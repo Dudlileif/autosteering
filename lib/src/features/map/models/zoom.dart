@@ -1,0 +1,4 @@
+enum Zoom {
+  zoomIn,
+  zoomOut;
+}

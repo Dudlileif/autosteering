@@ -1,0 +1,10 @@
+{
+    "init_position": {
+        "coordinates": [
+            10,
+            60
+        ]
+    },
+    "init_heading": 0,
+    "copernicus_instance_id": null
+}
