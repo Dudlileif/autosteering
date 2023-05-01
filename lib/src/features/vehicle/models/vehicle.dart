@@ -347,7 +347,7 @@ class Vehicle with _$Vehicle {
       points.add(
         distance.offset(
           solidAxlePosition,
-          isReversing ? -5 + velocity : 5 + velocity,
+          isReversing ? -30 : 5 + 30,
           normalizeBearing(heading),
         ),
       );

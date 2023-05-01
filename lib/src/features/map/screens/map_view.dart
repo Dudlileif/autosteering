@@ -85,37 +85,40 @@ class _MapViewState extends ConsumerState<MapView> {
             ),
           ],
         ),
-        CircleLayer(
-          circles: [
-            CircleMarker(
-              point: vehicle.position,
-              radius: 10,
-            ),
-            CircleMarker(
-              point: vehicle.solidAxlePosition,
-              radius: 10,
-              color: Colors.red,
-            ),
-            CircleMarker(
-              point: vehicle.steeringAxlePosition,
-              radius: 10,
-              color: Colors.blue,
-            )
-          ],
-        ),
+        if (ref.watch(debugAckermannProvider))
+          CircleLayer(
+            circles: [
+              CircleMarker(
+                point: vehicle.position,
+                radius: 10,
+              ),
+              CircleMarker(
+                point: vehicle.solidAxlePosition,
+                radius: 10,
+                color: Colors.red,
+              ),
+              CircleMarker(
+                point: vehicle.steeringAxlePosition,
+                radius: 10,
+                color: Colors.blue,
+              )
+            ],
+          ),
         PolylineLayer(
           polylineCulling: true,
           polylines: [
-            Polyline(
-              points: vehicle.trajectory.coordinates,
-              strokeWidth: 5,
-              color: Colors.red,
-            ),
+            if (ref.watch(debugTrajectoryProvider))
+              Polyline(
+                points: vehicle.trajectory.coordinates,
+                strokeWidth: 5,
+                color: Colors.red,
+              ),
             Polyline(
               points: points,
               strokeWidth: 10,
             ),
-            if (vehicle.turningRadiusCenter != null) ...[
+            if (vehicle.turningRadiusCenter != null &&
+                ref.watch(debugAckermannProvider)) ...[
               Polyline(
                 points: [
                   vehicle.solidAxlePosition,
