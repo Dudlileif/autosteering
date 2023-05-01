@@ -30,12 +30,12 @@ environment:
 dependencies:
     async: ^2.10.0
     collection: ^1.17.0
-    connectivity_plus: ^3.0.5
+    connectivity_plus: ^3.0.6
     cupertino_icons: ^1.0.2
     dio: ^5.1.1
     dynamic_color: ^1.6.3
     fast_cached_network_image: ^1.2.0
-    flex_color_scheme: ^7.0.4
+    flex_color_scheme: ^7.0.5
     flutter:
         sdk: flutter
     flutter_map: ^3.1.0
