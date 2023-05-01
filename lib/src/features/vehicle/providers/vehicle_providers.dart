@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
-import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:async/async.dart';
-import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,14 +11,17 @@ part 'vehicle_providers.g.dart';
 class MainVehicle extends _$MainVehicle {
   @override
   Vehicle build() => Vehicle(
+        type: VehicleType.conventionalTractor,
         position: ref.read(homePositionProvider),
+        antennaHeight: 2.822,
         heading: 0,
         length: 4.358,
         width: 2.360,
+        trackWidth: 1.8,
         wheelBase: 2.550,
-        rearAxleDistance: 1.275,
+        solidAxleDistance: 1.275,
         minTurningRadius: 4.25,
-        wheelAngleMax: 40,
+        wheelAngleMax: 32,
         simulated: true,
       );
 
@@ -64,17 +63,17 @@ class MainVehicle extends _$MainVehicle {
 @riverpod
 Future<void> vehicleDriving(VehicleDrivingRef ref) async {
   if (ref.watch(mapReadyProvider)) {
-    final vehicle = ref
-        .watch(
-          ref.watch(simVehicleInputProvider)
-              ? simVehicleWebStreamProvider
-              : simVehicleIsolateStreamProvider,
-        )
-        .when(
-          data: (data) => data,
-          error: (error, stackTrace) => ref.watch(mainVehicleProvider),
-          loading: () => ref.watch(mainVehicleProvider),
-        );
+    final vehicle = ref.watch(simVehicleInputProvider)
+        ? ref.watch(simVehicleWebStreamProvider).when(
+              data: (data) => data,
+              error: (error, stackTrace) => ref.watch(mainVehicleProvider),
+              loading: () => ref.watch(mainVehicleProvider),
+            )
+        : ref.watch(simVehicleIsolateStreamProvider).when(
+              data: (data) => data,
+              error: (error, stackTrace) => ref.watch(mainVehicleProvider),
+              loading: () => ref.watch(mainVehicleProvider),
+            );
     if (vehicle == null) {
       ref
           .read(simVehicleInputProvider.notifier)
@@ -90,70 +89,6 @@ Future<void> vehicleDriving(VehicleDrivingRef ref) async {
               -normalizeBearing(ref.watch(mainVehicleProvider).heading),
             );
       }
-    }
-  }
-}
-
-@Riverpod(keepAlive: true)
-class _SimVehicleIsolatePort extends _$SimVehicleIsolatePort {
-  @override
-  SendPort? build() => null;
-
-  void update(SendPort? port) => Future(() => state = port);
-}
-
-@Riverpod(keepAlive: true)
-class _SimVehicleWebInput extends _$SimVehicleWebInput {
-  @override
-  StreamController<dynamic> build() => StreamController<dynamic>();
-
-  Stream<dynamic> stream() => state.stream;
-}
-
-@Riverpod(keepAlive: true)
-class SimVehicleInput extends _$SimVehicleInput {
-  @override
-  bool build() => kIsWeb;
-
-  void send(dynamic input) => Future(
-        () => state
-            ? ref.read(_simVehicleWebInputProvider).add(input)
-            : ref.read(_simVehicleIsolatePortProvider)?.send(input),
-      );
-}
-
-@riverpod
-Stream<Vehicle?> simVehicleWebStream(SimVehicleWebStreamRef ref) {
-  return VehicleSimulator.webWorker(
-    ref.watch(_simVehicleWebInputProvider.notifier).stream(),
-  );
-}
-
-@riverpod
-Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
-  final recievePort = ReceivePort();
-  await Isolate.spawn(
-    VehicleSimulator.isolateWorker,
-    recievePort.sendPort,
-  );
-  log('Sim vehicle isolate spawned');
-
-  final events = StreamQueue<dynamic>(recievePort);
-
-  final sendPort = await events.next as SendPort;
-  ref.read(_simVehicleIsolatePortProvider.notifier).update(sendPort);
-  sendPort.send(ref.read(mainVehicleProvider));
-  // Exit isolate when provider is disposed.
-  ref.onDispose(() {
-    sendPort.send(null);
-    events.cancel();
-    ref.read(_simVehicleIsolatePortProvider.notifier).update(null);
-  });
-
-  while (true) {
-    final message = await events.next;
-    if (message is Vehicle) {
-      yield message;
     }
   }
 }

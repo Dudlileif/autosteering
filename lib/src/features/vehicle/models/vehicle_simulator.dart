@@ -6,6 +6,9 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
 class VehicleSimulator {
+  static const _targetPeriodMs = 10;
+  static const _distance = Distance(roundResult: false);
+
   /// Used non-web systems since they can easily be multithreaded.
   static Future<void> isolateWorker(SendPort sendPort) async {
     final commandPort = ReceivePort('SimVehicle');
@@ -17,15 +20,13 @@ class VehicleSimulator {
     Vehicle? vehicle;
     Vehicle? prevVehicle;
 
-    const distance = Distance(roundResult: false);
     var calcVel = 0.0;
     var calcHeading = 0.0;
 
     var prevUpdate = DateTime.now();
-    const targetPeroidMs = 1;
 
     final timer =
-        Timer.periodic(const Duration(milliseconds: targetPeroidMs), (timer) {
+        Timer.periodic(const Duration(milliseconds: _targetPeriodMs), (timer) {
       if (vehicle != null) {
         if (prevVehicle != null) {
           final now = DateTime.now();
@@ -34,25 +35,25 @@ class VehicleSimulator {
           if (period > 0) {
             prevUpdate = now;
 
-            vehicle = _updatePosition(vehicle!, period, distance);
+            // Move the vehicle
+            vehicle = _updatePosition(vehicle!, period);
 
+            // If the vehicle has moved (changed)
             if (vehicle != prevVehicle) {
               sendPort.send(vehicle);
 
               // Velocity calculation
               final newCalcVel =
-                  distance.distance(vehicle!.position, prevVehicle!.position) /
+                  _distance.distance(vehicle!.position, prevVehicle!.position) /
                       period;
 
               if (newCalcVel.toStringAsFixed(1) != calcVel.toStringAsFixed(1)) {
                 calcVel = newCalcVel;
               }
-
               // Heading calculation
               final newCalcHeading = _calcHeading(
                 vehicle!,
                 calcHeading,
-                distance,
                 prevVehicle!,
               );
 
@@ -92,41 +93,66 @@ class VehicleSimulator {
     Isolate.exit();
   }
 
-  static double _calcHeading(
-    Vehicle vehicle,
-    double calcHeading,
-    Distance distance,
-    Vehicle prevVehicle,
-  ) {
-    final newCalcHeading = vehicle.velocity.abs() == 0
-        ? calcHeading
-        : normalizeBearing(
-            vehicle.isReversing
-                ? distance.bearing(
-                    vehicle.position,
-                    prevVehicle.position,
-                  )
-                : distance.bearing(
-                    prevVehicle.position,
-                    vehicle.position,
-                  ),
-          );
-    return newCalcHeading;
-  }
-
   static Vehicle? _updatePosition(
     Vehicle vehicle,
     double period,
-    Distance distance,
   ) {
+    // Reqiure wheel angle above 1 deg when using simulator.
+    // This is due to some error at low angle calculation, which could
+    // give wrong movement.
+    if (vehicle.wheelAngle.abs() > 1) {
+      if (vehicle.velocity.abs() > 0) {
+        // How many degrees of the turning circle the current angular velocity
+        // during the period amounts to. Relative to the current position, is
+        // negative when reversing.
+        final turningCircleAngle = vehicle.angularVelocity! * period;
+
+        // The angle from the turning circle center to the projected
+        // position.
+        final angle = vehicle.wheelAngle < 0
+            // Turning left
+            ? vehicle.heading + 90 - turningCircleAngle
+            // Turning right
+            : vehicle.heading - 90 + turningCircleAngle;
+
+        // Projected solid axle position from the turning radius
+        // center.
+        final solidAxlePositon = _distance.offset(
+          vehicle.turningRadiusCenter!,
+          vehicle.currentTurningRadius!,
+          normalizeBearing(angle),
+        );
+
+        // The heading of the vehicle at the projected position.
+        final heading = normalizeBearing(
+          vehicle.wheelAngle < 0
+              ? vehicle.heading - turningCircleAngle
+              : vehicle.heading + turningCircleAngle,
+        );
+
+        // The vehicle center position, which is offset from the solid
+        // axle position.
+        final vehiclePosition = _distance.offset(
+          solidAxlePositon,
+          vehicle.solidAxleDistance,
+          heading,
+        );
+
+        return vehicle.copyWith(
+          position: vehiclePosition,
+          heading: heading,
+        );
+      }
+    }
     final sign = vehicle.velocity.abs() == 0
         ? 0
         : vehicle.isReversing
             ? -1
             : 1;
-    final heading = vehicle.heading + sign * vehicle.wheelAngle * period;
+    final heading = vehicle.heading +
+        sign * vehicle.ackermanSteering.ackermannAngleDegrees * period;
 
-    final position = distance.offset(
+    final position = _distance.offset(
       vehicle.position,
       vehicle.velocity * period,
       vehicle.heading,
@@ -136,6 +162,27 @@ class VehicleSimulator {
       position: position,
       heading: heading,
     );
+  }
+
+  static double _calcHeading(
+    Vehicle vehicle,
+    double calcHeading,
+    Vehicle prevVehicle,
+  ) {
+    final newCalcHeading = vehicle.velocity.abs() == 0
+        ? calcHeading
+        : normalizeBearing(
+            vehicle.isReversing
+                ? _distance.bearing(
+                    vehicle.position,
+                    prevVehicle.position,
+                  )
+                : _distance.bearing(
+                    prevVehicle.position,
+                    vehicle.position,
+                  ),
+          );
+    return newCalcHeading;
   }
 
   /// Used in web version since multithreading isn't possible.
@@ -160,15 +207,12 @@ class VehicleSimulator {
       },
     );
 
-    const distance = Distance(roundResult: false);
     var calcVel = 0.0;
     var calcHeading = 0.0;
 
-    const targetPeroidMs = 10;
-
     var prevUpdate = DateTime.now();
 
-    yield* Stream.periodic(const Duration(milliseconds: targetPeroidMs),
+    yield* Stream.periodic(const Duration(milliseconds: _targetPeriodMs),
         (timer) {
       if (vehicle != null) {
         if (prevVehicle != null) {
@@ -179,12 +223,13 @@ class VehicleSimulator {
           if (period > 0) {
             prevUpdate = now;
 
-            vehicle = _updatePosition(vehicle!, period, distance);
+            // Move the vehicle
+            vehicle = _updatePosition(vehicle!, period);
 
             if (vehicle != prevVehicle) {
               // Velocity calculation
               final newCalcVel =
-                  distance.distance(vehicle!.position, prevVehicle!.position) /
+                  _distance.distance(vehicle!.position, prevVehicle!.position) /
                       period;
 
               if (newCalcVel.toStringAsFixed(1) != calcVel.toStringAsFixed(1)) {
@@ -195,7 +240,6 @@ class VehicleSimulator {
               final newCalcHeading = _calcHeading(
                 vehicle!,
                 calcHeading,
-                distance,
                 prevVehicle!,
               );
 
