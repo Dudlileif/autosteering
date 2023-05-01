@@ -48,8 +48,8 @@ class _MapViewState extends ConsumerState<MapView> {
           }
         },
         onTap: (tapPosition, point) {
-          ScaffoldMessenger.maybeOf(context)
-              ?.showSnackBar(SnackBar(content: Text('${point.toJson()}')));
+          // ScaffoldMessenger.maybeOf(context)
+          //     ?.showSnackBar(SnackBar(content: Text('${point.toJson()}')));
           setState(() => points.add(point));
         },
         onLongPress: (tapPosition, point) {
@@ -62,15 +62,15 @@ class _MapViewState extends ConsumerState<MapView> {
         onMapReady: ref.read(mapReadyProvider.notifier).ready,
       ),
       children: [
-        if (ref.watch(useOSMLayerProvider)) const OSMLayer(),
+        if (ref.watch(showOSMLayerProvider)) const OSMLayer(),
         const CountryLayers(),
         const SentinelLayers(),
         PolygonLayer(
           polygonCulling: true,
           polygons: [
             // vehicle.polygon,
-            vehicle.rightFrontWheelPolygon,
-            vehicle.leftFrontWheelPolygon,
+            vehicle.rightSteeringWheelPolygon,
+            vehicle.leftSteeringWheelPolygon,
           ],
         ),
         OverlayImageLayer(
@@ -85,18 +85,59 @@ class _MapViewState extends ConsumerState<MapView> {
             ),
           ],
         ),
+        CircleLayer(
+          circles: [
+            CircleMarker(
+              point: vehicle.position,
+              radius: 10,
+            ),
+            CircleMarker(
+              point: vehicle.solidAxlePosition,
+              radius: 10,
+              color: Colors.red,
+            ),
+            CircleMarker(
+              point: vehicle.steeringAxlePosition,
+              radius: 10,
+              color: Colors.blue,
+            )
+          ],
+        ),
         PolylineLayer(
           polylineCulling: true,
           polylines: [
             Polyline(
               points: vehicle.trajectory.coordinates,
               strokeWidth: 5,
-              color: Colors.blue,
+              color: Colors.red,
             ),
             Polyline(
               points: points,
               strokeWidth: 10,
-            )
+            ),
+            if (vehicle.turningRadiusCenter != null) ...[
+              Polyline(
+                points: [
+                  vehicle.solidAxlePosition,
+                  vehicle.turningRadiusCenter!,
+                ],
+                color: Colors.red,
+              ),
+              Polyline(
+                points: [
+                  vehicle.steeringAxlePosition,
+                  vehicle.turningRadiusCenter!,
+                ],
+                color: Colors.blue,
+              ),
+              Polyline(
+                points: [
+                  vehicle.position,
+                  vehicle.turningRadiusCenter!,
+                ],
+                color: Colors.green,
+              ),
+            ],
           ],
         )
       ],

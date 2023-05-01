@@ -56,4 +56,32 @@ Future<void> applyTestSettings(ProviderContainer container) async {
   container
       .read(sentinelInstanceIdProvider.notifier)
       .update(copernicusInstanceId);
+
+  if (testSettings.containsKey('show_osm_layer')) {
+    final showOSMLayer = testSettings['show_osm_layer'] as bool;
+    container.read(showOSMLayerProvider.notifier).update(value: showOSMLayer);
+  }
+
+  if (testSettings.containsKey('country_layers')) {
+    final countryMap = Map<String, dynamic>.from(
+      testSettings['country_layers'] as Map,
+    );
+    container.listen(currentCountryProvider, (previous, next) {
+      if (next != null) {
+        final country = next;
+        if (countryMap.containsKey(country.name)) {
+          Map<String, double>.from(countryMap[country.name] as Map)
+              .forEach((name, opacity) {
+            final layer = country.layer(name);
+            if (layer != null) {
+              container
+                  .read(countryLayerOpacitiesProvider.notifier)
+                  .update(layer, opacity);
+              container.read(selectedCountryLayersProvider.notifier).add(layer);
+            }
+          });
+        }
+      }
+    });
+  }
 }

@@ -37,6 +37,10 @@ class CurrentCountry extends _$CurrentCountry {
               if (data.containsKey('name')) {
                 final name = data['name'] as String;
                 state = Countries.current(name);
+                if (state == null) {
+                  ref.read(showOSMLayerProvider.notifier).update(value: true);
+                  ref.read(selectedCountryLayersProvider.notifier).clear();
+                }
               } else if (data.containsKey('error')) {
                 await update();
               }

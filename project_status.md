@@ -8,13 +8,14 @@
         -   Copernicus Sentinel, up-to-date insightful data
         -   Custom layers per country, example:
             -   Norway: High-res orthophoto, topological maps, DTM/DOM terrain
--   Basic proof of concept vehicle movement simulation
+-   Basic vehicle movement simulation
 
-## To be implemented functionality
+## To be implemented
 
--   Correct vehicle simulation, independent steering wheels turning angle and radii etc..., support for harvester, articulated vehicles
+-   Correct vehicle simulation, support for harvester, articulated vehicles
 -   Equipment simulation
 -   Fields, paths, recording etc...
+-   Autosteering
 -   Hardware communication
 -   Import/export to the original AgOpenGps
 
