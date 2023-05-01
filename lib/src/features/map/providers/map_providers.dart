@@ -114,7 +114,7 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
 }
 
 @Riverpod(keepAlive: true)
-class UseOSMLayer extends _$UseOSMLayer {
+class ShowOSMLayer extends _$ShowOSMLayer {
   @override
   bool build() => true;
 

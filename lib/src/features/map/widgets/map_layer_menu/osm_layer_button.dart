@@ -8,9 +8,9 @@ class OSMLayerButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return CheckboxListTile(
-      value: ref.watch(useOSMLayerProvider),
+      value: ref.watch(showOSMLayerProvider),
       onChanged: (value) => value != null
-          ? ref.read(useOSMLayerProvider.notifier).update(value: value)
+          ? ref.read(showOSMLayerProvider.notifier).update(value: value)
           : null,
       secondary: Text(
         'OpenStreetMap',
