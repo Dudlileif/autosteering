@@ -18,6 +18,7 @@
 -   Autosteering
 -   Hardware communication
 -   Import/export to the original AgOpenGps
+-   Map layer caching/offline
 
 ## Further ideas
 

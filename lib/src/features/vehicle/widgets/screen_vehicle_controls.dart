@@ -23,13 +23,14 @@ class ScreenVehicleControls extends ConsumerWidget {
                     showValueIndicator: ShowValueIndicator.always,
                   ),
               child: Slider(
-                value: vehicle.wheelAngle,
+                value: vehicle.steeringAngle,
                 onChanged: (value) => ref
                     .read(simVehicleInputProvider.notifier)
-                    .send(VehicleInput(wheelAngle: value)),
+                    .send(VehicleInput(steeringAngle: value)),
                 min: -vehicle.wheelAngleMax,
                 max: vehicle.wheelAngleMax,
-                label: 'Wheel Angle: ${vehicle.wheelAngle.toStringAsFixed(1)}°',
+                label:
+                    'Wheel Angle: ${vehicle.steeringAngle.toStringAsFixed(1)}°',
               ),
             ),
           ),
@@ -49,7 +50,7 @@ class ScreenVehicleControls extends ConsumerWidget {
                 Icons.replay,
               ),
               label: const Text(
-                'Position',
+                'Position as tractor',
               ),
               onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
                     Vehicle(
@@ -63,10 +64,31 @@ class ScreenVehicleControls extends ConsumerWidget {
                       solidAxleDistance: 1.275,
                       trackWidth: 1.8,
                       minTurningRadius: 4.25,
-                      wheelAngle: 0,
                       wheelAngleMax: 32,
-                      velocity: 0,
-                      acceleration: 0,
+                      simulated: true,
+                    ),
+                  ),
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(
+                Icons.replay,
+              ),
+              label: const Text(
+                'Position as harvester',
+              ),
+              onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
+                    Vehicle(
+                      type: VehicleType.harvester,
+                      position: ref.read(homePositionProvider),
+                      antennaHeight: 2.822,
+                      heading: 241.5,
+                      length: 4.358,
+                      width: 2.360,
+                      wheelBase: 3.550,
+                      solidAxleDistance: 1.275,
+                      trackWidth: 1.8,
+                      minTurningRadius: 4.25,
+                      wheelAngleMax: 45,
                       simulated: true,
                     ),
                   ),
@@ -81,7 +103,7 @@ class ScreenVehicleControls extends ConsumerWidget {
               onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
                     const VehicleInput(
                       velocity: 0,
-                      wheelAngle: 0,
+                      steeringAngle: 0,
                     ),
                   ),
               style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
@@ -97,10 +119,11 @@ class ScreenVehicleControls extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'Vel',
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Text('Velocity'),
                   ),
-                  Text(vehicle.velocity.toStringAsPrecision(2)),
+                  Text('${vehicle.velocity.toStringAsFixed(1)} m/s'),
                   RotatedBox(
                     quarterTurns: 3,
                     child: SizedBox(
@@ -115,9 +138,8 @@ class ScreenVehicleControls extends ConsumerWidget {
                           onChanged: (value) => ref
                               .read(simVehicleInputProvider.notifier)
                               .send(VehicleInput(velocity: value)),
-                          min: -11,
-                          max: 11,
-                          // divisions: 22,
+                          min: -12,
+                          max: 12,
                         ),
                       ),
                     ),

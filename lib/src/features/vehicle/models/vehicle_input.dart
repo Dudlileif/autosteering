@@ -9,7 +9,7 @@ class VehicleInput with _$VehicleInput {
   const factory VehicleInput({
     LatLng? position,
     double? velocity,
-    double? wheelAngle,
+    double? steeringAngle,
   }) = _VehicleInput;
 
   factory VehicleInput.fromJson(Map<String, Object?> json) =>

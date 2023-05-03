@@ -5,14 +5,14 @@ import 'package:latlong2/latlong.dart';
 /// https://se.mathworks.com/help/vdynblks/ref/kinematicsteering.html
 class AckermannSteering {
   const AckermannSteering({
-    required this.wheelAngle,
+    required this.steeringAngle,
     required this.wheelBase,
     required this.trackWidth,
     this.steeringRatio = 1.25,
   });
 
   /// The input wheel angle
-  final double wheelAngle;
+  final double steeringAngle;
 
   /// The distance between the wheel axles
   final double wheelBase;
@@ -20,7 +20,7 @@ class AckermannSteering {
   final double steeringRatio;
 
   /// Radians
-  double get ackermannAngle => degToRadian(wheelAngle) / steeringRatio;
+  double get ackermannAngle => degToRadian(steeringAngle) / steeringRatio;
 
   /// Degrees
   double get ackermannAngleDegrees => radianToDeg(ackermannAngle);
@@ -55,7 +55,7 @@ class AckermannSteering {
   @override
   String toString() => '''
   Ackermann steering:
-  Steering angle: $wheelAngle  
+  Steering angle: $steeringAngle  
   Ackermann angle: ${radianToDeg(ackermannAngle)}
   Left angle: $leftAngle
   Right angle: $rightAngle

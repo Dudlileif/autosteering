@@ -14,7 +14,6 @@ class MainVehicle extends _$MainVehicle {
         type: VehicleType.conventionalTractor,
         position: ref.read(homePositionProvider),
         antennaHeight: 2.822,
-        heading: 0,
         length: 4.358,
         width: 2.360,
         trackWidth: 1.8,
@@ -37,9 +36,9 @@ class MainVehicle extends _$MainVehicle {
     }
   }
 
-  void setWheelAngle(double value) {
-    if (value != state.wheelAngle) {
-      Future(() => state = state.copyWith(wheelAngle: value));
+  void setSteeringAngle(double value) {
+    if (value != state.steeringAngle) {
+      Future(() => state = state.copyWith(steeringAngle: value));
     }
   }
 

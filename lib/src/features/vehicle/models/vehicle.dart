@@ -29,7 +29,7 @@ class Vehicle with _$Vehicle {
     /// The width of the vehicle, in meters.
     required double width,
 
-    /// The distance between the axels.
+    /// The distance between the axles.
     required double wheelBase,
 
     /// The distance from the antenna [position] to the solid axle,
@@ -51,11 +51,10 @@ class Vehicle with _$Vehicle {
     /// The heading of the vehicle, in degrees.
     @Default(0) double heading,
 
-    /// The angle at which the steering wheels are turned, in degrees.
-    /// This is the Ackerman angle, imagined to be on the middle of
+    /// This is the Ackermann input angle, imagined to be on the middle of
     /// the steering axle, as if the vehicle only had one center
     /// steering wheel.
-    @Default(0) double wheelAngle,
+    @Default(0) double steeringAngle,
 
     /// The velocity of the vehicle, in m/s, meters per second, in the heading
     /// direction.
@@ -73,33 +72,51 @@ class Vehicle with _$Vehicle {
       _$VehicleFromJson(json);
 
   /// Geo-calculator used to calculate offsets.
-  static const distance = Distance(roundResult: false);
+  static const _distance = Distance(roundResult: false);
 
   /// The position of the center of the rear axle.
-  LatLng get solidAxlePosition => distance.offset(
+  LatLng get solidAxlePosition => _distance.offset(
         position,
         solidAxleDistance,
-        normalizeBearing(heading - 180),
+        normalizeBearing(
+          switch (type) {
+            VehicleType.conventionalTractor => heading - 180,
+            VehicleType.harvester => heading,
+            VehicleType.articulatedTractor => heading,
+          },
+        ),
       );
 
   /// The position of the center of the front axle.
-  LatLng get steeringAxlePosition => distance.offset(
+  LatLng get steeringAxlePosition => _distance.offset(
         position,
-        wheelBase - solidAxleDistance,
+        switch (type) {
+          VehicleType.conventionalTractor => wheelBase - solidAxleDistance,
+          VehicleType.harvester => -wheelBase + solidAxleDistance,
+          VehicleType.articulatedTractor => 0,
+        },
         normalizeBearing(heading),
       );
 
-  AckermannSteering get ackermanSteering => AckermannSteering(
-        wheelAngle: wheelAngle,
+  AckermannSteering get ackermannSteering => AckermannSteering(
+        steeringAngle: steeringAngle,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
       );
 
   /// The angle of the left steering wheel when using Ackermann steering.
-  double get leftSteeringWheelAngle => ackermanSteering.leftAngle;
+  double get leftSteeringWheelAngle => switch (type) {
+        VehicleType.conventionalTractor => ackermannSteering.leftAngle,
+        VehicleType.harvester => -ackermannSteering.leftAngle,
+        VehicleType.articulatedTractor => 0
+      };
 
   /// The angle of the right steering wheel when using Ackermann steering.
-  double get rightSteeringWheelAngle => ackermanSteering.rightAngle;
+  double get rightSteeringWheelAngle => switch (type) {
+        VehicleType.conventionalTractor => ackermannSteering.rightAngle,
+        VehicleType.harvester => -ackermannSteering.rightAngle,
+        VehicleType.articulatedTractor => 0
+      };
 
   /// The max opposite steering angle for the wheel the angle sensor is
   /// mounted to. I.e. the angle to the right for a front left steering wheel.
@@ -136,22 +153,22 @@ class Vehicle with _$Vehicle {
 
   /// The max extent/bounds points of the vehicle. The [heading] is followed.
   List<LatLng> get points {
-    final frontLeft = distance.offset(
+    final frontLeft = _distance.offset(
       position,
       centerToCornerDistance,
       frontLeftAngle,
     );
-    final frontRight = distance.offset(
+    final frontRight = _distance.offset(
       position,
       centerToCornerDistance,
       frontRightAngle,
     );
-    final rearRight = distance.offset(
+    final rearRight = _distance.offset(
       position,
       centerToCornerDistance,
       rearRightAngle,
     );
-    final rearLeft = distance.offset(
+    final rearLeft = _distance.offset(
       position,
       centerToCornerDistance,
       rearLeftAngle,
@@ -170,6 +187,7 @@ class Vehicle with _$Vehicle {
   Polygon get polygon => Polygon(
         points: points,
         isFilled: true,
+        color: Colors.yellow.withOpacity(0.5),
       );
 
   /// The bounds of the left steering wheel, or the right steering wheel if
@@ -197,76 +215,149 @@ class Vehicle with _$Vehicle {
     final rearInnerToRearOuterAngle =
         normalizeBearing(frontInnerToRearInnerAngle + (90 * sign));
 
-    final wheelCenter = distance.offset(
+    final wheelCenter = _distance.offset(
       steeringAxlePosition,
       trackWidth / 2 - wheelWidth / 2,
       axleToCenterAngle,
     );
 
-    final wheelOuterFront = distance.offset(
+    final wheelOuterFront = _distance.offset(
       wheelCenter,
       wheelDiameter / 2,
       frontOuterCenterToOuterFrontAngle,
     );
-    final wheelInnerFront = distance.offset(
+    final wheelInnerFront = _distance.offset(
       wheelOuterFront,
       wheelWidth,
       frontOuterToFrontInnerAngle,
     );
-    final wheelInnerRear = distance.offset(
+    final wheelInnerRear = _distance.offset(
       wheelInnerFront,
       wheelDiameter,
       frontInnerToRearInnerAngle,
     );
-    final wheelOuterRear = distance.offset(
+    final wheelOuterRear = _distance.offset(
       wheelInnerRear,
       wheelWidth,
       rearInnerToRearOuterAngle,
     );
 
-    final points = <LatLng>[
+    return [
       wheelOuterFront,
       wheelInnerFront,
       wheelInnerRear,
       wheelOuterRear,
     ];
-
-    return points;
   }
 
-  /// The left front wheel polygon.
+  /// The left steering wheel polygon.
   Polygon get leftSteeringWheelPolygon => Polygon(
         points: steeringWheelPoints(),
         isFilled: true,
         color: Colors.black,
       );
 
-  /// The right front wheel polygon.
+  /// The right steering wheel polygon.
   Polygon get rightSteeringWheelPolygon => Polygon(
         points: steeringWheelPoints(left: false),
         isFilled: true,
         color: Colors.black,
       );
 
-  // Reqiure wheel angle above 1 deg when using simulator.
+  /// The bounds of the left solid axle wheel, or the right solid axle wheel if
+  /// [left] is set to false.
+  List<LatLng> solidAxleWheelPoints({bool left = true}) {
+    const wheelDiameter = 1.8;
+    const wheelWidth = 0.6;
+
+    final sign = left ? 1 : -1;
+
+    final axleToCenterAngle = normalizeBearing(heading - (90 * sign));
+
+    final frontOuterCenterToOuterFrontAngle = normalizeBearing(
+      axleToCenterAngle - 90 * sign,
+    );
+
+    final frontOuterToFrontInnerAngle =
+        normalizeBearing(frontOuterCenterToOuterFrontAngle + (90 * sign));
+
+    final frontInnerToRearInnerAngle =
+        normalizeBearing(frontOuterToFrontInnerAngle + (90 * sign));
+
+    final rearInnerToRearOuterAngle =
+        normalizeBearing(frontInnerToRearInnerAngle + (90 * sign));
+
+    final wheelCenter = _distance.offset(
+      solidAxlePosition,
+      trackWidth / 2 - wheelWidth / 2,
+      axleToCenterAngle,
+    );
+
+    final wheelOuterFront = _distance.offset(
+      wheelCenter,
+      wheelDiameter / 2,
+      frontOuterCenterToOuterFrontAngle,
+    );
+    final wheelInnerFront = _distance.offset(
+      wheelOuterFront,
+      wheelWidth,
+      frontOuterToFrontInnerAngle,
+    );
+    final wheelInnerRear = _distance.offset(
+      wheelInnerFront,
+      wheelDiameter,
+      frontInnerToRearInnerAngle,
+    );
+    final wheelOuterRear = _distance.offset(
+      wheelInnerRear,
+      wheelWidth,
+      rearInnerToRearOuterAngle,
+    );
+
+    return [
+      wheelOuterFront,
+      wheelInnerFront,
+      wheelInnerRear,
+      wheelOuterRear,
+    ];
+  }
+
+  /// The left solid axle wheel polygon.
+  Polygon get leftSolidAxleWheelPolygon => Polygon(
+        points: solidAxleWheelPoints(),
+        isFilled: true,
+        color: Colors.black,
+      );
+
+  /// The right solid axle wheel polygon.
+  Polygon get rightSolidAxleWheelPolygon => Polygon(
+        points: solidAxleWheelPoints(left: false),
+        isFilled: true,
+        color: Colors.black,
+      );
+
+  // Reqiure wheel angle above 1 deg when using simulator, 0.01 deg otherwise.
   // This is due to some error at low angle calculation, which could
   // give wrong movement.
   double get minSteeringAngle => simulated ? 1 : 0.01;
 
-  /// The turning radius corresponding to the current [wheelAngle].
-  ///
-  /// Will default to [minTurningRadius] if the angle is above [wheelAngleMax].
-  double? get currentTurningRadius =>
-      wheelAngle.abs() <= wheelAngleMax && wheelAngle.abs() > minSteeringAngle
-          ? ackermanSteering.turningRadius
-          : null;
+  /// The turning radius corresponding to the current [steeringAngle].
+  double? get currentTurningRadius => steeringAngle.abs() <= wheelAngleMax &&
+          steeringAngle.abs() > minSteeringAngle
+      ? ackermannSteering.turningRadius
+      : null;
 
   /// The center point of which the [currentTurningRadius] revolves around.
   LatLng? get turningRadiusCenter => currentTurningRadius != null
-      ? distance.offset(
+      ? _distance.offset(
           solidAxlePosition,
           currentTurningRadius!,
-          normalizeBearing(wheelAngle < 0 ? heading - 90 : heading + 90),
+          normalizeBearing(
+            switch (isTurningLeft) {
+              true => heading - 90,
+              false => heading + 90
+            },
+          ),
         )
       : null;
 
@@ -278,25 +369,16 @@ class Vehicle with _$Vehicle {
 
   /// The projected trajectory for the moving vehicle.
   ///
-  /// Based on the current [wheelAngle], [velocity] and [currentTurningRadius].
+  /// Based on the current [steeringAngle], [velocity] and
+  /// [currentTurningRadius].
   Path get trajectory {
     final points = <LatLng>[solidAxlePosition];
 
     if (currentTurningRadius != null) {
-      // // Clamp the angular velocity to min 5 deg/s so that we always show
-      // // the tracjectory even when stationary or at very low speeds.
-      // final clampedAngularVelocity = angularVelocity!.clamp(
-      //   // Min
-      //   isReversing ? -double.infinity : 5,
-
-      //   // Max
-      //   isReversing ? -5 : double.infinity,
-      // );
-
       final minTurningCircumference = 2 *
           pi *
           AckermannSteering(
-            wheelAngle: wheelAngleMax,
+            steeringAngle: wheelAngleMax,
             wheelBase: wheelBase,
             trackWidth: trackWidth,
           ).turningRadius;
@@ -312,30 +394,33 @@ class Vehicle with _$Vehicle {
         {
           // The angle from the turning circle center to the projected
           // position.
-          final angle = isReversing
-              // Reversing
-              ? wheelAngle < 0
-                  // Turning left
-                  ? heading +
-                      90 +
-                      i / numberOfPoints * revolutionsOfTurningCircle * 360
-                  // Turning right
-                  : heading -
-                      90 -
-                      i / numberOfPoints * revolutionsOfTurningCircle * 360
-              // Forward
-              : wheelAngle < 0
-                  // Turning left
-                  ? heading +
-                      90 -
-                      i / numberOfPoints * revolutionsOfTurningCircle * 360
-                  // Turning right
-                  : heading -
-                      90 +
-                      i / numberOfPoints * revolutionsOfTurningCircle * 360;
+          final angle = switch (isTurningLeft) {
+            // Turning left
+            true => switch (isReversing) {
+                // Reversing
+                true => heading +
+                    90 +
+                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+                // Forward
+                false => heading +
+                    90 -
+                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+              },
+            // Turning right
+            false => switch (isReversing) {
+                // Reversing
+                true => heading -
+                    90 -
+                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+                // Forward
+                false => heading -
+                    90 +
+                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+              },
+          };
 
           points.add(
-            distance.offset(
+            _distance.offset(
               turningRadiusCenter!,
               currentTurningRadius!,
               normalizeBearing(angle),
@@ -345,7 +430,7 @@ class Vehicle with _$Vehicle {
       }
     } else {
       points.add(
-        distance.offset(
+        _distance.offset(
           solidAxlePosition,
           isReversing ? -30 : 5 + 30,
           normalizeBearing(heading),
@@ -358,6 +443,10 @@ class Vehicle with _$Vehicle {
 
   /// Whether the vehicle is reversing or not.
   bool get isReversing => velocity < 0;
+
+  /// Whether the vehicle is turning to the left,
+  /// otherwise assumed turning to the right.
+  bool get isTurningLeft => steeringAngle < 0;
 }
 
 enum VehicleType {
