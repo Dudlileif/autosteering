@@ -38,3 +38,15 @@ class SentinelLayers extends ConsumerWidget {
     );
   }
 }
+
+class SentinelContribution extends StatelessWidget {
+  const SentinelContribution({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'Copernicus Sentinel data ${DateTime.now().year}',
+      style: Theme.of(context).textTheme.bodySmall,
+    );
+  }
+}

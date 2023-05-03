@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 class Norway extends Country {
@@ -14,6 +15,12 @@ class Norway extends Country {
         terrainDTMMulti,
         terrainDOM,
       ];
+
+  @override
+  Widget mapContribution(BuildContext context) => Text(
+        '© Kartverket',
+        style: Theme.of(context).textTheme.bodySmall,
+      );
 
   TileLayerData get norgeIBilder => const TileLayerData(
         name: 'Norge i bilder',
