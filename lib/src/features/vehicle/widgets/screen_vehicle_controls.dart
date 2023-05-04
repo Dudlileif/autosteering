@@ -87,7 +87,6 @@ class ScreenVehicleControls extends ConsumerWidget {
                       trackWidth: 1.8,
                       minTurningRadius: 4.25,
                       steeringAngleMax: 45,
-                      invertSteeringInput: false,
                       simulated: true,
                     ),
                   ),

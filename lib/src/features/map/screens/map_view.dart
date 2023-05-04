@@ -173,7 +173,8 @@ class _MapViewState extends ConsumerState<MapView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                            'Distance: ${(Path()..addAll(points)).distance} m'),
+                          'Distance: ${(Path()..addAll(points)).distance} m',
+                        ),
                         Text('${points.firstOrNull}->${points.lastOrNull}'),
                       ],
                     ),

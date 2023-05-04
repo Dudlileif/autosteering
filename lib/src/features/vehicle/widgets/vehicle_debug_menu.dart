@@ -9,19 +9,20 @@ class VehicleDebugMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SubmenuButton(
       menuChildren: [
-        CheckboxListTile(
-          value: ref.watch(debugAckermannProvider),
-          onChanged: (value) => value != null
-              ? ref.read(debugAckermannProvider.notifier).update(value: value)
-              : null,
-          secondary: Text(
-            'Ackermann steering',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+        if (ref.watch(mainVehicleProvider) is AxleSteeredVehicle)
+          CheckboxListTile(
+            value: ref.watch(debugAckermannProvider),
+            onChanged: (value) => value != null
+                ? ref.read(debugAckermannProvider.notifier).update(value: value)
+                : null,
+            secondary: Text(
+              'Ackermann steering',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(fontWeight: FontWeight.w500),
+            ),
           ),
-        ),
         CheckboxListTile(
           value: ref.watch(debugTrajectoryProvider),
           onChanged: (value) => value != null
