@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-/// A base class for vehicles that steer with either a front or rear axle.
+/// A base class for vehicles that steers with either a front or rear axle.
 abstract class AxleSteeredVehicle extends Vehicle {
   const AxleSteeredVehicle({
     required this.wheelBase,

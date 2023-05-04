@@ -2,7 +2,7 @@ import 'package:agopengps_flutter/src/features/vehicle/models/vehicle_types/axle
 import 'package:agopengps_flutter/src/features/vehicle/models/vehicle_types/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
-/// A harvester with a rear wheel steering and a front solid axle.
+/// A harvester with rear wheel steering and a solid front axle.
 class Harvester extends AxleSteeredVehicle {
   const Harvester({
     required super.wheelBase,
