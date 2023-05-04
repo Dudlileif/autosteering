@@ -27,8 +27,8 @@ class ScreenVehicleControls extends ConsumerWidget {
                 onChanged: (value) => ref
                     .read(simVehicleInputProvider.notifier)
                     .send(VehicleInput(steeringAngle: value)),
-                min: -vehicle.wheelAngleMax,
-                max: vehicle.wheelAngleMax,
+                min: -vehicle.steeringAngleMax,
+                max: vehicle.steeringAngleMax,
                 label:
                     'Wheel Angle: ${vehicle.steeringAngle.toStringAsFixed(1)}°',
               ),
@@ -53,8 +53,7 @@ class ScreenVehicleControls extends ConsumerWidget {
                 'Position as tractor',
               ),
               onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
-                    Vehicle(
-                      type: VehicleType.conventionalTractor,
+                    Tractor(
                       position: ref.read(homePositionProvider),
                       antennaHeight: 2.822,
                       heading: 241.5,
@@ -64,7 +63,7 @@ class ScreenVehicleControls extends ConsumerWidget {
                       solidAxleDistance: 1.275,
                       trackWidth: 1.8,
                       minTurningRadius: 4.25,
-                      wheelAngleMax: 32,
+                      steeringAngleMax: 32,
                       simulated: true,
                     ),
                   ),
@@ -77,8 +76,7 @@ class ScreenVehicleControls extends ConsumerWidget {
                 'Position as harvester',
               ),
               onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
-                    Vehicle(
-                      type: VehicleType.harvester,
+                    Harvester(
                       position: ref.read(homePositionProvider),
                       antennaHeight: 2.822,
                       heading: 241.5,
@@ -88,7 +86,8 @@ class ScreenVehicleControls extends ConsumerWidget {
                       solidAxleDistance: 1.275,
                       trackWidth: 1.8,
                       minTurningRadius: 4.25,
-                      wheelAngleMax: 45,
+                      steeringAngleMax: 45,
+                      invertSteeringInput: false,
                       simulated: true,
                     ),
                   ),

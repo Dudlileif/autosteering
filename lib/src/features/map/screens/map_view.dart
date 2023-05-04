@@ -48,8 +48,6 @@ class _MapViewState extends ConsumerState<MapView> {
           }
         },
         onTap: (tapPosition, point) {
-          // ScaffoldMessenger.maybeOf(context)
-          //     ?.showSnackBar(SnackBar(content: Text('${point.toJson()}')));
           setState(() => points.add(point));
         },
         onLongPress: (tapPosition, point) {
@@ -68,24 +66,23 @@ class _MapViewState extends ConsumerState<MapView> {
         PolygonLayer(
           polygonCulling: true,
           polygons: [
-            // vehicle.polygon,
-            vehicle.rightSteeringWheelPolygon,
-            vehicle.leftSteeringWheelPolygon,
+            vehicle.polygon,
+            ...vehicle.wheelPolygons,
           ],
         ),
-        OverlayImageLayer(
-          overlayImages: [
-            RotatedOverlayImage(
-              imageProvider: Image.asset(
-                'assets/images/TractorMassey.png',
-              ).image,
-              topLeftCorner: vehicle.points[0],
-              bottomLeftCorner: vehicle.points[3],
-              bottomRightCorner: vehicle.points[2],
-            ),
-          ],
-        ),
-        if (ref.watch(debugAckermannProvider))
+        // OverlayImageLayer(
+        //   overlayImages: [
+        //     RotatedOverlayImage(
+        //       imageProvider: Image.asset(
+        //         'assets/images/TractorMassey.png',
+        //       ).image,
+        //       topLeftCorner: vehicle.points[0],
+        //       bottomLeftCorner: vehicle.points[3],
+        //       bottomRightCorner: vehicle.points[2],
+        //     ),
+        //   ],
+        // ),
+        if (ref.watch(debugAckermannProvider) && vehicle is AxleSteeredVehicle)
           CircleLayer(
             circles: [
               CircleMarker(
@@ -118,7 +115,8 @@ class _MapViewState extends ConsumerState<MapView> {
               strokeWidth: 10,
             ),
             if (vehicle.turningRadiusCenter != null &&
-                ref.watch(debugAckermannProvider)) ...[
+                ref.watch(debugAckermannProvider) &&
+                vehicle is AxleSteeredVehicle) ...[
               Polyline(
                 points: [
                   vehicle.solidAxlePosition,
@@ -142,7 +140,7 @@ class _MapViewState extends ConsumerState<MapView> {
               ),
             ],
           ],
-        )
+        ),
       ],
     );
 
@@ -174,8 +172,9 @@ class _MapViewState extends ConsumerState<MapView> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Distance: ${test()} m'),
-                        // Text('Speed: ${(speed * 3.6).toStringAsFixed(1)} km/h')
+                        Text(
+                            'Distance: ${(Path()..addAll(points)).distance} m'),
+                        Text('${points.firstOrNull}->${points.lastOrNull}'),
                       ],
                     ),
                   ),
@@ -183,13 +182,12 @@ class _MapViewState extends ConsumerState<MapView> {
               ),
             ),
           ),
-        )
+        ),
+        const Align(
+          alignment: Alignment.bottomRight,
+          child: MapContributionWidget(),
+        ),
       ],
     );
-  }
-
-  double test() {
-    final path = Path()..addAll(points);
-    return path.distance;
   }
 }

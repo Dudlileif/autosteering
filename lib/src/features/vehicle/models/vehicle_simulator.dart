@@ -79,7 +79,7 @@ class VehicleSimulator {
         vehicle = vehicle?.copyWith(
           position: message.position ?? vehicle!.position,
           velocity: message.velocity ?? vehicle!.velocity,
-          steeringAngle: message.steeringAngle ?? vehicle!.steeringAngle,
+          steeringAngleInput: message.steeringAngle ?? vehicle!.steeringAngle,
         );
       }
 
@@ -100,76 +100,77 @@ class VehicleSimulator {
     // Reqiure wheel angle above 1 deg when using simulator.
     // This is due to some error at low angle calculation, which could
     // give wrong movement.
-    if (vehicle.steeringAngle.abs() > vehicle.minSteeringAngle) {
-      if (vehicle.velocity.abs() > 0) {
-        // How many degrees of the turning circle the current angular velocity
-        // during the period amounts to. Relative to the current position, is
-        // negative when reversing.
-        final turningCircleAngle = vehicle.angularVelocity! * period;
+    if (vehicle is AxleSteeredVehicle) {
+      if (vehicle.steeringAngle.abs() > vehicle.minSteeringAngle) {
+        if (vehicle.velocity.abs() > 0) {
+          // How many degrees of the turning circle the current angular velocity
+          // during the period amounts to. Relative to the current position, is
+          // negative when reversing.
+          final turningCircleAngle = vehicle.angularVelocity! * period;
 
-        // The angle from the turning circle center to the projected
-        // position.
-        final angle = switch (vehicle.isTurningLeft) {
-          // Turning left
-          true => vehicle.heading + 90 - turningCircleAngle,
-          // Turning right
-          false => vehicle.heading - 90 + turningCircleAngle,
-        };
+          // The angle from the turning circle center to the projected
+          // position.
+          final angle = switch (vehicle.isTurningLeft) {
+            // Turning left
+            true => vehicle.heading + 90 - turningCircleAngle,
+            // Turning right
+            false => vehicle.heading - 90 + turningCircleAngle,
+          };
+          // Projected solid axle position from the turning radius
+          // center.
+          final solidAxlePositon = _distance.offset(
+            vehicle.turningRadiusCenter!,
+            vehicle.currentTurningRadius!,
+            normalizeBearing(angle),
+          );
 
-        // Projected solid axle position from the turning radius
-        // center.
-        final solidAxlePositon = _distance.offset(
-          vehicle.turningRadiusCenter!,
-          vehicle.currentTurningRadius!,
-          normalizeBearing(angle),
-        );
+          // The heading of the vehicle at the projected position.
+          final heading = normalizeBearing(
+            switch (vehicle.isTurningLeft) {
+              true => vehicle.heading - turningCircleAngle,
+              false => vehicle.heading + turningCircleAngle,
+            },
+          );
 
-        // The heading of the vehicle at the projected position.
-        final heading = normalizeBearing(
-          switch (vehicle.isTurningLeft) {
-            true => vehicle.heading - turningCircleAngle,
-            false => vehicle.heading + turningCircleAngle,
-          },
-        );
+          // The vehicle center position, which is offset from the solid
+          // axle position.
+          final vehiclePosition = _distance.offset(
+            solidAxlePositon,
+            vehicle.solidAxleDistance,
+            switch (vehicle is Tractor) {
+              true => heading,
+              false => heading + 180,
+            },
+          );
 
-        // The vehicle center position, which is offset from the solid
-        // axle position.
-        final vehiclePosition = _distance.offset(
-          solidAxlePositon,
-          vehicle.solidAxleDistance,
-          switch (vehicle.type) {
-            VehicleType.conventionalTractor => heading,
-            VehicleType.harvester => heading + 180,
-            VehicleType.articulatedTractor => heading,
-          },
-        );
-
-        return vehicle.copyWith(
-          position: vehiclePosition,
-          heading: heading,
-        );
-      }
-    }
-    final sign = switch (vehicle.velocity.abs()) {
-      0 => 0,
-      _ => switch (vehicle.isReversing) {
-          true => -1,
-          false => 1,
+          return vehicle.copyWith(
+            position: vehiclePosition,
+            heading: heading,
+          );
         }
-    };
-    final heading = vehicle.heading +
-        sign * vehicle.ackermannSteering.ackermannAngleDegrees * period;
+      }
+      final sign = switch (vehicle.velocity.abs()) {
+        0 => 0,
+        _ => switch (vehicle.isReversing) {
+            true => -1,
+            false => 1,
+          }
+      };
+      final heading = vehicle.heading +
+          sign * vehicle.ackermannSteering.ackermannAngleDegrees * period;
 
-    final position = _distance.offset(
-      vehicle.position,
-      vehicle.velocity * period,
-      vehicle.heading,
-    );
+      final position = _distance.offset(
+        vehicle.position,
+        vehicle.velocity * period,
+        vehicle.heading,
+      );
 
-    return vehicle.copyWith(
-      position: position,
-      heading: heading,
-    );
+      return vehicle.copyWith(
+        position: position,
+        heading: heading,
+      );
+    }
+    return vehicle;
   }
 
   static double _calcHeading(
@@ -210,7 +211,7 @@ class VehicleSimulator {
           vehicle = vehicle?.copyWith(
             position: message.position ?? vehicle!.position,
             velocity: message.velocity ?? vehicle!.velocity,
-            steeringAngle: message.steeringAngle ?? vehicle!.steeringAngle,
+            steeringAngleInput: message.steeringAngle ?? vehicle!.steeringAngle,
           );
         }
       },

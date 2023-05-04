@@ -10,8 +10,7 @@ part 'vehicle_providers.g.dart';
 @Riverpod(keepAlive: true)
 class MainVehicle extends _$MainVehicle {
   @override
-  Vehicle build() => Vehicle(
-        type: VehicleType.conventionalTractor,
+  Vehicle build() => Tractor(
         position: ref.read(homePositionProvider),
         antennaHeight: 2.822,
         length: 4.358,
@@ -20,7 +19,7 @@ class MainVehicle extends _$MainVehicle {
         wheelBase: 2.550,
         solidAxleDistance: 1.275,
         minTurningRadius: 4.25,
-        wheelAngleMax: 32,
+        steeringAngleMax: 32,
         simulated: true,
       );
 
@@ -38,7 +37,7 @@ class MainVehicle extends _$MainVehicle {
 
   void setSteeringAngle(double value) {
     if (value != state.steeringAngle) {
-      Future(() => state = state.copyWith(steeringAngle: value));
+      Future(() => state = state.copyWith(steeringAngleInput: value));
     }
   }
 
