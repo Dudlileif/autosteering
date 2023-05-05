@@ -30,7 +30,7 @@ class ScreenVehicleControls extends ConsumerWidget {
                 min: -vehicle.steeringAngleMax,
                 max: vehicle.steeringAngleMax,
                 label:
-                    'Wheel Angle: ${vehicle.steeringAngle.toStringAsFixed(1)}°',
+                    'Steering Angle: ${vehicle.steeringAngle.toStringAsFixed(1)}°',
               ),
             ),
           ),
@@ -64,6 +64,30 @@ class ScreenVehicleControls extends ConsumerWidget {
                       trackWidth: 1.8,
                       minTurningRadius: 4.25,
                       steeringAngleMax: 32,
+                      simulated: true,
+                    ),
+                  ),
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(
+                Icons.replay,
+              ),
+              label: const Text(
+                'Position as\narticulated tractor',
+              ),
+              onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
+                    ArticulatedTractor(
+                      position: ref.read(homePositionProvider),
+                      antennaHeight: 2.822,
+                      heading: 241.5,
+                      length: 4.358,
+                      width: 2.360,
+                      pivotToAntennaDistance: 1,
+                      pivotToFrontAxle: 2,
+                      pivotToRearAxle: 2,
+                      trackWidth: 2.75,
+                      minTurningRadius: 6,
+                      steeringAngleMax: 20,
                       simulated: true,
                     ),
                   ),

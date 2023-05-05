@@ -1,5 +1,4 @@
-import 'package:agopengps_flutter/src/features/vehicle/models/vehicle_types/axle_steered_vehicle.dart';
-import 'package:agopengps_flutter/src/features/vehicle/models/vehicle_types/vehicle.dart';
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
 /// A harvester with rear wheel steering and a solid front axle.

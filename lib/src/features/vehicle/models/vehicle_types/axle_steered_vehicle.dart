@@ -1,5 +1,6 @@
-import 'package:agopengps_flutter/src/features/vehicle/models/ackermann_steering.dart';
-import 'package:agopengps_flutter/src/features/vehicle/models/vehicle_types/vehicle.dart';
+import 'dart:math';
+
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -320,6 +321,72 @@ abstract class AxleSteeredVehicle extends Vehicle {
       wheelBase,
       solidAxleDistance,
     ]);
+
+  /// The distance from the center of the vehicle the corners.
+  double get centerToCornerDistance =>
+      sqrt(pow(length / 2, 2) + pow(width / 2, 2));
+
+  /// The angle to north-west point of the max extent/bounds of the vehicle
+  /// when it points to the north (0 degrees).
+  double get northWestAngle => normalizeBearing(
+        asin((width / 2) / centerToCornerDistance) * 360 / (2 * pi),
+      );
+
+  /// The angle to north-east point of the max extent/bounds of the vehicle
+  /// when it points to the north (0 degrees).
+  double get northEastAngle => normalizeBearing(
+        360 - northWestAngle,
+      );
+
+  /// The angles for each corner of the max extent/bounds of the vehicle
+  /// with regards to the [heading].
+  double get frontLeftAngle => normalizeBearing(heading - northWestAngle);
+  double get frontRightAngle => normalizeBearing(heading - northEastAngle);
+  double get rearRightAngle =>
+      normalizeBearing(heading - (northWestAngle + 180));
+  double get rearLeftAngle =>
+      normalizeBearing(heading - (northEastAngle + 180));
+
+  /// The max extent/bounds points of the vehicle. The [heading] is followed.
+  List<LatLng> get points {
+    final frontLeft = Vehicle.distance.offset(
+      position,
+      centerToCornerDistance,
+      frontLeftAngle,
+    );
+    final frontRight = Vehicle.distance.offset(
+      position,
+      centerToCornerDistance,
+      frontRightAngle,
+    );
+    final rearRight = Vehicle.distance.offset(
+      position,
+      centerToCornerDistance,
+      rearRightAngle,
+    );
+    final rearLeft = Vehicle.distance.offset(
+      position,
+      centerToCornerDistance,
+      rearLeftAngle,
+    );
+
+    return [
+      frontLeft,
+      frontRight,
+      rearRight,
+      rearLeft,
+    ];
+  }
+
+  /// Polygons for visualizing the extent of the vehicle.
+  @override
+  List<Polygon> get polygons => [
+        Polygon(
+          points: points,
+          isFilled: true,
+          color: Colors.yellow.withOpacity(0.5),
+        )
+      ];
 
   /// Returns a new [AxleSteeredVehicle] based on the this one, but with
   /// parameters/variables altered.

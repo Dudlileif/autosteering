@@ -66,8 +66,8 @@ class _MapViewState extends ConsumerState<MapView> {
         PolygonLayer(
           polygonCulling: true,
           polygons: [
-            vehicle.polygon,
             ...vehicle.wheelPolygons,
+            ...vehicle.polygons,
           ],
         ),
         // OverlayImageLayer(
@@ -98,6 +98,31 @@ class _MapViewState extends ConsumerState<MapView> {
                 point: vehicle.steeringAxlePosition,
                 radius: 10,
                 color: Colors.blue,
+              )
+            ],
+          ),
+        if (ref.watch(debugAtriculatedProvider) &&
+            vehicle is ArticulatedTractor)
+          CircleLayer(
+            circles: [
+              CircleMarker(
+                point: vehicle.position,
+                radius: 10,
+              ),
+              CircleMarker(
+                point: vehicle.rearAxlePosition,
+                radius: 10,
+                color: Colors.red,
+              ),
+              CircleMarker(
+                point: vehicle.frontAxlePosition,
+                radius: 10,
+                color: Colors.blue,
+              ),
+              CircleMarker(
+                point: vehicle.pivotPosition,
+                radius: 10,
+                color: Colors.black,
               )
             ],
           ),
@@ -137,6 +162,38 @@ class _MapViewState extends ConsumerState<MapView> {
                   vehicle.turningRadiusCenter!,
                 ],
                 color: Colors.green,
+              ),
+            ],
+            if (vehicle.turningRadiusCenter != null &&
+                ref.watch(debugAtriculatedProvider) &&
+                vehicle is ArticulatedTractor) ...[
+              Polyline(
+                points: [
+                  vehicle.rearAxlePosition,
+                  vehicle.turningRadiusCenter!,
+                ],
+                color: Colors.red,
+              ),
+              Polyline(
+                points: [
+                  vehicle.frontAxlePosition,
+                  vehicle.turningRadiusCenter!,
+                ],
+                color: Colors.blue,
+              ),
+              Polyline(
+                points: [
+                  vehicle.position,
+                  vehicle.turningRadiusCenter!,
+                ],
+                color: Colors.green,
+              ),
+              Polyline(
+                points: [
+                  vehicle.pivotPosition,
+                  vehicle.turningRadiusCenter!,
+                ],
+                color: Colors.black,
               ),
             ],
           ],

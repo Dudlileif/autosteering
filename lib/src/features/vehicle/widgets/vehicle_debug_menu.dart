@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/vehicle/models/vehicle_types/articulated_tractor.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,22 @@ class VehicleDebugMenu extends ConsumerWidget {
                 : null,
             secondary: Text(
               'Ackermann steering',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(fontWeight: FontWeight.w500),
+            ),
+          ),
+        if (ref.watch(mainVehicleProvider) is ArticulatedTractor)
+          CheckboxListTile(
+            value: ref.watch(debugAtriculatedProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugAtriculatedProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: Text(
+              'Articulated steering',
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge

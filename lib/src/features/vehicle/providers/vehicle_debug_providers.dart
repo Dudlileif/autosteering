@@ -13,6 +13,16 @@ class DebugAckermann extends _$DebugAckermann {
 }
 
 @Riverpod(keepAlive: true)
+class DebugAtriculated extends _$DebugAtriculated {
+  @override
+  bool build() => false;
+
+  void update({required bool value}) => Future(() => state = value);
+
+  void toggle() => Future(() => state = !state);
+}
+
+@Riverpod(keepAlive: true)
 class DebugTrajectory extends _$DebugTrajectory {
   @override
   bool build() => false;

@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -76,70 +73,6 @@ abstract class Vehicle extends Equatable {
         false => steeringAngleInput,
       };
 
-  /// The distance from the center of the vehicle the corners.
-  double get centerToCornerDistance =>
-      sqrt(pow(length / 2, 2) + pow(width / 2, 2));
-
-  /// The angle to north-west point of the max extent/bounds of the vehicle
-  /// when it points to the north (0 degrees).
-  double get northWestAngle => normalizeBearing(
-        asin((width / 2) / centerToCornerDistance) * 360 / (2 * pi),
-      );
-
-  /// The angle to north-east point of the max extent/bounds of the vehicle
-  /// when it points to the north (0 degrees).
-  double get northEastAngle => normalizeBearing(
-        360 - northWestAngle,
-      );
-
-  /// The angles for each corner of the max extent/bounds of the vehicle
-  /// with regards to the [heading].
-  double get frontLeftAngle => normalizeBearing(heading - northWestAngle);
-  double get frontRightAngle => normalizeBearing(heading - northEastAngle);
-  double get rearRightAngle =>
-      normalizeBearing(heading - (northWestAngle + 180));
-  double get rearLeftAngle =>
-      normalizeBearing(heading - (northEastAngle + 180));
-
-  /// The max extent/bounds points of the vehicle. The [heading] is followed.
-  List<LatLng> get points {
-    final frontLeft = distance.offset(
-      position,
-      centerToCornerDistance,
-      frontLeftAngle,
-    );
-    final frontRight = distance.offset(
-      position,
-      centerToCornerDistance,
-      frontRightAngle,
-    );
-    final rearRight = distance.offset(
-      position,
-      centerToCornerDistance,
-      rearRightAngle,
-    );
-    final rearLeft = distance.offset(
-      position,
-      centerToCornerDistance,
-      rearLeftAngle,
-    );
-
-    return [
-      frontLeft,
-      frontRight,
-      rearRight,
-      rearLeft,
-    ];
-  }
-
-  /// A polygon for visualizing the extent of the vehicle. The [heading] is
-  /// followed.
-  Polygon get polygon => Polygon(
-        points: points,
-        isFilled: true,
-        color: Colors.yellow.withOpacity(0.5),
-      );
-
   /// Polygons for drawing the wheels of the vehicle.
   List<Polygon> get wheelPolygons;
 
@@ -172,6 +105,9 @@ abstract class Vehicle extends Equatable {
   /// Whether the vehicle is turning to the left,
   /// otherwise assumed turning to the right.
   bool get isTurningLeft => steeringAngle < 0;
+
+  /// Polygons for visualizing the extent of the vehicle.
+  List<Polygon> get polygons;
 
   /// Props used for checking for equality.
   @override

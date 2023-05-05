@@ -169,6 +169,84 @@ class VehicleSimulator {
         position: position,
         heading: heading,
       );
+    } else if (vehicle is ArticulatedTractor) {
+      if (vehicle.steeringAngle.abs() > vehicle.minSteeringAngle) {
+        if (vehicle.velocity.abs() > 0) {
+          // How many degrees of the turning circle the current angular velocity
+          // during the period amounts to. Relative to the current position, is
+          // negative when reversing.
+          final turningCircleAngle = vehicle.angularVelocity! * period;
+
+          // The current angle from the turning radius center to the
+          // front axle center.
+          final turningCenterToFrontAxleAngle = normalizeBearing(
+            _distance.bearing(
+              vehicle.turningRadiusCenter!,
+              vehicle.frontAxlePosition,
+            ),
+          );
+
+          // The angle from the turning circle center to the projected front
+          // axle position.
+          final projectedFrontAxleAngle = normalizeBearing(
+            switch (vehicle.isTurningLeft) {
+              // Turning left
+              true => turningCenterToFrontAxleAngle - turningCircleAngle,
+              // Turning right
+              false => turningCenterToFrontAxleAngle + turningCircleAngle,
+            },
+          );
+
+          // Projected vehicle front axle position from the turning radius
+          // center.
+          final frontAxlePosition = _distance.offset(
+            vehicle.turningRadiusCenter!,
+            vehicle.currentTurningRadius!,
+            normalizeBearing(projectedFrontAxleAngle),
+          );
+
+          // The heading of the front body of the vehicle at the projected
+          // position.
+          final frontBodyHeading = normalizeBearing(
+            switch (vehicle.isTurningLeft) {
+              true => vehicle.heading - turningCircleAngle,
+              false => vehicle.heading + turningCircleAngle,
+            },
+          );
+
+          // The vehicle antenna position, projected from the front axle
+          // position.
+          final vehiclePosition = _distance.offset(
+            frontAxlePosition,
+            vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
+            normalizeBearing(frontBodyHeading + 180 + vehicle.steeringAngle),
+          );
+
+          return vehicle.copyWith(
+            position: vehiclePosition,
+            heading: frontBodyHeading,
+          );
+        }
+      }
+      final sign = switch (vehicle.velocity.abs()) {
+        0 => 0,
+        _ => switch (vehicle.isReversing) {
+            true => -1,
+            false => 1,
+          }
+      };
+      final heading = vehicle.heading + sign * vehicle.steeringAngle * period;
+
+      final position = _distance.offset(
+        vehicle.position,
+        vehicle.velocity * period,
+        vehicle.heading,
+      );
+
+      return vehicle.copyWith(
+        position: position,
+        heading: heading,
+      );
     }
     return vehicle;
   }
