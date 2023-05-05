@@ -72,10 +72,10 @@ class ArticulatedTractor extends Vehicle {
   /// We don't divide by two since both bodies of the vehicle is rotating
   /// around the pivot.
   @override
-  double? get currentTurningRadius => steeringAngle.abs() <= steeringAngleMax &&
-          steeringAngle.abs() > minSteeringAngle
-      ? pivotToFrontAxle / cos(degToRadian(90 - steeringAngle.abs()))
-      : null;
+  double? get currentTurningRadius =>
+      steeringAngle.abs() <= steeringAngleMax && steeringAngle.abs() > 0
+          ? pivotToFrontAxle / cos(degToRadian(90 - steeringAngle.abs()))
+          : null;
 
   /// The center point of which the [currentTurningRadius] revolves around.
   @override

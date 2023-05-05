@@ -101,7 +101,7 @@ class VehicleSimulator {
     // This is due to some error at low angle calculation, which could
     // give wrong movement.
     if (vehicle is AxleSteeredVehicle) {
-      if (vehicle.steeringAngle.abs() > vehicle.minSteeringAngle) {
+      if (vehicle.steeringAngle.abs() > 0) {
         if (vehicle.velocity.abs() > 0) {
           // How many degrees of the turning circle the current angular velocity
           // during the period amounts to. Relative to the current position, is
@@ -170,7 +170,7 @@ class VehicleSimulator {
         heading: heading,
       );
     } else if (vehicle is ArticulatedTractor) {
-      if (vehicle.steeringAngle.abs() > vehicle.minSteeringAngle) {
+      if (vehicle.steeringAngle.abs() > 0) {
         if (vehicle.velocity.abs() > 0) {
           // How many degrees of the turning circle the current angular velocity
           // during the period amounts to. Relative to the current position, is

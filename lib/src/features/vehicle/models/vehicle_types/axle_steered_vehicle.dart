@@ -64,10 +64,10 @@ abstract class AxleSteeredVehicle extends Vehicle {
 
   /// The turning radius corresponding to the current [steeringAngle].
   @override
-  double? get currentTurningRadius => steeringAngle.abs() <= steeringAngleMax &&
-          steeringAngle.abs() > minSteeringAngle
-      ? ackermannSteering.turningRadius
-      : null;
+  double? get currentTurningRadius =>
+      steeringAngle.abs() <= steeringAngleMax && steeringAngle.abs() > 0
+          ? ackermannSteering.turningRadius
+          : null;
 
   /// The center point of which the [currentTurningRadius] revolves around.
   @override

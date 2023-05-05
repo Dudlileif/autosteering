@@ -67,19 +67,24 @@ abstract class Vehicle extends Equatable {
   /// Geo-calculator used to calculate offsets.
   static const distance = Distance(roundResult: false);
 
-  /// The [steeringAngleInput] accounted for [invertSteeringInput].
-  double get steeringAngle => switch (invertSteeringInput) {
-        true => -steeringAngleInput,
-        false => steeringAngleInput,
-      };
-
-  /// Polygons for drawing the wheels of the vehicle.
-  List<Polygon> get wheelPolygons;
-
   // Reqiure wheel angle above 1 deg when using simulator, 0.01 deg otherwise.
   // This is due to some error at low angle calculation, which could
   // give wrong movement.
   double get minSteeringAngle => simulated ? 1 : 0.01;
+
+  /// The [steeringAngleInput] accounted for [invertSteeringInput] and
+  /// [minSteeringAngle].
+  double get steeringAngle =>
+      switch (steeringAngleInput.abs() > minSteeringAngle) {
+        true => switch (invertSteeringInput) {
+            true => -steeringAngleInput,
+            false => steeringAngleInput,
+          },
+        false => 0,
+      };
+
+  /// Polygons for drawing the wheels of the vehicle.
+  List<Polygon> get wheelPolygons;
 
   /// The turning radius corresponding to the current [steeringAngle].
   double? get currentTurningRadius;
