@@ -32,7 +32,15 @@ class VehicleSimulator {
           final now = DateTime.now();
 
           final period = now.difference(prevUpdate).inMicroseconds / 1e6;
-          if (period > 0) {
+
+          // Increase period when the vehicle is a simulated
+          // articulated tractor, due to calculation error at low steering
+          // angles.
+          if (period < _targetPeriodMs * 2 / 1000 &&
+              vehicle is ArticulatedTractor &&
+              vehicle!.simulated) {
+            prevVehicle = vehicle;
+          } else if (period > 0) {
             prevUpdate = now;
 
             // Move the vehicle
@@ -40,8 +48,6 @@ class VehicleSimulator {
 
             // If the vehicle has moved (changed)
             if (vehicle != prevVehicle) {
-              sendPort.send(vehicle);
-
               // Velocity calculation
               final newCalcVel =
                   _distance.distance(vehicle!.position, prevVehicle!.position) /
@@ -50,17 +56,26 @@ class VehicleSimulator {
               if (newCalcVel.toStringAsFixed(1) != calcVel.toStringAsFixed(1)) {
                 calcVel = newCalcVel;
               }
+
               // Heading calculation
               final newCalcHeading = _calcHeading(
                 vehicle!,
-                calcHeading,
                 prevVehicle!,
+                calcHeading,
               );
 
               if (newCalcHeading.toStringAsFixed(1) !=
                   calcHeading.toStringAsFixed(1)) {
                 calcHeading = newCalcHeading;
               }
+
+              sendPort.send(
+                (
+                  vehicle: vehicle,
+                  velocity: calcVel,
+                  heading: calcHeading,
+                ),
+              );
 
               prevVehicle = vehicle;
             }
@@ -97,9 +112,6 @@ class VehicleSimulator {
     Vehicle vehicle,
     double period,
   ) {
-    // Reqiure wheel angle above 1 deg when using simulator.
-    // This is due to some error at low angle calculation, which could
-    // give wrong movement.
     if (vehicle is AxleSteeredVehicle) {
       if (vehicle.steeringAngle.abs() > 0) {
         if (vehicle.velocity.abs() > 0) {
@@ -253,8 +265,8 @@ class VehicleSimulator {
 
   static double _calcHeading(
     Vehicle vehicle,
-    double calcHeading,
     Vehicle prevVehicle,
+    double calcHeading,
   ) {
     final newCalcHeading = vehicle.velocity.abs() == 0
         ? calcHeading
@@ -274,7 +286,14 @@ class VehicleSimulator {
   }
 
   /// Used in web version since multithreading isn't possible.
-  static Stream<Vehicle?> webWorker(Stream<dynamic> vehicleEvents) async* {
+  static Stream<
+      ({
+        Vehicle? vehicle,
+        double velocity,
+        double heading,
+      })> webWorker(
+    Stream<dynamic> vehicleEvents,
+  ) async* {
     log('Sim vehicle worker spawned');
 
     Vehicle? vehicle;
@@ -327,8 +346,8 @@ class VehicleSimulator {
               // Heading calculation
               final newCalcHeading = _calcHeading(
                 vehicle!,
-                calcHeading,
                 prevVehicle!,
+                calcHeading,
               );
 
               if (newCalcHeading.toStringAsFixed(1) !=
@@ -338,14 +357,22 @@ class VehicleSimulator {
 
               prevVehicle = vehicle;
 
-              return vehicle;
+              return (
+                vehicle: vehicle,
+                velocity: calcVel,
+                heading: calcHeading,
+              );
             }
           }
         } else {
           prevVehicle = vehicle;
         }
       }
-      return vehicle;
+      return (
+        vehicle: vehicle,
+        velocity: calcVel,
+        heading: calcHeading,
+      );
     });
   }
 }

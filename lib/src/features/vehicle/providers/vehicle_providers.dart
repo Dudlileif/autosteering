@@ -90,3 +90,39 @@ Future<void> vehicleDriving(VehicleDrivingRef ref) async {
     }
   }
 }
+
+@riverpod
+class VehicleTravelledDistance extends _$VehicleTravelledDistance {
+  @override
+  double build() {
+    ref.listen(mainVehicleProvider, (previous, next) {
+      if (previous != null) {
+        if (previous.position != next.position) {
+          update(
+            const Distance(roundResult: false)
+                .distance(previous.position, next.position),
+          );
+        }
+      }
+    });
+    return 0;
+  }
+
+  void update(double distance) => Future(() => state += distance);
+}
+
+@riverpod
+class VehicleVelocity extends _$VehicleVelocity {
+  @override
+  double build() => 0;
+
+  void update(double value) => Future(() => state = value);
+}
+
+@riverpod
+class VehicleHeading extends _$VehicleHeading {
+  @override
+  double build() => 0;
+
+  void update(double value) => Future(() => state = value);
+}

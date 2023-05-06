@@ -38,10 +38,13 @@ class _SimVehicleWebInput extends _$SimVehicleWebInput {
 }
 
 @riverpod
-Stream<Vehicle?> simVehicleWebStream(SimVehicleWebStreamRef ref) {
-  return VehicleSimulator.webWorker(
+Stream<Vehicle?> simVehicleWebStream(
+  SimVehicleWebStreamRef ref,
+) {
+  final stream = VehicleSimulator.webWorker(
     ref.watch(_simVehicleWebInputProvider.notifier).stream(),
   );
+  return stream.map((event) => event.vehicle);
 }
 
 @riverpod
@@ -67,8 +70,10 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
 
   while (true) {
     final message = await events.next;
-    if (message is Vehicle) {
-      yield message;
+    if (message is ({Vehicle vehicle, double velocity, double heading})) {
+      ref.read(vehicleVelocityProvider.notifier).update(message.velocity);
+      ref.read(vehicleHeadingProvider.notifier).update(message.heading);
+      yield message.vehicle;
     }
   }
 }

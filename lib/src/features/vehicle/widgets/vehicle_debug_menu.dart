@@ -51,6 +51,35 @@ class VehicleDebugMenu extends ConsumerWidget {
                 .bodyLarge
                 ?.copyWith(fontWeight: FontWeight.w500),
           ),
+        ),
+        CheckboxListTile(
+          value: ref.watch(debugTravelledPathProvider),
+          onChanged: (value) => value != null
+              ? ref
+                  .read(debugTravelledPathProvider.notifier)
+                  .update(value: value)
+              : null,
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Travelled path',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.w500),
+              ),
+              Slider.adaptive(
+                value: ref.watch(debugTravelledPathSizeProvider).toDouble(),
+                onChanged: (value) => ref
+                    .read(debugTravelledPathSizeProvider.notifier)
+                    .update(value.toInt()),
+                min: 1,
+                max: 1000,
+                divisions: 10,
+              ),
+            ],
+          ),
         )
       ],
       child: Text(

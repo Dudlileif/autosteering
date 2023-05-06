@@ -11,12 +11,18 @@ class DebugMenu extends ConsumerWidget {
       menuChildren: const [
         VehicleDebugMenu(),
       ],
-      child: Text(
-        'Debug',
-        style: Theme.of(context)
-            .textTheme
-            .bodyLarge
-            ?.copyWith(fontWeight: FontWeight.w500),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.bug_report),
+          Text(
+            'Debug',
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(fontWeight: FontWeight.w500),
+          ),
+        ],
       ),
     );
   }

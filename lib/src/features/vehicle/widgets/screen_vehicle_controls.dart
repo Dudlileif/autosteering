@@ -10,132 +10,159 @@ class ScreenVehicleControls extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vehicle = ref.watch(mainVehicleProvider);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Card(
-          child: SizedBox(
-            height: 50,
-            width: 200,
-            child: SliderTheme(
-              data: Theme.of(context).sliderTheme.copyWith(
-                    showValueIndicator: ShowValueIndicator.always,
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: FloatingActionButton(
+            onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
+                  const VehicleInput(
+                    velocity: 0,
+                    steeringAngle: 0,
                   ),
-              child: Slider(
-                value: vehicle.steeringAngle,
-                onChanged: (value) => ref
-                    .read(simVehicleInputProvider.notifier)
-                    .send(VehicleInput(steeringAngle: value)),
-                min: -vehicle.steeringAngleMax,
-                max: vehicle.steeringAngleMax,
-                label:
-                    'Steering Angle: ${vehicle.steeringAngle.toStringAsFixed(1)}°',
-              ),
+                ),
+            backgroundColor: MaterialStatePropertyAll(
+              Theme.of(context).colorScheme.error,
+            ).value,
+            foregroundColor: MaterialStatePropertyAll(
+              Theme.of(context).primaryTextTheme.bodyLarge?.color,
+            ).value,
+            child: const Stack(
+              children: [
+                Align(
+                  heightFactor: 1.5,
+                  child: Icon(
+                    Icons.stop_circle,
+                    size: 32,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    'STOP',
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-        Column(
+        Row(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            if (!kIsWeb)
-              ElevatedButton.icon(
-                onPressed: () =>
-                    ref.invalidate(simVehicleIsolateStreamProvider),
-                icon: const Icon(Icons.replay),
-                label: const Text('Sim'),
-              ),
-            ElevatedButton.icon(
-              icon: const Icon(
-                Icons.replay,
-              ),
-              label: const Text(
-                'Position as tractor',
-              ),
-              onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
-                    Tractor(
-                      position: ref.read(homePositionProvider),
-                      antennaHeight: 2.822,
-                      heading: 241.5,
-                      length: 4.358,
-                      width: 2.360,
-                      wheelBase: 2.550,
-                      solidAxleDistance: 1.275,
-                      trackWidth: 1.8,
-                      minTurningRadius: 4.25,
-                      steeringAngleMax: 32,
-                      simulated: true,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!kIsWeb)
+                  ElevatedButton.icon(
+                    onPressed: () =>
+                        ref.invalidate(simVehicleIsolateStreamProvider),
+                    icon: const Icon(Icons.replay),
+                    label: const Text('Sim'),
+                  ),
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.replay,
+                  ),
+                  label: const Text(
+                    'Position as tractor',
+                  ),
+                  onPressed: () {
+                    ref.read(simVehicleInputProvider.notifier).send(
+                          Tractor(
+                            position: ref.read(homePositionProvider),
+                            antennaHeight: 2.822,
+                            heading: 241.5,
+                            length: 4.358,
+                            width: 2.360,
+                            wheelBase: 2.550,
+                            solidAxleDistance: 1.275,
+                            trackWidth: 1.8,
+                            minTurningRadius: 4.25,
+                            steeringAngleMax: 32,
+                            simulated: true,
+                          ),
+                        );
+                    ref.invalidate(debugTravelledPathListProvider);
+                  },
+                ),
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.replay,
+                  ),
+                  label: const Text(
+                    'Position as\narticulated tractor',
+                  ),
+                  onPressed: () {
+                    ref.read(simVehicleInputProvider.notifier).send(
+                          ArticulatedTractor(
+                            position: ref.read(homePositionProvider),
+                            antennaHeight: 2.822,
+                            heading: 241.5,
+                            length: 4.358,
+                            width: 2.360,
+                            pivotToAntennaDistance: 1,
+                            pivotToFrontAxle: 2,
+                            pivotToRearAxle: 2,
+                            trackWidth: 2.75,
+                            minTurningRadius: 6,
+                            steeringAngleMax: 20,
+                            simulated: true,
+                          ),
+                        );
+                    ref.invalidate(debugTravelledPathListProvider);
+                  },
+                ),
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.replay,
+                  ),
+                  label: const Text(
+                    'Position as harvester',
+                  ),
+                  onPressed: () {
+                    ref.read(simVehicleInputProvider.notifier).send(
+                          Harvester(
+                            position: ref.read(homePositionProvider),
+                            antennaHeight: 2.822,
+                            heading: 241.5,
+                            length: 4.358,
+                            width: 2.360,
+                            wheelBase: 3.550,
+                            solidAxleDistance: 1.275,
+                            trackWidth: 1.8,
+                            minTurningRadius: 4.25,
+                            steeringAngleMax: 45,
+                            simulated: true,
+                          ),
+                        );
+                    ref.invalidate(debugTravelledPathListProvider);
+                  },
+                ),
+                Card(
+                  child: SizedBox(
+                    height: 50,
+                    width: 200,
+                    child: SliderTheme(
+                      data: Theme.of(context).sliderTheme.copyWith(
+                            showValueIndicator: ShowValueIndicator.always,
+                          ),
+                      child: Slider(
+                        value: vehicle.steeringAngle,
+                        onChanged: (value) => ref
+                            .read(simVehicleInputProvider.notifier)
+                            .send(VehicleInput(steeringAngle: value)),
+                        min: -vehicle.steeringAngleMax,
+                        max: vehicle.steeringAngleMax,
+                        label:
+                            'Steering Angle: ${vehicle.steeringAngle.toStringAsFixed(1)}°',
+                      ),
                     ),
                   ),
-            ),
-            ElevatedButton.icon(
-              icon: const Icon(
-                Icons.replay,
-              ),
-              label: const Text(
-                'Position as\narticulated tractor',
-              ),
-              onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
-                    ArticulatedTractor(
-                      position: ref.read(homePositionProvider),
-                      antennaHeight: 2.822,
-                      heading: 241.5,
-                      length: 4.358,
-                      width: 2.360,
-                      pivotToAntennaDistance: 1,
-                      pivotToFrontAxle: 2,
-                      pivotToRearAxle: 2,
-                      trackWidth: 2.75,
-                      minTurningRadius: 6,
-                      steeringAngleMax: 20,
-                      simulated: true,
-                    ),
-                  ),
-            ),
-            ElevatedButton.icon(
-              icon: const Icon(
-                Icons.replay,
-              ),
-              label: const Text(
-                'Position as harvester',
-              ),
-              onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
-                    Harvester(
-                      position: ref.read(homePositionProvider),
-                      antennaHeight: 2.822,
-                      heading: 241.5,
-                      length: 4.358,
-                      width: 2.360,
-                      wheelBase: 3.550,
-                      solidAxleDistance: 1.275,
-                      trackWidth: 1.8,
-                      minTurningRadius: 4.25,
-                      steeringAngleMax: 45,
-                      simulated: true,
-                    ),
-                  ),
-            ),
-            ElevatedButton.icon(
-              icon: const Icon(
-                Icons.stop_circle,
-              ),
-              label: const Text(
-                'STOP',
-              ),
-              onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
-                    const VehicleInput(
-                      velocity: 0,
-                      steeringAngle: 0,
-                    ),
-                  ),
-              style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                    backgroundColor: MaterialStatePropertyAll(
-                      Theme.of(context).colorScheme.error,
-                    ),
-                    foregroundColor: MaterialStatePropertyAll(
-                      Theme.of(context).primaryTextTheme.bodyLarge?.color,
-                    ),
-                  ),
+                ),
+              ],
             ),
             Card(
               child: Column(
@@ -170,7 +197,7 @@ class ScreenVehicleControls extends ConsumerWidget {
               ),
             ),
           ],
-        )
+        ),
       ],
     );
   }

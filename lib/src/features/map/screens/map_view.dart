@@ -1,24 +1,14 @@
-// import 'package:agopengps_flutter/src/features/gamepad/gamepad.dart';
-
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong.dart';
 
-class MapView extends ConsumerStatefulWidget {
+class MapView extends ConsumerWidget {
   const MapView({super.key});
 
   @override
-  ConsumerState<MapView> createState() => _MapViewState();
-}
-
-class _MapViewState extends ConsumerState<MapView> {
-  final points = <LatLng>[];
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final mapController = ref.watch(mainMapControllerProvider);
     final vehicle = ref.watch(mainVehicleProvider);
 
@@ -47,9 +37,6 @@ class _MapViewState extends ConsumerState<MapView> {
                 .move(event.center, event.targetZoom);
           }
         },
-        onTap: (tapPosition, point) {
-          setState(() => points.add(point));
-        },
         onLongPress: (tapPosition, point) {
           ref.read(homePositionProvider.notifier).update(point);
           ref
@@ -61,8 +48,10 @@ class _MapViewState extends ConsumerState<MapView> {
       ),
       children: [
         if (ref.watch(showOSMLayerProvider)) const OSMLayer(),
-        const CountryLayers(),
-        const SentinelLayers(),
+        if (ref.watch(selectedCountryLayersProvider).isNotEmpty)
+          const CountryLayers(),
+        if (ref.watch(selectedSentinelLayersProvider).isNotEmpty)
+          const SentinelLayers(),
         PolygonLayer(
           polygonCulling: true,
           polygons: [
@@ -70,18 +59,6 @@ class _MapViewState extends ConsumerState<MapView> {
             ...vehicle.polygons,
           ],
         ),
-        // OverlayImageLayer(
-        //   overlayImages: [
-        //     RotatedOverlayImage(
-        //       imageProvider: Image.asset(
-        //         'assets/images/TractorMassey.png',
-        //       ).image,
-        //       topLeftCorner: vehicle.points[0],
-        //       bottomLeftCorner: vehicle.points[3],
-        //       bottomRightCorner: vehicle.points[2],
-        //     ),
-        //   ],
-        // ),
         if (ref.watch(debugAckermannProvider) && vehicle is AxleSteeredVehicle)
           CircleLayer(
             circles: [
@@ -129,16 +106,22 @@ class _MapViewState extends ConsumerState<MapView> {
         PolylineLayer(
           polylineCulling: true,
           polylines: [
+            if (ref.watch(debugTravelledPathProvider))
+              Polyline(
+                points: ref.watch(debugTravelledPathListProvider),
+                strokeWidth: 3,
+                strokeCap: StrokeCap.butt,
+                gradientColors: [
+                  Colors.red.withOpacity(0.4),
+                  Colors.green.withOpacity(0.4)
+                ],
+              ),
             if (ref.watch(debugTrajectoryProvider))
               Polyline(
                 points: vehicle.trajectory.coordinates,
                 strokeWidth: 5,
                 color: Colors.red,
               ),
-            Polyline(
-              points: points,
-              strokeWidth: 10,
-            ),
             if (vehicle.turningRadiusCenter != null &&
                 ref.watch(debugAckermannProvider) &&
                 vehicle is AxleSteeredVehicle) ...[
@@ -217,23 +200,37 @@ class _MapViewState extends ConsumerState<MapView> {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Card(
-              child: Row(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FloatingActionButton(
-                    onPressed: () => setState(points.clear),
-                    child: const Icon(Icons.clear),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () => ref
+                          ..invalidate(vehicleTravelledDistanceProvider)
+                          ..invalidate(debugTravelledPathListProvider),
+                        icon: const Icon(Icons.clear),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          'Travelled distance: ${ref.watch(vehicleTravelledDistanceProvider).toStringAsFixed(1)} m',
+                        ),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Distance: ${(Path()..addAll(points)).distance} m',
-                        ),
-                        Text('${points.firstOrNull}->${points.lastOrNull}'),
-                      ],
+                    child: Text(
+                      'Speed: ${ref.watch(vehicleVelocityProvider).toStringAsFixed(1)} m/s',
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      'Heading: ${ref.watch(vehicleHeadingProvider).toStringAsFixed(1)} deg',
                     ),
                   ),
                 ],
