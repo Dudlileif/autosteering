@@ -122,3 +122,20 @@ class ShowOSMLayer extends _$ShowOSMLayer {
 
   void update({required bool value}) => Future(() => state = value);
 }
+
+@Riverpod(keepAlive: true)
+class AlwaysPointNorth extends _$AlwaysPointNorth {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (next) {
+        ref.read(mainMapControllerProvider).rotate(0);
+      }
+    });
+    return false;
+  }
+
+  void toggle() => Future(() => state = !state);
+
+  void update({required bool value}) => Future(() => state = value);
+}

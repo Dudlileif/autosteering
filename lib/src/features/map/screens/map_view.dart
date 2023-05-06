@@ -36,6 +36,12 @@ class MapView extends ConsumerWidget {
                 .read(mainMapControllerProvider)
                 .move(event.center, event.targetZoom);
           }
+          // Force map to not allow rotation when it should always point north.
+          if (ref.watch(alwaysPointNorthProvider) && event is MapEventRotate) {
+            if (event.targetRotation != 0) {
+              ref.read(mainMapControllerProvider).rotate(0);
+            }
+          }
         },
         onLongPress: (tapPosition, point) {
           ref.read(homePositionProvider.notifier).update(point);
@@ -223,8 +229,17 @@ class MapView extends ConsumerWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8),
-                    child: Text(
-                      'Speed: ${ref.watch(vehicleVelocityProvider).toStringAsFixed(1)} m/s',
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: Icon(Icons.speed),
+                        ),
+                        Text(
+                          '${ref.watch(vehicleVelocityProvider).toStringAsFixed(1)} m/s',
+                        ),
+                      ],
                     ),
                   ),
                   Padding(

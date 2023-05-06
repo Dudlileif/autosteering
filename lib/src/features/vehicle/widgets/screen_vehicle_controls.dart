@@ -23,15 +23,12 @@ class ScreenVehicleControls extends ConsumerWidget {
                     steeringAngle: 0,
                   ),
                 ),
-            backgroundColor: MaterialStatePropertyAll(
-              Theme.of(context).colorScheme.error,
-            ).value,
-            foregroundColor: MaterialStatePropertyAll(
-              Theme.of(context).primaryTextTheme.bodyLarge?.color,
-            ).value,
-            child: const Stack(
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+            tooltip: 'Stop the vehicle',
+            child: Stack(
               children: [
-                Align(
+                const Align(
                   heightFactor: 1.5,
                   child: Icon(
                     Icons.stop_circle,
@@ -42,6 +39,10 @@ class ScreenVehicleControls extends ConsumerWidget {
                   alignment: Alignment.bottomCenter,
                   child: Text(
                     'STOP',
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(color: Colors.white),
                   ),
                 ),
               ],

@@ -29,4 +29,7 @@
 -   Sim integration - gamepad/wheel
 
 -   Custom vehicle painter, moving tires etc...
+
     -   Custom equipment painter
+
+-   Weather forecast
