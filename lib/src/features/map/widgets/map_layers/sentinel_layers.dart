@@ -26,12 +26,14 @@ class SentinelLayers extends ConsumerWidget {
     return Stack(
       children: layers
           .map(
-            (layer) => TileLayer(
-              urlTemplate: layer.urlTemplate(maxCloudCoveragePercent),
+            (layer) => Opacity(
               opacity: opacities[layer.layerType] ?? 0.5,
-              maxNativeZoom: 18,
-              userAgentPackageName: 'agopengps_flutter',
-              maxZoom: 22,
+              child: TileLayer(
+                urlTemplate: layer.urlTemplate(maxCloudCoveragePercent),
+                maxNativeZoom: 18,
+                userAgentPackageName: 'agopengps_flutter',
+                maxZoom: 22,
+              ),
             ),
           )
           .toList(),

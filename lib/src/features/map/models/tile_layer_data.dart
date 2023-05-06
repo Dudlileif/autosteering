@@ -17,8 +17,8 @@ class TileLayerData {
   final String? urlTemplate;
   final WMSTileLayerOptions? wmsOptions;
   final List<String> subdomains;
-  final double? minNativeZoom;
-  final double? maxNativeZoom;
+  final int? minNativeZoom;
+  final int? maxNativeZoom;
   final double minZoom;
   final double maxZoom;
   final Widget Function(

@@ -112,7 +112,8 @@ class MapView extends ConsumerWidget {
         PolylineLayer(
           polylineCulling: true,
           polylines: [
-            if (ref.watch(debugTravelledPathProvider))
+            if (ref.watch(debugTravelledPathProvider) &&
+                ref.watch(debugTravelledPathListProvider).isNotEmpty)
               Polyline(
                 points: ref.watch(debugTravelledPathListProvider),
                 strokeWidth: 3,

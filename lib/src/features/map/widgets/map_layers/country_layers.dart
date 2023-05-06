@@ -23,14 +23,16 @@ class CountryLayers extends ConsumerWidget {
 
     return Stack(
       children: layers.map((layer) {
-        final tileLayer = TileLayer(
-          urlTemplate: layer.urlTemplate,
-          wmsOptions: layer.wmsOptions,
+        final tileLayer = Opacity(
           opacity: opacities[layer.name] ?? 0.5,
-          maxNativeZoom: layer.maxNativeZoom,
-          tileProvider: CachedTileProvider(),
-          maxZoom: 22,
-          userAgentPackageName: 'agopengps_flutter',
+          child: TileLayer(
+            urlTemplate: layer.urlTemplate,
+            wmsOptions: layer.wmsOptions,
+            maxNativeZoom: layer.maxNativeZoom,
+            tileProvider: CachedTileProvider(),
+            maxZoom: 22,
+            userAgentPackageName: 'agopengps_flutter',
+          ),
         );
         return layer.themedTileLayerBuilder != null
             ? layer.themedTileLayerBuilder!(context, tileLayer)
