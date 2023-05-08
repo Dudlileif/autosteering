@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/widgets/widgets.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/foundation.dart';
@@ -9,7 +10,8 @@ class SimMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SubmenuButton(
+    return MenuButtonWithChildren(
+      text: 'Sim',
       menuChildren: [
         const VehicleSimMenu(),
         ListTile(
@@ -40,13 +42,6 @@ class SimMenu extends ConsumerWidget {
             ),
           ),
       ],
-      child: Text(
-        'Sim',
-        style: Theme.of(context)
-            .textTheme
-            .bodyLarge
-            ?.copyWith(fontWeight: FontWeight.w500),
-      ),
     );
   }
 }
