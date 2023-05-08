@@ -40,6 +40,13 @@ class VehicleSimulator {
               vehicle is ArticulatedTractor &&
               vehicle!.simulated) {
             prevVehicle = vehicle;
+            sendPort.send(
+              (
+                vehicle: vehicle,
+                velocity: calcVel,
+                heading: calcHeading,
+              ),
+            );
           } else if (period > 0) {
             prevUpdate = now;
 

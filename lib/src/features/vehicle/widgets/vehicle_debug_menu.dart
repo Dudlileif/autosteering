@@ -82,12 +82,24 @@ class VehicleDebugMenu extends ConsumerWidget {
           ),
         )
       ],
-      child: Text(
-        'Vehicle',
-        style: Theme.of(context)
-            .textTheme
-            .bodyLarge
-            ?.copyWith(fontWeight: FontWeight.w500),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8),
+            child: Icon(Icons.agriculture),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 4),
+            child: Text(
+              'Vehicle',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
       ),
     );
   }

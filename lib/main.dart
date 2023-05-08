@@ -20,7 +20,7 @@ Future<void> main() async {
     ),
   );
 
-  await FastCachedImageConfig.init();
+  await FastCachedImageConfig.init(subDir: 'AgOpenGPS_flutter/image_cache/');
 
   final container = ProviderContainer();
 

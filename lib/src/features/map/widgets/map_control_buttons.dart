@@ -5,18 +5,16 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MapPositionAndZoomButtons extends ConsumerStatefulWidget {
-  const MapPositionAndZoomButtons({
+class MapControlButtons extends ConsumerStatefulWidget {
+  const MapControlButtons({
     super.key,
   });
 
   @override
-  ConsumerState<MapPositionAndZoomButtons> createState() =>
-      _MapPositionAndZoomButtonsState();
+  ConsumerState<MapControlButtons> createState() => _MapControlButtonsState();
 }
 
-class _MapPositionAndZoomButtonsState
-    extends ConsumerState<MapPositionAndZoomButtons> {
+class _MapControlButtonsState extends ConsumerState<MapControlButtons> {
   @override
   Widget build(BuildContext context) {
     // Defer the first frame so that map and vehcile position are initialized.
@@ -89,9 +87,13 @@ class _MapPositionAndZoomButtonsState
                             ),
                           ),
                           Align(
-                            alignment: Alignment.centerRight,
+                            alignment: alwaysPointNorth
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
                             child: Padding(
-                              padding: const EdgeInsets.only(right: 4),
+                              padding: alwaysPointNorth
+                                  ? const EdgeInsets.only(right: 4)
+                                  : const EdgeInsets.only(left: 4),
                               child: Transform.rotate(
                                 angle: alwaysPointNorth ? 0 : -angle,
                                 child: Text(
@@ -112,7 +114,9 @@ class _MapPositionAndZoomButtonsState
                             ),
                           ),
                           Align(
-                            alignment: Alignment.centerLeft,
+                            alignment: alwaysPointNorth
+                                ? Alignment.centerLeft
+                                : Alignment.centerRight,
                             child: Transform.rotate(
                               angle: alwaysPointNorth ? 0 : -angle,
                               child: Text(

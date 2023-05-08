@@ -40,9 +40,12 @@ class SentinelLayerSelector extends ConsumerWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.satellite_alt),
+                  const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.satellite_alt),
+                  ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 4),
                     child: Text(
                       'Sentinel',
                       style: Theme.of(context)

@@ -46,9 +46,12 @@ class CountryLayerSelector extends ConsumerWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.map),
+                  const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.map),
+                  ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 4),
                     child: Text(
                       country.name,
                       style: Theme.of(context)

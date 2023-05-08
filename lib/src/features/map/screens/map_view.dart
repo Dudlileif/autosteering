@@ -195,8 +195,12 @@ class MapView extends ConsumerWidget {
       children: [
         map,
         const Align(
+          alignment: Alignment.bottomRight,
+          child: MapContributionWidget(),
+        ),
+        const Align(
           alignment: Alignment.topRight,
-          child: MapPositionAndZoomButtons(),
+          child: MapControlButtons(),
         ),
         const Align(
           alignment: Alignment.bottomRight,
@@ -207,6 +211,7 @@ class MapView extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Card(
+              color: Theme.of(context).cardColor.withOpacity(0.5),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,10 +258,6 @@ class MapView extends ConsumerWidget {
               ),
             ),
           ),
-        ),
-        const Align(
-          alignment: Alignment.bottomRight,
-          child: MapContributionWidget(),
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/scaffold/widgets/debug_menu.dart';
+import 'package:agopengps_flutter/src/features/scaffold/widgets/sim_menu.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,8 +23,9 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         actions: const [
           MenuBar(
             children: [
-              MapLayerMenu(),
+              MapMenu(),
               DebugMenu(),
+              SimMenu(),
             ],
           ),
           ManufacturerThemeSelector(),
