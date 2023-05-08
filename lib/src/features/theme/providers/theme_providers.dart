@@ -14,11 +14,11 @@ class ActiveThemeMode extends _$ActiveThemeMode {
   void update(ThemeMode newMode) => Future(() => state = newMode);
 
   void cycle() => Future(
-        () => state = state == ThemeMode.light
-            ? ThemeMode.system
-            : state == ThemeMode.dark
-                ? ThemeMode.light
-                : ThemeMode.dark,
+        () => state = switch (state) {
+          ThemeMode.light => ThemeMode.system,
+          ThemeMode.system => ThemeMode.dark,
+          ThemeMode.dark => ThemeMode.light,
+        },
       );
 }
 

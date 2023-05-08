@@ -68,17 +68,20 @@ class ZoomTimerController extends _$ZoomTimerController {
   void update(Zoom zoomAction) {
     cancel();
     Future(
-      () => state = zoomAction == Zoom.zoomIn
-          ? Timer.periodic(const Duration(milliseconds: 10), (timer) {
-              ref
-                  .read(mainMapControllerProvider.notifier)
-                  .zoomIn(timer.tick * 0.001);
-            })
-          : Timer.periodic(const Duration(milliseconds: 10), (timer) {
-              ref
-                  .read(mainMapControllerProvider.notifier)
-                  .zoomOut(timer.tick * 0.001);
-            }),
+      () => state = switch (zoomAction) {
+        Zoom.zoomIn =>
+          Timer.periodic(const Duration(milliseconds: 10), (timer) {
+            ref
+                .read(mainMapControllerProvider.notifier)
+                .zoomIn(timer.tick * 0.001);
+          }),
+        Zoom.zoomOut =>
+          Timer.periodic(const Duration(milliseconds: 10), (timer) {
+            ref
+                .read(mainMapControllerProvider.notifier)
+                .zoomOut(timer.tick * 0.001);
+          }),
+      },
     );
   }
 }

@@ -29,7 +29,8 @@ class MapView extends ConsumerWidget {
             : InteractiveFlag.all,
         onMapEvent: (event) {
           // Force scrolling zoom events to keep position when the map
-          // should be centered on the vehicle.
+          // should be centered on the vehicle. Otherwise it would
+          // zoom towards pointer/pinch center.
           if (ref.watch(centerMapOnVehicleProvider) &&
               event is MapEventScrollWheelZoom) {
             ref

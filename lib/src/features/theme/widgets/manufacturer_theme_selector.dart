@@ -18,11 +18,10 @@ class ManufacturerThemeSelector extends ConsumerWidget {
               child: ListTile(
                 leading: Icon(
                   Icons.lens,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? ManufacturerSchemes.scheme(scheme, Brightness.light)
-                          .primary
-                      : ManufacturerSchemes.scheme(scheme, Brightness.dark)
-                          .primary,
+                  color: ManufacturerSchemes.scheme(
+                    scheme,
+                    Theme.of(context).brightness,
+                  ).primary,
                   size: 35,
                 ),
                 title: Text(scheme.name),

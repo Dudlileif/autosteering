@@ -32,7 +32,7 @@ dependencies:
     collection: ^1.17.1
     connectivity_plus: ^3.0.6
     cupertino_icons: ^1.0.2
-    dio: ^5.1.1
+    dio: ^5.1.2
     dynamic_color: ^1.6.3
     equatable: ^2.0.5
     fast_cached_network_image: ^1.2.0

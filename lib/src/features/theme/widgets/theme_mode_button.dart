@@ -13,11 +13,11 @@ class ThemeModeButton extends ConsumerWidget {
       tooltip: 'Cycle Light/System/Dark mode',
       onPressed: ref.read(activeThemeModeProvider.notifier).cycle,
       icon: Icon(
-        themeMode == ThemeMode.light
-            ? Icons.light_mode
-            : themeMode == ThemeMode.system
-                ? Icons.settings_brightness
-                : Icons.dark_mode,
+        switch (themeMode) {
+          ThemeMode.light => Icons.light_mode,
+          ThemeMode.system => Icons.settings_brightness,
+          ThemeMode.dark => Icons.dark_mode,
+        },
       ),
     );
   }

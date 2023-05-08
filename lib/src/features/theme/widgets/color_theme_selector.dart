@@ -20,9 +20,12 @@ class ColorThemeSelector extends ConsumerWidget {
                   child: ListTile(
                     leading: Icon(
                       Icons.lens,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? FlexColor.schemes[scheme]?.light.primary
-                          : FlexColor.schemes[scheme]?.dark.primary,
+                      color: switch (Theme.of(context).brightness) {
+                        Brightness.light =>
+                          FlexColor.schemes[scheme]?.light.primary,
+                        Brightness.dark =>
+                          FlexColor.schemes[scheme]?.dark.primary,
+                      },
                       size: 35,
                     ),
                     title: Text(FlexColor.schemes[scheme]?.name ?? 'Scheme'),
@@ -37,9 +40,11 @@ class ColorThemeSelector extends ConsumerWidget {
           children: [
             Icon(
               Icons.lens,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.white
-                  : Theme.of(context).appBarTheme.backgroundColor,
+              color: switch (Theme.of(context).brightness) {
+                Brightness.light => Colors.white,
+                Brightness.dark =>
+                  Theme.of(context).appBarTheme.backgroundColor,
+              },
               size: 40,
             ),
             Icon(

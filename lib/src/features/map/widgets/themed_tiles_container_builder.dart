@@ -6,19 +6,20 @@ Widget themedTileLayerBuilder(
   BuildContext context,
   Widget tileLayer,
 ) =>
-    Theme.of(context).brightness == Brightness.dark
-        // Rotate hue by 180 deg, lower saturation
-        ? ChangeColors(
-            hue: 1,
-            saturation: -0.2,
+    switch (Theme.of(context).brightness) {
+      Brightness.dark => // Rotate hue by 180 deg, lower saturation
+        ChangeColors(
+          hue: 1,
+          saturation: -0.2,
 
-            // Invert colors
-            child: ColorFiltered(
-              colorFilter: const ColorFilter.mode(
-                Colors.white,
-                BlendMode.difference,
-              ),
-              child: tileLayer,
+          // Invert colors
+          child: ColorFiltered(
+            colorFilter: const ColorFilter.mode(
+              Colors.white,
+              BlendMode.difference,
             ),
-          )
-        : tileLayer;
+            child: tileLayer,
+          ),
+        ),
+      Brightness.light => tileLayer,
+    };

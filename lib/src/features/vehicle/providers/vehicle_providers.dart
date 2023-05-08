@@ -61,17 +61,18 @@ class MainVehicle extends _$MainVehicle {
 @riverpod
 Future<void> vehicleDriving(VehicleDrivingRef ref) async {
   if (ref.watch(mapReadyProvider)) {
-    final vehicle = ref.watch(simVehicleInputProvider)
-        ? ref.watch(simVehicleWebStreamProvider).when(
-              data: (data) => data,
-              error: (error, stackTrace) => ref.watch(mainVehicleProvider),
-              loading: () => ref.watch(mainVehicleProvider),
-            )
-        : ref.watch(simVehicleIsolateStreamProvider).when(
-              data: (data) => data,
-              error: (error, stackTrace) => ref.watch(mainVehicleProvider),
-              loading: () => ref.watch(mainVehicleProvider),
-            );
+    final vehicle = switch (ref.watch(simVehicleInputProvider)) {
+      SimPlatform.web => ref.watch(simVehicleWebStreamProvider).when(
+            data: (data) => data,
+            error: (error, stackTrace) => ref.watch(mainVehicleProvider),
+            loading: () => ref.watch(mainVehicleProvider),
+          ),
+      SimPlatform.native => ref.watch(simVehicleIsolateStreamProvider).when(
+            data: (data) => data,
+            error: (error, stackTrace) => ref.watch(mainVehicleProvider),
+            loading: () => ref.watch(mainVehicleProvider),
+          )
+    };
     if (vehicle == null) {
       ref
           .read(simVehicleInputProvider.notifier)

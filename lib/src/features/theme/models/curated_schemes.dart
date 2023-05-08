@@ -31,9 +31,10 @@ class CuratedSchemes {
     double degrees = 105,
   }) {
     final colorData = FlexColor.schemes[scheme]!;
-    final color = brightness == Brightness.light
-        ? colorData.light.primary
-        : colorData.dark.primary;
+    final color = switch (brightness) {
+      Brightness.light => colorData.light.primary,
+      Brightness.dark => colorData.dark.primary,
+    };
     final hue = HSVColor.fromColor(color).hue;
     return (hue - degrees) % 360;
   }

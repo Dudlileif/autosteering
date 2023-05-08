@@ -9,15 +9,25 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'vehicle_simulator_providers.g.dart';
 
+enum SimPlatform {
+  native,
+  web;
+}
+
 @Riverpod(keepAlive: true)
 class SimVehicleInput extends _$SimVehicleInput {
   @override
-  bool build() => kIsWeb;
+  SimPlatform build() => switch (kIsWeb) {
+        true => SimPlatform.web,
+        false => SimPlatform.native,
+      };
 
   void send(dynamic input) => Future(
-        () => state
-            ? ref.read(_simVehicleWebInputProvider).add(input)
-            : ref.read(_simVehicleIsolatePortProvider)?.send(input),
+        () => switch (state) {
+          SimPlatform.web => ref.read(_simVehicleWebInputProvider).add(input),
+          SimPlatform.native =>
+            ref.read(_simVehicleIsolatePortProvider)?.send(input),
+        },
       );
 }
 
