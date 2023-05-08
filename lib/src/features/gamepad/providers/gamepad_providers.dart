@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:agopengps_flutter/src/features/gamepad/gamepad.dart';
@@ -35,7 +36,7 @@ class ActiveGamepadConfig extends _$ActiveGamepadConfig {
 Stream<GamepadInput> gamepadInputEvents(GamepadInputEventsRef ref) =>
     Gamepads.events.map(
       (event) {
-        print(
+        dev.log(
           'id: ${event.gamepadId}\tkey: ${event.key}\tvalue: ${event.value}',
         );
         return GamepadInput(
@@ -77,42 +78,46 @@ void handleAnalogInput(GamepadInput event, ProviderRef<void> ref) {
 
   // Forward/backward
   if (event.analogInput == GamepadAnalogInput.rightTrigger) {
-    final acceleration = Tween<double>(begin: 0, end: 4)
+    final velocity = Tween<double>(begin: 0, end: 12)
         .transform(event.triggerValueDeadZoneAdjusted);
-    ref.read(mainVehicleProvider.notifier).setAcceleration(acceleration);
+    ref
+        .read(simVehicleInputProvider.notifier)
+        .send(VehicleInput(velocity: velocity));
   }
   if (event.analogInput == GamepadAnalogInput.leftTrigger) {
-    final acceleration = Tween<double>(begin: 0, end: -4)
+    final velocity = Tween<double>(begin: 0, end: -12)
         .transform(event.triggerValueDeadZoneAdjusted);
-    ref.read(mainVehicleProvider.notifier).setAcceleration(acceleration);
+    ref
+        .read(simVehicleInputProvider.notifier)
+        .send(VehicleInput(velocity: velocity));
   }
   // Steering
   else if (event.analogInput == GamepadAnalogInput.leftStickX) {
     final angle = Tween<double>(
-      begin: -vehicle.wheelAngleMax,
-      end: vehicle.wheelAngleMax,
+      begin: -vehicle.steeringAngleMax,
+      end: vehicle.steeringAngleMax,
     ).transform(
       event.joystickValueDeadZoneAdjusted,
     );
-    ref.read(mainVehicleProvider.notifier).setWheelAngle(angle);
+    ref.read(simVehicleInputProvider.notifier).send(
+          VehicleInput(steeringAngle: angle),
+        );
   }
 }
 
 void handleButtonInput(GamepadInput event, ProviderRef<void> ref) {
   if (event.buttonInput == GamepadButtonInput.home) {
-    ref.read(mainVehicleProvider.notifier).reset();
-    ref.read(mainMapControllerProvider).moveAndRotate(
-          ref.watch(offsetVehiclePositionProvider),
-          19,
-          -ref.watch(mainVehicleProvider).heading,
+    ref.read(simVehicleInputProvider.notifier).send(
+          VehicleInput(
+            position: ref.watch(homePositionProvider),
+            velocity: 0,
+          ),
         );
   } else if (event.buttonInput == GamepadButtonInput.start) {
-    ref.read(mainVehicleProvider.notifier).update(
-          ref.watch(mainVehicleProvider).copyWith(
-                velocity: 0,
-                acceleration: 0,
-                wheelAngle: 0,
-              ),
+    ref.read(simVehicleInputProvider.notifier).send(
+          const VehicleInput(
+            velocity: 0,
+          ),
         );
   }
 }
