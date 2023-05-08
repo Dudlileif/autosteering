@@ -22,13 +22,14 @@ class SimVehicleInput extends _$SimVehicleInput {
         false => SimPlatform.native,
       };
 
-  void send(dynamic input) => Future(
-        () => switch (state) {
-          SimPlatform.web => ref.read(_simVehicleWebInputProvider).add(input),
-          SimPlatform.native =>
-            ref.read(_simVehicleIsolatePortProvider)?.send(input),
-        },
-      );
+  void send(dynamic input) => switch (state) {
+        SimPlatform.web => Future(
+            () => ref.read(_simVehicleWebInputProvider).add(input),
+          ),
+        SimPlatform.native => Future(
+            () => ref.read(_simVehicleIsolatePortProvider)?.send(input),
+          ),
+      };
 }
 
 @Riverpod(keepAlive: true)
