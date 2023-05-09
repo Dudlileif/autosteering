@@ -3,11 +3,13 @@
 ## Implemented functionality
 
 -   Maps
+
     -   Reorderable and mixable (transparency/opacity) layers
         -   OpenStreetMap
         -   Copernicus Sentinel, up-to-date insightful data
         -   Custom layers per country, example:
             -   Norway: High-res orthophoto, topological maps, DTM/DOM terrain
+
 -   Basic vehicle movement simulation
 
 ## To be implemented
@@ -21,6 +23,8 @@
 -   Map layer caching/offline
 
 ## Further ideas
+
+-   Use OSM to look for powerlines/obstacles in fields/polygons
 
 -   Restrict map layer to polygon extent, directly from wms?
 

@@ -1,5 +1,7 @@
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,13 +46,6 @@ class MapView extends ConsumerWidget {
             }
           }
         },
-        onLongPress: (tapPosition, point) {
-          ref.read(homePositionProvider.notifier).update(point);
-          ref
-              .read(simVehicleInputProvider.notifier)
-              .send(vehicle.copyWith(position: point, heading: 0));
-          ref.invalidate(currentCountryProvider);
-        },
         onMapReady: ref.read(mapReadyProvider.notifier).ready,
       ),
       children: [
@@ -59,60 +54,22 @@ class MapView extends ConsumerWidget {
           const CountryLayers(),
         if (ref.watch(selectedSentinelLayersProvider).isNotEmpty)
           const SentinelLayers(),
-        PolygonLayer(
-          polygonCulling: true,
-          polygons: [
-            ...vehicle.wheelPolygons,
-            ...vehicle.polygons,
-          ],
-        ),
-        if (ref.watch(debugAckermannProvider) && vehicle is AxleSteeredVehicle)
-          CircleLayer(
-            circles: [
-              CircleMarker(
-                point: vehicle.position,
-                radius: 10,
-              ),
-              CircleMarker(
-                point: vehicle.solidAxlePosition,
-                radius: 10,
-                color: Colors.red,
-              ),
-              CircleMarker(
-                point: vehicle.steeringAxlePosition,
-                radius: 10,
-                color: Colors.blue,
-              )
-            ],
-          ),
-        if (ref.watch(debugAtriculatedProvider) &&
-            vehicle is ArticulatedTractor)
-          CircleLayer(
-            circles: [
-              CircleMarker(
-                point: vehicle.position,
-                radius: 10,
-              ),
-              CircleMarker(
-                point: vehicle.rearAxlePosition,
-                radius: 10,
-                color: Colors.red,
-              ),
-              CircleMarker(
-                point: vehicle.frontAxlePosition,
-                radius: 10,
-                color: Colors.blue,
-              ),
-              CircleMarker(
-                point: vehicle.pivotPosition,
-                radius: 10,
-                color: Colors.black,
-              )
-            ],
-          ),
         PolylineLayer(
           polylineCulling: true,
           polylines: [
+            if (ref.watch(pathRecordingListProvider).isNotEmpty)
+              Polyline(
+                points: [
+                  ...ref.watch(pathRecordingListProvider),
+                  ref.watch(mainVehicleProvider).position
+                ],
+              ),
+            if ((ref.watch(showFinishedPathProvider) ||
+                    ref.watch(editFinishedPathProvider)) &&
+                ref.watch(finishedPathRecordingListProvider) != null)
+              Polyline(
+                points: ref.watch(finishedPathRecordingListProvider)!,
+              ),
             if (ref.watch(debugTravelledPathProvider) &&
                 ref.watch(debugTravelledPathListProvider).isNotEmpty)
               Polyline(
@@ -131,64 +88,67 @@ class MapView extends ConsumerWidget {
                 color: Colors.red,
               ),
             if (vehicle.turningRadiusCenter != null &&
-                ref.watch(debugAckermannProvider) &&
-                vehicle is AxleSteeredVehicle) ...[
-              Polyline(
-                points: [
-                  vehicle.solidAxlePosition,
-                  vehicle.turningRadiusCenter!,
-                ],
-                color: Colors.red,
-              ),
-              Polyline(
-                points: [
-                  vehicle.steeringAxlePosition,
-                  vehicle.turningRadiusCenter!,
-                ],
-                color: Colors.blue,
-              ),
-              Polyline(
-                points: [
-                  vehicle.position,
-                  vehicle.turningRadiusCenter!,
-                ],
-                color: Colors.green,
-              ),
-            ],
-            if (vehicle.turningRadiusCenter != null &&
-                ref.watch(debugAtriculatedProvider) &&
-                vehicle is ArticulatedTractor) ...[
-              Polyline(
-                points: [
-                  vehicle.rearAxlePosition,
-                  vehicle.turningRadiusCenter!,
-                ],
-                color: Colors.red,
-              ),
-              Polyline(
-                points: [
-                  vehicle.frontAxlePosition,
-                  vehicle.turningRadiusCenter!,
-                ],
-                color: Colors.blue,
-              ),
-              Polyline(
-                points: [
-                  vehicle.position,
-                  vehicle.turningRadiusCenter!,
-                ],
-                color: Colors.green,
-              ),
-              Polyline(
-                points: [
-                  vehicle.pivotPosition,
-                  vehicle.turningRadiusCenter!,
-                ],
-                color: Colors.black,
-              ),
-            ],
+                ref.watch(debugSteeringProvider))
+              ...vehicle.steeringDebugLines,
           ],
         ),
+        PolygonLayer(
+          polygonCulling: true,
+          polygons: [
+            if (ref.watch(showFinishedPolygonProvider) &&
+                ref.watch(finishedPathRecordingListProvider) != null)
+              Polygon(
+                points: ref.watch(finishedPathRecordingListProvider)!,
+                isFilled: true,
+                borderStrokeWidth: 2,
+                color: Colors.pink.withOpacity(0.2),
+              ),
+            ...vehicle.wheelPolygons,
+            ...vehicle.polygons,
+          ],
+        ),
+        CircleLayer(
+          circles: [
+            if (ref.watch(debugSteeringProvider))
+              ...vehicle.steeringDebugMarkers,
+            if (ref.watch(pathRecordingListProvider).isNotEmpty)
+              ...ref.watch(pathRecordingListProvider).map(
+                    (point) => CircleMarker(
+                      point: point,
+                      radius: 5,
+                    ),
+                  ),
+            if (ref.watch(showFinishedPathProvider) &&
+                !ref.watch(editFinishedPathProvider) &&
+                ref.watch(finishedPathRecordingListProvider) != null)
+              ...ref.watch(finishedPathRecordingListProvider)!.map(
+                    (point) => CircleMarker(
+                      point: point,
+                      radius: 5,
+                    ),
+                  ),
+          ],
+        ),
+        MarkerLayer(
+          markers: [
+            if (ref.watch(editFinishedPathProvider) &&
+                ref.watch(finishedPathRecordingListProvider) != null)
+              ...ref.watch(finishedPathRecordingListProvider)!.mapIndexed(
+                    (index, point) => Marker(
+                      point: point,
+                      builder: (context) => MovableMapMarker(
+                        point: point,
+                        radius: 5,
+                        onMoved: (position) {
+                          ref
+                              .read(finishedPathRecordingListProvider.notifier)
+                              .movePoint(index, position);
+                        },
+                      ),
+                    ),
+                  ),
+          ],
+        )
       ],
     );
 

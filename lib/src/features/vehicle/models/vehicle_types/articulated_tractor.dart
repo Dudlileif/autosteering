@@ -64,6 +64,65 @@ class ArticulatedTractor extends Vehicle {
         rearAxleAngle,
       );
 
+  /// Basic circle markers for showing the vehicle's steering related
+  /// points.
+  @override
+  List<CircleMarker> get steeringDebugMarkers => [
+        CircleMarker(
+          point: position,
+          radius: 10,
+        ),
+        CircleMarker(
+          point: rearAxlePosition,
+          radius: 10,
+          color: Colors.red,
+        ),
+        CircleMarker(
+          point: frontAxlePosition,
+          radius: 10,
+          color: Colors.blue,
+        ),
+        CircleMarker(
+          point: pivotPosition,
+          radius: 10,
+          color: Colors.black,
+        )
+      ];
+
+  /// Basic polylines for showing the vehicle's steering related
+  /// points.
+  @override
+  List<Polyline> get steeringDebugLines => [
+        Polyline(
+          points: [
+            rearAxlePosition,
+            turningRadiusCenter!,
+          ],
+          color: Colors.red,
+        ),
+        Polyline(
+          points: [
+            frontAxlePosition,
+            turningRadiusCenter!,
+          ],
+          color: Colors.blue,
+        ),
+        Polyline(
+          points: [
+            position,
+            turningRadiusCenter!,
+          ],
+          color: Colors.green,
+        ),
+        Polyline(
+          points: [
+            pivotPosition,
+            turningRadiusCenter!,
+          ],
+          color: Colors.black,
+        ),
+      ];
+
   /// The turning radius corresponding to the current [steeringAngle].
   ///
   /// Found by calculating the hypotenuse of the isosceles triangle with

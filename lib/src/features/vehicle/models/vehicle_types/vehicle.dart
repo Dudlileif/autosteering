@@ -83,6 +83,14 @@ abstract class Vehicle extends Equatable {
         false => 0,
       };
 
+  /// Basic circle markers for showing the vehicle's steering related
+  /// points.
+  List<CircleMarker> get steeringDebugMarkers;
+
+  /// Basic polylines for showing the vehicle's steering related
+  /// points.
+  List<Polyline> get steeringDebugLines;
+
   /// Polygons for drawing the wheels of the vehicle.
   List<Polygon> get wheelPolygons;
 

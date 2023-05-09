@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/scaffold/widgets/debug_menu.dart';
 import 'package:agopengps_flutter/src/features/scaffold/widgets/sim_menu.dart';
@@ -24,6 +25,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
           MenuBar(
             children: [
               MapMenu(),
+              GuidanceMenu(),
               DebugMenu(),
               SimMenu(),
             ],

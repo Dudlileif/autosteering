@@ -41,6 +41,53 @@ abstract class AxleSteeredVehicle extends Vehicle {
   /// The position of the center of the front axle.
   LatLng get steeringAxlePosition;
 
+  /// Basic circle markers for showing the vehicle's Ackermann related
+  /// points.
+  @override
+  List<CircleMarker> get steeringDebugMarkers => [
+        CircleMarker(
+          point: position,
+          radius: 10,
+        ),
+        CircleMarker(
+          point: solidAxlePosition,
+          radius: 10,
+          color: Colors.red,
+        ),
+        CircleMarker(
+          point: steeringAxlePosition,
+          radius: 10,
+          color: Colors.blue,
+        )
+      ];
+
+  /// Basic polylines for showing the vehicle's steering related
+  /// points.
+  @override
+  List<Polyline> get steeringDebugLines => [
+        Polyline(
+          points: [
+            solidAxlePosition,
+            turningRadiusCenter!,
+          ],
+          color: Colors.red,
+        ),
+        Polyline(
+          points: [
+            steeringAxlePosition,
+            turningRadiusCenter!,
+          ],
+          color: Colors.blue,
+        ),
+        Polyline(
+          points: [
+            position,
+            turningRadiusCenter!,
+          ],
+          color: Colors.green,
+        ),
+      ];
+
   /// The Ackermann steering geometry of the vehicle.
   AckermannSteering get ackermannSteering => AckermannSteering(
         steeringAngle: steeringAngle,
