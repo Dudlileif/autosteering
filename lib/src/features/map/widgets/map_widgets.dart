@@ -1,3 +1,4 @@
+export 'add_point_marker.dart';
 export 'cached_tile_provider.dart';
 export 'map_contribution_widget.dart';
 export 'map_control_buttons.dart';

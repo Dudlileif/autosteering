@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-    sdk: ">=3.0.0-417.3.beta <4.0.0"
+    sdk: ">=3.0.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -32,6 +32,7 @@ dependencies:
     collection: ^1.17.1
     connectivity_plus: ^4.0.0
     cupertino_icons: ^1.0.2
+    dart_jts: ^0.2.2+3
     dio: ^5.1.2
     dynamic_color: ^1.6.3
     equatable: ^2.0.5
@@ -46,12 +47,13 @@ dependencies:
     geobase: ^0.4.2
     json_annotation: ^4.8.1
     latlong2: ^0.8.1
+    maps_toolkit2: ^1.0.1+1
     riverpod_annotation: ^2.1.1
     themed: ^4.0.0
     window_manager: ^0.3.2
 
 dev_dependencies:
-    build_runner: ^2.4.1
+    build_runner: ^2.4.2
     custom_lint: ^0.3.4
     flutter_test:
         sdk: flutter

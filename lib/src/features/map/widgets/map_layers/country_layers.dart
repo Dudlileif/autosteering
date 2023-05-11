@@ -21,6 +21,10 @@ class CountryLayers extends ConsumerWidget {
         );
     final opacities = ref.watch(countryLayerOpacitiesProvider);
 
+    final enabled = layers.isNotEmpty;
+    if (!enabled) {
+      return const SizedBox.shrink();
+    }
     return Stack(
       children: layers.map((layer) {
         final tileLayer = Opacity(

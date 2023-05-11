@@ -23,6 +23,11 @@ class SentinelLayers extends ConsumerWidget {
         ref.watch(sentinelMaxCloudCoveragePercentProvider);
     final opacities = ref.watch(sentinelLayerOpacitiesProvider);
 
+    final enabled = layers.isNotEmpty;
+    if (!enabled) {
+      return const SizedBox.shrink();
+    }
+
     return Stack(
       children: layers
           .map(

@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,33 +20,37 @@ class EnablePathRecorder extends _$EnablePathRecorder {
 @Riverpod(keepAlive: true)
 class PathRecordingList extends _$PathRecordingList {
   @override
-  List<LatLng> build() {
-    final points = <LatLng>[];
+  List<WayPoint> build() {
+    final points = <WayPoint>[];
 
     ref.listen(enablePathRecorderProvider, (prevDoRecord, doRecord) async {
       if (doRecord) {
-        ref.listen(mainVehicleProvider.select((vehicle) => vehicle.position),
-            (prevPosition, position) async {
-          if (prevPosition != position) {
+        ref.listen(mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
+            (prevWayPoint, wayPoint) async {
+          if (prevWayPoint != wayPoint) {
             if (points.isNotEmpty) {
-              final distance = calculator.distance(points.last, position);
+              final distance =
+                  calculator.distance(points.last.position, wayPoint.position);
               if (distance > 20) {
-                await add(position);
+                await add(wayPoint);
               } else if (distance > 1 && points.length >= 2) {
-                final prevHeading =
-                    calculator.bearing(points[points.length - 2], points.last);
-                final heading = calculator.bearing(points.last, position);
+                final prevHeading = calculator.bearing(
+                  points[points.length - 2].position,
+                  points.last.position,
+                );
+                final heading =
+                    calculator.bearing(points.last.position, wayPoint.position);
 
                 final headingDiff = (prevHeading - heading).abs();
 
                 if (headingDiff > 1) {
-                  await add(position);
+                  await add(wayPoint);
                 }
               } else if (points.length < 2 && distance > 1) {
-                await add(position);
+                await add(wayPoint);
               }
             } else {
-              await add(position);
+              await add(wayPoint);
             }
           }
         });
@@ -53,7 +58,7 @@ class PathRecordingList extends _$PathRecordingList {
         if (prevDoRecord && !doRecord) {
           if (state.isNotEmpty) {
             final position = ref.read(
-              mainVehicleProvider.select((vehicle) => vehicle.position),
+              mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
             );
             if (state.last != position) {
               await add(position);
@@ -69,7 +74,7 @@ class PathRecordingList extends _$PathRecordingList {
     return points;
   }
 
-  Future<void> add(LatLng point) => Future(() => state.add(point));
+  Future<void> add(WayPoint point) => Future(() => state.add(point));
 
   void clear() => Future(() => state.clear());
 }
@@ -77,18 +82,27 @@ class PathRecordingList extends _$PathRecordingList {
 @Riverpod(keepAlive: true)
 class FinishedPathRecordingList extends _$FinishedPathRecordingList {
   @override
-  List<LatLng>? build() => null;
+  List<WayPoint>? build() => null;
 
-  void update(List<LatLng> points) => Future(() => state = points);
-  void movePoint(int index, LatLng point) => Future(
+  void update(List<WayPoint> points) => Future(() => state = points);
+
+  void movePoint(int index, WayPoint point) => Future(
         () => state = state
           ?..insert(index, point)
           ..removeAt(index + 1),
       );
+  void insert(int index, WayPoint point) =>
+      Future(() => state = state?..insert(index, point));
+
+  void remove(int index) => Future(
+        () => state = state?..removeAt(index),
+      );
+
   void clear() => Future(() => state = null);
 
   @override
-  bool updateShouldNotify(List<LatLng>? previous, List<LatLng>? next) => true;
+  bool updateShouldNotify(List<WayPoint>? previous, List<WayPoint>? next) =>
+      true;
 }
 
 @Riverpod(keepAlive: true)
