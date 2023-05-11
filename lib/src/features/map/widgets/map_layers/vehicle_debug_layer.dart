@@ -15,34 +15,32 @@ class VehicleDebugLayer extends ConsumerWidget {
     final vehicle = ref.watch(mainVehicleProvider);
     final travelledPath = ref.watch(debugTravelledPathListProvider);
 
-    if (!debugTrajectory && !debugTravelledPath && !debugSteering) {
-      return const SizedBox.shrink();
-    }
     return Stack(
       children: [
-        PolylineLayer(
-          polylineCulling: true,
-          polylines: [
-            if (debugTravelledPath && travelledPath.isNotEmpty)
-              Polyline(
-                points: travelledPath,
-                strokeWidth: 3,
-                strokeCap: StrokeCap.butt,
-                gradientColors: [
-                  Colors.red.withOpacity(0.4),
-                  Colors.green.withOpacity(0.4)
-                ],
-              ),
-            if (debugTrajectory)
-              Polyline(
-                points: vehicle.trajectory.coordinates,
-                strokeWidth: 5,
-                color: Colors.red,
-              ),
-            if (vehicle.turningRadiusCenter != null && debugSteering)
-              ...vehicle.steeringDebugLines,
-          ],
-        ),
+        if (debugTravelledPath || debugTrajectory || debugSteering)
+          PolylineLayer(
+            polylineCulling: true,
+            polylines: [
+              if (debugTravelledPath && travelledPath.isNotEmpty)
+                Polyline(
+                  points: travelledPath,
+                  strokeWidth: 3,
+                  strokeCap: StrokeCap.butt,
+                  gradientColors: [
+                    Colors.red.withOpacity(0.4),
+                    Colors.green.withOpacity(0.4)
+                  ],
+                ),
+              if (debugTrajectory)
+                Polyline(
+                  points: vehicle.trajectory.coordinates,
+                  strokeWidth: 5,
+                  color: Colors.red,
+                ),
+              if (vehicle.turningRadiusCenter != null && debugSteering)
+                ...vehicle.steeringDebugLines,
+            ],
+          ),
         PolygonLayer(
           polygonCulling: true,
           polygons: [
@@ -50,11 +48,12 @@ class VehicleDebugLayer extends ConsumerWidget {
             ...vehicle.polygons,
           ],
         ),
-        CircleLayer(
-          circles: [
-            if (debugSteering) ...vehicle.steeringDebugMarkers,
-          ],
-        ),
+        if (debugSteering)
+          CircleLayer(
+            circles: [
+              if (debugSteering) ...vehicle.steeringDebugMarkers,
+            ],
+          ),
       ],
     );
   }
