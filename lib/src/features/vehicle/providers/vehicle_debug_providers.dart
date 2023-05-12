@@ -7,7 +7,7 @@ part 'vehicle_debug_providers.g.dart';
 @Riverpod(keepAlive: true)
 class DebugVehiclePolygons extends _$DebugVehiclePolygons {
   @override
-  bool build() => false;
+  bool build() => true;
 
   void update({required bool value}) => Future(() => state = value);
 
@@ -60,6 +60,7 @@ class DebugTravelledPathList extends _$DebugTravelledPathList {
       ref.listen(
         mainVehicleProvider,
         (previous, next) => add(next.position),
+        fireImmediately: true,
       );
     }
 

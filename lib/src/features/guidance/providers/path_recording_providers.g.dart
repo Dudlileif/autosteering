@@ -23,7 +23,7 @@ final enablePathRecorderProvider =
 );
 
 typedef _$EnablePathRecorder = Notifier<bool>;
-String _$pathRecordingListHash() => r'92b2e9bc2659ef5d35ce683eea0192e7ee1ac239';
+String _$pathRecordingListHash() => r'78728614519462ac1c2e910fce7ad233197851a2';
 
 /// See also [PathRecordingList].
 @ProviderFor(PathRecordingList)

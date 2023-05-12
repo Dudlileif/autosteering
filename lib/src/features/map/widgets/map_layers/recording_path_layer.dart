@@ -9,32 +9,35 @@ class RecordingPathLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recordingPathPoints = ref.watch(pathRecordingListProvider);
-
+    final points = ref.watch(pathRecordingListProvider);
+    final vehicle = ref.watch(mainVehicleProvider);
     return Stack(
-      children: [
-        PolylineLayer(
-          polylines: [
-            Polyline(
-              points: [
-                ...recordingPathPoints.map((point) => point.position),
-                ref.watch(mainVehicleProvider).position
-              ],
-            )
-          ],
-        ),
-        CircleLayer(
-          circles: [
-            if (recordingPathPoints.isNotEmpty)
-              ...recordingPathPoints.map(
-                (point) => CircleMarker(
-                  point: point.position,
-                  radius: 5,
-                ),
+      children: points.isNotEmpty
+          ? [
+              PolylineLayer(
+                polylineCulling: true,
+                polylines: [
+                  Polyline(
+                    points: [
+                      ...points.map((point) => point.position),
+                      vehicle.position,
+                    ],
+                  )
+                ],
               ),
-          ],
-        ),
-      ],
+              CircleLayer(
+                circles: [
+                  if (points.isNotEmpty)
+                    ...points.map(
+                      (point) => CircleMarker(
+                        point: point.position,
+                        radius: 5,
+                      ),
+                    ),
+                ],
+              ),
+            ]
+          : const [],
     );
   }
 }

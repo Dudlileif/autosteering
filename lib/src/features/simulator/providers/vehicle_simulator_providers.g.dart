@@ -22,7 +22,7 @@ final simVehicleDrivingProvider = AutoDisposeFutureProvider<void>.internal(
 
 typedef SimVehicleDrivingRef = AutoDisposeFutureProviderRef<void>;
 String _$simVehicleWebStreamHash() =>
-    r'35ebf1c032255d3ecf3607822e014716d2d434a4';
+    r'02219bdaccc98c86a74ca4e590248220db009b61';
 
 /// See also [simVehicleWebStream].
 @ProviderFor(simVehicleWebStream)

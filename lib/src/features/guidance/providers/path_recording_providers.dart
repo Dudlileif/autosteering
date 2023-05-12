@@ -23,58 +23,68 @@ class PathRecordingList extends _$PathRecordingList {
   List<WayPoint> build() {
     final points = <WayPoint>[];
 
-    ref.listen(enablePathRecorderProvider, (prevDoRecord, doRecord) async {
-      if (doRecord) {
-        ref.listen(mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
-            (prevWayPoint, wayPoint) async {
-          if (prevWayPoint != wayPoint) {
-            if (points.isNotEmpty) {
-              final distance =
-                  calculator.distance(points.last.position, wayPoint.position);
-              if (distance > 20) {
-                await add(wayPoint);
-              } else if (distance > 1 && points.length >= 2) {
-                final prevHeading = calculator.bearing(
-                  points[points.length - 2].position,
+    ref.listen(
+      enablePathRecorderProvider,
+      (prevDoRecord, doRecord) async {
+        if (doRecord) {
+          ref.listen(mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
+              (prevWayPoint, wayPoint) async {
+            if (prevWayPoint != wayPoint) {
+              if (points.isNotEmpty) {
+                final distance = calculator.distance(
                   points.last.position,
+                  wayPoint.position,
                 );
-                final heading =
-                    calculator.bearing(points.last.position, wayPoint.position);
+                if (distance > 20) {
+                  await add(wayPoint);
+                } else if (distance > 1 && points.length >= 2) {
+                  final prevHeading = calculator.bearing(
+                    points[points.length - 2].position,
+                    points.last.position,
+                  );
+                  final heading = calculator.bearing(
+                    points.last.position,
+                    wayPoint.position,
+                  );
 
-                final headingDiff = (prevHeading - heading).abs();
+                  final headingDiff = (prevHeading - heading).abs();
 
-                if (headingDiff > 1) {
+                  if (headingDiff > 1) {
+                    await add(wayPoint);
+                  }
+                } else if (points.length < 2 && distance > 1) {
                   await add(wayPoint);
                 }
-              } else if (points.length < 2 && distance > 1) {
+              } else {
                 await add(wayPoint);
               }
-            } else {
-              await add(wayPoint);
             }
-          }
-        });
-      } else if (prevDoRecord != null) {
-        if (prevDoRecord && !doRecord) {
-          if (state.isNotEmpty) {
-            final position = ref.read(
-              mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
-            );
-            if (state.last != position) {
-              await add(position);
+          });
+        } else if (prevDoRecord != null) {
+          if (prevDoRecord && !doRecord) {
+            if (state.isNotEmpty) {
+              final position = ref.read(
+                mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
+              );
+              if (state.last != position) {
+                await add(position);
+              }
+              ref
+                  .read(finishedPathRecordingListProvider.notifier)
+                  .update(points);
+              ref.read(showFinishedPathProvider.notifier).update(value: true);
             }
-            ref.read(finishedPathRecordingListProvider.notifier).update(points);
-            ref.read(showFinishedPathProvider.notifier).update(value: true);
+            ref.invalidateSelf();
           }
-          ref.invalidateSelf();
         }
-      }
-    });
+      },
+      fireImmediately: true,
+    );
 
     return points;
   }
 
-  Future<void> add(WayPoint point) => Future(() => state.add(point));
+  Future<void> add(WayPoint point) => Future(() => state = state..add(point));
 
   void clear() => Future(() => state.clear());
 }

@@ -92,7 +92,14 @@ Stream<Vehicle?> simVehicleWebStream(
   final stream = VehicleSimulator.webWorker(
     ref.watch(_simVehicleWebInputProvider.notifier).stream(),
   );
-  return stream.map((event) => event.vehicle);
+
+  return stream.map((event) {
+    ref
+        .read(vehicleVelocityProvider.notifier)
+        .update(event.velocity.toDouble());
+    ref.read(vehicleHeadingProvider.notifier).update(event.heading.toDouble());
+    return event.vehicle;
+  });
 }
 
 @riverpod

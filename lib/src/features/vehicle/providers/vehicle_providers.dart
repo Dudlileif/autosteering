@@ -62,16 +62,20 @@ class MainVehicle extends _$MainVehicle {
 class VehicleTravelledDistance extends _$VehicleTravelledDistance {
   @override
   double build() {
-    ref.listen(mainVehicleProvider, (previous, next) {
-      if (previous != null) {
-        if (previous.position != next.position) {
-          update(
-            const Distance(roundResult: false)
-                .distance(previous.position, next.position),
-          );
+    ref.listen(
+      mainVehicleProvider,
+      (previous, next) {
+        if (previous != null) {
+          if (previous.position != next.position) {
+            update(
+              const Distance(roundResult: false)
+                  .distance(previous.position, next.position),
+            );
+          }
         }
-      }
-    });
+      },
+      fireImmediately: true,
+    );
     return 0;
   }
 

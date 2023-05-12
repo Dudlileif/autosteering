@@ -56,8 +56,10 @@ class MapView extends ConsumerWidget {
           const FinishedPolygonLayer(),
         if (ref.watch(showRecordingPathLayerProvider))
           const RecordingPathLayer(),
-        if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),
+        // Only the last layer can be user interactive due to using Stack
+        // widgets in the previous layers.
+        if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
       ],
     );
 

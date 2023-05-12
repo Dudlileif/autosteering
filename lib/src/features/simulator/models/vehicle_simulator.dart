@@ -296,8 +296,8 @@ class VehicleSimulator {
   static Stream<
       ({
         Vehicle? vehicle,
-        double velocity,
-        double heading,
+        num velocity,
+        num heading,
       })> webWorker(
     Stream<dynamic> vehicleEvents,
   ) async* {

@@ -21,7 +21,7 @@ final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
 
 typedef _$MainVehicle = Notifier<Vehicle>;
 String _$vehicleTravelledDistanceHash() =>
-    r'1ddce754afcb487bfcce35988f1e8ae6b85e06f7';
+    r'7edcf32efb1f7984dfc10d8df6f362d86c7c734d';
 
 /// See also [VehicleTravelledDistance].
 @ProviderFor(VehicleTravelledDistance)

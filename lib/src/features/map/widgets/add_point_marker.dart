@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
@@ -52,10 +50,7 @@ class _AddPointMarkerState extends State<AddPointMarker> {
         child: GestureDetector(
           onTap: widget.onTap,
           child: Visibility(
-            visible: visible ||
-                widget.alwaysVisible ||
-                Platform.isAndroid ||
-                Platform.isIOS,
+            visible: visible || widget.alwaysVisible,
             child: CustomPaint(
               painter: IconPainter(
                 color: widget.color,

@@ -7,7 +7,7 @@ part of 'vehicle_debug_providers.dart';
 // **************************************************************************
 
 String _$debugVehiclePolygonsHash() =>
-    r'5cc07678616b6616a45ef6e130642b8e912acac5';
+    r'b213b15d3dd31550a74f7788d92e34c91aee45ea';
 
 /// See also [DebugVehiclePolygons].
 @ProviderFor(DebugVehiclePolygons)
@@ -89,7 +89,7 @@ final debugTravelledPathSizeProvider =
 
 typedef _$DebugTravelledPathSize = Notifier<int>;
 String _$debugTravelledPathListHash() =>
-    r'45df3642488f9c3335ed6a21d8b57295463a21d2';
+    r'9511fef26c55caa1f0b9946c0dddb2e3fd5a9c88';
 
 /// See also [DebugTravelledPathList].
 @ProviderFor(DebugTravelledPathList)

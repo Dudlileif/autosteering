@@ -8,17 +8,20 @@ class FinishedPolygonLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final points = ref.watch(finishedPathRecordingListProvider) ?? [];
+    final points = ref.watch(finishedPathRecordingListProvider) ?? const [];
 
     return PolygonLayer(
-      polygons: [
-        Polygon(
-          points: points.map((e) => e.position).toList(),
-          isFilled: true,
-          borderStrokeWidth: 2,
-          color: Colors.pink.withOpacity(0.2),
-        ),
-      ],
+      polygonCulling: true,
+      polygons: points.isNotEmpty
+          ? [
+              Polygon(
+                points: points.map((e) => e.position).toList(),
+                isFilled: true,
+                borderStrokeWidth: 2,
+                color: Colors.pink.withOpacity(0.2),
+              ),
+            ]
+          : const [],
     );
   }
 }
