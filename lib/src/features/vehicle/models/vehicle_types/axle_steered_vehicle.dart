@@ -435,7 +435,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
         )
       ];
 
-  /// Returns a new [AxleSteeredVehicle] based on the this one, but with
+  /// Returns a new [AxleSteeredVehicle] based on this one, but with
   /// parameters/variables altered.
   @override
   AxleSteeredVehicle copyWith({

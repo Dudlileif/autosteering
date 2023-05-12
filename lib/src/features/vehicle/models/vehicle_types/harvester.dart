@@ -47,7 +47,7 @@ class Harvester extends AxleSteeredVehicle {
   @override
   double get rightSteeringWheelAngle => -ackermannSteering.rightAngle;
 
-  /// Returns a new [Harvester] based on the this one, but with
+  /// Returns a new [Harvester] based on this one, but with
   /// parameters/variables altered.
   @override
   Harvester copyWith({

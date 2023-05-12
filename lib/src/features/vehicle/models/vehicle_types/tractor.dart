@@ -45,7 +45,7 @@ class Tractor extends AxleSteeredVehicle {
   @override
   double get rightSteeringWheelAngle => ackermannSteering.rightAngle;
 
-  /// Returns a new [Tractor] based on the this one, but with
+  /// Returns a new [Tractor] based on this one, but with
   /// parameters/variables altered.
   @override
   Tractor copyWith({

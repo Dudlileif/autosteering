@@ -1,5 +1,4 @@
 import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/vehicle/models/models.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/animation.dart';
 import 'package:latlong2/latlong.dart';
@@ -32,16 +31,6 @@ class WayPoint extends Equatable {
         heading,
         velocity,
       ];
-}
-
-extension VehicleWayPoint on Vehicle {
-  /// A [WayPoint] for the vehicle in it's current state, i.e. position, heading
-  /// and velocity.
-  WayPoint get wayPoint => WayPoint(
-        position: position,
-        heading: heading,
-        velocity: velocity,
-      );
 }
 
 /// A class for tweening two [WayPoint].

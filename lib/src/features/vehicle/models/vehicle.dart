@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -63,6 +64,14 @@ abstract class Vehicle extends Equatable {
 
   /// Whether the vehicle is simulated.
   final bool simulated;
+
+  /// A [WayPoint] for the vehicle in it's current state, i.e. position, heading
+  /// and velocity.
+  WayPoint get wayPoint => WayPoint(
+        position: position,
+        heading: heading,
+        velocity: velocity,
+      );
 
   /// Geo-calculator used to calculate offsets.
   static const distance = Distance(roundResult: false);
@@ -140,7 +149,7 @@ abstract class Vehicle extends Equatable {
         simulated,
       ];
 
-  /// Returns a new [Vehicle] based on the this one, but with
+  /// Returns a new [Vehicle] based on this one, but with
   /// parameters/variables altered.
   Vehicle copyWith({
     LatLng? position,
