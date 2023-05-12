@@ -6,6 +6,21 @@ part of 'vehicle_simulator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$simVehicleDrivingHash() => r'be56dc171d561aa46a385205a2d4bf764406ac8f';
+
+/// See also [simVehicleDriving].
+@ProviderFor(simVehicleDriving)
+final simVehicleDrivingProvider = AutoDisposeFutureProvider<void>.internal(
+  simVehicleDriving,
+  name: r'simVehicleDrivingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simVehicleDrivingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SimVehicleDrivingRef = AutoDisposeFutureProviderRef<void>;
 String _$simVehicleWebStreamHash() =>
     r'35ebf1c032255d3ecf3607822e014716d2d434a4';
 

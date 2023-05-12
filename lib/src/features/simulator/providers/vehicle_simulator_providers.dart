@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:isolate';
 
+import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'vehicle_simulator_providers.g.dart';
@@ -30,6 +33,40 @@ class SimVehicleInput extends _$SimVehicleInput {
             () => ref.read(_simVehicleIsolatePortProvider)?.send(input),
           ),
       };
+}
+
+@riverpod
+Future<void> simVehicleDriving(SimVehicleDrivingRef ref) async {
+  if (ref.watch(mapReadyProvider)) {
+    final vehicle = switch (ref.watch(simVehicleInputProvider)) {
+      SimPlatform.web => ref.watch(simVehicleWebStreamProvider).when(
+            data: (data) => data,
+            error: (error, stackTrace) => ref.watch(mainVehicleProvider),
+            loading: () => ref.watch(mainVehicleProvider),
+          ),
+      SimPlatform.native => ref.watch(simVehicleIsolateStreamProvider).when(
+            data: (data) => data,
+            error: (error, stackTrace) => ref.watch(mainVehicleProvider),
+            loading: () => ref.watch(mainVehicleProvider),
+          )
+    };
+    if (vehicle == null) {
+      ref
+          .read(simVehicleInputProvider.notifier)
+          .send(ref.read(mainVehicleProvider));
+    } else {
+      ref.read(mainVehicleProvider.notifier).update(vehicle);
+
+      if (vehicle.position != ref.watch(mainMapControllerProvider).center &&
+          ref.watch(centerMapOnVehicleProvider)) {
+        ref.read(mainMapControllerProvider).moveAndRotate(
+              ref.watch(offsetVehiclePositionProvider),
+              ref.watch(mainMapControllerProvider).zoom,
+              -normalizeBearing(ref.watch(mainVehicleProvider).heading),
+            );
+      }
+    }
+  }
 }
 
 @Riverpod(keepAlive: true)

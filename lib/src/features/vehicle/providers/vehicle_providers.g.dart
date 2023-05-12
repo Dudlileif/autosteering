@@ -6,21 +6,6 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$vehicleDrivingHash() => r'03a43a933859996e86ff3b0b7dfa07932dfc772e';
-
-/// See also [vehicleDriving].
-@ProviderFor(vehicleDriving)
-final vehicleDrivingProvider = AutoDisposeFutureProvider<void>.internal(
-  vehicleDriving,
-  name: r'vehicleDrivingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$vehicleDrivingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef VehicleDrivingRef = AutoDisposeFutureProviderRef<void>;
 String _$mainVehicleHash() => r'61ec75fcba2ef443709aa528baf8f644a6036732';
 
 /// See also [MainVehicle].

@@ -1,9 +1,10 @@
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ScreenVehicleControls extends ConsumerWidget {
-  const ScreenVehicleControls({super.key});
+class ScreenSimVehicleControls extends ConsumerWidget {
+  const ScreenSimVehicleControls({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

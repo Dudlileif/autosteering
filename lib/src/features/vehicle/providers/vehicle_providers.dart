@@ -59,40 +59,6 @@ class MainVehicle extends _$MainVehicle {
 }
 
 @riverpod
-Future<void> vehicleDriving(VehicleDrivingRef ref) async {
-  if (ref.watch(mapReadyProvider)) {
-    final vehicle = switch (ref.watch(simVehicleInputProvider)) {
-      SimPlatform.web => ref.watch(simVehicleWebStreamProvider).when(
-            data: (data) => data,
-            error: (error, stackTrace) => ref.watch(mainVehicleProvider),
-            loading: () => ref.watch(mainVehicleProvider),
-          ),
-      SimPlatform.native => ref.watch(simVehicleIsolateStreamProvider).when(
-            data: (data) => data,
-            error: (error, stackTrace) => ref.watch(mainVehicleProvider),
-            loading: () => ref.watch(mainVehicleProvider),
-          )
-    };
-    if (vehicle == null) {
-      ref
-          .read(simVehicleInputProvider.notifier)
-          .send(ref.read(mainVehicleProvider));
-    } else {
-      ref.read(mainVehicleProvider.notifier).update(vehicle);
-
-      if (vehicle.position != ref.watch(mainMapControllerProvider).center &&
-          ref.watch(centerMapOnVehicleProvider)) {
-        ref.read(mainMapControllerProvider).moveAndRotate(
-              ref.watch(offsetVehiclePositionProvider),
-              ref.watch(mainMapControllerProvider).zoom,
-              -normalizeBearing(ref.watch(mainVehicleProvider).heading),
-            );
-      }
-    }
-  }
-}
-
-@riverpod
 class VehicleTravelledDistance extends _$VehicleTravelledDistance {
   @override
   double build() {

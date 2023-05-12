@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
@@ -13,7 +14,7 @@ class MapView extends ConsumerWidget {
     final vehicle = ref.watch(mainVehicleProvider);
 
     ref
-      ..watch(vehicleDrivingProvider)
+      ..watch(simVehicleDrivingProvider)
       ..watch(zoomTimerControllerProvider);
 
     final map = FlutterMap(
@@ -71,7 +72,7 @@ class MapView extends ConsumerWidget {
         ),
         const Align(
           alignment: Alignment.bottomRight,
-          child: ScreenVehicleControls(),
+          child: ScreenSimVehicleControls(),
         ),
         const Align(
           alignment: Alignment.topLeft,
