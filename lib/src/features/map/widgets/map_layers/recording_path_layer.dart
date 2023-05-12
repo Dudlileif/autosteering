@@ -9,12 +9,8 @@ class RecordingPathLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isRecording = ref.watch(enablePathRecorderProvider);
     final recordingPathPoints = ref.watch(pathRecordingListProvider);
 
-    if (!isRecording) {
-      return const SizedBox.shrink();
-    }
     return Stack(
       children: [
         PolylineLayer(

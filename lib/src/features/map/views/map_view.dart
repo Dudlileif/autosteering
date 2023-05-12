@@ -49,13 +49,15 @@ class MapView extends ConsumerWidget {
       ),
       children: [
         if (ref.watch(showOSMLayerProvider)) const OSMLayer(),
-        const CountryLayers(),
-        const SentinelLayers(),
-        const FinishedPathLayer(),
-        const FinishedPolygonLayer(),
-        const RecordingPathLayer(),
-        const EditablePathLayer(),
-        const VehicleDebugLayer(),
+        if (ref.watch(showCountryLayersProvider)) const CountryLayers(),
+        if (ref.watch(showSentinelLayersProvider)) const SentinelLayers(),
+        if (ref.watch(showFinishedPathLayerProvider)) const FinishedPathLayer(),
+        if (ref.watch(showFinishedPolygonLayerProvider))
+          const FinishedPolygonLayer(),
+        if (ref.watch(showRecordingPathLayerProvider))
+          const RecordingPathLayer(),
+        if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
+        if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),
       ],
     );
 
@@ -72,7 +74,7 @@ class MapView extends ConsumerWidget {
         ),
         const Align(
           alignment: Alignment.bottomRight,
-          child: ScreenSimVehicleControls(),
+          child: VehicleSimScreenControls(),
         ),
         const Align(
           alignment: Alignment.topLeft,

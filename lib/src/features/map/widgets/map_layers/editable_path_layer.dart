@@ -10,13 +10,9 @@ class EditablePathLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isEditing = ref.watch(editFinishedPathProvider);
-    final points = ref.watch(finishedPathRecordingListProvider);
+    final points = ref.watch(finishedPathRecordingListProvider) ?? [];
     final closedPath = ref.watch(showFinishedPolygonProvider);
 
-    if (!isEditing || points == null) {
-      return const SizedBox.shrink();
-    }
     return Stack(
       children: [
         PolylineLayer(

@@ -11,6 +11,7 @@ class VehicleDebugLayer extends ConsumerWidget {
     final debugTravelledPath = ref.watch(debugTravelledPathProvider);
     final debugTrajectory = ref.watch(debugTrajectoryProvider);
     final debugSteering = ref.watch(debugSteeringProvider);
+    final debugPolygons = ref.watch(debugVehiclePolygonsProvider);
 
     final vehicle = ref.watch(mainVehicleProvider);
     final travelledPath = ref.watch(debugTravelledPathListProvider);
@@ -41,13 +42,14 @@ class VehicleDebugLayer extends ConsumerWidget {
                 ...vehicle.steeringDebugLines,
             ],
           ),
-        PolygonLayer(
-          polygonCulling: true,
-          polygons: [
-            ...vehicle.wheelPolygons,
-            ...vehicle.polygons,
-          ],
-        ),
+        if (debugPolygons)
+          PolygonLayer(
+            polygonCulling: true,
+            polygons: [
+              ...vehicle.wheelPolygons,
+              ...vehicle.polygons,
+            ],
+          ),
         if (debugSteering)
           CircleLayer(
             circles: [

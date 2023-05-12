@@ -114,20 +114,6 @@ final mapOffsetProvider = NotifierProvider<MapOffset, MapCenterOffset>.internal(
 );
 
 typedef _$MapOffset = Notifier<MapCenterOffset>;
-String _$showOSMLayerHash() => r'bc0ef306dcc916f4b9503bd18d57a64e09885c8a';
-
-/// See also [ShowOSMLayer].
-@ProviderFor(ShowOSMLayer)
-final showOSMLayerProvider = NotifierProvider<ShowOSMLayer, bool>.internal(
-  ShowOSMLayer.new,
-  name: r'showOSMLayerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$showOSMLayerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ShowOSMLayer = Notifier<bool>;
 String _$alwaysPointNorthHash() => r'f8a05832feb870dadc2d754f8633c256ab5eaa23';
 
 /// See also [AlwaysPointNorth].

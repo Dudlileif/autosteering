@@ -8,13 +8,9 @@ class FinishedPathLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isEditing = ref.watch(editFinishedPathProvider);
-    final showFinishedPath = ref.watch(showFinishedPathProvider);
-    final finishedPathPoints = ref.watch(finishedPathRecordingListProvider);
+    final finishedPathPoints =
+        ref.watch(finishedPathRecordingListProvider) ?? [];
 
-    if (finishedPathPoints == null || isEditing || !showFinishedPath) {
-      return const SizedBox.shrink();
-    }
     return Stack(
       children: [
         PolylineLayer(

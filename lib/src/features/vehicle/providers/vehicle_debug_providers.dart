@@ -5,6 +5,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'vehicle_debug_providers.g.dart';
 
 @Riverpod(keepAlive: true)
+class DebugVehiclePolygons extends _$DebugVehiclePolygons {
+  @override
+  bool build() => false;
+
+  void update({required bool value}) => Future(() => state = value);
+
+  void toggle() => Future(() => state = !state);
+}
+
+@Riverpod(keepAlive: true)
 class DebugSteering extends _$DebugSteering {
   @override
   bool build() => false;

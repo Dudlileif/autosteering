@@ -117,16 +117,6 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
 }
 
 @Riverpod(keepAlive: true)
-class ShowOSMLayer extends _$ShowOSMLayer {
-  @override
-  bool build() => true;
-
-  void toggle() => Future(() => state = !state);
-
-  void update({required bool value}) => Future(() => state = value);
-}
-
-@Riverpod(keepAlive: true)
 class AlwaysPointNorth extends _$AlwaysPointNorth {
   @override
   bool build() {

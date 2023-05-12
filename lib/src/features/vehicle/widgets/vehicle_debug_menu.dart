@@ -63,7 +63,22 @@ class VehicleDebugMenu extends ConsumerWidget {
               ),
             ],
           ),
-        )
+        ),
+        CheckboxListTile(
+          value: ref.watch(debugVehiclePolygonsProvider),
+          onChanged: (value) => value != null
+              ? ref
+                  .read(debugVehiclePolygonsProvider.notifier)
+                  .update(value: value)
+              : null,
+          secondary: Text(
+            'Polygons',
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(fontWeight: FontWeight.w500),
+          ),
+        ),
       ],
       child: Row(
         mainAxisSize: MainAxisSize.min,

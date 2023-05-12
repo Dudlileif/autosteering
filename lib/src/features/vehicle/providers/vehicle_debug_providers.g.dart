@@ -6,6 +6,23 @@ part of 'vehicle_debug_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$debugVehiclePolygonsHash() =>
+    r'5cc07678616b6616a45ef6e130642b8e912acac5';
+
+/// See also [DebugVehiclePolygons].
+@ProviderFor(DebugVehiclePolygons)
+final debugVehiclePolygonsProvider =
+    NotifierProvider<DebugVehiclePolygons, bool>.internal(
+  DebugVehiclePolygons.new,
+  name: r'debugVehiclePolygonsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugVehiclePolygonsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugVehiclePolygons = Notifier<bool>;
 String _$debugSteeringHash() => r'c5ada2ad5ee082dc18321fb8ebfa78e9ad9c2a71';
 
 /// See also [DebugSteering].
