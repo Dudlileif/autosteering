@@ -45,6 +45,7 @@ class VehicleSimulator {
                 vehicle: vehicle,
                 velocity: calcVel,
                 heading: calcHeading,
+                distance: 0,
               ),
             );
           } else if (period > 0) {
@@ -55,10 +56,12 @@ class VehicleSimulator {
 
             // If the vehicle has moved (changed)
             if (vehicle != prevVehicle) {
+              // Distance calculation
+              final calcDistance =
+                  _distance.distance(vehicle!.position, prevVehicle!.position);
+
               // Velocity calculation
-              final newCalcVel =
-                  _distance.distance(vehicle!.position, prevVehicle!.position) /
-                      period;
+              final newCalcVel = calcDistance / period;
 
               if (newCalcVel.toStringAsFixed(1) != calcVel.toStringAsFixed(1)) {
                 calcVel = newCalcVel;
@@ -81,6 +84,7 @@ class VehicleSimulator {
                   vehicle: vehicle,
                   velocity: calcVel,
                   heading: calcHeading,
+                  distance: calcDistance,
                 ),
               );
 
@@ -298,6 +302,7 @@ class VehicleSimulator {
         Vehicle? vehicle,
         num velocity,
         num heading,
+        num distance,
       })> webWorker(
     Stream<dynamic> vehicleEvents,
   ) async* {
@@ -341,10 +346,12 @@ class VehicleSimulator {
             vehicle = _updatePosition(vehicle!, period);
 
             if (vehicle != prevVehicle) {
+              // Distance calculation
+              final calcDistance =
+                  _distance.distance(vehicle!.position, prevVehicle!.position);
+
               // Velocity calculation
-              final newCalcVel =
-                  _distance.distance(vehicle!.position, prevVehicle!.position) /
-                      period;
+              final newCalcVel = calcDistance / period;
 
               if (newCalcVel.toStringAsFixed(1) != calcVel.toStringAsFixed(1)) {
                 calcVel = newCalcVel;
@@ -368,6 +375,7 @@ class VehicleSimulator {
                 vehicle: vehicle,
                 velocity: calcVel,
                 heading: calcHeading,
+                distance: calcDistance,
               );
             }
           }
@@ -379,6 +387,7 @@ class VehicleSimulator {
         vehicle: vehicle,
         velocity: calcVel,
         heading: calcHeading,
+        distance: 0,
       );
     });
   }

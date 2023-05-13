@@ -61,23 +61,7 @@ class MainVehicle extends _$MainVehicle {
 @riverpod
 class VehicleTravelledDistance extends _$VehicleTravelledDistance {
   @override
-  double build() {
-    ref.listen(
-      mainVehicleProvider,
-      (previous, next) {
-        if (previous != null) {
-          if (previous.position != next.position) {
-            update(
-              const Distance(roundResult: false)
-                  .distance(previous.position, next.position),
-            );
-          }
-        }
-      },
-      fireImmediately: true,
-    );
-    return 0;
-  }
+  double build() => 0;
 
   void update(double distance) => Future(() => state += distance);
 }

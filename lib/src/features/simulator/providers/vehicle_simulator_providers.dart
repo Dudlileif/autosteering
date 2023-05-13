@@ -98,6 +98,9 @@ Stream<Vehicle?> simVehicleWebStream(
         .read(vehicleVelocityProvider.notifier)
         .update(event.velocity.toDouble());
     ref.read(vehicleHeadingProvider.notifier).update(event.heading.toDouble());
+    ref
+        .read(vehicleTravelledDistanceProvider.notifier)
+        .update(event.distance.toDouble());
     return event.vehicle;
   });
 }
@@ -125,9 +128,17 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
 
   while (true) {
     final message = await events.next;
-    if (message is ({Vehicle vehicle, double velocity, double heading})) {
+    if (message is ({
+      Vehicle vehicle,
+      double velocity,
+      double heading,
+      double distance
+    })) {
       ref.read(vehicleVelocityProvider.notifier).update(message.velocity);
       ref.read(vehicleHeadingProvider.notifier).update(message.heading);
+      ref
+          .read(vehicleTravelledDistanceProvider.notifier)
+          .update(message.distance);
       yield message.vehicle;
     }
   }
