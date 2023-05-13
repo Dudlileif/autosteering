@@ -9,7 +9,9 @@ part of 'vehicle_debug_providers.dart';
 String _$debugVehiclePolygonsHash() =>
     r'b213b15d3dd31550a74f7788d92e34c91aee45ea';
 
-/// See also [DebugVehiclePolygons].
+/// Whether to show vehicle debug polygons.
+///
+/// Copied from [DebugVehiclePolygons].
 @ProviderFor(DebugVehiclePolygons)
 final debugVehiclePolygonsProvider =
     NotifierProvider<DebugVehiclePolygons, bool>.internal(
@@ -25,7 +27,9 @@ final debugVehiclePolygonsProvider =
 typedef _$DebugVehiclePolygons = Notifier<bool>;
 String _$debugSteeringHash() => r'c5ada2ad5ee082dc18321fb8ebfa78e9ad9c2a71';
 
-/// See also [DebugSteering].
+/// Whether to show vehicle steering debug features.
+///
+/// Copied from [DebugSteering].
 @ProviderFor(DebugSteering)
 final debugSteeringProvider = NotifierProvider<DebugSteering, bool>.internal(
   DebugSteering.new,
@@ -40,7 +44,9 @@ final debugSteeringProvider = NotifierProvider<DebugSteering, bool>.internal(
 typedef _$DebugSteering = Notifier<bool>;
 String _$debugTrajectoryHash() => r'6c7e2444394bba5a8e3186695f547453f4ad614c';
 
-/// See also [DebugTrajectory].
+/// Whether to show vehicle trajectory debug features.
+///
+/// Copied from [DebugTrajectory].
 @ProviderFor(DebugTrajectory)
 final debugTrajectoryProvider =
     NotifierProvider<DebugTrajectory, bool>.internal(
@@ -57,7 +63,9 @@ typedef _$DebugTrajectory = Notifier<bool>;
 String _$debugTravelledPathHash() =>
     r'bb96ce559ab9a9ece21a9649a620cdc0f029afb7';
 
-/// See also [DebugTravelledPath].
+/// Whether to show vehicle travelled path debug.
+///
+/// Copied from [DebugTravelledPath].
 @ProviderFor(DebugTravelledPath)
 final debugTravelledPathProvider =
     NotifierProvider<DebugTravelledPath, bool>.internal(
@@ -74,7 +82,9 @@ typedef _$DebugTravelledPath = Notifier<bool>;
 String _$debugTravelledPathSizeHash() =>
     r'd3ad16cdc8e478f038dde44511c1442a27dcf02f';
 
-/// See also [DebugTravelledPathSize].
+/// The amount of points [DebugTravelledPathList] should hold.
+///
+/// Copied from [DebugTravelledPathSize].
 @ProviderFor(DebugTravelledPathSize)
 final debugTravelledPathSizeProvider =
     NotifierProvider<DebugTravelledPathSize, int>.internal(
@@ -91,7 +101,9 @@ typedef _$DebugTravelledPathSize = Notifier<int>;
 String _$debugTravelledPathListHash() =>
     r'9511fef26c55caa1f0b9946c0dddb2e3fd5a9c88';
 
-/// See also [DebugTravelledPathList].
+/// A list of the last [DebugTravelledPathSize] position points for the vehicle.
+///
+/// Copied from [DebugTravelledPathList].
 @ProviderFor(DebugTravelledPathList)
 final debugTravelledPathListProvider =
     AutoDisposeNotifierProvider<DebugTravelledPathList, List<LatLng>>.internal(

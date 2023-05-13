@@ -20,8 +20,13 @@ VehicleInput _$VehicleInputFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$VehicleInput {
+  /// The position of the vehicle.
   LatLng? get position => throw _privateConstructorUsedError;
+
+  /// The velocity of the vehicle.
   double? get velocity => throw _privateConstructorUsedError;
+
+  /// The steering angle of the vehicle.
   double? get steeringAngle => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -124,10 +129,15 @@ class _$_VehicleInput implements _VehicleInput {
   factory _$_VehicleInput.fromJson(Map<String, dynamic> json) =>
       _$$_VehicleInputFromJson(json);
 
+  /// The position of the vehicle.
   @override
   final LatLng? position;
+
+  /// The velocity of the vehicle.
   @override
   final double? velocity;
+
+  /// The steering angle of the vehicle.
   @override
   final double? steeringAngle;
 
@@ -178,10 +188,16 @@ abstract class _VehicleInput implements VehicleInput {
       _$_VehicleInput.fromJson;
 
   @override
+
+  /// The position of the vehicle.
   LatLng? get position;
   @override
+
+  /// The velocity of the vehicle.
   double? get velocity;
   @override
+
+  /// The steering angle of the vehicle.
   double? get steeringAngle;
   @override
   @JsonKey(ignore: true)

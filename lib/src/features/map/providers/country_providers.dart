@@ -6,6 +6,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'country_providers.g.dart';
 
+/// A provider fort showing the country we are currently in, if the country
+/// has defined custom map layers.
+///
+/// Can check the current location by querying the OSM servers.
 @Riverpod(keepAlive: true)
 class CurrentCountry extends _$CurrentCountry {
   @override
@@ -50,6 +54,8 @@ class CurrentCountry extends _$CurrentCountry {
       });
 }
 
+/// A provider that contains all the custom layers available for the
+/// [CurrentCountry].
 @Riverpod(keepAlive: true)
 class AvailableCountryLayers extends _$AvailableCountryLayers {
   @override
@@ -78,6 +84,7 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
       true;
 }
 
+/// A set of the current selction of custom layers for the [CurrentCountry].
 @Riverpod(keepAlive: true)
 class SelectedCountryLayers extends _$SelectedCountryLayers {
   @override
@@ -110,6 +117,8 @@ class SelectedCountryLayers extends _$SelectedCountryLayers {
       true;
 }
 
+/// A map of the available country layers and their opacities, which can be
+/// specified.
 @Riverpod(keepAlive: true)
 class CountryLayerOpacities extends _$CountryLayerOpacities {
   @override

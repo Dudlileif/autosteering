@@ -2,6 +2,7 @@ import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A menu button and attached submenu for Sentinel layers.
 class SentinelLayerSelector extends ConsumerWidget {
   const SentinelLayerSelector({super.key});
 
@@ -63,6 +64,7 @@ class SentinelLayerSelector extends ConsumerWidget {
   }
 }
 
+/// A button in the submenu of the Sentinel layer selector.
 class _SentinelLayerMenuItemButton extends ConsumerWidget {
   const _SentinelLayerMenuItemButton({
     required this.index,

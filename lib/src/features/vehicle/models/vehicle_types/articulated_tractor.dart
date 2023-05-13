@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+/// An articulated tractor with two bodies with solid axles that are joined
+/// at a pivot point.
 class ArticulatedTractor extends Vehicle {
   const ArticulatedTractor({
     required this.pivotToAntennaDistance,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A combination layer for the editable points and the lines between.
 class EditablePathLayer extends ConsumerWidget {
   const EditablePathLayer({super.key});
 

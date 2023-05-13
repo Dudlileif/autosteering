@@ -2,6 +2,7 @@ import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A small widget to show attributions to the map contributors.
 class MapContributionWidget extends ConsumerWidget {
   const MapContributionWidget({super.key});
 

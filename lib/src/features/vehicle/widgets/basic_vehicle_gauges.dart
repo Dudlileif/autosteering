@@ -2,6 +2,8 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Basic vehicle gauges to show the travelled distance (clearable), velocity
+/// and heading.
 class BasicVehicleGauges extends ConsumerWidget {
   const BasicVehicleGauges({
     super.key,

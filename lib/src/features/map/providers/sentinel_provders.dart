@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sentinel_provders.g.dart';
 
+/// A provider for the Sentinel Dataspace instance id.
 @Riverpod(keepAlive: true)
 class SentinelInstanceId extends _$SentinelInstanceId {
   @override
@@ -11,6 +12,7 @@ class SentinelInstanceId extends _$SentinelInstanceId {
   void update(String? value) => Future(() => state = value);
 }
 
+/// A provider for the available Sentinel layers.
 @Riverpod(keepAlive: true)
 class AvailableSentinelLayers extends _$AvailableSentinelLayers {
   @override
@@ -46,6 +48,8 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
       true;
 }
 
+/// A provider for the max level of cloud coverage that the Sentinel layers
+/// should query for.
 @Riverpod(keepAlive: true)
 class SentinelMaxCloudCoveragePercent
     extends _$SentinelMaxCloudCoveragePercent {
@@ -55,6 +59,7 @@ class SentinelMaxCloudCoveragePercent
   void update(double value) => Future(() => state = value);
 }
 
+/// A provider for the set of selected Sentinel layers.
 @Riverpod(keepAlive: true)
 class SelectedSentinelLayers extends _$SelectedSentinelLayers {
   @override
@@ -88,6 +93,7 @@ class SelectedSentinelLayers extends _$SelectedSentinelLayers {
       true;
 }
 
+/// A map for the Sentinel layers and their opacities, which can be specified.
 @Riverpod(keepAlive: true)
 class SentinelLayerOpacities extends _$SentinelLayerOpacities {
   @override

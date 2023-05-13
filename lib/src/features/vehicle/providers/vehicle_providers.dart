@@ -7,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'vehicle_providers.g.dart';
 
+/// The main provider for the vehicle state.
 @Riverpod(keepAlive: true)
 class MainVehicle extends _$MainVehicle {
   @override
@@ -58,6 +59,7 @@ class MainVehicle extends _$MainVehicle {
   void reset() => ref.invalidateSelf();
 }
 
+/// A provider for the distance travelled by the vehicle.
 @riverpod
 class VehicleTravelledDistance extends _$VehicleTravelledDistance {
   @override
@@ -66,6 +68,7 @@ class VehicleTravelledDistance extends _$VehicleTravelledDistance {
   void update(double distance) => Future(() => state += distance);
 }
 
+/// A provider for the vehicle's velocity gauge.
 @riverpod
 class VehicleVelocity extends _$VehicleVelocity {
   @override
@@ -74,6 +77,7 @@ class VehicleVelocity extends _$VehicleVelocity {
   void update(double value) => Future(() => state = value);
 }
 
+/// A provider for the vehicle's heading gauge.
 @riverpod
 class VehicleHeading extends _$VehicleHeading {
   @override

@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/animation.dart';
 import 'package:latlong2/latlong.dart';
 
+/// A class for combining vehicle information with it's position.
+/// Useful to record paths and function as targets for auto-steering.
 class WayPoint extends Equatable {
   const WayPoint({
     required this.position,
@@ -10,10 +12,16 @@ class WayPoint extends Equatable {
     required this.velocity,
   });
 
+  /// The position of the waypoint.
   final LatLng position;
+
+  /// The heading of the vehicle at the time of recording.
   final double heading;
+
+  /// The velocity of the vehicle at the time of the recording.
   final double velocity;
 
+  /// Returns a new [WayPoint] from this with altered parameters.
   WayPoint copyWith({
     LatLng? position,
     double? heading,
@@ -25,6 +33,7 @@ class WayPoint extends Equatable {
         velocity: velocity ?? this.velocity,
       );
 
+  /// Properties used to compare with [Equatable].
   @override
   List<Object?> get props => [
         position,

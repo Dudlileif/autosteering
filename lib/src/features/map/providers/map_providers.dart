@@ -9,6 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'map_providers.g.dart';
 
+/// Whether the map is ready to be shown or not.
 @Riverpod(keepAlive: true)
 class MapReady extends _$MapReady {
   @override
@@ -17,6 +18,8 @@ class MapReady extends _$MapReady {
   void ready() => Future(() => state = true);
 }
 
+/// The main [MapController] provider, which allows controlling the map from
+/// outside the widget code itself.
 @Riverpod(keepAlive: true)
 class MainMapController extends _$MainMapController {
   @override
@@ -31,6 +34,7 @@ class MainMapController extends _$MainMapController {
       );
 }
 
+/// The home position of the vehicle, i.e. where the vehicle will reset to.
 @Riverpod(keepAlive: true)
 class HomePosition extends _$HomePosition {
   @override
@@ -39,6 +43,7 @@ class HomePosition extends _$HomePosition {
   void update(LatLng position) => Future(() => state = position);
 }
 
+/// Whether the map should center on the vehicle or if it could be moved freely.
 @Riverpod(keepAlive: true)
 class CenterMapOnVehicle extends _$CenterMapOnVehicle {
   @override
@@ -59,12 +64,16 @@ class CenterMapOnVehicle extends _$CenterMapOnVehicle {
   void invert() => update(!state);
 }
 
+/// A provider for controlling the zoom when a gamepad button is held down.
+///
+/// The map will keep zooming in/out while the button is held down.
 @riverpod
 class ZoomTimerController extends _$ZoomTimerController {
   @override
   Timer? build() => null;
 
   void cancel() => Future(() => state?.cancel());
+
   void update(Zoom zoomAction) {
     cancel();
     Future(
@@ -86,6 +95,7 @@ class ZoomTimerController extends _$ZoomTimerController {
   }
 }
 
+/// How much the map center should be offset from the vehicle.
 @Riverpod(keepAlive: true)
 class MapOffset extends _$MapOffset {
   @override
@@ -99,6 +109,8 @@ class MapOffset extends _$MapOffset {
       );
 }
 
+/// The map center offset applied to the vehicle position, contains the
+/// actual center position of the map.
 @Riverpod(keepAlive: true)
 LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
   final vehicle = ref.watch(mainVehicleProvider);
@@ -116,6 +128,7 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
   );
 }
 
+/// Whether the map always should point to the north and not rotate.
 @Riverpod(keepAlive: true)
 class AlwaysPointNorth extends _$AlwaysPointNorth {
   @override

@@ -8,7 +8,12 @@ part of 'country_providers.dart';
 
 String _$currentCountryHash() => r'e674d2f08e41fc881509fba4fd304057ca66a552';
 
-/// See also [CurrentCountry].
+/// A provider fort showing the country we are currently in, if the country
+/// has defined custom map layers.
+///
+/// Can check the current location by querying the OSM servers.
+///
+/// Copied from [CurrentCountry].
 @ProviderFor(CurrentCountry)
 final currentCountryProvider =
     NotifierProvider<CurrentCountry, Country?>.internal(
@@ -25,7 +30,10 @@ typedef _$CurrentCountry = Notifier<Country?>;
 String _$availableCountryLayersHash() =>
     r'558c96a7495d3d83408e41446eff9af46073a47b';
 
-/// See also [AvailableCountryLayers].
+/// A provider that contains all the custom layers available for the
+/// [CurrentCountry].
+///
+/// Copied from [AvailableCountryLayers].
 @ProviderFor(AvailableCountryLayers)
 final availableCountryLayersProvider =
     NotifierProvider<AvailableCountryLayers, List<TileLayerData>>.internal(
@@ -42,7 +50,9 @@ typedef _$AvailableCountryLayers = Notifier<List<TileLayerData>>;
 String _$selectedCountryLayersHash() =>
     r'f1542b4e5e1a4fe0c67f4f9a2d14bc50f223ace1';
 
-/// See also [SelectedCountryLayers].
+/// A set of the current selction of custom layers for the [CurrentCountry].
+///
+/// Copied from [SelectedCountryLayers].
 @ProviderFor(SelectedCountryLayers)
 final selectedCountryLayersProvider =
     NotifierProvider<SelectedCountryLayers, Set<TileLayerData>>.internal(
@@ -59,7 +69,10 @@ typedef _$SelectedCountryLayers = Notifier<Set<TileLayerData>>;
 String _$countryLayerOpacitiesHash() =>
     r'8e5035439847e8333b010ad9c41eeb81d4e74a94';
 
-/// See also [CountryLayerOpacities].
+/// A map of the available country layers and their opacities, which can be
+/// specified.
+///
+/// Copied from [CountryLayerOpacities].
 @ProviderFor(CountryLayerOpacities)
 final countryLayerOpacitiesProvider =
     NotifierProvider<CountryLayerOpacities, Map<String, double>>.internal(

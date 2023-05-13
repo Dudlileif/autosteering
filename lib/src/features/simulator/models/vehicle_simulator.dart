@@ -5,11 +5,13 @@ import 'dart:isolate';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
+/// A class for simulating how vehicles should move given their position,
+/// heading, steering angle and velocity.
 class VehicleSimulator {
   static const _targetPeriodMs = 10;
   static const _distance = Distance(roundResult: false);
 
-  /// Used non-web systems since they can easily be multithreaded.
+  /// Used on native platforms since they can easily be multithreaded.
   static Future<void> isolateWorker(SendPort sendPort) async {
     final commandPort = ReceivePort('SimVehicle');
 

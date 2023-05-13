@@ -8,7 +8,9 @@ part of 'enabled_map_layers_providers.dart';
 
 String _$showCountryLayersHash() => r'61af2048fb2cd4af4a320878551e206e8c176294';
 
-/// See also [showCountryLayers].
+/// Whether the selected country layers should be shown.
+///
+/// Copied from [showCountryLayers].
 @ProviderFor(showCountryLayers)
 final showCountryLayersProvider = AutoDisposeProvider<bool>.internal(
   showCountryLayers,
@@ -24,7 +26,9 @@ typedef ShowCountryLayersRef = AutoDisposeProviderRef<bool>;
 String _$showSentinelLayersHash() =>
     r'95bc3f5387c26ae043399c2fba4d87f5552e9366';
 
-/// See also [showSentinelLayers].
+/// Whether the selected Sentinel layers should be shown.
+///
+/// Copied from [showSentinelLayers].
 @ProviderFor(showSentinelLayers)
 final showSentinelLayersProvider = AutoDisposeProvider<bool>.internal(
   showSentinelLayers,
@@ -40,7 +44,9 @@ typedef ShowSentinelLayersRef = AutoDisposeProviderRef<bool>;
 String _$showFinishedPathLayerHash() =>
     r'b3ab3c600695d5323d5c2ecd07bdf4cb2e8350db';
 
-/// See also [showFinishedPathLayer].
+/// Whether the finished recorded path should be shown.
+///
+/// Copied from [showFinishedPathLayer].
 @ProviderFor(showFinishedPathLayer)
 final showFinishedPathLayerProvider = AutoDisposeProvider<bool>.internal(
   showFinishedPathLayer,
@@ -56,7 +62,10 @@ typedef ShowFinishedPathLayerRef = AutoDisposeProviderRef<bool>;
 String _$showFinishedPolygonLayerHash() =>
     r'bc3fbb243a3e2955bd42729d782fb89d2c4ec361';
 
-/// See also [showFinishedPolygonLayer].
+/// Whether the polygon contained by the finished recorded path should be
+/// shown.
+///
+/// Copied from [showFinishedPolygonLayer].
 @ProviderFor(showFinishedPolygonLayer)
 final showFinishedPolygonLayerProvider = AutoDisposeProvider<bool>.internal(
   showFinishedPolygonLayer,
@@ -72,7 +81,9 @@ typedef ShowFinishedPolygonLayerRef = AutoDisposeProviderRef<bool>;
 String _$showRecordingPathLayerHash() =>
     r'ae2f7794987dbccd35e5546413fd3caf0f451d7c';
 
-/// See also [showRecordingPathLayer].
+/// Whether the currently recording path should be shown.
+///
+/// Copied from [showRecordingPathLayer].
 @ProviderFor(showRecordingPathLayer)
 final showRecordingPathLayerProvider = AutoDisposeProvider<bool>.internal(
   showRecordingPathLayer,
@@ -88,7 +99,9 @@ typedef ShowRecordingPathLayerRef = AutoDisposeProviderRef<bool>;
 String _$showEditablePathLayerHash() =>
     r'18c4ca86fc37494746fef72752d7e348e8d5dcdc';
 
-/// See also [showEditablePathLayer].
+/// Whether the editable recorded path should be shown.
+///
+/// Copied from [showEditablePathLayer].
 @ProviderFor(showEditablePathLayer)
 final showEditablePathLayerProvider = AutoDisposeProvider<bool>.internal(
   showEditablePathLayer,
@@ -104,7 +117,9 @@ typedef ShowEditablePathLayerRef = AutoDisposeProviderRef<bool>;
 String _$showVehicleDebugLayerHash() =>
     r'bd078d57b11197ad1018055ecd4375a4ba6085b4';
 
-/// See also [showVehicleDebugLayer].
+/// Whether the debugging layer for the vehicle should be shown.
+///
+/// Copied from [showVehicleDebugLayer].
 @ProviderFor(showVehicleDebugLayer)
 final showVehicleDebugLayerProvider = AutoDisposeProvider<bool>.internal(
   showVehicleDebugLayer,
@@ -119,7 +134,9 @@ final showVehicleDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 typedef ShowVehicleDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showOSMLayerHash() => r'bc0ef306dcc916f4b9503bd18d57a64e09885c8a';
 
-/// See also [ShowOSMLayer].
+/// Whether the OpenStreetMap layer should be shown.
+///
+/// Copied from [ShowOSMLayer].
 @ProviderFor(ShowOSMLayer)
 final showOSMLayerProvider = NotifierProvider<ShowOSMLayer, bool>.internal(
   ShowOSMLayer.new,

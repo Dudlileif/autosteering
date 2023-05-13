@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A combination layer for the selected Sentinel layers.
 class SentinelLayers extends ConsumerWidget {
   const SentinelLayers({super.key});
 

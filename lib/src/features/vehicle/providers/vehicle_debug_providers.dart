@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'vehicle_debug_providers.g.dart';
 
+/// Whether to show vehicle debug polygons.
 @Riverpod(keepAlive: true)
 class DebugVehiclePolygons extends _$DebugVehiclePolygons {
   @override
@@ -14,6 +15,7 @@ class DebugVehiclePolygons extends _$DebugVehiclePolygons {
   void toggle() => Future(() => state = !state);
 }
 
+/// Whether to show vehicle steering debug features.
 @Riverpod(keepAlive: true)
 class DebugSteering extends _$DebugSteering {
   @override
@@ -24,6 +26,7 @@ class DebugSteering extends _$DebugSteering {
   void toggle() => Future(() => state = !state);
 }
 
+/// Whether to show vehicle trajectory debug features.
 @Riverpod(keepAlive: true)
 class DebugTrajectory extends _$DebugTrajectory {
   @override
@@ -34,6 +37,7 @@ class DebugTrajectory extends _$DebugTrajectory {
   void toggle() => Future(() => state = !state);
 }
 
+/// Whether to show vehicle travelled path debug.
 @Riverpod(keepAlive: true)
 class DebugTravelledPath extends _$DebugTravelledPath {
   @override
@@ -44,6 +48,7 @@ class DebugTravelledPath extends _$DebugTravelledPath {
   void toggle() => Future(() => state = !state);
 }
 
+/// The amount of points [DebugTravelledPathList] should hold.
 @Riverpod(keepAlive: true)
 class DebugTravelledPathSize extends _$DebugTravelledPathSize {
   @override
@@ -52,6 +57,7 @@ class DebugTravelledPathSize extends _$DebugTravelledPathSize {
   void update(int value) => Future(() => state = value);
 }
 
+/// A list of the last [DebugTravelledPathSize] position points for the vehicle.
 @riverpod
 class DebugTravelledPathList extends _$DebugTravelledPathList {
   @override

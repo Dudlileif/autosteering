@@ -2,6 +2,7 @@ import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
+/// A country class for Norway, with a selection of maps from Kartverket.
 class Norway extends Country {
   const Norway() : super('Norway');
 

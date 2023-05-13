@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A menu button with attached submenu for configuring the simulator.
 class SimMenu extends ConsumerWidget {
   const SimMenu({super.key});
 

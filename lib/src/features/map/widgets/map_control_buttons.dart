@@ -5,18 +5,14 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MapControlButtons extends ConsumerStatefulWidget {
+/// A selection of widgets to control the map zoom, rotation and position lock.
+class MapControlButtons extends ConsumerWidget {
   const MapControlButtons({
     super.key,
   });
 
   @override
-  ConsumerState<MapControlButtons> createState() => _MapControlButtonsState();
-}
-
-class _MapControlButtonsState extends ConsumerState<MapControlButtons> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Defer the first frame so that map and vehcile position are initialized.
     WidgetsBinding.instance.deferFirstFrame();
 

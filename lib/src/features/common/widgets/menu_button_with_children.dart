@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// A standardized menu button useful for keeping consistent styling of
+/// menus.
 class MenuButtonWithChildren extends StatelessWidget {
   const MenuButtonWithChildren({
     required this.text,
@@ -7,8 +9,14 @@ class MenuButtonWithChildren extends StatelessWidget {
     this.icon,
     super.key,
   });
+
+  /// The children widgets of this menu.
   final List<Widget> menuChildren;
+
+  /// The icon to show besides the text.
   final IconData? icon;
+
+  /// The text to show on the button.
   final String text;
 
   @override

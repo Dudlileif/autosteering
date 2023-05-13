@@ -3,6 +3,8 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A menu button with attached submenu for options related to the
+/// simulated vehicle.
 class VehicleSimMenu extends ConsumerWidget {
   const VehicleSimMenu({super.key});
 

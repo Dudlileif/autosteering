@@ -8,7 +8,9 @@ part of 'vehicle_providers.dart';
 
 String _$mainVehicleHash() => r'61ec75fcba2ef443709aa528baf8f644a6036732';
 
-/// See also [MainVehicle].
+/// The main provider for the vehicle state.
+///
+/// Copied from [MainVehicle].
 @ProviderFor(MainVehicle)
 final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
   MainVehicle.new,
@@ -21,9 +23,11 @@ final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
 
 typedef _$MainVehicle = Notifier<Vehicle>;
 String _$vehicleTravelledDistanceHash() =>
-    r'7edcf32efb1f7984dfc10d8df6f362d86c7c734d';
+    r'6a316e0c90297686a35761fd5e29de66cb214254';
 
-/// See also [VehicleTravelledDistance].
+/// A provider for the distance travelled by the vehicle.
+///
+/// Copied from [VehicleTravelledDistance].
 @ProviderFor(VehicleTravelledDistance)
 final vehicleTravelledDistanceProvider =
     AutoDisposeNotifierProvider<VehicleTravelledDistance, double>.internal(
@@ -39,7 +43,9 @@ final vehicleTravelledDistanceProvider =
 typedef _$VehicleTravelledDistance = AutoDisposeNotifier<double>;
 String _$vehicleVelocityHash() => r'28b83020d7c59ceb0ed8e2098344c48249c608fe';
 
-/// See also [VehicleVelocity].
+/// A provider for the vehicle's velocity gauge.
+///
+/// Copied from [VehicleVelocity].
 @ProviderFor(VehicleVelocity)
 final vehicleVelocityProvider =
     AutoDisposeNotifierProvider<VehicleVelocity, double>.internal(
@@ -55,7 +61,9 @@ final vehicleVelocityProvider =
 typedef _$VehicleVelocity = AutoDisposeNotifier<double>;
 String _$vehicleHeadingHash() => r'8d735c55694e84dd953388bf76a895d61845f23c';
 
-/// See also [VehicleHeading].
+/// A provider for the vehicle's heading gauge.
+///
+/// Copied from [VehicleHeading].
 @ProviderFor(VehicleHeading)
 final vehicleHeadingProvider =
     AutoDisposeNotifierProvider<VehicleHeading, double>.internal(

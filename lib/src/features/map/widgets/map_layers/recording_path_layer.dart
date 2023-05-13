@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A combination layer for the currently recording points and the
+/// lines between.
 class RecordingPathLayer extends ConsumerWidget {
   const RecordingPathLayer({super.key});
 

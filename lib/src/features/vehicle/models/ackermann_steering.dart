@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:latlong2/latlong.dart';
 
+/// A class used to simulate Ackermann steering geometry.
 /// https://se.mathworks.com/help/vdynblks/ref/kinematicsteering.html
 class AckermannSteering {
   const AckermannSteering({
@@ -11,12 +12,16 @@ class AckermannSteering {
     this.steeringRatio = 1.25,
   });
 
-  /// The input wheel angle
+  /// The input steering angle.
   final double steeringAngle;
 
-  /// The distance between the wheel axles
+  /// The distance between the wheel axles.
   final double wheelBase;
+
+  /// The distance between the wheels on the same axle.
   final double trackWidth;
+
+  /// A modifier to increase/decrease how fast the steering turns.
   final double steeringRatio;
 
   /// Radians
@@ -62,23 +67,32 @@ class AckermannSteering {
   Turning radius: $turningRadius''';
 }
 
+/// A class used to find the angle of the opposite steering wheel with
+/// Ackermann steering geometry.
 class AckermannOppositeAngle {
   const AckermannOppositeAngle({
-    required this.wheelAngleMax,
+    required this.wheelAngle,
     required this.wheelBase,
     required this.trackWidth,
     this.steeringRatio = 1.25,
   });
 
-  final double wheelAngleMax;
+  /// The angle of the known steering wheel.
+  final double wheelAngle;
+
+  /// The distance between the wheel axles.
   final double wheelBase;
+
+  /// The distance between the wheels on the same axle.
   final double trackWidth;
+
+  /// A modifier to increase/decrease how fast the steering turns.
   final double steeringRatio;
 
   /// Radians
   double get ackermannAngle => atan(
-        (wheelBase * tan(degToRadian(wheelAngleMax))) /
-            (wheelBase + 0.5 * trackWidth * tan(degToRadian(wheelAngleMax))),
+        (wheelBase * tan(degToRadian(wheelAngle))) /
+            (wheelBase + 0.5 * trackWidth * tan(degToRadian(wheelAngle))),
       );
 
   /// Degrees

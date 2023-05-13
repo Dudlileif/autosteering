@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// The main map widget with overlayed widgets (buttons, gauges).
 class MapView extends ConsumerWidget {
   const MapView({super.key});
 

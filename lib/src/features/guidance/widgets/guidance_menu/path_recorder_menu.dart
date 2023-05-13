@@ -3,6 +3,8 @@ import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A menu button with attached submenu for working with the path recording
+/// and editing feature.
 class PathRecorderMenu extends ConsumerWidget {
   const PathRecorderMenu({
     super.key,

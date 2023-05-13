@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'sentinel_layer.freezed.dart';
 part 'sentinel_layer.g.dart';
 
+/// A class that stores information for a Copernicus Sentinel-2 map layer.
 @freezed
 class SentinelLayer with _$SentinelLayer {
   const factory SentinelLayer({
@@ -11,6 +12,8 @@ class SentinelLayer with _$SentinelLayer {
     /// go to [https://shapps.dataspace.copernicus.eu/dashboard/#/configurations]
     /// and create a new configuration, and copy the Id.
     required String instanceId,
+
+    /// Which layer type this layer should contain info about.
     required SentinelLayerType layerType,
   }) = _SentinelLayer;
   const SentinelLayer._();
@@ -18,8 +21,10 @@ class SentinelLayer with _$SentinelLayer {
   factory SentinelLayer.fromJson(Map<String, Object?> json) =>
       _$SentinelLayerFromJson(json);
 
+  /// The name of the layer type.
   String get name => layerType.name;
 
+  /// The url template for getting map tiles for this layer.
   String urlTemplate(double maxCloudCoveragePercent) => layerType.urlTemplate(
         instanceId: instanceId,
         maxCloudCoveragePercent: maxCloudCoveragePercent,
@@ -37,11 +42,14 @@ enum SentinelLayerType {
 
   const SentinelLayerType(this.id);
 
+  /// The Copernicus Dataspace id for the layer.
   final String id;
 
+  /// A friendlier name that only has the first letter capitalized.
   String get name =>
       id.replaceAll('_', ' ').toLowerCase().replaceRange(0, 1, id[0]);
 
+  /// The url template for getting map tiles for this layer.
   String urlTemplate({
     required String instanceId,
     double maxCloudCoveragePercent = 20,

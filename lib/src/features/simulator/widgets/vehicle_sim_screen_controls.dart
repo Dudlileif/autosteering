@@ -3,6 +3,9 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Basic on screen controls for the simulated vehicle.
+///
+/// Contains controls for velocity, steering and a separate stop button.
 class VehicleSimScreenControls extends ConsumerWidget {
   const VehicleSimScreenControls({super.key});
 

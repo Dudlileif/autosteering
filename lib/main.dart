@@ -34,6 +34,7 @@ Future<void> main() async {
   );
 }
 
+/// Apply test settings from 'assets/test_settings.json'.
 Future<void> applyTestSettings(ProviderContainer container) async {
   final testSettings =
       await rootBundle.loadStructuredData<Map<String, dynamic>>(

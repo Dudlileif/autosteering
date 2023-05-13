@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+/// An extension to allow for using [copyWith] on [Polygon].
 extension PolygonCopyWith on Polygon {
+  /// Returns a [Polygon] with altered parameters.
   Polygon copyWith({
     List<LatLng>? points,
     List<List<LatLng>>? holePointsList,
@@ -37,7 +39,9 @@ extension PolygonCopyWith on Polygon {
       );
 }
 
+/// An extension to allow for using [copyWith] on [Polyline].
 extension PolylineCopyWith on Polyline {
+  /// Returns a [Polyline] with altered parameters.
   Polyline copyWith({
     List<LatLng>? points,
     double? strokeWidth,

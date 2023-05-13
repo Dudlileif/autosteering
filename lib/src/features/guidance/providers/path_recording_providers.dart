@@ -5,8 +5,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'path_recording_providers.g.dart';
 
+/// A calculator used to find distances, heading/bearing etc. between points.
 const calculator = Distance(roundResult: false);
 
+/// Whether the recorder is enabled.
 @Riverpod(keepAlive: true)
 class EnablePathRecorder extends _$EnablePathRecorder {
   @override
@@ -17,6 +19,7 @@ class EnablePathRecorder extends _$EnablePathRecorder {
   void toggle() => Future(() => state != state);
 }
 
+/// A list of the currently recording points.
 @Riverpod(keepAlive: true)
 class PathRecordingList extends _$PathRecordingList {
   @override
@@ -89,6 +92,7 @@ class PathRecordingList extends _$PathRecordingList {
   void clear() => Future(() => state.clear());
 }
 
+/// A list of path points for the last finished recording.
 @Riverpod(keepAlive: true)
 class FinishedPathRecordingList extends _$FinishedPathRecordingList {
   @override
@@ -115,6 +119,7 @@ class FinishedPathRecordingList extends _$FinishedPathRecordingList {
       true;
 }
 
+/// Whether to show the last fininshed path recording.
 @Riverpod(keepAlive: true)
 class ShowFinishedPath extends _$ShowFinishedPath {
   @override
@@ -125,6 +130,7 @@ class ShowFinishedPath extends _$ShowFinishedPath {
   void toggle() => Future(() => state != state);
 }
 
+/// Whether to show the polygon contained by the last fininshed path recording.
 @Riverpod(keepAlive: true)
 class ShowFinishedPolygon extends _$ShowFinishedPolygon {
   @override
@@ -135,6 +141,7 @@ class ShowFinishedPolygon extends _$ShowFinishedPolygon {
   void toggle() => Future(() => state != state);
 }
 
+/// Whether to activate editing of the last finished path recording.
 @Riverpod(keepAlive: true)
 class EditFinishedPath extends _$EditFinishedPath {
   @override

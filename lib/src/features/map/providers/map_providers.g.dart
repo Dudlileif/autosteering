@@ -9,7 +9,10 @@ part of 'map_providers.dart';
 String _$offsetVehiclePositionHash() =>
     r'2ff19a43f87ee2431bad5e002ae4f5dfa94df6bc';
 
-/// See also [offsetVehiclePosition].
+/// The map center offset applied to the vehicle position, contains the
+/// actual center position of the map.
+///
+/// Copied from [offsetVehiclePosition].
 @ProviderFor(offsetVehiclePosition)
 final offsetVehiclePositionProvider = Provider<LatLng>.internal(
   offsetVehiclePosition,
@@ -24,7 +27,9 @@ final offsetVehiclePositionProvider = Provider<LatLng>.internal(
 typedef OffsetVehiclePositionRef = ProviderRef<LatLng>;
 String _$mapReadyHash() => r'2931061d7ad71c99e4d4b04386d2adc722b6e029';
 
-/// See also [MapReady].
+/// Whether the map is ready to be shown or not.
+///
+/// Copied from [MapReady].
 @ProviderFor(MapReady)
 final mapReadyProvider = NotifierProvider<MapReady, bool>.internal(
   MapReady.new,
@@ -38,7 +43,10 @@ final mapReadyProvider = NotifierProvider<MapReady, bool>.internal(
 typedef _$MapReady = Notifier<bool>;
 String _$mainMapControllerHash() => r'161021f93fea3f2ea13ea30ce3b768d6718ced11';
 
-/// See also [MainMapController].
+/// The main [MapController] provider, which allows controlling the map from
+/// outside the widget code itself.
+///
+/// Copied from [MainMapController].
 @ProviderFor(MainMapController)
 final mainMapControllerProvider =
     NotifierProvider<MainMapController, MapController>.internal(
@@ -54,7 +62,9 @@ final mainMapControllerProvider =
 typedef _$MainMapController = Notifier<MapController>;
 String _$homePositionHash() => r'6d6ea4b473964c1f64a70739e69bf44512264eeb';
 
-/// See also [HomePosition].
+/// The home position of the vehicle, i.e. where the vehicle will reset to.
+///
+/// Copied from [HomePosition].
 @ProviderFor(HomePosition)
 final homePositionProvider = NotifierProvider<HomePosition, LatLng>.internal(
   HomePosition.new,
@@ -69,7 +79,9 @@ typedef _$HomePosition = Notifier<LatLng>;
 String _$centerMapOnVehicleHash() =>
     r'89addbc27d6c66b66bd52f5feba007f0aa480afd';
 
-/// See also [CenterMapOnVehicle].
+/// Whether the map should center on the vehicle or if it could be moved freely.
+///
+/// Copied from [CenterMapOnVehicle].
 @ProviderFor(CenterMapOnVehicle)
 final centerMapOnVehicleProvider =
     NotifierProvider<CenterMapOnVehicle, bool>.internal(
@@ -86,7 +98,11 @@ typedef _$CenterMapOnVehicle = Notifier<bool>;
 String _$zoomTimerControllerHash() =>
     r'033d1227ff87f645fe562bd349cba49d854ffb3d';
 
-/// See also [ZoomTimerController].
+/// A provider for controlling the zoom when a gamepad button is held down.
+///
+/// The map will keep zooming in/out while the button is held down.
+///
+/// Copied from [ZoomTimerController].
 @ProviderFor(ZoomTimerController)
 final zoomTimerControllerProvider =
     AutoDisposeNotifierProvider<ZoomTimerController, Timer?>.internal(
@@ -102,7 +118,9 @@ final zoomTimerControllerProvider =
 typedef _$ZoomTimerController = AutoDisposeNotifier<Timer?>;
 String _$mapOffsetHash() => r'b46b6719a6b0032ff0f70065900ed94a4837f396';
 
-/// See also [MapOffset].
+/// How much the map center should be offset from the vehicle.
+///
+/// Copied from [MapOffset].
 @ProviderFor(MapOffset)
 final mapOffsetProvider = NotifierProvider<MapOffset, MapCenterOffset>.internal(
   MapOffset.new,
@@ -116,7 +134,9 @@ final mapOffsetProvider = NotifierProvider<MapOffset, MapCenterOffset>.internal(
 typedef _$MapOffset = Notifier<MapCenterOffset>;
 String _$alwaysPointNorthHash() => r'f8a05832feb870dadc2d754f8633c256ab5eaa23';
 
-/// See also [AlwaysPointNorth].
+/// Whether the map always should point to the north and not rotate.
+///
+/// Copied from [AlwaysPointNorth].
 @ProviderFor(AlwaysPointNorth)
 final alwaysPointNorthProvider =
     NotifierProvider<AlwaysPointNorth, bool>.internal(

@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'enabled_map_layers_providers.g.dart';
 
+/// Whether the OpenStreetMap layer should be shown.
 @Riverpod(keepAlive: true)
 class ShowOSMLayer extends _$ShowOSMLayer {
   @override
@@ -15,18 +16,21 @@ class ShowOSMLayer extends _$ShowOSMLayer {
   void update({required bool value}) => Future(() => state = value);
 }
 
+/// Whether the selected country layers should be shown.
 @riverpod
 bool showCountryLayers(ShowCountryLayersRef ref) {
   final enabled = ref.watch(selectedCountryLayersProvider).isNotEmpty;
   return enabled;
 }
 
+/// Whether the selected Sentinel layers should be shown.
 @riverpod
 bool showSentinelLayers(ShowSentinelLayersRef ref) {
   final enabled = ref.watch(selectedSentinelLayersProvider).isNotEmpty;
   return enabled;
 }
 
+/// Whether the finished recorded path should be shown.
 @riverpod
 bool showFinishedPathLayer(ShowFinishedPathLayerRef ref) {
   final isEditing = ref.watch(editFinishedPathProvider);
@@ -37,6 +41,8 @@ bool showFinishedPathLayer(ShowFinishedPathLayerRef ref) {
   return enabled;
 }
 
+/// Whether the polygon contained by the finished recorded path should be
+/// shown.
 @riverpod
 bool showFinishedPolygonLayer(ShowFinishedPolygonLayerRef ref) {
   final showPolygon = ref.watch(showFinishedPolygonProvider);
@@ -46,12 +52,14 @@ bool showFinishedPolygonLayer(ShowFinishedPolygonLayerRef ref) {
   return enabled;
 }
 
+/// Whether the currently recording path should be shown.
 @riverpod
 bool showRecordingPathLayer(ShowRecordingPathLayerRef ref) {
   final enabled = ref.watch(enablePathRecorderProvider);
   return enabled;
 }
 
+/// Whether the editable recorded path should be shown.
 @riverpod
 bool showEditablePathLayer(ShowEditablePathLayerRef ref) {
   final isEditing = ref.watch(editFinishedPathProvider);
@@ -61,6 +69,7 @@ bool showEditablePathLayer(ShowEditablePathLayerRef ref) {
   return enabled;
 }
 
+/// Whether the debugging layer for the vehicle should be shown.
 @riverpod
 bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {
   final debugTravelledPath = ref.watch(debugTravelledPathProvider);

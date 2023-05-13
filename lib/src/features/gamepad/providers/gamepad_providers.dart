@@ -11,6 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gamepad_providers.g.dart';
 
+/// The currently active configuration of the gamepad.
 @Riverpod(keepAlive: true)
 class ActiveGamepadConfig extends _$ActiveGamepadConfig {
   @override
@@ -32,6 +33,8 @@ class ActiveGamepadConfig extends _$ActiveGamepadConfig {
       );
 }
 
+/// A stream of the input events from the gamepad mapped to a more friendly
+/// input interface.
 @Riverpod(keepAlive: true)
 Stream<GamepadInput> gamepadInputEvents(GamepadInputEventsRef ref) =>
     Gamepads.events.map(
@@ -46,6 +49,7 @@ Stream<GamepadInput> gamepadInputEvents(GamepadInputEventsRef ref) =>
       },
     );
 
+/// A provider for handling the inputs from the gamepad.
 @Riverpod(keepAlive: true)
 void handleGamepadInput(HandleGamepadInputRef ref) {
   ref.watch(gamepadInputEventsProvider).when(
@@ -63,6 +67,7 @@ void handleGamepadInput(HandleGamepadInputRef ref) {
       );
 }
 
+/// How to handle POV/D-pad inputs.
 void handlePovInput(GamepadInput event, ProviderRef<void> ref) {
   if (event.povInput == GamepadPovInput.released) {
     ref.read(zoomTimerControllerProvider.notifier).cancel();
@@ -73,6 +78,7 @@ void handlePovInput(GamepadInput event, ProviderRef<void> ref) {
   }
 }
 
+/// How to handle analog inputs, i.e. triggers and joysticks.
 void handleAnalogInput(GamepadInput event, ProviderRef<void> ref) {
   final vehicle = ref.watch(mainVehicleProvider);
 
@@ -105,6 +111,7 @@ void handleAnalogInput(GamepadInput event, ProviderRef<void> ref) {
   }
 }
 
+/// How to handle button presses.
 void handleButtonInput(GamepadInput event, ProviderRef<void> ref) {
   if (event.buttonInput == GamepadButtonInput.home) {
     ref.read(simVehicleInputProvider.notifier).send(

@@ -25,6 +25,8 @@ mixin _$SentinelLayer {
   /// go to [https://shapps.dataspace.copernicus.eu/dashboard/#/configurations]
   /// and create a new configuration, and copy the Id.
   String get instanceId => throw _privateConstructorUsedError;
+
+  /// Which layer type this layer should contain info about.
   SentinelLayerType get layerType => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -124,6 +126,8 @@ class _$_SentinelLayer extends _SentinelLayer {
   /// and create a new configuration, and copy the Id.
   @override
   final String instanceId;
+
+  /// Which layer type this layer should contain info about.
   @override
   final SentinelLayerType layerType;
 
@@ -178,6 +182,8 @@ abstract class _SentinelLayer extends SentinelLayer {
   /// and create a new configuration, and copy the Id.
   String get instanceId;
   @override
+
+  /// Which layer type this layer should contain info about.
   SentinelLayerType get layerType;
   @override
   @JsonKey(ignore: true)

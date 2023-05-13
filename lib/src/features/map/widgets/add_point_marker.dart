@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
 
+/// A marker that will insert a new point to the editable path.
 class AddPointMarker extends StatefulWidget {
   const AddPointMarker({
     required this.point,
@@ -14,19 +15,34 @@ class AddPointMarker extends StatefulWidget {
     super.key,
   });
 
+  /// Position of the marker
   final LatLng point;
+
+  /// What to do when the marker is tapped.
   final void Function() onTap;
+
+  /// The radius of the marker.
   final double radius;
+
+  /// The strokewidth of the lines in the marker.
   final double strokeWidth;
+
+  /// The color of the marker.
   final Color color;
+
+  /// Whether to use the [radius] parameter as meters instead of pixels.
   final bool useRadiusInMeter;
+
+  /// Whether the marker always should be visible, otherwise on hover/tap.
   final bool alwaysVisible;
 
   @override
   State<AddPointMarker> createState() => _AddPointMarkerState();
 }
 
+/// The actual state and widget for [AddPointMarker].
 class _AddPointMarkerState extends State<AddPointMarker> {
+  /// Whether the marker should be visible.
   bool visible = false;
 
   @override
@@ -41,8 +57,11 @@ class _AddPointMarkerState extends State<AddPointMarker> {
       final delta = offset - map.getOffsetFromOrigin(r);
       radiusToUse = delta.distance;
     }
+    // Convert strokeWidth to meters is radius is in meters.
+    final strokeWidth = widget.strokeWidth / widget.radius * radiusToUse;
 
     return Transform.rotate(
+      // Counter-rotated to keep upright.
       angle: -map.rotationRad,
       child: MouseRegion(
         onEnter: (event) => setState(() => visible = true),
@@ -52,10 +71,10 @@ class _AddPointMarkerState extends State<AddPointMarker> {
           child: Visibility(
             visible: visible || widget.alwaysVisible,
             child: CustomPaint(
-              painter: IconPainter(
+              painter: PlusIconPainter(
                 color: widget.color,
                 radius: radiusToUse,
-                strokeWidth: widget.strokeWidth,
+                strokeWidth: strokeWidth,
               ),
             ),
           ),
@@ -65,8 +84,9 @@ class _AddPointMarkerState extends State<AddPointMarker> {
   }
 }
 
-class IconPainter extends CustomPainter {
-  const IconPainter({
+/// A painter for drawing a custom sized plus icon.
+class PlusIconPainter extends CustomPainter {
+  const PlusIconPainter({
     required this.color,
     required this.radius,
     required this.strokeWidth,

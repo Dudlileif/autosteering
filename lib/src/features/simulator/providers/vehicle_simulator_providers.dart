@@ -12,11 +12,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'vehicle_simulator_providers.g.dart';
 
+/// An enumeration class for determining which platform we're running on.
 enum SimPlatform {
   native,
   web;
 }
 
+/// A provider used to send vehicle input data to the simulation thread/worker.
+///
+/// It will automatically select the right type of thread/worker depending
+/// on the platform.
 @Riverpod(keepAlive: true)
 class SimVehicleInput extends _$SimVehicleInput {
   @override
@@ -35,6 +40,8 @@ class SimVehicleInput extends _$SimVehicleInput {
       };
 }
 
+/// A provider that watches the simulated vehicle and updates the map
+/// position when necessary.
 @riverpod
 Future<void> simVehicleDriving(SimVehicleDrivingRef ref) async {
   if (ref.watch(mapReadyProvider)) {
@@ -69,6 +76,8 @@ Future<void> simVehicleDriving(SimVehicleDrivingRef ref) async {
   }
 }
 
+/// A provider for keeping the isolate [SendPort] for when working on a
+/// native platform. Vehicle inputs gets directed here from [SimVehicleInput].
 @Riverpod(keepAlive: true)
 class _SimVehicleIsolatePort extends _$SimVehicleIsolatePort {
   @override
@@ -77,6 +86,8 @@ class _SimVehicleIsolatePort extends _$SimVehicleIsolatePort {
   void update(SendPort? port) => Future(() => state = port);
 }
 
+/// A provider that creates a stream for sending vehicle inputs to the
+/// vehicle simulator when on the web platform.
 @Riverpod(keepAlive: true)
 class _SimVehicleWebInput extends _$SimVehicleWebInput {
   @override
@@ -85,6 +96,11 @@ class _SimVehicleWebInput extends _$SimVehicleWebInput {
   Stream<dynamic> stream() => state.stream;
 }
 
+/// A provider that creates a stream and watches the vehicle simulator on the
+/// web platform.
+///
+/// It will update the stream with vehicle updates from the simulator and also
+/// update the vehicle gauge providers.
 @riverpod
 Stream<Vehicle?> simVehicleWebStream(
   SimVehicleWebStreamRef ref,
@@ -105,6 +121,11 @@ Stream<Vehicle?> simVehicleWebStream(
   });
 }
 
+/// A provider that creates a stream and watches the vehicle simulator on the
+/// native platform.
+///
+/// It will update the stream with vehicle updates from the simulator and also
+/// update the vehicle gauge providers.
 @riverpod
 Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
   final recievePort = ReceivePort();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
 
+/// A movable map marker used to edit the position of points in editable paths.
 class MovableMapMarker extends StatelessWidget {
   const MovableMapMarker({
     required this.point,
@@ -12,10 +13,19 @@ class MovableMapMarker extends StatelessWidget {
     super.key,
   });
 
+  /// Position of the marker
   final LatLng point;
+
+  /// What to do when the marker is moved.
   final void Function(LatLng position) onMoved;
+
+  /// The radius of the marker.
   final double radius;
+
+  /// The color of the marker.
   final Color color;
+
+  /// Whether to use the [radius] parameter as meters instead of pixels.
   final bool useRadiusInMeter;
 
   @override
@@ -66,6 +76,7 @@ class MovableMapMarker extends StatelessWidget {
   }
 }
 
+/// A basic painter for painting a circle.
 class CirclePainter extends CustomPainter {
   const CirclePainter({
     required this.color,

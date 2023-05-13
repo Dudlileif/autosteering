@@ -2,6 +2,7 @@ import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A menu button and attached submenu for selecting custom country layers.
 class CountryLayerSelector extends ConsumerWidget {
   const CountryLayerSelector({super.key});
 
@@ -69,6 +70,7 @@ class CountryLayerSelector extends ConsumerWidget {
   }
 }
 
+/// A button in the submenu of the country layer selector.
 class _CountryLayerMenuItemButton extends ConsumerWidget {
   const _CountryLayerMenuItemButton({
     required this.index,

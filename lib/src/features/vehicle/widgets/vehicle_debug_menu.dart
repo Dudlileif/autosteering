@@ -2,6 +2,8 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A menu button with attached submenu for toggling vehicle debugging
+/// features.
 class VehicleDebugMenu extends ConsumerWidget {
   const VehicleDebugMenu({super.key});
 

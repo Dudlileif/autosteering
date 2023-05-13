@@ -9,7 +9,9 @@ part of 'sentinel_provders.dart';
 String _$sentinelInstanceIdHash() =>
     r'2df91878eb3536ade9ab1de22b1801570fc273b7';
 
-/// See also [SentinelInstanceId].
+/// A provider for the Sentinel Dataspace instance id.
+///
+/// Copied from [SentinelInstanceId].
 @ProviderFor(SentinelInstanceId)
 final sentinelInstanceIdProvider =
     NotifierProvider<SentinelInstanceId, String?>.internal(
@@ -26,7 +28,9 @@ typedef _$SentinelInstanceId = Notifier<String?>;
 String _$availableSentinelLayersHash() =>
     r'7bf62de8a9d66ed26fb2faf6564951e4e72413a8';
 
-/// See also [AvailableSentinelLayers].
+/// A provider for the available Sentinel layers.
+///
+/// Copied from [AvailableSentinelLayers].
 @ProviderFor(AvailableSentinelLayers)
 final availableSentinelLayersProvider =
     NotifierProvider<AvailableSentinelLayers, List<SentinelLayer>>.internal(
@@ -43,7 +47,10 @@ typedef _$AvailableSentinelLayers = Notifier<List<SentinelLayer>>;
 String _$sentinelMaxCloudCoveragePercentHash() =>
     r'1dff6c54679fabeb5fe660d40081e8054fc8e9cc';
 
-/// See also [SentinelMaxCloudCoveragePercent].
+/// A provider for the max level of cloud coverage that the Sentinel layers
+/// should query for.
+///
+/// Copied from [SentinelMaxCloudCoveragePercent].
 @ProviderFor(SentinelMaxCloudCoveragePercent)
 final sentinelMaxCloudCoveragePercentProvider =
     NotifierProvider<SentinelMaxCloudCoveragePercent, double>.internal(
@@ -60,7 +67,9 @@ typedef _$SentinelMaxCloudCoveragePercent = Notifier<double>;
 String _$selectedSentinelLayersHash() =>
     r'910f4f783d730729884fcdd0cc3c8ddf09fdc09d';
 
-/// See also [SelectedSentinelLayers].
+/// A provider for the set of selected Sentinel layers.
+///
+/// Copied from [SelectedSentinelLayers].
 @ProviderFor(SelectedSentinelLayers)
 final selectedSentinelLayersProvider =
     NotifierProvider<SelectedSentinelLayers, Set<SentinelLayer>>.internal(
@@ -77,7 +86,9 @@ typedef _$SelectedSentinelLayers = Notifier<Set<SentinelLayer>>;
 String _$sentinelLayerOpacitiesHash() =>
     r'133600f24775b6062e2c828f01d4ff4b60d93327';
 
-/// See also [SentinelLayerOpacities].
+/// A map for the Sentinel layers and their opacities, which can be specified.
+///
+/// Copied from [SentinelLayerOpacities].
 @ProviderFor(SentinelLayerOpacities)
 final sentinelLayerOpacitiesProvider = NotifierProvider<SentinelLayerOpacities,
     Map<SentinelLayerType, double>>.internal(

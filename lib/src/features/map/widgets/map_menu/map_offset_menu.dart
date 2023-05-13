@@ -4,6 +4,7 @@ import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A menu button and attached submenu for configuring the map center offset.
 class MapOffsetMenu extends ConsumerWidget {
   const MapOffsetMenu({super.key});
 

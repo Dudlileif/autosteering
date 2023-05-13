@@ -104,7 +104,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
   /// The max opposite steering angle for the wheel the angle sensor is
   /// mounted to. I.e. the angle to the right for a front left steering wheel.
   double get maxOppositeSteeringAngle => AckermannOppositeAngle(
-        wheelAngleMax: steeringAngleMax,
+        wheelAngle: steeringAngleMax,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
       ).oppositeAngle;

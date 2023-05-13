@@ -8,7 +8,10 @@ part of 'vehicle_simulator_providers.dart';
 
 String _$simVehicleDrivingHash() => r'be56dc171d561aa46a385205a2d4bf764406ac8f';
 
-/// See also [simVehicleDriving].
+/// A provider that watches the simulated vehicle and updates the map
+/// position when necessary.
+///
+/// Copied from [simVehicleDriving].
 @ProviderFor(simVehicleDriving)
 final simVehicleDrivingProvider = AutoDisposeFutureProvider<void>.internal(
   simVehicleDriving,
@@ -22,9 +25,15 @@ final simVehicleDrivingProvider = AutoDisposeFutureProvider<void>.internal(
 
 typedef SimVehicleDrivingRef = AutoDisposeFutureProviderRef<void>;
 String _$simVehicleWebStreamHash() =>
-    r'02219bdaccc98c86a74ca4e590248220db009b61';
+    r'a80d35d1c3096960f294753353308dcadfe3dc50';
 
-/// See also [simVehicleWebStream].
+/// A provider that creates a stream and watches the vehicle simulator on the
+/// web platform.
+///
+/// It will update the stream with vehicle updates from the simulator and also
+/// update the vehicle gauge providers.
+///
+/// Copied from [simVehicleWebStream].
 @ProviderFor(simVehicleWebStream)
 final simVehicleWebStreamProvider =
     AutoDisposeStreamProvider<Vehicle?>.internal(
@@ -39,9 +48,15 @@ final simVehicleWebStreamProvider =
 
 typedef SimVehicleWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simVehicleIsolateStreamHash() =>
-    r'b8ecf3600509e91f9a36ec2d3064ad28193ba589';
+    r'122e29af528cd2dc0aa4d889f99bcbb9708fd552';
 
-/// See also [simVehicleIsolateStream].
+/// A provider that creates a stream and watches the vehicle simulator on the
+/// native platform.
+///
+/// It will update the stream with vehicle updates from the simulator and also
+/// update the vehicle gauge providers.
+///
+/// Copied from [simVehicleIsolateStream].
 @ProviderFor(simVehicleIsolateStream)
 final simVehicleIsolateStreamProvider =
     AutoDisposeStreamProvider<Vehicle>.internal(
@@ -57,7 +72,12 @@ final simVehicleIsolateStreamProvider =
 typedef SimVehicleIsolateStreamRef = AutoDisposeStreamProviderRef<Vehicle>;
 String _$simVehicleInputHash() => r'6d3e54cc2067bd06966437f73a29c17e318ccc68';
 
-/// See also [SimVehicleInput].
+/// A provider used to send vehicle input data to the simulation thread/worker.
+///
+/// It will automatically select the right type of thread/worker depending
+/// on the platform.
+///
+/// Copied from [SimVehicleInput].
 @ProviderFor(SimVehicleInput)
 final simVehicleInputProvider =
     NotifierProvider<SimVehicleInput, SimPlatform>.internal(
@@ -74,7 +94,10 @@ typedef _$SimVehicleInput = Notifier<SimPlatform>;
 String _$simVehicleIsolatePortHash() =>
     r'2d97a0640c019e8c43506747a04eac2dcab1c5c4';
 
-/// See also [_SimVehicleIsolatePort].
+/// A provider for keeping the isolate [SendPort] for when working on a
+/// native platform. Vehicle inputs gets directed here from [SimVehicleInput].
+///
+/// Copied from [_SimVehicleIsolatePort].
 @ProviderFor(_SimVehicleIsolatePort)
 final _simVehicleIsolatePortProvider =
     NotifierProvider<_SimVehicleIsolatePort, SendPort?>.internal(
@@ -91,7 +114,10 @@ typedef _$SimVehicleIsolatePort = Notifier<SendPort?>;
 String _$simVehicleWebInputHash() =>
     r'fa42aa4d307021c610da4f894436f6920fe30f8f';
 
-/// See also [_SimVehicleWebInput].
+/// A provider that creates a stream for sending vehicle inputs to the
+/// vehicle simulator when on the web platform.
+///
+/// Copied from [_SimVehicleWebInput].
 @ProviderFor(_SimVehicleWebInput)
 final _simVehicleWebInputProvider =
     NotifierProvider<_SimVehicleWebInput, StreamController<dynamic>>.internal(

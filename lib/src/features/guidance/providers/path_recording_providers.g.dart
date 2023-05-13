@@ -9,7 +9,9 @@ part of 'path_recording_providers.dart';
 String _$enablePathRecorderHash() =>
     r'46976f30ef4bb77980c70721adb3f8e56a0bfa8d';
 
-/// See also [EnablePathRecorder].
+/// Whether the recorder is enabled.
+///
+/// Copied from [EnablePathRecorder].
 @ProviderFor(EnablePathRecorder)
 final enablePathRecorderProvider =
     NotifierProvider<EnablePathRecorder, bool>.internal(
@@ -25,7 +27,9 @@ final enablePathRecorderProvider =
 typedef _$EnablePathRecorder = Notifier<bool>;
 String _$pathRecordingListHash() => r'78728614519462ac1c2e910fce7ad233197851a2';
 
-/// See also [PathRecordingList].
+/// A list of the currently recording points.
+///
+/// Copied from [PathRecordingList].
 @ProviderFor(PathRecordingList)
 final pathRecordingListProvider =
     NotifierProvider<PathRecordingList, List<WayPoint>>.internal(
@@ -42,7 +46,9 @@ typedef _$PathRecordingList = Notifier<List<WayPoint>>;
 String _$finishedPathRecordingListHash() =>
     r'a9eb350deb822e89a3b6ce05ab7f1eec9c5105b6';
 
-/// See also [FinishedPathRecordingList].
+/// A list of path points for the last finished recording.
+///
+/// Copied from [FinishedPathRecordingList].
 @ProviderFor(FinishedPathRecordingList)
 final finishedPathRecordingListProvider =
     NotifierProvider<FinishedPathRecordingList, List<WayPoint>?>.internal(
@@ -58,7 +64,9 @@ final finishedPathRecordingListProvider =
 typedef _$FinishedPathRecordingList = Notifier<List<WayPoint>?>;
 String _$showFinishedPathHash() => r'7053947b87b868ba73bc65e72d1e9d50f768d58a';
 
-/// See also [ShowFinishedPath].
+/// Whether to show the last fininshed path recording.
+///
+/// Copied from [ShowFinishedPath].
 @ProviderFor(ShowFinishedPath)
 final showFinishedPathProvider =
     NotifierProvider<ShowFinishedPath, bool>.internal(
@@ -75,7 +83,9 @@ typedef _$ShowFinishedPath = Notifier<bool>;
 String _$showFinishedPolygonHash() =>
     r'0fa3bd17b79894df87db88328f82dc90f46d0e5e';
 
-/// See also [ShowFinishedPolygon].
+/// Whether to show the polygon contained by the last fininshed path recording.
+///
+/// Copied from [ShowFinishedPolygon].
 @ProviderFor(ShowFinishedPolygon)
 final showFinishedPolygonProvider =
     NotifierProvider<ShowFinishedPolygon, bool>.internal(
@@ -91,7 +101,9 @@ final showFinishedPolygonProvider =
 typedef _$ShowFinishedPolygon = Notifier<bool>;
 String _$editFinishedPathHash() => r'9343300ae45482c100ab819f01af800f3baae4a3';
 
-/// See also [EditFinishedPath].
+/// Whether to activate editing of the last finished path recording.
+///
+/// Copied from [EditFinishedPath].
 @ProviderFor(EditFinishedPath)
 final editFinishedPathProvider =
     NotifierProvider<EditFinishedPath, bool>.internal(
