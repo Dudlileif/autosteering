@@ -2,6 +2,9 @@ import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A button for selecting which color theme to apply.
+///
+/// Shows a popu menu with the alternatives when tapped.
 class ManufacturerThemeSelector extends ConsumerWidget {
   const ManufacturerThemeSelector({super.key});
 

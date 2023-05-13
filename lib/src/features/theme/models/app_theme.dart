@@ -1,4 +1,3 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
@@ -80,56 +79,4 @@ class AppTheme {
         ),
         swapLegacyOnMaterial3: true,
       );
-
-  /// Returns a harmonized [FlexSchemeColor] for the [scheme].
-  ///
-  /// Usually called to generate a nicer color scheme when using dynamic colors
-  static FlexSchemeColor harmonizedSchemeColor(ColorScheme scheme) =>
-      FlexSchemeColor(
-        primary: scheme.harmonized().primary,
-        secondary: scheme.harmonized().secondary,
-        tertiary: scheme.harmonized().tertiary,
-        primaryContainer: scheme.harmonized().primaryContainer,
-        secondaryContainer: scheme.harmonized().secondaryContainer,
-        tertiaryContainer: scheme.harmonized().tertiaryContainer,
-        appBarColor: scheme.harmonized().secondaryContainer,
-        error: scheme.harmonized().error,
-        errorContainer: scheme.harmonized().errorContainer,
-      );
-
-  /// Generates dynamic colors from the OS, if available.
-  ///
-  /// See [DynamicColorPlugin] for supported platforms.
-  static Future<List<FlexSchemeColor?>?> getDynamicColors() async {
-    late final ColorScheme? lightDynamic;
-    late final ColorScheme? darkDynamic;
-
-    // Try Android Material You (S+)
-    final corePalette = await DynamicColorPlugin.getCorePalette();
-    if (corePalette != null) {
-      lightDynamic = corePalette.toColorScheme();
-      darkDynamic = corePalette.toColorScheme(brightness: Brightness.dark);
-    } else {
-      // Try desktop accent color
-      final accentColor = await DynamicColorPlugin.getAccentColor();
-      if (accentColor != null) {
-        lightDynamic = ColorScheme.fromSeed(
-          seedColor: accentColor,
-        );
-        darkDynamic = ColorScheme.fromSeed(
-          seedColor: accentColor,
-          brightness: Brightness.dark,
-        );
-      }
-    }
-
-    if (lightDynamic != null && darkDynamic != null) {
-      return [
-        AppTheme.harmonizedSchemeColor(lightDynamic),
-        AppTheme.harmonizedSchemeColor(darkDynamic),
-      ];
-    }
-
-    return null;
-  }
 }

@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
-  dynamic_color
   screen_retriever
   window_manager
 )

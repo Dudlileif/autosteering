@@ -1,5 +1,4 @@
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,24 +21,6 @@ class ActiveThemeMode extends _$ActiveThemeMode {
       );
 }
 
-@riverpod
-class UseManufacturerColors extends _$UseManufacturerColors {
-  @override
-  bool build() => true;
-}
-
-/// A provider that contains theme color state.
-@riverpod
-class ColorScheme extends _$ColorScheme {
-  @override
-  FlexScheme build() => FlexScheme.green;
-
-  void update(FlexScheme newScheme) => Future(() => state = newScheme);
-
-  void updateByIndex(int index) =>
-      Future(() => state = FlexScheme.values[index]);
-}
-
 /// A provider that contains theme color state.
 @riverpod
 class Manufacturer extends _$Manufacturer {
@@ -58,8 +39,6 @@ class Manufacturer extends _$Manufacturer {
 /// for the options changes.
 @riverpod
 AppTheme appTheme(AppThemeRef ref) => AppTheme(
-      useManufacturerColors: ref.watch(useManufacturerColorsProvider),
-      flexScheme: ref.watch(colorSchemeProvider),
       lightColors: ManufacturerSchemes.scheme(
         ref.watch(manufacturerProvider),
         Brightness.light,

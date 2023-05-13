@@ -1,12 +1,16 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
+/// A class with color schemes for different vehicle manufacturers.
 class ManufacturerSchemes {
+  /// An iterable of the available color schemes.
   static Iterable<FlexSchemeColor> schemes(Brightness brightness) =>
       ManufacturerColor.values.map(
         (value) => scheme(value, brightness),
       );
 
+  /// A function for getting the appropriate color scheme for the manufacturer
+  /// color, depending on the theme mode brightness.
   static FlexSchemeColor scheme(
     ManufacturerColor colors,
     Brightness brightness,
@@ -19,6 +23,7 @@ class ManufacturerSchemes {
       );
 }
 
+/// An enum class with names and colors for each manufacturer.
 enum ManufacturerColor {
   caseIH(
     name: 'Case IH',
@@ -80,8 +85,15 @@ enum ManufacturerColor {
     this.tertiary,
   });
 
+  /// The primary color for the color scheme.
   final Color primary;
+
+  /// The secondary color for the color scheme.
   final Color secondary;
+
+  /// the tertiary color for the color scheme.
   final Color? tertiary;
+
+  /// The name of the manufacturer.
   final String name;
 }

@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  dynamic_color
   screen_retriever
   window_manager
 )

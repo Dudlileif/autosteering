@@ -6,7 +6,7 @@ part of 'theme_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appThemeHash() => r'2534e8e2557daf69f2be4f347a89223ddc705f27';
+String _$appThemeHash() => r'4bbcd940502f65d559e4a33c912fcc7cfd7c0d3c';
 
 /// A provider for the app's theme.
 ///
@@ -43,40 +43,6 @@ final activeThemeModeProvider =
 );
 
 typedef _$ActiveThemeMode = AutoDisposeNotifier<ThemeMode>;
-String _$useManufacturerColorsHash() =>
-    r'91922110fb07325c4260645cd5d8351a8505b89a';
-
-/// See also [UseManufacturerColors].
-@ProviderFor(UseManufacturerColors)
-final useManufacturerColorsProvider =
-    AutoDisposeNotifierProvider<UseManufacturerColors, bool>.internal(
-  UseManufacturerColors.new,
-  name: r'useManufacturerColorsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$useManufacturerColorsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$UseManufacturerColors = AutoDisposeNotifier<bool>;
-String _$colorSchemeHash() => r'3c44a7ae8ed626720c2a4f89da11c0ac3d6e2e20';
-
-/// A provider that contains theme color state.
-///
-/// Copied from [ColorScheme].
-@ProviderFor(ColorScheme)
-final colorSchemeProvider =
-    AutoDisposeNotifierProvider<ColorScheme, FlexScheme>.internal(
-  ColorScheme.new,
-  name: r'colorSchemeProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$colorSchemeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ColorScheme = AutoDisposeNotifier<FlexScheme>;
 String _$manufacturerHash() => r'af8ba3d8f1943b33cb83c6e95412fa57595e288e';
 
 /// A provider that contains theme color state.
