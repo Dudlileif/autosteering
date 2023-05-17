@@ -1,4 +1,5 @@
 export 'country_layers.dart';
+export 'dubins_path_debug_layer.dart';
 export 'editable_path_layer.dart';
 export 'finished_path_layer.dart';
 export 'finished_polygon_layer.dart';

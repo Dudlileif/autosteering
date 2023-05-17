@@ -81,3 +81,10 @@ bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {
       debugTravelledPath || debugTrajectory || debugSteering || debugPolygons;
   return enabled;
 }
+
+/// Whether the debugging layer for the Dubins path should be shown.
+@riverpod
+bool showDubinsPathDebugLayer(ShowDubinsPathDebugLayerRef ref) {
+  final enabled = ref.watch(enableDubinsPathDebugProvider);
+  return enabled;
+}

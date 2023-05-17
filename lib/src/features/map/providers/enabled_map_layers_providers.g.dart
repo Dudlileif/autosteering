@@ -132,6 +132,24 @@ final showVehicleDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowVehicleDebugLayerRef = AutoDisposeProviderRef<bool>;
+String _$showDubinsPathDebugLayerHash() =>
+    r'1f790f37459d0d5a7d30143ec3648772e6d85193';
+
+/// Whether the debugging layer for the Dubins path should be shown.
+///
+/// Copied from [showDubinsPathDebugLayer].
+@ProviderFor(showDubinsPathDebugLayer)
+final showDubinsPathDebugLayerProvider = AutoDisposeProvider<bool>.internal(
+  showDubinsPathDebugLayer,
+  name: r'showDubinsPathDebugLayerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showDubinsPathDebugLayerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ShowDubinsPathDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showOSMLayerHash() => r'bc0ef306dcc916f4b9503bd18d57a64e09885c8a';
 
 /// Whether the OpenStreetMap layer should be shown.

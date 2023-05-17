@@ -61,6 +61,9 @@ class MapView extends ConsumerWidget {
         // Only the last layer can be user interactive due to using Stack
         // widgets in the previous layers.
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
+
+        if (ref.watch(showDubinsPathDebugLayerProvider))
+          const DubinsPathDebugLayer(),
       ],
     );
 

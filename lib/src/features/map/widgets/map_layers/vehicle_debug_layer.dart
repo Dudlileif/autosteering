@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -28,10 +29,7 @@ class VehicleDebugLayer extends ConsumerWidget {
                   points: travelledPath,
                   strokeWidth: 3,
                   strokeCap: StrokeCap.butt,
-                  gradientColors: [
-                    Colors.red.withOpacity(0.4),
-                    Colors.green.withOpacity(0.4)
-                  ],
+                  color: Colors.orange,
                 ),
               if (debugTrajectory)
                 Polyline(
@@ -48,7 +46,11 @@ class VehicleDebugLayer extends ConsumerWidget {
             polygonCulling: true,
             polygons: [
               ...vehicle.wheelPolygons,
-              ...vehicle.polygons,
+              ...vehicle.polygons.map(
+                (polygon) => polygon.copyWith(
+                  color: Theme.of(context).primaryColor.withOpacity(0.5),
+                ),
+              ),
             ],
           ),
         if (debugSteering)

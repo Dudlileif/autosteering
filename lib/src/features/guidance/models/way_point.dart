@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/animation.dart';
 import 'package:latlong2/latlong.dart';
@@ -9,7 +9,7 @@ class WayPoint extends Equatable {
   const WayPoint({
     required this.position,
     required this.heading,
-    required this.velocity,
+    this.velocity = 0,
   });
 
   /// The position of the waypoint.
