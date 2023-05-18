@@ -153,7 +153,7 @@ typedef _$AlwaysPointNorth = Notifier<bool>;
 String _$mapUse3DPerspectiveHash() =>
     r'a0651b05e8a2c04f9a9108bbb64899bb5887ebcb';
 
-/// Whether to enable a 3D perspective for the map, otherwise a orthogonal
+/// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
 ///
 /// Copied from [MapUse3DPerspective].

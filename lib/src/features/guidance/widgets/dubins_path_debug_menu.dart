@@ -33,6 +33,19 @@ class DubinsPathDebugMenu extends ConsumerWidget {
             style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
+        CheckboxListTile(
+          value: ref.watch(showDubinsPathDebugCirclesProvider),
+          onChanged: (value) => value != null
+              ? ref
+                  .read(showDubinsPathDebugCirclesProvider.notifier)
+                  .update(value: value)
+              : null,
+          secondary: const Icon(Icons.circle),
+          title: Text(
+            'Turning circles',
+            style: Theme.of(context).menuButtonWithChildrenText,
+          ),
+        ),
         MenuButtonWithChildren(
           icon: Icons.abc,
           text:

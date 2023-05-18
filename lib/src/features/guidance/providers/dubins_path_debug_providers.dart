@@ -15,6 +15,17 @@ class EnableDubinsPathDebug extends _$EnableDubinsPathDebug {
   void toggle() => Future(() => state != state);
 }
 
+/// Whether to show the turning circles for the Dubins path.
+@Riverpod(keepAlive: true)
+class ShowDubinsPathDebugCircles extends _$ShowDubinsPathDebugCircles {
+  @override
+  bool build() => false;
+
+  void update({required bool value}) => Future(() => state = value);
+
+  void toggle() => Future(() => state != state);
+}
+
 /// The starting point for the Dubins path.
 @Riverpod(keepAlive: true)
 class DubinsPathDebugStartPoint extends _$DubinsPathDebugStartPoint {
@@ -52,7 +63,7 @@ DubinsPath? debugDubinsPath(DebugDubinsPathRef ref) {
     return DubinsPath(
       start: start,
       end: end,
-      turningRadius: ref.watch(mainVehicleProvider).minTurningRadius,
+      turningRadius: 1.2 * ref.watch(mainVehicleProvider).minTurningRadius,
       stepSize: ref.watch(dubinsPathDebugStepSizeProvider),
     );
   }

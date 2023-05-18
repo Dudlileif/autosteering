@@ -6,7 +6,7 @@ part of 'dubins_path_debug_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$debugDubinsPathHash() => r'94a09b5e22216c01729bfa8b4d3df881e991ef40';
+String _$debugDubinsPathHash() => r'9f1b306f563439ac3b9c4e393cd529f5b6edc6ee';
 
 /// The current [DubinsPath] object that we can debug.
 ///
@@ -42,6 +42,25 @@ final enableDubinsPathDebugProvider =
 );
 
 typedef _$EnableDubinsPathDebug = Notifier<bool>;
+String _$showDubinsPathDebugCirclesHash() =>
+    r'5891960f3c944dd42c4a29e4db13361c8c6ff8eb';
+
+/// Whether to show the turning circles for the Dubins path.
+///
+/// Copied from [ShowDubinsPathDebugCircles].
+@ProviderFor(ShowDubinsPathDebugCircles)
+final showDubinsPathDebugCirclesProvider =
+    NotifierProvider<ShowDubinsPathDebugCircles, bool>.internal(
+  ShowDubinsPathDebugCircles.new,
+  name: r'showDubinsPathDebugCirclesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showDubinsPathDebugCirclesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowDubinsPathDebugCircles = Notifier<bool>;
 String _$dubinsPathDebugStartPointHash() =>
     r'34396034575b2993bec1dee396873357438c20e4';
 

@@ -19,6 +19,8 @@ class DubinsPathDebugLayer extends ConsumerWidget {
           dubinsPath.bestPathData?.pathType;
       if (pathType != null) {
         if (dubinsPath.isPathTypePossible(pathType)) {
+          final showTurningCricles =
+              ref.watch(showDubinsPathDebugCirclesProvider);
           final vehicle = ref.watch(mainVehicleProvider);
           final wayPoints = dubinsPath
               .dubinsPathPlan(
@@ -30,53 +32,53 @@ class DubinsPathDebugLayer extends ConsumerWidget {
             children: [
               CircleLayer(
                 circles: [
-                  CircleMarker(
-                    point: dubinsPath.startRightCircleCenter,
-                    radius: vehicle.minTurningRadius,
-                    useRadiusInMeter: true,
-                    color: Colors.pink.withOpacity(0.3),
-                  ),
-                  CircleMarker(
-                    point: dubinsPath.startLeftCircleCenter,
-                    radius: vehicle.minTurningRadius,
-                    useRadiusInMeter: true,
-                    color: Colors.grey.withOpacity(0.3),
-                  ),
-                  CircleMarker(
-                    point: dubinsPath.endLeftCircleCenter,
-                    radius: vehicle.minTurningRadius,
-                    useRadiusInMeter: true,
-                    color: Colors.grey.withOpacity(0.3),
-                  ),
-                  CircleMarker(
-                    point: dubinsPath.endRightCircleCenter,
-                    radius: vehicle.minTurningRadius,
-                    useRadiusInMeter: true,
-                    color: Colors.pink.withOpacity(0.3),
-                  ),
-                  if ([DubinsPathType.lrl, DubinsPathType.rlr]
-                      .contains(pathType))
+                  if (showTurningCricles) ...[
                     CircleMarker(
-                      point: dubinsPath.pathData(pathType)!.middleCircleCenter!,
+                      point: dubinsPath.startRightCircleCenter,
                       radius: vehicle.minTurningRadius,
                       useRadiusInMeter: true,
-                      color: Colors.blue.withOpacity(0.3),
+                      color: Colors.pink.withOpacity(0.3),
                     ),
+                    CircleMarker(
+                      point: dubinsPath.startLeftCircleCenter,
+                      radius: vehicle.minTurningRadius,
+                      useRadiusInMeter: true,
+                      color: Colors.grey.withOpacity(0.3),
+                    ),
+                    CircleMarker(
+                      point: dubinsPath.endLeftCircleCenter,
+                      radius: vehicle.minTurningRadius,
+                      useRadiusInMeter: true,
+                      color: Colors.grey.withOpacity(0.3),
+                    ),
+                    CircleMarker(
+                      point: dubinsPath.endRightCircleCenter,
+                      radius: vehicle.minTurningRadius,
+                      useRadiusInMeter: true,
+                      color: Colors.pink.withOpacity(0.3),
+                    ),
+                    if ([DubinsPathType.lrl, DubinsPathType.rlr]
+                        .contains(pathType))
+                      CircleMarker(
+                        point:
+                            dubinsPath.pathData(pathType)!.middleCircleCenter!,
+                        radius: vehicle.minTurningRadius,
+                        useRadiusInMeter: true,
+                        color: Colors.blue.withOpacity(0.3),
+                      ),
+                  ],
                   ...wayPoints
                       .map((e) => CircleMarker(point: e.position, radius: 5)),
-                  ...[
-                    CircleMarker(
-                      point:
-                          dubinsPath.pathData(pathType)!.tangentStart.position,
-                      radius: 3,
-                      color: Colors.black,
-                    ),
-                    CircleMarker(
-                      point: dubinsPath.pathData(pathType)!.tangentEnd.position,
-                      radius: 3,
-                      color: Colors.black,
-                    ),
-                  ],
+                  CircleMarker(
+                    point: dubinsPath.pathData(pathType)!.tangentStart.position,
+                    radius: 3,
+                    color: Colors.black,
+                  ),
+                  CircleMarker(
+                    point: dubinsPath.pathData(pathType)!.tangentEnd.position,
+                    radius: 3,
+                    color: Colors.black,
+                  ),
                 ],
               ),
               PolylineLayer(
