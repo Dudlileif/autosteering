@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -117,13 +118,19 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
   final offset = ref.watch(mapOffsetProvider);
   const distance = Distance(roundResult: false);
 
+  final use3DPerspective = ref.watch(mapUse3DPerspectiveProvider);
+  final perspectiveAngle = ref.watch(map3DPerspectiveAngleProvider);
+
   return distance.offset(
     distance.offset(
       vehicle.position,
       offset.x,
       normalizeBearing(vehicle.heading + 90),
     ),
-    offset.y,
+    switch (use3DPerspective) {
+      false => offset.y,
+      true => offset.y * (1 + tan(perspectiveAngle)),
+    },
     vehicle.heading,
   );
 }
@@ -144,4 +151,25 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
   void toggle() => Future(() => state = !state);
 
   void update({required bool value}) => Future(() => state = value);
+}
+
+/// Whether to enable a 3D perspective for the map, otherwise an orthogonal
+/// view is used.
+@Riverpod(keepAlive: true)
+class MapUse3DPerspective extends _$MapUse3DPerspective {
+  @override
+  bool build() => false;
+
+  void update({required bool value}) => Future(() => state = value);
+  void toggle() => Future(() => state = !state);
+}
+
+/// The angle that the 3D perspective should be seen from, as in radians
+/// from the orthogonal view.
+@Riverpod(keepAlive: true)
+class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
+  @override
+  double build() => 40 * pi / 180;
+
+  void update(double value) => Future(() => state = value);
 }

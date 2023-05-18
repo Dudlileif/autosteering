@@ -7,7 +7,7 @@ part of 'map_providers.dart';
 // **************************************************************************
 
 String _$offsetVehiclePositionHash() =>
-    r'2ff19a43f87ee2431bad5e002ae4f5dfa94df6bc';
+    r'75b52632382383648e85d8f84c0b5a954e888064';
 
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.
@@ -150,4 +150,44 @@ final alwaysPointNorthProvider =
 );
 
 typedef _$AlwaysPointNorth = Notifier<bool>;
+String _$mapUse3DPerspectiveHash() =>
+    r'a0651b05e8a2c04f9a9108bbb64899bb5887ebcb';
+
+/// Whether to enable a 3D perspective for the map, otherwise a orthogonal
+/// view is used.
+///
+/// Copied from [MapUse3DPerspective].
+@ProviderFor(MapUse3DPerspective)
+final mapUse3DPerspectiveProvider =
+    NotifierProvider<MapUse3DPerspective, bool>.internal(
+  MapUse3DPerspective.new,
+  name: r'mapUse3DPerspectiveProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$mapUse3DPerspectiveHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MapUse3DPerspective = Notifier<bool>;
+String _$map3DPerspectiveAngleHash() =>
+    r'fd39a0b32f0090b1204d523b4b28872e2261b187';
+
+/// The angle that the 3D perspective should be seen from, as in radians
+/// from the orthogonal view.
+///
+/// Copied from [Map3DPerspectiveAngle].
+@ProviderFor(Map3DPerspectiveAngle)
+final map3DPerspectiveAngleProvider =
+    NotifierProvider<Map3DPerspectiveAngle, double>.internal(
+  Map3DPerspectiveAngle.new,
+  name: r'map3DPerspectiveAngleProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$map3DPerspectiveAngleHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$Map3DPerspectiveAngle = Notifier<double>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

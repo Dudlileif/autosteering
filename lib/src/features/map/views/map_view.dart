@@ -48,6 +48,9 @@ class MapView extends ConsumerWidget {
         },
         onMapReady: ref.read(mapReadyProvider.notifier).ready,
       ),
+
+      // Only the last layer can be user interactive due to using Stack
+      // widgets in the previous layers.
       children: [
         if (ref.watch(showOSMLayerProvider)) const OSMLayer(),
         if (ref.watch(showCountryLayersProvider)) const CountryLayers(),
@@ -58,10 +61,7 @@ class MapView extends ConsumerWidget {
         if (ref.watch(showRecordingPathLayerProvider))
           const RecordingPathLayer(),
         if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),
-        // Only the last layer can be user interactive due to using Stack
-        // widgets in the previous layers.
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
-
         if (ref.watch(showDubinsPathDebugLayerProvider))
           const DubinsPathDebugLayer(),
       ],
@@ -69,7 +69,13 @@ class MapView extends ConsumerWidget {
 
     return Stack(
       children: [
-        map,
+        switch (ref.watch(mapUse3DPerspectiveProvider)) {
+          false => map,
+          true => PerspectiveWithOverflow(
+              perspectiveAngle: ref.watch(map3DPerspectiveAngleProvider),
+              child: map,
+            ),
+        },
         const Align(
           alignment: Alignment.bottomRight,
           child: MapContributionWidget(),
@@ -90,6 +96,35 @@ class MapView extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// An extended surface area that is displayed at an angle. The area will
+/// overflow the screen edges further back to fill more of the screen further
+/// ahead.
+class PerspectiveWithOverflow extends StatelessWidget {
+  const PerspectiveWithOverflow({
+    required this.child,
+    required this.perspectiveAngle,
+    super.key,
+  });
+
+  final Widget child;
+  final double perspectiveAngle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform(
+      alignment: Alignment.center,
+      transform: Matrix4.identity()
+        ..setEntry(3, 2, 0.001) // Perspective narrowing modifier
+        ..rotateX(-perspectiveAngle),
+      child: FractionallySizedBox(
+        heightFactor: 3,
+        widthFactor: 1.5,
+        child: child,
+      ),
     );
   }
 }
