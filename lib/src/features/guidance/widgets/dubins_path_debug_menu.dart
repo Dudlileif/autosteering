@@ -1,6 +1,7 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,10 +30,7 @@ class DubinsPathDebugMenu extends ConsumerWidget {
               : null,
           secondary: Text(
             'Debugging',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
         MenuButtonWithChildren(
@@ -57,10 +55,7 @@ class DubinsPathDebugMenu extends ConsumerWidget {
                   },
                   secondary: Text(
                     pathType.name.toUpperCase(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(fontWeight: FontWeight.w500),
+                    style: Theme.of(context).menuButtonWithChildrenText,
                   ),
                 ),
               )
@@ -76,10 +71,7 @@ class DubinsPathDebugMenu extends ConsumerWidget {
                 children: [
                   Text(
                     'Start:${start.heading.round()}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(fontWeight: FontWeight.w500),
+                    style: Theme.of(context).menuButtonWithChildrenText,
                   ),
                   Slider(
                     value: start.heading,
@@ -98,10 +90,7 @@ class DubinsPathDebugMenu extends ConsumerWidget {
                 children: [
                   Text(
                     'End: ${end.heading.round()}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(fontWeight: FontWeight.w500),
+                    style: Theme.of(context).menuButtonWithChildrenText,
                   ),
                   Slider(
                     value: end.heading,
@@ -121,10 +110,7 @@ class DubinsPathDebugMenu extends ConsumerWidget {
           children: [
             Text(
               'Step size: ${ref.watch(dubinsPathDebugStepSizeProvider).toStringAsFixed(1)} m',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(fontWeight: FontWeight.w500),
+              style: Theme.of(context).menuButtonWithChildrenText,
             ),
             const StepSizeSlider(),
           ],
@@ -151,10 +137,7 @@ class DubinsPathDebugMenu extends ConsumerWidget {
           leading: const Icon(Icons.refresh),
           title: Text(
             'Reset points',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
         ListTile(
@@ -164,10 +147,7 @@ class DubinsPathDebugMenu extends ConsumerWidget {
           leading: const Icon(Icons.clear),
           title: Text(
             'Clear points',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
       ],
@@ -175,6 +155,7 @@ class DubinsPathDebugMenu extends ConsumerWidget {
   }
 }
 
+/// A slider for specifying the step size for the Dubins path debugging.
 class StepSizeSlider extends ConsumerWidget {
   const StepSizeSlider({
     super.key,

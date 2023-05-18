@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -49,10 +50,7 @@ class SentinelLayerSelector extends ConsumerWidget {
                     padding: const EdgeInsets.only(left: 4),
                     child: Text(
                       'Sentinel',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(fontWeight: FontWeight.w500),
+                      style: Theme.of(context).menuButtonWithChildrenText,
                     ),
                   ),
                 ],
@@ -92,7 +90,10 @@ class _SentinelLayerMenuItemButton extends ConsumerWidget {
             title: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(layer.name),
+                Text(
+                  layer.name,
+                  style: Theme.of(context).menuButtonWithChildrenText,
+                ),
                 SliderTheme(
                   data: Theme.of(context).sliderTheme.copyWith(
                         showValueIndicator: ShowValueIndicator.always,

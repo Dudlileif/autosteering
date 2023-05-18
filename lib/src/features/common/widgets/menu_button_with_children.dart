@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 /// A standardized menu button useful for keeping consistent styling of
@@ -23,10 +24,7 @@ class MenuButtonWithChildren extends StatelessWidget {
   Widget build(BuildContext context) {
     final textWidget = Text(
       text,
-      style: Theme.of(context)
-          .textTheme
-          .bodyLarge
-          ?.copyWith(fontWeight: FontWeight.w500),
+      style: Theme.of(context).menuButtonWithChildrenText,
     );
     return SubmenuButton(
       menuChildren: menuChildren,

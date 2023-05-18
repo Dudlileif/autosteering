@@ -1,6 +1,7 @@
 import 'package:agopengps_flutter/src/features/common/widgets/widgets.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +26,7 @@ class SimMenu extends ConsumerWidget {
           leading: const Icon(Icons.replay),
           title: Text(
             'Reset position',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
         if (!kIsWeb)
@@ -37,10 +35,7 @@ class SimMenu extends ConsumerWidget {
             leading: const Icon(Icons.replay),
             title: Text(
               'Restart sim',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(fontWeight: FontWeight.w500),
+              style: Theme.of(context).menuButtonWithChildrenText,
             ),
           ),
       ],

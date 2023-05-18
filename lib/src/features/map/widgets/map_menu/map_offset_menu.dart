@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,7 +18,10 @@ class MapOffsetMenu extends ConsumerWidget {
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('X: ${offset.x} m'),
+            Text(
+              'X: ${offset.x} m',
+              style: Theme.of(context).menuButtonWithChildrenText,
+            ),
             Slider(
               value: offset.x,
               onChanged: (value) =>
@@ -31,7 +35,10 @@ class MapOffsetMenu extends ConsumerWidget {
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Y: ${offset.y} m'),
+            Text(
+              'Y: ${offset.y} m',
+              style: Theme.of(context).menuButtonWithChildrenText,
+            ),
             Slider(
               value: offset.y,
               onChanged: (value) =>
@@ -57,10 +64,7 @@ class MapOffsetMenu extends ConsumerWidget {
             padding: const EdgeInsets.only(left: 4),
             child: Text(
               'Center offset',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(fontWeight: FontWeight.w500),
+              style: Theme.of(context).menuButtonWithChildrenText,
             ),
           ),
         ],

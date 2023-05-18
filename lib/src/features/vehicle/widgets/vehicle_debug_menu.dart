@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,10 +19,7 @@ class VehicleDebugMenu extends ConsumerWidget {
               : null,
           secondary: Text(
             'Steering',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
         CheckboxListTile(
@@ -31,10 +29,7 @@ class VehicleDebugMenu extends ConsumerWidget {
               : null,
           secondary: Text(
             'Trajectory',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
         CheckboxListTile(
@@ -49,10 +44,7 @@ class VehicleDebugMenu extends ConsumerWidget {
             children: [
               Text(
                 'Travelled path',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(fontWeight: FontWeight.w500),
+                style: Theme.of(context).menuButtonWithChildrenText,
               ),
               Slider.adaptive(
                 value: ref.watch(debugTravelledPathSizeProvider).toDouble(),
@@ -75,10 +67,7 @@ class VehicleDebugMenu extends ConsumerWidget {
               : null,
           secondary: Text(
             'Polygons',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
       ],
@@ -93,10 +82,7 @@ class VehicleDebugMenu extends ConsumerWidget {
             padding: const EdgeInsets.only(left: 4),
             child: Text(
               'Vehicle',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(fontWeight: FontWeight.w500),
+              style: Theme.of(context).menuButtonWithChildrenText,
             ),
           ),
         ],

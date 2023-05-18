@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,10 +37,7 @@ class VehicleSimMenu extends ConsumerWidget {
           },
           title: Text(
             'Tractor',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
         CheckboxListTile(
@@ -65,10 +63,7 @@ class VehicleSimMenu extends ConsumerWidget {
           },
           title: Text(
             'Articulated tractor',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
         CheckboxListTile(
@@ -93,10 +88,7 @@ class VehicleSimMenu extends ConsumerWidget {
           },
           title: Text(
             'Harvester',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         )
       ],
@@ -111,10 +103,7 @@ class VehicleSimMenu extends ConsumerWidget {
             padding: const EdgeInsets.only(left: 4),
             child: Text(
               'Vehicle',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(fontWeight: FontWeight.w500),
+              style: Theme.of(context).menuButtonWithChildrenText,
             ),
           ),
         ],

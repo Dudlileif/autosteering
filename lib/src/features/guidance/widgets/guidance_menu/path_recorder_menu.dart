@@ -1,5 +1,6 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,10 +20,7 @@ class PathRecorderMenu extends ConsumerWidget {
         CheckboxListTile(
           title: Text(
             'Recording',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
           secondary: ref.watch(enablePathRecorderProvider)
               ? const Icon(Icons.stop)
@@ -37,10 +35,7 @@ class PathRecorderMenu extends ConsumerWidget {
         CheckboxListTile(
           title: Text(
             'Last recorded path',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
           secondary: const Icon(Icons.route),
           value: ref.watch(showFinishedPathProvider),
@@ -51,10 +46,7 @@ class PathRecorderMenu extends ConsumerWidget {
         CheckboxListTile(
           title: Text(
             'Last recorded path as polygon',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
           secondary: const SizedBox.square(
             dimension: 24,
@@ -105,10 +97,7 @@ class PathRecorderMenu extends ConsumerWidget {
         CheckboxListTile(
           title: Text(
             'Edit recorded path',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
           secondary: const Icon(Icons.edit),
           value: ref.watch(editFinishedPathProvider),
@@ -119,10 +108,7 @@ class PathRecorderMenu extends ConsumerWidget {
         ListTile(
           title: Text(
             'Clear recorded path',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
           leading: const Icon(Icons.clear),
           onTap: ref.read(finishedPathRecordingListProvider.notifier).clear,
