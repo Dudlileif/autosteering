@@ -3,7 +3,7 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
 
 /// A movable map marker used to edit the position of points in editable paths.
-class MovableMapMarker extends StatelessWidget {
+class MovableMapMarker extends StatefulWidget {
   const MovableMapMarker({
     required this.point,
     required this.onMoved,
@@ -29,48 +29,79 @@ class MovableMapMarker extends StatelessWidget {
   final bool useRadiusInMeter;
 
   @override
+  State<MovableMapMarker> createState() => _MovableMapMarkerState();
+}
+
+class _MovableMapMarkerState extends State<MovableMapMarker> {
+  double hoverModifier = 1;
+
+  @override
   Widget build(BuildContext context) {
     final map = FlutterMapState.of(context);
 
-    var radiusToUse = radius;
+    var radiusToUse = widget.radius;
 
-    if (useRadiusInMeter) {
-      final offset = map.getOffsetFromOrigin(point);
-      final r = const Distance().offset(point, radius, 180);
+    if (widget.useRadiusInMeter) {
+      final offset = map.getOffsetFromOrigin(widget.point);
+      final r = const Distance().offset(widget.point, widget.radius, 180);
       final delta = offset - map.getOffsetFromOrigin(r);
       radiusToUse = delta.distance;
     }
 
+    final baseChild = CustomPaint(
+      painter: CirclePainter(
+        color: widget.color,
+        radius: radiusToUse,
+      ),
+    );
+
     return Draggable(
+      ignoringFeedbackPointer: false,
+      dragAnchorStrategy: pointerDragAnchorStrategy,
       onDragUpdate: (details) {
-        final position = map.pointToLatLng(
-          CustomPoint(
-            details.globalPosition.dx,
-            details.globalPosition.dy,
-          ),
+        final point = CustomPoint(
+          details.globalPosition.dx,
+          details.globalPosition.dy - kToolbarHeight,
         );
 
+        final position = map.pointToLatLng(point);
+
         if (position != null) {
-          onMoved(position);
+          widget.onMoved(position);
         }
       },
-      feedback: CustomPaint(
-        painter: CirclePainter(
-          color: color,
-          radius: radiusToUse,
+      feedback: MouseRegion(
+        cursor: SystemMouseCursors.move,
+        child: baseChild,
+      ),
+      childWhenDragging: MouseRegion(
+        cursor: SystemMouseCursors.move,
+        child: CustomPaint(
+          painter: CirclePainter(
+            color: widget.color.withOpacity(0.35),
+            radius: radiusToUse * 2,
+          ),
         ),
       ),
-      childWhenDragging: CustomPaint(
-        painter: CirclePainter(
-          color: color.withOpacity(0.35),
-          radius: radiusToUse,
-        ),
-      ),
-      child: CustomPaint(
-        painter: CirclePainter(
-          color: color,
-          radius: radiusToUse,
-        ),
+      child: MouseRegion(
+        onEnter: (event) => setState(() => hoverModifier = 2),
+        onExit: (event) => setState(() => hoverModifier = 1),
+        cursor: SystemMouseCursors.click,
+        child: switch (hoverModifier > 1) {
+          true => Stack(
+              alignment: Alignment.center,
+              children: [
+                CustomPaint(
+                  painter: CirclePainter(
+                    color: widget.color.withOpacity(0.35),
+                    radius: radiusToUse * hoverModifier,
+                  ),
+                ),
+                baseChild
+              ],
+            ),
+          false => baseChild
+        },
       ),
     );
   }

@@ -64,6 +64,7 @@ class _AddPointMarkerState extends State<AddPointMarker> {
       // Counter-rotated to keep upright.
       angle: -map.rotationRad,
       child: MouseRegion(
+        cursor: MaterialStateMouseCursor.clickable,
         onEnter: (event) => setState(() => visible = true),
         onExit: (event) => setState(() => visible = false),
         child: GestureDetector(

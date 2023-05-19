@@ -19,6 +19,7 @@ class MapView extends ConsumerWidget {
       ..watch(zoomTimerControllerProvider);
 
     final map = FlutterMap(
+      key: const Key('Map'),
       mapController: mapController,
       options: MapOptions(
         center: vehicle.position,
