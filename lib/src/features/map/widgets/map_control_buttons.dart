@@ -69,32 +69,34 @@ class MapControlButtons extends ConsumerWidget {
                   alignment: Alignment.center,
                   children: [
                     Transform.rotate(
-                      angle: alwaysPointNorth ? 0 : angle,
+                      angle: alwaysPointNorth ? 0 : -angle,
                       child: Stack(
                         children: [
                           Align(
                             alignment: Alignment.topCenter,
                             child: Transform.rotate(
-                              angle: alwaysPointNorth ? 0 : -angle,
+                              angle: alwaysPointNorth ? 0 : angle,
                               child: Text(
                                 'N',
-                                style: Theme.of(context).textTheme.labelSmall,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: alwaysPointNorth
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            child: Padding(
-                              padding: alwaysPointNorth
-                                  ? const EdgeInsets.only(right: 4)
-                                  : const EdgeInsets.only(left: 4),
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Align(
+                              alignment: Alignment.centerRight,
                               child: Transform.rotate(
-                                angle: alwaysPointNorth ? 0 : -angle,
+                                angle: alwaysPointNorth ? 0 : angle,
                                 child: Text(
                                   'E',
-                                  style: Theme.of(context).textTheme.labelSmall,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall
+                                      ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
@@ -102,22 +104,29 @@ class MapControlButtons extends ConsumerWidget {
                           Align(
                             alignment: Alignment.bottomCenter,
                             child: Transform.rotate(
-                              angle: alwaysPointNorth ? 0 : -angle,
+                              angle: alwaysPointNorth ? 0 : angle,
                               child: Text(
                                 'S',
-                                style: Theme.of(context).textTheme.labelSmall,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: alwaysPointNorth
-                                ? Alignment.centerLeft
-                                : Alignment.centerRight,
-                            child: Transform.rotate(
-                              angle: alwaysPointNorth ? 0 : -angle,
-                              child: Text(
-                                'W',
-                                style: Theme.of(context).textTheme.labelSmall,
+                          Padding(
+                            padding: const EdgeInsets.all(1),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Transform.rotate(
+                                angle: alwaysPointNorth ? 0 : angle,
+                                child: Text(
+                                  'W',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                           ),
@@ -125,7 +134,7 @@ class MapControlButtons extends ConsumerWidget {
                       ),
                     ),
                     Transform.rotate(
-                      angle: alwaysPointNorth ? 0 : angle,
+                      angle: alwaysPointNorth ? 0 : -angle,
                       child: ring,
                     ),
                     Transform.rotate(
