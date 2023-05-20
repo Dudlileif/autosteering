@@ -5,82 +5,12 @@ import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:collection/collection.dart';
 import 'package:latlong2/latlong.dart';
 
+part 'dubins_path_type.dart';
+part 'dubins_section.dart';
+
 /// A calculator used to calculate offsets, distances and angles on the
 /// earth.
 const _calculator = Distance(roundResult: false);
-
-/// An enumerator class for distinguishing between the different sections of
-/// a Dubins path.
-enum DubinsSection {
-  /// Left turn
-  l,
-
-  /// Straight
-  s,
-
-  /// Right turn
-  r;
-}
-
-/// An enumerator class for distinguishing between the different types of
-/// Dubins paths.
-enum DubinsPathType {
-  /// Right - Straight - Right
-  rsr(
-    DubinsSection.r,
-    DubinsSection.s,
-    DubinsSection.r,
-  ),
-
-  /// Right - Straight - Left
-  rsl(
-    DubinsSection.r,
-    DubinsSection.s,
-    DubinsSection.l,
-  ),
-
-  /// Right - Left - Right
-  rlr(
-    DubinsSection.r,
-    DubinsSection.l,
-    DubinsSection.r,
-  ),
-
-  /// Left - Straight - Right
-  lsr(
-    DubinsSection.l,
-    DubinsSection.s,
-    DubinsSection.r,
-  ),
-
-  /// Left - Straight - Left
-  lsl(
-    DubinsSection.l,
-    DubinsSection.s,
-    DubinsSection.l,
-  ),
-
-  /// Left - Right - Left
-  lrl(
-    DubinsSection.l,
-    DubinsSection.r,
-    DubinsSection.l,
-  );
-
-  const DubinsPathType(this.start, this.mid, this.end);
-
-  /// The first section of the path.
-  final DubinsSection start;
-
-  /// The middle section of the path.
-  final DubinsSection mid;
-
-  /// The final section of the path.
-  final DubinsSection end;
-
-  /// A list of the path sections.
-  List<DubinsSection> get sections => [start, mid, end];
-}
 
 /// A class for encompassing the data generated for a [DubinsPathType].
 final class DubinsPathData {
