@@ -1,5 +1,4 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/map/utils/utils.dart';
 import 'package:dart_jts/dart_jts.dart' as jts;
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:maps_toolkit2/maps_toolkit2.dart';
