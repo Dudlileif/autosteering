@@ -68,6 +68,18 @@ class VehicleSimScreenControls extends ConsumerWidget {
                         width: 200,
                         child: Slider(
                           value: vehicle.steeringAngle,
+                          onChangeStart: (value) =>
+                              ref.watch(simVehicleAutoCenterSteeringProvider)
+                                  ? ref
+                                      .read(simVehicleInputProvider.notifier)
+                                      .send((enableAutoCenterSteering: false))
+                                  : null,
+                          onChangeEnd: (value) =>
+                              ref.watch(simVehicleAutoCenterSteeringProvider)
+                                  ? ref
+                                      .read(simVehicleInputProvider.notifier)
+                                      .send((enableAutoCenterSteering: true))
+                                  : null,
                           onChanged: (value) => ref
                               .read(simVehicleInputProvider.notifier)
                               .send(VehicleInput(steeringAngle: value)),
@@ -101,6 +113,18 @@ class VehicleSimScreenControls extends ConsumerWidget {
                             ),
                         child: Slider(
                           value: vehicle.velocity,
+                          onChangeStart: (value) =>
+                              ref.watch(simVehicleAutoSlowDownProvider)
+                                  ? ref
+                                      .read(simVehicleInputProvider.notifier)
+                                      .send((enableAutoSlowDown: false))
+                                  : null,
+                          onChangeEnd: (value) =>
+                              ref.watch(simVehicleAutoSlowDownProvider)
+                                  ? ref
+                                      .read(simVehicleInputProvider.notifier)
+                                      .send((enableAutoSlowDown: true))
+                                  : null,
                           onChanged: (value) => ref
                               .read(simVehicleInputProvider.notifier)
                               .send(VehicleInput(velocity: value)),

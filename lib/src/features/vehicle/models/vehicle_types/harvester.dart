@@ -1,6 +1,9 @@
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
+/// Geo-calculator used to calculate offsets.
+const _distance = Distance(roundResult: false);
+
 /// A harvester with rear wheel steering and a solid front axle.
 class Harvester extends AxleSteeredVehicle {
   const Harvester({
@@ -11,6 +14,7 @@ class Harvester extends AxleSteeredVehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
+    super.ackermannSteeringRatio,
     super.invertSteeringInput = false,
     super.velocity = 0,
     super.heading = 0,
@@ -23,7 +27,7 @@ class Harvester extends AxleSteeredVehicle {
 
   /// The position of the center of the rear axle.
   @override
-  LatLng get solidAxlePosition => Vehicle.distance.offset(
+  LatLng get solidAxlePosition => _distance.offset(
         position,
         solidAxleDistance,
         normalizeBearing(heading),
@@ -31,7 +35,7 @@ class Harvester extends AxleSteeredVehicle {
 
   /// The position of the center of the front axle.
   @override
-  LatLng get steeringAxlePosition => Vehicle.distance.offset(
+  LatLng get steeringAxlePosition => _distance.offset(
         position,
         solidAxleDistance - wheelBase,
         normalizeBearing(heading),
@@ -58,6 +62,7 @@ class Harvester extends AxleSteeredVehicle {
     double? trackWidth,
     double? wheelBase,
     double? solidAxleDistance,
+    double? ackermannSteeringRatio,
     bool? invertSteeringInput,
     double? velocity,
     double? heading,
@@ -75,6 +80,8 @@ class Harvester extends AxleSteeredVehicle {
         trackWidth: trackWidth ?? this.trackWidth,
         wheelBase: wheelBase ?? this.wheelBase,
         solidAxleDistance: solidAxleDistance ?? this.solidAxleDistance,
+        ackermannSteeringRatio:
+            ackermannSteeringRatio ?? this.ackermannSteeringRatio,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         velocity: velocity ?? this.velocity,
         heading: heading ?? this.heading,

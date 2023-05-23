@@ -57,6 +57,21 @@ class VehicleDebugLayer extends ConsumerWidget {
           CircleLayer(
             circles: [
               if (debugSteering) ...vehicle.steeringDebugMarkers,
+              if (vehicle.currentTurningRadius != null)
+                CircleMarker(
+                  point: vehicle.turningRadiusCenter!,
+                  radius: vehicle.currentTurningRadius!,
+                  useRadiusInMeter: true,
+                  color: Colors.blue.withOpacity(0.2),
+                ),
+              if (vehicle is ArticulatedTractor &&
+                  vehicle.currentRearTurningRadius != null)
+                CircleMarker(
+                  point: vehicle.turningRadiusCenter!,
+                  radius: vehicle.currentRearTurningRadius!,
+                  useRadiusInMeter: true,
+                  color: Colors.red.withOpacity(0.2),
+                )
             ],
           ),
       ],

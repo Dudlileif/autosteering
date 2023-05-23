@@ -35,15 +35,14 @@ abstract class Vehicle extends Equatable {
   /// The best/minimum turning radius, in meters.
   final double minTurningRadius;
 
-  /// The maximum angle that the steering wheels can turn, in degrees.
+  /// The maximum angle that the steering wheels/pivot can turn, in degrees.
   final double steeringAngleMax;
 
   /// The heading of the vehicle, in degrees.
   final double heading;
 
-  /// This is the Ackermann input angle, imagined to be on the middle of
-  /// the steering axle, as if the vehicle only had one center
-  /// steering wheel.
+  /// This is the Ackermann input angle or the angle of the articulation for an
+  /// articulated tractor.
   final double steeringAngleInput;
 
   /// Whether the [steeringAngleInput] should be inverted.
@@ -73,13 +72,8 @@ abstract class Vehicle extends Equatable {
         velocity: velocity,
       );
 
-  /// Geo-calculator used to calculate offsets.
-  static const distance = Distance(roundResult: false);
-
-  // Reqiure wheel angle above 1 deg when using simulator, 0.01 deg otherwise.
-  // This is due to some error at low angle calculation, which could
-  // give wrong movement.
-  double get minSteeringAngle => simulated ? 1 : 0.01;
+  // Reqiure wheel angle above 0.01 deg.
+  double get minSteeringAngle => 0.01;
 
   /// The [steeringAngleInput] accounted for [invertSteeringInput] and
   /// [minSteeringAngle].

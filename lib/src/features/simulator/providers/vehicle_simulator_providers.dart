@@ -43,7 +43,7 @@ class SimVehicleInput extends _$SimVehicleInput {
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
 @riverpod
-Future<void> simVehicleDriving(SimVehicleDrivingRef ref) async {
+void simVehicleDriving(SimVehicleDrivingRef ref) {
   if (ref.watch(mapReadyProvider)) {
     final vehicle = switch (ref.watch(simVehicleInputProvider)) {
       SimPlatform.web => ref.watch(simVehicleWebStreamProvider).when(
@@ -163,4 +163,42 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
       yield message.vehicle;
     }
   }
+}
+
+/// A provider for whether the steering automatically should recenter when
+/// no input is provided.
+@Riverpod(keepAlive: true)
+class SimVehicleAutoCenterSteering extends _$SimVehicleAutoCenterSteering {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      ref
+          .read(simVehicleInputProvider.notifier)
+          .send((enableAutoCenterSteering: next));
+    });
+    return false;
+  }
+
+  void update({required bool value}) => Future(() => state = value);
+
+  void toggle() => Future(() => state != state);
+}
+
+/// A provider for whether the vehicle should slow down when no input is
+/// provided.
+@Riverpod(keepAlive: true)
+class SimVehicleAutoSlowDown extends _$SimVehicleAutoSlowDown {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      ref
+          .read(simVehicleInputProvider.notifier)
+          .send((enableAutoSlowDown: next));
+    });
+    return false;
+  }
+
+  void update({required bool value}) => Future(() => state = value);
+
+  void toggle() => Future(() => state != state);
 }

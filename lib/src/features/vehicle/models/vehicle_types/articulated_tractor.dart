@@ -5,8 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+/// Geo-calculator used to calculate offsets.
+const _distance = Distance(roundResult: false);
+
 /// An articulated tractor with two bodies with solid axles that are joined
 /// at a pivot point.
+///
+/// Geometry: https://eprints.qut.edu.au/21740/1/corke_00928568.pdf
 class ArticulatedTractor extends Vehicle {
   const ArticulatedTractor({
     required this.pivotToAntennaDistance,
@@ -14,6 +19,8 @@ class ArticulatedTractor extends Vehicle {
     required this.pivotToRearAxle,
     required super.position,
     required super.antennaHeight,
+
+    /// The minimum turning radius of the front axle.
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
@@ -40,27 +47,28 @@ class ArticulatedTractor extends Vehicle {
   final double pivotToRearAxle;
 
   /// The position of the vehicle articulation pivot point.
-  LatLng get pivotPosition => Vehicle.distance.offset(
+  LatLng get pivotPosition => _distance.offset(
         position,
         pivotToAntennaDistance,
-        normalizeBearing(heading - 180 + steeringAngle),
+        normalizeBearing(heading - 180 + steeringAngle / 2),
       );
 
   /// The angle from the pivot point to the front axle.
-  double get frontAxleAngle => normalizeBearing(heading + steeringAngle);
+  double get frontAxleAngle => normalizeBearing(heading + steeringAngle / 2);
 
   /// The position of the front axle center point.
-  LatLng get frontAxlePosition => Vehicle.distance.offset(
+  LatLng get frontAxlePosition => _distance.offset(
         pivotPosition,
         pivotToFrontAxle,
         frontAxleAngle,
       );
 
   /// The angle from the pivot point to the rear axle.
-  double get rearAxleAngle => normalizeBearing(heading + 180 - steeringAngle);
+  double get rearAxleAngle =>
+      normalizeBearing(heading + 180 - steeringAngle / 2);
 
   /// The position of the front axle center point.
-  LatLng get rearAxlePosition => Vehicle.distance.offset(
+  LatLng get rearAxlePosition => _distance.offset(
         pivotPosition,
         pivotToRearAxle,
         rearAxleAngle,
@@ -125,23 +133,33 @@ class ArticulatedTractor extends Vehicle {
         ),
       ];
 
-  /// The turning radius corresponding to the current [steeringAngle].
+  /// The turning radius of the front axle corresponding to the current
+  /// [steeringAngle].
   ///
-  /// Found by calculating the hypotenuse of the isosceles triangle with
-  /// base [pivotToFrontAxle] distance and base angle 90 - [steeringAngle].
-  /// https://keisan.casio.com/exec/system/1273850202
-  /// We don't divide by two since both bodies of the vehicle is rotating
-  /// around the pivot.
+  /// https://eprints.qut.edu.au/21740/1/corke_00928568.pdf
   @override
   double? get currentTurningRadius =>
       steeringAngle.abs() <= steeringAngleMax && steeringAngle.abs() > 0
-          ? pivotToFrontAxle / cos(degToRadian(90 - steeringAngle.abs()))
+          ? (pivotToFrontAxle * cos(degToRadian(steeringAngle.abs())) +
+                  pivotToRearAxle) /
+              sin(degToRadian(steeringAngle.abs()))
+          : null;
+
+  /// The turning radius of the rear axle corresponding to the current
+  /// [steeringAngle].
+  ///
+  /// https://eprints.qut.edu.au/21740/1/corke_00928568.pdf
+  double? get currentRearTurningRadius =>
+      steeringAngle.abs() <= steeringAngleMax && steeringAngle.abs() > 0
+          ? (pivotToRearAxle * cos(degToRadian(steeringAngle.abs())) +
+                  pivotToFrontAxle) /
+              sin(degToRadian(steeringAngle.abs()))
           : null;
 
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
   LatLng? get turningRadiusCenter => currentTurningRadius != null
-      ? Vehicle.distance.offset(
+      ? _distance.offset(
           frontAxlePosition,
           currentTurningRadius!,
           normalizeBearing(
@@ -176,28 +194,28 @@ class ArticulatedTractor extends Vehicle {
     final rearInnerToRearOuterAngle =
         normalizeBearing(frontInnerToRearInnerAngle + (90 * sign));
 
-    final wheelCenter = Vehicle.distance.offset(
+    final wheelCenter = _distance.offset(
       frontAxlePosition,
       trackWidth / 2 - wheelWidth / 2,
       axleToCenterAngle,
     );
 
-    final wheelOuterFront = Vehicle.distance.offset(
+    final wheelOuterFront = _distance.offset(
       wheelCenter,
       wheelDiameter / 2,
       frontOuterCenterToOuterFrontAngle,
     );
-    final wheelInnerFront = Vehicle.distance.offset(
+    final wheelInnerFront = _distance.offset(
       wheelOuterFront,
       wheelWidth,
       frontOuterToFrontInnerAngle,
     );
-    final wheelInnerRear = Vehicle.distance.offset(
+    final wheelInnerRear = _distance.offset(
       wheelInnerFront,
       wheelDiameter,
       frontInnerToRearInnerAngle,
     );
-    final wheelOuterRear = Vehicle.distance.offset(
+    final wheelOuterRear = _distance.offset(
       wheelInnerRear,
       wheelWidth,
       rearInnerToRearOuterAngle,
@@ -248,28 +266,28 @@ class ArticulatedTractor extends Vehicle {
     final rearInnerToRearOuterAngle =
         normalizeBearing(frontInnerToRearInnerAngle + (90 * sign));
 
-    final wheelCenter = Vehicle.distance.offset(
+    final wheelCenter = _distance.offset(
       rearAxlePosition,
       trackWidth / 2 - wheelWidth / 2,
       axleToCenterAngle,
     );
 
-    final wheelOuterFront = Vehicle.distance.offset(
+    final wheelOuterFront = _distance.offset(
       wheelCenter,
       wheelDiameter / 2,
       frontOuterCenterToOuterFrontAngle,
     );
-    final wheelInnerFront = Vehicle.distance.offset(
+    final wheelInnerFront = _distance.offset(
       wheelOuterFront,
       wheelWidth,
       frontOuterToFrontInnerAngle,
     );
-    final wheelInnerRear = Vehicle.distance.offset(
+    final wheelInnerRear = _distance.offset(
       wheelInnerFront,
       wheelDiameter,
       frontInnerToRearInnerAngle,
     );
-    final wheelOuterRear = Vehicle.distance.offset(
+    final wheelOuterRear = _distance.offset(
       wheelInnerRear,
       wheelWidth,
       rearInnerToRearOuterAngle,
@@ -317,8 +335,9 @@ class ArticulatedTractor extends Vehicle {
     if (currentTurningRadius != null) {
       final minTurningCircumference = 2 *
           pi *
-          pivotToFrontAxle /
-          cos(degToRadian(90 - steeringAngleMax.abs()));
+          (pivotToFrontAxle * cos(degToRadian(steeringAngleMax)) +
+              pivotToRearAxle) /
+          sin(degToRadian(steeringAngleMax));
 
       // Clamp the number of turning revolutions so that we only display
       // up to one whole turning circle.
@@ -357,7 +376,7 @@ class ArticulatedTractor extends Vehicle {
           };
 
           points.add(
-            Vehicle.distance.offset(
+            _distance.offset(
               turningRadiusCenter!,
               currentTurningRadius!,
               normalizeBearing(angle),
@@ -367,7 +386,7 @@ class ArticulatedTractor extends Vehicle {
       }
     } else {
       points.add(
-        Vehicle.distance.offset(
+        _distance.offset(
           position,
           isReversing ? -30 : 5 + 30,
           normalizeBearing(heading),
@@ -381,77 +400,76 @@ class ArticulatedTractor extends Vehicle {
   /// Polygons for visualizing the extent of the vehicle.
   @override
   List<Polygon> get polygons {
-    final rearLeftCornerAngle = normalizeBearing(heading - 90 - steeringAngle);
-    final rearLeftCenter = Vehicle.distance.offset(
+    final rearLeftCornerAngle = normalizeBearing(rearAxleAngle + 90);
+    final rearLeftCenter = _distance.offset(
       rearAxlePosition,
       1,
       rearLeftCornerAngle,
     );
     final rearLeftSide = [
-      Vehicle.distance.offset(
+      _distance.offset(
         rearLeftCenter,
         1,
         normalizeBearing(rearLeftCornerAngle - 90),
       ),
-      Vehicle.distance.offset(
+      _distance.offset(
         rearLeftCenter,
         1,
         normalizeBearing(rearLeftCornerAngle + 90),
       )
     ];
 
-    final rearRightCornerAngle = normalizeBearing(heading + 90 - steeringAngle);
-    final rearRightCenter = Vehicle.distance.offset(
+    final rearRightCornerAngle = normalizeBearing(rearAxleAngle - 90);
+    final rearRightCenter = _distance.offset(
       rearAxlePosition,
       1,
       rearRightCornerAngle,
     );
     final rearRightSide = [
-      Vehicle.distance.offset(
+      _distance.offset(
         rearRightCenter,
         1,
         normalizeBearing(rearRightCornerAngle - 90),
       ),
-      Vehicle.distance.offset(
+      _distance.offset(
         rearRightCenter,
         1,
         normalizeBearing(rearRightCornerAngle + 90),
       )
     ];
 
-    final frontLeftCornerAngle = normalizeBearing(heading - 90 + steeringAngle);
-    final frontLeftCenter = Vehicle.distance.offset(
+    final frontLeftCornerAngle = normalizeBearing(frontAxleAngle - 90);
+    final frontLeftCenter = _distance.offset(
       frontAxlePosition,
       1,
       frontLeftCornerAngle,
     );
     final frontLeftSide = [
-      Vehicle.distance.offset(
+      _distance.offset(
         frontLeftCenter,
         1,
         normalizeBearing(frontLeftCornerAngle - 90),
       ),
-      Vehicle.distance.offset(
+      _distance.offset(
         frontLeftCenter,
         1,
         normalizeBearing(frontLeftCornerAngle + 90),
       )
     ];
 
-    final frontRightCornerAngle =
-        normalizeBearing(heading + 90 + steeringAngle);
-    final frontRightCenter = Vehicle.distance.offset(
+    final frontRightCornerAngle = normalizeBearing(frontAxleAngle + 90);
+    final frontRightCenter = _distance.offset(
       frontAxlePosition,
       1,
       frontRightCornerAngle,
     );
     final frontRightSide = [
-      Vehicle.distance.offset(
+      _distance.offset(
         frontRightCenter,
         1,
         normalizeBearing(frontRightCornerAngle - 90),
       ),
-      Vehicle.distance.offset(
+      _distance.offset(
         frontRightCenter,
         1,
         normalizeBearing(frontRightCornerAngle + 90),

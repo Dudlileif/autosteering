@@ -6,14 +6,14 @@ part of 'vehicle_simulator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$simVehicleDrivingHash() => r'be56dc171d561aa46a385205a2d4bf764406ac8f';
+String _$simVehicleDrivingHash() => r'a2e0c62945666fc6f4f036f0a86bc6957e491c50';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
 ///
 /// Copied from [simVehicleDriving].
 @ProviderFor(simVehicleDriving)
-final simVehicleDrivingProvider = AutoDisposeFutureProvider<void>.internal(
+final simVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
   simVehicleDriving,
   name: r'simVehicleDrivingProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -23,7 +23,7 @@ final simVehicleDrivingProvider = AutoDisposeFutureProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef SimVehicleDrivingRef = AutoDisposeFutureProviderRef<void>;
+typedef SimVehicleDrivingRef = AutoDisposeProviderRef<void>;
 String _$simVehicleWebStreamHash() =>
     r'a80d35d1c3096960f294753353308dcadfe3dc50';
 
@@ -131,4 +131,44 @@ final _simVehicleWebInputProvider =
 );
 
 typedef _$SimVehicleWebInput = Notifier<StreamController<dynamic>>;
+String _$simVehicleAutoCenterSteeringHash() =>
+    r'ceadc061951f02db91ef831b7be10fde5ae61617';
+
+/// A provider for whether the steering automatically should recenter when
+/// no input is provided.
+///
+/// Copied from [SimVehicleAutoCenterSteering].
+@ProviderFor(SimVehicleAutoCenterSteering)
+final simVehicleAutoCenterSteeringProvider =
+    NotifierProvider<SimVehicleAutoCenterSteering, bool>.internal(
+  SimVehicleAutoCenterSteering.new,
+  name: r'simVehicleAutoCenterSteeringProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simVehicleAutoCenterSteeringHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimVehicleAutoCenterSteering = Notifier<bool>;
+String _$simVehicleAutoSlowDownHash() =>
+    r'9c732890648d0b43b3731ceb939125bbb21b5804';
+
+/// A provider for whether the vehicle should slow down when no input is
+/// provided.
+///
+/// Copied from [SimVehicleAutoSlowDown].
+@ProviderFor(SimVehicleAutoSlowDown)
+final simVehicleAutoSlowDownProvider =
+    NotifierProvider<SimVehicleAutoSlowDown, bool>.internal(
+  SimVehicleAutoSlowDown.new,
+  name: r'simVehicleAutoSlowDownProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simVehicleAutoSlowDownHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimVehicleAutoSlowDown = Notifier<bool>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

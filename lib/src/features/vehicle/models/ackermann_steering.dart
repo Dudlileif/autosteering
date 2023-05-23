@@ -9,7 +9,7 @@ class AckermannSteering {
     required this.steeringAngle,
     required this.wheelBase,
     required this.trackWidth,
-    this.steeringRatio = 1.25,
+    required this.steeringRatio,
   });
 
   /// The input steering angle.
@@ -62,6 +62,7 @@ class AckermannSteering {
   Ackermann steering:
   Steering angle: $steeringAngle  
   Ackermann angle: ${radianToDeg(ackermannAngle)}
+  Ackermann ratio: $steeringRatio
   Left angle: $leftAngle
   Right angle: $rightAngle
   Turning radius: $turningRadius''';
@@ -74,7 +75,7 @@ class AckermannOppositeAngle {
     required this.wheelAngle,
     required this.wheelBase,
     required this.trackWidth,
-    this.steeringRatio = 1.25,
+    required this.steeringRatio,
   });
 
   /// The angle of the known steering wheel.

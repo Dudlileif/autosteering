@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+/// Geo-calculator used to calculate offsets.
+const _distance = Distance(roundResult: false);
+
 /// A base class for vehicles that steers with either a front or rear axle.
 abstract class AxleSteeredVehicle extends Vehicle {
   const AxleSteeredVehicle({
@@ -15,6 +18,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
+    this.ackermannSteeringRatio = 1,
     super.invertSteeringInput = false,
     super.velocity = 0,
     super.heading = 0,
@@ -34,6 +38,13 @@ abstract class AxleSteeredVehicle extends Vehicle {
   /// Expected positive for front wheel steered,
   /// negative for rear wheel steered.
   final double solidAxleDistance;
+
+  /// A modifier ratio for the Ackermann central angle. Defaults to 1.
+  ///
+  /// A higher value will cause a sharper turn, and a lower value a looser
+  /// turn.
+  /// ackermannAngle = [steeringAngleInput] / [ackermannSteeringRatio]
+  final double ackermannSteeringRatio;
 
   /// The position of the center of the rear axle.
   LatLng get solidAxlePosition;
@@ -93,6 +104,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
         steeringAngle: steeringAngle,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
+        steeringRatio: ackermannSteeringRatio,
       );
 
   /// The angle of the left steering wheel when using Ackermann steering.
@@ -107,6 +119,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
         wheelAngle: steeringAngleMax,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
+        steeringRatio: ackermannSteeringRatio,
       ).oppositeAngle;
 
   /// The turning radius corresponding to the current [steeringAngle].
@@ -119,7 +132,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
   LatLng? get turningRadiusCenter => currentTurningRadius != null
-      ? Vehicle.distance.offset(
+      ? _distance.offset(
           solidAxlePosition,
           currentTurningRadius!,
           normalizeBearing(
@@ -156,28 +169,28 @@ abstract class AxleSteeredVehicle extends Vehicle {
     final rearInnerToRearOuterAngle =
         normalizeBearing(frontInnerToRearInnerAngle + (90 * sign));
 
-    final wheelCenter = Vehicle.distance.offset(
+    final wheelCenter = _distance.offset(
       steeringAxlePosition,
       trackWidth / 2 - wheelWidth / 2,
       axleToCenterAngle,
     );
 
-    final wheelOuterFront = Vehicle.distance.offset(
+    final wheelOuterFront = _distance.offset(
       wheelCenter,
       wheelDiameter / 2,
       frontOuterCenterToOuterFrontAngle,
     );
-    final wheelInnerFront = Vehicle.distance.offset(
+    final wheelInnerFront = _distance.offset(
       wheelOuterFront,
       wheelWidth,
       frontOuterToFrontInnerAngle,
     );
-    final wheelInnerRear = Vehicle.distance.offset(
+    final wheelInnerRear = _distance.offset(
       wheelInnerFront,
       wheelDiameter,
       frontInnerToRearInnerAngle,
     );
-    final wheelOuterRear = Vehicle.distance.offset(
+    final wheelOuterRear = _distance.offset(
       wheelInnerRear,
       wheelWidth,
       rearInnerToRearOuterAngle,
@@ -237,28 +250,28 @@ abstract class AxleSteeredVehicle extends Vehicle {
     final rearInnerToRearOuterAngle =
         normalizeBearing(frontInnerToRearInnerAngle + (90 * sign));
 
-    final wheelCenter = Vehicle.distance.offset(
+    final wheelCenter = _distance.offset(
       solidAxlePosition,
       trackWidth / 2 - wheelWidth / 2,
       axleToCenterAngle,
     );
 
-    final wheelOuterFront = Vehicle.distance.offset(
+    final wheelOuterFront = _distance.offset(
       wheelCenter,
       wheelDiameter / 2,
       frontOuterCenterToOuterFrontAngle,
     );
-    final wheelInnerFront = Vehicle.distance.offset(
+    final wheelInnerFront = _distance.offset(
       wheelOuterFront,
       wheelWidth,
       frontOuterToFrontInnerAngle,
     );
-    final wheelInnerRear = Vehicle.distance.offset(
+    final wheelInnerRear = _distance.offset(
       wheelInnerFront,
       wheelDiameter,
       frontInnerToRearInnerAngle,
     );
-    final wheelOuterRear = Vehicle.distance.offset(
+    final wheelOuterRear = _distance.offset(
       wheelInnerRear,
       wheelWidth,
       rearInnerToRearOuterAngle,
@@ -301,6 +314,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
             steeringAngle: steeringAngleMax,
             wheelBase: wheelBase,
             trackWidth: trackWidth,
+            steeringRatio: ackermannSteeringRatio,
           ).turningRadius;
 
       // Clamp the number of turning revolutions so that we only display
@@ -340,7 +354,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
           };
 
           points.add(
-            Vehicle.distance.offset(
+            _distance.offset(
               turningRadiusCenter!,
               currentTurningRadius!,
               normalizeBearing(angle),
@@ -350,7 +364,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
       }
     } else {
       points.add(
-        Vehicle.distance.offset(
+        _distance.offset(
           solidAxlePosition,
           isReversing ? -30 : 5 + 30,
           normalizeBearing(heading),
@@ -396,22 +410,22 @@ abstract class AxleSteeredVehicle extends Vehicle {
 
   /// The max extent/bounds points of the vehicle. The [heading] is followed.
   List<LatLng> get points {
-    final frontLeft = Vehicle.distance.offset(
+    final frontLeft = _distance.offset(
       position,
       centerToCornerDistance,
       frontLeftAngle,
     );
-    final frontRight = Vehicle.distance.offset(
+    final frontRight = _distance.offset(
       position,
       centerToCornerDistance,
       frontRightAngle,
     );
-    final rearRight = Vehicle.distance.offset(
+    final rearRight = _distance.offset(
       position,
       centerToCornerDistance,
       rearRightAngle,
     );
-    final rearLeft = Vehicle.distance.offset(
+    final rearLeft = _distance.offset(
       position,
       centerToCornerDistance,
       rearLeftAngle,
@@ -446,6 +460,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
     double? trackWidth,
     double? wheelBase,
     double? solidAxleDistance,
+    double? ackermannSteeringRatio,
     bool? invertSteeringInput,
     double? velocity,
     double? heading,
