@@ -132,7 +132,7 @@ final _simVehicleWebInputProvider =
 
 typedef _$SimVehicleWebInput = Notifier<StreamController<dynamic>>;
 String _$simVehicleAutoCenterSteeringHash() =>
-    r'ceadc061951f02db91ef831b7be10fde5ae61617';
+    r'f6a0bbb7cc408cbff496d8c52ada0e765ef37082';
 
 /// A provider for whether the steering automatically should recenter when
 /// no input is provided.
@@ -152,7 +152,7 @@ final simVehicleAutoCenterSteeringProvider =
 
 typedef _$SimVehicleAutoCenterSteering = Notifier<bool>;
 String _$simVehicleAutoSlowDownHash() =>
-    r'9c732890648d0b43b3731ceb939125bbb21b5804';
+    r'80968a9a31e611417512c3947ba07a5aad1f0b93';
 
 /// A provider for whether the vehicle should slow down when no input is
 /// provided.

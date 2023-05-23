@@ -174,7 +174,7 @@ class SimVehicleAutoCenterSteering extends _$SimVehicleAutoCenterSteering {
     ref.listenSelf((previous, next) {
       ref
           .read(simVehicleInputProvider.notifier)
-          .send((enableAutoCenterSteering: next));
+          .send((autoCenterSteering: next));
     });
     return false;
   }
@@ -191,9 +191,7 @@ class SimVehicleAutoSlowDown extends _$SimVehicleAutoSlowDown {
   @override
   bool build() {
     ref.listenSelf((previous, next) {
-      ref
-          .read(simVehicleInputProvider.notifier)
-          .send((enableAutoSlowDown: next));
+      ref.read(simVehicleInputProvider.notifier).send((autoSlowDown: next));
     });
     return false;
   }
