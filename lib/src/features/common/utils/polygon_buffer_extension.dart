@@ -6,7 +6,7 @@ import 'package:maps_toolkit2/maps_toolkit2.dart';
 /// An extension to allow for interfacing with different geometry and
 /// map tool packages to make insetting and extending [map.Polygon]s easy.
 /// It also adds getters for the area of the polygon.
-extension BufferPolygonExtension on map.Polygon {
+extension PolygonBufferExtension on map.Polygon {
   /// A [jts.Coordinate] conversion of the [points], adds the first point at
   /// the end to complete the loop.
   List<jts.Coordinate> get jtsCoordinates =>
