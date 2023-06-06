@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -18,6 +19,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
+    required super.pidParameters,
     this.ackermannSteeringRatio = 1,
     super.invertSteeringInput = false,
     super.velocity = 0,
@@ -25,11 +27,11 @@ abstract class AxleSteeredVehicle extends Vehicle {
     super.steeringAngleInput = 0,
     super.length = 4,
     super.width = 2.5,
-    super.acceleration = 0,
     super.simulated = false,
   });
 
   /// The distance between the axles.
+  @override
   final double wheelBase;
 
   /// The distance from the antenna [position] to the solid axle,
@@ -51,6 +53,10 @@ abstract class AxleSteeredVehicle extends Vehicle {
 
   /// The position of the center of the front axle.
   LatLng get steeringAxlePosition;
+
+  /// Where the look ahead distance calculation should start.
+  @override
+  LatLng get lookAheadStartPosition => solidAxlePosition;
 
   /// Basic circle markers for showing the vehicle's Ackermann related
   /// points.
@@ -462,12 +468,12 @@ abstract class AxleSteeredVehicle extends Vehicle {
     double? solidAxleDistance,
     double? ackermannSteeringRatio,
     bool? invertSteeringInput,
+    PidParameters? pidParameters,
     double? velocity,
     double? heading,
     double? steeringAngleInput,
     double? length,
     double? width,
-    double? acceleration,
     bool? simulated,
   });
 }

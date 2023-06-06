@@ -6,6 +6,26 @@ part of 'country_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$sortedCountryLayersHash() =>
+    r'dcc4ddead6be2f8f7e503ce5badaa2bed42a61ca';
+
+/// The selected country layers sorted by their index in the available layers
+/// list.
+///
+/// Copied from [sortedCountryLayers].
+@ProviderFor(sortedCountryLayers)
+final sortedCountryLayersProvider =
+    AutoDisposeProvider<List<TileLayerData>>.internal(
+  sortedCountryLayers,
+  name: r'sortedCountryLayersProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$sortedCountryLayersHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SortedCountryLayersRef = AutoDisposeProviderRef<List<TileLayerData>>;
 String _$currentCountryHash() => r'e674d2f08e41fc881509fba4fd304057ca66a552';
 
 /// A provider fort showing the country we are currently in, if the country

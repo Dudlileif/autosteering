@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -25,12 +26,12 @@ class ArticulatedTractor extends Vehicle {
     required super.steeringAngleMax,
     required super.trackWidth,
     super.invertSteeringInput = false,
+    super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
     super.velocity = 0,
     super.heading = 0,
     super.steeringAngleInput = 0,
     super.length = 4,
     super.width = 2.5,
-    super.acceleration = 0,
     super.simulated = false,
   });
 
@@ -46,12 +47,19 @@ class ArticulatedTractor extends Vehicle {
   /// axle center position.
   final double pivotToRearAxle;
 
+  @override
+  double get wheelBase => pivotToFrontAxle + pivotToRearAxle;
+
   /// The position of the vehicle articulation pivot point.
   LatLng get pivotPosition => _distance.offset(
         position,
         pivotToAntennaDistance,
         normalizeBearing(heading - 180 + steeringAngle / 2),
       );
+
+  /// Where the look ahead distance calculation should start.
+  @override
+  LatLng get lookAheadStartPosition => pivotPosition;
 
   /// The angle from the pivot point to the front axle.
   double get frontAxleAngle => normalizeBearing(heading + steeringAngle / 2);
@@ -73,6 +81,21 @@ class ArticulatedTractor extends Vehicle {
         pivotToRearAxle,
         rearAxleAngle,
       );
+
+  /// The position of the pursuit axle in the the vehicle direction. Used when
+  /// calculating the pure pursuit values.
+  ///
+  /// The mirror position of the antenna position from the pivot point is used
+  /// when the tractor is reversing.
+  @override
+  LatLng get pursuitAxlePosition => switch (isReversing) {
+        true => _distance.offset(
+            pivotPosition,
+            pivotToAntennaDistance,
+            rearAxleAngle,
+          ),
+        false => position,
+      };
 
   /// Basic circle markers for showing the vehicle's steering related
   /// points.
@@ -511,12 +534,12 @@ class ArticulatedTractor extends Vehicle {
     double? steeringAngleMax,
     double? trackWidth,
     bool? invertSteeringInput,
+    PidParameters? pidParameters,
     double? velocity,
     double? heading,
     double? steeringAngleInput,
     double? length,
     double? width,
-    double? acceleration,
     bool? simulated,
   }) =>
       ArticulatedTractor(
@@ -530,12 +553,12 @@ class ArticulatedTractor extends Vehicle {
         pivotToFrontAxle: pivotToFrontAxle ?? this.pivotToFrontAxle,
         pivotToRearAxle: pivotToRearAxle ?? this.pivotToRearAxle,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
+        pidParameters: pidParameters ?? this.pidParameters,
         velocity: velocity ?? this.velocity,
         heading: heading ?? this.heading,
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,
-        acceleration: acceleration ?? this.acceleration,
         simulated: simulated ?? this.simulated,
       );
 }

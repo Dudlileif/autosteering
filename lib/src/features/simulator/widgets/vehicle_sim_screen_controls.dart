@@ -72,13 +72,13 @@ class VehicleSimScreenControls extends ConsumerWidget {
                               ref.watch(simVehicleAutoCenterSteeringProvider)
                                   ? ref
                                       .read(simVehicleInputProvider.notifier)
-                                      .send((enableAutoCenterSteering: false))
+                                      .send((autoCenterSteering: false))
                                   : null,
                           onChangeEnd: (value) =>
                               ref.watch(simVehicleAutoCenterSteeringProvider)
                                   ? ref
                                       .read(simVehicleInputProvider.notifier)
-                                      .send((enableAutoCenterSteering: true))
+                                      .send((autoCenterSteering: true))
                                   : null,
                           onChanged: (value) => ref
                               .read(simVehicleInputProvider.notifier)
@@ -117,13 +117,13 @@ class VehicleSimScreenControls extends ConsumerWidget {
                               ref.watch(simVehicleAutoSlowDownProvider)
                                   ? ref
                                       .read(simVehicleInputProvider.notifier)
-                                      .send((enableAutoSlowDown: false))
+                                      .send((autoSlowDown: false))
                                   : null,
                           onChangeEnd: (value) =>
                               ref.watch(simVehicleAutoSlowDownProvider)
                                   ? ref
                                       .read(simVehicleInputProvider.notifier)
-                                      .send((enableAutoSlowDown: true))
+                                      .send((autoSlowDown: true))
                                   : null,
                           onChanged: (value) => ref
                               .read(simVehicleInputProvider.notifier)

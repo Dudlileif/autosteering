@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -115,6 +116,19 @@ class SelectedCountryLayers extends _$SelectedCountryLayers {
     Set<TileLayerData> next,
   ) =>
       true;
+}
+
+/// The selected country layers sorted by their index in the available layers
+/// list.
+@riverpod
+List<TileLayerData> sortedCountryLayers(SortedCountryLayersRef ref) {
+  final availableLayers = ref.watch(availableCountryLayersProvider);
+
+  return ref.watch(selectedCountryLayersProvider).sorted(
+        (key1, key2) => availableLayers
+            .indexOf(key2)
+            .compareTo(availableLayers.indexOf(key1)),
+      );
 }
 
 /// A map of the available country layers and their opacities, which can be

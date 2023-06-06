@@ -150,6 +150,24 @@ final showDubinsPathDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowDubinsPathDebugLayerRef = AutoDisposeProviderRef<bool>;
+String _$showPurePursuitDebugLayerHash() =>
+    r'b8e5b6066546b66d0f7ff1eff0678354c93ec589';
+
+/// Whether the debugging layer for the pure pursuit should be shown.
+///
+/// Copied from [showPurePursuitDebugLayer].
+@ProviderFor(showPurePursuitDebugLayer)
+final showPurePursuitDebugLayerProvider = AutoDisposeProvider<bool>.internal(
+  showPurePursuitDebugLayer,
+  name: r'showPurePursuitDebugLayerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showPurePursuitDebugLayerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ShowPurePursuitDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showOSMLayerHash() => r'bc0ef306dcc916f4b9503bd18d57a64e09885c8a';
 
 /// Whether the OpenStreetMap layer should be shown.

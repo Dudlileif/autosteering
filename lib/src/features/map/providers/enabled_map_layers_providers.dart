@@ -88,3 +88,10 @@ bool showDubinsPathDebugLayer(ShowDubinsPathDebugLayerRef ref) {
   final enabled = ref.watch(enableDubinsPathDebugProvider);
   return enabled;
 }
+
+/// Whether the debugging layer for the pure pursuit should be shown.
+@riverpod
+bool showPurePursuitDebugLayer(ShowPurePursuitDebugLayerRef ref) {
+  final enabled = ref.watch(debugPurePursuitProvider);
+  return enabled;
+}

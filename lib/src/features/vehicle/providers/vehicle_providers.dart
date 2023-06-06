@@ -30,12 +30,6 @@ class MainVehicle extends _$MainVehicle {
     }
   }
 
-  void setAcceleration(double value) {
-    if (value != state.acceleration) {
-      Future(() => state = state.copyWith(acceleration: value));
-    }
-  }
-
   void setSteeringAngle(double value) {
     if (value != state.steeringAngle) {
       Future(() => state = state.copyWith(steeringAngleInput: value));

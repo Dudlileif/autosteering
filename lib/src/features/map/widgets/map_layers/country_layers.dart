@@ -1,5 +1,4 @@
 import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,12 +13,7 @@ class CountryLayers extends ConsumerWidget {
     // They are sorted backwards to make the top-most layer added
     // to the stack last, so that the sorting corresponds to the
     // selection list.
-    final availableLayers = ref.watch(availableCountryLayersProvider);
-    final layers = ref.watch(selectedCountryLayersProvider).sorted(
-          (key1, key2) => availableLayers
-              .indexOf(key2)
-              .compareTo(availableLayers.indexOf(key1)),
-        );
+    final layers = ref.watch(sortedCountryLayersProvider);
     final opacities = ref.watch(countryLayerOpacitiesProvider);
 
     return Stack(

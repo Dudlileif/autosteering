@@ -12,13 +12,13 @@ abstract class Vehicle extends Equatable {
     required this.minTurningRadius,
     required this.steeringAngleMax,
     required this.trackWidth,
+    required this.pidParameters,
     this.invertSteeringInput = false,
     this.velocity = 0,
     this.heading = 0,
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
-    this.acceleration = 0,
     this.simulated = false,
   });
 
@@ -48,12 +48,13 @@ abstract class Vehicle extends Equatable {
   /// Whether the [steeringAngleInput] should be inverted.
   final bool invertSteeringInput;
 
+  /// The PID parameters for controlling the steering of this vehicle
+  /// with
+  final PidParameters pidParameters;
+
   /// The velocity of the vehicle, in m/s, meters per second, in the heading
   /// direction.
   final double velocity;
-
-  /// The acceleration of the vehicle, in m/s^2, in the heading direction.
-  final double acceleration;
 
   /// The length of the vehicle, in meters.
   final double length;
@@ -63,6 +64,12 @@ abstract class Vehicle extends Equatable {
 
   /// Whether the vehicle is simulated.
   final bool simulated;
+
+  /// The distance between the wheel axles.
+  double get wheelBase;
+
+  /// Where the look ahead distance calculation should start.
+  LatLng get lookAheadStartPosition;
 
   /// A [WayPoint] for the vehicle in it's current state, i.e. position, heading
   /// and velocity.
@@ -85,6 +92,10 @@ abstract class Vehicle extends Equatable {
           },
         false => 0,
       };
+
+  /// The position of the pursuit axle in the the vehicle direction. Used when
+  /// calculating the pure pursuit values.
+  LatLng get pursuitAxlePosition;
 
   /// Basic circle markers for showing the vehicle's steering related
   /// points.
@@ -139,7 +150,6 @@ abstract class Vehicle extends Equatable {
         steeringAngleInput,
         length,
         width,
-        acceleration,
         simulated,
       ];
 
@@ -152,12 +162,12 @@ abstract class Vehicle extends Equatable {
     double? steeringAngleMax,
     double? trackWidth,
     bool? invertSteeringInput,
+    PidParameters? pidParameters,
     double? velocity,
     double? heading,
     double? steeringAngleInput,
     double? length,
     double? width,
-    double? acceleration,
     bool? simulated,
   });
 }

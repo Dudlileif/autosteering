@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -12,7 +13,6 @@ class MapView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapController = ref.watch(mainMapControllerProvider);
-    final vehicle = ref.watch(mainVehicleProvider);
 
     ref
       ..watch(simVehicleDrivingProvider)
@@ -22,8 +22,6 @@ class MapView extends ConsumerWidget {
       key: const Key('Map'),
       mapController: mapController,
       options: MapOptions(
-        center: vehicle.position,
-        rotation: -vehicle.heading,
         zoom: 19,
         minZoom: 4,
         maxZoom: 22,
@@ -62,6 +60,8 @@ class MapView extends ConsumerWidget {
         if (ref.watch(showRecordingPathLayerProvider))
           const RecordingPathLayer(),
         if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),
+        if (ref.watch(showPurePursuitDebugLayerProvider))
+          const PurePursuitDebugLayer(),
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showDubinsPathDebugLayerProvider))
           const DubinsPathDebugLayer(),
@@ -96,6 +96,25 @@ class MapView extends ConsumerWidget {
             child: BasicVehicleGauges(),
           ),
         ),
+        if (ref.watch(displayPurePursuitProvider) != null)
+          Align(
+            alignment: Alignment.topCenter,
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    return Text(
+                      ref
+                          .watch(displayPurePursuitProvider)!
+                          .perpendicularDistance(ref.watch(mainVehicleProvider))
+                          .toStringAsFixed(3),
+                    );
+                  },
+                ),
+              ),
+            ),
+          )
       ],
     );
   }

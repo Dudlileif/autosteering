@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:isolate';
 
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -29,11 +30,7 @@ class VehicleSimulator {
     final timer =
         Timer.periodic(const Duration(milliseconds: _targetPeriodMs), (timer) {
       if (state.vehicle != null) {
-        state
-          ..checkAutoSlowDownOrCentering()
-          ..checkTurningCircle()
-          ..updateTime()
-          ..updatePosition();
+        state.update();
 
         // If the vehicle has moved (changed) we send the new state back to the
         // main/UI isolate.
@@ -44,6 +41,7 @@ class VehicleSimulator {
               velocity: state.velocity,
               heading: state.heading,
               distance: state.distance,
+              purePursuit: state.purePursuit,
             ),
           );
         }
@@ -74,6 +72,7 @@ class VehicleSimulator {
         num velocity,
         num heading,
         num distance,
+        PurePursuit? purePursuit,
       })> webWorker(
     Stream<dynamic> vehicleEvents,
   ) async* {
@@ -90,11 +89,7 @@ class VehicleSimulator {
     yield* Stream.periodic(const Duration(milliseconds: _targetPeriodMs),
         (timer) {
       if (state.vehicle != null) {
-        state
-          ..checkAutoSlowDownOrCentering()
-          ..checkTurningCircle()
-          ..updateTime()
-          ..updatePosition();
+        state.update();
       }
 
       // The simulation data to send to the stream.
@@ -103,6 +98,7 @@ class VehicleSimulator {
         velocity: state.velocity,
         heading: state.heading,
         distance: state.distance,
+        purePursuit: state.purePursuit,
       );
 
       // Update state for the next loop.
@@ -121,6 +117,9 @@ class _VehicleSimulatorState {
   /// The previous vehicle state of the simulation.
   Vehicle? prevVehicle;
 
+  /// The pure pursuit to drive after, if there is one.
+  PurePursuit? purePursuit;
+
   /// A static turning circle center to keep while the steering angle is
   /// constant. We use this due to small errors when using the
   /// [vehicle].turningRadiusCenter as it would move around slightly as the
@@ -133,6 +132,25 @@ class _VehicleSimulatorState {
   /// Whether the vehicle should automatically center the when no input is
   /// given.
   bool autoCenterSteering = false;
+
+  /// Whether the vehicle should use the [purePursuit] model to steer.
+  bool enablePurePursuit = false;
+
+  /// Which mode the [purePursuit] should use to go from the last to the first
+  /// waypoint.
+  PurePursuitLoopMode pursuitLoopMode = PurePursuitLoopMode.none;
+
+  /// Which steering mode the [purePursuit] should use.
+  PurePursuitMode pursuitMode = PurePursuitMode.pid;
+
+  /// A temporary steering mode for the [purePursuit], only used when the
+  /// [pursuitMode] is [PurePursuitMode.pid] and the lateral distance to
+  /// the path is larger than the vehicle's min turning radius.
+  PurePursuitMode tempPursuitMode = PurePursuitMode.pid;
+
+  /// The distance ahead of the vehicle the [purePursuit] should look for the
+  /// path when in look ahead mode.
+  double lookAheadDistance = 4;
 
   /// The previous time of when the simulation was updated.
   DateTime prevUpdateTime = DateTime.now();
@@ -186,21 +204,77 @@ class _VehicleSimulatorState {
 
   /// Change state parameters/values according to the incomming [message].
   ///
-  /// This can be [Vehicle], [VehicleInput] or a records for [autoSlowDown]
-  /// of [autoCenterSteering].
+  /// This can be [Vehicle], [VehicleInput], [PurePursuitMode] or records for
+  /// [purePursuit], [autoSlowDown], [autoCenterSteering], [enablePurePursuit],
+  /// [lookAheadDistance] or [pursuitLoopMode].
   void handleMessage(dynamic message) {
+    // Set the vehicle to simulate.
     if (message is Vehicle) {
-      vehicle = message;
-    } else if (message is VehicleInput && vehicle != null) {
+      vehicle = message.copyWith(
+        velocity: vehicle?.velocity,
+        heading: vehicle?.heading,
+        steeringAngleInput: vehicle?.steeringAngleInput
+            .clamp(-message.steeringAngleMax, message.steeringAngleMax),
+      );
+    }
+    // Update the vehicle with new inputs.
+    else if (message is VehicleInput && vehicle != null) {
       vehicle = vehicle?.copyWith(
         position: message.position ?? vehicle!.position,
         velocity: message.velocity ?? vehicle!.velocity,
         steeringAngleInput: message.steeringAngle ?? vehicle!.steeringAngle,
       );
-    } else if (message is ({bool autoSlowDown})) {
+    }
+    // Set the pure pursuit model.
+    else if (message is ({PurePursuit? purePursuit})) {
+      purePursuit = message.purePursuit;
+    }
+    // Update whether to automatically slow down.
+    else if (message is ({bool autoSlowDown})) {
       autoSlowDown = message.autoSlowDown;
-    } else if (message is ({bool autoCenterSteering})) {
+    }
+    // Update whether to automatically center the steering.
+    else if (message is ({bool autoCenterSteering})) {
       autoCenterSteering = message.autoCenterSteering;
+    }
+    // Enable/disable pure pursuit.
+    else if (message is ({bool enablePurePursuit})) {
+      enablePurePursuit = message.enablePurePursuit;
+      if (vehicle != null && purePursuit != null) {
+        purePursuit?.currentIndex = purePursuit!.closestIndex(vehicle!);
+      }
+    }
+    // Change pure pursuit mode.
+    else if (message is PurePursuitMode) {
+      pursuitMode = message;
+      tempPursuitMode = pursuitMode;
+    }
+    // Set new look ahead distance.
+    else if (message is ({double lookAheadDistance})) {
+      lookAheadDistance = message.lookAheadDistance;
+      // Interpolate the path with new max distance.
+      purePursuit?.interPolateWayPoints(
+        maxDistance: lookAheadDistance,
+        loopMode: pursuitLoopMode,
+      );
+      // Find the current index as the closest point since the path has updated.
+      if (purePursuit != null && vehicle != null) {
+        purePursuit!.currentIndex = purePursuit!.closestIndex(vehicle!);
+      }
+    }
+    // Change the pure pursuit loop mode, i.e. if/how to go from the last to
+    // the first point.
+    else if (message is ({PurePursuitLoopMode pursuitLoopMode})) {
+      pursuitLoopMode = message.pursuitLoopMode;
+      // Interpolate the path since we might have new points.
+      purePursuit?.interPolateWayPoints(
+        maxDistance: lookAheadDistance,
+        loopMode: pursuitLoopMode,
+      );
+      // Find the current index as the closest point since the path has updated.
+      if (purePursuit != null && vehicle != null) {
+        purePursuit!.currentIndex = purePursuit!.closestIndex(vehicle!);
+      }
     }
   }
 
@@ -236,6 +310,53 @@ class _VehicleSimulatorState {
     if (vehicle?.steeringAngle != prevVehicle?.steeringAngle ||
         vehicle.runtimeType != prevVehicle.runtimeType) {
       turningCircleCenter = vehicle?.turningRadiusCenter;
+    }
+  }
+
+  /// Check and update the steering of the vehicle if pure pursuit is available
+  /// and activated.
+  void checkPurePursuit() {
+    if (purePursuit != null) {
+      purePursuit!.tryChangeWayPoint(vehicle!);
+
+      if (enablePurePursuit && vehicle != null) {
+        // Swap to look ahead if the distance is farther than the vehicle's
+        // min turning radius, as we'd be doing circles otherwise.
+        if (pursuitMode == PurePursuitMode.pid) {
+          final lateralDistance =
+              purePursuit!.perpendicularDistance(vehicle!).abs();
+
+          // Switch if the distance is larger than 0.7 times the turning radius,
+          // this value is experimental to find a smoother transition to swap
+          // mode
+          if (lateralDistance > 0.7 * vehicle!.minTurningRadius &&
+              tempPursuitMode != PurePursuitMode.lookAhead) {
+            tempPursuitMode = PurePursuitMode.lookAhead;
+          }
+          // Swap back to the pid mode when we're within the turning circle
+          // radius of the path.
+          else if (pursuitMode == PurePursuitMode.pid &&
+              lateralDistance < vehicle!.minTurningRadius) {
+            tempPursuitMode = pursuitMode;
+          }
+        }
+
+        final steeringAngleCalc = switch (tempPursuitMode) {
+          PurePursuitMode.pid => purePursuit!.nextSteeringAnglePid(vehicle!),
+          PurePursuitMode.lookAhead => purePursuit!.nextSteeringAngleLookAhead(
+              vehicle!,
+              lookAheadDistance,
+            )
+        };
+
+        // Filter out steering angle less than 0.5 degrees.
+        final steeringAngle = switch (steeringAngleCalc.abs() < 0.5) {
+          true => 0.0,
+          false => steeringAngleCalc,
+        };
+
+        vehicle = vehicle?.copyWith(steeringAngleInput: steeringAngle);
+      }
     }
   }
 
@@ -367,5 +488,14 @@ class _VehicleSimulatorState {
         );
       }
     }
+  }
+
+  /// Update the simulation, i.e. simulate the next step.
+  void update() {
+    checkPurePursuit();
+    checkAutoSlowDownOrCentering();
+    checkTurningCircle();
+    updateTime();
+    updatePosition();
   }
 }

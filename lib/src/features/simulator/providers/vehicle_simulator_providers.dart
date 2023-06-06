@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:isolate';
 
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -117,6 +118,8 @@ Stream<Vehicle?> simVehicleWebStream(
     ref
         .read(vehicleTravelledDistanceProvider.notifier)
         .update(event.distance.toDouble());
+    ref.read(displayPurePursuitProvider.notifier).update(event.purePursuit);
+
     return event.vehicle;
   });
 }
@@ -153,13 +156,15 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
       Vehicle vehicle,
       double velocity,
       double heading,
-      double distance
+      double distance,
+      PurePursuit? purePursuit,
     })) {
       ref.read(vehicleVelocityProvider.notifier).update(message.velocity);
       ref.read(vehicleHeadingProvider.notifier).update(message.heading);
       ref
           .read(vehicleTravelledDistanceProvider.notifier)
           .update(message.distance);
+      ref.read(displayPurePursuitProvider.notifier).update(message.purePursuit);
       yield message.vehicle;
     }
   }
