@@ -37,7 +37,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         ],
       ),
       body: showMap
-          ? const MapView()
+          ? const MapAndGaugeStackView()
           : Center(
               child: ElevatedButton.icon(
                 onPressed: () => setState(() {

@@ -1,5 +1,6 @@
 export 'add_point_marker.dart';
 export 'cached_tile_provider.dart';
+export 'main_map.dart';
 export 'map_contribution_widget.dart';
 export 'map_control_buttons.dart';
 export 'map_layers/layers.dart';
