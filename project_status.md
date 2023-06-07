@@ -10,16 +10,26 @@
         -   Custom layers per country, example:
             -   Norway: High-res orthophoto, topological maps, DTM/DOM terrain
 
--   Basic vehicle movement simulation
+-   Basic vehicle movement simulation, for conventional and articulated tractors and harvesters
+
+-   Basic path recording
+
+-   Basic pure pursuit autosteering with PID or look ahead modes
 
 ## To be implemented
 
--   Correct vehicle simulation, support for harvester, articulated vehicles
+-   Improved vehicle simulation, though good enough for testing features now
+
 -   Equipment simulation
--   Fields, paths, recording etc...
--   Autosteering
--   Hardware communication
+
+-   Fields, AB lines/curves etc.
+
+-   Improve autosteering, look at more algorithms
+
+-   Hardware communication, probably UDP first
+
 -   Import/export to the original AgOpenGps
+
 -   Map layer caching/offline
 
 ## Further ideas
