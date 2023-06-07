@@ -11,7 +11,7 @@ part 'gamepad_config.g.dart';
 class GamepadConfig with _$GamepadConfig {
   const factory GamepadConfig({
     /// The maximum discrete analog value. Typically 2^16-1=65535, 16 bits.
-    required int analogMaxValue,
+    @Default(65535) int analogMaxValue,
 
     /// The maximum values that increases input. Values in distance from 0.
     /// The max value is 1. Typically 0.8-0.9 can prevent jitter/drift.
@@ -29,7 +29,7 @@ class GamepadConfig with _$GamepadConfig {
 
   /// The center value of the analog inputs.
   /// Useful for self centering joysticks.
-  double get analogCenter => analogMaxValue / 2;
+  int get analogCenter => analogMaxValue ~/ 2;
 
   /// The deadzone value for the high end of the [input].
   /// Defaults to 1 (no deadzone).

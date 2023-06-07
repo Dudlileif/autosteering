@@ -136,7 +136,7 @@ class __$$_GamepadConfigCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_GamepadConfig extends _GamepadConfig {
   const _$_GamepadConfig(
-      {required this.analogMaxValue,
+      {this.analogMaxValue = 65535,
       final Map<GamepadAnalogInput, double> analogDeadZoneMax = const {},
       final Map<GamepadAnalogInput, double> analogDeadZoneMin = const {}})
       : _analogDeadZoneMax = analogDeadZoneMax,
@@ -148,6 +148,7 @@ class _$_GamepadConfig extends _GamepadConfig {
 
   /// The maximum discrete analog value. Typically 2^16-1=65535, 16 bits.
   @override
+  @JsonKey()
   final int analogMaxValue;
 
   /// The maximum values that increases input. Values in distance from 0.
@@ -224,7 +225,7 @@ class _$_GamepadConfig extends _GamepadConfig {
 
 abstract class _GamepadConfig extends GamepadConfig {
   const factory _GamepadConfig(
-          {required final int analogMaxValue,
+          {final int analogMaxValue,
           final Map<GamepadAnalogInput, double> analogDeadZoneMax,
           final Map<GamepadAnalogInput, double> analogDeadZoneMin}) =
       _$_GamepadConfig;

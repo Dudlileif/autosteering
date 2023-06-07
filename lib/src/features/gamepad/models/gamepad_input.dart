@@ -166,40 +166,10 @@ enum GamepadButtonInput {
 
   /// Map an input [key] to the corresponding [GamepadButtonInput]
   /// button action.
-  static GamepadButtonInput map(String? key) {
-    switch (key) {
-      case 'button-0':
-        return square;
-      case 'button-1':
-        return cross;
-      case 'button-2':
-        return circle;
-      case 'button-3':
-        return triangle;
-      case 'button-4':
-        return leftBumper;
-      case 'button-5':
-        return rightBumper;
-      case 'button-6':
-        return leftTrigger;
-      case 'button-7':
-        return rightTrigger;
-      case 'button-8':
-        return share;
-      case 'button-9':
-        return start;
-      case 'button-10':
-        return leftStickButton;
-      case 'button-11':
-        return rightStickButton;
-      case 'button-12':
-        return home;
-      case 'button-13':
-        return touchpad;
-      default:
-        return unknown;
-    }
-  }
+  static GamepadButtonInput map(String? key) => values.where(
+        (element) => element.id == key,
+        orElse: () => unknown,
+      );
 }
 
 /// An enumerator for mapping analog axis to their corresponding
@@ -220,26 +190,10 @@ enum GamepadAnalogInput {
   final String? id;
 
   /// Map an input [key] to the corresponding [GamepadAnalogInput] analog axis.
-  static GamepadAnalogInput map(String? key) {
-    switch (key) {
-      case 'dwXpos':
-        return leftStickX;
-      case 'dwYpos':
-        return leftStickY;
-      case 'dwZpos':
-        return rightStickX;
-      case 'dwRpos':
-        return rightStickY;
-      case 'dwUpos':
-        return rightTrigger;
-      case 'dwVpos':
-        return leftTrigger;
-      case 'pov':
-        return pov;
-      default:
-        return unknown;
-    }
-  }
+  static GamepadAnalogInput map(String? key) => values.firstWhere(
+        (element) => element.id == key,
+        orElse: () => unknown,
+      );
 }
 
 /// An enumerator for mapping POV button presses to their corresponding
@@ -258,34 +212,14 @@ enum GamepadPovInput {
   const GamepadPovInput(this.value);
 
   /// The analog input value.
-  final double value;
+  final int value;
 
   /// POV button action to degrees.
   double? get degrees => value != 65535 ? value / 100 : null;
 
   /// Map an input [value] to the corresponding [GamepadPovInput] button action.
-  static GamepadPovInput map(double value) {
-    switch (value.round()) {
-      case 0:
-        return GamepadPovInput.up;
-      case 4500:
-        return GamepadPovInput.upRight;
-      case 9000:
-        return GamepadPovInput.right;
-      case 13500:
-        return GamepadPovInput.downRight;
-      case 18000:
-        return GamepadPovInput.down;
-      case 22500:
-        return GamepadPovInput.downLeft;
-      case 27000:
-        return GamepadPovInput.left;
-      case 31500:
-        return GamepadPovInput.upLeft;
-      case 65535:
-        return GamepadPovInput.released;
-      default:
-        return GamepadPovInput.released;
-    }
-  }
+  static GamepadPovInput map(double value) => values.firstWhere(
+        (element) => element.value == value.round(),
+        orElse: () => released,
+      );
 }
