@@ -21,7 +21,8 @@ Future<void> applyTestSettings(ApplyTestSettingsRef ref) async {
     Map<String, dynamic>.from(testSettings['init_position'] as Map),
   );
   final initHeading = testSettings['init_heading'] as double;
-  final copernicusInstanceId = testSettings['copernicus_instance_id'] as String;
+  final copernicusInstanceId =
+      testSettings['copernicus_instance_id'] as String?;
 
   ref.read(homePositionProvider.notifier).update(initPosition);
   ref.read(mainVehicleProvider.notifier).update(

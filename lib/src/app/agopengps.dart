@@ -13,6 +13,7 @@ class AgOpenGps extends ConsumerWidget {
     final appTheme = ref.watch(appThemeProvider);
     final themeMode = ref.watch(activeThemeModeProvider);
 
+    // We are loading until the test settings have been applied.
     final loading = ref.watch(applyTestSettingsProvider) is! AsyncData;
 
     return MaterialApp(
