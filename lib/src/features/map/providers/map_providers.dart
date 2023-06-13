@@ -39,7 +39,7 @@ class MainMapController extends _$MainMapController {
 @Riverpod(keepAlive: true)
 class HomePosition extends _$HomePosition {
   @override
-  LatLng build() => LatLng(0, 0);
+  LatLng build() => const LatLng(0, 0);
 
   void update(LatLng position) => Future(() => state = position);
 }

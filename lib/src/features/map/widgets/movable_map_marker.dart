@@ -66,9 +66,7 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
 
         final position = map.pointToLatLng(point);
 
-        if (position != null) {
-          widget.onMoved(position);
-        }
+        widget.onMoved(position);
       },
       feedback: MouseRegion(
         cursor: SystemMouseCursors.move,
