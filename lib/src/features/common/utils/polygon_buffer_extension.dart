@@ -50,11 +50,11 @@ extension PolygonBufferExtension on map.Polygon {
   jts.Geometry jtsBufferedGeometry(jts.Geometry geometry, double distance) =>
       geometry.buffer(distance);
 
-  /// The buffered [LatLng] points for a polygon that has been inset or extended
-  /// by [distance] meters. Insetting requires negative [distance], extending
-  /// requires positive [distance].
-  List<LatLng> bufferedPoints(double distance) {
-    final geometry = jtsBufferedGeometry(jtsShell, 2 * distance.abs());
+  /// The buffered [LatLng] points for a geometry that has been inset or
+  /// extended by [distance] meters. Insetting requires negative [distance],
+  /// extending requires positive [distance].
+  List<LatLng> bufferedPoints(jts.Geometry from, double distance) {
+    final geometry = jtsBufferedGeometry(from, 2 * distance.abs());
     if (geometry is jts.Polygon) {
       // Get the inner buffer hole ring
       if (distance.isNegative) {
@@ -84,11 +84,29 @@ extension PolygonBufferExtension on map.Polygon {
     return geometry.getCoordinates().map((e) => e.latLng).toList();
   }
 
+  /// The buffered [LatLng] points for a polygon's holes that has been inset or
+  /// extended by [distance] meters. Insetting requires negative [distance],
+  /// extending requires positive [distance].
+  List<List<LatLng>>? bufferedHolesPoints(double distance) {
+    if (holePointsList == null) {
+      return null;
+    }
+    return jtsHoles!.map((hole) => bufferedPoints(hole, distance)).toList();
+  }
+
   /// An inset or extended polygon that has been extended or inset by
   /// [distance] meters. Insetting requires negative [distance], extending
-  /// requires positive [distance].
-  map.Polygon bufferedPolygon(double distance) => copyWith(
-        points: bufferedPoints(distance),
+  /// requires positive [distance]. [holeDistance] needs to be set if the
+  /// holes also should be inset/extended.
+  map.Polygon bufferedPolygon({
+    double? distance,
+    double? holeDistance,
+  }) =>
+      copyWith(
+        points: distance != null ? bufferedPoints(jtsShell, distance) : points,
+        holePointsList: holeDistance != null
+            ? bufferedHolesPoints(holeDistance)
+            : holePointsList,
       );
 
   /// Area of the polygon in square meters.
