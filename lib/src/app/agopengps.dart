@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/app/test_providers/test_settings_provider.dart';
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/scaffold/widgets/main_scaffold.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,10 @@ class AgOpenGps extends ConsumerWidget {
     final appTheme = ref.watch(appThemeProvider);
     final themeMode = ref.watch(activeThemeModeProvider);
 
-    // We are loading until the test settings have been applied.
-    final loading = ref.watch(applyTestSettingsProvider) is! AsyncData;
+    // We are loading until the test settings have been applied and the file
+    // directory is ready.
+    final loading = ref.watch(applyTestSettingsProvider) is! AsyncData &&
+        ref.watch(fileDirectoryProvider) is! AsyncData;
 
     return MaterialApp(
       theme: appTheme.light,
