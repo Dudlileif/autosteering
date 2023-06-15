@@ -22,7 +22,6 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AgOpenGPS'),
         actions: const [
           MenuBar(
             children: [
