@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/services.dart';
@@ -58,5 +59,11 @@ Future<void> applyTestSettings(ApplyTestSettingsRef ref) async {
         }
       }
     });
+  }
+
+  if (testSettings.containsKey('field')) {
+    final field =
+        Field.fromJson(Map<String, dynamic>.from(testSettings['field'] as Map));
+    ref.read(testFieldProvider.notifier).update(field);
   }
 }

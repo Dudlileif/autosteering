@@ -52,6 +52,7 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showOSMLayerProvider)) const OSMLayer(),
         if (ref.watch(showCountryLayersProvider)) const CountryLayers(),
         if (ref.watch(showSentinelLayersProvider)) const SentinelLayers(),
+        if (ref.watch(showFieldDebugLayerProvider)) const FieldLayer(),
         if (ref.watch(showFinishedPathLayerProvider)) const FinishedPathLayer(),
         if (ref.watch(showFinishedPolygonLayerProvider))
           const FinishedPolygonLayer(),

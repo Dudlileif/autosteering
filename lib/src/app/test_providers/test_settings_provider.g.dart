@@ -6,7 +6,7 @@ part of 'test_settings_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$applyTestSettingsHash() => r'6a4794b4739de9fbd9cd1e9d4b1a4ec7f307ceaf';
+String _$applyTestSettingsHash() => r'61e863ce23f53972145ea31a31c5cbcd72277325';
 
 /// Apply test settings from 'assets/test_settings.json'.
 ///

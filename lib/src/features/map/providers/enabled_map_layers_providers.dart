@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -93,5 +94,16 @@ bool showDubinsPathDebugLayer(ShowDubinsPathDebugLayerRef ref) {
 @riverpod
 bool showPurePursuitDebugLayer(ShowPurePursuitDebugLayerRef ref) {
   final enabled = ref.watch(debugPurePursuitProvider);
+  return enabled;
+}
+
+/// Whether the debugging layer for the test field should be shown.
+@riverpod
+bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
+  final showTestField = ref.watch(showTestFieldProvider);
+  final showBufferedTestField = ref.watch(showBufferedTestFieldProvider);
+  final testFieldExists = ref.watch(testFieldProvider) != null;
+
+  final enabled = (showTestField || showBufferedTestField) && testFieldExists;
   return enabled;
 }
