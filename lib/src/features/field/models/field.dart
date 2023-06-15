@@ -54,9 +54,11 @@ class Field extends Equatable {
   /// ```
   Field.fromJson(Map<String, dynamic> json)
       : name = json['name'] as String,
-        border = List<Map<String, dynamic>>.from(json['border'] as List)
-            .map(LatLng.fromJson)
-            .toList(),
+        border = json['border'] != null
+            ? List<Map<String, dynamic>>.from(json['border'] as List)
+                .map(LatLng.fromJson)
+                .toList()
+            : [],
         holes = json['holes'] != null
             ? List<List<dynamic>>.from(json['holes'] as List)
                 .map(
