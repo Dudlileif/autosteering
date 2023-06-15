@@ -12,7 +12,9 @@ class Field extends Equatable {
     this.holes,
   });
 
-  /// Expects a json of this format:
+  /// Creates a [Field] from a json map object.
+  ///
+  /// Expects a json map of this format:
   ///```
   /// {
   ///   "name": "some name",
@@ -50,33 +52,20 @@ class Field extends Equatable {
   ///   ]
   /// }
   /// ```
-  factory Field.fromJson(Map<String, dynamic> map) {
-    final name = map['name'] as String;
-
-    List<LatLng>? border;
-    if (map.containsKey('border')) {
-      border = List<Map<String, dynamic>>.from(map['border'] as List)
-          .map(LatLng.fromJson)
-          .toList();
-    }
-
-    List<List<LatLng>>? holes;
-    if (map.containsKey('holes')) {
-      holes = (map['holes'] as List)
-          .map(
-            (hole) => List<Map<String, dynamic>>.from(hole as List)
-                .map(LatLng.fromJson)
-                .toList(),
-          )
-          .toList();
-    }
-
-    return Field(
-      name: name,
-      border: border ?? [],
-      holes: holes,
-    );
-  }
+  Field.fromJson(Map<String, dynamic> json)
+      : name = json['name'] as String,
+        border = List<Map<String, dynamic>>.from(json['border'] as List)
+            .map(LatLng.fromJson)
+            .toList(),
+        holes = json['holes'] != null
+            ? List<List<dynamic>>.from(json['holes'] as List)
+                .map(
+                  (hole) => List<Map<String, dynamic>>.from(hole)
+                      .map(LatLng.fromJson)
+                      .toList(),
+                )
+                .toList()
+            : null;
 
   /// The name of the field.
   final String name;
