@@ -16,6 +16,10 @@ class Tractor extends AxleSteeredVehicle {
     required super.steeringAngleMax,
     required super.trackWidth,
     super.ackermannSteeringRatio,
+    super.steeringAxleWheelDiameter,
+    super.solidAxleWheelDiameter,
+    super.steeringAxleWheelWidth,
+    super.solidAxleWheelWidth,
     super.invertSteeringInput = false,
     super.pidParameters = const PidParameters(p: 30, i: 0, d: 2),
     super.velocity = 0,
@@ -73,6 +77,10 @@ class Tractor extends AxleSteeredVehicle {
     double? wheelBase,
     double? solidAxleDistance,
     double? ackermannSteeringRatio,
+    double? steeringAxleWheelDiameter,
+    double? solidAxleWheelDiameter,
+    double? steeringAxleWheelWidth,
+    double? solidAxleWheelWidth,
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     double? velocity,
@@ -92,6 +100,13 @@ class Tractor extends AxleSteeredVehicle {
         solidAxleDistance: solidAxleDistance ?? this.solidAxleDistance,
         ackermannSteeringRatio:
             ackermannSteeringRatio ?? this.ackermannSteeringRatio,
+        steeringAxleWheelDiameter:
+            steeringAxleWheelDiameter ?? this.steeringAxleWheelDiameter,
+        solidAxleWheelDiameter:
+            solidAxleWheelDiameter ?? this.solidAxleWheelDiameter,
+        steeringAxleWheelWidth:
+            steeringAxleWheelWidth ?? this.steeringAxleWheelWidth,
+        solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         pidParameters: pidParameters ?? this.pidParameters,
         velocity: velocity ?? this.velocity,

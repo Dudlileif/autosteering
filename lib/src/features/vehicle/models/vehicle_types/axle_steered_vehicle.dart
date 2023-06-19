@@ -21,6 +21,10 @@ abstract class AxleSteeredVehicle extends Vehicle {
     required super.trackWidth,
     required super.pidParameters,
     this.ackermannSteeringRatio = 1,
+    this.steeringAxleWheelDiameter = 1.1,
+    this.solidAxleWheelDiameter = 1.8,
+    this.steeringAxleWheelWidth = 0.48,
+    this.solidAxleWheelWidth = 0.6,
     super.invertSteeringInput = false,
     super.velocity = 0,
     super.heading = 0,
@@ -47,6 +51,18 @@ abstract class AxleSteeredVehicle extends Vehicle {
   /// turn.
   /// ackermannAngle = [steeringAngleInput] / [ackermannSteeringRatio]
   final double ackermannSteeringRatio;
+
+  /// The diameter of the steering axle wheels.
+  final double steeringAxleWheelDiameter;
+
+  /// The diameter of the solid axle wheels
+  final double solidAxleWheelDiameter;
+
+  /// The width of the steering axle wheels.
+  final double steeringAxleWheelWidth;
+
+  /// The width of the solid axle wheels.
+  final double solidAxleWheelWidth;
 
   /// The position of the center of the rear axle.
   LatLng get solidAxlePosition;
@@ -152,74 +168,87 @@ abstract class AxleSteeredVehicle extends Vehicle {
 
   /// The bounds of the left steering wheel, or the right steering wheel if
   /// [left] is set to false.
-  List<LatLng> steeringWheelPoints({bool left = true}) {
-    const wheelDiameter = 1.1;
-    const wheelWidth = 0.48;
+  List<LatLng> wheelPoints({bool left = true, bool steering = true}) {
+    final wheelDiameter = switch (steering) {
+      true => steeringAxleWheelDiameter,
+      false => solidAxleWheelDiameter,
+    };
+    final wheelWidth = switch (steering) {
+      true => steeringAxleWheelWidth,
+      false => solidAxleWheelWidth,
+    };
 
     final sign = left ? 1 : -1;
+
     final steeringWheelAngle =
         left ? leftSteeringWheelAngle : rightSteeringWheelAngle;
 
     final axleToCenterAngle = normalizeBearing(heading - (90 * sign));
 
-    final frontOuterCenterToOuterFrontAngle = normalizeBearing(
-      axleToCenterAngle + steeringWheelAngle - 90 * sign,
+    final innerCenterToInnerRearAngle = normalizeBearing(
+      switch (steering) {
+        true => axleToCenterAngle + steeringWheelAngle - 90 * sign,
+        false => axleToCenterAngle - 90 * sign,
+      },
     );
 
-    final frontOuterToFrontInnerAngle =
-        normalizeBearing(frontOuterCenterToOuterFrontAngle + (90 * sign));
+    final innerRearToOuterRearAngle =
+        normalizeBearing(innerCenterToInnerRearAngle + (90 * sign));
 
-    final frontInnerToRearInnerAngle =
-        normalizeBearing(frontOuterToFrontInnerAngle + (90 * sign));
+    final outerRearToOuterFrontAngle =
+        normalizeBearing(innerRearToOuterRearAngle + (90 * sign));
 
-    final rearInnerToRearOuterAngle =
-        normalizeBearing(frontInnerToRearInnerAngle + (90 * sign));
+    final outerFrontToInnerFrontAngle =
+        normalizeBearing(outerRearToOuterFrontAngle + (90 * sign));
 
-    final wheelCenter = _distance.offset(
-      steeringAxlePosition,
+    final wheelInnerCenter = _distance.offset(
+      switch (steering) {
+        true => steeringAxlePosition,
+        false => solidAxlePosition,
+      },
       trackWidth / 2 - wheelWidth / 2,
       axleToCenterAngle,
     );
 
-    final wheelOuterFront = _distance.offset(
-      wheelCenter,
-      wheelDiameter / 2,
-      frontOuterCenterToOuterFrontAngle,
-    );
-    final wheelInnerFront = _distance.offset(
-      wheelOuterFront,
-      wheelWidth,
-      frontOuterToFrontInnerAngle,
-    );
     final wheelInnerRear = _distance.offset(
-      wheelInnerFront,
-      wheelDiameter,
-      frontInnerToRearInnerAngle,
+      wheelInnerCenter,
+      wheelDiameter / 2,
+      innerCenterToInnerRearAngle,
     );
     final wheelOuterRear = _distance.offset(
       wheelInnerRear,
       wheelWidth,
-      rearInnerToRearOuterAngle,
+      innerRearToOuterRearAngle,
+    );
+    final wheelOuterFront = _distance.offset(
+      wheelOuterRear,
+      wheelDiameter,
+      outerRearToOuterFrontAngle,
+    );
+    final wheelInnerFront = _distance.offset(
+      wheelOuterFront,
+      wheelWidth,
+      outerFrontToInnerFrontAngle,
     );
 
     return [
-      wheelOuterFront,
-      wheelInnerFront,
       wheelInnerRear,
       wheelOuterRear,
+      wheelOuterFront,
+      wheelInnerFront,
     ];
   }
 
   /// The left steering wheel polygon.
   Polygon get leftSteeringWheelPolygon => Polygon(
-        points: steeringWheelPoints(),
+        points: wheelPoints(),
         isFilled: true,
         color: Colors.black,
       );
 
   /// The right steering wheel polygon.
   Polygon get rightSteeringWheelPolygon => Polygon(
-        points: steeringWheelPoints(left: false),
+        points: wheelPoints(left: false),
         isFilled: true,
         color: Colors.black,
       );
@@ -233,74 +262,16 @@ abstract class AxleSteeredVehicle extends Vehicle {
         rightSolidAxleWheelPolygon,
       ];
 
-  /// The bounds of the left solid axle wheel, or the right solid axle wheel if
-  /// [left] is set to false.
-  List<LatLng> solidAxleWheelPoints({bool left = true}) {
-    const wheelDiameter = 1.8;
-    const wheelWidth = 0.6;
-
-    final sign = left ? 1 : -1;
-
-    final axleToCenterAngle = normalizeBearing(heading - (90 * sign));
-
-    final frontOuterCenterToOuterFrontAngle = normalizeBearing(
-      axleToCenterAngle - 90 * sign,
-    );
-
-    final frontOuterToFrontInnerAngle =
-        normalizeBearing(frontOuterCenterToOuterFrontAngle + (90 * sign));
-
-    final frontInnerToRearInnerAngle =
-        normalizeBearing(frontOuterToFrontInnerAngle + (90 * sign));
-
-    final rearInnerToRearOuterAngle =
-        normalizeBearing(frontInnerToRearInnerAngle + (90 * sign));
-
-    final wheelCenter = _distance.offset(
-      solidAxlePosition,
-      trackWidth / 2 - wheelWidth / 2,
-      axleToCenterAngle,
-    );
-
-    final wheelOuterFront = _distance.offset(
-      wheelCenter,
-      wheelDiameter / 2,
-      frontOuterCenterToOuterFrontAngle,
-    );
-    final wheelInnerFront = _distance.offset(
-      wheelOuterFront,
-      wheelWidth,
-      frontOuterToFrontInnerAngle,
-    );
-    final wheelInnerRear = _distance.offset(
-      wheelInnerFront,
-      wheelDiameter,
-      frontInnerToRearInnerAngle,
-    );
-    final wheelOuterRear = _distance.offset(
-      wheelInnerRear,
-      wheelWidth,
-      rearInnerToRearOuterAngle,
-    );
-
-    return [
-      wheelOuterFront,
-      wheelInnerFront,
-      wheelInnerRear,
-      wheelOuterRear,
-    ];
-  }
-
   /// The left solid axle wheel polygon.
   Polygon get leftSolidAxleWheelPolygon => Polygon(
-        points: solidAxleWheelPoints(),
+        points: wheelPoints(steering: false),
         isFilled: true,
         color: Colors.black,
       );
 
   /// The right solid axle wheel polygon.
   Polygon get rightSolidAxleWheelPolygon => Polygon(
-        points: solidAxleWheelPoints(left: false),
+        points: wheelPoints(left: false, steering: false),
         isFilled: true,
         color: Colors.black,
       );
@@ -467,6 +438,10 @@ abstract class AxleSteeredVehicle extends Vehicle {
     double? wheelBase,
     double? solidAxleDistance,
     double? ackermannSteeringRatio,
+    double? steeringAxleWheelDiameter,
+    double? solidAxleWheelDiameter,
+    double? steeringAxleWheelWidth,
+    double? solidAxleWheelWidth,
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     double? velocity,

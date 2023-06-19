@@ -53,6 +53,73 @@ class VehicleDebugLayer extends ConsumerWidget {
               ),
             ],
           ),
+        if (vehicle is Tractor) ...[
+          OverlayImageLayer(
+            overlayImages: [
+              RotatedOverlayImage(
+                topLeftCorner: vehicle.polygons.first.points.first,
+                bottomLeftCorner: vehicle.polygons.first.points.last,
+                bottomRightCorner: vehicle.polygons.first.points[2],
+                imageProvider: const AssetImage('assets/images/Tractor.png'),
+              )
+            ],
+          ),
+        ] else if (vehicle is Harvester)
+          OverlayImageLayer(
+            overlayImages: [
+              RotatedOverlayImage(
+                topLeftCorner: vehicle.polygons.first.points.first,
+                bottomLeftCorner: vehicle.polygons.first.points.last,
+                bottomRightCorner: vehicle.polygons.first.points[2],
+                imageProvider: const AssetImage('assets/images/Harvester.png'),
+              )
+            ],
+          )
+        else if (vehicle is ArticulatedTractor) ...[
+          OverlayImageLayer(
+            overlayImages: [
+              RotatedOverlayImage(
+                topLeftCorner: vehicle.pivotPosition.offset(
+                  vehicle.trackWidth - 0.7,
+                  vehicle.rearAxleAngle + 90,
+                ),
+                bottomLeftCorner: vehicle.wheelPoints(rear: true)[1].offset(
+                      0.5,
+                      vehicle.rearAxleAngle,
+                    ),
+                bottomRightCorner:
+                    vehicle.wheelPoints(rear: true, left: false)[1].offset(
+                          0.5,
+                          vehicle.rearAxleAngle,
+                        ),
+                imageProvider: const AssetImage(
+                  'assets/images/ArticulatedTractorRear.png',
+                ),
+              )
+            ],
+          ),
+          OverlayImageLayer(
+            overlayImages: [
+              RotatedOverlayImage(
+                topLeftCorner: vehicle.wheelPoints()[2].offset(
+                      0.75,
+                      vehicle.frontAxleAngle,
+                    ),
+                bottomLeftCorner: vehicle.pivotPosition.offset(
+                  vehicle.trackWidth - 0.7,
+                  vehicle.frontAxleAngle - 90,
+                ),
+                bottomRightCorner: vehicle.pivotPosition.offset(
+                  vehicle.trackWidth - 0.7,
+                  vehicle.frontAxleAngle + 90,
+                ),
+                imageProvider: const AssetImage(
+                  'assets/images/ArticulatedTractorFront.png',
+                ),
+              )
+            ],
+          ),
+        ],
         if (debugSteering)
           CircleLayer(
             circles: [

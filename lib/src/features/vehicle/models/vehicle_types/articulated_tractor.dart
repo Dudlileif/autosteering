@@ -25,6 +25,8 @@ class ArticulatedTractor extends Vehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
+    this.wheelDiameter = 1.8,
+    this.wheelWidth = 1.3,
     super.invertSteeringInput = false,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
     super.velocity = 0,
@@ -46,6 +48,12 @@ class ArticulatedTractor extends Vehicle {
   /// The distance from the vehicle articulation pivot point to the rear
   /// axle center position.
   final double pivotToRearAxle;
+
+  /// The diameter of the wheels.
+  final double wheelDiameter;
+
+  /// The width of the wheels.
+  final double wheelWidth;
 
   @override
   double get wheelBase => pivotToFrontAxle + pivotToRearAxle;
@@ -194,146 +202,93 @@ class ArticulatedTractor extends Vehicle {
         )
       : null;
 
-  // The bounds of the left solid axle wheel, or the right solid axle wheel if
-  /// [left] is set to false.
-  List<LatLng> frontWheelPoints({bool left = true}) {
-    const wheelDiameter = 1.8;
-    const wheelWidth = 1.3;
-
-    final sign = left ? 1 : -1;
-
-    final axleToCenterAngle = normalizeBearing(frontAxleAngle - (90 * sign));
-
-    final frontOuterCenterToOuterFrontAngle = normalizeBearing(
-      axleToCenterAngle - 90 * sign,
-    );
-
-    final frontOuterToFrontInnerAngle =
-        normalizeBearing(frontOuterCenterToOuterFrontAngle + (90 * sign));
-
-    final frontInnerToRearInnerAngle =
-        normalizeBearing(frontOuterToFrontInnerAngle + (90 * sign));
-
-    final rearInnerToRearOuterAngle =
-        normalizeBearing(frontInnerToRearInnerAngle + (90 * sign));
-
-    final wheelCenter = _distance.offset(
-      frontAxlePosition,
-      trackWidth / 2 - wheelWidth / 2,
-      axleToCenterAngle,
-    );
-
-    final wheelOuterFront = _distance.offset(
-      wheelCenter,
-      wheelDiameter / 2,
-      frontOuterCenterToOuterFrontAngle,
-    );
-    final wheelInnerFront = _distance.offset(
-      wheelOuterFront,
-      wheelWidth,
-      frontOuterToFrontInnerAngle,
-    );
-    final wheelInnerRear = _distance.offset(
-      wheelInnerFront,
-      wheelDiameter,
-      frontInnerToRearInnerAngle,
-    );
-    final wheelOuterRear = _distance.offset(
-      wheelInnerRear,
-      wheelWidth,
-      rearInnerToRearOuterAngle,
-    );
-
-    return [
-      wheelOuterFront,
-      wheelInnerFront,
-      wheelInnerRear,
-      wheelOuterRear,
-    ];
-  }
-
   /// The left solid axle wheel polygon.
   Polygon get leftFrontWheelPolygon => Polygon(
-        points: frontWheelPoints(),
+        points: wheelPoints(),
         isFilled: true,
         color: Colors.black,
       );
 
   /// The right solid axle wheel polygon.
   Polygon get rightFrontWheelPolygon => Polygon(
-        points: frontWheelPoints(left: false),
+        points: wheelPoints(left: false),
         isFilled: true,
         color: Colors.black,
       );
 
-  // The bounds of the left solid axle wheel, or the right solid axle wheel if
-  /// [left] is set to false.
-  List<LatLng> rearWheelPoints({bool left = true}) {
-    const wheelDiameter = 1.8;
-    const wheelWidth = 1.3;
-
+  /// The bounds of any of the specified wheels of the tractor.
+  ///
+  /// [left] is used to choose left (default, true) or right side (false).
+  /// [rear] is used to choose front (default, false) or rear (true).
+  List<LatLng> wheelPoints({bool left = true, bool rear = false}) {
     final sign = left ? 1 : -1;
 
-    final axleToCenterAngle = normalizeBearing(rearAxleAngle - (90 * sign));
+    final axleToCenterAngle = switch (rear) {
+      true => normalizeBearing(rearAxleAngle + 90 * sign),
+      false => normalizeBearing(frontAxleAngle - 90 * sign)
+    };
 
-    final frontOuterCenterToOuterFrontAngle = normalizeBearing(
+    final innerCenterToInnerRearAngle = normalizeBearing(
       axleToCenterAngle - 90 * sign,
     );
 
-    final frontOuterToFrontInnerAngle =
-        normalizeBearing(frontOuterCenterToOuterFrontAngle + (90 * sign));
-
-    final frontInnerToRearInnerAngle =
-        normalizeBearing(frontOuterToFrontInnerAngle + (90 * sign));
-
     final rearInnerToRearOuterAngle =
-        normalizeBearing(frontInnerToRearInnerAngle + (90 * sign));
+        normalizeBearing(innerCenterToInnerRearAngle + 90 * sign);
 
-    final wheelCenter = _distance.offset(
-      rearAxlePosition,
+    final rearOuterToFrontOuterAngle =
+        normalizeBearing(rearInnerToRearOuterAngle + 90 * sign);
+
+    final frontOuterToFrontInnerAngle =
+        normalizeBearing(rearOuterToFrontOuterAngle + 90 * sign);
+
+    final wheelInnerCenter = _distance.offset(
+      switch (rear) {
+        true => rearAxlePosition,
+        false => frontAxlePosition,
+      },
       trackWidth / 2 - wheelWidth / 2,
       axleToCenterAngle,
     );
 
-    final wheelOuterFront = _distance.offset(
-      wheelCenter,
-      wheelDiameter / 2,
-      frontOuterCenterToOuterFrontAngle,
-    );
-    final wheelInnerFront = _distance.offset(
-      wheelOuterFront,
-      wheelWidth,
-      frontOuterToFrontInnerAngle,
-    );
     final wheelInnerRear = _distance.offset(
-      wheelInnerFront,
-      wheelDiameter,
-      frontInnerToRearInnerAngle,
+      wheelInnerCenter,
+      wheelDiameter / 2,
+      innerCenterToInnerRearAngle,
     );
     final wheelOuterRear = _distance.offset(
       wheelInnerRear,
       wheelWidth,
       rearInnerToRearOuterAngle,
     );
+    final wheelOuterFront = _distance.offset(
+      wheelOuterRear,
+      wheelDiameter,
+      rearOuterToFrontOuterAngle,
+    );
+    final wheelInnerFront = _distance.offset(
+      wheelOuterFront,
+      wheelWidth,
+      frontOuterToFrontInnerAngle,
+    );
 
     return [
-      wheelOuterFront,
-      wheelInnerFront,
       wheelInnerRear,
       wheelOuterRear,
+      wheelOuterFront,
+      wheelInnerFront,
     ];
   }
 
   /// The left solid axle wheel polygon.
   Polygon get leftRearWheelPolygon => Polygon(
-        points: rearWheelPoints(),
+        points: wheelPoints(rear: true),
         isFilled: true,
         color: Colors.black,
       );
 
   /// The right solid axle wheel polygon.
   Polygon get rightRearWheelPolygon => Polygon(
-        points: rearWheelPoints(left: false),
+        points: wheelPoints(left: false, rear: true),
         isFilled: true,
         color: Colors.black,
       );
@@ -533,6 +488,8 @@ class ArticulatedTractor extends Vehicle {
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
+    double? wheelDiameter,
+    double? wheelWidth,
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     double? velocity,
@@ -548,6 +505,8 @@ class ArticulatedTractor extends Vehicle {
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,
         steeringAngleMax: steeringAngleMax ?? this.steeringAngleMax,
         trackWidth: trackWidth ?? this.trackWidth,
+        wheelDiameter: wheelDiameter ?? this.wheelDiameter,
+        wheelWidth: wheelWidth ?? this.wheelWidth,
         pivotToAntennaDistance:
             pivotToAntennaDistance ?? this.pivotToAntennaDistance,
         pivotToFrontAxle: pivotToFrontAxle ?? this.pivotToFrontAxle,

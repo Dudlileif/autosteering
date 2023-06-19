@@ -35,3 +35,12 @@ extension ProjectionExtension on jts.Coordinate {
   /// package.
   LatLng get latLng => LatLng(gbPosition.lat, gbPosition.lon);
 }
+
+/// An extension to make it easier and slightly less convoluted to offset and
+/// move [LatLng] points around.
+extension OffsetLatLng on LatLng {
+  /// Create a new [LatLng] that has been offset from this by [distance]
+  /// meters in direction of [bearing].
+  LatLng offset(double distance, double bearing) =>
+      const Distance(roundResult: false).offset(this, distance, bearing);
+}
