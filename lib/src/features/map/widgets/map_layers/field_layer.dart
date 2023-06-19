@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/common/utils/utils.dart';
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +19,15 @@ class FieldLayer extends ConsumerWidget {
         final bufferedField = ref.watch(bufferedTestFieldProvider);
 
         final showField = ref.watch(showTestFieldProvider);
-        final showBuffered =
+        final showBufferedField =
             ref.watch(showBufferedTestFieldProvider) && bufferedField != null;
+
+        final showFieldBoundingBox =
+            ref.watch(showTestFieldBoundingBoxProvider) && showField;
+
+        final showBufferedFieldBoundingBox =
+            ref.watch(showBufferedTestFieldBoundingBoxProvider) &&
+                showBufferedField;
 
         return Stack(
           children: [
@@ -28,9 +35,31 @@ class FieldLayer extends ConsumerWidget {
               polygonCulling: true,
               polygons: [
                 if (showField) field.polygon,
-                if (showBuffered)
+                if (showBufferedField)
                   bufferedField.polygon.copyWith(
                     color: Colors.red.withOpacity(0.25),
+                    borderColor: Colors.red,
+                  ),
+                if (showFieldBoundingBox)
+                  Polygon(
+                    points: [
+                      field.boundingBox.northEast,
+                      field.boundingBox.northWest,
+                      field.boundingBox.southWest,
+                      field.boundingBox.southEast
+                    ],
+                    borderStrokeWidth: 1,
+                    borderColor: Colors.yellow,
+                  ),
+                if (showBufferedFieldBoundingBox)
+                  Polygon(
+                    points: [
+                      bufferedField.boundingBox.northEast,
+                      bufferedField.boundingBox.northWest,
+                      bufferedField.boundingBox.southWest,
+                      bufferedField.boundingBox.southEast
+                    ],
+                    borderStrokeWidth: 1,
                     borderColor: Colors.red,
                   ),
               ],
@@ -45,7 +74,7 @@ class FieldLayer extends ConsumerWidget {
                           element.map((e) => CircleMarker(point: e, radius: 2)),
                     ),
                 ],
-                if (showBuffered) ...[
+                if (showBufferedField) ...[
                   ...bufferedField.border.map(
                     (e) => CircleMarker(point: e, radius: 2),
                   ),

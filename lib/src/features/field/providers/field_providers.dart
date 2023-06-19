@@ -26,6 +26,17 @@ class TestField extends _$TestField {
       );
 }
 
+/// A provider for whether bounding box of the test field should be shown.
+@Riverpod(keepAlive: true)
+class ShowTestFieldBoundingBox extends _$ShowTestFieldBoundingBox {
+  @override
+  bool build() => false;
+
+  void update({required bool value}) => Future(() => state = value);
+
+  void toggle() => Future(() => state = !state);
+}
+
 /// A provider for the distance that the test [Field.border] should be buffered.
 @Riverpod(keepAlive: true)
 class TestFieldBufferDistance extends _$TestFieldBufferDistance {
@@ -71,4 +82,16 @@ Field? bufferedTestField(BufferedTestFieldRef ref) {
     );
   }
   return null;
+}
+
+/// A provider for whether bounding box of the test field should be shown.
+@Riverpod(keepAlive: true)
+class ShowBufferedTestFieldBoundingBox
+    extends _$ShowBufferedTestFieldBoundingBox {
+  @override
+  bool build() => false;
+
+  void update({required bool value}) => Future(() => state = value);
+
+  void toggle() => Future(() => state = !state);
 }

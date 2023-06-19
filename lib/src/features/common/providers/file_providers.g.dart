@@ -8,7 +8,9 @@ part of 'file_providers.dart';
 
 String _$fileDirectoryHash() => r'51ee4c648b7ec7fb8ddbfcab01de648d54068278';
 
-/// See also [fileDirectory].
+/// A provider for the main user file directory for the application.
+///
+/// Copied from [fileDirectory].
 @ProviderFor(fileDirectory)
 final fileDirectoryProvider = FutureProvider<Directory>.internal(
   fileDirectory,

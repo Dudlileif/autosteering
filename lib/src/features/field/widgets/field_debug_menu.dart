@@ -27,6 +27,19 @@ class FieldDebugMenu extends ConsumerWidget {
               ? ref.read(showTestFieldProvider.notifier).update(value: value)
               : null,
         ),
+        if (ref.watch(showTestFieldProvider))
+          CheckboxListTile(
+            secondary: Text(
+              'Show bounding box',
+              style: Theme.of(context).menuButtonWithChildrenText,
+            ),
+            value: ref.watch(showTestFieldBoundingBoxProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(showTestFieldBoundingBoxProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
         CheckboxListTile(
           secondary: Text(
             'Show buffered test field',
@@ -40,6 +53,18 @@ class FieldDebugMenu extends ConsumerWidget {
               : null,
         ),
         if (ref.watch(showBufferedTestFieldProvider)) ...[
+          CheckboxListTile(
+            secondary: Text(
+              'Show buffered bounding box',
+              style: Theme.of(context).menuButtonWithChildrenText,
+            ),
+            value: ref.watch(showBufferedTestFieldBoundingBoxProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(showBufferedTestFieldBoundingBoxProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
           Consumer(
             builder: (context, ref, child) {
               final distance = ref.watch(testFieldBufferDistanceProvider);

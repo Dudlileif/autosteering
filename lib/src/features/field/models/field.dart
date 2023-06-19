@@ -102,6 +102,12 @@ class Field extends Equatable {
   /// Unit: square meters
   double get holesArea => polygon.holesArea;
 
+  /// The boudning box of the field.
+  ///
+  /// The box has parameters for the min and max for both longitude and
+  /// latitude.
+  LatLngBounds get boundingBox => LatLngBounds.fromPoints(border);
+
   /// Returns a new [Field] based on the this one, but with
   /// parameters/variables altered.
   Field copyWith({
