@@ -25,6 +25,7 @@ class VehicleSimMenu extends ConsumerWidget {
               value: vehicle is Tractor,
               onChanged: (value) {
                 ref.read(simVehicleInputProvider.notifier).send(
+                      // MF 5713S -ish
                       Tractor(
                         position: vehicle.position,
                         antennaHeight: 2.822,
@@ -50,18 +51,21 @@ class VehicleSimMenu extends ConsumerWidget {
               value: vehicle is ArticulatedTractor,
               onChanged: (value) {
                 ref.read(simVehicleInputProvider.notifier).send(
+                      // NH T9.700 -ish
                       ArticulatedTractor(
                         position: vehicle.position,
-                        antennaHeight: 2.822,
+                        antennaHeight: 3.8,
                         heading: vehicle.heading,
-                        length: 4.358,
-                        width: 2.360,
+                        length: 7.5,
+                        width: 3,
                         pivotToAntennaDistance: 1,
                         pivotToFrontAxle: 1.6,
                         pivotToRearAxle: 1.8,
                         trackWidth: 2.75,
-                        minTurningRadius: 6,
-                        steeringAngleMax: 33,
+                        wheelDiameter: 2.1,
+                        wheelWidth: 0.710,
+                        minTurningRadius: 5.7,
+                        steeringAngleMax: 38,
                         simulated: true,
                       ),
                     );
@@ -76,15 +80,19 @@ class VehicleSimMenu extends ConsumerWidget {
               value: vehicle is Harvester,
               onChanged: (value) {
                 ref.read(simVehicleInputProvider.notifier).send(
+                      // MF Activa 7345
                       Harvester(
                         position: vehicle.position,
-                        antennaHeight: 2.822,
+                        antennaHeight: 3.5,
                         heading: vehicle.heading,
-                        length: 4.358,
-                        width: 2.360,
-                        wheelBase: 3.550,
+                        length: 9,
+                        width: 3.3,
+                        wheelBase: 3.7,
                         solidAxleDistance: 1.275,
-                        trackWidth: 1.8,
+                        trackWidth: 2.2,
+                        solidAxleWheelWidth: 0.65,
+                        steeringAxleWheelWidth: 0.46,
+                        steeringAxleWheelDiameter: 1.25,
                         minTurningRadius: 4.25,
                         steeringAngleMax: 35,
                         simulated: true,

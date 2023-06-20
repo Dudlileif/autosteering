@@ -61,6 +61,18 @@ class VehicleDebugLayer extends ConsumerWidget {
                 bottomLeftCorner: vehicle.polygons.first.points.last,
                 bottomRightCorner: vehicle.polygons.first.points[2],
                 imageProvider: const AssetImage('assets/images/Tractor.png'),
+              ),
+              RotatedOverlayImage(
+                topLeftCorner: vehicle.wheelPoints()[2],
+                bottomLeftCorner: vehicle.wheelPoints()[1],
+                bottomRightCorner: vehicle.wheelPoints().first,
+                imageProvider: const AssetImage('assets/images/FrontWheel.png'),
+              ),
+              RotatedOverlayImage(
+                topLeftCorner: vehicle.wheelPoints(left: false).last,
+                bottomLeftCorner: vehicle.wheelPoints(left: false)[0],
+                bottomRightCorner: vehicle.wheelPoints(left: false)[1],
+                imageProvider: const AssetImage('assets/images/FrontWheel.png'),
               )
             ],
           ),
@@ -79,40 +91,42 @@ class VehicleDebugLayer extends ConsumerWidget {
           OverlayImageLayer(
             overlayImages: [
               RotatedOverlayImage(
-                topLeftCorner: vehicle.pivotPosition.offset(
-                  vehicle.trackWidth - 0.7,
-                  vehicle.rearAxleAngle + 90,
-                ),
+                topLeftCorner: vehicle.pivotPosition
+                    .offset(
+                      vehicle.trackWidth - 0.7,
+                      vehicle.rearAxleAngle + 90,
+                    )
+                    .offset(0.5, vehicle.rearAxleAngle + 180),
                 bottomLeftCorner: vehicle.wheelPoints(rear: true)[1].offset(
-                      0.5,
+                      1,
                       vehicle.rearAxleAngle,
                     ),
                 bottomRightCorner:
                     vehicle.wheelPoints(rear: true, left: false)[1].offset(
-                          0.5,
+                          1,
                           vehicle.rearAxleAngle,
                         ),
                 imageProvider: const AssetImage(
                   'assets/images/ArticulatedTractorRear.png',
                 ),
-              )
-            ],
-          ),
-          OverlayImageLayer(
-            overlayImages: [
+              ),
               RotatedOverlayImage(
                 topLeftCorner: vehicle.wheelPoints()[2].offset(
-                      0.75,
+                      1.25,
                       vehicle.frontAxleAngle,
                     ),
-                bottomLeftCorner: vehicle.pivotPosition.offset(
-                  vehicle.trackWidth - 0.7,
-                  vehicle.frontAxleAngle - 90,
-                ),
-                bottomRightCorner: vehicle.pivotPosition.offset(
-                  vehicle.trackWidth - 0.7,
-                  vehicle.frontAxleAngle + 90,
-                ),
+                bottomLeftCorner: vehicle.pivotPosition
+                    .offset(
+                      vehicle.trackWidth - 0.7,
+                      vehicle.frontAxleAngle - 90,
+                    )
+                    .offset(0.5, vehicle.frontAxleAngle + 180),
+                bottomRightCorner: vehicle.pivotPosition
+                    .offset(
+                      vehicle.trackWidth - 0.7,
+                      vehicle.frontAxleAngle + 90,
+                    )
+                    .offset(0.5, vehicle.frontAxleAngle + 180),
                 imageProvider: const AssetImage(
                   'assets/images/ArticulatedTractorFront.png',
                 ),

@@ -27,6 +27,8 @@ class ArticulatedTractor extends Vehicle {
     required super.trackWidth,
     this.wheelDiameter = 1.8,
     this.wheelWidth = 1.3,
+    this.wheelSpacing = 0.15,
+    this.numWheels = 2,
     super.invertSteeringInput = false,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
     super.velocity = 0,
@@ -54,6 +56,12 @@ class ArticulatedTractor extends Vehicle {
 
   /// The width of the wheels.
   final double wheelWidth;
+
+  /// The distance between the twin/triple etc. wheels.
+  final double wheelSpacing;
+
+  /// The number of wheels, i.e. twin/triples etc...
+  final int numWheels;
 
   @override
   double get wheelBase => pivotToFrontAxle + pivotToRearAxle;
@@ -202,14 +210,14 @@ class ArticulatedTractor extends Vehicle {
         )
       : null;
 
-  /// The left solid axle wheel polygon.
+  /// The left front wheel polygon.
   Polygon get leftFrontWheelPolygon => Polygon(
         points: wheelPoints(),
         isFilled: true,
         color: Colors.black,
       );
 
-  /// The right solid axle wheel polygon.
+  /// The right front wheel polygon.
   Polygon get rightFrontWheelPolygon => Polygon(
         points: wheelPoints(left: false),
         isFilled: true,
@@ -246,7 +254,8 @@ class ArticulatedTractor extends Vehicle {
         true => rearAxlePosition,
         false => frontAxlePosition,
       },
-      trackWidth / 2 - wheelWidth / 2,
+      trackWidth / 2 -
+          (wheelWidth * numWheels + (numWheels - 1) * wheelSpacing) / 2,
       axleToCenterAngle,
     );
 
@@ -257,7 +266,7 @@ class ArticulatedTractor extends Vehicle {
     );
     final wheelOuterRear = _distance.offset(
       wheelInnerRear,
-      wheelWidth,
+      wheelWidth * numWheels + (numWheels - 1) * wheelSpacing,
       rearInnerToRearOuterAngle,
     );
     final wheelOuterFront = _distance.offset(
@@ -267,7 +276,7 @@ class ArticulatedTractor extends Vehicle {
     );
     final wheelInnerFront = _distance.offset(
       wheelOuterFront,
-      wheelWidth,
+      wheelWidth * numWheels + (numWheels - 1) * wheelSpacing,
       frontOuterToFrontInnerAngle,
     );
 
@@ -279,14 +288,14 @@ class ArticulatedTractor extends Vehicle {
     ];
   }
 
-  /// The left solid axle wheel polygon.
+  /// The left rear wheel polygon.
   Polygon get leftRearWheelPolygon => Polygon(
         points: wheelPoints(rear: true),
         isFilled: true,
         color: Colors.black,
       );
 
-  /// The right solid axle wheel polygon.
+  /// The right rear wheel polygon.
   Polygon get rightRearWheelPolygon => Polygon(
         points: wheelPoints(left: false, rear: true),
         isFilled: true,
@@ -490,6 +499,8 @@ class ArticulatedTractor extends Vehicle {
     double? trackWidth,
     double? wheelDiameter,
     double? wheelWidth,
+    double? wheelSpacing,
+    int? numWheels,
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     double? velocity,
@@ -507,6 +518,8 @@ class ArticulatedTractor extends Vehicle {
         trackWidth: trackWidth ?? this.trackWidth,
         wheelDiameter: wheelDiameter ?? this.wheelDiameter,
         wheelWidth: wheelWidth ?? this.wheelWidth,
+        wheelSpacing: wheelSpacing ?? this.wheelSpacing,
+        numWheels: numWheels ?? this.numWheels,
         pivotToAntennaDistance:
             pivotToAntennaDistance ?? this.pivotToAntennaDistance,
         pivotToFrontAxle: pivotToFrontAxle ?? this.pivotToFrontAxle,
