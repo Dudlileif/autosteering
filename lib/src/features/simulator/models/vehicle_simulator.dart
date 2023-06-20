@@ -12,7 +12,8 @@ const _distance = Distance(roundResult: false);
 /// A class for simulating how vehicles should move given their position,
 /// heading, steering angle and velocity.
 class VehicleSimulator {
-  static const _targetPeriodMs = 10;
+  /// Targets 60 hz => 16666.66... micro seconds
+  static const _targetPeriodMicroSeconds = 16667;
 
   /// Used on native platforms since they can easily be multithreaded.
   static Future<void> isolateWorker(SendPort sendPort) async {
@@ -27,8 +28,8 @@ class VehicleSimulator {
     final state = _VehicleSimulatorState();
 
     // A timer for periodically updating the simulation.
-    final timer =
-        Timer.periodic(const Duration(milliseconds: _targetPeriodMs), (timer) {
+    final timer = Timer.periodic(
+        const Duration(microseconds: _targetPeriodMicroSeconds), (timer) {
       if (state.vehicle != null) {
         state.update();
 
@@ -86,8 +87,8 @@ class VehicleSimulator {
 
     // A stream generator that periodically updates the simulation and
     // sends the state.
-    yield* Stream.periodic(const Duration(milliseconds: _targetPeriodMs),
-        (timer) {
+    yield* Stream.periodic(
+        const Duration(microseconds: _targetPeriodMicroSeconds), (timer) {
       if (state.vehicle != null) {
         state.update();
       }
