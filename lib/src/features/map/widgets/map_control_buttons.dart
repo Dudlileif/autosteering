@@ -26,19 +26,10 @@ class MapControlButtons extends ConsumerWidget {
             backgroundColor:
                 Theme.of(context).colorScheme.primaryContainer.withOpacity(0.6),
             onPressed: ref.read(centerMapOnVehicleProvider.notifier).invert,
-            child: Builder(
-              builder: (context) {
-                if (ref.watch(centerMapOnVehicleProvider)) {
-                  // &&  canComparePositions) {
-                  if (ref.watch(mainMapControllerProvider).center ==
-                      ref.watch(offsetVehiclePositionProvider)) {
-                    return const Icon(Icons.my_location, size: 50);
-                  }
-                }
-
-                return const Icon(Icons.location_searching, size: 50);
-              },
-            ),
+            child: switch (ref.watch(centerMapOnVehicleProvider)) {
+              true => const Icon(Icons.my_location, size: 50),
+              false => const Icon(Icons.location_searching, size: 50)
+            },
           ),
         ),
         Padding(
