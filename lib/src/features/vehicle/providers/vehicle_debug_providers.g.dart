@@ -7,7 +7,7 @@ part of 'vehicle_debug_providers.dart';
 // **************************************************************************
 
 String _$debugVehiclePolygonsHash() =>
-    r'b213b15d3dd31550a74f7788d92e34c91aee45ea';
+    r'5cc07678616b6616a45ef6e130642b8e912acac5';
 
 /// Whether to show vehicle debug polygons.
 ///

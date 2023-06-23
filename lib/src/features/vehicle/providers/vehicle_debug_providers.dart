@@ -8,7 +8,7 @@ part 'vehicle_debug_providers.g.dart';
 @Riverpod(keepAlive: true)
 class DebugVehiclePolygons extends _$DebugVehiclePolygons {
   @override
-  bool build() => true;
+  bool build() => false;
 
   void update({required bool value}) => Future(() => state = value);
 
