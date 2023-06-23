@@ -70,6 +70,17 @@ bool showEditablePathLayer(ShowEditablePathLayerRef ref) {
   return enabled;
 }
 
+/// Whether the vehicle image drawing layer should be shown.
+@Riverpod(keepAlive: true)
+class ShowVehicleDrawingLayer extends _$ShowVehicleDrawingLayer {
+  @override
+  bool build() => true;
+
+  void toggle() => Future(() => state = !state);
+
+  void update({required bool value}) => Future(() => state = value);
+}
+
 /// Whether the debugging layer for the vehicle should be shown.
 @riverpod
 bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {

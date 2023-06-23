@@ -56,6 +56,8 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showFinishedPathLayerProvider)) const FinishedPathLayer(),
         if (ref.watch(showFinishedPolygonLayerProvider))
           const FinishedPolygonLayer(),
+        if (ref.watch(showVehicleDrawingLayerProvider))
+          const VehicleDrawerLayer(),
         if (ref.watch(showRecordingPathLayerProvider))
           const RecordingPathLayer(),
         if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),

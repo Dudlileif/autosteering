@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,18 @@ class VehicleDebugMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SubmenuButton(
       menuChildren: [
+        CheckboxListTile(
+          value: ref.watch(showVehicleDrawingLayerProvider),
+          onChanged: (value) => value != null
+              ? ref
+                  .read(showVehicleDrawingLayerProvider.notifier)
+                  .update(value: value)
+              : null,
+          secondary: Text(
+            'Vehicle image',
+            style: Theme.of(context).menuButtonWithChildrenText,
+          ),
+        ),
         CheckboxListTile(
           value: ref.watch(debugSteeringProvider),
           onChanged: (value) => value != null

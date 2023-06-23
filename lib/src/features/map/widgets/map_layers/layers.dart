@@ -9,3 +9,4 @@ export 'pure_pursuit_debug_layer.dart';
 export 'recording_path_layer.dart';
 export 'sentinel_layers.dart';
 export 'vehicle_debug_layer.dart';
+export 'vehicle_drawer_layer.dart';

@@ -202,4 +202,23 @@ final showOSMLayerProvider = NotifierProvider<ShowOSMLayer, bool>.internal(
 );
 
 typedef _$ShowOSMLayer = Notifier<bool>;
+String _$showVehicleDrawingLayerHash() =>
+    r'36000a9e0c70487a428014e47b1daad68a1b79cf';
+
+/// Whether the vehicle image drawing layer should be shown.
+///
+/// Copied from [ShowVehicleDrawingLayer].
+@ProviderFor(ShowVehicleDrawingLayer)
+final showVehicleDrawingLayerProvider =
+    NotifierProvider<ShowVehicleDrawingLayer, bool>.internal(
+  ShowVehicleDrawingLayer.new,
+  name: r'showVehicleDrawingLayerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showVehicleDrawingLayerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowVehicleDrawingLayer = Notifier<bool>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
