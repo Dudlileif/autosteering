@@ -61,6 +61,8 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showRecordingPathLayerProvider))
           const RecordingPathLayer(),
         if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),
+        if (ref.watch(showEquipmentDebugLayerProvider))
+          const EquipmentDebugLayer(),
         if (ref.watch(showPurePursuitDebugLayerProvider))
           const PurePursuitDebugLayer(),
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),

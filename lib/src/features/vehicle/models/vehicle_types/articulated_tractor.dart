@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -25,6 +27,8 @@ class ArticulatedTractor extends Vehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
+    this.rearAxleToHitchDistance = 1.6,
+    this.rearAxleToTowbarDistance = 1,
     this.wheelDiameter = 1.8,
     this.wheelWidth = 1.3,
     this.wheelSpacing = 0.15,
@@ -37,6 +41,9 @@ class ArticulatedTractor extends Vehicle {
     super.length = 4,
     super.width = 2.5,
     super.simulated = false,
+    super.hitchFrontFixedChild,
+    super.hitchRearFixedChild,
+    super.hitchRearTowbarChild,
   });
 
   /// The distance from the vehicle articulation pivot point to the antenna
@@ -50,6 +57,10 @@ class ArticulatedTractor extends Vehicle {
   /// The distance from the vehicle articulation pivot point to the rear
   /// axle center position.
   final double pivotToRearAxle;
+
+  final double? rearAxleToHitchDistance;
+
+  final double? rearAxleToTowbarDistance;
 
   /// The diameter of the wheels.
   final double wheelDiameter;
@@ -97,6 +108,30 @@ class ArticulatedTractor extends Vehicle {
         pivotToRearAxle,
         rearAxleAngle,
       );
+
+  /// Articulated tractors usually don't have front hitches.
+  @override
+  LatLng? get hitchFrontFixedPosition => null;
+
+  @override
+  LatLng? get hitchRearFixedPosition =>
+      switch (rearAxleToHitchDistance != null) {
+        true => rearAxlePosition.offset(
+            rearAxleToHitchDistance!,
+            rearAxleAngle,
+          ),
+        false => null,
+      };
+
+  @override
+  LatLng? get hitchRearTowbarPosition =>
+      switch (rearAxleToTowbarDistance != null) {
+        true => rearAxlePosition.offset(
+            rearAxleToTowbarDistance!,
+            heading + 180,
+          ),
+        false => null,
+      };
 
   /// The position of the pursuit axle in the the vehicle direction. Used when
   /// calculating the pure pursuit values.
@@ -492,6 +527,8 @@ class ArticulatedTractor extends Vehicle {
     double? pivotToAntennaDistance,
     double? pivotToFrontAxle,
     double? pivotToRearAxle,
+    double? rearAxleToHitchDistance,
+    double? rearAxleToTowbarDistance,
     LatLng? position,
     double? antennaHeight,
     double? minTurningRadius,
@@ -509,6 +546,10 @@ class ArticulatedTractor extends Vehicle {
     double? length,
     double? width,
     bool? simulated,
+    Hitchable? hitchParent,
+    Hitchable? hitchFrontFixedChild,
+    Hitchable? hitchRearFixedChild,
+    Hitchable? hitchRearTowbarChild,
   }) =>
       ArticulatedTractor(
         position: position ?? this.position,
@@ -524,6 +565,10 @@ class ArticulatedTractor extends Vehicle {
             pivotToAntennaDistance ?? this.pivotToAntennaDistance,
         pivotToFrontAxle: pivotToFrontAxle ?? this.pivotToFrontAxle,
         pivotToRearAxle: pivotToRearAxle ?? this.pivotToRearAxle,
+        rearAxleToHitchDistance:
+            rearAxleToHitchDistance ?? this.rearAxleToHitchDistance,
+        rearAxleToTowbarDistance:
+            rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         pidParameters: pidParameters ?? this.pidParameters,
         velocity: velocity ?? this.velocity,
@@ -532,5 +577,8 @@ class ArticulatedTractor extends Vehicle {
         length: length ?? this.length,
         width: width ?? this.width,
         simulated: simulated ?? this.simulated,
+        hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
+        hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
+        hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
       );
 }

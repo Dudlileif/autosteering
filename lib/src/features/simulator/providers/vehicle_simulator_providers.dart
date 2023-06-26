@@ -131,10 +131,12 @@ Stream<Vehicle?> simVehicleWebStream(
 /// update the vehicle gauge providers.
 @riverpod
 Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
-  final recievePort = ReceivePort();
+  final recievePort = ReceivePort('Recieve from sim port');
+
   await Isolate.spawn(
     VehicleSimulator.isolateWorker,
     recievePort.sendPort,
+    debugName: 'VehicleSimulator',
   );
   log('Sim vehicle isolate spawned');
 

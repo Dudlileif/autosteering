@@ -412,10 +412,19 @@ class _VehicleSimulatorState {
           );
 
           // Update the vehicle state.
-          this.vehicle = vehicle.copyWith(
-            position: vehiclePosition,
-            heading: heading,
-          );
+          this.vehicle = vehicle
+              .copyWith(
+                position: vehiclePosition,
+                heading: heading,
+              )
+              .copyWith(
+                hitchFrontFixedChild: vehicle.hitchFrontFixedChild
+                    ?.copyWith(hitchParent: vehicle),
+                hitchRearFixedChild:
+                    vehicle.hitchRearFixedChild?.copyWith(hitchParent: vehicle),
+                hitchRearTowbarChild: vehicle.hitchRearTowbarChild
+                    ?.copyWith(hitchParent: vehicle),
+              );
         } else if (vehicle is ArticulatedTractor) {
           // A local vehicle variable to simplify null safe syntax.
           final vehicle = this.vehicle! as ArticulatedTractor;
@@ -469,10 +478,19 @@ class _VehicleSimulatorState {
           );
 
           // Update the vehicle state.
-          this.vehicle = vehicle.copyWith(
-            position: vehiclePosition,
-            heading: frontBodyHeading,
-          );
+          this.vehicle = vehicle
+              .copyWith(
+                position: vehiclePosition,
+                heading: frontBodyHeading,
+              )
+              .copyWith(
+                hitchFrontFixedChild: vehicle.hitchFrontFixedChild
+                    ?.copyWith(hitchParent: vehicle),
+                hitchRearFixedChild:
+                    vehicle.hitchRearFixedChild?.copyWith(hitchParent: vehicle),
+                hitchRearTowbarChild: vehicle.hitchRearTowbarChild
+                    ?.copyWith(hitchParent: vehicle),
+              );
         }
       }
       // Going straight.
@@ -484,9 +502,18 @@ class _VehicleSimulatorState {
         );
 
         // Update the vehicle state.
-        vehicle = vehicle!.copyWith(
-          position: position,
-        );
+        vehicle = vehicle!
+            .copyWith(
+              position: position,
+            )
+            .copyWith(
+              hitchFrontFixedChild:
+                  vehicle?.hitchFrontFixedChild?.copyWith(hitchParent: vehicle),
+              hitchRearFixedChild:
+                  vehicle?.hitchRearFixedChild?.copyWith(hitchParent: vehicle),
+              hitchRearTowbarChild:
+                  vehicle?.hitchRearTowbarChild?.copyWith(hitchParent: vehicle),
+            );
       }
     }
   }

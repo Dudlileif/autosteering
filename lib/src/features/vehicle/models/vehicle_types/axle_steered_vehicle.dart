@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -20,6 +22,9 @@ abstract class AxleSteeredVehicle extends Vehicle {
     required super.steeringAngleMax,
     required super.trackWidth,
     required super.pidParameters,
+    this.solidAxleToFrontHitchDistance,
+    this.solidAxleToRearHitchDistance,
+    this.solidAxleToRearTowbarDistance,
     this.ackermannSteeringRatio = 1,
     this.steeringAxleWheelDiameter = 1.1,
     this.solidAxleWheelDiameter = 1.8,
@@ -32,6 +37,9 @@ abstract class AxleSteeredVehicle extends Vehicle {
     super.length = 4,
     super.width = 2.5,
     super.simulated = false,
+    super.hitchFrontFixedChild,
+    super.hitchRearFixedChild,
+    super.hitchRearTowbarChild,
   });
 
   /// The distance between the axles.
@@ -44,6 +52,15 @@ abstract class AxleSteeredVehicle extends Vehicle {
   /// Expected positive for front wheel steered,
   /// negative for rear wheel steered.
   final double solidAxleDistance;
+
+  /// The distance to the front hitch point from the solid axle.
+  final double? solidAxleToFrontHitchDistance;
+
+  /// The distance to the rear hitch point from the solid axle.
+  final double? solidAxleToRearHitchDistance;
+
+  /// The distance to the rear towbar hitch point from the solid axle.
+  final double? solidAxleToRearTowbarDistance;
 
   /// A modifier ratio for the Ackermann central angle. Defaults to 1.
   ///
@@ -69,6 +86,34 @@ abstract class AxleSteeredVehicle extends Vehicle {
 
   /// The position of the center of the front axle.
   LatLng get steeringAxlePosition;
+
+  @override
+  LatLng? get hitchFrontFixedPosition =>
+      switch (solidAxleToFrontHitchDistance != null) {
+        true =>
+          solidAxlePosition.offset(solidAxleToFrontHitchDistance!, heading),
+        false => null,
+      };
+
+  @override
+  LatLng? get hitchRearFixedPosition =>
+      switch (solidAxleToRearHitchDistance != null) {
+        true => solidAxlePosition.offset(
+            solidAxleToRearHitchDistance!,
+            heading + 180,
+          ),
+        false => null,
+      };
+
+  @override
+  LatLng? get hitchRearTowbarPosition =>
+      switch (solidAxleToRearTowbarDistance != null) {
+        true => solidAxlePosition.offset(
+            solidAxleToRearTowbarDistance!,
+            heading + 180,
+          ),
+        false => null,
+      };
 
   /// Where the look ahead distance calculation should start.
   @override
@@ -450,5 +495,9 @@ abstract class AxleSteeredVehicle extends Vehicle {
     double? length,
     double? width,
     bool? simulated,
+    Hitchable? hitchParent,
+    Hitchable? hitchFrontFixedChild,
+    Hitchable? hitchRearFixedChild,
+    Hitchable? hitchRearTowbarChild,
   });
 }

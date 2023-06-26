@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
@@ -117,4 +118,10 @@ bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
 
   final enabled = (showTestField || showBufferedTestField) && testFieldExists;
   return enabled;
+}
+
+/// Whether the debugging layer for the equipment should be shown.
+@riverpod
+bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) {
+  return ref.watch(showEquipmentProvider);
 }

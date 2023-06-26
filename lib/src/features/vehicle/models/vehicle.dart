@@ -1,11 +1,12 @@
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 /// A base class for vehicles that handles all common parameters/variables
 /// and methods.
-abstract class Vehicle extends Equatable {
+abstract class Vehicle extends Hitchable with EquatableMixin {
   const Vehicle({
     required this.position,
     required this.antennaHeight,
@@ -20,6 +21,9 @@ abstract class Vehicle extends Equatable {
     this.length = 4,
     this.width = 2.5,
     this.simulated = false,
+    super.hitchFrontFixedChild,
+    super.hitchRearFixedChild,
+    super.hitchRearTowbarChild,
   });
 
   /// Antenna position of the vehicle. Assumed centered in the
@@ -155,6 +159,7 @@ abstract class Vehicle extends Equatable {
 
   /// Returns a new [Vehicle] based on this one, but with
   /// parameters/variables altered.
+  @override
   Vehicle copyWith({
     LatLng? position,
     double? antennaHeight,
@@ -169,5 +174,9 @@ abstract class Vehicle extends Equatable {
     double? length,
     double? width,
     bool? simulated,
+    Hitchable? hitchParent,
+    Hitchable? hitchFrontFixedChild,
+    Hitchable? hitchRearFixedChild,
+    Hitchable? hitchRearTowbarChild,
   });
 }

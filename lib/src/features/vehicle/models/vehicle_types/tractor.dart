@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -15,6 +16,9 @@ class Tractor extends AxleSteeredVehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
+    super.solidAxleToFrontHitchDistance = 3.25,
+    super.solidAxleToRearHitchDistance = 0.9,
+    super.solidAxleToRearTowbarDistance = 0.65,
     super.ackermannSteeringRatio,
     super.steeringAxleWheelDiameter,
     super.solidAxleWheelDiameter,
@@ -28,6 +32,9 @@ class Tractor extends AxleSteeredVehicle {
     super.length = 4,
     super.width = 2.5,
     super.simulated = false,
+    super.hitchFrontFixedChild,
+    super.hitchRearFixedChild,
+    super.hitchRearTowbarChild,
   });
 
   /// The position of the center of the rear axle.
@@ -76,6 +83,9 @@ class Tractor extends AxleSteeredVehicle {
     double? trackWidth,
     double? wheelBase,
     double? solidAxleDistance,
+    double? solidAxleToFrontHitchDistance,
+    double? solidAxleToRearHitchDistance,
+    double? solidAxleToRearTowbarHitchDistance,
     double? ackermannSteeringRatio,
     double? steeringAxleWheelDiameter,
     double? solidAxleWheelDiameter,
@@ -89,6 +99,10 @@ class Tractor extends AxleSteeredVehicle {
     double? length,
     double? width,
     bool? simulated,
+    Hitchable? hitchParent,
+    Hitchable? hitchFrontFixedChild,
+    Hitchable? hitchRearFixedChild,
+    Hitchable? hitchRearTowbarChild,
   }) =>
       Tractor(
         position: position ?? this.position,
@@ -98,6 +112,12 @@ class Tractor extends AxleSteeredVehicle {
         trackWidth: trackWidth ?? this.trackWidth,
         wheelBase: wheelBase ?? this.wheelBase,
         solidAxleDistance: solidAxleDistance ?? this.solidAxleDistance,
+        solidAxleToFrontHitchDistance:
+            solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
+        solidAxleToRearHitchDistance:
+            solidAxleToRearHitchDistance ?? this.solidAxleToRearHitchDistance,
+        solidAxleToRearTowbarDistance:
+            solidAxleToRearTowbarDistance ?? solidAxleToRearTowbarDistance,
         ackermannSteeringRatio:
             ackermannSteeringRatio ?? this.ackermannSteeringRatio,
         steeringAxleWheelDiameter:
@@ -115,5 +135,8 @@ class Tractor extends AxleSteeredVehicle {
         length: length ?? this.length,
         width: width ?? this.width,
         simulated: simulated ?? this.simulated,
+        hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
+        hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
+        hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
       );
 }
