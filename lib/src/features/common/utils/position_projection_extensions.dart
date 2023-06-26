@@ -42,5 +42,9 @@ extension OffsetLatLng on LatLng {
   /// Create a new [LatLng] that has been offset from this by [distance]
   /// meters in direction of [bearing].
   LatLng offset(double distance, double bearing) =>
-      const Distance(roundResult: false).offset(this, distance, bearing);
+      const Distance(roundResult: false).offset(
+        this,
+        distance,
+        normalizeBearing(bearing),
+      );
 }
