@@ -35,7 +35,7 @@ class VehicleSimulator {
 
         // If the vehicle has moved (changed) we send the new state back to the
         // main/UI isolate.
-        if (state.vehicle != state.prevVehicle) {
+        if (state.didChange) {
           sendPort.send(
             (
               vehicle: state.vehicle,
@@ -46,8 +46,6 @@ class VehicleSimulator {
             ),
           );
         }
-        // Update state for the next loop.
-        state.prevVehicle = state.vehicle;
       }
     });
 
@@ -102,9 +100,6 @@ class VehicleSimulator {
         purePursuit: state.purePursuit,
       );
 
-      // Update state for the next loop.
-      state.prevVehicle = state.vehicle;
-
       return returnObject;
     });
   }
@@ -117,6 +112,20 @@ class _VehicleSimulatorState {
 
   /// The previous vehicle state of the simulation.
   Vehicle? prevVehicle;
+
+  /// The distance from the previous vehicle state to the current vehicle state.
+  double distance = 0;
+
+  /// The velocity of the current vehicle, as calculated from the [distance] and
+  /// [period].
+  double velocity = 0;
+
+  /// The heading of the current vehicle, as calculated from the previous
+  /// position to the current position.
+  double heading = 0;
+
+  /// Whether the state changed in the last update.
+  bool didChange = true;
 
   /// The pure pursuit to drive after, if there is one.
   PurePursuit? purePursuit;
@@ -164,43 +173,6 @@ class _VehicleSimulatorState {
     final now = DateTime.now();
     period = now.difference(prevUpdateTime).inMicroseconds / 1e6;
     prevUpdateTime = now;
-  }
-
-  /// The distance from the previous vehicle state to the current vehicle state.
-  double get distance {
-    if (vehicle != null && prevVehicle != null) {
-      return _distance.distance(vehicle!.position, prevVehicle!.position);
-    }
-    return 0;
-  }
-
-  /// The velocity of the current vehicle, as calculated from the [distance] and
-  /// [period].
-  double get velocity {
-    if (period > 0) {
-      return distance / period;
-    }
-    return 0;
-  }
-
-  /// The heading of the current vehicle, as calculated from the previous
-  /// position to the current position.
-  double get heading {
-    if (vehicle != null && prevVehicle != null) {
-      return normalizeBearing(
-        switch (vehicle!.isReversing) {
-          true => _distance.bearing(
-              vehicle!.position,
-              prevVehicle!.position,
-            ),
-          false => _distance.bearing(
-              prevVehicle!.position,
-              vehicle!.position,
-            ),
-        },
-      );
-    }
-    return 0;
   }
 
   /// Change state parameters/values according to the incomming [message].
@@ -518,6 +490,39 @@ class _VehicleSimulatorState {
     }
   }
 
+  /// Updates the calculated gauges for the vehicle state.
+  void updateGauges() {
+    // Distance
+    if (vehicle != null && prevVehicle != null) {
+      distance = _distance.distance(vehicle!.position, prevVehicle!.position);
+    } else {
+      distance = 0;
+    }
+
+    // Velocity
+    if (period > 0) {
+      velocity = distance / period;
+    } else {
+      velocity = 0;
+    }
+
+    // Heading, only updated if we're moving to keep heading while stationary.
+    if (vehicle != null && prevVehicle != null && velocity.abs() > 0) {
+      heading = normalizeBearing(
+        switch (vehicle!.isReversing) {
+          true => _distance.bearing(
+              vehicle!.position,
+              prevVehicle!.position,
+            ),
+          false => _distance.bearing(
+              prevVehicle!.position,
+              vehicle!.position,
+            ),
+        },
+      );
+    }
+  }
+
   /// Update the simulation, i.e. simulate the next step.
   void update() {
     checkPurePursuit();
@@ -525,5 +530,10 @@ class _VehicleSimulatorState {
     checkTurningCircle();
     updateTime();
     updatePosition();
+    updateGauges();
+
+    didChange = prevVehicle != vehicle;
+
+    prevVehicle = vehicle;
   }
 }
