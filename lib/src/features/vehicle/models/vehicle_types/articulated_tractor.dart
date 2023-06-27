@@ -27,6 +27,7 @@ class ArticulatedTractor extends Vehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
+    this.frontAxleToHitchDistance,
     this.rearAxleToHitchDistance = 1.6,
     this.rearAxleToTowbarDistance = 1,
     this.wheelDiameter = 1.8,
@@ -57,6 +58,8 @@ class ArticulatedTractor extends Vehicle {
   /// The distance from the vehicle articulation pivot point to the rear
   /// axle center position.
   final double pivotToRearAxle;
+
+  final double? frontAxleToHitchDistance;
 
   final double? rearAxleToHitchDistance;
 
@@ -109,9 +112,15 @@ class ArticulatedTractor extends Vehicle {
         rearAxleAngle,
       );
 
-  /// Articulated tractors usually don't have front hitches.
   @override
-  LatLng? get hitchFrontFixedPosition => null;
+  LatLng? get hitchFrontFixedPosition =>
+      switch (frontAxleToHitchDistance != null) {
+        true => frontAxlePosition.offset(
+            frontAxleToHitchDistance!,
+            frontAxleAngle,
+          ),
+        false => null,
+      };
 
   @override
   LatLng? get hitchRearFixedPosition =>
@@ -527,6 +536,7 @@ class ArticulatedTractor extends Vehicle {
     double? pivotToAntennaDistance,
     double? pivotToFrontAxle,
     double? pivotToRearAxle,
+    double? frontAxleToHitchDistance,
     double? rearAxleToHitchDistance,
     double? rearAxleToTowbarDistance,
     LatLng? position,
@@ -565,6 +575,8 @@ class ArticulatedTractor extends Vehicle {
             pivotToAntennaDistance ?? this.pivotToAntennaDistance,
         pivotToFrontAxle: pivotToFrontAxle ?? this.pivotToFrontAxle,
         pivotToRearAxle: pivotToRearAxle ?? this.pivotToRearAxle,
+        frontAxleToHitchDistance:
+            frontAxleToHitchDistance ?? this.frontAxleToHitchDistance,
         rearAxleToHitchDistance:
             rearAxleToHitchDistance ?? this.rearAxleToHitchDistance,
         rearAxleToTowbarDistance:
