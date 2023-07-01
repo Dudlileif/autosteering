@@ -9,8 +9,6 @@ import 'package:latlong2/latlong.dart';
 part 'pure_pursuit_loop_mode.dart';
 part 'pure_pursuit_mode.dart';
 
-const _distance = Distance(roundResult: false);
-
 /// A class for path tracking that utilizes the pure pursuit algorithm.
 ///
 /// The pure pursuit algorithm finds a point a certain distance ahead of it and
@@ -57,15 +55,13 @@ class PurePursuit {
     while (index + 1 < path.length) {
       final point = path[index];
       final nextPoint = path[index + 1];
-      if (_distance.distance(point.position, nextPoint.position) >
-          maxDistance) {
+      if (point.position.distanceTo(nextPoint.position) > maxDistance) {
         path.insert(
           index + 1,
           point.copyWith(
-            position: _distance.offset(
-              point.position,
+            position: point.position.offset(
               maxDistance,
-              _distance.bearing(point.position, nextPoint.position),
+              point.position.bearingTo(nextPoint.position),
             ),
           ),
         );
@@ -74,20 +70,15 @@ class PurePursuit {
     }
 
     if (loopMode == PurePursuitLoopMode.straight) {
-      while (_distance.distance(
-            path.last.position,
+      while (path.last.position.distanceTo(
             path.first.position,
           ) >
           maxDistance) {
         path.add(
           path.last.copyWith(
-            position: _distance.offset(
-              path.last.position,
+            position: path.last.position.offset(
               maxDistance,
-              _distance.bearing(
-                path.last.position,
-                path.first.position,
-              ),
+              path.last.position.bearingTo(path.first.position),
             ),
           ),
         );
@@ -169,8 +160,7 @@ class PurePursuit {
       intersect.jtsCoordinate,
     );
 
-    return -orientation *
-        _distance.distance(vehicle.pursuitAxlePosition, intersect);
+    return -orientation * vehicle.pursuitAxlePosition.distanceTo(intersect);
   }
 
   /// The waypoint in [path] that is closest to the [vehicle].
@@ -178,11 +168,10 @@ class PurePursuit {
     Vehicle vehicle,
   ) =>
       path.reduce(
-        (value, element) => _distance.distance(
-                  element.position,
+        (value, element) => element.position.distanceTo(
                   vehicle.pursuitAxlePosition,
                 ) <
-                _distance.distance(value.position, vehicle.pursuitAxlePosition)
+                value.position.distanceTo(vehicle.pursuitAxlePosition)
             ? element
             : value,
       );
@@ -235,8 +224,7 @@ class PurePursuit {
   ) {
     var insidePoint = nextWayPoint(vehicle);
 
-    var insideDistance = _distance.distance(
-      vehicle.lookAheadStartPosition,
+    var insideDistance = vehicle.lookAheadStartPosition.distanceTo(
       insidePoint.position,
     );
 
@@ -245,10 +233,9 @@ class PurePursuit {
     if (insideDistance >= lookAheadDistance) {
       return (
         insidePoint.copyWith(
-          position: _distance.offset(
-            vehicle.lookAheadStartPosition,
+          position: vehicle.lookAheadStartPosition.offset(
             lookAheadDistance,
-            _distance.bearing(vehicle.position, insidePoint.position),
+            vehicle.position.bearingTo(insidePoint.position),
           ),
         ),
         null,
@@ -265,7 +252,7 @@ class PurePursuit {
           };
       final point = path[index % path.length];
       final distance =
-          _distance.distance(vehicle.lookAheadStartPosition, point.position);
+          vehicle.lookAheadStartPosition.distanceTo(point.position);
       if (distance <= lookAheadDistance) {
         insidePoint = point;
         insideDistance = distance;
@@ -328,39 +315,36 @@ class PurePursuit {
     final vehicleToLineProjection =
         line.projectCoord(vehicle.lookAheadStartPosition.jtsCoordinate).latLng;
 
-    final vehicleToLineDistance = _distance.distance(
-      vehicle.lookAheadStartPosition,
+    final vehicleToLineDistance = vehicle.lookAheadStartPosition.distanceTo(
       vehicleToLineProjection,
     );
     final projectionToCircleDistance =
         sqrt(pow(lookAheadDistance, 2) - pow(vehicleToLineDistance, 2));
 
-    final pointA = _distance.offset(
-      vehicleToLineProjection,
+    final pointA = vehicleToLineProjection.offset(
       projectionToCircleDistance,
-      _distance.bearing(vehicleToLineProjection, insidePoint.position),
+      vehicleToLineProjection.bearingTo(insidePoint.position),
     );
 
-    final pointB = _distance.offset(
-      vehicleToLineProjection,
+    final pointB = vehicleToLineProjection.offset(
       projectionToCircleDistance,
       normalizeBearing(
-        _distance.bearing(vehicleToLineProjection, insidePoint.position) + 180,
+        vehicleToLineProjection.bearingTo(insidePoint.position) + 180,
       ),
     );
 
-    final distanceA = _distance.distance(pointA, outsidePoint.position);
-    final distanceB = _distance.distance(pointB, outsidePoint.position);
+    final distanceA = pointA.distanceTo(outsidePoint.position);
+    final distanceB = pointB.distanceTo(outsidePoint.position);
 
     final wayPointA = WayPoint(
       position: pointA,
-      heading: _distance.bearing(insidePoint.position, outsidePoint.position),
+      heading: insidePoint.position.bearingTo(outsidePoint.position),
       velocity: insidePoint.velocity,
     );
 
     final wayPointB = WayPoint(
       position: pointB,
-      heading: _distance.bearing(insidePoint.position, outsidePoint.position),
+      heading: insidePoint.position.bearingTo(outsidePoint.position),
       velocity: insidePoint.velocity,
     );
 
@@ -376,8 +360,7 @@ class PurePursuit {
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
-    final angle = _distance.bearing(
-          vehicle.lookAheadStartPosition,
+    final angle = vehicle.lookAheadStartPosition.bearingTo(
           findLookAheadCirclePoints(vehicle, lookAheadDistance).$1.position,
         ) -
         vehicle.heading;

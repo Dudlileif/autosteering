@@ -1,10 +1,8 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
-
-/// Geo-calculator used to calculate offsets.
-const _distance = Distance(roundResult: false);
 
 /// A harvester with rear wheel steering and a solid front axle.
 class Harvester extends AxleSteeredVehicle {
@@ -38,16 +36,14 @@ class Harvester extends AxleSteeredVehicle {
 
   /// The position of the center of the rear axle.
   @override
-  LatLng get solidAxlePosition => _distance.offset(
-        position,
+  LatLng get solidAxlePosition => position.offset(
         solidAxleDistance,
         normalizeBearing(heading),
       );
 
   /// The position of the center of the front axle.
   @override
-  LatLng get steeringAxlePosition => _distance.offset(
-        position,
+  LatLng get steeringAxlePosition => position.offset(
         solidAxleDistance - wheelBase,
         normalizeBearing(heading),
       );
@@ -60,7 +56,7 @@ class Harvester extends AxleSteeredVehicle {
   @override
   LatLng get pursuitAxlePosition => switch (isReversing) {
         true => steeringAxlePosition,
-        false => _distance.offset(solidAxlePosition, wheelBase, heading),
+        false => solidAxlePosition.offset(wheelBase, heading),
       };
 
   /// The angle of the left steering wheel when using Ackermann steering.

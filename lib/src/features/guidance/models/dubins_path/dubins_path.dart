@@ -8,10 +8,6 @@ import 'package:latlong2/latlong.dart';
 part 'dubins_path_type.dart';
 part 'dubins_section.dart';
 
-/// A calculator used to calculate offsets, distances and angles on the
-/// earth.
-const _calculator = Distance(roundResult: false);
-
 /// A class for encompassing the data generated for a [DubinsPathType].
 final class DubinsPathData {
   DubinsPathData({
@@ -64,29 +60,25 @@ class DubinsPath {
     angleStepSize = 360 * stepSize / (2 * pi * turningRadius);
 
     /// The center position of the left starting circle.
-    startLeftCircleCenter = _calculator.offset(
-      start.position,
+    startLeftCircleCenter = start.position.offset(
       turningRadius,
       normalizeBearing(start.heading - 90),
     );
 
     /// The center position of the right starting circle.
-    startRightCircleCenter = _calculator.offset(
-      start.position,
+    startRightCircleCenter = start.position.offset(
       turningRadius,
       normalizeBearing(start.heading + 90),
     );
 
     /// The center position of the left end circle.
-    endLeftCircleCenter = _calculator.offset(
-      end.position,
+    endLeftCircleCenter = end.position.offset(
       turningRadius,
       normalizeBearing(end.heading - 90),
     );
 
     /// The center position of the right end circle.
-    endRightCircleCenter = _calculator.offset(
-      end.position,
+    endRightCircleCenter = end.position.offset(
       turningRadius,
       normalizeBearing(end.heading + 90),
     );
@@ -166,12 +158,10 @@ class DubinsPath {
     };
 
     // The heading from the starting to the ending circle.
-    final startToEndCircleHeading =
-        _calculator.bearing(startingCircle, endingCircle);
+    final startToEndCircleHeading = startingCircle.bearingTo(endingCircle);
 
     // The distance from the starting to the ending circle.
-    final startToEndCircleDistance =
-        _calculator.distance(startingCircle, endingCircle);
+    final startToEndCircleDistance = startingCircle.distanceTo(endingCircle);
 
     // Invalidate paths that can't physically exist.
     if (pathType == DubinsPathType.lsr || pathType == DubinsPathType.rsl) {
@@ -210,8 +200,7 @@ class DubinsPath {
     };
 
     // The starting point of the tangent.
-    final tangentStart = _calculator.offset(
-      startingCircle,
+    final tangentStart = startingCircle.offset(
       turningRadius,
       theta,
     );
@@ -238,70 +227,63 @@ class DubinsPath {
       // end circle if the distance is long enough, so we use the heading of
       // this point from the end circle to get the tangent point with correct
       // radius.
-      final tangentEndHeadingPoint = _calculator.offset(
-        tangentStart,
+      final tangentEndHeadingPoint = tangentStart.offset(
         startToEndCircleDistance,
         startToEndCircleHeading,
       );
 
       // The heading from the end circle to the end tangent.
       final endCircleToTangentEndHeading =
-          _calculator.bearing(endingCircle, tangentEndHeadingPoint);
+          endingCircle.bearingTo(tangentEndHeadingPoint);
 
       // The end tangent point calculated from the end circle center.
-      tangentEnd = _calculator.offset(
-        endingCircle,
+      tangentEnd = endingCircle.offset(
         turningRadius,
         endCircleToTangentEndHeading,
       );
 
       // The heading from the start to end tangent points.
-      tangentStartHeading = _calculator.bearing(tangentStart, tangentEnd);
+      tangentStartHeading = tangentStart.bearingTo(tangentEnd);
 
-      middleLength = calculator.distance(tangentStart, tangentEnd);
+      middleLength = tangentStart.distanceTo(tangentEnd);
     } else if (pathType == DubinsPathType.lsr ||
         pathType == DubinsPathType.rsl) {
       // The starting circle is offset by one diameter to get the
       // diagonal tangent.
-      final offsetStartingCircle = _calculator.offset(
-        startingCircle,
+      final offsetStartingCircle = startingCircle.offset(
         2 * turningRadius,
         theta,
       );
 
       // The heading from the offset starting circle to the ending circle.
-      tangentStartHeading =
-          _calculator.bearing(offsetStartingCircle, endingCircle);
+      tangentStartHeading = offsetStartingCircle.bearingTo(endingCircle);
 
       // The heading is the same since the tangent is straight.
       tangentEndHeading = tangentStartHeading;
 
       // The assumed tangent length.
-      final tangentLength =
-          _calculator.distance(offsetStartingCircle, endingCircle);
+      final tangentLength = offsetStartingCircle.distanceTo(endingCircle);
 
       // The end tangent point, but it might have a radius mismatch from the
       // end circle if the distance is long enough, so we use the heading of
       // this point from the end circle to get the tangent point with correct
       // radius.
-      final tangentEndHeadingPoint = _calculator.offset(
-        tangentStart,
+      final tangentEndHeadingPoint = tangentStart.offset(
         tangentLength,
         tangentStartHeading,
       );
 
       // The heading from the end circle to the end tangent.
       final endCircleToTangentEndHeading =
-          _calculator.bearing(endingCircle, tangentEndHeadingPoint);
+          endingCircle.bearingTo(tangentEndHeadingPoint);
 
       // The end tangent point calculated from the end circle center.
-      tangentEnd = calculator.offset(
-        endingCircle,
+      tangentEnd = endingCircle.offset(
         turningRadius,
         endCircleToTangentEndHeading,
       );
 
-      middleLength = _calculator.distance(tangentStart, tangentEnd);
+      middleLength = tangentStart.distanceTo(tangentEnd);
     } else if (pathType == DubinsPathType.lrl ||
         pathType == DubinsPathType.rlr) {
       // Change the sign of angle/heading modifiers if we're turning left.
@@ -313,21 +295,18 @@ class DubinsPath {
       // Turn by 90 degrees since the vehicle drives orthogonal to the radius.
       tangentStartHeading = theta - middleTurnSign * 90;
 
-      middleCircleCenter = _calculator.offset(
-        startingCircle,
+      middleCircleCenter = startingCircle.offset(
         2 * turningRadius,
         theta,
       );
 
       // The angle/heading from the middle circle to the ending circle.
-      final middleToEndHeading =
-          _calculator.bearing(middleCircleCenter, endingCircle);
+      final middleToEndHeading = middleCircleCenter.bearingTo(endingCircle);
 
       // Turn by 90 degrees since the vehicle drives orthogonal to the radius.
       tangentEndHeading = middleToEndHeading + middleTurnSign * 90;
 
-      tangentEnd = _calculator.offset(
-        middleCircleCenter,
+      tangentEnd = middleCircleCenter.offset(
         turningRadius,
         middleToEndHeading,
       );
@@ -336,12 +315,10 @@ class DubinsPath {
       final middleTurnAngle = mod2pi(
         middleTurnSign *
             degToRadian(
-              _calculator.bearing(
-                    middleCircleCenter,
+              middleCircleCenter.bearingTo(
                     tangentEnd,
                   ) -
-                  _calculator.bearing(
-                    middleCircleCenter,
+                  middleCircleCenter.bearingTo(
                     tangentStart,
                   ),
             ),
@@ -359,11 +336,10 @@ class DubinsPath {
     final startTurnAngle = mod2pi(
       startTurnSign *
           degToRadian(
-            _calculator.bearing(
-                  startingCircle,
+            startingCircle.bearingTo(
                   tangentStart,
                 ) -
-                _calculator.bearing(startingCircle, start.position),
+                startingCircle.bearingTo(start.position),
           ),
     );
 
@@ -377,11 +353,8 @@ class DubinsPath {
     final endTurnAngle = mod2pi(
       endTurnSign *
           degToRadian(
-            _calculator.bearing(endingCircle, end.position) -
-                _calculator.bearing(
-                  endingCircle,
-                  tangentEnd,
-                ),
+            endingCircle.bearingTo(end.position) -
+                endingCircle.bearingTo(tangentEnd),
           ),
     );
     // The length of the first section.
@@ -462,7 +435,7 @@ class DubinsPath {
     }
     // Calculate next point when turning.
     if (circleCenter != null) {
-      final angle = _calculator.bearing(circleCenter, origin.position);
+      final angle = circleCenter.bearingTo(origin.position);
 
       // Make the step negative if we're turning left, positive otherwise.
       final sign = switch (section) {
@@ -474,8 +447,7 @@ class DubinsPath {
       // revolve around the [circleCenter].
       angleStep = sign * angleStepSize;
 
-      nextPoint = _calculator.offset(
-        circleCenter,
+      nextPoint = circleCenter.offset(
         turningRadius,
         angle + angleStep,
       );

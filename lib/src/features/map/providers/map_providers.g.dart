@@ -7,7 +7,7 @@ part of 'map_providers.dart';
 // **************************************************************************
 
 String _$offsetVehiclePositionHash() =>
-    r'75b52632382383648e85d8f84c0b5a954e888064';
+    r'4f20d097b23213cd6ab1639833328be3dc50ea8f';
 
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.

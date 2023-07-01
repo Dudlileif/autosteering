@@ -8,9 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-/// Geo-calculator used to calculate offsets.
-const _distance = Distance(roundResult: false);
-
 /// A base class for vehicles that steers with either a front or rear axle.
 abstract class AxleSteeredVehicle extends Vehicle {
   const AxleSteeredVehicle({
@@ -199,8 +196,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
   LatLng? get turningRadiusCenter => currentTurningRadius != null
-      ? _distance.offset(
-          solidAxlePosition,
+      ? solidAxlePosition.offset(
           currentTurningRadius!,
           normalizeBearing(
             switch (isTurningLeft) {
@@ -246,32 +242,28 @@ abstract class AxleSteeredVehicle extends Vehicle {
     final outerFrontToInnerFrontAngle =
         normalizeBearing(outerRearToOuterFrontAngle + (90 * sign));
 
-    final wheelInnerCenter = _distance.offset(
-      switch (steering) {
-        true => steeringAxlePosition,
-        false => solidAxlePosition,
-      },
+    final wheelInnerCenter = switch (steering) {
+      true => steeringAxlePosition,
+      false => solidAxlePosition,
+    }
+        .offset(
       trackWidth / 2 - wheelWidth / 2,
       axleToCenterAngle,
     );
 
-    final wheelInnerRear = _distance.offset(
-      wheelInnerCenter,
+    final wheelInnerRear = wheelInnerCenter.offset(
       wheelDiameter / 2,
       innerCenterToInnerRearAngle,
     );
-    final wheelOuterRear = _distance.offset(
-      wheelInnerRear,
+    final wheelOuterRear = wheelInnerRear.offset(
       wheelWidth,
       innerRearToOuterRearAngle,
     );
-    final wheelOuterFront = _distance.offset(
-      wheelOuterRear,
+    final wheelOuterFront = wheelOuterRear.offset(
       wheelDiameter,
       outerRearToOuterFrontAngle,
     );
-    final wheelInnerFront = _distance.offset(
-      wheelOuterFront,
+    final wheelInnerFront = wheelOuterFront.offset(
       wheelWidth,
       outerFrontToInnerFrontAngle,
     );
@@ -376,8 +368,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
           };
 
           points.add(
-            _distance.offset(
-              turningRadiusCenter!,
+            turningRadiusCenter!.offset(
               currentTurningRadius!,
               normalizeBearing(angle),
             ),
@@ -386,8 +377,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
       }
     } else {
       points.add(
-        _distance.offset(
-          solidAxlePosition,
+        solidAxlePosition.offset(
           isReversing ? -30 : 5 + 30,
           normalizeBearing(heading),
         ),
@@ -432,23 +422,19 @@ abstract class AxleSteeredVehicle extends Vehicle {
 
   /// The max extent/bounds points of the vehicle. The [heading] is followed.
   List<LatLng> get points {
-    final frontLeft = _distance.offset(
-      position,
+    final frontLeft = position.offset(
       centerToCornerDistance,
       frontLeftAngle,
     );
-    final frontRight = _distance.offset(
-      position,
+    final frontRight = position.offset(
       centerToCornerDistance,
       frontRightAngle,
     );
-    final rearRight = _distance.offset(
-      position,
+    final rearRight = position.offset(
       centerToCornerDistance,
       rearRightAngle,
     );
-    final rearLeft = _distance.offset(
-      position,
+    final rearLeft = position.offset(
       centerToCornerDistance,
       rearLeftAngle,
     );

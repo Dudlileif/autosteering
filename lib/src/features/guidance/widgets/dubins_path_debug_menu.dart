@@ -169,11 +169,11 @@ class DubinsPathDebugMenu extends StatelessWidget {
                     );
                 ref.read(dubinsPathDebugEndPointProvider.notifier).update(
                       WayPoint(
-                        position: calculator.offset(
-                          ref.watch(mainMapControllerProvider).center,
-                          35,
-                          0,
-                        ),
+                        position:
+                            ref.watch(mainMapControllerProvider).center.offset(
+                                  35,
+                                  0,
+                                ),
                         heading: 210,
                       ),
                     );

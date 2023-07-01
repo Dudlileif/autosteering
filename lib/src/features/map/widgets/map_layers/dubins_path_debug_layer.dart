@@ -1,10 +1,10 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong.dart';
 
 /// A combination layer for debugging a Dubins path between two points.
 class DubinsPathDebugLayer extends ConsumerWidget {
@@ -88,8 +88,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                   Polyline(
                     points: [
                       dubinsPath.start.position,
-                      const Distance(roundResult: false).offset(
-                        dubinsPath.start.position,
+                      dubinsPath.start.position.offset(
                         2,
                         dubinsPath.start.heading,
                       )
@@ -100,8 +99,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                   Polyline(
                     points: [
                       dubinsPath.end.position,
-                      const Distance(roundResult: false).offset(
-                        dubinsPath.end.position,
+                      dubinsPath.end.position.offset(
                         2,
                         dubinsPath.end.heading,
                       )
@@ -111,10 +109,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                   ),
                   ...wayPoints.map(
                     (e) => Polyline(
-                      points: [
-                        e.position,
-                        calculator.offset(e.position, 0.5, e.heading)
-                      ],
+                      points: [e.position, e.position.offset(0.5, e.heading)],
                       strokeWidth: 2,
                     ),
                   ),

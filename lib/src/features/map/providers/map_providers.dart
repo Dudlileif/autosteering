@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:agopengps_flutter/src/features/common/utils/position_projection_extensions.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -114,25 +115,27 @@ class MapOffset extends _$MapOffset {
 /// actual center position of the map.
 @Riverpod(keepAlive: true)
 LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
-  final vehicle = ref.watch(mainVehicleProvider);
   final offset = ref.watch(mapOffsetProvider);
-  const distance = Distance(roundResult: false);
+  if (offset == const MapCenterOffset()) {
+    return ref.watch(mainVehicleProvider.select((vehicle) => vehicle.position));
+  }
+  final vehicle = ref.watch(mainVehicleProvider);
 
   final use3DPerspective = ref.watch(mapUse3DPerspectiveProvider);
   final perspectiveAngle = ref.watch(map3DPerspectiveAngleProvider);
 
-  return distance.offset(
-    distance.offset(
-      vehicle.position,
-      offset.x,
-      normalizeBearing(vehicle.heading + 90),
-    ),
-    switch (use3DPerspective) {
-      false => offset.y,
-      true => offset.y * (1 + tan(perspectiveAngle)),
-    },
-    vehicle.heading,
-  );
+  return vehicle.position
+      .offset(
+        offset.x,
+        normalizeBearing(vehicle.heading + 90),
+      )
+      .offset(
+        switch (use3DPerspective) {
+          false => offset.y,
+          true => offset.y * (1 + tan(perspectiveAngle)),
+        },
+        vehicle.heading,
+      );
 }
 
 /// Whether the map always should point to the north and not rotate.

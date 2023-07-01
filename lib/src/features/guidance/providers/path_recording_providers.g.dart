@@ -25,7 +25,7 @@ final enablePathRecorderProvider =
 );
 
 typedef _$EnablePathRecorder = Notifier<bool>;
-String _$pathRecordingListHash() => r'78728614519462ac1c2e910fce7ad233197851a2';
+String _$pathRecordingListHash() => r'ec1d12167b46f56c8f506655c8073030c2846ac9';
 
 /// A list of the currently recording points.
 ///

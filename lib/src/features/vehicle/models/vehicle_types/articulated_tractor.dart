@@ -8,9 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-/// Geo-calculator used to calculate offsets.
-const _distance = Distance(roundResult: false);
-
 /// An articulated tractor with two bodies with solid axles that are joined
 /// at a pivot point.
 ///
@@ -81,8 +78,7 @@ class ArticulatedTractor extends Vehicle {
   double get wheelBase => pivotToFrontAxle + pivotToRearAxle;
 
   /// The position of the vehicle articulation pivot point.
-  LatLng get pivotPosition => _distance.offset(
-        position,
+  LatLng get pivotPosition => position.offset(
         pivotToAntennaDistance,
         normalizeBearing(heading - 180 + steeringAngle / 2),
       );
@@ -95,8 +91,7 @@ class ArticulatedTractor extends Vehicle {
   double get frontAxleAngle => normalizeBearing(heading + steeringAngle / 2);
 
   /// The position of the front axle center point.
-  LatLng get frontAxlePosition => _distance.offset(
-        pivotPosition,
+  LatLng get frontAxlePosition => pivotPosition.offset(
         pivotToFrontAxle,
         frontAxleAngle,
       );
@@ -106,8 +101,7 @@ class ArticulatedTractor extends Vehicle {
       normalizeBearing(heading + 180 - steeringAngle / 2);
 
   /// The position of the front axle center point.
-  LatLng get rearAxlePosition => _distance.offset(
-        pivotPosition,
+  LatLng get rearAxlePosition => pivotPosition.offset(
         pivotToRearAxle,
         rearAxleAngle,
       );
@@ -149,8 +143,7 @@ class ArticulatedTractor extends Vehicle {
   /// when the tractor is reversing.
   @override
   LatLng get pursuitAxlePosition => switch (isReversing) {
-        true => _distance.offset(
-            pivotPosition,
+        true => pivotPosition.offset(
             pivotToAntennaDistance,
             rearAxleAngle,
           ),
@@ -242,8 +235,7 @@ class ArticulatedTractor extends Vehicle {
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
   LatLng? get turningRadiusCenter => currentTurningRadius != null
-      ? _distance.offset(
-          frontAxlePosition,
+      ? frontAxlePosition.offset(
           currentTurningRadius!,
           normalizeBearing(
             switch (isTurningLeft) {
@@ -293,33 +285,29 @@ class ArticulatedTractor extends Vehicle {
     final frontOuterToFrontInnerAngle =
         normalizeBearing(rearOuterToFrontOuterAngle + 90 * sign);
 
-    final wheelInnerCenter = _distance.offset(
-      switch (rear) {
-        true => rearAxlePosition,
-        false => frontAxlePosition,
-      },
+    final wheelInnerCenter = switch (rear) {
+      true => rearAxlePosition,
+      false => frontAxlePosition,
+    }
+        .offset(
       trackWidth / 2 -
           (wheelWidth * numWheels + (numWheels - 1) * wheelSpacing) / 2,
       axleToCenterAngle,
     );
 
-    final wheelInnerRear = _distance.offset(
-      wheelInnerCenter,
+    final wheelInnerRear = wheelInnerCenter.offset(
       wheelDiameter / 2,
       innerCenterToInnerRearAngle,
     );
-    final wheelOuterRear = _distance.offset(
-      wheelInnerRear,
+    final wheelOuterRear = wheelInnerRear.offset(
       wheelWidth * numWheels + (numWheels - 1) * wheelSpacing,
       rearInnerToRearOuterAngle,
     );
-    final wheelOuterFront = _distance.offset(
-      wheelOuterRear,
+    final wheelOuterFront = wheelOuterRear.offset(
       wheelDiameter,
       rearOuterToFrontOuterAngle,
     );
-    final wheelInnerFront = _distance.offset(
-      wheelOuterFront,
+    final wheelInnerFront = wheelOuterFront.offset(
       wheelWidth * numWheels + (numWheels - 1) * wheelSpacing,
       frontOuterToFrontInnerAngle,
     );
@@ -407,8 +395,7 @@ class ArticulatedTractor extends Vehicle {
           };
 
           points.add(
-            _distance.offset(
-              turningRadiusCenter!,
+            turningRadiusCenter!.offset(
               currentTurningRadius!,
               normalizeBearing(angle),
             ),
@@ -417,8 +404,7 @@ class ArticulatedTractor extends Vehicle {
       }
     } else {
       points.add(
-        _distance.offset(
-          position,
+        position.offset(
           isReversing ? -30 : 5 + 30,
           normalizeBearing(heading),
         ),
@@ -432,76 +418,64 @@ class ArticulatedTractor extends Vehicle {
   @override
   List<Polygon> get polygons {
     final rearLeftCornerAngle = normalizeBearing(rearAxleAngle + 90);
-    final rearLeftCenter = _distance.offset(
-      rearAxlePosition,
+    final rearLeftCenter = rearAxlePosition.offset(
       1,
       rearLeftCornerAngle,
     );
     final rearLeftSide = [
-      _distance.offset(
-        rearLeftCenter,
+      rearLeftCenter.offset(
         1,
         normalizeBearing(rearLeftCornerAngle - 90),
       ),
-      _distance.offset(
-        rearLeftCenter,
+      rearLeftCenter.offset(
         1,
         normalizeBearing(rearLeftCornerAngle + 90),
       )
     ];
 
     final rearRightCornerAngle = normalizeBearing(rearAxleAngle - 90);
-    final rearRightCenter = _distance.offset(
-      rearAxlePosition,
+    final rearRightCenter = rearAxlePosition.offset(
       1,
       rearRightCornerAngle,
     );
     final rearRightSide = [
-      _distance.offset(
-        rearRightCenter,
+      rearRightCenter.offset(
         1,
         normalizeBearing(rearRightCornerAngle - 90),
       ),
-      _distance.offset(
-        rearRightCenter,
+      rearRightCenter.offset(
         1,
         normalizeBearing(rearRightCornerAngle + 90),
       )
     ];
 
     final frontLeftCornerAngle = normalizeBearing(frontAxleAngle - 90);
-    final frontLeftCenter = _distance.offset(
-      frontAxlePosition,
+    final frontLeftCenter = frontAxlePosition.offset(
       1,
       frontLeftCornerAngle,
     );
     final frontLeftSide = [
-      _distance.offset(
-        frontLeftCenter,
+      frontLeftCenter.offset(
         1,
         normalizeBearing(frontLeftCornerAngle - 90),
       ),
-      _distance.offset(
-        frontLeftCenter,
+      frontLeftCenter.offset(
         1,
         normalizeBearing(frontLeftCornerAngle + 90),
       )
     ];
 
     final frontRightCornerAngle = normalizeBearing(frontAxleAngle + 90);
-    final frontRightCenter = _distance.offset(
-      frontAxlePosition,
+    final frontRightCenter = frontAxlePosition.offset(
       1,
       frontRightCornerAngle,
     );
     final frontRightSide = [
-      _distance.offset(
-        frontRightCenter,
+      frontRightCenter.offset(
         1,
         normalizeBearing(frontRightCornerAngle - 90),
       ),
-      _distance.offset(
-        frontRightCenter,
+      frontRightCenter.offset(
         1,
         normalizeBearing(frontRightCornerAngle + 90),
       )

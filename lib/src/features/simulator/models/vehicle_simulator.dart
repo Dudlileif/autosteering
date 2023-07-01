@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:isolate';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
-
-/// Geo-calculator used to calculate offsets.
-const _distance = Distance(roundResult: false);
 
 /// A class for simulating how vehicles should move given their position,
 /// heading, steering angle and velocity.
@@ -358,8 +356,7 @@ class _VehicleSimulatorState {
           };
           // Projected solid axle position from the turning radius
           // center.
-          final solidAxlePositon = _distance.offset(
-            turningCircleCenter!,
+          final solidAxlePositon = turningCircleCenter!.offset(
             vehicle.currentTurningRadius!,
             normalizeBearing(angle),
           );
@@ -374,8 +371,7 @@ class _VehicleSimulatorState {
 
           // The vehicle center position, which is offset from the solid
           // axle position.
-          final vehiclePosition = _distance.offset(
-            solidAxlePositon,
+          final vehiclePosition = solidAxlePositon.offset(
             vehicle.solidAxleDistance,
             switch (vehicle is Tractor) {
               true => heading,
@@ -428,8 +424,7 @@ class _VehicleSimulatorState {
 
           // Projected vehicle front axle position from the turning radius
           // center.
-          final frontAxlePosition = _distance.offset(
-            turningCircleCenter!,
+          final frontAxlePosition = turningCircleCenter!.offset(
             vehicle.currentTurningRadius!,
             projectedFrontAxleAngle,
           );
@@ -443,8 +438,7 @@ class _VehicleSimulatorState {
 
           // The vehicle antenna position, projected from the front axle
           // position.
-          final vehiclePosition = _distance.offset(
-            frontAxlePosition,
+          final vehiclePosition = frontAxlePosition.offset(
             vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
             frontBodyHeading - 180 + vehicle.steeringAngle / 2,
           );
@@ -467,8 +461,7 @@ class _VehicleSimulatorState {
       }
       // Going straight.
       else {
-        final position = _distance.offset(
-          vehicle!.position,
+        final position = vehicle!.position.offset(
           vehicle!.velocity * period,
           vehicle!.heading,
         );
@@ -494,7 +487,7 @@ class _VehicleSimulatorState {
   void updateGauges() {
     // Distance
     if (vehicle != null && prevVehicle != null) {
-      distance = _distance.distance(vehicle!.position, prevVehicle!.position);
+      distance = vehicle!.position.distanceTo(prevVehicle!.position);
     } else {
       distance = 0;
     }
@@ -510,12 +503,10 @@ class _VehicleSimulatorState {
     if (vehicle != null && prevVehicle != null && velocity.abs() > 0) {
       heading = normalizeBearing(
         switch (vehicle!.isReversing) {
-          true => _distance.bearing(
-              vehicle!.position,
+          true => vehicle!.position.bearingTo(
               prevVehicle!.position,
             ),
-          false => _distance.bearing(
-              prevVehicle!.position,
+          false => prevVehicle!.position.bearingTo(
               vehicle!.position,
             ),
         },

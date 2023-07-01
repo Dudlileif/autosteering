@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
@@ -53,7 +54,7 @@ class _AddPointMarkerState extends State<AddPointMarker> {
 
     if (widget.useRadiusInMeter) {
       final offset = map.getOffsetFromOrigin(widget.point);
-      final r = const Distance().offset(widget.point, widget.radius, 180);
+      final r = widget.point.offset(widget.radius, 180);
       final delta = offset - map.getOffsetFromOrigin(r);
       radiusToUse = delta.distance;
     }

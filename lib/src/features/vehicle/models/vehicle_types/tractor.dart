@@ -1,10 +1,8 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
-
-/// Geo-calculator used to calculate offsets.
-const _distance = Distance(roundResult: false);
 
 /// A conventional tractor with front wheel steering and a solid rear axle.
 class Tractor extends AxleSteeredVehicle {
@@ -39,16 +37,14 @@ class Tractor extends AxleSteeredVehicle {
 
   /// The position of the center of the rear axle.
   @override
-  LatLng get solidAxlePosition => _distance.offset(
-        position,
+  LatLng get solidAxlePosition => position.offset(
         solidAxleDistance,
         normalizeBearing(heading - 180),
       );
 
   /// The position of the center of the front axle.
   @override
-  LatLng get steeringAxlePosition => _distance.offset(
-        position,
+  LatLng get steeringAxlePosition => position.offset(
         wheelBase - solidAxleDistance,
         normalizeBearing(heading),
       );
@@ -60,7 +56,7 @@ class Tractor extends AxleSteeredVehicle {
   /// when the tractor is reversing.
   @override
   LatLng get pursuitAxlePosition => switch (isReversing) {
-        true => _distance.offset(solidAxlePosition, wheelBase, heading + 180),
+        true => solidAxlePosition.offset(wheelBase, heading + 180),
         false => steeringAxlePosition,
       };
 
