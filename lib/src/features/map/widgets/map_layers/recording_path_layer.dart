@@ -12,7 +12,8 @@ class RecordingPathLayer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final points = ref.watch(pathRecordingListProvider);
-    final vehicle = ref.watch(mainVehicleProvider);
+    final vehiclePosition =
+        ref.watch(mainVehicleProvider.select((vehicle) => vehicle.position));
     return Stack(
       children: points.isNotEmpty
           ? [
@@ -22,7 +23,7 @@ class RecordingPathLayer extends ConsumerWidget {
                   Polyline(
                     points: [
                       ...points.map((point) => point.position),
-                      vehicle.position,
+                      vehiclePosition,
                     ],
                   )
                 ],

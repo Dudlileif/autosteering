@@ -21,7 +21,9 @@ class DubinsPathDebugLayer extends ConsumerWidget {
         if (dubinsPath.isPathTypePossible(pathType)) {
           final showTurningCricles =
               ref.watch(showDubinsPathDebugCirclesProvider);
-          final vehicle = ref.watch(mainVehicleProvider);
+          final minTurningRadius = ref.watch(
+            mainVehicleProvider.select((vehicle) => vehicle.minTurningRadius),
+          );
           final wayPoints = dubinsPath
               .dubinsPathPlan(
                 pathType,
@@ -35,25 +37,25 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                   if (showTurningCricles) ...[
                     CircleMarker(
                       point: dubinsPath.startRightCircleCenter,
-                      radius: vehicle.minTurningRadius,
+                      radius: minTurningRadius,
                       useRadiusInMeter: true,
                       color: Colors.pink.withOpacity(0.3),
                     ),
                     CircleMarker(
                       point: dubinsPath.startLeftCircleCenter,
-                      radius: vehicle.minTurningRadius,
+                      radius: minTurningRadius,
                       useRadiusInMeter: true,
                       color: Colors.grey.withOpacity(0.3),
                     ),
                     CircleMarker(
                       point: dubinsPath.endLeftCircleCenter,
-                      radius: vehicle.minTurningRadius,
+                      radius: minTurningRadius,
                       useRadiusInMeter: true,
                       color: Colors.grey.withOpacity(0.3),
                     ),
                     CircleMarker(
                       point: dubinsPath.endRightCircleCenter,
-                      radius: vehicle.minTurningRadius,
+                      radius: minTurningRadius,
                       useRadiusInMeter: true,
                       color: Colors.pink.withOpacity(0.3),
                     ),
@@ -62,7 +64,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                       CircleMarker(
                         point:
                             dubinsPath.pathData(pathType)!.middleCircleCenter!,
-                        radius: vehicle.minTurningRadius,
+                        radius: minTurningRadius,
                         useRadiusInMeter: true,
                         color: Colors.blue.withOpacity(0.3),
                       ),

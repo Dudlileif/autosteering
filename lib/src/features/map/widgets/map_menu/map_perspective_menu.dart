@@ -7,43 +7,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button with attached submenu for configuring the map perspective.
-class MapPerspectiveMenu extends ConsumerWidget {
+class MapPerspectiveMenu extends StatelessWidget {
   const MapPerspectiveMenu({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final angle = ref.watch(map3DPerspectiveAngleProvider);
-
+  Widget build(BuildContext context) {
     return MenuButtonWithChildren(
       icon: Icons.threed_rotation,
       text: 'Perspective',
       menuChildren: [
-        CheckboxListTile(
-          value: ref.watch(mapUse3DPerspectiveProvider),
-          onChanged: (value) => value != null
-              ? ref
-                  .read(mapUse3DPerspectiveProvider.notifier)
-                  .update(value: value)
-              : null,
-          secondary: Text(
+        Consumer(
+          child: Text(
             'Enable 3D',
             style: Theme.of(context).menuButtonWithChildrenText,
           ),
+          builder: (context, ref, child) {
+            return CheckboxListTile(
+              value: ref.watch(mapUse3DPerspectiveProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(mapUse3DPerspectiveProvider.notifier)
+                      .update(value: value)
+                  : null,
+              secondary: child,
+            );
+          },
         ),
         ListTile(
-          title: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('${(angle * 180 / pi).round()}°'),
-              Slider(
-                value: angle,
-                onChanged:
-                    ref.read(map3DPerspectiveAngleProvider.notifier).update,
-                min: 10 * pi / 180,
-                max: 70 * pi / 180,
-                divisions: 12,
-              ),
-            ],
+          title: Consumer(
+            builder: (context, ref, child) {
+              final angle = ref.watch(map3DPerspectiveAngleProvider);
+
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('${(angle * 180 / pi).round()}°'),
+                  Slider(
+                    value: angle,
+                    onChanged:
+                        ref.read(map3DPerspectiveAngleProvider.notifier).update,
+                    min: 10 * pi / 180,
+                    max: 70 * pi / 180,
+                    divisions: 12,
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ],

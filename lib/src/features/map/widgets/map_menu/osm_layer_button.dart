@@ -4,21 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button for toggling the OpenStreetMap layer.
-class OSMLayerButton extends ConsumerWidget {
+class OSMLayerButton extends StatelessWidget {
   const OSMLayerButton({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return CheckboxListTile(
-      value: ref.watch(showOSMLayerProvider),
-      onChanged: (value) => value != null
-          ? ref.read(showOSMLayerProvider.notifier).update(value: value)
-          : null,
-      secondary: Text(
+  Widget build(BuildContext context) {
+    return Consumer(
+      child: Text(
         'OpenStreetMap',
         softWrap: false,
         style: Theme.of(context).menuButtonWithChildrenText,
       ),
+      builder: (context, ref, child) {
+        return CheckboxListTile(
+          value: ref.watch(showOSMLayerProvider),
+          onChanged: (value) => value != null
+              ? ref.read(showOSMLayerProvider.notifier).update(value: value)
+              : null,
+          secondary: child,
+        );
+      },
     );
   }
 }

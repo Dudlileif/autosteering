@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,11 @@ class SentinelLayerSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (ref.watch(mapReadyProvider)) {
       final availableLayers = ref.watch(availableSentinelLayersProvider);
+
+      if (availableLayers.isEmpty) {
+        return const SizedBox.shrink();
+      }
+
       final selectedLayers = ref.watch(selectedSentinelLayersProvider);
 
       final listView = ReorderableListView.builder(
@@ -30,40 +36,24 @@ class SentinelLayerSelector extends ConsumerWidget {
         onReorder: ref.read(availableSentinelLayersProvider.notifier).reorder,
       );
 
-      return availableLayers.isNotEmpty
-          ? SubmenuButton(
-              menuChildren: [
-                SizedBox(
-                  height: 3 * 80,
-                  width: 300,
-                  child: listView,
-                )
-              ],
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.satellite_alt),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4),
-                    child: Text(
-                      'Sentinel',
-                      style: Theme.of(context).menuButtonWithChildrenText,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : const SizedBox.shrink();
+      return MenuButtonWithChildren(
+        icon: Icons.satellite_alt,
+        text: 'Sentinel',
+        menuChildren: [
+          SizedBox(
+            height: 3 * 80,
+            width: 300,
+            child: listView,
+          )
+        ],
+      );
     }
     return const SizedBox.shrink();
   }
 }
 
 /// A button in the submenu of the Sentinel layer selector.
-class _SentinelLayerMenuItemButton extends ConsumerWidget {
+class _SentinelLayerMenuItemButton extends StatelessWidget {
   const _SentinelLayerMenuItemButton({
     required this.index,
     required this.enabled,
@@ -75,41 +65,56 @@ class _SentinelLayerMenuItemButton extends ConsumerWidget {
   final SentinelLayer layer;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final opacity = ref.watch(sentinelLayerOpacitiesProvider)[layer.layerType]!;
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Expanded(
-          child: CheckboxListTile(
-            controlAffinity: ListTileControlAffinity.leading,
-            value: enabled,
-            onChanged: (value) =>
-                ref.read(selectedSentinelLayersProvider.notifier).toggle(layer),
-            title: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  layer.name,
-                  style: Theme.of(context).menuButtonWithChildrenText,
-                ),
-                SliderTheme(
-                  data: Theme.of(context).sliderTheme.copyWith(
+          child: Consumer(
+            builder: (context, ref, child) {
+              return CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.leading,
+                value: enabled,
+                onChanged: (value) => ref
+                    .read(selectedSentinelLayersProvider.notifier)
+                    .toggle(layer),
+                title: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      layer.name,
+                      style: theme.menuButtonWithChildrenText,
+                    ),
+                    SliderTheme(
+                      data: theme.sliderTheme.copyWith(
                         showValueIndicator: ShowValueIndicator.always,
                       ),
-                  child: Slider(
-                    value: opacity,
-                    label: 'Opacity: ${opacity.toStringAsFixed(2)}',
-                    onChanged: enabled
-                        ? (value) => ref
-                            .read(sentinelLayerOpacitiesProvider.notifier)
-                            .update(layer.layerType, value)
-                        : null,
-                  ),
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final opacity = ref.watch(
+                            sentinelLayerOpacitiesProvider,
+                          )[layer.layerType]!;
+
+                          return Slider(
+                            value: opacity,
+                            label: 'Opacity: ${opacity.toStringAsFixed(2)}',
+                            onChanged: enabled
+                                ? (value) => ref
+                                    .read(
+                                      sentinelLayerOpacitiesProvider.notifier,
+                                    )
+                                    .update(layer.layerType, value)
+                                : null,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
         Padding(

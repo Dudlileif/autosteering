@@ -10,15 +10,13 @@ class MainMap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapController = ref.watch(mainMapControllerProvider);
-
     ref
       ..watch(simVehicleDrivingProvider)
       ..watch(zoomTimerControllerProvider);
 
     return FlutterMap(
       key: const Key('Map'),
-      mapController: mapController,
+      mapController: ref.watch(mainMapControllerProvider),
       options: MapOptions(
         zoom: 19,
         minZoom: 4,

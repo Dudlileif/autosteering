@@ -7,161 +7,196 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button with attached submenu or buttons used for debugging
 /// a Dubins path between two points.
-class DubinsPathDebugMenu extends ConsumerWidget {
+class DubinsPathDebugMenu extends StatelessWidget {
   const DubinsPathDebugMenu({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final start = ref.watch(dubinsPathDebugStartPointProvider);
-    final end = ref.watch(dubinsPathDebugEndPointProvider);
-    final selectedPathType = ref.watch(dubinsPathDebugPathTypeProvider);
-    final dubinsPath = ref.watch(debugDubinsPathProvider);
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       icon: Icons.route,
       text: 'Dubins path',
       menuChildren: [
-        CheckboxListTile(
-          value: ref.watch(enableDubinsPathDebugProvider),
-          onChanged: (value) => value != null
-              ? ref
-                  .read(enableDubinsPathDebugProvider.notifier)
-                  .update(value: value)
-              : null,
-          secondary: Text(
+        Consumer(
+          child: Text(
             'Debugging',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
+          builder: (context, ref, child) {
+            return CheckboxListTile(
+              value: ref.watch(enableDubinsPathDebugProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(enableDubinsPathDebugProvider.notifier)
+                      .update(value: value)
+                  : null,
+              secondary: child,
+            );
+          },
         ),
-        CheckboxListTile(
-          value: ref.watch(showDubinsPathDebugCirclesProvider),
-          onChanged: (value) => value != null
-              ? ref
-                  .read(showDubinsPathDebugCirclesProvider.notifier)
-                  .update(value: value)
-              : null,
-          secondary: const Icon(Icons.circle),
-          title: Text(
+        Consumer(
+          child: Text(
             'Turning circles',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
+          builder: (context, ref, child) {
+            return CheckboxListTile(
+              value: ref.watch(showDubinsPathDebugCirclesProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(showDubinsPathDebugCirclesProvider.notifier)
+                      .update(value: value)
+                  : null,
+              secondary: const Icon(Icons.circle),
+              title: child,
+            );
+          },
         ),
-        MenuButtonWithChildren(
-          icon: Icons.abc,
-          text:
-              'Path type: ${(selectedPathType?.name ?? dubinsPath?.bestPathData?.pathType.name)?.toUpperCase()}\n${(dubinsPath?.pathData(selectedPathType)?.totalLength ?? dubinsPath?.bestPathData?.totalLength)?.round()} m',
-          menuChildren: DubinsPathType.values
-              .map(
-                (pathType) => CheckboxListTile(
-                  value: selectedPathType == pathType,
-                  enabled: ref
-                      .watch(debugDubinsPathProvider)
-                      ?.isPathTypePossible(pathType),
-                  onChanged: (value) => switch (value) {
-                    true => {
-                        ref
-                            .read(dubinsPathDebugPathTypeProvider.notifier)
-                            .update(pathType)
+        Consumer(
+          builder: (context, ref, child) {
+            final selectedPathType = ref.watch(dubinsPathDebugPathTypeProvider);
+            final dubinsPath = ref.watch(debugDubinsPathProvider);
+
+            return MenuButtonWithChildren(
+              icon: Icons.abc,
+              text:
+                  'Path type: ${(selectedPathType?.name ?? dubinsPath?.bestPathData?.pathType.name)?.toUpperCase()}\n${(dubinsPath?.pathData(selectedPathType)?.totalLength ?? dubinsPath?.bestPathData?.totalLength)?.round()} m',
+              menuChildren: DubinsPathType.values
+                  .map(
+                    (pathType) => CheckboxListTile(
+                      value: selectedPathType == pathType,
+                      enabled: dubinsPath?.isPathTypePossible(pathType),
+                      onChanged: (value) => switch (value) {
+                        true => {
+                            ref
+                                .read(dubinsPathDebugPathTypeProvider.notifier)
+                                .update(pathType)
+                          },
+                        false => {
+                            ref.invalidate(dubinsPathDebugPathTypeProvider)
+                          },
+                        _ => null,
                       },
-                    false => {ref.invalidate(dubinsPathDebugPathTypeProvider)},
-                    _ => null,
-                  },
-                  secondary: Text(
-                    pathType.name.toUpperCase(),
-                    style: Theme.of(context).menuButtonWithChildrenText,
-                  ),
-                ),
-              )
-              .toList(),
+                      secondary: Text(
+                        pathType.name.toUpperCase(),
+                        style: textStyle,
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+          },
         ),
-        MenuButtonWithChildren(
-          icon: Icons.threesixty,
-          text: 'Rotate points',
-          menuChildren: [
-            if (start != null)
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Start:${start.heading.round()}',
-                    style: Theme.of(context).menuButtonWithChildrenText,
+        Consumer(
+          builder: (context, ref, child) {
+            final start = ref.watch(dubinsPathDebugStartPointProvider);
+            final end = ref.watch(dubinsPathDebugEndPointProvider);
+
+            return MenuButtonWithChildren(
+              icon: Icons.threesixty,
+              text: 'Rotate points',
+              menuChildren: [
+                if (start != null)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Start:${start.heading.round()}',
+                        style: textStyle,
+                      ),
+                      Slider(
+                        value: start.heading,
+                        onChanged: (value) => ref
+                            .read(dubinsPathDebugStartPointProvider.notifier)
+                            .update(
+                              start.copyWith(heading: value),
+                            ),
+                        max: 360,
+                      )
+                    ],
                   ),
-                  Slider(
-                    value: start.heading,
-                    onChanged: (value) => ref
-                        .read(dubinsPathDebugStartPointProvider.notifier)
-                        .update(
-                          start.copyWith(heading: value),
-                        ),
-                    max: 360,
-                  )
-                ],
-              ),
-            if (end != null)
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'End: ${end.heading.round()}',
-                    style: Theme.of(context).menuButtonWithChildrenText,
+                if (end != null)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'End: ${end.heading.round()}',
+                        style: textStyle,
+                      ),
+                      Slider(
+                        value: end.heading,
+                        onChanged: (value) => ref
+                            .read(dubinsPathDebugEndPointProvider.notifier)
+                            .update(
+                              end.copyWith(heading: value),
+                            ),
+                        max: 360,
+                      )
+                    ],
                   ),
-                  Slider(
-                    value: end.heading,
-                    onChanged: (value) => ref
-                        .read(dubinsPathDebugEndPointProvider.notifier)
-                        .update(
-                          end.copyWith(heading: value),
-                        ),
-                    max: 360,
-                  )
-                ],
-              ),
-          ],
+              ],
+            );
+          },
         ),
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'Step size: ${ref.watch(dubinsPathDebugStepSizeProvider).toStringAsFixed(1)} m',
-              style: Theme.of(context).menuButtonWithChildrenText,
+            Consumer(
+              builder: (context, ref, child) {
+                return Text(
+                  'Step size: ${ref.watch(dubinsPathDebugStepSizeProvider).toStringAsFixed(1)} m',
+                  style: textStyle,
+                );
+              },
             ),
             const StepSizeSlider(),
           ],
         ),
-        ListTile(
-          onTap: () {
-            ref.read(dubinsPathDebugStartPointProvider.notifier).update(
-                  WayPoint(
-                    position: ref.watch(mainMapControllerProvider).center,
-                    heading: 90,
-                  ),
-                );
-            ref.read(dubinsPathDebugEndPointProvider.notifier).update(
-                  WayPoint(
-                    position: calculator.offset(
-                      ref.watch(mainMapControllerProvider).center,
-                      35,
-                      0,
-                    ),
-                    heading: 210,
-                  ),
-                );
-          },
-          leading: const Icon(Icons.refresh),
-          title: Text(
+        Consumer(
+          child: Text(
             'Reset points',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
+          builder: (context, ref, child) {
+            return ListTile(
+              onTap: () {
+                ref.read(dubinsPathDebugStartPointProvider.notifier).update(
+                      WayPoint(
+                        position: ref.watch(mainMapControllerProvider).center,
+                        heading: 90,
+                      ),
+                    );
+                ref.read(dubinsPathDebugEndPointProvider.notifier).update(
+                      WayPoint(
+                        position: calculator.offset(
+                          ref.watch(mainMapControllerProvider).center,
+                          35,
+                          0,
+                        ),
+                        heading: 210,
+                      ),
+                    );
+              },
+              leading: const Icon(Icons.refresh),
+              title: child,
+            );
+          },
         ),
-        ListTile(
-          onTap: () => ref
-            ..invalidate(dubinsPathDebugStartPointProvider)
-            ..invalidate(dubinsPathDebugEndPointProvider),
-          leading: const Icon(Icons.clear),
-          title: Text(
+        Consumer(
+          child: Text(
             'Clear points',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
+          builder: (context, ref, child) {
+            return ListTile(
+              onTap: () => ref
+                ..invalidate(dubinsPathDebugStartPointProvider)
+                ..invalidate(dubinsPathDebugEndPointProvider),
+              leading: const Icon(Icons.clear),
+              title: child,
+            );
+          },
         ),
       ],
     );

@@ -28,16 +28,18 @@ class OSMContribution extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return RichText(
       text: TextSpan(
         children: [
           TextSpan(
             text: '© ',
-            style: Theme.of(context).textTheme.bodySmall,
+            style: textTheme.bodySmall,
           ),
           TextSpan(
             text: 'OpenStreetMap',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            style: textTheme.bodySmall?.copyWith(
                 // decoration: TextDecoration.underline,
                 ),
             // recognizer: TapGestureRecognizer()
@@ -51,7 +53,7 @@ class OSMContribution extends StatelessWidget {
           ),
           TextSpan(
             text: ' contributors',
-            style: Theme.of(context).textTheme.bodySmall,
+            style: textTheme.bodySmall,
           ),
         ],
       ),

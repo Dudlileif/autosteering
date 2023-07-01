@@ -4,30 +4,39 @@ import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EquipmentDebugMenu extends ConsumerWidget {
+class EquipmentDebugMenu extends StatelessWidget {
   const EquipmentDebugMenu({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
       text: 'Equipment',
       menuChildren: [
-        ListTile(
-          title: Text(
+        Consumer(
+          child: Text(
             'Attach to vehicle',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
-          onTap: ref.read(configuredEquipmentProvider.notifier).attachToVehicle,
+          builder: (context, ref, child) => ListTile(
+            title: child,
+            onTap:
+                ref.read(configuredEquipmentProvider.notifier).attachToVehicle,
+          ),
         ),
-        CheckboxListTile(
-          title: Text(
+        Consumer(
+          child: Text(
             'Show',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
-          value: ref.watch(showEquipmentProvider),
-          onChanged: (value) => value != null
-              ? ref.read(showEquipmentProvider.notifier).update(value: value)
-              : null,
+          builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            value: ref.watch(showEquipmentProvider),
+            onChanged: (value) => value != null
+                ? ref.read(showEquipmentProvider.notifier).update(value: value)
+                : null,
+          ),
         )
       ],
     );
