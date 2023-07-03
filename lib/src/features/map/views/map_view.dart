@@ -6,6 +6,7 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:window_manager/window_manager.dart';
 
 /// The main map widget with overlayed widgets (buttons, gauges).
 class MapAndGaugeStackView extends ConsumerWidget {
@@ -14,17 +15,24 @@ class MapAndGaugeStackView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var shiftModifier = false;
+    var altModifier = false;
 
     const map = MainMap();
 
     return KeyboardListener(
       autofocus: true,
-      onKeyEvent: (event) => switch (event.logicalKey) {
+      onKeyEvent: (event) async => switch (event.logicalKey) {
         LogicalKeyboardKey.shiftLeft => {
             if (event is KeyDownEvent)
               shiftModifier = true
             else if (event is KeyUpEvent)
               shiftModifier = false
+          },
+        LogicalKeyboardKey.altLeft => {
+            if (event is KeyDownEvent)
+              altModifier = true
+            else if (event is KeyUpEvent)
+              altModifier = false
           },
         LogicalKeyboardKey.minus => {
             if (event is KeyUpEvent)
@@ -37,6 +45,16 @@ class MapAndGaugeStackView extends ConsumerWidget {
               ref.read(zoomTimerControllerProvider.notifier).cancel()
             else if (event is KeyDownEvent)
               ref.read(zoomTimerControllerProvider.notifier).zoomIn(),
+          },
+        LogicalKeyboardKey.enter => {
+            if (Device.isDesktop && altModifier)
+              if (event is KeyDownEvent)
+                windowManager.setFullScreen(!await windowManager.isFullScreen())
+          },
+        LogicalKeyboardKey.f11 => {
+            if (Device.isDesktop)
+              if (event is KeyDownEvent)
+                windowManager.setFullScreen(!await windowManager.isFullScreen())
           },
         LogicalKeyboardKey.space => {
             if (event is KeyDownEvent)
