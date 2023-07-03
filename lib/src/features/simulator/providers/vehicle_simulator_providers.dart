@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:isolate';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:async/async.dart';
-import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,7 +26,7 @@ enum SimPlatform {
 @Riverpod(keepAlive: true)
 class SimVehicleInput extends _$SimVehicleInput {
   @override
-  SimPlatform build() => switch (kIsWeb) {
+  SimPlatform build() => switch (Device.isWeb) {
         true => SimPlatform.web,
         false => SimPlatform.native,
       };

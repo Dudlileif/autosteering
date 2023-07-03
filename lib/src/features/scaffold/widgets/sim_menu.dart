@@ -1,9 +1,8 @@
-import 'package:agopengps_flutter/src/features/common/widgets/widgets.dart';
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -34,7 +33,7 @@ class SimMenu extends StatelessWidget {
             title: child,
           ),
         ),
-        if (!kIsWeb)
+        if (!Device.isWeb)
           Consumer(
             child: Text(
               'Restart sim',
