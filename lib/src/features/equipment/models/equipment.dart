@@ -113,7 +113,12 @@ class Equipment extends Hitchable with EquatableMixin {
   List<Polygon>? get polygons {
     if (parentHitchPosition != null) {
       final heading = switch (hitchParent is Vehicle) {
-        true => (hitchParent! as Vehicle).heading,
+        true => switch (hitchParent is AxleSteeredVehicle) {
+            true => (hitchParent! as AxleSteeredVehicle).heading,
+            false => hitchParent!.hitchFrontFixedChild == this
+                ? (hitchParent! as ArticulatedTractor).frontAxleAngle
+                : (hitchParent! as ArticulatedTractor).rearAxleAngle + 180
+          },
         false => 0,
       };
 
