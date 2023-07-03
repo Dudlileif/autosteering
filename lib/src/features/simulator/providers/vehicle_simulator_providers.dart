@@ -65,12 +65,23 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
     } else {
       ref.read(mainVehicleProvider.notifier).update(vehicle);
 
-      if (vehicle.position != ref.watch(mainMapControllerProvider).center &&
+      if (vehicle.position !=
+              ref.watch(
+                mainMapControllerProvider
+                    .select((controller) => controller.center),
+              ) &&
           ref.watch(centerMapOnVehicleProvider)) {
         ref.read(mainMapControllerProvider).moveAndRotate(
               ref.watch(offsetVehiclePositionProvider),
-              ref.watch(mainMapControllerProvider).zoom,
-              -normalizeBearing(ref.watch(mainVehicleProvider).heading),
+              ref.watch(
+                mainMapControllerProvider
+                    .select((controller) => controller.zoom),
+              ),
+              -normalizeBearing(
+                ref.watch(
+                  mainVehicleProvider.select((vehicle) => vehicle.heading),
+                ),
+              ),
             );
       }
     }
@@ -208,6 +219,8 @@ class SimVehicleAutoSlowDown extends _$SimVehicleAutoSlowDown {
   void toggle() => Future(() => state != state);
 }
 
+/// A provider for accelerating the vehicle in the simulator, typically
+/// used by hotkeys/keyboard.
 @Riverpod(keepAlive: true)
 class SimVehicleAccelerator extends _$SimVehicleAccelerator {
   @override
@@ -230,6 +243,8 @@ class SimVehicleAccelerator extends _$SimVehicleAccelerator {
   void reverse() => update(const VehicleInput(velocityDelta: -0.1));
 }
 
+/// A provider for steering the vehicle in the simulator, typically
+/// used by hotkeys/keyboard.
 @Riverpod(keepAlive: true)
 class SimVehicleSteering extends _$SimVehicleSteering {
   @override

@@ -57,7 +57,10 @@ class CenterMapOnVehicle extends _$CenterMapOnVehicle {
       if (value) {
         ref.read(mainMapControllerProvider).move(
               ref.watch(offsetVehiclePositionProvider),
-              ref.watch(mainMapControllerProvider).zoom,
+              ref.watch(
+                mainMapControllerProvider
+                    .select((controller) => controller.zoom),
+              ),
             );
       }
     }

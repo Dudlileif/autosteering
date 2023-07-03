@@ -161,19 +161,19 @@ class DubinsPathDebugMenu extends StatelessWidget {
           builder: (context, ref, child) {
             return ListTile(
               onTap: () {
+                final center = ref.watch(
+                  mainMapControllerProvider
+                      .select((controller) => controller.center),
+                );
                 ref.read(dubinsPathDebugStartPointProvider.notifier).update(
                       WayPoint(
-                        position: ref.watch(mainMapControllerProvider).center,
+                        position: center,
                         heading: 90,
                       ),
                     );
                 ref.read(dubinsPathDebugEndPointProvider.notifier).update(
                       WayPoint(
-                        position:
-                            ref.watch(mainMapControllerProvider).center.offset(
-                                  35,
-                                  0,
-                                ),
+                        position: center.offset(35, 0),
                         heading: 210,
                       ),
                     );

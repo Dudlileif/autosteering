@@ -63,7 +63,10 @@ DubinsPath? debugDubinsPath(DebugDubinsPathRef ref) {
     return DubinsPath(
       start: start,
       end: end,
-      turningRadius: 1.2 * ref.watch(mainVehicleProvider).minTurningRadius,
+      turningRadius: 1.2 *
+          ref.watch(
+            mainVehicleProvider.select((vehicle) => vehicle.minTurningRadius),
+          ),
       stepSize: ref.watch(dubinsPathDebugStepSizeProvider),
     );
   }

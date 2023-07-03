@@ -51,7 +51,12 @@ class MapControlButtons extends StatelessWidget {
 
                   final alwaysPointNorth =
                       ref.watch(alwaysPointNorthProvider) &&
-                          ref.watch(mainMapControllerProvider).rotation == 0;
+                          ref.watch(
+                                mainMapControllerProvider.select(
+                                  (controller) => controller.rotation,
+                                ),
+                              ) ==
+                              0;
 
                   const ring = Icon(
                     Icons.location_searching,
