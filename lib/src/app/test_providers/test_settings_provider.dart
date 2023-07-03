@@ -53,7 +53,7 @@ Future<void> applyTestSettings(ApplyTestSettingsRef ref) async {
               ref
                   .read(countryLayerOpacitiesProvider.notifier)
                   .update(layer, opacity);
-              ref.read(selectedCountryLayersProvider.notifier).add(layer);
+              ref.read(enabledCountryLayersProvider.notifier).add(layer);
             }
           });
         }

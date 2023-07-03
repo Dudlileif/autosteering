@@ -64,25 +64,25 @@ final sentinelMaxCloudCoveragePercentProvider =
 );
 
 typedef _$SentinelMaxCloudCoveragePercent = Notifier<double>;
-String _$selectedSentinelLayersHash() =>
-    r'910f4f783d730729884fcdd0cc3c8ddf09fdc09d';
+String _$enabledSentinelLayersHash() =>
+    r'237907a934f56814311871bd7b5b86e0dee4975d';
 
 /// A provider for the set of selected Sentinel layers.
 ///
-/// Copied from [SelectedSentinelLayers].
-@ProviderFor(SelectedSentinelLayers)
-final selectedSentinelLayersProvider =
-    NotifierProvider<SelectedSentinelLayers, Set<SentinelLayer>>.internal(
-  SelectedSentinelLayers.new,
-  name: r'selectedSentinelLayersProvider',
+/// Copied from [EnabledSentinelLayers].
+@ProviderFor(EnabledSentinelLayers)
+final enabledSentinelLayersProvider =
+    NotifierProvider<EnabledSentinelLayers, Set<SentinelLayer>>.internal(
+  EnabledSentinelLayers.new,
+  name: r'enabledSentinelLayersProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$selectedSentinelLayersHash,
+      : _$enabledSentinelLayersHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SelectedSentinelLayers = Notifier<Set<SentinelLayer>>;
+typedef _$EnabledSentinelLayers = Notifier<Set<SentinelLayer>>;
 String _$sentinelLayerOpacitiesHash() =>
     r'133600f24775b6062e2c828f01d4ff4b60d93327';
 

@@ -61,7 +61,7 @@ class SentinelMaxCloudCoveragePercent
 
 /// A provider for the set of selected Sentinel layers.
 @Riverpod(keepAlive: true)
-class SelectedSentinelLayers extends _$SelectedSentinelLayers {
+class EnabledSentinelLayers extends _$EnabledSentinelLayers {
   @override
   Set<SentinelLayer> build() => <SentinelLayer>{};
 

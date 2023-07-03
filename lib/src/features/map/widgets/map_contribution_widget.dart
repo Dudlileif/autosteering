@@ -14,12 +14,12 @@ class MapContributionWidget extends ConsumerWidget {
           padding: EdgeInsets.all(2),
           child: OSMContribution(),
         ),
-      if (ref.watch(selectedCountryLayersProvider).isNotEmpty)
+      if (ref.watch(enabledCountryLayersProvider).isNotEmpty)
         Padding(
           padding: const EdgeInsets.all(2),
           child: ref.watch(currentCountryProvider)?.mapContribution(context),
         ),
-      if (ref.watch(selectedSentinelLayersProvider).isNotEmpty)
+      if (ref.watch(enabledSentinelLayersProvider).isNotEmpty)
         const Padding(
           padding: EdgeInsets.all(2),
           child: SentinelContribution(),

@@ -7,7 +7,7 @@ part of 'country_providers.dart';
 // **************************************************************************
 
 String _$sortedCountryLayersHash() =>
-    r'dcc4ddead6be2f8f7e503ce5badaa2bed42a61ca';
+    r'9ce56f5047c67017fcacf0d53ff311f3dc38982c';
 
 /// The selected country layers sorted by their index in the available layers
 /// list.
@@ -26,7 +26,7 @@ final sortedCountryLayersProvider =
 );
 
 typedef SortedCountryLayersRef = AutoDisposeProviderRef<List<TileLayerData>>;
-String _$currentCountryHash() => r'e674d2f08e41fc881509fba4fd304057ca66a552';
+String _$currentCountryHash() => r'b4e1485b70d819f76f000649a529f08cad697fc0';
 
 /// A provider fort showing the country we are currently in, if the country
 /// has defined custom map layers.
@@ -48,7 +48,7 @@ final currentCountryProvider =
 
 typedef _$CurrentCountry = Notifier<Country?>;
 String _$availableCountryLayersHash() =>
-    r'558c96a7495d3d83408e41446eff9af46073a47b';
+    r'4dc452083bdeb44bb635faac383b3689691dcea8';
 
 /// A provider that contains all the custom layers available for the
 /// [CurrentCountry].
@@ -67,27 +67,27 @@ final availableCountryLayersProvider =
 );
 
 typedef _$AvailableCountryLayers = Notifier<List<TileLayerData>>;
-String _$selectedCountryLayersHash() =>
-    r'f1542b4e5e1a4fe0c67f4f9a2d14bc50f223ace1';
+String _$enabledCountryLayersHash() =>
+    r'f919be9712abeef57d130c40107bea4dfccfd6a3';
 
 /// A set of the current selction of custom layers for the [CurrentCountry].
 ///
-/// Copied from [SelectedCountryLayers].
-@ProviderFor(SelectedCountryLayers)
-final selectedCountryLayersProvider =
-    NotifierProvider<SelectedCountryLayers, Set<TileLayerData>>.internal(
-  SelectedCountryLayers.new,
-  name: r'selectedCountryLayersProvider',
+/// Copied from [EnabledCountryLayers].
+@ProviderFor(EnabledCountryLayers)
+final enabledCountryLayersProvider =
+    NotifierProvider<EnabledCountryLayers, Set<TileLayerData>>.internal(
+  EnabledCountryLayers.new,
+  name: r'enabledCountryLayersProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$selectedCountryLayersHash,
+      : _$enabledCountryLayersHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SelectedCountryLayers = Notifier<Set<TileLayerData>>;
+typedef _$EnabledCountryLayers = Notifier<Set<TileLayerData>>;
 String _$countryLayerOpacitiesHash() =>
-    r'8e5035439847e8333b010ad9c41eeb81d4e74a94';
+    r'6d8fa520c12e300a0dc37cd0a382c527c5c965cf';
 
 /// A map of the available country layers and their opacities, which can be
 /// specified.

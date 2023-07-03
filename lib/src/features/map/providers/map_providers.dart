@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:agopengps_flutter/src/features/common/utils/position_projection_extensions.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
@@ -40,7 +41,25 @@ class MainMapController extends _$MainMapController {
 @Riverpod(keepAlive: true)
 class HomePosition extends _$HomePosition {
   @override
-  LatLng build() => const LatLng(0, 0);
+  LatLng build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.homePosition, next);
+      }
+    });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.homePosition)) {
+      return LatLng.fromJson(
+        ref.read(settingsProvider.notifier).getMap(SettingsKey.homePosition)!,
+      );
+    }
+
+    return const LatLng(0, 0);
+  }
 
   void update(LatLng position) => Future(() => state = position);
 }
@@ -49,7 +68,22 @@ class HomePosition extends _$HomePosition {
 @Riverpod(keepAlive: true)
 class CenterMapOnVehicle extends _$CenterMapOnVehicle {
   @override
-  bool build() => true;
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && next) {
+        ref.read(mainMapControllerProvider).rotate(0);
+      }
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.centerMapOnVehicle, next);
+      }
+    });
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.centerMapOnVehicle) ??
+        true;
+  }
 
   void update(bool? value) {
     Future(() => state = value ?? state);
@@ -104,9 +138,74 @@ class ZoomTimerController extends _$ZoomTimerController {
 
 /// How much the map center should be offset from the vehicle.
 @Riverpod(keepAlive: true)
-class MapOffset extends _$MapOffset {
+MapCenterOffset mapOffset(MapOffsetRef ref) {
+  return switch (ref.watch(mapUse3DPerspectiveProvider)) {
+    true => ref.watch(mapOffset3DProvider),
+    false => ref.watch(mapOffset2DProvider),
+  };
+}
+
+/// How much the map center should be offset from the vehicle when using
+/// 2D view.
+@Riverpod(keepAlive: true)
+class MapOffset2D extends _$MapOffset2D {
   @override
-  MapCenterOffset build() => const MapCenterOffset();
+  MapCenterOffset build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapCenterOffset2D, state);
+      }
+    });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.mapCenterOffset2D)) {
+      return MapCenterOffset.fromJson(
+        ref
+            .read(settingsProvider.notifier)
+            .getMap(SettingsKey.mapCenterOffset2D)!,
+      );
+    }
+
+    return const MapCenterOffset();
+  }
+
+  void update({double? x, double? y}) => Future(
+        () => state = state.copyWith(
+          x: x ?? state.x,
+          y: y ?? state.y,
+        ),
+      );
+}
+
+/// How much the map center should be offset from the vehicle when using
+/// 3D view.
+@Riverpod(keepAlive: true)
+class MapOffset3D extends _$MapOffset3D {
+  @override
+  MapCenterOffset build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapCenterOffset3D, state);
+      }
+    });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.mapCenterOffset3D)) {
+      return MapCenterOffset.fromJson(
+        ref
+            .read(settingsProvider.notifier)
+            .getMap(SettingsKey.mapCenterOffset3D)!,
+      );
+    }
+
+    return const MapCenterOffset();
+  }
 
   void update({double? x, double? y}) => Future(
         () => state = state.copyWith(
@@ -152,8 +251,16 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
       if (next) {
         ref.read(mainMapControllerProvider).rotate(0);
       }
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.alwaysPointNorth, next);
+      }
     });
-    return false;
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.alwaysPointNorth) ??
+        false;
   }
 
   void toggle() => Future(() => state = !state);
@@ -166,7 +273,20 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
 @Riverpod(keepAlive: true)
 class MapUse3DPerspective extends _$MapUse3DPerspective {
   @override
-  bool build() => false;
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.enableMap3D, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.enableMap3D) ??
+        false;
+  }
 
   void update({required bool value}) => Future(() => state = value);
   void toggle() => Future(() => state = !state);
@@ -177,7 +297,20 @@ class MapUse3DPerspective extends _$MapUse3DPerspective {
 @Riverpod(keepAlive: true)
 class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
   @override
-  double build() => 40 * pi / 180;
+  double build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapPerspectiveAngle, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getDouble(SettingsKey.mapPerspectiveAngle) ??
+        40 * pi / 180;
+  }
 
   void update(double value) => Future(() => state = value);
 }

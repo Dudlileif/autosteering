@@ -5,6 +5,8 @@ import 'dart:isolate';
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/settings/models/settings_key.dart';
+import 'package:agopengps_flutter/src/features/settings/providers/settings_providers.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:async/async.dart';
@@ -46,6 +48,10 @@ class SimVehicleInput extends _$SimVehicleInput {
 @riverpod
 void simVehicleDriving(SimVehicleDrivingRef ref) {
   if (ref.watch(mapReadyProvider)) {
+    ref
+      ..watch(simVehicleAutoCenterSteeringProvider)
+      ..watch(simVehicleAutoSlowDownProvider);
+
     final vehicle = switch (ref.watch(simVehicleInputProvider)) {
       SimPlatform.web => ref.watch(simVehicleWebStreamProvider).when(
             data: (data) => data,
@@ -155,7 +161,13 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
 
   final sendPort = await events.next as SendPort;
   ref.read(_simVehicleIsolatePortProvider.notifier).update(sendPort);
-  sendPort.send(ref.read(mainVehicleProvider));
+  sendPort
+    ..send(ref.read(mainVehicleProvider))
+    ..send((autoSlowDown: ref.read(simVehicleAutoSlowDownProvider)))
+    ..send(
+      (autoCenterSteering: ref.read(simVehicleAutoCenterSteeringProvider)),
+    );
+
   // Exit isolate when provider is disposed.
   ref.onDispose(() {
     sendPort.send(null);
@@ -193,7 +205,23 @@ class SimVehicleAutoCenterSteering extends _$SimVehicleAutoCenterSteering {
       ref
           .read(simVehicleInputProvider.notifier)
           .send((autoCenterSteering: next));
+
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.simAutoCenterSteering, next);
+      }
     });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.simAutoCenterSteering)) {
+      return ref
+              .read(settingsProvider.notifier)
+              .getBool(SettingsKey.simAutoCenterSteering) ??
+          false;
+    }
+
     return false;
   }
 
@@ -210,7 +238,22 @@ class SimVehicleAutoSlowDown extends _$SimVehicleAutoSlowDown {
   bool build() {
     ref.listenSelf((previous, next) {
       ref.read(simVehicleInputProvider.notifier).send((autoSlowDown: next));
+
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.simAutoSlowDown, next);
+      }
     });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.simAutoSlowDown)) {
+      return ref
+              .read(settingsProvider.notifier)
+              .getBool(SettingsKey.simAutoSlowDown) ??
+          false;
+    }
     return false;
   }
 

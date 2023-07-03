@@ -23,7 +23,7 @@ class CountryLayerSelector extends ConsumerWidget {
         return const SizedBox.shrink();
       }
 
-      final selectedLayers = ref.watch(selectedCountryLayersProvider);
+      final selectedLayers = ref.watch(enabledCountryLayersProvider);
 
       final listView = ReorderableListView.builder(
         buildDefaultDragHandles: false,
@@ -82,9 +82,15 @@ class _CountryLayerMenuItemButton extends StatelessWidget {
             builder: (context, ref, child) => CheckboxListTile(
               controlAffinity: ListTileControlAffinity.leading,
               value: enabled,
-              onChanged: (value) => ref
-                  .read(selectedCountryLayersProvider.notifier)
-                  .toggle(layer),
+              onChanged: (value) => value != null
+                  ? value
+                      ? ref
+                          .read(enabledCountryLayersProvider.notifier)
+                          .add(layer)
+                      : ref
+                          .read(enabledCountryLayersProvider.notifier)
+                          .remove(layer)
+                  : null,
               title: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

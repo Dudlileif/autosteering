@@ -12,12 +12,14 @@ class MapOffsetMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
+    final using3D = ref.watch(mapUse3DPerspectiveProvider);
+
     final offset = ref.watch(mapOffsetProvider);
 
     return MenuButtonWithChildren(
       icon: Icons.zoom_out_map_sharp,
       iconRotation: 45,
-      text: 'Center offset',
+      text: using3D ? 'Center offset 3D' : 'Center offset 2D',
       menuChildren: [
         Column(
           mainAxisSize: MainAxisSize.min,
@@ -28,8 +30,10 @@ class MapOffsetMenu extends ConsumerWidget {
             ),
             Slider(
               value: offset.x,
-              onChanged: (value) =>
-                  ref.read(mapOffsetProvider.notifier).update(x: value),
+              onChanged: (value) => switch (using3D) {
+                true => ref.read(mapOffset3DProvider.notifier).update(x: value),
+                false => ref.read(mapOffset2DProvider.notifier).update(x: value)
+              },
               min: -40,
               max: 40,
               divisions: 80,
@@ -45,8 +49,10 @@ class MapOffsetMenu extends ConsumerWidget {
             ),
             Slider(
               value: offset.y,
-              onChanged: (value) =>
-                  ref.read(mapOffsetProvider.notifier).update(y: value),
+              onChanged: (value) => switch (using3D) {
+                true => ref.read(mapOffset3DProvider.notifier).update(y: value),
+                false => ref.read(mapOffset2DProvider.notifier).update(y: value)
+              },
               min: -40,
               max: 40,
               divisions: 80,

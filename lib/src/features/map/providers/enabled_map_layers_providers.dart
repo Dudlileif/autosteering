@@ -2,6 +2,7 @@ import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,7 +12,20 @@ part 'enabled_map_layers_providers.g.dart';
 @Riverpod(keepAlive: true)
 class ShowOSMLayer extends _$ShowOSMLayer {
   @override
-  bool build() => true;
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.showOpenStreetMap, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.showOpenStreetMap) ??
+        true;
+  }
 
   void toggle() => Future(() => state = !state);
 
@@ -21,14 +35,14 @@ class ShowOSMLayer extends _$ShowOSMLayer {
 /// Whether the selected country layers should be shown.
 @riverpod
 bool showCountryLayers(ShowCountryLayersRef ref) {
-  final enabled = ref.watch(selectedCountryLayersProvider).isNotEmpty;
+  final enabled = ref.watch(enabledCountryLayersProvider).isNotEmpty;
   return enabled;
 }
 
 /// Whether the selected Sentinel layers should be shown.
 @riverpod
 bool showSentinelLayers(ShowSentinelLayersRef ref) {
-  final enabled = ref.watch(selectedSentinelLayersProvider).isNotEmpty;
+  final enabled = ref.watch(enabledSentinelLayersProvider).isNotEmpty;
   return enabled;
 }
 

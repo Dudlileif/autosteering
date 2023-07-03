@@ -6,16 +6,8 @@ import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 /// The main scaffold widget surrounding the main content of the application.
-class MainScaffold extends StatefulWidget {
+class MainScaffold extends StatelessWidget {
   const MainScaffold({super.key});
-
-  @override
-  State<MainScaffold> createState() => _MainScaffoldState();
-}
-
-class _MainScaffoldState extends State<MainScaffold> {
-  // Whether to show the main map widget as the body.
-  bool showMap = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,17 +41,7 @@ class _MainScaffoldState extends State<MainScaffold> {
           ),
         ],
       ),
-      body: showMap
-          ? const MapAndGaugeStackView()
-          : Center(
-              child: ElevatedButton.icon(
-                onPressed: () => setState(() {
-                  showMap = true;
-                }),
-                icon: const Icon(Icons.map),
-                label: const Text('Show map'),
-              ),
-            ),
+      body: const MapAndGaugeStackView(),
     );
   }
 }

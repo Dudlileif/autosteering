@@ -17,7 +17,7 @@ class SentinelLayerSelector extends ConsumerWidget {
         return const SizedBox.shrink();
       }
 
-      final selectedLayers = ref.watch(selectedSentinelLayersProvider);
+      final selectedLayers = ref.watch(enabledSentinelLayersProvider);
 
       final listView = ReorderableListView.builder(
         buildDefaultDragHandles: false,
@@ -78,7 +78,7 @@ class _SentinelLayerMenuItemButton extends StatelessWidget {
                 controlAffinity: ListTileControlAffinity.leading,
                 value: enabled,
                 onChanged: (value) => ref
-                    .read(selectedSentinelLayersProvider.notifier)
+                    .read(enabledSentinelLayersProvider.notifier)
                     .toggle(layer),
                 title: Column(
                   mainAxisSize: MainAxisSize.min,
