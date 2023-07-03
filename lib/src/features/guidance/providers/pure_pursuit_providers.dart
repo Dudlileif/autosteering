@@ -1,5 +1,5 @@
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/simulator/providers/providers.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pure_pursuit_providers.g.dart';
@@ -7,20 +7,26 @@ part 'pure_pursuit_providers.g.dart';
 /// A provider for creating and holding a [PurePursuit] model for the
 /// previously recorded waypoints.
 @Riverpod(keepAlive: true)
-PurePursuit? purePursuit(PurePursuitRef ref) {
-  final wayPoints = ref.watch(finishedPathRecordingListProvider);
-  if (wayPoints != null) {
-    return PurePursuit(
-      wayPoints: wayPoints,
-      interpolationDistance: ref.watch(lookAheadDistanceProvider),
-      loopMode: ref.watch(purePursuitLoopProvider),
-    );
+class ConfiguredPurePursuit extends _$ConfiguredPurePursuit {
+  @override
+  PurePursuit? build() {
+    final wayPoints = ref.watch(finishedPathRecordingListProvider);
+    if (wayPoints != null) {
+      return PurePursuit(
+        wayPoints: wayPoints,
+        interpolationDistance: ref.watch(lookAheadDistanceProvider),
+        loopMode: ref.watch(purePursuitLoopProvider),
+      );
+    }
+    return null;
   }
-  return null;
+
+  void sendToSim() =>
+      ref.read(simVehicleInputProvider.notifier).send((purePursuit: state));
 }
 
-/// A provider for whether or not the vehicle should follow the [purePursuit]
-/// tracking model.
+/// A provider for whether or not the vehicle should follow the
+/// [ConfiguredPurePursuit] tracking model.
 @Riverpod(keepAlive: true)
 class EnablePurePursuit extends _$EnablePurePursuit {
   @override
@@ -28,11 +34,10 @@ class EnablePurePursuit extends _$EnablePurePursuit {
     ref.listenSelf((previous, next) {
       ref
           .read(simVehicleInputProvider.notifier)
-          .send((purePursuit: ref.watch(purePursuitProvider)));
-
-      ref
-          .read(simVehicleInputProvider.notifier)
           .send((enablePurePursuit: next));
+      if (next) {
+        ref.read(configuredPurePursuitProvider.notifier).sendToSim();
+      }
     });
     return false;
   }
@@ -42,7 +47,8 @@ class EnablePurePursuit extends _$EnablePurePursuit {
   void toggle() => Future(() => state != state);
 }
 
-/// A provider for which steering mode the [PurePursuit] model should use.
+/// A provider for which steering mode the [ConfiguredPurePursuit] model should
+/// use.
 @Riverpod(keepAlive: true)
 class PursuitMode extends _$PursuitMode {
   @override
@@ -50,13 +56,13 @@ class PursuitMode extends _$PursuitMode {
     ref.listenSelf((previous, next) {
       ref.read(simVehicleInputProvider.notifier).send(state);
     });
-    return PurePursuitMode.pid;
+    return PurePursuitMode.lookAhead;
   }
 
   void update(PurePursuitMode value) => Future(() => state = value);
 }
 
-/// A provider for which looping mode the [purePursuit] should follow.
+/// A provider for which looping mode the [ConfiguredPurePursuit] should follow.
 @Riverpod(keepAlive: true)
 class PurePursuitLoop extends _$PurePursuitLoop {
   @override
@@ -70,7 +76,7 @@ class PurePursuitLoop extends _$PurePursuitLoop {
   void update(PurePursuitLoopMode value) => Future(() => state = value);
 }
 
-/// A provider for the look ahead distance of the [PurePursuit] model.
+/// A provider for the look ahead distance of the [ConfiguredPurePursuit] model.
 @Riverpod(keepAlive: true)
 class LookAheadDistance extends _$LookAheadDistance {
   @override
@@ -86,8 +92,8 @@ class LookAheadDistance extends _$LookAheadDistance {
   void update(double value) => Future(() => state = value);
 }
 
-/// A provider for the activated [PurePursuit] model, typically recieved and
-/// updated from the simulator.
+/// A provider for the activated [ConfiguredPurePursuit] model, typically
+/// recieved and updated from the simulator.
 @riverpod
 class DisplayPurePursuit extends _$DisplayPurePursuit {
   @override
