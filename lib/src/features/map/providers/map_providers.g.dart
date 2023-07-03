@@ -96,7 +96,7 @@ final centerMapOnVehicleProvider =
 
 typedef _$CenterMapOnVehicle = Notifier<bool>;
 String _$zoomTimerControllerHash() =>
-    r'033d1227ff87f645fe562bd349cba49d854ffb3d';
+    r'd9243c1dd58f6f89846247a2c1ad48684a5bf5eb';
 
 /// A provider for controlling the zoom when a gamepad button is held down.
 ///

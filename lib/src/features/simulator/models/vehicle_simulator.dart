@@ -190,10 +190,22 @@ class _VehicleSimulatorState {
     }
     // Update the vehicle with new inputs.
     else if (message is VehicleInput && vehicle != null) {
+      final velocityFromDelta = message.velocityDelta != null
+          ? (vehicle!.velocity +
+                  (autoSlowDown ? 1.2 : 1) * message.velocityDelta!)
+              .clamp(-12.0, 12.0)
+          : null;
+
+      final steeringAngleFromDelta = message.steeringAngleDelta != null
+          ? (vehicle!.steeringAngleInput +
+                  (autoCenterSteering ? 2 : 1) * message.steeringAngleDelta!)
+              .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax)
+          : null;
+
       vehicle = vehicle?.copyWith(
-        position: message.position ?? vehicle!.position,
-        velocity: message.velocity ?? vehicle!.velocity,
-        steeringAngleInput: message.steeringAngle ?? vehicle!.steeringAngle,
+        position: message.position,
+        velocity: message.velocity ?? velocityFromDelta,
+        steeringAngleInput: message.steeringAngle ?? steeringAngleFromDelta,
       );
     }
     // Set the pure pursuit model.

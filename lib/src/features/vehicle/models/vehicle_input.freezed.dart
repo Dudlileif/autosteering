@@ -26,8 +26,14 @@ mixin _$VehicleInput {
   /// The velocity of the vehicle.
   double? get velocity => throw _privateConstructorUsedError;
 
+  /// Change in velocity from current velocity.
+  double? get velocityDelta => throw _privateConstructorUsedError;
+
   /// The steering angle of the vehicle.
   double? get steeringAngle => throw _privateConstructorUsedError;
+
+  /// The change of steering angle of the vehicle from the current angle.
+  double? get steeringAngleDelta => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +47,12 @@ abstract class $VehicleInputCopyWith<$Res> {
           VehicleInput value, $Res Function(VehicleInput) then) =
       _$VehicleInputCopyWithImpl<$Res, VehicleInput>;
   @useResult
-  $Res call({LatLng? position, double? velocity, double? steeringAngle});
+  $Res call(
+      {LatLng? position,
+      double? velocity,
+      double? velocityDelta,
+      double? steeringAngle,
+      double? steeringAngleDelta});
 }
 
 /// @nodoc
@@ -59,7 +70,9 @@ class _$VehicleInputCopyWithImpl<$Res, $Val extends VehicleInput>
   $Res call({
     Object? position = freezed,
     Object? velocity = freezed,
+    Object? velocityDelta = freezed,
     Object? steeringAngle = freezed,
+    Object? steeringAngleDelta = freezed,
   }) {
     return _then(_value.copyWith(
       position: freezed == position
@@ -70,9 +83,17 @@ class _$VehicleInputCopyWithImpl<$Res, $Val extends VehicleInput>
           ? _value.velocity
           : velocity // ignore: cast_nullable_to_non_nullable
               as double?,
+      velocityDelta: freezed == velocityDelta
+          ? _value.velocityDelta
+          : velocityDelta // ignore: cast_nullable_to_non_nullable
+              as double?,
       steeringAngle: freezed == steeringAngle
           ? _value.steeringAngle
           : steeringAngle // ignore: cast_nullable_to_non_nullable
+              as double?,
+      steeringAngleDelta: freezed == steeringAngleDelta
+          ? _value.steeringAngleDelta
+          : steeringAngleDelta // ignore: cast_nullable_to_non_nullable
               as double?,
     ) as $Val);
   }
@@ -86,7 +107,12 @@ abstract class _$$_VehicleInputCopyWith<$Res>
       __$$_VehicleInputCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({LatLng? position, double? velocity, double? steeringAngle});
+  $Res call(
+      {LatLng? position,
+      double? velocity,
+      double? velocityDelta,
+      double? steeringAngle,
+      double? steeringAngleDelta});
 }
 
 /// @nodoc
@@ -102,7 +128,9 @@ class __$$_VehicleInputCopyWithImpl<$Res>
   $Res call({
     Object? position = freezed,
     Object? velocity = freezed,
+    Object? velocityDelta = freezed,
     Object? steeringAngle = freezed,
+    Object? steeringAngleDelta = freezed,
   }) {
     return _then(_$_VehicleInput(
       position: freezed == position
@@ -113,9 +141,17 @@ class __$$_VehicleInputCopyWithImpl<$Res>
           ? _value.velocity
           : velocity // ignore: cast_nullable_to_non_nullable
               as double?,
+      velocityDelta: freezed == velocityDelta
+          ? _value.velocityDelta
+          : velocityDelta // ignore: cast_nullable_to_non_nullable
+              as double?,
       steeringAngle: freezed == steeringAngle
           ? _value.steeringAngle
           : steeringAngle // ignore: cast_nullable_to_non_nullable
+              as double?,
+      steeringAngleDelta: freezed == steeringAngleDelta
+          ? _value.steeringAngleDelta
+          : steeringAngleDelta // ignore: cast_nullable_to_non_nullable
               as double?,
     ));
   }
@@ -124,7 +160,12 @@ class __$$_VehicleInputCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_VehicleInput implements _VehicleInput {
-  const _$_VehicleInput({this.position, this.velocity, this.steeringAngle});
+  const _$_VehicleInput(
+      {this.position,
+      this.velocity,
+      this.velocityDelta,
+      this.steeringAngle,
+      this.steeringAngleDelta});
 
   factory _$_VehicleInput.fromJson(Map<String, dynamic> json) =>
       _$$_VehicleInputFromJson(json);
@@ -137,13 +178,21 @@ class _$_VehicleInput implements _VehicleInput {
   @override
   final double? velocity;
 
+  /// Change in velocity from current velocity.
+  @override
+  final double? velocityDelta;
+
   /// The steering angle of the vehicle.
   @override
   final double? steeringAngle;
 
+  /// The change of steering angle of the vehicle from the current angle.
+  @override
+  final double? steeringAngleDelta;
+
   @override
   String toString() {
-    return 'VehicleInput(position: $position, velocity: $velocity, steeringAngle: $steeringAngle)';
+    return 'VehicleInput(position: $position, velocity: $velocity, velocityDelta: $velocityDelta, steeringAngle: $steeringAngle, steeringAngleDelta: $steeringAngleDelta)';
   }
 
   @override
@@ -155,14 +204,18 @@ class _$_VehicleInput implements _VehicleInput {
                 other.position == position) &&
             (identical(other.velocity, velocity) ||
                 other.velocity == velocity) &&
+            (identical(other.velocityDelta, velocityDelta) ||
+                other.velocityDelta == velocityDelta) &&
             (identical(other.steeringAngle, steeringAngle) ||
-                other.steeringAngle == steeringAngle));
+                other.steeringAngle == steeringAngle) &&
+            (identical(other.steeringAngleDelta, steeringAngleDelta) ||
+                other.steeringAngleDelta == steeringAngleDelta));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, position, velocity, steeringAngle);
+  int get hashCode => Object.hash(runtimeType, position, velocity,
+      velocityDelta, steeringAngle, steeringAngleDelta);
 
   @JsonKey(ignore: true)
   @override
@@ -182,7 +235,9 @@ abstract class _VehicleInput implements VehicleInput {
   const factory _VehicleInput(
       {final LatLng? position,
       final double? velocity,
-      final double? steeringAngle}) = _$_VehicleInput;
+      final double? velocityDelta,
+      final double? steeringAngle,
+      final double? steeringAngleDelta}) = _$_VehicleInput;
 
   factory _VehicleInput.fromJson(Map<String, dynamic> json) =
       _$_VehicleInput.fromJson;
@@ -197,8 +252,16 @@ abstract class _VehicleInput implements VehicleInput {
   double? get velocity;
   @override
 
+  /// Change in velocity from current velocity.
+  double? get velocityDelta;
+  @override
+
   /// The steering angle of the vehicle.
   double? get steeringAngle;
+  @override
+
+  /// The change of steering angle of the vehicle from the current angle.
+  double? get steeringAngleDelta;
   @override
   @JsonKey(ignore: true)
   _$$_VehicleInputCopyWith<_$_VehicleInput> get copyWith =>

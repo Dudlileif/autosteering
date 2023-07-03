@@ -207,3 +207,47 @@ class SimVehicleAutoSlowDown extends _$SimVehicleAutoSlowDown {
 
   void toggle() => Future(() => state != state);
 }
+
+@Riverpod(keepAlive: true)
+class SimVehicleAccelerator extends _$SimVehicleAccelerator {
+  @override
+  Timer? build() => null;
+
+  void cancel() => Future(() => state?.cancel());
+
+  void update(VehicleInput input) {
+    cancel();
+    Future(
+      () =>
+          state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
+        ref.read(simVehicleInputProvider.notifier).send(input);
+      }),
+    );
+  }
+
+  void forward() => update(const VehicleInput(velocityDelta: 0.1));
+
+  void reverse() => update(const VehicleInput(velocityDelta: -0.1));
+}
+
+@Riverpod(keepAlive: true)
+class SimVehicleSteering extends _$SimVehicleSteering {
+  @override
+  Timer? build() => null;
+
+  void cancel() => Future(() => state?.cancel());
+
+  void update(VehicleInput input) {
+    cancel();
+    Future(
+      () =>
+          state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
+        ref.read(simVehicleInputProvider.notifier).send(input);
+      }),
+    );
+  }
+
+  void right() => update(const VehicleInput(steeringAngleDelta: 0.5));
+
+  void left() => update(const VehicleInput(steeringAngleDelta: -0.5));
+}

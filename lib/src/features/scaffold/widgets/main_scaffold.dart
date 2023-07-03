@@ -22,16 +22,31 @@ class _MainScaffoldState extends State<MainScaffold> {
     return Scaffold(
       appBar: AppBar(
         actions: const [
-          MenuBar(
-            children: [
-              MapMenu(),
-              GuidanceMenu(),
-              DebugMenu(),
-              SimMenu(),
-            ],
+          Focus(
+            canRequestFocus: false,
+            descendantsAreFocusable: false,
+            descendantsAreTraversable: false,
+            child: MenuBar(
+              children: [
+                MapMenu(),
+                GuidanceMenu(),
+                DebugMenu(),
+                SimMenu(),
+              ],
+            ),
           ),
-          ManufacturerThemeSelector(),
-          ThemeModeButton(),
+          Focus(
+            canRequestFocus: false,
+            descendantsAreFocusable: false,
+            descendantsAreTraversable: false,
+            child: ManufacturerThemeSelector(),
+          ),
+          Focus(
+            canRequestFocus: false,
+            descendantsAreFocusable: false,
+            descendantsAreTraversable: false,
+            child: ThemeModeButton(),
+          ),
         ],
       ),
       body: showMap

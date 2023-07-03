@@ -72,16 +72,14 @@ void handlePovInput(GamepadInput event, ProviderRef<void> ref) {
   if (event.povInput == GamepadPovInput.released) {
     ref.read(zoomTimerControllerProvider.notifier).cancel();
   } else if (event.povInput == GamepadPovInput.up) {
-    ref.read(zoomTimerControllerProvider.notifier).update(Zoom.zoomIn);
+    ref.read(zoomTimerControllerProvider.notifier).zoomIn();
   } else if (event.povInput == GamepadPovInput.down) {
-    ref.read(zoomTimerControllerProvider.notifier).update(Zoom.zoomOut);
+    ref.read(zoomTimerControllerProvider.notifier).zoomOut();
   }
 }
 
 /// How to handle analog inputs, i.e. triggers and joysticks.
 void handleAnalogInput(GamepadInput event, ProviderRef<void> ref) {
-  final vehicle = ref.watch(mainVehicleProvider);
-
   // Forward/backward
   if (event.analogInput == GamepadAnalogInput.rightTrigger) {
     final velocity = Tween<double>(begin: 0, end: 12)
@@ -99,9 +97,12 @@ void handleAnalogInput(GamepadInput event, ProviderRef<void> ref) {
   }
   // Steering
   else if (event.analogInput == GamepadAnalogInput.leftStickX) {
+    final maxAngle = ref.watch(
+        mainVehicleProvider.select((vehicle) => vehicle.steeringAngleMax));
+
     final angle = Tween<double>(
-      begin: -vehicle.steeringAngleMax,
-      end: vehicle.steeringAngleMax,
+      begin: -maxAngle,
+      end: maxAngle,
     ).transform(
       event.joystickValueDeadZoneAdjusted,
     );

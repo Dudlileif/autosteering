@@ -171,4 +171,38 @@ final simVehicleAutoSlowDownProvider =
 );
 
 typedef _$SimVehicleAutoSlowDown = Notifier<bool>;
+String _$simVehicleAcceleratorHash() =>
+    r'a666a1fdb3a0d95488156f0aa2a2d59170086ee1';
+
+/// See also [SimVehicleAccelerator].
+@ProviderFor(SimVehicleAccelerator)
+final simVehicleAcceleratorProvider =
+    NotifierProvider<SimVehicleAccelerator, Timer?>.internal(
+  SimVehicleAccelerator.new,
+  name: r'simVehicleAcceleratorProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simVehicleAcceleratorHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimVehicleAccelerator = Notifier<Timer?>;
+String _$simVehicleSteeringHash() =>
+    r'd3d01f8ea6a3673138a3a2d572835aca4c08aca7';
+
+/// See also [SimVehicleSteering].
+@ProviderFor(SimVehicleSteering)
+final simVehicleSteeringProvider =
+    NotifierProvider<SimVehicleSteering, Timer?>.internal(
+  SimVehicleSteering.new,
+  name: r'simVehicleSteeringProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simVehicleSteeringHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimVehicleSteering = Notifier<Timer?>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
