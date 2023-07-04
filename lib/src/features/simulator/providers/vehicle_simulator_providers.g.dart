@@ -6,7 +6,7 @@ part of 'vehicle_simulator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$simVehicleDrivingHash() => r'a2e0c62945666fc6f4f036f0a86bc6957e491c50';
+String _$simVehicleDrivingHash() => r'6c43edeae3629e34765ed0d8d79db1d929fda56d';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -48,7 +48,7 @@ final simVehicleWebStreamProvider =
 
 typedef SimVehicleWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simVehicleIsolateStreamHash() =>
-    r'a980dc794c278e4c4e62e3464bc126b17c096d4b';
+    r'290673a682d214a71626adda111edc7408984722';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platform.
@@ -70,7 +70,7 @@ final simVehicleIsolateStreamProvider =
 );
 
 typedef SimVehicleIsolateStreamRef = AutoDisposeStreamProviderRef<Vehicle>;
-String _$simVehicleInputHash() => r'6d3e54cc2067bd06966437f73a29c17e318ccc68';
+String _$simVehicleInputHash() => r'f5f2f93520ee40486a0f9d8a66cf0e58d535a1d3';
 
 /// A provider used to send vehicle input data to the simulation thread/worker.
 ///
@@ -132,7 +132,7 @@ final _simVehicleWebInputProvider =
 
 typedef _$SimVehicleWebInput = Notifier<StreamController<dynamic>>;
 String _$simVehicleAutoCenterSteeringHash() =>
-    r'f6a0bbb7cc408cbff496d8c52ada0e765ef37082';
+    r'5e57a522d19fb72f9f546c47301c42898bff668c';
 
 /// A provider for whether the steering automatically should recenter when
 /// no input is provided.
@@ -152,7 +152,7 @@ final simVehicleAutoCenterSteeringProvider =
 
 typedef _$SimVehicleAutoCenterSteering = Notifier<bool>;
 String _$simVehicleAutoSlowDownHash() =>
-    r'80968a9a31e611417512c3947ba07a5aad1f0b93';
+    r'2dd9040f4c0dee54740af47d4bd063197dcc5f13';
 
 /// A provider for whether the vehicle should slow down when no input is
 /// provided.
@@ -171,4 +171,44 @@ final simVehicleAutoSlowDownProvider =
 );
 
 typedef _$SimVehicleAutoSlowDown = Notifier<bool>;
+String _$simVehicleAcceleratorHash() =>
+    r'a666a1fdb3a0d95488156f0aa2a2d59170086ee1';
+
+/// A provider for accelerating the vehicle in the simulator, typically
+/// used by hotkeys/keyboard.
+///
+/// Copied from [SimVehicleAccelerator].
+@ProviderFor(SimVehicleAccelerator)
+final simVehicleAcceleratorProvider =
+    NotifierProvider<SimVehicleAccelerator, Timer?>.internal(
+  SimVehicleAccelerator.new,
+  name: r'simVehicleAcceleratorProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simVehicleAcceleratorHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimVehicleAccelerator = Notifier<Timer?>;
+String _$simVehicleSteeringHash() =>
+    r'd3d01f8ea6a3673138a3a2d572835aca4c08aca7';
+
+/// A provider for steering the vehicle in the simulator, typically
+/// used by hotkeys/keyboard.
+///
+/// Copied from [SimVehicleSteering].
+@ProviderFor(SimVehicleSteering)
+final simVehicleSteeringProvider =
+    NotifierProvider<SimVehicleSteering, Timer?>.internal(
+  SimVehicleSteering.new,
+  name: r'simVehicleSteeringProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simVehicleSteeringHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimVehicleSteering = Notifier<Timer?>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

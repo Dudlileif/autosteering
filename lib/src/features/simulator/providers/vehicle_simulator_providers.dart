@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:isolate';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:async/async.dart';
-import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,7 +27,7 @@ enum SimPlatform {
 @Riverpod(keepAlive: true)
 class SimVehicleInput extends _$SimVehicleInput {
   @override
-  SimPlatform build() => switch (kIsWeb) {
+  SimPlatform build() => switch (Device.isWeb) {
         true => SimPlatform.web,
         false => SimPlatform.native,
       };
@@ -46,6 +47,10 @@ class SimVehicleInput extends _$SimVehicleInput {
 @riverpod
 void simVehicleDriving(SimVehicleDrivingRef ref) {
   if (ref.watch(mapReadyProvider)) {
+    ref
+      ..watch(simVehicleAutoCenterSteeringProvider)
+      ..watch(simVehicleAutoSlowDownProvider);
+
     final vehicle = switch (ref.watch(simVehicleInputProvider)) {
       SimPlatform.web => ref.watch(simVehicleWebStreamProvider).when(
             data: (data) => data,
@@ -65,12 +70,23 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
     } else {
       ref.read(mainVehicleProvider.notifier).update(vehicle);
 
-      if (vehicle.position != ref.watch(mainMapControllerProvider).center &&
+      if (vehicle.position !=
+              ref.watch(
+                mainMapControllerProvider
+                    .select((controller) => controller.center),
+              ) &&
           ref.watch(centerMapOnVehicleProvider)) {
         ref.read(mainMapControllerProvider).moveAndRotate(
               ref.watch(offsetVehiclePositionProvider),
-              ref.watch(mainMapControllerProvider).zoom,
-              -normalizeBearing(ref.watch(mainVehicleProvider).heading),
+              ref.watch(
+                mainMapControllerProvider
+                    .select((controller) => controller.zoom),
+              ),
+              -normalizeBearing(
+                ref.watch(
+                  mainVehicleProvider.select((vehicle) => vehicle.heading),
+                ),
+              ),
             );
       }
     }
@@ -131,10 +147,12 @@ Stream<Vehicle?> simVehicleWebStream(
 /// update the vehicle gauge providers.
 @riverpod
 Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
-  final recievePort = ReceivePort();
+  final recievePort = ReceivePort('Recieve from sim port');
+
   await Isolate.spawn(
     VehicleSimulator.isolateWorker,
     recievePort.sendPort,
+    debugName: 'VehicleSimulator',
   );
   log('Sim vehicle isolate spawned');
 
@@ -142,7 +160,13 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
 
   final sendPort = await events.next as SendPort;
   ref.read(_simVehicleIsolatePortProvider.notifier).update(sendPort);
-  sendPort.send(ref.read(mainVehicleProvider));
+  sendPort
+    ..send(ref.read(mainVehicleProvider))
+    ..send((autoSlowDown: ref.read(simVehicleAutoSlowDownProvider)))
+    ..send(
+      (autoCenterSteering: ref.read(simVehicleAutoCenterSteeringProvider)),
+    );
+
   // Exit isolate when provider is disposed.
   ref.onDispose(() {
     sendPort.send(null);
@@ -180,7 +204,23 @@ class SimVehicleAutoCenterSteering extends _$SimVehicleAutoCenterSteering {
       ref
           .read(simVehicleInputProvider.notifier)
           .send((autoCenterSteering: next));
+
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.simAutoCenterSteering, next);
+      }
     });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.simAutoCenterSteering)) {
+      return ref
+              .read(settingsProvider.notifier)
+              .getBool(SettingsKey.simAutoCenterSteering) ??
+          false;
+    }
+
     return false;
   }
 
@@ -197,11 +237,74 @@ class SimVehicleAutoSlowDown extends _$SimVehicleAutoSlowDown {
   bool build() {
     ref.listenSelf((previous, next) {
       ref.read(simVehicleInputProvider.notifier).send((autoSlowDown: next));
+
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.simAutoSlowDown, next);
+      }
     });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.simAutoSlowDown)) {
+      return ref
+              .read(settingsProvider.notifier)
+              .getBool(SettingsKey.simAutoSlowDown) ??
+          false;
+    }
     return false;
   }
 
   void update({required bool value}) => Future(() => state = value);
 
   void toggle() => Future(() => state != state);
+}
+
+/// A provider for accelerating the vehicle in the simulator, typically
+/// used by hotkeys/keyboard.
+@Riverpod(keepAlive: true)
+class SimVehicleAccelerator extends _$SimVehicleAccelerator {
+  @override
+  Timer? build() => null;
+
+  void cancel() => Future(() => state?.cancel());
+
+  void update(VehicleInput input) {
+    cancel();
+    Future(
+      () =>
+          state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
+        ref.read(simVehicleInputProvider.notifier).send(input);
+      }),
+    );
+  }
+
+  void forward() => update(const VehicleInput(velocityDelta: 0.1));
+
+  void reverse() => update(const VehicleInput(velocityDelta: -0.1));
+}
+
+/// A provider for steering the vehicle in the simulator, typically
+/// used by hotkeys/keyboard.
+@Riverpod(keepAlive: true)
+class SimVehicleSteering extends _$SimVehicleSteering {
+  @override
+  Timer? build() => null;
+
+  void cancel() => Future(() => state?.cancel());
+
+  void update(VehicleInput input) {
+    cancel();
+    Future(
+      () =>
+          state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
+        ref.read(simVehicleInputProvider.notifier).send(input);
+      }),
+    );
+  }
+
+  void right() => update(const VehicleInput(steeringAngleDelta: 0.5));
+
+  void left() => update(const VehicleInput(steeringAngleDelta: -0.5));
 }

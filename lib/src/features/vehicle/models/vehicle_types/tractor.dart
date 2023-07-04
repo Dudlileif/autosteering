@@ -1,13 +1,12 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
-/// Geo-calculator used to calculate offsets.
-const _distance = Distance(roundResult: false);
-
 /// A conventional tractor with front wheel steering and a solid rear axle.
 class Tractor extends AxleSteeredVehicle {
-  const Tractor({
+  Tractor({
     required super.wheelBase,
     required super.solidAxleDistance,
     required super.position,
@@ -15,6 +14,9 @@ class Tractor extends AxleSteeredVehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
+    super.solidAxleToFrontHitchDistance = 3.25,
+    super.solidAxleToRearHitchDistance = 0.9,
+    super.solidAxleToRearTowbarDistance = 0.65,
     super.ackermannSteeringRatio,
     super.steeringAxleWheelDiameter,
     super.solidAxleWheelDiameter,
@@ -28,20 +30,22 @@ class Tractor extends AxleSteeredVehicle {
     super.length = 4,
     super.width = 2.5,
     super.simulated = false,
+    super.hitchFrontFixedChild,
+    super.hitchRearFixedChild,
+    super.hitchRearTowbarChild,
+    super.name,
   });
 
   /// The position of the center of the rear axle.
   @override
-  LatLng get solidAxlePosition => _distance.offset(
-        position,
+  LatLng get solidAxlePosition => position.offset(
         solidAxleDistance,
         normalizeBearing(heading - 180),
       );
 
   /// The position of the center of the front axle.
   @override
-  LatLng get steeringAxlePosition => _distance.offset(
-        position,
+  LatLng get steeringAxlePosition => position.offset(
         wheelBase - solidAxleDistance,
         normalizeBearing(heading),
       );
@@ -53,7 +57,7 @@ class Tractor extends AxleSteeredVehicle {
   /// when the tractor is reversing.
   @override
   LatLng get pursuitAxlePosition => switch (isReversing) {
-        true => _distance.offset(solidAxlePosition, wheelBase, heading + 180),
+        true => solidAxlePosition.offset(wheelBase, heading + 180),
         false => steeringAxlePosition,
       };
 
@@ -76,6 +80,9 @@ class Tractor extends AxleSteeredVehicle {
     double? trackWidth,
     double? wheelBase,
     double? solidAxleDistance,
+    double? solidAxleToFrontHitchDistance,
+    double? solidAxleToRearHitchDistance,
+    double? solidAxleToRearTowbarHitchDistance,
     double? ackermannSteeringRatio,
     double? steeringAxleWheelDiameter,
     double? solidAxleWheelDiameter,
@@ -89,6 +96,11 @@ class Tractor extends AxleSteeredVehicle {
     double? length,
     double? width,
     bool? simulated,
+    Hitchable? hitchParent,
+    Hitchable? hitchFrontFixedChild,
+    Hitchable? hitchRearFixedChild,
+    Hitchable? hitchRearTowbarChild,
+    String? name,
   }) =>
       Tractor(
         position: position ?? this.position,
@@ -98,6 +110,12 @@ class Tractor extends AxleSteeredVehicle {
         trackWidth: trackWidth ?? this.trackWidth,
         wheelBase: wheelBase ?? this.wheelBase,
         solidAxleDistance: solidAxleDistance ?? this.solidAxleDistance,
+        solidAxleToFrontHitchDistance:
+            solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
+        solidAxleToRearHitchDistance:
+            solidAxleToRearHitchDistance ?? this.solidAxleToRearHitchDistance,
+        solidAxleToRearTowbarDistance:
+            solidAxleToRearTowbarDistance ?? solidAxleToRearTowbarDistance,
         ackermannSteeringRatio:
             ackermannSteeringRatio ?? this.ackermannSteeringRatio,
         steeringAxleWheelDiameter:
@@ -115,5 +133,9 @@ class Tractor extends AxleSteeredVehicle {
         length: length ?? this.length,
         width: width ?? this.width,
         simulated: simulated ?? this.simulated,
+        hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
+        hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
+        hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
+        name: name ?? this.name,
       );
 }

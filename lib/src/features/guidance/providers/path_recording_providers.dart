@@ -1,12 +1,9 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'path_recording_providers.g.dart';
-
-/// A calculator used to find distances, heading/bearing etc. between points.
-const calculator = Distance(roundResult: false);
 
 /// Whether the recorder is enabled.
 @Riverpod(keepAlive: true)
@@ -34,19 +31,17 @@ class PathRecordingList extends _$PathRecordingList {
               (prevWayPoint, wayPoint) async {
             if (prevWayPoint != wayPoint) {
               if (points.isNotEmpty) {
-                final distance = calculator.distance(
-                  points.last.position,
+                final distance = points.last.position.distanceTo(
                   wayPoint.position,
                 );
                 if (distance > 20) {
                   await add(wayPoint);
                 } else if (distance > 1 && points.length >= 2) {
-                  final prevHeading = calculator.bearing(
-                    points[points.length - 2].position,
-                    points.last.position,
-                  );
-                  final heading = calculator.bearing(
-                    points.last.position,
+                  final prevHeading =
+                      points[points.length - 2].position.bearingTo(
+                            points.last.position,
+                          );
+                  final heading = points.last.position.bearingTo(
                     wayPoint.position,
                   );
 

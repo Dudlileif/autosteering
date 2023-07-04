@@ -6,27 +6,30 @@ part of 'pure_pursuit_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$purePursuitHash() => r'98381f9c11478d34002186c48b1804625253473b';
+String _$configuredPurePursuitHash() =>
+    r'a079d969dfaa0a8a7924344102abe0aed3c9475f';
 
 /// A provider for creating and holding a [PurePursuit] model for the
 /// previously recorded waypoints.
 ///
-/// Copied from [purePursuit].
-@ProviderFor(purePursuit)
-final purePursuitProvider = Provider<PurePursuit?>.internal(
-  purePursuit,
-  name: r'purePursuitProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$purePursuitHash,
+/// Copied from [ConfiguredPurePursuit].
+@ProviderFor(ConfiguredPurePursuit)
+final configuredPurePursuitProvider =
+    NotifierProvider<ConfiguredPurePursuit, PurePursuit?>.internal(
+  ConfiguredPurePursuit.new,
+  name: r'configuredPurePursuitProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$configuredPurePursuitHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef PurePursuitRef = ProviderRef<PurePursuit?>;
-String _$enablePurePursuitHash() => r'9d9832e2b0d5910da2552adcfe18a3a57f63ceb4';
+typedef _$ConfiguredPurePursuit = Notifier<PurePursuit?>;
+String _$enablePurePursuitHash() => r'938f70c30bf51f34d21d1169bc32eba29a85aedc';
 
-/// A provider for whether or not the vehicle should follow the [purePursuit]
-/// tracking model.
+/// A provider for whether or not the vehicle should follow the
+/// [ConfiguredPurePursuit] tracking model.
 ///
 /// Copied from [EnablePurePursuit].
 @ProviderFor(EnablePurePursuit)
@@ -42,9 +45,10 @@ final enablePurePursuitProvider =
 );
 
 typedef _$EnablePurePursuit = Notifier<bool>;
-String _$pursuitModeHash() => r'8e798d23b858e45e57a261bee6a4cedaf394ae0b';
+String _$pursuitModeHash() => r'47d8fafa7d49b3347e33e0e0f0cb631a49615d15';
 
-/// A provider for which steering mode the [PurePursuit] model should use.
+/// A provider for which steering mode the [ConfiguredPurePursuit] model should
+/// use.
 ///
 /// Copied from [PursuitMode].
 @ProviderFor(PursuitMode)
@@ -61,7 +65,7 @@ final pursuitModeProvider =
 typedef _$PursuitMode = Notifier<PurePursuitMode>;
 String _$purePursuitLoopHash() => r'348334dc74b35f8ff0599ec5557333c7c719fe5d';
 
-/// A provider for which looping mode the [purePursuit] should follow.
+/// A provider for which looping mode the [ConfiguredPurePursuit] should follow.
 ///
 /// Copied from [PurePursuitLoop].
 @ProviderFor(PurePursuitLoop)
@@ -79,7 +83,7 @@ final purePursuitLoopProvider =
 typedef _$PurePursuitLoop = Notifier<PurePursuitLoopMode>;
 String _$lookAheadDistanceHash() => r'cc5238aefa1ff1c179aea9507f00d9770269e555';
 
-/// A provider for the look ahead distance of the [PurePursuit] model.
+/// A provider for the look ahead distance of the [ConfiguredPurePursuit] model.
 ///
 /// Copied from [LookAheadDistance].
 @ProviderFor(LookAheadDistance)
@@ -98,8 +102,8 @@ typedef _$LookAheadDistance = Notifier<double>;
 String _$displayPurePursuitHash() =>
     r'9e5dcfbf4401f0910761b08a1a07dc28204c9af2';
 
-/// A provider for the activated [PurePursuit] model, typically recieved and
-/// updated from the simulator.
+/// A provider for the activated [ConfiguredPurePursuit] model, typically
+/// recieved and updated from the simulator.
 ///
 /// Copied from [DisplayPurePursuit].
 @ProviderFor(DisplayPurePursuit)

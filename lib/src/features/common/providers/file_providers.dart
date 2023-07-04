@@ -15,3 +15,13 @@ Future<Directory> fileDirectory(FileDirectoryRef ref) async {
 
   return directory;
 }
+
+/// A provider for the main settings file for the application.
+@Riverpod(keepAlive: true)
+Future<File> settingsFile(SettingsFileRef ref) async {
+  final file = await File(
+    '${ref.watch(fileDirectoryProvider).requireValue.path}/settings.json',
+  ).create(recursive: true);
+
+  return file;
+}

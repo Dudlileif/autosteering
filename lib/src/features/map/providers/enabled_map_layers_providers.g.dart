@@ -6,7 +6,7 @@ part of 'enabled_map_layers_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$showCountryLayersHash() => r'61af2048fb2cd4af4a320878551e206e8c176294';
+String _$showCountryLayersHash() => r'd98ad0a566476f5224c0a51202cad28a8208820f';
 
 /// Whether the selected country layers should be shown.
 ///
@@ -24,7 +24,7 @@ final showCountryLayersProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowCountryLayersRef = AutoDisposeProviderRef<bool>;
 String _$showSentinelLayersHash() =>
-    r'95bc3f5387c26ae043399c2fba4d87f5552e9366';
+    r'4b0b2121be62f303ab5dd3e5b6bb6a9d2c67a5f7';
 
 /// Whether the selected Sentinel layers should be shown.
 ///
@@ -186,7 +186,25 @@ final showFieldDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowFieldDebugLayerRef = AutoDisposeProviderRef<bool>;
-String _$showOSMLayerHash() => r'bc0ef306dcc916f4b9503bd18d57a64e09885c8a';
+String _$showEquipmentDebugLayerHash() =>
+    r'187ca5c02fe0e815c63095f34442d0f64d98001d';
+
+/// Whether the debugging layer for the equipment should be shown.
+///
+/// Copied from [showEquipmentDebugLayer].
+@ProviderFor(showEquipmentDebugLayer)
+final showEquipmentDebugLayerProvider = AutoDisposeProvider<bool>.internal(
+  showEquipmentDebugLayer,
+  name: r'showEquipmentDebugLayerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showEquipmentDebugLayerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ShowEquipmentDebugLayerRef = AutoDisposeProviderRef<bool>;
+String _$showOSMLayerHash() => r'f24917b39fe1e4fc43bf081986939a70d7dff5e6';
 
 /// Whether the OpenStreetMap layer should be shown.
 ///

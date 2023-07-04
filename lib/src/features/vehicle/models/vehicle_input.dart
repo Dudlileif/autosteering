@@ -14,8 +14,14 @@ class VehicleInput with _$VehicleInput {
     /// The velocity of the vehicle.
     double? velocity,
 
+    /// Change in velocity from current velocity.
+    double? velocityDelta,
+
     /// The steering angle of the vehicle.
     double? steeringAngle,
+
+    /// The change of steering angle of the vehicle from the current angle.
+    double? steeringAngleDelta,
   }) = _VehicleInput;
 
   factory VehicleInput.fromJson(Map<String, Object?> json) =>

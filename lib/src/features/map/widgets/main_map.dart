@@ -10,15 +10,13 @@ class MainMap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapController = ref.watch(mainMapControllerProvider);
-
     ref
       ..watch(simVehicleDrivingProvider)
       ..watch(zoomTimerControllerProvider);
 
     return FlutterMap(
       key: const Key('Map'),
-      mapController: mapController,
+      mapController: ref.watch(mainMapControllerProvider),
       options: MapOptions(
         zoom: 19,
         minZoom: 4,
@@ -61,6 +59,8 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showRecordingPathLayerProvider))
           const RecordingPathLayer(),
         if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),
+        if (ref.watch(showEquipmentDebugLayerProvider))
+          const EquipmentDebugLayer(),
         if (ref.watch(showPurePursuitDebugLayerProvider))
           const PurePursuitDebugLayer(),
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),

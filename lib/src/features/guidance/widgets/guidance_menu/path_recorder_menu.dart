@@ -6,49 +6,58 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button with attached submenu for working with the path recording
 /// and editing feature.
-class PathRecorderMenu extends ConsumerWidget {
+class PathRecorderMenu extends StatelessWidget {
   const PathRecorderMenu({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
       text: 'Path recording',
       icon: Icons.route,
       menuChildren: [
-        CheckboxListTile(
-          title: Text(
+        Consumer(
+          child: Text(
             'Recording',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
-          secondary: ref.watch(enablePathRecorderProvider)
-              ? const Icon(Icons.stop)
-              : const Icon(Icons.play_arrow),
-          value: ref.watch(enablePathRecorderProvider),
-          onChanged: (value) => value != null
-              ? ref
-                  .read(enablePathRecorderProvider.notifier)
-                  .update(value: value)
-              : null,
+          builder: (context, ref, child) {
+            final enabled = ref.watch(enablePathRecorderProvider);
+            return CheckboxListTile(
+              title: child,
+              secondary: enabled
+                  ? const Icon(Icons.stop)
+                  : const Icon(Icons.play_arrow),
+              value: enabled,
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(enablePathRecorderProvider.notifier)
+                      .update(value: value)
+                  : null,
+            );
+          },
         ),
-        CheckboxListTile(
-          title: Text(
+        Consumer(
+          child: Text(
             'Last recorded path',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
-          secondary: const Icon(Icons.route),
-          value: ref.watch(showFinishedPathProvider),
-          onChanged: (value) => value != null
-              ? ref.read(showFinishedPathProvider.notifier).update(value: value)
-              : null,
+          builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            secondary: const Icon(Icons.route),
+            value: ref.watch(showFinishedPathProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(showFinishedPathProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
         ),
-        CheckboxListTile(
-          title: Text(
-            'Last recorded path as polygon',
-            style: Theme.of(context).menuButtonWithChildrenText,
-          ),
-          secondary: const SizedBox.square(
+        Consumer(
+          child: const SizedBox.square(
             dimension: 24,
             child: Stack(
               alignment: Alignment.center,
@@ -87,31 +96,46 @@ class PathRecorderMenu extends ConsumerWidget {
               ],
             ),
           ),
-          value: ref.watch(showFinishedPolygonProvider),
-          onChanged: (value) => value != null
-              ? ref
-                  .read(showFinishedPolygonProvider.notifier)
-                  .update(value: value)
-              : null,
+          builder: (context, ref, child) => CheckboxListTile(
+            title: Text(
+              'Last recorded path as polygon',
+              style: textStyle,
+            ),
+            secondary: child,
+            value: ref.watch(showFinishedPolygonProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(showFinishedPolygonProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
         ),
-        CheckboxListTile(
-          title: Text(
+        Consumer(
+          child: Text(
             'Edit recorded path',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
-          secondary: const Icon(Icons.edit),
-          value: ref.watch(editFinishedPathProvider),
-          onChanged: (value) => value != null
-              ? ref.read(editFinishedPathProvider.notifier).update(value: value)
-              : null,
+          builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            secondary: const Icon(Icons.edit),
+            value: ref.watch(editFinishedPathProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(editFinishedPathProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
         ),
-        ListTile(
-          title: Text(
+        Consumer(
+          child: Text(
             'Clear recorded path',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
-          leading: const Icon(Icons.clear),
-          onTap: ref.read(finishedPathRecordingListProvider.notifier).clear,
+          builder: (context, ref, child) => ListTile(
+            title: child,
+            leading: const Icon(Icons.clear),
+            onTap: ref.read(finishedPathRecordingListProvider.notifier).clear,
+          ),
         ),
       ],
     );

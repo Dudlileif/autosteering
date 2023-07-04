@@ -13,61 +13,76 @@ class FieldDebugMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
       text: 'Field',
       icon: Icons.waves,
       menuChildren: [
-        CheckboxListTile(
-          secondary: Text(
+        Consumer(
+          child: Text(
             'Show test field',
-            style: Theme.of(context).menuButtonWithChildrenText,
+            style: textStyle,
           ),
-          value: ref.watch(showTestFieldProvider),
-          onChanged: (value) => value != null
-              ? ref.read(showTestFieldProvider.notifier).update(value: value)
-              : null,
+          builder: (context, ref, child) => CheckboxListTile(
+            secondary: child,
+            value: ref.watch(showTestFieldProvider),
+            onChanged: (value) => value != null
+                ? ref.read(showTestFieldProvider.notifier).update(value: value)
+                : null,
+          ),
         ),
         if (ref.watch(showTestFieldProvider))
-          CheckboxListTile(
-            secondary: Text(
+          Consumer(
+            child: Text(
               'Show bounding box',
-              style: Theme.of(context).menuButtonWithChildrenText,
+              style: textStyle,
             ),
-            value: ref.watch(showTestFieldBoundingBoxProvider),
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: child,
+              value: ref.watch(showTestFieldBoundingBoxProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(showTestFieldBoundingBoxProvider.notifier)
+                      .update(value: value)
+                  : null,
+            ),
+          ),
+        Consumer(
+          child: Text(
+            'Show buffered test field',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            secondary: child,
+            value: ref.watch(showBufferedTestFieldProvider),
             onChanged: (value) => value != null
                 ? ref
-                    .read(showTestFieldBoundingBoxProvider.notifier)
+                    .read(showBufferedTestFieldProvider.notifier)
                     .update(value: value)
                 : null,
           ),
-        CheckboxListTile(
-          secondary: Text(
-            'Show buffered test field',
-            style: Theme.of(context).menuButtonWithChildrenText,
-          ),
-          value: ref.watch(showBufferedTestFieldProvider),
-          onChanged: (value) => value != null
-              ? ref
-                  .read(showBufferedTestFieldProvider.notifier)
-                  .update(value: value)
-              : null,
         ),
         if (ref.watch(showBufferedTestFieldProvider)) ...[
-          CheckboxListTile(
-            secondary: Text(
+          Consumer(
+            child: Text(
               'Show buffered bounding box',
-              style: Theme.of(context).menuButtonWithChildrenText,
+              style: textStyle,
             ),
-            value: ref.watch(showBufferedTestFieldBoundingBoxProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(showBufferedTestFieldBoundingBoxProvider.notifier)
-                    .update(value: value)
-                : null,
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: child,
+              value: ref.watch(showBufferedTestFieldBoundingBoxProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(showBufferedTestFieldBoundingBoxProvider.notifier)
+                      .update(value: value)
+                  : null,
+            ),
           ),
           Consumer(
             builder: (context, ref, child) {
               final distance = ref.watch(testFieldBufferDistanceProvider);
+
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -88,6 +103,7 @@ class FieldDebugMenu extends ConsumerWidget {
             Consumer(
               builder: (context, ref, child) {
                 final distance = ref.watch(testFieldHoleBufferDistanceProvider);
+
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -108,14 +124,15 @@ class FieldDebugMenu extends ConsumerWidget {
             ),
         ],
         Consumer(
+          child: Text(
+            'Save field',
+            style: textStyle,
+          ),
           builder: (context, ref, child) {
             final field = ref.watch(testFieldProvider);
 
             return ListTile(
-              title: Text(
-                'Save field',
-                style: Theme.of(context).menuButtonWithChildrenText,
-              ),
+              title: child,
               leading: const Icon(Icons.save),
               onTap: field != null
                   ? () async {
@@ -138,14 +155,15 @@ class FieldDebugMenu extends ConsumerWidget {
         ),
         if (ref.watch(showBufferedTestFieldProvider))
           Consumer(
+            child: Text(
+              'Save buffered field',
+              style: textStyle,
+            ),
             builder: (context, ref, child) {
               final field = ref.watch(bufferedTestFieldProvider);
 
               return ListTile(
-                title: Text(
-                  'Save buffered field',
-                  style: Theme.of(context).menuButtonWithChildrenText,
-                ),
+                title: child,
                 leading: const Icon(Icons.save),
                 onTap: field != null
                     ? () async {

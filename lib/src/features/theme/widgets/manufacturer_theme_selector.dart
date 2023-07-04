@@ -10,6 +10,8 @@ class ManufacturerThemeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
     return PopupMenuButton<ManufacturerColor>(
       onSelected: (ManufacturerColor scheme) =>
           ref.read(manufacturerProvider.notifier).update(scheme),
@@ -23,7 +25,7 @@ class ManufacturerThemeSelector extends ConsumerWidget {
                   Icons.lens,
                   color: ManufacturerSchemes.scheme(
                     scheme,
-                    Theme.of(context).brightness,
+                    theme.brightness,
                   ).primary,
                   size: 35,
                 ),
@@ -39,12 +41,12 @@ class ManufacturerThemeSelector extends ConsumerWidget {
           children: [
             Icon(
               Icons.lens,
-              color: Theme.of(context).colorScheme.secondary,
+              color: theme.colorScheme.secondary,
               size: 40,
             ),
             Icon(
               Icons.color_lens,
-              color: Theme.of(context).primaryColor,
+              color: theme.primaryColor,
               size: 30,
             ),
           ],

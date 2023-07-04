@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +10,7 @@ class MenuButtonWithChildren extends StatelessWidget {
     required this.text,
     required this.menuChildren,
     this.icon,
+    this.iconRotation,
     super.key,
   });
 
@@ -16,6 +19,11 @@ class MenuButtonWithChildren extends StatelessWidget {
 
   /// The icon to show besides the text.
   final IconData? icon;
+
+  /// The angle of rotation the icon should be rotated, defaults to no rotation.
+  ///
+  /// Expected to be in degrees.
+  final double? iconRotation;
 
   /// The text to show on the button.
   final String text;
@@ -26,6 +34,7 @@ class MenuButtonWithChildren extends StatelessWidget {
       text,
       style: Theme.of(context).menuButtonWithChildrenText,
     );
+
     return SubmenuButton(
       menuChildren: menuChildren,
       child: icon != null
@@ -34,7 +43,12 @@ class MenuButtonWithChildren extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Icon(icon),
+                  child: iconRotation != null
+                      ? Transform.rotate(
+                          angle: iconRotation! / 180 * pi,
+                          child: Icon(icon),
+                        )
+                      : Icon(icon),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 4),

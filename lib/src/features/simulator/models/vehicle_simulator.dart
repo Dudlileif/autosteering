@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:isolate';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
-
-/// Geo-calculator used to calculate offsets.
-const _distance = Distance(roundResult: false);
 
 /// A class for simulating how vehicles should move given their position,
 /// heading, steering angle and velocity.
@@ -35,7 +33,7 @@ class VehicleSimulator {
 
         // If the vehicle has moved (changed) we send the new state back to the
         // main/UI isolate.
-        if (state.vehicle != state.prevVehicle) {
+        if (state.didChange) {
           sendPort.send(
             (
               vehicle: state.vehicle,
@@ -46,8 +44,6 @@ class VehicleSimulator {
             ),
           );
         }
-        // Update state for the next loop.
-        state.prevVehicle = state.vehicle;
       }
     });
 
@@ -102,9 +98,6 @@ class VehicleSimulator {
         purePursuit: state.purePursuit,
       );
 
-      // Update state for the next loop.
-      state.prevVehicle = state.vehicle;
-
       return returnObject;
     });
   }
@@ -117,6 +110,20 @@ class _VehicleSimulatorState {
 
   /// The previous vehicle state of the simulation.
   Vehicle? prevVehicle;
+
+  /// The distance from the previous vehicle state to the current vehicle state.
+  double distance = 0;
+
+  /// The velocity of the current vehicle, as calculated from the [distance] and
+  /// [period].
+  double velocity = 0;
+
+  /// The heading of the current vehicle, as calculated from the previous
+  /// position to the current position.
+  double heading = 0;
+
+  /// Whether the state changed in the last update.
+  bool didChange = true;
 
   /// The pure pursuit to drive after, if there is one.
   PurePursuit? purePursuit;
@@ -166,43 +173,6 @@ class _VehicleSimulatorState {
     prevUpdateTime = now;
   }
 
-  /// The distance from the previous vehicle state to the current vehicle state.
-  double get distance {
-    if (vehicle != null && prevVehicle != null) {
-      return _distance.distance(vehicle!.position, prevVehicle!.position);
-    }
-    return 0;
-  }
-
-  /// The velocity of the current vehicle, as calculated from the [distance] and
-  /// [period].
-  double get velocity {
-    if (period > 0) {
-      return distance / period;
-    }
-    return 0;
-  }
-
-  /// The heading of the current vehicle, as calculated from the previous
-  /// position to the current position.
-  double get heading {
-    if (vehicle != null && prevVehicle != null) {
-      return normalizeBearing(
-        switch (vehicle!.isReversing) {
-          true => _distance.bearing(
-              vehicle!.position,
-              prevVehicle!.position,
-            ),
-          false => _distance.bearing(
-              prevVehicle!.position,
-              vehicle!.position,
-            ),
-        },
-      );
-    }
-    return 0;
-  }
-
   /// Change state parameters/values according to the incomming [message].
   ///
   /// This can be [Vehicle], [VehicleInput], [PurePursuitMode] or records for
@@ -220,11 +190,23 @@ class _VehicleSimulatorState {
     }
     // Update the vehicle with new inputs.
     else if (message is VehicleInput && vehicle != null) {
-      vehicle = vehicle?.copyWith(
-        position: message.position ?? vehicle!.position,
-        velocity: message.velocity ?? vehicle!.velocity,
-        steeringAngleInput: message.steeringAngle ?? vehicle!.steeringAngle,
-      );
+      if (message.position != null) {
+        vehicle?.position = message.position!;
+      }
+      if (message.velocity != null) {
+        vehicle?.velocity = message.velocity!;
+      } else if (message.velocityDelta != null) {
+        vehicle?.velocity = (vehicle!.velocity +
+                (autoSlowDown ? 1.2 : 1) * message.velocityDelta!)
+            .clamp(-12.0, 12.0);
+      }
+      if (message.steeringAngle != null) {
+        vehicle?.steeringAngleInput = message.steeringAngle!;
+      } else if (message.steeringAngleDelta != null) {
+        vehicle?.steeringAngleInput = (vehicle!.steeringAngleInput +
+                (autoCenterSteering ? 2 : 1) * message.steeringAngleDelta!)
+            .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+      }
     }
     // Set the pure pursuit model.
     else if (message is ({PurePursuit? purePursuit})) {
@@ -282,27 +264,25 @@ class _VehicleSimulatorState {
   /// Check if [autoSlowDown] or [autoCenterSteering] should decrease the
   /// parameters they control.
   void checkAutoSlowDownOrCentering() {
-    vehicle = vehicle?.copyWith(
-      velocity: switch (autoSlowDown) {
-        false => null,
-        true => switch (vehicle!.velocity.abs() > 0.1) {
-            true => vehicle!.velocity -
-                vehicle!.velocity / vehicle!.velocity.abs() * 0.0125,
-            false => 0,
-          }
-      },
-      steeringAngleInput: switch (
-          vehicle!.steeringAngle.abs() > 0 && autoCenterSteering) {
-        false => null,
-        true => switch (vehicle!.steeringAngle.abs() < 1) {
-            true => 0,
-            false => vehicle!.steeringAngleInput -
-                vehicle!.steeringAngleInput.abs() /
-                    vehicle!.steeringAngleInput *
-                    0.4,
-          }
-      },
-    );
+    if (vehicle != null) {
+      if (autoSlowDown) {
+        vehicle!.velocity = switch (vehicle!.velocity.abs() > 0.1) {
+          true => vehicle!.velocity -
+              vehicle!.velocity / vehicle!.velocity.abs() * 0.0125,
+          false => 0,
+        };
+      }
+      if (autoCenterSteering) {
+        vehicle!.steeringAngleInput =
+            switch (vehicle!.steeringAngle.abs() < 1) {
+          true => 0,
+          false => vehicle!.steeringAngleInput -
+              vehicle!.steeringAngleInput.abs() /
+                  vehicle!.steeringAngleInput *
+                  0.4,
+        };
+      }
+    }
   }
 
   /// Check if we should update the turning circle center. We only do this
@@ -356,7 +336,7 @@ class _VehicleSimulatorState {
           false => steeringAngleCalc,
         };
 
-        vehicle = vehicle?.copyWith(steeringAngleInput: steeringAngle);
+        vehicle?.steeringAngleInput = steeringAngle;
       }
     }
   }
@@ -386,8 +366,7 @@ class _VehicleSimulatorState {
           };
           // Projected solid axle position from the turning radius
           // center.
-          final solidAxlePositon = _distance.offset(
-            turningCircleCenter!,
+          final solidAxlePositon = turningCircleCenter!.offset(
             vehicle.currentTurningRadius!,
             normalizeBearing(angle),
           );
@@ -402,8 +381,7 @@ class _VehicleSimulatorState {
 
           // The vehicle center position, which is offset from the solid
           // axle position.
-          final vehiclePosition = _distance.offset(
-            solidAxlePositon,
+          final vehiclePosition = solidAxlePositon.offset(
             vehicle.solidAxleDistance,
             switch (vehicle is Tractor) {
               true => heading,
@@ -412,10 +390,9 @@ class _VehicleSimulatorState {
           );
 
           // Update the vehicle state.
-          this.vehicle = vehicle.copyWith(
-            position: vehiclePosition,
-            heading: heading,
-          );
+          this.vehicle
+            ?..position = vehiclePosition
+            ..heading = heading;
         } else if (vehicle is ArticulatedTractor) {
           // A local vehicle variable to simplify null safe syntax.
           final vehicle = this.vehicle! as ArticulatedTractor;
@@ -447,8 +424,7 @@ class _VehicleSimulatorState {
 
           // Projected vehicle front axle position from the turning radius
           // center.
-          final frontAxlePosition = _distance.offset(
-            turningCircleCenter!,
+          final frontAxlePosition = turningCircleCenter!.offset(
             vehicle.currentTurningRadius!,
             projectedFrontAxleAngle,
           );
@@ -462,32 +438,60 @@ class _VehicleSimulatorState {
 
           // The vehicle antenna position, projected from the front axle
           // position.
-          final vehiclePosition = _distance.offset(
-            frontAxlePosition,
+          final vehiclePosition = frontAxlePosition.offset(
             vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
             frontBodyHeading - 180 + vehicle.steeringAngle / 2,
           );
 
           // Update the vehicle state.
-          this.vehicle = vehicle.copyWith(
-            position: vehiclePosition,
-            heading: frontBodyHeading,
-          );
+          this.vehicle
+            ?..position = vehiclePosition
+            ..heading = frontBodyHeading;
         }
       }
       // Going straight.
       else {
-        final position = _distance.offset(
-          vehicle!.position,
+        final position = vehicle!.position.offset(
           vehicle!.velocity * period,
           vehicle!.heading,
         );
 
         // Update the vehicle state.
-        vehicle = vehicle!.copyWith(
-          position: position,
-        );
+        vehicle?.position = position;
       }
+      // Update the connected equipment.
+      vehicle?.updateChildren();
+    }
+  }
+
+  /// Updates the calculated gauges for the vehicle state.
+  void updateGauges() {
+    // Distance
+    if (vehicle != null && prevVehicle != null) {
+      distance = vehicle!.position.distanceTo(prevVehicle!.position);
+    } else {
+      distance = 0;
+    }
+
+    // Velocity
+    if (period > 0) {
+      velocity = distance / period;
+    } else {
+      velocity = 0;
+    }
+
+    // Heading, only updated if we're moving to keep heading while stationary.
+    if (vehicle != null && prevVehicle != null && velocity.abs() > 0) {
+      heading = normalizeBearing(
+        switch (vehicle!.isReversing) {
+          true => vehicle!.position.bearingTo(
+              prevVehicle!.position,
+            ),
+          false => prevVehicle!.position.bearingTo(
+              vehicle!.position,
+            ),
+        },
+      );
     }
   }
 
@@ -498,5 +502,10 @@ class _VehicleSimulatorState {
     checkTurningCircle();
     updateTime();
     updatePosition();
+    updateGauges();
+
+    didChange = prevVehicle != vehicle;
+
+    prevVehicle = vehicle?.copyWith();
   }
 }

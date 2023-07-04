@@ -6,8 +6,24 @@ part of 'map_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$mapOffsetHash() => r'264c09201daa5721ac983436017a37f5f28e23f3';
+
+/// How much the map center should be offset from the vehicle.
+///
+/// Copied from [mapOffset].
+@ProviderFor(mapOffset)
+final mapOffsetProvider = Provider<MapCenterOffset>.internal(
+  mapOffset,
+  name: r'mapOffsetProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$mapOffsetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef MapOffsetRef = ProviderRef<MapCenterOffset>;
 String _$offsetVehiclePositionHash() =>
-    r'75b52632382383648e85d8f84c0b5a954e888064';
+    r'4f20d097b23213cd6ab1639833328be3dc50ea8f';
 
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.
@@ -60,7 +76,7 @@ final mainMapControllerProvider =
 );
 
 typedef _$MainMapController = Notifier<MapController>;
-String _$homePositionHash() => r'd93a25ba25b3a3fa41f5404f5b42d8515153ce94';
+String _$homePositionHash() => r'9887c76d9fd12dbfe3d8dbe1040f342b26aaa652';
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
 ///
@@ -77,7 +93,7 @@ final homePositionProvider = NotifierProvider<HomePosition, LatLng>.internal(
 
 typedef _$HomePosition = Notifier<LatLng>;
 String _$centerMapOnVehicleHash() =>
-    r'89addbc27d6c66b66bd52f5feba007f0aa480afd';
+    r'0bbe5ef562ea8154bc497be0626337a17a97f870';
 
 /// Whether the map should center on the vehicle or if it could be moved freely.
 ///
@@ -96,7 +112,7 @@ final centerMapOnVehicleProvider =
 
 typedef _$CenterMapOnVehicle = Notifier<bool>;
 String _$zoomTimerControllerHash() =>
-    r'033d1227ff87f645fe562bd349cba49d854ffb3d';
+    r'd9243c1dd58f6f89846247a2c1ad48684a5bf5eb';
 
 /// A provider for controlling the zoom when a gamepad button is held down.
 ///
@@ -116,23 +132,43 @@ final zoomTimerControllerProvider =
 );
 
 typedef _$ZoomTimerController = AutoDisposeNotifier<Timer?>;
-String _$mapOffsetHash() => r'b46b6719a6b0032ff0f70065900ed94a4837f396';
+String _$mapOffset2DHash() => r'bacee10fe6dceef24cc755af969461bc872bf088';
 
-/// How much the map center should be offset from the vehicle.
+/// How much the map center should be offset from the vehicle when using
+/// 2D view.
 ///
-/// Copied from [MapOffset].
-@ProviderFor(MapOffset)
-final mapOffsetProvider = NotifierProvider<MapOffset, MapCenterOffset>.internal(
-  MapOffset.new,
-  name: r'mapOffsetProvider',
+/// Copied from [MapOffset2D].
+@ProviderFor(MapOffset2D)
+final mapOffset2DProvider =
+    NotifierProvider<MapOffset2D, MapCenterOffset>.internal(
+  MapOffset2D.new,
+  name: r'mapOffset2DProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$mapOffsetHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$mapOffset2DHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$MapOffset = Notifier<MapCenterOffset>;
-String _$alwaysPointNorthHash() => r'f8a05832feb870dadc2d754f8633c256ab5eaa23';
+typedef _$MapOffset2D = Notifier<MapCenterOffset>;
+String _$mapOffset3DHash() => r'eed798ad2fa9d9781af96898d913a23068763984';
+
+/// How much the map center should be offset from the vehicle when using
+/// 3D view.
+///
+/// Copied from [MapOffset3D].
+@ProviderFor(MapOffset3D)
+final mapOffset3DProvider =
+    NotifierProvider<MapOffset3D, MapCenterOffset>.internal(
+  MapOffset3D.new,
+  name: r'mapOffset3DProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$mapOffset3DHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MapOffset3D = Notifier<MapCenterOffset>;
+String _$alwaysPointNorthHash() => r'b7b98a0c768dbf808383c3f5d29ea22bb1581589';
 
 /// Whether the map always should point to the north and not rotate.
 ///
@@ -151,7 +187,7 @@ final alwaysPointNorthProvider =
 
 typedef _$AlwaysPointNorth = Notifier<bool>;
 String _$mapUse3DPerspectiveHash() =>
-    r'a0651b05e8a2c04f9a9108bbb64899bb5887ebcb';
+    r'e2a44a841ae01677fcc8ea2de4c63e33677e2a06';
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
@@ -171,7 +207,7 @@ final mapUse3DPerspectiveProvider =
 
 typedef _$MapUse3DPerspective = Notifier<bool>;
 String _$map3DPerspectiveAngleHash() =>
-    r'fd39a0b32f0090b1204d523b4b28872e2261b187';
+    r'2d41f3d840e1281e01a58b107c01bec1596c1188';
 
 /// The angle that the 3D perspective should be seen from, as in radians
 /// from the orthogonal view.

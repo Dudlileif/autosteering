@@ -1,17 +1,16 @@
 import 'dart:math';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-/// Geo-calculator used to calculate offsets.
-const _distance = Distance(roundResult: false);
-
 /// A base class for vehicles that steers with either a front or rear axle.
 abstract class AxleSteeredVehicle extends Vehicle {
-  const AxleSteeredVehicle({
+  AxleSteeredVehicle({
     required this.wheelBase,
     required this.solidAxleDistance,
     required super.position,
@@ -20,6 +19,9 @@ abstract class AxleSteeredVehicle extends Vehicle {
     required super.steeringAngleMax,
     required super.trackWidth,
     required super.pidParameters,
+    this.solidAxleToFrontHitchDistance,
+    this.solidAxleToRearHitchDistance,
+    this.solidAxleToRearTowbarDistance,
     this.ackermannSteeringRatio = 1,
     this.steeringAxleWheelDiameter = 1.1,
     this.solidAxleWheelDiameter = 1.8,
@@ -32,43 +34,84 @@ abstract class AxleSteeredVehicle extends Vehicle {
     super.length = 4,
     super.width = 2.5,
     super.simulated = false,
+    super.hitchFrontFixedChild,
+    super.hitchRearFixedChild,
+    super.hitchRearTowbarChild,
+    super.name,
   });
 
   /// The distance between the axles.
   @override
-  final double wheelBase;
+  double wheelBase;
 
   /// The distance from the antenna [position] to the solid axle,
   /// this means the rear axle on front wheel steered vehicles, and
   /// the front axle on rear wheel steered vehicles.
   /// Expected positive for front wheel steered,
   /// negative for rear wheel steered.
-  final double solidAxleDistance;
+  double solidAxleDistance;
+
+  /// The distance to the front hitch point from the solid axle.
+  double? solidAxleToFrontHitchDistance;
+
+  /// The distance to the rear hitch point from the solid axle.
+  double? solidAxleToRearHitchDistance;
+
+  /// The distance to the rear towbar hitch point from the solid axle.
+  double? solidAxleToRearTowbarDistance;
 
   /// A modifier ratio for the Ackermann central angle. Defaults to 1.
   ///
   /// A higher value will cause a sharper turn, and a lower value a looser
   /// turn.
   /// ackermannAngle = [steeringAngleInput] / [ackermannSteeringRatio]
-  final double ackermannSteeringRatio;
+  double ackermannSteeringRatio;
 
   /// The diameter of the steering axle wheels.
-  final double steeringAxleWheelDiameter;
+  double steeringAxleWheelDiameter;
 
   /// The diameter of the solid axle wheels
-  final double solidAxleWheelDiameter;
+  double solidAxleWheelDiameter;
 
   /// The width of the steering axle wheels.
-  final double steeringAxleWheelWidth;
+  double steeringAxleWheelWidth;
 
   /// The width of the solid axle wheels.
-  final double solidAxleWheelWidth;
+  double solidAxleWheelWidth;
 
   /// The position of the center of the rear axle.
   LatLng get solidAxlePosition;
 
   /// The position of the center of the front axle.
   LatLng get steeringAxlePosition;
+
+  @override
+  LatLng? get hitchFrontFixedPosition =>
+      switch (solidAxleToFrontHitchDistance != null) {
+        true =>
+          solidAxlePosition.offset(solidAxleToFrontHitchDistance!, heading),
+        false => null,
+      };
+
+  @override
+  LatLng? get hitchRearFixedPosition =>
+      switch (solidAxleToRearHitchDistance != null) {
+        true => solidAxlePosition.offset(
+            solidAxleToRearHitchDistance!,
+            heading + 180,
+          ),
+        false => null,
+      };
+
+  @override
+  LatLng? get hitchRearTowbarPosition =>
+      switch (solidAxleToRearTowbarDistance != null) {
+        true => solidAxlePosition.offset(
+            solidAxleToRearTowbarDistance!,
+            heading + 180,
+          ),
+        false => null,
+      };
 
   /// Where the look ahead distance calculation should start.
   @override
@@ -154,8 +197,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
   LatLng? get turningRadiusCenter => currentTurningRadius != null
-      ? _distance.offset(
-          solidAxlePosition,
+      ? solidAxlePosition.offset(
           currentTurningRadius!,
           normalizeBearing(
             switch (isTurningLeft) {
@@ -201,32 +243,28 @@ abstract class AxleSteeredVehicle extends Vehicle {
     final outerFrontToInnerFrontAngle =
         normalizeBearing(outerRearToOuterFrontAngle + (90 * sign));
 
-    final wheelInnerCenter = _distance.offset(
-      switch (steering) {
-        true => steeringAxlePosition,
-        false => solidAxlePosition,
-      },
+    final wheelInnerCenter = switch (steering) {
+      true => steeringAxlePosition,
+      false => solidAxlePosition,
+    }
+        .offset(
       trackWidth / 2 - wheelWidth / 2,
       axleToCenterAngle,
     );
 
-    final wheelInnerRear = _distance.offset(
-      wheelInnerCenter,
+    final wheelInnerRear = wheelInnerCenter.offset(
       wheelDiameter / 2,
       innerCenterToInnerRearAngle,
     );
-    final wheelOuterRear = _distance.offset(
-      wheelInnerRear,
+    final wheelOuterRear = wheelInnerRear.offset(
       wheelWidth,
       innerRearToOuterRearAngle,
     );
-    final wheelOuterFront = _distance.offset(
-      wheelOuterRear,
+    final wheelOuterFront = wheelOuterRear.offset(
       wheelDiameter,
       outerRearToOuterFrontAngle,
     );
-    final wheelInnerFront = _distance.offset(
-      wheelOuterFront,
+    final wheelInnerFront = wheelOuterFront.offset(
       wheelWidth,
       outerFrontToInnerFrontAngle,
     );
@@ -331,8 +369,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
           };
 
           points.add(
-            _distance.offset(
-              turningRadiusCenter!,
+            turningRadiusCenter!.offset(
               currentTurningRadius!,
               normalizeBearing(angle),
             ),
@@ -341,8 +378,7 @@ abstract class AxleSteeredVehicle extends Vehicle {
       }
     } else {
       points.add(
-        _distance.offset(
-          solidAxlePosition,
+        solidAxlePosition.offset(
           isReversing ? -30 : 5 + 30,
           normalizeBearing(heading),
         ),
@@ -387,23 +423,19 @@ abstract class AxleSteeredVehicle extends Vehicle {
 
   /// The max extent/bounds points of the vehicle. The [heading] is followed.
   List<LatLng> get points {
-    final frontLeft = _distance.offset(
-      position,
+    final frontLeft = position.offset(
       centerToCornerDistance,
       frontLeftAngle,
     );
-    final frontRight = _distance.offset(
-      position,
+    final frontRight = position.offset(
       centerToCornerDistance,
       frontRightAngle,
     );
-    final rearRight = _distance.offset(
-      position,
+    final rearRight = position.offset(
       centerToCornerDistance,
       rearRightAngle,
     );
-    final rearLeft = _distance.offset(
-      position,
+    final rearLeft = position.offset(
       centerToCornerDistance,
       rearLeftAngle,
     );
@@ -450,5 +482,10 @@ abstract class AxleSteeredVehicle extends Vehicle {
     double? length,
     double? width,
     bool? simulated,
+    Hitchable? hitchParent,
+    Hitchable? hitchFrontFixedChild,
+    Hitchable? hitchRearFixedChild,
+    Hitchable? hitchRearTowbarChild,
+    String? name,
   });
 }

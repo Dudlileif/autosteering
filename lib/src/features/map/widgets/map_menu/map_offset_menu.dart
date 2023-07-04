@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:agopengps_flutter/src/features/common/widgets/menu_button_with_children.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -11,21 +10,30 @@ class MapOffsetMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    final using3D = ref.watch(mapUse3DPerspectiveProvider);
+
     final offset = ref.watch(mapOffsetProvider);
 
-    return SubmenuButton(
+    return MenuButtonWithChildren(
+      icon: Icons.zoom_out_map_sharp,
+      iconRotation: 45,
+      text: using3D ? 'Center offset 3D' : 'Center offset 2D',
       menuChildren: [
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               'X: ${offset.x} m',
-              style: Theme.of(context).menuButtonWithChildrenText,
+              style: textStyle,
             ),
             Slider(
               value: offset.x,
-              onChanged: (value) =>
-                  ref.read(mapOffsetProvider.notifier).update(x: value),
+              onChanged: (value) => switch (using3D) {
+                true => ref.read(mapOffset3DProvider.notifier).update(x: value),
+                false => ref.read(mapOffset2DProvider.notifier).update(x: value)
+              },
               min: -40,
               max: 40,
               divisions: 80,
@@ -37,12 +45,14 @@ class MapOffsetMenu extends ConsumerWidget {
           children: [
             Text(
               'Y: ${offset.y} m',
-              style: Theme.of(context).menuButtonWithChildrenText,
+              style: textStyle,
             ),
             Slider(
               value: offset.y,
-              onChanged: (value) =>
-                  ref.read(mapOffsetProvider.notifier).update(y: value),
+              onChanged: (value) => switch (using3D) {
+                true => ref.read(mapOffset3DProvider.notifier).update(y: value),
+                false => ref.read(mapOffset2DProvider.notifier).update(y: value)
+              },
               min: -40,
               max: 40,
               divisions: 80,
@@ -50,25 +60,6 @@ class MapOffsetMenu extends ConsumerWidget {
           ],
         ),
       ],
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Transform.rotate(
-              angle: 45 * 2 * pi / 360,
-              child: const Icon(Icons.zoom_out_map_sharp),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 4),
-            child: Text(
-              'Center offset',
-              style: Theme.of(context).menuButtonWithChildrenText,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

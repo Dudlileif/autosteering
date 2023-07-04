@@ -6,7 +6,7 @@ part of 'dubins_path_debug_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$debugDubinsPathHash() => r'9f1b306f563439ac3b9c4e393cd529f5b6edc6ee';
+String _$debugDubinsPathHash() => r'd010244d78a859486ca7a083f1cbec36fcf84167';
 
 /// The current [DubinsPath] object that we can debug.
 ///

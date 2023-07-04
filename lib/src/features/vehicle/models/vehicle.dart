@@ -1,12 +1,13 @@
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 /// A base class for vehicles that handles all common parameters/variables
 /// and methods.
-abstract class Vehicle extends Equatable {
-  const Vehicle({
+abstract class Vehicle extends Hitchable with EquatableMixin {
+  Vehicle({
     required this.position,
     required this.antennaHeight,
     required this.minTurningRadius,
@@ -20,50 +21,54 @@ abstract class Vehicle extends Equatable {
     this.length = 4,
     this.width = 2.5,
     this.simulated = false,
+    super.hitchFrontFixedChild,
+    super.hitchRearFixedChild,
+    super.hitchRearTowbarChild,
+    super.name,
   });
 
   /// Antenna position of the vehicle. Assumed centered in the
   /// width dimension of the vehicle.
-  final LatLng position;
+  LatLng position;
 
   /// The height of the antenna above the ground, in meters.
-  final double antennaHeight;
+  double antennaHeight;
 
   /// The distance between the center of the wheels on the solid axle.
-  final double trackWidth;
+  double trackWidth;
 
   /// The best/minimum turning radius, in meters.
-  final double minTurningRadius;
+  double minTurningRadius;
 
   /// The maximum angle that the steering wheels/pivot can turn, in degrees.
-  final double steeringAngleMax;
+  double steeringAngleMax;
 
   /// The heading of the vehicle, in degrees.
-  final double heading;
+  double heading;
 
   /// This is the Ackermann input angle or the angle of the articulation for an
   /// articulated tractor.
-  final double steeringAngleInput;
+  double steeringAngleInput;
 
   /// Whether the [steeringAngleInput] should be inverted.
-  final bool invertSteeringInput;
+  bool invertSteeringInput;
 
   /// The PID parameters for controlling the steering of this vehicle
   /// with
-  final PidParameters pidParameters;
+  PidParameters pidParameters;
 
   /// The velocity of the vehicle, in m/s, meters per second, in the heading
   /// direction.
-  final double velocity;
+  double velocity;
 
   /// The length of the vehicle, in meters.
-  final double length;
+  double length;
 
   /// The width of the vehicle, in meters.
-  final double width;
+  double width;
 
   /// Whether the vehicle is simulated.
-  final bool simulated;
+  bool simulated;
 
   /// The distance between the wheel axles.
   double get wheelBase;
@@ -155,6 +160,7 @@ abstract class Vehicle extends Equatable {
 
   /// Returns a new [Vehicle] based on this one, but with
   /// parameters/variables altered.
+  @override
   Vehicle copyWith({
     LatLng? position,
     double? antennaHeight,
@@ -169,5 +175,10 @@ abstract class Vehicle extends Equatable {
     double? length,
     double? width,
     bool? simulated,
+    Hitchable? hitchParent,
+    Hitchable? hitchFrontFixedChild,
+    Hitchable? hitchRearFixedChild,
+    Hitchable? hitchRearTowbarChild,
+    String? name,
   });
 }

@@ -15,7 +15,7 @@ class SentinelLayers extends ConsumerWidget {
     // to the stack last, so that the sorting corresponds to the
     // selection list.
     final availableLayers = ref.watch(availableSentinelLayersProvider);
-    final layers = ref.watch(selectedSentinelLayersProvider).sorted(
+    final layers = ref.watch(enabledSentinelLayersProvider).sorted(
           (key1, key2) => availableLayers
               .indexOf(key2)
               .compareTo(availableLayers.indexOf(key1)),
