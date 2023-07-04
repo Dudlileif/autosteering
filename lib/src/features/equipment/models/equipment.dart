@@ -8,11 +8,12 @@ import 'package:latlong2/latlong.dart';
 
 /// A class for creating equipments for attaching to vehicles.
 class Equipment extends Hitchable with EquatableMixin {
-  const Equipment({
+  Equipment({
     required this.hitchType,
     super.hitchParent,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
+    super.name,
     this.segments = 1,
     this.segmentWidths = const [3],
     this.length = 2,
@@ -25,29 +26,29 @@ class Equipment extends Hitchable with EquatableMixin {
         );
 
   /// Which type of hitch point this equipment has.
-  final HitchType hitchType;
+  HitchType hitchType;
 
   /// The number of segments the equipment is made of.
-  final int segments;
+  int segments;
 
   /// The width of each of the segments.
-  final List<double> segmentWidths;
+  List<double> segmentWidths;
 
   /// The total length of the equipment, from the front hitch point to the
   /// rear of the equipment.
-  final double length;
+  double length;
 
   /// The length from the front hitch point to the start of the main equipment
   /// working area/segments.
-  final double drawbarLength;
+  double drawbarLength;
 
   /// The length from the front hitch point to the rear fixed hitch point of the
   /// equipment, if there is one.
-  final double? hitchRearFixedLength;
+  double? hitchRearFixedLength;
 
   /// The length from the front hitch point to the rear towbar hitch point of
   /// the equipment, if there is one.
-  final double? hitchRearTowbarLength;
+  double? hitchRearTowbarLength;
 
   /// The total width of the equipment. Found by summing the [segmentWidths].
   double get width => segmentWidths.sum;
@@ -167,6 +168,7 @@ class Equipment extends Hitchable with EquatableMixin {
   // TODO: implement copyWith
   @override
   Equipment copyWith({
+    String? name,
     HitchType? hitchType,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
@@ -180,6 +182,7 @@ class Equipment extends Hitchable with EquatableMixin {
     double? hitchRearTowbarLength,
   }) =>
       Equipment(
+        name: name ?? this.name,
         hitchType: hitchType ?? this.hitchType,
         hitchParent: hitchParent ?? this.hitchParent,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,

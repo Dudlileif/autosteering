@@ -3,24 +3,28 @@ import 'package:latlong2/latlong.dart';
 /// A class for making interfacing between vehicle and equipment easier by
 /// giving them parent <-> children relations.
 abstract class Hitchable {
-  const Hitchable({
+  Hitchable({
+    this.name = 'No name',
     this.hitchParent,
     this.hitchFrontFixedChild,
     this.hitchRearFixedChild,
     this.hitchRearTowbarChild,
   });
 
-  /// The parent of this hitch.
-  final Hitchable? hitchParent;
+  /// The parent of this, if there is one.
+  Hitchable? hitchParent;
 
   /// The child of this front fixed hitch.
-  final Hitchable? hitchFrontFixedChild;
+  Hitchable? hitchFrontFixedChild;
 
   /// The child of this rear fixed hitch.
-  final Hitchable? hitchRearFixedChild;
+  Hitchable? hitchRearFixedChild;
 
   /// The child of this rear towbar hitch.
-  final Hitchable? hitchRearTowbarChild;
+  Hitchable? hitchRearTowbarChild;
+
+  /// The name/id of this.
+  String name;
 
   /// A list of the currently attached children.
   List<Hitchable> get hitchChildren => [
@@ -38,10 +42,24 @@ abstract class Hitchable {
   /// The position of the rear towbar hitch point, if there is one.
   LatLng? get hitchRearTowbarPosition;
 
+  /// Update the children connected to this.
+  void updateChildren() {
+    hitchFrontFixedChild
+      ?..hitchParent = this
+      ..updateChildren();
+    hitchRearFixedChild
+      ?..hitchParent = this
+      ..updateChildren();
+    hitchRearTowbarChild
+      ?..hitchParent = this
+      ..updateChildren();
+  }
+
   Hitchable copyWith({
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
+    String? name,
   });
 }

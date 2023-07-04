@@ -13,7 +13,7 @@ import 'package:latlong2/latlong.dart';
 ///
 /// Geometry: https://eprints.qut.edu.au/21740/1/corke_00928568.pdf
 class ArticulatedTractor extends Vehicle {
-  const ArticulatedTractor({
+  ArticulatedTractor({
     required this.pivotToAntennaDistance,
     required this.pivotToFrontAxle,
     required this.pivotToRearAxle,
@@ -42,37 +42,38 @@ class ArticulatedTractor extends Vehicle {
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
+    super.name,
   });
 
   /// The distance from the vehicle articulation pivot point to the antenna
   /// [position].
-  final double pivotToAntennaDistance;
+  double pivotToAntennaDistance;
 
   /// The distance from the vehicle articulation pivot point to the front
   /// axle center position.
-  final double pivotToFrontAxle;
+  double pivotToFrontAxle;
 
   /// The distance from the vehicle articulation pivot point to the rear
   /// axle center position.
-  final double pivotToRearAxle;
+  double pivotToRearAxle;
 
-  final double? frontAxleToHitchDistance;
+  double? frontAxleToHitchDistance;
 
-  final double? rearAxleToHitchDistance;
+  double? rearAxleToHitchDistance;
 
-  final double? rearAxleToTowbarDistance;
+  double? rearAxleToTowbarDistance;
 
   /// The diameter of the wheels.
-  final double wheelDiameter;
+  double wheelDiameter;
 
   /// The width of the wheels.
-  final double wheelWidth;
+  double wheelWidth;
 
   /// The distance between the twin/triple etc. wheels.
-  final double wheelSpacing;
+  double wheelSpacing;
 
   /// The number of wheels, i.e. twin/triples etc...
-  final int numWheels;
+  int numWheels;
 
   @override
   double get wheelBase => pivotToFrontAxle + pivotToRearAxle;
@@ -534,6 +535,7 @@ class ArticulatedTractor extends Vehicle {
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
+    String? name,
   }) =>
       ArticulatedTractor(
         position: position ?? this.position,
@@ -566,5 +568,6 @@ class ArticulatedTractor extends Vehicle {
         hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
+        name: name ?? this.name,
       );
 }

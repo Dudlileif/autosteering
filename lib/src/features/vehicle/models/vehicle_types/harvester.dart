@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart';
 
 /// A harvester with rear wheel steering and a solid front axle.
 class Harvester extends AxleSteeredVehicle {
-  const Harvester({
+  Harvester({
     required super.wheelBase,
     required super.solidAxleDistance,
     required super.position,
@@ -32,6 +32,7 @@ class Harvester extends AxleSteeredVehicle {
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
+    super.name,
   });
 
   /// The position of the center of the rear axle.
@@ -99,6 +100,7 @@ class Harvester extends AxleSteeredVehicle {
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
+    String? name,
   }) =>
       Harvester(
         position: position ?? this.position,
@@ -132,5 +134,6 @@ class Harvester extends AxleSteeredVehicle {
         hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
+        name: name ?? this.name,
       );
 }

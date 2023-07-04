@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart';
 
 /// A conventional tractor with front wheel steering and a solid rear axle.
 class Tractor extends AxleSteeredVehicle {
-  const Tractor({
+  Tractor({
     required super.wheelBase,
     required super.solidAxleDistance,
     required super.position,
@@ -33,6 +33,7 @@ class Tractor extends AxleSteeredVehicle {
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
+    super.name,
   });
 
   /// The position of the center of the rear axle.
@@ -99,6 +100,7 @@ class Tractor extends AxleSteeredVehicle {
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
+    String? name,
   }) =>
       Tractor(
         position: position ?? this.position,
@@ -134,5 +136,6 @@ class Tractor extends AxleSteeredVehicle {
         hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
+        name: name ?? this.name,
       );
 }

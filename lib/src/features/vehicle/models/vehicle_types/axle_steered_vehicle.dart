@@ -10,7 +10,7 @@ import 'package:latlong2/latlong.dart';
 
 /// A base class for vehicles that steers with either a front or rear axle.
 abstract class AxleSteeredVehicle extends Vehicle {
-  const AxleSteeredVehicle({
+  AxleSteeredVehicle({
     required this.wheelBase,
     required this.solidAxleDistance,
     required super.position,
@@ -37,46 +37,47 @@ abstract class AxleSteeredVehicle extends Vehicle {
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
+    super.name,
   });
 
   /// The distance between the axles.
   @override
-  final double wheelBase;
+  double wheelBase;
 
   /// The distance from the antenna [position] to the solid axle,
   /// this means the rear axle on front wheel steered vehicles, and
   /// the front axle on rear wheel steered vehicles.
   /// Expected positive for front wheel steered,
   /// negative for rear wheel steered.
-  final double solidAxleDistance;
+  double solidAxleDistance;
 
   /// The distance to the front hitch point from the solid axle.
-  final double? solidAxleToFrontHitchDistance;
+  double? solidAxleToFrontHitchDistance;
 
   /// The distance to the rear hitch point from the solid axle.
-  final double? solidAxleToRearHitchDistance;
+  double? solidAxleToRearHitchDistance;
 
   /// The distance to the rear towbar hitch point from the solid axle.
-  final double? solidAxleToRearTowbarDistance;
+  double? solidAxleToRearTowbarDistance;
 
   /// A modifier ratio for the Ackermann central angle. Defaults to 1.
   ///
   /// A higher value will cause a sharper turn, and a lower value a looser
   /// turn.
   /// ackermannAngle = [steeringAngleInput] / [ackermannSteeringRatio]
-  final double ackermannSteeringRatio;
+  double ackermannSteeringRatio;
 
   /// The diameter of the steering axle wheels.
-  final double steeringAxleWheelDiameter;
+  double steeringAxleWheelDiameter;
 
   /// The diameter of the solid axle wheels
-  final double solidAxleWheelDiameter;
+  double solidAxleWheelDiameter;
 
   /// The width of the steering axle wheels.
-  final double steeringAxleWheelWidth;
+  double steeringAxleWheelWidth;
 
   /// The width of the solid axle wheels.
-  final double solidAxleWheelWidth;
+  double solidAxleWheelWidth;
 
   /// The position of the center of the rear axle.
   LatLng get solidAxlePosition;
@@ -485,5 +486,6 @@ abstract class AxleSteeredVehicle extends Vehicle {
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
+    String? name,
   });
 }

@@ -190,23 +190,23 @@ class _VehicleSimulatorState {
     }
     // Update the vehicle with new inputs.
     else if (message is VehicleInput && vehicle != null) {
-      final velocityFromDelta = message.velocityDelta != null
-          ? (vehicle!.velocity +
-                  (autoSlowDown ? 1.2 : 1) * message.velocityDelta!)
-              .clamp(-12.0, 12.0)
-          : null;
-
-      final steeringAngleFromDelta = message.steeringAngleDelta != null
-          ? (vehicle!.steeringAngleInput +
-                  (autoCenterSteering ? 2 : 1) * message.steeringAngleDelta!)
-              .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax)
-          : null;
-
-      vehicle = vehicle?.copyWith(
-        position: message.position,
-        velocity: message.velocity ?? velocityFromDelta,
-        steeringAngleInput: message.steeringAngle ?? steeringAngleFromDelta,
-      );
+      if (message.position != null) {
+        vehicle?.position = message.position!;
+      }
+      if (message.velocity != null) {
+        vehicle?.velocity = message.velocity!;
+      } else if (message.velocityDelta != null) {
+        vehicle?.velocity = (vehicle!.velocity +
+                (autoSlowDown ? 1.2 : 1) * message.velocityDelta!)
+            .clamp(-12.0, 12.0);
+      }
+      if (message.steeringAngle != null) {
+        vehicle?.steeringAngleInput = message.steeringAngle!;
+      } else if (message.steeringAngleDelta != null) {
+        vehicle?.steeringAngleInput = (vehicle!.steeringAngleInput +
+                (autoCenterSteering ? 2 : 1) * message.steeringAngleDelta!)
+            .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+      }
     }
     // Set the pure pursuit model.
     else if (message is ({PurePursuit? purePursuit})) {
@@ -264,27 +264,25 @@ class _VehicleSimulatorState {
   /// Check if [autoSlowDown] or [autoCenterSteering] should decrease the
   /// parameters they control.
   void checkAutoSlowDownOrCentering() {
-    vehicle = vehicle?.copyWith(
-      velocity: switch (autoSlowDown) {
-        false => null,
-        true => switch (vehicle!.velocity.abs() > 0.1) {
-            true => vehicle!.velocity -
-                vehicle!.velocity / vehicle!.velocity.abs() * 0.0125,
-            false => 0,
-          }
-      },
-      steeringAngleInput: switch (
-          vehicle!.steeringAngle.abs() > 0 && autoCenterSteering) {
-        false => null,
-        true => switch (vehicle!.steeringAngle.abs() < 1) {
-            true => 0,
-            false => vehicle!.steeringAngleInput -
-                vehicle!.steeringAngleInput.abs() /
-                    vehicle!.steeringAngleInput *
-                    0.4,
-          }
-      },
-    );
+    if (vehicle != null) {
+      if (autoSlowDown) {
+        vehicle!.velocity = switch (vehicle!.velocity.abs() > 0.1) {
+          true => vehicle!.velocity -
+              vehicle!.velocity / vehicle!.velocity.abs() * 0.0125,
+          false => 0,
+        };
+      }
+      if (autoCenterSteering) {
+        vehicle!.steeringAngleInput =
+            switch (vehicle!.steeringAngle.abs() < 1) {
+          true => 0,
+          false => vehicle!.steeringAngleInput -
+              vehicle!.steeringAngleInput.abs() /
+                  vehicle!.steeringAngleInput *
+                  0.4,
+        };
+      }
+    }
   }
 
   /// Check if we should update the turning circle center. We only do this
@@ -338,7 +336,7 @@ class _VehicleSimulatorState {
           false => steeringAngleCalc,
         };
 
-        vehicle = vehicle?.copyWith(steeringAngleInput: steeringAngle);
+        vehicle?.steeringAngleInput = steeringAngle;
       }
     }
   }
@@ -392,19 +390,9 @@ class _VehicleSimulatorState {
           );
 
           // Update the vehicle state.
-          this.vehicle = vehicle
-              .copyWith(
-                position: vehiclePosition,
-                heading: heading,
-              )
-              .copyWith(
-                hitchFrontFixedChild: vehicle.hitchFrontFixedChild
-                    ?.copyWith(hitchParent: vehicle),
-                hitchRearFixedChild:
-                    vehicle.hitchRearFixedChild?.copyWith(hitchParent: vehicle),
-                hitchRearTowbarChild: vehicle.hitchRearTowbarChild
-                    ?.copyWith(hitchParent: vehicle),
-              );
+          this.vehicle
+            ?..position = vehiclePosition
+            ..heading = heading;
         } else if (vehicle is ArticulatedTractor) {
           // A local vehicle variable to simplify null safe syntax.
           final vehicle = this.vehicle! as ArticulatedTractor;
@@ -456,19 +444,9 @@ class _VehicleSimulatorState {
           );
 
           // Update the vehicle state.
-          this.vehicle = vehicle
-              .copyWith(
-                position: vehiclePosition,
-                heading: frontBodyHeading,
-              )
-              .copyWith(
-                hitchFrontFixedChild: vehicle.hitchFrontFixedChild
-                    ?.copyWith(hitchParent: vehicle),
-                hitchRearFixedChild:
-                    vehicle.hitchRearFixedChild?.copyWith(hitchParent: vehicle),
-                hitchRearTowbarChild: vehicle.hitchRearTowbarChild
-                    ?.copyWith(hitchParent: vehicle),
-              );
+          this.vehicle
+            ?..position = vehiclePosition
+            ..heading = frontBodyHeading;
         }
       }
       // Going straight.
@@ -479,19 +457,10 @@ class _VehicleSimulatorState {
         );
 
         // Update the vehicle state.
-        vehicle = vehicle!
-            .copyWith(
-              position: position,
-            )
-            .copyWith(
-              hitchFrontFixedChild:
-                  vehicle?.hitchFrontFixedChild?.copyWith(hitchParent: vehicle),
-              hitchRearFixedChild:
-                  vehicle?.hitchRearFixedChild?.copyWith(hitchParent: vehicle),
-              hitchRearTowbarChild:
-                  vehicle?.hitchRearTowbarChild?.copyWith(hitchParent: vehicle),
-            );
+        vehicle?.position = position;
       }
+      // Update the connected equipment.
+      vehicle?.updateChildren();
     }
   }
 
@@ -537,6 +506,6 @@ class _VehicleSimulatorState {
 
     didChange = prevVehicle != vehicle;
 
-    prevVehicle = vehicle;
+    prevVehicle = vehicle?.copyWith();
   }
 }
