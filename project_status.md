@@ -18,6 +18,9 @@
 
 ## To be implemented
 
+-   Better performance, the current immutable/copyWith implementation might be
+    too taxing, reduce conversion steps with latlng/xy-coordinates (change algorithms to xy-coords)
+
 -   Improved vehicle simulation, though good enough for testing features now
 
 -   Equipment simulation
