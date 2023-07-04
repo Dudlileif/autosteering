@@ -115,6 +115,7 @@ class _CountryLayerMenuItemButton extends StatelessWidget {
                                   .read(countryLayerOpacitiesProvider.notifier)
                                   .update(layer, value)
                               : null,
+                          divisions: 20,
                         );
                       },
                     ),

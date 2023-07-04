@@ -107,6 +107,7 @@ class _SentinelLayerMenuItemButton extends StatelessWidget {
                                     )
                                     .update(layer.layerType, value)
                                 : null,
+                            divisions: 20,
                           );
                         },
                       ),

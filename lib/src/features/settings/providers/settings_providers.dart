@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
@@ -14,10 +15,14 @@ class Settings extends _$Settings {
   Map<String, dynamic> build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref
-            .watch(settingsFileProvider)
-            .requireValue
-            .writeAsString(const JsonEncoder.withIndent('    ').convert(state));
+        final sortedMap = SplayTreeMap.of(
+          next,
+          (key1, key2) => key1.compareTo(key2),
+        );
+
+        ref.watch(settingsFileProvider).requireValue.writeAsString(
+              const JsonEncoder.withIndent('    ').convert(sortedMap),
+            );
       }
     });
 

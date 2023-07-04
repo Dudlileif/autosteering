@@ -6,27 +6,27 @@ part of 'sentinel_provders.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sentinelInstanceIdHash() =>
-    r'2df91878eb3536ade9ab1de22b1801570fc273b7';
+String _$copernicusInstanceIdHash() =>
+    r'0a1e6f470a8443ceed23cc711bf09573fcec32ce';
 
 /// A provider for the Sentinel Dataspace instance id.
 ///
-/// Copied from [SentinelInstanceId].
-@ProviderFor(SentinelInstanceId)
-final sentinelInstanceIdProvider =
-    NotifierProvider<SentinelInstanceId, String?>.internal(
-  SentinelInstanceId.new,
-  name: r'sentinelInstanceIdProvider',
+/// Copied from [CopernicusInstanceId].
+@ProviderFor(CopernicusInstanceId)
+final copernicusInstanceIdProvider =
+    NotifierProvider<CopernicusInstanceId, String?>.internal(
+  CopernicusInstanceId.new,
+  name: r'copernicusInstanceIdProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$sentinelInstanceIdHash,
+      : _$copernicusInstanceIdHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SentinelInstanceId = Notifier<String?>;
+typedef _$CopernicusInstanceId = Notifier<String?>;
 String _$availableSentinelLayersHash() =>
-    r'7bf62de8a9d66ed26fb2faf6564951e4e72413a8';
+    r'843a435f03a14ef7319a1dd0ae28b380017b1267';
 
 /// A provider for the available Sentinel layers.
 ///
