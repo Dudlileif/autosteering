@@ -84,16 +84,12 @@ void handleAnalogInput(GamepadInput event, ProviderRef<void> ref) {
   if (event.analogInput == GamepadAnalogInput.rightTrigger) {
     final velocity = Tween<double>(begin: 0, end: 12)
         .transform(event.triggerValueDeadZoneAdjusted);
-    ref
-        .read(simVehicleInputProvider.notifier)
-        .send(VehicleInput(velocity: velocity));
+    ref.read(simInputProvider.notifier).send(VehicleInput(velocity: velocity));
   }
   if (event.analogInput == GamepadAnalogInput.leftTrigger) {
     final velocity = Tween<double>(begin: 0, end: -12)
         .transform(event.triggerValueDeadZoneAdjusted);
-    ref
-        .read(simVehicleInputProvider.notifier)
-        .send(VehicleInput(velocity: velocity));
+    ref.read(simInputProvider.notifier).send(VehicleInput(velocity: velocity));
   }
   // Steering
   else if (event.analogInput == GamepadAnalogInput.leftStickX) {
@@ -106,7 +102,7 @@ void handleAnalogInput(GamepadInput event, ProviderRef<void> ref) {
     ).transform(
       event.joystickValueDeadZoneAdjusted,
     );
-    ref.read(simVehicleInputProvider.notifier).send(
+    ref.read(simInputProvider.notifier).send(
           VehicleInput(steeringAngle: angle),
         );
   }
@@ -115,14 +111,14 @@ void handleAnalogInput(GamepadInput event, ProviderRef<void> ref) {
 /// How to handle button presses.
 void handleButtonInput(GamepadInput event, ProviderRef<void> ref) {
   if (event.buttonInput == GamepadButtonInput.home) {
-    ref.read(simVehicleInputProvider.notifier).send(
+    ref.read(simInputProvider.notifier).send(
           VehicleInput(
             position: ref.watch(homePositionProvider),
             velocity: 0,
           ),
         );
   } else if (event.buttonInput == GamepadButtonInput.start) {
-    ref.read(simVehicleInputProvider.notifier).send(
+    ref.read(simInputProvider.notifier).send(
           const VehicleInput(
             velocity: 0,
           ),

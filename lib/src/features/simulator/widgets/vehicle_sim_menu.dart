@@ -28,7 +28,7 @@ class VehicleSimMenu extends StatelessWidget {
                 CheckboxListTile(
                   value: vehicle is Tractor,
                   onChanged: (value) {
-                    ref.read(simVehicleInputProvider.notifier).send(
+                    ref.read(simInputProvider.notifier).send(
                           // MF 5713S -ish
                           Tractor(
                             position: vehicle.position,
@@ -54,7 +54,7 @@ class VehicleSimMenu extends StatelessWidget {
                 CheckboxListTile(
                   value: vehicle is ArticulatedTractor,
                   onChanged: (value) {
-                    ref.read(simVehicleInputProvider.notifier).send(
+                    ref.read(simInputProvider.notifier).send(
                           // NH T9.700 -ish
                           ArticulatedTractor(
                             position: vehicle.position,
@@ -83,7 +83,7 @@ class VehicleSimMenu extends StatelessWidget {
                 CheckboxListTile(
                   value: vehicle is Harvester,
                   onChanged: (value) {
-                    ref.read(simVehicleInputProvider.notifier).send(
+                    ref.read(simInputProvider.notifier).send(
                           // MF Activa 7345
                           Harvester(
                             position: vehicle.position,

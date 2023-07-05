@@ -26,7 +26,7 @@ final copernicusInstanceIdProvider =
 
 typedef _$CopernicusInstanceId = Notifier<String?>;
 String _$availableSentinelLayersHash() =>
-    r'843a435f03a14ef7319a1dd0ae28b380017b1267';
+    r'e54c0aefca7d5e1309260b740cbd2397ea1cc1b3';
 
 /// A provider for the available Sentinel layers.
 ///
@@ -65,7 +65,7 @@ final sentinelMaxCloudCoveragePercentProvider =
 
 typedef _$SentinelMaxCloudCoveragePercent = Notifier<double>;
 String _$enabledSentinelLayersHash() =>
-    r'237907a934f56814311871bd7b5b86e0dee4975d';
+    r'5cd9eb2132a9573e8834b563f6563c8d1cf82837';
 
 /// A provider for the set of selected Sentinel layers.
 ///
@@ -84,7 +84,7 @@ final enabledSentinelLayersProvider =
 
 typedef _$EnabledSentinelLayers = Notifier<Set<SentinelLayer>>;
 String _$sentinelLayerOpacitiesHash() =>
-    r'133600f24775b6062e2c828f01d4ff4b60d93327';
+    r'45e4ee42a89e5167fb49727d1f0bc4c56276032e';
 
 /// A map for the Sentinel layers and their opacities, which can be specified.
 ///

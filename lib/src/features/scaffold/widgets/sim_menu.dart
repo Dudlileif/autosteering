@@ -24,7 +24,7 @@ class SimMenu extends StatelessWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) => ListTile(
-            onTap: () => ref.read(simVehicleInputProvider.notifier).send(
+            onTap: () => ref.read(simInputProvider.notifier).send(
                   ref.watch(mainVehicleProvider).copyWith(
                         position: ref.watch(homePositionProvider),
                       ),

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
@@ -25,7 +26,7 @@ enum SimPlatform {
 /// It will automatically select the right type of thread/worker depending
 /// on the platform.
 @Riverpod(keepAlive: true)
-class SimVehicleInput extends _$SimVehicleInput {
+class SimInput extends _$SimInput {
   @override
   SimPlatform build() => switch (Device.isWeb) {
         true => SimPlatform.web,
@@ -51,7 +52,7 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
       ..watch(simVehicleAutoCenterSteeringProvider)
       ..watch(simVehicleAutoSlowDownProvider);
 
-    final vehicle = switch (ref.watch(simVehicleInputProvider)) {
+    final vehicle = switch (ref.watch(simInputProvider)) {
       SimPlatform.web => ref.watch(simVehicleWebStreamProvider).when(
             data: (data) => data,
             error: (error, stackTrace) => ref.watch(mainVehicleProvider),
@@ -64,11 +65,14 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
           )
     };
     if (vehicle == null) {
-      ref
-          .read(simVehicleInputProvider.notifier)
-          .send(ref.read(mainVehicleProvider));
+      ref.read(simInputProvider.notifier).send(ref.read(mainVehicleProvider));
     } else {
       ref.read(mainVehicleProvider.notifier).update(vehicle);
+
+      for (final element in vehicle.hitchChildren) {
+        (element as Equipment)
+            .update(ref.read(allEquipmentsProvider.notifier).update);
+      }
 
       if (vehicle.position !=
               ref.watch(
@@ -94,7 +98,7 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
 }
 
 /// A provider for keeping the isolate [SendPort] for when working on a
-/// native platform. Vehicle inputs gets directed here from [SimVehicleInput].
+/// native platform. Vehicle inputs gets directed here from [SimInput].
 @Riverpod(keepAlive: true)
 class _SimVehicleIsolatePort extends _$SimVehicleIsolatePort {
   @override
@@ -201,9 +205,7 @@ class SimVehicleAutoCenterSteering extends _$SimVehicleAutoCenterSteering {
   @override
   bool build() {
     ref.listenSelf((previous, next) {
-      ref
-          .read(simVehicleInputProvider.notifier)
-          .send((autoCenterSteering: next));
+      ref.read(simInputProvider.notifier).send((autoCenterSteering: next));
 
       if (next != previous) {
         ref
@@ -236,7 +238,7 @@ class SimVehicleAutoSlowDown extends _$SimVehicleAutoSlowDown {
   @override
   bool build() {
     ref.listenSelf((previous, next) {
-      ref.read(simVehicleInputProvider.notifier).send((autoSlowDown: next));
+      ref.read(simInputProvider.notifier).send((autoSlowDown: next));
 
       if (next != previous) {
         ref
@@ -275,7 +277,7 @@ class SimVehicleAccelerator extends _$SimVehicleAccelerator {
     Future(
       () =>
           state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
-        ref.read(simVehicleInputProvider.notifier).send(input);
+        ref.read(simInputProvider.notifier).send(input);
       }),
     );
   }
@@ -299,7 +301,7 @@ class SimVehicleSteering extends _$SimVehicleSteering {
     Future(
       () =>
           state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
-        ref.read(simVehicleInputProvider.notifier).send(input);
+        ref.read(simInputProvider.notifier).send(input);
       }),
     );
   }

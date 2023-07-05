@@ -6,7 +6,7 @@ part of 'vehicle_simulator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$simVehicleDrivingHash() => r'6c43edeae3629e34765ed0d8d79db1d929fda56d';
+String _$simVehicleDrivingHash() => r'bca513924be91940b680589eacff8748290dde8f';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -70,32 +70,30 @@ final simVehicleIsolateStreamProvider =
 );
 
 typedef SimVehicleIsolateStreamRef = AutoDisposeStreamProviderRef<Vehicle>;
-String _$simVehicleInputHash() => r'f5f2f93520ee40486a0f9d8a66cf0e58d535a1d3';
+String _$simInputHash() => r'9c4794614e6f6395f9b5fa233c4c4a9dbb38243f';
 
 /// A provider used to send vehicle input data to the simulation thread/worker.
 ///
 /// It will automatically select the right type of thread/worker depending
 /// on the platform.
 ///
-/// Copied from [SimVehicleInput].
-@ProviderFor(SimVehicleInput)
-final simVehicleInputProvider =
-    NotifierProvider<SimVehicleInput, SimPlatform>.internal(
-  SimVehicleInput.new,
-  name: r'simVehicleInputProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simVehicleInputHash,
+/// Copied from [SimInput].
+@ProviderFor(SimInput)
+final simInputProvider = NotifierProvider<SimInput, SimPlatform>.internal(
+  SimInput.new,
+  name: r'simInputProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$simInputHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SimVehicleInput = Notifier<SimPlatform>;
+typedef _$SimInput = Notifier<SimPlatform>;
 String _$simVehicleIsolatePortHash() =>
     r'2d97a0640c019e8c43506747a04eac2dcab1c5c4';
 
 /// A provider for keeping the isolate [SendPort] for when working on a
-/// native platform. Vehicle inputs gets directed here from [SimVehicleInput].
+/// native platform. Vehicle inputs gets directed here from [SimInput].
 ///
 /// Copied from [_SimVehicleIsolatePort].
 @ProviderFor(_SimVehicleIsolatePort)
@@ -132,7 +130,7 @@ final _simVehicleWebInputProvider =
 
 typedef _$SimVehicleWebInput = Notifier<StreamController<dynamic>>;
 String _$simVehicleAutoCenterSteeringHash() =>
-    r'5e57a522d19fb72f9f546c47301c42898bff668c';
+    r'f0ef7498715fdcc0908fb2e5b867129c8484496d';
 
 /// A provider for whether the steering automatically should recenter when
 /// no input is provided.
@@ -152,7 +150,7 @@ final simVehicleAutoCenterSteeringProvider =
 
 typedef _$SimVehicleAutoCenterSteering = Notifier<bool>;
 String _$simVehicleAutoSlowDownHash() =>
-    r'2dd9040f4c0dee54740af47d4bd063197dcc5f13';
+    r'e6f8146e571d296065971b3becfe1d53cb094a56';
 
 /// A provider for whether the vehicle should slow down when no input is
 /// provided.
@@ -172,7 +170,7 @@ final simVehicleAutoSlowDownProvider =
 
 typedef _$SimVehicleAutoSlowDown = Notifier<bool>;
 String _$simVehicleAcceleratorHash() =>
-    r'a666a1fdb3a0d95488156f0aa2a2d59170086ee1';
+    r'10e04dc7eae79c439dd221071390bf9dcca44ac4';
 
 /// A provider for accelerating the vehicle in the simulator, typically
 /// used by hotkeys/keyboard.
@@ -192,7 +190,7 @@ final simVehicleAcceleratorProvider =
 
 typedef _$SimVehicleAccelerator = Notifier<Timer?>;
 String _$simVehicleSteeringHash() =>
-    r'd3d01f8ea6a3673138a3a2d572835aca4c08aca7';
+    r'b36625c6a2ec89643fb421f5be6243a5d5ccac5d';
 
 /// A provider for steering the vehicle in the simulator, typically
 /// used by hotkeys/keyboard.

@@ -22,7 +22,7 @@ class ConfiguredPurePursuit extends _$ConfiguredPurePursuit {
   }
 
   void sendToSim() =>
-      ref.read(simVehicleInputProvider.notifier).send((purePursuit: state));
+      ref.read(simInputProvider.notifier).send((purePursuit: state));
 }
 
 /// A provider for whether or not the vehicle should follow the
@@ -32,9 +32,7 @@ class EnablePurePursuit extends _$EnablePurePursuit {
   @override
   bool build() {
     ref.listenSelf((previous, next) {
-      ref
-          .read(simVehicleInputProvider.notifier)
-          .send((enablePurePursuit: next));
+      ref.read(simInputProvider.notifier).send((enablePurePursuit: next));
       if (next) {
         ref.read(configuredPurePursuitProvider.notifier).sendToSim();
       }
@@ -54,7 +52,7 @@ class PursuitMode extends _$PursuitMode {
   @override
   PurePursuitMode build() {
     ref.listenSelf((previous, next) {
-      ref.read(simVehicleInputProvider.notifier).send(state);
+      ref.read(simInputProvider.notifier).send(state);
     });
     return PurePursuitMode.lookAhead;
   }
@@ -68,7 +66,7 @@ class PurePursuitLoop extends _$PurePursuitLoop {
   @override
   PurePursuitLoopMode build() {
     ref.listenSelf((previous, next) {
-      ref.read(simVehicleInputProvider.notifier).send((loopModePursuit: next));
+      ref.read(simInputProvider.notifier).send((loopModePursuit: next));
     });
     return PurePursuitLoopMode.none;
   }
@@ -82,9 +80,7 @@ class LookAheadDistance extends _$LookAheadDistance {
   @override
   double build() {
     ref.listenSelf((previous, next) {
-      ref
-          .read(simVehicleInputProvider.notifier)
-          .send((lookAheadDistance: state));
+      ref.read(simInputProvider.notifier).send((lookAheadDistance: state));
     });
     return 4;
   }

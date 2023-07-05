@@ -7,7 +7,7 @@ part of 'pure_pursuit_providers.dart';
 // **************************************************************************
 
 String _$configuredPurePursuitHash() =>
-    r'a079d969dfaa0a8a7924344102abe0aed3c9475f';
+    r'707c6fd1bca4a6511f16451b4233e1416e4f53fb';
 
 /// A provider for creating and holding a [PurePursuit] model for the
 /// previously recorded waypoints.
@@ -26,7 +26,7 @@ final configuredPurePursuitProvider =
 );
 
 typedef _$ConfiguredPurePursuit = Notifier<PurePursuit?>;
-String _$enablePurePursuitHash() => r'938f70c30bf51f34d21d1169bc32eba29a85aedc';
+String _$enablePurePursuitHash() => r'a6f67c9a872f07a2f3673cea178c4819fb8b48bb';
 
 /// A provider for whether or not the vehicle should follow the
 /// [ConfiguredPurePursuit] tracking model.
@@ -45,7 +45,7 @@ final enablePurePursuitProvider =
 );
 
 typedef _$EnablePurePursuit = Notifier<bool>;
-String _$pursuitModeHash() => r'47d8fafa7d49b3347e33e0e0f0cb631a49615d15';
+String _$pursuitModeHash() => r'13cbf8a34f72658677ad31554e5733b412039b3c';
 
 /// A provider for which steering mode the [ConfiguredPurePursuit] model should
 /// use.
@@ -63,7 +63,7 @@ final pursuitModeProvider =
 );
 
 typedef _$PursuitMode = Notifier<PurePursuitMode>;
-String _$purePursuitLoopHash() => r'348334dc74b35f8ff0599ec5557333c7c719fe5d';
+String _$purePursuitLoopHash() => r'a464f55dc59553b26faf22059769fd554409b585';
 
 /// A provider for which looping mode the [ConfiguredPurePursuit] should follow.
 ///
@@ -81,7 +81,7 @@ final purePursuitLoopProvider =
 );
 
 typedef _$PurePursuitLoop = Notifier<PurePursuitLoopMode>;
-String _$lookAheadDistanceHash() => r'cc5238aefa1ff1c179aea9507f00d9770269e555';
+String _$lookAheadDistanceHash() => r'88a53a0827e724b4c8d9d671fa62054cea09f0c1';
 
 /// A provider for the look ahead distance of the [ConfiguredPurePursuit] model.
 ///

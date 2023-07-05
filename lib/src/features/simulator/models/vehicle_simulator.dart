@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
@@ -63,6 +64,9 @@ class VehicleSimulator {
   }
 
   /// Used in web version since multithreading isn't possible.
+  ///
+  /// This takes in the stream [vehicleEvents] to get events/messages
+  /// from the UI.
   static Stream<
       ({
         Vehicle? vehicle,
@@ -166,6 +170,9 @@ class _VehicleSimulatorState {
   /// The time period between the last update and this current update.
   double period = 0;
 
+  /// Whether we should force update for the next update, i.e. send the state.
+  bool forceChange = false;
+
   /// Update the [prevUpdateTime] and the [period] for the next simulation.
   void updateTime() {
     final now = DateTime.now();
@@ -258,7 +265,14 @@ class _VehicleSimulatorState {
       if (purePursuit != null && vehicle != null) {
         purePursuit!.currentIndex = purePursuit!.closestIndex(vehicle!);
       }
+    } else if (message is ({String uuid, List<bool> activeSegments})) {
+      final equipment = vehicle?.findChildRecursive(message.uuid);
+      if (equipment != null && equipment is Equipment) {
+        equipment.activeSegments = message.activeSegments;
+      }
     }
+    // Force update to reflect changes in case we haven't moved.
+    forceChange = true;
   }
 
   /// Check if [autoSlowDown] or [autoCenterSteering] should decrease the
@@ -504,8 +518,9 @@ class _VehicleSimulatorState {
     updatePosition();
     updateGauges();
 
-    didChange = prevVehicle != vehicle;
+    didChange = forceChange || prevVehicle != vehicle;
 
     prevVehicle = vehicle?.copyWith();
+    forceChange = false;
   }
 }

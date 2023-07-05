@@ -40,7 +40,7 @@ class VehicleSimScreenControls extends StatelessWidget {
               ],
             ),
             builder: (context, ref, child) => FloatingActionButton(
-              onPressed: () => ref.read(simVehicleInputProvider.notifier).send(
+              onPressed: () => ref.read(simInputProvider.notifier).send(
                     const VehicleInput(velocity: 0),
                   ),
               backgroundColor: Colors.red,
@@ -88,7 +88,7 @@ class VehicleSimScreenControls extends StatelessWidget {
                               )
                                   ? ref
                                       .read(
-                                      simVehicleInputProvider.notifier,
+                                      simInputProvider.notifier,
                                     )
                                       .send((autoCenterSteering: false))
                                   : null,
@@ -97,12 +97,12 @@ class VehicleSimScreenControls extends StatelessWidget {
                               )
                                   ? ref
                                       .read(
-                                      simVehicleInputProvider.notifier,
+                                      simInputProvider.notifier,
                                     )
                                       .send((autoCenterSteering: true))
                                   : null,
                               onChanged: (value) => ref
-                                  .read(simVehicleInputProvider.notifier)
+                                  .read(simInputProvider.notifier)
                                   .send(VehicleInput(steeringAngle: value)),
                               min: -steeringAngleMax,
                               max: steeringAngleMax,
@@ -142,20 +142,20 @@ class VehicleSimScreenControls extends StatelessWidget {
                             ),
                             child: Slider(
                               value: velocity,
-                              onChangeStart: (value) => ref
-                                      .watch(simVehicleAutoSlowDownProvider)
-                                  ? ref
-                                      .read(simVehicleInputProvider.notifier)
-                                      .send((autoSlowDown: false))
-                                  : null,
-                              onChangeEnd: (value) => ref
-                                      .watch(simVehicleAutoSlowDownProvider)
-                                  ? ref
-                                      .read(simVehicleInputProvider.notifier)
-                                      .send((autoSlowDown: true))
-                                  : null,
+                              onChangeStart: (value) =>
+                                  ref.watch(simVehicleAutoSlowDownProvider)
+                                      ? ref
+                                          .read(simInputProvider.notifier)
+                                          .send((autoSlowDown: false))
+                                      : null,
+                              onChangeEnd: (value) =>
+                                  ref.watch(simVehicleAutoSlowDownProvider)
+                                      ? ref
+                                          .read(simInputProvider.notifier)
+                                          .send((autoSlowDown: true))
+                                      : null,
                               onChanged: (value) => ref
-                                  .read(simVehicleInputProvider.notifier)
+                                  .read(simInputProvider.notifier)
                                   .send(VehicleInput(velocity: value)),
                               min: -12,
                               max: 12,
