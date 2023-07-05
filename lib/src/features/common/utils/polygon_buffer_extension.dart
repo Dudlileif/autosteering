@@ -124,4 +124,7 @@ extension PolygonBufferExtension on map.Polygon {
             : SphericalUtil.computeArea(hole).toDouble(),
       ) ??
       0;
+
+  /// Whether this polygon contains the [point];
+  bool contains(LatLng point) => jtsPolygon.contains(point.jtsPoint);
 }

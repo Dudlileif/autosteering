@@ -19,6 +19,10 @@ extension ProjectionExstention on LatLng {
         gbProjected.x.toDouble(),
         gbProjected.y.toDouble(),
       );
+
+  /// A conversion to a Point from the JTS package format;
+  jts.Point get jtsPoint =>
+      jts.Point(jtsCoordinate, jts.PrecisionModel(), 4326);
 }
 
 /// An extension to allow easy swapping between different location/coordinate
