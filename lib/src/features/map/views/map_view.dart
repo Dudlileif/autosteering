@@ -58,7 +58,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
           },
         LogicalKeyboardKey.space => {
             if (event is KeyDownEvent)
-              ref.read(simVehicleInputProvider.notifier).send(
+              ref.read(simInputProvider.notifier).send(
                     switch (shiftModifier) {
                       false => const VehicleInput(velocity: 0),
                       true => const VehicleInput(steeringAngle: 0)
