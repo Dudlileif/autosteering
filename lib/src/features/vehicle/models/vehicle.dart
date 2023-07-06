@@ -1,12 +1,22 @@
+import 'dart:math';
+
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+part 'vehicle_types/articulated_tractor.dart';
+part 'vehicle_types/axle_steered_vehicle.dart';
+part 'vehicle_types/harvester.dart';
+part 'vehicle_types/tractor.dart';
+
 /// A base class for vehicles that handles all common parameters/variables
 /// and methods.
-abstract class Vehicle extends Hitchable with EquatableMixin {
+sealed class Vehicle extends Hitchable with EquatableMixin {
   Vehicle({
     required this.position,
     required this.antennaHeight,
@@ -16,7 +26,6 @@ abstract class Vehicle extends Hitchable with EquatableMixin {
     required this.pidParameters,
     this.invertSteeringInput = false,
     this.velocity = 0,
-    this.heading = 0,
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
@@ -25,7 +34,8 @@ abstract class Vehicle extends Hitchable with EquatableMixin {
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
-  });
+    double heading = 0,
+  }) : _heading = heading;
 
   /// Antenna position of the vehicle. Assumed centered in the
   /// width dimension of the vehicle.
@@ -42,9 +52,6 @@ abstract class Vehicle extends Hitchable with EquatableMixin {
 
   /// The maximum angle that the steering wheels/pivot can turn, in degrees.
   double steeringAngleMax;
-
-  /// The heading of the vehicle, in degrees.
-  double heading;
 
   /// This is the Ackermann input angle or the angle of the articulation for an
   /// articulated tractor.
@@ -69,6 +76,17 @@ abstract class Vehicle extends Hitchable with EquatableMixin {
 
   /// Whether the vehicle is simulated.
   bool simulated;
+
+  /// Heading as set from the outside.
+  double _heading = 0;
+
+  /// The heading of the vehicle, in degrees.
+  @override
+  double get heading => _heading;
+
+  /// Update the heading of the vehicle, [value] in degrees.
+  @override
+  set heading(double value) => _heading = value;
 
   /// The distance between the wheel axles.
   double get wheelBase;

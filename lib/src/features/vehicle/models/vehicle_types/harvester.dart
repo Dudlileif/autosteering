@@ -1,11 +1,7 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:latlong2/latlong.dart';
+part of '../vehicle.dart';
 
 /// A harvester with rear wheel steering and a solid front axle.
-class Harvester extends AxleSteeredVehicle {
+final class Harvester extends AxleSteeredVehicle {
   Harvester({
     required super.wheelBase,
     required super.solidAxleDistance,
@@ -14,7 +10,7 @@ class Harvester extends AxleSteeredVehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
-    super.solidAxleToFrontHitchDistance = 1.5,
+    super.solidAxleToFrontHitchDistance = 2,
     super.solidAxleToRearTowbarDistance = 6,
     super.ackermannSteeringRatio,
     super.steeringAxleWheelDiameter,

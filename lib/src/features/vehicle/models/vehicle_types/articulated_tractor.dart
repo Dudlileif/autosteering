@@ -1,18 +1,10 @@
-import 'dart:math';
-
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+part of '../vehicle.dart';
 
 /// An articulated tractor with two bodies with solid axles that are joined
 /// at a pivot point.
 ///
 /// Geometry: https://eprints.qut.edu.au/21740/1/corke_00928568.pdf
-class ArticulatedTractor extends Vehicle {
+final class ArticulatedTractor extends Vehicle {
   ArticulatedTractor({
     required this.pivotToAntennaDistance,
     required this.pivotToFrontAxle,
@@ -25,8 +17,8 @@ class ArticulatedTractor extends Vehicle {
     required super.steeringAngleMax,
     required super.trackWidth,
     this.frontAxleToHitchDistance,
-    this.rearAxleToHitchDistance = 1.6,
-    this.rearAxleToTowbarDistance = 1,
+    this.rearAxleToHitchDistance = 1.9,
+    this.rearAxleToTowbarDistance = 1.6,
     this.wheelDiameter = 1.8,
     this.wheelWidth = 1.3,
     this.wheelSpacing = 0.15,
@@ -132,7 +124,7 @@ class ArticulatedTractor extends Vehicle {
       switch (rearAxleToTowbarDistance != null) {
         true => rearAxlePosition.offset(
             rearAxleToTowbarDistance!,
-            heading + 180,
+            rearAxleAngle,
           ),
         false => null,
       };

@@ -1,15 +1,7 @@
-import 'dart:math';
-
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+part of '../vehicle.dart';
 
 /// A base class for vehicles that steers with either a front or rear axle.
-abstract class AxleSteeredVehicle extends Vehicle {
+sealed class AxleSteeredVehicle extends Vehicle {
   AxleSteeredVehicle({
     required this.wheelBase,
     required this.solidAxleDistance,

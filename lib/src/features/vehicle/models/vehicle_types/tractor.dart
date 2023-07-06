@@ -1,11 +1,7 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:latlong2/latlong.dart';
+part of '../vehicle.dart';
 
 /// A conventional tractor with front wheel steering and a solid rear axle.
-class Tractor extends AxleSteeredVehicle {
+final class Tractor extends AxleSteeredVehicle {
   Tractor({
     required super.wheelBase,
     required super.solidAxleDistance,
@@ -14,7 +10,7 @@ class Tractor extends AxleSteeredVehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
-    super.solidAxleToFrontHitchDistance = 3.25,
+    super.solidAxleToFrontHitchDistance = 3.5,
     super.solidAxleToRearHitchDistance = 0.9,
     super.solidAxleToRearTowbarDistance = 0.65,
     super.ackermannSteeringRatio,
