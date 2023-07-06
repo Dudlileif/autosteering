@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/common/widgets/widgets.dart';
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/path_recorder_menu.dart';
 import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/pure_pursuit_menu.dart';
 import 'package:flutter/material.dart';
