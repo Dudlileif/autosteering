@@ -33,10 +33,5 @@ linter:
     # `// ignore_for_file: name_of_lint` syntax on the line or in the file
     # producing the lint.
     rules:
-        # avoid_print: false
-        prefer_single_quotes: true
-        public_member_api_docs: true
-        avoid_positional_boolean_parameters: true
-        use_setters_to_change_properties: false
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
