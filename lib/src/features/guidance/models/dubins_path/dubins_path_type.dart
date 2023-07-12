@@ -58,4 +58,12 @@ enum DubinsPathType {
 
   /// A list of the path sections.
   List<DubinsSection> get sections => [start, mid, end];
+
+  /// A list of the path types that have a straight tangent from the start
+  /// to the end circle.
+  static List<DubinsPathType> get withStraight => [lsl, lsr, rsl, rsr];
+
+  /// A list of the path types that have a third, middle circle connecting the
+  /// start and end circles.
+  static List<DubinsPathType> get onlyCircles => [lrl, rlr];
 }

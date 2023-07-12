@@ -93,7 +93,7 @@ final homePositionProvider = NotifierProvider<HomePosition, LatLng>.internal(
 
 typedef _$HomePosition = Notifier<LatLng>;
 String _$centerMapOnVehicleHash() =>
-    r'0bbe5ef562ea8154bc497be0626337a17a97f870';
+    r'6268ec68323bb1790b8585e16fcdb04b57ec6e4b';
 
 /// Whether the map should center on the vehicle or if it could be moved freely.
 ///
@@ -168,7 +168,7 @@ final mapOffset3DProvider =
 );
 
 typedef _$MapOffset3D = Notifier<MapCenterOffset>;
-String _$alwaysPointNorthHash() => r'b7b98a0c768dbf808383c3f5d29ea22bb1581589';
+String _$alwaysPointNorthHash() => r'4c5a4f69391405ba0f11fabe94c3fc9e492e5ad4';
 
 /// Whether the map always should point to the north and not rotate.
 ///

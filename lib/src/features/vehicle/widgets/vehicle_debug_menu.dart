@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// A menu button with attached submenu for toggling vehicle debugging
 /// features.
 class VehicleDebugMenu extends StatelessWidget {
+  /// A menu button with attached submenu for toggling vehicle debugging
+  /// features.
   const VehicleDebugMenu({super.key});
 
   @override

@@ -7,9 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A selection of widgets to control the map zoom, rotation and position lock.
 class MapControlButtons extends StatelessWidget {
-  const MapControlButtons({
-    super.key,
-  });
+  /// A selection of widgets to control the map zoom, rotation and position
+  /// lock.
+  const MapControlButtons({super.key});
 
   @override
   Widget build(BuildContext context) {

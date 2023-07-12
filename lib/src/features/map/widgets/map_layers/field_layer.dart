@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A combination layer for debugging the field feature.
 class FieldLayer extends ConsumerWidget {
+  /// A combination layer for debugging the field feature.
   const FieldLayer({super.key});
 
   @override

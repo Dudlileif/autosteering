@@ -1,16 +1,18 @@
+// ignore_for_file: public_member_api_docs
+
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 /// A class with color schemes for different vehicle manufacturers.
 class ManufacturerSchemes {
-  /// An iterable of the available color schemes.
+  /// An iterable of the available color schemes with the [brightness] applied.
   static Iterable<FlexSchemeColor> schemes(Brightness brightness) =>
       ManufacturerColor.values.map(
         (value) => scheme(value, brightness),
       );
 
   /// A function for getting the appropriate color scheme for the manufacturer
-  /// color, depending on the theme mode brightness.
+  /// [colors], depending on the theme mode [brightness].
   static FlexSchemeColor scheme(
     ManufacturerColor colors,
     Brightness brightness,

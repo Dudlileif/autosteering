@@ -6,7 +6,19 @@ import 'package:flutter_map/plugin_api.dart';
 
 /// A [TileProvider] for network images that will be cached.
 class CachedTileProvider extends TileProvider {
-  CachedTileProvider({this.debugPrint = false, super.headers});
+  /// A [TileProvider] for network images that will be cached.
+  ///
+  /// Supply custom [headers] if needed.
+  ///
+  /// Enabling [debugPrint] will print the urls for the tiles to the consolse as
+  /// they are requested.
+  CachedTileProvider({
+    this.debugPrint = false,
+    super.headers,
+  });
+
+  /// Whether the urls for the tiles should be printed to the console as they
+  /// are requested.
   final bool debugPrint;
 
   @override

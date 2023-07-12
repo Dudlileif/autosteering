@@ -6,6 +6,9 @@ import 'package:flutter_map/flutter_map.dart';
 ///
 /// The map tiles are themed when in dark mode.
 class OSMLayer extends StatelessWidget {
+  /// A layer for the OpenStreetMap map tiles.
+  ///
+  /// The map tiles are themed when in dark mode.
   const OSMLayer({super.key});
 
   @override
@@ -24,6 +27,7 @@ class OSMLayer extends StatelessWidget {
 
 /// A small OpenStreetMap contribution widget, to use in corner of the map.
 class OSMContribution extends StatelessWidget {
+  /// A small OpenStreetMap contribution widget, to use in corner of the map.
   const OSMContribution({super.key});
 
   @override

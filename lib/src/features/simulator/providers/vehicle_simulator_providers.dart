@@ -17,7 +17,10 @@ part 'vehicle_simulator_providers.g.dart';
 
 /// An enumeration class for determining which platform we're running on.
 enum SimPlatform {
+  /// Running natively on a platform with multithreading.
   native,
+
+  /// Running on the web browser, i.e. no multithreading.
   web;
 }
 
@@ -33,6 +36,7 @@ class SimInput extends _$SimInput {
         false => SimPlatform.native,
       };
 
+  /// Send some [input] to the simulator.
   void send(dynamic input) => switch (state) {
         SimPlatform.web => Future(
             () => ref.read(_simVehicleWebInputProvider).add(input),
@@ -138,7 +142,7 @@ Stream<Vehicle?> simVehicleWebStream(
     ref.read(vehicleHeadingProvider.notifier).update(event.heading.toDouble());
     ref
         .read(vehicleTravelledDistanceProvider.notifier)
-        .update(event.distance.toDouble());
+        .updateWith(event.distance.toDouble());
     ref.read(displayPurePursuitProvider.notifier).update(event.purePursuit);
     return event.vehicle;
   });
@@ -191,7 +195,7 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
       ref.read(vehicleHeadingProvider.notifier).update(message.heading);
       ref
           .read(vehicleTravelledDistanceProvider.notifier)
-          .update(message.distance);
+          .updateWith(message.distance);
       ref.read(displayPurePursuitProvider.notifier).update(message.purePursuit);
       yield message.vehicle;
     }
@@ -226,8 +230,10 @@ class SimVehicleAutoCenterSteering extends _$SimVehicleAutoCenterSteering {
     return false;
   }
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state != state);
 }
 
@@ -258,8 +264,10 @@ class SimVehicleAutoSlowDown extends _$SimVehicleAutoSlowDown {
     return false;
   }
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state != state);
 }
 
@@ -270,8 +278,12 @@ class SimVehicleAccelerator extends _$SimVehicleAccelerator {
   @override
   Timer? build() => null;
 
+  /// Cancel the [state] timer, i.e. stop adding/removing velocity to the
+  /// simulator.
   void cancel() => Future(() => state?.cancel());
 
+  /// Restart the timer and send the [input] velocity change at a constant
+  /// interval.
   void update(VehicleInput input) {
     cancel();
     Future(
@@ -282,8 +294,10 @@ class SimVehicleAccelerator extends _$SimVehicleAccelerator {
     );
   }
 
+  /// Start accelerating forwards/increasing the velocity.
   void forward() => update(const VehicleInput(velocityDelta: 0.1));
 
+  /// Start accelerating backwards/decreasing the velocity.
   void reverse() => update(const VehicleInput(velocityDelta: -0.1));
 }
 
@@ -294,8 +308,12 @@ class SimVehicleSteering extends _$SimVehicleSteering {
   @override
   Timer? build() => null;
 
+  /// Cancel the [state] timer, i.e. stop adding/removing steering angle to the
+  /// simulator.
   void cancel() => Future(() => state?.cancel());
 
+  /// Restart the timer and send the [input] steering change at a constant
+  /// interval.
   void update(VehicleInput input) {
     cancel();
     Future(
@@ -306,7 +324,9 @@ class SimVehicleSteering extends _$SimVehicleSteering {
     );
   }
 
+  /// Start steering to the right.
   void right() => update(const VehicleInput(steeringAngleDelta: 0.5));
 
+  /// Start steering to the left.
   void left() => update(const VehicleInput(steeringAngleDelta: -0.5));
 }

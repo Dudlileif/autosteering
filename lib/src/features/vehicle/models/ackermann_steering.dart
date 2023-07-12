@@ -5,6 +5,17 @@ import 'package:latlong2/latlong.dart';
 /// A class used to simulate Ackermann steering geometry.
 /// https://se.mathworks.com/help/vdynblks/ref/kinematicsteering.html
 class AckermannSteering {
+  /// A class used to simulate Ackermann steering geometry.
+  /// https://se.mathworks.com/help/vdynblks/ref/kinematicsteering.html
+  ///
+  /// [steeringAngle] is the input steering angle in degrees.
+  ///
+  /// [wheelBase] is the distance between the steering and the non-steering
+  /// solid axle.
+  ///
+  /// [trackWidth] is the distance between the wheels on the same axle.
+  ///
+  /// [steeringRatio] is a ratio to change how fast the steering turns.
   const AckermannSteering({
     required this.steeringAngle,
     required this.wheelBase,
@@ -71,6 +82,17 @@ class AckermannSteering {
 /// A class used to find the angle of the opposite steering wheel with
 /// Ackermann steering geometry.
 class AckermannOppositeAngle {
+  /// A class used to find the angle of the opposite steering wheel with
+  /// Ackermann steering geometry.
+  ///
+  /// [wheelAngle] is the steering angle of the measured wheel.
+  ///
+  /// [wheelBase] is the distance between the steering and the non-steering
+  /// solid axle.
+  ///
+  /// [trackWidth] is the distance between the wheels on the same axle.
+  ///
+  /// [steeringRatio] is a ratio to change how fast the steering turns.
   const AckermannOppositeAngle({
     required this.wheelAngle,
     required this.wheelBase,

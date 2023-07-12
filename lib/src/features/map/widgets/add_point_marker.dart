@@ -5,13 +5,30 @@ import 'package:latlong2/latlong.dart';
 
 /// A marker that will insert a new point to the editable path.
 class AddPointMarker extends StatefulWidget {
+  /// A marker that will insert a new point to the editable path.
+  ///
+  /// [point] is the position of the marker on the map.
+  ///
+  /// [onTap] is the function for what should happen when the marker is tapped.
+  ///
+  /// [radius] is the radius/size of the marker.
+  ///
+  /// [strokeWidth] is how thick the line of the marker should be.
+  ///
+  /// [color] is which color the marker should have.
+  ///
+  /// If the marker should resize with the zoom level of the map, enable
+  /// [useRadiusInMeters].
+  ///
+  /// If the marker always should be visible, i.e. when not hovered over, set
+  /// [alwaysVisible] to true.
   const AddPointMarker({
     required this.point,
     required this.onTap,
     required this.radius,
     this.strokeWidth = 2,
     this.color = Colors.red,
-    this.useRadiusInMeter = false,
+    this.useRadiusInMeters = false,
     this.alwaysVisible = false,
     super.key,
   });
@@ -32,7 +49,7 @@ class AddPointMarker extends StatefulWidget {
   final Color color;
 
   /// Whether to use the [radius] parameter as meters instead of pixels.
-  final bool useRadiusInMeter;
+  final bool useRadiusInMeters;
 
   /// Whether the marker always should be visible, otherwise on hover/tap.
   final bool alwaysVisible;
@@ -52,7 +69,7 @@ class _AddPointMarkerState extends State<AddPointMarker> {
 
     var radiusToUse = widget.radius;
 
-    if (widget.useRadiusInMeter) {
+    if (widget.useRadiusInMeters) {
       final offset = map.getOffsetFromOrigin(widget.point);
       final r = widget.point.offset(widget.radius, 180);
       final delta = offset - map.getOffsetFromOrigin(r);
@@ -88,13 +105,24 @@ class _AddPointMarkerState extends State<AddPointMarker> {
 
 /// A painter for drawing a custom sized plus icon.
 class PlusIconPainter extends CustomPainter {
+  /// A painter for drawing a custom sized plus/cross icon.
+  ///
+  /// [color] gives the color of the icon.
+  /// [radius] gives the size of the icon.
+  /// [strokeWidth] gives the thickness of the lines of the icon.
   const PlusIconPainter({
     required this.color,
     required this.radius,
     required this.strokeWidth,
   });
+
+  /// The color of the icon.
   final Color color;
+
+  /// The radius/size of the icon.
   final double radius;
+
+  /// The thickness of the lines of the icon.
   final double strokeWidth;
 
   @override

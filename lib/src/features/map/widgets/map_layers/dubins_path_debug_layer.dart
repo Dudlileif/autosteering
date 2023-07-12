@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A combination layer for debugging a Dubins path between two points.
 class DubinsPathDebugLayer extends ConsumerWidget {
+  /// A combination layer for debugging a Dubins path between two points.
   const DubinsPathDebugLayer({super.key});
 
   @override

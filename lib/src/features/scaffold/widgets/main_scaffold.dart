@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 /// The main scaffold widget surrounding the main content of the application.
 class MainScaffold extends StatelessWidget {
+  /// The main scaffold widget surrounding the main content of the application.
   const MainScaffold({super.key});
 
   @override

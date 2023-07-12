@@ -18,6 +18,7 @@ class MapReady extends _$MapReady {
   @override
   bool build() => false;
 
+  /// Set the [state] to true to indicate that the map is ready.
   void ready() => Future(() => state = true);
 }
 
@@ -28,10 +29,12 @@ class MainMapController extends _$MainMapController {
   @override
   MapController build() => MapController();
 
+  /// Increase the zoom value of the [state] by [value].
   void zoomIn(double value) => Future(
         () => state.move(state.center, state.zoom + value),
       );
 
+  /// Decrease the zoom value of the [state] by [value].
   void zoomOut(double value) => Future(
         () => state.move(state.center, state.zoom - value),
       );
@@ -61,6 +64,7 @@ class HomePosition extends _$HomePosition {
     return const LatLng(0, 0);
   }
 
+  /// Update the [state] to [position].
   void update(LatLng position) => Future(() => state = position);
 }
 
@@ -85,7 +89,8 @@ class CenterMapOnVehicle extends _$CenterMapOnVehicle {
         true;
   }
 
-  void update(bool? value) {
+  /// Update the [state] to [value]. Will update the map if necessary.
+  void update({bool? value}) {
     Future(() => state = value ?? state);
     if (value != null) {
       if (value) {
@@ -100,7 +105,8 @@ class CenterMapOnVehicle extends _$CenterMapOnVehicle {
     }
   }
 
-  void invert() => update(!state);
+  /// Invert the current [state].
+  void invert() => update(value: !state);
 }
 
 /// A provider for controlling the zoom when a gamepad button is held down.
@@ -111,8 +117,10 @@ class ZoomTimerController extends _$ZoomTimerController {
   @override
   Timer? build() => null;
 
+  /// Cancel the timer, i.e. stop the last activated zooming event.
   void cancel() => Future(() => state?.cancel());
 
+  /// Start to zoom in.
   void zoomIn() {
     cancel();
     Future(
@@ -123,6 +131,7 @@ class ZoomTimerController extends _$ZoomTimerController {
     );
   }
 
+  /// Start to zoom out.
   void zoomOut() {
     cancel();
     Future(
@@ -172,6 +181,7 @@ class MapOffset2D extends _$MapOffset2D {
     return const MapCenterOffset();
   }
 
+  /// Update the [state] offset with [x] and [y].
   void update({double? x, double? y}) => Future(
         () => state = state.copyWith(
           x: x ?? state.x,
@@ -207,6 +217,7 @@ class MapOffset3D extends _$MapOffset3D {
     return const MapCenterOffset();
   }
 
+  /// Update the [state] offset with [x] and [y].
   void update({double? x, double? y}) => Future(
         () => state = state.copyWith(
           x: x ?? state.x,
@@ -263,9 +274,11 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
         false;
   }
 
-  void toggle() => Future(() => state = !state);
-
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
 }
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
@@ -288,7 +301,10 @@ class MapUse3DPerspective extends _$MapUse3DPerspective {
         false;
   }
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
 
@@ -312,5 +328,6 @@ class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
         40 * pi / 180;
   }
 
+  /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }

@@ -10,6 +10,7 @@ import 'package:window_manager/window_manager.dart';
 
 /// The main map widget with overlayed widgets (buttons, gauges).
 class MapAndGaugeStackView extends ConsumerWidget {
+  /// The main map widget with overlayed widgets (buttons, gauges).
   const MapAndGaugeStackView({super.key});
 
   @override

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A combination layer for debuggin the pure pursuit functionality.
 class PurePursuitDebugLayer extends ConsumerWidget {
+  /// A combination layer for debuggin the pure pursuit functionality.
   const PurePursuitDebugLayer({super.key});
 
   @override

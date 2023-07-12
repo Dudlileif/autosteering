@@ -6,6 +6,11 @@ import 'package:latlong2/latlong.dart';
 /// A class for combining vehicle information with it's position.
 /// Useful to record paths and function as targets for auto-steering.
 class WayPoint extends Equatable {
+  /// A class for combining vehicle information with it's position.
+  /// Useful to record paths and function as targets for auto-steering.
+  ///
+  /// [heading] in degrees from 0-360.
+  /// [velocity] in m/s.
   const WayPoint({
     required this.position,
     required this.heading,

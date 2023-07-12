@@ -40,6 +40,7 @@ class CurrentCountry extends _$CurrentCountry {
     return null;
   }
 
+  /// Attempt to find a country for the current map center position.
   Future<void> update() async => Future(() async {
         if (ref.watch(mapReadyProvider)) {
           if (state == null) {
@@ -115,6 +116,7 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
     return [];
   }
 
+  /// Reorder the item at [oldIndex] to [newIndex].
   void reorder(int oldIndex, int newIndex) => Future(() {
         var moveTo = newIndex;
         if (oldIndex < newIndex) {
@@ -169,14 +171,19 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
     return layers;
   }
 
+  /// Add the [layer] to the [state]-
   void add(TileLayerData layer) => Future(
         () => state = Set<TileLayerData>.from(state)..add(layer),
       );
+
+  /// Remvoe the [layer] from the [state].
   void remove(TileLayerData layer) => Future(
         () => state = Set<TileLayerData>.from(state)
           ..removeWhere((element) => element.name == layer.name),
       );
 
+  /// Add the [layer] to the [state] if it's missing or remove it if it's
+  /// already in the [state].
   void toggle(TileLayerData layer) {
     final layerExists = state.any((element) => element.name == layer.name);
     if (layerExists) {
@@ -186,6 +193,7 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
     }
   }
 
+  /// Remove all the layers from the state.
   void clear() => Future(() => state = {});
 
   @override
@@ -248,11 +256,13 @@ class CountryLayerOpacities extends _$CountryLayerOpacities {
     return layers;
   }
 
+  /// Update the [opacity] for the given [layer].
   void update(TileLayerData layer, double opacity) => Future(
         () => state = Map<String, double>.from(state)
           ..update(layer.name, (value) => opacity),
       );
 
+  /// Reset the [state] to the initial value by recreating it.
   void reset() => ref.invalidateSelf();
 
   @override

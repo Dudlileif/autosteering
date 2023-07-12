@@ -3,6 +3,24 @@ import 'package:flutter_map/flutter_map.dart';
 
 /// A configuration class for a map tile layer.
 class TileLayerData {
+  /// A configuration class for a map tile layer.
+  ///
+  /// [name] is the display name for the layer.
+  /// The [urlTemplate] is the url that is used to get WMTS map tiles,
+  /// typical XYZ tiles.
+  ///
+  /// [subdomains] is a list of optional subdomains that can help spread the
+  /// server load.
+  ///
+  /// The [wmsOptions] is special options for a layer that uses WMS.
+  /// [minNativeZoom] and [maxNativeZoom] are the zoom level limits for the
+  /// image tiles.
+  ///
+  /// [minZoom] and [maxZoom] are the zoom level limits for whether this layer
+  /// should be shown on the map.
+  ///
+  /// [themedTileLayerBuilder] is an optional widget builder that is used
+  /// when using dark mode, primarily useful for non-satellite maps.
   const TileLayerData({
     required this.name,
     this.urlTemplate,

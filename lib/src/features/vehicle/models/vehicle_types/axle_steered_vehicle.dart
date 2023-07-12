@@ -2,6 +2,7 @@ part of '../vehicle.dart';
 
 /// A base class for vehicles that steers with either a front or rear axle.
 sealed class AxleSteeredVehicle extends Vehicle {
+  /// A base class for vehicles that steers with either a front or rear axle.
   AxleSteeredVehicle({
     required this.wheelBase,
     required this.solidAxleDistance,
@@ -404,32 +405,41 @@ sealed class AxleSteeredVehicle extends Vehicle {
         360 - northWestAngle,
       );
 
-  /// The angles for each corner of the max extent/bounds of the vehicle
-  /// with regards to the [heading].
-  double get frontLeftAngle => normalizeBearing(heading - northWestAngle);
-  double get frontRightAngle => normalizeBearing(heading - northEastAngle);
-  double get rearRightAngle =>
+  /// The bearing for the front left corner of the max extent/bounds of the
+  /// vehicle with regards to the [heading].
+  double get frontLeftBearing => normalizeBearing(heading - northWestAngle);
+
+  /// The bearing for the front right corner of the max extent/bounds of the
+  /// vehicle with regards to the [heading].
+  double get frontRightBearing => normalizeBearing(heading - northEastAngle);
+
+  /// The bearing for the rear right corner of the max extent/bounds of the
+  /// vehicle with regards to the [heading].
+  double get rearRightBearing =>
       normalizeBearing(heading - (northWestAngle + 180));
-  double get rearLeftAngle =>
+
+  /// The bearing for the rear left corner of the max extent/bounds of the
+  /// vehicle with regards to the [heading].
+  double get rearLeftBearing =>
       normalizeBearing(heading - (northEastAngle + 180));
 
   /// The max extent/bounds points of the vehicle. The [heading] is followed.
   List<LatLng> get points {
     final frontLeft = position.offset(
       centerToCornerDistance,
-      frontLeftAngle,
+      frontLeftBearing,
     );
     final frontRight = position.offset(
       centerToCornerDistance,
-      frontRightAngle,
+      frontRightBearing,
     );
     final rearRight = position.offset(
       centerToCornerDistance,
-      rearRightAngle,
+      rearRightBearing,
     );
     final rearLeft = position.offset(
       centerToCornerDistance,
-      rearLeftAngle,
+      rearLeftBearing,
     );
 
     return [

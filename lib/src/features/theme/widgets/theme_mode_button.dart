@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A button to switch between the different theme modes.
 class ThemeModeButton extends ConsumerWidget {
+  /// A button to switch between the different theme modes.
   const ThemeModeButton({super.key});
 
   @override

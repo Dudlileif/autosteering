@@ -7,6 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 ///
 /// Contains controls for velocity, steering and a separate stop button.
 class VehicleSimScreenControls extends StatelessWidget {
+  /// Basic on screen controls for the simulated vehicle.
+  ///
+  /// Contains controls for velocity, steering and a separate stop button.
   const VehicleSimScreenControls({super.key});
 
   @override

@@ -204,7 +204,7 @@ final showEquipmentDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowEquipmentDebugLayerRef = AutoDisposeProviderRef<bool>;
-String _$showOSMLayerHash() => r'f24917b39fe1e4fc43bf081986939a70d7dff5e6';
+String _$showOSMLayerHash() => r'f74aac3e4858c8090ae861b3677ab68ccac3a9a7';
 
 /// Whether the OpenStreetMap layer should be shown.
 ///
@@ -221,7 +221,7 @@ final showOSMLayerProvider = NotifierProvider<ShowOSMLayer, bool>.internal(
 
 typedef _$ShowOSMLayer = Notifier<bool>;
 String _$showVehicleDrawingLayerHash() =>
-    r'36000a9e0c70487a428014e47b1daad68a1b79cf';
+    r'9921159602e933029f559425e6055bdd9019a559';
 
 /// Whether the vehicle image drawing layer should be shown.
 ///

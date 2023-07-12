@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A layer for the polygon of the finished recorded points.
 class FinishedPolygonLayer extends ConsumerWidget {
+  /// A layer for the polygon of the finished recorded points.
   const FinishedPolygonLayer({super.key});
 
   @override

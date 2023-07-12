@@ -1,9 +1,13 @@
-import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_io/io.dart';
 
 part 'file_providers.g.dart';
+
+/** 
+ * TODO: Fix Web implementation -> html.window.localstorage, change file storage
+ *  Add a platform agnostic storage/persistance system 
+*/
 
 /// A provider for the main user file directory for the application.
 @Riverpod(keepAlive: true)

@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The main map widget used on the primary screen/view in the application.
 class MainMap extends ConsumerWidget {
+  /// The main map widget used on the primary screen/view in the application.
   const MainMap({super.key});
 
   @override

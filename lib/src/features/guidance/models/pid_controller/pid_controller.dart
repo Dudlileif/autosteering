@@ -9,8 +9,13 @@ part 'pid_parameters.dart';
 /// proportional to the current error, an integral for the past errors and a
 /// derivative for the difference between the previous and the current value.
 class PidController {
+  /// The previous error/distance from the optimal state.
   double prevError = 0;
+
+  /// The value of the integral/average.
   double integral = 0;
+
+  /// The previous time to get a period/time delta from.
   DateTime prevTime = DateTime.now();
 
   /// The next output value for the controller.

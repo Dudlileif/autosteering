@@ -39,6 +39,7 @@ class Settings extends _$Settings {
     );
   }
 
+  /// Update the setting [key] to [value].
   void update(SettingsKey key, dynamic value) => Future(
         () => state = Map<String, dynamic>.from(state)
           ..update(
@@ -48,24 +49,31 @@ class Settings extends _$Settings {
           ),
       );
 
+  /// Whether the settings contains a value for [key].
   bool containsKey(SettingsKey key) => state.containsKey(key.name);
 
+  /// Get the value of type [bool] for the setting [key], if it exists.
   bool? getBool(SettingsKey key) =>
       state.containsKey(key.name) ? state[key.name] as bool : null;
 
+  /// Get the value of type [double] for the setting [key], if it exists.
   double? getDouble(SettingsKey key) =>
       state.containsKey(key.name) ? state[key.name] as double : null;
 
+  /// Get the value of type [int] for the setting [key], if it exists.
   int? getInt(SettingsKey key) =>
       state.containsKey(key.name) ? state[key.name] as int : null;
 
+  /// Get the value of type [String] for the setting [key], if it exists.
   String? getString(SettingsKey key) =>
       state.containsKey(key.name) ? state[key.name] as String : null;
 
+  /// Get the value of type [Map] for the setting [key], if it exists.
   Map<String, dynamic>? getMap(SettingsKey key) => state.containsKey(key.name)
       ? Map<String, dynamic>.from(state[key.name] as Map)
       : null;
 
+  /// Get the value of type [List] for the setting [key], if it exists.
   List<dynamic>? getList(SettingsKey key) => state.containsKey(key.name)
       ? List<dynamic>.from(state[key.name] as List)
       : null;

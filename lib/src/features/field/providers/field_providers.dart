@@ -10,8 +10,10 @@ class ShowTestField extends _$ShowTestField {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
 
@@ -21,9 +23,8 @@ class TestField extends _$TestField {
   @override
   Field? build() => null;
 
-  void update(Field field) => Future(
-        () => state = field,
-      );
+  /// Update the [state] to [field].
+  void update(Field field) => Future(() => state = field);
 }
 
 /// A provider for whether bounding box of the test field should be shown.
@@ -32,8 +33,10 @@ class ShowTestFieldBoundingBox extends _$ShowTestFieldBoundingBox {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
 
@@ -43,6 +46,7 @@ class TestFieldBufferDistance extends _$TestFieldBufferDistance {
   @override
   double build() => 5;
 
+  /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
 
@@ -52,6 +56,7 @@ class TestFieldHoleBufferDistance extends _$TestFieldHoleBufferDistance {
   @override
   double build() => 5;
 
+  /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
 
@@ -61,8 +66,10 @@ class ShowBufferedTestField extends _$ShowBufferedTestField {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
 
@@ -91,7 +98,9 @@ class ShowBufferedTestFieldBoundingBox
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current state.
   void toggle() => Future(() => state = !state);
 }

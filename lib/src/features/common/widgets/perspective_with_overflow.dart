@@ -4,6 +4,15 @@ import 'package:flutter/material.dart';
 /// overflow the screen edges further back to fill more of the screen further
 /// ahead.
 class PerspectiveWithOverflow extends StatelessWidget {
+  /// An extended surface area that is displayed at an angle. The area will
+  /// overflow the screen edges further back to fill more of the screen further
+  /// ahead.
+  ///
+  /// The [child] will be displayed on the surface area.
+  /// The [perspectiveAngle] dictates how many radians the surface should be
+  /// rotated around the X-axis.
+  /// The [heightFactor] and [widthFactor] can be set to make the surface area
+  /// larger, but large areas can become expensive, so be careful.
   const PerspectiveWithOverflow({
     required this.child,
     required this.perspectiveAngle,
@@ -12,9 +21,16 @@ class PerspectiveWithOverflow extends StatelessWidget {
     super.key,
   });
 
+  /// The widget that is displayed on the surface area.
   final Widget child;
+
+  /// How many radians the surface should be rotated around the X-axis.
   final double perspectiveAngle;
+
+  /// A multiplier for the height of the surface area.
   final double heightFactor;
+
+  /// A multiplier for the width of the surface area.
   final double widthFactor;
 
   @override

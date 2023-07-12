@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A combination layer for the finished recorded points and the lines between.
 class FinishedPathLayer extends ConsumerWidget {
+  /// A combination layer for the finished recorded points and the lines
+  ///  between.
   const FinishedPathLayer({super.key});
 
   @override

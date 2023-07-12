@@ -1,14 +1,15 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:universal_io/io.dart';
 
 /// A menu with attached submenu for debugging the field feature.
 class FieldDebugMenu extends ConsumerWidget {
+  /// A menu with attached submenu for debugging the field feature.
   const FieldDebugMenu({super.key});
 
   @override

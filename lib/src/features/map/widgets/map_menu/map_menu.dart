@@ -6,8 +6,9 @@ import 'package:agopengps_flutter/src/features/map/widgets/map_menu/map_perspect
 import 'package:agopengps_flutter/src/features/map/widgets/map_menu/osm_layer_button.dart';
 import 'package:flutter/material.dart';
 
-/// A menu button and attached submenu for selecting map layers.
+/// A menu button and attached submenu for configuring the map.
 class MapMenu extends StatelessWidget {
+  /// A menu button and attached submenu for configuring the map.
   const MapMenu({super.key});
 
   @override

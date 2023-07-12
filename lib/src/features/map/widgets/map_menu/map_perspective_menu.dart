@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button with attached submenu for configuring the map perspective.
 class MapPerspectiveMenu extends StatelessWidget {
+  /// A menu button with attached submenu for configuring the map perspective.
   const MapPerspectiveMenu({super.key});
 
   @override

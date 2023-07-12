@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button for toggling the OpenStreetMap layer.
 class OSMLayerButton extends StatelessWidget {
+  /// A menu button for toggling the OpenStreetMap layer.
   const OSMLayerButton({super.key});
 
   @override

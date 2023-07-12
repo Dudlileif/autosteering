@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A combination layer for the selected Sentinel layers.
 class SentinelLayers extends ConsumerWidget {
+  /// A combination layer for the selected Sentinel layers.
   const SentinelLayers({super.key});
 
   @override
@@ -42,7 +43,9 @@ class SentinelLayers extends ConsumerWidget {
   }
 }
 
+/// A small attribution widget for the Copernicus Sentinel layers.
 class SentinelContribution extends StatelessWidget {
+  /// A small attribution widget for the Copernicus Sentinel layers.
   const SentinelContribution({super.key});
 
   @override

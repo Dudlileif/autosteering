@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A combination layer of all the custom country layers.
 class CountryLayers extends ConsumerWidget {
+  /// A combination layer of all the custom country layers.
   const CountryLayers({super.key});
 
   @override

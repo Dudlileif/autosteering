@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu for showing and updating the default home position.
 class HomePositionMenu extends StatelessWidget {
+  /// A menu for showing and updating the default home position.
   const HomePositionMenu({super.key});
 
   @override

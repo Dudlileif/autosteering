@@ -6,6 +6,14 @@ part 'sentinel_layer.g.dart';
 /// A class that stores information for a Copernicus Sentinel-2 map layer.
 @freezed
 class SentinelLayer with _$SentinelLayer {
+  /// A class that stores information for a Copernicus Sentinel-2 map layer.
+  ///
+  /// Enter a Coperincus dataspace [instanceId] api-key.
+  /// Register a user at [https://dataspace.copernicus.eu/],
+  /// go to [https://shapps.dataspace.copernicus.eu/dashboard/#/configurations]
+  /// and create a new configuration, and copy the Id.
+  ///
+  /// The [layerType] is which layer type this layer represents.
   const factory SentinelLayer({
     /// The Coperincus dataspace instanceId api-key.
     /// Register a user at [https://dataspace.copernicus.eu/],
@@ -18,6 +26,7 @@ class SentinelLayer with _$SentinelLayer {
   }) = _SentinelLayer;
   const SentinelLayer._();
 
+  /// Creates a [SentinelLayer] from a [json] object.
   factory SentinelLayer.fromJson(Map<String, Object?> json) =>
       _$SentinelLayerFromJson(json);
 
@@ -36,8 +45,13 @@ class SentinelLayer with _$SentinelLayer {
 /// These layers can be used to get up-to-date (1-2 times a week) views
 /// of the world. The resolution is quite low though, ~20 m / pixel.
 enum SentinelLayerType {
+  /// Normal orthographic satellite imagery.
   trueColor('TRUE_COLOR'),
+
+  /// Special combination of bands that is useful for agricultural use.
   agriculture('AGRICULTURE'),
+
+  /// An index that shows how much vegetation there is.
   ndvi('VEGETATION_INDEX');
 
   const SentinelLayerType(this.id);

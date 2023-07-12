@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 ///
 /// Shows a popu menu with the alternatives when tapped.
 class ManufacturerThemeSelector extends ConsumerWidget {
+  /// A button for selecting which color theme to apply.
+  ///
+  /// Shows a popu menu with the alternatives when tapped.
   const ManufacturerThemeSelector({super.key});
 
   @override

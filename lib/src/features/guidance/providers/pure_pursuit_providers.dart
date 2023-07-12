@@ -21,6 +21,7 @@ class ConfiguredPurePursuit extends _$ConfiguredPurePursuit {
     return null;
   }
 
+  /// Send the [state] to the simulator.
   void sendToSim() =>
       ref.read(simInputProvider.notifier).send((purePursuit: state));
 }
@@ -40,8 +41,10 @@ class EnablePurePursuit extends _$EnablePurePursuit {
     return false;
   }
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current state.
   void toggle() => Future(() => state != state);
 }
 
@@ -57,6 +60,7 @@ class PursuitMode extends _$PursuitMode {
     return PurePursuitMode.lookAhead;
   }
 
+  /// Update the [state] to [value].
   void update(PurePursuitMode value) => Future(() => state = value);
 }
 
@@ -71,6 +75,7 @@ class PurePursuitLoop extends _$PurePursuitLoop {
     return PurePursuitLoopMode.none;
   }
 
+  /// Update the [state] to [value].
   void update(PurePursuitLoopMode value) => Future(() => state = value);
 }
 
@@ -85,6 +90,7 @@ class LookAheadDistance extends _$LookAheadDistance {
     return 4;
   }
 
+  /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
 
@@ -95,10 +101,10 @@ class DisplayPurePursuit extends _$DisplayPurePursuit {
   @override
   PurePursuit? build() => null;
 
-  void update(PurePursuit? pursuit) => Future(
-        () => state = pursuit,
-      );
+  /// Update the [state] to [pursuit].
+  void update(PurePursuit? pursuit) => Future(() => state = pursuit);
 
+  /// Set the state to null.
   void clear() => Future(() => state = null);
 }
 
@@ -109,7 +115,9 @@ class DebugPurePursuit extends _$DebugPurePursuit {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current state.
   void toggle() => Future(() => state != state);
 }

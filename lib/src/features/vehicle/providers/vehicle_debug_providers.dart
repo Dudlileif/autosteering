@@ -10,8 +10,10 @@ class DebugVehiclePolygons extends _$DebugVehiclePolygons {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
 
@@ -21,8 +23,10 @@ class DebugSteering extends _$DebugSteering {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
 
@@ -32,8 +36,10 @@ class DebugTrajectory extends _$DebugTrajectory {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
 
@@ -43,8 +49,10 @@ class DebugTravelledPath extends _$DebugTravelledPath {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
 
@@ -54,6 +62,7 @@ class DebugTravelledPathSize extends _$DebugTravelledPathSize {
   @override
   int build() => 100;
 
+  /// Update the [state] to [value].
   void update(int value) => Future(() => state = value);
 }
 
@@ -73,6 +82,7 @@ class DebugTravelledPathList extends _$DebugTravelledPathList {
     return <LatLng>[];
   }
 
+  /// Add the [point] to the travelled path.
   void add(LatLng point) => Future(() {
         if (state.length == ref.watch(debugTravelledPathSizeProvider)) {
           state.removeLast();
@@ -87,7 +97,9 @@ class DebugVehicleHitches extends _$DebugVehicleHitches {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }

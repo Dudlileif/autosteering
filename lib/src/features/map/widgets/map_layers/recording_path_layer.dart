@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// A combination layer for the currently recording points and the
 /// lines between.
 class RecordingPathLayer extends ConsumerWidget {
+  /// A combination layer for the currently recording points and the
+  /// lines between.
   const RecordingPathLayer({super.key});
 
   @override

@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs
+
+/// An enumerator for all the settings of the program.
 enum SettingsKey {
   copernicusInstanceId('map.copernicus_instance_id'),
   currentCountry('map.current_country'),
@@ -20,5 +23,7 @@ enum SettingsKey {
 
   const SettingsKey(this.name);
 
+  /// The string that will be used when writing to/reading from the settings
+  /// file.
   final String name;
 }

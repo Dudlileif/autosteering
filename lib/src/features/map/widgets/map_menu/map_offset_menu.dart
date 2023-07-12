@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button and attached submenu for configuring the map center offset.
 class MapOffsetMenu extends ConsumerWidget {
+  /// A menu button and attached submenu for configuring the map center offset.
   const MapOffsetMenu({super.key});
 
   @override

@@ -17,6 +17,8 @@ part 'vehicle_types/tractor.dart';
 /// A base class for vehicles that handles all common parameters/variables
 /// and methods.
 sealed class Vehicle extends Hitchable with EquatableMixin {
+  /// A base class for vehicles that handles all common parameters/variables
+  /// and methods.
   Vehicle({
     required LatLng position,
     required this.antennaHeight,
@@ -118,7 +120,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         velocity: velocity,
       );
 
-  // Reqiure wheel angle above 0.01 deg.
+  /// Reqiure wheel angle above 0.01 deg.
   double get minSteeringAngle => 0.01;
 
   /// The [steeringAngleInput] accounted for [invertSteeringInput] and

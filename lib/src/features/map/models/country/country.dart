@@ -8,6 +8,10 @@ import 'package:flutter/material.dart';
 /// This is aimed at layers that are specific for a country, or perhaps region
 /// locked to a country.
 abstract class Country {
+  /// A base class for country based layers.
+  ///
+  /// This is aimed at layers that are specific for a country, or perhaps region
+  /// locked to a country.
   const Country(this.name);
 
   /// The name of the country.
@@ -27,9 +31,9 @@ abstract class Country {
 /// A class for collecting the available countries.
 class Countries {
   /// The list of available countries.
-  static const countries = <Country>[norway];
-
-  static const norway = Norway();
+  static const countries = <Country>[
+    Norway(),
+  ];
 
   /// Finds the country that corresponds to the [name], if there is one defined.
   static Country? current(String name) => countries.firstWhereOrNull(

@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The main [MaterialApp] wrapper for the whole application.
 class AgOpenGps extends ConsumerWidget {
+  /// The main [MaterialApp] wrapper for the whole application.
+  ///
+  /// Will show a [CircularProgressIndicator] during initial loading.
   const AgOpenGps({super.key});
 
   @override
@@ -15,14 +18,9 @@ class AgOpenGps extends ConsumerWidget {
 
     var loading = true;
 
-    // We are loading until the test settings have been applied and the file
-    // directory is ready.
-    final baseLoading = [
-      // ref.watch(applyTestSettingsProvider),
-      ref.watch(fileDirectoryProvider),
-    ].any((element) => element is! AsyncData);
-
-    if (!baseLoading) {
+    // We are loading until the file directory and the settings file are
+    // ready.
+    if (ref.watch(fileDirectoryProvider) is AsyncData) {
       loading = ref.watch(settingsFileProvider) is! AsyncData;
     }
 

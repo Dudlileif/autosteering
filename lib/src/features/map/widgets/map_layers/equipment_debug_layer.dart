@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A combination layer for debugging equipment.
 class EquipmentDebugLayer extends ConsumerWidget {
+  /// A combination layer for debugging equipment.
   const EquipmentDebugLayer({super.key});
 
   @override

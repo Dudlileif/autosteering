@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 /// A menu button with attached submenu for enabling debugging features.
 class DebugMenu extends StatelessWidget {
+  /// A menu button with attached submenu for enabling debugging features.
   const DebugMenu({super.key});
 
   @override

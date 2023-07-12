@@ -10,8 +10,10 @@ class EnableDubinsPathDebug extends _$EnableDubinsPathDebug {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state != state);
 }
 
@@ -21,8 +23,10 @@ class ShowDubinsPathDebugCircles extends _$ShowDubinsPathDebugCircles {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state != state);
 }
 
@@ -32,6 +36,7 @@ class DubinsPathDebugStartPoint extends _$DubinsPathDebugStartPoint {
   @override
   WayPoint? build() => null;
 
+  /// Update the [state] to [point].
   void update(WayPoint point) => Future(() => state = point);
 }
 
@@ -41,6 +46,7 @@ class DubinsPathDebugEndPoint extends _$DubinsPathDebugEndPoint {
   @override
   WayPoint? build() => null;
 
+  /// Update the [state] to [point].
   void update(WayPoint point) => Future(() => state = point);
 }
 
@@ -50,6 +56,7 @@ class DubinsPathDebugPathType extends _$DubinsPathDebugPathType {
   @override
   DubinsPathType? build() => null;
 
+  /// Update the [state] to [pathType].
   void update(DubinsPathType pathType) => Future(() => state = pathType);
 }
 
@@ -80,5 +87,6 @@ class DubinsPathDebugStepSize extends _$DubinsPathDebugStepSize {
   @override
   double build() => 0.1;
 
+  /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }

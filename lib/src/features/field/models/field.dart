@@ -6,6 +6,12 @@ import 'package:latlong2/latlong.dart';
 
 /// A base class for a field.
 class Field extends Equatable {
+  /// A class for representing a field in the real world.
+  ///
+  /// The field needs a [name] for identifying purposes.
+  /// The [border] of the field makes the outline of the field.
+  /// If the field has spots of unusable land within the border, add a list of
+  /// the borders for the spots in [holes].
   const Field({
     required this.name,
     this.border = const [],

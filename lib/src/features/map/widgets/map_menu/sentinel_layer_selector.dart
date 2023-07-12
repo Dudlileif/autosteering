@@ -4,8 +4,9 @@ import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A menu button and attached submenu for Sentinel layers.
+/// A menu button and attached submenu for selecting Sentinel layers.
 class SentinelLayerSelector extends ConsumerWidget {
+  /// A menu button and attached submenu for selecting Sentinel layers.
   const SentinelLayerSelector({super.key});
 
   @override

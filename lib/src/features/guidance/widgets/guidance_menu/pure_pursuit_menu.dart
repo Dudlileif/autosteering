@@ -8,9 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// A menu button with attached submenu for working with the pure pursuit
 /// path tracking feature.
 class PurePursuitMenu extends StatelessWidget {
-  const PurePursuitMenu({
-    super.key,
-  });
+  /// A menu button with attached submenu for working with the pure pursuit
+  /// path tracking feature.
+  const PurePursuitMenu({super.key});
 
   @override
   Widget build(BuildContext context) {

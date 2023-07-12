@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// A menu button with attached submenu or buttons used for debugging
 /// a Dubins path between two points.
 class DubinsPathDebugMenu extends StatelessWidget {
+  /// A menu button with attached submenu or buttons used for debugging
+  /// a Dubins path between two points.
   const DubinsPathDebugMenu({super.key});
 
   @override
@@ -205,23 +207,23 @@ class DubinsPathDebugMenu extends StatelessWidget {
 
 /// A slider for specifying the step size for the Dubins path debugging.
 class StepSizeSlider extends ConsumerWidget {
-  const StepSizeSlider({
-    super.key,
-  });
+  /// A slider for specifying the step size for the Dubins path debugging.
 
-  List<double> get values => <double>[0.1, 0.5, 1, 2, 5, 10];
+  const StepSizeSlider({super.key});
+
+  List<double> get _values => <double>[0.1, 0.5, 1, 2, 5, 10];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stepSize = ref.watch(dubinsPathDebugStepSizeProvider);
 
     return Slider(
-      value: values.indexOf(stepSize).toDouble(),
+      value: _values.indexOf(stepSize).toDouble(),
       onChanged: (index) => ref
           .read(dubinsPathDebugStepSizeProvider.notifier)
-          .update(values[index.toInt()]),
-      max: values.length - 1,
-      divisions: values.length - 1,
+          .update(_values[index.toInt()]),
+      max: _values.length - 1,
+      divisions: _values.length - 1,
     );
   }
 }

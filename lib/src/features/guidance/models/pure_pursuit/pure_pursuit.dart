@@ -6,8 +6,28 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:dart_jts/dart_jts.dart' as jts;
 import 'package:latlong2/latlong.dart';
 
-part 'pure_pursuit_loop_mode.dart';
-part 'pure_pursuit_mode.dart';
+/// An enumerator for which steering mode the [PurePursuit] model should
+/// use.
+enum PurePursuitMode {
+  /// Use a PID-controller mode to control the steering.
+  pid,
+
+  /// Use a look ahead mode to control the steering.
+  lookAhead,
+}
+
+/// An enumerator for if/how the last and first points of the path of the
+/// [PurePursuit] should loop.
+enum PurePursuitLoopMode {
+  /// Don't loop when reaching the end.
+  none,
+
+  /// Loop to the start point by using a straight line from the end point.
+  straight,
+
+  /// Loop to the start point by using a Dubins path from the end point.
+  dubins,
+}
 
 /// A class for path tracking that utilizes the pure pursuit algorithm.
 ///
@@ -16,6 +36,18 @@ part 'pure_pursuit_mode.dart';
 /// reached, where it can loop back to the starting point in a couple different
 /// ways or stop tracking.
 class PurePursuit {
+  /// A class for path tracking that utilizes the pure pursuit algorithm.
+  ///
+  /// The pure pursuit algorithm finds a point a certain distance ahead of it
+  /// and attempts to chase it. This continually happens until the end of the
+  /// path is reached, where it can loop back to the starting point in a couple
+  /// different ways or stop tracking.
+  ///
+  /// The [wayPoints] gives the path that the vehicle should follow.
+  /// The [interpolationDistance] is the maximum distance between points in the
+  /// path, points will be interpolated if the [wayPoints] are too far apart.
+  /// The [loopMode] dictates what the vehicle should do when it finishes the
+  /// path.
   PurePursuit({
     required this.wayPoints,
     double interpolationDistance = 4,

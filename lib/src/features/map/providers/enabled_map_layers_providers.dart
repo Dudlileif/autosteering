@@ -27,9 +27,11 @@ class ShowOSMLayer extends _$ShowOSMLayer {
         true;
   }
 
-  void toggle() => Future(() => state = !state);
-
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
 }
 
 /// Whether the selected country layers should be shown.
@@ -91,9 +93,11 @@ class ShowVehicleDrawingLayer extends _$ShowVehicleDrawingLayer {
   @override
   bool build() => true;
 
-  void toggle() => Future(() => state = !state);
-
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
 }
 
 /// Whether the debugging layer for the vehicle should be shown.

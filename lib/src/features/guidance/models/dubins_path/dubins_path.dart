@@ -10,6 +10,20 @@ part 'dubins_section.dart';
 
 /// A class for encompassing the data generated for a [DubinsPathType].
 final class DubinsPathData {
+  /// A class for encompassing the data generated for a [DubinsPathType].
+  ///
+  /// [pathType] describes which Dubins path type this data is for.
+  /// [tangentStart] is where the tangent from the first circle to the final
+  /// circle starts.
+  /// [tangentEnd] is where the tangent from the first circle to the final
+  /// circle ends.
+  /// [startLength] is the path length of around the first circle.
+  /// [middleLength] is the path length of the tangent or around the
+  /// middle circle.
+  /// [endLength] is the path lenght around the last circle.
+  /// [middleCircleCenter] should be the center point of the middle circle if
+  /// [pathType] is [DubinsPathType.lrl] or [DubinsPathType.rlr].
+
   DubinsPathData({
     required this.pathType,
     required this.tangentStart,
@@ -17,9 +31,17 @@ final class DubinsPathData {
     required this.startLength,
     required this.middleLength,
     required this.endLength,
-    required this.totalLength,
     this.middleCircleCenter,
-  });
+  })  : totalLength = startLength + middleLength + endLength,
+        assert(
+          DubinsPathType.withStraight.contains(pathType) ||
+              (DubinsPathType.onlyCircles.contains(pathType) &&
+                  middleCircleCenter != null),
+          '''
+The Dubins path data must contain a middle circle center point if the path type
+is made of three circles (lrl or rlr). 
+          ''',
+        );
 
   /// Which path type this is.
   final DubinsPathType pathType;
@@ -49,6 +71,14 @@ final class DubinsPathData {
 
 /// A class for calculating Dubins paths between two points.
 class DubinsPath {
+  /// A class for calculating Dubins paths between two points.
+  ///
+  /// The [start] and [end] waypoints of the path must be set.
+  /// The [turningRadius] dictates how tight the vehicle can turn at full
+  /// steering lock. A slightly/somewhat larger radius might be easier to
+  /// track in real time.
+  /// The [stepSize] indicates the distance between the points on the
+  /// generated path.
   DubinsPath({
     required this.start,
     required this.end,
@@ -363,9 +393,6 @@ class DubinsPath {
     // The length of the last section.
     final endLength = endTurnAngle * turningRadius;
 
-    // The total length of the path from start to finish.
-    final totalLength = startLength + middleLength + endLength;
-
     return DubinsPathData(
       pathType: pathType,
       tangentStart: WayPoint(
@@ -380,7 +407,6 @@ class DubinsPath {
       startLength: startLength,
       middleLength: middleLength,
       endLength: endLength,
-      totalLength: totalLength,
     );
   }
 

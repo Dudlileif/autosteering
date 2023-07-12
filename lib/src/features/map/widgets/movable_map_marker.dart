@@ -5,6 +5,19 @@ import 'package:latlong2/latlong.dart';
 
 /// A movable map marker used to edit the position of points in editable paths.
 class MovableMapMarker extends StatefulWidget {
+  /// A movable map marker used to edit the position of points in editable
+  /// paths.
+  ///
+  /// [point] is the position of the marker.
+  ///
+  /// [onMoved] is the function that triggers when the marker is moved.
+  ///
+  /// [radius] is the size of the marker.
+  ///
+  /// [color] is the color of the marker.
+  ///
+  /// [useRadiusInMeter] is whether the marker should resize with the map zoom
+  /// level so that its size is constant in the physical world.
   const MovableMapMarker({
     required this.point,
     required this.onMoved,
@@ -108,11 +121,19 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
 
 /// A basic painter for painting a circle.
 class CirclePainter extends CustomPainter {
+  /// A basic painter for painting a circle.
+  ///
+  /// [color] is the color of the circle to paint.
+  /// [radius] is the radius of the circle to paint.
   const CirclePainter({
     required this.color,
     required this.radius,
   });
+
+  /// The color of the circle to paint.
   final Color color;
+
+  /// The radius of the circle to paint.
   final double radius;
   @override
   void paint(Canvas canvas, Size size) {

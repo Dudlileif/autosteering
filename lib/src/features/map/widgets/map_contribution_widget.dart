@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A small widget to show attributions to the map contributors.
 class MapContributionWidget extends ConsumerWidget {
+  /// A small widget to show attributions to the map contributors.
   const MapContributionWidget({super.key});
 
   @override

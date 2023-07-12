@@ -5,6 +5,8 @@ part of '../vehicle.dart';
 ///
 /// Geometry: https://eprints.qut.edu.au/21740/1/corke_00928568.pdf
 final class ArticulatedTractor extends Vehicle {
+  /// An articulated tractor with two bodies with solid axles that are joined
+  /// at a pivot point.
   ArticulatedTractor({
     required this.pivotToAntennaDistance,
     required this.pivotToFrontAxle,
@@ -49,10 +51,13 @@ final class ArticulatedTractor extends Vehicle {
   /// axle center position.
   double pivotToRearAxle;
 
+  /// The distance from the front axle to the front fixed hitch point.
   double? frontAxleToHitchDistance;
 
+  /// The distance from the rear axle to the rear fixed hitch point.
   double? rearAxleToHitchDistance;
 
+  /// The distance from the rear axle to the rear towbar hitch point.
   double? rearAxleToTowbarDistance;
 
   /// The diameter of the wheels.

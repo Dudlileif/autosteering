@@ -2,6 +2,7 @@ part of '../vehicle.dart';
 
 /// A conventional tractor with front wheel steering and a solid rear axle.
 final class Tractor extends AxleSteeredVehicle {
+  /// A conventional tractor with front wheel steering and a solid rear axle.
   Tractor({
     required super.wheelBase,
     required super.solidAxleDistance,

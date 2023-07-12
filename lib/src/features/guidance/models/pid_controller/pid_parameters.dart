@@ -2,6 +2,11 @@ part of 'pid_controller.dart';
 
 /// A class for encompassing the gain parameters for a [PidController].
 class PidParameters extends Equatable {
+  /// A class for encompassing the gain parameters for a [PidController].
+  ///
+  /// [p] is the proportional gain.
+  /// [i] is the integral gain.
+  /// [d] is the derivative gain.
   const PidParameters({
     required this.p,
     required this.i,

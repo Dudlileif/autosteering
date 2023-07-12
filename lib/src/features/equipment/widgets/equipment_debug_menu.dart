@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu with attached submenu for debugging the equipment feature.
 class EquipmentDebugMenu extends StatelessWidget {
+  /// A menu with attached submenu for debugging the equipment feature.
   const EquipmentDebugMenu({super.key});
 
   @override

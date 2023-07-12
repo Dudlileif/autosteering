@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Basic vehicle gauges to show the travelled distance (clearable), velocity
 /// and heading.
 class BasicVehicleGauges extends StatelessWidget {
-  const BasicVehicleGauges({
-    super.key,
-  });
+  /// Basic vehicle gauges to show the travelled distance (clearable), velocity
+  /// and heading.
+  const BasicVehicleGauges({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A combination layer for the vehicle debugging features.
 class VehicleDebugLayer extends ConsumerWidget {
+  /// A combination layer for the vehicle debugging features.
   const VehicleDebugLayer({super.key});
 
   @override

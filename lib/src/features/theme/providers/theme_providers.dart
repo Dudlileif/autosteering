@@ -10,8 +10,11 @@ class ActiveThemeMode extends _$ActiveThemeMode {
   @override
   ThemeMode build() => ThemeMode.system;
 
+  /// Update the [state] to [newMode].
   void update(ThemeMode newMode) => Future(() => state = newMode);
 
+  /// Cycle throught the available states by going to the next one after the
+  /// current [state].
   void cycle() => Future(
         () => state = switch (state) {
           ThemeMode.light => ThemeMode.system,
@@ -27,8 +30,11 @@ class Manufacturer extends _$Manufacturer {
   @override
   ManufacturerColor build() => ManufacturerColor.masseyFerguson;
 
+  /// Update the [state] to [newScheme].
   void update(ManufacturerColor newScheme) => Future(() => state = newScheme);
 
+  /// Update the [state] by using the [index] of the wanted
+  /// [ManufacturerColor].
   void updateByIndex(int index) =>
       Future(() => state = ManufacturerColor.values[index]);
 }

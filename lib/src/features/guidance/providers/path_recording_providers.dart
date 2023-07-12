@@ -11,8 +11,10 @@ class EnablePathRecorder extends _$EnablePathRecorder {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state != state);
 }
 
@@ -82,8 +84,10 @@ class PathRecordingList extends _$PathRecordingList {
     return points;
   }
 
+  /// Add the [point] to the [state].
   Future<void> add(WayPoint point) => Future(() => state = state..add(point));
 
+  /// Remove all the waypoints.
   void clear() => Future(() => state.clear());
 }
 
@@ -93,20 +97,26 @@ class FinishedPathRecordingList extends _$FinishedPathRecordingList {
   @override
   List<WayPoint>? build() => null;
 
+  /// Update the [state] to [points].
   void update(List<WayPoint> points) => Future(() => state = points);
 
+  /// Move the [point] to [index].
   void movePoint(int index, WayPoint point) => Future(
         () => state = state
           ?..insert(index, point)
           ..removeAt(index + 1),
       );
+
+  /// Insert [point] at [index].
   void insert(int index, WayPoint point) =>
       Future(() => state = state?..insert(index, point));
 
+  /// Remove point at [index].
   void remove(int index) => Future(
         () => state = state?..removeAt(index),
       );
 
+  /// Set the state to null.
   void clear() => Future(() => state = null);
 
   @override
@@ -120,8 +130,10 @@ class ShowFinishedPath extends _$ShowFinishedPath {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current state.
   void toggle() => Future(() => state != state);
 }
 
@@ -131,8 +143,10 @@ class ShowFinishedPolygon extends _$ShowFinishedPolygon {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current state.
   void toggle() => Future(() => state != state);
 }
 
@@ -142,7 +156,9 @@ class EditFinishedPath extends _$EditFinishedPath {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current state.
   void toggle() => Future(() => state != state);
 }

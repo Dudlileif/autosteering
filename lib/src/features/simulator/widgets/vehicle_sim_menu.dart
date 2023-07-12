@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// A menu button with attached submenu for options related to the
 /// simulated vehicle.
 class VehicleSimMenu extends StatelessWidget {
+  /// A menu button with attached submenu for options related to the
+  /// simulated vehicle.
   const VehicleSimMenu({super.key});
 
   @override

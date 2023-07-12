@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button with attached submenu for configuring the simulator.
 class SimMenu extends StatelessWidget {
+  /// A menu button with attached submenu for configuring the simulator.
   const SimMenu({super.key});
 
   @override

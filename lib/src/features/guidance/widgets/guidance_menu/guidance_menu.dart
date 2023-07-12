@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 /// A menu with attached submenu for working with the guidance features.
 class GuidanceMenu extends StatelessWidget {
+  /// A menu with attached submenu for working with the guidance features.
   const GuidanceMenu({super.key});
 
   @override

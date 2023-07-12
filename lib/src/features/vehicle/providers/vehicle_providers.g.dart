@@ -6,7 +6,7 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainVehicleHash() => r'13866f0760c5b44c4adcf7dd1a06aaf61578a3c9';
+String _$mainVehicleHash() => r'42e94bffbe28637f10ee029d54466ec411a01014';
 
 /// The main provider for the vehicle state.
 ///
@@ -23,7 +23,7 @@ final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
 
 typedef _$MainVehicle = Notifier<Vehicle>;
 String _$vehicleTravelledDistanceHash() =>
-    r'6a316e0c90297686a35761fd5e29de66cb214254';
+    r'8f56b17e4d80d300688beea21c377223b368fa0a';
 
 /// A provider for the distance travelled by the vehicle.
 ///

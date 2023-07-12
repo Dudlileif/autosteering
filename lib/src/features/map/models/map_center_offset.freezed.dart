@@ -20,10 +20,10 @@ MapCenterOffset _$MapCenterOffsetFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MapCenterOffset {
-  /// Offset in meters from the center point.
+  /// Longitudinal offset in meters from the center point.
   double get x => throw _privateConstructorUsedError;
 
-  /// Offset in meters from the center point.
+  /// Transverse offset in meters from the center point.
   double get y => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -116,12 +116,12 @@ class _$_MapCenterOffset implements _MapCenterOffset {
   factory _$_MapCenterOffset.fromJson(Map<String, dynamic> json) =>
       _$$_MapCenterOffsetFromJson(json);
 
-  /// Offset in meters from the center point.
+  /// Longitudinal offset in meters from the center point.
   @override
   @JsonKey()
   final double x;
 
-  /// Offset in meters from the center point.
+  /// Transverse offset in meters from the center point.
   @override
   @JsonKey()
   final double y;
@@ -167,11 +167,11 @@ abstract class _MapCenterOffset implements MapCenterOffset {
 
   @override
 
-  /// Offset in meters from the center point.
+  /// Longitudinal offset in meters from the center point.
   double get x;
   @override
 
-  /// Offset in meters from the center point.
+  /// Transverse offset in meters from the center point.
   double get y;
   @override
   @JsonKey(ignore: true)

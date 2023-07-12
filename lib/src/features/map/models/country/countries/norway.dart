@@ -4,17 +4,18 @@ import 'package:flutter_map/flutter_map.dart';
 
 /// A country class for Norway, with a selection of maps from Kartverket.
 class Norway extends Country {
+  /// A country class for Norway, with a selection of maps from Kartverket.
   const Norway() : super('Norway');
 
   @override
   List<TileLayerData> get availableLayers => [
-        norgeIBilder,
-        norgesKart,
-        norgesGrunnkart,
-        norgesGrunnkartGraatone,
-        terrainDTM,
-        terrainDTMMulti,
-        terrainDOM,
+        _norgeIBilder,
+        _norgesKart,
+        _norgesGrunnkart,
+        _norgesGrunnkartGraatone,
+        _terrainDTM,
+        _terrainDTMMulti,
+        _terrainDOM,
       ];
 
   @override
@@ -23,7 +24,7 @@ class Norway extends Country {
         style: Theme.of(context).textTheme.bodySmall,
       );
 
-  TileLayerData get norgeIBilder => const TileLayerData(
+  TileLayerData get _norgeIBilder => const TileLayerData(
         name: 'Norge i bilder',
         urlTemplate:
             'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_nib_web_mercator_wmts_v2?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=Nibcache_web_mercator_v2&STYLE=default&FORMAT=image/png&tileMatrixSet=default028mm&tileMatrix={z}&tileRow={y}&tileCol={x}',
@@ -31,7 +32,7 @@ class Norway extends Country {
         maxNativeZoom: 18,
       );
 
-  TileLayerData get norgesKart => const TileLayerData(
+  TileLayerData get _norgesKart => const TileLayerData(
         name: 'Norgeskart',
         urlTemplate:
             'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=norgeskart_bakgrunn&STYLE=default&FORMAT=image/png&tileMatrixSet=EPSG:3857&tileMatrix=EPSG:3857:{z}&tileRow={y}&tileCol={x}',
@@ -40,7 +41,7 @@ class Norway extends Country {
         themedTileLayerBuilder: themedTileLayerBuilder,
       );
 
-  TileLayerData get norgesGrunnkart => const TileLayerData(
+  TileLayerData get _norgesGrunnkart => const TileLayerData(
         name: 'Norges grunnkart',
         urlTemplate:
             'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=norges_grunnkart&STYLE=default&FORMAT=image/png&tileMatrixSet=EPSG:3857&tileMatrix=EPSG:3857:{z}&tileRow={y}&tileCol={x}',
@@ -49,7 +50,7 @@ class Norway extends Country {
         themedTileLayerBuilder: themedTileLayerBuilder,
       );
 
-  TileLayerData get norgesGrunnkartGraatone => const TileLayerData(
+  TileLayerData get _norgesGrunnkartGraatone => const TileLayerData(
         name: 'Norges grunnkart gråtone',
         urlTemplate:
             'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=norges_grunnkart_graatone&STYLE=default&FORMAT=image/png&tileMatrixSet=EPSG:3857&tileMatrix=EPSG:3857:{z}&tileRow={y}&tileCol={x}',
@@ -58,7 +59,7 @@ class Norway extends Country {
         themedTileLayerBuilder: themedTileLayerBuilder,
       );
 
-  TileLayerData get terrainDTM => TileLayerData(
+  TileLayerData get _terrainDTM => TileLayerData(
         name: 'Terreng - skyggerelieff',
         wmsOptions: WMSTileLayerOptions(
           baseUrl: 'https://wms.geonorge.no/skwms1/wms.hoyde-dtm?',
@@ -68,7 +69,7 @@ class Norway extends Country {
         ),
       );
 
-  TileLayerData get terrainDTMMulti => TileLayerData(
+  TileLayerData get _terrainDTMMulti => TileLayerData(
         name: 'Terreng - multiskyggerelieff',
         wmsOptions: WMSTileLayerOptions(
           baseUrl: 'https://wms.geonorge.no/skwms1/wms.hoyde-dtm?',
@@ -78,7 +79,7 @@ class Norway extends Country {
         ),
       );
 
-  TileLayerData get terrainDOM => TileLayerData(
+  TileLayerData get _terrainDOM => TileLayerData(
         name: 'Terreng - skyggerelieff DOM',
         wmsOptions: WMSTileLayerOptions(
           baseUrl: 'https://wms.geonorge.no/skwms1/wms.hoyde-dom?',

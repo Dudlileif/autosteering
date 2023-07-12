@@ -24,41 +24,39 @@ class MainVehicle extends _$MainVehicle {
         simulated: true,
       );
 
+  /// Set the velocity of the [state] to [value].
   void setVelocity(double value) {
     if (value != state.velocity) {
       Future(() => state = state.copyWith(velocity: value));
     }
   }
 
+  /// Set the steering angle input of the [state] to [value].
   void setSteeringAngle(double value) {
     if (value != state.steeringAngle) {
       Future(() => state = state.copyWith(steeringAngleInput: value));
     }
   }
 
-  void setPositon(LatLng position) {
-    if (position != state.position) {
-      Future(() => state = state.copyWith(position: position));
+  /// Set the position of the [state] to [value].
+  void setPositon(LatLng value) {
+    if (value != state.position) {
+      Future(() => state = state.copyWith(position: value));
     }
   }
 
-  void setHeading(double heading) {
-    if (heading != state.heading) {
-      Future(() => state = state.copyWith(heading: heading));
+  /// Set the heading of the [state] to [value].
+
+  void setHeading(double value) {
+    if (value != state.heading) {
+      Future(() => state = state.copyWith(heading: value));
     }
   }
 
-  void updateOnlyNecessary(Vehicle vehicle) => Future(
-        () => state = state.copyWith(
-          position: vehicle.position,
-          steeringAngleInput: vehicle.steeringAngleInput,
-          velocity: vehicle.velocity,
-          heading: vehicle.heading,
-        ),
-      );
-
+  /// Update the [state] to [vehicle].
   void update(Vehicle vehicle) => Future(() => state = vehicle);
 
+  /// Reset the [state] to the initial value by recreating the [state].
   void reset() => ref.invalidateSelf();
 }
 
@@ -68,7 +66,8 @@ class VehicleTravelledDistance extends _$VehicleTravelledDistance {
   @override
   double build() => 0;
 
-  void update(double distance) => Future(() => state += distance);
+  /// Update the [state] by adding [value].
+  void updateWith(double value) => Future(() => state += value);
 }
 
 /// A provider for the vehicle's velocity gauge.
@@ -77,6 +76,7 @@ class VehicleVelocity extends _$VehicleVelocity {
   @override
   double build() => 0;
 
+  /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
 
@@ -86,5 +86,6 @@ class VehicleHeading extends _$VehicleHeading {
   @override
   double build() => 0;
 
+  /// Update the [state] by adding [value].
   void update(double value) => Future(() => state = value);
 }

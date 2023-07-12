@@ -17,8 +17,10 @@ class ShowEquipmentDebug extends _$ShowEquipmentDebug {
   @override
   bool build() => true;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
+  /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
 
@@ -34,8 +36,10 @@ class ConfiguredEquipment extends _$ConfiguredEquipment {
     return Equipment(hitchType: HitchType.fixed);
   }
 
+  /// Update the [state] to [equipment].
   void update(Equipment equipment) => Future(() => state = equipment);
 
+  /// Attach the [state] equipment to the front fixed hitch of the main vehicle.
   void attachToVehicleFront() => Future(
         () {
           state = state.copyWith(
@@ -47,6 +51,9 @@ class ConfiguredEquipment extends _$ConfiguredEquipment {
           );
         },
       );
+
+  /// Attach the [state] equipment to the rear fixed hitch of the main
+  /// vehicle.
   void attachToVehicleRear() => Future(
         () {
           state = state.copyWith(
@@ -58,6 +65,8 @@ class ConfiguredEquipment extends _$ConfiguredEquipment {
           );
         },
       );
+
+  /// Attach the [state] equipment to the rear towbar hitch of the main vehicle.
   void attachToVehicleTowbar() => Future(
         () {
           state = state.copyWith(
@@ -89,6 +98,7 @@ class AllEquipments extends _$AllEquipments {
     return {};
   }
 
+  /// Update the [equipment] in the [state].
   void update(Equipment equipment) => Future(
         () => state = Map.of(state)
           ..update(
@@ -98,11 +108,14 @@ class AllEquipments extends _$AllEquipments {
           ),
       );
 
+  /// Remove all the equipment.
   void clear() => Future(() {
         state = {};
         ref.read(simInputProvider.notifier).send(());
       });
 
+  /// Handles the event of a tap on the map. If [point] is within one of the
+  /// equipments' segments, then the segment will be toggled.
   void handleMapOnTap(TapPosition tapPosition, LatLng point) {
     for (final equipment in state.values) {
       equipment.segmentPolygons.forEachIndexed((index, segment) {
@@ -118,6 +131,9 @@ class AllEquipments extends _$AllEquipments {
     }
   }
 
+  /// Handles the event of a pointer hovering on the map. If [point] is within
+  /// one of the equipments' segments, the [equipmentHoveredProvider] is
+  /// set to true, otherwise false.
   void handleMapOnPointerHover(PointerHoverEvent event, LatLng point) {
     for (final equipment in state.values) {
       for (final segment in equipment.segmentPolygons) {
@@ -138,6 +154,7 @@ class EquipmentHovered extends _$EquipmentHovered {
   @override
   bool build() => false;
 
+  /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 }
 
@@ -149,6 +166,7 @@ class EquipmentPaths extends _$EquipmentPaths {
   @override
   List<Map<int, List<LatLng>?>> build(String uuid) => [];
 
+  /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
         // Activation/deactivation
         if (!equipment.activeSegments.equals(_lastActiveSegments) ||
@@ -218,6 +236,8 @@ class EquipmentPaths extends _$EquipmentPaths {
     }
   }
 
+  /// Whether the [next] point for this [segment] is necessary to keep the
+  /// path up to date.
   bool shouldAddNext(LatLng next, int segment) {
     final prev = state.last[segment]?.last;
 

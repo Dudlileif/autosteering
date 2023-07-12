@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A layer for drawing the image/model of the vehicle on the map.
 class VehicleDrawerLayer extends ConsumerWidget {
+  /// A layer for drawing the image/model of the vehicle on the map.
   const VehicleDrawerLayer({super.key});
 
   @override

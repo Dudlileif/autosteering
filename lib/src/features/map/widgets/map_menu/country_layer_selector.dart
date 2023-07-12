@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button and attached submenu for selecting custom country layers.
 class CountryLayerSelector extends ConsumerWidget {
+  /// A menu button and attached submenu for selecting custom country layers.
   const CountryLayerSelector({super.key});
 
   @override

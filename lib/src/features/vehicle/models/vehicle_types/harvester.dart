@@ -2,6 +2,7 @@ part of '../vehicle.dart';
 
 /// A harvester with rear wheel steering and a solid front axle.
 final class Harvester extends AxleSteeredVehicle {
+  /// A harvester with rear wheel steering and a solid front axle.
   Harvester({
     required super.wheelBase,
     required super.solidAxleDistance,

@@ -7,9 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// A menu button with attached submenu for working with the path recording
 /// and editing feature.
 class PathRecorderMenu extends StatelessWidget {
-  const PathRecorderMenu({
-    super.key,
-  });
+  /// A menu button with attached submenu for working with the path recording
+  /// and editing feature.
+  const PathRecorderMenu({super.key});
 
   @override
   Widget build(BuildContext context) {

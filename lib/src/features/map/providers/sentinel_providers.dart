@@ -29,6 +29,7 @@ class CopernicusInstanceId extends _$CopernicusInstanceId {
     return null;
   }
 
+  /// Update the [state] to [value].
   void update(String? value) => Future(() => state = value);
 }
 
@@ -78,6 +79,7 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
     return [];
   }
 
+  /// Reorders the item at [oldIndex] to [newIndex].
   void reorder(int oldIndex, int newIndex) => Future(() {
         var moveTo = newIndex;
         if (oldIndex < newIndex) {
@@ -103,6 +105,7 @@ class SentinelMaxCloudCoveragePercent
   @override
   double build() => 20;
 
+  /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
 
@@ -146,14 +149,19 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
     return layers;
   }
 
+  /// Add the [layer] to the [state].
   void add(SentinelLayer layer) => Future(
         () => state = Set<SentinelLayer>.from(state)..add(layer),
       );
+
+  /// Remove the [layer] from the [state].
   void remove(SentinelLayer layer) => Future(
         () => state = Set<SentinelLayer>.from(state)
           ..removeWhere((element) => element.layerType == layer.layerType),
       );
 
+  /// Add the [layer] to the [state] if it's missing or remove it if it's
+  /// already in the [state].
   void toggle(SentinelLayer layer) {
     final layerExists =
         state.any((element) => element.layerType == layer.layerType);
@@ -164,6 +172,7 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
     }
   }
 
+  /// Remove all the layers from the [state].
   void clear() => Future(() => state = {});
 
   @override
@@ -207,11 +216,13 @@ class SentinelLayerOpacities extends _$SentinelLayerOpacities {
     return layers;
   }
 
+  /// Update the [opacity] for the given [layer].
   void update(SentinelLayerType layer, double opacity) => Future(
         () => state = Map<SentinelLayerType, double>.from(state)
           ..update(layer, (value) => opacity),
       );
 
+  /// Reset the [state] to the initial value by recreating it.
   void reset() => ref.invalidateSelf();
 
   @override
