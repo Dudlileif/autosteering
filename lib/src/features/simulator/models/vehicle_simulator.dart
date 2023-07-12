@@ -5,6 +5,7 @@ import 'dart:isolate';
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -196,7 +197,7 @@ class _VehicleSimulatorState {
       );
     }
     // Update the vehicle with new inputs.
-    else if (message is VehicleInput && vehicle != null) {
+    else if (message is VehicleInput) {
       if (message.position != null) {
         vehicle?.position = message.position!;
       }
@@ -265,10 +266,25 @@ class _VehicleSimulatorState {
       if (purePursuit != null && vehicle != null) {
         purePursuit!.currentIndex = purePursuit!.closestIndex(vehicle!);
       }
-    } else if (message is ({String uuid, List<bool> activeSegments})) {
+    }
+    // Attach a new front hitch equipment. Detach by sending null as the
+    // equipment.
+    else if (message is ({Equipment? child, Hitch position})) {
+      vehicle?.attachChild(message.child, message.position);
+    }
+    // Update the active segments of the equipment with the given uuid.
+    else if (message is ({String uuid, List<bool> activeSegments})) {
       final equipment = vehicle?.findChildRecursive(message.uuid);
       if (equipment != null && equipment is Equipment) {
         equipment.activeSegments = message.activeSegments;
+      }
+    }
+    // Detach the equipment with the given uuid.
+    else if (message is ({String detachUuid})) {
+      final equipment = vehicle?.findChildRecursive(message.detachUuid);
+      if (equipment != null) {
+        final parent = equipment.hitchParent;
+        if (parent != null) {}
       }
     }
     // Force update to reflect changes in case we haven't moved.
@@ -361,108 +377,117 @@ class _VehicleSimulatorState {
     if (vehicle != null && period > 0) {
       // Turning
       if (vehicle!.angularVelocity != null && turningCircleCenter != null) {
-        if (vehicle is AxleSteeredVehicle) {
-          // A local vehicle variable to simplify null safe syntax.
-          final vehicle = this.vehicle! as AxleSteeredVehicle;
+        switch (vehicle!) {
+          case AxleSteeredVehicle():
+            {
+              // A local vehicle variable to simplify null safe syntax.
+              final vehicle = this.vehicle! as AxleSteeredVehicle;
 
-          // How many degrees of the turning circle the current angular velocity
-          // during the period amounts to. Relative to the current position, is
-          // negative when reversing.
-          final turningCircleAngle = vehicle.angularVelocity! * period;
+              // How many degrees of the turning circle the current angular
+              // velocity during the period amounts to. Relative to the current
+              // position, is negative when reversing.
+              final turningCircleAngle = vehicle.angularVelocity! * period;
 
-          // The angle from the turning circle center to the projected
-          // position.
-          final angle = switch (vehicle.isTurningLeft) {
-            // Turning left
-            true => vehicle.heading + 90 - turningCircleAngle,
-            // Turning right
-            false => vehicle.heading - 90 + turningCircleAngle,
-          };
-          // Projected solid axle position from the turning radius
-          // center.
-          final solidAxlePositon = turningCircleCenter!.offset(
-            vehicle.currentTurningRadius!,
-            normalizeBearing(angle),
-          );
+              // The angle from the turning circle center to the projected
+              // position.
+              final angle = switch (vehicle.isTurningLeft) {
+                // Turning left
+                true => vehicle.heading + 90 - turningCircleAngle,
+                // Turning right
+                false => vehicle.heading - 90 + turningCircleAngle,
+              };
+              // Projected solid axle position from the turning radius
+              // center.
+              final solidAxlePositon = turningCircleCenter!.offset(
+                vehicle.currentTurningRadius!,
+                normalizeBearing(angle),
+              );
 
-          // The heading of the vehicle at the projected position.
-          final heading = normalizeBearing(
-            switch (vehicle.isTurningLeft) {
-              true => vehicle.heading - turningCircleAngle,
-              false => vehicle.heading + turningCircleAngle,
-            },
-          );
+              // The heading of the vehicle at the projected position.
+              final heading = normalizeBearing(
+                switch (vehicle.isTurningLeft) {
+                  true => vehicle.heading - turningCircleAngle,
+                  false => vehicle.heading + turningCircleAngle,
+                },
+              );
 
-          // The vehicle center position, which is offset from the solid
-          // axle position.
-          final vehiclePosition = solidAxlePositon.offset(
-            vehicle.solidAxleDistance,
-            switch (vehicle is Tractor) {
-              true => heading,
-              false => heading + 180,
-            },
-          );
+              // The vehicle center position, which is offset from the solid
+              // axle position.
+              final vehiclePosition = solidAxlePositon.offset(
+                vehicle.solidAxleDistance,
+                switch (vehicle) {
+                  Tractor() => heading,
+                  Harvester() => heading + 180,
+                },
+              );
 
-          // Update the vehicle state.
-          this.vehicle
-            ?..position = vehiclePosition
-            ..heading = heading;
-        } else if (vehicle is ArticulatedTractor) {
-          // A local vehicle variable to simplify null safe syntax.
-          final vehicle = this.vehicle! as ArticulatedTractor;
+              // Update the vehicle state.
+              this.vehicle
+                ?..position = vehiclePosition
+                ..heading = heading;
+            }
+          case ArticulatedTractor():
+            {
+              // A local vehicle variable to simplify null safe syntax.
+              final vehicle = this.vehicle! as ArticulatedTractor;
 
-          // How many degrees of the turning circle the current angular velocity
-          // during the period amounts to. Relative to the current position, is
-          // negative when reversing.
-          final turningCircleAngle = vehicle.angularVelocity! * period;
+              // How many degrees of the turning circle the current angular
+              // velocity
+              // during the period amounts to. Relative to the current position,
+              // is negative when reversing.
+              final turningCircleAngle = vehicle.angularVelocity! * period;
 
-          // The current angle from the turning radius center to the
-          // front axle center.
-          final turningCenterToFrontAxleAngle = normalizeBearing(
-            switch (vehicle.isTurningLeft) {
-              // Turning left
-              true => vehicle.frontAxleAngle + 90,
-              // Turning right
-              false => vehicle.frontAxleAngle - 90,
-            },
-          );
+              // The current angle from the turning radius center to the
+              // front axle center.
+              final turningCenterToFrontAxleAngle = normalizeBearing(
+                switch (vehicle.isTurningLeft) {
+                  // Turning left
+                  true => vehicle.frontAxleAngle + 90,
+                  // Turning right
+                  false => vehicle.frontAxleAngle - 90,
+                },
+              );
 
-          // The angle from the turning circle center to the projected front
-          // axle position.
-          final projectedFrontAxleAngle = switch (vehicle.isTurningLeft) {
-            // Turning left
-            true => turningCenterToFrontAxleAngle - turningCircleAngle,
-            // Turning right
-            false => turningCenterToFrontAxleAngle + turningCircleAngle,
-          };
+              // The angle from the turning circle center to the projected front
+              // axle position.
+              final projectedFrontAxleAngle = switch (vehicle.isTurningLeft) {
+                // Turning left
+                true => turningCenterToFrontAxleAngle - turningCircleAngle,
+                // Turning right
+                false => turningCenterToFrontAxleAngle + turningCircleAngle,
+              };
 
-          // Projected vehicle front axle position from the turning radius
-          // center.
-          final frontAxlePosition = turningCircleCenter!.offset(
-            vehicle.currentTurningRadius!,
-            projectedFrontAxleAngle,
-          );
+              // Projected vehicle front axle position from the turning radius
+              // center.
+              final frontAxlePosition = turningCircleCenter!.offset(
+                vehicle.currentTurningRadius!,
+                projectedFrontAxleAngle,
+              );
 
-          // The heading of the front body of the vehicle at the projected
-          // position.
-          final frontBodyHeading = switch (vehicle.isTurningLeft) {
-            true => projectedFrontAxleAngle - 90 - vehicle.steeringAngle / 2,
-            false => projectedFrontAxleAngle + 90 - vehicle.steeringAngle / 2,
-          };
+              // The heading of the front body of the vehicle at the projected
+              // position.
+              final frontBodyHeading = switch (vehicle.isTurningLeft) {
+                true =>
+                  projectedFrontAxleAngle - 90 - vehicle.steeringAngle / 2,
+                false =>
+                  projectedFrontAxleAngle + 90 - vehicle.steeringAngle / 2,
+              };
 
-          // The vehicle antenna position, projected from the front axle
-          // position.
-          final vehiclePosition = frontAxlePosition.offset(
-            vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
-            frontBodyHeading - 180 + vehicle.steeringAngle / 2,
-          );
+              // The vehicle antenna position, projected from the front axle
+              // position.
+              final vehiclePosition = frontAxlePosition.offset(
+                vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
+                frontBodyHeading - 180 + vehicle.steeringAngle / 2,
+              );
 
-          // Update the vehicle state.
-          this.vehicle
-            ?..position = vehiclePosition
-            ..heading = frontBodyHeading;
+              // Update the vehicle state.
+              this.vehicle
+                ?..position = vehiclePosition
+                ..heading = frontBodyHeading;
+            }
         }
       }
+
       // Going straight.
       else {
         final position = vehicle!.position.offset(
@@ -473,7 +498,7 @@ class _VehicleSimulatorState {
         // Update the vehicle state.
         vehicle?.position = position;
       }
-      // Update the connected equipment.
+      // Update the connected equipment/children.
       vehicle?.updateChildren();
     }
   }

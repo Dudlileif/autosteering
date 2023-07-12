@@ -117,4 +117,23 @@ final debugTravelledPathListProvider =
 );
 
 typedef _$DebugTravelledPathList = AutoDisposeNotifier<List<LatLng>>;
+String _$debugVehicleHitchesHash() =>
+    r'3750b049d3c928c7fb92c45455ee680c7f8b7a94';
+
+/// Whether to show vehicle hitches debug.
+///
+/// Copied from [DebugVehicleHitches].
+@ProviderFor(DebugVehicleHitches)
+final debugVehicleHitchesProvider =
+    NotifierProvider<DebugVehicleHitches, bool>.internal(
+  DebugVehicleHitches.new,
+  name: r'debugVehicleHitchesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugVehicleHitchesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugVehicleHitches = Notifier<bool>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

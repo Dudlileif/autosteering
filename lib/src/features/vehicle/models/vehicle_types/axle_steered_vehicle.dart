@@ -78,7 +78,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   LatLng get steeringAxlePosition;
 
   @override
-  LatLng? get hitchFrontFixedPosition =>
+  LatLng? get hitchFrontFixedPoint =>
       switch (solidAxleToFrontHitchDistance != null) {
         true =>
           solidAxlePosition.offset(solidAxleToFrontHitchDistance!, heading),
@@ -86,7 +86,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       };
 
   @override
-  LatLng? get hitchRearFixedPosition =>
+  LatLng? get hitchRearFixedPoint =>
       switch (solidAxleToRearHitchDistance != null) {
         true => solidAxlePosition.offset(
             solidAxleToRearHitchDistance!,
@@ -96,7 +96,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       };
 
   @override
-  LatLng? get hitchRearTowbarPosition =>
+  LatLng? get hitchRearTowbarPoint =>
       switch (solidAxleToRearTowbarDistance != null) {
         true => solidAxlePosition.offset(
             solidAxleToRearTowbarDistance!,

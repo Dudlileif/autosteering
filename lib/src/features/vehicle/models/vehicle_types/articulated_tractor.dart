@@ -100,7 +100,7 @@ final class ArticulatedTractor extends Vehicle {
       );
 
   @override
-  LatLng? get hitchFrontFixedPosition =>
+  LatLng? get hitchFrontFixedPoint =>
       switch (frontAxleToHitchDistance != null) {
         true => frontAxlePosition.offset(
             frontAxleToHitchDistance!,
@@ -110,8 +110,7 @@ final class ArticulatedTractor extends Vehicle {
       };
 
   @override
-  LatLng? get hitchRearFixedPosition =>
-      switch (rearAxleToHitchDistance != null) {
+  LatLng? get hitchRearFixedPoint => switch (rearAxleToHitchDistance != null) {
         true => rearAxlePosition.offset(
             rearAxleToHitchDistance!,
             rearAxleAngle,
@@ -120,7 +119,7 @@ final class ArticulatedTractor extends Vehicle {
       };
 
   @override
-  LatLng? get hitchRearTowbarPosition =>
+  LatLng? get hitchRearTowbarPoint =>
       switch (rearAxleToTowbarDistance != null) {
         true => rearAxlePosition.offset(
             rearAxleToTowbarDistance!,

@@ -6,7 +6,7 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainVehicleHash() => r'5c08882d68787d93f307c72c5376e3951343ead5';
+String _$mainVehicleHash() => r'13866f0760c5b44c4adcf7dd1a06aaf61578a3c9';
 
 /// The main provider for the vehicle state.
 ///

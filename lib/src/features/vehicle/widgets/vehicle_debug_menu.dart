@@ -35,6 +35,21 @@ class VehicleDebugMenu extends StatelessWidget {
         ),
         Consumer(
           child: Text(
+            'Hitches',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(debugVehicleHitchesProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugVehicleHitchesProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
             'Steering',
             style: textStyle,
           ),

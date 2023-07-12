@@ -14,6 +14,7 @@ class VehicleDebugLayer extends ConsumerWidget {
     final debugTrajectory = ref.watch(debugTrajectoryProvider);
     final debugSteering = ref.watch(debugSteeringProvider);
     final debugPolygons = ref.watch(debugVehiclePolygonsProvider);
+    final debugHitches = ref.watch(debugVehicleHitchesProvider);
 
     final vehicle = ref.watch(mainVehicleProvider);
     final travelledPath = ref.watch(debugTravelledPathListProvider);
@@ -52,6 +53,18 @@ class VehicleDebugLayer extends ConsumerWidget {
                 ),
               ),
             ],
+          ),
+        if (debugHitches)
+          CircleLayer(
+            circles: vehicle.hitchPoints
+                .map(
+                  (hitch) => CircleMarker(
+                    point: hitch,
+                    radius: 5,
+                    color: Colors.orange,
+                  ),
+                )
+                .toList(),
           ),
         if (debugSteering)
           CircleLayer(

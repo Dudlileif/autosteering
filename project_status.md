@@ -16,6 +16,11 @@
 
 -   Basic pure pursuit autosteering with PID or look ahead modes
 
+-   Basic equipment simulation
+    -   Front and rear fixed hitch (three point)
+    -   Rear towbar hitch
+    -   Equipment can be chained in any configuration
+
 ## To be implemented
 
 -   Better performance, <s>the current immutable/copyWith implementation might be
@@ -23,7 +28,9 @@
 
 -   Improved vehicle simulation, though good enough for testing features now
 
--   Equipment simulation
+-   Equipment simulation, maybe make segments a separate class, sideways offset, draw some polygon when no segments (i.e. tank/trailer)
+
+-   Saving/loading of vehicles, equipment, fields etc...
 
 -   Fields, AB lines/curves etc.
 

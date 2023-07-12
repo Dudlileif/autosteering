@@ -103,9 +103,13 @@ bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {
   final debugTrajectory = ref.watch(debugTrajectoryProvider);
   final debugSteering = ref.watch(debugSteeringProvider);
   final debugPolygons = ref.watch(debugVehiclePolygonsProvider);
+  final debugHitches = ref.watch(debugVehicleHitchesProvider);
 
-  final enabled =
-      debugTravelledPath || debugTrajectory || debugSteering || debugPolygons;
+  final enabled = debugTravelledPath ||
+      debugTrajectory ||
+      debugSteering ||
+      debugPolygons ||
+      debugHitches;
   return enabled;
 }
 
@@ -137,5 +141,5 @@ bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
 /// Whether the debugging layer for the equipment should be shown.
 @riverpod
 bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) {
-  return ref.watch(showEquipmentProvider);
+  return ref.watch(showEquipmentDebugProvider);
 }

@@ -1,38 +1,71 @@
+import 'dart:math';
+
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
+import 'package:dart_jts/dart_jts.dart' as jts;
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-/// A class for creating equipments for attaching to vehicles.
+/// A class for equipment used for working on the fields.
 class Equipment extends Hitchable with EquatableMixin {
+  /// A class for equipment used for working on the fields.
+  ///
+  /// The required [hitchType] specifies how this equipment connects to a
+  /// parent.
+  ///
+  /// The number of [segments] must correspond with the length of
+  /// [segmentWidths].
+  ///
+  /// The [length] refers to the length of the working area, and the
+  /// [drawbarLength] how long the drawbar(s) is/are. The working area starts
+  /// after the drawbar.
+  ///
+  /// To add child hitches to the equipment, set the distance from the hitch
+  /// point to the corresponding [hitchToChildFrontFixedHitchLength],
+  /// [hitchToChildRearFixedHitchLength], [hitchToChildRearTowbarHitchLength]
+  /// depending on which hitch(es) you wan't to add.
+  ///
+  /// The [heading] and [position] parameters generally doesn't need to be
+  /// set, as the equipment usually doesn't spawn/show initially without a
+  /// parent to inherit position and heading from.
   Equipment({
     required this.hitchType,
     super.hitchParent,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
-    this.segments = 1,
-    this.segmentWidths = const [3],
+    this.segments = 4,
+    this.segmentWidths = const [3, 3, 3, 3],
     this.length = 2,
-    this.drawbarLength = 0.5,
-    this.hitchRearFixedLength,
-    this.hitchRearTowbarLength,
-  }) : assert(
+    this.drawbarLength = 1,
+    this.hitchToChildFrontFixedHitchLength,
+    this.hitchToChildRearFixedHitchLength,
+    this.hitchToChildRearTowbarHitchLength,
+    double heading = 0,
+    LatLng position = const LatLng(0, 0),
+  })  : assert(
           segmentWidths.length == segments,
           'The number of segment widths must match the number of segments.',
-        );
+        ),
+        activeSegments = List.generate(segments, (index) => false),
+        _position = position,
+        _heading = hitchParent?.heading ?? heading;
 
   /// Which type of hitch point this equipment has.
   HitchType hitchType;
 
-  /// The number of segments the equipment is made of.
+  /// The number of segments the equipment working area is made of.
   int segments;
 
   /// The width of each of the segments.
   List<double> segmentWidths;
+
+  /// A list for showing which segements are activated.
+  List<bool> activeSegments;
 
   /// The total length of the equipment, from the front hitch point to the
   /// rear of the equipment.
@@ -42,130 +75,350 @@ class Equipment extends Hitchable with EquatableMixin {
   /// working area/segments.
   double drawbarLength;
 
-  /// The length from the front hitch point to the rear fixed hitch point of the
-  /// equipment, if there is one.
-  double? hitchRearFixedLength;
+  /// The length from the hitch point to the child fixed hitch at the front,
+  /// if there is one.
+  double? hitchToChildFrontFixedHitchLength;
 
-  /// The length from the front hitch point to the rear towbar hitch point of
-  /// the equipment, if there is one.
-  double? hitchRearTowbarLength;
+  /// The length from the primary hitch point to the child fixed hitch at the
+  /// rear, if there is one.
+  double? hitchToChildRearFixedHitchLength;
+
+  /// The length from the primary hitch point to the child rear towbar hitch at
+  /// the rear, if there is one.
+  double? hitchToChildRearTowbarHitchLength;
+
+  /// The position of the equipment, used to specifically set the [position].
+  LatLng _position = const LatLng(0, 0);
+
+  /// The velocity of the equipment, used to specifically set the [velocity].
+  double _velocity = 0;
+
+  /// The heading of the equipment, used to specifically set the [heading].
+  double _heading = 0;
+
+  /// The position of the hitch point of the equipment, will use the parent's
+  /// hitch point if connected.
+  ///
+  /// All geometry calculations for this equipment is based on this point.
+  @override
+  LatLng get position => parentHitchPoint ?? _position;
+
+  /// Manually update the position of the equipment to [value].
+  @override
+  set position(LatLng value) => _position = value;
+
+  /// The velocity of the equipment, will use the parent's velocity if the
+  /// connection is fixed, otherwise the explicitly set [_velocity].
+  @override
+  double get velocity {
+    if (hitchParent != null && parentHitch != Hitch.rearTowbar) {
+      return hitchParent!.velocity;
+    }
+    return _velocity;
+  }
+
+  /// Manually update the velocity of the equipment to [value].
+  @override
+  set velocity(double value) => _velocity = value;
+
+  /// The heading/bearing of the equipment, will use the parent's heading if
+  /// connection is fixed, otherwise the explicitly set [_heading].
+  @override
+  double get heading {
+    if (hitchParent != null && parentHitch != Hitch.rearTowbar) {
+      return switch (hitchParent! is ArticulatedTractor) {
+        true => parentHitch == Hitch.frontFixed
+            ? (hitchParent! as ArticulatedTractor).frontAxleAngle
+            : (hitchParent! as ArticulatedTractor).rearAxleAngle + 180,
+        false => hitchParent!.heading,
+      };
+    }
+    return _heading;
+  }
+
+  /// Manually update the heading of the equipment to [value].
+  @override
+  set heading(double value) => _heading = value;
 
   /// The total width of the equipment. Found by summing the [segmentWidths].
   double get width => segmentWidths.sum;
 
-  /// The hitch connection position where this equipment is attached to the
-  /// [hitchParent].
-  LatLng? get parentHitchPosition => switch (hitchParent != null) {
-        true => switch (hitchType) {
-            HitchType.fixed => switch (
-                  hitchParent!.hitchRearFixedChild == this) {
-                // This equipment is mounted on the rear.
-                true => hitchParent!.hitchRearFixedPosition,
+  /// Run the given [function] on this and all of its children recursively.
+  ///
+  ///  Mainly used to update a Map of equipments in a provider.
+  void runFunctionRecursively(void Function(Equipment equipment) function) {
+    function(this);
+    for (final element in hitchChildren.whereType<Equipment>()) {
+      function(element);
+      element.runFunctionRecursively(function);
+    }
+  }
 
-                // This equipment is mounted on the front.
-                false => hitchParent!.hitchFrontFixedPosition,
-              },
-            HitchType.towbar => hitchParent!.hitchRearTowbarPosition,
+  /// Activate the given [segment].
+  void activateSegment(int segment) => activeSegments[segment] = true;
+
+  /// Deactivate the given [segment].
+  void deActivateSegment(int segment) => activeSegments[segment] = false;
+
+  /// Toggle the given [segment].
+  void toggleSegment(int segment) =>
+      activeSegments[segment] = !activeSegments[segment];
+
+  /// Activate the given [segments].
+  void activateSegments(List<int> segmentsToActivate) {
+    for (final segment in segmentsToActivate) {
+      activeSegments[segment] = true;
+    }
+  }
+
+  /// Deactivate the given [segments].
+  void deactivateSegments(List<int> segmentsToDeactivate) {
+    for (final segment in segmentsToDeactivate) {
+      activeSegments[segment] = false;
+    }
+  }
+
+  /// Toggle the given [segments].
+  void toggleSegments(List<int> segmentsToToggle) {
+    for (final segment in segmentsToToggle) {
+      activeSegments[segment] = !activeSegments[segment];
+    }
+  }
+
+  /// Activate all of the [segments].
+  void activateAll() =>
+      activeSegments = List.generate(segments, (index) => true);
+
+  /// Deactivate all of the [segments].
+  void deactivateAll() =>
+      activeSegments = List.generate(segments, (index) => false);
+
+  /// Toggle all of the [segments].
+  void toggleAll() => activeSegments = activeSegments.map((e) => !e).toList();
+
+  /// The hitch connection position where this equipment is attached to the
+  /// [hitchParent], if it's connected.
+  LatLng? get parentHitchPoint => switch (parentHitch != null) {
+        true => switch (parentHitch!) {
+            Hitch.frontFixed => hitchParent!.hitchFrontFixedPoint,
+            Hitch.rearFixed => hitchParent!.hitchRearFixedPoint,
+            Hitch.rearTowbar => hitchParent!.hitchRearTowbarPoint,
           },
         false => null,
       };
 
-  /// The equipment can't have children in both directions, so we disregard
-  /// having stacked/chained equipment at the front.
+  /// The position of the front fixed child hitch on this equipment, if there is
+  /// one.
   @override
-  LatLng? get hitchFrontFixedPosition => null;
-
-  @override
-  // TODO: implement hitchRearFixedPosition, find the correct bearing
-  LatLng? get hitchRearFixedPosition => switch (hitchParent != null) {
-        true => switch (hitchType) {
-            HitchType.fixed => hitchRearFixedLength != null &&
-                    hitchParent!.hitchRearFixedPosition != null
-                ? hitchParent!.hitchRearFixedPosition!
-                    .offset(hitchRearFixedLength!, 0)
-                : null,
-            HitchType.towbar => hitchRearFixedLength != null &&
-                    hitchParent!.hitchRearTowbarPosition != null
-                ? hitchParent!.hitchRearTowbarPosition!
-                    .offset(hitchRearFixedLength!, 0)
-                : null,
-          },
+  LatLng? get hitchFrontFixedPoint =>
+      switch (hitchToChildFrontFixedHitchLength != null) {
+        true => position.offset(hitchToChildFrontFixedHitchLength!, heading),
         false => null
       };
 
+  /// The position of the rear fixed child hitch on this equipment, if there is
+  /// one.
   @override
-  // TODO: implement hitchRearTowbarPosition, find the correct bearing
-  LatLng? get hitchRearTowbarPosition => switch (hitchParent != null) {
-        true => switch (hitchType) {
-            HitchType.fixed => hitchRearTowbarLength != null &&
-                    hitchParent!.hitchRearFixedPosition != null
-                ? hitchParent!.hitchRearFixedPosition!
-                    .offset(hitchRearTowbarLength!, 0)
-                : null,
-            HitchType.towbar => hitchRearTowbarLength != null &&
-                    hitchParent!.hitchRearTowbarPosition != null
-                ? hitchParent!.hitchRearTowbarPosition!
-                    .offset(hitchRearTowbarLength!, 0)
-                : null,
-          },
+  LatLng? get hitchRearFixedPoint =>
+      switch (hitchToChildRearFixedHitchLength != null) {
+        true =>
+          position.offset(hitchToChildRearFixedHitchLength!, heading + 180),
         false => null
       };
 
-  List<Polygon>? get polygons {
-    if (parentHitchPosition != null) {
-      final heading = switch (hitchParent is Vehicle) {
-        true => switch (hitchParent is AxleSteeredVehicle) {
-            true => (hitchParent! as AxleSteeredVehicle).heading,
-            false => hitchParent!.hitchFrontFixedChild == this
-                ? (hitchParent! as ArticulatedTractor).frontAxleAngle
-                : (hitchParent! as ArticulatedTractor).rearAxleAngle + 180
-          },
-        false => 0,
+  /// The position of the rear towbar child hitch on this equipment, if there is
+  /// one.
+  @override
+  LatLng? get hitchRearTowbarPoint =>
+      switch (hitchToChildRearTowbarHitchLength != null) {
+        true =>
+          position.offset(hitchToChildRearTowbarHitchLength!, heading + 180),
+        false => null
       };
 
-      return [
-        Polygon(
-          borderStrokeWidth: 1,
-          isFilled: true,
-          points: [
-            parentHitchPosition!,
-            parentHitchPosition!.offset(drawbarLength, heading + 180),
-            parentHitchPosition!
-                .offset(drawbarLength, heading + 180)
-                .offset(width / 2, heading + 90),
-            parentHitchPosition!
-                .offset(drawbarLength, heading + 180)
-                .offset(width / 2, heading + 90)
-                .offset(length - drawbarLength, heading + 180),
-            parentHitchPosition!
-                .offset(drawbarLength, heading + 180)
-                .offset(width / 2, heading - 90)
-                .offset(length - drawbarLength, heading + 180),
-            parentHitchPosition!
-                .offset(drawbarLength, heading + 180)
-                .offset(width / 2, heading - 90),
-            parentHitchPosition!.offset(drawbarLength, heading + 180),
-            parentHitchPosition!,
-          ],
-        )
-      ];
+  /// Update the [heading] and [velocity] of the equipment when using connected
+  /// to parent with a towbar.
+  void updateTowbar() {
+    if (hitchParent != null && parentHitch == Hitch.rearTowbar) {
+      final hitchAngle = jts.Angle.angleBetweenOriented(
+        workingCenter.jtsCoordinate,
+        position.jtsCoordinate,
+        hitchParent!.position.jtsCoordinate,
+      );
+
+      final headingChange = hitchParent!.velocity /
+          (drawbarLength + length / 2) *
+          sin(hitchAngle);
+
+      // Only change heading if we're moving.
+      if (hitchParent!.velocity.abs() > 0) {
+        heading = normalizeBearing(_heading + headingChange);
+      }
+      _velocity = hitchParent!.velocity * -cos(hitchAngle);
     }
-    return null;
   }
 
+  /// Update the children connected to this. Also checks and updates this
+  /// equipment if it's connected to parent with a towbar.
   @override
-  // TODO: implement props
+  void updateChildren() {
+    updateTowbar();
+    super.updateChildren();
+  }
+
+  /// The working area center of this equipment.
+  LatLng get workingCenter => position.offset(
+        drawbarLength + length / 2,
+        switch (parentHitch) {
+          Hitch.frontFixed => heading,
+          Hitch.rearFixed => heading + 180,
+          Hitch.rearTowbar => heading + 180,
+          null => heading,
+        },
+      );
+
+  /// The position of the end of the drawbar, i.e. furthest away from the
+  /// parent.
+  LatLng get drawbarEnd => switch (parentHitch) {
+        Hitch.frontFixed => position.offset(drawbarLength, heading),
+        Hitch.rearFixed => position.offset(drawbarLength, heading + 180),
+        Hitch.rearTowbar => position.offset(drawbarLength, heading + 180),
+        null => position.offset(drawbarLength, heading),
+      };
+
+  /// The corner points for the given [segment].
+  List<LatLng> segmentPoints(int segment) {
+    // The starting point of this equipment.
+    final equipmentStart = parentHitch == Hitch.frontFixed
+        ? drawbarEnd.offset(length, heading)
+        : drawbarEnd;
+
+    // The width of the preceding segments.
+    final widthBefore = segmentWidths.getRange(0, segment).sum;
+
+    final segmentFrontLeft =
+        equipmentStart.offset(width / 2 - widthBefore, heading - 90);
+
+    final segmentRearLeft = segmentFrontLeft.offset(length, heading + 180);
+
+    final segmentRearRight =
+        segmentRearLeft.offset(segmentWidths[segment], heading + 90);
+
+    final segmentFrontRight = segmentRearRight.offset(length, heading);
+
+    return [
+      segmentFrontLeft,
+      segmentRearLeft,
+      segmentRearRight,
+      segmentFrontRight
+    ];
+  }
+
+  /// The center point of the given [segment].
+  LatLng segmentCenter(int segment) {
+    final points = segmentPoints(segment);
+    return LatLngBounds.fromPoints(points).center;
+  }
+
+  /// The polygon for the given [segment].
+  Polygon segmentPolygon(int segment) {
+    final points = segmentPoints(segment);
+    final active = activeSegments[segment];
+
+    return Polygon(
+      borderStrokeWidth: 2,
+      isFilled: active,
+      borderColor: switch (active) {
+        true => Colors.greenAccent,
+        false => Colors.grey,
+      },
+      color: switch (active) {
+        true => Colors.green.withOpacity(0.8),
+        false => Colors.grey.withOpacity(0.4),
+      },
+      points: points,
+    );
+  }
+
+  /// An iterable of all the segments' polygons.
+  Iterable<Polygon> get segmentPolygons =>
+      List.generate(segments, segmentPolygon, growable: false).whereNotNull();
+
+  /// A list of the polygon(s) for the drawbar(s).
+  List<Polygon> get drawbarPolygons => switch (hitchType) {
+        HitchType.towbar => [
+            Polygon(
+              borderStrokeWidth: 3,
+              isFilled: true,
+              color: Colors.grey.shade800,
+              borderColor: Colors.black,
+              points: [
+                position.offset(0.05, heading - 90),
+                drawbarEnd.offset(0.05, heading - 90),
+                drawbarEnd.offset(0.05, heading + 90),
+                position.offset(0.05, heading + 90),
+              ],
+            )
+          ],
+        HitchType.fixed => [
+            // Left hitch bar
+            Polygon(
+              borderStrokeWidth: 3,
+              isFilled: true,
+              color: Colors.grey.shade800,
+              borderColor: Colors.black,
+              points: [
+                position.offset(0.35, heading - 90),
+                drawbarEnd.offset(0.35, heading - 90),
+                drawbarEnd.offset(0.3, heading - 90),
+                position.offset(0.3, heading - 90),
+              ],
+            ),
+            // Right hitch bar
+            Polygon(
+              borderStrokeWidth: 3,
+              isFilled: true,
+              color: Colors.grey.shade800,
+              borderColor: Colors.black,
+              points: [
+                position.offset(0.35, heading + 90),
+                drawbarEnd.offset(0.35, heading + 90),
+                drawbarEnd.offset(0.3, heading + 90),
+                position.offset(0.3, heading + 90),
+              ],
+            )
+          ]
+      };
+
+  /// A list of all the polygons for the equipment, i.e. [drawbarPolygons] and
+  /// all the [segmentPolygon]s.
+  List<Polygon> get polygons {
+    return [
+      ...drawbarPolygons,
+      ...List.generate(segments, segmentPolygon, growable: false)
+          .whereNotNull(),
+    ];
+  }
+
+  /// Properties used to check for equality.
+  @override
   List<Object?> get props => [
+        uuid,
         hitchType,
         segments,
         segmentWidths,
         length,
         drawbarLength,
-        hitchRearFixedLength,
-        hitchRearTowbarLength,
+        position,
+        heading,
+        velocity,
+        hitchToChildFrontFixedHitchLength,
+        hitchToChildRearFixedHitchLength,
+        hitchToChildRearTowbarHitchLength,
       ];
 
-  // TODO: implement copyWith
+  /// Returns a new [Equipment] based on this one, but with
+  /// parameters/variables altered.
   @override
   Equipment copyWith({
     String? name,
@@ -178,8 +431,11 @@ class Equipment extends Hitchable with EquatableMixin {
     List<double>? segmentWidths,
     double? length,
     double? drawbarLength,
-    double? hitchRearFixedLength,
-    double? hitchRearTowbarLength,
+    double? heading,
+    LatLng? position,
+    double? hitchToChildFrontFixedHitchLength,
+    double? hitchToChildRearFixedHitchLength,
+    double? hitchToChildRearTowbarHitchLength,
   }) =>
       Equipment(
         name: name ?? this.name,
@@ -191,8 +447,13 @@ class Equipment extends Hitchable with EquatableMixin {
         segmentWidths: segmentWidths ?? this.segmentWidths,
         length: length ?? this.length,
         drawbarLength: drawbarLength ?? this.drawbarLength,
-        hitchRearFixedLength: hitchRearFixedLength ?? this.hitchRearFixedLength,
-        hitchRearTowbarLength:
-            hitchRearTowbarLength ?? this.hitchRearTowbarLength,
+        position: position ?? this.position,
+        heading: heading ?? this.heading,
+        hitchToChildFrontFixedHitchLength: hitchToChildFrontFixedHitchLength ??
+            this.hitchToChildFrontFixedHitchLength,
+        hitchToChildRearFixedHitchLength: hitchToChildRearFixedHitchLength ??
+            this.hitchToChildRearFixedHitchLength,
+        hitchToChildRearTowbarHitchLength: hitchToChildRearTowbarHitchLength ??
+            this.hitchToChildRearTowbarHitchLength,
       );
 }

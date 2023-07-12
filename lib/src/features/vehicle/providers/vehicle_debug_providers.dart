@@ -80,3 +80,14 @@ class DebugTravelledPathList extends _$DebugTravelledPathList {
         state = [point, ...state];
       });
 }
+
+/// Whether to show vehicle hitches debug.
+@Riverpod(keepAlive: true)
+class DebugVehicleHitches extends _$DebugVehicleHitches {
+  @override
+  bool build() => false;
+
+  void update({required bool value}) => Future(() => state = value);
+
+  void toggle() => Future(() => state = !state);
+}

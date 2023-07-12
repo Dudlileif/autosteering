@@ -69,9 +69,10 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
     } else {
       ref.read(mainVehicleProvider.notifier).update(vehicle);
 
-      for (final element in vehicle.hitchChildren) {
-        (element as Equipment)
-            .update(ref.read(allEquipmentsProvider.notifier).update);
+      for (final equipment in vehicle.hitchChildren.whereType<Equipment>()) {
+        equipment.runFunctionRecursively(
+          ref.read(allEquipmentsProvider.notifier).update,
+        );
       }
 
       if (vehicle.position !=
@@ -139,7 +140,6 @@ Stream<Vehicle?> simVehicleWebStream(
         .read(vehicleTravelledDistanceProvider.notifier)
         .update(event.distance.toDouble());
     ref.read(displayPurePursuitProvider.notifier).update(event.purePursuit);
-
     return event.vehicle;
   });
 }

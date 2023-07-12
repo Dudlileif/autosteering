@@ -115,7 +115,7 @@ final showEditablePathLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowEditablePathLayerRef = AutoDisposeProviderRef<bool>;
 String _$showVehicleDebugLayerHash() =>
-    r'bd078d57b11197ad1018055ecd4375a4ba6085b4';
+    r'5b3374c5b91c6c70759da0085331a1711f809341';
 
 /// Whether the debugging layer for the vehicle should be shown.
 ///
@@ -187,7 +187,7 @@ final showFieldDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowFieldDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showEquipmentDebugLayerHash() =>
-    r'187ca5c02fe0e815c63095f34442d0f64d98001d';
+    r'4c540eeb6eacc927d241f2d50f07197888bface7';
 
 /// Whether the debugging layer for the equipment should be shown.
 ///

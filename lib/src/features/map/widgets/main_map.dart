@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,16 @@ class MainMap extends ConsumerWidget {
           }
         },
         onMapReady: ref.read(mapReadyProvider.notifier).ready,
+        onTap: (tapPosition, point) {
+          ref
+              .read(allEquipmentsProvider.notifier)
+              .handleMapOnTap(tapPosition, point);
+        },
+        onPointerHover: (event, point) {
+          ref
+              .read(allEquipmentsProvider.notifier)
+              .handleMapOnPointerHover(event, point);
+        },
       ),
 
       // Only the last layer can be user interactive due to using Stack

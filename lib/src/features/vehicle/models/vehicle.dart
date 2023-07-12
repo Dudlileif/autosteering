@@ -18,14 +18,13 @@ part 'vehicle_types/tractor.dart';
 /// and methods.
 sealed class Vehicle extends Hitchable with EquatableMixin {
   Vehicle({
-    required this.position,
+    required LatLng position,
     required this.antennaHeight,
     required this.minTurningRadius,
     required this.steeringAngleMax,
     required this.trackWidth,
     required this.pidParameters,
     this.invertSteeringInput = false,
-    this.velocity = 0,
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
@@ -35,11 +34,14 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     super.hitchRearTowbarChild,
     super.name,
     double heading = 0,
-  }) : _heading = heading;
+    double velocity = 0,
+  })  : _heading = heading,
+        _velocity = velocity,
+        _position = position;
 
   /// Antenna position of the vehicle. Assumed centered in the
   /// width dimension of the vehicle.
-  LatLng position;
+  LatLng _position;
 
   /// The height of the antenna above the ground, in meters.
   double antennaHeight;
@@ -64,9 +66,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// with
   PidParameters pidParameters;
 
-  /// The velocity of the vehicle, in m/s, meters per second, in the heading
-  /// direction.
-  double velocity;
+  /// The velocity of the vehicle as set from the outside.
+  double _velocity;
 
   /// The length of the vehicle, in meters.
   double length;
@@ -79,6 +80,21 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Heading as set from the outside.
   double _heading = 0;
+
+  @override
+  LatLng get position => _position;
+
+  @override
+  set position(LatLng value) => _position = value;
+
+  /// The velocity of the vehicle, in m/s, meters per second, in the heading
+  /// direction.
+  @override
+  double get velocity => _velocity;
+
+  /// Update the velocity of the vehicle.
+  @override
+  set velocity(double value) => _velocity = value;
 
   /// The heading of the vehicle, in degrees.
   @override
@@ -150,6 +166,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   Path get trajectory;
 
   /// Whether the vehicle is reversing or not.
+  @override
   bool get isReversing => velocity < 0;
 
   /// Whether the vehicle is turning to the left,

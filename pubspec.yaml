@@ -43,7 +43,7 @@ dependencies:
         sdk: flutter
     flutter_map: ^5.0.0
     flutter_riverpod: ^2.3.6
-    freezed_annotation: ^2.2.0
+    freezed_annotation: ^2.4.1
     # gamepads: ^0.1.1
     geobase: ^0.4.2
     json_annotation: ^4.8.1
@@ -52,6 +52,8 @@ dependencies:
     path_provider: ^2.0.15
     riverpod_annotation: ^2.1.1
     themed: ^4.0.0
+    universal_io: ^2.2.2
+    uuid: ^3.0.7
     window_manager: ^0.3.5
 
 dependency_overrides:
@@ -62,7 +64,7 @@ dev_dependencies:
     custom_lint: ^0.4.0
     flutter_test:
         sdk: flutter
-    freezed: ^2.3.5
+    freezed: ^2.4.1
     json_serializable: ^6.7.1
     riverpod_generator: ^2.2.3
     riverpod_lint: ^1.3.2
