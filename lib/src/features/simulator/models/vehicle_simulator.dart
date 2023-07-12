@@ -33,7 +33,7 @@ class VehicleSimulator {
       if (state.vehicle != null) {
         state.update();
 
-        // If the vehicle has moved (changed) we send the new state back to the
+        // If the vehicle has moved or changed we send the new state back to the
         // main/UI isolate.
         if (state.didChange) {
           sendPort.send(
@@ -77,7 +77,7 @@ class VehicleSimulator {
         PurePursuit? purePursuit,
       })> webWorker(
     Stream<dynamic> vehicleEvents,
-  ) async* {
+  ) {
     log('Sim vehicle worker spawned');
 
     // The state of the simulation.
@@ -86,25 +86,35 @@ class VehicleSimulator {
     // Handle the incoming messages.
     vehicleEvents.listen(state.handleMessage);
 
-    // A stream generator that periodically updates the simulation and
+    final streamController = StreamController<
+        ({
+          Vehicle? vehicle,
+          num velocity,
+          num heading,
+          num distance,
+          PurePursuit? purePursuit,
+        })>();
+
+    // A stream event generator that periodically updates the simulation and
     // sends the state.
-    yield* Stream.periodic(
-        const Duration(microseconds: _targetPeriodMicroSeconds), (timer) {
-      if (state.vehicle != null) {
-        state.update();
+    Timer.periodic(const Duration(microseconds: _targetPeriodMicroSeconds),
+        (timer) {
+      state.update();
+
+      if (state.didChange && streamController.hasListener) {
+        streamController.add(
+          (
+            vehicle: state.vehicle,
+            velocity: state.velocity,
+            heading: state.heading,
+            distance: state.distance,
+            purePursuit: state.purePursuit,
+          ),
+        );
       }
-
-      // The simulation data to send to the stream.
-      final returnObject = (
-        vehicle: state.vehicle,
-        velocity: state.velocity,
-        heading: state.heading,
-        distance: state.distance,
-        purePursuit: state.purePursuit,
-      );
-
-      return returnObject;
     });
+
+    return streamController.stream;
   }
 }
 
@@ -183,10 +193,14 @@ class _VehicleSimulatorState {
 
   /// Change state parameters/values according to the incomming [message].
   ///
-  /// This can be [Vehicle], [VehicleInput], [PurePursuitMode] or records for
-  /// [purePursuit], [autoSlowDown], [autoCenterSteering], [enablePurePursuit],
+  /// This can be [Vehicle], [PurePursuitMode] or records for the vehicle's
+  /// position, velocity(Delta), steeringAngle(Delta), [purePursuit],
+  /// [autoSlowDown], [autoCenterSteering], [enablePurePursuit],
   /// [lookAheadDistance] or [pursuitLoopMode].
   void handleMessage(dynamic message) {
+    // Force update to reflect changes in case we haven't moved.
+    forceChange = true;
+
     // Set the vehicle to simulate.
     if (message is Vehicle) {
       vehicle = message.copyWith(
@@ -196,25 +210,29 @@ class _VehicleSimulatorState {
             .clamp(-message.steeringAngleMax, message.steeringAngleMax),
       );
     }
-    // Update the vehicle with new inputs.
-    else if (message is VehicleInput) {
-      if (message.position != null) {
-        vehicle?.position = message.position!;
-      }
-      if (message.velocity != null) {
-        vehicle?.velocity = message.velocity!;
-      } else if (message.velocityDelta != null) {
-        vehicle?.velocity = (vehicle!.velocity +
-                (autoSlowDown ? 1.2 : 1) * message.velocityDelta!)
-            .clamp(-12.0, 12.0);
-      }
-      if (message.steeringAngle != null) {
-        vehicle?.steeringAngleInput = message.steeringAngle!;
-      } else if (message.steeringAngleDelta != null) {
-        vehicle?.steeringAngleInput = (vehicle!.steeringAngleInput +
-                (autoCenterSteering ? 2 : 1) * message.steeringAngleDelta!)
-            .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
-      }
+    // Update the vehicle position.
+    else if (message is ({LatLng position})) {
+      vehicle?.position = message.position;
+    }
+    // Update the vehicle velocity
+    else if (message is ({double velocity})) {
+      vehicle?.velocity = message.velocity;
+    }
+    // Update the vehicle velocity by delta
+    else if (message is ({double velocityDelta})) {
+      vehicle?.velocity =
+          (vehicle!.velocity + (autoSlowDown ? 1.2 : 1) * message.velocityDelta)
+              .clamp(-12.0, 12.0);
+    }
+    // Update the vehicle steering angle input.
+    else if (message is ({double steeringAngle})) {
+      vehicle?.steeringAngleInput = message.steeringAngle;
+    }
+    // Update the vehicle steering angle input by delta.
+    else if (message is ({double steeringAngleDelta})) {
+      vehicle?.steeringAngleInput = (vehicle!.steeringAngleInput +
+              (autoCenterSteering ? 2 : 1) * message.steeringAngleDelta)
+          .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
     }
     // Set the pure pursuit model.
     else if (message is ({PurePursuit? purePursuit})) {
@@ -267,8 +285,8 @@ class _VehicleSimulatorState {
         purePursuit!.currentIndex = purePursuit!.closestIndex(vehicle!);
       }
     }
-    // Attach a new front hitch equipment. Detach by sending null as the
-    // equipment.
+    // Attach a new equipment. Detach by sending null as the equipment with
+    // the same hitch position.
     else if (message is ({Equipment? child, Hitch position})) {
       vehicle?.attachChild(message.child, message.position);
     }
@@ -287,8 +305,6 @@ class _VehicleSimulatorState {
         if (parent != null) {}
       }
     }
-    // Force update to reflect changes in case we haven't moved.
-    forceChange = true;
   }
 
   /// Check if [autoSlowDown] or [autoCenterSteering] should decrease the

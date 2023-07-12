@@ -124,37 +124,38 @@ class FieldDebugMenu extends ConsumerWidget {
               },
             ),
         ],
-        Consumer(
-          child: Text(
-            'Save field',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) {
-            final field = ref.watch(testFieldProvider);
+        if (Device.isWeb)
+          Consumer(
+            child: Text(
+              'Save field',
+              style: textStyle,
+            ),
+            builder: (context, ref, child) {
+              final field = ref.watch(testFieldProvider);
 
-            return ListTile(
-              title: child,
-              leading: const Icon(Icons.save),
-              onTap: field != null
-                  ? () async {
-                      final path = [
-                        ref.watch(fileDirectoryProvider).requireValue.path,
-                        '/fields/test.json'
-                      ].join();
+              return ListTile(
+                title: child,
+                leading: const Icon(Icons.save),
+                onTap: field != null
+                    ? () async {
+                        final path = [
+                          ref.watch(fileDirectoryProvider).requireValue.path,
+                          '/fields/test.json'
+                        ].join();
 
-                      final file = File(path);
-                      if (!file.existsSync()) {
-                        await file.create(recursive: true);
+                        final file = File(path);
+                        if (!file.existsSync()) {
+                          await file.create(recursive: true);
+                        }
+                        await file.writeAsString(
+                          const JsonEncoder.withIndent('    ').convert(field),
+                        );
                       }
-                      await file.writeAsString(
-                        const JsonEncoder.withIndent('    ').convert(field),
-                      );
-                    }
-                  : null,
-            );
-          },
-        ),
-        if (ref.watch(showBufferedTestFieldProvider))
+                    : null,
+              );
+            },
+          ),
+        if (ref.watch(showBufferedTestFieldProvider) && !Device.isWeb)
           Consumer(
             child: Text(
               'Save buffered field',

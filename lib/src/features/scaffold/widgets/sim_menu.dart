@@ -2,7 +2,6 @@ import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,11 +24,17 @@ class SimMenu extends StatelessWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) => ListTile(
-            onTap: () => ref.read(simInputProvider.notifier).send(
-                  ref.watch(mainVehicleProvider).copyWith(
-                        position: ref.watch(homePositionProvider),
-                      ),
-                ),
+            onTap: () {
+              // The simulation has to have a stationary vehicle for the reset
+              // to work on web.
+              if (Device.isWeb) {
+                ref.read(simInputProvider.notifier).send((velocity: 0));
+                ref.read(simInputProvider.notifier).send((steeringAngle: 0));
+              }
+              ref.read(simInputProvider.notifier).send(
+                (position: ref.watch(homePositionProvider)),
+              );
+            },
             leading: const Icon(Icons.replay),
             title: child,
           ),

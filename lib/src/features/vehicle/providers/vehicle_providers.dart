@@ -56,6 +56,17 @@ class MainVehicle extends _$MainVehicle {
   /// Update the [state] to [vehicle].
   void update(Vehicle vehicle) => Future(() => state = vehicle);
 
+  /// Update the [state] with only the position, velocity, heading and
+  /// steering input angle from [vehicle].
+  void updateStateOnly(Vehicle vehicle) => Future(() {
+        state = state.copyWith(
+          velocity: vehicle.velocity,
+          heading: vehicle.heading,
+          steeringAngleInput: vehicle.steeringAngleInput,
+          position: vehicle.position,
+        );
+      });
+
   /// Reset the [state] to the initial value by recreating the [state].
   void reset() => ref.invalidateSelf();
 }

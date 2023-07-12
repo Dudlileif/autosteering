@@ -5,8 +5,25 @@ import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_html/html.dart' show Storage, window;
+import 'package:universal_io/io.dart';
 
 part 'settings_providers.g.dart';
+
+/// A provider for the main settings file for the application.
+@Riverpod(keepAlive: true)
+Future<File> settingsFile(SettingsFileRef ref) async {
+  final file = await File(
+    '${ref.watch(fileDirectoryProvider).requireValue.path}/settings.json',
+  ).create(recursive: true);
+
+  return file;
+}
+
+/// A provider for the local storage data map for the web version of the
+/// application.
+@Riverpod(keepAlive: true)
+Storage webLocalStorage(WebLocalStorageRef ref) => window.localStorage;
 
 /// A provider for the settings map for the application.
 @Riverpod(keepAlive: true)
@@ -20,15 +37,21 @@ class Settings extends _$Settings {
           (key1, key2) => key1.compareTo(key2),
         );
 
-        ref.watch(settingsFileProvider).requireValue.writeAsString(
-              const JsonEncoder.withIndent('    ').convert(sortedMap),
-            );
+        if (Device.isWeb) {
+          ref.watch(webLocalStorageProvider)['settings'] =
+              jsonEncode(sortedMap);
+        } else {
+          ref.watch(settingsFileProvider).requireValue.writeAsString(
+                const JsonEncoder.withIndent('    ').convert(sortedMap),
+              );
+        }
       }
     });
 
-    var fileString =
-        ref.watch(settingsFileProvider).requireValue.readAsStringSync();
-
+    var fileString = switch (Device.isWeb) {
+      true => ref.watch(webLocalStorageProvider)['settings'] ?? '',
+      false => ref.watch(settingsFileProvider).requireValue.readAsStringSync(),
+    };
     if (fileString.isEmpty) {
       fileString = '{}';
     }

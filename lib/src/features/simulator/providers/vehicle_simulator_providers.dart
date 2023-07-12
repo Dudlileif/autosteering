@@ -71,8 +71,12 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
     if (vehicle == null) {
       ref.read(simInputProvider.notifier).send(ref.read(mainVehicleProvider));
     } else {
-      ref.read(mainVehicleProvider.notifier).update(vehicle);
-
+      if (Device.isWeb &&
+          vehicle.runtimeType == ref.watch(mainVehicleProvider).runtimeType) {
+        ref.read(mainVehicleProvider.notifier).updateStateOnly(vehicle);
+      } else {
+        ref.read(mainVehicleProvider.notifier).update(vehicle);
+      }
       for (final equipment in vehicle.hitchChildren.whereType<Equipment>()) {
         equipment.runFunctionRecursively(
           ref.read(allEquipmentsProvider.notifier).update,
@@ -282,23 +286,23 @@ class SimVehicleAccelerator extends _$SimVehicleAccelerator {
   /// simulator.
   void cancel() => Future(() => state?.cancel());
 
-  /// Restart the timer and send the [input] velocity change at a constant
+  /// Restart the timer and send the [delta] velocity change at a constant
   /// interval.
-  void update(VehicleInput input) {
+  void update(double delta) {
     cancel();
     Future(
       () =>
           state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
-        ref.read(simInputProvider.notifier).send(input);
+        ref.read(simInputProvider.notifier).send((velocityDelta: delta));
       }),
     );
   }
 
   /// Start accelerating forwards/increasing the velocity.
-  void forward() => update(const VehicleInput(velocityDelta: 0.1));
+  void forward() => update(0.1);
 
   /// Start accelerating backwards/decreasing the velocity.
-  void reverse() => update(const VehicleInput(velocityDelta: -0.1));
+  void reverse() => update(-0.1);
 }
 
 /// A provider for steering the vehicle in the simulator, typically
@@ -312,21 +316,21 @@ class SimVehicleSteering extends _$SimVehicleSteering {
   /// simulator.
   void cancel() => Future(() => state?.cancel());
 
-  /// Restart the timer and send the [input] steering change at a constant
+  /// Restart the timer and send the [delta] steering change at a constant
   /// interval.
-  void update(VehicleInput input) {
+  void update(double delta) {
     cancel();
     Future(
       () =>
           state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
-        ref.read(simInputProvider.notifier).send(input);
+        ref.read(simInputProvider.notifier).send((steeringAngleDelta: delta));
       }),
     );
   }
 
   /// Start steering to the right.
-  void right() => update(const VehicleInput(steeringAngleDelta: 0.5));
+  void right() => update(0.5);
 
   /// Start steering to the left.
-  void left() => update(const VehicleInput(steeringAngleDelta: -0.5));
+  void left() => update(-0.5);
 }

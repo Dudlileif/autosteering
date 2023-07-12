@@ -44,8 +44,8 @@ class VehicleSimScreenControls extends StatelessWidget {
             ),
             builder: (context, ref, child) => FloatingActionButton(
               onPressed: () => ref.read(simInputProvider.notifier).send(
-                    const VehicleInput(velocity: 0),
-                  ),
+                (velocity: 0),
+              ),
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
               tooltip: 'Stop the vehicle',
@@ -106,7 +106,7 @@ class VehicleSimScreenControls extends StatelessWidget {
                                   : null,
                               onChanged: (value) => ref
                                   .read(simInputProvider.notifier)
-                                  .send(VehicleInput(steeringAngle: value)),
+                                  .send((steeringAngle: value)),
                               min: -steeringAngleMax,
                               max: steeringAngleMax,
                             ),
@@ -159,7 +159,7 @@ class VehicleSimScreenControls extends StatelessWidget {
                                       : null,
                               onChanged: (value) => ref
                                   .read(simInputProvider.notifier)
-                                  .send(VehicleInput(velocity: value)),
+                                  .send((velocity: value)),
                               min: -12,
                               max: 12,
                             ),

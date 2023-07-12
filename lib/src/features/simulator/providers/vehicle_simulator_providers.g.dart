@@ -6,7 +6,7 @@ part of 'vehicle_simulator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$simVehicleDrivingHash() => r'1d4531b9250bc798aed1289f4578f47c75952159';
+String _$simVehicleDrivingHash() => r'a28ea17d39277f1dd8a0aa8c182626c3603d03fd';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -170,7 +170,7 @@ final simVehicleAutoSlowDownProvider =
 
 typedef _$SimVehicleAutoSlowDown = Notifier<bool>;
 String _$simVehicleAcceleratorHash() =>
-    r'10e04dc7eae79c439dd221071390bf9dcca44ac4';
+    r'e8da7b1b6fbb05294a32a70630edeced11659c01';
 
 /// A provider for accelerating the vehicle in the simulator, typically
 /// used by hotkeys/keyboard.
@@ -190,7 +190,7 @@ final simVehicleAcceleratorProvider =
 
 typedef _$SimVehicleAccelerator = Notifier<Timer?>;
 String _$simVehicleSteeringHash() =>
-    r'b36625c6a2ec89643fb421f5be6243a5d5ccac5d';
+    r'5cd25e089212adb51e8bab1946d71f14779d6ba1';
 
 /// A provider for steering the vehicle in the simulator, typically
 /// used by hotkeys/keyboard.

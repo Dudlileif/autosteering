@@ -61,8 +61,8 @@ class MapAndGaugeStackView extends ConsumerWidget {
             if (event is KeyDownEvent)
               ref.read(simInputProvider.notifier).send(
                     switch (shiftModifier) {
-                      false => const VehicleInput(velocity: 0),
-                      true => const VehicleInput(steeringAngle: 0)
+                      false => const (velocity: 0),
+                      true => const (steeringAngle: 0)
                     },
                   ),
           },
