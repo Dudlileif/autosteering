@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'sentinel_provders.dart';
+part of 'sentinel_providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator

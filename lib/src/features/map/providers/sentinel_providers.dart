@@ -3,7 +3,7 @@ import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'sentinel_provders.g.dart';
+part 'sentinel_providers.g.dart';
 
 /// A provider for the Sentinel Dataspace instance id.
 @Riverpod(keepAlive: true)
