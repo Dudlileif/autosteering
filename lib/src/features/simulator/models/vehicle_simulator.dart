@@ -215,21 +215,21 @@ class _VehicleSimulatorState {
       vehicle?.position = message.position;
     }
     // Update the vehicle velocity
-    else if (message is ({double velocity})) {
-      vehicle?.velocity = message.velocity;
+    else if (message is ({num velocity})) {
+      vehicle?.velocity = message.velocity.toDouble();
     }
     // Update the vehicle velocity by delta
-    else if (message is ({double velocityDelta})) {
+    else if (message is ({num velocityDelta})) {
       vehicle?.velocity =
           (vehicle!.velocity + (autoSlowDown ? 1.2 : 1) * message.velocityDelta)
               .clamp(-12.0, 12.0);
     }
     // Update the vehicle steering angle input.
-    else if (message is ({double steeringAngle})) {
-      vehicle?.steeringAngleInput = message.steeringAngle;
+    else if (message is ({num steeringAngle})) {
+      vehicle?.steeringAngleInput = message.steeringAngle.toDouble();
     }
     // Update the vehicle steering angle input by delta.
-    else if (message is ({double steeringAngleDelta})) {
+    else if (message is ({num steeringAngleDelta})) {
       vehicle?.steeringAngleInput = (vehicle!.steeringAngleInput +
               (autoCenterSteering ? 2 : 1) * message.steeringAngleDelta)
           .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
@@ -259,8 +259,8 @@ class _VehicleSimulatorState {
       tempPursuitMode = pursuitMode;
     }
     // Set new look ahead distance.
-    else if (message is ({double lookAheadDistance})) {
-      lookAheadDistance = message.lookAheadDistance;
+    else if (message is ({num lookAheadDistance})) {
+      lookAheadDistance = message.lookAheadDistance.toDouble();
       // Interpolate the path with new max distance.
       purePursuit?.interPolateWayPoints(
         maxDistance: lookAheadDistance,
