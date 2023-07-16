@@ -21,7 +21,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.invertSteeringInput = false,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 2),
     super.velocity = 0,
-    super.heading = 0,
+    super.bearing = 0,
     super.steeringAngleInput = 0,
     super.length = 4,
     super.width = 2.5,
@@ -36,14 +36,14 @@ final class Harvester extends AxleSteeredVehicle {
   @override
   LatLng get solidAxlePosition => position.offset(
         solidAxleDistance,
-        normalizeBearing(heading),
+        normalizeBearing(bearing),
       );
 
   /// The position of the center of the front axle.
   @override
   LatLng get steeringAxlePosition => position.offset(
         solidAxleDistance - wheelBase,
-        normalizeBearing(heading),
+        normalizeBearing(bearing),
       );
 
   /// The position of the pursuit axle in the the vehicle direction. Used when
@@ -54,7 +54,7 @@ final class Harvester extends AxleSteeredVehicle {
   @override
   LatLng get pursuitAxlePosition => switch (isReversing) {
         true => steeringAxlePosition,
-        false => solidAxlePosition.offset(wheelBase, heading),
+        false => solidAxlePosition.offset(wheelBase, bearing),
       };
 
   /// The angle of the left steering wheel when using Ackermann steering.
@@ -88,7 +88,7 @@ final class Harvester extends AxleSteeredVehicle {
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     double? velocity,
-    double? heading,
+    double? bearing,
     double? steeringAngleInput,
     double? length,
     double? width,
@@ -123,7 +123,7 @@ final class Harvester extends AxleSteeredVehicle {
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         pidParameters: pidParameters ?? this.pidParameters,
         velocity: velocity ?? this.velocity,
-        heading: heading ?? this.heading,
+        bearing: bearing ?? this.bearing,
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,

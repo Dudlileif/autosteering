@@ -9,19 +9,19 @@ class WayPoint extends Equatable {
   /// A class for combining vehicle information with it's position.
   /// Useful to record paths and function as targets for auto-steering.
   ///
-  /// [heading] in degrees from 0-360.
+  /// [bearing] in degrees from 0-360.
   /// [velocity] in m/s.
   const WayPoint({
     required this.position,
-    required this.heading,
+    required this.bearing,
     this.velocity = 0,
   });
 
   /// The position of the waypoint.
   final LatLng position;
 
-  /// The heading of the vehicle at the time of recording.
-  final double heading;
+  /// The bearing of the vehicle at the time of recording.
+  final double bearing;
 
   /// The velocity of the vehicle at the time of the recording.
   final double velocity;
@@ -29,12 +29,12 @@ class WayPoint extends Equatable {
   /// Returns a new [WayPoint] from this with altered parameters.
   WayPoint copyWith({
     LatLng? position,
-    double? heading,
+    double? bearing,
     double? velocity,
   }) =>
       WayPoint(
         position: position ?? this.position,
-        heading: heading ?? this.heading,
+        bearing: bearing ?? this.bearing,
         velocity: velocity ?? this.velocity,
       );
 
@@ -42,7 +42,7 @@ class WayPoint extends Equatable {
   @override
   List<Object?> get props => [
         position,
-        heading,
+        bearing,
         velocity,
       ];
 }
@@ -67,9 +67,9 @@ class WayPointTween extends Tween<WayPoint> {
       end: end?.position,
     ).lerp(t);
 
-    final heading = Tween<double>(
-      begin: begin?.heading,
-      end: end?.heading,
+    final bearing = Tween<double>(
+      begin: begin?.bearing,
+      end: end?.bearing,
     ).lerp(t);
 
     final velocity = Tween<double>(
@@ -79,7 +79,7 @@ class WayPointTween extends Tween<WayPoint> {
 
     return WayPoint(
       position: position,
-      heading: heading,
+      bearing: bearing,
       velocity: velocity,
     );
   }

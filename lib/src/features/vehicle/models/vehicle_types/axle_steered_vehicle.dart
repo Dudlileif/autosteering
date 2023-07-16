@@ -22,7 +22,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     this.solidAxleWheelWidth = 0.6,
     super.invertSteeringInput = false,
     super.velocity = 0,
-    super.heading = 0,
+    super.bearing = 0,
     super.steeringAngleInput = 0,
     super.length = 4,
     super.width = 2.5,
@@ -82,7 +82,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   LatLng? get hitchFrontFixedPoint =>
       switch (solidAxleToFrontHitchDistance != null) {
         true =>
-          solidAxlePosition.offset(solidAxleToFrontHitchDistance!, heading),
+          solidAxlePosition.offset(solidAxleToFrontHitchDistance!, bearing),
         false => null,
       };
 
@@ -91,7 +91,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       switch (solidAxleToRearHitchDistance != null) {
         true => solidAxlePosition.offset(
             solidAxleToRearHitchDistance!,
-            heading + 180,
+            bearing + 180,
           ),
         false => null,
       };
@@ -101,7 +101,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       switch (solidAxleToRearTowbarDistance != null) {
         true => solidAxlePosition.offset(
             solidAxleToRearTowbarDistance!,
-            heading + 180,
+            bearing + 180,
           ),
         false => null,
       };
@@ -194,8 +194,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
           currentTurningRadius!,
           normalizeBearing(
             switch (isTurningLeft) {
-              true => heading - 90,
-              false => heading + 90
+              true => bearing - 90,
+              false => bearing + 90
             },
           ),
         )
@@ -218,7 +218,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     final steeringWheelAngle =
         left ? leftSteeringWheelAngle : rightSteeringWheelAngle;
 
-    final axleToCenterAngle = normalizeBearing(heading - (90 * sign));
+    final axleToCenterAngle = normalizeBearing(bearing - (90 * sign));
 
     final innerCenterToInnerRearAngle = normalizeBearing(
       switch (steering) {
@@ -340,22 +340,22 @@ sealed class AxleSteeredVehicle extends Vehicle {
             // Turning left
             true => switch (isReversing) {
                 // Reversing
-                true => heading +
+                true => bearing +
                     90 +
                     i / numberOfPoints * revolutionsOfTurningCircle * 360,
                 // Forward
-                false => heading +
+                false => bearing +
                     90 -
                     i / numberOfPoints * revolutionsOfTurningCircle * 360,
               },
             // Turning right
             false => switch (isReversing) {
                 // Reversing
-                true => heading -
+                true => bearing -
                     90 -
                     i / numberOfPoints * revolutionsOfTurningCircle * 360,
                 // Forward
-                false => heading -
+                false => bearing -
                     90 +
                     i / numberOfPoints * revolutionsOfTurningCircle * 360,
               },
@@ -373,7 +373,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       points.add(
         solidAxlePosition.offset(
           isReversing ? -30 : 5 + 30,
-          normalizeBearing(heading),
+          normalizeBearing(bearing),
         ),
       );
     }
@@ -406,24 +406,24 @@ sealed class AxleSteeredVehicle extends Vehicle {
       );
 
   /// The bearing for the front left corner of the max extent/bounds of the
-  /// vehicle with regards to the [heading].
-  double get frontLeftBearing => normalizeBearing(heading - northWestAngle);
+  /// vehicle with regards to the [bearing].
+  double get frontLeftBearing => normalizeBearing(bearing - northWestAngle);
 
   /// The bearing for the front right corner of the max extent/bounds of the
-  /// vehicle with regards to the [heading].
-  double get frontRightBearing => normalizeBearing(heading - northEastAngle);
+  /// vehicle with regards to the [bearing].
+  double get frontRightBearing => normalizeBearing(bearing - northEastAngle);
 
   /// The bearing for the rear right corner of the max extent/bounds of the
-  /// vehicle with regards to the [heading].
+  /// vehicle with regards to the [bearing].
   double get rearRightBearing =>
-      normalizeBearing(heading - (northWestAngle + 180));
+      normalizeBearing(bearing - (northWestAngle + 180));
 
   /// The bearing for the rear left corner of the max extent/bounds of the
-  /// vehicle with regards to the [heading].
+  /// vehicle with regards to the [bearing].
   double get rearLeftBearing =>
-      normalizeBearing(heading - (northEastAngle + 180));
+      normalizeBearing(bearing - (northEastAngle + 180));
 
-  /// The max extent/bounds points of the vehicle. The [heading] is followed.
+  /// The max extent/bounds points of the vehicle. The [bearing] is followed.
   List<LatLng> get points {
     final frontLeft = position.offset(
       centerToCornerDistance,
@@ -479,7 +479,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     double? velocity,
-    double? heading,
+    double? bearing,
     double? steeringAngleInput,
     double? length,
     double? width,

@@ -80,7 +80,7 @@ final equipmentHoveredProvider =
 );
 
 typedef _$EquipmentHovered = Notifier<bool>;
-String _$equipmentPathsHash() => r'12b06fcf16d55196317784c85e836c4d73bf4de8';
+String _$equipmentPathsHash() => r'07a5b8a77a65819f1328a7212f64c5330a474c1d';
 
 /// Copied from Dart SDK
 class _SystemHash {

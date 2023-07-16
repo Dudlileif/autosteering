@@ -249,12 +249,12 @@ class EquipmentPaths extends _$EquipmentPaths {
       } else if (distance > 1 && (state.last[segment]?.length ?? 0) >= 2) {
         final secondPrev =
             state.last[segment]![state.last[segment]!.length - 2];
-        final prevHeading = secondPrev.bearingTo(prev);
-        final heading = prev.bearingTo(next);
+        final prevBearing = secondPrev.bearingTo(prev);
+        final bearing = prev.bearingTo(next);
 
-        final headingDiff = (prevHeading - heading).abs();
+        final bearingDiff = (prevBearing - bearing).abs();
 
-        if (headingDiff > 1) {
+        if (bearingDiff > 1) {
           return true;
         }
       } else if ((state.last[segment]?.length ?? 0) < 2 && distance > 1) {

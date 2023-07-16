@@ -74,11 +74,11 @@ abstract class Hitchable {
   /// Update the position of this.
   set position(LatLng value);
 
-  /// The heading/bearing of this in degrees.
-  double get heading;
+  /// The bearing/bearing of this in degrees.
+  double get bearing;
 
-  /// Update the heading of this hitchable. [value] is in degrees.
-  set heading(double value);
+  /// Update the bearing of this hitchable. [value] is in degrees.
+  set bearing(double value);
 
   /// The velocity of this hitchable in m/s.
   double get velocity;

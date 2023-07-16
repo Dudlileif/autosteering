@@ -47,7 +47,7 @@ class MapControlButtons extends StatelessWidget {
               child: Consumer(
                 builder: (context, ref, child) {
                   final angle =
-                      ref.watch(vehicleHeadingProvider) * 2 * pi / 360;
+                      ref.watch(vehicleBearingProvider) * 2 * pi / 360;
 
                   final alwaysPointNorth =
                       ref.watch(alwaysPointNorthProvider) &&

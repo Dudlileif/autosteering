@@ -242,14 +242,14 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
   return vehicle.position
       .offset(
         offset.x,
-        normalizeBearing(vehicle.heading + 90),
+        normalizeBearing(vehicle.bearing + 90),
       )
       .offset(
         switch (use3DPerspective) {
           false => offset.y,
           true => offset.y * (1 + tan(perspectiveAngle)),
         },
-        vehicle.heading,
+        vehicle.bearing,
       );
 }
 

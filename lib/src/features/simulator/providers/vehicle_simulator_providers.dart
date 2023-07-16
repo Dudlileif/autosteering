@@ -97,7 +97,7 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
               ),
               -normalizeBearing(
                 ref.watch(
-                  mainVehicleProvider.select((vehicle) => vehicle.heading),
+                  mainVehicleProvider.select((vehicle) => vehicle.bearing),
                 ),
               ),
             );
@@ -143,7 +143,7 @@ Stream<Vehicle?> simVehicleWebStream(
     ref
         .read(vehicleVelocityProvider.notifier)
         .update(event.velocity.toDouble());
-    ref.read(vehicleHeadingProvider.notifier).update(event.heading.toDouble());
+    ref.read(vehicleBearingProvider.notifier).update(event.bearing.toDouble());
     ref
         .read(vehicleTravelledDistanceProvider.notifier)
         .updateWith(event.distance.toDouble());
@@ -191,12 +191,12 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
     if (message is ({
       Vehicle vehicle,
       double velocity,
-      double heading,
+      double bearing,
       double distance,
       PurePursuit? purePursuit,
     })) {
       ref.read(vehicleVelocityProvider.notifier).update(message.velocity);
-      ref.read(vehicleHeadingProvider.notifier).update(message.heading);
+      ref.read(vehicleBearingProvider.notifier).update(message.bearing);
       ref
           .read(vehicleTravelledDistanceProvider.notifier)
           .updateWith(message.distance);

@@ -29,9 +29,9 @@ class Equipment extends Hitchable with EquatableMixin {
   /// [hitchToChildRearFixedHitchLength], [hitchToChildRearTowbarHitchLength]
   /// depending on which hitch(es) you wan't to add.
   ///
-  /// The [heading] and [position] parameters generally doesn't need to be
+  /// The [bearing] and [position] parameters generally doesn't need to be
   /// set, as the equipment usually doesn't spawn/show initially without a
-  /// parent to inherit position and heading from.
+  /// parent to inherit position and bearing from.
   Equipment({
     required this.hitchType,
     super.hitchParent,
@@ -45,7 +45,7 @@ class Equipment extends Hitchable with EquatableMixin {
     this.hitchToChildFrontFixedHitchLength,
     this.hitchToChildRearFixedHitchLength,
     this.hitchToChildRearTowbarHitchLength,
-    double heading = 0,
+    double bearing = 0,
     LatLng position = const LatLng(0, 0),
   })  : assert(
           segmentWidths.length == segments,
@@ -53,7 +53,7 @@ class Equipment extends Hitchable with EquatableMixin {
         ),
         activeSegments = List.generate(segments, (index) => false),
         _position = position,
-        _heading = hitchParent?.heading ?? heading;
+        _bearing = hitchParent?.bearing ?? bearing;
 
   /// Which type of hitch point this equipment has.
   HitchType hitchType;
@@ -93,8 +93,8 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The velocity of the equipment, used to specifically set the [velocity].
   double _velocity = 0;
 
-  /// The heading of the equipment, used to specifically set the [heading].
-  double _heading = 0;
+  /// The bearing of the equipment, used to specifically set the [bearing].
+  double _bearing = 0;
 
   /// The position of the hitch point of the equipment, will use the parent's
   /// hitch point if connected.
@@ -121,24 +121,24 @@ class Equipment extends Hitchable with EquatableMixin {
   @override
   set velocity(double value) => _velocity = value;
 
-  /// The heading/bearing of the equipment, will use the parent's heading if
-  /// connection is fixed, otherwise the explicitly set [_heading].
+  /// The bearing/bearing of the equipment, will use the parent's bearing if
+  /// connection is fixed, otherwise the explicitly set [_bearing].
   @override
-  double get heading {
+  double get bearing {
     if (hitchParent != null && parentHitch != Hitch.rearTowbar) {
       return switch (hitchParent! is ArticulatedTractor) {
         true => parentHitch == Hitch.frontFixed
             ? (hitchParent! as ArticulatedTractor).frontAxleAngle
             : (hitchParent! as ArticulatedTractor).rearAxleAngle + 180,
-        false => hitchParent!.heading,
+        false => hitchParent!.bearing,
       };
     }
-    return _heading;
+    return _bearing;
   }
 
-  /// Manually update the heading of the equipment to [value].
+  /// Manually update the bearing of the equipment to [value].
   @override
-  set heading(double value) => _heading = value;
+  set bearing(double value) => _bearing = value;
 
   /// The total width of the equipment. Found by summing the [segmentWidths].
   double get width => segmentWidths.sum;
@@ -212,7 +212,7 @@ class Equipment extends Hitchable with EquatableMixin {
   @override
   LatLng? get hitchFrontFixedPoint =>
       switch (hitchToChildFrontFixedHitchLength != null) {
-        true => position.offset(hitchToChildFrontFixedHitchLength!, heading),
+        true => position.offset(hitchToChildFrontFixedHitchLength!, bearing),
         false => null
       };
 
@@ -222,7 +222,7 @@ class Equipment extends Hitchable with EquatableMixin {
   LatLng? get hitchRearFixedPoint =>
       switch (hitchToChildRearFixedHitchLength != null) {
         true =>
-          position.offset(hitchToChildRearFixedHitchLength!, heading + 180),
+          position.offset(hitchToChildRearFixedHitchLength!, bearing + 180),
         false => null
       };
 
@@ -232,11 +232,11 @@ class Equipment extends Hitchable with EquatableMixin {
   LatLng? get hitchRearTowbarPoint =>
       switch (hitchToChildRearTowbarHitchLength != null) {
         true =>
-          position.offset(hitchToChildRearTowbarHitchLength!, heading + 180),
+          position.offset(hitchToChildRearTowbarHitchLength!, bearing + 180),
         false => null
       };
 
-  /// Update the [heading] and [velocity] of the equipment when using connected
+  /// Update the [bearing] and [velocity] of the equipment when using connected
   /// to parent with a towbar.
   void updateTowbar() {
     if (hitchParent != null && parentHitch == Hitch.rearTowbar) {
@@ -246,13 +246,13 @@ class Equipment extends Hitchable with EquatableMixin {
         hitchParent!.position.jtsCoordinate,
       );
 
-      final headingChange = hitchParent!.velocity /
+      final bearingChange = hitchParent!.velocity /
           (drawbarLength + length / 2) *
           sin(hitchAngle);
 
-      // Only change heading if we're moving.
+      // Only change bearing if we're moving.
       if (hitchParent!.velocity.abs() > 0) {
-        heading = normalizeBearing(_heading + headingChange);
+        bearing = normalizeBearing(_bearing + bearingChange);
       }
       _velocity = hitchParent!.velocity * -cos(hitchAngle);
     }
@@ -270,41 +270,41 @@ class Equipment extends Hitchable with EquatableMixin {
   LatLng get workingCenter => position.offset(
         drawbarLength + length / 2,
         switch (parentHitch) {
-          Hitch.frontFixed => heading,
-          Hitch.rearFixed => heading + 180,
-          Hitch.rearTowbar => heading + 180,
-          null => heading,
+          Hitch.frontFixed => bearing,
+          Hitch.rearFixed => bearing + 180,
+          Hitch.rearTowbar => bearing + 180,
+          null => bearing,
         },
       );
 
   /// The position of the end of the drawbar, i.e. furthest away from the
   /// parent.
   LatLng get drawbarEnd => switch (parentHitch) {
-        Hitch.frontFixed => position.offset(drawbarLength, heading),
-        Hitch.rearFixed => position.offset(drawbarLength, heading + 180),
-        Hitch.rearTowbar => position.offset(drawbarLength, heading + 180),
-        null => position.offset(drawbarLength, heading),
+        Hitch.frontFixed => position.offset(drawbarLength, bearing),
+        Hitch.rearFixed => position.offset(drawbarLength, bearing + 180),
+        Hitch.rearTowbar => position.offset(drawbarLength, bearing + 180),
+        null => position.offset(drawbarLength, bearing),
       };
 
   /// The corner points for the given [segment].
   List<LatLng> segmentPoints(int segment) {
     // The starting point of this equipment.
     final equipmentStart = parentHitch == Hitch.frontFixed
-        ? drawbarEnd.offset(length, heading)
+        ? drawbarEnd.offset(length, bearing)
         : drawbarEnd;
 
     // The width of the preceding segments.
     final widthBefore = segmentWidths.getRange(0, segment).sum;
 
     final segmentFrontLeft =
-        equipmentStart.offset(width / 2 - widthBefore, heading - 90);
+        equipmentStart.offset(width / 2 - widthBefore, bearing - 90);
 
-    final segmentRearLeft = segmentFrontLeft.offset(length, heading + 180);
+    final segmentRearLeft = segmentFrontLeft.offset(length, bearing + 180);
 
     final segmentRearRight =
-        segmentRearLeft.offset(segmentWidths[segment], heading + 90);
+        segmentRearLeft.offset(segmentWidths[segment], bearing + 90);
 
-    final segmentFrontRight = segmentRearRight.offset(length, heading);
+    final segmentFrontRight = segmentRearRight.offset(length, bearing);
 
     return [
       segmentFrontLeft,
@@ -353,10 +353,10 @@ class Equipment extends Hitchable with EquatableMixin {
               color: Colors.grey.shade800,
               borderColor: Colors.black,
               points: [
-                position.offset(0.05, heading - 90),
-                drawbarEnd.offset(0.05, heading - 90),
-                drawbarEnd.offset(0.05, heading + 90),
-                position.offset(0.05, heading + 90),
+                position.offset(0.05, bearing - 90),
+                drawbarEnd.offset(0.05, bearing - 90),
+                drawbarEnd.offset(0.05, bearing + 90),
+                position.offset(0.05, bearing + 90),
               ],
             )
           ],
@@ -368,10 +368,10 @@ class Equipment extends Hitchable with EquatableMixin {
               color: Colors.grey.shade800,
               borderColor: Colors.black,
               points: [
-                position.offset(0.35, heading - 90),
-                drawbarEnd.offset(0.35, heading - 90),
-                drawbarEnd.offset(0.3, heading - 90),
-                position.offset(0.3, heading - 90),
+                position.offset(0.35, bearing - 90),
+                drawbarEnd.offset(0.35, bearing - 90),
+                drawbarEnd.offset(0.3, bearing - 90),
+                position.offset(0.3, bearing - 90),
               ],
             ),
             // Right hitch bar
@@ -381,10 +381,10 @@ class Equipment extends Hitchable with EquatableMixin {
               color: Colors.grey.shade800,
               borderColor: Colors.black,
               points: [
-                position.offset(0.35, heading + 90),
-                drawbarEnd.offset(0.35, heading + 90),
-                drawbarEnd.offset(0.3, heading + 90),
-                position.offset(0.3, heading + 90),
+                position.offset(0.35, bearing + 90),
+                drawbarEnd.offset(0.35, bearing + 90),
+                drawbarEnd.offset(0.3, bearing + 90),
+                position.offset(0.3, bearing + 90),
               ],
             )
           ]
@@ -410,7 +410,7 @@ class Equipment extends Hitchable with EquatableMixin {
         length,
         drawbarLength,
         position,
-        heading,
+        bearing,
         velocity,
         hitchToChildFrontFixedHitchLength,
         hitchToChildRearFixedHitchLength,
@@ -431,7 +431,7 @@ class Equipment extends Hitchable with EquatableMixin {
     List<double>? segmentWidths,
     double? length,
     double? drawbarLength,
-    double? heading,
+    double? bearing,
     LatLng? position,
     double? hitchToChildFrontFixedHitchLength,
     double? hitchToChildRearFixedHitchLength,
@@ -448,7 +448,7 @@ class Equipment extends Hitchable with EquatableMixin {
         length: length ?? this.length,
         drawbarLength: drawbarLength ?? this.drawbarLength,
         position: position ?? this.position,
-        heading: heading ?? this.heading,
+        bearing: bearing ?? this.bearing,
         hitchToChildFrontFixedHitchLength: hitchToChildFrontFixedHitchLength ??
             this.hitchToChildFrontFixedHitchLength,
         hitchToChildRearFixedHitchLength: hitchToChildRearFixedHitchLength ??

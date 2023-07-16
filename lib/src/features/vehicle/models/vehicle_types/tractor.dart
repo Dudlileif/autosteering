@@ -22,7 +22,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.invertSteeringInput = false,
     super.pidParameters = const PidParameters(p: 30, i: 0, d: 2),
     super.velocity = 0,
-    super.heading = 0,
+    super.bearing = 0,
     super.steeringAngleInput = 0,
     super.length = 4,
     super.width = 2.5,
@@ -37,14 +37,14 @@ final class Tractor extends AxleSteeredVehicle {
   @override
   LatLng get solidAxlePosition => position.offset(
         solidAxleDistance,
-        normalizeBearing(heading - 180),
+        normalizeBearing(bearing - 180),
       );
 
   /// The position of the center of the front axle.
   @override
   LatLng get steeringAxlePosition => position.offset(
         wheelBase - solidAxleDistance,
-        normalizeBearing(heading),
+        normalizeBearing(bearing),
       );
 
   /// The position of the pursuit axle in the the vehicle direction. Used when
@@ -54,7 +54,7 @@ final class Tractor extends AxleSteeredVehicle {
   /// when the tractor is reversing.
   @override
   LatLng get pursuitAxlePosition => switch (isReversing) {
-        true => solidAxlePosition.offset(wheelBase, heading + 180),
+        true => solidAxlePosition.offset(wheelBase, bearing + 180),
         false => steeringAxlePosition,
       };
 
@@ -88,7 +88,7 @@ final class Tractor extends AxleSteeredVehicle {
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     double? velocity,
-    double? heading,
+    double? bearing,
     double? steeringAngleInput,
     double? length,
     double? width,
@@ -125,7 +125,7 @@ final class Tractor extends AxleSteeredVehicle {
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         pidParameters: pidParameters ?? this.pidParameters,
         velocity: velocity ?? this.velocity,
-        heading: heading ?? this.heading,
+        bearing: bearing ?? this.bearing,
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,

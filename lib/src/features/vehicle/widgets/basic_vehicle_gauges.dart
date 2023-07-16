@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Basic vehicle gauges to show the travelled distance (clearable), velocity
-/// and heading.
+/// and bearing.
 class BasicVehicleGauges extends StatelessWidget {
   /// Basic vehicle gauges to show the travelled distance (clearable), velocity
-  /// and heading.
+  /// and bearing.
   const BasicVehicleGauges({super.key});
 
   @override
@@ -59,7 +59,7 @@ class BasicVehicleGauges extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Consumer(
               builder: (context, ref, child) => Text(
-                'Heading: ${ref.watch(vehicleHeadingProvider).toStringAsFixed(1)}º',
+                'Bearing: ${ref.watch(vehicleBearingProvider).toStringAsFixed(1)}º',
               ),
             ),
           ),

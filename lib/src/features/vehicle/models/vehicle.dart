@@ -35,9 +35,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
-    double heading = 0,
+    double bearing = 0,
     double velocity = 0,
-  })  : _heading = heading,
+  })  : _bearing = bearing,
         _velocity = velocity,
         _position = position;
 
@@ -80,8 +80,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Whether the vehicle is simulated.
   bool simulated;
 
-  /// Heading as set from the outside.
-  double _heading = 0;
+  /// Bearing as set from the outside.
+  double _bearing = 0;
 
   @override
   LatLng get position => _position;
@@ -89,7 +89,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   @override
   set position(LatLng value) => _position = value;
 
-  /// The velocity of the vehicle, in m/s, meters per second, in the heading
+  /// The velocity of the vehicle, in m/s, meters per second, in the bearing
   /// direction.
   @override
   double get velocity => _velocity;
@@ -98,13 +98,13 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   @override
   set velocity(double value) => _velocity = value;
 
-  /// The heading of the vehicle, in degrees.
+  /// The bearing of the vehicle, in degrees.
   @override
-  double get heading => _heading;
+  double get bearing => _bearing;
 
-  /// Update the heading of the vehicle, [value] in degrees.
+  /// Update the bearing of the vehicle, [value] in degrees.
   @override
-  set heading(double value) => _heading = value;
+  set bearing(double value) => _bearing = value;
 
   /// The distance between the wheel axles.
   double get wheelBase;
@@ -112,11 +112,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Where the look ahead distance calculation should start.
   LatLng get lookAheadStartPosition;
 
-  /// A [WayPoint] for the vehicle in it's current state, i.e. position, heading
+  /// A [WayPoint] for the vehicle in it's current state, i.e. position, bearing
   /// and velocity.
   WayPoint get wayPoint => WayPoint(
         position: position,
-        heading: heading,
+        bearing: bearing,
         velocity: velocity,
       );
 
@@ -188,7 +188,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         trackWidth,
         invertSteeringInput,
         velocity,
-        heading,
+        bearing,
         steeringAngleInput,
         length,
         width,
@@ -207,7 +207,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     double? velocity,
-    double? heading,
+    double? bearing,
     double? steeringAngleInput,
     double? length,
     double? width,

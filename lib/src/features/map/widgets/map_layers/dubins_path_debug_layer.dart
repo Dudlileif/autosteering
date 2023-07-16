@@ -91,7 +91,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                       dubinsPath.start.position,
                       dubinsPath.start.position.offset(
                         2,
-                        dubinsPath.start.heading,
+                        dubinsPath.start.bearing,
                       )
                     ],
                     color: Colors.blue,
@@ -102,7 +102,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                       dubinsPath.end.position,
                       dubinsPath.end.position.offset(
                         2,
-                        dubinsPath.end.heading,
+                        dubinsPath.end.bearing,
                       )
                     ],
                     color: Colors.red,
@@ -110,7 +110,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                   ),
                   ...wayPoints.map(
                     (e) => Polyline(
-                      points: [e.position, e.position.offset(0.5, e.heading)],
+                      points: [e.position, e.position.offset(0.5, e.bearing)],
                       strokeWidth: 2,
                     ),
                   ),

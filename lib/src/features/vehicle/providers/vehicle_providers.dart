@@ -45,23 +45,23 @@ class MainVehicle extends _$MainVehicle {
     }
   }
 
-  /// Set the heading of the [state] to [value].
+  /// Set the bearing of the [state] to [value].
 
-  void setHeading(double value) {
-    if (value != state.heading) {
-      Future(() => state = state.copyWith(heading: value));
+  void setBearing(double value) {
+    if (value != state.bearing) {
+      Future(() => state = state.copyWith(bearing: value));
     }
   }
 
   /// Update the [state] to [vehicle].
   void update(Vehicle vehicle) => Future(() => state = vehicle);
 
-  /// Update the [state] with only the position, velocity, heading and
+  /// Update the [state] with only the position, velocity, bearing and
   /// steering input angle from [vehicle].
   void updateStateOnly(Vehicle vehicle) => Future(() {
         state = state.copyWith(
           velocity: vehicle.velocity,
-          heading: vehicle.heading,
+          bearing: vehicle.bearing,
           steeringAngleInput: vehicle.steeringAngleInput,
           position: vehicle.position,
         );
@@ -91,9 +91,9 @@ class VehicleVelocity extends _$VehicleVelocity {
   void update(double value) => Future(() => state = value);
 }
 
-/// A provider for the vehicle's heading gauge.
+/// A provider for the vehicle's bearing gauge.
 @riverpod
-class VehicleHeading extends _$VehicleHeading {
+class VehicleBearing extends _$VehicleBearing {
   @override
   double build() => 0;
 

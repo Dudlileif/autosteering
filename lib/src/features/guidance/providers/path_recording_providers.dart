@@ -39,17 +39,17 @@ class PathRecordingList extends _$PathRecordingList {
                 if (distance > 20) {
                   await add(wayPoint);
                 } else if (distance > 1 && points.length >= 2) {
-                  final prevHeading =
+                  final prevBearing =
                       points[points.length - 2].position.bearingTo(
                             points.last.position,
                           );
-                  final heading = points.last.position.bearingTo(
+                  final bearing = points.last.position.bearingTo(
                     wayPoint.position,
                   );
 
-                  final headingDiff = (prevHeading - heading).abs();
+                  final bearingDiff = (prevBearing - bearing).abs();
 
-                  if (headingDiff > 1) {
+                  if (bearingDiff > 1) {
                     await add(wayPoint);
                   }
                 } else if (points.length < 2 && distance > 1) {

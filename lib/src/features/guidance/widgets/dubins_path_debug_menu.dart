@@ -104,15 +104,15 @@ class DubinsPathDebugMenu extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Start:${start.heading.round()}',
+                        'Start:${start.bearing.round()}',
                         style: textStyle,
                       ),
                       Slider(
-                        value: start.heading,
+                        value: start.bearing,
                         onChanged: (value) => ref
                             .read(dubinsPathDebugStartPointProvider.notifier)
                             .update(
-                              start.copyWith(heading: value),
+                              start.copyWith(bearing: value),
                             ),
                         max: 360,
                       )
@@ -123,15 +123,15 @@ class DubinsPathDebugMenu extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'End: ${end.heading.round()}',
+                        'End: ${end.bearing.round()}',
                         style: textStyle,
                       ),
                       Slider(
-                        value: end.heading,
+                        value: end.bearing,
                         onChanged: (value) => ref
                             .read(dubinsPathDebugEndPointProvider.notifier)
                             .update(
-                              end.copyWith(heading: value),
+                              end.copyWith(bearing: value),
                             ),
                         max: 360,
                       )
@@ -170,13 +170,13 @@ class DubinsPathDebugMenu extends StatelessWidget {
                 ref.read(dubinsPathDebugStartPointProvider.notifier).update(
                       WayPoint(
                         position: center,
-                        heading: 90,
+                        bearing: 90,
                       ),
                     );
                 ref.read(dubinsPathDebugEndPointProvider.notifier).update(
                       WayPoint(
                         position: center.offset(35, 0),
-                        heading: 210,
+                        bearing: 210,
                       ),
                     );
               },

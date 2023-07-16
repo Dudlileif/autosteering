@@ -28,7 +28,7 @@ final class ArticulatedTractor extends Vehicle {
     super.invertSteeringInput = false,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
     super.velocity = 0,
-    super.heading = 0,
+    super.bearing = 0,
     super.steeringAngleInput = 0,
     super.length = 4,
     super.width = 2.5,
@@ -78,7 +78,7 @@ final class ArticulatedTractor extends Vehicle {
   /// The position of the vehicle articulation pivot point.
   LatLng get pivotPosition => position.offset(
         pivotToAntennaDistance,
-        normalizeBearing(heading - 180 + steeringAngle / 2),
+        normalizeBearing(bearing - 180 + steeringAngle / 2),
       );
 
   /// Where the look ahead distance calculation should start.
@@ -86,7 +86,7 @@ final class ArticulatedTractor extends Vehicle {
   LatLng get lookAheadStartPosition => pivotPosition;
 
   /// The angle from the pivot point to the front axle.
-  double get frontAxleAngle => normalizeBearing(heading + steeringAngle / 2);
+  double get frontAxleAngle => normalizeBearing(bearing + steeringAngle / 2);
 
   /// The position of the front axle center point.
   LatLng get frontAxlePosition => pivotPosition.offset(
@@ -96,7 +96,7 @@ final class ArticulatedTractor extends Vehicle {
 
   /// The angle from the pivot point to the rear axle.
   double get rearAxleAngle =>
-      normalizeBearing(heading + 180 - steeringAngle / 2);
+      normalizeBearing(bearing + 180 - steeringAngle / 2);
 
   /// The position of the front axle center point.
   LatLng get rearAxlePosition => pivotPosition.offset(
@@ -403,7 +403,7 @@ final class ArticulatedTractor extends Vehicle {
       points.add(
         position.offset(
           isReversing ? -30 : 5 + 30,
-          normalizeBearing(heading),
+          normalizeBearing(bearing),
         ),
       );
     }
@@ -522,7 +522,7 @@ final class ArticulatedTractor extends Vehicle {
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     double? velocity,
-    double? heading,
+    double? bearing,
     double? steeringAngleInput,
     double? length,
     double? width,
@@ -556,7 +556,7 @@ final class ArticulatedTractor extends Vehicle {
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         pidParameters: pidParameters ?? this.pidParameters,
         velocity: velocity ?? this.velocity,
-        heading: heading ?? this.heading,
+        bearing: bearing ?? this.bearing,
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,

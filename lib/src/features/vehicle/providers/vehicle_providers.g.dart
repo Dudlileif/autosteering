@@ -6,7 +6,7 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainVehicleHash() => r'e73ad2c9499ffa67e3533352db6ed04f112c826b';
+String _$mainVehicleHash() => r'4b048c8a11fdcc934eadf15b19b6d328391d1072';
 
 /// The main provider for the vehicle state.
 ///
@@ -59,22 +59,22 @@ final vehicleVelocityProvider =
 );
 
 typedef _$VehicleVelocity = AutoDisposeNotifier<double>;
-String _$vehicleHeadingHash() => r'8d735c55694e84dd953388bf76a895d61845f23c';
+String _$vehicleBearingHash() => r'531f3ff1909aef4bf1144136bade4c6b5981041a';
 
-/// A provider for the vehicle's heading gauge.
+/// A provider for the vehicle's bearing gauge.
 ///
-/// Copied from [VehicleHeading].
-@ProviderFor(VehicleHeading)
-final vehicleHeadingProvider =
-    AutoDisposeNotifierProvider<VehicleHeading, double>.internal(
-  VehicleHeading.new,
-  name: r'vehicleHeadingProvider',
+/// Copied from [VehicleBearing].
+@ProviderFor(VehicleBearing)
+final vehicleBearingProvider =
+    AutoDisposeNotifierProvider<VehicleBearing, double>.internal(
+  VehicleBearing.new,
+  name: r'vehicleBearingProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$vehicleHeadingHash,
+      : _$vehicleBearingHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$VehicleHeading = AutoDisposeNotifier<double>;
+typedef _$VehicleBearing = AutoDisposeNotifier<double>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

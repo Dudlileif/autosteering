@@ -370,13 +370,13 @@ class PurePursuit {
 
     final wayPointA = WayPoint(
       position: pointA,
-      heading: insidePoint.position.bearingTo(outsidePoint.position),
+      bearing: insidePoint.position.bearingTo(outsidePoint.position),
       velocity: insidePoint.velocity,
     );
 
     final wayPointB = WayPoint(
       position: pointB,
-      heading: insidePoint.position.bearingTo(outsidePoint.position),
+      bearing: insidePoint.position.bearingTo(outsidePoint.position),
       velocity: insidePoint.velocity,
     );
 
@@ -395,7 +395,7 @@ class PurePursuit {
     final angle = vehicle.lookAheadStartPosition.bearingTo(
           findLookAheadCirclePoints(vehicle, lookAheadDistance).$1.position,
         ) -
-        vehicle.heading;
+        vehicle.bearing;
 
     final steeringAngle = atan(
           2 * vehicle.wheelBase * sin(angle * pi / 180) / lookAheadDistance,

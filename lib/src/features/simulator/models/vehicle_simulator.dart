@@ -10,7 +10,7 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
 /// A class for simulating how vehicles should move given their position,
-/// heading, steering angle and velocity.
+/// bearing, steering angle and velocity.
 class VehicleSimulator {
   /// Targets 60 hz => 16666.66... micro seconds
   static const _targetPeriodMicroSeconds = 16667;
@@ -40,7 +40,7 @@ class VehicleSimulator {
             (
               vehicle: state.vehicle,
               velocity: state.velocity,
-              heading: state.heading,
+              bearing: state.bearing,
               distance: state.distance,
               purePursuit: state.purePursuit,
             ),
@@ -72,7 +72,7 @@ class VehicleSimulator {
       ({
         Vehicle? vehicle,
         num velocity,
-        num heading,
+        num bearing,
         num distance,
         PurePursuit? purePursuit,
       })> webWorker(
@@ -90,7 +90,7 @@ class VehicleSimulator {
         ({
           Vehicle? vehicle,
           num velocity,
-          num heading,
+          num bearing,
           num distance,
           PurePursuit? purePursuit,
         })>();
@@ -106,7 +106,7 @@ class VehicleSimulator {
           (
             vehicle: state.vehicle,
             velocity: state.velocity,
-            heading: state.heading,
+            bearing: state.bearing,
             distance: state.distance,
             purePursuit: state.purePursuit,
           ),
@@ -133,9 +133,9 @@ class _VehicleSimulatorState {
   /// [period].
   double velocity = 0;
 
-  /// The heading of the current vehicle, as calculated from the previous
+  /// The bearing of the current vehicle, as calculated from the previous
   /// position to the current position.
-  double heading = 0;
+  double bearing = 0;
 
   /// Whether the state changed in the last update.
   bool didChange = true;
@@ -205,7 +205,7 @@ class _VehicleSimulatorState {
     if (message is Vehicle) {
       vehicle = message.copyWith(
         velocity: vehicle?.velocity,
-        heading: vehicle?.heading,
+        bearing: vehicle?.bearing,
         steeringAngleInput: vehicle?.steeringAngleInput
             .clamp(-message.steeringAngleMax, message.steeringAngleMax),
       );
@@ -387,7 +387,7 @@ class _VehicleSimulatorState {
     }
   }
 
-  /// Calculate the next position and heading of the vehicle and then
+  /// Calculate the next position and bearing of the vehicle and then
   /// updates the state.
   void updatePosition() {
     if (vehicle != null && period > 0) {
@@ -408,9 +408,9 @@ class _VehicleSimulatorState {
               // position.
               final angle = switch (vehicle.isTurningLeft) {
                 // Turning left
-                true => vehicle.heading + 90 - turningCircleAngle,
+                true => vehicle.bearing + 90 - turningCircleAngle,
                 // Turning right
-                false => vehicle.heading - 90 + turningCircleAngle,
+                false => vehicle.bearing - 90 + turningCircleAngle,
               };
               // Projected solid axle position from the turning radius
               // center.
@@ -419,11 +419,11 @@ class _VehicleSimulatorState {
                 normalizeBearing(angle),
               );
 
-              // The heading of the vehicle at the projected position.
-              final heading = normalizeBearing(
+              // The bearing of the vehicle at the projected position.
+              final bearing = normalizeBearing(
                 switch (vehicle.isTurningLeft) {
-                  true => vehicle.heading - turningCircleAngle,
-                  false => vehicle.heading + turningCircleAngle,
+                  true => vehicle.bearing - turningCircleAngle,
+                  false => vehicle.bearing + turningCircleAngle,
                 },
               );
 
@@ -432,15 +432,15 @@ class _VehicleSimulatorState {
               final vehiclePosition = solidAxlePositon.offset(
                 vehicle.solidAxleDistance,
                 switch (vehicle) {
-                  Tractor() => heading,
-                  Harvester() => heading + 180,
+                  Tractor() => bearing,
+                  Harvester() => bearing + 180,
                 },
               );
 
               // Update the vehicle state.
               this.vehicle
                 ?..position = vehiclePosition
-                ..heading = heading;
+                ..bearing = bearing;
             }
           case ArticulatedTractor():
             {
@@ -480,9 +480,9 @@ class _VehicleSimulatorState {
                 projectedFrontAxleAngle,
               );
 
-              // The heading of the front body of the vehicle at the projected
+              // The bearing of the front body of the vehicle at the projected
               // position.
-              final frontBodyHeading = switch (vehicle.isTurningLeft) {
+              final frontBodyBearing = switch (vehicle.isTurningLeft) {
                 true =>
                   projectedFrontAxleAngle - 90 - vehicle.steeringAngle / 2,
                 false =>
@@ -493,13 +493,13 @@ class _VehicleSimulatorState {
               // position.
               final vehiclePosition = frontAxlePosition.offset(
                 vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
-                frontBodyHeading - 180 + vehicle.steeringAngle / 2,
+                frontBodyBearing - 180 + vehicle.steeringAngle / 2,
               );
 
               // Update the vehicle state.
               this.vehicle
                 ?..position = vehiclePosition
-                ..heading = frontBodyHeading;
+                ..bearing = frontBodyBearing;
             }
         }
       }
@@ -508,7 +508,7 @@ class _VehicleSimulatorState {
       else {
         final position = vehicle!.position.offset(
           vehicle!.velocity * period,
-          vehicle!.heading,
+          vehicle!.bearing,
         );
 
         // Update the vehicle state.
@@ -535,9 +535,9 @@ class _VehicleSimulatorState {
       velocity = 0;
     }
 
-    // Heading, only updated if we're moving to keep heading while stationary.
+    // Bearing, only updated if we're moving to keep bearing while stationary.
     if (vehicle != null && prevVehicle != null && velocity.abs() > 0) {
-      heading = normalizeBearing(
+      bearing = normalizeBearing(
         switch (vehicle!.isReversing) {
           true => vehicle!.position.bearingTo(
               prevVehicle!.position,

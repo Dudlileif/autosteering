@@ -35,7 +35,7 @@ class VehicleSimMenu extends StatelessWidget {
                           Tractor(
                             position: vehicle.position,
                             antennaHeight: 2.822,
-                            heading: vehicle.heading,
+                            bearing: vehicle.bearing,
                             length: 4.358,
                             width: 2.360,
                             wheelBase: 2.550,
@@ -61,7 +61,7 @@ class VehicleSimMenu extends StatelessWidget {
                           ArticulatedTractor(
                             position: vehicle.position,
                             antennaHeight: 3.8,
-                            heading: vehicle.heading,
+                            bearing: vehicle.bearing,
                             length: 7.5,
                             width: 3,
                             pivotToAntennaDistance: 1,
@@ -90,7 +90,7 @@ class VehicleSimMenu extends StatelessWidget {
                           Harvester(
                             position: vehicle.position,
                             antennaHeight: 3.5,
-                            heading: vehicle.heading,
+                            bearing: vehicle.bearing,
                             length: 9,
                             width: 3.3,
                             wheelBase: 3.7,
