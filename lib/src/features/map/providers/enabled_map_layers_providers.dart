@@ -36,17 +36,13 @@ class ShowOSMLayer extends _$ShowOSMLayer {
 
 /// Whether the selected country layers should be shown.
 @riverpod
-bool showCountryLayers(ShowCountryLayersRef ref) {
-  final enabled = ref.watch(enabledCountryLayersProvider).isNotEmpty;
-  return enabled;
-}
+bool showCountryLayers(ShowCountryLayersRef ref) =>
+    ref.watch(enabledCountryLayersProvider.select((value) => value.isNotEmpty));
 
 /// Whether the selected Sentinel layers should be shown.
 @riverpod
-bool showSentinelLayers(ShowSentinelLayersRef ref) {
-  final enabled = ref.watch(enabledSentinelLayersProvider).isNotEmpty;
-  return enabled;
-}
+bool showSentinelLayers(ShowSentinelLayersRef ref) => ref
+    .watch(enabledSentinelLayersProvider.select((value) => value.isNotEmpty));
 
 /// Whether the finished recorded path should be shown.
 @riverpod
@@ -72,10 +68,8 @@ bool showFinishedPolygonLayer(ShowFinishedPolygonLayerRef ref) {
 
 /// Whether the currently recording path should be shown.
 @riverpod
-bool showRecordingPathLayer(ShowRecordingPathLayerRef ref) {
-  final enabled = ref.watch(enablePathRecorderProvider);
-  return enabled;
-}
+bool showRecordingPathLayer(ShowRecordingPathLayerRef ref) =>
+    ref.watch(enablePathRecorderProvider);
 
 /// Whether the editable recorded path should be shown.
 @riverpod
@@ -119,17 +113,13 @@ bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {
 
 /// Whether the debugging layer for the Dubins path should be shown.
 @riverpod
-bool showDubinsPathDebugLayer(ShowDubinsPathDebugLayerRef ref) {
-  final enabled = ref.watch(enableDubinsPathDebugProvider);
-  return enabled;
-}
+bool showDubinsPathDebugLayer(ShowDubinsPathDebugLayerRef ref) =>
+    ref.watch(enableDubinsPathDebugProvider);
 
 /// Whether the debugging layer for the pure pursuit should be shown.
 @riverpod
-bool showPurePursuitDebugLayer(ShowPurePursuitDebugLayerRef ref) {
-  final enabled = ref.watch(debugPurePursuitProvider);
-  return enabled;
-}
+bool showPurePursuitDebugLayer(ShowPurePursuitDebugLayerRef ref) =>
+    ref.watch(debugPurePursuitProvider);
 
 /// Whether the debugging layer for the test field should be shown.
 @riverpod
@@ -144,6 +134,10 @@ bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
 
 /// Whether the debugging layer for the equipment should be shown.
 @riverpod
-bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) {
-  return ref.watch(showEquipmentDebugProvider);
-}
+bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) =>
+    ref.watch(showEquipmentDebugProvider);
+
+/// Whether the debugging layer for the AB-line should be shown.
+@riverpod
+bool showABLineDebugLayer(ShowABLineDebugLayerRef ref) =>
+    ref.watch(aBLineDebugShowProvider);
