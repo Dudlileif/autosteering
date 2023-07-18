@@ -16,7 +16,7 @@ class MenuButtonWithChildren extends StatelessWidget {
 
   const MenuButtonWithChildren({
     required this.text,
-    required this.menuChildren,
+    this.menuChildren = const [],
     this.icon,
     this.iconRotation,
     super.key,
