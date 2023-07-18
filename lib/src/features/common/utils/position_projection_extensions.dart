@@ -59,5 +59,6 @@ extension LatLngOperations on LatLng {
   double distanceTo(LatLng other) => _calculator.distance(this, other);
 
   /// The bearing direction from this to [other].
-  double bearingTo(LatLng other) => _calculator.bearing(this, other);
+  double bearingTo(LatLng other) =>
+      normalizeBearing(_calculator.bearing(this, other));
 }
