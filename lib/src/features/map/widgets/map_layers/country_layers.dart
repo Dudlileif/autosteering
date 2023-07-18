@@ -24,8 +24,10 @@ class CountryLayers extends ConsumerWidget {
           child: TileLayer(
             urlTemplate: layer.urlTemplate,
             wmsOptions: layer.wmsOptions,
+            minNativeZoom: layer.minNativeZoom,
             maxNativeZoom: layer.maxNativeZoom,
-            tileProvider: CachedTileProvider(),
+            subdomains: layer.subdomains,
+            tileProvider: CachedTileProvider(layer: layer),
             maxZoom: 22,
             userAgentPackageName: 'agopengps_flutter',
           ),
