@@ -1,5 +1,4 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -126,27 +125,6 @@ class MapAndGaugeStackView extends ConsumerWidget {
               child: BasicVehicleGauges(),
             ),
           ),
-          if (ref.watch(displayPurePursuitProvider) != null)
-            Align(
-              alignment: Alignment.topCenter,
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      return Text(
-                        ref
-                            .watch(displayPurePursuitProvider)!
-                            .perpendicularDistance(
-                              ref.watch(mainVehicleProvider),
-                            )
-                            .toStringAsFixed(3),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            )
         ],
       ),
     );

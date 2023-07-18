@@ -251,6 +251,23 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                   ),
                 ],
               ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        return Text(
+                          pursuit
+                              .perpendicularDistance(vehicle)
+                              .toStringAsFixed(3),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              )
             ]
           : const [],
     );
