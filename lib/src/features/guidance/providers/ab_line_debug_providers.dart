@@ -101,4 +101,20 @@ class ABLineDebug extends _$ABLineDebug {
 
     return null;
   }
+
+  /// Move the line by one offset step to the right relative to [heading].
+  void moveOffsetRight(double heading) =>
+      Future(() => state = state?..moveOffsetRight(heading));
+
+  /// Move the line by one offset step to the left relative to [heading].
+
+  void moveOffsetLeft(double heading) =>
+      Future(() => state = state?..moveOffsetLeft(heading));
+
+  /// Update whether the closest line automatically should be selected.
+  void updateSnapToClosestLine({required bool value}) =>
+      Future(() => state = state?..snapToClosestLine = value);
+
+  @override
+  bool updateShouldNotify(ABLine? previous, ABLine? next) => true;
 }

@@ -154,7 +154,7 @@ class ABLineMenu extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Points ahead: $numPointsBehind',
+                  'Points behind: $numPointsBehind',
                   style: textStyle,
                 ),
                 Slider.adaptive(

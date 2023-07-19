@@ -29,7 +29,8 @@ class ABLineDebugLayer extends ConsumerWidget {
                     mainVehicleProvider.select((vehicle) => vehicle.position),
                   ),
                   abLine
-                      .closestPerpendicularIntersect(
+                      .offsetPerpendicularIntersect(
+                        abLine.currentOffset,
                         ref.watch(
                           mainVehicleProvider
                               .select((vehicle) => vehicle.position),
@@ -82,30 +83,100 @@ class ABLineDebugLayer extends ConsumerWidget {
               ]
             ],
           ),
-        if (abLine != null)
-          Align(
-            alignment: Alignment.topCenter,
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Consumer(
+      ],
+    );
+  }
+}
+
+/// A widget for controlling the AB-line offset.
+class ABLineOffsetDebugControls extends ConsumerWidget {
+  /// A widget for controlling the AB-line offset.
+  const ABLineOffsetDebugControls({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final abLine = ref.watch(aBLineDebugProvider);
+
+    if (abLine != null) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Consumer(
                   builder: (context, ref, child) {
                     return Text(
-                      abLine
-                          .distanceToClosestLine(
-                            ref.watch(
-                              mainVehicleProvider
-                                  .select((vehicle) => vehicle.position),
-                            ),
-                          )
+                      (abLine.perpendicularDistanceToOffsetLine(
+                                abLine.currentOffset,
+                                ref.watch(
+                                  mainVehicleProvider
+                                      .select((vehicle) => vehicle.position),
+                                ),
+                              ) *
+                              abLine.compareToBearing(
+                                ref.watch(
+                                  mainVehicleProvider
+                                      .select((vehicle) => vehicle.bearing),
+                                ),
+                              ))
                           .toStringAsFixed(3),
                     );
                   },
                 ),
-              ),
+                Text(
+                  'Offset: ${abLine.currentOffset}',
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Consumer(
+                      builder: (context, ref, child) => IconButton.filled(
+                        onPressed: () => ref
+                            .read(aBLineDebugProvider.notifier)
+                            .moveOffsetLeft(
+                              ref.watch(
+                                mainVehicleProvider.select(
+                                  (vehicle) => vehicle.bearing,
+                                ),
+                              ),
+                            ),
+                        icon: const Icon(Icons.arrow_left),
+                      ),
+                    ),
+                    Consumer(
+                      builder: (context, ref, child) => FilterChip(
+                        label: const Text('AUTO'),
+                        selected: abLine.snapToClosestLine,
+                        onSelected: (value) => ref
+                            .read(aBLineDebugProvider.notifier)
+                            .updateSnapToClosestLine(value: value),
+                      ),
+                    ),
+                    Consumer(
+                      builder: (context, ref, child) => IconButton.filled(
+                        onPressed: () => ref
+                            .read(aBLineDebugProvider.notifier)
+                            .moveOffsetRight(
+                              ref.watch(
+                                mainVehicleProvider.select(
+                                  (vehicle) => vehicle.bearing,
+                                ),
+                              ),
+                            ),
+                        icon: const Icon(Icons.arrow_right),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          )
-      ],
-    );
+          ),
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 }

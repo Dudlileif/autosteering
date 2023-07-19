@@ -61,6 +61,10 @@ class MainMap extends ConsumerWidget {
               .handleMapOnPointerHover(event, point);
         },
       ),
+      nonRotatedChildren: [
+        if (ref.watch(showABLineDebugLayerProvider))
+          const ABLineOffsetDebugControls()
+      ],
 
       // Only the last layer can be user interactive due to using Stack
       // widgets in the previous layers.

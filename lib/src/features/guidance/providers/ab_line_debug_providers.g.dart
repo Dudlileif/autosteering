@@ -151,7 +151,7 @@ final aBLineWidthProvider = NotifierProvider<ABLineWidth, double>.internal(
 );
 
 typedef _$ABLineWidth = Notifier<double>;
-String _$aBLineDebugHash() => r'70958303f7ce97e4f51456ed6d385ab02369f634';
+String _$aBLineDebugHash() => r'b6392222b882a60d404abdf11c6d0a4b16e7d6c1';
 
 /// A provider for the AB-line object to debug.
 ///
