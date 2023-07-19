@@ -125,38 +125,9 @@ class ABLine with EquatableMixin {
   }
 
   /// How many [width] offsets from the original [_line] we need to get the
-  /// [closestLine].
+  /// closest line.
   int numOffsetsToClosestLine(LatLng point) =>
       (perpendicularDistanceToLine(point) / width).round();
-
-  /// The start point A for the line closest to [point].
-  LatLng closestStart(LatLng point) =>
-      offsetStart(numOffsetsToClosestLine(point));
-
-  /// The end point B for the line closest to [point].
-  LatLng closestEnd(LatLng point) => offsetEnd(numOffsetsToClosestLine(point));
-
-  /// The offset line closest to [point].
-  jts.LineSegment closestLine(LatLng point) =>
-      offsetLine(numOffsetsToClosestLine(point));
-
-  /// The perpendicular intersect from [point] to the [closestLine].
-  jts.Coordinate closestPerpendicularIntersect(LatLng point) =>
-      closestLine(point).projectCoord(point.jtsCoordinate);
-
-  /// The perpendicular distance from [point] to the [closestLine].
-  ///
-  /// The distance is negative if the point is to the left of the [closestLine].
-  double perpendicularDistanceToClosestLine(LatLng point) {
-    final orientation = jts.Orientation.index(
-      closestStart(point).jtsCoordinate,
-      closestEnd(point).jtsCoordinate,
-      point.jtsCoordinate,
-    );
-
-    return -orientation *
-        point.distanceTo(closestPerpendicularIntersect(point).latLng);
-  }
 
   /// Whether the [point] has a negative x-value on the realtive coordinate
   /// system where [start] is origo and [end] is along positive x axis.
@@ -168,27 +139,13 @@ class ABLine with EquatableMixin {
       ).abs() >
       pi / 2;
 
-  /// The distance from [point] to the [closestStart] point.
+  /// The distance from [point] to the [offsetStart] point.
   ///
   /// The distance is positive in [bearing] direction and
   /// negative in opposite direction.
   double offsetIntersectToStartDistance(int offset, LatLng point) {
     final distance = offsetStart(offset)
         .distanceTo(offsetPerpendicularIntersect(offset, point).latLng);
-
-    return switch (inNegativeDirection(point)) {
-      true => -distance,
-      false => distance
-    };
-  }
-
-  /// The distance from [point] to the [closestStart] point.
-  ///
-  /// The distance is positive in [bearing] direction and
-  /// negative in opposite direction.
-  double closestIntersectToStartDistance(LatLng point) {
-    final distance = closestStart(point)
-        .distanceTo(closestPerpendicularIntersect(point).latLng);
 
     return switch (inNegativeDirection(point)) {
       true => -distance,
