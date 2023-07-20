@@ -1,5 +1,6 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -95,12 +96,14 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final abLine = ref.watch(aBLineDebugProvider);
 
     if (abLine != null) {
       return Align(
         alignment: Alignment.topCenter,
         child: Card(
+          color: Theme.of(context).cardColor.withOpacity(0.5),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
@@ -109,25 +112,26 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                 Consumer(
                   builder: (context, ref, child) {
                     return Text(
-                      (abLine.perpendicularDistanceToOffsetLine(
-                                abLine.currentOffset,
-                                ref.watch(
-                                  mainVehicleProvider
-                                      .select((vehicle) => vehicle.position),
-                                ),
-                              ) *
-                              abLine.compareToBearing(
-                                ref.watch(
-                                  mainVehicleProvider
-                                      .select((vehicle) => vehicle.bearing),
-                                ),
-                              ))
+                      abLine
+                          .signedPerpendicularDistanceToOffsetLine(
+                            offset: abLine.currentOffset,
+                            point: ref.watch(
+                              mainVehicleProvider
+                                  .select((vehicle) => vehicle.position),
+                            ),
+                            heading: ref.watch(
+                              mainVehicleProvider
+                                  .select((vehicle) => vehicle.bearing),
+                            ),
+                          )
                           .toStringAsFixed(3),
+                      style: theme.menuButtonWithChildrenText,
                     );
                   },
                 ),
                 Text(
                   'Offset: ${abLine.currentOffset}',
+                  style: theme.menuButtonWithChildrenText,
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,

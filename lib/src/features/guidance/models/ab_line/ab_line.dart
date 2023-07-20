@@ -107,6 +107,15 @@ class ABLine with EquatableMixin {
         offsetEnd(offset).jtsCoordinate,
       );
 
+  /// Compares [heading] to [bearing] to determine what should be left and
+  /// right.
+  ///
+  /// Returns 1 if the [heading] is in the general forward direction of
+  /// [bearing] (think upper half circle), and -1 when [heading] is in the
+  /// general reverse direction of [bearing] (think lower half circle).
+  int compareToBearing(double heading) =>
+      (normalizeBearing(bearing - heading) - 180).abs() >= 90 ? 1 : -1;
+
   /// The perpendicular intersect from [point] to the [offsetLine] with
   /// [offset] offsets.
   jts.Coordinate offsetPerpendicularIntersect(int offset, LatLng point) =>
@@ -123,6 +132,20 @@ class ABLine with EquatableMixin {
     return -orientation *
         point.distanceTo(offsetPerpendicularIntersect(offset, point).latLng);
   }
+
+  /// The signed perpendicular distance from [point] to the [offsetLine] with
+  /// [offset] offsets.
+  ///
+  /// A negative value means that we're to the left of the line in the
+  /// when accounting for the [heading] and comparing it to the [bearing], and
+  /// a positive value means that we're to the right of the line.
+  double signedPerpendicularDistanceToOffsetLine({
+    required int offset,
+    required LatLng point,
+    required double heading,
+  }) =>
+      perpendicularDistanceToOffsetLine(offset, point) *
+      compareToBearing(heading);
 
   /// How many [width] offsets from the original [_line] we need to get the
   /// closest line.
@@ -152,14 +175,6 @@ class ABLine with EquatableMixin {
       false => distance
     };
   }
-
-  /// Compares [heading] to [bearing] to determine what should be left or right.
-  ///
-  /// Returns 1 if the [heading] is in the general forward direction of
-  /// [bearing] (think upper half circle), and -1 when [heading] is in the
-  /// general reverse direction of [bearing] (think lower half circle).
-  int compareToBearing(double heading) =>
-      (normalizeBearing(bearing - heading) - 180).abs() >= 90 ? 1 : -1;
 
   /// Moves the [currentOffset] in the right direction relative to [heading].
   void moveOffsetRight(double heading) {
@@ -265,6 +280,7 @@ class ABLine with EquatableMixin {
         end,
         width,
         snapToClosestLine,
+        _awaitToReengageSnap,
         currentOffset,
         bearing,
         _line,
