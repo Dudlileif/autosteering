@@ -169,44 +169,4 @@ final simVehicleAutoSlowDownProvider =
 );
 
 typedef _$SimVehicleAutoSlowDown = Notifier<bool>;
-String _$simVehicleAcceleratorHash() =>
-    r'e8da7b1b6fbb05294a32a70630edeced11659c01';
-
-/// A provider for accelerating the vehicle in the simulator, typically
-/// used by hotkeys/keyboard.
-///
-/// Copied from [SimVehicleAccelerator].
-@ProviderFor(SimVehicleAccelerator)
-final simVehicleAcceleratorProvider =
-    NotifierProvider<SimVehicleAccelerator, Timer?>.internal(
-  SimVehicleAccelerator.new,
-  name: r'simVehicleAcceleratorProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simVehicleAcceleratorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SimVehicleAccelerator = Notifier<Timer?>;
-String _$simVehicleSteeringHash() =>
-    r'5cd25e089212adb51e8bab1946d71f14779d6ba1';
-
-/// A provider for steering the vehicle in the simulator, typically
-/// used by hotkeys/keyboard.
-///
-/// Copied from [SimVehicleSteering].
-@ProviderFor(SimVehicleSteering)
-final simVehicleSteeringProvider =
-    NotifierProvider<SimVehicleSteering, Timer?>.internal(
-  SimVehicleSteering.new,
-  name: r'simVehicleSteeringProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simVehicleSteeringHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SimVehicleSteering = Notifier<Timer?>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

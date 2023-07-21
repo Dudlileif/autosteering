@@ -33,14 +33,14 @@ class VehicleSimulator {
       if (state.vehicle != null) {
         state.update();
 
-        // If the vehicle has moved or changed we send the new state back to the
+        // If the state has changed we send the new state back to the
         // main/UI isolate.
         if (state.didChange) {
           sendPort.send(
             (
               vehicle: state.vehicle,
-              velocity: state.velocity,
-              bearing: state.bearing,
+              velocity: state.gaugeVelocity,
+              bearing: state.gaugeBearing,
               distance: state.distance,
               purePursuit: state.purePursuit,
             ),
@@ -101,12 +101,13 @@ class VehicleSimulator {
         (timer) {
       state.update();
 
+      // If the state has changed we add the new state to the stream.
       if (state.didChange && streamController.hasListener) {
         streamController.add(
           (
             vehicle: state.vehicle,
-            velocity: state.velocity,
-            bearing: state.bearing,
+            velocity: state.gaugeVelocity,
+            bearing: state.gaugeBearing,
             distance: state.distance,
             purePursuit: state.purePursuit,
           ),
@@ -116,6 +117,22 @@ class VehicleSimulator {
 
     return streamController.stream;
   }
+}
+
+/// An enumerator used to signal how a value in the [_VehicleSimulatorState]
+/// should change.
+enum SimInputChange {
+  /// Increase the value.
+  increase,
+
+  /// Decrease the value.
+  decrease,
+
+  /// Keep the current value.
+  hold,
+
+  /// Resets the value to 0.
+  reset,
 }
 
 /// A class for holding and updating the state of the [VehicleSimulator].
@@ -131,11 +148,11 @@ class _VehicleSimulatorState {
 
   /// The velocity of the current vehicle, as calculated from the [distance] and
   /// [period].
-  double velocity = 0;
+  double gaugeVelocity = 0;
 
   /// The bearing of the current vehicle, as calculated from the previous
   /// position to the current position.
-  double bearing = 0;
+  double gaugeBearing = 0;
 
   /// Whether the state changed in the last update.
   bool didChange = true;
@@ -148,6 +165,14 @@ class _VehicleSimulatorState {
   /// [vehicle].turningRadiusCenter as it would move around slightly as the
   /// vehicle is moving, and cause wrong calculations.
   LatLng? turningCircleCenter;
+
+  /// If this is not [SimInputChange.hold] then the [vehicle]'s velocity is
+  /// manually changed due to input to the sim.
+  SimInputChange velocityChange = SimInputChange.hold;
+
+  /// If this is not [SimInputChange.hold] then the [vehicle]'s
+  /// steeringAngleInput is manually changed due to input to the sim.
+  SimInputChange steeringChange = SimInputChange.hold;
 
   /// Whether the vehicle should automatically slow down when no input is given.
   bool autoSlowDown = false;
@@ -179,6 +204,8 @@ class _VehicleSimulatorState {
   DateTime prevUpdateTime = DateTime.now();
 
   /// The time period between the last update and this current update.
+  ///
+  /// In seconds.
   double period = 0;
 
   /// Whether we should force update for the next update, i.e. send the state.
@@ -218,22 +245,20 @@ class _VehicleSimulatorState {
     else if (message is ({num velocity})) {
       vehicle?.velocity = message.velocity.toDouble();
     }
-    // Update the vehicle velocity by delta
-    else if (message is ({num velocityDelta})) {
-      vehicle?.velocity =
-          (vehicle!.velocity + (autoSlowDown ? 1.2 : 1) * message.velocityDelta)
-              .clamp(-12.0, 12.0);
+
+    // Update the vehicle velocity at a set rate.
+    else if (message is ({SimInputChange velocityChange})) {
+      velocityChange = message.velocityChange;
+    }
+    // Update the vehicle steering angle at a set rate.
+    else if (message is ({SimInputChange steeringChange})) {
+      steeringChange = message.steeringChange;
     }
     // Update the vehicle steering angle input.
     else if (message is ({num steeringAngle})) {
       vehicle?.steeringAngleInput = message.steeringAngle.toDouble();
     }
-    // Update the vehicle steering angle input by delta.
-    else if (message is ({num steeringAngleDelta})) {
-      vehicle?.steeringAngleInput = (vehicle!.steeringAngleInput +
-              (autoCenterSteering ? 2 : 1) * message.steeringAngleDelta)
-          .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
-    }
+
     // Set the pure pursuit model.
     else if (message is ({PurePursuit? purePursuit})) {
       purePursuit = message.purePursuit;
@@ -309,24 +334,69 @@ class _VehicleSimulatorState {
 
   /// Check if [autoSlowDown] or [autoCenterSteering] should decrease the
   /// parameters they control.
-  void checkAutoSlowDownOrCentering() {
+  void updateVehicleVelocityAndSteering() {
     if (vehicle != null) {
-      if (autoSlowDown) {
-        vehicle!.velocity = switch (vehicle!.velocity.abs() > 0.1) {
-          true => vehicle!.velocity -
-              vehicle!.velocity / vehicle!.velocity.abs() * 0.0125,
-          false => 0,
-        };
+      // The acceleration rate of the vehicle, m/s^2.
+      const accelerationRate = 3;
+
+      switch (velocityChange) {
+        case SimInputChange.reset:
+          vehicle!.velocity = 0;
+          velocityChange = SimInputChange.hold;
+        case SimInputChange.increase:
+          vehicle!.velocity = (vehicle!.velocity + period * accelerationRate)
+              .clamp(-12.0, 12.0);
+        case SimInputChange.decrease:
+          vehicle!.velocity = (vehicle!.velocity - period * accelerationRate)
+              .clamp(-12.0, 12.0);
+
+        case SimInputChange.hold:
+          if (autoSlowDown) {
+            // Slowing rate m/s^2
+            const slowingRate = 2;
+
+            vehicle!.velocity = switch (vehicle!.velocity.abs() > 0.1) {
+              true => vehicle!.velocity -
+                  period *
+                      slowingRate *
+                      vehicle!.velocity /
+                      vehicle!.velocity.abs(),
+              false => 0,
+            };
+          }
       }
-      if (autoCenterSteering) {
-        vehicle!.steeringAngleInput =
-            switch (vehicle!.steeringAngle.abs() < 1) {
-          true => 0,
-          false => vehicle!.steeringAngleInput -
-              vehicle!.steeringAngleInput.abs() /
-                  vehicle!.steeringAngleInput *
-                  0.4,
-        };
+
+      // The steering rate of the vehicle, deg/s
+      const steeringRate = 30;
+
+      switch (steeringChange) {
+        case SimInputChange.reset:
+          vehicle!.steeringAngleInput = 0;
+          steeringChange = SimInputChange.hold;
+        case SimInputChange.increase:
+          vehicle!.steeringAngleInput =
+              (vehicle!.steeringAngleInput + period * steeringRate)
+                  .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+        case SimInputChange.decrease:
+          vehicle!.steeringAngleInput =
+              (vehicle!.steeringAngleInput - period * steeringRate)
+                  .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+
+        case SimInputChange.hold:
+          if (autoCenterSteering) {
+            // Centering rate deg/s
+            const centeringRate = 25;
+
+            vehicle!.steeringAngleInput =
+                switch (vehicle!.steeringAngle.abs() < 1) {
+              true => 0,
+              false => vehicle!.steeringAngleInput -
+                  period *
+                      centeringRate *
+                      vehicle!.steeringAngleInput.abs() /
+                      vehicle!.steeringAngleInput,
+            };
+          }
       }
     }
   }
@@ -530,14 +600,14 @@ class _VehicleSimulatorState {
 
     // Velocity
     if (period > 0) {
-      velocity = distance / period;
+      gaugeVelocity = distance / period;
     } else {
-      velocity = 0;
+      gaugeVelocity = 0;
     }
 
     // Bearing, only updated if we're moving to keep bearing while stationary.
-    if (vehicle != null && prevVehicle != null && velocity.abs() > 0) {
-      bearing = normalizeBearing(
+    if (vehicle != null && prevVehicle != null && gaugeVelocity.abs() > 0) {
+      gaugeBearing = normalizeBearing(
         switch (vehicle!.isReversing) {
           true => vehicle!.position.bearingTo(
               prevVehicle!.position,
@@ -553,7 +623,7 @@ class _VehicleSimulatorState {
   /// Update the simulation, i.e. simulate the next step.
   void update() {
     checkPurePursuit();
-    checkAutoSlowDownOrCentering();
+    updateVehicleVelocityAndSteering();
     checkTurningCircle();
     updateTime();
     updatePosition();
