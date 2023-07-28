@@ -250,7 +250,7 @@ class PurePursuit {
   ///
   /// If the closest point is outside the circle, only this point will be
   /// returned.
-  (WayPoint inside, WayPoint? outside) findLookAheadLinePoints(
+  ({WayPoint inside, WayPoint? outside}) findLookAheadLinePoints(
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
@@ -264,17 +264,17 @@ class PurePursuit {
     // intermediate point on the circle in the direction of the closest point.
     if (insideDistance >= lookAheadDistance) {
       return (
-        insidePoint.copyWith(
+        inside: insidePoint.copyWith(
           position: vehicle.lookAheadStartPosition.offset(
             lookAheadDistance,
             vehicle.position.bearingTo(insidePoint.position),
           ),
         ),
-        null,
+        outside: null,
       );
     }
 
-    late WayPoint outsidePoint;
+    WayPoint? outsidePoint;
 
     for (var i = 1; i < path.length; i++) {
       final index = nextIndex(vehicle) +
@@ -293,7 +293,7 @@ class PurePursuit {
         break;
       }
     }
-    return (insidePoint, outsidePoint);
+    return (inside: insidePoint, outside: outsidePoint);
   }
 
   /// The point on the secant line that is the shortest distance from the
@@ -302,15 +302,14 @@ class PurePursuit {
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
-    final (insidePoint, outsidePoint) =
-        findLookAheadLinePoints(vehicle, lookAheadDistance);
+    final points = findLookAheadLinePoints(vehicle, lookAheadDistance);
 
-    if (outsidePoint == null) {
+    if (points.outside == null) {
       return null;
     }
     final line = jts.LineSegment.fromCoordinates(
-      insidePoint.position.jtsCoordinate,
-      outsidePoint.position.jtsCoordinate,
+      points.inside.position.jtsCoordinate,
+      points.outside!.position.jtsCoordinate,
     );
 
     return line
@@ -328,20 +327,19 @@ class PurePursuit {
   /// points are returned as the best and worst, sorted by their distance to
   /// the next point outside the circle. The best point is what should be
   /// used for path tracking.
-  (WayPoint best, WayPoint? worst) findLookAheadCirclePoints(
+  ({WayPoint best, WayPoint? worst}) findLookAheadCirclePoints(
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
-    final (insidePoint, outsidePoint) =
-        findLookAheadLinePoints(vehicle, lookAheadDistance);
+    final points = findLookAheadLinePoints(vehicle, lookAheadDistance);
 
-    if (outsidePoint == null) {
-      return (insidePoint, null);
+    if (points.outside == null) {
+      return (best: points.inside, worst: null);
     }
 
     final line = jts.LineSegment.fromCoordinates(
-      insidePoint.position.jtsCoordinate,
-      outsidePoint.position.jtsCoordinate,
+      points.inside.position.jtsCoordinate,
+      points.outside!.position.jtsCoordinate,
     );
 
     final vehicleToLineProjection =
@@ -355,35 +353,35 @@ class PurePursuit {
 
     final pointA = vehicleToLineProjection.offset(
       projectionToCircleDistance,
-      vehicleToLineProjection.bearingTo(insidePoint.position),
+      vehicleToLineProjection.bearingTo(points.inside.position),
     );
 
     final pointB = vehicleToLineProjection.offset(
       projectionToCircleDistance,
       normalizeBearing(
-        vehicleToLineProjection.bearingTo(insidePoint.position) + 180,
+        vehicleToLineProjection.bearingTo(points.inside.position) + 180,
       ),
     );
 
-    final distanceA = pointA.distanceTo(outsidePoint.position);
-    final distanceB = pointB.distanceTo(outsidePoint.position);
+    final distanceA = pointA.distanceTo(points.outside!.position);
+    final distanceB = pointB.distanceTo(points.outside!.position);
 
     final wayPointA = WayPoint(
       position: pointA,
-      bearing: insidePoint.position.bearingTo(outsidePoint.position),
-      velocity: insidePoint.velocity,
+      bearing: points.inside.position.bearingTo(points.outside!.position),
+      velocity: points.inside.velocity,
     );
 
     final wayPointB = WayPoint(
       position: pointB,
-      bearing: insidePoint.position.bearingTo(outsidePoint.position),
-      velocity: insidePoint.velocity,
+      bearing: points.inside.position.bearingTo(points.outside!.position),
+      velocity: points.inside.velocity,
     );
 
     if (distanceA < distanceB) {
-      return (wayPointA, wayPointB);
+      return (best: wayPointA, worst: wayPointB);
     }
-    return (wayPointB, wayPointA);
+    return (best: wayPointB, worst: wayPointA);
   }
 
   /// Calculates the steering angle needed to reach the target point when
@@ -393,7 +391,7 @@ class PurePursuit {
     double lookAheadDistance,
   ) {
     final angle = vehicle.lookAheadStartPosition.bearingTo(
-          findLookAheadCirclePoints(vehicle, lookAheadDistance).$1.position,
+          findLookAheadCirclePoints(vehicle, lookAheadDistance).best.position,
         ) -
         vehicle.bearing;
 
