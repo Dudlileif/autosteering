@@ -1,4 +1,6 @@
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,7 +11,15 @@ part 'ab_line_debug_providers.g.dart';
 @Riverpod(keepAlive: true)
 class ABLineDebugEnabled extends _$ABLineDebugEnabled {
   @override
-  bool build() => false;
+  bool build() {
+    ref.listenSelf((previous, next) {
+      ref
+          .read(simInputProvider.notifier)
+          .send((abLine: ref.watch(aBLineDebugProvider)));
+    });
+
+    return false;
+  }
 
   /// Updates [state] to [value].
   void update({required bool value}) => Future(() => state = value);
@@ -118,3 +128,30 @@ class ABLineDebug extends _$ABLineDebug {
   @override
   bool updateShouldNotify(ABLine? previous, ABLine? next) => true;
 }
+
+/// A provider for the activated [ABLineDebug] model, typically updated and
+/// recieved from the simulator.
+@riverpod
+class DisplayABLine extends _$DisplayABLine {
+  @override
+  ABLine? build() => null;
+
+  /// Updates [state] to [value].
+  void update(ABLine? value) => Future(() => state = value);
+}
+
+/// A provider for the perpendicular distance from the [ABLineDebug] line
+/// to the [MainVehicle].
+@riverpod
+double? abLinePerpendicularDistance(AbLinePerpendicularDistanceRef ref) =>
+    switch (ref.watch(autoSteerEnabledProvider)) {
+      true => ref.watch(displayABLineProvider),
+      false => ref.watch(aBLineDebugProvider)
+    }
+        ?.signedPerpendicularDistanceToCurrentLine(
+      point: ref.watch(
+        mainVehicleProvider.select((vehicle) => vehicle.pursuitAxlePosition),
+      ),
+      heading:
+          ref.watch(mainVehicleProvider.select((vehicle) => vehicle.bearing)),
+    );

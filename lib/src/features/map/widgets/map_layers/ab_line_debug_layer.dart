@@ -1,5 +1,6 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,16 @@ class ABLineDebugLayer extends ConsumerWidget {
     final pointA = ref.watch(aBLinePointAProvider);
     final pointB = ref.watch(aBLinePointBProvider);
 
-    final abLine = ref.watch(aBLineDebugProvider);
+    final autoSteerEnabled = ref.watch(autoSteerEnabledProvider);
+
+    final abLine = switch (autoSteerEnabled) {
+      true => ref.watch(displayABLineProvider),
+      false => ref.watch(aBLineDebugProvider)
+    };
+
+    final lookAheadDistance = ref.watch(lookAheadDistanceProvider);
+
+    final vehicle = ref.watch(mainVehicleProvider);
 
     return Stack(
       children: [
@@ -26,21 +36,119 @@ class ABLineDebugLayer extends ConsumerWidget {
               Polyline(points: [abLine.start, abLine.end]),
               Polyline(
                 points: [
-                  ref.watch(
-                    mainVehicleProvider.select((vehicle) => vehicle.position),
-                  ),
+                  vehicle.pursuitAxlePosition,
                   abLine
                       .offsetPerpendicularIntersect(
                         abLine.currentOffset,
-                        ref.watch(
-                          mainVehicleProvider
-                              .select((vehicle) => vehicle.position),
-                        ),
+                        vehicle.pursuitAxlePosition,
                       )
                       .latLng,
                 ],
-                color: Colors.red,
-              )
+                color: Colors.white,
+              ),
+              Polyline(
+                color: Colors.black,
+                points: [
+                  vehicle.lookAheadStartPosition,
+                  if (abLine.vehicleToLookAheadLineProjection(
+                        vehicle,
+                        lookAheadDistance,
+                      ) !=
+                      null)
+                    abLine.vehicleToLookAheadLineProjection(
+                      vehicle,
+                      lookAheadDistance,
+                    )!,
+                  abLine
+                      .findLookAheadLinePoints(vehicle, lookAheadDistance)
+                      .inside,
+                  if (abLine
+                          .findLookAheadLinePoints(
+                            vehicle,
+                            lookAheadDistance,
+                          )
+                          .outside !=
+                      null)
+                    abLine
+                        .findLookAheadLinePoints(
+                          vehicle,
+                          lookAheadDistance,
+                        )
+                        .outside!,
+                ],
+              ),
+              Polyline(
+                points: [
+                  vehicle.lookAheadStartPosition,
+                  abLine
+                      .findLookAheadCirclePoints(
+                        vehicle,
+                        lookAheadDistance,
+                      )
+                      .best
+                ],
+                color: Colors.green,
+              ),
+              if (abLine.vehicleToLookAheadLineProjection(
+                    vehicle,
+                    lookAheadDistance,
+                  ) !=
+                  null)
+                Polyline(
+                  points: [
+                    abLine.vehicleToLookAheadLineProjection(
+                      vehicle,
+                      lookAheadDistance,
+                    )!,
+                    abLine
+                        .findLookAheadCirclePoints(
+                          vehicle,
+                          lookAheadDistance,
+                        )
+                        .best
+                  ],
+                  color: Colors.green,
+                ),
+              if (abLine
+                      .findLookAheadCirclePoints(
+                        vehicle,
+                        lookAheadDistance,
+                      )
+                      .worst !=
+                  null) ...[
+                Polyline(
+                  points: [
+                    vehicle.lookAheadStartPosition,
+                    abLine
+                        .findLookAheadCirclePoints(
+                          vehicle,
+                          lookAheadDistance,
+                        )
+                        .worst!
+                  ],
+                  color: Colors.red,
+                ),
+                if (abLine.vehicleToLookAheadLineProjection(
+                      vehicle,
+                      lookAheadDistance,
+                    ) !=
+                    null)
+                  Polyline(
+                    points: [
+                      abLine.vehicleToLookAheadLineProjection(
+                        vehicle,
+                        lookAheadDistance,
+                      )!,
+                      abLine
+                          .findLookAheadCirclePoints(
+                            vehicle,
+                            lookAheadDistance,
+                          )
+                          .worst!
+                    ],
+                    color: Colors.red,
+                  )
+              ]
             ],
           ),
         if (abLine != null || pointA != null || pointB != null)
@@ -49,37 +157,50 @@ class ABLineDebugLayer extends ConsumerWidget {
               if (pointA != null) CircleMarker(point: pointA, radius: 5),
               if (pointB != null) CircleMarker(point: pointB, radius: 5),
               if (abLine != null) ...[
+                if (autoSteerEnabled)
+                  CircleMarker(
+                    point: vehicle.lookAheadStartPosition,
+                    radius: lookAheadDistance,
+                    useRadiusInMeter: true,
+                    color: Colors.pink.withOpacity(0.2),
+                  ),
+                CircleMarker(
+                  point: abLine
+                      .offsetPerpendicularIntersect(
+                        abLine.currentOffset,
+                        vehicle.pursuitAxlePosition,
+                      )
+                      .latLng,
+                  radius: 5,
+                  color: Colors.red,
+                ),
                 ...abLine
-                    .pointsAheadOf(
-                      point: ref.watch(
-                        mainVehicleProvider
-                            .select((vehicle) => vehicle.position),
-                      ),
-                      heading: ref.watch(
-                        mainVehicleProvider
-                            .select((vehicle) => vehicle.bearing),
-                      ),
+                    .pointsAhead(
+                      point: vehicle.position,
+                      heading: vehicle.bearing,
                       num: ref.watch(aBLineDebugNumPointsAheadProvider),
                       stepSize: ref.watch(aBLineDebugStepSizeProvider),
                     )
                     .map(
-                      (point) => CircleMarker(point: point, radius: 3),
+                      (point) => CircleMarker(
+                        point: point,
+                        radius: 3,
+                        color: Colors.blue,
+                      ),
                     ),
                 ...abLine
                     .pointsBehind(
-                      point: ref.watch(
-                        mainVehicleProvider
-                            .select((vehicle) => vehicle.position),
-                      ),
-                      heading: ref.watch(
-                        mainVehicleProvider
-                            .select((vehicle) => vehicle.bearing),
-                      ),
+                      point: vehicle.position,
+                      heading: vehicle.bearing,
                       num: ref.watch(aBLineDebugNumPointsBehindProvider),
                       stepSize: ref.watch(aBLineDebugStepSizeProvider),
                     )
                     .map(
-                      (point) => CircleMarker(point: point, radius: 3),
+                      (point) => CircleMarker(
+                        point: point,
+                        radius: 3,
+                        color: Colors.orange,
+                      ),
                     )
               ]
             ],
@@ -97,7 +218,11 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final abLine = ref.watch(aBLineDebugProvider);
+
+    final abLine = switch (ref.watch(autoSteerEnabledProvider)) {
+      true => ref.watch(displayABLineProvider),
+      false => ref.watch(aBLineDebugProvider)
+    };
 
     if (abLine != null) {
       return Align(
@@ -112,18 +237,7 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                 Consumer(
                   builder: (context, ref, child) {
                     return Text(
-                      abLine
-                          .signedPerpendicularDistanceToOffsetLine(
-                            offset: abLine.currentOffset,
-                            point: ref.watch(
-                              mainVehicleProvider
-                                  .select((vehicle) => vehicle.position),
-                            ),
-                            heading: ref.watch(
-                              mainVehicleProvider
-                                  .select((vehicle) => vehicle.bearing),
-                            ),
-                          )
+                      (ref.watch(abLinePerpendicularDistanceProvider) ?? 0)
                           .toStringAsFixed(3),
                       style: theme.menuButtonWithChildrenText,
                     );
@@ -138,15 +252,18 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                   children: [
                     Consumer(
                       builder: (context, ref, child) => IconButton.filled(
-                        onPressed: () => ref
-                            .read(aBLineDebugProvider.notifier)
-                            .moveOffsetLeft(
-                              ref.watch(
-                                mainVehicleProvider.select(
-                                  (vehicle) => vehicle.bearing,
+                        onPressed: () {
+                          ref.read(aBLineDebugProvider.notifier).moveOffsetLeft(
+                                ref.watch(
+                                  mainVehicleProvider.select(
+                                    (vehicle) => vehicle.bearing,
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                          ref
+                              .read(simInputProvider.notifier)
+                              .send((abLineMoveOffset: -1));
+                        },
                         icon: const Icon(Icons.arrow_left),
                       ),
                     ),
@@ -154,22 +271,32 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                       builder: (context, ref, child) => FilterChip(
                         label: const Text('AUTO'),
                         selected: abLine.snapToClosestLine,
-                        onSelected: (value) => ref
-                            .read(aBLineDebugProvider.notifier)
-                            .updateSnapToClosestLine(value: value),
+                        onSelected: (value) {
+                          ref
+                              .read(aBLineDebugProvider.notifier)
+                              .updateSnapToClosestLine(value: value);
+                          ref
+                              .read(simInputProvider.notifier)
+                              .send((abLineSnapping: value));
+                        },
                       ),
                     ),
                     Consumer(
                       builder: (context, ref, child) => IconButton.filled(
-                        onPressed: () => ref
-                            .read(aBLineDebugProvider.notifier)
-                            .moveOffsetRight(
-                              ref.watch(
-                                mainVehicleProvider.select(
-                                  (vehicle) => vehicle.bearing,
+                        onPressed: () {
+                          ref
+                              .read(aBLineDebugProvider.notifier)
+                              .moveOffsetRight(
+                                ref.watch(
+                                  mainVehicleProvider.select(
+                                    (vehicle) => vehicle.bearing,
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                          ref
+                              .read(simInputProvider.notifier)
+                              .send((abLineMoveOffset: 1));
+                        },
                         icon: const Icon(Icons.arrow_right),
                       ),
                     ),

@@ -6,8 +6,28 @@ part of 'ab_line_debug_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$abLinePerpendicularDistanceHash() =>
+    r'701ce8f8fede74b09d882e390a5ca4f0f4651830';
+
+/// A provider for the perpendicular distance from the [ABLineDebug] line
+/// to the [MainVehicle].
+///
+/// Copied from [abLinePerpendicularDistance].
+@ProviderFor(abLinePerpendicularDistance)
+final abLinePerpendicularDistanceProvider =
+    AutoDisposeProvider<double?>.internal(
+  abLinePerpendicularDistance,
+  name: r'abLinePerpendicularDistanceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$abLinePerpendicularDistanceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AbLinePerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
 String _$aBLineDebugEnabledHash() =>
-    r'f6d0e62489f1a026440b33b3c03472e63ab65917';
+    r'1a0f361292dfa40a2f6ab508e92edc8c150044fe';
 
 /// A provider for whether the [aBLineDebugProvider]'s state should be
 /// used for autosteering.
@@ -167,4 +187,21 @@ final aBLineDebugProvider = NotifierProvider<ABLineDebug, ABLine?>.internal(
 );
 
 typedef _$ABLineDebug = Notifier<ABLine?>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+String _$displayABLineHash() => r'a08c7aa1d2e3c7db37907cbe51b8de3e151c4758';
+
+/// See also [DisplayABLine].
+@ProviderFor(DisplayABLine)
+final displayABLineProvider =
+    AutoDisposeNotifierProvider<DisplayABLine, ABLine?>.internal(
+  DisplayABLine.new,
+  name: r'displayABLineProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$displayABLineHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DisplayABLine = AutoDisposeNotifier<ABLine?>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

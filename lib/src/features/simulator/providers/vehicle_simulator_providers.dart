@@ -148,6 +148,8 @@ Stream<Vehicle?> simVehicleWebStream(
         .read(vehicleTravelledDistanceProvider.notifier)
         .updateWith(event.distance.toDouble());
     ref.read(displayPurePursuitProvider.notifier).update(event.purePursuit);
+    ref.read(displayABLineProvider.notifier).update(event.abLine);
+
     return event.vehicle;
   });
 }
@@ -194,6 +196,7 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
       double bearing,
       double distance,
       PurePursuit? purePursuit,
+      ABLine? abLine,
     })) {
       ref.read(vehicleVelocityProvider.notifier).update(message.velocity);
       ref.read(vehicleBearingProvider.notifier).update(message.bearing);
@@ -201,6 +204,8 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
           .read(vehicleTravelledDistanceProvider.notifier)
           .updateWith(message.distance);
       ref.read(displayPurePursuitProvider.notifier).update(message.purePursuit);
+      ref.read(displayABLineProvider.notifier).update(message.abLine);
+
       yield message.vehicle;
     }
   }
