@@ -59,7 +59,7 @@ final vehicleVelocityProvider =
 );
 
 typedef _$VehicleVelocity = AutoDisposeNotifier<double>;
-String _$vehicleBearingHash() => r'531f3ff1909aef4bf1144136bade4c6b5981041a';
+String _$vehicleBearingHash() => r'30845597e73573427f953aea48ba36e59f4b6600';
 
 /// A provider for the vehicle's bearing gauge.
 ///
@@ -77,4 +77,23 @@ final vehicleBearingProvider =
 );
 
 typedef _$VehicleBearing = AutoDisposeNotifier<double>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+String _$autoSteerEnabledHash() => r'491f89abd6aa83fa8ef8a6fb8c79430e99631e54';
+
+/// A provider for whether the vehicle should steer automatically.
+///
+/// Copied from [AutoSteerEnabled].
+@ProviderFor(AutoSteerEnabled)
+final autoSteerEnabledProvider =
+    NotifierProvider<AutoSteerEnabled, bool>.internal(
+  AutoSteerEnabled.new,
+  name: r'autoSteerEnabledProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$autoSteerEnabledHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$AutoSteerEnabled = Notifier<bool>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

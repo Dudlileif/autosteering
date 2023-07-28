@@ -23,6 +23,49 @@ class VehicleSimScreenControls extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8),
           child: Consumer(
+            builder: (context, ref, child) {
+              final enabled = ref.watch(autoSteerEnabledProvider);
+
+              return FloatingActionButton(
+                onPressed: ref.read(autoSteerEnabledProvider.notifier).toggle,
+                backgroundColor: switch (enabled) {
+                  true => Colors.orange,
+                  false => Colors.green,
+                },
+                foregroundColor: Colors.white,
+                tooltip: switch (enabled) {
+                  false => 'Enable auto steering',
+                  true => 'Disable auto steering'
+                },
+                child: Stack(
+                  children: [
+                    Align(
+                      heightFactor: 1.5,
+                      child: Icon(
+                        switch (enabled) {
+                          true => Icons.pause_circle,
+                          false => Icons.play_circle
+                        },
+                        size: 32,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        'AUTO',
+                        style: theme.textTheme.labelLarge
+                            ?.copyWith(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Consumer(
             child: Stack(
               children: [
                 const Align(

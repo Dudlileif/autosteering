@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -98,5 +99,28 @@ class VehicleBearing extends _$VehicleBearing {
   double build() => 0;
 
   /// Update the [state] by adding [value].
-  void update(double value) => Future(() => state = value);
+  void update(double value) => Future(
+        () => state = normalizeBearing(((state * 10) + value) / (10 + 1)),
+      );
+}
+
+/// A provider for whether the vehicle should steer automatically.
+@Riverpod(keepAlive: true)
+class AutoSteerEnabled extends _$AutoSteerEnabled {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (next != previous) {
+        ref.read(simInputProvider.notifier).send((autoSteerEnabled: next));
+      }
+    });
+
+    return false;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
 }
