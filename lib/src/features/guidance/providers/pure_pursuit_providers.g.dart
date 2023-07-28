@@ -6,6 +6,26 @@ part of 'pure_pursuit_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$purePursuitPerpendicularDistanceHash() =>
+    r'fa15bc3d44fa8d9604ab11253e67924e6f055761';
+
+/// A provider for the perpendicular distance from the [DisplayPurePursuit] line
+/// to the [MainVehicle].
+///
+/// Copied from [purePursuitPerpendicularDistance].
+@ProviderFor(purePursuitPerpendicularDistance)
+final purePursuitPerpendicularDistanceProvider =
+    AutoDisposeProvider<double?>.internal(
+  purePursuitPerpendicularDistance,
+  name: r'purePursuitPerpendicularDistanceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$purePursuitPerpendicularDistanceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef PurePursuitPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
 String _$configuredPurePursuitHash() =>
     r'707c6fd1bca4a6511f16451b4233e1416e4f53fb';
 
@@ -138,4 +158,5 @@ final debugPurePursuitProvider =
 );
 
 typedef _$DebugPurePursuit = Notifier<bool>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

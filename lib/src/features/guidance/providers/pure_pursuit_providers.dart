@@ -1,5 +1,6 @@
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pure_pursuit_providers.g.dart';
@@ -107,6 +108,16 @@ class DisplayPurePursuit extends _$DisplayPurePursuit {
   /// Set the state to null.
   void clear() => Future(() => state = null);
 }
+
+/// A provider for the perpendicular distance from the [DisplayPurePursuit] line
+/// to the [MainVehicle].
+@riverpod
+double? purePursuitPerpendicularDistance(
+  PurePursuitPerpendicularDistanceRef ref,
+) =>
+    ref
+        .watch(displayPurePursuitProvider)
+        ?.perpendicularDistance(ref.watch(mainVehicleProvider));
 
 /// A provider for whether or not the pure pursuit debugging features should
 /// show.

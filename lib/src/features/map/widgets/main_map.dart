@@ -63,7 +63,9 @@ class MainMap extends ConsumerWidget {
       ),
       nonRotatedChildren: [
         if (ref.watch(showABLineDebugLayerProvider))
-          const ABLineOffsetDebugControls()
+          const ABLineOffsetDebugControls(),
+        if (ref.watch(showPurePursuitDebugLayerProvider))
+          const PurePursuitDebugWidget()
       ],
 
       // Only the last layer can be user interactive due to using Stack

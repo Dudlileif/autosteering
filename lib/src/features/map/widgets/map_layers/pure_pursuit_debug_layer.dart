@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -49,21 +50,21 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                           )!,
                         pursuit
                             .findLookAheadLinePoints(vehicle, lookAheadDistance)
-                            .$1
+                            .inside
                             .position,
                         if (pursuit
                                 .findLookAheadLinePoints(
                                   vehicle,
                                   lookAheadDistance,
                                 )
-                                .$2 !=
+                                .outside !=
                             null)
                           pursuit
                               .findLookAheadLinePoints(
                                 vehicle,
                                 lookAheadDistance,
                               )
-                              .$2!
+                              .outside!
                               .position,
                       ],
                     ),
@@ -75,7 +76,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                               vehicle,
                               lookAheadDistance,
                             )
-                            .$1
+                            .best
                             .position
                       ],
                       color: Colors.pink,
@@ -96,7 +97,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                                 vehicle,
                                 lookAheadDistance,
                               )
-                              .$1
+                              .best
                               .position
                         ],
                         color: Colors.pink,
@@ -106,7 +107,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                               vehicle,
                               lookAheadDistance,
                             )
-                            .$2 !=
+                            .worst !=
                         null) ...[
                       Polyline(
                         points: [
@@ -116,7 +117,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                                 vehicle,
                                 lookAheadDistance,
                               )
-                              .$2!
+                              .worst!
                               .position
                         ],
                         color: Colors.blue,
@@ -137,7 +138,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                                   vehicle,
                                   lookAheadDistance,
                                 )
-                                .$2!
+                                .worst!
                                 .position
                           ],
                           color: Colors.blue,
@@ -191,7 +192,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                             vehicle,
                             lookAheadDistance,
                           )
-                          .$1
+                          .inside
                           .position,
                       radius: 3,
                       color: Colors.white,
@@ -201,7 +202,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                               vehicle,
                               lookAheadDistance,
                             )
-                            .$2 !=
+                            .outside !=
                         null)
                       CircleMarker(
                         point: pursuit
@@ -209,7 +210,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                               vehicle,
                               lookAheadDistance,
                             )
-                            .$2!
+                            .outside!
                             .position,
                         radius: 3,
                         color: Colors.white,
@@ -220,7 +221,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                             vehicle,
                             lookAheadDistance,
                           )
-                          .$1
+                          .best
                           .position,
                       radius: 5,
                       color: Colors.pink,
@@ -230,7 +231,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                               vehicle,
                               lookAheadDistance,
                             )
-                            .$2 !=
+                            .worst !=
                         null)
                       CircleMarker(
                         point: pursuit
@@ -238,7 +239,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                               vehicle,
                               lookAheadDistance,
                             )
-                            .$2!
+                            .worst!
                             .position,
                         radius: 5,
                         color: Colors.blue,
@@ -251,25 +252,40 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        return Text(
-                          pursuit
-                              .perpendicularDistance(vehicle)
-                              .toStringAsFixed(3),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              )
             ]
           : const [],
+    );
+  }
+}
+
+/// A Widget for displaying the distance from the pure pursuit line to the
+/// vehicle.
+class PurePursuitDebugWidget extends ConsumerWidget {
+  /// A Widget for displaying the distance from the pure pursuit line to the
+  /// vehicle.
+  const PurePursuitDebugWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Card(
+        color: theme.cardColor.withOpacity(0.5),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Consumer(
+            builder: (context, ref, child) {
+              return Text(
+                (ref.watch(purePursuitPerpendicularDistanceProvider) ?? 0)
+                    .toStringAsFixed(3),
+                style: theme.menuButtonWithChildrenText,
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }
