@@ -26,11 +26,10 @@ class SimMenu extends StatelessWidget {
           builder: (context, ref, child) => ListTile(
             onTap: () {
               // The simulation has to have a stationary vehicle for the reset
-              // to work on web.
-              if (Device.isWeb) {
-                ref.read(simInputProvider.notifier).send((velocity: 0));
-                ref.read(simInputProvider.notifier).send((steeringAngle: 0));
-              }
+              // to work.
+              ref.read(simInputProvider.notifier).send((velocity: 0));
+              ref.read(simInputProvider.notifier).send((steeringAngle: 0));
+
               ref.read(simInputProvider.notifier).send(
                 (position: ref.watch(homePositionProvider)),
               );
