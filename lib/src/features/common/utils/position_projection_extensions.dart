@@ -4,7 +4,7 @@ import 'package:latlong2/latlong.dart';
 
 /// An extension to allow easy swapping between different location/coordinate
 /// packages different classes.
-extension ProjectionExstention on LatLng {
+extension LatLngProjExt on LatLng {
   /// A conversion to the geobase package format.
   gb.Geographic get gbPosition => gb.Geographic(lon: longitude, lat: latitude);
 
@@ -27,7 +27,7 @@ extension ProjectionExstention on LatLng {
 
 /// An extension to allow easy swapping between different location/coordinate
 /// packages different classes.
-extension ProjectionExtension on jts.Coordinate {
+extension JTSCoordProjExt on jts.Coordinate {
   /// An x/y projection in meters in the geobase package format.
   gb.Projected get gbProjected => gb.Projected(x: x, y: y);
 
@@ -38,6 +38,24 @@ extension ProjectionExtension on jts.Coordinate {
   /// A conversion to the latlong2 package format, used by the flutter_map
   /// package.
   LatLng get latLng => LatLng(gbPosition.lat, gbPosition.lon);
+}
+
+/// An extension to allow easy swapping between different location/coordinate
+/// packages different classes.
+extension GeographicProjExt on gb.Geographic {
+  /// A conversion to the latlong2 package format, used by the flutter_map
+  /// package.
+  LatLng get latLng => LatLng(lat, lon);
+
+  /// An x/y projection in meters in the geobase package format.
+  gb.Projected get projected =>
+      gb.WGS84.webMercator.forward.project(this, to: gb.Projected.create);
+
+  /// A conversion to the JTS package format.
+  jts.Coordinate get jtsCoordinate => jts.Coordinate(
+        projected.x.toDouble(),
+        projected.y.toDouble(),
+      );
 }
 
 /// An extension to make it easier and slightly less convoluted to do operations
