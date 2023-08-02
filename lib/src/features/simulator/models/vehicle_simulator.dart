@@ -9,6 +9,8 @@ import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
+//TODO: look into making the simulation only return data similar to nmea from gps
+
 /// A class for simulating how vehicles should move given their position,
 /// bearing, steering angle and velocity.
 class VehicleSimulator {
@@ -362,9 +364,15 @@ class _VehicleSimulatorState {
       if (vehicle != null) {
         switch (message.abLineMoveOffset.isNegative) {
           case true:
-            abLine?.moveOffsetLeft(vehicle!.bearing);
+            abLine?.moveOffsetLeft(
+              vehicle!.pursuitAxlePosition.gbPosition,
+              vehicle!.bearing,
+            );
           case false:
-            abLine?.moveOffsetRight(vehicle!.bearing);
+            abLine?.moveOffsetRight(
+              vehicle!.pursuitAxlePosition.gbPosition,
+              vehicle!.bearing,
+            );
         }
       }
     }
@@ -458,7 +466,7 @@ class _VehicleSimulatorState {
           }
       }
 
-      // Filter out low angles as they make the simulation spazzes because the
+      // Filter out low angles as they make the simulation spazz out because the
       // turning circles get very large.
       if (vehicle!.steeringAngleInput.abs() < 0.5) {
         vehicle!.steeringAngleInput = 0;
@@ -669,7 +677,12 @@ class _VehicleSimulatorState {
   void updateGauges() {
     // Distance
     if (vehicle != null && prevVehicle != null) {
-      distance = vehicle!.position.distanceTo(prevVehicle!.position);
+      final movedDistance = vehicle!.position.distanceTo(prevVehicle!.position);
+
+      // Filter out too large distances
+      if (movedDistance < 5) {
+        distance = movedDistance;
+      }
     } else {
       distance = 0;
     }

@@ -50,7 +50,7 @@ class ABLineMenu extends ConsumerWidget {
         if (abLine != null)
           Consumer(
             builder: (context, ref, child) => MenuButtonWithChildren(
-              text: 'Bearing: ${abLine.bearing.toStringAsFixed(1)}°',
+              text: 'Bearing: ${abLine.initialBearing.toStringAsFixed(1)}°',
             ),
           ),
         Consumer(

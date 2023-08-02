@@ -37,7 +37,7 @@ class VehicleDebugLayer extends ConsumerWidget {
                 Polyline(
                   points: vehicle.trajectory.coordinates,
                   strokeWidth: 2,
-                  color: Colors.red,
+                  color: Colors.blue,
                 ),
               if (vehicle.turningRadiusCenter != null && debugSteering)
                 ...vehicle.steeringDebugLines,

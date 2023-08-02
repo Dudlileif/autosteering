@@ -33,14 +33,13 @@ class ABLineDebugLayer extends ConsumerWidget {
         if (abLine != null)
           PolylineLayer(
             polylines: [
-              Polyline(points: [abLine.start, abLine.end]),
+              Polyline(points: [abLine.start.latLng, abLine.end.latLng]),
               Polyline(
                 points: [
                   vehicle.pursuitAxlePosition,
                   abLine
-                      .offsetPerpendicularIntersect(
-                        abLine.currentOffset,
-                        vehicle.pursuitAxlePosition,
+                      .currentPerpendicularIntersect(
+                        vehicle.pursuitAxlePosition.gbPosition,
                       )
                       .latLng,
                 ],
@@ -55,13 +54,16 @@ class ABLineDebugLayer extends ConsumerWidget {
                         lookAheadDistance,
                       ) !=
                       null)
-                    abLine.vehicleToLookAheadLineProjection(
-                      vehicle,
-                      lookAheadDistance,
-                    )!,
+                    abLine
+                        .vehicleToLookAheadLineProjection(
+                          vehicle,
+                          lookAheadDistance,
+                        )!
+                        .latLng,
                   abLine
                       .findLookAheadLinePoints(vehicle, lookAheadDistance)
-                      .inside,
+                      .inside
+                      .latLng,
                   if (abLine
                           .findLookAheadLinePoints(
                             vehicle,
@@ -74,7 +76,8 @@ class ABLineDebugLayer extends ConsumerWidget {
                           vehicle,
                           lookAheadDistance,
                         )
-                        .outside!,
+                        .outside!
+                        .latLng,
                 ],
               ),
               Polyline(
@@ -86,6 +89,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                         lookAheadDistance,
                       )
                       .best
+                      .latLng
                 ],
                 color: Colors.green,
               ),
@@ -96,16 +100,19 @@ class ABLineDebugLayer extends ConsumerWidget {
                   null)
                 Polyline(
                   points: [
-                    abLine.vehicleToLookAheadLineProjection(
-                      vehicle,
-                      lookAheadDistance,
-                    )!,
+                    abLine
+                        .vehicleToLookAheadLineProjection(
+                          vehicle,
+                          lookAheadDistance,
+                        )!
+                        .latLng,
                     abLine
                         .findLookAheadCirclePoints(
                           vehicle,
                           lookAheadDistance,
                         )
                         .best
+                        .latLng
                   ],
                   color: Colors.green,
                 ),
@@ -125,6 +132,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                           lookAheadDistance,
                         )
                         .worst!
+                        .latLng
                   ],
                   color: Colors.red,
                 ),
@@ -135,16 +143,19 @@ class ABLineDebugLayer extends ConsumerWidget {
                     null)
                   Polyline(
                     points: [
-                      abLine.vehicleToLookAheadLineProjection(
-                        vehicle,
-                        lookAheadDistance,
-                      )!,
+                      abLine
+                          .vehicleToLookAheadLineProjection(
+                            vehicle,
+                            lookAheadDistance,
+                          )!
+                          .latLng,
                       abLine
                           .findLookAheadCirclePoints(
                             vehicle,
                             lookAheadDistance,
                           )
                           .worst!
+                          .latLng
                     ],
                     color: Colors.red,
                   )
@@ -166,9 +177,8 @@ class ABLineDebugLayer extends ConsumerWidget {
                   ),
                 CircleMarker(
                   point: abLine
-                      .offsetPerpendicularIntersect(
-                        abLine.currentOffset,
-                        vehicle.pursuitAxlePosition,
+                      .currentPerpendicularIntersect(
+                        vehicle.pursuitAxlePosition.gbPosition,
                       )
                       .latLng,
                   radius: 5,
@@ -176,28 +186,28 @@ class ABLineDebugLayer extends ConsumerWidget {
                 ),
                 ...abLine
                     .pointsAhead(
-                      point: vehicle.position,
+                      point: vehicle.position.gbPosition,
                       heading: vehicle.bearing,
                       num: ref.watch(aBLineDebugNumPointsAheadProvider),
                       stepSize: ref.watch(aBLineDebugStepSizeProvider),
                     )
                     .map(
                       (point) => CircleMarker(
-                        point: point,
+                        point: point.latLng,
                         radius: 3,
                         color: Colors.blue,
                       ),
                     ),
                 ...abLine
                     .pointsBehind(
-                      point: vehicle.position,
+                      point: vehicle.position.gbPosition,
                       heading: vehicle.bearing,
                       num: ref.watch(aBLineDebugNumPointsBehindProvider),
                       stepSize: ref.watch(aBLineDebugStepSizeProvider),
                     )
                     .map(
                       (point) => CircleMarker(
-                        point: point,
+                        point: point.latLng,
                         radius: 3,
                         color: Colors.orange,
                       ),
@@ -256,6 +266,12 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                           ref.read(aBLineDebugProvider.notifier).moveOffsetLeft(
                                 ref.watch(
                                   mainVehicleProvider.select(
+                                    (vehicle) =>
+                                        vehicle.pursuitAxlePosition.gbPosition,
+                                  ),
+                                ),
+                                ref.watch(
+                                  mainVehicleProvider.select(
                                     (vehicle) => vehicle.bearing,
                                   ),
                                 ),
@@ -287,6 +303,12 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                           ref
                               .read(aBLineDebugProvider.notifier)
                               .moveOffsetRight(
+                                ref.watch(
+                                  mainVehicleProvider.select(
+                                    (vehicle) =>
+                                        vehicle.pursuitAxlePosition.gbPosition,
+                                  ),
+                                ),
                                 ref.watch(
                                   mainVehicleProvider.select(
                                     (vehicle) => vehicle.bearing,

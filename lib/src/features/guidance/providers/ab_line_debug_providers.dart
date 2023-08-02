@@ -1,6 +1,8 @@
+import 'package:agopengps_flutter/src/features/common/utils/position_projection_extensions.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -106,20 +108,24 @@ class ABLineDebug extends _$ABLineDebug {
     final b = ref.watch(aBLinePointBProvider);
 
     if (a != null && b != null) {
-      return ABLine(start: a, end: b, width: ref.watch(aBLineWidthProvider));
+      return ABLine(
+        start: a.gbPosition,
+        end: b.gbPosition,
+        width: ref.watch(aBLineWidthProvider),
+      );
     }
 
     return null;
   }
 
   /// Move the line by one offset step to the right relative to [heading].
-  void moveOffsetRight(double heading) =>
-      Future(() => state = state?..moveOffsetRight(heading));
+  void moveOffsetRight(Geographic point, double heading) =>
+      Future(() => state = state?..moveOffsetRight(point, heading));
 
   /// Move the line by one offset step to the left relative to [heading].
 
-  void moveOffsetLeft(double heading) =>
-      Future(() => state = state?..moveOffsetLeft(heading));
+  void moveOffsetLeft(Geographic point, double heading) =>
+      Future(() => state = state?..moveOffsetLeft(point, heading));
 
   /// Update whether the closest line automatically should be selected.
   void updateSnapToClosestLine({required bool value}) =>
@@ -150,7 +156,8 @@ double? abLinePerpendicularDistance(AbLinePerpendicularDistanceRef ref) =>
     }
         ?.signedPerpendicularDistanceToCurrentLine(
       point: ref.watch(
-        mainVehicleProvider.select((vehicle) => vehicle.pursuitAxlePosition),
+        mainVehicleProvider
+            .select((vehicle) => vehicle.pursuitAxlePosition.gbPosition),
       ),
       heading:
           ref.watch(mainVehicleProvider.select((vehicle) => vehicle.bearing)),

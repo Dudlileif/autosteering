@@ -2,12 +2,14 @@ import 'dart:math';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:dart_jts/dart_jts.dart' as jts;
 import 'package:equatable/equatable.dart';
+import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 
 /// A class for creating and tracking straight lines by using the bearing
 /// from point A to point B and their positions to create parallel lines.
+///
+/// The lines are based on [SphericalGreatCircle].
 class ABLine with EquatableMixin {
   /// Create an AB-line from the [start] point A and the [end] point B.
   ///
@@ -19,24 +21,20 @@ class ABLine with EquatableMixin {
     required this.end,
     required this.width,
     this.snapToClosestLine = false,
-  })  : bearing = start.bearingTo(end),
-        _line = jts.LineSegment.fromCoordinates(
-          start.jtsCoordinate,
-          end.jtsCoordinate,
-        );
+  })  : initialBearing = start.spherical.initialBearingTo(end),
+        finalBearing = start.spherical.finalBearingTo(end);
 
   /// Point A, the starting point for creating the AB-line.
-  final LatLng start;
+  final Geographic start;
 
   /// Point B, the ending point for creating the AB-line.
-  final LatLng end;
+  final Geographic end;
 
-  /// The bearing of the AB-line, i.e. the bearing from [start] point A to [end]
-  /// point B.
-  final double bearing;
+  /// The bearing of the line at the [start] point.
+  final double initialBearing;
 
-  /// The line segment between [start] and [end].
-  final jts.LineSegment _line;
+  /// The bearing of the line at the [end] point.
+  final double finalBearing;
 
   /// How wide an AB-line should be, as in when to skip to the next line over.
   double width;
@@ -47,8 +45,10 @@ class ABLine with EquatableMixin {
 
   /// The number of [width] offsets that we should move the line.
   ///
-  /// A positive number means offsetting to the right of the [bearing],
-  /// a negative number means offsetting to the left of the [bearing].
+  /// A positive number means that the line is moved to the right relative
+  /// to the line's [initialBearing].
+  /// A negative number means that the line is move to the left relative to
+  /// the line's [initialBearing].
   int currentOffset = 0;
 
   /// Whether we are waiting to re-engage [snapToClosestLine] when the
@@ -65,7 +65,7 @@ class ABLine with EquatableMixin {
   /// we check if that is the case and re-engage [snapToClosestLine] if it is.
   ///
   /// The [point] is used to find which offset/line is the closest.
-  void _checkIfShouldReengageSnap(LatLng point) {
+  void _checkIfShouldReengageSnap(Geographic point) {
     if (_awaitToReengageSnap) {
       if (currentOffset == numOffsetsToClosestLine(point)) {
         snapToClosestLine = true;
@@ -77,137 +77,142 @@ class ABLine with EquatableMixin {
   /// Toggles the [snapToClosestLine] to the inverse value.
   void toggleSnapToClosestLine() => snapToClosestLine = !snapToClosestLine;
 
-  /// The perpendicular intersect from the [point] to the original [_line].
-  jts.Coordinate perpendicularIntersect(LatLng point) =>
-      _line.projectCoord(point.jtsCoordinate);
-
-  /// The perpendicular distance from [point] to the original [_line].
-  ///
-  /// The distance is negative if the point is to the left of the [_line].
-  double perpendicularDistanceToLine(LatLng point) {
-    final orientation = jts.Orientation.index(
-      start.jtsCoordinate,
-      end.jtsCoordinate,
-      point.jtsCoordinate,
-    );
-    return -orientation *
-        point.distanceTo(perpendicularIntersect(point).latLng);
-  }
-
   /// Offsets the [start] point by [offset]*[width] meters to the side.
   ///
   /// Negative [offset] means the point is offset in the opposite direction.
-  LatLng offsetStart(int offset) => start.offset(offset * width, bearing + 90);
+  Geographic offsetStart(int offset) => start.spherical
+      .destinationPoint(distance: offset * width, bearing: initialBearing + 90);
 
   /// Offsets the [end] point by [offset]*[width] meters to the side.
   ///
   /// Negative [offset] means the point is offset in the opposite direction.
-  LatLng offsetEnd(int offset) => end.offset(offset * width, bearing + 90);
+  Geographic offsetEnd(int offset) => end.spherical
+      .destinationPoint(distance: offset * width, bearing: finalBearing + 90);
 
-  /// Offset the [_line] by [offset]*[width] meters to the side.
-  jts.LineSegment offsetLine(int offset) => jts.LineSegment.fromCoordinates(
-        offsetStart(offset).jtsCoordinate,
-        offsetEnd(offset).jtsCoordinate,
-      );
+  /// The start point for the line with [currentOffset].
+  Geographic get currentStart => offsetStart(currentOffset);
 
-  /// Compares [heading] to [bearing] to determine what should be left and
+  /// The end point for the line with [currentOffset].
+  Geographic get currentEnd => offsetEnd(currentOffset);
+
+  /// The bearing of the current line at the [currentStart].
+  double get currentInitialBearing =>
+      currentStart.spherical.initialBearingTo(currentEnd);
+
+  /// The bearing of the current line at the [currentEnd].
+  double get currentFinalBearing =>
+      currentStart.spherical.finalBearingTo(currentEnd);
+
+  /// Compares [heading] to current line bearing at the
+  /// [currentPerpendicularIntersect] to determine what should be left and
   /// right.
   ///
   /// Returns 1 if the [heading] is in the general forward direction of
-  /// [bearing] (think upper half circle), and -1 when [heading] is in the
-  /// general reverse direction of [bearing] (think lower half circle).
-  int compareToBearing(double heading) =>
-      (normalizeBearing(bearing - heading) - 180).abs() >= 90 ? 1 : -1;
+  /// [initialBearing] (think upper half circle), and -1 when [heading] is in
+  /// the general reverse direction of [initialBearing] (think lower half
+  /// circle).
+  int compareToBearing(Geographic point, double heading) => (normalizeBearing(
+                    currentStart.spherical.finalBearingTo(
+                          currentPerpendicularIntersect(point),
+                        ) -
+                        heading,
+                  ) -
+                  180)
+              .abs() >=
+          90
+      ? 1
+      : -1;
 
-  /// The perpendicular intersect from [point] to the [offsetLine] with
-  /// [offset] offsets.
-  jts.Coordinate offsetPerpendicularIntersect(int offset, LatLng point) =>
-      offsetLine(offset).projectCoord(point.jtsCoordinate);
-
-  /// The perpendicular distance from [point] to the [offsetLine] with
-  /// [offset] offsets.
-  double perpendicularDistanceToOffsetLine(int offset, LatLng point) {
-    final orientation = jts.Orientation.index(
-      offsetStart(offset).jtsCoordinate,
-      offsetEnd(offset).jtsCoordinate,
-      point.jtsCoordinate,
+  /// The perpendicular intersection point from [point] to the current line.
+  Geographic currentPerpendicularIntersect(Geographic point) {
+    final distanceAlong = point.spherical.alongTrackDistanceTo(
+      start: currentStart,
+      end: currentEnd,
     );
-    return -orientation *
-        point.distanceTo(offsetPerpendicularIntersect(offset, point).latLng);
+
+    return currentStart.spherical.destinationPoint(
+      distance: distanceAlong,
+      bearing: currentInitialBearing,
+    );
   }
 
-  /// The signed perpendicular distance from [point] to the [offsetLine] with
+  /// The perpendicular distance from [point] to the line of [offset] offsets.
+  double perpendicularDistanceToOffsetLine(int offset, Geographic point) =>
+      point.spherical.crossTrackDistanceTo(
+        start: offsetStart(offset),
+        end: offsetEnd(offset),
+      );
+
+  /// The signed perpendicular distance from [point] to the line with
   /// [currentOffset] offsets.
   ///
   /// A negative value means that we're to the left of the line in the
-  /// when accounting for the [heading] and comparing it to the [bearing], and
-  /// a positive value means that we're to the right of the line.
+  /// when accounting for the [heading] and comparing it to the current line's
+  /// bearing at the [currentPerpendicularIntersect], and a positive value means
+  /// that we're to the right of the line.
   double signedPerpendicularDistanceToCurrentLine({
-    required LatLng point,
+    required Geographic point,
     required double heading,
   }) =>
-      perpendicularDistanceToOffsetLine(currentOffset, point) *
-      compareToBearing(heading);
+      compareToBearing(point, heading) *
+      point.spherical.crossTrackDistanceTo(
+        start: currentStart,
+        end: currentEnd,
+      );
 
-  /// How many [width] offsets from the original [_line] we need to get the
+  /// The perpendicular distance from [point] to the original line.
+  ///
+  /// The distance is negative if the point is to the left of the line.
+  double perpendicularDistanceToLine(Geographic point) =>
+      point.spherical.crossTrackDistanceTo(
+        start: start,
+        end: end,
+      );
+
+  /// How many [width] offsets from the original line we need to get the
   /// closest line.
-  int numOffsetsToClosestLine(LatLng point) =>
+  int numOffsetsToClosestLine(Geographic point) =>
       (perpendicularDistanceToLine(point) / width).round();
-
-  /// Whether the [point] has a negative x-value on the realtive coordinate
-  /// system where [start] is origo and [end] is along positive x axis.
-  bool inNegativeDirection(LatLng point) =>
-      jts.Angle.angleBetweenOriented(
-        point.jtsCoordinate,
-        start.jtsCoordinate,
-        end.jtsCoordinate,
-      ).abs() >
-      pi / 2;
 
   /// The distance from [point] to the [offsetStart] point.
   ///
-  /// The distance is positive in [bearing] direction and
-  /// negative in opposite direction.
-  double offsetIntersectToStartDistance(int offset, LatLng point) {
-    final distance = offsetStart(offset)
-        .distanceTo(offsetPerpendicularIntersect(offset, point).latLng);
-
-    return switch (inNegativeDirection(point)) {
-      true => -distance,
-      false => distance
-    };
-  }
+  /// The distance is positive in the [currentInitialBearing] from the
+  /// [currentStart] point and negative in the opposite direction.
+  double offsetIntersectToStartDistance(int offset, Geographic point) => point
+      .spherical
+      .alongTrackDistanceTo(start: offsetStart(offset), end: offsetEnd(offset));
 
   /// Moves the [currentOffset] in the right direction relative to [heading].
-  void moveOffsetRight(double heading) {
+  void moveOffsetRight(Geographic point, double heading) {
     if (snapToClosestLine) {
       snapToClosestLine = false;
       _awaitToReengageSnap = true;
     }
-    currentOffset += compareToBearing(heading);
+    currentOffset += compareToBearing(point, heading);
   }
 
   /// Moves the [currentOffset] in the left direction relative to [heading];
-  void moveOffsetLeft(double heading) {
+  void moveOffsetLeft(Geographic point, double heading) {
     if (snapToClosestLine) {
       snapToClosestLine = false;
       _awaitToReengageSnap = true;
     }
-    currentOffset -= compareToBearing(heading);
+    currentOffset -= compareToBearing(point, heading);
   }
 
-  /// Calculates a list of [num] points along the [offsetLine] ahead of the
-  /// [point], in the forward direction of the vehicle according to [heading].
+  /// Calculates a list of [num] points along the current offset line ahead of
+  /// the [point], in the forward direction of the vehicle according to
+  /// [heading].
   ///
   /// The [stepSize] is the distance between the points in meters.
-  List<LatLng> pointsAhead({
-    required LatLng point,
+  List<Geographic> pointsAhead({
+    required Geographic point,
     required double heading,
     double stepSize = 10,
     int num = 2,
   }) {
     // Whether the heading closer to the line bearing or the opposite bearing.
-    final sign = compareToBearing(heading);
+    final sign = compareToBearing(point, heading);
 
     if (snapToClosestLine) {
       currentOffset = numOffsetsToClosestLine(point);
@@ -224,30 +229,30 @@ class ABLine with EquatableMixin {
 
     return List.generate(
       num,
-      (index) => offsetStart(currentOffset).offset(
-        stepSize * (index + sign * stepOffset),
-        switch (sign.isNegative) {
-          true => bearing + 180,
-          false => bearing,
+      (index) => currentStart.spherical.destinationPoint(
+        distance: stepSize * (index + sign * stepOffset),
+        bearing: switch (sign.isNegative) {
+          true => currentInitialBearing + 180,
+          false => currentInitialBearing,
         },
       ),
       growable: false,
     );
   }
 
-  /// Calculates a list of [num] points along the [offsetLine] behind of the
+  /// Calculates a list of [num] points along the current line behind of the
   /// [point], in the rearward direction of the vehicle according to [heading].
   ///
   /// The [stepSize] is the distance between the points in meters.
-  List<LatLng> pointsBehind({
-    required LatLng point,
+  List<Geographic> pointsBehind({
+    required Geographic point,
     required double heading,
     double stepSize = 10,
     int num = 2,
   }) {
     // Whether the heading is closer to the line bearing or the opposite
     // bearing.
-    final sign = compareToBearing(heading);
+    final sign = compareToBearing(point, heading);
 
     if (snapToClosestLine) {
       currentOffset = numOffsetsToClosestLine(point);
@@ -265,11 +270,11 @@ class ABLine with EquatableMixin {
 
     return List.generate(
       num,
-      (index) => offsetStart(currentOffset).offset(
-        stepSize * (index - sign * stepOffset),
-        switch (sign.isNegative) {
-          true => bearing,
-          false => bearing + 180,
+      (index) => currentStart.spherical.destinationPoint(
+        distance: stepSize * (index - sign * stepOffset),
+        bearing: switch (sign.isNegative) {
+          true => currentInitialBearing,
+          false => currentInitialBearing + 180,
         },
       ),
       growable: false,
@@ -284,14 +289,14 @@ class ABLine with EquatableMixin {
         snapToClosestLine,
         _awaitToReengageSnap,
         currentOffset,
-        bearing,
-        _line,
+        initialBearing,
+        finalBearing,
       ];
 
-  /// The next point on the [currentOffset]'s [offsetLine] in the [heading]
+  /// The next point on the [currentOffset]'s line in the [heading]
   /// direction from [point] with [lookAheadDistance] step size.
-  LatLng nextForwardPoint(
-    LatLng point,
+  Geographic nextForwardPoint(
+    Geographic point,
     double heading,
     double lookAheadDistance,
   ) =>
@@ -301,10 +306,10 @@ class ABLine with EquatableMixin {
         stepSize: lookAheadDistance,
       ).first;
 
-  /// The next point on the [currentOffset]'s [offsetLine] in the opposite
+  /// The next point on the [currentOffset]'s line in the opposite
   /// direction to [heading] from [point] with [lookAheadDistance] step size.
-  LatLng nextReversingPoint(
-    LatLng point,
+  Geographic nextReversingPoint(
+    Geographic point,
     double heading,
     double lookAheadDistance,
   ) =>
@@ -320,18 +325,18 @@ class ABLine with EquatableMixin {
   ///
   /// If the closest point is outside the circle, only this point will be
   /// returned.
-  ({LatLng inside, LatLng? outside}) findLookAheadLinePoints(
+  ({Geographic inside, Geographic? outside}) findLookAheadLinePoints(
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
     final points = switch (vehicle.isReversing) {
       true => pointsBehind(
-          point: vehicle.lookAheadStartPosition,
+          point: vehicle.lookAheadStartPosition.gbPosition,
           heading: vehicle.bearing,
           stepSize: lookAheadDistance,
         ),
       false => pointsAhead(
-          point: vehicle.lookAheadStartPosition,
+          point: vehicle.lookAheadStartPosition.gbPosition,
           heading: vehicle.bearing,
           stepSize: lookAheadDistance,
         )
@@ -339,22 +344,29 @@ class ABLine with EquatableMixin {
 
     var insidePoint = points.first;
 
-    var insideDistance = vehicle.lookAheadStartPosition.distanceTo(insidePoint);
+    var insideDistance = vehicle.lookAheadStartPosition.gbPosition.spherical
+        .distanceTo(insidePoint);
 
     // If the closest point is outside look ahead circle we create an
     // intermediate point on the circle in the direction of the closest point.
     if (insideDistance >= lookAheadDistance) {
       return (
-        inside: insidePoint = vehicle.lookAheadStartPosition
-            .offset(lookAheadDistance, vehicle.position.bearingTo(insidePoint)),
+        inside: insidePoint = vehicle
+            .lookAheadStartPosition.gbPosition.spherical
+            .destinationPoint(
+          distance: lookAheadDistance,
+          bearing: vehicle.lookAheadStartPosition.gbPosition.spherical
+              .initialBearingTo(insidePoint),
+        ),
         outside: null,
       );
     }
 
-    LatLng? outsidePoint;
+    Geographic? outsidePoint;
     for (var i = 1; i < points.length; i++) {
       final point = points[i];
-      final distance = vehicle.lookAheadStartPosition.distanceTo(point);
+      final distance =
+          vehicle.lookAheadStartPosition.gbPosition.spherical.distanceTo(point);
       if (distance <= lookAheadDistance) {
         insidePoint = point;
         insideDistance = distance;
@@ -369,7 +381,7 @@ class ABLine with EquatableMixin {
 
   /// The point on the secant line that is the shortest distance from the
   /// [vehicle]'s look ahead starting point.
-  LatLng? vehicleToLookAheadLineProjection(
+  Geographic? vehicleToLookAheadLineProjection(
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
@@ -378,14 +390,17 @@ class ABLine with EquatableMixin {
     if (points.outside == null) {
       return null;
     }
-    final line = jts.LineSegment.fromCoordinates(
-      points.inside.jtsCoordinate,
-      points.outside!.jtsCoordinate,
-    );
 
-    return line
-        .projectCoord(vehicle.lookAheadStartPosition.jtsCoordinate)
-        .latLng;
+    final crossDistance = vehicle.lookAheadStartPosition.gbPosition.spherical
+        .crossTrackDistanceTo(start: points.inside, end: points.outside!);
+
+    final secantBearing =
+        points.inside.spherical.initialBearingTo(points.outside!);
+
+    return vehicle.lookAheadStartPosition.gbPosition.spherical.destinationPoint(
+      distance: crossDistance,
+      bearing: secantBearing - 90,
+    );
   }
 
   /// Finds the intersection waypoints on the look ahead circle.
@@ -398,7 +413,7 @@ class ABLine with EquatableMixin {
   /// points are returned as the best and worst, sorted by their distance to
   /// the next point outside the circle. The best point is what should be
   /// used for path tracking.
-  ({LatLng best, LatLng? worst}) findLookAheadCirclePoints(
+  ({Geographic best, Geographic? worst}) findLookAheadCirclePoints(
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
@@ -408,34 +423,43 @@ class ABLine with EquatableMixin {
       return (best: points.inside, worst: null);
     }
 
-    final line = jts.LineSegment.fromCoordinates(
-      points.inside.jtsCoordinate,
-      points.outside!.jtsCoordinate,
-    );
+    final vehicleAlongDistance = vehicle
+        .lookAheadStartPosition.gbPosition.spherical
+        .alongTrackDistanceTo(start: points.inside, end: points.outside!);
 
-    final vehicleToLineProjection =
-        line.projectCoord(vehicle.lookAheadStartPosition.jtsCoordinate).latLng;
+    final vehicleToLineDistance = vehicle
+        .lookAheadStartPosition.gbPosition.spherical
+        .crossTrackDistanceTo(start: points.inside, end: points.outside!);
 
-    final vehicleToLineDistance = vehicle.lookAheadStartPosition.distanceTo(
-      vehicleToLineProjection,
-    );
     final projectionToCircleDistance =
         sqrt(pow(lookAheadDistance, 2) - pow(vehicleToLineDistance, 2));
 
-    final pointA = vehicleToLineProjection.offset(
-      projectionToCircleDistance,
-      vehicleToLineProjection.bearingTo(points.inside),
+    final secantBearing =
+        points.inside.spherical.initialBearingTo(points.outside!);
+
+    final vehicleToLineProjection = points.inside.spherical.destinationPoint(
+      distance: vehicleAlongDistance,
+      bearing: secantBearing,
     );
 
-    final pointB = vehicleToLineProjection.offset(
-      projectionToCircleDistance,
-      normalizeBearing(
-        vehicleToLineProjection.bearingTo(points.inside) + 180,
-      ),
+    var vehicleLineProjectionToInsidePointBearing =
+        vehicleToLineProjection.spherical.initialBearingTo(points.inside);
+    if (vehicleLineProjectionToInsidePointBearing.isNaN) {
+      vehicleLineProjectionToInsidePointBearing = secantBearing;
+    }
+
+    final pointA = vehicleToLineProjection.spherical.destinationPoint(
+      distance: projectionToCircleDistance,
+      bearing: vehicleLineProjectionToInsidePointBearing,
     );
 
-    final distanceA = pointA.distanceTo(points.outside!);
-    final distanceB = pointB.distanceTo(points.outside!);
+    final pointB = vehicleToLineProjection.spherical.destinationPoint(
+      distance: projectionToCircleDistance,
+      bearing: (vehicleLineProjectionToInsidePointBearing + 180).wrap360(),
+    );
+
+    final distanceA = pointA.spherical.distanceTo(points.outside!);
+    final distanceB = pointB.spherical.distanceTo(points.outside!);
 
     if (distanceA < distanceB) {
       return (best: pointA, worst: pointB);
@@ -443,16 +467,17 @@ class ABLine with EquatableMixin {
     return (best: pointB, worst: pointA);
   }
 
-  /// Finds the next steering angle to reach the [currentOffset]'s [offsetLine]
+  /// Finds the next steering angle to reach the [currentOffset]'s line
   /// for the for the [vehicle] with the specified [lookAheadDistance].
   double nextSteeringAngleLookAhead({
     required Vehicle vehicle,
     required double lookAheadDistance,
   }) {
-    final angle = vehicle.lookAheadStartPosition.bearingTo(
-          findLookAheadCirclePoints(vehicle, lookAheadDistance).best,
-        ) -
-        vehicle.bearing;
+    final angle =
+        vehicle.lookAheadStartPosition.gbPosition.spherical.initialBearingTo(
+              findLookAheadCirclePoints(vehicle, lookAheadDistance).best,
+            ) -
+            vehicle.bearing;
 
     final steeringAngle = atan(
           2 * vehicle.wheelBase * sin(angle * pi / 180) / lookAheadDistance,
