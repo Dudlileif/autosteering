@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geobase/geobase.dart';
@@ -125,11 +124,7 @@ class ABLine with EquatableMixin {
         }
     };
 
-    final angle = (normalizeBearing(
-              lineBearing - heading,
-            ) -
-            180)
-        .abs();
+    final angle = ((lineBearing - heading) - 180).wrap360().abs();
 
     return switch (angle >= 90) {
       true => 1,
@@ -345,12 +340,12 @@ class ABLine with EquatableMixin {
   ) {
     final points = switch (vehicle.isReversing) {
       true => pointsBehind(
-          point: vehicle.lookAheadStartPosition.gbPosition,
+          point: vehicle.lookAheadStartPosition,
           heading: vehicle.bearing,
           stepSize: lookAheadDistance,
         ),
       false => pointsAhead(
-          point: vehicle.lookAheadStartPosition.gbPosition,
+          point: vehicle.lookAheadStartPosition,
           heading: vehicle.bearing,
           stepSize: lookAheadDistance,
         )
@@ -358,18 +353,17 @@ class ABLine with EquatableMixin {
 
     var insidePoint = points.first;
 
-    var insideDistance = vehicle.lookAheadStartPosition.gbPosition.spherical
-        .distanceTo(insidePoint);
+    var insideDistance =
+        vehicle.lookAheadStartPosition.spherical.distanceTo(insidePoint);
 
     // If the closest point is outside look ahead circle we create an
     // intermediate point on the circle in the direction of the closest point.
     if (insideDistance >= lookAheadDistance) {
       return (
-        inside: insidePoint = vehicle
-            .lookAheadStartPosition.gbPosition.spherical
-            .destinationPoint(
+        inside: insidePoint =
+            vehicle.lookAheadStartPosition.spherical.destinationPoint(
           distance: lookAheadDistance,
-          bearing: vehicle.lookAheadStartPosition.gbPosition.spherical
+          bearing: vehicle.lookAheadStartPosition.spherical
               .initialBearingTo(insidePoint),
         ),
         outside: null,
@@ -380,7 +374,7 @@ class ABLine with EquatableMixin {
     for (var i = 1; i < points.length; i++) {
       final point = points[i];
       final distance =
-          vehicle.lookAheadStartPosition.gbPosition.spherical.distanceTo(point);
+          vehicle.lookAheadStartPosition.spherical.distanceTo(point);
       if (distance <= lookAheadDistance) {
         insidePoint = point;
         insideDistance = distance;
@@ -405,13 +399,13 @@ class ABLine with EquatableMixin {
       return null;
     }
 
-    final crossDistance = vehicle.lookAheadStartPosition.gbPosition.spherical
+    final crossDistance = vehicle.lookAheadStartPosition.spherical
         .crossTrackDistanceTo(start: points.inside, end: points.outside!);
 
     final secantBearing =
         points.inside.spherical.initialBearingTo(points.outside!);
 
-    return vehicle.lookAheadStartPosition.gbPosition.spherical.destinationPoint(
+    return vehicle.lookAheadStartPosition.spherical.destinationPoint(
       distance: crossDistance,
       bearing: secantBearing - 90,
     );
@@ -437,12 +431,10 @@ class ABLine with EquatableMixin {
       return (best: points.inside, worst: null);
     }
 
-    final vehicleAlongDistance = vehicle
-        .lookAheadStartPosition.gbPosition.spherical
+    final vehicleAlongDistance = vehicle.lookAheadStartPosition.spherical
         .alongTrackDistanceTo(start: points.inside, end: points.outside!);
 
-    final vehicleToLineDistance = vehicle
-        .lookAheadStartPosition.gbPosition.spherical
+    final vehicleToLineDistance = vehicle.lookAheadStartPosition.spherical
         .crossTrackDistanceTo(start: points.inside, end: points.outside!);
 
     final projectionToCircleDistance =
@@ -487,11 +479,10 @@ class ABLine with EquatableMixin {
     required Vehicle vehicle,
     required double lookAheadDistance,
   }) {
-    final angle =
-        vehicle.lookAheadStartPosition.gbPosition.spherical.initialBearingTo(
-              findLookAheadCirclePoints(vehicle, lookAheadDistance).best,
-            ) -
-            vehicle.bearing;
+    final angle = vehicle.lookAheadStartPosition.spherical.initialBearingTo(
+          findLookAheadCirclePoints(vehicle, lookAheadDistance).best,
+        ) -
+        vehicle.bearing;
 
     final steeringAngle = atan(
           2 * vehicle.wheelBase * sin(angle * pi / 180) / lookAheadDistance,

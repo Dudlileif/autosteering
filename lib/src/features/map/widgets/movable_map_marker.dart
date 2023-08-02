@@ -1,7 +1,7 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:geobase/geobase.dart';
 
 /// A movable map marker used to edit the position of points in editable paths.
 class MovableMapMarker extends StatefulWidget {
@@ -28,10 +28,10 @@ class MovableMapMarker extends StatefulWidget {
   });
 
   /// Position of the marker
-  final LatLng point;
+  final Geographic point;
 
   /// What to do when the marker is moved.
-  final void Function(LatLng position) onMoved;
+  final void Function(Geographic position) onMoved;
 
   /// The radius of the marker.
   final double radius;
@@ -56,9 +56,10 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
     var radiusToUse = widget.radius;
 
     if (widget.useRadiusInMeter) {
-      final offset = map.getOffsetFromOrigin(widget.point);
-      final r = widget.point.offset(widget.radius, 180);
-      final delta = offset - map.getOffsetFromOrigin(r);
+      final offset = map.getOffsetFromOrigin(widget.point.latLng);
+      final r = widget.point.spherical
+          .destinationPoint(distance: widget.radius, bearing: 180);
+      final delta = offset - map.getOffsetFromOrigin(r.latLng);
       radiusToUse = delta.distance;
     }
 
@@ -80,7 +81,7 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
 
         final position = map.pointToLatLng(point);
 
-        widget.onMoved(position);
+        widget.onMoved(position.gbPosition);
       },
       feedback: MouseRegion(
         cursor: SystemMouseCursors.move,

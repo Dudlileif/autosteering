@@ -5,6 +5,7 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geobase/geobase.dart';
 
 /// A combination layer for debugging a Dubins path between two points.
 class DubinsPathDebugLayer extends ConsumerWidget {
@@ -37,25 +38,25 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                 circles: [
                   if (showTurningCricles) ...[
                     CircleMarker(
-                      point: dubinsPath.startRightCircleCenter,
+                      point: dubinsPath.startRightCircleCenter.latLng,
                       radius: minTurningRadius,
                       useRadiusInMeter: true,
                       color: Colors.pink.withOpacity(0.3),
                     ),
                     CircleMarker(
-                      point: dubinsPath.startLeftCircleCenter,
+                      point: dubinsPath.startLeftCircleCenter.latLng,
                       radius: minTurningRadius,
                       useRadiusInMeter: true,
                       color: Colors.grey.withOpacity(0.3),
                     ),
                     CircleMarker(
-                      point: dubinsPath.endLeftCircleCenter,
+                      point: dubinsPath.endLeftCircleCenter.latLng,
                       radius: minTurningRadius,
                       useRadiusInMeter: true,
                       color: Colors.grey.withOpacity(0.3),
                     ),
                     CircleMarker(
-                      point: dubinsPath.endRightCircleCenter,
+                      point: dubinsPath.endRightCircleCenter.latLng,
                       radius: minTurningRadius,
                       useRadiusInMeter: true,
                       color: Colors.pink.withOpacity(0.3),
@@ -63,22 +64,33 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                     if ([DubinsPathType.lrl, DubinsPathType.rlr]
                         .contains(pathType))
                       CircleMarker(
-                        point:
-                            dubinsPath.pathData(pathType)!.middleCircleCenter!,
+                        point: dubinsPath
+                            .pathData(pathType)!
+                            .middleCircleCenter!
+                            .latLng,
                         radius: minTurningRadius,
                         useRadiusInMeter: true,
                         color: Colors.blue.withOpacity(0.3),
                       ),
                   ],
-                  ...wayPoints
-                      .map((e) => CircleMarker(point: e.position, radius: 5)),
+                  ...wayPoints.map(
+                    (e) => CircleMarker(point: e.position.latLng, radius: 5),
+                  ),
                   CircleMarker(
-                    point: dubinsPath.pathData(pathType)!.tangentStart.position,
+                    point: dubinsPath
+                        .pathData(pathType)!
+                        .tangentStart
+                        .position
+                        .latLng,
                     radius: 3,
                     color: Colors.black,
                   ),
                   CircleMarker(
-                    point: dubinsPath.pathData(pathType)!.tangentEnd.position,
+                    point: dubinsPath
+                        .pathData(pathType)!
+                        .tangentEnd
+                        .position
+                        .latLng,
                     radius: 3,
                     color: Colors.black,
                   ),
@@ -88,29 +100,38 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                 polylines: [
                   Polyline(
                     points: [
-                      dubinsPath.start.position,
-                      dubinsPath.start.position.offset(
-                        2,
-                        dubinsPath.start.bearing,
-                      )
+                      dubinsPath.start.position.latLng,
+                      dubinsPath.start.position.spherical
+                          .destinationPoint(
+                            distance: 2,
+                            bearing: dubinsPath.start.bearing,
+                          )
+                          .latLng
                     ],
                     color: Colors.blue,
                     strokeWidth: 5,
                   ),
                   Polyline(
                     points: [
-                      dubinsPath.end.position,
-                      dubinsPath.end.position.offset(
-                        2,
-                        dubinsPath.end.bearing,
-                      )
+                      dubinsPath.end.position.latLng,
+                      dubinsPath.end.position.spherical
+                          .destinationPoint(
+                            distance: 2,
+                            bearing: dubinsPath.end.bearing,
+                          )
+                          .latLng
                     ],
                     color: Colors.red,
                     strokeWidth: 5,
                   ),
                   ...wayPoints.map(
                     (e) => Polyline(
-                      points: [e.position, e.position.offset(0.5, e.bearing)],
+                      points: [
+                        e.position.latLng,
+                        e.position.spherical
+                            .destinationPoint(distance: 0.5, bearing: e.bearing)
+                            .latLng
+                      ],
                       strokeWidth: 2,
                     ),
                   ),
@@ -119,7 +140,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
               MarkerLayer(
                 markers: [
                   Marker(
-                    point: dubinsPath.start.position,
+                    point: dubinsPath.start.position.latLng,
                     builder: (context) => MovableMapMarker(
                       point: dubinsPath.start.position,
                       onMoved: (position) => ref
@@ -132,12 +153,14 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                     ),
                   ),
                   Marker(
-                    point: dubinsPath.end.position,
+                    point: dubinsPath.end.position.latLng,
                     builder: (context) => MovableMapMarker(
                       point: dubinsPath.end.position,
                       onMoved: (position) => ref
                           .read(dubinsPathDebugEndPointProvider.notifier)
-                          .update(dubinsPath.end.copyWith(position: position)),
+                          .update(
+                            dubinsPath.end.copyWith(position: position),
+                          ),
                       radius: 5,
                       color: Colors.red,
                     ),
@@ -159,7 +182,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
           markers: [
             if (start != null)
               Marker(
-                point: start.position,
+                point: start.position.latLng,
                 builder: (context) => MovableMapMarker(
                   point: start.position,
                   onMoved: (position) => ref
@@ -171,7 +194,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
               ),
             if (end != null)
               Marker(
-                point: end.position,
+                point: end.position.latLng,
                 builder: (context) => MovableMapMarker(
                   point: end.position,
                   onMoved: (position) => ref

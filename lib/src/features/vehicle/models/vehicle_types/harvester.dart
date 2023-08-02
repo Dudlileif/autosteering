@@ -34,16 +34,16 @@ final class Harvester extends AxleSteeredVehicle {
 
   /// The position of the center of the rear axle.
   @override
-  LatLng get solidAxlePosition => position.offset(
-        solidAxleDistance,
-        normalizeBearing(bearing),
+  Geographic get solidAxlePosition => position.spherical.destinationPoint(
+        distance: solidAxleDistance,
+        bearing: bearing.wrap360(),
       );
 
   /// The position of the center of the front axle.
   @override
-  LatLng get steeringAxlePosition => position.offset(
-        solidAxleDistance - wheelBase,
-        normalizeBearing(bearing),
+  Geographic get steeringAxlePosition => position.spherical.destinationPoint(
+        distance: solidAxleDistance - wheelBase,
+        bearing: bearing.wrap360(),
       );
 
   /// The position of the pursuit axle in the the vehicle direction. Used when
@@ -52,9 +52,10 @@ final class Harvester extends AxleSteeredVehicle {
   /// The mirror position of the steering axle from the solid axle is used
   /// when the harvester is driving forward.
   @override
-  LatLng get pursuitAxlePosition => switch (isReversing) {
+  Geographic get pursuitAxlePosition => switch (isReversing) {
         true => steeringAxlePosition,
-        false => solidAxlePosition.offset(wheelBase, bearing),
+        false => solidAxlePosition.spherical
+            .destinationPoint(distance: wheelBase, bearing: bearing),
       };
 
   /// The angle of the left steering wheel when using Ackermann steering.
@@ -71,7 +72,7 @@ final class Harvester extends AxleSteeredVehicle {
   /// parameters/variables altered.
   @override
   Harvester copyWith({
-    LatLng? position,
+    Geographic? position,
     double? antennaHeight,
     double? minTurningRadius,
     double? steeringAngleMax,

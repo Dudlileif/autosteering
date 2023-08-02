@@ -76,59 +76,59 @@ final class ArticulatedTractor extends Vehicle {
   double get wheelBase => pivotToFrontAxle + pivotToRearAxle;
 
   /// The position of the vehicle articulation pivot point.
-  LatLng get pivotPosition => position.offset(
-        pivotToAntennaDistance,
-        normalizeBearing(bearing - 180 + steeringAngle / 2),
+  Geographic get pivotPosition => position.spherical.destinationPoint(
+        distance: pivotToAntennaDistance,
+        bearing: (bearing - 180 + steeringAngle / 2).wrap360(),
       );
 
   /// Where the look ahead distance calculation should start.
   @override
-  LatLng get lookAheadStartPosition => pivotPosition;
+  Geographic get lookAheadStartPosition => pivotPosition;
 
   /// The angle from the pivot point to the front axle.
-  double get frontAxleAngle => normalizeBearing(bearing + steeringAngle / 2);
+  double get frontAxleAngle => (bearing + steeringAngle / 2).wrap360();
 
   /// The position of the front axle center point.
-  LatLng get frontAxlePosition => pivotPosition.offset(
-        pivotToFrontAxle,
-        frontAxleAngle,
+  Geographic get frontAxlePosition => pivotPosition.spherical.destinationPoint(
+        distance: pivotToFrontAxle,
+        bearing: frontAxleAngle,
       );
 
   /// The angle from the pivot point to the rear axle.
-  double get rearAxleAngle =>
-      normalizeBearing(bearing + 180 - steeringAngle / 2);
+  double get rearAxleAngle => (bearing + 180 - steeringAngle / 2).wrap360();
 
   /// The position of the front axle center point.
-  LatLng get rearAxlePosition => pivotPosition.offset(
-        pivotToRearAxle,
-        rearAxleAngle,
+  Geographic get rearAxlePosition => pivotPosition.spherical.destinationPoint(
+        distance: pivotToRearAxle,
+        bearing: rearAxleAngle,
       );
 
   @override
-  LatLng? get hitchFrontFixedPoint =>
+  Geographic? get hitchFrontFixedPoint =>
       switch (frontAxleToHitchDistance != null) {
-        true => frontAxlePosition.offset(
-            frontAxleToHitchDistance!,
-            frontAxleAngle,
+        true => frontAxlePosition.spherical.destinationPoint(
+            distance: frontAxleToHitchDistance!,
+            bearing: frontAxleAngle,
           ),
         false => null,
       };
 
   @override
-  LatLng? get hitchRearFixedPoint => switch (rearAxleToHitchDistance != null) {
-        true => rearAxlePosition.offset(
-            rearAxleToHitchDistance!,
-            rearAxleAngle,
+  Geographic? get hitchRearFixedPoint =>
+      switch (rearAxleToHitchDistance != null) {
+        true => rearAxlePosition.spherical.destinationPoint(
+            distance: rearAxleToHitchDistance!,
+            bearing: rearAxleAngle,
           ),
         false => null,
       };
 
   @override
-  LatLng? get hitchRearTowbarPoint =>
+  Geographic? get hitchRearTowbarPoint =>
       switch (rearAxleToTowbarDistance != null) {
-        true => rearAxlePosition.offset(
-            rearAxleToTowbarDistance!,
-            rearAxleAngle,
+        true => rearAxlePosition.spherical.destinationPoint(
+            distance: rearAxleToTowbarDistance!,
+            bearing: rearAxleAngle,
           ),
         false => null,
       };
@@ -139,10 +139,10 @@ final class ArticulatedTractor extends Vehicle {
   /// The mirror position of the antenna position from the pivot point is used
   /// when the tractor is reversing.
   @override
-  LatLng get pursuitAxlePosition => switch (isReversing) {
-        true => pivotPosition.offset(
-            pivotToAntennaDistance,
-            rearAxleAngle,
+  Geographic get pursuitAxlePosition => switch (isReversing) {
+        true => pivotPosition.spherical.destinationPoint(
+            distance: pivotToAntennaDistance,
+            bearing: rearAxleAngle,
           ),
         false => position,
       };
@@ -150,23 +150,23 @@ final class ArticulatedTractor extends Vehicle {
   /// Basic circle markers for showing the vehicle's steering related
   /// points.
   @override
-  List<CircleMarker> get steeringDebugMarkers => [
-        CircleMarker(
-          point: position,
+  List<map.CircleMarker> get steeringDebugMarkers => [
+        map.CircleMarker(
+          point: position.latLng,
           radius: 10,
         ),
-        CircleMarker(
-          point: rearAxlePosition,
+        map.CircleMarker(
+          point: rearAxlePosition.latLng,
           radius: 10,
           color: Colors.red,
         ),
-        CircleMarker(
-          point: frontAxlePosition,
+        map.CircleMarker(
+          point: frontAxlePosition.latLng,
           radius: 10,
           color: Colors.blue,
         ),
-        CircleMarker(
-          point: pivotPosition,
+        map.CircleMarker(
+          point: pivotPosition.latLng,
           radius: 10,
           color: Colors.black,
         )
@@ -175,32 +175,32 @@ final class ArticulatedTractor extends Vehicle {
   /// Basic polylines for showing the vehicle's steering related
   /// points.
   @override
-  List<Polyline> get steeringDebugLines => [
-        Polyline(
+  List<map.Polyline> get steeringDebugLines => [
+        map.Polyline(
           points: [
-            rearAxlePosition,
-            turningRadiusCenter!,
+            rearAxlePosition.latLng,
+            turningRadiusCenter!.latLng,
           ],
           color: Colors.red,
         ),
-        Polyline(
+        map.Polyline(
           points: [
-            frontAxlePosition,
-            turningRadiusCenter!,
+            frontAxlePosition.latLng,
+            turningRadiusCenter!.latLng,
           ],
           color: Colors.blue,
         ),
-        Polyline(
+        map.Polyline(
           points: [
-            position,
-            turningRadiusCenter!,
+            position.latLng,
+            turningRadiusCenter!.latLng,
           ],
           color: Colors.green,
         ),
-        Polyline(
+        map.Polyline(
           points: [
-            pivotPosition,
-            turningRadiusCenter!,
+            pivotPosition.latLng,
+            turningRadiusCenter!.latLng,
           ],
           color: Colors.black,
         ),
@@ -231,28 +231,27 @@ final class ArticulatedTractor extends Vehicle {
 
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
-  LatLng? get turningRadiusCenter => currentTurningRadius != null
-      ? frontAxlePosition.offset(
-          currentTurningRadius!,
-          normalizeBearing(
-            switch (isTurningLeft) {
-              true => frontAxleAngle - 90,
-              false => frontAxleAngle + 90,
-            },
-          ),
+  Geographic? get turningRadiusCenter => currentTurningRadius != null
+      ? frontAxlePosition.spherical.destinationPoint(
+          distance: currentTurningRadius!,
+          bearing: switch (isTurningLeft) {
+            true => frontAxleAngle - 90,
+            false => frontAxleAngle + 90,
+          }
+              .wrap360(),
         )
       : null;
 
   /// The left front wheel polygon.
-  Polygon get leftFrontWheelPolygon => Polygon(
-        points: wheelPoints(),
+  map.Polygon get leftFrontWheelPolygon => map.Polygon(
+        points: wheelPoints().map((e) => e.latLng).toList(),
         isFilled: true,
         color: Colors.black,
       );
 
   /// The right front wheel polygon.
-  Polygon get rightFrontWheelPolygon => Polygon(
-        points: wheelPoints(left: false),
+  map.Polygon get rightFrontWheelPolygon => map.Polygon(
+        points: wheelPoints(left: false).map((e) => e.latLng).toList(),
         isFilled: true,
         color: Colors.black,
       );
@@ -261,52 +260,52 @@ final class ArticulatedTractor extends Vehicle {
   ///
   /// [left] is used to choose left (default, true) or right side (false).
   /// [rear] is used to choose front (default, false) or rear (true).
-  List<LatLng> wheelPoints({bool left = true, bool rear = false}) {
+  List<Geographic> wheelPoints({bool left = true, bool rear = false}) {
     final sign = left ? 1 : -1;
 
     final axleToCenterAngle = switch (rear) {
-      true => normalizeBearing(rearAxleAngle + 90 * sign),
-      false => normalizeBearing(frontAxleAngle - 90 * sign)
+      true => (rearAxleAngle + 90 * sign).wrap360(),
+      false => (frontAxleAngle - 90 * sign).wrap360()
     };
 
-    final innerCenterToInnerRearAngle = normalizeBearing(
-      axleToCenterAngle - 90 * sign,
-    );
+    final innerCenterToInnerRearAngle =
+        (axleToCenterAngle - 90 * sign).wrap360();
 
     final rearInnerToRearOuterAngle =
-        normalizeBearing(innerCenterToInnerRearAngle + 90 * sign);
+        (innerCenterToInnerRearAngle + 90 * sign).wrap360();
 
     final rearOuterToFrontOuterAngle =
-        normalizeBearing(rearInnerToRearOuterAngle + 90 * sign);
+        (rearInnerToRearOuterAngle + 90 * sign).wrap360();
 
     final frontOuterToFrontInnerAngle =
-        normalizeBearing(rearOuterToFrontOuterAngle + 90 * sign);
+        (rearOuterToFrontOuterAngle + 90 * sign).wrap360();
 
     final wheelInnerCenter = switch (rear) {
       true => rearAxlePosition,
       false => frontAxlePosition,
     }
-        .offset(
-      trackWidth / 2 -
-          (wheelWidth * numWheels + (numWheels - 1) * wheelSpacing) / 2,
-      axleToCenterAngle,
-    );
+        .spherical
+        .destinationPoint(
+          distance: trackWidth / 2 -
+              (wheelWidth * numWheels + (numWheels - 1) * wheelSpacing) / 2,
+          bearing: axleToCenterAngle,
+        );
 
-    final wheelInnerRear = wheelInnerCenter.offset(
-      wheelDiameter / 2,
-      innerCenterToInnerRearAngle,
+    final wheelInnerRear = wheelInnerCenter.spherical.destinationPoint(
+      distance: wheelDiameter / 2,
+      bearing: innerCenterToInnerRearAngle,
     );
-    final wheelOuterRear = wheelInnerRear.offset(
-      wheelWidth * numWheels + (numWheels - 1) * wheelSpacing,
-      rearInnerToRearOuterAngle,
+    final wheelOuterRear = wheelInnerRear.spherical.destinationPoint(
+      distance: wheelWidth * numWheels + (numWheels - 1) * wheelSpacing,
+      bearing: rearInnerToRearOuterAngle,
     );
-    final wheelOuterFront = wheelOuterRear.offset(
-      wheelDiameter,
-      rearOuterToFrontOuterAngle,
+    final wheelOuterFront = wheelOuterRear.spherical.destinationPoint(
+      distance: wheelDiameter,
+      bearing: rearOuterToFrontOuterAngle,
     );
-    final wheelInnerFront = wheelOuterFront.offset(
-      wheelWidth * numWheels + (numWheels - 1) * wheelSpacing,
-      frontOuterToFrontInnerAngle,
+    final wheelInnerFront = wheelOuterFront.spherical.destinationPoint(
+      distance: wheelWidth * numWheels + (numWheels - 1) * wheelSpacing,
+      bearing: frontOuterToFrontInnerAngle,
     );
 
     return [
@@ -318,22 +317,23 @@ final class ArticulatedTractor extends Vehicle {
   }
 
   /// The left rear wheel polygon.
-  Polygon get leftRearWheelPolygon => Polygon(
-        points: wheelPoints(rear: true),
+  map.Polygon get leftRearWheelPolygon => map.Polygon(
+        points: wheelPoints(rear: true).map((e) => e.latLng).toList(),
         isFilled: true,
         color: Colors.black,
       );
 
   /// The right rear wheel polygon.
-  Polygon get rightRearWheelPolygon => Polygon(
-        points: wheelPoints(left: false, rear: true),
+  map.Polygon get rightRearWheelPolygon => map.Polygon(
+        points:
+            wheelPoints(left: false, rear: true).map((e) => e.latLng).toList(),
         isFilled: true,
         color: Colors.black,
       );
 
   /// Polygons for drawing the wheels of the vehicle.
   @override
-  List<Polygon> get wheelPolygons => [
+  List<map.Polygon> get wheelPolygons => [
         leftFrontWheelPolygon,
         rightFrontWheelPolygon,
         leftRearWheelPolygon,
@@ -345,8 +345,8 @@ final class ArticulatedTractor extends Vehicle {
   /// Based on the current [steeringAngle], [velocity] and
   /// [currentTurningRadius].
   @override
-  Path<LatLng> get trajectory {
-    final points = <LatLng>[frontAxlePosition];
+  Path get trajectory {
+    final points = <Geographic>[frontAxlePosition];
 
     if (currentTurningRadius != null) {
       final minTurningCircumference = 2 *
@@ -392,107 +392,107 @@ final class ArticulatedTractor extends Vehicle {
           };
 
           points.add(
-            turningRadiusCenter!.offset(
-              currentTurningRadius!,
-              normalizeBearing(angle),
+            turningRadiusCenter!.spherical.destinationPoint(
+              distance: currentTurningRadius!,
+              bearing: angle.wrap360(),
             ),
           );
         }
       }
     } else {
       points.add(
-        position.offset(
-          isReversing ? -30 : 5 + 30,
-          normalizeBearing(bearing),
+        position.spherical.destinationPoint(
+          distance: isReversing ? -30 : 5 + 30,
+          bearing: bearing.wrap360(),
         ),
       );
     }
 
-    return Path()..addAll(points);
+    return Path()..addAll(points.map((e) => e.latLng).toList());
   }
 
   /// Polygons for visualizing the extent of the vehicle.
   @override
-  List<Polygon> get polygons {
-    final rearLeftCornerAngle = normalizeBearing(rearAxleAngle + 90);
-    final rearLeftCenter = rearAxlePosition.offset(
-      1,
-      rearLeftCornerAngle,
+  List<map.Polygon> get polygons {
+    final rearLeftCornerAngle = (rearAxleAngle + 90).wrap360();
+    final rearLeftCenter = rearAxlePosition.spherical.destinationPoint(
+      distance: 1,
+      bearing: rearLeftCornerAngle,
     );
     final rearLeftSide = [
-      rearLeftCenter.offset(
-        1,
-        normalizeBearing(rearLeftCornerAngle - 90),
+      rearLeftCenter.spherical.destinationPoint(
+        distance: 1,
+        bearing: (rearLeftCornerAngle - 90).wrap360(),
       ),
-      rearLeftCenter.offset(
-        1,
-        normalizeBearing(rearLeftCornerAngle + 90),
+      rearLeftCenter.spherical.destinationPoint(
+        distance: 1,
+        bearing: (rearLeftCornerAngle + 90).wrap360(),
       )
     ];
 
-    final rearRightCornerAngle = normalizeBearing(rearAxleAngle - 90);
-    final rearRightCenter = rearAxlePosition.offset(
-      1,
-      rearRightCornerAngle,
+    final rearRightCornerAngle = (rearAxleAngle - 90).wrap360();
+    final rearRightCenter = rearAxlePosition.spherical.destinationPoint(
+      distance: 1,
+      bearing: rearRightCornerAngle,
     );
     final rearRightSide = [
-      rearRightCenter.offset(
-        1,
-        normalizeBearing(rearRightCornerAngle - 90),
+      rearRightCenter.spherical.destinationPoint(
+        distance: 1,
+        bearing: (rearRightCornerAngle - 90).wrap360(),
       ),
-      rearRightCenter.offset(
-        1,
-        normalizeBearing(rearRightCornerAngle + 90),
+      rearRightCenter.spherical.destinationPoint(
+        distance: 1,
+        bearing: (rearRightCornerAngle + 90).wrap360(),
       )
     ];
 
-    final frontLeftCornerAngle = normalizeBearing(frontAxleAngle - 90);
-    final frontLeftCenter = frontAxlePosition.offset(
-      1,
-      frontLeftCornerAngle,
+    final frontLeftCornerAngle = (frontAxleAngle - 90).wrap360();
+    final frontLeftCenter = frontAxlePosition.spherical.destinationPoint(
+      distance: 1,
+      bearing: frontLeftCornerAngle,
     );
     final frontLeftSide = [
-      frontLeftCenter.offset(
-        1,
-        normalizeBearing(frontLeftCornerAngle - 90),
+      frontLeftCenter.spherical.destinationPoint(
+        distance: 1,
+        bearing: (frontLeftCornerAngle - 90).wrap360(),
       ),
-      frontLeftCenter.offset(
-        1,
-        normalizeBearing(frontLeftCornerAngle + 90),
+      frontLeftCenter.spherical.destinationPoint(
+        distance: 1,
+        bearing: (frontLeftCornerAngle + 90).wrap360(),
       )
     ];
 
-    final frontRightCornerAngle = normalizeBearing(frontAxleAngle + 90);
-    final frontRightCenter = frontAxlePosition.offset(
-      1,
-      frontRightCornerAngle,
+    final frontRightCornerAngle = (frontAxleAngle + 90).wrap360();
+    final frontRightCenter = frontAxlePosition.spherical.destinationPoint(
+      distance: 1,
+      bearing: frontRightCornerAngle,
     );
     final frontRightSide = [
-      frontRightCenter.offset(
-        1,
-        normalizeBearing(frontRightCornerAngle - 90),
+      frontRightCenter.spherical.destinationPoint(
+        distance: 1,
+        bearing: (frontRightCornerAngle - 90).wrap360(),
       ),
-      frontRightCenter.offset(
-        1,
-        normalizeBearing(frontRightCornerAngle + 90),
+      frontRightCenter.spherical.destinationPoint(
+        distance: 1,
+        bearing: (frontRightCornerAngle + 90).wrap360(),
       )
     ];
 
     return [
-      Polygon(
+      map.Polygon(
         points: [
-          pivotPosition,
-          ...frontLeftSide,
-          ...frontRightSide,
+          pivotPosition.latLng,
+          ...frontLeftSide.map((e) => e.latLng),
+          ...frontRightSide.map((e) => e.latLng),
         ],
         isFilled: true,
         color: Colors.yellow.withOpacity(0.5),
       ),
-      Polygon(
+      map.Polygon(
         points: [
-          pivotPosition,
-          ...rearRightSide,
-          ...rearLeftSide,
+          pivotPosition.latLng,
+          ...rearRightSide.map((e) => e.latLng),
+          ...rearLeftSide.map((e) => e.latLng),
         ],
         isFilled: true,
         color: Colors.yellow.withOpacity(0.5),
@@ -510,7 +510,7 @@ final class ArticulatedTractor extends Vehicle {
     double? frontAxleToHitchDistance,
     double? rearAxleToHitchDistance,
     double? rearAxleToTowbarDistance,
-    LatLng? position,
+    Geographic? position,
     double? antennaHeight,
     double? minTurningRadius,
     double? steeringAngleMax,

@@ -7,7 +7,7 @@ import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:geobase/geobase.dart';
 
 //TODO: look into making the simulation only return data similar to nmea from gps
 
@@ -173,7 +173,7 @@ class _VehicleSimulatorState {
   /// constant. We use this due to small errors when using the
   /// [vehicle].turningRadiusCenter as it would move around slightly as the
   /// vehicle is moving, and cause wrong calculations.
-  LatLng? turningCircleCenter;
+  Geographic? turningCircleCenter;
 
   /// Whether the simulator is receiving manual input.
   bool receivingManualInput = false;
@@ -254,7 +254,7 @@ class _VehicleSimulatorState {
     }
 
     // Update the vehicle position.
-    else if (message is ({LatLng position})) {
+    else if (message is ({Geographic position})) {
       vehicle?.position = message.position;
     }
     // Update the vehicle velocity
@@ -365,12 +365,12 @@ class _VehicleSimulatorState {
         switch (message.abLineMoveOffset.isNegative) {
           case true:
             abLine?.moveOffsetLeft(
-              vehicle!.pursuitAxlePosition.gbPosition,
+              vehicle!.pursuitAxlePosition,
               vehicle!.bearing,
             );
           case false:
             abLine?.moveOffsetRight(
-              vehicle!.pursuitAxlePosition.gbPosition,
+              vehicle!.pursuitAxlePosition,
               vehicle!.bearing,
             );
         }
@@ -568,24 +568,25 @@ class _VehicleSimulatorState {
               };
               // Projected solid axle position from the turning radius
               // center.
-              final solidAxlePositon = turningCircleCenter!.offset(
-                vehicle.currentTurningRadius!,
-                normalizeBearing(angle),
+              final solidAxlePositon =
+                  turningCircleCenter!.spherical.destinationPoint(
+                distance: vehicle.currentTurningRadius!,
+                bearing: angle.wrap360(),
               );
 
               // The bearing of the vehicle at the projected position.
-              final bearing = normalizeBearing(
-                switch (vehicle.isTurningLeft) {
-                  true => vehicle.bearing - turningCircleAngle,
-                  false => vehicle.bearing + turningCircleAngle,
-                },
-              );
+              final bearing = switch (vehicle.isTurningLeft) {
+                true => vehicle.bearing - turningCircleAngle,
+                false => vehicle.bearing + turningCircleAngle,
+              }
+                  .wrap360();
 
               // The vehicle center position, which is offset from the solid
               // axle position.
-              final vehiclePosition = solidAxlePositon.offset(
-                vehicle.solidAxleDistance,
-                switch (vehicle) {
+              final vehiclePosition =
+                  solidAxlePositon.spherical.destinationPoint(
+                distance: vehicle.solidAxleDistance,
+                bearing: switch (vehicle) {
                   Tractor() => bearing,
                   Harvester() => bearing + 180,
                 },
@@ -609,14 +610,14 @@ class _VehicleSimulatorState {
 
               // The current angle from the turning radius center to the
               // front axle center.
-              final turningCenterToFrontAxleAngle = normalizeBearing(
-                switch (vehicle.isTurningLeft) {
-                  // Turning left
-                  true => vehicle.frontAxleAngle + 90,
-                  // Turning right
-                  false => vehicle.frontAxleAngle - 90,
-                },
-              );
+              final turningCenterToFrontAxleAngle =
+                  switch (vehicle.isTurningLeft) {
+                // Turning left
+                true => vehicle.frontAxleAngle + 90,
+                // Turning right
+                false => vehicle.frontAxleAngle - 90,
+              }
+                      .wrap360();
 
               // The angle from the turning circle center to the projected front
               // axle position.
@@ -629,9 +630,10 @@ class _VehicleSimulatorState {
 
               // Projected vehicle front axle position from the turning radius
               // center.
-              final frontAxlePosition = turningCircleCenter!.offset(
-                vehicle.currentTurningRadius!,
-                projectedFrontAxleAngle,
+              final frontAxlePosition =
+                  turningCircleCenter!.spherical.destinationPoint(
+                distance: vehicle.currentTurningRadius!,
+                bearing: projectedFrontAxleAngle,
               );
 
               // The bearing of the front body of the vehicle at the projected
@@ -645,9 +647,11 @@ class _VehicleSimulatorState {
 
               // The vehicle antenna position, projected from the front axle
               // position.
-              final vehiclePosition = frontAxlePosition.offset(
-                vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
-                frontBodyBearing - 180 + vehicle.steeringAngle / 2,
+              final vehiclePosition =
+                  frontAxlePosition.spherical.destinationPoint(
+                distance:
+                    vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
+                bearing: frontBodyBearing - 180 + vehicle.steeringAngle / 2,
               );
 
               // Update the vehicle state.
@@ -660,9 +664,9 @@ class _VehicleSimulatorState {
 
       // Going straight.
       else {
-        final position = vehicle!.position.offset(
-          vehicle!.velocity * period,
-          vehicle!.bearing,
+        final position = vehicle!.position.spherical.destinationPoint(
+          distance: vehicle!.velocity * period,
+          bearing: vehicle!.bearing,
         );
 
         // Update the vehicle state.
@@ -677,7 +681,8 @@ class _VehicleSimulatorState {
   void updateGauges() {
     // Distance
     if (vehicle != null && prevVehicle != null) {
-      final movedDistance = vehicle!.position.distanceTo(prevVehicle!.position);
+      final movedDistance =
+          vehicle!.position.spherical.distanceTo(prevVehicle!.position);
 
       // Filter out too large distances
       if (movedDistance < 5) {
@@ -700,16 +705,15 @@ class _VehicleSimulatorState {
         (vehicle?.velocity.abs() ?? 1) > 0.5) {
       // Discard bearing changes over 10 degrees for one simulation step.
       if (bearingDifference(prevVehicle!.bearing, vehicle!.bearing) < 10) {
-        gaugeBearing = normalizeBearing(
-          switch (vehicle!.isReversing) {
-            true => vehicle!.position.bearingTo(
-                prevVehicle!.position,
-              ),
-            false => prevVehicle!.position.bearingTo(
-                vehicle!.position,
-              ),
-          },
-        );
+        gaugeBearing = switch (vehicle!.isReversing) {
+          true => vehicle!.position.spherical.finalBearingTo(
+              prevVehicle!.position,
+            ),
+          false => prevVehicle!.position.spherical.finalBearingTo(
+              vehicle!.position,
+            ),
+        }
+            .wrap360();
       }
     }
   }

@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/utils/position_projection_extensions.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:collection/collection.dart';
@@ -23,8 +24,8 @@ class EditablePathLayer extends ConsumerWidget {
                 polylines: [
                   Polyline(
                     points: [
-                      ...points.map((point) => point.position),
-                      if (closedPath) points.first.position
+                      ...points.map((point) => point.position.latLng),
+                      if (closedPath) points.first.position.latLng
                     ],
                   )
                 ],
@@ -47,9 +48,9 @@ class EditablePathLayer extends ConsumerWidget {
                               .transform(0.5);
 
                       return Marker(
-                        point: midPoint.position,
+                        point: midPoint.position.latLng,
                         builder: (context) => AddPointMarker(
-                          point: midPoint.position,
+                          point: midPoint.position.latLng,
                           radius: 5,
                           onTap: () => ref
                               .read(
@@ -65,7 +66,7 @@ class EditablePathLayer extends ConsumerWidget {
                   ),
                   ...points.mapIndexed(
                     (index, point) => Marker(
-                      point: point.position,
+                      point: point.position.latLng,
                       builder: (context) => GestureDetector(
                         onSecondaryTap: () => ref
                             .read(finishedPathRecordingListProvider.notifier)

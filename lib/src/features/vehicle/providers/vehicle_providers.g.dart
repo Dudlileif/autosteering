@@ -6,7 +6,7 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainVehicleHash() => r'4b048c8a11fdcc934eadf15b19b6d328391d1072';
+String _$mainVehicleHash() => r'81ef89c0875797227d48ba861117365ed1af4161';
 
 /// The main provider for the vehicle state.
 ///
@@ -59,7 +59,7 @@ final vehicleVelocityProvider =
 );
 
 typedef _$VehicleVelocity = AutoDisposeNotifier<double>;
-String _$vehicleBearingHash() => r'30845597e73573427f953aea48ba36e59f4b6600';
+String _$vehicleBearingHash() => r'3631ee582bf4d5a582f69897529d4aba141f61ab';
 
 /// A provider for the vehicle's bearing gauge.
 ///

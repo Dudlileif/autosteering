@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -20,7 +21,8 @@ class FinishedPathLayer extends ConsumerWidget {
                 polylineCulling: true,
                 polylines: [
                   Polyline(
-                    points: points.map((point) => point.position).toList(),
+                    points:
+                        points.map((point) => point.position.latLng).toList(),
                   )
                 ],
               ),
@@ -28,7 +30,7 @@ class FinishedPathLayer extends ConsumerWidget {
                 circles: [
                   ...points.map(
                     (point) => CircleMarker(
-                      point: point.position,
+                      point: point.position.latLng,
                       radius: 5,
                     ),
                   ),

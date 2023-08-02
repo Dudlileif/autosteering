@@ -1,9 +1,7 @@
-import 'package:agopengps_flutter/src/features/common/utils/position_projection_extensions.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ab_line_debug_providers.g.dart';
@@ -73,20 +71,20 @@ class ABLineDebugNumPointsBehind extends _$ABLineDebugNumPointsBehind {
 @Riverpod(keepAlive: true)
 class ABLinePointA extends _$ABLinePointA {
   @override
-  LatLng? build() => null;
+  Geographic? build() => null;
 
   /// Updates [state] to [point].
-  void update(LatLng point) => Future(() => state = point);
+  void update(Geographic point) => Future(() => state = point);
 }
 
 /// A provider for the ending point B of an AB-line.
 @Riverpod(keepAlive: true)
 class ABLinePointB extends _$ABLinePointB {
   @override
-  LatLng? build() => null;
+  Geographic? build() => null;
 
   /// Updates [state] to [point].
-  void update(LatLng point) => Future(() => state = point);
+  void update(Geographic point) => Future(() => state = point);
 }
 
 /// A provider for the width of an AB-line.
@@ -109,8 +107,8 @@ class ABLineDebug extends _$ABLineDebug {
 
     if (a != null && b != null) {
       return ABLine(
-        start: a.gbPosition,
-        end: b.gbPosition,
+        start: a,
+        end: b,
         width: ref.watch(aBLineWidthProvider),
       );
     }
@@ -156,8 +154,7 @@ double? abLinePerpendicularDistance(AbLinePerpendicularDistanceRef ref) =>
     }
         ?.signedPerpendicularDistanceToCurrentLine(
       point: ref.watch(
-        mainVehicleProvider
-            .select((vehicle) => vehicle.pursuitAxlePosition.gbPosition),
+        mainVehicleProvider.select((vehicle) => vehicle.pursuitAxlePosition),
       ),
       heading:
           ref.watch(mainVehicleProvider.select((vehicle) => vehicle.bearing)),

@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'vehicle_providers.g.dart';
@@ -13,7 +14,7 @@ part 'vehicle_providers.g.dart';
 class MainVehicle extends _$MainVehicle {
   @override
   Vehicle build() => Tractor(
-        position: ref.read(homePositionProvider),
+        position: ref.read(homePositionProvider).gbPosition,
         antennaHeight: 2.822,
         length: 4.358,
         width: 2.360,
@@ -40,7 +41,7 @@ class MainVehicle extends _$MainVehicle {
   }
 
   /// Set the position of the [state] to [value].
-  void setPositon(LatLng value) {
+  void setPositon(Geographic value) {
     if (value != state.position) {
       Future(() => state = state.copyWith(position: value));
     }
@@ -100,7 +101,7 @@ class VehicleBearing extends _$VehicleBearing {
 
   /// Update the [state] by adding [value].
   void update(double value) => Future(
-        () => state = normalizeBearing(((state * 10) + value) / (10 + 1)),
+        () => state = (((state * 10) + value) / (10 + 1)).wrap360(),
       );
 }
 

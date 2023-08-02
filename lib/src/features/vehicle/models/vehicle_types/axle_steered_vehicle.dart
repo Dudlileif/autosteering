@@ -1,8 +1,12 @@
 part of '../vehicle.dart';
 
 /// A base class for vehicles that steers with either a front or rear axle.
+///
+/// The steering axle is based on Ackermann geometry.
 sealed class AxleSteeredVehicle extends Vehicle {
   /// A base class for vehicles that steers with either a front or rear axle.
+  ///
+  /// The steering axle is based on Ackermann geometry.
   AxleSteeredVehicle({
     required this.wheelBase,
     required this.solidAxleDistance,
@@ -73,58 +77,60 @@ sealed class AxleSteeredVehicle extends Vehicle {
   double solidAxleWheelWidth;
 
   /// The position of the center of the rear axle.
-  LatLng get solidAxlePosition;
+  Geographic get solidAxlePosition;
 
   /// The position of the center of the front axle.
-  LatLng get steeringAxlePosition;
+  Geographic get steeringAxlePosition;
 
   @override
-  LatLng? get hitchFrontFixedPoint =>
+  Geographic? get hitchFrontFixedPoint =>
       switch (solidAxleToFrontHitchDistance != null) {
-        true =>
-          solidAxlePosition.offset(solidAxleToFrontHitchDistance!, bearing),
-        false => null,
-      };
-
-  @override
-  LatLng? get hitchRearFixedPoint =>
-      switch (solidAxleToRearHitchDistance != null) {
-        true => solidAxlePosition.offset(
-            solidAxleToRearHitchDistance!,
-            bearing + 180,
+        true => solidAxlePosition.spherical.destinationPoint(
+            distance: solidAxleToFrontHitchDistance!,
+            bearing: bearing,
           ),
         false => null,
       };
 
   @override
-  LatLng? get hitchRearTowbarPoint =>
+  Geographic? get hitchRearFixedPoint =>
+      switch (solidAxleToRearHitchDistance != null) {
+        true => solidAxlePosition.spherical.destinationPoint(
+            distance: solidAxleToRearHitchDistance!,
+            bearing: bearing + 180,
+          ),
+        false => null,
+      };
+
+  @override
+  Geographic? get hitchRearTowbarPoint =>
       switch (solidAxleToRearTowbarDistance != null) {
-        true => solidAxlePosition.offset(
-            solidAxleToRearTowbarDistance!,
-            bearing + 180,
+        true => solidAxlePosition.spherical.destinationPoint(
+            distance: solidAxleToRearTowbarDistance!,
+            bearing: bearing + 180,
           ),
         false => null,
       };
 
   /// Where the look ahead distance calculation should start.
   @override
-  LatLng get lookAheadStartPosition => solidAxlePosition;
+  Geographic get lookAheadStartPosition => solidAxlePosition;
 
   /// Basic circle markers for showing the vehicle's Ackermann related
   /// points.
   @override
-  List<CircleMarker> get steeringDebugMarkers => [
-        CircleMarker(
-          point: position,
+  List<map.CircleMarker> get steeringDebugMarkers => [
+        map.CircleMarker(
+          point: position.latLng,
           radius: 10,
         ),
-        CircleMarker(
-          point: solidAxlePosition,
+        map.CircleMarker(
+          point: solidAxlePosition.latLng,
           radius: 10,
           color: Colors.red,
         ),
-        CircleMarker(
-          point: steeringAxlePosition,
+        map.CircleMarker(
+          point: steeringAxlePosition.latLng,
           radius: 10,
           color: Colors.blue,
         )
@@ -133,25 +139,25 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// Basic polylines for showing the vehicle's steering related
   /// points.
   @override
-  List<Polyline> get steeringDebugLines => [
-        Polyline(
+  List<map.Polyline> get steeringDebugLines => [
+        map.Polyline(
           points: [
-            solidAxlePosition,
-            turningRadiusCenter!,
+            solidAxlePosition.latLng,
+            turningRadiusCenter!.latLng,
           ],
           color: Colors.red,
         ),
-        Polyline(
+        map.Polyline(
           points: [
-            steeringAxlePosition,
-            turningRadiusCenter!,
+            steeringAxlePosition.latLng,
+            turningRadiusCenter!.latLng,
           ],
           color: Colors.blue,
         ),
-        Polyline(
+        map.Polyline(
           points: [
-            position,
-            turningRadiusCenter!,
+            position.latLng,
+            turningRadiusCenter!.latLng,
           ],
           color: Colors.green,
         ),
@@ -189,21 +195,20 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
-  LatLng? get turningRadiusCenter => currentTurningRadius != null
-      ? solidAxlePosition.offset(
-          currentTurningRadius!,
-          normalizeBearing(
-            switch (isTurningLeft) {
-              true => bearing - 90,
-              false => bearing + 90
-            },
-          ),
+  Geographic? get turningRadiusCenter => currentTurningRadius != null
+      ? solidAxlePosition.spherical.destinationPoint(
+          distance: currentTurningRadius!,
+          bearing: switch (isTurningLeft) {
+            true => bearing - 90,
+            false => bearing + 90
+          }
+              .wrap360(),
         )
       : null;
 
   /// The bounds of the left steering wheel, or the right steering wheel if
   /// [left] is set to false.
-  List<LatLng> wheelPoints({bool left = true, bool steering = true}) {
+  List<Geographic> wheelPoints({bool left = true, bool steering = true}) {
     final wheelDiameter = switch (steering) {
       true => steeringAxleWheelDiameter,
       false => solidAxleWheelDiameter,
@@ -218,48 +223,48 @@ sealed class AxleSteeredVehicle extends Vehicle {
     final steeringWheelAngle =
         left ? leftSteeringWheelAngle : rightSteeringWheelAngle;
 
-    final axleToCenterAngle = normalizeBearing(bearing - (90 * sign));
+    final axleToCenterAngle = (bearing - (90 * sign)).wrap360();
 
-    final innerCenterToInnerRearAngle = normalizeBearing(
-      switch (steering) {
-        true => axleToCenterAngle + steeringWheelAngle - 90 * sign,
-        false => axleToCenterAngle - 90 * sign,
-      },
-    );
+    final innerCenterToInnerRearAngle = switch (steering) {
+      true => axleToCenterAngle + steeringWheelAngle - 90 * sign,
+      false => axleToCenterAngle - 90 * sign,
+    }
+        .wrap360();
 
     final innerRearToOuterRearAngle =
-        normalizeBearing(innerCenterToInnerRearAngle + (90 * sign));
+        (innerCenterToInnerRearAngle + (90 * sign)).wrap360();
 
     final outerRearToOuterFrontAngle =
-        normalizeBearing(innerRearToOuterRearAngle + (90 * sign));
+        (innerRearToOuterRearAngle + (90 * sign)).wrap360();
 
     final outerFrontToInnerFrontAngle =
-        normalizeBearing(outerRearToOuterFrontAngle + (90 * sign));
+        (outerRearToOuterFrontAngle + (90 * sign)).wrap360();
 
     final wheelInnerCenter = switch (steering) {
       true => steeringAxlePosition,
       false => solidAxlePosition,
     }
-        .offset(
-      trackWidth / 2 - wheelWidth / 2,
-      axleToCenterAngle,
-    );
+        .spherical
+        .destinationPoint(
+          distance: trackWidth / 2 - wheelWidth / 2,
+          bearing: axleToCenterAngle,
+        );
 
-    final wheelInnerRear = wheelInnerCenter.offset(
-      wheelDiameter / 2,
-      innerCenterToInnerRearAngle,
+    final wheelInnerRear = wheelInnerCenter.spherical.destinationPoint(
+      distance: wheelDiameter / 2,
+      bearing: innerCenterToInnerRearAngle,
     );
-    final wheelOuterRear = wheelInnerRear.offset(
-      wheelWidth,
-      innerRearToOuterRearAngle,
+    final wheelOuterRear = wheelInnerRear.spherical.destinationPoint(
+      distance: wheelWidth,
+      bearing: innerRearToOuterRearAngle,
     );
-    final wheelOuterFront = wheelOuterRear.offset(
-      wheelDiameter,
-      outerRearToOuterFrontAngle,
+    final wheelOuterFront = wheelOuterRear.spherical.destinationPoint(
+      distance: wheelDiameter,
+      bearing: outerRearToOuterFrontAngle,
     );
-    final wheelInnerFront = wheelOuterFront.offset(
-      wheelWidth,
-      outerFrontToInnerFrontAngle,
+    final wheelInnerFront = wheelOuterFront.spherical.destinationPoint(
+      distance: wheelWidth,
+      bearing: outerFrontToInnerFrontAngle,
     );
 
     return [
@@ -271,41 +276,43 @@ sealed class AxleSteeredVehicle extends Vehicle {
   }
 
   /// The left steering wheel polygon.
-  Polygon get leftSteeringWheelPolygon => Polygon(
-        points: wheelPoints(),
+  map.Polygon get leftSteeringWheelPolygon => map.Polygon(
+        points: wheelPoints().map((e) => e.latLng).toList(),
         isFilled: true,
         color: Colors.black,
       );
 
   /// The right steering wheel polygon.
-  Polygon get rightSteeringWheelPolygon => Polygon(
-        points: wheelPoints(left: false),
+  map.Polygon get rightSteeringWheelPolygon => map.Polygon(
+        points: wheelPoints(left: false).map((e) => e.latLng).toList(),
+        isFilled: true,
+        color: Colors.black,
+      );
+
+  /// The left solid axle wheel polygon.
+  map.Polygon get leftSolidAxleWheelPolygon => map.Polygon(
+        points: wheelPoints(steering: false).map((e) => e.latLng).toList(),
+        isFilled: true,
+        color: Colors.black,
+      );
+
+  /// The right solid axle wheel polygon.
+  map.Polygon get rightSolidAxleWheelPolygon => map.Polygon(
+        points: wheelPoints(left: false, steering: false)
+            .map((e) => e.latLng)
+            .toList(),
         isFilled: true,
         color: Colors.black,
       );
 
   /// Polygons for drawing the wheels of the vehicle.
   @override
-  List<Polygon> get wheelPolygons => [
+  List<map.Polygon> get wheelPolygons => [
         leftSteeringWheelPolygon,
         rightSteeringWheelPolygon,
         leftSolidAxleWheelPolygon,
         rightSolidAxleWheelPolygon,
       ];
-
-  /// The left solid axle wheel polygon.
-  Polygon get leftSolidAxleWheelPolygon => Polygon(
-        points: wheelPoints(steering: false),
-        isFilled: true,
-        color: Colors.black,
-      );
-
-  /// The right solid axle wheel polygon.
-  Polygon get rightSolidAxleWheelPolygon => Polygon(
-        points: wheelPoints(left: false, steering: false),
-        isFilled: true,
-        color: Colors.black,
-      );
 
   /// The projected trajectory for the moving vehicle.
   ///
@@ -313,7 +320,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// [currentTurningRadius].
   @override
   Path get trajectory {
-    final points = <LatLng>[solidAxlePosition];
+    final points = <Geographic>[solidAxlePosition];
 
     if (currentTurningRadius != null) {
       final minTurningCircumference = 2 *
@@ -362,23 +369,23 @@ sealed class AxleSteeredVehicle extends Vehicle {
           };
 
           points.add(
-            turningRadiusCenter!.offset(
-              currentTurningRadius!,
-              normalizeBearing(angle),
+            turningRadiusCenter!.spherical.destinationPoint(
+              distance: currentTurningRadius!,
+              bearing: (angle).wrap360(),
             ),
           );
         }
       }
     } else {
       points.add(
-        solidAxlePosition.offset(
-          isReversing ? -30 : 5 + 30,
-          normalizeBearing(bearing),
+        solidAxlePosition.spherical.destinationPoint(
+          distance: isReversing ? -30 : 5 + 30,
+          bearing: (bearing).wrap360(),
         ),
       );
     }
 
-    return Path()..addAll(points);
+    return Path()..addAll(points.map((e) => e.latLng).toList());
   }
 
   /// Props used for checking for equality.
@@ -395,51 +402,46 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// The angle to north-west point of the max extent/bounds of the vehicle
   /// when it points to the north (0 degrees).
-  double get northWestAngle => normalizeBearing(
-        asin((width / 2) / centerToCornerDistance) * 360 / (2 * pi),
-      );
+  double get northWestAngle =>
+      (asin((width / 2) / centerToCornerDistance) * 360 / (2 * pi)).wrap360();
 
   /// The angle to north-east point of the max extent/bounds of the vehicle
   /// when it points to the north (0 degrees).
-  double get northEastAngle => normalizeBearing(
-        360 - northWestAngle,
-      );
+  double get northEastAngle => (360 - northWestAngle).wrap360();
 
   /// The bearing for the front left corner of the max extent/bounds of the
   /// vehicle with regards to the [bearing].
-  double get frontLeftBearing => normalizeBearing(bearing - northWestAngle);
+  double get frontLeftBearing => (bearing - northWestAngle).wrap360();
 
   /// The bearing for the front right corner of the max extent/bounds of the
   /// vehicle with regards to the [bearing].
-  double get frontRightBearing => normalizeBearing(bearing - northEastAngle);
+  double get frontRightBearing => (bearing - northEastAngle).wrap360();
 
   /// The bearing for the rear right corner of the max extent/bounds of the
   /// vehicle with regards to the [bearing].
-  double get rearRightBearing =>
-      normalizeBearing(bearing - (northWestAngle + 180));
+  double get rearRightBearing => (bearing - (northWestAngle + 180)).wrap360();
 
   /// The bearing for the rear left corner of the max extent/bounds of the
   /// vehicle with regards to the [bearing].
-  double get rearLeftBearing =>
-      normalizeBearing(bearing - (northEastAngle + 180));
+  double get rearLeftBearing => (bearing - (northEastAngle + 180)).wrap360();
 
   /// The max extent/bounds points of the vehicle. The [bearing] is followed.
-  List<LatLng> get points {
-    final frontLeft = position.offset(
-      centerToCornerDistance,
-      frontLeftBearing,
+  List<Geographic> get points {
+    final frontLeft = position.spherical.destinationPoint(
+      distance: centerToCornerDistance,
+      bearing: frontLeftBearing,
     );
-    final frontRight = position.offset(
-      centerToCornerDistance,
-      frontRightBearing,
+    final frontRight = position.spherical.destinationPoint(
+      distance: centerToCornerDistance,
+      bearing: frontRightBearing,
     );
-    final rearRight = position.offset(
-      centerToCornerDistance,
-      rearRightBearing,
+    final rearRight = position.spherical.destinationPoint(
+      distance: centerToCornerDistance,
+      bearing: rearRightBearing,
     );
-    final rearLeft = position.offset(
-      centerToCornerDistance,
-      rearLeftBearing,
+    final rearLeft = position.spherical.destinationPoint(
+      distance: centerToCornerDistance,
+      bearing: rearLeftBearing,
     );
 
     return [
@@ -452,9 +454,9 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// Polygons for visualizing the extent of the vehicle.
   @override
-  List<Polygon> get polygons => [
-        Polygon(
-          points: points,
+  List<map.Polygon> get polygons => [
+        map.Polygon(
+          points: points.map((e) => e.latLng).toList(),
           isFilled: true,
           color: Colors.yellow.withOpacity(0.5),
         )
@@ -464,7 +466,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// parameters/variables altered.
   @override
   AxleSteeredVehicle copyWith({
-    LatLng? position,
+    Geographic? position,
     double? antennaHeight,
     double? minTurningRadius,
     double? steeringAngleMax,

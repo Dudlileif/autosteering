@@ -36,68 +36,71 @@ class ABLineDebugLayer extends ConsumerWidget {
               Polyline(points: [abLine.start.latLng, abLine.end.latLng]),
               Polyline(
                 points: [
-                  vehicle.pursuitAxlePosition,
+                  vehicle.pursuitAxlePosition.latLng,
                   abLine
                       .currentPerpendicularIntersect(
-                        vehicle.pursuitAxlePosition.gbPosition,
+                        vehicle.pursuitAxlePosition,
                       )
                       .latLng,
                 ],
                 color: Colors.white,
               ),
-              Polyline(
-                color: Colors.black,
-                points: [
-                  vehicle.lookAheadStartPosition,
-                  if (abLine.vehicleToLookAheadLineProjection(
-                        vehicle,
-                        lookAheadDistance,
-                      ) !=
-                      null)
-                    abLine
-                        .vehicleToLookAheadLineProjection(
+              if (autoSteerEnabled)
+                Polyline(
+                  color: Colors.black,
+                  points: [
+                    vehicle.lookAheadStartPosition.latLng,
+                    if (abLine.vehicleToLookAheadLineProjection(
                           vehicle,
                           lookAheadDistance,
-                        )!
+                        ) !=
+                        null)
+                      abLine
+                          .vehicleToLookAheadLineProjection(
+                            vehicle,
+                            lookAheadDistance,
+                          )!
+                          .latLng,
+                    abLine
+                        .findLookAheadLinePoints(vehicle, lookAheadDistance)
+                        .inside
                         .latLng,
-                  abLine
-                      .findLookAheadLinePoints(vehicle, lookAheadDistance)
-                      .inside
-                      .latLng,
-                  if (abLine
+                    if (abLine
+                            .findLookAheadLinePoints(
+                              vehicle,
+                              lookAheadDistance,
+                            )
+                            .outside !=
+                        null)
+                      abLine
                           .findLookAheadLinePoints(
                             vehicle,
                             lookAheadDistance,
                           )
-                          .outside !=
-                      null)
+                          .outside!
+                          .latLng,
+                  ],
+                ),
+              if (autoSteerEnabled)
+                Polyline(
+                  points: [
+                    vehicle.lookAheadStartPosition.latLng,
                     abLine
-                        .findLookAheadLinePoints(
+                        .findLookAheadCirclePoints(
                           vehicle,
                           lookAheadDistance,
                         )
-                        .outside!
-                        .latLng,
-                ],
-              ),
-              Polyline(
-                points: [
-                  vehicle.lookAheadStartPosition,
-                  abLine
-                      .findLookAheadCirclePoints(
+                        .best
+                        .latLng
+                  ],
+                  color: Colors.green,
+                ),
+              if (abLine.vehicleToLookAheadLineProjection(
                         vehicle,
                         lookAheadDistance,
-                      )
-                      .best
-                      .latLng
-                ],
-                color: Colors.green,
-              ),
-              if (abLine.vehicleToLookAheadLineProjection(
-                    vehicle,
-                    lookAheadDistance,
-                  ) !=
-                  null)
+                      ) !=
+                      null &&
+                  autoSteerEnabled)
                 Polyline(
                   points: [
                     abLine
@@ -117,15 +120,16 @@ class ABLineDebugLayer extends ConsumerWidget {
                   color: Colors.green,
                 ),
               if (abLine
-                      .findLookAheadCirclePoints(
-                        vehicle,
-                        lookAheadDistance,
-                      )
-                      .worst !=
-                  null) ...[
+                          .findLookAheadCirclePoints(
+                            vehicle,
+                            lookAheadDistance,
+                          )
+                          .worst !=
+                      null &&
+                  autoSteerEnabled) ...[
                 Polyline(
                   points: [
-                    vehicle.lookAheadStartPosition,
+                    vehicle.lookAheadStartPosition.latLng,
                     abLine
                         .findLookAheadCirclePoints(
                           vehicle,
@@ -137,10 +141,11 @@ class ABLineDebugLayer extends ConsumerWidget {
                   color: Colors.red,
                 ),
                 if (abLine.vehicleToLookAheadLineProjection(
-                      vehicle,
-                      lookAheadDistance,
-                    ) !=
-                    null)
+                          vehicle,
+                          lookAheadDistance,
+                        ) !=
+                        null &&
+                    autoSteerEnabled)
                   Polyline(
                     points: [
                       abLine
@@ -165,12 +170,12 @@ class ABLineDebugLayer extends ConsumerWidget {
         if (abLine != null || pointA != null || pointB != null)
           CircleLayer(
             circles: [
-              if (pointA != null) CircleMarker(point: pointA, radius: 5),
-              if (pointB != null) CircleMarker(point: pointB, radius: 5),
+              if (pointA != null) CircleMarker(point: pointA.latLng, radius: 5),
+              if (pointB != null) CircleMarker(point: pointB.latLng, radius: 5),
               if (abLine != null) ...[
                 if (autoSteerEnabled)
                   CircleMarker(
-                    point: vehicle.lookAheadStartPosition,
+                    point: vehicle.lookAheadStartPosition.latLng,
                     radius: lookAheadDistance,
                     useRadiusInMeter: true,
                     color: Colors.pink.withOpacity(0.2),
@@ -178,7 +183,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                 CircleMarker(
                   point: abLine
                       .currentPerpendicularIntersect(
-                        vehicle.pursuitAxlePosition.gbPosition,
+                        vehicle.pursuitAxlePosition,
                       )
                       .latLng,
                   radius: 5,
@@ -186,7 +191,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                 ),
                 ...abLine
                     .pointsAhead(
-                      point: vehicle.position.gbPosition,
+                      point: vehicle.position,
                       heading: vehicle.bearing,
                       num: ref.watch(aBLineDebugNumPointsAheadProvider),
                       stepSize: ref.watch(aBLineDebugStepSizeProvider),
@@ -200,7 +205,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                     ),
                 ...abLine
                     .pointsBehind(
-                      point: vehicle.position.gbPosition,
+                      point: vehicle.position,
                       heading: vehicle.bearing,
                       num: ref.watch(aBLineDebugNumPointsBehindProvider),
                       stepSize: ref.watch(aBLineDebugStepSizeProvider),
@@ -266,8 +271,7 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                           ref.read(aBLineDebugProvider.notifier).moveOffsetLeft(
                                 ref.watch(
                                   mainVehicleProvider.select(
-                                    (vehicle) =>
-                                        vehicle.pursuitAxlePosition.gbPosition,
+                                    (vehicle) => vehicle.pursuitAxlePosition,
                                   ),
                                 ),
                                 ref.watch(
@@ -305,8 +309,7 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                               .moveOffsetRight(
                                 ref.watch(
                                   mainVehicleProvider.select(
-                                    (vehicle) =>
-                                        vehicle.pursuitAxlePosition.gbPosition,
+                                    (vehicle) => vehicle.pursuitAxlePosition,
                                   ),
                                 ),
                                 ref.watch(

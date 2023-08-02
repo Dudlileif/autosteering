@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/utils/position_projection_extensions.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
                   .map(
                     (equipment) => equipment.hitchPoints.mapIndexed(
                       (index, hitch) => CircleMarker(
-                        point: hitch,
+                        point: hitch.latLng,
                         radius: 5,
                         color: [Colors.red, Colors.green, Colors.blue][index],
                       ),
@@ -48,7 +49,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
                   .flattened,
               ...equipments.map(
                 (equipment) => CircleMarker(
-                  point: equipment.workingCenter,
+                  point: equipment.workingCenter.latLng,
                   radius: 5,
                   color: Colors.yellow,
                 ),
@@ -72,6 +73,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
                                                   equipments
                                                       .elementAt(equipmentIndex)
                                                       .segmentCenter(segment)
+                                                      .latLng
                                                 ]
                                               : line,
                                       color: Theme.of(context)
@@ -105,7 +107,8 @@ class EquipmentDebugLayer extends ConsumerWidget {
                                       ...line,
                                       equipments
                                           .elementAt(equipmentIndex)
-                                          .segmentCenter(segment),
+                                          .segmentCenter(segment)
+                                          .latLng,
                                     ].map(
                                       (point) =>
                                           CircleMarker(point: point, radius: 3),

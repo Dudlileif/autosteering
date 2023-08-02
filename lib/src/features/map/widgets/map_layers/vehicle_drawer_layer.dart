@@ -3,6 +3,7 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geobase/geobase.dart';
 
 /// A layer for drawing the image/model of the vehicle on the map.
 class VehicleDrawerLayer extends ConsumerWidget {
@@ -23,15 +24,15 @@ class VehicleDrawerLayer extends ConsumerWidget {
               imageProvider: const AssetImage('assets/images/Tractor.png'),
             ),
             RotatedOverlayImage(
-              topLeftCorner: vehicle.wheelPoints()[2],
-              bottomLeftCorner: vehicle.wheelPoints()[1],
-              bottomRightCorner: vehicle.wheelPoints().first,
+              topLeftCorner: vehicle.wheelPoints()[2].latLng,
+              bottomLeftCorner: vehicle.wheelPoints()[1].latLng,
+              bottomRightCorner: vehicle.wheelPoints().first.latLng,
               imageProvider: const AssetImage('assets/images/FrontWheel.png'),
             ),
             RotatedOverlayImage(
-              topLeftCorner: vehicle.wheelPoints(left: false).last,
-              bottomLeftCorner: vehicle.wheelPoints(left: false)[0],
-              bottomRightCorner: vehicle.wheelPoints(left: false)[1],
+              topLeftCorner: vehicle.wheelPoints(left: false).last.latLng,
+              bottomLeftCorner: vehicle.wheelPoints(left: false)[0].latLng,
+              bottomRightCorner: vehicle.wheelPoints(left: false)[1].latLng,
               imageProvider: const AssetImage('assets/images/FrontWheel.png'),
             )
           ],
@@ -43,56 +44,82 @@ class VehicleDrawerLayer extends ConsumerWidget {
               imageProvider: const AssetImage('assets/images/Harvester.png'),
             ),
             RotatedOverlayImage(
-              topLeftCorner: vehicle.wheelPoints()[2],
-              bottomLeftCorner: vehicle.wheelPoints()[1],
-              bottomRightCorner: vehicle.wheelPoints().first,
+              topLeftCorner: vehicle.wheelPoints()[2].latLng,
+              bottomLeftCorner: vehicle.wheelPoints()[1].latLng,
+              bottomRightCorner: vehicle.wheelPoints().first.latLng,
               imageProvider: const AssetImage('assets/images/FrontWheel.png'),
             ),
             RotatedOverlayImage(
-              topLeftCorner: vehicle.wheelPoints(left: false).last,
-              bottomLeftCorner: vehicle.wheelPoints(left: false)[0],
-              bottomRightCorner: vehicle.wheelPoints(left: false)[1],
+              topLeftCorner: vehicle.wheelPoints(left: false).last.latLng,
+              bottomLeftCorner: vehicle.wheelPoints(left: false)[0].latLng,
+              bottomRightCorner: vehicle.wheelPoints(left: false)[1].latLng,
               imageProvider: const AssetImage('assets/images/FrontWheel.png'),
             )
           ],
         ArticulatedTractor() => [
             RotatedOverlayImage(
-              topLeftCorner: vehicle.pivotPosition
-                  .offset(
-                    vehicle.trackWidth - 0.7,
-                    vehicle.rearAxleAngle + 90,
+              topLeftCorner: vehicle.pivotPosition.spherical
+                  .destinationPoint(
+                    distance: vehicle.trackWidth - 0.7,
+                    bearing: vehicle.rearAxleAngle + 90,
                   )
-                  .offset(0.5, vehicle.rearAxleAngle + 180),
-              bottomLeftCorner: vehicle.wheelPoints(rear: true)[1].offset(
-                    1,
-                    vehicle.rearAxleAngle,
-                  ),
-              bottomRightCorner:
-                  vehicle.wheelPoints(rear: true, left: false)[1].offset(
-                        1,
-                        vehicle.rearAxleAngle,
-                      ),
+                  .spherical
+                  .destinationPoint(
+                    distance: 0.5,
+                    bearing: vehicle.rearAxleAngle + 180,
+                  )
+                  .latLng,
+              bottomLeftCorner: vehicle
+                  .wheelPoints(rear: true)[1]
+                  .spherical
+                  .destinationPoint(
+                    distance: 1,
+                    bearing: vehicle.rearAxleAngle,
+                  )
+                  .latLng,
+              bottomRightCorner: vehicle
+                  .wheelPoints(rear: true, left: false)[1]
+                  .spherical
+                  .destinationPoint(
+                    distance: 1,
+                    bearing: vehicle.rearAxleAngle,
+                  )
+                  .latLng,
               imageProvider: const AssetImage(
                 'assets/images/ArticulatedTractorRear.png',
               ),
             ),
             RotatedOverlayImage(
-              topLeftCorner: vehicle.wheelPoints()[2].offset(
-                    1.25,
-                    vehicle.frontAxleAngle,
-                  ),
-              bottomLeftCorner: vehicle.pivotPosition
-                  .offset(
-                    vehicle.trackWidth - 0.7,
-                    vehicle.frontAxleAngle - 90,
+              topLeftCorner: vehicle
+                  .wheelPoints()[2]
+                  .spherical
+                  .destinationPoint(
+                    distance: 1.25,
+                    bearing: vehicle.frontAxleAngle,
                   )
-                  .offset(0.5, vehicle.frontAxleAngle + 180),
-              bottomRightCorner: vehicle.pivotPosition
-                  .offset(
-                    vehicle.trackWidth - 0.7,
-                    vehicle.frontAxleAngle + 90,
+                  .latLng,
+              bottomLeftCorner: vehicle.pivotPosition.spherical
+                  .destinationPoint(
+                    distance: vehicle.trackWidth - 0.7,
+                    bearing: vehicle.frontAxleAngle - 90,
                   )
-                  .offset(0.5, vehicle.frontAxleAngle + 180),
+                  .spherical
+                  .destinationPoint(
+                    distance: 0.5,
+                    bearing: vehicle.frontAxleAngle + 180,
+                  )
+                  .latLng,
+              bottomRightCorner: vehicle.pivotPosition.spherical
+                  .destinationPoint(
+                    distance: vehicle.trackWidth - 0.7,
+                    bearing: vehicle.frontAxleAngle + 90,
+                  )
+                  .spherical
+                  .destinationPoint(
+                    distance: 0.5,
+                    bearing: vehicle.frontAxleAngle + 180,
+                  )
+                  .latLng,
               imageProvider: const AssetImage(
                 'assets/images/ArticulatedTractorFront.png',
               ),

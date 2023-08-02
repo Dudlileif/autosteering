@@ -23,7 +23,7 @@ final mapOffsetProvider = Provider<MapCenterOffset>.internal(
 
 typedef MapOffsetRef = ProviderRef<MapCenterOffset>;
 String _$offsetVehiclePositionHash() =>
-    r'939c82d8ae7359ac475b6c9beadc079114be0fb2';
+    r'932c255b65d3b9b8faf7fab7176808ba3387308b';
 
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.

@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/utils/position_projection_extensions.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class RecordingPathLayer extends ConsumerWidget {
     final points = ref.watch(pathRecordingListProvider);
     final vehiclePosition =
         ref.watch(mainVehicleProvider.select((vehicle) => vehicle.position));
+
     return Stack(
       children: points.isNotEmpty
           ? [
@@ -24,8 +26,8 @@ class RecordingPathLayer extends ConsumerWidget {
                 polylines: [
                   Polyline(
                     points: [
-                      ...points.map((point) => point.position),
-                      vehiclePosition,
+                      ...points.map((point) => point.position.latLng),
+                      vehiclePosition.latLng,
                     ],
                   )
                 ],
@@ -35,7 +37,7 @@ class RecordingPathLayer extends ConsumerWidget {
                   if (points.isNotEmpty)
                     ...points.map(
                       (point) => CircleMarker(
-                        point: point.position,
+                        point: point.position.latLng,
                         radius: 5,
                       ),
                     ),

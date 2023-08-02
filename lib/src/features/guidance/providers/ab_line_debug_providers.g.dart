@@ -123,13 +123,14 @@ final aBLineDebugNumPointsBehindProvider =
 );
 
 typedef _$ABLineDebugNumPointsBehind = Notifier<int>;
-String _$aBLinePointAHash() => r'1fe9fc8a963e254cd6b31c309c498616746b655f';
+String _$aBLinePointAHash() => r'0834bf3f4b30eca21228d66cc4f243fe6e18e11f';
 
 /// A provider for the starting point A of an AB-line.
 ///
 /// Copied from [ABLinePointA].
 @ProviderFor(ABLinePointA)
-final aBLinePointAProvider = NotifierProvider<ABLinePointA, LatLng?>.internal(
+final aBLinePointAProvider =
+    NotifierProvider<ABLinePointA, Geographic?>.internal(
   ABLinePointA.new,
   name: r'aBLinePointAProvider',
   debugGetCreateSourceHash:
@@ -138,14 +139,15 @@ final aBLinePointAProvider = NotifierProvider<ABLinePointA, LatLng?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$ABLinePointA = Notifier<LatLng?>;
-String _$aBLinePointBHash() => r'2a79112cc9dcb21b980a73d7974f6feab13387d6';
+typedef _$ABLinePointA = Notifier<Geographic?>;
+String _$aBLinePointBHash() => r'df5f21b8c4350459ef0a9f0604ecacfeefa2f6c6';
 
 /// A provider for the ending point B of an AB-line.
 ///
 /// Copied from [ABLinePointB].
 @ProviderFor(ABLinePointB)
-final aBLinePointBProvider = NotifierProvider<ABLinePointB, LatLng?>.internal(
+final aBLinePointBProvider =
+    NotifierProvider<ABLinePointB, Geographic?>.internal(
   ABLinePointB.new,
   name: r'aBLinePointBProvider',
   debugGetCreateSourceHash:
@@ -154,7 +156,7 @@ final aBLinePointBProvider = NotifierProvider<ABLinePointB, LatLng?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$ABLinePointB = Notifier<LatLng?>;
+typedef _$ABLinePointB = Notifier<Geographic?>;
 String _$aBLineWidthHash() => r'74aba65b5ee22cdf4b79affd4e582a2ce11368ff';
 
 /// A provider for the width of an AB-line.
@@ -171,7 +173,7 @@ final aBLineWidthProvider = NotifierProvider<ABLineWidth, double>.internal(
 );
 
 typedef _$ABLineWidth = Notifier<double>;
-String _$aBLineDebugHash() => r'b6392222b882a60d404abdf11c6d0a4b16e7d6c1';
+String _$aBLineDebugHash() => r'344150ffadb4b0cb72f1458e3b1dfddae094d0cb';
 
 /// A provider for the AB-line object to debug.
 ///
@@ -189,7 +191,10 @@ final aBLineDebugProvider = NotifierProvider<ABLineDebug, ABLine?>.internal(
 typedef _$ABLineDebug = Notifier<ABLine?>;
 String _$displayABLineHash() => r'a08c7aa1d2e3c7db37907cbe51b8de3e151c4758';
 
-/// See also [DisplayABLine].
+/// A provider for the activated [ABLineDebug] model, typically updated and
+/// recieved from the simulator.
+///
+/// Copied from [DisplayABLine].
 @ProviderFor(DisplayABLine)
 final displayABLineProvider =
     AutoDisposeNotifierProvider<DisplayABLine, ABLine?>.internal(
