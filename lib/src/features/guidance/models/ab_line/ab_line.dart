@@ -111,17 +111,31 @@ class ABLine with EquatableMixin {
   /// [initialBearing] (think upper half circle), and -1 when [heading] is in
   /// the general reverse direction of [initialBearing] (think lower half
   /// circle).
-  int compareToBearing(Geographic point, double heading) => (normalizeBearing(
-                    currentStart.spherical.finalBearingTo(
-                          currentPerpendicularIntersect(point),
-                        ) -
-                        heading,
-                  ) -
-                  180)
-              .abs() >=
-          90
-      ? 1
-      : -1;
+  int compareToBearing(Geographic point, double heading) {
+    final alongDistance = point.spherical
+        .alongTrackDistanceTo(start: currentStart, end: currentEnd);
+
+    final lineBearing = switch (alongDistance.isNaN) {
+      true => currentInitialBearing,
+      false => switch (alongDistance.isNegative) {
+          true => point.spherical.initialBearingTo(currentStart),
+          false => currentStart.spherical.finalBearingTo(
+              currentPerpendicularIntersect(point),
+            ),
+        }
+    };
+
+    final angle = (normalizeBearing(
+              lineBearing - heading,
+            ) -
+            180)
+        .abs();
+
+    return switch (angle >= 90) {
+      true => 1,
+      false => -1,
+    };
+  }
 
   /// The perpendicular intersection point from [point] to the current line.
   Geographic currentPerpendicularIntersect(Geographic point) {
