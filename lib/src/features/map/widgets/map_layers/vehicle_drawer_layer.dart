@@ -41,6 +41,18 @@ class VehicleDrawerLayer extends ConsumerWidget {
               bottomLeftCorner: vehicle.polygons.first.points.last,
               bottomRightCorner: vehicle.polygons.first.points[2],
               imageProvider: const AssetImage('assets/images/Harvester.png'),
+            ),
+            RotatedOverlayImage(
+              topLeftCorner: vehicle.wheelPoints()[2],
+              bottomLeftCorner: vehicle.wheelPoints()[1],
+              bottomRightCorner: vehicle.wheelPoints().first,
+              imageProvider: const AssetImage('assets/images/FrontWheel.png'),
+            ),
+            RotatedOverlayImage(
+              topLeftCorner: vehicle.wheelPoints(left: false).last,
+              bottomLeftCorner: vehicle.wheelPoints(left: false)[0],
+              bottomRightCorner: vehicle.wheelPoints(left: false)[1],
+              imageProvider: const AssetImage('assets/images/FrontWheel.png'),
             )
           ],
         ArticulatedTractor() => [
