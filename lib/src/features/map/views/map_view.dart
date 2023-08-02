@@ -141,6 +141,10 @@ class MapAndGaugeStackView extends ConsumerWidget {
               child: BasicVehicleGauges(),
             ),
           ),
+          if (ref.watch(showABLineDebugLayerProvider))
+            const ABLineOffsetDebugControls(),
+          if (ref.watch(showPurePursuitDebugLayerProvider))
+            const PurePursuitDebugWidget()
         ],
       ),
     );
