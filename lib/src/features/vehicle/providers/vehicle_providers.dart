@@ -73,38 +73,6 @@ class MainVehicle extends _$MainVehicle {
   void reset() => ref.invalidateSelf();
 }
 
-/// A provider for the distance travelled by the vehicle.
-@riverpod
-class VehicleTravelledDistance extends _$VehicleTravelledDistance {
-  @override
-  double build() => 0;
-
-  /// Update the [state] by adding [value].
-  void updateWith(double value) => Future(() => state += value);
-}
-
-/// A provider for the vehicle's velocity gauge.
-@riverpod
-class VehicleVelocity extends _$VehicleVelocity {
-  @override
-  double build() => 0;
-
-  /// Update the [state] to [value].
-  void update(double value) => Future(() => state = value);
-}
-
-/// A provider for the vehicle's bearing gauge.
-@riverpod
-class VehicleBearing extends _$VehicleBearing {
-  @override
-  double build() => 0;
-
-  /// Update the [state] by adding [value].
-  void update(double value) => Future(
-        () => state = (((state * 10) + value) / (10 + 1)).wrap360(),
-      );
-}
-
 /// A provider for whether the vehicle should steer automatically.
 @Riverpod(keepAlive: true)
 class AutoSteerEnabled extends _$AutoSteerEnabled {

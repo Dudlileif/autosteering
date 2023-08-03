@@ -140,12 +140,10 @@ Stream<Vehicle?> simVehicleWebStream(
   );
 
   return stream.map((event) {
+    ref.read(gaugeVelocityProvider.notifier).update(event.velocity.toDouble());
+    ref.read(gaugeBearingProvider.notifier).update(event.bearing.toDouble());
     ref
-        .read(vehicleVelocityProvider.notifier)
-        .update(event.velocity.toDouble());
-    ref.read(vehicleBearingProvider.notifier).update(event.bearing.toDouble());
-    ref
-        .read(vehicleTravelledDistanceProvider.notifier)
+        .read(gaugeTravelledDistanceProvider.notifier)
         .updateWith(event.distance.toDouble());
     ref.read(displayPurePursuitProvider.notifier).update(event.purePursuit);
     ref.read(displayABLineProvider.notifier).update(event.abLine);
@@ -198,10 +196,10 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
       PurePursuit? purePursuit,
       ABLine? abLine,
     })) {
-      ref.read(vehicleVelocityProvider.notifier).update(message.velocity);
-      ref.read(vehicleBearingProvider.notifier).update(message.bearing);
+      ref.read(gaugeVelocityProvider.notifier).update(message.velocity);
+      ref.read(gaugeBearingProvider.notifier).update(message.bearing);
       ref
-          .read(vehicleTravelledDistanceProvider.notifier)
+          .read(gaugeTravelledDistanceProvider.notifier)
           .updateWith(message.distance);
       ref.read(displayPurePursuitProvider.notifier).update(message.purePursuit);
       ref.read(displayABLineProvider.notifier).update(message.abLine);
