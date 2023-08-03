@@ -114,19 +114,20 @@ class PurePursuitMenu extends StatelessWidget {
         ListTile(
           title: Consumer(
             builder: (context, ref, child) {
-              final lookAheadDistance = ref.watch(lookAheadDistanceProvider);
+              final distance = ref.watch(pursuitInterpolationDistanceProvider);
 
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Look ahead distance: $lookAheadDistance m',
+                    'Interpolation distance: $distance m',
                     style: textStyle,
                   ),
                   Slider(
-                    value: lookAheadDistance,
-                    onChanged:
-                        ref.read(lookAheadDistanceProvider.notifier).update,
+                    value: distance,
+                    onChanged: ref
+                        .read(pursuitInterpolationDistanceProvider.notifier)
+                        .update,
                     max: 20,
                     min: 1,
                     divisions: 19,
@@ -135,7 +136,7 @@ class PurePursuitMenu extends StatelessWidget {
               );
             },
           ),
-        )
+        ),
       ],
     );
   }

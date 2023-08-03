@@ -24,7 +24,7 @@ class ABLineDebugLayer extends ConsumerWidget {
       false => ref.watch(aBLineDebugProvider)
     };
 
-    final lookAheadDistance = ref.watch(lookAheadDistanceProvider);
+    final lookAheadDistance = ref.watch(effectiveLookAheadDistanceProvider);
 
     final vehicle = ref.watch(mainVehicleProvider);
 

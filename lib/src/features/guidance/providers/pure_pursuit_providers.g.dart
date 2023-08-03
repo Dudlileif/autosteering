@@ -26,8 +26,27 @@ final purePursuitPerpendicularDistanceProvider =
 );
 
 typedef PurePursuitPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
+String _$pursuitInterpolationDistanceHash() =>
+    r'613aa73bb69740dda4993c9d4255487c79dd3778';
+
+/// A provider for the velocity gain for the [LookAheadDistance].
+///
+/// Copied from [PursuitInterpolationDistance].
+@ProviderFor(PursuitInterpolationDistance)
+final pursuitInterpolationDistanceProvider =
+    NotifierProvider<PursuitInterpolationDistance, double>.internal(
+  PursuitInterpolationDistance.new,
+  name: r'pursuitInterpolationDistanceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pursuitInterpolationDistanceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$PursuitInterpolationDistance = Notifier<double>;
 String _$configuredPurePursuitHash() =>
-    r'707c6fd1bca4a6511f16451b4233e1416e4f53fb';
+    r'cb6588925f664c1a12577c07166d2bb21ad24af0';
 
 /// A provider for creating and holding a [PurePursuit] model for the
 /// previously recorded waypoints.
@@ -83,7 +102,7 @@ final pursuitModeProvider =
 );
 
 typedef _$PursuitMode = Notifier<PurePursuitMode>;
-String _$purePursuitLoopHash() => r'a464f55dc59553b26faf22059769fd554409b585';
+String _$purePursuitLoopHash() => r'59aa8894ef7b149833f5e3f1b0e281840e26b28b';
 
 /// A provider for which looping mode the [ConfiguredPurePursuit] should follow.
 ///
@@ -101,24 +120,6 @@ final purePursuitLoopProvider =
 );
 
 typedef _$PurePursuitLoop = Notifier<PurePursuitLoopMode>;
-String _$lookAheadDistanceHash() => r'88a53a0827e724b4c8d9d671fa62054cea09f0c1';
-
-/// A provider for the look ahead distance of the [ConfiguredPurePursuit] model.
-///
-/// Copied from [LookAheadDistance].
-@ProviderFor(LookAheadDistance)
-final lookAheadDistanceProvider =
-    NotifierProvider<LookAheadDistance, double>.internal(
-  LookAheadDistance.new,
-  name: r'lookAheadDistanceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$lookAheadDistanceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$LookAheadDistance = Notifier<double>;
 String _$displayPurePursuitHash() =>
     r'9e5dcfbf4401f0910761b08a1a07dc28204c9af2';
 

@@ -5,6 +5,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pure_pursuit_providers.g.dart';
 
+/// A provider for the velocity gain for the [LookAheadDistance].
+@Riverpod(keepAlive: true)
+class PursuitInterpolationDistance extends _$PursuitInterpolationDistance {
+  @override
+  double build() {
+    ref.listenSelf((previous, next) {
+      ref
+          .read(simInputProvider.notifier)
+          .send((pursuitInterpolationDistance: state));
+    });
+    return 4;
+  }
+
+  /// Update the [state] to [value].
+  void update(double value) => Future(() => state = value);
+}
+
 /// A provider for creating and holding a [PurePursuit] model for the
 /// previously recorded waypoints.
 @Riverpod(keepAlive: true)
@@ -15,7 +32,7 @@ class ConfiguredPurePursuit extends _$ConfiguredPurePursuit {
     if (wayPoints != null) {
       return PurePursuit(
         wayPoints: wayPoints,
-        interpolationDistance: ref.watch(lookAheadDistanceProvider),
+        interpolationDistance: ref.watch(pursuitInterpolationDistanceProvider),
         loopMode: ref.watch(purePursuitLoopProvider),
       );
     }
@@ -71,28 +88,13 @@ class PurePursuitLoop extends _$PurePursuitLoop {
   @override
   PurePursuitLoopMode build() {
     ref.listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send((loopModePursuit: next));
+      ref.read(simInputProvider.notifier).send((pursuitLoopMode: next));
     });
     return PurePursuitLoopMode.none;
   }
 
   /// Update the [state] to [value].
   void update(PurePursuitLoopMode value) => Future(() => state = value);
-}
-
-/// A provider for the look ahead distance of the [ConfiguredPurePursuit] model.
-@Riverpod(keepAlive: true)
-class LookAheadDistance extends _$LookAheadDistance {
-  @override
-  double build() {
-    ref.listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send((lookAheadDistance: state));
-    });
-    return 4;
-  }
-
-  /// Update the [state] to [value].
-  void update(double value) => Future(() => state = value);
 }
 
 /// A provider for the activated [ConfiguredPurePursuit] model, typically

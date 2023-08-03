@@ -211,9 +211,16 @@ class _VehicleSimulatorState {
   /// the path is larger than the vehicle's min turning radius.
   PurePursuitMode tempPursuitMode = PurePursuitMode.pid;
 
+  /// The interpolation distance for points in the [purePursuit]
+  double pursuitInterpolationDistance = 4;
+
   /// The distance ahead of the vehicle the [purePursuit] should look for the
   /// path when in look ahead mode.
   double lookAheadDistance = 4;
+
+  /// A multiplicator for how much of the [vehicle]'s velocity we want to
+  /// add to the [lookAheadDistance].
+  double lookAheadVelocityGain = 0.5;
 
   /// The previous time of when the simulation was updated.
   DateTime prevUpdateTime = DateTime.now();
@@ -225,6 +232,13 @@ class _VehicleSimulatorState {
 
   /// Whether we should force update for the next update, i.e. send the state.
   bool forceChange = false;
+
+  double get effectiveLookAheadDistance {
+    if (vehicle != null) {
+      return lookAheadDistance + vehicle!.velocity * lookAheadVelocityGain;
+    }
+    return lookAheadDistance;
+  }
 
   /// Update the [prevUpdateTime] and the [period] for the next simulation.
   void updateTime() {
@@ -302,13 +316,11 @@ class _VehicleSimulatorState {
     else if (message is PurePursuitMode) {
       pursuitMode = message;
       tempPursuitMode = pursuitMode;
-    }
-    // Set new look ahead distance.
-    else if (message is ({num lookAheadDistance})) {
-      lookAheadDistance = message.lookAheadDistance.toDouble();
+    } else if (message is ({double pursuitInterpolationDistance})) {
+      pursuitInterpolationDistance = message.pursuitInterpolationDistance;
       // Interpolate the path with new max distance.
       purePursuit?.interPolateWayPoints(
-        maxDistance: lookAheadDistance,
+        maxDistance: pursuitInterpolationDistance,
         loopMode: pursuitLoopMode,
       );
       // Find the current index as the closest point since the path has updated.
@@ -316,13 +328,21 @@ class _VehicleSimulatorState {
         purePursuit!.currentIndex = purePursuit!.closestIndex(vehicle!);
       }
     }
+    // Set new look ahead distance.
+    else if (message is ({num lookAheadDistance})) {
+      lookAheadDistance = message.lookAheadDistance.toDouble();
+    }
+    // Set the look ahead distance velocity gain.
+    else if (message is ({double lookAheadVelocityGain})) {
+      lookAheadVelocityGain = message.lookAheadVelocityGain;
+    }
     // Change the pure pursuit loop mode, i.e. if/how to go from the last to
     // the first point.
     else if (message is ({PurePursuitLoopMode pursuitLoopMode})) {
       pursuitLoopMode = message.pursuitLoopMode;
       // Interpolate the path since we might have new points.
       purePursuit?.interPolateWayPoints(
-        maxDistance: lookAheadDistance,
+        maxDistance: pursuitInterpolationDistance,
         loopMode: pursuitLoopMode,
       );
       // Find the current index as the closest point since the path has updated.
@@ -490,7 +510,7 @@ class _VehicleSimulatorState {
       if (abLine != null) {
         steeringAngle = abLine!.nextSteeringAngleLookAhead(
           vehicle: vehicle!,
-          lookAheadDistance: lookAheadDistance,
+          lookAheadDistance: effectiveLookAheadDistance,
         );
       } else if (purePursuit != null) {
         purePursuit!.tryChangeWayPoint(vehicle!);
@@ -502,9 +522,9 @@ class _VehicleSimulatorState {
             final lateralDistance =
                 purePursuit!.perpendicularDistance(vehicle!).abs();
 
-            // Switch if the distance is larger than 0.7 times the turning radius,
-            // this value is experimental to find a smoother transition to swap
-            // mode
+            // Switch if the distance is larger than 0.7 times the turning
+            // radius, this value is experimental to find a smoother transition
+            // to swap mode.
             if (lateralDistance > 0.7 * vehicle!.minTurningRadius &&
                 tempPursuitMode != PurePursuitMode.lookAhead) {
               tempPursuitMode = PurePursuitMode.lookAhead;
@@ -522,7 +542,7 @@ class _VehicleSimulatorState {
             PurePursuitMode.lookAhead =>
               purePursuit!.nextSteeringAngleLookAhead(
                 vehicle!,
-                lookAheadDistance,
+                effectiveLookAheadDistance,
               )
           };
         }
@@ -712,8 +732,7 @@ class _VehicleSimulatorState {
           false => prevVehicle!.position.spherical.finalBearingTo(
               vehicle!.position,
             ),
-        }
-            .wrap360();
+        };
       }
     }
   }

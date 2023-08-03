@@ -15,7 +15,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pursuit = ref.watch(displayPurePursuitProvider);
     final pursuitMode = ref.watch(pursuitModeProvider);
-    final lookAheadDistance = ref.watch(lookAheadDistanceProvider);
+    final lookAheadDistance = ref.watch(effectiveLookAheadDistanceProvider);
     final vehicle = ref.watch(mainVehicleProvider);
 
     return Stack(
