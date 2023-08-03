@@ -124,8 +124,7 @@ class ABLine with EquatableMixin {
         }
     };
 
-    final angle = ((lineBearing - heading) - 180).wrap360().abs();
-
+    final angle = ((lineBearing - heading).wrap360() - 180).abs();
     return switch (angle >= 90) {
       true => 1,
       false => -1,
