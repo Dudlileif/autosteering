@@ -31,7 +31,7 @@ class SimMenu extends StatelessWidget {
               ref.read(simInputProvider.notifier).send((steeringAngle: 0));
 
               ref.read(simInputProvider.notifier).send(
-                (position: ref.watch(homePositionProvider)),
+                (position: ref.watch(homePositionProvider).gbPosition),
               );
             },
             leading: const Icon(Icons.replay),
