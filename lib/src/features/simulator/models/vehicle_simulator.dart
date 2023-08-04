@@ -275,6 +275,7 @@ class _VehicleSimulatorState {
     // Update the vehicle velocity
     else if (message is ({num velocity})) {
       vehicle?.velocity = message.velocity.toDouble();
+      velocityChange = SimInputChange.hold;
     }
 
     // Update the vehicle velocity at a set rate.
@@ -289,6 +290,7 @@ class _VehicleSimulatorState {
     // Update the vehicle steering angle input.
     else if (message is ({num steeringAngle})) {
       vehicle?.steeringAngleInput = message.steeringAngle.toDouble();
+      steeringChange = SimInputChange.hold;
     }
     // Enable/disable auto steering.
     else if (message is ({bool autoSteerEnabled})) {
