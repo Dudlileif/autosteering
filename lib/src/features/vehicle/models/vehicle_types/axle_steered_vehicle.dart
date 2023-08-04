@@ -371,7 +371,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
           points.add(
             turningRadiusCenter!.spherical.destinationPoint(
               distance: currentTurningRadius!,
-              bearing: (angle).wrap360(),
+              bearing: angle.wrap360(),
             ),
           );
         }
@@ -380,7 +380,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       points.add(
         solidAxlePosition.spherical.destinationPoint(
           distance: isReversing ? -30 : 5 + 30,
-          bearing: (bearing).wrap360(),
+          bearing: bearing.wrap360(),
         ),
       );
     }
