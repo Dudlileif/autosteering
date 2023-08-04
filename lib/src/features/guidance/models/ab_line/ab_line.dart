@@ -1,9 +1,9 @@
 import 'dart:math';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geobase/geobase.dart';
-import 'package:latlong2/latlong.dart';
 
 /// A class for creating and tracking straight lines by using the bearing
 /// from point A to point B and their positions to create parallel lines.
@@ -449,6 +449,7 @@ class ABLine with EquatableMixin {
 
     var vehicleLineProjectionToInsidePointBearing =
         vehicleToLineProjection.spherical.initialBearingTo(points.inside);
+
     if (vehicleLineProjectionToInsidePointBearing.isNaN) {
       vehicleLineProjectionToInsidePointBearing = secantBearing;
     }
@@ -474,20 +475,25 @@ class ABLine with EquatableMixin {
 
   /// Finds the next steering angle to reach the [currentOffset]'s line
   /// for the for the [vehicle] with the specified [lookAheadDistance].
+  ///
+  /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
   double nextSteeringAngleLookAhead({
     required Vehicle vehicle,
     required double lookAheadDistance,
   }) {
-    final angle = vehicle.lookAheadStartPosition.spherical.initialBearingTo(
-          findLookAheadCirclePoints(vehicle, lookAheadDistance).best,
-        ) -
-        vehicle.bearing;
+    final bearingToPoint =
+        vehicle.lookAheadStartPosition.spherical.initialBearingTo(
+      findLookAheadCirclePoints(vehicle, lookAheadDistance).best,
+    );
+
+    final angle = signedBearingDifference(
+      vehicle.bearing,
+      bearingToPoint,
+    );
 
     final steeringAngle = atan(
-          2 * vehicle.wheelBase * sin(angle * pi / 180) / lookAheadDistance,
-        ) *
-        180 /
-        pi;
+      2 * vehicle.wheelBase * sin(angle.toRadians()) / lookAheadDistance,
+    ).toDegrees();
 
     return steeringAngle.clamp(
       -vehicle.steeringAngleMax,

@@ -235,7 +235,8 @@ class _VehicleSimulatorState {
 
   double get effectiveLookAheadDistance {
     if (vehicle != null) {
-      return lookAheadDistance + vehicle!.velocity * lookAheadVelocityGain;
+      return lookAheadDistance +
+          vehicle!.velocity.abs() * lookAheadVelocityGain;
     }
     return lookAheadDistance;
   }

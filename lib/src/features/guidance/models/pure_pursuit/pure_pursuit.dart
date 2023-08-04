@@ -1,9 +1,9 @@
 import 'dart:math';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
-import 'package:latlong2/latlong.dart';
 
 /// An enumerator for which steering mode the [PurePursuit] model should
 /// use.
@@ -191,11 +191,18 @@ class PurePursuit {
   /// The value is negative if the vehicle is to the left of the line.
   double perpendicularDistance(
     Vehicle vehicle,
-  ) =>
-      vehicle.pursuitAxlePosition.spherical.crossTrackDistanceTo(
-        start: currentWayPoint.position,
-        end: nextWayPoint(vehicle).position,
-      );
+  ) {
+    final sign = switch (vehicle.isReversing) {
+      false => 1,
+      true => -1,
+    };
+
+    return sign *
+        vehicle.pursuitAxlePosition.spherical.crossTrackDistanceTo(
+          start: currentWayPoint.position,
+          end: nextWayPoint(vehicle).position,
+        );
+  }
 
   /// The waypoint in [path] that is closest to the [vehicle].
   WayPoint closestWayPoint(
@@ -236,16 +243,10 @@ class PurePursuit {
       vehicle.pidParameters,
     );
 
-    final sign = switch (vehicle.isReversing) {
-      true => -1,
-      false => 1,
-    };
-
-    return sign *
-        steeringAngle.clamp(
-          -vehicle.steeringAngleMax,
-          vehicle.steeringAngleMax,
-        );
+    return steeringAngle.clamp(
+      -vehicle.steeringAngleMax,
+      vehicle.steeringAngleMax,
+    );
   }
 
   /// Finds the points that we use to get the secant line that intersects
@@ -411,20 +412,25 @@ class PurePursuit {
 
   /// Calculates the steering angle needed to reach the target point when
   /// using a the look ahead method.
+  ///
+  /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
   double nextSteeringAngleLookAhead(
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
-    final angle = vehicle.lookAheadStartPosition.spherical.initialBearingTo(
-          findLookAheadCirclePoints(vehicle, lookAheadDistance).best.position,
-        ) -
-        vehicle.bearing;
+    final bearingToPoint =
+        vehicle.lookAheadStartPosition.spherical.initialBearingTo(
+      findLookAheadCirclePoints(vehicle, lookAheadDistance).best.position,
+    );
+
+    final angle = signedBearingDifference(
+      vehicle.bearing,
+      bearingToPoint,
+    );
 
     final steeringAngle = atan(
-          2 * vehicle.wheelBase * sin(angle * pi / 180) / lookAheadDistance,
-        ) *
-        180 /
-        pi;
+      2 * vehicle.wheelBase * sin(angle.toRadians()) / lookAheadDistance,
+    ).toDegrees();
 
     return steeringAngle.clamp(
       -vehicle.steeringAngleMax,
