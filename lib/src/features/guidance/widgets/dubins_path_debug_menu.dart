@@ -4,6 +4,7 @@ import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geobase/geobase.dart';
 
 /// A menu button with attached submenu or buttons used for debugging
 /// a Dubins path between two points.
@@ -169,13 +170,14 @@ class DubinsPathDebugMenu extends StatelessWidget {
                 );
                 ref.read(dubinsPathDebugStartPointProvider.notifier).update(
                       WayPoint(
-                        position: center,
+                        position: center.gbPosition,
                         bearing: 90,
                       ),
                     );
                 ref.read(dubinsPathDebugEndPointProvider.notifier).update(
                       WayPoint(
-                        position: center.offset(35, 0),
+                        position: center.gbPosition.spherical
+                            .destinationPoint(distance: 35, bearing: 0),
                         bearing: 210,
                       ),
                     );

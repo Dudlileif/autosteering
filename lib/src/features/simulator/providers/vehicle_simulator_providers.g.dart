@@ -6,7 +6,7 @@ part of 'vehicle_simulator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$simVehicleDrivingHash() => r'db7b25f8888abae70ca3c4192e40765778f87687';
+String _$simVehicleDrivingHash() => r'62db147a7fbd7f30a94c0420c95a948a887bb4f7';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -25,7 +25,7 @@ final simVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 
 typedef SimVehicleDrivingRef = AutoDisposeProviderRef<void>;
 String _$simVehicleWebStreamHash() =>
-    r'7386e17a025dfc5c273591ce7150114193458da8';
+    r'c9159c416ab30141a91232864c114e87533cf0f7';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
@@ -48,7 +48,7 @@ final simVehicleWebStreamProvider =
 
 typedef SimVehicleWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simVehicleIsolateStreamHash() =>
-    r'0bae406f6e8eb06d9e4ee3c1c9af1e66cda4fb0d';
+    r'34ce98ad9bf728932aff8e741905227fc93629dc';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platform.
@@ -169,44 +169,5 @@ final simVehicleAutoSlowDownProvider =
 );
 
 typedef _$SimVehicleAutoSlowDown = Notifier<bool>;
-String _$simVehicleAcceleratorHash() =>
-    r'e8da7b1b6fbb05294a32a70630edeced11659c01';
-
-/// A provider for accelerating the vehicle in the simulator, typically
-/// used by hotkeys/keyboard.
-///
-/// Copied from [SimVehicleAccelerator].
-@ProviderFor(SimVehicleAccelerator)
-final simVehicleAcceleratorProvider =
-    NotifierProvider<SimVehicleAccelerator, Timer?>.internal(
-  SimVehicleAccelerator.new,
-  name: r'simVehicleAcceleratorProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simVehicleAcceleratorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SimVehicleAccelerator = Notifier<Timer?>;
-String _$simVehicleSteeringHash() =>
-    r'5cd25e089212adb51e8bab1946d71f14779d6ba1';
-
-/// A provider for steering the vehicle in the simulator, typically
-/// used by hotkeys/keyboard.
-///
-/// Copied from [SimVehicleSteering].
-@ProviderFor(SimVehicleSteering)
-final simVehicleSteeringProvider =
-    NotifierProvider<SimVehicleSteering, Timer?>.internal(
-  SimVehicleSteering.new,
-  name: r'simVehicleSteeringProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simVehicleSteeringHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SimVehicleSteering = Notifier<Timer?>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

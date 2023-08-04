@@ -6,7 +6,8 @@ import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/flutter_map.dart' as map;
+import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 
 part 'vehicle_types/articulated_tractor.dart';
@@ -20,7 +21,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// A base class for vehicles that handles all common parameters/variables
   /// and methods.
   Vehicle({
-    required LatLng position,
+    required Geographic position,
     required this.antennaHeight,
     required this.minTurningRadius,
     required this.steeringAngleMax,
@@ -43,7 +44,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Antenna position of the vehicle. Assumed centered in the
   /// width dimension of the vehicle.
-  LatLng _position;
+  Geographic _position;
 
   /// The height of the antenna above the ground, in meters.
   double antennaHeight;
@@ -84,10 +85,10 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   double _bearing = 0;
 
   @override
-  LatLng get position => _position;
+  Geographic get position => _position;
 
   @override
-  set position(LatLng value) => _position = value;
+  set position(Geographic value) => _position = value;
 
   /// The velocity of the vehicle, in m/s, meters per second, in the bearing
   /// direction.
@@ -110,7 +111,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   double get wheelBase;
 
   /// Where the look ahead distance calculation should start.
-  LatLng get lookAheadStartPosition;
+  Geographic get lookAheadStartPosition;
 
   /// A [WayPoint] for the vehicle in it's current state, i.e. position, bearing
   /// and velocity.
@@ -136,24 +137,24 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The position of the pursuit axle in the the vehicle direction. Used when
   /// calculating the pure pursuit values.
-  LatLng get pursuitAxlePosition;
+  Geographic get pursuitAxlePosition;
 
   /// Basic circle markers for showing the vehicle's steering related
   /// points.
-  List<CircleMarker> get steeringDebugMarkers;
+  List<map.CircleMarker> get steeringDebugMarkers;
 
   /// Basic polylines for showing the vehicle's steering related
   /// points.
-  List<Polyline> get steeringDebugLines;
+  List<map.Polyline> get steeringDebugLines;
 
   /// Polygons for drawing the wheels of the vehicle.
-  List<Polygon> get wheelPolygons;
+  List<map.Polygon> get wheelPolygons;
 
   /// The turning radius corresponding to the current [steeringAngle].
   double? get currentTurningRadius;
 
   /// The center point of which the [currentTurningRadius] revolves around.
-  LatLng? get turningRadiusCenter;
+  Geographic? get turningRadiusCenter;
 
   /// The angular velocity of the vehicle, if it is turning.
   /// degrees/s, does not care about clockwise/counter-clockwise direction.
@@ -176,7 +177,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   bool get isTurningLeft => steeringAngle < 0;
 
   /// Polygons for visualizing the extent of the vehicle.
-  List<Polygon> get polygons;
+  List<map.Polygon> get polygons;
 
   /// Props used for checking for equality.
   @override
@@ -199,7 +200,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// parameters/variables altered.
   @override
   Vehicle copyWith({
-    LatLng? position,
+    Geographic? position,
     double? antennaHeight,
     double? minTurningRadius,
     double? steeringAngleMax,

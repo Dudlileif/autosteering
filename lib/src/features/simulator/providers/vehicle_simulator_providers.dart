@@ -10,7 +10,7 @@ import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:async/async.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'vehicle_simulator_providers.g.dart';
@@ -86,7 +86,7 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
       if (vehicle.position !=
               ref.watch(
                 mainMapControllerProvider
-                    .select((controller) => controller.center),
+                    .select((controller) => controller.center.gbPosition),
               ) &&
           ref.watch(centerMapOnVehicleProvider)) {
         ref.read(mainMapControllerProvider).moveAndRotate(
@@ -95,11 +95,11 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
                 mainMapControllerProvider
                     .select((controller) => controller.zoom),
               ),
-              -normalizeBearing(
-                ref.watch(
-                  mainVehicleProvider.select((vehicle) => vehicle.bearing),
-                ),
-              ),
+              -ref
+                  .watch(
+                    mainVehicleProvider.select((vehicle) => vehicle.bearing),
+                  )
+                  .wrap360(),
             );
       }
     }
@@ -140,14 +140,14 @@ Stream<Vehicle?> simVehicleWebStream(
   );
 
   return stream.map((event) {
+    ref.read(gaugeVelocityProvider.notifier).update(event.velocity.toDouble());
+    ref.read(gaugeBearingProvider.notifier).update(event.bearing.toDouble());
     ref
-        .read(vehicleVelocityProvider.notifier)
-        .update(event.velocity.toDouble());
-    ref.read(vehicleBearingProvider.notifier).update(event.bearing.toDouble());
-    ref
-        .read(vehicleTravelledDistanceProvider.notifier)
+        .read(gaugeTravelledDistanceProvider.notifier)
         .updateWith(event.distance.toDouble());
     ref.read(displayPurePursuitProvider.notifier).update(event.purePursuit);
+    ref.read(displayABLineProvider.notifier).update(event.abLine);
+
     return event.vehicle;
   });
 }
@@ -194,13 +194,16 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
       double bearing,
       double distance,
       PurePursuit? purePursuit,
+      ABLine? abLine,
     })) {
-      ref.read(vehicleVelocityProvider.notifier).update(message.velocity);
-      ref.read(vehicleBearingProvider.notifier).update(message.bearing);
+      ref.read(gaugeVelocityProvider.notifier).update(message.velocity);
+      ref.read(gaugeBearingProvider.notifier).update(message.bearing);
       ref
-          .read(vehicleTravelledDistanceProvider.notifier)
+          .read(gaugeTravelledDistanceProvider.notifier)
           .updateWith(message.distance);
       ref.read(displayPurePursuitProvider.notifier).update(message.purePursuit);
+      ref.read(displayABLineProvider.notifier).update(message.abLine);
+
       yield message.vehicle;
     }
   }
@@ -273,64 +276,4 @@ class SimVehicleAutoSlowDown extends _$SimVehicleAutoSlowDown {
 
   /// Invert the current [state].
   void toggle() => Future(() => state != state);
-}
-
-/// A provider for accelerating the vehicle in the simulator, typically
-/// used by hotkeys/keyboard.
-@Riverpod(keepAlive: true)
-class SimVehicleAccelerator extends _$SimVehicleAccelerator {
-  @override
-  Timer? build() => null;
-
-  /// Cancel the [state] timer, i.e. stop adding/removing velocity to the
-  /// simulator.
-  void cancel() => Future(() => state?.cancel());
-
-  /// Restart the timer and send the [delta] velocity change at a constant
-  /// interval.
-  void update(double delta) {
-    cancel();
-    Future(
-      () =>
-          state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
-        ref.read(simInputProvider.notifier).send((velocityDelta: delta));
-      }),
-    );
-  }
-
-  /// Start accelerating forwards/increasing the velocity.
-  void forward() => update(0.1);
-
-  /// Start accelerating backwards/decreasing the velocity.
-  void reverse() => update(-0.1);
-}
-
-/// A provider for steering the vehicle in the simulator, typically
-/// used by hotkeys/keyboard.
-@Riverpod(keepAlive: true)
-class SimVehicleSteering extends _$SimVehicleSteering {
-  @override
-  Timer? build() => null;
-
-  /// Cancel the [state] timer, i.e. stop adding/removing steering angle to the
-  /// simulator.
-  void cancel() => Future(() => state?.cancel());
-
-  /// Restart the timer and send the [delta] steering change at a constant
-  /// interval.
-  void update(double delta) {
-    cancel();
-    Future(
-      () =>
-          state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
-        ref.read(simInputProvider.notifier).send((steeringAngleDelta: delta));
-      }),
-    );
-  }
-
-  /// Start steering to the right.
-  void right() => update(0.5);
-
-  /// Start steering to the left.
-  void left() => update(-0.5);
 }

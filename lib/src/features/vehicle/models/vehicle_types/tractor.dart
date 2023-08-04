@@ -35,16 +35,16 @@ final class Tractor extends AxleSteeredVehicle {
 
   /// The position of the center of the rear axle.
   @override
-  LatLng get solidAxlePosition => position.offset(
-        solidAxleDistance,
-        normalizeBearing(bearing - 180),
+  Geographic get solidAxlePosition => position.spherical.destinationPoint(
+        distance: solidAxleDistance,
+        bearing: (bearing - 180).wrap360(),
       );
 
   /// The position of the center of the front axle.
   @override
-  LatLng get steeringAxlePosition => position.offset(
-        wheelBase - solidAxleDistance,
-        normalizeBearing(bearing),
+  Geographic get steeringAxlePosition => position.spherical.destinationPoint(
+        distance: wheelBase - solidAxleDistance,
+        bearing: bearing.wrap360(),
       );
 
   /// The position of the pursuit axle in the the vehicle direction. Used when
@@ -53,8 +53,9 @@ final class Tractor extends AxleSteeredVehicle {
   /// The mirror position of the steering axle from the solid axle is used
   /// when the tractor is reversing.
   @override
-  LatLng get pursuitAxlePosition => switch (isReversing) {
-        true => solidAxlePosition.offset(wheelBase, bearing + 180),
+  Geographic get pursuitAxlePosition => switch (isReversing) {
+        true => solidAxlePosition.spherical
+            .destinationPoint(distance: wheelBase, bearing: bearing + 180),
         false => steeringAxlePosition,
       };
 
@@ -70,7 +71,7 @@ final class Tractor extends AxleSteeredVehicle {
   /// parameters/variables altered.
   @override
   Tractor copyWith({
-    LatLng? position,
+    Geographic? position,
     double? antennaHeight,
     double? minTurningRadius,
     double? steeringAngleMax,

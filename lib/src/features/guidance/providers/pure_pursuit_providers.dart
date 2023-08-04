@@ -1,8 +1,26 @@
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pure_pursuit_providers.g.dart';
+
+/// A provider for the velocity gain for the [LookAheadDistance].
+@Riverpod(keepAlive: true)
+class PursuitInterpolationDistance extends _$PursuitInterpolationDistance {
+  @override
+  double build() {
+    ref.listenSelf((previous, next) {
+      ref
+          .read(simInputProvider.notifier)
+          .send((pursuitInterpolationDistance: state));
+    });
+    return 4;
+  }
+
+  /// Update the [state] to [value].
+  void update(double value) => Future(() => state = value);
+}
 
 /// A provider for creating and holding a [PurePursuit] model for the
 /// previously recorded waypoints.
@@ -14,7 +32,7 @@ class ConfiguredPurePursuit extends _$ConfiguredPurePursuit {
     if (wayPoints != null) {
       return PurePursuit(
         wayPoints: wayPoints,
-        interpolationDistance: ref.watch(lookAheadDistanceProvider),
+        interpolationDistance: ref.watch(pursuitInterpolationDistanceProvider),
         loopMode: ref.watch(purePursuitLoopProvider),
       );
     }
@@ -70,28 +88,13 @@ class PurePursuitLoop extends _$PurePursuitLoop {
   @override
   PurePursuitLoopMode build() {
     ref.listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send((loopModePursuit: next));
+      ref.read(simInputProvider.notifier).send((pursuitLoopMode: next));
     });
     return PurePursuitLoopMode.none;
   }
 
   /// Update the [state] to [value].
   void update(PurePursuitLoopMode value) => Future(() => state = value);
-}
-
-/// A provider for the look ahead distance of the [ConfiguredPurePursuit] model.
-@Riverpod(keepAlive: true)
-class LookAheadDistance extends _$LookAheadDistance {
-  @override
-  double build() {
-    ref.listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send((lookAheadDistance: state));
-    });
-    return 4;
-  }
-
-  /// Update the [state] to [value].
-  void update(double value) => Future(() => state = value);
 }
 
 /// A provider for the activated [ConfiguredPurePursuit] model, typically
@@ -107,6 +110,16 @@ class DisplayPurePursuit extends _$DisplayPurePursuit {
   /// Set the state to null.
   void clear() => Future(() => state = null);
 }
+
+/// A provider for the perpendicular distance from the [DisplayPurePursuit] line
+/// to the [MainVehicle].
+@riverpod
+double? purePursuitPerpendicularDistance(
+  PurePursuitPerpendicularDistanceRef ref,
+) =>
+    ref
+        .watch(displayPurePursuitProvider)
+        ?.perpendicularDistance(ref.watch(mainVehicleProvider));
 
 /// A provider for whether or not the pure pursuit debugging features should
 /// show.

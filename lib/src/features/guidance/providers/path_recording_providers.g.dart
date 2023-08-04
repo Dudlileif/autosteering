@@ -25,7 +25,7 @@ final enablePathRecorderProvider =
 );
 
 typedef _$EnablePathRecorder = Notifier<bool>;
-String _$pathRecordingListHash() => r'4a67bfd848874302be3994007450253def50a64e';
+String _$pathRecordingListHash() => r'33dbe104abe107b219ee4fb3d6bba45a56b7b10e';
 
 /// A list of the currently recording points.
 ///
@@ -117,4 +117,5 @@ final editFinishedPathProvider =
 );
 
 typedef _$EditFinishedPath = Notifier<bool>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

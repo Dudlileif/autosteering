@@ -6,7 +6,7 @@ part of 'enabled_map_layers_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$showCountryLayersHash() => r'd98ad0a566476f5224c0a51202cad28a8208820f';
+String _$showCountryLayersHash() => r'f0dd3c5eea4ae833673d2c9a5a3043c8aae24b7e';
 
 /// Whether the selected country layers should be shown.
 ///
@@ -24,7 +24,7 @@ final showCountryLayersProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowCountryLayersRef = AutoDisposeProviderRef<bool>;
 String _$showSentinelLayersHash() =>
-    r'4b0b2121be62f303ab5dd3e5b6bb6a9d2c67a5f7';
+    r'faefb6ecfa71a06240cabe6d74dd31abe7fa6629';
 
 /// Whether the selected Sentinel layers should be shown.
 ///
@@ -79,7 +79,7 @@ final showFinishedPolygonLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowFinishedPolygonLayerRef = AutoDisposeProviderRef<bool>;
 String _$showRecordingPathLayerHash() =>
-    r'ae2f7794987dbccd35e5546413fd3caf0f451d7c';
+    r'a03194c1186cdfbba9943f6c4fb6658f91b37806';
 
 /// Whether the currently recording path should be shown.
 ///
@@ -133,7 +133,7 @@ final showVehicleDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowVehicleDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showDubinsPathDebugLayerHash() =>
-    r'1f790f37459d0d5a7d30143ec3648772e6d85193';
+    r'2c850fa857d6529045c19b6c1c166017e9eb41e6';
 
 /// Whether the debugging layer for the Dubins path should be shown.
 ///
@@ -151,7 +151,7 @@ final showDubinsPathDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowDubinsPathDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showPurePursuitDebugLayerHash() =>
-    r'b8e5b6066546b66d0f7ff1eff0678354c93ec589';
+    r'8e69a3662635862c93778e70b959d7a4706a2bf5';
 
 /// Whether the debugging layer for the pure pursuit should be shown.
 ///
@@ -187,7 +187,7 @@ final showFieldDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowFieldDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showEquipmentDebugLayerHash() =>
-    r'4c540eeb6eacc927d241f2d50f07197888bface7';
+    r'b8a001de87bdbfba763dd2bd7e6c3f128188e39d';
 
 /// Whether the debugging layer for the equipment should be shown.
 ///
@@ -204,6 +204,24 @@ final showEquipmentDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowEquipmentDebugLayerRef = AutoDisposeProviderRef<bool>;
+String _$showABLineDebugLayerHash() =>
+    r'c6b03e515d0b46ffe68180a1ad8c0ce438677212';
+
+/// Whether the debugging layer for the AB-line should be shown.
+///
+/// Copied from [showABLineDebugLayer].
+@ProviderFor(showABLineDebugLayer)
+final showABLineDebugLayerProvider = AutoDisposeProvider<bool>.internal(
+  showABLineDebugLayer,
+  name: r'showABLineDebugLayerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showABLineDebugLayerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ShowABLineDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showOSMLayerHash() => r'f74aac3e4858c8090ae861b3677ab68ccac3a9a7';
 
 /// Whether the OpenStreetMap layer should be shown.
@@ -239,4 +257,5 @@ final showVehicleDrawingLayerProvider =
 );
 
 typedef _$ShowVehicleDrawingLayer = Notifier<bool>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

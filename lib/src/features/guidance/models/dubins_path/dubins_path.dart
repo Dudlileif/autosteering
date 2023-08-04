@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:collection/collection.dart';
+import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 
 part 'dubins_path_type.dart';
@@ -65,7 +66,7 @@ is made of three circles (lrl or rlr).
 
   /// The center point of the middle circle if [pathType] is
   /// [DubinsPathType.lrl] or [DubinsPathType.rlr].
-  final LatLng? middleCircleCenter;
+  final Geographic? middleCircleCenter;
 }
 
 /// A class for calculating Dubins paths between two points.
@@ -89,27 +90,27 @@ class DubinsPath {
     angleStepSize = 360 * stepSize / (2 * pi * turningRadius);
 
     /// The center position of the left starting circle.
-    startLeftCircleCenter = start.position.offset(
-      turningRadius,
-      normalizeBearing(start.bearing - 90),
+    startLeftCircleCenter = start.position.spherical.destinationPoint(
+      distance: turningRadius,
+      bearing: (start.bearing - 90).wrap360(),
     );
 
     /// The center position of the right starting circle.
-    startRightCircleCenter = start.position.offset(
-      turningRadius,
-      normalizeBearing(start.bearing + 90),
+    startRightCircleCenter = start.position.spherical.destinationPoint(
+      distance: turningRadius,
+      bearing: (start.bearing + 90).wrap360(),
     );
 
     /// The center position of the left end circle.
-    endLeftCircleCenter = end.position.offset(
-      turningRadius,
-      normalizeBearing(end.bearing - 90),
+    endLeftCircleCenter = end.position.spherical.destinationPoint(
+      distance: turningRadius,
+      bearing: (end.bearing - 90).wrap360(),
     );
 
     /// The center position of the right end circle.
-    endRightCircleCenter = end.position.offset(
-      turningRadius,
-      normalizeBearing(end.bearing + 90),
+    endRightCircleCenter = end.position.spherical.destinationPoint(
+      distance: turningRadius,
+      bearing: (end.bearing + 90).wrap360(),
     );
 
     // Set the data for all the path types.
@@ -143,16 +144,16 @@ class DubinsPath {
   late double angleStepSize;
 
   /// The center position of the left starting circle.
-  late LatLng startLeftCircleCenter;
+  late Geographic startLeftCircleCenter;
 
   /// The center position of the right starting circle.
-  late LatLng startRightCircleCenter;
+  late Geographic startRightCircleCenter;
 
   /// The center position of the left end circle.
-  late LatLng endLeftCircleCenter;
+  late Geographic endLeftCircleCenter;
 
   /// The center position of the right end circle.
-  late LatLng endRightCircleCenter;
+  late Geographic endRightCircleCenter;
 
   /// An iterable of the part lengths for each Dubins path type.
   late Iterable<DubinsPathData?> _pathDataIterable;
@@ -187,10 +188,12 @@ class DubinsPath {
     };
 
     // The bearing from the starting to the ending circle.
-    final startToEndCircleBearing = startingCircle.bearingTo(endingCircle);
+    final startToEndCircleBearing =
+        startingCircle.spherical.initialBearingTo(endingCircle);
 
     // The distance from the starting to the ending circle.
-    final startToEndCircleDistance = startingCircle.distanceTo(endingCircle);
+    final startToEndCircleDistance =
+        startingCircle.spherical.distanceTo(endingCircle);
 
     // Invalidate paths that can't physically exist.
     if (pathType == DubinsPathType.lsr || pathType == DubinsPathType.rsl) {
@@ -229,9 +232,9 @@ class DubinsPath {
     };
 
     // The starting point of the tangent.
-    final tangentStart = startingCircle.offset(
-      turningRadius,
-      theta,
+    final tangentStart = startingCircle.spherical.destinationPoint(
+      distance: turningRadius,
+      bearing: theta,
     );
 
     // The bearing of the waypoint at the tangent starting point.
@@ -241,10 +244,10 @@ class DubinsPath {
     late double tangentEndBearing;
 
     // The ending point of the tangent.
-    late LatLng tangentEnd;
+    late Geographic tangentEnd;
 
     // The center of the middle circle if we're in an LRL or RLR path.
-    LatLng? middleCircleCenter;
+    Geographic? middleCircleCenter;
 
     // The length of the middle section of the path.
     late double middleLength;
@@ -256,63 +259,65 @@ class DubinsPath {
       // end circle if the distance is long enough, so we use the bearing of
       // this point from the end circle to get the tangent point with correct
       // radius.
-      final tangentEndBearingPoint = tangentStart.offset(
-        startToEndCircleDistance,
-        startToEndCircleBearing,
+      final tangentEndBearingPoint = tangentStart.spherical.destinationPoint(
+        distance: startToEndCircleDistance,
+        bearing: startToEndCircleBearing,
       );
 
       // The bearing from the end circle to the end tangent.
       final endCircleToTangentEndBearing =
-          endingCircle.bearingTo(tangentEndBearingPoint);
+          endingCircle.spherical.initialBearingTo(tangentEndBearingPoint);
 
       // The end tangent point calculated from the end circle center.
-      tangentEnd = endingCircle.offset(
-        turningRadius,
-        endCircleToTangentEndBearing,
+      tangentEnd = endingCircle.spherical.destinationPoint(
+        distance: turningRadius,
+        bearing: endCircleToTangentEndBearing,
       );
 
       // The bearing from the start to end tangent points.
-      tangentStartBearing = tangentStart.bearingTo(tangentEnd);
+      tangentStartBearing = tangentStart.spherical.initialBearingTo(tangentEnd);
 
-      middleLength = tangentStart.distanceTo(tangentEnd);
+      middleLength = tangentStart.spherical.distanceTo(tangentEnd);
     } else if (pathType == DubinsPathType.lsr ||
         pathType == DubinsPathType.rsl) {
       // The starting circle is offset by one diameter to get the
       // diagonal tangent.
-      final offsetStartingCircle = startingCircle.offset(
-        2 * turningRadius,
-        theta,
+      final offsetStartingCircle = startingCircle.spherical.destinationPoint(
+        distance: 2 * turningRadius,
+        bearing: theta,
       );
 
       // The bearing from the offset starting circle to the ending circle.
-      tangentStartBearing = offsetStartingCircle.bearingTo(endingCircle);
+      tangentStartBearing =
+          offsetStartingCircle.spherical.initialBearingTo(endingCircle);
 
       // The bearing is the same since the tangent is straight.
       tangentEndBearing = tangentStartBearing;
 
       // The assumed tangent length.
-      final tangentLength = offsetStartingCircle.distanceTo(endingCircle);
+      final tangentLength =
+          offsetStartingCircle.spherical.distanceTo(endingCircle);
 
       // The end tangent point, but it might have a radius mismatch from the
       // end circle if the distance is long enough, so we use the bearing of
       // this point from the end circle to get the tangent point with correct
       // radius.
-      final tangentEndBearingPoint = tangentStart.offset(
-        tangentLength,
-        tangentStartBearing,
+      final tangentEndBearingPoint = tangentStart.spherical.destinationPoint(
+        distance: tangentLength,
+        bearing: tangentStartBearing,
       );
 
       // The bearing from the end circle to the end tangent.
       final endCircleToTangentEndBearing =
-          endingCircle.bearingTo(tangentEndBearingPoint);
+          endingCircle.spherical.initialBearingTo(tangentEndBearingPoint);
 
       // The end tangent point calculated from the end circle center.
-      tangentEnd = endingCircle.offset(
-        turningRadius,
-        endCircleToTangentEndBearing,
+      tangentEnd = endingCircle.spherical.destinationPoint(
+        distance: turningRadius,
+        bearing: endCircleToTangentEndBearing,
       );
 
-      middleLength = tangentStart.distanceTo(tangentEnd);
+      middleLength = tangentStart.spherical.distanceTo(tangentEnd);
     } else if (pathType == DubinsPathType.lrl ||
         pathType == DubinsPathType.rlr) {
       // Change the sign of angle/bearing modifiers if we're turning left.
@@ -324,30 +329,31 @@ class DubinsPath {
       // Turn by 90 degrees since the vehicle drives orthogonal to the radius.
       tangentStartBearing = theta - middleTurnSign * 90;
 
-      middleCircleCenter = startingCircle.offset(
-        2 * turningRadius,
-        theta,
+      middleCircleCenter = startingCircle.spherical.destinationPoint(
+        distance: 2 * turningRadius,
+        bearing: theta,
       );
 
       // The angle/bearing from the middle circle to the ending circle.
-      final middleToEndBearing = middleCircleCenter.bearingTo(endingCircle);
+      final middleToEndBearing =
+          middleCircleCenter.spherical.initialBearingTo(endingCircle);
 
       // Turn by 90 degrees since the vehicle drives orthogonal to the radius.
       tangentEndBearing = middleToEndBearing + middleTurnSign * 90;
 
-      tangentEnd = middleCircleCenter.offset(
-        turningRadius,
-        middleToEndBearing,
+      tangentEnd = middleCircleCenter.spherical.destinationPoint(
+        distance: turningRadius,
+        bearing: middleToEndBearing,
       );
 
       // The angle/amount of the middle turning circle we're turning.
       final middleTurnAngle = mod2pi(
         middleTurnSign *
             degToRadian(
-              middleCircleCenter.bearingTo(
+              middleCircleCenter.spherical.initialBearingTo(
                     tangentEnd,
                   ) -
-                  middleCircleCenter.bearingTo(
+                  middleCircleCenter.spherical.initialBearingTo(
                     tangentStart,
                   ),
             ),
@@ -365,10 +371,10 @@ class DubinsPath {
     final startTurnAngle = mod2pi(
       startTurnSign *
           degToRadian(
-            startingCircle.bearingTo(
+            startingCircle.spherical.initialBearingTo(
                   tangentStart,
                 ) -
-                startingCircle.bearingTo(start.position),
+                startingCircle.spherical.initialBearingTo(start.position),
           ),
     );
 
@@ -382,8 +388,8 @@ class DubinsPath {
     final endTurnAngle = mod2pi(
       endTurnSign *
           degToRadian(
-            endingCircle.bearingTo(end.position) -
-                endingCircle.bearingTo(tangentEnd),
+            endingCircle.spherical.initialBearingTo(end.position) -
+                endingCircle.spherical.initialBearingTo(tangentEnd),
           ),
     );
     // The length of the first section.
@@ -437,10 +443,11 @@ class DubinsPath {
     required int sectionIndex,
     required double currentLength,
   }) {
-    LatLng? circleCenter;
+    Geographic? circleCenter;
     var angleStep = 0.0;
+    var bearing = origin.bearing;
 
-    late LatLng nextPoint;
+    late Geographic nextPoint;
 
     final path = pathData(pathType);
 
@@ -460,7 +467,7 @@ class DubinsPath {
     }
     // Calculate next point when turning.
     if (circleCenter != null) {
-      final angle = circleCenter.bearingTo(origin.position);
+      final angle = circleCenter.spherical.initialBearingTo(origin.position);
 
       // Make the step negative if we're turning left, positive otherwise.
       final sign = switch (section) {
@@ -472,23 +479,30 @@ class DubinsPath {
       // revolve around the [circleCenter].
       angleStep = sign * angleStepSize;
 
-      nextPoint = circleCenter.offset(
-        turningRadius,
-        angle + angleStep,
+      nextPoint = circleCenter.spherical.destinationPoint(
+        distance: turningRadius,
+        bearing: angle + angleStep,
       );
+
+      bearing += angleStep;
     }
     // Calculate next point when going straight.
     else {
-      final stepFraction = currentLength / pathData(pathType)!.middleLength;
-      nextPoint = LatLngTween(
-        begin: pathData(pathType)!.tangentStart.position,
-        end: pathData(pathType)!.tangentEnd.position,
-      ).transform(stepFraction);
+      nextPoint = origin.position.spherical.destinationPoint(
+        distance: stepSize,
+        bearing: origin.bearing,
+      );
+
+      bearing = pathData(pathType)!
+          .tangentStart
+          .position
+          .spherical
+          .finalBearingTo(nextPoint);
     }
 
     return WayPoint(
       position: nextPoint,
-      bearing: origin.bearing + angleStep,
+      bearing: bearing,
       velocity: origin.velocity,
     );
   }
@@ -514,7 +528,6 @@ class DubinsPath {
         1 => path.middleLength,
         _ => path.endLength,
       };
-
       // No points to add if section has no length.
       if (sectionLength == 0) {
         return;

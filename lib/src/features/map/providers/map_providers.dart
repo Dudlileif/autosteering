@@ -7,6 +7,7 @@ import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -232,25 +233,29 @@ class MapOffset3D extends _$MapOffset3D {
 LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
   final offset = ref.watch(mapOffsetProvider);
   if (offset == const MapCenterOffset()) {
-    return ref.watch(mainVehicleProvider.select((vehicle) => vehicle.position));
+    return ref.watch(
+      mainVehicleProvider.select((vehicle) => vehicle.position.latLng),
+    );
   }
   final vehicle = ref.watch(mainVehicleProvider);
 
   final use3DPerspective = ref.watch(mapUse3DPerspectiveProvider);
   final perspectiveAngle = ref.watch(map3DPerspectiveAngleProvider);
 
-  return vehicle.position
-      .offset(
-        offset.x,
-        normalizeBearing(vehicle.bearing + 90),
+  return vehicle.position.spherical
+      .destinationPoint(
+        distance: offset.x,
+        bearing: (vehicle.bearing + 90).wrap360(),
       )
-      .offset(
-        switch (use3DPerspective) {
+      .spherical
+      .destinationPoint(
+        distance: switch (use3DPerspective) {
           false => offset.y,
           true => offset.y * (1 + tan(perspectiveAngle)),
         },
-        vehicle.bearing,
-      );
+        bearing: vehicle.bearing,
+      )
+      .latLng;
 }
 
 /// Whether the map always should point to the north and not rotate.

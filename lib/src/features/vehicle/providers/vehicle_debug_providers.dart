@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/utils/position_projection_extensions.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -74,7 +75,7 @@ class DebugTravelledPathList extends _$DebugTravelledPathList {
     if (ref.watch(debugTravelledPathProvider)) {
       ref.listen(
         mainVehicleProvider,
-        (previous, next) => add(next.position),
+        (previous, next) => add(next.lookAheadStartPosition.latLng),
         fireImmediately: true,
       );
     }

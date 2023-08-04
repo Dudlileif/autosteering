@@ -180,10 +180,10 @@ class EquipmentPaths extends _$EquipmentPaths {
                     (_lastActiveSegments.elementAtOrNull(segment) ?? false)
                 ? [
                     state.last[segment]?.last ??
-                        equipment.segmentCenter(segment)
+                        equipment.segmentCenter(segment).latLng
                   ]
                 : active
-                    ? [equipment.segmentCenter(segment)]
+                    ? [equipment.segmentCenter(segment).latLng]
                     : null,
           );
 
@@ -202,14 +202,14 @@ class EquipmentPaths extends _$EquipmentPaths {
           );
           final addNext = positions
               .mapIndexed(
-                (segment, position) => shouldAddNext(position, segment),
+                (segment, position) => shouldAddNext(position.latLng, segment),
               )
               .reduce((value, element) => value || element);
 
           if (addNext) {
             state = state
               ..last.updateAll(
-                (key, value) => value?..add(positions[key]),
+                (key, value) => value?..add(positions[key].latLng),
               );
           }
         }
@@ -231,7 +231,7 @@ class EquipmentPaths extends _$EquipmentPaths {
     if (nextActive < prevActive) {
       state = state
         ..last.updateAll(
-          (key, value) => value?..add(equipment.segmentCenter(key)),
+          (key, value) => value?..add(equipment.segmentCenter(key).latLng),
         );
     }
   }

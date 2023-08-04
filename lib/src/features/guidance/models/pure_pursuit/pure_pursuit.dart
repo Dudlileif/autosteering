@@ -3,8 +3,7 @@ import 'dart:math';
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:dart_jts/dart_jts.dart' as jts;
-import 'package:latlong2/latlong.dart';
+import 'package:geobase/geobase.dart';
 
 /// An enumerator for which steering mode the [PurePursuit] model should
 /// use.
@@ -87,13 +86,15 @@ class PurePursuit {
     while (index + 1 < path.length) {
       final point = path[index];
       final nextPoint = path[index + 1];
-      if (point.position.distanceTo(nextPoint.position) > maxDistance) {
+      if (point.position.spherical.distanceTo(nextPoint.position) >
+          maxDistance) {
         path.insert(
           index + 1,
           point.copyWith(
-            position: point.position.offset(
-              maxDistance,
-              point.position.bearingTo(nextPoint.position),
+            position: point.position.spherical.destinationPoint(
+              distance: maxDistance,
+              bearing:
+                  point.position.spherical.initialBearingTo(nextPoint.position),
             ),
           ),
         );
@@ -102,15 +103,16 @@ class PurePursuit {
     }
 
     if (loopMode == PurePursuitLoopMode.straight) {
-      while (path.last.position.distanceTo(
+      while (path.last.position.spherical.distanceTo(
             path.first.position,
           ) >
           maxDistance) {
         path.add(
           path.last.copyWith(
-            position: path.last.position.offset(
-              maxDistance,
-              path.last.position.bearingTo(path.first.position),
+            position: path.last.position.spherical.destinationPoint(
+              distance: maxDistance,
+              bearing: path.last.position.spherical
+                  .initialBearingTo(path.first.position),
             ),
           ),
         );
@@ -167,32 +169,39 @@ class PurePursuit {
 
   /// The intersection point that is projected from the vehicle onto the
   /// line from the current to the next waypoint.
-  LatLng perpendicularIntersect(
+  Geographic perpendicularIntersect(
     Vehicle vehicle,
   ) {
-    final intersect = jts.LineSegment.fromCoordinates(
-      currentWayPoint.position.jtsCoordinate,
-      nextWayPoint(vehicle).position.jtsCoordinate,
-    ).projectCoord(vehicle.pursuitAxlePosition.jtsCoordinate);
+    final nextPoint = nextWayPoint(vehicle).position;
 
-    return intersect.latLng;
+    final distanceAlong = vehicle.pursuitAxlePosition.spherical
+        .alongTrackDistanceTo(start: currentWayPoint.position, end: nextPoint);
+
+    final bearing =
+        currentWayPoint.position.spherical.initialBearingTo(nextPoint);
+
+    assert(!bearing.isNaN, 'Bearing error');
+
+    return currentWayPoint.position.spherical
+        .destinationPoint(distance: distanceAlong, bearing: bearing);
   }
 
   /// The distance from the vehicle to the [perpendicularIntersect] point.
   ///
-  /// The value is negative if the line is to the left of the vehicle.
+  /// The value is negative if the vehicle is to the left of the line.
   double perpendicularDistance(
     Vehicle vehicle,
   ) {
-    final intersect = perpendicularIntersect(vehicle);
+    final sign = switch (vehicle.isReversing) {
+      false => 1,
+      true => -1,
+    };
 
-    final orientation = jts.Orientation.index(
-      nextWayPoint(vehicle).position.jtsCoordinate,
-      vehicle.pursuitAxlePosition.jtsCoordinate,
-      intersect.jtsCoordinate,
-    );
-
-    return -orientation * vehicle.pursuitAxlePosition.distanceTo(intersect);
+    return sign *
+        vehicle.pursuitAxlePosition.spherical.crossTrackDistanceTo(
+          start: currentWayPoint.position,
+          end: nextWayPoint(vehicle).position,
+        );
   }
 
   /// The waypoint in [path] that is closest to the [vehicle].
@@ -200,10 +209,10 @@ class PurePursuit {
     Vehicle vehicle,
   ) =>
       path.reduce(
-        (value, element) => element.position.distanceTo(
+        (value, element) => element.position.spherical.distanceTo(
                   vehicle.pursuitAxlePosition,
                 ) <
-                value.position.distanceTo(vehicle.pursuitAxlePosition)
+                value.position.spherical.distanceTo(vehicle.pursuitAxlePosition)
             ? element
             : value,
       );
@@ -215,11 +224,13 @@ class PurePursuit {
   void tryChangeWayPoint(
     Vehicle vehicle,
   ) {
-    final progress = jts.LineSegment.fromCoordinates(
-      currentWayPoint.position.jtsCoordinate,
-      nextWayPoint(vehicle).position.jtsCoordinate,
-    ).projectionFactor(vehicle.pursuitAxlePosition.jtsCoordinate);
-    if (progress > 1) {
+    final nextPoint = nextWayPoint(vehicle).position;
+
+    final progress = vehicle.pursuitAxlePosition.spherical.alongTrackDistanceTo(
+      start: currentWayPoint.position,
+      end: nextPoint,
+    );
+    if (progress > currentWayPoint.position.spherical.distanceTo(nextPoint)) {
       currentIndex = nextIndex(vehicle);
     }
   }
@@ -232,16 +243,10 @@ class PurePursuit {
       vehicle.pidParameters,
     );
 
-    final sign = switch (vehicle.isReversing) {
-      true => -1,
-      false => 1,
-    };
-
-    return sign *
-        steeringAngle.clamp(
-          -vehicle.steeringAngleMax,
-          vehicle.steeringAngleMax,
-        );
+    return steeringAngle.clamp(
+      -vehicle.steeringAngleMax,
+      vehicle.steeringAngleMax,
+    );
   }
 
   /// Finds the points that we use to get the secant line that intersects
@@ -250,13 +255,13 @@ class PurePursuit {
   ///
   /// If the closest point is outside the circle, only this point will be
   /// returned.
-  (WayPoint inside, WayPoint? outside) findLookAheadLinePoints(
+  ({WayPoint inside, WayPoint? outside}) findLookAheadLinePoints(
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
     var insidePoint = nextWayPoint(vehicle);
 
-    var insideDistance = vehicle.lookAheadStartPosition.distanceTo(
+    var insideDistance = vehicle.lookAheadStartPosition.spherical.distanceTo(
       insidePoint.position,
     );
 
@@ -264,17 +269,18 @@ class PurePursuit {
     // intermediate point on the circle in the direction of the closest point.
     if (insideDistance >= lookAheadDistance) {
       return (
-        insidePoint.copyWith(
-          position: vehicle.lookAheadStartPosition.offset(
-            lookAheadDistance,
-            vehicle.position.bearingTo(insidePoint.position),
+        inside: insidePoint.copyWith(
+          position: vehicle.lookAheadStartPosition.spherical.destinationPoint(
+            distance: lookAheadDistance,
+            bearing: vehicle.lookAheadStartPosition.spherical
+                .initialBearingTo(insidePoint.position),
           ),
         ),
-        null,
+        outside: null,
       );
     }
 
-    late WayPoint outsidePoint;
+    WayPoint? outsidePoint;
 
     for (var i = 1; i < path.length; i++) {
       final index = nextIndex(vehicle) +
@@ -284,7 +290,7 @@ class PurePursuit {
           };
       final point = path[index % path.length];
       final distance =
-          vehicle.lookAheadStartPosition.distanceTo(point.position);
+          vehicle.lookAheadStartPosition.spherical.distanceTo(point.position);
       if (distance <= lookAheadDistance) {
         insidePoint = point;
         insideDistance = distance;
@@ -293,29 +299,34 @@ class PurePursuit {
         break;
       }
     }
-    return (insidePoint, outsidePoint);
+    return (inside: insidePoint, outside: outsidePoint);
   }
 
   /// The point on the secant line that is the shortest distance from the
   /// vehicle's starting point.
-  LatLng? lookAheadVehicleToLineProjection(
+  Geographic? lookAheadVehicleToLineProjection(
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
-    final (insidePoint, outsidePoint) =
-        findLookAheadLinePoints(vehicle, lookAheadDistance);
+    final points = findLookAheadLinePoints(vehicle, lookAheadDistance);
 
-    if (outsidePoint == null) {
+    if (points.outside == null) {
       return null;
     }
-    final line = jts.LineSegment.fromCoordinates(
-      insidePoint.position.jtsCoordinate,
-      outsidePoint.position.jtsCoordinate,
+
+    final crossDistance =
+        vehicle.lookAheadStartPosition.spherical.crossTrackDistanceTo(
+      start: points.inside.position,
+      end: points.outside!.position,
     );
 
-    return line
-        .projectCoord(vehicle.lookAheadStartPosition.jtsCoordinate)
-        .latLng;
+    final secantBearing = points.inside.position.spherical
+        .initialBearingTo(points.outside!.position);
+
+    return vehicle.lookAheadStartPosition.spherical.destinationPoint(
+      distance: crossDistance,
+      bearing: secantBearing - 90,
+    );
   }
 
   /// Finds the intersection waypoints on the look ahead circle.
@@ -328,80 +339,98 @@ class PurePursuit {
   /// points are returned as the best and worst, sorted by their distance to
   /// the next point outside the circle. The best point is what should be
   /// used for path tracking.
-  (WayPoint best, WayPoint? worst) findLookAheadCirclePoints(
+  ({WayPoint best, WayPoint? worst}) findLookAheadCirclePoints(
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
-    final (insidePoint, outsidePoint) =
-        findLookAheadLinePoints(vehicle, lookAheadDistance);
+    final points = findLookAheadLinePoints(vehicle, lookAheadDistance);
 
-    if (outsidePoint == null) {
-      return (insidePoint, null);
+    if (points.outside == null) {
+      return (best: points.inside, worst: null);
     }
 
-    final line = jts.LineSegment.fromCoordinates(
-      insidePoint.position.jtsCoordinate,
-      outsidePoint.position.jtsCoordinate,
+    final vehicleAlongDistance =
+        vehicle.lookAheadStartPosition.spherical.alongTrackDistanceTo(
+      start: points.inside.position,
+      end: points.outside!.position,
     );
 
-    final vehicleToLineProjection =
-        line.projectCoord(vehicle.lookAheadStartPosition.jtsCoordinate).latLng;
-
-    final vehicleToLineDistance = vehicle.lookAheadStartPosition.distanceTo(
-      vehicleToLineProjection,
+    final vehicleToLineDistance =
+        vehicle.lookAheadStartPosition.spherical.crossTrackDistanceTo(
+      start: points.inside.position,
+      end: points.outside!.position,
     );
+
     final projectionToCircleDistance =
         sqrt(pow(lookAheadDistance, 2) - pow(vehicleToLineDistance, 2));
 
-    final pointA = vehicleToLineProjection.offset(
-      projectionToCircleDistance,
-      vehicleToLineProjection.bearingTo(insidePoint.position),
+    final secantBearing = points.inside.position.spherical
+        .initialBearingTo(points.outside!.position);
+
+    final vehicleToLineProjection =
+        points.inside.position.spherical.destinationPoint(
+      distance: vehicleAlongDistance,
+      bearing: secantBearing,
     );
 
-    final pointB = vehicleToLineProjection.offset(
-      projectionToCircleDistance,
-      normalizeBearing(
-        vehicleToLineProjection.bearingTo(insidePoint.position) + 180,
-      ),
+    var vehicleLineProjectionToInsidePointBearing = vehicleToLineProjection
+        .spherical
+        .initialBearingTo(points.inside.position);
+    if (vehicleLineProjectionToInsidePointBearing.isNaN) {
+      vehicleLineProjectionToInsidePointBearing = secantBearing;
+    }
+
+    final pointA = vehicleToLineProjection.spherical.destinationPoint(
+      distance: projectionToCircleDistance,
+      bearing: vehicleLineProjectionToInsidePointBearing,
     );
 
-    final distanceA = pointA.distanceTo(outsidePoint.position);
-    final distanceB = pointB.distanceTo(outsidePoint.position);
+    final pointB = vehicleToLineProjection.spherical.destinationPoint(
+      distance: projectionToCircleDistance,
+      bearing: (vehicleLineProjectionToInsidePointBearing + 180).wrap360(),
+    );
+
+    final distanceA = pointA.spherical.distanceTo(points.outside!.position);
+    final distanceB = pointB.spherical.distanceTo(points.outside!.position);
 
     final wayPointA = WayPoint(
       position: pointA,
-      bearing: insidePoint.position.bearingTo(outsidePoint.position),
-      velocity: insidePoint.velocity,
+      bearing: points.inside.position.spherical.finalBearingTo(pointA),
+      velocity: points.inside.velocity,
     );
-
     final wayPointB = WayPoint(
       position: pointB,
-      bearing: insidePoint.position.bearingTo(outsidePoint.position),
-      velocity: insidePoint.velocity,
+      bearing: points.inside.position.spherical.finalBearingTo(pointB),
+      velocity: points.inside.velocity,
     );
 
     if (distanceA < distanceB) {
-      return (wayPointA, wayPointB);
+      return (best: wayPointA, worst: wayPointB);
     }
-    return (wayPointB, wayPointA);
+    return (best: wayPointB, worst: wayPointA);
   }
 
   /// Calculates the steering angle needed to reach the target point when
   /// using a the look ahead method.
+  ///
+  /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
   double nextSteeringAngleLookAhead(
     Vehicle vehicle,
     double lookAheadDistance,
   ) {
-    final angle = vehicle.lookAheadStartPosition.bearingTo(
-          findLookAheadCirclePoints(vehicle, lookAheadDistance).$1.position,
-        ) -
-        vehicle.bearing;
+    final bearingToPoint =
+        vehicle.lookAheadStartPosition.spherical.initialBearingTo(
+      findLookAheadCirclePoints(vehicle, lookAheadDistance).best.position,
+    );
+
+    final angle = signedBearingDifference(
+      vehicle.bearing,
+      bearingToPoint,
+    );
 
     final steeringAngle = atan(
-          2 * vehicle.wheelBase * sin(angle * pi / 180) / lookAheadDistance,
-        ) *
-        180 /
-        pi;
+      2 * vehicle.wheelBase * sin(angle.toRadians()) / lookAheadDistance,
+    ).toDegrees();
 
     return steeringAngle.clamp(
       -vehicle.steeringAngleMax,

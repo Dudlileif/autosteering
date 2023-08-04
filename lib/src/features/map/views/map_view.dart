@@ -60,34 +60,50 @@ class MapAndGaugeStackView extends ConsumerWidget {
             if (event is KeyDownEvent)
               ref.read(simInputProvider.notifier).send(
                     switch (shiftModifier) {
-                      false => const (velocity: 0),
-                      true => const (steeringAngle: 0)
+                      false => const (velocityChange: SimInputChange.reset),
+                      true => const (steeringChange: SimInputChange.reset)
                     },
                   ),
           },
         LogicalKeyboardKey.keyW || LogicalKeyboardKey.arrowUp => {
             if (event is KeyDownEvent)
-              ref.read(simVehicleAcceleratorProvider.notifier).forward()
+              ref
+                  .read(simInputProvider.notifier)
+                  .send((velocityChange: SimInputChange.increase))
             else if (event is KeyUpEvent)
-              ref.read(simVehicleAcceleratorProvider.notifier).cancel()
+              ref
+                  .read(simInputProvider.notifier)
+                  .send((velocityChange: SimInputChange.hold))
           },
         LogicalKeyboardKey.keyS || LogicalKeyboardKey.arrowDown => {
             if (event is KeyDownEvent)
-              ref.read(simVehicleAcceleratorProvider.notifier).reverse()
+              ref
+                  .read(simInputProvider.notifier)
+                  .send((velocityChange: SimInputChange.decrease))
             else if (event is KeyUpEvent)
-              ref.read(simVehicleAcceleratorProvider.notifier).cancel()
+              ref
+                  .read(simInputProvider.notifier)
+                  .send((velocityChange: SimInputChange.hold))
           },
         LogicalKeyboardKey.keyA || LogicalKeyboardKey.arrowLeft => {
             if (event is KeyDownEvent)
-              ref.read(simVehicleSteeringProvider.notifier).left()
+              ref
+                  .read(simInputProvider.notifier)
+                  .send((steeringChange: SimInputChange.decrease))
             else if (event is KeyUpEvent)
-              ref.read(simVehicleSteeringProvider.notifier).cancel()
+              ref
+                  .read(simInputProvider.notifier)
+                  .send((steeringChange: SimInputChange.hold))
           },
         LogicalKeyboardKey.keyD || LogicalKeyboardKey.arrowRight => {
             if (event is KeyDownEvent)
-              ref.read(simVehicleSteeringProvider.notifier).right()
+              ref
+                  .read(simInputProvider.notifier)
+                  .send((steeringChange: SimInputChange.increase))
             else if (event is KeyUpEvent)
-              ref.read(simVehicleSteeringProvider.notifier).cancel()
+              ref
+                  .read(simInputProvider.notifier)
+                  .send((steeringChange: SimInputChange.hold))
           },
         _ => null
       },
@@ -125,6 +141,10 @@ class MapAndGaugeStackView extends ConsumerWidget {
               child: BasicVehicleGauges(),
             ),
           ),
+          if (ref.watch(showABLineDebugLayerProvider))
+            const ABLineOffsetDebugControls(),
+          if (ref.watch(showPurePursuitDebugLayerProvider))
+            const PurePursuitDebugWidget()
         ],
       ),
     );

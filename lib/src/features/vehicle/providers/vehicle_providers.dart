@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'vehicle_providers.g.dart';
@@ -12,7 +14,7 @@ part 'vehicle_providers.g.dart';
 class MainVehicle extends _$MainVehicle {
   @override
   Vehicle build() => Tractor(
-        position: ref.read(homePositionProvider),
+        position: ref.read(homePositionProvider).gbPosition,
         antennaHeight: 2.822,
         length: 4.358,
         width: 2.360,
@@ -39,7 +41,7 @@ class MainVehicle extends _$MainVehicle {
   }
 
   /// Set the position of the [state] to [value].
-  void setPositon(LatLng value) {
+  void setPositon(Geographic value) {
     if (value != state.position) {
       Future(() => state = state.copyWith(position: value));
     }
@@ -71,32 +73,23 @@ class MainVehicle extends _$MainVehicle {
   void reset() => ref.invalidateSelf();
 }
 
-/// A provider for the distance travelled by the vehicle.
-@riverpod
-class VehicleTravelledDistance extends _$VehicleTravelledDistance {
+/// A provider for whether the vehicle should steer automatically.
+@Riverpod(keepAlive: true)
+class AutoSteerEnabled extends _$AutoSteerEnabled {
   @override
-  double build() => 0;
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (next != previous) {
+        ref.read(simInputProvider.notifier).send((autoSteerEnabled: next));
+      }
+    });
 
-  /// Update the [state] by adding [value].
-  void updateWith(double value) => Future(() => state += value);
-}
-
-/// A provider for the vehicle's velocity gauge.
-@riverpod
-class VehicleVelocity extends _$VehicleVelocity {
-  @override
-  double build() => 0;
+    return false;
+  }
 
   /// Update the [state] to [value].
-  void update(double value) => Future(() => state = value);
-}
+  void update({required bool value}) => Future(() => state = value);
 
-/// A provider for the vehicle's bearing gauge.
-@riverpod
-class VehicleBearing extends _$VehicleBearing {
-  @override
-  double build() => 0;
-
-  /// Update the [state] by adding [value].
-  void update(double value) => Future(() => state = value);
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
 }

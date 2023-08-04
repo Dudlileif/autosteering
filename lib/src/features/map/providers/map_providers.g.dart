@@ -23,7 +23,7 @@ final mapOffsetProvider = Provider<MapCenterOffset>.internal(
 
 typedef MapOffsetRef = ProviderRef<MapCenterOffset>;
 String _$offsetVehiclePositionHash() =>
-    r'939c82d8ae7359ac475b6c9beadc079114be0fb2';
+    r'932c255b65d3b9b8faf7fab7176808ba3387308b';
 
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.
@@ -226,4 +226,5 @@ final map3DPerspectiveAngleProvider =
 );
 
 typedef _$Map3DPerspectiveAngle = Notifier<double>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

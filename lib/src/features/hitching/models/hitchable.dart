@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:geobase/geobase.dart';
 import 'package:uuid/uuid.dart';
 
 /// Which type of hitch a [Hitchable] is using to connect to it's parent.
@@ -69,10 +69,10 @@ abstract class Hitchable {
   Hitchable? hitchRearTowbarChild;
 
   /// The position of this hitchable.
-  LatLng get position;
+  Geographic get position;
 
   /// Update the position of this.
-  set position(LatLng value);
+  set position(Geographic value);
 
   /// The bearing/bearing of this in degrees.
   double get bearing;
@@ -132,16 +132,16 @@ abstract class Hitchable {
       ];
 
   /// The position of the front fixed hitch point, if there is one.
-  LatLng? get hitchFrontFixedPoint;
+  Geographic? get hitchFrontFixedPoint;
 
   /// The position of the rear fixed hitch point, if there is one.
-  LatLng? get hitchRearFixedPoint;
+  Geographic? get hitchRearFixedPoint;
 
   /// The position of the rear towbar hitch point, if there is one.
-  LatLng? get hitchRearTowbarPoint;
+  Geographic? get hitchRearTowbarPoint;
 
   /// The hitch positions of this that are not null.
-  Iterable<LatLng> get hitchPoints => [
+  Iterable<Geographic> get hitchPoints => [
         hitchFrontFixedPoint,
         hitchRearFixedPoint,
         hitchRearTowbarPoint

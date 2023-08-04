@@ -24,18 +24,24 @@ class MainMap extends ConsumerWidget {
         minZoom: 4,
         maxZoom: 22,
         interactiveFlags: ref.watch(centerMapOnVehicleProvider)
-            ? InteractiveFlag.none
+            ? InteractiveFlag.pinchZoom | InteractiveFlag.doubleTapZoom
             : InteractiveFlag.all,
         onMapEvent: (event) {
           // Force scrolling zoom events to keep position when the map
           // should be centered on the vehicle. Otherwise it would
           // zoom towards pointer/pinch center.
-          if (ref.watch(centerMapOnVehicleProvider) &&
-              event is MapEventScrollWheelZoom) {
-            ref
-                .read(mainMapControllerProvider)
-                .move(event.center, event.targetZoom);
+          if (ref.watch(centerMapOnVehicleProvider)) {
+            if (event is MapEventScrollWheelZoom) {
+              ref
+                  .read(mainMapControllerProvider)
+                  .move(event.center, event.targetZoom);
+            } else if (event is MapEventDoubleTapZoom) {
+              ref
+                  .read(mainMapControllerProvider)
+                  .move(event.center, event.targetZoom + 1);
+            }
           }
+
           // Force map to not allow rotation when it should always point north.
           if (ref.watch(alwaysPointNorthProvider) && event is MapEventRotate) {
             if (event.targetRotation != 0) {
@@ -78,6 +84,7 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showDubinsPathDebugLayerProvider))
           const DubinsPathDebugLayer(),
+        if (ref.watch(showABLineDebugLayerProvider)) const ABLineDebugLayer(),
       ],
     );
   }

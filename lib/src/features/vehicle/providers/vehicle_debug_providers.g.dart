@@ -99,7 +99,7 @@ final debugTravelledPathSizeProvider =
 
 typedef _$DebugTravelledPathSize = Notifier<int>;
 String _$debugTravelledPathListHash() =>
-    r'9511fef26c55caa1f0b9946c0dddb2e3fd5a9c88';
+    r'1c3cb1277562092280683c8f7cc1ce06cc095355';
 
 /// A list of the last [DebugTravelledPathSize] position points for the vehicle.
 ///
@@ -136,4 +136,5 @@ final debugVehicleHitchesProvider =
 );
 
 typedef _$DebugVehicleHitches = Notifier<bool>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

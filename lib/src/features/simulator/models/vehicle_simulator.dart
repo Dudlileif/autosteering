@@ -7,7 +7,9 @@ import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:geobase/geobase.dart';
+
+//TODO: look into making the simulation only return data similar to nmea from gps
 
 /// A class for simulating how vehicles should move given their position,
 /// bearing, steering angle and velocity.
@@ -33,16 +35,17 @@ class VehicleSimulator {
       if (state.vehicle != null) {
         state.update();
 
-        // If the vehicle has moved or changed we send the new state back to the
+        // If the state has changed we send the new state back to the
         // main/UI isolate.
         if (state.didChange) {
           sendPort.send(
             (
               vehicle: state.vehicle,
-              velocity: state.velocity,
-              bearing: state.bearing,
+              velocity: state.gaugeVelocity,
+              bearing: state.gaugeBearing,
               distance: state.distance,
               purePursuit: state.purePursuit,
+              abLine: state.abLine,
             ),
           );
         }
@@ -75,6 +78,7 @@ class VehicleSimulator {
         num bearing,
         num distance,
         PurePursuit? purePursuit,
+        ABLine? abLine,
       })> webWorker(
     Stream<dynamic> vehicleEvents,
   ) {
@@ -93,6 +97,7 @@ class VehicleSimulator {
           num bearing,
           num distance,
           PurePursuit? purePursuit,
+          ABLine? abLine,
         })>();
 
     // A stream event generator that periodically updates the simulation and
@@ -101,14 +106,16 @@ class VehicleSimulator {
         (timer) {
       state.update();
 
+      // If the state has changed we add the new state to the stream.
       if (state.didChange && streamController.hasListener) {
         streamController.add(
           (
             vehicle: state.vehicle,
-            velocity: state.velocity,
-            bearing: state.bearing,
+            velocity: state.gaugeVelocity,
+            bearing: state.gaugeBearing,
             distance: state.distance,
             purePursuit: state.purePursuit,
+            abLine: state.abLine,
           ),
         );
       }
@@ -116,6 +123,22 @@ class VehicleSimulator {
 
     return streamController.stream;
   }
+}
+
+/// An enumerator used to signal how a value in the [_VehicleSimulatorState]
+/// should change.
+enum SimInputChange {
+  /// Increase the value.
+  increase,
+
+  /// Decrease the value.
+  decrease,
+
+  /// Keep the current value.
+  hold,
+
+  /// Resets the value to 0.
+  reset,
 }
 
 /// A class for holding and updating the state of the [VehicleSimulator].
@@ -131,11 +154,11 @@ class _VehicleSimulatorState {
 
   /// The velocity of the current vehicle, as calculated from the [distance] and
   /// [period].
-  double velocity = 0;
+  double gaugeVelocity = 0;
 
   /// The bearing of the current vehicle, as calculated from the previous
   /// position to the current position.
-  double bearing = 0;
+  double gaugeBearing = 0;
 
   /// Whether the state changed in the last update.
   bool didChange = true;
@@ -143,11 +166,25 @@ class _VehicleSimulatorState {
   /// The pure pursuit to drive after, if there is one.
   PurePursuit? purePursuit;
 
+  /// The AB-line to drive after, if there is one.
+  ABLine? abLine;
+
   /// A static turning circle center to keep while the steering angle is
   /// constant. We use this due to small errors when using the
   /// [vehicle].turningRadiusCenter as it would move around slightly as the
   /// vehicle is moving, and cause wrong calculations.
-  LatLng? turningCircleCenter;
+  Geographic? turningCircleCenter;
+
+  /// Whether the simulator is receiving manual input.
+  bool receivingManualInput = false;
+
+  /// If this is not [SimInputChange.hold] then the [vehicle]'s velocity is
+  /// manually changed due to input to the sim.
+  SimInputChange velocityChange = SimInputChange.hold;
+
+  /// If this is not [SimInputChange.hold] then the [vehicle]'s
+  /// steeringAngleInput is manually changed due to input to the sim.
+  SimInputChange steeringChange = SimInputChange.hold;
 
   /// Whether the vehicle should automatically slow down when no input is given.
   bool autoSlowDown = false;
@@ -158,6 +195,9 @@ class _VehicleSimulatorState {
 
   /// Whether the vehicle should use the [purePursuit] model to steer.
   bool enablePurePursuit = false;
+
+  /// Whehter the vehicle should automatically steer.
+  bool autoSteerEnabled = false;
 
   /// Which mode the [purePursuit] should use to go from the last to the first
   /// waypoint.
@@ -171,18 +211,35 @@ class _VehicleSimulatorState {
   /// the path is larger than the vehicle's min turning radius.
   PurePursuitMode tempPursuitMode = PurePursuitMode.pid;
 
+  /// The interpolation distance for points in the [purePursuit]
+  double pursuitInterpolationDistance = 4;
+
   /// The distance ahead of the vehicle the [purePursuit] should look for the
   /// path when in look ahead mode.
   double lookAheadDistance = 4;
+
+  /// A multiplicator for how much of the [vehicle]'s velocity we want to
+  /// add to the [lookAheadDistance].
+  double lookAheadVelocityGain = 0.5;
 
   /// The previous time of when the simulation was updated.
   DateTime prevUpdateTime = DateTime.now();
 
   /// The time period between the last update and this current update.
+  ///
+  /// In seconds.
   double period = 0;
 
   /// Whether we should force update for the next update, i.e. send the state.
   bool forceChange = false;
+
+  double get effectiveLookAheadDistance {
+    if (vehicle != null) {
+      return lookAheadDistance +
+          vehicle!.velocity.abs() * lookAheadVelocityGain;
+    }
+    return lookAheadDistance;
+  }
 
   /// Update the [prevUpdateTime] and the [period] for the next simulation.
   void updateTime() {
@@ -210,29 +267,32 @@ class _VehicleSimulatorState {
             .clamp(-message.steeringAngleMax, message.steeringAngleMax),
       );
     }
+
     // Update the vehicle position.
-    else if (message is ({LatLng position})) {
+    else if (message is ({Geographic position})) {
       vehicle?.position = message.position;
     }
     // Update the vehicle velocity
     else if (message is ({num velocity})) {
       vehicle?.velocity = message.velocity.toDouble();
     }
-    // Update the vehicle velocity by delta
-    else if (message is ({num velocityDelta})) {
-      vehicle?.velocity =
-          (vehicle!.velocity + (autoSlowDown ? 1.2 : 1) * message.velocityDelta)
-              .clamp(-12.0, 12.0);
+
+    // Update the vehicle velocity at a set rate.
+    else if (message is ({SimInputChange velocityChange})) {
+      velocityChange = message.velocityChange;
+    }
+    // Update the vehicle steering angle at a set rate.
+    else if (message is ({SimInputChange steeringChange})) {
+      receivingManualInput = message.steeringChange != SimInputChange.hold;
+      steeringChange = message.steeringChange;
     }
     // Update the vehicle steering angle input.
     else if (message is ({num steeringAngle})) {
       vehicle?.steeringAngleInput = message.steeringAngle.toDouble();
     }
-    // Update the vehicle steering angle input by delta.
-    else if (message is ({num steeringAngleDelta})) {
-      vehicle?.steeringAngleInput = (vehicle!.steeringAngleInput +
-              (autoCenterSteering ? 2 : 1) * message.steeringAngleDelta)
-          .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+    // Enable/disable auto steering.
+    else if (message is ({bool autoSteerEnabled})) {
+      autoSteerEnabled = message.autoSteerEnabled;
     }
     // Set the pure pursuit model.
     else if (message is ({PurePursuit? purePursuit})) {
@@ -257,13 +317,11 @@ class _VehicleSimulatorState {
     else if (message is PurePursuitMode) {
       pursuitMode = message;
       tempPursuitMode = pursuitMode;
-    }
-    // Set new look ahead distance.
-    else if (message is ({num lookAheadDistance})) {
-      lookAheadDistance = message.lookAheadDistance.toDouble();
+    } else if (message is ({double pursuitInterpolationDistance})) {
+      pursuitInterpolationDistance = message.pursuitInterpolationDistance;
       // Interpolate the path with new max distance.
       purePursuit?.interPolateWayPoints(
-        maxDistance: lookAheadDistance,
+        maxDistance: pursuitInterpolationDistance,
         loopMode: pursuitLoopMode,
       );
       // Find the current index as the closest point since the path has updated.
@@ -271,13 +329,21 @@ class _VehicleSimulatorState {
         purePursuit!.currentIndex = purePursuit!.closestIndex(vehicle!);
       }
     }
+    // Set new look ahead distance.
+    else if (message is ({num lookAheadDistance})) {
+      lookAheadDistance = message.lookAheadDistance.toDouble();
+    }
+    // Set the look ahead distance velocity gain.
+    else if (message is ({double lookAheadVelocityGain})) {
+      lookAheadVelocityGain = message.lookAheadVelocityGain;
+    }
     // Change the pure pursuit loop mode, i.e. if/how to go from the last to
     // the first point.
     else if (message is ({PurePursuitLoopMode pursuitLoopMode})) {
       pursuitLoopMode = message.pursuitLoopMode;
       // Interpolate the path since we might have new points.
       purePursuit?.interPolateWayPoints(
-        maxDistance: lookAheadDistance,
+        maxDistance: pursuitInterpolationDistance,
         loopMode: pursuitLoopMode,
       );
       // Find the current index as the closest point since the path has updated.
@@ -305,28 +371,126 @@ class _VehicleSimulatorState {
         if (parent != null) {}
       }
     }
+    // Update the AB-line to follow
+    else if (message is ({ABLine? abLine})) {
+      abLine = message.abLine;
+    }
+    // Update if the AB-line should automatically snap to the next offset.
+    else if (message is ({bool abLineSnapping})) {
+      abLine?.snapToClosestLine = message.abLineSnapping;
+    }
+    // Move the AB-line offset by 1 to the left if negative or to the
+    // right if positive.
+    else if (message is ({int abLineMoveOffset})) {
+      if (vehicle != null) {
+        switch (message.abLineMoveOffset.isNegative) {
+          case true:
+            abLine?.moveOffsetLeft(
+              vehicle!.pursuitAxlePosition,
+              vehicle!.bearing,
+            );
+          case false:
+            abLine?.moveOffsetRight(
+              vehicle!.pursuitAxlePosition,
+              vehicle!.bearing,
+            );
+        }
+      }
+    }
   }
 
   /// Check if [autoSlowDown] or [autoCenterSteering] should decrease the
   /// parameters they control.
-  void checkAutoSlowDownOrCentering() {
+  void updateVehicleVelocityAndSteering() {
     if (vehicle != null) {
-      if (autoSlowDown) {
-        vehicle!.velocity = switch (vehicle!.velocity.abs() > 0.1) {
-          true => vehicle!.velocity -
-              vehicle!.velocity / vehicle!.velocity.abs() * 0.0125,
-          false => 0,
-        };
+      // The acceleration rate of the vehicle, m/s^2.
+      const accelerationRate = 3;
+
+      // The acceleration rate when braking, m/s^2.
+      const brakingRate = 7;
+
+      switch (velocityChange) {
+        case SimInputChange.reset:
+          vehicle!.velocity = 0;
+          velocityChange = SimInputChange.hold;
+        case SimInputChange.increase:
+          vehicle!.velocity = (vehicle!.velocity +
+                  period *
+                      switch (vehicle!.velocity.isNegative) {
+                        true => brakingRate,
+                        false => accelerationRate,
+                      })
+              .clamp(-12.0, 12.0);
+        case SimInputChange.decrease:
+          vehicle!.velocity = (vehicle!.velocity -
+                  period *
+                      switch (vehicle!.velocity.isNegative) {
+                        true => accelerationRate,
+                        false => brakingRate,
+                      })
+              .clamp(-12.0, 12.0);
+
+        case SimInputChange.hold:
+          if (autoSlowDown) {
+            // Slowing rate m/s^2
+            const slowingRate = 2;
+
+            vehicle!.velocity = switch (vehicle!.velocity.abs() > 0.1) {
+              true => vehicle!.velocity -
+                  period *
+                      slowingRate *
+                      vehicle!.velocity /
+                      vehicle!.velocity.abs(),
+              false => 0,
+            };
+          }
       }
-      if (autoCenterSteering) {
-        vehicle!.steeringAngleInput =
-            switch (vehicle!.steeringAngle.abs() < 1) {
-          true => 0,
-          false => vehicle!.steeringAngleInput -
-              vehicle!.steeringAngleInput.abs() /
-                  vehicle!.steeringAngleInput *
-                  0.4,
-        };
+
+      // The steering rate of the vehicle, deg/s
+      const steeringRate = 30;
+
+      switch (steeringChange) {
+        case SimInputChange.reset:
+          vehicle!.steeringAngleInput = 0;
+          steeringChange = SimInputChange.hold;
+
+        case SimInputChange.increase:
+          if (vehicle!.steeringAngleInput == 0) {
+            vehicle!.steeringAngleInput = 0.5;
+          }
+          vehicle!.steeringAngleInput =
+              (vehicle!.steeringAngleInput + period * steeringRate)
+                  .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+        case SimInputChange.decrease:
+          if (vehicle!.steeringAngleInput == 0) {
+            vehicle!.steeringAngleInput = -0.5;
+          }
+          vehicle!.steeringAngleInput =
+              (vehicle!.steeringAngleInput - period * steeringRate)
+                  .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+
+        case SimInputChange.hold:
+          receivingManualInput = false;
+          if (autoCenterSteering) {
+            // Centering rate deg/s
+            const centeringRate = 25;
+
+            vehicle!.steeringAngleInput =
+                switch (vehicle!.steeringAngle.abs() < 0.5) {
+              true => 0,
+              false => vehicle!.steeringAngleInput -
+                  period *
+                      centeringRate *
+                      vehicle!.steeringAngleInput.abs() /
+                      vehicle!.steeringAngleInput,
+            };
+          }
+      }
+
+      // Filter out low angles as they make the simulation spazz out because the
+      // turning circles get very large.
+      if (vehicle!.steeringAngleInput.abs() < 0.5) {
+        vehicle!.steeringAngleInput = 0;
       }
     }
   }
@@ -340,49 +504,60 @@ class _VehicleSimulatorState {
     }
   }
 
-  /// Check and update the steering of the vehicle if pure pursuit is available
-  /// and activated.
-  void checkPurePursuit() {
-    if (purePursuit != null) {
-      purePursuit!.tryChangeWayPoint(vehicle!);
+  /// Check and update the steering of the vehicle if [autoSteerEnabled].
+  void checkAutoSteering() {
+    if (autoSteerEnabled && vehicle != null && !receivingManualInput) {
+      var steeringAngle = 0.0;
+      if (abLine != null) {
+        steeringAngle = abLine!.nextSteeringAngleLookAhead(
+          vehicle: vehicle!,
+          lookAheadDistance: effectiveLookAheadDistance,
+        );
+      } else if (purePursuit != null) {
+        purePursuit!.tryChangeWayPoint(vehicle!);
 
-      if (enablePurePursuit && vehicle != null) {
-        // Swap to look ahead if the distance is farther than the vehicle's
-        // min turning radius, as we'd be doing circles otherwise.
-        if (pursuitMode == PurePursuitMode.pid) {
-          final lateralDistance =
-              purePursuit!.perpendicularDistance(vehicle!).abs();
+        if (enablePurePursuit && vehicle != null && !receivingManualInput) {
+          // Swap to look ahead if the distance is farther than the vehicle's
+          // min turning radius, as we'd be doing circles otherwise.
+          if (pursuitMode == PurePursuitMode.pid) {
+            final lateralDistance =
+                purePursuit!.perpendicularDistance(vehicle!).abs();
 
-          // Switch if the distance is larger than 0.7 times the turning radius,
-          // this value is experimental to find a smoother transition to swap
-          // mode
-          if (lateralDistance > 0.7 * vehicle!.minTurningRadius &&
-              tempPursuitMode != PurePursuitMode.lookAhead) {
-            tempPursuitMode = PurePursuitMode.lookAhead;
+            // Switch if the distance is larger than 0.7 times the turning
+            // radius, this value is experimental to find a smoother transition
+            // to swap mode.
+            if (lateralDistance > 0.7 * vehicle!.minTurningRadius &&
+                tempPursuitMode != PurePursuitMode.lookAhead) {
+              tempPursuitMode = PurePursuitMode.lookAhead;
+            }
+            // Swap back to the pid mode when we're within the turning circle
+            // radius of the path.
+            else if (pursuitMode == PurePursuitMode.pid &&
+                lateralDistance < vehicle!.minTurningRadius) {
+              tempPursuitMode = pursuitMode;
+            }
           }
-          // Swap back to the pid mode when we're within the turning circle
-          // radius of the path.
-          else if (pursuitMode == PurePursuitMode.pid &&
-              lateralDistance < vehicle!.minTurningRadius) {
-            tempPursuitMode = pursuitMode;
-          }
+
+          steeringAngle = switch (tempPursuitMode) {
+            PurePursuitMode.pid => purePursuit!.nextSteeringAnglePid(vehicle!),
+            PurePursuitMode.lookAhead =>
+              purePursuit!.nextSteeringAngleLookAhead(
+                vehicle!,
+                effectiveLookAheadDistance,
+              )
+          };
         }
+      }
 
-        final steeringAngleCalc = switch (tempPursuitMode) {
-          PurePursuitMode.pid => purePursuit!.nextSteeringAnglePid(vehicle!),
-          PurePursuitMode.lookAhead => purePursuit!.nextSteeringAngleLookAhead(
-              vehicle!,
-              lookAheadDistance,
-            )
-        };
-
-        // Filter out steering angle less than 0.5 degrees.
-        final steeringAngle = switch (steeringAngleCalc.abs() < 0.5) {
-          true => 0.0,
-          false => steeringAngleCalc,
-        };
-
-        vehicle?.steeringAngleInput = steeringAngle;
+      // Only allow steering if vehicle is moving to prevent jitter that moves
+      // the vehicle when stationary.
+      if (steeringAngle == vehicle!.steeringAngleInput ||
+          vehicle!.velocity == 0) {
+        steeringChange = SimInputChange.hold;
+      } else if (steeringAngle < vehicle!.steeringAngleInput) {
+        steeringChange = SimInputChange.decrease;
+      } else if (steeringAngle > vehicle!.steeringAngleInput) {
+        steeringChange = SimInputChange.increase;
       }
     }
   }
@@ -414,24 +589,25 @@ class _VehicleSimulatorState {
               };
               // Projected solid axle position from the turning radius
               // center.
-              final solidAxlePositon = turningCircleCenter!.offset(
-                vehicle.currentTurningRadius!,
-                normalizeBearing(angle),
+              final solidAxlePositon =
+                  turningCircleCenter!.spherical.destinationPoint(
+                distance: vehicle.currentTurningRadius!,
+                bearing: angle.wrap360(),
               );
 
               // The bearing of the vehicle at the projected position.
-              final bearing = normalizeBearing(
-                switch (vehicle.isTurningLeft) {
-                  true => vehicle.bearing - turningCircleAngle,
-                  false => vehicle.bearing + turningCircleAngle,
-                },
-              );
+              final bearing = switch (vehicle.isTurningLeft) {
+                true => vehicle.bearing - turningCircleAngle,
+                false => vehicle.bearing + turningCircleAngle,
+              }
+                  .wrap360();
 
               // The vehicle center position, which is offset from the solid
               // axle position.
-              final vehiclePosition = solidAxlePositon.offset(
-                vehicle.solidAxleDistance,
-                switch (vehicle) {
+              final vehiclePosition =
+                  solidAxlePositon.spherical.destinationPoint(
+                distance: vehicle.solidAxleDistance,
+                bearing: switch (vehicle) {
                   Tractor() => bearing,
                   Harvester() => bearing + 180,
                 },
@@ -455,14 +631,14 @@ class _VehicleSimulatorState {
 
               // The current angle from the turning radius center to the
               // front axle center.
-              final turningCenterToFrontAxleAngle = normalizeBearing(
-                switch (vehicle.isTurningLeft) {
-                  // Turning left
-                  true => vehicle.frontAxleAngle + 90,
-                  // Turning right
-                  false => vehicle.frontAxleAngle - 90,
-                },
-              );
+              final turningCenterToFrontAxleAngle =
+                  switch (vehicle.isTurningLeft) {
+                // Turning left
+                true => vehicle.frontAxleAngle + 90,
+                // Turning right
+                false => vehicle.frontAxleAngle - 90,
+              }
+                      .wrap360();
 
               // The angle from the turning circle center to the projected front
               // axle position.
@@ -475,9 +651,10 @@ class _VehicleSimulatorState {
 
               // Projected vehicle front axle position from the turning radius
               // center.
-              final frontAxlePosition = turningCircleCenter!.offset(
-                vehicle.currentTurningRadius!,
-                projectedFrontAxleAngle,
+              final frontAxlePosition =
+                  turningCircleCenter!.spherical.destinationPoint(
+                distance: vehicle.currentTurningRadius!,
+                bearing: projectedFrontAxleAngle,
               );
 
               // The bearing of the front body of the vehicle at the projected
@@ -491,9 +668,11 @@ class _VehicleSimulatorState {
 
               // The vehicle antenna position, projected from the front axle
               // position.
-              final vehiclePosition = frontAxlePosition.offset(
-                vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
-                frontBodyBearing - 180 + vehicle.steeringAngle / 2,
+              final vehiclePosition =
+                  frontAxlePosition.spherical.destinationPoint(
+                distance:
+                    vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
+                bearing: frontBodyBearing - 180 + vehicle.steeringAngle / 2,
               );
 
               // Update the vehicle state.
@@ -506,9 +685,9 @@ class _VehicleSimulatorState {
 
       // Going straight.
       else {
-        final position = vehicle!.position.offset(
-          vehicle!.velocity * period,
-          vehicle!.bearing,
+        final position = vehicle!.position.spherical.destinationPoint(
+          distance: vehicle!.velocity * period,
+          bearing: vehicle!.bearing,
         );
 
         // Update the vehicle state.
@@ -523,37 +702,46 @@ class _VehicleSimulatorState {
   void updateGauges() {
     // Distance
     if (vehicle != null && prevVehicle != null) {
-      distance = vehicle!.position.distanceTo(prevVehicle!.position);
+      final movedDistance =
+          vehicle!.position.spherical.distanceTo(prevVehicle!.position);
+
+      // Filter out too large distances
+      if (movedDistance < 5) {
+        distance = movedDistance;
+      }
     } else {
       distance = 0;
     }
 
     // Velocity
     if (period > 0) {
-      velocity = distance / period;
+      gaugeVelocity = distance / period;
     } else {
-      velocity = 0;
+      gaugeVelocity = 0;
     }
 
     // Bearing, only updated if we're moving to keep bearing while stationary.
-    if (vehicle != null && prevVehicle != null && velocity.abs() > 0) {
-      bearing = normalizeBearing(
-        switch (vehicle!.isReversing) {
-          true => vehicle!.position.bearingTo(
+    if (vehicle != null &&
+        prevVehicle != null &&
+        (vehicle?.velocity.abs() ?? 1) > 0.5) {
+      // Discard bearing changes over 10 degrees for one simulation step.
+      if (bearingDifference(prevVehicle!.bearing, vehicle!.bearing) < 10) {
+        gaugeBearing = switch (vehicle!.isReversing) {
+          true => vehicle!.position.spherical.finalBearingTo(
               prevVehicle!.position,
             ),
-          false => prevVehicle!.position.bearingTo(
+          false => prevVehicle!.position.spherical.finalBearingTo(
               vehicle!.position,
             ),
-        },
-      );
+        };
+      }
     }
   }
 
   /// Update the simulation, i.e. simulate the next step.
   void update() {
-    checkPurePursuit();
-    checkAutoSlowDownOrCentering();
+    checkAutoSteering();
+    updateVehicleVelocityAndSteering();
     checkTurningCircle();
     updateTime();
     updatePosition();

@@ -7,8 +7,8 @@ import 'package:collection/collection.dart';
 import 'package:dart_jts/dart_jts.dart' as jts;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:flutter_map/flutter_map.dart' as map;
+import 'package:geobase/geobase.dart';
 
 /// A class for equipment used for working on the fields.
 class Equipment extends Hitchable with EquatableMixin {
@@ -46,7 +46,7 @@ class Equipment extends Hitchable with EquatableMixin {
     this.hitchToChildRearFixedHitchLength,
     this.hitchToChildRearTowbarHitchLength,
     double bearing = 0,
-    LatLng position = const LatLng(0, 0),
+    Geographic position = const Geographic(lat: 0, lon: 0),
   })  : assert(
           segmentWidths.length == segments,
           'The number of segment widths must match the number of segments.',
@@ -88,7 +88,7 @@ class Equipment extends Hitchable with EquatableMixin {
   double? hitchToChildRearTowbarHitchLength;
 
   /// The position of the equipment, used to specifically set the [position].
-  LatLng _position = const LatLng(0, 0);
+  Geographic _position = const Geographic(lon: 0, lat: 0);
 
   /// The velocity of the equipment, used to specifically set the [velocity].
   double _velocity = 0;
@@ -101,11 +101,11 @@ class Equipment extends Hitchable with EquatableMixin {
   ///
   /// All geometry calculations for this equipment is based on this point.
   @override
-  LatLng get position => parentHitchPoint ?? _position;
+  Geographic get position => parentHitchPoint ?? _position;
 
   /// Manually update the position of the equipment to [value].
   @override
-  set position(LatLng value) => _position = value;
+  set position(Geographic value) => _position = value;
 
   /// The velocity of the equipment, will use the parent's velocity if the
   /// connection is fixed, otherwise the explicitly set [_velocity].
@@ -198,7 +198,7 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// The hitch connection position where this equipment is attached to the
   /// [hitchParent], if it's connected.
-  LatLng? get parentHitchPoint => switch (parentHitch != null) {
+  Geographic? get parentHitchPoint => switch (parentHitch != null) {
         true => switch (parentHitch!) {
             Hitch.frontFixed => hitchParent!.hitchFrontFixedPoint,
             Hitch.rearFixed => hitchParent!.hitchRearFixedPoint,
@@ -210,29 +210,36 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The position of the front fixed child hitch on this equipment, if there is
   /// one.
   @override
-  LatLng? get hitchFrontFixedPoint =>
+  Geographic? get hitchFrontFixedPoint =>
       switch (hitchToChildFrontFixedHitchLength != null) {
-        true => position.offset(hitchToChildFrontFixedHitchLength!, bearing),
+        true => position.spherical.destinationPoint(
+            distance: hitchToChildFrontFixedHitchLength!,
+            bearing: bearing,
+          ),
         false => null
       };
 
   /// The position of the rear fixed child hitch on this equipment, if there is
   /// one.
   @override
-  LatLng? get hitchRearFixedPoint =>
+  Geographic? get hitchRearFixedPoint =>
       switch (hitchToChildRearFixedHitchLength != null) {
-        true =>
-          position.offset(hitchToChildRearFixedHitchLength!, bearing + 180),
+        true => position.spherical.destinationPoint(
+            distance: hitchToChildRearFixedHitchLength!,
+            bearing: bearing + 180,
+          ),
         false => null
       };
 
   /// The position of the rear towbar child hitch on this equipment, if there is
   /// one.
   @override
-  LatLng? get hitchRearTowbarPoint =>
+  Geographic? get hitchRearTowbarPoint =>
       switch (hitchToChildRearTowbarHitchLength != null) {
-        true =>
-          position.offset(hitchToChildRearTowbarHitchLength!, bearing + 180),
+        true => position.spherical.destinationPoint(
+            distance: hitchToChildRearTowbarHitchLength!,
+            bearing: bearing + 180,
+          ),
         false => null
       };
 
@@ -252,7 +259,7 @@ class Equipment extends Hitchable with EquatableMixin {
 
       // Only change bearing if we're moving.
       if (hitchParent!.velocity.abs() > 0) {
-        bearing = normalizeBearing(_bearing + bearingChange);
+        bearing = (_bearing + bearingChange).wrap360();
       }
       _velocity = hitchParent!.velocity * -cos(hitchAngle);
     }
@@ -267,9 +274,9 @@ class Equipment extends Hitchable with EquatableMixin {
   }
 
   /// The working area center of this equipment.
-  LatLng get workingCenter => position.offset(
-        drawbarLength + length / 2,
-        switch (parentHitch) {
+  Geographic get workingCenter => position.spherical.destinationPoint(
+        distance: drawbarLength + length / 2,
+        bearing: switch (parentHitch) {
           Hitch.frontFixed => bearing,
           Hitch.rearFixed => bearing + 180,
           Hitch.rearTowbar => bearing + 180,
@@ -279,32 +286,43 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// The position of the end of the drawbar, i.e. furthest away from the
   /// parent.
-  LatLng get drawbarEnd => switch (parentHitch) {
-        Hitch.frontFixed => position.offset(drawbarLength, bearing),
-        Hitch.rearFixed => position.offset(drawbarLength, bearing + 180),
-        Hitch.rearTowbar => position.offset(drawbarLength, bearing + 180),
-        null => position.offset(drawbarLength, bearing),
+  Geographic get drawbarEnd => switch (parentHitch) {
+        Hitch.frontFixed => position.spherical
+            .destinationPoint(distance: drawbarLength, bearing: bearing),
+        Hitch.rearFixed => position.spherical
+            .destinationPoint(distance: drawbarLength, bearing: bearing + 180),
+        Hitch.rearTowbar => position.spherical
+            .destinationPoint(distance: drawbarLength, bearing: bearing + 180),
+        null => position.spherical
+            .destinationPoint(distance: drawbarLength, bearing: bearing),
       };
 
   /// The corner points for the given [segment].
-  List<LatLng> segmentPoints(int segment) {
+  List<Geographic> segmentPoints(int segment) {
     // The starting point of this equipment.
     final equipmentStart = parentHitch == Hitch.frontFixed
-        ? drawbarEnd.offset(length, bearing)
+        ? drawbarEnd.spherical
+            .destinationPoint(distance: length, bearing: bearing)
         : drawbarEnd;
 
     // The width of the preceding segments.
     final widthBefore = segmentWidths.getRange(0, segment).sum;
 
-    final segmentFrontLeft =
-        equipmentStart.offset(width / 2 - widthBefore, bearing - 90);
+    final segmentFrontLeft = equipmentStart.spherical.destinationPoint(
+      distance: width / 2 - widthBefore,
+      bearing: bearing - 90,
+    );
 
-    final segmentRearLeft = segmentFrontLeft.offset(length, bearing + 180);
+    final segmentRearLeft = segmentFrontLeft.spherical
+        .destinationPoint(distance: length, bearing: bearing + 180);
 
-    final segmentRearRight =
-        segmentRearLeft.offset(segmentWidths[segment], bearing + 90);
+    final segmentRearRight = segmentRearLeft.spherical.destinationPoint(
+      distance: segmentWidths[segment],
+      bearing: bearing + 90,
+    );
 
-    final segmentFrontRight = segmentRearRight.offset(length, bearing);
+    final segmentFrontRight = segmentRearRight.spherical
+        .destinationPoint(distance: length, bearing: bearing);
 
     return [
       segmentFrontLeft,
@@ -315,17 +333,19 @@ class Equipment extends Hitchable with EquatableMixin {
   }
 
   /// The center point of the given [segment].
-  LatLng segmentCenter(int segment) {
+  Geographic segmentCenter(int segment) {
     final points = segmentPoints(segment);
-    return LatLngBounds.fromPoints(points).center;
+    return map.LatLngBounds.fromPoints(points.map((e) => e.latLng).toList())
+        .center
+        .gbPosition;
   }
 
   /// The polygon for the given [segment].
-  Polygon segmentPolygon(int segment) {
+  map.Polygon segmentPolygon(int segment) {
     final points = segmentPoints(segment);
     final active = activeSegments[segment];
 
-    return Polygon(
+    return map.Polygon(
       borderStrokeWidth: 2,
       isFilled: active,
       borderColor: switch (active) {
@@ -336,55 +356,79 @@ class Equipment extends Hitchable with EquatableMixin {
         true => Colors.green.withOpacity(0.8),
         false => Colors.grey.withOpacity(0.4),
       },
-      points: points,
+      points: points.map((e) => e.latLng).toList(),
     );
   }
 
   /// An iterable of all the segments' polygons.
-  Iterable<Polygon> get segmentPolygons =>
+  Iterable<map.Polygon> get segmentPolygons =>
       List.generate(segments, segmentPolygon, growable: false).whereNotNull();
 
   /// A list of the polygon(s) for the drawbar(s).
-  List<Polygon> get drawbarPolygons => switch (hitchType) {
+  List<map.Polygon> get drawbarPolygons => switch (hitchType) {
         HitchType.towbar => [
-            Polygon(
+            map.Polygon(
               borderStrokeWidth: 3,
               isFilled: true,
               color: Colors.grey.shade800,
               borderColor: Colors.black,
               points: [
-                position.offset(0.05, bearing - 90),
-                drawbarEnd.offset(0.05, bearing - 90),
-                drawbarEnd.offset(0.05, bearing + 90),
-                position.offset(0.05, bearing + 90),
+                position.spherical
+                    .destinationPoint(distance: 0.05, bearing: bearing - 90)
+                    .latLng,
+                drawbarEnd.spherical
+                    .destinationPoint(distance: 0.05, bearing: bearing - 90)
+                    .latLng,
+                drawbarEnd.spherical
+                    .destinationPoint(distance: 0.05, bearing: bearing + 90)
+                    .latLng,
+                position.spherical
+                    .destinationPoint(distance: 0.05, bearing: bearing + 90)
+                    .latLng,
               ],
             )
           ],
         HitchType.fixed => [
             // Left hitch bar
-            Polygon(
+            map.Polygon(
               borderStrokeWidth: 3,
               isFilled: true,
               color: Colors.grey.shade800,
               borderColor: Colors.black,
               points: [
-                position.offset(0.35, bearing - 90),
-                drawbarEnd.offset(0.35, bearing - 90),
-                drawbarEnd.offset(0.3, bearing - 90),
-                position.offset(0.3, bearing - 90),
+                position.spherical
+                    .destinationPoint(distance: 0.35, bearing: bearing - 90)
+                    .latLng,
+                drawbarEnd.spherical
+                    .destinationPoint(distance: 0.35, bearing: bearing - 90)
+                    .latLng,
+                drawbarEnd.spherical
+                    .destinationPoint(distance: 0.3, bearing: bearing - 90)
+                    .latLng,
+                position.spherical
+                    .destinationPoint(distance: 0.3, bearing: bearing - 90)
+                    .latLng,
               ],
             ),
             // Right hitch bar
-            Polygon(
+            map.Polygon(
               borderStrokeWidth: 3,
               isFilled: true,
               color: Colors.grey.shade800,
               borderColor: Colors.black,
               points: [
-                position.offset(0.35, bearing + 90),
-                drawbarEnd.offset(0.35, bearing + 90),
-                drawbarEnd.offset(0.3, bearing + 90),
-                position.offset(0.3, bearing + 90),
+                position.spherical
+                    .destinationPoint(distance: 0.35, bearing: bearing + 90)
+                    .latLng,
+                drawbarEnd.spherical
+                    .destinationPoint(distance: 0.35, bearing: bearing + 90)
+                    .latLng,
+                drawbarEnd.spherical
+                    .destinationPoint(distance: 0.3, bearing: bearing + 90)
+                    .latLng,
+                position.spherical
+                    .destinationPoint(distance: 0.3, bearing: bearing + 90)
+                    .latLng,
               ],
             )
           ]
@@ -392,7 +436,7 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// A list of all the polygons for the equipment, i.e. [drawbarPolygons] and
   /// all the [segmentPolygon]s.
-  List<Polygon> get polygons {
+  List<map.Polygon> get polygons {
     return [
       ...drawbarPolygons,
       ...List.generate(segments, segmentPolygon, growable: false)
@@ -432,7 +476,7 @@ class Equipment extends Hitchable with EquatableMixin {
     double? length,
     double? drawbarLength,
     double? bearing,
-    LatLng? position,
+    Geographic? position,
     double? hitchToChildFrontFixedHitchLength,
     double? hitchToChildRearFixedHitchLength,
     double? hitchToChildRearTowbarHitchLength,

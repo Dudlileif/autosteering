@@ -1,6 +1,6 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'path_recording_providers.g.dart';
@@ -33,17 +33,20 @@ class PathRecordingList extends _$PathRecordingList {
               (prevWayPoint, wayPoint) async {
             if (prevWayPoint != wayPoint) {
               if (points.isNotEmpty) {
-                final distance = points.last.position.distanceTo(
+                final distance = points.last.position.spherical.distanceTo(
                   wayPoint.position,
                 );
                 if (distance > 20) {
                   await add(wayPoint);
                 } else if (distance > 1 && points.length >= 2) {
-                  final prevBearing =
-                      points[points.length - 2].position.bearingTo(
-                            points.last.position,
-                          );
-                  final bearing = points.last.position.bearingTo(
+                  final prevBearing = points[points.length - 2]
+                      .position
+                      .spherical
+                      .initialBearingTo(
+                        points.last.position,
+                      );
+                  final bearing =
+                      points.last.position.spherical.initialBearingTo(
                     wayPoint.position,
                   );
 

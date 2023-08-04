@@ -37,7 +37,7 @@ class VehicleDebugLayer extends ConsumerWidget {
                 Polyline(
                   points: vehicle.trajectory.coordinates,
                   strokeWidth: 2,
-                  color: Colors.red,
+                  color: Colors.blue,
                 ),
               if (vehicle.turningRadiusCenter != null && debugSteering)
                 ...vehicle.steeringDebugLines,
@@ -60,7 +60,7 @@ class VehicleDebugLayer extends ConsumerWidget {
             circles: vehicle.hitchPoints
                 .map(
                   (hitch) => CircleMarker(
-                    point: hitch,
+                    point: hitch.latLng,
                     radius: 5,
                     color: Colors.orange,
                   ),
@@ -73,7 +73,7 @@ class VehicleDebugLayer extends ConsumerWidget {
               if (debugSteering) ...vehicle.steeringDebugMarkers,
               if (vehicle.currentTurningRadius != null)
                 CircleMarker(
-                  point: vehicle.turningRadiusCenter!,
+                  point: vehicle.turningRadiusCenter!.latLng,
                   radius: vehicle.currentTurningRadius!,
                   useRadiusInMeter: true,
                   color: Colors.blue.withOpacity(0.2),
@@ -81,7 +81,7 @@ class VehicleDebugLayer extends ConsumerWidget {
               if (vehicle is ArticulatedTractor &&
                   vehicle.currentRearTurningRadius != null)
                 CircleMarker(
-                  point: vehicle.turningRadiusCenter!,
+                  point: vehicle.turningRadiusCenter!.latLng,
                   radius: vehicle.currentRearTurningRadius!,
                   useRadiusInMeter: true,
                   color: Colors.red.withOpacity(0.2),
