@@ -1,4 +1,3 @@
-import 'package:dart_jts/dart_jts.dart' as jts;
 import 'package:geobase/geobase.dart' as gb;
 import 'package:latlong2/latlong.dart';
 
@@ -13,31 +12,6 @@ extension LatLngProjExt on LatLng {
         gbPosition,
         to: gb.Projected.create,
       );
-
-  /// A conversion to the JTS package format.
-  jts.Coordinate get jtsCoordinate => jts.Coordinate(
-        gbProjected.x.toDouble(),
-        gbProjected.y.toDouble(),
-      );
-
-  /// A conversion to a Point from the JTS package format;
-  jts.Point get jtsPoint =>
-      jts.Point(jtsCoordinate, jts.PrecisionModel(), 4326);
-}
-
-/// An extension to allow easy swapping between different location/coordinate
-/// packages different classes.
-extension JTSCoordProjExt on jts.Coordinate {
-  /// An x/y projection in meters in the geobase package format.
-  gb.Projected get gbProjected => gb.Projected(x: x, y: y);
-
-  /// A conversion to the geobase package format.
-  gb.Geographic get gbPosition => gb.WGS84.webMercator.inverse
-      .project(gbProjected, to: gb.Geographic.create);
-
-  /// A conversion to the latlong2 package format, used by the flutter_map
-  /// package.
-  LatLng get latLng => LatLng(gbPosition.lat, gbPosition.lon);
 }
 
 /// An extension to allow easy swapping between different location/coordinate
@@ -51,32 +25,45 @@ extension GeographicProjExt on gb.Geographic {
   gb.Projected get projected =>
       gb.WGS84.webMercator.forward.project(this, to: gb.Projected.create);
 
-  /// A conversion to the JTS package format.
-  jts.Coordinate get jtsCoordinate => jts.Coordinate(
-        projected.x.toDouble(),
-        projected.y.toDouble(),
+  /// Checks if this point is within the [ring].
+  ///
+  /// By drawing a line straight south from this point we can count the amount
+  /// of times the line crosses the ring while inside the [gb.GeoBox] boundary
+  /// of the ring. It the amount we cross is odd we're within the ring,
+  ///  if it's even we are outside.
+  bool isWithinRing(Iterable<gb.Geographic> ring) {
+    final boundary = gb.GeoBox.from(ring);
+
+    var intersects = 0;
+
+    for (var i = 0; i < ring.length; i++) {
+      final start = ring.elementAt(i);
+      final end = ring.elementAt((i + 1) % ring.length);
+
+      // Skip lines that are to the north of this point..
+      if (start.y > y && end.y > y) continue;
+
+      final ringIntersection = spherical.intersectionWith(
+        bearing: 180,
+        other: start,
+        otherBearing: start.spherical.initialBearingTo(end),
       );
-}
 
-/// An extension to make it easier and slightly less convoluted to do operations
-/// on [LatLng] points.
-extension LatLngOperations on LatLng {
-  /// Geo-calculator used by the methods provided by the [LatLngOperations]
-  /// extension.
-  static const _calculator = Distance(roundResult: false);
+      if (ringIntersection != null) {
+        // Check that we're inside the boundary box.
+        if (boundary.intersectsPoint2D(ringIntersection)) {
+          final distanceAlongLine = ringIntersection.spherical
+              .alongTrackDistanceTo(start: start, end: end);
 
-  /// Create a new [LatLng] that has been offset from this by [distance]
-  /// meters in direction of [bearing].
-  LatLng offset(double distance, double bearing) => _calculator.offset(
-        this,
-        distance,
-        normalizeBearing(bearing),
-      );
+          // Is the intersection on the actual line segment?
+          if (distanceAlongLine >= 0 &&
+              distanceAlongLine <= start.spherical.distanceTo(end)) {
+            intersects++;
+          }
+        }
+      }
+    }
 
-  /// The distance between this and [other].
-  double distanceTo(LatLng other) => _calculator.distance(this, other);
-
-  /// The bearing direction from this to [other].
-  double bearingTo(LatLng other) =>
-      normalizeBearing(_calculator.bearing(this, other));
+    return intersects.isOdd;
+  }
 }

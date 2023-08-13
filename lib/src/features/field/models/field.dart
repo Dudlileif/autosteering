@@ -1,97 +1,126 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:flutter_map/flutter_map.dart' as map;
+import 'package:geobase/geobase.dart';
 
 /// A base class for a field.
 class Field extends Equatable {
   /// A class for representing a field in the real world.
   ///
   /// The field needs a [name] for identifying purposes.
-  /// The [border] of the field makes the outline of the field.
-  /// If the field has spots of unusable land within the border, add a list of
-  /// the borders for the spots in [holes].
   const Field({
     required this.name,
-    this.border = const [],
-    this.holes,
+    required this.polygon,
+    required this.boundingBox,
   });
 
   /// Creates a [Field] from a json map object.
   ///
   /// Expects a json map of this format:
+  ///
   ///```
   /// {
   ///   "name": "some name",
-  ///   "border": [
-  ///     {
-  ///       "coordinates": [
-  ///         10.0,
-  ///         60.0
-  ///       ]
-  ///     },
-  ///     {
-  ///       "coordinates": [
-  ///         11.0,
-  ///         61.0
-  ///       ]
-  ///     },
-  ///     ...
-  ///   ],
-  /// "holes": [
-  ///     [
-  ///       {
-  ///         "coordinates": [
-  ///           10.0,
-  ///           60.0
-  ///         ]
-  ///       },
-  ///       {
-  ///         "coordinates": [
-  ///           11.0,
-  ///           61.0
-  ///         ]
-  ///       },
-  ///       ...
-  ///     ]
-  ///   ]
+  ///   "polygon": "{\"type\":\"Polygon\",\"coordinates\":[[[10, 60], [11, 60], [11, 61], [10, 61]]]
   /// }
   /// ```
-  Field.fromJson(Map<String, dynamic> json)
-      : name = json['name'] as String,
-        border = json['border'] != null
-            ? List<Map<String, dynamic>>.from(json['border'] as List)
-                .map(LatLng.fromJson)
-                .toList()
-            : [],
-        holes = json['holes'] != null
-            ? List<List<dynamic>>.from(json['holes'] as List)
-                .map(
-                  (hole) => List<Map<String, dynamic>>.from(hole)
-                      .map(LatLng.fromJson)
-                      .toList(),
-                )
-                .toList()
-            : null;
+  ///
+  /// Caution, the "polygon" field stores a *string* of a GeoJson polygon, not
+  /// the GeoJson polygon itself.
+
+  factory Field.fromJson(Map<String, dynamic> json) {
+    final name = json['name'] as String;
+    final polygon = Polygon.parse(json['polygon'] as String);
+    final boundingBox = polygon.exterior != null
+        ? GeoBox.from(polygon.exterior!.toGeographicPositions)
+        : null;
+    return Field(name: name, polygon: polygon, boundingBox: boundingBox);
+  }
 
   /// The name of the field.
   final String name;
 
-  /// The border of the field.
-  final List<LatLng> border;
+  /// The polygon that contains the exterior boundary and interior boundaries
+  /// if there are any.
+  final Polygon polygon;
 
-  /// A list of borders for holes in the field.
-  final List<List<LatLng>>? holes;
+  /// The bounding box of the field.
+  ///
+  /// The box has parameters for the min and max for both longitude and
+  /// latitude.
+  final GeoBox? boundingBox;
 
   /// A map-ready polygon for the field
-  Polygon get polygon => Polygon(
-        points: border,
-        holePointsList: holes,
+  map.Polygon get mapPolygon => map.Polygon(
+        points: polygon.exterior != null
+            ? polygon.exterior!.toGeographicPositions
+                .map((point) => point.latLng)
+                .toList()
+            : [],
+        holePointsList: polygon.interior
+            .map(
+              (hole) => hole.toGeographicPositions
+                  .map((point) => point.latLng)
+                  .toList(),
+            )
+            .toList(),
         borderStrokeWidth: 1,
         isFilled: true,
         color: Colors.yellow.withOpacity(0.25),
       );
+
+  /// Map the [polygon]'s exterior ring points with [map].
+  Iterable<T> mapExteriorPoints<T>(
+    T Function(Geographic point) map,
+  ) =>
+      polygon.exterior != null
+          ? polygon.exterior!.toGeographicPositions.map((point) => map(point))
+          : [];
+
+  /// Map the [polygon]'s interior rings' points with [map].
+  Iterable<Iterable<T>> mapInteriorPoints<T>(
+    T Function(Geographic point) map,
+  ) =>
+      polygon.interior.map(
+        (interior) => interior.toGeographicPositions.map((point) => map(point)),
+      );
+
+  /// Map the [boundingBox] corner points with [map].
+  Iterable<T> mapBoundingBox<T>(
+    T Function(Geographic point) map,
+  ) =>
+      boundingBox != null
+          ? boundingBox!.corners2D.map((point) => map(point))
+          : [];
+
+  /// Map the [polygon]'s exterior ring points and their index with [map].
+  Iterable<T> mapIndexedExteriorPoints<T>(
+    T Function(int index, Geographic point) map,
+  ) =>
+      polygon.exterior != null
+          ? polygon.exterior!.toGeographicPositions
+              .mapIndexed((index, point) => map(index, point))
+          : [];
+
+  /// Map the [polygon]'s interior rings' points and their index with [map].
+  Iterable<Iterable<T>> mapIndexedInteriorPoints<T>(
+    T Function(int index, Geographic point) map,
+  ) =>
+      polygon.interior.map(
+        (interior) => interior.toGeographicPositions
+            .mapIndexed((index, point) => map(index, point)),
+      );
+
+  /// Map the [boundingBox] corner points and their index with [map].
+  Iterable<T> mapIndexedBoundingBox<T>(
+    T Function(int index, Geographic point) map,
+  ) =>
+      boundingBox != null
+          ? boundingBox!.corners2D
+              .mapIndexed((index, point) => map(index, point))
+          : [];
 
   /// The area of the whole field.
   ///
@@ -108,31 +137,25 @@ class Field extends Equatable {
   /// Unit: square meters
   double get holesArea => polygon.holesArea;
 
-  /// The boudning box of the field.
-  ///
-  /// The box has parameters for the min and max for both longitude and
-  /// latitude.
-  LatLngBounds get boundingBox => LatLngBounds.fromPoints(border);
-
   /// Returns a new [Field] based on the this one, but with
   /// parameters/variables altered.
   Field copyWith({
     String? name,
-    List<LatLng>? border,
-    List<List<LatLng>>? holes,
+    Polygon? polygon,
+    GeoBox? boundingBox,
   }) =>
       Field(
         name: name ?? this.name,
-        border: border ?? this.border,
-        holes: holes ?? this.holes,
+        polygon: polygon ?? this.polygon,
+        boundingBox: boundingBox ?? this.boundingBox,
       );
 
   /// Properties used for checking for equality.
   @override
   List<Object?> get props => [
         name,
-        border,
-        holes,
+        polygon,
+        boundingBox,
       ];
 
   /// Convert the model to a json compatible map.
@@ -140,9 +163,7 @@ class Field extends Equatable {
     final map = <String, dynamic>{};
 
     map['name'] = name;
-    map['border'] = border;
-    map['holes'] = holes;
-
+    map['polygon'] = polygon.toText();
     return map;
   }
 }

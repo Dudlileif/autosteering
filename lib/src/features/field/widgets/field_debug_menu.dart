@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
@@ -20,6 +22,35 @@ class FieldDebugMenu extends ConsumerWidget {
       text: 'Field',
       icon: Icons.waves,
       menuChildren: [
+        Consumer(
+          child: Text(
+            'Open field',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => ListTile(
+            leading: const Icon(Icons.file_open),
+            title: child,
+            onTap: () async {
+              final result = await FilePicker.platform.pickFiles(
+                initialDirectory:
+                    ref.watch(fileDirectoryProvider).requireValue.path,
+                dialogTitle: 'Open field json file',
+                allowedExtensions: ['json'],
+              );
+              if (result != null) {
+                final path = result.paths.first;
+                if (path != null) {
+                  final data = jsonDecode(File(path).readAsStringSync());
+                  if (data is Map) {
+                    ref.read(testFieldProvider.notifier).update(
+                          Field.fromJson(Map<String, dynamic>.from(data)),
+                        );
+                  }
+                }
+              }
+            },
+          ),
+        ),
         Consumer(
           child: Text(
             'Show test field',
@@ -64,7 +95,7 @@ class FieldDebugMenu extends ConsumerWidget {
                 : null,
           ),
         ),
-        if (ref.watch(showBufferedTestFieldProvider)) ...[
+        if (ref.watch(showTestFieldProvider)) ...[
           Consumer(
             child: Text(
               'Show buffered bounding box',
@@ -82,49 +113,133 @@ class FieldDebugMenu extends ConsumerWidget {
           ),
           Consumer(
             builder: (context, ref, child) {
-              final distance = ref.watch(testFieldBufferDistanceProvider);
+              final distance =
+                  ref.watch(testFieldExteriorBufferDistanceProvider);
 
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Buffer distance: ${distance.toStringAsFixed(1)} m'),
+                  Text(
+                    'Exterior buffer distance: ${distance.toStringAsFixed(1)} m',
+                    style: textStyle,
+                  ),
                   Slider(
                     value: distance,
                     onChanged: ref
-                        .read(testFieldBufferDistanceProvider.notifier)
+                        .read(testFieldExteriorBufferDistanceProvider.notifier)
                         .update,
                     min: -10,
                     max: 10,
+                    divisions: 20,
                   )
                 ],
               );
             },
           ),
-          if (ref.watch(testFieldProvider)?.holes != null)
+          if (ref.watch(testFieldProvider)?.polygon.interior.isNotEmpty ??
+              false)
             Consumer(
               builder: (context, ref, child) {
-                final distance = ref.watch(testFieldHoleBufferDistanceProvider);
+                final distance =
+                    ref.watch(testFieldInteriorBufferDistanceProvider);
 
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Hole buffer distance: ${distance.toStringAsFixed(1)} m ',
+                      'Interior buffer distance: ${distance.toStringAsFixed(1)} m ',
+                      style: textStyle,
                     ),
                     Slider(
                       value: distance,
                       onChanged: ref
-                          .read(testFieldHoleBufferDistanceProvider.notifier)
+                          .read(
+                            testFieldInteriorBufferDistanceProvider.notifier,
+                          )
                           .update,
                       min: -10,
                       max: 10,
+                      divisions: 40,
                     )
                   ],
                 );
               },
             ),
+          if (ref.watch(showBufferedTestFieldProvider))
+            Consumer(
+              builder: (context, ref, child) {
+                final activeMode =
+                    ref.watch(testFieldExteriorBufferJoinProvider);
+                return MenuButtonWithChildren(
+                  text: 'Exterior buffer join mode',
+                  icon: Icons.rounded_corner,
+                  menuChildren: BufferJoin.values
+                      .map(
+                        (mode) => CheckboxListTile(
+                          secondary:
+                              Text(mode.name.capitalize, style: textStyle),
+                          value: mode == activeMode,
+                          onChanged: (value) => value != null && value
+                              ? ref
+                                  .read(
+                                    testFieldExteriorBufferJoinProvider
+                                        .notifier,
+                                  )
+                                  .update(mode)
+                              : null,
+                        ),
+                      )
+                      .toList(),
+                );
+              },
+            ),
+          if (ref.watch(showBufferedTestFieldProvider) &&
+              (ref.watch(testFieldProvider)?.polygon.interior.isNotEmpty ??
+                  false))
+            Consumer(
+              builder: (context, ref, child) {
+                final activeMode =
+                    ref.watch(testFieldInteriorBufferJoinProvider);
+                return MenuButtonWithChildren(
+                  text: 'Interior buffer join mode',
+                  icon: Icons.rounded_corner,
+                  menuChildren: BufferJoin.values
+                      .map(
+                        (mode) => CheckboxListTile(
+                          secondary:
+                              Text(mode.name.capitalize, style: textStyle),
+                          value: mode == activeMode,
+                          onChanged: (value) => value != null && value
+                              ? ref
+                                  .read(
+                                    testFieldInteriorBufferJoinProvider
+                                        .notifier,
+                                  )
+                                  .update(mode)
+                              : null,
+                        ),
+                      )
+                      .toList(),
+                );
+              },
+            ),
+          Consumer(
+            child: Text(
+              'Raw buffer points',
+              style: textStyle,
+            ),
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: child,
+              value: ref.watch(testFieldBufferGetRawPointsProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(testFieldBufferGetRawPointsProvider.notifier)
+                      .update(value: value)
+                  : null,
+            ),
+          ),
         ],
-        if (Device.isWeb)
+        if (!Device.isWeb)
           Consumer(
             child: Text(
               'Save field',

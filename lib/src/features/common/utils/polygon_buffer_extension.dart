@@ -1,130 +1,222 @@
+import 'dart:math';
+
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:dart_jts/dart_jts.dart' as jts;
+import 'package:collection/collection.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
+import 'package:geobase/geobase.dart';
 import 'package:maps_toolkit2/maps_toolkit2.dart';
 
 /// An extension to allow for interfacing with different geometry and
-/// map tool packages to make insetting and extending [map.Polygon]s easy.
+/// map tool packages to make insetting and extending [Polygon]s easy.
 /// It also adds getters for the area of the polygon.
-extension PolygonBufferExtension on map.Polygon {
-  /// A [jts.Coordinate] conversion of the [points], adds the first point at
-  /// the end to complete the loop.
-  List<jts.Coordinate> get jtsCoordinates =>
-      points.map((point) => point.jtsCoordinate).toList()
-        ..add(points.first.jtsCoordinate);
-
-  /// A [jts.Coordinate] conversion of the [holePointsList], adds the first
-  /// point at the end to complete the loop.
-  List<List<jts.Coordinate>>? get jtsHoleCoordinatesList => holePointsList
-      ?.map(
-        (hole) => hole.map((point) => point.jtsCoordinate).toList()
-          ..add(hole.first.jtsCoordinate),
-      )
-      .toList();
-
-  /// A [jts.LinearRing] of a general list of [jts.Coordinate]s.
-  jts.LinearRing _jtsShell(List<jts.Coordinate> coordinates) =>
-      jts.LinearRing.fromSequence(
-        jts.CoordinateArraySequenceFactory().create(coordinates),
-        jts.GeometryFactory.defaultPrecision(),
-      );
-
-  /// A [jts.LinearRing] conversion of the polygon's points.
-  jts.LinearRing get jtsShell => _jtsShell(jtsCoordinates);
-
-  /// A list of the [jts.LinearRing] holes of the polygon.
-  List<jts.LinearRing>? get jtsHoles =>
-      jtsHoleCoordinatesList?.map(_jtsShell).toList();
-
-  /// A [jts.Polygon] convserion of [map.Polygon].
-  jts.Polygon get jtsPolygon => jts.Polygon.withPrecisionModelSrid(
-        jtsShell,
-        jtsHoles ?? [],
-        jts.PrecisionModel(),
-        4326,
-      );
-
-  /// A buffered [jts.Geometry] that has been inset and extended by [distance]
-  /// meters. We can then choose which part of the inset or extended geometry
-  /// we want to use later.
-  jts.Geometry jtsBufferedGeometry(jts.Geometry geometry, double distance) =>
-      geometry.buffer(distance);
-
-  /// The buffered [LatLng] points for a geometry that has been inset or
+extension PolygonBufferExtension on Polygon {
+  /// The buffered [Geographic] points for a geometry that has been inset or
   /// extended by [distance] meters. Insetting requires negative [distance],
   /// extending requires positive [distance].
-  List<LatLng> bufferedPoints(jts.Geometry from, double distance) {
-    final geometry = jtsBufferedGeometry(from, 2 * distance.abs());
-    if (geometry is jts.Polygon) {
-      // Get the inner buffer hole ring
-      if (distance.isNegative) {
-        if (geometry.holes != null) {
-          if (geometry.holes!.isNotEmpty) {
-            return geometry.holes!.first
-                .getCoordinates()
-                .map((e) => e.latLng)
-                .toList()
-              ..removeLast();
-          }
-        }
-      }
-      // Skip calculations if distance is 0
-      else if (distance == 0) {
-        return points;
-      }
-      // Get the outer buffer shell
-      if (geometry.shell != null) {
-        return geometry.shell!
-            .getCoordinates()
-            .map((coordinate) => coordinate.latLng)
-            .toList()
-          ..removeLast();
-      }
-    }
-    return geometry.getCoordinates().map((e) => e.latLng).toList();
-  }
+  PositionArray bufferedPoints({
+    required PositionArray ring,
+    required double distance,
+    BufferJoin joinType = BufferJoin.round,
+    bool getRawPoints = false,
+  }) =>
+      PositionArray.view(
+        RingBuffer.bufferCircular(
+          ring: ring.toGeographicPositions,
+          distance: distance,
+          joinType: joinType,
+          getRawPoints: getRawPoints,
+        ).map((point) => point.values).flattened,
+      );
 
   /// The buffered [LatLng] points for a polygon's holes that has been inset or
   /// extended by [distance] meters. Insetting requires negative [distance],
   /// extending requires positive [distance].
-  List<List<LatLng>>? bufferedHolesPoints(double distance) {
-    if (holePointsList == null) {
-      return null;
-    }
-    return jtsHoles!.map((hole) => bufferedPoints(hole, distance)).toList();
-  }
-
-  /// An inset or extended polygon that has been extended or inset by
-  /// [distance] meters. Insetting requires negative [distance], extending
-  /// requires positive [distance]. [holeDistance] needs to be set if the
-  /// holes also should be inset/extended.
-  map.Polygon bufferedPolygon({
-    double? distance,
-    double? holeDistance,
+  Iterable<PositionArray> bufferedInterior({
+    required double distance,
+    BufferJoin joinType = BufferJoin.round,
+    bool getRawPoints = false,
   }) =>
-      copyWith(
-        points: distance != null ? bufferedPoints(jtsShell, distance) : points,
-        holePointsList: holeDistance != null
-            ? bufferedHolesPoints(holeDistance)
-            : holePointsList,
+      interior.map(
+        (hole) => bufferedPoints(
+          ring: hole,
+          distance: distance,
+          joinType: joinType,
+          getRawPoints: getRawPoints,
+        ),
       );
 
+  /// An inset or extended polygon that has been extended or inset by
+  /// [exteriorDistance] meters. Insetting requires negative
+  /// [exteriorDistance], extending requires positive [exteriorDistance].
+  /// [interiorDistance] needs to be set if the interior holes also should be
+  /// inset/extended.
+  Polygon bufferedPolygon({
+    double? exteriorDistance,
+    double? interiorDistance,
+    BufferJoin exteriorJoinType = BufferJoin.round,
+    BufferJoin interiorJoinType = BufferJoin.round,
+    bool getRawPoints = false,
+  }) =>
+      Polygon([
+        if (exteriorDistance != null && exterior != null)
+          bufferedPoints(
+            ring: exterior!,
+            distance: exteriorDistance,
+            joinType: exteriorJoinType,
+            getRawPoints: getRawPoints,
+          )
+        else if (exterior != null)
+          exterior!,
+        if (interiorDistance != null)
+          ...bufferedInterior(
+            distance: interiorDistance,
+            joinType: interiorJoinType,
+            getRawPoints: getRawPoints,
+          )
+        else
+          ...interior,
+      ]);
+
   /// Area of the polygon in square meters.
-  double get area => SphericalUtil.computeArea(points).toDouble();
+  double get area => exterior != null
+      ? computeArea(exterior!.toGeographicPositions).toDouble()
+      : 0;
 
   /// Area of the polygon with the area of the holes deducted.
   double get areaWithoutHoles => area - holesArea;
 
   /// Area of the holes in the polygon.
   double get holesArea =>
-      holePointsList?.fold(
+      interior.fold(
         0,
         (previousValue, hole) => previousValue != null
-            ? previousValue + SphericalUtil.computeArea(hole).toDouble()
-            : SphericalUtil.computeArea(hole).toDouble(),
+            ? previousValue + computeArea(hole.toGeographicPositions).toDouble()
+            : computeArea(hole.toGeographicPositions).toDouble(),
       ) ??
       0;
 
-  /// Whether this polygon contains the [point];
-  bool contains(LatLng point) => jtsPolygon.contains(point.jtsPoint);
+  /// Whether this polygon contains the [point].
+  ///
+  /// If [onlyExteriorBounds] is true, then [point] will be regarded as
+  /// contained when inside the [exterior] even though it may be within an
+  /// [interior] hole of the polygon.
+  bool contains(Geographic point, {bool onlyExteriorBounds = false}) {
+    if (exterior == null) {
+      return false;
+    }
+    final exteriorContains =
+        point.isWithinRing(exterior!.toGeographicPositions);
+    return switch (onlyExteriorBounds || interior.isEmpty) {
+      true => exteriorContains,
+      false => exteriorContains &&
+          !interior
+              .map((hole) => point.isWithinRing(hole.toGeographicPositions))
+              .any((element) => element == true)
+    };
+  }
+
+  /// Returns the area of a closed path on Earth.
+  /// @param path A closed path.
+  /// @return The path's area in square meters.
+  static num computeArea(Iterable<Geographic> path) =>
+      computeSignedArea(path).abs();
+
+  /// Returns the signed area of a closed path on Earth. The sign of the area
+  /// may be used to determine the orientation of the path.
+  /// "inside" is the surface that does not contain the South Pole.
+  /// @param path A closed path.
+  /// @return The loop's area in square meters.
+  static num computeSignedArea(Iterable<Geographic> path) =>
+      _computeSignedArea(path, earthRadius);
+
+  /// Returns the signed area of a closed path on a sphere of given radius.
+  /// The computed area uses the same units as the radius squared.
+  /// Used by SphericalUtilTest.
+  static num _computeSignedArea(Iterable<Geographic> path, num radius) {
+    if (path.length < 3) {
+      return 0;
+    }
+
+    final prev = path.last;
+    var prevTanLat = tan((pi / 2 - prev.lat.toRadians()) / 2);
+    var prevLng = prev.lon.toRadians();
+
+    // For each edge, accumulate the signed area of the triangle formed by the
+    // North Pole and that edge ("polar triangle").
+    final total = path.fold<num>(0.0, (value, point) {
+      final tanLat = tan((pi / 2 - point.lat.toRadians()) / 2);
+      final lng = point.lon.toRadians();
+
+      value += _polarTriangleArea(tanLat, lng, prevTanLat, prevLng);
+
+      prevTanLat = tanLat;
+      prevLng = lng;
+
+      return value;
+    });
+
+    return total * (radius * radius);
+  }
+
+  /// Returns the signed area of a triangle which has North Pole as a vertex.
+  /// Formula derived from "Area of a spherical triangle given two edges and
+  /// the included angle" as per "Spherical Trigonometry" by Todhunter, page 71,
+  /// section 103, point 2.
+  /// See http://books.google.com/books?id=3uBHAAAAIAAJ&pg=PA71
+  /// The arguments named "tan" are tan((pi/2 - latitude)/2).
+  static num _polarTriangleArea(num tan1, num lng1, num tan2, num lng2) {
+    final deltaLng = lng1 - lng2;
+    final t = tan1 * tan2;
+    return 2 * atan2(t * sin(deltaLng), 1 + t * cos(deltaLng));
+  }
+
+  /// Creates a polygon for use with flutter_map from the [exterior] and
+  /// [interior], either which can be disabled with [withExterior] or
+  /// [withInteriorHoles].
+  map.Polygon mapPolygon({
+    bool withExterior = true,
+    bool withInteriorHoles = true,
+    Color color = const Color(0xFF00FF00),
+    double borderStrokeWidth = 0.0,
+    Color borderColor = const Color(0xFFFFFF00),
+    bool disableHolesBorder = false,
+    bool isDotted = false,
+    bool isFilled = false,
+    StrokeCap strokeCap = StrokeCap.round,
+    StrokeJoin strokeJoin = StrokeJoin.round,
+    String? label,
+    TextStyle labelStyle = const TextStyle(),
+    map.PolygonLabelPlacement labelPlacement =
+        map.PolygonLabelPlacement.centroid,
+    bool rotateLabel = false,
+  }) =>
+      map.Polygon(
+        points: switch (withExterior && exterior != null) {
+          true => exterior!.toGeographicPositions.map((e) => e.latLng).toList(),
+          false => []
+        },
+        holePointsList: switch (withInteriorHoles) {
+          true => interior
+              .map(
+                (hole) => hole.toGeographicPositions
+                    .map((point) => point.latLng)
+                    .toList(),
+              )
+              .toList(),
+          false => []
+        },
+        color: color,
+        borderStrokeWidth: borderStrokeWidth,
+        borderColor: borderColor,
+        disableHolesBorder: disableHolesBorder,
+        isDotted: isDotted,
+        isFilled: isFilled,
+        strokeCap: strokeCap,
+        strokeJoin: strokeJoin,
+        label: label,
+        labelStyle: labelStyle,
+        labelPlacement: labelPlacement,
+        rotateLabel: rotateLabel,
+      );
 }

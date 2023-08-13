@@ -1,8 +1,11 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geobase/geobase.dart';
 
 /// A menu button with attached submenu for working with the path recording
 /// and editing feature.
@@ -124,6 +127,32 @@ class PathRecorderMenu extends StatelessWidget {
                     .read(editFinishedPathProvider.notifier)
                     .update(value: value)
                 : null,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Make test field of recorded path',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => ListTile(
+            title: child,
+            leading: const Icon(Icons.waves),
+            onTap: () {
+              final points = ref.watch(finishedPathRecordingListProvider);
+              if (points != null) {
+                ref.read(testFieldProvider.notifier).update(
+                      Field(
+                        name: 'Test',
+                        polygon: Polygon([
+                          PositionArray.view(
+                            points.map((e) => e.position.values).flattened,
+                          )
+                        ]),
+                        boundingBox: GeoBox.from(points.map((e) => e.position)),
+                      ),
+                    );
+              }
+            },
           ),
         ),
         Consumer(
