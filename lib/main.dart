@@ -8,7 +8,9 @@ import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await WakelockPlus.enable();
+  if (!Device.isWeb) {
+    await WakelockPlus.enable();
+  }
 
   if (Device.isDesktop) {
     await windowManager.ensureInitialized();
