@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:isolate';
 
@@ -8,6 +9,8 @@ import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
+import 'package:udp/udp.dart';
+import 'package:universal_io/io.dart';
 
 //TODO: look into making the simulation only return data similar to nmea from gps
 
@@ -26,8 +29,25 @@ class VehicleSimulator {
 
     log('Sim vehicle isolate spawn confirmation');
 
+    final serverEndPoint = Endpoint.unicast(
+      InternetAddress('192.168.4.1'),
+      port: const Port(6666),
+    );
+
+    final endPoint = Endpoint.any(
+      port: const Port(3333),
+    );
+
+    final udp = await UDP.bind(endPoint);
+
+    final udpSendStream = StreamController<String>();
+
+    udpSendStream.stream.listen(
+      (event) async => udp.send(utf8.encode(event), serverEndPoint),
+    );
+
     // The state of the simulation.
-    final state = _VehicleSimulatorState();
+    final state = _VehicleSimulatorState(udpSendStream);
 
     // A timer for periodically updating the simulation.
     final timer = Timer.periodic(
@@ -52,7 +72,23 @@ class VehicleSimulator {
       }
     });
 
-    // Handle incoming messages.
+    await udp.send(
+      utf8.encode('Simulator started'),
+      serverEndPoint,
+    );
+
+    udp.asStream().listen((datagram) {
+      if (datagram != null) {
+        final str = String.fromCharCodes(datagram.data);
+        if (str.startsWith('{')) {
+          final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
+          final bearing = (-(data['yaw'] as double)).wrap360();
+          state.vehicle?.bearing = bearing;
+        }
+      }
+    });
+
+    // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
       if (message != null) {
         state.handleMessage(message);
@@ -63,6 +99,15 @@ class VehicleSimulator {
         break;
       }
     }
+
+    // Isolate shut down procedure
+    await udp.send(
+      utf8.encode('Simulator shut down'),
+      serverEndPoint,
+    );
+
+    udp.close();
+
     log('Sim vehicle isolate exited.');
     Isolate.exit();
   }
@@ -143,6 +188,12 @@ enum SimInputChange {
 
 /// A class for holding and updating the state of the [VehicleSimulator].
 class _VehicleSimulatorState {
+  _VehicleSimulatorState([this.udpSendStream]);
+
+  /// A stream controller for forwarding events to send with UDP, only used on
+  /// native platforms.
+  StreamController<String>? udpSendStream;
+
   /// The current vehicle of the simulation.
   Vehicle? vehicle;
 
@@ -277,6 +328,10 @@ class _VehicleSimulatorState {
       vehicle?.velocity = message.velocity.toDouble();
       velocityChange = SimInputChange.hold;
     }
+    // Update bearing
+    else if (message is ({double bearing})) {
+      vehicle?.bearing = message.bearing;
+    }
 
     // Update the vehicle velocity at a set rate.
     else if (message is ({SimInputChange velocityChange})) {
@@ -295,6 +350,7 @@ class _VehicleSimulatorState {
     // Enable/disable auto steering.
     else if (message is ({bool autoSteerEnabled})) {
       autoSteerEnabled = message.autoSteerEnabled;
+      udpSendStream?.add(jsonEncode({'autoSteerEnabled': autoSteerEnabled}));
     }
     // Set the pure pursuit model.
     else if (message is ({PurePursuit? purePursuit})) {
