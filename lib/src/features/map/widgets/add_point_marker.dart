@@ -1,7 +1,7 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:geobase/geobase.dart';
 
 /// A marker that will insert a new point to the editable path.
 class AddPointMarker extends StatefulWidget {
@@ -34,7 +34,7 @@ class AddPointMarker extends StatefulWidget {
   });
 
   /// Position of the marker
-  final LatLng point;
+  final Geographic point;
 
   /// What to do when the marker is tapped.
   final void Function() onTap;
@@ -70,9 +70,10 @@ class _AddPointMarkerState extends State<AddPointMarker> {
     var radiusToUse = widget.radius;
 
     if (widget.useRadiusInMeters) {
-      final offset = map.getOffsetFromOrigin(widget.point);
-      final r = widget.point.offset(widget.radius, 180);
-      final delta = offset - map.getOffsetFromOrigin(r);
+      final offset = map.getOffsetFromOrigin(widget.point.latLng);
+      final r = widget.point.spherical
+          .destinationPoint(distance: widget.radius, bearing: 180);
+      final delta = offset - map.getOffsetFromOrigin(r.latLng);
       radiusToUse = delta.distance;
     }
     // Convert strokeWidth to meters is radius is in meters.

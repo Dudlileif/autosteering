@@ -44,7 +44,7 @@ final configuredEquipmentProvider =
 );
 
 typedef _$ConfiguredEquipment = Notifier<Equipment>;
-String _$allEquipmentsHash() => r'9972c7b13311144749d4acfdc40e045372233396';
+String _$allEquipmentsHash() => r'8659bdfdda0792d6f061297869cd94813cbba7f6';
 
 /// A provider that holds all of the equipments.
 ///
@@ -80,7 +80,7 @@ final equipmentHoveredProvider =
 );
 
 typedef _$EquipmentHovered = Notifier<bool>;
-String _$equipmentPathsHash() => r'0d1940be10b89ed3daea50801f120175f4775569';
+String _$equipmentPathsHash() => r'ec5ad4a592e1e64e4c5c822bb5fb07b1d32f811c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -104,10 +104,10 @@ class _SystemHash {
 }
 
 abstract class _$EquipmentPaths
-    extends BuildlessAutoDisposeNotifier<List<Map<int, List<LatLng>?>>> {
+    extends BuildlessAutoDisposeNotifier<List<Map<int, List<Geographic>?>>> {
   late final String uuid;
 
-  List<Map<int, List<LatLng>?>> build(
+  List<Map<int, List<Geographic>?>> build(
     String uuid,
   );
 }
@@ -121,7 +121,7 @@ const equipmentPathsProvider = EquipmentPathsFamily();
 /// A provider for tracking the worked paths for the given equipment [uuid].
 ///
 /// Copied from [EquipmentPaths].
-class EquipmentPathsFamily extends Family<List<Map<int, List<LatLng>?>>> {
+class EquipmentPathsFamily extends Family<List<Map<int, List<Geographic>?>>> {
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
   /// Copied from [EquipmentPaths].
@@ -166,7 +166,7 @@ class EquipmentPathsFamily extends Family<List<Map<int, List<LatLng>?>>> {
 ///
 /// Copied from [EquipmentPaths].
 class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
-    EquipmentPaths, List<Map<int, List<LatLng>?>>> {
+    EquipmentPaths, List<Map<int, List<Geographic>?>>> {
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
   /// Copied from [EquipmentPaths].
@@ -201,7 +201,7 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
   }
 
   @override
-  List<Map<int, List<LatLng>?>> runNotifierBuild(
+  List<Map<int, List<Geographic>?>> runNotifierBuild(
     covariant EquipmentPaths notifier,
   ) {
     return notifier.build(

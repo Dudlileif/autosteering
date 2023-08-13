@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/common/utils/position_projection_extensions.dart';
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
         children: [
           PolygonLayer(
             polygons: equipments
-                .map((e) => e.polygons)
+                .map((e) => e.mapPolygons)
                 .whereNotNull()
                 .flattened
                 .toList(),
@@ -66,16 +66,16 @@ class EquipmentDebugLayer extends ConsumerWidget {
                             .mapIndexed(
                               (segment, line) => line != null
                                   ? Polyline(
-                                      points:
-                                          sectionUpdate == equipment.length - 1
-                                              ? [
-                                                  ...line,
-                                                  equipments
-                                                      .elementAt(equipmentIndex)
-                                                      .segmentCenter(segment)
-                                                      .latLng
-                                                ]
-                                              : line,
+                                      points: sectionUpdate ==
+                                              equipment.length - 1
+                                          ? [
+                                              ...line.map((e) => e.latLng),
+                                              equipments
+                                                  .elementAt(equipmentIndex)
+                                                  .segmentCenter(segment)
+                                                  .latLng
+                                            ]
+                                          : line.map((e) => e.latLng).toList(),
                                       color: Theme.of(context)
                                           .primaryColor
                                           .withOpacity(0.25),
@@ -95,34 +95,35 @@ class EquipmentDebugLayer extends ConsumerWidget {
                 .flattened
                 .toList(),
           ),
-          CircleLayer(
-            circles: workedLines
-                .mapIndexed(
-                  (equipmentIndex, equipment) => equipment
-                      .map(
-                        (sectionMap) => sectionMap.values
-                            .mapIndexed(
-                              (segment, line) => line != null
-                                  ? [
-                                      ...line,
-                                      equipments
-                                          .elementAt(equipmentIndex)
-                                          .segmentCenter(segment)
-                                          .latLng,
-                                    ].map(
-                                      (point) =>
-                                          CircleMarker(point: point, radius: 3),
-                                    )
-                                  : null,
-                            )
-                            .whereNotNull()
-                            .flattened,
-                      )
-                      .flattened,
-                )
-                .flattened
-                .toList(),
-          )
+          // CircleLayer(
+          //   circles: workedLines
+          //       .mapIndexed(
+          //         (equipmentIndex, equipment) => equipment
+          //             .map(
+          //               (sectionMap) => sectionMap.values
+          //                   .mapIndexed(
+          //                     (segment, line) => line != null
+          //                         ? [
+          //                             ...line,
+          //                             equipments
+          //                                 .elementAt(equipmentIndex)
+          //                                 .segmentCenter(segment),
+          //                           ].map(
+          //                             (point) => CircleMarker(
+          //                               point: point.latLng,
+          //                               radius: 3,
+          //                             ),
+          //                           )
+          //                         : null,
+          //                   )
+          //                   .whereNotNull()
+          //                   .flattened,
+          //             )
+          //             .flattened,
+          //       )
+          //       .flattened
+          //       .toList(),
+          // )
         ],
       ),
     );

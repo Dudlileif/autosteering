@@ -50,7 +50,7 @@ class EditablePathLayer extends ConsumerWidget {
                       return Marker(
                         point: midPoint.position.latLng,
                         builder: (context) => AddPointMarker(
-                          point: midPoint.position.latLng,
+                          point: midPoint.position,
                           radius: 5,
                           onTap: () => ref
                               .read(

@@ -6,6 +6,7 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -119,7 +120,7 @@ class AllEquipments extends _$AllEquipments {
   void handleMapOnTap(TapPosition tapPosition, LatLng point) {
     for (final equipment in state.values) {
       equipment.segmentPolygons.forEachIndexed((index, segment) {
-        if (segment.contains(point)) {
+        if (segment.contains(point.gbPosition)) {
           ref.read(simInputProvider.notifier).send(
             (
               uuid: equipment.uuid,
@@ -137,7 +138,7 @@ class AllEquipments extends _$AllEquipments {
   void handleMapOnPointerHover(PointerHoverEvent event, LatLng point) {
     for (final equipment in state.values) {
       for (final segment in equipment.segmentPolygons) {
-        if (segment.contains(point)) {
+        if (segment.contains(point.gbPosition)) {
           return ref
               .read(equipmentHoveredProvider.notifier)
               .update(value: true);
@@ -164,7 +165,7 @@ class EquipmentPaths extends _$EquipmentPaths {
   var _lastActiveSegments = <bool>[];
 
   @override
-  List<Map<int, List<LatLng>?>> build(String uuid) => [];
+  List<Map<int, List<Geographic>?>> build(String uuid) => [];
 
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
@@ -180,14 +181,14 @@ class EquipmentPaths extends _$EquipmentPaths {
                     (_lastActiveSegments.elementAtOrNull(segment) ?? false)
                 ? [
                     state.last[segment]?.last ??
-                        equipment.segmentCenter(segment).latLng
+                        equipment.segmentCenter(segment)
                   ]
                 : active
-                    ? [equipment.segmentCenter(segment).latLng]
+                    ? [equipment.segmentCenter(segment)]
                     : null,
           );
 
-          final segmentLines = Map<int, List<LatLng>?>.fromEntries(
+          final segmentLines = Map<int, List<Geographic>?>.fromEntries(
             points.mapIndexed(MapEntry.new),
           );
           state = state..add(segmentLines);
@@ -202,14 +203,14 @@ class EquipmentPaths extends _$EquipmentPaths {
           );
           final addNext = positions
               .mapIndexed(
-                (segment, position) => shouldAddNext(position.latLng, segment),
+                (segment, position) => shouldAddNext(position, segment),
               )
               .reduce((value, element) => value || element);
 
           if (addNext) {
             state = state
               ..last.updateAll(
-                (key, value) => value?..add(positions[key].latLng),
+                (key, value) => value?..add(positions[key]),
               );
           }
         }
@@ -231,28 +232,28 @@ class EquipmentPaths extends _$EquipmentPaths {
     if (nextActive < prevActive) {
       state = state
         ..last.updateAll(
-          (key, value) => value?..add(equipment.segmentCenter(key).latLng),
+          (key, value) => value?..add(equipment.segmentCenter(key)),
         );
     }
   }
 
   /// Whether the [next] point for this [segment] is necessary to keep the
   /// path up to date.
-  bool shouldAddNext(LatLng next, int segment) {
+  bool shouldAddNext(Geographic next, int segment) {
     final prev = state.last[segment]?.last;
 
     if (state.isNotEmpty && prev != null) {
-      final distance = prev.distanceTo(next);
+      final distance = prev.spherical.distanceTo(next);
 
       if (distance > 20) {
         return true;
       } else if (distance > 1 && (state.last[segment]?.length ?? 0) >= 2) {
         final secondPrev =
             state.last[segment]![state.last[segment]!.length - 2];
-        final prevBearing = secondPrev.bearingTo(prev);
-        final bearing = prev.bearingTo(next);
+        final prevBearing = secondPrev.spherical.initialBearingTo(prev);
+        final nextBearing = prev.spherical.finalBearingTo(next);
 
-        final bearingDiff = (prevBearing - bearing).abs();
+        final bearingDiff = bearingDifference(prevBearing, nextBearing);
 
         if (bearingDiff > 1) {
           return true;
@@ -268,8 +269,8 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// different to the previous state.
   @override
   bool updateShouldNotify(
-    List<Map<int, List<LatLng>?>> previous,
-    List<Map<int, List<LatLng>?>> next,
+    List<Map<int, List<Geographic>?>> previous,
+    List<Map<int, List<Geographic>?>> next,
   ) =>
       true;
 }

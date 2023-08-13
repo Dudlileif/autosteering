@@ -34,15 +34,21 @@
 
 - Saving/loading of vehicles, equipment, fields etc...
 
+- Vehicle/equipment configurator/builder, chained equipment presets
+
 - Fields, AB lines/curves etc.
 
 - Improve autosteering, look at more algorithms
 
 - Hardware communication, probably UDP first
 
+- Debugging graphs/logs
+
 - Import/export to the original AgOpenGps
 
 - Map layer caching/offline
+
+- Custom hotkeys, also from hardware
 
 ## Further ideas
 

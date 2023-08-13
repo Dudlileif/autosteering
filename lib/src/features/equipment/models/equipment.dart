@@ -4,7 +4,6 @@ import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
-import 'package:dart_jts/dart_jts.dart' as jts;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
@@ -247,11 +246,10 @@ class Equipment extends Hitchable with EquatableMixin {
   /// to parent with a towbar.
   void updateTowbar() {
     if (hitchParent != null && parentHitch == Hitch.rearTowbar) {
-      final hitchAngle = jts.Angle.angleBetweenOriented(
-        workingCenter.jtsCoordinate,
-        position.jtsCoordinate,
-        hitchParent!.position.jtsCoordinate,
-      );
+      final hitchAngle = signedBearingDifference(
+        position.spherical.initialBearingTo(hitchParent!.position),
+        position.spherical.initialBearingTo(workingCenter),
+      ).toRadians();
 
       final bearingChange = hitchParent!.velocity /
           (drawbarLength + length / 2) *
@@ -335,17 +333,27 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The center point of the given [segment].
   Geographic segmentCenter(int segment) {
     final points = segmentPoints(segment);
-    return map.LatLngBounds.fromPoints(points.map((e) => e.latLng).toList())
-        .center
-        .gbPosition;
+    return points[0].spherical.midPointTo(points[2]);
   }
 
   /// The polygon for the given [segment].
-  map.Polygon segmentPolygon(int segment) {
-    final points = segmentPoints(segment);
+  Polygon segmentPolygon(int segment) => Polygon(
+        [
+          PositionArray.view(
+            segmentPoints(segment).map((e) => e.values).flattened,
+          )
+        ],
+      );
+
+  /// An iterable of all the segments' polygons.
+  Iterable<Polygon> get segmentPolygons =>
+      Iterable.generate(segments, segmentPolygon).whereNotNull();
+
+  /// The map polygon for the given [segment].
+  map.Polygon segmentMapPolygon(int segment) {
     final active = activeSegments[segment];
 
-    return map.Polygon(
+    return segmentPolygon(segment).mapPolygon(
       borderStrokeWidth: 2,
       isFilled: active,
       borderColor: switch (active) {
@@ -356,16 +364,16 @@ class Equipment extends Hitchable with EquatableMixin {
         true => Colors.green.withOpacity(0.8),
         false => Colors.grey.withOpacity(0.4),
       },
-      points: points.map((e) => e.latLng).toList(),
     );
   }
 
   /// An iterable of all the segments' polygons.
-  Iterable<map.Polygon> get segmentPolygons =>
-      List.generate(segments, segmentPolygon, growable: false).whereNotNull();
+  Iterable<map.Polygon> get segmentMapPolygons =>
+      List.generate(segments, segmentMapPolygon, growable: false)
+          .whereNotNull();
 
   /// A list of the polygon(s) for the drawbar(s).
-  List<map.Polygon> get drawbarPolygons => switch (hitchType) {
+  List<map.Polygon> get drawbarMapPolygons => switch (hitchType) {
         HitchType.towbar => [
             map.Polygon(
               borderStrokeWidth: 3,
@@ -434,12 +442,12 @@ class Equipment extends Hitchable with EquatableMixin {
           ]
       };
 
-  /// A list of all the polygons for the equipment, i.e. [drawbarPolygons] and
-  /// all the [segmentPolygon]s.
-  List<map.Polygon> get polygons {
+  /// A list of all the polygons for the equipment, i.e. [drawbarMapPolygons]
+  /// and all the [segmentMapPolygon]s.
+  List<map.Polygon> get mapPolygons {
     return [
-      ...drawbarPolygons,
-      ...List.generate(segments, segmentPolygon, growable: false)
+      ...drawbarMapPolygons,
+      ...List.generate(segments, segmentMapPolygon, growable: false)
           .whereNotNull(),
     ];
   }
