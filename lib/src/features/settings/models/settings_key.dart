@@ -2,6 +2,9 @@
 
 /// An enumerator for all the settings of the program.
 enum SettingsKey {
+  hardwareIPAdress('hardware.ip_address'),
+  hardwareUDPReceivePort('hardware.udp_receive_port'),
+  hardwareUDPSendPort('hardware.udp_send_port'),
   copernicusInstanceId('map.copernicus_instance_id'),
   currentCountry('map.current_country'),
   enableMap3D('map.enable_3d'),

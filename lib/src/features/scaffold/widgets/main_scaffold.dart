@@ -1,5 +1,7 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/network/widgets/widgets.dart';
 import 'package:agopengps_flutter/src/features/scaffold/widgets/debug_menu.dart';
 import 'package:agopengps_flutter/src/features/scaffold/widgets/sim_menu.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
@@ -14,27 +16,28 @@ class MainScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: const [
+        actions: [
           Focus(
             canRequestFocus: false,
             descendantsAreFocusable: false,
             descendantsAreTraversable: false,
             child: MenuBar(
               children: [
-                MapMenu(),
-                GuidanceMenu(),
-                DebugMenu(),
-                SimMenu(),
+                const MapMenu(),
+                const GuidanceMenu(),
+                if (!Device.isWeb) const NetworkMenu(),
+                const DebugMenu(),
+                const SimMenu(),
               ],
             ),
           ),
-          Focus(
+          const Focus(
             canRequestFocus: false,
             descendantsAreFocusable: false,
             descendantsAreTraversable: false,
             child: ManufacturerThemeSelector(),
           ),
-          Focus(
+          const Focus(
             canRequestFocus: false,
             descendantsAreFocusable: false,
             descendantsAreTraversable: false,
