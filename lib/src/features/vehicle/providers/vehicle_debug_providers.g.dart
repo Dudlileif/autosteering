@@ -136,5 +136,24 @@ final debugVehicleHitchesProvider =
 );
 
 typedef _$DebugVehicleHitches = Notifier<bool>;
+String _$debugVehicleAntennaPositionHash() =>
+    r'01e2df818d2995610c08b0a90b5030a616fbe179';
+
+/// Whether to show vehicle antenna position debug.
+///
+/// Copied from [DebugVehicleAntennaPosition].
+@ProviderFor(DebugVehicleAntennaPosition)
+final debugVehicleAntennaPositionProvider =
+    NotifierProvider<DebugVehicleAntennaPosition, bool>.internal(
+  DebugVehicleAntennaPosition.new,
+  name: r'debugVehicleAntennaPositionProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugVehicleAntennaPositionHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugVehicleAntennaPosition = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

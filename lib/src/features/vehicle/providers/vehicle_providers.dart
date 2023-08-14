@@ -23,7 +23,7 @@ class MainVehicle extends _$MainVehicle {
         solidAxleDistance: 1.275,
         minTurningRadius: 4.25,
         steeringAngleMax: 32,
-        simulated: true,
+        isSimulated: true,
       );
 
   /// Set the velocity of the [state] to [value].
@@ -81,6 +81,27 @@ class AutoSteerEnabled extends _$AutoSteerEnabled {
     ref.listenSelf((previous, next) {
       if (next != previous) {
         ref.read(simInputProvider.notifier).send((autoSteerEnabled: next));
+      }
+    });
+
+    return false;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}
+
+/// A provider for whether the vehicle's bearing is set by the IMU input.
+@Riverpod(keepAlive: true)
+class UseIMUBearing extends _$UseIMUBearing {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != next) {
+        ref.read(simInputProvider.notifier).send((useIMUBearing: next));
       }
     });
 

@@ -29,25 +29,8 @@ class VehicleSimulator {
 
     log('Sim vehicle isolate spawn confirmation');
 
-    final serverEndPoint = Endpoint.unicast(
-      InternetAddress('192.168.4.1'),
-      port: const Port(6666),
-    );
-
-    final endPoint = Endpoint.any(
-      port: const Port(3333),
-    );
-
-    final udp = await UDP.bind(endPoint);
-
-    final udpSendStream = StreamController<String>();
-
-    udpSendStream.stream.listen(
-      (event) async => udp.send(utf8.encode(event), serverEndPoint),
-    );
-
     // The state of the simulation.
-    final state = _VehicleSimulatorState(udpSendStream);
+    final state = _VehicleSimulatorState();
 
     // A timer for periodically updating the simulation.
     final timer = Timer.periodic(
@@ -72,25 +55,63 @@ class VehicleSimulator {
       }
     });
 
+    var serverEndPoint = Endpoint.unicast(
+      InternetAddress('192.168.4.1'),
+      port: const Port(6666),
+    );
+
+    var endPoint = Endpoint.any(
+      port: const Port(3333),
+    );
+
+    var udp = await UDP.bind(endPoint);
+
+    final udpSendStream = StreamController<String>();
+
+    state.udpSendStream = udpSendStream;
+
+    udpSendStream.stream.listen(
+      (event) async => udp.send(utf8.encode(event), serverEndPoint),
+    );
+
     await udp.send(
       utf8.encode('Simulator started'),
       serverEndPoint,
     );
 
-    udp.asStream().listen((datagram) {
-      if (datagram != null) {
-        final str = String.fromCharCodes(datagram.data);
-        if (str.startsWith('{')) {
-          final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
-          final bearing = (-(data['yaw'] as double)).wrap360();
-          state.vehicle?.bearing = bearing;
-        }
-      }
-    });
+    udp.asStream().listen(
+          (datagram) => _udpListener(datagram, state),
+        );
 
     // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
-      if (message != null) {
+      // Update the udp ip adress for the hardware.
+      if (message is ({
+        String hardwareIPAdress,
+        int hardwareUDPReceivePort,
+        int hardwareUDPSendPort
+      })) {
+        serverEndPoint = Endpoint.unicast(
+          InternetAddress(message.hardwareIPAdress),
+          port: Port(message.hardwareUDPSendPort),
+        );
+
+        endPoint = Endpoint.any(port: Port(message.hardwareUDPReceivePort));
+
+        udp.close();
+        udp = await UDP.bind(endPoint);
+
+        udp.asStream().listen(
+              (datagram) => _udpListener(datagram, state),
+            );
+
+        await udp.send(
+          utf8.encode('Simulator started'),
+          serverEndPoint,
+        );
+      }
+      // Messages for the state.
+      else if (message != null) {
         state.handleMessage(message);
       }
       // Shut down the isolate.
@@ -110,6 +131,24 @@ class VehicleSimulator {
 
     log('Sim vehicle isolate exited.');
     Isolate.exit();
+  }
+
+  static void _udpListener(Datagram? datagram, _VehicleSimulatorState state) {
+    if (datagram != null) {
+      final str = String.fromCharCodes(datagram.data);
+      if (str.startsWith('{')) {
+        try {
+          final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
+          if (state.useIMUBearing) {
+            state.vehicle?.bearing = (-(data['yaw'] as double)).wrap360();
+          }
+          state.vehicle?.pitch = -(data['pitch'] as double);
+          state.vehicle?.roll = data['roll'] as double;
+        } catch (e) {
+          log(e.toString());
+        }
+      }
+    }
   }
 
   /// Used in web version since multithreading isn't possible.
@@ -188,7 +227,7 @@ enum SimInputChange {
 
 /// A class for holding and updating the state of the [VehicleSimulator].
 class _VehicleSimulatorState {
-  _VehicleSimulatorState([this.udpSendStream]);
+  _VehicleSimulatorState();
 
   /// A stream controller for forwarding events to send with UDP, only used on
   /// native platforms.
@@ -273,6 +312,9 @@ class _VehicleSimulatorState {
   /// add to the [lookAheadDistance].
   double lookAheadVelocityGain = 0.5;
 
+  /// Whether the bearing from the IMU input should be used.
+  bool useIMUBearing = false;
+
   /// The previous time of when the simulation was updated.
   DateTime prevUpdateTime = DateTime.now();
 
@@ -318,7 +360,16 @@ class _VehicleSimulatorState {
             .clamp(-message.steeringAngleMax, message.steeringAngleMax),
       );
     }
-
+    // Update whether the vehicle position should take the roll and pitch into
+    // account when an IMU is connected.
+    else if (message is ({bool useIMUPitchAndRoll})) {
+      vehicle?.useIMUPitchAndRoll = message.useIMUPitchAndRoll;
+    }
+    // Update whether the vehicle bearing should be set by the IMU when it's
+    // connected.
+    else if (message is ({bool useIMUBearing})) {
+      useIMUBearing = message.useIMUBearing;
+    }
     // Update the vehicle position.
     else if (message is ({Geographic position})) {
       vehicle?.position = message.position;
@@ -331,6 +382,14 @@ class _VehicleSimulatorState {
     // Update bearing
     else if (message is ({double bearing})) {
       vehicle?.bearing = message.bearing;
+    }
+    // Update pitch
+    else if (message is ({double pitch})) {
+      vehicle?.pitch = message.pitch;
+    }
+    // Update roll
+    else if (message is ({double roll})) {
+      vehicle?.roll = message.roll;
     }
 
     // Update the vehicle velocity at a set rate.
@@ -742,7 +801,7 @@ class _VehicleSimulatorState {
       }
 
       // Going straight.
-      else {
+      else if ((vehicle?.velocity ?? 0).abs() > 0) {
         final position = vehicle!.position.spherical.destinationPoint(
           distance: vehicle!.velocity * period,
           bearing: vehicle!.bearing,
@@ -784,7 +843,7 @@ class _VehicleSimulatorState {
         (vehicle?.velocity.abs() ?? 1) > 0.5) {
       // Discard bearing changes over 10 degrees for one simulation step.
       if (bearingDifference(prevVehicle!.bearing, vehicle!.bearing) < 10) {
-        gaugeBearing = switch (vehicle!.isReversing) {
+        final bearing = switch (vehicle!.isReversing) {
           true => vehicle!.position.spherical.finalBearingTo(
               prevVehicle!.position,
             ),
@@ -792,6 +851,9 @@ class _VehicleSimulatorState {
               vehicle!.position,
             ),
         };
+        if (!bearing.isNaN) {
+          gaugeBearing = bearing;
+        }
       }
     }
   }

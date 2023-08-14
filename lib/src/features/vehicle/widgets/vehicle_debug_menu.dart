@@ -122,6 +122,34 @@ class VehicleDebugMenu extends StatelessWidget {
             secondary: child,
           ),
         ),
+        Consumer(
+          child: Text(
+            'Antenna position',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(debugVehicleAntennaPositionProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugVehicleAntennaPositionProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Use IMU bearing',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(useIMUBearingProvider),
+            onChanged: (value) => value != null
+                ? ref.read(useIMUBearingProvider.notifier).update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
       ],
     );
   }

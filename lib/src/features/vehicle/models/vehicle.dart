@@ -31,7 +31,10 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
-    this.simulated = false,
+    this.pitch = 0,
+    this.roll = 0,
+    this.isSimulated = false,
+    this.useIMUPitchAndRoll = false,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
@@ -40,11 +43,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double velocity = 0,
   })  : _bearing = bearing,
         _velocity = velocity,
-        _position = position;
-
-  /// Antenna position of the vehicle. Assumed centered in the
-  /// width dimension of the vehicle.
-  Geographic _position;
+        antennaPosition = position;
 
   /// The height of the antenna above the ground, in meters.
   double antennaHeight;
@@ -79,16 +78,58 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   double width;
 
   /// Whether the vehicle is simulated.
-  bool simulated;
+  bool isSimulated;
+
+  /// Whether the roll and pitch should affect the [position].
+  bool useIMUPitchAndRoll;
+
+  /// The pitch of the vehicle as degrees of inclination around the x-axis
+  /// (across) the vehicle in the forward direction.
+  double pitch;
+
+  /// The roll of the vehicle as degrees of roll around the y-axis (along) the
+  /// vehicle in the forward direction.
+  double roll;
 
   /// Bearing as set from the outside.
   double _bearing = 0;
 
+  /// Antenna position of the vehicle. Assumed centered in the
+  /// width dimension of the vehicle.
+  Geographic antennaPosition;
+
+  /// The projected ground position of the antenna of this vehicle accounting
+  /// for [pitch] and [roll].
   @override
-  Geographic get position => _position;
+  Geographic get position => switch (useIMUPitchAndRoll) {
+        false => antennaPosition,
+        true => antennaPosition.spherical
+            .destinationPoint(
+              distance: antennaLateralOffset,
+              bearing: bearing - 90,
+            )
+            .spherical
+            .destinationPoint(
+              distance: antennaLongitudinalOffset,
+              bearing: bearing,
+            ),
+      };
 
   @override
-  set position(Geographic value) => _position = value;
+  set position(Geographic value) =>
+      antennaPosition = switch (isSimulated && useIMUPitchAndRoll) {
+        false => value,
+        true => value.spherical
+            .destinationPoint(
+              distance: -antennaLateralOffset,
+              bearing: bearing - 90,
+            )
+            .spherical
+            .destinationPoint(
+              distance: -antennaLongitudinalOffset,
+              bearing: bearing,
+            )
+      };
 
   /// The velocity of the vehicle, in m/s, meters per second, in the bearing
   /// direction.
@@ -106,6 +147,15 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Update the bearing of the vehicle, [value] in degrees.
   @override
   set bearing(double value) => _bearing = value;
+
+  /// The lateral offset of the the antenna's true ground position to the
+  /// mounted position.
+  double get antennaLateralOffset => sin(roll.toRadians()) * antennaHeight;
+
+  /// The longitudinal offset of the the antenna's true ground position to the
+  /// mounted position.
+  double get antennaLongitudinalOffset =>
+      sin(pitch.toRadians()) * antennaHeight;
 
   /// The distance between the wheel axles.
   double get wheelBase;
@@ -193,7 +243,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         steeringAngleInput,
         length,
         width,
-        simulated,
+        isSimulated,
       ];
 
   /// Returns a new [Vehicle] based on this one, but with
@@ -212,7 +262,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleInput,
     double? length,
     double? width,
-    bool? simulated,
+    bool? isSimulated,
+    bool? useIMUPitchAndRoll,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,

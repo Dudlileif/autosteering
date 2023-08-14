@@ -102,12 +102,14 @@ bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {
   final debugSteering = ref.watch(debugSteeringProvider);
   final debugPolygons = ref.watch(debugVehiclePolygonsProvider);
   final debugHitches = ref.watch(debugVehicleHitchesProvider);
+  final debugAntennaPosition = ref.watch(debugVehicleAntennaPositionProvider);
 
   final enabled = debugTravelledPath ||
       debugTrajectory ||
       debugSteering ||
       debugPolygons ||
-      debugHitches;
+      debugHitches ||
+      debugAntennaPosition;
   return enabled;
 }
 

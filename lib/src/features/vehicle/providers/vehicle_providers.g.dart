@@ -6,7 +6,7 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainVehicleHash() => r'81ef89c0875797227d48ba861117365ed1af4161';
+String _$mainVehicleHash() => r'b0e330ed7011b600df6bcea18c3afe9a2649420a';
 
 /// The main provider for the vehicle state.
 ///
@@ -40,5 +40,22 @@ final autoSteerEnabledProvider =
 );
 
 typedef _$AutoSteerEnabled = Notifier<bool>;
+String _$useIMUBearingHash() => r'7011a616009be1e5664d6bd7c0560bfe1e27593d';
+
+/// A provider for whether the vehicle's bearing is set by the IMU input.
+///
+/// Copied from [UseIMUBearing].
+@ProviderFor(UseIMUBearing)
+final useIMUBearingProvider = NotifierProvider<UseIMUBearing, bool>.internal(
+  UseIMUBearing.new,
+  name: r'useIMUBearingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$useIMUBearingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$UseIMUBearing = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
