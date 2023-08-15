@@ -111,6 +111,15 @@ class PitchAndRollGauges extends StatelessWidget {
                 },
               ),
             ),
+            Consumer(
+              child: const Text('Zero IMU'),
+              builder: (context, ref, child) => ListTile(
+                title: child,
+                onTap: () => ref
+                    .read(simInputProvider.notifier)
+                    .send((setZeroIMU: true)),
+              ),
+            )
           ],
         ),
       ),

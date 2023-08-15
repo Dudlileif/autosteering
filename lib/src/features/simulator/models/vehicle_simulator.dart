@@ -110,6 +110,7 @@ class VehicleSimulator {
           serverEndPoint,
         );
       }
+
       // Messages for the state.
       else if (message != null) {
         state.handleMessage(message);
@@ -139,11 +140,19 @@ class VehicleSimulator {
       if (str.startsWith('{')) {
         try {
           final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
+          final bearing = -(data['yaw'] as double);
+          final pitch = -(data['pitch'] as double);
+          final roll = data['roll'] as double;
+
           if (state.useIMUBearing) {
-            state.vehicle?.bearing = (-(data['yaw'] as double)).wrap360();
+            state.vehicle?.bearing =
+                (bearing - state.imuZero.bearingZero).wrap360();
           }
-          state.vehicle?.pitch = -(data['pitch'] as double);
-          state.vehicle?.roll = data['roll'] as double;
+          state.vehicle?.pitch = pitch - state.imuZero.pitchZero;
+
+          state.vehicle?.roll = roll - state.imuZero.rollZero;
+
+          state.imuInputRaw = (bearing: bearing, pitch: pitch, roll: roll);
         } catch (e) {
           log(e.toString());
         }
@@ -315,6 +324,15 @@ class _VehicleSimulatorState {
   /// Whether the bearing from the IMU input should be used.
   bool useIMUBearing = false;
 
+  /// A record of the raw IMU input.
+  ({double bearing, double pitch, double roll}) imuInputRaw =
+      (bearing: 0, pitch: 0, roll: 0);
+
+  /// A record with the zero values for the IMU. These can be updated to
+  /// change what is perceived as zero for each axis.
+  ({double bearingZero, double pitchZero, double rollZero}) imuZero =
+      (bearingZero: 0, pitchZero: 0, rollZero: 0);
+
   /// The previous time of when the simulation was updated.
   DateTime prevUpdateTime = DateTime.now();
 
@@ -391,7 +409,18 @@ class _VehicleSimulatorState {
     else if (message is ({double roll})) {
       vehicle?.roll = message.roll;
     }
-
+    // Set the zero points for the IMU
+    else if (message is ({bool setZeroIMU})) {
+      if (message.setZeroIMU) {
+        imuZero = (
+          bearingZero: 0,
+          pitchZero: imuInputRaw.pitch,
+          rollZero: imuInputRaw.roll,
+        );
+      } else {
+        imuZero = (bearingZero: 0, pitchZero: 0, rollZero: 0);
+      }
+    }
     // Update the vehicle velocity at a set rate.
     else if (message is ({SimInputChange velocityChange})) {
       velocityChange = message.velocityChange;
