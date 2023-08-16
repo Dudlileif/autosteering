@@ -11,6 +11,7 @@ enum SettingsKey {
   mapPerspectiveAngle('map.3d_perspective_angle'),
   alwaysPointNorth('map.always_point_north'),
   centerMapOnVehicle('map.center_on_vehicle'),
+  mapZoom('map.zoom'),
   homePosition('map.home_position'),
   mapCenterOffset2D('map.offset.2d'),
   mapCenterOffset3D('map.offset.3d'),
@@ -22,7 +23,9 @@ enum SettingsKey {
   enabledSentinelLayers('map.layers.sentinel.enabled'),
   sentinelLayersOpacities('map.layers.sentinel.opacities'),
   simAutoCenterSteering('sim.auto_center_steering'),
-  simAutoSlowDown('sim.auto_slow_down');
+  simAutoSlowDown('sim.auto_slow_down'),
+  themeColorScheme('theme.color_scheme'),
+  themeMode('theme.mode');
 
   const SettingsKey(this.name);
 

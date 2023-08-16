@@ -1,4 +1,6 @@
+import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -8,7 +10,27 @@ part 'theme_providers.g.dart';
 @riverpod
 class ActiveThemeMode extends _$ActiveThemeMode {
   @override
-  ThemeMode build() => ThemeMode.system;
+  ThemeMode build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.themeMode, next.name);
+      }
+    });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.themeMode)) {
+      final name =
+          ref.read(settingsProvider.notifier).getString(SettingsKey.themeMode);
+      return ThemeMode.values
+              .firstWhereOrNull((element) => element.name == name) ??
+          ThemeMode.system;
+    }
+
+    return ThemeMode.system;
+  }
 
   /// Update the [state] to [newMode].
   void update(ThemeMode newMode) => Future(() => state = newMode);
@@ -28,7 +50,28 @@ class ActiveThemeMode extends _$ActiveThemeMode {
 @riverpod
 class Manufacturer extends _$Manufacturer {
   @override
-  ManufacturerColor build() => ManufacturerColor.masseyFerguson;
+  ManufacturerColor build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.themeColorScheme, next.name);
+      }
+    });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.themeColorScheme)) {
+      final name = ref
+          .read(settingsProvider.notifier)
+          .getString(SettingsKey.themeColorScheme);
+      return ManufacturerColor.values
+              .firstWhereOrNull((element) => element.name == name) ??
+          ManufacturerColor.masseyFerguson;
+    }
+
+    return ManufacturerColor.masseyFerguson;
+  }
 
   /// Update the [state] to [newScheme].
   void update(ManufacturerColor newScheme) => Future(() => state = newScheme);

@@ -25,7 +25,7 @@ final appThemeProvider = AutoDisposeProvider<AppTheme>.internal(
 );
 
 typedef AppThemeRef = AutoDisposeProviderRef<AppTheme>;
-String _$activeThemeModeHash() => r'1a51aab764a270c00c8b7a59237de47abf0f4cd8';
+String _$activeThemeModeHash() => r'7947ef6d5863e016244b0daea29420e0188907f2';
 
 /// A provider that contains the current theme mode state.
 ///
@@ -43,7 +43,7 @@ final activeThemeModeProvider =
 );
 
 typedef _$ActiveThemeMode = AutoDisposeNotifier<ThemeMode>;
-String _$manufacturerHash() => r'af8ba3d8f1943b33cb83c6e95412fa57595e288e';
+String _$manufacturerHash() => r'f8b1a7a97736615dd20edbdb33963e0dc174d045';
 
 /// A provider that contains theme color state.
 ///

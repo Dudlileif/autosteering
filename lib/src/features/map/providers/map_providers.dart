@@ -336,3 +336,22 @@ class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
   /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
+
+/// The zoom value that the map should use when being created.
+@Riverpod(keepAlive: true)
+class MapZoom extends _$MapZoom {
+  @override
+  double build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref.read(settingsProvider.notifier).update(SettingsKey.mapZoom, next);
+      }
+    });
+
+    return ref.read(settingsProvider.notifier).getDouble(SettingsKey.mapZoom) ??
+        19;
+  }
+
+  /// Update the [state] to [value].
+  void update(double value) => Future(() => state = value);
+}

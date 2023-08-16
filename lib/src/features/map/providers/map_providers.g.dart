@@ -187,7 +187,7 @@ final alwaysPointNorthProvider =
 
 typedef _$AlwaysPointNorth = Notifier<bool>;
 String _$mapUse3DPerspectiveHash() =>
-    r'e2a44a841ae01677fcc8ea2de4c63e33677e2a06';
+    r'c20f26c02dc947aa0c0674983a377de3f8b7843f';
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
@@ -226,5 +226,21 @@ final map3DPerspectiveAngleProvider =
 );
 
 typedef _$Map3DPerspectiveAngle = Notifier<double>;
+String _$mapZoomHash() => r'070ace7cb8cec2c2a0c7b1c56a4c50f8bb51a379';
+
+/// The zoom value that the map should use when being created.
+///
+/// Copied from [MapZoom].
+@ProviderFor(MapZoom)
+final mapZoomProvider = NotifierProvider<MapZoom, double>.internal(
+  MapZoom.new,
+  name: r'mapZoomProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$mapZoomHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MapZoom = Notifier<double>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

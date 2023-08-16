@@ -22,9 +22,6 @@ class _AgOpenGpsState extends ConsumerState<AgOpenGps> {
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = ref.watch(appThemeProvider);
-    final themeMode = ref.watch(activeThemeModeProvider);
-
     if (loading) {
       // Add an artificial delay on web to allow the program to start up.
       if (Device.isWeb) {
@@ -45,19 +42,23 @@ class _AgOpenGpsState extends ConsumerState<AgOpenGps> {
       }
     }
 
-    return MaterialApp(
-      theme: appTheme.light,
-      darkTheme: appTheme.dark,
-      themeMode: themeMode,
-      debugShowCheckedModeBanner: false,
-      home: loading
-          ? const Center(
-              child: SizedBox.square(
-                dimension: 50,
-                child: CircularProgressIndicator.adaptive(),
-              ),
-            )
-          : const MainScaffold(),
-    );
+    final appTheme = loading ? const AppTheme() : ref.watch(appThemeProvider);
+    final themeMode =
+        loading ? ThemeMode.system : ref.watch(activeThemeModeProvider);
+
+    return loading
+        ? const Center(
+            child: SizedBox.square(
+              dimension: 50,
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          )
+        : MaterialApp(
+            theme: appTheme.light,
+            darkTheme: appTheme.dark,
+            themeMode: themeMode,
+            debugShowCheckedModeBanner: false,
+            home: const MainScaffold(),
+          );
   }
 }
