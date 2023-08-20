@@ -11,7 +11,6 @@ final class ArticulatedTractor extends Vehicle {
     required this.pivotToAntennaDistance,
     required this.pivotToFrontAxle,
     required this.pivotToRearAxle,
-    required super.position,
     required super.antennaHeight,
 
     /// The minimum turning radius of the front axle.
@@ -25,8 +24,10 @@ final class ArticulatedTractor extends Vehicle {
     this.wheelWidth = 1.3,
     this.wheelSpacing = 0.15,
     this.numWheels = 2,
+    super.antennaLateralOffset,
     super.invertSteeringInput,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
+    super.position,
     super.velocity,
     super.bearing,
     super.steeringAngleInput,
@@ -38,7 +39,56 @@ final class ArticulatedTractor extends Vehicle {
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
+    super.uuid,
+    super.lastUsed,
   });
+
+  /// Creates an [ArticulatedTractor] from the [json] object.
+  factory ArticulatedTractor.fromJson(Map<String, dynamic> json) {
+    final info = Map<String, dynamic>.from(json['info'] as Map);
+
+    final antenna = Map<String, dynamic>.from(json['antenna'] as Map);
+
+    final dimensions = Map<String, dynamic>.from(json['dimensions'] as Map);
+
+    final wheels = Map<String, dynamic>.from(dimensions['wheels'] as Map);
+
+    final steering = Map<String, dynamic>.from(json['steering'] as Map);
+
+    final pidParameters = PidParameters.fromJson(
+      Map<String, dynamic>.from(json['pid_parameters'] as Map),
+    );
+
+    final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
+
+    return ArticulatedTractor(
+      name: info['name'] as String?,
+      uuid: info['uuid'] as String?,
+      lastUsed: DateTime.tryParse(info['last_used'] as String),
+      antennaHeight: antenna['height'] as double,
+      antennaLateralOffset: antenna['lateral_offset'] as double,
+      width: dimensions['width'] as double,
+      length: dimensions['length'] as double,
+      trackWidth: dimensions['track_width'] as double,
+      pivotToAntennaDistance: dimensions['pivot_to_antenna_distance'] as double,
+      pivotToFrontAxle: dimensions['pivot_to_front_axle'] as double,
+      pivotToRearAxle: dimensions['pivot_to_rear_axle'] as double,
+      minTurningRadius: steering['min_turning_radius'] as double,
+      steeringAngleMax: steering['steering_angle_max'] as double,
+      invertSteeringInput: steering['invert_steering_input'] as bool,
+      numWheels: wheels['num_wheels'] as int,
+      wheelDiameter: wheels['wheel_diameter'] as double,
+      wheelWidth: wheels['wheel_width'] as double,
+      wheelSpacing: wheels['wheel_spacing'] as double,
+      pidParameters: pidParameters,
+      frontAxleToHitchDistance:
+          hitches['front_axle_to_front_hitch_distance'] as double?,
+      rearAxleToHitchDistance:
+          hitches['rear_axle_to_hitch_distance'] as double?,
+      rearAxleToTowbarDistance:
+          hitches['rear_axle_to_towbar_distance'] as double?,
+    );
+  }
 
   /// The distance from the vehicle articulation pivot point to the antenna
   /// [position].
@@ -170,7 +220,7 @@ final class ArticulatedTractor extends Vehicle {
           point: pivotPosition.latLng,
           radius: 10,
           color: Colors.black,
-        )
+        ),
       ];
 
   /// Basic polylines for showing the vehicle's steering related
@@ -428,7 +478,7 @@ final class ArticulatedTractor extends Vehicle {
       rearLeftCenter.spherical.destinationPoint(
         distance: 1,
         bearing: (rearLeftCornerAngle + 90).wrap360(),
-      )
+      ),
     ];
 
     final rearRightCornerAngle = (rearAxleAngle - 90).wrap360();
@@ -444,7 +494,7 @@ final class ArticulatedTractor extends Vehicle {
       rearRightCenter.spherical.destinationPoint(
         distance: 1,
         bearing: (rearRightCornerAngle + 90).wrap360(),
-      )
+      ),
     ];
 
     final frontLeftCornerAngle = (frontAxleAngle - 90).wrap360();
@@ -460,7 +510,7 @@ final class ArticulatedTractor extends Vehicle {
       frontLeftCenter.spherical.destinationPoint(
         distance: 1,
         bearing: (frontLeftCornerAngle + 90).wrap360(),
-      )
+      ),
     ];
 
     final frontRightCornerAngle = (frontAxleAngle + 90).wrap360();
@@ -476,7 +526,7 @@ final class ArticulatedTractor extends Vehicle {
       frontRightCenter.spherical.destinationPoint(
         distance: 1,
         bearing: (frontRightCornerAngle + 90).wrap360(),
-      )
+      ),
     ];
 
     return [
@@ -497,7 +547,7 @@ final class ArticulatedTractor extends Vehicle {
         ],
         isFilled: true,
         color: Colors.yellow.withOpacity(0.5),
-      )
+      ),
     ];
   }
 
@@ -513,6 +563,7 @@ final class ArticulatedTractor extends Vehicle {
     double? rearAxleToTowbarDistance,
     Geographic? position,
     double? antennaHeight,
+    double? antennaLateralOffset,
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
@@ -538,6 +589,7 @@ final class ArticulatedTractor extends Vehicle {
       ArticulatedTractor(
         position: position ?? this.position,
         antennaHeight: antennaHeight ?? this.antennaHeight,
+        antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,
         steeringAngleMax: steeringAngleMax ?? this.steeringAngleMax,
         trackWidth: trackWidth ?? this.trackWidth,
@@ -569,4 +621,32 @@ final class ArticulatedTractor extends Vehicle {
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
       );
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = super.toJson();
+
+    map['info'] = Map<String, dynamic>.from(map['info'] as Map)
+      ..addAll({'type': 'Articulated tractor'});
+
+    map['dimensions'] = Map<String, dynamic>.from(map['dimensions'] as Map)
+      ..addAll({
+        'pivot_to_antenna_distance': pivotToAntennaDistance,
+        'pivot_to_front_axle': pivotToFrontAxle,
+        'pivot_to_rear_axle': pivotToRearAxle,
+        'wheels': {
+          'num_wheels': numWheels,
+          'wheel_diameter': wheelDiameter,
+          'wheel_width': wheelWidth,
+          'wheel_spacing': wheelSpacing,
+        },
+      });
+    map['hitches'] = {
+      'front_axle_to_front_hitch_distance': frontAxleToHitchDistance,
+      'rear_axle_to_hitch_distance': rearAxleToHitchDistance,
+      'rear_axle_to_towbar_distance': rearAxleToTowbarDistance,
+    };
+
+    return map;
+  }
 }

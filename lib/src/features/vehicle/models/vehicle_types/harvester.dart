@@ -6,12 +6,14 @@ final class Harvester extends AxleSteeredVehicle {
   Harvester({
     required super.wheelBase,
     required super.solidAxleDistance,
-    required super.position,
     required super.antennaHeight,
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
+    super.position,
+    super.antennaLateralOffset,
     super.solidAxleToFrontHitchDistance = 2,
+    super.solidAxleToRearHitchDistance,
     super.solidAxleToRearTowbarDistance = 6,
     super.ackermannSteeringRatio,
     super.steeringAxleWheelDiameter,
@@ -31,7 +33,57 @@ final class Harvester extends AxleSteeredVehicle {
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
+    super.uuid,
+    super.lastUsed,
   });
+
+  /// Creates a [Harvester] from the [json] object.
+  factory Harvester.fromJson(Map<String, dynamic> json) {
+    final info = Map<String, dynamic>.from(json['info'] as Map);
+
+    final antenna = Map<String, dynamic>.from(json['antenna'] as Map);
+
+    final dimensions = Map<String, dynamic>.from(json['dimensions'] as Map);
+
+    final wheels = Map<String, dynamic>.from(dimensions['wheels'] as Map);
+
+    final steering = Map<String, dynamic>.from(json['steering'] as Map);
+
+    final pidParameters = PidParameters.fromJson(
+      Map<String, dynamic>.from(json['pid_parameters'] as Map),
+    );
+
+    final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
+
+    return Harvester(
+      name: info['name'] as String?,
+      uuid: info['uuid'] as String?,
+      lastUsed: DateTime.tryParse(info['last_used'] as String),
+      antennaHeight: antenna['height'] as double,
+      antennaLateralOffset: antenna['lateral_offset'] as double,
+      width: dimensions['width'] as double,
+      length: dimensions['length'] as double,
+      wheelBase: dimensions['wheel_base'] as double,
+      trackWidth: dimensions['track_width'] as double,
+      solidAxleDistance: dimensions['solid_axle_distance'] as double,
+      minTurningRadius: steering['min_turning_radius'] as double,
+      steeringAngleMax: steering['steering_angle_max'] as double,
+      invertSteeringInput: steering['invert_steering_input'] as bool,
+      ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
+      steeringAxleWheelDiameter:
+          wheels['steering_axle_wheel_diameter'] as double,
+      solidAxleWheelDiameter: wheels['solid_axle_wheel_diameter'] as double,
+      steeringAxleWheelWidth: wheels['steering_axle_wheel_width'] as double,
+      solidAxleWheelWidth: wheels['solid_axle_wheel_width'] as double,
+      pidParameters: pidParameters,
+      solidAxleToFrontHitchDistance:
+          hitches['solid_axle_to_front_hitch_distance'] as double?,
+      solidAxleToRearHitchDistance:
+          hitches['solid_axle_to_rear_hitch_distance'] as double?,
+      solidAxleToRearTowbarDistance:
+          hitches['solid_axle_to_rear_towbar_distance'] as double?,
+    );
+  }
 
   /// The position of the center of the rear axle.
   @override
@@ -75,6 +127,7 @@ final class Harvester extends AxleSteeredVehicle {
   Harvester copyWith({
     Geographic? position,
     double? antennaHeight,
+    double? antennaLateralOffset,
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
@@ -82,6 +135,7 @@ final class Harvester extends AxleSteeredVehicle {
     double? solidAxleDistance,
     double? solidAxleToFrontHitchDistance,
     double? solidAxleToRearTowbarDistance,
+    double? solidAxleToRearHitchDistance,
     double? ackermannSteeringRatio,
     double? steeringAxleWheelDiameter,
     double? solidAxleWheelDiameter,
@@ -105,6 +159,7 @@ final class Harvester extends AxleSteeredVehicle {
       Harvester(
         position: position ?? this.position,
         antennaHeight: antennaHeight ?? this.antennaHeight,
+        antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,
         steeringAngleMax: steeringAngleMax ?? this.steeringAngleMax,
         trackWidth: trackWidth ?? this.trackWidth,
@@ -112,8 +167,10 @@ final class Harvester extends AxleSteeredVehicle {
         solidAxleDistance: solidAxleDistance ?? this.solidAxleDistance,
         solidAxleToFrontHitchDistance:
             solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
+        solidAxleToRearHitchDistance:
+            solidAxleToRearHitchDistance ?? this.solidAxleToRearHitchDistance,
         solidAxleToRearTowbarDistance:
-            solidAxleToRearTowbarDistance ?? solidAxleToRearTowbarDistance,
+            solidAxleToRearTowbarDistance ?? this.solidAxleToRearTowbarDistance,
         ackermannSteeringRatio:
             ackermannSteeringRatio ?? this.ackermannSteeringRatio,
         steeringAxleWheelDiameter:
@@ -137,4 +194,14 @@ final class Harvester extends AxleSteeredVehicle {
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
       );
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = super.toJson();
+
+    map['info'] = Map<String, dynamic>.from(map['info'] as Map)
+      ..addAll({'type': 'Harvester'});
+
+    return map;
+  }
 }

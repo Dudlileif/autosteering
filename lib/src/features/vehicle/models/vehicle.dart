@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
@@ -21,12 +22,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// A base class for vehicles that handles all common parameters/variables
   /// and methods.
   Vehicle({
-    required Geographic position,
     required this.antennaHeight,
     required this.minTurningRadius,
     required this.steeringAngleMax,
     required this.trackWidth,
     required this.pidParameters,
+    this.antennaLateralOffset = 0,
     this.invertSteeringInput = false,
     this.steeringAngleInput = 0,
     this.length = 4,
@@ -34,21 +35,50 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     this.pitch = 0,
     this.roll = 0,
     this.isSimulated = false,
-    this.useIMUPitchAndRoll = false,
+    this.useIMUPitchAndRoll = true,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
+    super.uuid,
+    DateTime? lastUsed,
+    Geographic position = const Geographic(lon: 0, lat: 0),
     double bearing = 0,
     double velocity = 0,
   })  : _bearing = bearing,
         _velocity = velocity,
-        antennaPosition = position;
+        antennaPosition = position,
+        lastUsed = lastUsed ?? DateTime.now();
+
+  /// Creates the appropriate [Vehicle] subclass from the [json] object.
+  ///
+  /// The returned object is one of the following:
+  ///
+  /// [Tractor] or
+  /// [Harvester] or
+  /// [ArticulatedTractor]
+  factory Vehicle.fromJson(Map<String, dynamic> json) {
+    final info = Map<String, dynamic>.from(json['info'] as Map);
+    final type = info['type'];
+    return switch (type) {
+      'Tractor' => Tractor.fromJson(json),
+      'Harvester' => Harvester.fromJson(json),
+      'Articulated tractor' => ArticulatedTractor.fromJson(json),
+      _ => Tractor.fromJson(json),
+    };
+  }
+
+  /// The last time this vehicle was used.
+  DateTime lastUsed;
 
   /// The height of the antenna above the ground, in meters.
   double antennaHeight;
 
-  /// The distance between the center of the wheels on the solid axle.
+  /// How much the antenna is offset from the center line of the vehicle
+  /// in the forward direction, in meters.
+  double antennaLateralOffset;
+
+  /// The distance between the centers of the wheels on the solid axle.
   double trackWidth;
 
   /// The best/minimum turning radius, in meters.
@@ -94,9 +124,27 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Bearing as set from the outside.
   double _bearing = 0;
 
-  /// Antenna position of the vehicle. Assumed centered in the
-  /// width dimension of the vehicle.
+  /// Antenna position of the vehicle.
   Geographic antennaPosition;
+
+  /// The [antennaPosition] moved to the center line of the vehicle.
+  Geographic get centeredAntennaPosition =>
+      switch (antennaLateralOffset.abs() > 0) {
+        false => antennaPosition,
+        true => antennaPosition.spherical.destinationPoint(
+            distance: antennaLateralOffset,
+            bearing: bearing + 90,
+          )
+      };
+
+  /// The lateral offset of the the antenna's true ground position to the
+  /// mounted position.
+  double get antennaRollLateralOffset => sin(roll.toRadians()) * antennaHeight;
+
+  /// The longitudinal offset of the the antenna's true ground position to the
+  /// mounted position.
+  double get antennaPitchLongitudinalOffset =>
+      sin(pitch.toRadians()) * antennaHeight;
 
   /// The projected ground position of the antenna of this vehicle accounting
   /// for [pitch] and [roll].
@@ -105,28 +153,28 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         false => antennaPosition,
         true => antennaPosition.spherical
             .destinationPoint(
-              distance: antennaLateralOffset,
+              distance: antennaRollLateralOffset,
               bearing: bearing - 90,
             )
             .spherical
             .destinationPoint(
-              distance: antennaLongitudinalOffset,
+              distance: antennaPitchLongitudinalOffset,
               bearing: bearing,
             ),
       };
 
   @override
   set position(Geographic value) =>
-      antennaPosition = switch (isSimulated && useIMUPitchAndRoll) {
+      antennaPosition = switch (useIMUPitchAndRoll) {
         false => value,
         true => value.spherical
             .destinationPoint(
-              distance: -antennaLateralOffset,
+              distance: -antennaRollLateralOffset,
               bearing: bearing - 90,
             )
             .spherical
             .destinationPoint(
-              distance: -antennaLongitudinalOffset,
+              distance: -antennaPitchLongitudinalOffset,
               bearing: bearing,
             )
       };
@@ -148,14 +196,13 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   @override
   set bearing(double value) => _bearing = value;
 
-  /// The lateral offset of the the antenna's true ground position to the
-  /// mounted position.
-  double get antennaLateralOffset => sin(roll.toRadians()) * antennaHeight;
+  /// The distance from the ground position to the antenna position.
+  double get positionToAntennaDistance =>
+      position.spherical.distanceTo(antennaPosition);
 
-  /// The longitudinal offset of the the antenna's true ground position to the
-  /// mounted position.
-  double get antennaLongitudinalOffset =>
-      sin(pitch.toRadians()) * antennaHeight;
+  /// The bearing from the ground position to the antenna position.
+  double get positionToAntennaBearing =>
+      position.spherical.initialBearingTo(antennaPosition);
 
   /// The distance between the wheel axles.
   double get wheelBase;
@@ -172,7 +219,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       );
 
   /// Reqiure wheel angle above 0.01 deg.
-  double get minSteeringAngle => 0.01;
+  static const double minSteeringAngle = 0.01;
 
   /// The [steeringAngleInput] accounted for [invertSteeringInput] and
   /// [minSteeringAngle].
@@ -252,6 +299,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   Vehicle copyWith({
     Geographic? position,
     double? antennaHeight,
+    double? antennaLateralOffset,
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
@@ -270,4 +318,36 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     Hitchable? hitchRearTowbarChild,
     String? name,
   });
+
+  /// Converts the object to a json compatible structure.
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['info'] = {
+      'name': name,
+      'uuid': uuid,
+      'last_used': lastUsed.toIso8601String(),
+    };
+    map['antenna'] = {
+      'height': antennaHeight,
+      'lateral_offset': antennaLateralOffset,
+    };
+    map['dimensions'] = {
+      'length': length,
+      'width': width,
+      'track_width': trackWidth,
+    };
+
+    map['pid_parameters'] = pidParameters;
+
+    map['steering'] = {
+      'invert_steering_input': invertSteeringInput,
+      'min_turning_radius': minTurningRadius,
+      'steering_angle_max': steeringAngleMax,
+    };
+
+    return SplayTreeMap.from(
+      map,
+      (key1, key2) => key1.compareTo(key2),
+    );
+  }
 }

@@ -6,11 +6,11 @@ final class Tractor extends AxleSteeredVehicle {
   Tractor({
     required super.wheelBase,
     required super.solidAxleDistance,
-    required super.position,
     required super.antennaHeight,
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
+    super.antennaLateralOffset,
     super.solidAxleToFrontHitchDistance = 3.5,
     super.solidAxleToRearHitchDistance = 0.9,
     super.solidAxleToRearTowbarDistance = 0.65,
@@ -20,6 +20,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.steeringAxleWheelWidth,
     super.solidAxleWheelWidth,
     super.invertSteeringInput,
+    super.position,
     super.pidParameters = const PidParameters(p: 30, i: 0, d: 2),
     super.velocity,
     super.bearing,
@@ -32,7 +33,57 @@ final class Tractor extends AxleSteeredVehicle {
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
+    super.uuid,
+    super.lastUsed,
   });
+
+  /// Creates a [Tractor] from the [json] object.
+  factory Tractor.fromJson(Map<String, dynamic> json) {
+    final info = Map<String, dynamic>.from(json['info'] as Map);
+
+    final antenna = Map<String, dynamic>.from(json['antenna'] as Map);
+
+    final dimensions = Map<String, dynamic>.from(json['dimensions'] as Map);
+
+    final wheels = Map<String, dynamic>.from(dimensions['wheels'] as Map);
+
+    final steering = Map<String, dynamic>.from(json['steering'] as Map);
+
+    final pidParameters = PidParameters.fromJson(
+      Map<String, dynamic>.from(json['pid_parameters'] as Map),
+    );
+
+    final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
+
+    return Tractor(
+      name: info['name'] as String?,
+      uuid: info['uuid'] as String?,
+      lastUsed: DateTime.tryParse(info['last_used'] as String),
+      antennaHeight: antenna['height'] as double,
+      antennaLateralOffset: antenna['lateral_offset'] as double,
+      width: dimensions['width'] as double,
+      length: dimensions['length'] as double,
+      wheelBase: dimensions['wheel_base'] as double,
+      trackWidth: dimensions['track_width'] as double,
+      solidAxleDistance: dimensions['solid_axle_distance'] as double,
+      minTurningRadius: steering['min_turning_radius'] as double,
+      steeringAngleMax: steering['steering_angle_max'] as double,
+      invertSteeringInput: steering['invert_steering_input'] as bool,
+      ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
+      steeringAxleWheelDiameter:
+          wheels['steering_axle_wheel_diameter'] as double,
+      solidAxleWheelDiameter: wheels['solid_axle_wheel_diameter'] as double,
+      steeringAxleWheelWidth: wheels['steering_axle_wheel_width'] as double,
+      solidAxleWheelWidth: wheels['solid_axle_wheel_width'] as double,
+      pidParameters: pidParameters,
+      solidAxleToFrontHitchDistance:
+          hitches['solid_axle_to_front_hitch_distance'] as double?,
+      solidAxleToRearHitchDistance:
+          hitches['solid_axle_to_rear_hitch_distance'] as double?,
+      solidAxleToRearTowbarDistance:
+          hitches['solid_axle_to_rear_towbar_distance'] as double?,
+    );
+  }
 
   /// The position of the center of the rear axle.
   @override
@@ -74,6 +125,7 @@ final class Tractor extends AxleSteeredVehicle {
   Tractor copyWith({
     Geographic? position,
     double? antennaHeight,
+    double? antennaLateralOffset,
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
@@ -81,7 +133,7 @@ final class Tractor extends AxleSteeredVehicle {
     double? solidAxleDistance,
     double? solidAxleToFrontHitchDistance,
     double? solidAxleToRearHitchDistance,
-    double? solidAxleToRearTowbarHitchDistance,
+    double? solidAxleToRearTowbarDistance,
     double? ackermannSteeringRatio,
     double? steeringAxleWheelDiameter,
     double? solidAxleWheelDiameter,
@@ -105,6 +157,7 @@ final class Tractor extends AxleSteeredVehicle {
       Tractor(
         position: position ?? this.position,
         antennaHeight: antennaHeight ?? this.antennaHeight,
+        antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,
         steeringAngleMax: steeringAngleMax ?? this.steeringAngleMax,
         trackWidth: trackWidth ?? this.trackWidth,
@@ -115,7 +168,7 @@ final class Tractor extends AxleSteeredVehicle {
         solidAxleToRearHitchDistance:
             solidAxleToRearHitchDistance ?? this.solidAxleToRearHitchDistance,
         solidAxleToRearTowbarDistance:
-            solidAxleToRearTowbarDistance ?? solidAxleToRearTowbarDistance,
+            solidAxleToRearTowbarDistance ?? this.solidAxleToRearTowbarDistance,
         ackermannSteeringRatio:
             ackermannSteeringRatio ?? this.ackermannSteeringRatio,
         steeringAxleWheelDiameter:
@@ -139,4 +192,14 @@ final class Tractor extends AxleSteeredVehicle {
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
       );
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = super.toJson();
+
+    map['info'] = Map<String, dynamic>.from(map['info'] as Map)
+      ..addAll({'type': 'Tractor'});
+
+    return map;
+  }
 }

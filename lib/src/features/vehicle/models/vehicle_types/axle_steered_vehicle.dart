@@ -10,7 +10,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
   AxleSteeredVehicle({
     required this.wheelBase,
     required this.solidAxleDistance,
-    required super.position,
     required super.antennaHeight,
     required super.minTurningRadius,
     required super.steeringAngleMax,
@@ -24,6 +23,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
     this.solidAxleWheelDiameter = 1.8,
     this.steeringAxleWheelWidth = 0.48,
     this.solidAxleWheelWidth = 0.6,
+    super.antennaLateralOffset,
+    super.position,
     super.invertSteeringInput,
     super.velocity,
     super.bearing,
@@ -36,6 +37,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
+    super.uuid,
+    super.lastUsed,
   });
 
   /// The distance between the axles.
@@ -134,7 +137,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
           point: steeringAxlePosition.latLng,
           radius: 10,
           color: Colors.blue,
-        )
+        ),
       ];
 
   /// Basic polylines for showing the vehicle's steering related
@@ -460,7 +463,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
           points: points.map((e) => e.latLng).toList(),
           isFilled: true,
           color: Colors.yellow.withOpacity(0.5),
-        )
+        ),
       ];
 
   /// Returns a new [AxleSteeredVehicle] based on this one, but with
@@ -469,6 +472,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   AxleSteeredVehicle copyWith({
     Geographic? position,
     double? antennaHeight,
+    double? antennaLateralOffset,
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
@@ -479,6 +483,9 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? solidAxleWheelDiameter,
     double? steeringAxleWheelWidth,
     double? solidAxleWheelWidth,
+    double? solidAxleToFrontHitchDistance,
+    double? solidAxleToRearHitchDistance,
+    double? solidAxleToRearTowbarDistance,
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     double? velocity,
@@ -494,4 +501,34 @@ sealed class AxleSteeredVehicle extends Vehicle {
     Hitchable? hitchRearTowbarChild,
     String? name,
   });
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = super.toJson();
+
+    map['dimensions'] = Map<String, dynamic>.from(map['dimensions'] as Map)
+      ..addAll(
+        {
+          'wheel_base': wheelBase,
+          'solid_axle_distance': solidAxleDistance,
+          'wheels': {
+            'steering_axle_wheel_diameter': steeringAxleWheelDiameter,
+            'solid_axle_wheel_diameter': solidAxleWheelDiameter,
+            'steering_axle_wheel_width': steeringAxleWheelWidth,
+            'solid_axle_wheel_width': solidAxleWheelWidth,
+          },
+        },
+      );
+
+    map['steering'] = Map<String, dynamic>.from(map['steering'] as Map)
+      ..addAll({'ackermann_steering_ratio': ackermannSteeringRatio});
+
+    map['hitches'] = {
+      'solid_axle_to_front_hitch_distance': solidAxleToFrontHitchDistance,
+      'solid_axle_to_rear_hitch_distance': solidAxleToRearHitchDistance,
+      'solid_axle_to_rear_towbar_distance': solidAxleToRearTowbarDistance,
+    };
+
+    return map;
+  }
 }
