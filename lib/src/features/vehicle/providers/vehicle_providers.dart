@@ -14,7 +14,7 @@ part 'vehicle_providers.g.dart';
 @Riverpod(keepAlive: true)
 class MainVehicle extends _$MainVehicle {
   @override
-  Vehicle build() => ref.watch(lastUsedVehicleProvider).requireValue
+  Vehicle build() => ref.read(lastUsedVehicleProvider).requireValue
     ..position = ref.read(homePositionProvider).gbPosition;
 
   /// Update the [state] to [vehicle].
