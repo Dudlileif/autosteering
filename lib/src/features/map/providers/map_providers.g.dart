@@ -187,7 +187,7 @@ final alwaysPointNorthProvider =
 
 typedef _$AlwaysPointNorth = Notifier<bool>;
 String _$mapUse3DPerspectiveHash() =>
-    r'c20f26c02dc947aa0c0674983a377de3f8b7843f';
+    r'e2a44a841ae01677fcc8ea2de4c63e33677e2a06';
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
