@@ -84,7 +84,7 @@ final enabledSentinelLayersProvider =
 
 typedef _$EnabledSentinelLayers = Notifier<Set<SentinelLayer>>;
 String _$sentinelLayerOpacitiesHash() =>
-    r'45e4ee42a89e5167fb49727d1f0bc4c56276032e';
+    r'2f422a371d0e56d26d580f18f1d3876048f75902';
 
 /// A map for the Sentinel layers and their opacities, which can be specified.
 ///

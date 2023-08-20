@@ -31,16 +31,24 @@ class _SystemHash {
 
 typedef SaveVehicleRef = AutoDisposeFutureProviderRef<void>;
 
-/// See also [saveVehicle].
+/// A provider for saving [vehicle] to a file in the user file directory.
+///
+/// Copied from [saveVehicle].
 @ProviderFor(saveVehicle)
 const saveVehicleProvider = SaveVehicleFamily();
 
-/// See also [saveVehicle].
+/// A provider for saving [vehicle] to a file in the user file directory.
+///
+/// Copied from [saveVehicle].
 class SaveVehicleFamily extends Family<AsyncValue<void>> {
-  /// See also [saveVehicle].
+  /// A provider for saving [vehicle] to a file in the user file directory.
+  ///
+  /// Copied from [saveVehicle].
   const SaveVehicleFamily();
 
-  /// See also [saveVehicle].
+  /// A provider for saving [vehicle] to a file in the user file directory.
+  ///
+  /// Copied from [saveVehicle].
   SaveVehicleProvider call(
     Vehicle vehicle,
   ) {
@@ -73,9 +81,13 @@ class SaveVehicleFamily extends Family<AsyncValue<void>> {
   String? get name => r'saveVehicleProvider';
 }
 
-/// See also [saveVehicle].
+/// A provider for saving [vehicle] to a file in the user file directory.
+///
+/// Copied from [saveVehicle].
 class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
-  /// See also [saveVehicle].
+  /// A provider for saving [vehicle] to a file in the user file directory.
+  ///
+  /// Copied from [saveVehicle].
   SaveVehicleProvider(
     this.vehicle,
   ) : super.internal(
@@ -112,7 +124,10 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
 
 String _$savedVehiclesHash() => r'9d437bc2885447ea0e3cb597e3a354d8c18df8c4';
 
-/// See also [savedVehicles].
+/// A provider for reading and holding all the saved vehicles in the
+/// user file directory.
+///
+/// Copied from [savedVehicles].
 @ProviderFor(savedVehicles)
 final savedVehiclesProvider = FutureProvider<List<Vehicle>>.internal(
   savedVehicles,
@@ -129,16 +144,24 @@ String _$loadVehicleFromFileHash() =>
     r'e93f82b56fdbdfe07fb20b32da3997a3964e539a';
 typedef LoadVehicleFromFileRef = AutoDisposeFutureProviderRef<Vehicle?>;
 
-/// See also [loadVehicleFromFile].
+/// A provider for loading a [Vehicle] from a file at [path], if it's valid.
+///
+/// Copied from [loadVehicleFromFile].
 @ProviderFor(loadVehicleFromFile)
 const loadVehicleFromFileProvider = LoadVehicleFromFileFamily();
 
-/// See also [loadVehicleFromFile].
+/// A provider for loading a [Vehicle] from a file at [path], if it's valid.
+///
+/// Copied from [loadVehicleFromFile].
 class LoadVehicleFromFileFamily extends Family<AsyncValue<Vehicle?>> {
-  /// See also [loadVehicleFromFile].
+  /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
+  ///
+  /// Copied from [loadVehicleFromFile].
   const LoadVehicleFromFileFamily();
 
-  /// See also [loadVehicleFromFile].
+  /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
+  ///
+  /// Copied from [loadVehicleFromFile].
   LoadVehicleFromFileProvider call(
     String path,
   ) {
@@ -171,9 +194,13 @@ class LoadVehicleFromFileFamily extends Family<AsyncValue<Vehicle?>> {
   String? get name => r'loadVehicleFromFileProvider';
 }
 
-/// See also [loadVehicleFromFile].
+/// A provider for loading a [Vehicle] from a file at [path], if it's valid.
+///
+/// Copied from [loadVehicleFromFile].
 class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
-  /// See also [loadVehicleFromFile].
+  /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
+  ///
+  /// Copied from [loadVehicleFromFile].
   LoadVehicleFromFileProvider(
     this.path,
   ) : super.internal(
@@ -210,7 +237,12 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
 
 String _$lastUsedVehicleHash() => r'3d62a3873e68a5e9ae6935a079aa5bdadca6b8d4';
 
-/// See also [lastUsedVehicle].
+/// A provider for the most recently used [Vehicle].
+///
+/// The vehicle is found by sorting the saved vehicles by their last used
+/// property.
+///
+/// Copied from [lastUsedVehicle].
 @ProviderFor(lastUsedVehicle)
 final lastUsedVehicleProvider = Provider<AsyncValue<Vehicle>>.internal(
   lastUsedVehicle,
@@ -223,7 +255,7 @@ final lastUsedVehicleProvider = Provider<AsyncValue<Vehicle>>.internal(
 );
 
 typedef LastUsedVehicleRef = ProviderRef<AsyncValue<Vehicle>>;
-String _$mainVehicleHash() => r'b53f069f98382693bccece79fa0cc4951facc316';
+String _$mainVehicleHash() => r'f058220065edb410ef53ba556dda9569de6c0b6b';
 
 /// The main provider for the vehicle state.
 ///

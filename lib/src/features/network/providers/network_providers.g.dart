@@ -6,23 +6,43 @@ part of 'network_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deviceIPAdressHash() => r'01ce6d3555a1294c42f373ba8efe94e109cc2632';
+String _$deviceIPAdressWlanHash() =>
+    r'6cbf270e542128179ce3e010c13b55d040085aac';
 
-/// A provider for the IP adress of the device.
+/// A provider for the wireless IP adress of the device.
 ///
-/// Copied from [deviceIPAdress].
-@ProviderFor(deviceIPAdress)
-final deviceIPAdressProvider = AutoDisposeFutureProvider<String?>.internal(
-  deviceIPAdress,
-  name: r'deviceIPAdressProvider',
+/// Copied from [deviceIPAdressWlan].
+@ProviderFor(deviceIPAdressWlan)
+final deviceIPAdressWlanProvider = AutoDisposeFutureProvider<String?>.internal(
+  deviceIPAdressWlan,
+  name: r'deviceIPAdressWlanProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$deviceIPAdressHash,
+      : _$deviceIPAdressWlanHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef DeviceIPAdressRef = AutoDisposeFutureProviderRef<String?>;
+typedef DeviceIPAdressWlanRef = AutoDisposeFutureProviderRef<String?>;
+String _$deviceIPAdressEthernetHash() =>
+    r'5cfdadb49cbd021daeefd9a0264a2e906ffbb6f3';
+
+/// A provider for the wireless IP adress of the device.
+///
+/// Copied from [deviceIPAdressEthernet].
+@ProviderFor(deviceIPAdressEthernet)
+final deviceIPAdressEthernetProvider =
+    AutoDisposeFutureProvider<String?>.internal(
+  deviceIPAdressEthernet,
+  name: r'deviceIPAdressEthernetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deviceIPAdressEthernetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DeviceIPAdressEthernetRef = AutoDisposeFutureProviderRef<String?>;
 String _$hardwareCommunicationConfigHash() =>
     r'607c3571bb12f80ce8af3d575d72d23622416ee6';
 

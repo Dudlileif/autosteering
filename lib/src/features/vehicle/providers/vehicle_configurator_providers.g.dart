@@ -7,9 +7,12 @@ part of 'vehicle_configurator_providers.dart';
 // **************************************************************************
 
 String _$loadFileConfiguredVehicleHash() =>
-    r'0b3f439d7fcc3e9201fe68fc1c60dbdb8f9b9b26';
+    r'c2ba6c2e90afaa701a7135c5ef1f0230b6101d78';
 
-/// See also [loadFileConfiguredVehicle].
+/// A provider for loading a vehicle configuration from the user file directory
+/// and applying it to the [ConfiguredVehicle] provider.
+///
+/// Copied from [loadFileConfiguredVehicle].
 @ProviderFor(loadFileConfiguredVehicle)
 final loadFileConfiguredVehicleProvider =
     AutoDisposeProvider<AsyncValue<Vehicle?>>.internal(

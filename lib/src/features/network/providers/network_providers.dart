@@ -1,15 +1,40 @@
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:network_info_plus/network_info_plus.dart';
+import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
 part 'network_providers.g.dart';
 
-/// A provider for the IP adress of the device.
+/// A provider for the wireless IP adress of the device.
 @riverpod
-Future<String?> deviceIPAdress(DeviceIPAdressRef ref) =>
-    NetworkInfo().getWifiIP();
+Future<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) =>
+    NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {
+      if (interfaces.isNotEmpty) {
+        return interfaces
+            .firstWhereOrNull((element) => element.name.startsWith('w'))
+            ?.addresses
+            .first
+            .address;
+      }
+      return null;
+    });
+
+/// A provider for the wireless IP adress of the device.
+@riverpod
+Future<String?> deviceIPAdressEthernet(
+  DeviceIPAdressEthernetRef ref,
+) =>
+    NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {
+      if (interfaces.isNotEmpty) {
+        return interfaces
+            .firstWhereOrNull((element) => element.name.startsWith('e'))
+            ?.addresses
+            .first
+            .address;
+      }
+      return null;
+    });
 
 /// A provider for the IP adress of the hardware we want to communicate with.
 @Riverpod(keepAlive: true)

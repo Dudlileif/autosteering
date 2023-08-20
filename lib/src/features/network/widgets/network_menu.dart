@@ -21,17 +21,40 @@ class NetworkMenu extends ConsumerWidget {
       icon: Icons.settings_ethernet,
       menuChildren: [
         Consumer(
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.devices),
-            title: Text(
-              'This device:\n${ref.watch(deviceIPAdressProvider).when(
-                    data: (data) => data,
-                    error: (error, stackTrace) => error,
-                    loading: () => 'loading',
-                  )}',
-              style: textStyle,
-            ),
-          ),
+          builder: (context, ref, child) {
+            final ip = ref.watch(deviceIPAdressWlanProvider).when(
+                  data: (data) => data ?? 'No connection',
+                  error: (error, stackTrace) => 'Error',
+                  loading: () => 'loading',
+                );
+            return ListTile(
+              leading: const Icon(Icons.wifi),
+              title: Text(
+                '''
+This device wlan:
+$ip''',
+                style: textStyle,
+              ),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final ip = ref.watch(deviceIPAdressEthernetProvider).when(
+                  data: (data) => data ?? 'No connection',
+                  error: (error, stackTrace) => 'Error',
+                  loading: () => 'loading',
+                );
+            return ListTile(
+              leading: const Icon(Icons.cable),
+              title: Text(
+                '''
+This device ethernet:
+$ip''',
+                style: textStyle,
+              ),
+            );
+          },
         ),
         Consumer(
           builder: (context, ref, child) => ListTile(
