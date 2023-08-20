@@ -136,7 +136,9 @@ class PathRecorderMenu extends StatelessWidget {
           ),
           builder: (context, ref, child) => ListTile(
             title: child,
-            leading: const Icon(Icons.waves),
+            leading: const Stack(
+              children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+            ),
             onTap: () {
               final points = ref.watch(finishedPathRecordingListProvider);
               if (points != null) {

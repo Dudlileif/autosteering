@@ -20,7 +20,9 @@ class FieldDebugMenu extends ConsumerWidget {
 
     return MenuButtonWithChildren(
       text: 'Field',
-      icon: Icons.waves,
+      iconOverrideWidget: const Stack(
+        children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+      ),
       menuChildren: [
         Consumer(
           child: Text(
@@ -120,7 +122,7 @@ class FieldDebugMenu extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Exterior buffer distance: ${distance.toStringAsFixed(1)} m',
+                    '''Exterior buffer distance: ${distance.toStringAsFixed(1)} m''',
                     style: textStyle,
                   ),
                   Slider(
@@ -131,7 +133,7 @@ class FieldDebugMenu extends ConsumerWidget {
                     min: -10,
                     max: 10,
                     divisions: 20,
-                  )
+                  ),
                 ],
               );
             },
@@ -147,7 +149,7 @@ class FieldDebugMenu extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Interior buffer distance: ${distance.toStringAsFixed(1)} m ',
+                      '''Interior buffer distance: ${distance.toStringAsFixed(1)} m''',
                       style: textStyle,
                     ),
                     Slider(
@@ -160,7 +162,7 @@ class FieldDebugMenu extends ConsumerWidget {
                       min: -10,
                       max: 10,
                       divisions: 40,
-                    )
+                    ),
                   ],
                 );
               },
@@ -255,7 +257,7 @@ class FieldDebugMenu extends ConsumerWidget {
                     ? () async {
                         final path = [
                           ref.watch(fileDirectoryProvider).requireValue.path,
-                          '/fields/test.json'
+                          '/fields/test.json',
                         ].join();
 
                         final file = File(path);
@@ -286,7 +288,7 @@ class FieldDebugMenu extends ConsumerWidget {
                     ? () async {
                         final path = [
                           ref.watch(fileDirectoryProvider).requireValue.path,
-                          '/fields/test_buffered.json'
+                          '/fields/test_buffered.json',
                         ].join();
 
                         final file = File(path);
@@ -300,7 +302,7 @@ class FieldDebugMenu extends ConsumerWidget {
                     : null,
               );
             },
-          )
+          ),
       ],
     );
   }
