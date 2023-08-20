@@ -282,9 +282,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The attached hitch children are then updated with [updateChildren]
   /// afterwards.
   void updatePositionAndBearing(
-    double period, {
+    double period,
     Geographic? turningCircleCenter,
-  }) {
+  ) {
     if (period > 0) {
       if (angularVelocity != null && turningCircleCenter != null) {
         updatePositionAndBearingTurning(period, turningCircleCenter);
@@ -305,7 +305,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Updates the [position] for the next [period] seconds when going straight.
   void updatePositionStraight(double period) =>
-      position.spherical.destinationPoint(
+      position = position.spherical.destinationPoint(
         distance: velocity * period,
         bearing: bearing,
       );

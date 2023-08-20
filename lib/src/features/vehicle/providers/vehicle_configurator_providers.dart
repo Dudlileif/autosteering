@@ -132,7 +132,7 @@ AsyncValue<Vehicle?> loadFileConfiguredVehicle(
   ).then((pickedFiles) {
     final filePath = pickedFiles?.paths.first;
     if (filePath != null) {
-      return ref.watch(LoadVehicleFromFileProvider(filePath)).when(
+      return ref.watch(loadVehicleFromFileProvider(filePath)).when(
             data: (data) {
               if (data != null) {
                 ref.read(configuredVehicleProvider.notifier).update(data);

@@ -12,9 +12,6 @@ import 'package:geobase/geobase.dart';
 import 'package:udp/udp.dart';
 import 'package:universal_io/io.dart';
 
-//TODO: look into making the simulation only return data similar to nmea from
-//gps
-
 /// A class for simulating how vehicles should move given their position,
 /// bearing, steering angle and velocity.
 class VehicleSimulator {
@@ -776,7 +773,10 @@ class _VehicleSimulatorState {
     updateVehicleVelocityAndSteering();
     checkTurningCircle();
     updateTime();
-    vehicle?.updatePositionAndBearing(period);
+    vehicle?.updatePositionAndBearing(
+      period,
+      turningCircleCenter,
+    );
     updateGauges();
 
     didChange = forceChange || prevVehicle != vehicle;
