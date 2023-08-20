@@ -122,7 +122,7 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
-String _$savedVehiclesHash() => r'9d437bc2885447ea0e3cb597e3a354d8c18df8c4';
+String _$savedVehiclesHash() => r'b988c84bcb9a410827e9e26e264b0caa5da63ca2';
 
 /// A provider for reading and holding all the saved vehicles in the
 /// user file directory.
@@ -141,7 +141,7 @@ final savedVehiclesProvider = FutureProvider<List<Vehicle>>.internal(
 
 typedef SavedVehiclesRef = FutureProviderRef<List<Vehicle>>;
 String _$loadVehicleFromFileHash() =>
-    r'e93f82b56fdbdfe07fb20b32da3997a3964e539a';
+    r'c0fbeb362d82690b35e0b1a891ff6a8cf62848ba';
 typedef LoadVehicleFromFileRef = AutoDisposeFutureProviderRef<Vehicle?>;
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.

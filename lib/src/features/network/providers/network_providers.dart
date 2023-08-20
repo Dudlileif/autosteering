@@ -8,7 +8,7 @@ part 'network_providers.g.dart';
 
 /// A provider for the wireless IP adress of the device.
 @riverpod
-Future<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) =>
+FutureOr<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) =>
     NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {
       if (interfaces.isNotEmpty) {
         return interfaces
@@ -22,7 +22,7 @@ Future<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) =>
 
 /// A provider for the wireless IP adress of the device.
 @riverpod
-Future<String?> deviceIPAdressEthernet(
+FutureOr<String?> deviceIPAdressEthernet(
   DeviceIPAdressEthernetRef ref,
 ) =>
     NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {

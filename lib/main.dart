@@ -21,7 +21,9 @@ Future<void> main() async {
     });
   }
 
-  await FastCachedImageConfig.init(subDir: 'AgOpenGPS_flutter/image_cache/');
+  if (Device.isWeb) {
+    await FastCachedImageConfig.init(subDir: 'AgOpenGPS_flutter/image_cache/');
+  }
 
   runApp(
     const ProviderScope(

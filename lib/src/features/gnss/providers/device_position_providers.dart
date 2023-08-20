@@ -14,7 +14,7 @@ Stream<Position> devicePositionStream(DevicePositionStreamRef ref) =>
 
 /// A provider for the position of the device.
 @riverpod
-Future<Geographic?> devicePosition(DevicePositionRef ref) async {
+FutureOr<Geographic?> devicePosition(DevicePositionRef ref) async {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {

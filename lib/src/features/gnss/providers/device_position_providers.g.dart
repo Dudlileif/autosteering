@@ -25,7 +25,7 @@ final devicePositionStreamProvider =
 );
 
 typedef DevicePositionStreamRef = AutoDisposeStreamProviderRef<Position>;
-String _$devicePositionHash() => r'7432313ae989ef05f648cb9e2188a58eb5415e80';
+String _$devicePositionHash() => r'd2fa19a5d9175ae8cad335f0d06dbfd199260dd2';
 
 /// A provider for the position of the device.
 ///

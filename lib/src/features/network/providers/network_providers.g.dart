@@ -7,7 +7,7 @@ part of 'network_providers.dart';
 // **************************************************************************
 
 String _$deviceIPAdressWlanHash() =>
-    r'6cbf270e542128179ce3e010c13b55d040085aac';
+    r'ec2d871c08b0813194a7519595f738d1f00b3efa';
 
 /// A provider for the wireless IP adress of the device.
 ///
@@ -25,7 +25,7 @@ final deviceIPAdressWlanProvider = AutoDisposeFutureProvider<String?>.internal(
 
 typedef DeviceIPAdressWlanRef = AutoDisposeFutureProviderRef<String?>;
 String _$deviceIPAdressEthernetHash() =>
-    r'5cfdadb49cbd021daeefd9a0264a2e906ffbb6f3';
+    r'4a7c7ec62c2bd4531a202830bada839e890dc0ac';
 
 /// A provider for the wireless IP adress of the device.
 ///

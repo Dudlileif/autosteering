@@ -10,6 +10,7 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_io/io.dart';
 
 part 'map_providers.g.dart';
 
@@ -355,3 +356,25 @@ class MapZoom extends _$MapZoom {
   /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
+
+/// A provider for finding the first cache date of the map layer cache
+/// at the given [path].
+@riverpod
+FutureOr<DateTime?> mapCacheDate(MapCacheDateRef ref, String path) async {
+  final file = File([path, 'created'].join('/'));
+
+  if (file.existsSync()) {
+    return DateTime.tryParse(await file.readAsString());
+  }
+  return null;
+}
+
+/// A provider for listing all the map layer cache folders.
+@riverpod
+FutureOr<List<String>> mapCacheDirectories(MapCacheDirectoriesRef ref) async =>
+    await Directory(
+      [
+        ref.watch(fileDirectoryProvider).requireValue.path,
+        'map_image_cache',
+      ].join('/'),
+    ).findSubfoldersWithTargetFile();

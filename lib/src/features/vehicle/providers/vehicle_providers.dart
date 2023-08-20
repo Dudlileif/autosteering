@@ -108,7 +108,7 @@ FutureOr<void> saveVehicle(
 /// A provider for reading and holding all the saved vehicles in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-Future<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) async {
+FutureOr<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) async {
   final dir = Directory(
     [ref.watch(fileDirectoryProvider).requireValue.path, '/vehicles'].join(),
   );
@@ -141,7 +141,7 @@ Future<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) async {
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 @riverpod
-Future<Vehicle?> loadVehicleFromFile(
+FutureOr<Vehicle?> loadVehicleFromFile(
   LoadVehicleFromFileRef ref,
   String path,
 ) async {
