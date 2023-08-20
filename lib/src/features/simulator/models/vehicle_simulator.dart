@@ -12,7 +12,8 @@ import 'package:geobase/geobase.dart';
 import 'package:udp/udp.dart';
 import 'package:universal_io/io.dart';
 
-//TODO: look into making the simulation only return data similar to nmea from gps
+//TODO: look into making the simulation only return data similar to nmea from
+//gps
 
 /// A class for simulating how vehicles should move given their position,
 /// bearing, steering angle and velocity.
@@ -74,10 +75,17 @@ class VehicleSimulator {
       (event) async => udp.send(utf8.encode(event), serverEndPoint),
     );
 
-    await udp.send(
-      utf8.encode('Simulator started'),
-      serverEndPoint,
+    unawaited(
+      udp.send(
+        utf8.encode('${Platform.operatingSystem}: Simulator started'),
+        serverEndPoint,
+      ),
     );
+
+    var udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      udp.send(utf8.encode('${Platform.operatingSystem}: Heartbeat'),
+          serverEndPoint);
+    });
 
     udp.asStream().listen(
           (datagram) => _udpListener(datagram, state),
@@ -91,6 +99,8 @@ class VehicleSimulator {
         int hardwareUDPReceivePort,
         int hardwareUDPSendPort
       })) {
+        udpHeartbeatTimer.cancel();
+
         serverEndPoint = Endpoint.unicast(
           InternetAddress(message.hardwareIPAdress),
           port: Port(message.hardwareUDPSendPort),
@@ -109,6 +119,13 @@ class VehicleSimulator {
           utf8.encode('Simulator started'),
           serverEndPoint,
         );
+
+        udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          udp.send(
+            utf8.encode('${Platform.operatingSystem}: Heartbeat'),
+            serverEndPoint,
+          );
+        });
       }
 
       // Messages for the state.

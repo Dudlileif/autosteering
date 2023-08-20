@@ -23,7 +23,38 @@ final deviceIPAdressProvider = AutoDisposeFutureProvider<String?>.internal(
 );
 
 typedef DeviceIPAdressRef = AutoDisposeFutureProviderRef<String?>;
-String _$hardwareIPAdressHash() => r'ad59b7de5881205f2da9e913d3c5446ca373df0f';
+String _$hardwareCommunicationConfigHash() =>
+    r'607c3571bb12f80ce8af3d575d72d23622416ee6';
+
+/// A provider for the combined state of the [HardwareIPAdress],
+/// [HardwareUDPReceivePort] and [HardwareUDPSendPort].
+///
+/// The updated state is automatically sent to the
+///
+/// Copied from [hardwareCommunicationConfig].
+@ProviderFor(hardwareCommunicationConfig)
+final hardwareCommunicationConfigProvider = Provider<
+    ({
+      String hardwareIPAdress,
+      int hardwareUDPReceivePort,
+      int hardwareUDPSendPort
+    })>.internal(
+  hardwareCommunicationConfig,
+  name: r'hardwareCommunicationConfigProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hardwareCommunicationConfigHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef HardwareCommunicationConfigRef = ProviderRef<
+    ({
+      String hardwareIPAdress,
+      int hardwareUDPReceivePort,
+      int hardwareUDPSendPort
+    })>;
+String _$hardwareIPAdressHash() => r'4e1d03593b82c071847884ed91e12d974c7f3c43';
 
 /// A provider for the IP adress of the hardware we want to communicate with.
 ///
@@ -42,7 +73,7 @@ final hardwareIPAdressProvider =
 
 typedef _$HardwareIPAdress = Notifier<String>;
 String _$hardwareUDPReceivePortHash() =>
-    r'f02097da340cf3fe4cdfee9c8cd708829d929283';
+    r'00d027c40fdf1f82128e0a4f6bd2430894a1ba74';
 
 /// A provider for the UDP receive port for the device.
 ///
@@ -61,7 +92,7 @@ final hardwareUDPReceivePortProvider =
 
 typedef _$HardwareUDPReceivePort = Notifier<int>;
 String _$hardwareUDPSendPortHash() =>
-    r'52fe42826c78d2a0fa934f585260912cf8a273c1';
+    r'88d58ea54179863cc7e7d1fc652c2479060ebe58';
 
 /// A provider for the UDP send port for the device to send messages to
 /// the hardware in [HardwareIPAdress].

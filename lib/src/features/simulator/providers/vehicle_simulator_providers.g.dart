@@ -6,7 +6,7 @@ part of 'vehicle_simulator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$simVehicleDrivingHash() => r'62db147a7fbd7f30a94c0420c95a948a887bb4f7';
+String _$simVehicleDrivingHash() => r'1683fcdfb3e9842634beeca97e827360a233d860';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -48,7 +48,7 @@ final simVehicleWebStreamProvider =
 
 typedef SimVehicleWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simVehicleIsolateStreamHash() =>
-    r'34ce98ad9bf728932aff8e741905227fc93629dc';
+    r'1d88071a819d3cbdcd5cb4ff3ba08f7384ef781f';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platform.

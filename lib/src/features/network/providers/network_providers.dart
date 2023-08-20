@@ -17,18 +17,10 @@ class HardwareIPAdress extends _$HardwareIPAdress {
   @override
   String build() {
     ref.listenSelf((previous, next) {
-      if (next != previous) {
+      if (previous != null) {
         ref
             .read(settingsProvider.notifier)
             .update(SettingsKey.hardwareIPAdress, next);
-
-        ref.read(simInputProvider.notifier).send(
-          (
-            hardwareIPAdress: next,
-            hardwareUDPReceivePort: ref.watch(hardwareUDPReceivePortProvider),
-            hardwareUDPSendPort: ref.watch(hardwareUDPSendPortProvider)
-          ),
-        );
       }
     });
 
@@ -57,18 +49,10 @@ class HardwareUDPReceivePort extends _$HardwareUDPReceivePort {
   @override
   int build() {
     ref.listenSelf((previous, next) {
-      if (next != previous) {
+      if (previous != null) {
         ref
             .read(settingsProvider.notifier)
             .update(SettingsKey.hardwareUDPReceivePort, next);
-
-        ref.read(simInputProvider.notifier).send(
-          (
-            hardwareIPAdress: ref.watch(hardwareIPAdressProvider),
-            hardwareUDPReceivePort: next,
-            hardwareUDPSendPort: ref.watch(hardwareUDPSendPortProvider)
-          ),
-        );
       }
     });
 
@@ -104,18 +88,10 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   @override
   int build() {
     ref.listenSelf((previous, next) {
-      if (next != previous) {
+      if (previous != null) {
         ref
             .read(settingsProvider.notifier)
             .update(SettingsKey.hardwareUDPSendPort, next);
-
-        ref.read(simInputProvider.notifier).send(
-          (
-            hardwareIPAdress: ref.watch(hardwareIPAdressProvider),
-            hardwareUDPReceivePort: ref.watch(hardwareUDPReceivePortProvider),
-            hardwareUDPSendPort: next,
-          ),
-        );
       }
     });
 
@@ -143,4 +119,24 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
           }
         }
       });
+}
+
+/// A provider for the combined state of the [HardwareIPAdress],
+/// [HardwareUDPReceivePort] and [HardwareUDPSendPort].
+///
+/// The updated state is automatically sent to the
+@Riverpod(keepAlive: true)
+({String hardwareIPAdress, int hardwareUDPReceivePort, int hardwareUDPSendPort})
+    hardwareCommunicationConfig(HardwareCommunicationConfigRef ref) {
+  ref.listenSelf((previous, next) {
+    if (next != previous) {
+      ref.read(simInputProvider.notifier).send(next);
+    }
+  });
+
+  return (
+    hardwareIPAdress: ref.watch(hardwareIPAdressProvider),
+    hardwareUDPReceivePort: ref.watch(hardwareUDPReceivePortProvider),
+    hardwareUDPSendPort: ref.watch(hardwareUDPSendPortProvider)
+  );
 }

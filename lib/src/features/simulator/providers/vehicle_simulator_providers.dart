@@ -4,8 +4,10 @@ import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:agopengps_flutter/src/features/gnss/providers/device_position_providers.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/network/network.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -52,6 +54,10 @@ class SimInput extends _$SimInput {
 @riverpod
 void simVehicleDriving(SimVehicleDrivingRef ref) {
   if (ref.watch(mapReadyProvider)) {
+    if (ref.watch(devicePositionAsVehiclePositionProvider)) {
+      ref.watch(devicePositionProvider);
+    }
+
     ref
       ..watch(simVehicleAutoCenterSteeringProvider)
       ..watch(simVehicleAutoSlowDownProvider);
@@ -173,6 +179,7 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
   final sendPort = await events.next as SendPort;
   ref.read(_simVehicleIsolatePortProvider.notifier).update(sendPort);
   sendPort
+    ..send(ref.read(hardwareCommunicationConfigProvider))
     ..send(ref.read(mainVehicleProvider))
     ..send((autoSlowDown: ref.read(simVehicleAutoSlowDownProvider)))
     ..send(
