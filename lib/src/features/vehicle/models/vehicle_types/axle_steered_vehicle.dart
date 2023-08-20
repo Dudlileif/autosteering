@@ -210,6 +210,54 @@ sealed class AxleSteeredVehicle extends Vehicle {
         )
       : null;
 
+  @override
+  void updatePositionAndBearingTurning(
+    double period,
+    Geographic turningCircleCenter,
+  ) {
+    // How many degrees of the turning circle the current angular
+    // velocity during the period amounts to. Relative to the current
+    // position, is negative when reversing.
+    final turningCircleAngle = angularVelocity! * period;
+
+    // The angle from the turning circle center to the projected
+    // position.
+    final angle = switch (isTurningLeft) {
+      // Turning left
+      true => bearing + 90 - turningCircleAngle,
+      // Turning right
+      false => bearing - 90 + turningCircleAngle,
+    };
+    // Projected solid axle position from the turning radius
+    // center.
+    final solidAxlePositon = turningCircleCenter.spherical.destinationPoint(
+      distance: currentTurningRadius!,
+      bearing: angle.wrap360(),
+    );
+
+    // The bearing of the vehicle at the projected position.
+    final projectedBearing = switch (isTurningLeft) {
+      true => bearing - turningCircleAngle,
+      false => bearing + turningCircleAngle,
+    }
+        .wrap360();
+
+    // The vehicle center position, which is offset from the solid
+    // axle position.
+    final vehiclePosition = solidAxlePositon.spherical.destinationPoint(
+      distance: solidAxleDistance,
+      bearing: switch (this) {
+        Tractor() => projectedBearing,
+        Harvester() => projectedBearing + 180,
+      },
+    );
+
+    // Update the vehicle state.
+
+    position = vehiclePosition;
+    bearing = projectedBearing;
+  }
+
   /// The bounds of the left steering wheel, or the right steering wheel if
   /// [left] is set to false.
   List<Geographic> wheelPoints({bool left = true, bool steering = true}) {

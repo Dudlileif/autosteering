@@ -198,6 +198,63 @@ final class ArticulatedTractor extends Vehicle {
         false => position,
       };
 
+  @override
+  void updatePositionAndBearingTurning(
+    double period,
+    Geographic turningCircleCenter,
+  ) {
+    // How many degrees of the turning circle the current angular
+    // velocity
+    // during the period amounts to. Relative to the current position,
+    // is negative when reversing.
+    final turningCircleAngle = angularVelocity! * period;
+
+    // The current angle from the turning radius center to the
+    // front axle center.
+    final turningCenterToFrontAxleAngle = switch (isTurningLeft) {
+      // Turning left
+      true => frontAxleAngle + 90,
+      // Turning right
+      false => frontAxleAngle - 90,
+    }
+        .wrap360();
+
+    // The angle from the turning circle center to the projected front
+    // axle position.
+    final projectedFrontAxleAngle = switch (isTurningLeft) {
+      // Turning left
+      true => turningCenterToFrontAxleAngle - turningCircleAngle,
+      // Turning right
+      false => turningCenterToFrontAxleAngle + turningCircleAngle,
+    };
+
+    // Projected vehicle front axle position from the turning radius
+    // center.
+    final frontAxlePosition = turningCircleCenter.spherical.destinationPoint(
+      distance: currentTurningRadius!,
+      bearing: projectedFrontAxleAngle,
+    );
+
+    // The bearing of the front body of the vehicle at the projected
+    // position.
+    final frontBodyBearing = switch (isTurningLeft) {
+      true => projectedFrontAxleAngle - 90 - steeringAngle / 2,
+      false => projectedFrontAxleAngle + 90 - steeringAngle / 2,
+    };
+
+    // The vehicle antenna position, projected from the front axle
+    // position.
+    final vehiclePosition = frontAxlePosition.spherical.destinationPoint(
+      distance: pivotToFrontAxle - pivotToAntennaDistance,
+      bearing: frontBodyBearing - 180 + steeringAngle / 2,
+    );
+
+    // Update the vehicle state.
+
+    position = vehiclePosition;
+    bearing = frontBodyBearing;
+  }
+
   /// Basic circle markers for showing the vehicle's steering related
   /// points.
   @override

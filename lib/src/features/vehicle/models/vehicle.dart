@@ -276,6 +276,40 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Polygons for visualizing the extent of the vehicle.
   List<map.Polygon> get polygons;
 
+  /// Updates the [position] and [bearing] according to the current [velocity],
+  /// [bearing], [steeringAngle] for the next [period] seconds.
+  ///
+  /// The attached hitch children are then updated with [updateChildren]
+  /// afterwards.
+  void updatePositionAndBearing(
+    double period, {
+    Geographic? turningCircleCenter,
+  }) {
+    if (period > 0) {
+      if (angularVelocity != null && turningCircleCenter != null) {
+        updatePositionAndBearingTurning(period, turningCircleCenter);
+      } else if (velocity.abs() > 0) {
+        updatePositionStraight(period);
+      }
+      updateChildren();
+    }
+  }
+
+  /// Updates the [position] and [bearing] for the next [period] seconds when
+  /// turning around [turningCircleCenter], i.e. with a constant
+  /// [steeringAngle].
+  void updatePositionAndBearingTurning(
+    double period,
+    Geographic turningCircleCenter,
+  );
+
+  /// Updates the [position] for the next [period] seconds when going straight.
+  void updatePositionStraight(double period) =>
+      position.spherical.destinationPoint(
+        distance: velocity * period,
+        bearing: bearing,
+      );
+
   /// Props used for checking for equality.
   @override
   List<Object> get props => [
