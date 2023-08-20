@@ -110,7 +110,7 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
                     radius: radiusToUse * hoverModifier,
                   ),
                 ),
-                baseChild
+                baseChild,
               ],
             ),
           false => baseChild

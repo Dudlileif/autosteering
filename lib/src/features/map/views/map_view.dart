@@ -26,13 +26,13 @@ class MapAndGaugeStackView extends ConsumerWidget {
             if (event is KeyDownEvent)
               shiftModifier = true
             else if (event is KeyUpEvent)
-              shiftModifier = false
+              shiftModifier = false,
           },
         LogicalKeyboardKey.altLeft => {
             if (event is KeyDownEvent)
               altModifier = true
             else if (event is KeyUpEvent)
-              altModifier = false
+              altModifier = false,
           },
         LogicalKeyboardKey.minus => {
             if (event is KeyUpEvent)
@@ -49,12 +49,14 @@ class MapAndGaugeStackView extends ConsumerWidget {
         LogicalKeyboardKey.enter => {
             if (Device.isDesktop && altModifier)
               if (event is KeyDownEvent)
-                windowManager.setFullScreen(!await windowManager.isFullScreen())
+                windowManager
+                    .setFullScreen(!await windowManager.isFullScreen()),
           },
         LogicalKeyboardKey.f11 => {
             if (Device.isDesktop)
               if (event is KeyDownEvent)
-                windowManager.setFullScreen(!await windowManager.isFullScreen())
+                windowManager
+                    .setFullScreen(!await windowManager.isFullScreen()),
           },
         LogicalKeyboardKey.space => {
             if (event is KeyDownEvent)
@@ -73,7 +75,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             else if (event is KeyUpEvent)
               ref
                   .read(simInputProvider.notifier)
-                  .send((velocityChange: SimInputChange.hold))
+                  .send((velocityChange: SimInputChange.hold)),
           },
         LogicalKeyboardKey.keyS || LogicalKeyboardKey.arrowDown => {
             if (event is KeyDownEvent)
@@ -83,7 +85,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             else if (event is KeyUpEvent)
               ref
                   .read(simInputProvider.notifier)
-                  .send((velocityChange: SimInputChange.hold))
+                  .send((velocityChange: SimInputChange.hold)),
           },
         LogicalKeyboardKey.keyA || LogicalKeyboardKey.arrowLeft => {
             if (event is KeyDownEvent)
@@ -93,7 +95,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             else if (event is KeyUpEvent)
               ref
                   .read(simInputProvider.notifier)
-                  .send((steeringChange: SimInputChange.hold))
+                  .send((steeringChange: SimInputChange.hold)),
           },
         LogicalKeyboardKey.keyD || LogicalKeyboardKey.arrowRight => {
             if (event is KeyDownEvent)
@@ -103,7 +105,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             else if (event is KeyUpEvent)
               ref
                   .read(simInputProvider.notifier)
-                  .send((steeringChange: SimInputChange.hold))
+                  .send((steeringChange: SimInputChange.hold)),
           },
         _ => null
       },
@@ -151,7 +153,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
           if (ref.watch(showABLineDebugLayerProvider))
             const ABLineOffsetDebugControls(),
           if (ref.watch(showPurePursuitDebugLayerProvider))
-            const PurePursuitDebugWidget()
+            const PurePursuitDebugWidget(),
         ],
       ),
     );

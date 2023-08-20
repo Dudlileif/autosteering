@@ -96,7 +96,7 @@ class EquipmentDebugMenu extends StatelessWidget {
             title: child,
             onTap: ref.read(allEquipmentsProvider.notifier).clear,
           ),
-        )
+        ),
       ],
     );
   }

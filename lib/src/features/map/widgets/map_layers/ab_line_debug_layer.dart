@@ -77,7 +77,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                 Polyline(
                   points: [
                     vehicle.lookAheadStartPosition.latLng,
-                    lookAheadCirclePoints.best.latLng
+                    lookAheadCirclePoints.best.latLng,
                   ],
                   color: Colors.green,
                 ),
@@ -87,7 +87,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                 Polyline(
                   points: [
                     vehicleToLineProjection,
-                    lookAheadCirclePoints.best.latLng
+                    lookAheadCirclePoints.best.latLng,
                   ],
                   color: Colors.green,
                 ),
@@ -98,7 +98,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                 Polyline(
                   points: [
                     vehicle.lookAheadStartPosition.latLng,
-                    lookAheadCirclePoints.worst!.latLng
+                    lookAheadCirclePoints.worst!.latLng,
                   ],
                   color: Colors.red,
                 ),
@@ -106,11 +106,11 @@ class ABLineDebugLayer extends ConsumerWidget {
                   Polyline(
                     points: [
                       vehicleToLineProjection,
-                      lookAheadCirclePoints.worst!.latLng
+                      lookAheadCirclePoints.worst!.latLng,
                     ],
                     color: Colors.red,
-                  )
-              ]
+                  ),
+              ],
             ],
           ),
         if (abLine != null || pointA != null || pointB != null)
@@ -159,8 +159,8 @@ class ABLineDebugLayer extends ConsumerWidget {
                         radius: 3,
                         color: Colors.orange,
                       ),
-                    )
-              ]
+                    ),
+              ],
             ],
           ),
       ],

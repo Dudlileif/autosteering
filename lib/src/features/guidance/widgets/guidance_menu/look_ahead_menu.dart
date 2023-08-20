@@ -35,7 +35,7 @@ class LookAheadMenu extends StatelessWidget {
                     max: 20,
                     min: 1,
                     divisions: 19,
-                  )
+                  ),
                 ],
               );
             },
@@ -58,12 +58,12 @@ class LookAheadMenu extends StatelessWidget {
                     onChanged:
                         ref.read(lookAheadVelocityGainProvider.notifier).update,
                     divisions: 10,
-                  )
+                  ),
                 ],
               );
             },
           ),
-        )
+        ),
       ],
     );
   }

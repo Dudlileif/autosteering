@@ -94,7 +94,7 @@ class VehicleDebugLayer extends ConsumerWidget {
                 radius: 10,
                 color: Colors.purple,
               ),
-            ]
+            ],
           ],
         ),
       ],

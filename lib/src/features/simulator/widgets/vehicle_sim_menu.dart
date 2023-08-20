@@ -110,7 +110,7 @@ class VehicleSimMenu extends StatelessWidget {
                     'Harvester',
                     style: textStyle,
                   ),
-                )
+                ),
               ],
             );
           },
@@ -144,7 +144,7 @@ class VehicleSimMenu extends StatelessWidget {
                     .update(value: value)
                 : null,
           ),
-        )
+        ),
       ],
     );
   }

@@ -24,7 +24,7 @@ class MapContributionWidget extends ConsumerWidget {
         const Padding(
           padding: EdgeInsets.all(2),
           child: SentinelContribution(),
-        )
+        ),
     ];
     if (items.length > 1) {
       for (var i = 1; i < items.length; i += 2) {

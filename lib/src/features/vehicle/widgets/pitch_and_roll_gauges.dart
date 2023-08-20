@@ -69,7 +69,7 @@ class PitchAndRollGauges extends StatelessWidget {
                             .send((pitch: value)),
                         min: -25,
                         max: 25,
-                      )
+                      ),
                     ],
                   );
                 },
@@ -105,7 +105,7 @@ class PitchAndRollGauges extends StatelessWidget {
                             .send((roll: value)),
                         min: -25,
                         max: 25,
-                      )
+                      ),
                     ],
                   );
                 },
@@ -119,7 +119,7 @@ class PitchAndRollGauges extends StatelessWidget {
                     .read(simInputProvider.notifier)
                     .send((setZeroIMU: true)),
               ),
-            )
+            ),
           ],
         ),
       ),

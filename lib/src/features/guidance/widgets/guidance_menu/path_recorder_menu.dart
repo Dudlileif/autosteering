@@ -95,7 +95,7 @@ class PathRecorderMenu extends StatelessWidget {
                 ),
                 Icon(
                   Icons.crop_square,
-                )
+                ),
               ],
             ),
           ),
@@ -148,7 +148,7 @@ class PathRecorderMenu extends StatelessWidget {
                         polygon: Polygon([
                           PositionArray.view(
                             points.map((e) => e.position.values).flattened,
-                          )
+                          ),
                         ]),
                         boundingBox: GeoBox.from(points.map((e) => e.position)),
                       ),

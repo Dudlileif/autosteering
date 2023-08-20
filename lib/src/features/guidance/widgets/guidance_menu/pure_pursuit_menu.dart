@@ -131,7 +131,7 @@ class PurePursuitMenu extends StatelessWidget {
                     max: 20,
                     min: 1,
                     divisions: 19,
-                  )
+                  ),
                 ],
               );
             },

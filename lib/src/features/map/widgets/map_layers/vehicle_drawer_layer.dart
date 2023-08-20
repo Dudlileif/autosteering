@@ -22,7 +22,8 @@ class VehicleDrawerLayer extends ConsumerWidget {
               bottomLeftCorner: vehicle.polygons.first.points.last,
               bottomRightCorner: vehicle.polygons.first.points[2],
               imageProvider: const AssetImage(
-                  'assets/images/vehicle_types/top_view/Tractor.png'),
+                'assets/images/vehicle_types/top_view/Tractor.png',
+              ),
             ),
             RotatedOverlayImage(
               topLeftCorner: vehicle.wheelPoints()[2].latLng,
@@ -37,7 +38,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
               bottomRightCorner: vehicle.wheelPoints(left: false)[1].latLng,
               imageProvider:
                   const AssetImage('assets/images/wheels/FrontWheel.png'),
-            )
+            ),
           ],
         Harvester() => [
             RotatedOverlayImage(
@@ -45,7 +46,8 @@ class VehicleDrawerLayer extends ConsumerWidget {
               bottomLeftCorner: vehicle.polygons.first.points.last,
               bottomRightCorner: vehicle.polygons.first.points[2],
               imageProvider: const AssetImage(
-                  'assets/images/vehicle_types/top_view/Harvester.png'),
+                'assets/images/vehicle_types/top_view/Harvester.png',
+              ),
             ),
             RotatedOverlayImage(
               topLeftCorner: vehicle.wheelPoints()[2].latLng,
@@ -60,7 +62,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
               bottomRightCorner: vehicle.wheelPoints(left: false)[1].latLng,
               imageProvider:
                   const AssetImage('assets/images/wheels/FrontWheel.png'),
-            )
+            ),
           ],
         ArticulatedTractor() => [
             RotatedOverlayImage(
@@ -129,7 +131,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
               imageProvider: const AssetImage(
                 'assets/images/vehicle_types/top_view/ArticulatedTractorFront.png',
               ),
-            )
+            ),
           ],
       },
     );

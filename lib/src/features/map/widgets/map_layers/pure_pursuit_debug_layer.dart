@@ -32,7 +32,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                   Polyline(
                     points: [
                       vehicle.pursuitAxlePosition.latLng,
-                      pursuit.perpendicularIntersect(vehicle).latLng
+                      pursuit.perpendicularIntersect(vehicle).latLng,
                     ],
                     color: Colors.white,
                   ),
@@ -84,7 +84,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                             )
                             .best
                             .position
-                            .latLng
+                            .latLng,
                       ],
                       color: Colors.pink,
                     ),
@@ -108,7 +108,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                               )
                               .best
                               .position
-                              .latLng
+                              .latLng,
                         ],
                         color: Colors.pink,
                       ),
@@ -129,7 +129,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                               )
                               .worst!
                               .position
-                              .latLng
+                              .latLng,
                         ],
                         color: Colors.blue,
                       ),
@@ -153,12 +153,12 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                                 )
                                 .worst!
                                 .position
-                                .latLng
+                                .latLng,
                           ],
                           color: Colors.blue,
-                        )
-                    ]
-                  ]
+                        ),
+                    ],
+                  ],
                 ],
               ),
               CircleLayer(

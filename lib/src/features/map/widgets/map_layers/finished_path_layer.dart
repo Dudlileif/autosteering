@@ -23,7 +23,7 @@ class FinishedPathLayer extends ConsumerWidget {
                   Polyline(
                     points:
                         points.map((point) => point.position.latLng).toList(),
-                  )
+                  ),
                 ],
               ),
               CircleLayer(

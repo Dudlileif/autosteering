@@ -45,7 +45,7 @@ class SentinelLayerSelector extends ConsumerWidget {
             height: 3 * 80,
             width: 300,
             child: listView,
-          )
+          ),
         ],
       );
     }

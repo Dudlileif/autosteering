@@ -53,7 +53,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
                   radius: 5,
                   color: Colors.yellow,
                 ),
-              )
+              ),
             ],
           ),
           PolylineLayer(
@@ -73,7 +73,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
                                               equipments
                                                   .elementAt(equipmentIndex)
                                                   .segmentCenter(segment)
-                                                  .latLng
+                                                  .latLng,
                                             ]
                                           : line.map((e) => e.latLng).toList(),
                                       color: Theme.of(context)

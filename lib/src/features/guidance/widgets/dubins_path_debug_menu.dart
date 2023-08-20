@@ -64,7 +64,7 @@ class DubinsPathDebugMenu extends StatelessWidget {
             return MenuButtonWithChildren(
               icon: Icons.abc,
               text:
-                  'Path type: ${(selectedPathType?.name ?? dubinsPath?.bestPathData?.pathType.name)?.toUpperCase()}\n${(dubinsPath?.pathData(selectedPathType)?.totalLength ?? dubinsPath?.bestPathData?.totalLength)?.round()} m',
+                  '''Path type: ${(selectedPathType?.name ?? dubinsPath?.bestPathData?.pathType.name)?.toUpperCase()}\n${(dubinsPath?.pathData(selectedPathType)?.totalLength ?? dubinsPath?.bestPathData?.totalLength)?.round()} m''',
               menuChildren: DubinsPathType.values
                   .map(
                     (pathType) => CheckboxListTile(
@@ -74,10 +74,10 @@ class DubinsPathDebugMenu extends StatelessWidget {
                         true => {
                             ref
                                 .read(dubinsPathDebugPathTypeProvider.notifier)
-                                .update(pathType)
+                                .update(pathType),
                           },
                         false => {
-                            ref.invalidate(dubinsPathDebugPathTypeProvider)
+                            ref.invalidate(dubinsPathDebugPathTypeProvider),
                           },
                         _ => null,
                       },
@@ -116,7 +116,7 @@ class DubinsPathDebugMenu extends StatelessWidget {
                               start.copyWith(bearing: value),
                             ),
                         max: 360,
-                      )
+                      ),
                     ],
                   ),
                 if (end != null)
@@ -135,7 +135,7 @@ class DubinsPathDebugMenu extends StatelessWidget {
                               end.copyWith(bearing: value),
                             ),
                         max: 360,
-                      )
+                      ),
                     ],
                   ),
               ],
@@ -148,7 +148,7 @@ class DubinsPathDebugMenu extends StatelessWidget {
             Consumer(
               builder: (context, ref, child) {
                 return Text(
-                  'Step size: ${ref.watch(dubinsPathDebugStepSizeProvider).toStringAsFixed(1)} m',
+                  '''Step size: ${ref.watch(dubinsPathDebugStepSizeProvider).toStringAsFixed(1)} m''',
                   style: textStyle,
                 );
               },

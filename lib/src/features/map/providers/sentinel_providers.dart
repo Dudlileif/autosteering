@@ -196,7 +196,7 @@ class SentinelLayerOpacities extends _$SentinelLayerOpacities {
           );
     });
 
-    final layers = {for (var layer in SentinelLayerType.values) layer: 0.5};
+    final layers = {for (final layer in SentinelLayerType.values) layer: 0.5};
 
     if (ref
         .read(settingsProvider.notifier)

@@ -83,8 +83,10 @@ class VehicleSimulator {
     );
 
     var udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      udp.send(utf8.encode('${Platform.operatingSystem}: Heartbeat'),
-          serverEndPoint);
+      udp.send(
+        utf8.encode('${Platform.operatingSystem}: Heartbeat'),
+        serverEndPoint,
+      );
     });
 
     udp.asStream().listen(

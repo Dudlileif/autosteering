@@ -171,7 +171,7 @@ class RingBuffer {
           bufferCircleStart,
           ...joinPoints,
           bufferCircleEnd,
-          nextBuffer
+          nextBuffer,
         ],
       );
     }

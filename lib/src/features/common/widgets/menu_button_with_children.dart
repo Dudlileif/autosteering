@@ -65,7 +65,7 @@ class MenuButtonWithChildren extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 4),
                   child: textWidget,
-                )
+                ),
               ],
             )
           : textWidget,

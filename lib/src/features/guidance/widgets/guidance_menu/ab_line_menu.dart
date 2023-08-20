@@ -97,7 +97,7 @@ class ABLineMenu extends ConsumerWidget {
                   min: 4,
                   max: 20,
                   divisions: 16,
-                )
+                ),
               ],
             );
           },
@@ -119,7 +119,7 @@ class ABLineMenu extends ConsumerWidget {
                       .update(value),
                   max: 10,
                   divisions: 20,
-                )
+                ),
               ],
             );
           },
@@ -141,7 +141,7 @@ class ABLineMenu extends ConsumerWidget {
                       .update(value.round()),
                   max: 10,
                   divisions: 10,
-                )
+                ),
               ],
             );
           },
@@ -164,7 +164,7 @@ class ABLineMenu extends ConsumerWidget {
                       .update(value.round()),
                   max: 10,
                   divisions: 10,
-                )
+                ),
               ],
             );
           },

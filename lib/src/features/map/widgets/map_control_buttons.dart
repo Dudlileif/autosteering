@@ -133,7 +133,7 @@ class MapControlButtons extends StatelessWidget {
                       Transform.rotate(
                         angle: alwaysPointNorth ? angle : 0,
                         child: navIcon,
-                      )
+                      ),
                     ],
                   );
                 },

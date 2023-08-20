@@ -326,7 +326,7 @@ class Equipment extends Hitchable with EquatableMixin {
       segmentFrontLeft,
       segmentRearLeft,
       segmentRearRight,
-      segmentFrontRight
+      segmentFrontRight,
     ];
   }
 
@@ -341,7 +341,7 @@ class Equipment extends Hitchable with EquatableMixin {
         [
           PositionArray.view(
             segmentPoints(segment).map((e) => e.values).flattened,
-          )
+          ),
         ],
       );
 
@@ -394,7 +394,7 @@ class Equipment extends Hitchable with EquatableMixin {
                     .destinationPoint(distance: 0.05, bearing: bearing + 90)
                     .latLng,
               ],
-            )
+            ),
           ],
         HitchType.fixed => [
             // Left hitch bar
@@ -438,7 +438,7 @@ class Equipment extends Hitchable with EquatableMixin {
                     .destinationPoint(distance: 0.3, bearing: bearing + 90)
                     .latLng,
               ],
-            )
+            ),
           ]
       };
 

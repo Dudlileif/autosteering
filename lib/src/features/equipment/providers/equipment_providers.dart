@@ -181,7 +181,7 @@ class EquipmentPaths extends _$EquipmentPaths {
                     (_lastActiveSegments.elementAtOrNull(segment) ?? false)
                 ? [
                     state.last[segment]?.last ??
-                        equipment.segmentCenter(segment)
+                        equipment.segmentCenter(segment),
                   ]
                 : active
                     ? [equipment.segmentCenter(segment)]
