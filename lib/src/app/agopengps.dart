@@ -2,6 +2,7 @@ import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/scaffold/widgets/main_scaffold.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -34,10 +35,12 @@ class _AgOpenGpsState extends ConsumerState<AgOpenGps> {
       }
       // Native platforms with file directory support.
       else {
-        // We are loading until the file directory and the settings file are
-        // ready.
+        // We are loading until the file directory, the settings file and
+        // the last used vehicle is ready.
         if (ref.watch(fileDirectoryProvider) is AsyncData) {
-          loading = ref.watch(settingsFileProvider) is! AsyncData;
+          if (ref.watch(settingsFileProvider) is AsyncData) {
+            loading = ref.watch(lastUsedVehicleProvider) is! AsyncData;
+          }
         }
       }
     }

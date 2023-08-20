@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/gnss/providers/device_position_providers.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -17,8 +18,8 @@ class VehicleDebugMenu extends StatelessWidget {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Vehicle',
-      icon: Icons.agriculture,
+      text: 'Debug',
+      icon: Icons.bug_report,
       menuChildren: [
         Consumer(
           child: Text(
@@ -146,6 +147,21 @@ class VehicleDebugMenu extends StatelessWidget {
             value: ref.watch(useIMUBearingProvider),
             onChanged: (value) => value != null
                 ? ref.read(useIMUBearingProvider.notifier).update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Use device position',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(devicePositionAsVehiclePositionProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(devicePositionAsVehiclePositionProvider.notifier)
+                    .update(value: value)
                 : null,
             secondary: child,
           ),

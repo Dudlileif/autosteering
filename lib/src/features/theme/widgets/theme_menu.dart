@@ -3,7 +3,11 @@ import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// A menu for configuring the app's theme, i.e. the color scheme and the
+/// theme mode.
 class ThemeMenu extends StatelessWidget {
+  /// A menu for configuring the app's theme, i.e. the color scheme and the
+  /// theme mode.
   const ThemeMenu({super.key});
 
   @override
@@ -53,7 +57,7 @@ class ThemeMenu extends StatelessWidget {
                         .update(ThemeMode.system),
                     selected: themeMode == ThemeMode.system,
                   ),
-                )
+                ),
               ],
             );
           },
@@ -85,7 +89,7 @@ class ThemeMenu extends StatelessWidget {
                   .toList(),
             );
           },
-        )
+        ),
       ],
     );
   }

@@ -39,7 +39,7 @@ abstract class Hitchable {
   /// [hitchRearTowbarChild] to attach children to this hitchable.
   ///
   Hitchable({
-    this.name = 'No name',
+    this.name,
     this.hitchParent,
     this.hitchFrontFixedChild,
     this.hitchRearFixedChild,
@@ -51,7 +51,7 @@ abstract class Hitchable {
   final String uuid;
 
   /// The name/id of this.
-  String name;
+  String? name;
 
   /// The parent of this, if there is one.
   Hitchable? hitchParent;
@@ -144,7 +144,7 @@ abstract class Hitchable {
   Iterable<Geographic> get hitchPoints => [
         hitchFrontFixedPoint,
         hitchRearFixedPoint,
-        hitchRearTowbarPoint
+        hitchRearTowbarPoint,
       ].whereNotNull();
 
   /// Update the children connected to this.
