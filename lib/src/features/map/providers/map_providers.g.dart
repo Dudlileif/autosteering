@@ -383,5 +383,23 @@ final mapZoomProvider = NotifierProvider<MapZoom, double>.internal(
 );
 
 typedef _$MapZoom = Notifier<double>;
+String _$mapAllowDownloadHash() => r'7c11393246dcc8e12c809f33c655bb676157b6a9';
+
+/// Whether the map should be allowed to download tiles over the internet.
+///
+/// Copied from [MapAllowDownload].
+@ProviderFor(MapAllowDownload)
+final mapAllowDownloadProvider =
+    NotifierProvider<MapAllowDownload, bool>.internal(
+  MapAllowDownload.new,
+  name: r'mapAllowDownloadProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$mapAllowDownloadHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MapAllowDownload = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

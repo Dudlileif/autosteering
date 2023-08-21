@@ -378,3 +378,28 @@ FutureOr<List<String>> mapCacheDirectories(MapCacheDirectoriesRef ref) async =>
         'map_image_cache',
       ].join('/'),
     ).findSubfoldersWithTargetFile();
+
+/// Whether the map should be allowed to download tiles over the internet.
+@Riverpod(keepAlive: true)
+class MapAllowDownload extends _$MapAllowDownload {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapAllowDownload, next);
+      }
+    });
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.mapAllowDownload) ??
+        true;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}

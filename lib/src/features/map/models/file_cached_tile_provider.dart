@@ -89,30 +89,33 @@ File: ${file.path}
       return Image.file(file).image;
     }
 
-    final url = getTileUrl(coordinates, options);
+    if (ref.watch(mapAllowDownloadProvider)) {
+      final url = getTileUrl(coordinates, options);
 
-    Dio().download(
-      url,
-      file.path,
-      options: Options(
-        responseType: ResponseType.bytes,
-        headers: headers,
-      ),
-    );
+      Dio().download(
+        url,
+        file.path,
+        options: Options(
+          responseType: ResponseType.bytes,
+          headers: headers,
+        ),
+      );
 
-    if (debugPrint) {
-      log(
-        '''
+      if (debugPrint) {
+        log(
+          '''
 Layer: ${layer?.name}
 $coordinates
 Url: $url
 File: ${file.path}
 ''',
-        name: 'FileCachedTileProvider',
-        time: DateTime.timestamp(),
-      );
-    }
+          name: 'FileCachedTileProvider',
+          time: DateTime.timestamp(),
+        );
+      }
 
-    return NetworkImage(url, headers: headers);
+      return NetworkImage(url, headers: headers);
+    }
+    return const AssetImage('assets/images/transparent.png');
   }
 }

@@ -24,18 +24,18 @@ class Norway extends Country {
         style: Theme.of(context).textTheme.bodySmall,
       );
 
-  TileLayerData get _norgeIBilder => const TileLayerData(
+  TileLayerData get _norgeIBilder => TileLayerData(
         name: 'Norge i bilder',
-        folderName: 'Country/Norway',
+        folderName: folderName,
         urlTemplate:
             'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_nib_web_mercator_wmts_v2?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=Nibcache_web_mercator_v2&STYLE=default&FORMAT=image/png&tileMatrixSet=default028mm&tileMatrix={z}&tileRow={y}&tileCol={x}',
         subdomains: ['', '2', '3'],
         maxNativeZoom: 18,
       );
 
-  TileLayerData get _norgesKart => const TileLayerData(
+  TileLayerData get _norgesKart => TileLayerData(
         name: 'Norgeskart',
-        folderName: 'Norway',
+        folderName: folderName,
         urlTemplate:
             'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=norgeskart_bakgrunn&STYLE=default&FORMAT=image/png&tileMatrixSet=EPSG:3857&tileMatrix=EPSG:3857:{z}&tileRow={y}&tileCol={x}',
         subdomains: ['', '2', '3'],
@@ -43,9 +43,9 @@ class Norway extends Country {
         themedTileLayerBuilder: themedTileLayerBuilder,
       );
 
-  TileLayerData get _norgesGrunnkart => const TileLayerData(
+  TileLayerData get _norgesGrunnkart => TileLayerData(
         name: 'Norges grunnkart',
-        folderName: 'Country/Norway',
+        folderName: folderName,
         urlTemplate:
             'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=norges_grunnkart&STYLE=default&FORMAT=image/png&tileMatrixSet=EPSG:3857&tileMatrix=EPSG:3857:{z}&tileRow={y}&tileCol={x}',
         subdomains: ['', '2', '3'],
@@ -53,9 +53,9 @@ class Norway extends Country {
         themedTileLayerBuilder: themedTileLayerBuilder,
       );
 
-  TileLayerData get _norgesGrunnkartGraatone => const TileLayerData(
+  TileLayerData get _norgesGrunnkartGraatone => TileLayerData(
         name: 'Norges grunnkart gråtone',
-        folderName: 'Country/Norway',
+        folderName: folderName,
         urlTemplate:
             'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=norges_grunnkart_graatone&STYLE=default&FORMAT=image/png&tileMatrixSet=EPSG:3857&tileMatrix=EPSG:3857:{z}&tileRow={y}&tileCol={x}',
         subdomains: ['', '2', '3'],
@@ -65,7 +65,7 @@ class Norway extends Country {
 
   TileLayerData get _terrainDTM => TileLayerData(
         name: 'Terreng - skyggerelieff',
-        folderName: 'Country/Norway',
+        folderName: folderName,
         wmsOptions: WMSTileLayerOptions(
           baseUrl: 'https://wms.geonorge.no/skwms1/wms.hoyde-dtm?',
           layers: ['DTM:skyggerelieff'],
@@ -76,7 +76,7 @@ class Norway extends Country {
 
   TileLayerData get _terrainDTMMulti => TileLayerData(
         name: 'Terreng - multiskyggerelieff',
-        folderName: 'Country/Norway',
+        folderName: folderName,
         wmsOptions: WMSTileLayerOptions(
           baseUrl: 'https://wms.geonorge.no/skwms1/wms.hoyde-dtm?',
           layers: ['DTM:multiskyggerelieff'],
@@ -87,7 +87,7 @@ class Norway extends Country {
 
   TileLayerData get _terrainDOM => TileLayerData(
         name: 'Terreng - skyggerelieff DOM',
-        folderName: 'Country/Norway',
+        folderName: folderName,
         wmsOptions: WMSTileLayerOptions(
           baseUrl: 'https://wms.geonorge.no/skwms1/wms.hoyde-dom?',
           layers: ['DOM:skyggerelieff'],
