@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geobase/geobase.dart';
@@ -37,6 +38,10 @@ class ABLine with EquatableMixin {
 
   /// How wide an AB-line should be, as in when to skip to the next line over.
   double width;
+
+  /// The PID controller for controlling the steering angle when
+  /// using [PathTrackingMode.pid].
+  final pidController = PidController();
 
   /// Whether or not the closest line should always be snapped to, otherwise
   /// the [currentOffset] has to be manually set/updated.
@@ -494,6 +499,61 @@ class ABLine with EquatableMixin {
     final steeringAngle = atan(
       2 * vehicle.wheelBase * sin(angle.toRadians()) / lookAheadDistance,
     ).toDegrees();
+
+    return steeringAngle.clamp(
+      -vehicle.steeringAngleMax,
+      vehicle.steeringAngleMax,
+    );
+  }
+
+  /// The next steering angle for the [vehicle] using Stanley path tracking.
+  double nextSteeringAngleStanley({required Vehicle vehicle}) {
+    final parameters = vehicle.stanleyParameters;
+
+    final headingError = signedBearingDifference(
+      vehicle.bearing,
+      currentPerpendicularIntersect(vehicle.stanleyAxlePosition)
+          .spherical
+          .initialBearingTo(
+            pointsAhead(
+              point: vehicle.stanleyAxlePosition,
+              heading: vehicle.bearing,
+            ).last,
+          ),
+    );
+
+    final sign = switch (vehicle.isReversing) {
+      true => -1,
+      false => 1,
+    };
+
+    final steeringAngle = sign * headingError +
+        atan(
+          parameters.crossDistanceCoefficient *
+              -signedPerpendicularDistanceToCurrentLine(
+                point: vehicle.stanleyAxlePosition,
+                heading: vehicle.bearing,
+              ) /
+              (parameters.softeningCoefficient +
+                  parameters.velocityCoefficient * vehicle.velocity.abs()),
+        ).toDegrees();
+
+    return steeringAngle.clamp(
+      -vehicle.steeringAngleMax,
+      vehicle.steeringAngleMax,
+    );
+  }
+
+  /// Calculates the steering angle needed to reach the target point when
+  /// using a PID controller.
+  double nextSteeringAnglePid(Vehicle vehicle) {
+    final steeringAngle = pidController.nextValue(
+      signedPerpendicularDistanceToCurrentLine(
+        point: vehicle.pursuitAxlePosition,
+        heading: vehicle.bearing,
+      ),
+      vehicle.pidParameters,
+    );
 
     return steeringAngle.clamp(
       -vehicle.steeringAngleMax,

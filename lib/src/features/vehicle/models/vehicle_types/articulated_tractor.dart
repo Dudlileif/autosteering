@@ -27,6 +27,7 @@ final class ArticulatedTractor extends Vehicle {
     super.antennaLateralOffset,
     super.invertSteeringInput,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
+    super.stanleyParameters,
     super.position,
     super.velocity,
     super.bearing,
@@ -59,6 +60,10 @@ final class ArticulatedTractor extends Vehicle {
       Map<String, dynamic>.from(json['pid_parameters'] as Map),
     );
 
+    final stanleyParameters = StanleyParameters.fromJson(
+      Map<String, dynamic>.from(json['stanley_parameters'] as Map),
+    );
+
     final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
 
     return ArticulatedTractor(
@@ -81,6 +86,7 @@ final class ArticulatedTractor extends Vehicle {
       wheelWidth: wheels['wheel_width'] as double,
       wheelSpacing: wheels['wheel_spacing'] as double,
       pidParameters: pidParameters,
+      stanleyParameters: stanleyParameters,
       frontAxleToHitchDistance:
           hitches['front_axle_to_front_hitch_distance'] as double?,
       rearAxleToHitchDistance:
@@ -184,18 +190,15 @@ final class ArticulatedTractor extends Vehicle {
         false => null,
       };
 
-  /// The position of the pursuit axle in the the vehicle direction. Used when
-  /// calculating the pure pursuit values.
-  ///
-  /// The mirror position of the antenna position from the pivot point is used
-  /// when the tractor is reversing.
   @override
-  Geographic get pursuitAxlePosition => switch (isReversing) {
-        true => pivotPosition.spherical.destinationPoint(
-            distance: pivotToAntennaDistance,
-            bearing: rearAxleAngle,
-          ),
-        false => position,
+  Geographic get pursuitAxlePosition => pivotPosition;
+
+  /// The position of the Stanley axle in the the vehicle direction. Used when
+  /// calculating the Stanley pursuit values.
+  @override
+  Geographic get stanleyAxlePosition => switch (isReversing) {
+        true => rearAxlePosition,
+        false => frontAxlePosition,
       };
 
   @override
@@ -630,6 +633,7 @@ final class ArticulatedTractor extends Vehicle {
     int? numWheels,
     bool? invertSteeringInput,
     PidParameters? pidParameters,
+    StanleyParameters? stanleyParameters,
     double? velocity,
     double? bearing,
     double? steeringAngleInput,
@@ -666,6 +670,7 @@ final class ArticulatedTractor extends Vehicle {
             rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         pidParameters: pidParameters ?? this.pidParameters,
+        stanleyParameters: stanleyParameters ?? this.stanleyParameters,
         velocity: velocity ?? this.velocity,
         bearing: bearing ?? this.bearing,
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,

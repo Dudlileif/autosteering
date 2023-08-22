@@ -22,6 +22,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.invertSteeringInput,
     super.position,
     super.pidParameters = const PidParameters(p: 30, i: 0, d: 2),
+    super.stanleyParameters,
     super.velocity,
     super.bearing,
     super.steeringAngleInput,
@@ -53,6 +54,10 @@ final class Tractor extends AxleSteeredVehicle {
       Map<String, dynamic>.from(json['pid_parameters'] as Map),
     );
 
+    final stanleyParameters = StanleyParameters.fromJson(
+      Map<String, dynamic>.from(json['stanley_parameters'] as Map),
+    );
+
     final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
 
     return Tractor(
@@ -76,6 +81,7 @@ final class Tractor extends AxleSteeredVehicle {
       steeringAxleWheelWidth: wheels['steering_axle_wheel_width'] as double,
       solidAxleWheelWidth: wheels['solid_axle_wheel_width'] as double,
       pidParameters: pidParameters,
+      stanleyParameters: stanleyParameters,
       solidAxleToFrontHitchDistance:
           hitches['solid_axle_to_front_hitch_distance'] as double?,
       solidAxleToRearHitchDistance:
@@ -99,13 +105,13 @@ final class Tractor extends AxleSteeredVehicle {
         bearing: bearing.wrap360(),
       );
 
-  /// The position of the pursuit axle in the the vehicle direction. Used when
-  /// calculating the pure pursuit values.
+  /// The position of the Stanley axle in the the vehicle direction. Used when
+  /// calculating the Stanley pursuit values.
   ///
-  /// The mirror position of the steering axle from the solid axle is used
+  /// The mirror position of the steering axle position from the is used
   /// when the tractor is reversing.
   @override
-  Geographic get pursuitAxlePosition => switch (isReversing) {
+  Geographic get stanleyAxlePosition => switch (isReversing) {
         true => solidAxlePosition.spherical
             .destinationPoint(distance: wheelBase, bearing: bearing + 180),
         false => steeringAxlePosition,
@@ -141,6 +147,7 @@ final class Tractor extends AxleSteeredVehicle {
     double? solidAxleWheelWidth,
     bool? invertSteeringInput,
     PidParameters? pidParameters,
+    StanleyParameters? stanleyParameters,
     double? velocity,
     double? bearing,
     double? steeringAngleInput,
@@ -180,6 +187,7 @@ final class Tractor extends AxleSteeredVehicle {
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         pidParameters: pidParameters ?? this.pidParameters,
+        stanleyParameters: stanleyParameters ?? this.stanleyParameters,
         velocity: velocity ?? this.velocity,
         bearing: bearing ?? this.bearing,
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,

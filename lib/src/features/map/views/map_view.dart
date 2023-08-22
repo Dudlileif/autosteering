@@ -153,8 +153,8 @@ class MapAndGaugeStackView extends ConsumerWidget {
             ),
           if (ref.watch(showABLineDebugLayerProvider))
             const ABLineOffsetDebugControls(),
-          if (ref.watch(showPurePursuitDebugLayerProvider))
-            const PurePursuitDebugWidget(),
+          if (ref.watch(showPathTrackingDebugLayerProvider))
+            const PathTrackingDebugWidget(),
         ],
       ),
     );

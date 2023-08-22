@@ -27,6 +27,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     required this.steeringAngleMax,
     required this.trackWidth,
     required this.pidParameters,
+    this.stanleyParameters = const StanleyParameters(),
     this.antennaLateralOffset = 0,
     this.invertSteeringInput = false,
     this.steeringAngleInput = 0,
@@ -95,8 +96,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   bool invertSteeringInput;
 
   /// The PID parameters for controlling the steering of this vehicle
-  /// with
+  /// when using a PID controller mode.
   PidParameters pidParameters;
+
+  /// The Stanley coefficients for controlling the steering of this vehicle
+  /// when using a Stanley path tracking steering mode.
+  StanleyParameters stanleyParameters;
 
   /// The velocity of the vehicle as set from the outside.
   double _velocity;
@@ -233,8 +238,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       };
 
   /// The position of the pursuit axle in the the vehicle direction. Used when
-  /// calculating the pure pursuit values.
+  /// calculating pure pursuit path tracking values.
   Geographic get pursuitAxlePosition;
+
+  /// The position of the Stanley axle in the vehicle direction. Used when
+  /// calculating Stanley path tracking values.
+  Geographic get stanleyAxlePosition;
 
   /// Basic circle markers for showing the vehicle's steering related
   /// points.
@@ -339,6 +348,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? trackWidth,
     bool? invertSteeringInput,
     PidParameters? pidParameters,
+    StanleyParameters? stanleyParameters,
     double? velocity,
     double? bearing,
     double? steeringAngleInput,
@@ -372,6 +382,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     };
 
     map['pid_parameters'] = pidParameters;
+
+    map['stanley_parameters'] = stanleyParameters;
 
     map['steering'] = {
       'invert_steering_input': invertSteeringInput,

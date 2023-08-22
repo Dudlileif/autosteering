@@ -5,19 +5,19 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A menu button with attached submenu for working with the pure pursuit
-/// path tracking feature.
-class PurePursuitMenu extends StatelessWidget {
-  /// A menu button with attached submenu for working with the pure pursuit
-  /// path tracking feature.
-  const PurePursuitMenu({super.key});
+/// A menu button with attached submenu for working with the path tracking
+/// feature.
+class PathTrackingMenu extends StatelessWidget {
+  /// A menu button with attached submenu for working with the path tracking
+  ///  feature.
+  const PathTrackingMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Pure pursuit',
+      text: 'Path tracking',
       menuChildren: [
         Consumer(
           child: Text(
@@ -27,10 +27,10 @@ class PurePursuitMenu extends StatelessWidget {
           builder: (context, ref, child) {
             return CheckboxListTile(
               secondary: child,
-              value: ref.watch(enablePurePursuitProvider),
+              value: ref.watch(enablePathTrackingProvider),
               onChanged: (value) => value != null
                   ? ref
-                      .read(enablePurePursuitProvider.notifier)
+                      .read(enablePathTrackingProvider.notifier)
                       .update(value: value)
                   : null,
             );
@@ -44,10 +44,10 @@ class PurePursuitMenu extends StatelessWidget {
           builder: (context, ref, child) {
             return CheckboxListTile(
               secondary: child,
-              value: ref.watch(debugPurePursuitProvider),
+              value: ref.watch(debugPathTrackingProvider),
               onChanged: (value) => value != null
                   ? ref
-                      .read(debugPurePursuitProvider.notifier)
+                      .read(debugPathTrackingProvider.notifier)
                       .update(value: value)
                   : null,
             );
@@ -60,16 +60,16 @@ class PurePursuitMenu extends StatelessWidget {
           ),
           trailing: Consumer(
             builder: (context, ref, child) {
-              final loopMode = ref.watch(purePursuitLoopProvider);
+              final loopMode = ref.watch(pathTrackingLoopProvider);
 
               return ToggleButtons(
-                isSelected: PurePursuitLoopMode.values
+                isSelected: PathTrackingLoopMode.values
                     .map((mode) => mode == loopMode)
                     .toList(),
                 onPressed: (index) => ref
-                    .read(purePursuitLoopProvider.notifier)
-                    .update(PurePursuitLoopMode.values[index]),
-                children: PurePursuitLoopMode.values
+                    .read(pathTrackingLoopProvider.notifier)
+                    .update(PathTrackingLoopMode.values[index]),
+                children: PathTrackingLoopMode.values
                     .map(
                       (mode) => Padding(
                         padding: const EdgeInsets.all(4),
@@ -83,21 +83,21 @@ class PurePursuitMenu extends StatelessWidget {
         ),
         ListTile(
           title: Text(
-            'Pursuit mode',
+            'Tracking mode',
             style: textStyle,
           ),
           trailing: Consumer(
             builder: (context, ref, child) {
-              final pursuitMode = ref.watch(pursuitModeProvider);
+              final pursuitMode = ref.watch(activePathTrackingModeProvider);
 
               return ToggleButtons(
                 onPressed: (index) => ref
-                    .read(pursuitModeProvider.notifier)
-                    .update(PurePursuitMode.values[index]),
-                isSelected: PurePursuitMode.values
+                    .read(activePathTrackingModeProvider.notifier)
+                    .update(PathTrackingMode.values[index]),
+                isSelected: PathTrackingMode.values
                     .map((mode) => mode == pursuitMode)
                     .toList(),
-                children: PurePursuitMode.values
+                children: PathTrackingMode.values
                     .map(
                       (mode) => Padding(
                         padding: const EdgeInsets.all(4),
@@ -114,7 +114,7 @@ class PurePursuitMenu extends StatelessWidget {
         ListTile(
           title: Consumer(
             builder: (context, ref, child) {
-              final distance = ref.watch(pursuitInterpolationDistanceProvider);
+              final distance = ref.watch(pathInterpolationDistanceProvider);
 
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -126,7 +126,7 @@ class PurePursuitMenu extends StatelessWidget {
                   Slider(
                     value: distance,
                     onChanged: ref
-                        .read(pursuitInterpolationDistanceProvider.notifier)
+                        .read(pathInterpolationDistanceProvider.notifier)
                         .update,
                     max: 20,
                     min: 1,

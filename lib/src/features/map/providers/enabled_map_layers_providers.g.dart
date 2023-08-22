@@ -150,24 +150,24 @@ final showDubinsPathDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowDubinsPathDebugLayerRef = AutoDisposeProviderRef<bool>;
-String _$showPurePursuitDebugLayerHash() =>
-    r'8e69a3662635862c93778e70b959d7a4706a2bf5';
+String _$showPathTrackingDebugLayerHash() =>
+    r'5811925eceaf6159659ddb008ec16389c0ce0ad3';
 
 /// Whether the debugging layer for the pure pursuit should be shown.
 ///
-/// Copied from [showPurePursuitDebugLayer].
-@ProviderFor(showPurePursuitDebugLayer)
-final showPurePursuitDebugLayerProvider = AutoDisposeProvider<bool>.internal(
-  showPurePursuitDebugLayer,
-  name: r'showPurePursuitDebugLayerProvider',
+/// Copied from [showPathTrackingDebugLayer].
+@ProviderFor(showPathTrackingDebugLayer)
+final showPathTrackingDebugLayerProvider = AutoDisposeProvider<bool>.internal(
+  showPathTrackingDebugLayer,
+  name: r'showPathTrackingDebugLayerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$showPurePursuitDebugLayerHash,
+      : _$showPathTrackingDebugLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ShowPurePursuitDebugLayerRef = AutoDisposeProviderRef<bool>;
+typedef ShowPathTrackingDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showFieldDebugLayerHash() =>
     r'8aedff6f7f894fed5181866050c2d2ef5b26d90f';
 

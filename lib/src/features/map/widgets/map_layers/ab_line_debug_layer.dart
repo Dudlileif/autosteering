@@ -134,7 +134,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                   ),
                 ...abLine
                     .pointsAhead(
-                      point: vehicle.position,
+                      point: vehicle.pursuitAxlePosition,
                       heading: vehicle.bearing,
                       num: ref.watch(aBLineDebugNumPointsAheadProvider),
                       stepSize: ref.watch(aBLineDebugStepSizeProvider),
@@ -148,7 +148,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                     ),
                 ...abLine
                     .pointsBehind(
-                      point: vehicle.position,
+                      point: vehicle.pursuitAxlePosition,
                       heading: vehicle.bearing,
                       num: ref.watch(aBLineDebugNumPointsBehindProvider),
                       stepSize: ref.watch(aBLineDebugStepSizeProvider),
