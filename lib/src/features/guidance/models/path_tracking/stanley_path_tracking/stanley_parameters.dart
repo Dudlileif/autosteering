@@ -19,9 +19,9 @@ class StanleyParameters extends Equatable {
   ///
   /// ```
   /// {
-  ///   'crossDistanceCoefficient': 1.1,
-  ///   'softeningCoefficient': 1.5,
-  ///   'velocityCoefficient': 1e-5,
+  ///   'crossDistanceCoefficient': 1.5,
+  ///   'softeningCoefficient': 1e-5,
+  ///   'velocityCoefficient': 1.3,
   /// }
   /// ```
   factory StanleyParameters.fromJson(Map<String, dynamic> json) =>
@@ -31,13 +31,14 @@ class StanleyParameters extends Equatable {
         velocityCoefficient: json['velocityCoefficient'] as double,
       );
 
-  /// Proportional crossDistanceCoefficient.
+  /// Proportional cross distance coefficient.
   final double crossDistanceCoefficient;
 
-  /// Integral gain.
+  /// The coefficient to ensure numerical stability when v -> 0.
   final double softeningCoefficient;
 
-  ///
+  /// Proportional coefficient for how much the velocity should alter the
+  /// steering angle.
   final double velocityCoefficient;
 
   /// Returns a new [StanleyParameters] from this with altered parameters.
