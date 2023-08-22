@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Basic gauges and controls for debugging the pitch and roll of the vehicle.
-class PitchAndRollGauges extends StatelessWidget {
+class PitchAndRollDebugGauges extends StatelessWidget {
   /// Basic gauges and controls for debugging the pitch and roll of the vehicle.
-  const PitchAndRollGauges({super.key});
+  const PitchAndRollDebugGauges({super.key});
 
   @override
   Widget build(BuildContext context) {

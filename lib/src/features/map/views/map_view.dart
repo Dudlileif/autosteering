@@ -143,13 +143,14 @@ class MapAndGaugeStackView extends ConsumerWidget {
               child: BasicVehicleGauges(),
             ),
           ),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: PitchAndRollGauges(),
+          if (ref.watch(debugVehicleIMUProvider))
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: PitchAndRollDebugGauges(),
+              ),
             ),
-          ),
           if (ref.watch(showABLineDebugLayerProvider))
             const ABLineOffsetDebugControls(),
           if (ref.watch(showPurePursuitDebugLayerProvider))

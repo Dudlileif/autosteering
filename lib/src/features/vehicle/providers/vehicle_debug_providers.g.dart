@@ -155,5 +155,23 @@ final debugVehicleAntennaPositionProvider =
 );
 
 typedef _$DebugVehicleAntennaPosition = Notifier<bool>;
+String _$debugVehicleIMUHash() => r'e95486e3ec7bd909ebdf31deffdf10729e077fa3';
+
+/// Whether to show vehicle antenna position debug.
+///
+/// Copied from [DebugVehicleIMU].
+@ProviderFor(DebugVehicleIMU)
+final debugVehicleIMUProvider =
+    NotifierProvider<DebugVehicleIMU, bool>.internal(
+  DebugVehicleIMU.new,
+  name: r'debugVehicleIMUProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugVehicleIMUHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugVehicleIMU = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

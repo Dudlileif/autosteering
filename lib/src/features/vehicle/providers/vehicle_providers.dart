@@ -113,6 +113,10 @@ FutureOr<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) async {
     [ref.watch(fileDirectoryProvider).requireValue.path, '/vehicles'].join(),
   );
 
+  if (!dir.existsSync()) {
+    dir.createSync(recursive: true);
+  }
+
   // Remake the list if there are any file changes in the folder.
   dir.watch(recursive: true).listen((event) {
     ref.invalidateSelf();

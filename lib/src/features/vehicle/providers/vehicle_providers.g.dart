@@ -122,7 +122,7 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
-String _$savedVehiclesHash() => r'b988c84bcb9a410827e9e26e264b0caa5da63ca2';
+String _$savedVehiclesHash() => r'1ef9b53975a6e354c3b95c6bf0fec9ae203f7ac6';
 
 /// A provider for reading and holding all the saved vehicles in the
 /// user file directory.
