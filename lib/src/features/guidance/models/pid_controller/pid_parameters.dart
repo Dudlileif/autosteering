@@ -8,9 +8,9 @@ class PidParameters extends Equatable {
   /// [i] is the integral gain.
   /// [d] is the derivative gain.
   const PidParameters({
-    required this.p,
-    required this.i,
-    required this.d,
+    this.p = 0.5,
+    this.i = 2.7,
+    this.d = 0.15,
   });
 
   /// A factory constructor that takes an input map of the form:

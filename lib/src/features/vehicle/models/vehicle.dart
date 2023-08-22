@@ -26,8 +26,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     required this.minTurningRadius,
     required this.steeringAngleMax,
     required this.trackWidth,
-    required this.pidParameters,
-    this.stanleyParameters = const StanleyParameters(),
     this.antennaLateralOffset = 0,
     this.invertSteeringInput = false,
     this.steeringAngleInput = 0,
@@ -42,6 +40,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     super.hitchRearTowbarChild,
     super.name,
     super.uuid,
+    PidParameters? pidParameters,
+    StanleyParameters? stanleyParameters,
     DateTime? lastUsed,
     Geographic position = const Geographic(lon: 0, lat: 0),
     double bearing = 0,
@@ -49,6 +49,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   })  : _bearing = bearing,
         _velocity = velocity,
         antennaPosition = position,
+        pidParameters = pidParameters ?? const PidParameters(),
+        stanleyParameters = stanleyParameters ?? const StanleyParameters(),
         lastUsed = lastUsed ?? DateTime.now();
 
   /// Creates the appropriate [Vehicle] subclass from the [json] object.
@@ -318,6 +320,34 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         distance: velocity * period,
         bearing: bearing,
       );
+
+  /// The predicted look ahead position and bearing when continuing the
+  /// vehicle's movement with [steeringAngle] for a time [period] in seconds.
+  ({Geographic position, double bearing}) predictedLookAheadPosition(
+    double period,
+    double steeringAngle,
+  ) {
+    if (velocity.abs() > 0) {
+      if (steeringAngle.abs() > 0) {
+        return predictedLookAheadPosition(period, steeringAngle);
+      }
+      final newPoint = lookAheadStartPosition.spherical
+          .destinationPoint(distance: velocity * period, bearing: bearing);
+      return (
+        position: newPoint,
+        bearing: position.spherical.finalBearingTo(newPoint)
+      );
+    }
+    return (position: position, bearing: bearing);
+  }
+
+  /// The predicted look ahead position and bearing when continuing the
+  /// vehicle's movement while turning with [steeringAngle] for a time
+  /// [period] in seconds.
+  ({Geographic position, double bearing}) predictedLookAheadPositionTurning(
+    double period,
+    double steeringAngle,
+  );
 
   /// Props used for checking for equality.
   @override

@@ -56,13 +56,17 @@ final class ArticulatedTractor extends Vehicle {
 
     final steering = Map<String, dynamic>.from(json['steering'] as Map);
 
-    final pidParameters = PidParameters.fromJson(
-      Map<String, dynamic>.from(json['pid_parameters'] as Map),
-    );
+    final pidParameters = json.containsKey('pid_parameters')
+        ? PidParameters.fromJson(
+            Map<String, dynamic>.from(json['pid_parameters'] as Map),
+          )
+        : null;
 
-    final stanleyParameters = StanleyParameters.fromJson(
-      Map<String, dynamic>.from(json['stanley_parameters'] as Map),
-    );
+    final stanleyParameters = json.containsKey('stanley_parameters')
+        ? StanleyParameters.fromJson(
+            Map<String, dynamic>.from(json['stanley_parameters'] as Map),
+          )
+        : null;
 
     final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
 
@@ -256,6 +260,76 @@ final class ArticulatedTractor extends Vehicle {
 
     position = vehiclePosition;
     bearing = frontBodyBearing;
+  }
+
+  @override
+  ({Geographic position, double bearing}) predictedLookAheadPositionTurning(
+    double period,
+    double steeringAngle,
+  ) {
+    final currentTurningRadius =
+        (pivotToFrontAxle * cos(degToRadian(steeringAngle.abs())) +
+                pivotToRearAxle) /
+            sin(degToRadian(steeringAngle.abs()));
+
+    final turningRadiusCenter =
+        this.frontAxlePosition.spherical.destinationPoint(
+              distance: currentTurningRadius,
+              bearing: switch (isTurningLeft) {
+                true => frontAxleAngle - 90,
+                false => frontAxleAngle + 90,
+              }
+                  .wrap360(),
+            );
+
+    final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
+
+    // How many degrees of the turning circle the current angular
+    // velocity
+    // during the period amounts to. Relative to the current position,
+    // is negative when reversing.
+    final turningCircleAngle = angularVelocity * period;
+
+    // The current angle from the turning radius center to the
+    // front axle center.
+    final turningCenterToFrontAxleAngle = switch (isTurningLeft) {
+      // Turning left
+      true => frontAxleAngle + 90,
+      // Turning right
+      false => frontAxleAngle - 90,
+    }
+        .wrap360();
+
+    // The angle from the turning circle center to the projected front
+    // axle position.
+    final projectedFrontAxleAngle = switch (isTurningLeft) {
+      // Turning left
+      true => turningCenterToFrontAxleAngle - turningCircleAngle,
+      // Turning right
+      false => turningCenterToFrontAxleAngle + turningCircleAngle,
+    };
+    // Projected vehicle front axle position from the turning radius
+    // center.
+    final frontAxlePosition = turningRadiusCenter.spherical.destinationPoint(
+      distance: currentTurningRadius,
+      bearing: projectedFrontAxleAngle,
+    );
+
+    // The bearing of the front body of the vehicle at the projected
+    // position.
+    final frontBodyBearing = switch (isTurningLeft) {
+      true => projectedFrontAxleAngle - 90 - steeringAngle / 2,
+      false => projectedFrontAxleAngle + 90 - steeringAngle / 2,
+    };
+
+    // The vehicle antenna position, projected from the front axle
+    // position.
+    final pivotPosition = frontAxlePosition.spherical.destinationPoint(
+      distance: pivotToFrontAxle,
+      bearing: frontBodyBearing - 180 + steeringAngle / 2,
+    );
+
+    return (position: pivotPosition, bearing: frontBodyBearing);
   }
 
   /// Basic circle markers for showing the vehicle's steering related

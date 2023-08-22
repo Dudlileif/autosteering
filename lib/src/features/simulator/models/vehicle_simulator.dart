@@ -475,6 +475,15 @@ class _VehicleSimulatorState {
         pathTracking?.currentIndex = pathTracking!.closestIndex(vehicle!);
       }
     }
+    // Update pid parameters.
+    else if (message is PidParameters) {
+      vehicle?.pidParameters = message;
+    }
+    // Update Stanley parameters.
+    else if (message is StanleyParameters) {
+      vehicle?.stanleyParameters = message;
+    }
+
     // Change pure pursuit mode.
     else if (message is PathTrackingMode) {
       pathTrackingMode = message;

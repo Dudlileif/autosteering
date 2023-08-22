@@ -50,13 +50,17 @@ final class Harvester extends AxleSteeredVehicle {
 
     final steering = Map<String, dynamic>.from(json['steering'] as Map);
 
-    final pidParameters = PidParameters.fromJson(
-      Map<String, dynamic>.from(json['pid_parameters'] as Map),
-    );
+    final pidParameters = json.containsKey('pid_parameters')
+        ? PidParameters.fromJson(
+            Map<String, dynamic>.from(json['pid_parameters'] as Map),
+          )
+        : null;
 
-    final stanleyParameters = StanleyParameters.fromJson(
-      Map<String, dynamic>.from(json['stanley_parameters'] as Map),
-    );
+    final stanleyParameters = json.containsKey('stanley_parameters')
+        ? StanleyParameters.fromJson(
+            Map<String, dynamic>.from(json['stanley_parameters'] as Map),
+          )
+        : null;
 
     final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
 

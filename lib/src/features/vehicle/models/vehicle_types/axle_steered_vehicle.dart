@@ -14,7 +14,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
-    required super.pidParameters,
     this.solidAxleToFrontHitchDistance,
     this.solidAxleToRearHitchDistance,
     this.solidAxleToRearTowbarDistance,
@@ -23,6 +22,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     this.solidAxleWheelDiameter = 1.8,
     this.steeringAxleWheelWidth = 0.48,
     this.solidAxleWheelWidth = 0.6,
+    super.pidParameters,
     super.stanleyParameters,
     super.antennaLateralOffset,
     super.position,
@@ -234,7 +234,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     };
     // Projected solid axle position from the turning radius
     // center.
-    final solidAxlePositon = turningCircleCenter.spherical.destinationPoint(
+    final solidAxlePosition = turningCircleCenter.spherical.destinationPoint(
       distance: currentTurningRadius!,
       bearing: angle.wrap360(),
     );
@@ -248,7 +248,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
     // The vehicle center position, which is offset from the solid
     // axle position.
-    final vehiclePosition = solidAxlePositon.spherical.destinationPoint(
+    final vehiclePosition = solidAxlePosition.spherical.destinationPoint(
       distance: solidAxleDistance,
       bearing: switch (this) {
         Tractor() => projectedBearing,
@@ -260,6 +260,61 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
     position = vehiclePosition;
     bearing = projectedBearing;
+  }
+
+  @override
+  ({Geographic position, double bearing}) predictedLookAheadPositionTurning(
+    double period,
+    double steeringAngle,
+  ) {
+    final currentTurningRadius = AckermannSteering(
+      steeringAngle: steeringAngle,
+      wheelBase: wheelBase,
+      trackWidth: trackWidth,
+      steeringRatio: ackermannSteeringRatio,
+    ).turningRadius;
+
+    final turningRadiusCenter =
+        this.solidAxlePosition.spherical.destinationPoint(
+              distance: currentTurningRadius,
+              bearing: switch (isTurningLeft) {
+                true => bearing - 90,
+                false => bearing + 90
+              }
+                  .wrap360(),
+            );
+
+    final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
+
+    // How many degrees of the turning circle the current angular
+    // velocity during the period amounts to. Relative to the current
+    // position, is negative when reversing.
+    final turningCircleAngle = angularVelocity * period;
+
+    // The angle from the turning circle center to the projected
+    // position.
+    final angle = switch (isTurningLeft) {
+      // Turning left
+      true => bearing + 90 - turningCircleAngle,
+      // Turning right
+      false => bearing - 90 + turningCircleAngle,
+    };
+
+    // Projected solid axle position from the turning radius
+    // center.
+    final solidAxlePosition = turningRadiusCenter.spherical.destinationPoint(
+      distance: currentTurningRadius,
+      bearing: angle.wrap360(),
+    );
+
+    // The bearing of the vehicle at the projected position.
+    final projectedBearing = switch (isTurningLeft) {
+      true => bearing - turningCircleAngle,
+      false => bearing + turningCircleAngle,
+    }
+        .wrap360();
+
+    return (position: solidAxlePosition, bearing: projectedBearing);
   }
 
   /// The bounds of the left steering wheel, or the right steering wheel if
