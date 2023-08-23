@@ -1,19 +1,29 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A menu for for deleting map layer caches.
+/// A menu/button for for deleting map layer caches.
 ///
-/// The menu also has the size and creation date for the map layer caches.
+/// The menu also has the size and creation date for the map layer caches
+/// on native systems.
 class DeleteCacheMenu extends ConsumerWidget {
-  /// A menu for for deleting map layer caches.
+  /// A menu/button for for deleting map layer caches.
   ///
-  /// The menu also has the size and creation date for the map layer caches.
+  /// The menu also has the size and creation date for the map layer caches
+  /// on native systems.
   const DeleteCacheMenu({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (Device.isWeb) {
+      return const MenuItemButton(
+        leadingIcon: Icon(Icons.delete),
+        onPressed: FastCachedImageConfig.clearAllCachedImages,
+        child: Text('Delete cache'),
+      );
+    }
     final directories = ref.watch(mapCacheDirectoriesProvider).when(
           data: (data) => data,
           error: (error, stackTrace) => <String>[],
