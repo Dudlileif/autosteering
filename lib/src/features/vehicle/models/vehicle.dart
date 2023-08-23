@@ -321,30 +321,63 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         bearing: bearing,
       );
 
-  /// The predicted look ahead position and bearing when continuing the
+  /// The predicted look ahead axle position and bearing when continuing the
   /// vehicle's movement with [steeringAngle] for a time [period] in seconds.
   ({Geographic position, double bearing}) predictedLookAheadPosition(
     double period,
     double steeringAngle,
   ) {
     if (velocity.abs() > 0) {
+      // Turning
       if (steeringAngle.abs() > 0) {
-        return predictedLookAheadPosition(period, steeringAngle);
+        return predictedLookAheadPositionTurning(period, steeringAngle);
       }
+
+      // Straight
       final newPoint = lookAheadStartPosition.spherical
           .destinationPoint(distance: velocity * period, bearing: bearing);
+      final newBearing =
+          lookAheadStartPosition.spherical.finalBearingTo(newPoint);
       return (
         position: newPoint,
-        bearing: position.spherical.finalBearingTo(newPoint)
+        bearing: newBearing.isFinite ? newBearing : bearing
       );
     }
-    return (position: position, bearing: bearing);
+    return (position: lookAheadStartPosition, bearing: bearing);
   }
 
-  /// The predicted look ahead position and bearing when continuing the
+  /// The predicted look ahead axle position and bearing when continuing the
   /// vehicle's movement while turning with [steeringAngle] for a time
   /// [period] in seconds.
   ({Geographic position, double bearing}) predictedLookAheadPositionTurning(
+    double period,
+    double steeringAngle,
+  );
+
+  /// The predicted Stanley axle position and bearing when continuing the
+  /// vehicle's movement with [steeringAngle] for a time [period] in seconds.
+  ({Geographic position, double bearing}) predictedStanleyPosition(
+    double period,
+    double steeringAngle,
+  ) {
+    if (velocity.abs() > 0) {
+      // Turning
+      if (steeringAngle.abs() > 0) {
+        return predictedStanleyPositionTurning(period, steeringAngle);
+      }
+      // Straight
+      final newPoint = stanleyAxlePosition.spherical
+          .destinationPoint(distance: velocity * period, bearing: bearing);
+
+      return (position: newPoint, bearing: bearing);
+    }
+    return (position: stanleyAxlePosition, bearing: bearing);
+  }
+
+  /// The predicted Stanley axle position and bearing when continuing the
+  /// vehicle's movement while turning with [steeringAngle] for a time
+  /// [period] in seconds.
+  ({Geographic position, double bearing}) predictedStanleyPositionTurning(
     double period,
     double steeringAngle,
   );

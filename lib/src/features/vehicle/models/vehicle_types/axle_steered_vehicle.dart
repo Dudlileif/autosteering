@@ -317,6 +317,69 @@ sealed class AxleSteeredVehicle extends Vehicle {
     return (position: solidAxlePosition, bearing: projectedBearing);
   }
 
+  @override
+  ({Geographic position, double bearing}) predictedStanleyPositionTurning(
+    double period,
+    double steeringAngle,
+  ) {
+    final currentTurningRadius = AckermannSteering(
+      steeringAngle: steeringAngle,
+      wheelBase: wheelBase,
+      trackWidth: trackWidth,
+      steeringRatio: ackermannSteeringRatio,
+    ).turningRadius;
+
+    final turningRadiusCenter =
+        this.solidAxlePosition.spherical.destinationPoint(
+              distance: currentTurningRadius,
+              bearing: switch (isTurningLeft) {
+                true => bearing - 90,
+                false => bearing + 90
+              }
+                  .wrap360(),
+            );
+
+    final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
+
+    // How many degrees of the turning circle the current angular
+    // velocity during the period amounts to. Relative to the current
+    // position, is negative when reversing.
+    final turningCircleAngle = angularVelocity * period;
+
+    // The angle from the turning circle center to the projected
+    // position.
+    final angle = switch (isTurningLeft) {
+      // Turning left
+      true => bearing + 90 - turningCircleAngle,
+      // Turning right
+      false => bearing - 90 + turningCircleAngle,
+    };
+
+    // Projected solid axle position from the turning radius
+    // center.
+    final solidAxlePosition = turningRadiusCenter.spherical.destinationPoint(
+      distance: currentTurningRadius,
+      bearing: angle.wrap360(),
+    );
+
+    // The bearing of the vehicle at the projected position.
+    final projectedBearing = switch (isTurningLeft) {
+      true => bearing - turningCircleAngle,
+      false => bearing + turningCircleAngle,
+    }
+        .wrap360();
+
+    final stanleyAxlePosition = solidAxlePosition.spherical.destinationPoint(
+      distance: wheelBase,
+      bearing: switch (isReversing) {
+        false => projectedBearing,
+        true => projectedBearing + 180
+      },
+    );
+
+    return (position: stanleyAxlePosition, bearing: projectedBearing);
+  }
+
   /// The bounds of the left steering wheel, or the right steering wheel if
   /// [left] is set to false.
   List<Geographic> wheelPoints({bool left = true, bool steering = true}) {
