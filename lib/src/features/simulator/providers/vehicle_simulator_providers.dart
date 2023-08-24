@@ -12,6 +12,7 @@ import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:async/async.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -159,7 +160,7 @@ Stream<Vehicle?> simVehicleWebStream(
 }
 
 /// A provider that creates a stream and watches the vehicle simulator on the
-/// native platform.
+/// native platforms.
 ///
 /// It will update the stream with vehicle updates from the simulator and also
 /// update the vehicle gauge providers.
@@ -177,7 +178,9 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
   final events = StreamQueue<dynamic>(recievePort);
 
   final sendPort = await events.next as SendPort;
+
   ref.read(_simVehicleIsolatePortProvider.notifier).update(sendPort);
+
   sendPort
     ..send(ref.read(hardwareCommunicationConfigProvider))
     ..send(ref.read(mainVehicleProvider))
@@ -193,8 +196,32 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
     ref.read(_simVehicleIsolatePortProvider.notifier).update(null);
   });
 
+  // Give the simulator isolate 1 second to start.
+  var lastMessageTime = DateTime.now().add(const Duration(seconds: 1));
+
+  // How long we will wait for a message until we restart the simulator, in
+  // seconds.
+  // An increased time is used for debug mode to allow for hot reloading
+  // without destroying the sim state.
+  final heartbeatThreshold = switch (kDebugMode) {
+    false => 0.5,
+    true => 5,
+  };
+
   while (true) {
+    final latestUpdate = DateTime.now();
+
+    // Restart simulator if we've not received a message within the
+    // heartbeatThreshold
+    final difference = latestUpdate.difference(lastMessageTime);
+    if (difference.inMicroseconds > 1e6 * heartbeatThreshold) {
+      log('Simulator isolate unresponsive/died... Restarting...');
+      ref.invalidateSelf();
+    }
+    lastMessageTime = latestUpdate;
+
     final message = await events.next;
+
     if (message is ({
       Vehicle vehicle,
       double velocity,
