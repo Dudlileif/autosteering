@@ -31,7 +31,9 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
     final wayPoints = ref.watch(finishedPathRecordingListProvider);
     if (wayPoints != null) {
       return switch (ref.watch(activePathTrackingModeProvider)) {
-        PathTrackingMode.pid || PathTrackingMode.purePursuit => PurePursuit(
+        PathTrackingMode.pid ||
+        PathTrackingMode.purePursuit =>
+          PurePursuitPathTracking(
             wayPoints: wayPoints,
             interpolationDistance: ref.watch(pathInterpolationDistanceProvider),
             loopMode: ref.watch(pathTrackingLoopProvider),

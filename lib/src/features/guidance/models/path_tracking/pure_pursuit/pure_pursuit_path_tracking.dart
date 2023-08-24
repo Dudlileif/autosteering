@@ -6,7 +6,7 @@ part of '../path_tracking.dart';
 /// attempts to chase it. This continually happens until the end of the path is
 /// reached, where it can loop back to the starting point in a couple different
 /// ways or stop tracking.
-final class PurePursuit extends PathTracking {
+final class PurePursuitPathTracking extends PathTracking {
   /// A class for path tracking that utilizes the pure pursuit algorithm.
   ///
   /// The pure pursuit algorithm finds a point a certain distance ahead of it
@@ -22,7 +22,7 @@ final class PurePursuit extends PathTracking {
   ///
   /// The [loopMode] dictates what the vehicle should do when it
   /// finishes the path.
-  PurePursuit({
+  PurePursuitPathTracking({
     required super.wayPoints,
     super.interpolationDistance,
     super.loopMode,
@@ -89,20 +89,6 @@ final class PurePursuit extends PathTracking {
     if (progress > currentWayPoint.position.spherical.distanceTo(nextPoint)) {
       currentIndex = nextIndex(vehicle);
     }
-  }
-
-  /// Calculates the steering angle needed to reach the target point when
-  /// using a PID controller.
-  double nextSteeringAnglePid(Vehicle vehicle) {
-    final steeringAngle = pidController.nextValue(
-      perpendicularDistance(vehicle),
-      vehicle.pidParameters,
-    );
-
-    return steeringAngle.clamp(
-      -vehicle.steeringAngleMax,
-      vehicle.steeringAngleMax,
-    );
   }
 
   /// Finds the points that we use to get the secant line that intersects
@@ -270,13 +256,12 @@ final class PurePursuit extends PathTracking {
   /// using a the look ahead method.
   ///
   /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
-  double nextSteeringAngleLookAhead(
-    Vehicle vehicle,
-    double lookAheadDistance,
-  ) {
+  double _nextSteeringAngleLookAhead(Vehicle vehicle) {
     final bearingToPoint =
         vehicle.lookAheadStartPosition.spherical.initialBearingTo(
-      findLookAheadCirclePoints(vehicle, lookAheadDistance).best.position,
+      findLookAheadCirclePoints(vehicle, vehicle.lookAheadDistance)
+          .best
+          .position,
     );
 
     final angle = signedBearingDifference(
@@ -285,7 +270,10 @@ final class PurePursuit extends PathTracking {
     );
 
     final steeringAngle = atan(
-      2 * vehicle.wheelBase * sin(angle.toRadians()) / lookAheadDistance,
+      2 *
+          vehicle.wheelBase *
+          sin(angle.toRadians()) /
+          vehicle.lookAheadDistance,
     ).toDegrees();
 
     return steeringAngle.clamp(
@@ -293,4 +281,28 @@ final class PurePursuit extends PathTracking {
       vehicle.steeringAngleMax,
     );
   }
+
+  /// Calculates the steering angle needed to reach the target point when
+  /// using a PID controller.
+  double _nextSteeringAnglePid(Vehicle vehicle) {
+    final steeringAngle = pidController.nextValue(
+      perpendicularDistance(vehicle),
+      vehicle.pidParameters,
+    );
+
+    return steeringAngle.clamp(
+      -vehicle.steeringAngleMax,
+      vehicle.steeringAngleMax,
+    );
+  }
+
+  ///
+  @override
+  double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) =>
+      switch (mode) {
+        PathTrackingMode.pid => _nextSteeringAnglePid(vehicle),
+        PathTrackingMode.purePursuit ||
+        _ =>
+          _nextSteeringAngleLookAhead(vehicle)
+      };
 }

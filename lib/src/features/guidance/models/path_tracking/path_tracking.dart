@@ -6,7 +6,8 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geobase/geobase.dart';
 
-part 'pure_pursuit/pure_pursuit.dart';
+part 'pure_pursuit/pure_pursuit_parameters.dart';
+part 'pure_pursuit/pure_pursuit_path_tracking.dart';
 part 'stanley_path_tracking/stanley_parameters.dart';
 part 'stanley_path_tracking/stanley_path_tracking.dart';
 
@@ -192,4 +193,12 @@ sealed class PathTracking {
 
   /// Try to advance to the next waypoint in the list.
   void tryChangeWayPoint(Vehicle vehicle);
+
+  /// The next steering angle for the vehicle following the [path].
+  ///
+  /// The [mode] can be specified to use different steering modes for
+  /// the path tracking systems that support it, be aware that not all
+  /// [PathTrackingMode]s are supported by all path tracking systems. They will
+  /// then default to the most usual supported one.
+  double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode});
 }

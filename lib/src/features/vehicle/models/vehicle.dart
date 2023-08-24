@@ -41,6 +41,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     super.name,
     super.uuid,
     PidParameters? pidParameters,
+    PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     DateTime? lastUsed,
     Geographic position = const Geographic(lon: 0, lat: 0),
@@ -51,6 +52,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         antennaPosition = position,
         pidParameters = pidParameters ?? const PidParameters(),
         stanleyParameters = stanleyParameters ?? const StanleyParameters(),
+        purePursuitParameters =
+            purePursuitParameters ?? const PurePursuitParameters(),
         lastUsed = lastUsed ?? DateTime.now();
 
   /// Creates the appropriate [Vehicle] subclass from the [json] object.
@@ -101,7 +104,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// when using a PID controller mode.
   PidParameters pidParameters;
 
-  /// The Stanley coefficients for controlling the steering of this vehicle
+  /// Parameters for the [lookAheadDistance] when using a pure pursuit/look
+  /// ahead steering mode.
+  PurePursuitParameters purePursuitParameters;
+
+  /// The Stanley gain coefficients for controlling the steering of this vehicle
   /// when using a Stanley path tracking steering mode.
   StanleyParameters stanleyParameters;
 
@@ -216,6 +223,13 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Where the look ahead distance calculation should start.
   Geographic get lookAheadStartPosition;
+
+  /// The effective look ahead distance for the vehicle.
+  ///
+  /// The distance is altered according to [purePursuitParameters].
+  double get lookAheadDistance =>
+      purePursuitParameters.lookAheadDistance +
+      velocity.abs() * purePursuitParameters.lookAheadVelocityGain;
 
   /// A [WayPoint] for the vehicle in it's current state, i.e. position, bearing
   /// and velocity.
@@ -411,6 +425,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? trackWidth,
     bool? invertSteeringInput,
     PidParameters? pidParameters,
+    PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     double? velocity,
     double? bearing,
@@ -445,6 +460,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     };
 
     map['pid_parameters'] = pidParameters;
+
+    map['pure_pursuit_parameters'] = purePursuitParameters;
 
     map['stanley_parameters'] = stanleyParameters;
 

@@ -6,6 +6,24 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geobase/geobase.dart';
 
+/// An enumerator for selecting what should happen when we approach
+/// point A or B.
+enum ABLineLimitMode {
+  /// The line will continue forever in both directions. No turns will be
+  /// placed at the A or B points of the line.
+  unlimited,
+
+  /// A turn will be placed at the A and B of the line so that the outermost
+  /// part of the turn will be tangential to the line through the A points
+  /// or the B points.
+  limitedTurnWithin,
+
+  /// A turn will be placed at the A and B points of the line so that the whole
+  /// line will be straight and then a turn will be placed after the A or B
+  /// points.
+  limitedTurnOutside,
+}
+
 /// A class for creating and tracking straight lines by using the bearing
 /// from point A to point B and their positions to create parallel lines.
 ///
@@ -20,6 +38,9 @@ class ABLine with EquatableMixin {
     required this.start,
     required this.end,
     required this.width,
+    this.pathTrackingMode = PathTrackingMode.purePursuit,
+    this.turnOffsetIncrease = 1,
+    this.limitMode = ABLineLimitMode.limitedTurnOutside,
     this.snapToClosestLine = false,
   })  : initialBearing = start.spherical.initialBearingTo(end),
         finalBearing = start.spherical.finalBearingTo(end);
@@ -38,6 +59,15 @@ class ABLine with EquatableMixin {
 
   /// How wide an AB-line should be, as in when to skip to the next line over.
   double width;
+
+  /// Which steering mode the path tracking should use.
+  PathTrackingMode pathTrackingMode;
+
+  /// The mode for what should happen at the end of the line.
+  ABLineLimitMode limitMode;
+
+  /// How many offsets we should add when performing a turn to the next line.
+  double turnOffsetIncrease;
 
   /// The PID controller for controlling the steering angle when
   /// using [PathTrackingMode.pid].
@@ -479,16 +509,13 @@ class ABLine with EquatableMixin {
   }
 
   /// Finds the next steering angle to reach the [currentOffset]'s line
-  /// for the for the [vehicle] with the specified [lookAheadDistance].
+  /// for the for the [vehicle] with it's look ahead distance.
   ///
   /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
-  double nextSteeringAngleLookAhead({
-    required Vehicle vehicle,
-    required double lookAheadDistance,
-  }) {
+  double _nextSteeringAngleLookAhead(Vehicle vehicle) {
     final bearingToPoint =
         vehicle.lookAheadStartPosition.spherical.initialBearingTo(
-      findLookAheadCirclePoints(vehicle, lookAheadDistance).best,
+      findLookAheadCirclePoints(vehicle, vehicle.lookAheadDistance).best,
     );
 
     final angle = signedBearingDifference(
@@ -497,7 +524,10 @@ class ABLine with EquatableMixin {
     );
 
     final steeringAngle = atan(
-      2 * vehicle.wheelBase * sin(angle.toRadians()) / lookAheadDistance,
+      2 *
+          vehicle.wheelBase *
+          sin(angle.toRadians()) /
+          vehicle.lookAheadDistance,
     ).toDegrees();
 
     return steeringAngle.clamp(
@@ -507,7 +537,7 @@ class ABLine with EquatableMixin {
   }
 
   /// The next steering angle for the [vehicle] using Stanley path tracking.
-  double nextSteeringAngleStanley({required Vehicle vehicle}) {
+  double _nextSteeringAngleStanley(Vehicle vehicle) {
     final parameters = vehicle.stanleyParameters;
 
     final headingError = signedBearingDifference(
@@ -529,13 +559,13 @@ class ABLine with EquatableMixin {
 
     final steeringAngle = sign * headingError +
         atan(
-          parameters.crossDistanceCoefficient *
+          parameters.crossDistanceGain *
               -signedPerpendicularDistanceToCurrentLine(
                 point: vehicle.stanleyAxlePosition,
                 heading: vehicle.bearing,
               ) /
-              (parameters.softeningCoefficient +
-                  parameters.velocityCoefficient * vehicle.velocity.abs()),
+              (parameters.softeningGain +
+                  parameters.velocityGain * vehicle.velocity.abs()),
         ).toDegrees();
 
     return steeringAngle.clamp(
@@ -546,7 +576,7 @@ class ABLine with EquatableMixin {
 
   /// Calculates the steering angle needed to reach the target point when
   /// using a PID controller.
-  double nextSteeringAnglePid(Vehicle vehicle) {
+  double _nextSteeringAnglePid(Vehicle vehicle) {
     final steeringAngle = pidController.nextValue(
       signedPerpendicularDistanceToCurrentLine(
         point: vehicle.pursuitAxlePosition,
@@ -560,4 +590,15 @@ class ABLine with EquatableMixin {
       vehicle.steeringAngleMax,
     );
   }
+
+  /// The next steering angle for chasing the line.
+  ///
+  /// The steering mode used is according to the [mode] if set, otherwise
+  /// the default [pathTrackingMode] will be used.
+  double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) =>
+      switch (mode ?? pathTrackingMode) {
+        PathTrackingMode.pid => _nextSteeringAnglePid(vehicle),
+        PathTrackingMode.purePursuit => _nextSteeringAngleLookAhead(vehicle),
+        PathTrackingMode.stanley => _nextSteeringAngleStanley(vehicle),
+      };
 }

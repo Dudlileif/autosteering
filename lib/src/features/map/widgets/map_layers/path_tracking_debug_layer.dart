@@ -29,7 +29,7 @@ class PathTrackingDebugLayer extends ConsumerWidget {
                         .map((point) => point.position.latLng)
                         .toList(),
                   ),
-                  if (tracking is PurePursuit)
+                  if (tracking is PurePursuitPathTracking)
                     Polyline(
                       points: [
                         vehicle.pursuitAxlePosition.latLng,
@@ -45,7 +45,7 @@ class PathTrackingDebugLayer extends ConsumerWidget {
                       ],
                       color: Colors.white,
                     ),
-                  if (tracking is PurePursuit) ...[
+                  if (tracking is PurePursuitPathTracking) ...[
                     Polyline(
                       color: Colors.black,
                       points: [
@@ -189,7 +189,7 @@ class PathTrackingDebugLayer extends ConsumerWidget {
                       radius: 3,
                       color: Colors.white,
                     ),
-                  ] else if (tracking is PurePursuit) ...[
+                  ] else if (tracking is PurePursuitPathTracking) ...[
                     CircleMarker(
                       point: vehicle.lookAheadStartPosition.latLng,
                       radius: lookAheadDistance,

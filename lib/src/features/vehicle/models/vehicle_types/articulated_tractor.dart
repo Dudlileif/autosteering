@@ -27,6 +27,7 @@ final class ArticulatedTractor extends Vehicle {
     super.antennaLateralOffset,
     super.invertSteeringInput,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
+    super.purePursuitParameters,
     super.stanleyParameters,
     super.position,
     super.velocity,
@@ -62,6 +63,12 @@ final class ArticulatedTractor extends Vehicle {
           )
         : null;
 
+    final purePursuitParameters = json.containsKey('pure_pursuit_parameters')
+        ? PurePursuitParameters.fromJson(
+            Map<String, dynamic>.from(json['pure_pursuit_parameters'] as Map),
+          )
+        : null;
+
     final stanleyParameters = json.containsKey('stanley_parameters')
         ? StanleyParameters.fromJson(
             Map<String, dynamic>.from(json['stanley_parameters'] as Map),
@@ -90,6 +97,7 @@ final class ArticulatedTractor extends Vehicle {
       wheelWidth: wheels['wheel_width'] as double,
       wheelSpacing: wheels['wheel_spacing'] as double,
       pidParameters: pidParameters,
+      purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
       frontAxleToHitchDistance:
           hitches['front_axle_to_front_hitch_distance'] as double?,
@@ -792,6 +800,7 @@ final class ArticulatedTractor extends Vehicle {
     bool? invertSteeringInput,
     PidParameters? pidParameters,
     StanleyParameters? stanleyParameters,
+    PurePursuitParameters? purePursuitParameters,
     double? velocity,
     double? bearing,
     double? steeringAngleInput,
@@ -828,6 +837,8 @@ final class ArticulatedTractor extends Vehicle {
             rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         pidParameters: pidParameters ?? this.pidParameters,
+        purePursuitParameters:
+            purePursuitParameters ?? this.purePursuitParameters,
         stanleyParameters: stanleyParameters ?? this.stanleyParameters,
         velocity: velocity ?? this.velocity,
         bearing: bearing ?? this.bearing,

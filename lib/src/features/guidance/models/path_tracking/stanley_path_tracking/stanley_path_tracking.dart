@@ -83,7 +83,10 @@ final class StanleyPathTracking extends PathTracking {
   }
 
   /// The next steering angle for the [vehicle] for following the [path].
-  double nextSteeringAngle({required Vehicle vehicle}) {
+  ///
+  /// [mode] does nothing for this tracking type.
+  @override
+  double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) {
     final parameters = vehicle.stanleyParameters;
 
     final headingError = signedBearingDifference(
@@ -98,10 +101,10 @@ final class StanleyPathTracking extends PathTracking {
 
     final steeringAngle = sign * headingError +
         atan(
-          parameters.crossDistanceCoefficient *
+          parameters.crossDistanceGain *
               -perpendicularDistance(vehicle) /
-              (parameters.softeningCoefficient +
-                  parameters.velocityCoefficient * vehicle.velocity.abs()),
+              (parameters.softeningGain +
+                  parameters.velocityGain * vehicle.velocity.abs()),
         ).toDegrees();
 
     return steeringAngle.clamp(

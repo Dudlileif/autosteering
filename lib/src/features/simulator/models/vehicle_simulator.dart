@@ -27,6 +27,11 @@ class VehicleSimulator {
 
     log('Sim vehicle isolate spawn confirmation');
 
+    // Heartbeat signal to show that the simulator isolate is alive.
+    Timer.periodic(const Duration(milliseconds: 250), (timer) {
+      sendPort.send('Heartbeat');
+    });
+
     // The state of the simulation.
     final state = _VehicleSimulatorState();
 
@@ -329,14 +334,6 @@ class _VehicleSimulatorState {
   /// The interpolation distance for points in the [pathTracking]
   double pathInterpolationDistance = 4;
 
-  /// The distance ahead of the vehicle the [pathTracking] should look for the
-  /// path when in look ahead mode.
-  double lookAheadDistance = 4;
-
-  /// A multiplicator for how much of the [vehicle]'s velocity we want to
-  /// add to the [lookAheadDistance].
-  double lookAheadVelocityGain = 0.5;
-
   /// Whether the bearing from the IMU input should be used.
   bool useIMUBearing = false;
 
@@ -360,14 +357,6 @@ class _VehicleSimulatorState {
   /// Whether we should force update for the next update, i.e. send the state.
   bool forceChange = false;
 
-  double get effectiveLookAheadDistance {
-    if (vehicle != null) {
-      return lookAheadDistance +
-          vehicle!.velocity.abs() * lookAheadVelocityGain;
-    }
-    return lookAheadDistance;
-  }
-
   /// Update the [prevUpdateTime] and the [period] for the next simulation.
   void updateTime() {
     final now = DateTime.now();
@@ -379,8 +368,8 @@ class _VehicleSimulatorState {
   ///
   /// This can be [Vehicle], [PathTrackingMode] or records for the vehicle's
   /// position, velocity(Delta), steeringAngle(Delta), [pathTracking],
-  /// [autoSlowDown], [autoCenterSteering], [enablePathTracking],
-  /// [lookAheadDistance] or [pathTrackingLoopMode].
+  /// [autoSlowDown], [autoCenterSteering], [enablePathTracking] or
+  /// [pathTrackingLoopMode].
   void handleMessage(dynamic message) {
     // Force update to reflect changes in case we haven't moved.
     forceChange = true;
@@ -488,10 +477,13 @@ class _VehicleSimulatorState {
     else if (message is PathTrackingMode) {
       pathTrackingMode = message;
       tempPathTrackingMode = pathTrackingMode;
+      abLine?.pathTrackingMode = pathTrackingMode;
       if (pathTracking != null) {
         final index = pathTracking!.currentIndex;
         pathTracking = switch (pathTrackingMode) {
-          PathTrackingMode.pid || PathTrackingMode.purePursuit => PurePursuit(
+          PathTrackingMode.pid ||
+          PathTrackingMode.purePursuit =>
+            PurePursuitPathTracking(
               wayPoints: pathTracking!.wayPoints,
               interpolationDistance: pathInterpolationDistance,
               loopMode: pathTrackingLoopMode,
@@ -518,11 +510,17 @@ class _VehicleSimulatorState {
     }
     // Set new look ahead distance.
     else if (message is ({num lookAheadDistance})) {
-      lookAheadDistance = message.lookAheadDistance.toDouble();
+      if (vehicle != null) {
+        vehicle!.purePursuitParameters = vehicle!.purePursuitParameters
+            .copyWith(lookAheadDistance: message.lookAheadDistance.toDouble());
+      }
     }
     // Set the look ahead distance velocity gain.
     else if (message is ({double lookAheadVelocityGain})) {
-      lookAheadVelocityGain = message.lookAheadVelocityGain;
+      if (vehicle != null) {
+        vehicle!.purePursuitParameters = vehicle!.purePursuitParameters
+            .copyWith(lookAheadVelocityGain: message.lookAheadVelocityGain);
+      }
     }
     // Change the pure pursuit loop mode, i.e. if/how to go from the last to
     // the first point.
@@ -705,16 +703,8 @@ class _VehicleSimulatorState {
               .abs(),
         );
 
-        steeringAngle = switch (tempPathTrackingMode) {
-          PathTrackingMode.pid => abLine!.nextSteeringAnglePid(vehicle!),
-          PathTrackingMode.purePursuit => abLine!.nextSteeringAngleLookAhead(
-              vehicle: vehicle!,
-              lookAheadDistance: effectiveLookAheadDistance,
-            ),
-          PathTrackingMode.stanley => abLine!.nextSteeringAngleStanley(
-              vehicle: vehicle!,
-            ),
-        };
+        steeringAngle =
+            abLine!.nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
       } else if (pathTracking != null) {
         pathTracking!.tryChangeWayPoint(vehicle!);
 
@@ -722,23 +712,8 @@ class _VehicleSimulatorState {
           checkIfPidModeIsValid(
             pathTracking!.perpendicularDistance(vehicle!).abs(),
           );
-          steeringAngle = switch (pathTracking) {
-            PurePursuit() => switch (tempPathTrackingMode) {
-                PathTrackingMode.pid =>
-                  (pathTracking! as PurePursuit).nextSteeringAnglePid(vehicle!),
-                PathTrackingMode.purePursuit =>
-                  (pathTracking! as PurePursuit).nextSteeringAngleLookAhead(
-                    vehicle!,
-                    effectiveLookAheadDistance,
-                  ),
-                PathTrackingMode.stanley =>
-                  (pathTracking! as StanleyPathTracking)
-                      .nextSteeringAngle(vehicle: vehicle!),
-              },
-            StanleyPathTracking() => (pathTracking! as StanleyPathTracking)
-                .nextSteeringAngle(vehicle: vehicle!),
-            null => steeringAngle,
-          };
+          steeringAngle = pathTracking!
+              .nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
         }
       }
 

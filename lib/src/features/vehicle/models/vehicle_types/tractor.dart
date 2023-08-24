@@ -22,6 +22,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.invertSteeringInput,
     super.position,
     super.pidParameters = const PidParameters(p: 30, i: 0, d: 2),
+    super.purePursuitParameters,
     super.stanleyParameters,
     super.velocity,
     super.bearing,
@@ -56,6 +57,11 @@ final class Tractor extends AxleSteeredVehicle {
           )
         : null;
 
+    final purePursuitParameters = json.containsKey('pure_pursuit_parameters')
+        ? PurePursuitParameters.fromJson(
+            Map<String, dynamic>.from(json['pure_pursuit_parameters'] as Map),
+          )
+        : null;
     final stanleyParameters = json.containsKey('stanley_parameters')
         ? StanleyParameters.fromJson(
             Map<String, dynamic>.from(json['stanley_parameters'] as Map),
@@ -85,6 +91,7 @@ final class Tractor extends AxleSteeredVehicle {
       steeringAxleWheelWidth: wheels['steering_axle_wheel_width'] as double,
       solidAxleWheelWidth: wheels['solid_axle_wheel_width'] as double,
       pidParameters: pidParameters,
+      purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
       solidAxleToFrontHitchDistance:
           hitches['solid_axle_to_front_hitch_distance'] as double?,
@@ -151,6 +158,7 @@ final class Tractor extends AxleSteeredVehicle {
     double? solidAxleWheelWidth,
     bool? invertSteeringInput,
     PidParameters? pidParameters,
+    PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     double? velocity,
     double? bearing,
@@ -191,6 +199,8 @@ final class Tractor extends AxleSteeredVehicle {
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         pidParameters: pidParameters ?? this.pidParameters,
+        purePursuitParameters:
+            purePursuitParameters ?? this.purePursuitParameters,
         stanleyParameters: stanleyParameters ?? this.stanleyParameters,
         velocity: velocity ?? this.velocity,
         bearing: bearing ?? this.bearing,
