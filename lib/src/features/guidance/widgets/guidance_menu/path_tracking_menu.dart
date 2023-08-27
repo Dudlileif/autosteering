@@ -1,6 +1,8 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -88,12 +90,15 @@ class PathTrackingMenu extends StatelessWidget {
           ),
           trailing: Consumer(
             builder: (context, ref, child) {
-              final pursuitMode = ref.watch(activePathTrackingModeProvider);
+              final pursuitMode = ref.watch(
+                mainVehicleProvider
+                    .select((vehicle) => vehicle.pathTrackingMode),
+              );
 
               return ToggleButtons(
                 onPressed: (index) => ref
-                    .read(activePathTrackingModeProvider.notifier)
-                    .update(PathTrackingMode.values[index]),
+                    .read(simInputProvider.notifier)
+                    .send(PathTrackingMode.values[index]),
                 isSelected: PathTrackingMode.values
                     .map((mode) => mode == pursuitMode)
                     .toList(),

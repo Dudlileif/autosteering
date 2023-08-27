@@ -30,7 +30,9 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
   PathTracking? build() {
     final wayPoints = ref.watch(finishedPathRecordingListProvider);
     if (wayPoints != null) {
-      return switch (ref.watch(activePathTrackingModeProvider)) {
+      return switch (ref.watch(
+        mainVehicleProvider.select((vehicle) => vehicle.pathTrackingMode),
+      )) {
         PathTrackingMode.pid ||
         PathTrackingMode.purePursuit =>
           PurePursuitPathTracking(
@@ -73,22 +75,6 @@ class EnablePathTracking extends _$EnablePathTracking {
 
   /// Invert the current state.
   void toggle() => Future(() => state != state);
-}
-
-/// A provider for which steering mode the [ConfiguredPathTracking] model should
-/// use.
-@Riverpod(keepAlive: true)
-class ActivePathTrackingMode extends _$ActivePathTrackingMode {
-  @override
-  PathTrackingMode build() {
-    ref.listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send(state);
-    });
-    return PathTrackingMode.purePursuit;
-  }
-
-  /// Update the [state] to [value].
-  void update(PathTrackingMode value) => Future(() => state = value);
 }
 
 /// A provider for which looping mode the [ConfiguredPathTracking] should

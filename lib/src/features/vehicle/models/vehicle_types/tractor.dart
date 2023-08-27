@@ -21,6 +21,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.solidAxleWheelWidth,
     super.invertSteeringInput,
     super.position,
+    super.pathTrackingMode,
     super.pidParameters = const PidParameters(p: 30, i: 0, d: 2),
     super.purePursuitParameters,
     super.stanleyParameters,
@@ -90,6 +91,9 @@ final class Tractor extends AxleSteeredVehicle {
       solidAxleWheelDiameter: wheels['solid_axle_wheel_diameter'] as double,
       steeringAxleWheelWidth: wheels['steering_axle_wheel_width'] as double,
       solidAxleWheelWidth: wheels['solid_axle_wheel_width'] as double,
+      pathTrackingMode: PathTrackingMode.values.firstWhere(
+        (element) => element.name == steering['path_tracking_mode'] as String,
+      ),
       pidParameters: pidParameters,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
@@ -157,6 +161,7 @@ final class Tractor extends AxleSteeredVehicle {
     double? steeringAxleWheelWidth,
     double? solidAxleWheelWidth,
     bool? invertSteeringInput,
+    PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
@@ -198,6 +203,7 @@ final class Tractor extends AxleSteeredVehicle {
             steeringAxleWheelWidth ?? this.steeringAxleWheelWidth,
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
+        pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:
             purePursuitParameters ?? this.purePursuitParameters,

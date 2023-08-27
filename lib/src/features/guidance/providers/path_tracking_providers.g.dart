@@ -46,7 +46,7 @@ final pathInterpolationDistanceProvider =
 
 typedef _$PathInterpolationDistance = Notifier<double>;
 String _$configuredPathTrackingHash() =>
-    r'0bc01bb38e842e2916ded3b2d00c836913973bc8';
+    r'638ded14b11a180b7a14826876258032e10297a9';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.
@@ -85,26 +85,6 @@ final enablePathTrackingProvider =
 );
 
 typedef _$EnablePathTracking = Notifier<bool>;
-String _$activePathTrackingModeHash() =>
-    r'afb3dc99dcc60bd8d4a073dcc707c59146b0b5ba';
-
-/// A provider for which steering mode the [ConfiguredPathTracking] model should
-/// use.
-///
-/// Copied from [ActivePathTrackingMode].
-@ProviderFor(ActivePathTrackingMode)
-final activePathTrackingModeProvider =
-    NotifierProvider<ActivePathTrackingMode, PathTrackingMode>.internal(
-  ActivePathTrackingMode.new,
-  name: r'activePathTrackingModeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activePathTrackingModeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ActivePathTrackingMode = Notifier<PathTrackingMode>;
 String _$pathTrackingLoopHash() => r'efd0e7b54cdcbf6422837e294c0ae85d57b6d62b';
 
 /// A provider for which looping mode the [ConfiguredPathTracking] should

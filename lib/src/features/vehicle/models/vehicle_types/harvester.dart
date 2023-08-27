@@ -21,6 +21,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.steeringAxleWheelWidth,
     super.solidAxleWheelWidth,
     super.invertSteeringInput,
+    super.pathTrackingMode,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 2),
     super.purePursuitParameters,
     super.stanleyParameters,
@@ -91,6 +92,9 @@ final class Harvester extends AxleSteeredVehicle {
       solidAxleWheelDiameter: wheels['solid_axle_wheel_diameter'] as double,
       steeringAxleWheelWidth: wheels['steering_axle_wheel_width'] as double,
       solidAxleWheelWidth: wheels['solid_axle_wheel_width'] as double,
+      pathTrackingMode: PathTrackingMode.values.firstWhere(
+        (element) => element.name == steering['path_tracking_mode'] as String,
+      ),
       pidParameters: pidParameters,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
@@ -160,6 +164,7 @@ final class Harvester extends AxleSteeredVehicle {
     double? steeringAxleWheelWidth,
     double? solidAxleWheelWidth,
     bool? invertSteeringInput,
+    PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
@@ -201,6 +206,7 @@ final class Harvester extends AxleSteeredVehicle {
             steeringAxleWheelWidth ?? this.steeringAxleWheelWidth,
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
+        pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:
             purePursuitParameters ?? this.purePursuitParameters,

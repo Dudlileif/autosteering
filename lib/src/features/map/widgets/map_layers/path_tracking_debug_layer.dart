@@ -14,9 +14,9 @@ class PathTrackingDebugLayer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tracking = ref.watch(displayPathTrackingProvider);
-    final trackingMode = ref.watch(activePathTrackingModeProvider);
-    final lookAheadDistance = ref.watch(effectiveLookAheadDistanceProvider);
     final vehicle = ref.watch(mainVehicleProvider);
+    final trackingMode = vehicle.pathTrackingMode;
+    final lookAheadDistance = vehicle.lookAheadDistance;
 
     return Stack(
       children: tracking != null
@@ -32,7 +32,7 @@ class PathTrackingDebugLayer extends ConsumerWidget {
                   if (tracking is PurePursuitPathTracking)
                     Polyline(
                       points: [
-                        vehicle.pursuitAxlePosition.latLng,
+                        vehicle.lookAheadStartPosition.latLng,
                         tracking.perpendicularIntersect(vehicle).latLng,
                       ],
                       color: Colors.white,
@@ -180,7 +180,7 @@ class PathTrackingDebugLayer extends ConsumerWidget {
                   ),
                   if (trackingMode == PathTrackingMode.pid) ...[
                     CircleMarker(
-                      point: tracking.currentWayPoint.position.latLng,
+                      point: tracking.currentWayPoint(vehicle).position.latLng,
                       radius: 3,
                       color: Colors.black,
                     ),

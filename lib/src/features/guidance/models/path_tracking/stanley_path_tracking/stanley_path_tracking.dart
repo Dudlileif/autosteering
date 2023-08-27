@@ -33,15 +33,16 @@ final class StanleyPathTracking extends PathTracking {
   Geographic perpendicularIntersect(Vehicle vehicle) {
     final nextPoint = nextWayPoint(vehicle).position;
 
-    final distanceAlong = vehicle.stanleyAxlePosition.spherical
-        .alongTrackDistanceTo(start: currentWayPoint.position, end: nextPoint);
+    final currentPoint = currentWayPoint(vehicle);
 
-    final bearing =
-        currentWayPoint.position.spherical.initialBearingTo(nextPoint);
+    final distanceAlong = vehicle.stanleyAxlePosition.spherical
+        .alongTrackDistanceTo(start: currentPoint.position, end: nextPoint);
+
+    final bearing = currentPoint.position.spherical.initialBearingTo(nextPoint);
 
     assert(!bearing.isNaN, 'Bearing error');
 
-    return currentWayPoint.position.spherical
+    return currentPoint.position.spherical
         .destinationPoint(distance: distanceAlong, bearing: bearing);
   }
 
@@ -54,7 +55,7 @@ final class StanleyPathTracking extends PathTracking {
 
     return sign *
         vehicle.stanleyAxlePosition.spherical.crossTrackDistanceTo(
-          start: currentWayPoint.position,
+          start: currentWayPoint(vehicle).position,
           end: nextWayPoint(vehicle).position,
         );
   }
@@ -73,12 +74,14 @@ final class StanleyPathTracking extends PathTracking {
   void tryChangeWayPoint(Vehicle vehicle) {
     final nextPoint = nextWayPoint(vehicle).position;
 
+    final currentPoint = currentWayPoint(vehicle);
+
     final progress = vehicle.stanleyAxlePosition.spherical.alongTrackDistanceTo(
-      start: currentWayPoint.position,
+      start: currentPoint.position,
       end: nextPoint,
     );
-    if (progress > currentWayPoint.position.spherical.distanceTo(nextPoint)) {
-      currentIndex = nextIndex(vehicle);
+    if (progress > currentPoint.position.spherical.distanceTo(nextPoint)) {
+      cumulativeIndex = nextIndex(vehicle);
     }
   }
 
@@ -87,11 +90,13 @@ final class StanleyPathTracking extends PathTracking {
   /// [mode] does nothing for this tracking type.
   @override
   double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) {
+    tryChangeWayPoint(vehicle);
+
     final parameters = vehicle.stanleyParameters;
 
     final headingError = signedBearingDifference(
       vehicle.bearing,
-      currentWayPoint.bearing,
+      currentWayPoint(vehicle).bearing,
     );
 
     final sign = switch (vehicle.isReversing) {

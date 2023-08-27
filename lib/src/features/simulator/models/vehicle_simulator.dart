@@ -382,6 +382,7 @@ class _VehicleSimulatorState {
         steeringAngleInput: vehicle?.steeringAngleInput
             .clamp(-message.steeringAngleMax, message.steeringAngleMax),
       );
+      pathTrackingMode = message.pathTrackingMode;
     }
     // Update whether the vehicle position should take the roll and pitch into
     // account when an IMU is connected.
@@ -461,7 +462,7 @@ class _VehicleSimulatorState {
     else if (message is ({bool enablePathTracking})) {
       enablePathTracking = message.enablePathTracking;
       if (vehicle != null && pathTracking != null) {
-        pathTracking?.currentIndex = pathTracking!.closestIndex(vehicle!);
+        pathTracking?.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
       }
     }
     // Update pid parameters.
@@ -477,7 +478,7 @@ class _VehicleSimulatorState {
     else if (message is PathTrackingMode) {
       pathTrackingMode = message;
       tempPathTrackingMode = pathTrackingMode;
-      abLine?.pathTrackingMode = pathTrackingMode;
+      vehicle?.pathTrackingMode = pathTrackingMode;
       if (pathTracking != null) {
         final index = pathTracking!.currentIndex;
         pathTracking = switch (pathTrackingMode) {
@@ -494,7 +495,7 @@ class _VehicleSimulatorState {
               loopMode: pathTrackingLoopMode,
             ),
         }
-          ..currentIndex = index;
+          ..cumulativeIndex = index;
       }
     } else if (message is ({double pathInterpolationDistance})) {
       pathInterpolationDistance = message.pathInterpolationDistance;
@@ -505,7 +506,7 @@ class _VehicleSimulatorState {
       );
       // Find the current index as the closest point since the path has updated.
       if (pathTracking != null && vehicle != null) {
-        pathTracking!.currentIndex = pathTracking!.closestIndex(vehicle!);
+        pathTracking!.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
       }
     }
     // Set new look ahead distance.
@@ -533,7 +534,7 @@ class _VehicleSimulatorState {
       );
       // Find the current index as the closest point since the path has updated.
       if (pathTracking != null && vehicle != null) {
-        pathTracking!.currentIndex = pathTracking!.closestIndex(vehicle!);
+        pathTracking!.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
       }
     }
     // Attach a new equipment. Detach by sending null as the equipment with
@@ -564,21 +565,34 @@ class _VehicleSimulatorState {
     else if (message is ({bool abLineSnapping})) {
       abLine?.snapToClosestLine = message.abLineSnapping;
     }
+    // Update the turning radius of the AB-line.
+    else if (message is ({double abTurningRadius})) {
+      abLine?.turningRadius = message.abTurningRadius;
+    }
+    // Update how many lines the AB-line should move when skipping to the
+    // next one.
+    else if (message is ({int abTurnOffsetIncrease})) {
+      abLine?.turnOffsetIncrease = message.abTurnOffsetIncrease;
+    }
+    // Update which way the upcoming turn of the AB-line should be.
+    else if (message is ({bool abToggleTurnDirection})) {
+      if (abLine != null) {
+        abLine!.offsetOppositeTurn = !abLine!.offsetOppositeTurn;
+      }
+    }
+    // Update the limit mode of the AB-line.
+    else if (message is ABLimitMode) {
+      abLine?.limitMode = message;
+    }
     // Move the AB-line offset by 1 to the left if negative or to the
     // right if positive.
     else if (message is ({int abLineMoveOffset})) {
       if (vehicle != null) {
         switch (message.abLineMoveOffset.isNegative) {
           case true:
-            abLine?.moveOffsetLeft(
-              vehicle!.pursuitAxlePosition,
-              vehicle!.bearing,
-            );
+            abLine?.moveOffsetLeft(vehicle!);
           case false:
-            abLine?.moveOffsetRight(
-              vehicle!.pursuitAxlePosition,
-              vehicle!.bearing,
-            );
+            abLine?.moveOffsetRight(vehicle!);
         }
       }
     }
@@ -695,12 +709,7 @@ class _VehicleSimulatorState {
       var steeringAngle = 0.0;
       if (abLine != null) {
         checkIfPidModeIsValid(
-          abLine!
-              .signedPerpendicularDistanceToCurrentLine(
-                point: vehicle!.pursuitAxlePosition,
-                heading: vehicle!.bearing,
-              )
-              .abs(),
+          abLine!.signedPerpendicularDistanceToCurrentLine(vehicle!).abs(),
         );
 
         steeringAngle =

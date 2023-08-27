@@ -28,7 +28,8 @@ final class PurePursuitPathTracking extends PathTracking {
     super.loopMode,
   });
 
-  /// The PID controller for controlling the steering angle.
+  /// The PID controller for controlling the steering angle in the PID steering
+  /// mode.
   final pidController = PidController();
 
   /// The intersection point that is projected from the vehicle onto the
@@ -37,15 +38,18 @@ final class PurePursuitPathTracking extends PathTracking {
   Geographic perpendicularIntersect(Vehicle vehicle) {
     final nextPoint = nextWayPoint(vehicle).position;
 
-    final distanceAlong = vehicle.pursuitAxlePosition.spherical
-        .alongTrackDistanceTo(start: currentWayPoint.position, end: nextPoint);
+    final currentPoint = currentWayPoint(vehicle);
 
-    final bearing =
-        currentWayPoint.position.spherical.initialBearingTo(nextPoint);
+    final distanceAlong = vehicle.lookAheadStartPosition.spherical
+        .alongTrackDistanceTo(start: currentPoint.position, end: nextPoint);
 
-    assert(!bearing.isNaN, 'Bearing error');
+    var bearing = currentPoint.position.spherical.initialBearingTo(nextPoint);
 
-    return currentWayPoint.position.spherical
+    if (bearing.isNaN) {
+      bearing = currentPoint.bearing;
+    }
+
+    return currentPoint.position.spherical
         .destinationPoint(distance: distanceAlong, bearing: bearing);
   }
 
@@ -60,8 +64,8 @@ final class PurePursuitPathTracking extends PathTracking {
     };
 
     return sign *
-        vehicle.pursuitAxlePosition.spherical.crossTrackDistanceTo(
-          start: currentWayPoint.position,
+        vehicle.lookAheadStartPosition.spherical.crossTrackDistanceTo(
+          start: currentWayPoint(vehicle).position,
           end: nextWayPoint(vehicle).position,
         );
   }
@@ -70,9 +74,10 @@ final class PurePursuitPathTracking extends PathTracking {
   @override
   WayPoint closestWayPoint(Vehicle vehicle) => path.reduce(
         (value, element) => element.position.spherical.distanceTo(
-                  vehicle.pursuitAxlePosition,
+                  vehicle.lookAheadStartPosition,
                 ) <
-                value.position.spherical.distanceTo(vehicle.pursuitAxlePosition)
+                value.position.spherical
+                    .distanceTo(vehicle.lookAheadStartPosition)
             ? element
             : value,
       );
@@ -82,12 +87,15 @@ final class PurePursuitPathTracking extends PathTracking {
   void tryChangeWayPoint(Vehicle vehicle) {
     final nextPoint = nextWayPoint(vehicle).position;
 
-    final progress = vehicle.pursuitAxlePosition.spherical.alongTrackDistanceTo(
-      start: currentWayPoint.position,
+    final currentPoint = currentWayPoint(vehicle);
+
+    final progress =
+        vehicle.lookAheadStartPosition.spherical.alongTrackDistanceTo(
+      start: currentPoint.position,
       end: nextPoint,
     );
-    if (progress > currentWayPoint.position.spherical.distanceTo(nextPoint)) {
-      currentIndex = nextIndex(vehicle);
+    if (progress > currentPoint.position.spherical.distanceTo(nextPoint)) {
+      cumulativeIndex = nextIndex(vehicle);
     }
   }
 
@@ -141,6 +149,31 @@ final class PurePursuitPathTracking extends PathTracking {
         break;
       }
     }
+
+    if (loopMode == PathTrackingLoopMode.none) {
+      if (vehicle.isReversing && outsidePoint == path.last) {
+        return (
+          inside: path.first.moveSpherical(
+            distance: vehicle.lookAheadDistance -
+                vehicle.lookAheadStartPosition.spherical
+                    .distanceTo(path.first.position)
+                    .clamp(0, vehicle.lookAheadDistance),
+          ),
+          outside: null
+        );
+      } else if (!vehicle.isReversing && outsidePoint == path.first) {
+        return (
+          inside: path.last.moveSpherical(
+            distance: vehicle.lookAheadDistance -
+                vehicle.lookAheadStartPosition.spherical
+                    .distanceTo(path.last.position)
+                    .clamp(0, vehicle.lookAheadDistance),
+          ),
+          outside: null
+        );
+      }
+    }
+
     return (inside: insidePoint, outside: outsidePoint);
   }
 
@@ -257,12 +290,13 @@ final class PurePursuitPathTracking extends PathTracking {
   ///
   /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
   double _nextSteeringAngleLookAhead(Vehicle vehicle) {
-    final bearingToPoint =
-        vehicle.lookAheadStartPosition.spherical.initialBearingTo(
-      findLookAheadCirclePoints(vehicle, vehicle.lookAheadDistance)
-          .best
-          .position,
-    );
+    final lookAheadPoint =
+        findLookAheadCirclePoints(vehicle, vehicle.lookAheadDistance)
+            .best
+            .position;
+
+    final bearingToPoint = vehicle.lookAheadStartPosition.spherical
+        .initialBearingTo(lookAheadPoint);
 
     final angle = signedBearingDifference(
       vehicle.bearing,
@@ -298,11 +332,11 @@ final class PurePursuitPathTracking extends PathTracking {
 
   ///
   @override
-  double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) =>
-      switch (mode) {
-        PathTrackingMode.pid => _nextSteeringAnglePid(vehicle),
-        PathTrackingMode.purePursuit ||
-        _ =>
-          _nextSteeringAngleLookAhead(vehicle)
-      };
+  double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) {
+    tryChangeWayPoint(vehicle);
+    return switch (mode ?? vehicle.pathTrackingMode) {
+      PathTrackingMode.pid => _nextSteeringAnglePid(vehicle),
+      PathTrackingMode.purePursuit || _ => _nextSteeringAngleLookAhead(vehicle)
+    };
+  }
 }

@@ -40,6 +40,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     super.hitchRearTowbarChild,
     super.name,
     super.uuid,
+    this.pathTrackingMode = PathTrackingMode.purePursuit,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
@@ -111,6 +112,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The Stanley gain coefficients for controlling the steering of this vehicle
   /// when using a Stanley path tracking steering mode.
   StanleyParameters stanleyParameters;
+
+  /// Which steering mode the path tracking should use.
+  PathTrackingMode pathTrackingMode;
 
   /// The velocity of the vehicle as set from the outside.
   double _velocity;
@@ -252,10 +256,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
           },
         false => 0,
       };
-
-  /// The position of the pursuit axle in the the vehicle direction. Used when
-  /// calculating pure pursuit path tracking values.
-  Geographic get pursuitAxlePosition;
 
   /// The position of the Stanley axle in the vehicle direction. Used when
   /// calculating Stanley path tracking values.
@@ -424,6 +424,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleMax,
     double? trackWidth,
     bool? invertSteeringInput,
+    PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
@@ -468,6 +469,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     map['steering'] = {
       'invert_steering_input': invertSteeringInput,
       'min_turning_radius': minTurningRadius,
+      'path_tracking_mode': pathTrackingMode.name,
       'steering_angle_max': steeringAngleMax,
     };
 

@@ -26,6 +26,7 @@ final class ArticulatedTractor extends Vehicle {
     this.numWheels = 2,
     super.antennaLateralOffset,
     super.invertSteeringInput,
+    super.pathTrackingMode,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
     super.purePursuitParameters,
     super.stanleyParameters,
@@ -96,6 +97,9 @@ final class ArticulatedTractor extends Vehicle {
       wheelDiameter: wheels['wheel_diameter'] as double,
       wheelWidth: wheels['wheel_width'] as double,
       wheelSpacing: wheels['wheel_spacing'] as double,
+      pathTrackingMode: PathTrackingMode.values.firstWhere(
+        (element) => element.name == steering['path_tracking_mode'] as String,
+      ),
       pidParameters: pidParameters,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
@@ -201,9 +205,6 @@ final class ArticulatedTractor extends Vehicle {
           ),
         false => null,
       };
-
-  @override
-  Geographic get pursuitAxlePosition => pivotPosition;
 
   /// The position of the Stanley axle in the the vehicle direction. Used when
   /// calculating the Stanley pursuit values.
@@ -798,6 +799,7 @@ final class ArticulatedTractor extends Vehicle {
     double? wheelSpacing,
     int? numWheels,
     bool? invertSteeringInput,
+    PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     StanleyParameters? stanleyParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -836,6 +838,7 @@ final class ArticulatedTractor extends Vehicle {
         rearAxleToTowbarDistance:
             rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
+        pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:
             purePursuitParameters ?? this.purePursuitParameters,

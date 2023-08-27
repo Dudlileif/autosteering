@@ -76,8 +76,18 @@ sealed class PathTracking {
   /// The list of waypoints that the vehicle should follow.
   late List<WayPoint> path;
 
-  /// The index of the current way point.
-  int currentIndex = 0;
+  /// The [path]'s index for the currently tracked point.
+  int get currentIndex => switch (
+          loopMode != PathTrackingLoopMode.none || cumulativeIndex.isNegative) {
+        true => cumulativeIndex % path.length,
+        false => cumulativeIndex
+      };
+
+  /// The cumulative index for the currently tracked point.
+  int cumulativeIndex = 0;
+
+  /// Whether the path is completed.
+  bool get isCompleted => cumulativeIndex.abs() >= path.length - 1;
 
   /// Interpolates the [wayPoints] and puts the result in [path].
   ///
@@ -143,25 +153,25 @@ sealed class PathTracking {
   }
 
   /// The index of the next waypoint when driving forward.
-  int get nextForwardIndex => switch (currentIndex == path.length - 1) {
-        true => 0,
-        false => currentIndex + 1
-      };
+  int get nextForwardIndex => cumulativeIndex + 1;
 
   /// The index of the next (previous) waypoint when driving in reverse.
-  int get nextReversingIndex => switch (currentIndex == 0) {
-        true => path.length - 1,
-        false => currentIndex - 1
-      };
+  int get nextReversingIndex => cumulativeIndex - 1;
 
   /// The current waypoint.
-  WayPoint get currentWayPoint => path[currentIndex];
+  WayPoint currentWayPoint(Vehicle vehicle) {
+    if (loopMode == PathTrackingLoopMode.none && isCompleted) {
+      return closestWayPoint(vehicle);
+    }
+
+    return path[currentIndex];
+  }
 
   /// The next waypoint when driving forward.
-  WayPoint get nextForwardWayPoint => path[nextForwardIndex];
+  WayPoint get nextForwardWayPoint => path[nextForwardIndex % path.length];
 
   /// The next waypoint when driving in reverse.
-  WayPoint get nextReversingWayPoint => path[nextReversingIndex];
+  WayPoint get nextReversingWayPoint => path[nextReversingIndex % path.length];
 
   /// The next waypoint index with vehicle driving direction taken into
   /// consideration.
@@ -201,4 +211,16 @@ sealed class PathTracking {
   /// [PathTrackingMode]s are supported by all path tracking systems. They will
   /// then default to the most usual supported one.
   double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode});
+}
+
+/// An extension to [Vehicle] for finding the right path tracking reference
+/// point.
+extension PathTrackingExtension on Vehicle {
+  /// Finds the point position corresponding to the [pathTrackingMode].
+  Geographic get pathTrackingPoint => switch (pathTrackingMode) {
+        PathTrackingMode.pid ||
+        PathTrackingMode.purePursuit =>
+          lookAheadStartPosition,
+        PathTrackingMode.stanley => stanleyAxlePosition,
+      };
 }

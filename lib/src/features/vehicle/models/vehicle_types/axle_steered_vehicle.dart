@@ -22,6 +22,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     this.solidAxleWheelDiameter = 1.8,
     this.steeringAxleWheelWidth = 0.48,
     this.solidAxleWheelWidth = 0.6,
+    super.pathTrackingMode,
     super.pidParameters,
     super.purePursuitParameters,
     super.stanleyParameters,
@@ -87,9 +88,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// The position of the center of the front axle.
   Geographic get steeringAxlePosition;
-
-  @override
-  Geographic get pursuitAxlePosition => solidAxlePosition;
 
   @override
   Geographic? get hitchFrontFixedPoint =>
@@ -658,6 +656,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? solidAxleToRearHitchDistance,
     double? solidAxleToRearTowbarDistance,
     bool? invertSteeringInput,
+    PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
