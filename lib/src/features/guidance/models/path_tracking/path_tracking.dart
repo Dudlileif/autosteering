@@ -218,9 +218,7 @@ sealed class PathTracking {
 extension PathTrackingExtension on Vehicle {
   /// Finds the point position corresponding to the [pathTrackingMode].
   Geographic get pathTrackingPoint => switch (pathTrackingMode) {
-        PathTrackingMode.pid ||
-        PathTrackingMode.purePursuit =>
-          lookAheadStartPosition,
-        PathTrackingMode.stanley => stanleyAxlePosition,
+        PathTrackingMode.purePursuit => lookAheadStartPosition,
+        PathTrackingMode.stanley || PathTrackingMode.pid => stanleyAxlePosition,
       };
 }

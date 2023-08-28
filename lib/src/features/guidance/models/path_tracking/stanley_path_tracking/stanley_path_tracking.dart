@@ -38,10 +38,11 @@ final class StanleyPathTracking extends PathTracking {
     final distanceAlong = vehicle.stanleyAxlePosition.spherical
         .alongTrackDistanceTo(start: currentPoint.position, end: nextPoint);
 
-    final bearing = currentPoint.position.spherical.initialBearingTo(nextPoint);
+    var bearing = currentPoint.position.spherical.initialBearingTo(nextPoint);
 
-    assert(!bearing.isNaN, 'Bearing error');
-
+    if (bearing.isNaN) {
+      bearing = currentPoint.bearing;
+    }
     return currentPoint.position.spherical
         .destinationPoint(distance: distanceAlong, bearing: bearing);
   }

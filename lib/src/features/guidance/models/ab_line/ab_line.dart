@@ -181,15 +181,21 @@ class ABLine with EquatableMixin {
     final alongDistance = point.spherical
         .alongTrackDistanceTo(start: currentStart, end: currentEnd);
 
-    final lineBearing = switch (alongDistance.isNaN) {
+    var lineBearing = switch (alongDistance.isNaN) {
       true => currentInitialBearing,
       false => switch (alongDistance.isNegative) {
-          true => point.spherical.initialBearingTo(currentStart),
+          true => currentPerpendicularIntersect(vehicle)
+              .spherical
+              .initialBearingTo(currentStart),
           false => currentStart.spherical.finalBearingTo(
               currentPerpendicularIntersect(vehicle),
             ),
         }
     };
+
+    if (lineBearing.isNaN) {
+      lineBearing = currentInitialBearing;
+    }
 
     final angle = ((lineBearing - vehicle.bearing).wrap360() - 180).abs();
     return switch (angle >= 90) {
@@ -324,8 +330,9 @@ class ABLine with EquatableMixin {
         currentOffset = numOffsetsToClosestLine(vehicle.pathTrackingPoint);
         _passedMiddle = false;
         activeTurn = null;
-      }
-      if (activeTurn != null) {
+      } else if (activeTurn != null) {
+        upcomingTurn = null;
+        _passedMiddle = false;
         return;
       }
 
@@ -337,7 +344,7 @@ class ABLine with EquatableMixin {
             distance: turningRadius,
             bearing: currentInitialBearing,
           ),
-        ABLimitMode.limitedTurnOutside || _ => currentStart,
+        _ => currentStart,
       };
 
       final endPoint = switch (limitMode) {
@@ -482,8 +489,12 @@ class ABLine with EquatableMixin {
         upcomingTurn = null;
       }
 
-      if (progress > lineLength && _passedMiddle && activeTurn == null) {
-        activeTurn = turn;
+      if (progress > lineLength &&
+          _passedMiddle &&
+          activeTurn == null &&
+          vehicle.velocity.abs() > 0) {
+        activeTurn = upcomingTurn;
+        upcomingTurn = null;
       }
     }
   }
@@ -761,7 +772,7 @@ class ABLine with EquatableMixin {
   }
 
   /// Finds the next steering angle to reach the [currentOffset]'s line
-  /// for the for the [vehicle] with it's look ahead distance.
+  /// for the for the [vehicle] with its look ahead distance.
   ///
   /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
   double _nextSteeringAngleLookAhead(Vehicle vehicle) {
@@ -840,7 +851,6 @@ class ABLine with EquatableMixin {
   /// the [vehicle]'s path tracking mode will be used.
   double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) {
     checkIfTurnShouldBeInserted(vehicle);
-
     if (activeTurn != null) {
       return activeTurn!.nextSteeringAngle(vehicle, mode: mode);
     }
