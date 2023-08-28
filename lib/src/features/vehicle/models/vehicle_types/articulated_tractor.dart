@@ -28,7 +28,8 @@ final class ArticulatedTractor extends Vehicle {
     super.invertSteeringInput,
     super.pathTrackingMode,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
-    super.purePursuitParameters,
+    super.purePursuitParameters =
+        const PurePursuitParameters(lookAheadDistance: 1),
     super.stanleyParameters,
     super.position,
     super.velocity,

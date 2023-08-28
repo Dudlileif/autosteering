@@ -10,7 +10,7 @@ class PurePursuitParameters extends Equatable {
   /// [lookAheadVelocityGain] is the coefficient for how much the vehicle's
   /// velocity should add to the [lookAheadDistance].
   const PurePursuitParameters({
-    this.lookAheadDistance = 4.0,
+    this.lookAheadDistance = 0.75,
     this.lookAheadVelocityGain = 0.5,
   });
 
@@ -18,7 +18,7 @@ class PurePursuitParameters extends Equatable {
   ///
   /// ```
   /// {
-  ///   'look_ahead_distance': 4,
+  ///   'look_ahead_distance': 0.75,
   ///   'look_ahead_velocity_gain': 0.5,
   /// }
   /// ```
