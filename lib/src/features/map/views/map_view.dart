@@ -2,6 +2,7 @@ import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_autosteer_parameter_configurator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -149,6 +150,14 @@ class MapAndGaugeStackView extends ConsumerWidget {
               child: Padding(
                 padding: EdgeInsets.all(8),
                 child: PitchAndRollDebugGauges(),
+              ),
+            ),
+          if (ref.watch(debugVehicleAutosteerParametersProvider))
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: VehicleAutosteerParameterConfigurator(),
               ),
             ),
           if (ref.watch(showABLineDebugLayerProvider))

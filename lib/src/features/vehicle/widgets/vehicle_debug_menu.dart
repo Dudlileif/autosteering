@@ -155,6 +155,21 @@ class VehicleDebugMenu extends StatelessWidget {
         ),
         Consumer(
           child: Text(
+            'Autosteering parameters',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(debugVehicleAutosteerParametersProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugVehicleAutosteerParametersProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
             'Use IMU bearing',
             style: textStyle,
           ),

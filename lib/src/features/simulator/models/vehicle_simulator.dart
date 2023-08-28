@@ -469,6 +469,10 @@ class _VehicleSimulatorState {
     else if (message is PidParameters) {
       vehicle?.pidParameters = message;
     }
+    // Update pure pursuit parameters.
+    else if (message is PurePursuitParameters) {
+      vehicle?.purePursuitParameters = message;
+    }
     // Update Stanley parameters.
     else if (message is StanleyParameters) {
       vehicle?.stanleyParameters = message;

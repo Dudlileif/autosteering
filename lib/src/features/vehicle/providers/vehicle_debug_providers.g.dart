@@ -173,5 +173,24 @@ final debugVehicleIMUProvider =
 );
 
 typedef _$DebugVehicleIMU = Notifier<bool>;
+String _$debugVehicleAutosteerParametersHash() =>
+    r'9a7ced139e78bfa75cf5d975973420c15a9748a7';
+
+/// Whether to show vehicle autosteer parameters debug.
+///
+/// Copied from [DebugVehicleAutosteerParameters].
+@ProviderFor(DebugVehicleAutosteerParameters)
+final debugVehicleAutosteerParametersProvider =
+    NotifierProvider<DebugVehicleAutosteerParameters, bool>.internal(
+  DebugVehicleAutosteerParameters.new,
+  name: r'debugVehicleAutosteerParametersProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugVehicleAutosteerParametersHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugVehicleAutosteerParameters = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

@@ -231,28 +231,40 @@ class ABLineDebugLayer extends ConsumerWidget {
             if (abLine != null) ...[
               Marker(
                 point: abLine.start.latLng,
-                builder: (context) => const Text('A'),
+                builder: (context) => const Text(
+                  'A',
+                  style: TextStyle(color: Colors.white),
+                ),
                 rotate: true,
                 width: 50,
                 height: 50,
               ),
               Marker(
                 point: abLine.end.latLng,
-                builder: (context) => const Text('B'),
+                builder: (context) => const Text(
+                  'B',
+                  style: TextStyle(color: Colors.white),
+                ),
                 rotate: true,
                 width: 50,
                 height: 50,
               ),
               Marker(
                 point: abLine.currentStart.latLng,
-                builder: (context) => Text('A${abLine.currentOffset}'),
+                builder: (context) => Text(
+                  'A${abLine.currentOffset}',
+                  style: const TextStyle(color: Colors.white),
+                ),
                 rotate: true,
                 width: 50,
                 height: 50,
               ),
               Marker(
                 point: abLine.currentEnd.latLng,
-                builder: (context) => Text('B${abLine.currentOffset}'),
+                builder: (context) => Text(
+                  'B${abLine.currentOffset}',
+                  style: const TextStyle(color: Colors.white),
+                ),
                 rotate: true,
                 width: 50,
                 height: 50,
@@ -260,14 +272,20 @@ class ABLineDebugLayer extends ConsumerWidget {
               if (abLine.limitMode != ABLimitMode.unlimited) ...[
                 Marker(
                   point: abLine.nextStart.latLng,
-                  builder: (context) => Text('A${abLine.nextOffset}'),
+                  builder: (context) => Text(
+                    'A${abLine.nextOffset}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
                   rotate: true,
                   width: 50,
                   height: 50,
                 ),
                 Marker(
                   point: abLine.nextEnd.latLng,
-                  builder: (context) => Text('B${abLine.nextOffset}'),
+                  builder: (context) => Text(
+                    'B${abLine.nextOffset}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
                   rotate: true,
                   width: 50,
                   height: 50,
