@@ -1,38 +1,28 @@
-import 'package:geobase/geobase.dart' as gb;
+import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 
 /// An extension to allow easy swapping between different location/coordinate
 /// packages different classes.
 extension LatLngProjExt on LatLng {
   /// A conversion to the geobase package format.
-  gb.Geographic get gbPosition => gb.Geographic(lon: longitude, lat: latitude);
-
-  /// An x/y projection in meters in the geobase package format.
-  gb.Projected get gbProjected => gb.WGS84.webMercator.forward.project(
-        gbPosition,
-        to: gb.Projected.create,
-      );
+  Geographic get gbPosition => Geographic(lon: longitude, lat: latitude);
 }
 
 /// An extension to allow easy swapping between different location/coordinate
 /// packages different classes.
-extension GeographicProjExt on gb.Geographic {
+extension GeographicProjExt on Geographic {
   /// A conversion to the latlong2 package format, used by the flutter_map
   /// package.
   LatLng get latLng => LatLng(lat, lon);
 
-  /// An x/y projection in meters in the geobase package format.
-  gb.Projected get projected =>
-      gb.WGS84.webMercator.forward.project(this, to: gb.Projected.create);
-
   /// Checks if this point is within the [ring].
   ///
   /// By drawing a line straight south from this point we can count the amount
-  /// of times the line crosses the ring while inside the [gb.GeoBox] boundary
+  /// of times the line crosses the ring while inside the [GeoBox] boundary
   /// of the ring. It the amount we cross is odd we're within the ring,
   ///  if it's even we are outside.
-  bool isWithinRing(Iterable<gb.Geographic> ring) {
-    final boundary = gb.GeoBox.from(ring);
+  bool isWithinRing(Iterable<Geographic> ring) {
+    final boundary = GeoBox.from(ring);
 
     var intersects = 0;
 
