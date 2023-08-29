@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
-import 'package:maps_toolkit2/maps_toolkit2.dart';
 
 /// An extension to allow for interfacing with different geometry and
 /// map tool packages to make insetting and extending [Polygon]s easy.
@@ -29,7 +28,7 @@ extension PolygonBufferExtension on Polygon {
         ).map((point) => point.values).flattened,
       );
 
-  /// The buffered [LatLng] points for a polygon's holes that has been inset or
+  /// The buffered [PositionArray]s for a polygon's holes that has been inset or
   /// extended by [distance] meters. Insetting requires negative [distance],
   /// extending requires positive [distance].
   Iterable<PositionArray> bufferedInterior({
@@ -129,7 +128,7 @@ extension PolygonBufferExtension on Polygon {
   /// [path] A closed path.
   ///
   static num computeSignedArea(Iterable<Geographic> path) =>
-      _computeSignedArea(path, earthRadius);
+      _computeSignedArea(path, 6371000);
 
   /// Returns the signed area of a closed [path] on a sphere of given [radius].
   /// The computed area uses the same units as the radius squared.
