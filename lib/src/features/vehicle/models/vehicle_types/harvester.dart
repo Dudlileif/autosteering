@@ -180,6 +180,7 @@ final class Harvester extends AxleSteeredVehicle {
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
     String? name,
+    String? uuid,
   }) =>
       Harvester(
         position: position ?? this.position,
@@ -222,6 +223,7 @@ final class Harvester extends AxleSteeredVehicle {
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
+        uuid: uuid ?? this.uuid,
       );
 
   @override

@@ -816,6 +816,7 @@ final class ArticulatedTractor extends Vehicle {
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
     String? name,
+    String? uuid,
   }) =>
       ArticulatedTractor(
         position: position ?? this.position,
@@ -855,6 +856,7 @@ final class ArticulatedTractor extends Vehicle {
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
+        uuid: uuid ?? this.uuid,
       );
 
   @override

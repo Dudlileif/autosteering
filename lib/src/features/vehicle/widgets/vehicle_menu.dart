@@ -27,12 +27,10 @@ class VehicleMenu extends StatelessWidget {
             'Configure',
             style: textStyle,
           ),
-          onPressed: () {
-            showDialog<void>(
-              context: context,
-              builder: (context) => const VehicleConfigurator(),
-            );
-          },
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => const VehicleConfigurator(),
+          ),
         ),
         const VehicleDebugMenu(),
       ],
@@ -61,7 +59,7 @@ class _LoadVehicleMenu extends ConsumerWidget {
       menuChildren: vehicles
           .map(
             (vehicle) => MenuItemButton(
-              child: Text(vehicle.name ?? ''),
+              child: Text(vehicle.name ?? vehicle.uuid),
               onPressed: () {
                 final position = ref.watch(
                   mainVehicleProvider.select((value) => value.position),

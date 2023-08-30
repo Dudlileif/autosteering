@@ -29,8 +29,6 @@ class _SystemHash {
   }
 }
 
-typedef SaveVehicleRef = AutoDisposeFutureProviderRef<void>;
-
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
 /// Copied from [saveVehicle].
@@ -89,10 +87,10 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
   ///
   /// Copied from [saveVehicle].
   SaveVehicleProvider(
-    this.vehicle,
-  ) : super.internal(
+    Vehicle vehicle,
+  ) : this._internal(
           (ref) => saveVehicle(
-            ref,
+            ref as SaveVehicleRef,
             vehicle,
           ),
           from: saveVehicleProvider,
@@ -104,9 +102,43 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
           dependencies: SaveVehicleFamily._dependencies,
           allTransitiveDependencies:
               SaveVehicleFamily._allTransitiveDependencies,
+          vehicle: vehicle,
         );
 
+  SaveVehicleProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.vehicle,
+  }) : super.internal();
+
   final Vehicle vehicle;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(SaveVehicleRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SaveVehicleProvider._internal(
+        (ref) => create(ref as SaveVehicleRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        vehicle: vehicle,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _SaveVehicleProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -120,6 +152,19 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin SaveVehicleRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `vehicle` of this provider.
+  Vehicle get vehicle;
+}
+
+class _SaveVehicleProviderElement extends AutoDisposeFutureProviderElement<void>
+    with SaveVehicleRef {
+  _SaveVehicleProviderElement(super.provider);
+
+  @override
+  Vehicle get vehicle => (origin as SaveVehicleProvider).vehicle;
 }
 
 String _$savedVehiclesHash() => r'1ef9b53975a6e354c3b95c6bf0fec9ae203f7ac6';
@@ -142,7 +187,6 @@ final savedVehiclesProvider = FutureProvider<List<Vehicle>>.internal(
 typedef SavedVehiclesRef = FutureProviderRef<List<Vehicle>>;
 String _$loadVehicleFromFileHash() =>
     r'c0fbeb362d82690b35e0b1a891ff6a8cf62848ba';
-typedef LoadVehicleFromFileRef = AutoDisposeFutureProviderRef<Vehicle?>;
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 ///
@@ -202,10 +246,10 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
   ///
   /// Copied from [loadVehicleFromFile].
   LoadVehicleFromFileProvider(
-    this.path,
-  ) : super.internal(
+    String path,
+  ) : this._internal(
           (ref) => loadVehicleFromFile(
-            ref,
+            ref as LoadVehicleFromFileRef,
             path,
           ),
           from: loadVehicleFromFileProvider,
@@ -217,9 +261,43 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
           dependencies: LoadVehicleFromFileFamily._dependencies,
           allTransitiveDependencies:
               LoadVehicleFromFileFamily._allTransitiveDependencies,
+          path: path,
         );
 
+  LoadVehicleFromFileProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.path,
+  }) : super.internal();
+
   final String path;
+
+  @override
+  Override overrideWith(
+    FutureOr<Vehicle?> Function(LoadVehicleFromFileRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: LoadVehicleFromFileProvider._internal(
+        (ref) => create(ref as LoadVehicleFromFileRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        path: path,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Vehicle?> createElement() {
+    return _LoadVehicleFromFileProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -233,6 +311,20 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin LoadVehicleFromFileRef on AutoDisposeFutureProviderRef<Vehicle?> {
+  /// The parameter `path` of this provider.
+  String get path;
+}
+
+class _LoadVehicleFromFileProviderElement
+    extends AutoDisposeFutureProviderElement<Vehicle?>
+    with LoadVehicleFromFileRef {
+  _LoadVehicleFromFileProviderElement(super.provider);
+
+  @override
+  String get path => (origin as LoadVehicleFromFileProvider).path;
 }
 
 String _$lastUsedVehicleHash() => r'3d62a3873e68a5e9ae6935a079aa5bdadca6b8d4';

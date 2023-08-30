@@ -177,6 +177,7 @@ final class Tractor extends AxleSteeredVehicle {
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
     String? name,
+    String? uuid,
   }) =>
       Tractor(
         position: position ?? this.position,
@@ -219,6 +220,7 @@ final class Tractor extends AxleSteeredVehicle {
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
+        uuid: uuid ?? this.uuid,
       );
 
   @override

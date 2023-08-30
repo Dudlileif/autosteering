@@ -440,11 +440,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
     String? name,
+    String? uuid,
   });
 
   /// Converts the object to a json compatible structure.
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
+    final map = SplayTreeMap<String, dynamic>();
     map['info'] = {
       'name': name,
       'uuid': uuid,
@@ -473,9 +474,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       'steering_angle_max': steeringAngleMax,
     };
 
-    return SplayTreeMap.from(
-      map,
-      (key1, key2) => key1.compareTo(key2),
-    );
+    return map;
   }
 }

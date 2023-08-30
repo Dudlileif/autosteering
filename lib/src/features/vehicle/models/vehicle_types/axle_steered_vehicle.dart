@@ -672,6 +672,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
     String? name,
+    String? uuid,
   });
 
   @override

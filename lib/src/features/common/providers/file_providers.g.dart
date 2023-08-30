@@ -46,8 +46,6 @@ class _SystemHash {
   }
 }
 
-typedef DirectorySizeRef = AutoDisposeFutureProviderRef<int?>;
-
 /// A provider for finding the size of the [Directory] at [path].
 ///
 /// Returns the size in number of bytes.
@@ -118,10 +116,10 @@ class DirectorySizeProvider extends AutoDisposeFutureProvider<int?> {
   ///
   /// Copied from [directorySize].
   DirectorySizeProvider(
-    this.path,
-  ) : super.internal(
+    String path,
+  ) : this._internal(
           (ref) => directorySize(
-            ref,
+            ref as DirectorySizeRef,
             path,
           ),
           from: directorySizeProvider,
@@ -133,9 +131,43 @@ class DirectorySizeProvider extends AutoDisposeFutureProvider<int?> {
           dependencies: DirectorySizeFamily._dependencies,
           allTransitiveDependencies:
               DirectorySizeFamily._allTransitiveDependencies,
+          path: path,
         );
 
+  DirectorySizeProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.path,
+  }) : super.internal();
+
   final String path;
+
+  @override
+  Override overrideWith(
+    FutureOr<int?> Function(DirectorySizeRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DirectorySizeProvider._internal(
+        (ref) => create(ref as DirectorySizeRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        path: path,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<int?> createElement() {
+    return _DirectorySizeProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -151,8 +183,20 @@ class DirectorySizeProvider extends AutoDisposeFutureProvider<int?> {
   }
 }
 
+mixin DirectorySizeRef on AutoDisposeFutureProviderRef<int?> {
+  /// The parameter `path` of this provider.
+  String get path;
+}
+
+class _DirectorySizeProviderElement
+    extends AutoDisposeFutureProviderElement<int?> with DirectorySizeRef {
+  _DirectorySizeProviderElement(super.provider);
+
+  @override
+  String get path => (origin as DirectorySizeProvider).path;
+}
+
 String _$directoryDeleteHash() => r'1bc28a5c77a52476af58a451f219f4f6b481cc44';
-typedef DirectoryDeleteRef = AutoDisposeFutureProviderRef<bool>;
 
 /// A provider for deleting the [Directory] at [path].
 ///
@@ -224,10 +268,10 @@ class DirectoryDeleteProvider extends AutoDisposeFutureProvider<bool> {
   ///
   /// Copied from [directoryDelete].
   DirectoryDeleteProvider(
-    this.path,
-  ) : super.internal(
+    String path,
+  ) : this._internal(
           (ref) => directoryDelete(
-            ref,
+            ref as DirectoryDeleteRef,
             path,
           ),
           from: directoryDeleteProvider,
@@ -239,9 +283,43 @@ class DirectoryDeleteProvider extends AutoDisposeFutureProvider<bool> {
           dependencies: DirectoryDeleteFamily._dependencies,
           allTransitiveDependencies:
               DirectoryDeleteFamily._allTransitiveDependencies,
+          path: path,
         );
 
+  DirectoryDeleteProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.path,
+  }) : super.internal();
+
   final String path;
+
+  @override
+  Override overrideWith(
+    FutureOr<bool> Function(DirectoryDeleteRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DirectoryDeleteProvider._internal(
+        (ref) => create(ref as DirectoryDeleteRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        path: path,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<bool> createElement() {
+    return _DirectoryDeleteProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -255,6 +333,19 @@ class DirectoryDeleteProvider extends AutoDisposeFutureProvider<bool> {
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin DirectoryDeleteRef on AutoDisposeFutureProviderRef<bool> {
+  /// The parameter `path` of this provider.
+  String get path;
+}
+
+class _DirectoryDeleteProviderElement
+    extends AutoDisposeFutureProviderElement<bool> with DirectoryDeleteRef {
+  _DirectoryDeleteProviderElement(super.provider);
+
+  @override
+  String get path => (origin as DirectoryDeleteProvider).path;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

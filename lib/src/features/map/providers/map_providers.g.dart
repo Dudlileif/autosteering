@@ -64,8 +64,6 @@ class _SystemHash {
   }
 }
 
-typedef MapCacheDateRef = AutoDisposeFutureProviderRef<DateTime?>;
-
 /// A provider for finding the first cache date of the map layer cache
 /// at the given [path].
 ///
@@ -130,10 +128,10 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
   ///
   /// Copied from [mapCacheDate].
   MapCacheDateProvider(
-    this.path,
-  ) : super.internal(
+    String path,
+  ) : this._internal(
           (ref) => mapCacheDate(
-            ref,
+            ref as MapCacheDateRef,
             path,
           ),
           from: mapCacheDateProvider,
@@ -145,9 +143,43 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
           dependencies: MapCacheDateFamily._dependencies,
           allTransitiveDependencies:
               MapCacheDateFamily._allTransitiveDependencies,
+          path: path,
         );
 
+  MapCacheDateProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.path,
+  }) : super.internal();
+
   final String path;
+
+  @override
+  Override overrideWith(
+    FutureOr<DateTime?> Function(MapCacheDateRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: MapCacheDateProvider._internal(
+        (ref) => create(ref as MapCacheDateRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        path: path,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<DateTime?> createElement() {
+    return _MapCacheDateProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -161,6 +193,19 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin MapCacheDateRef on AutoDisposeFutureProviderRef<DateTime?> {
+  /// The parameter `path` of this provider.
+  String get path;
+}
+
+class _MapCacheDateProviderElement
+    extends AutoDisposeFutureProviderElement<DateTime?> with MapCacheDateRef {
+  _MapCacheDateProviderElement(super.provider);
+
+  @override
+  String get path => (origin as MapCacheDateProvider).path;
 }
 
 String _$mapCacheDirectoriesHash() =>

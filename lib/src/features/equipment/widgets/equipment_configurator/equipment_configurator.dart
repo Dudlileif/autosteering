@@ -1,28 +1,27 @@
+import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_dimensions_page.dart';
+import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_hitches_page.dart';
+import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_sections_page.dart';
+import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_type_selector_page.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_antenna_page.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_dimensions_page.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_hitches_page.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_steering_page.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_type_selector_page.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_wheels_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A [SimpleDialog] for configuring a vehicle, with ability to apply to the
-/// current one, save to file or load from file.
-class VehicleConfigurator extends ConsumerWidget {
-  /// A [SimpleDialog] for configuring a vehicle, with ability to apply to the
-  /// current one, save to file or load from file.
-  const VehicleConfigurator({super.key});
+/// A [SimpleDialog] for configuring an equipment, with ability to apply to the
+/// one in the attached hierarchy, save to file or load from file.
+class EquipmentConfigurator extends ConsumerWidget {
+  /// A [SimpleDialog] for configuring an equipment, with ability to apply to
+  /// the equipment in the attached hierarchy, save to file or load from file.
+  const EquipmentConfigurator({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => SimpleDialog(
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Configure vehicle'),
-            _ApplyConfigurationToMainVehicleButton(),
+            Text('Configure equipment'),
+            _ApplyConfigurationToAttachedEquipmentButton(),
             Row(
               children: [
                 Padding(
@@ -62,16 +61,8 @@ class VehicleConfigurator extends ConsumerWidget {
                         label: Text('Dimensions'),
                       ),
                       NavigationRailDestination(
-                        icon: Icon(Icons.settings_input_antenna),
-                        label: Text('Antenna'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.circle_outlined),
-                        label: Text('Wheels'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.electric_meter),
-                        label: Text('Steering'),
+                        icon: Icon(Icons.view_column),
+                        label: Text('Sections'),
                       ),
                       NavigationRailDestination(
                         icon: Icon(Icons.commit),
@@ -79,11 +70,11 @@ class VehicleConfigurator extends ConsumerWidget {
                       ),
                     ],
                     selectedIndex: ref.watch(
-                      vehicleConfiguratorIndexProvider,
+                      equipmentConfiguratorIndexProvider,
                     ),
                     onDestinationSelected: ref
                         .read(
-                          vehicleConfiguratorPageControllerProvider.notifier,
+                          equipmentConfiguratorPageControllerProvider.notifier,
                         )
                         .animateToPage,
                   ),
@@ -93,14 +84,12 @@ class VehicleConfigurator extends ConsumerWidget {
                   child: PageView(
                     scrollDirection: Axis.vertical,
                     controller:
-                        ref.watch(vehicleConfiguratorPageControllerProvider),
+                        ref.watch(equipmentConfiguratorPageControllerProvider),
                     children: const [
-                      VehicleTypeSelectorPage(),
-                      VehicleDimensionsPage(),
-                      VehicleAntennaPage(),
-                      VehicleWheelsPage(),
-                      VehicleSteeringPage(),
-                      VehicleHitchesPage(),
+                      EquipmentTypeSelectorPage(),
+                      EquipmentDimensionsPage(),
+                      EquipmentSectionsPage(),
+                      EquipmentHitchesPage(),
                     ],
                   ),
                 ),
@@ -111,32 +100,41 @@ class VehicleConfigurator extends ConsumerWidget {
       );
 }
 
+/// A button for loading an [Equipment] to the [configuredEquipmentProvider]
+/// from a file.
 class _LoadButton extends ConsumerWidget {
+  /// A button for loading an [Equipment] to the [configuredEquipmentProvider]
+  /// from a file.
   const _LoadButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FilledButton.icon(
-      onPressed: () => ref.read(loadFileConfiguredVehicleProvider),
+      onPressed: () => ref.read(loadFileConfiguredEquipmentProvider),
       icon: const Icon(Icons.file_open),
       label: const Text('Load'),
     );
   }
 }
 
+/// A button for saving the [Equipment] int [configuredEquipmentProvider] to
+/// a file.
 class _SaveButton extends ConsumerWidget {
+  /// A button for saving the [Equipment] int [configuredEquipmentProvider] to
+  /// a file.
   const _SaveButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FilledButton.icon(
       onPressed: ref.watch(
-        configuredVehicleProvider.select(
+        configuredEquipmentProvider.select(
           (value) => value.name != null && (value.name ?? '').isNotEmpty,
         ),
       )
-          ? () => ref
-              .watch(SaveVehicleProvider(ref.watch(configuredVehicleProvider)))
+          ? () => ref.watch(
+                SaveEquipmentProvider(ref.watch(configuredEquipmentProvider)),
+              )
           : null,
       icon: const Icon(Icons.save),
       label: const Text('Save'),
@@ -145,9 +143,9 @@ class _SaveButton extends ConsumerWidget {
 }
 
 /// A button for going to the next page of the vehicle configurator.
-class VehicleConfiguratorNextButton extends ConsumerWidget {
+class EquipmentConfiguratorNextButton extends ConsumerWidget {
   /// A button for going to the next page of the vehicle configurator.
-  const VehicleConfiguratorNextButton({
+  const EquipmentConfiguratorNextButton({
     this.enabled = true,
     this.extraOnPressed,
     super.key,
@@ -166,7 +164,7 @@ class VehicleConfiguratorNextButton extends ConsumerWidget {
                 extraOnPressed?.call();
                 ref
                     .read(
-                      vehicleConfiguratorPageControllerProvider.notifier,
+                      equipmentConfiguratorPageControllerProvider.notifier,
                     )
                     .nextPage();
               }
@@ -177,9 +175,9 @@ class VehicleConfiguratorNextButton extends ConsumerWidget {
 }
 
 /// A button for going to the previous page of the vehicle configurator.
-class VehicleConfiguratorPreviousButton extends ConsumerWidget {
+class EquipmentConfiguratorPreviousButton extends ConsumerWidget {
   /// A button for going to the previous page of the vehicle configurator.
-  const VehicleConfiguratorPreviousButton({
+  const EquipmentConfiguratorPreviousButton({
     this.enabled = true,
     this.extraOnPressed,
     super.key,
@@ -198,7 +196,7 @@ class VehicleConfiguratorPreviousButton extends ConsumerWidget {
                 extraOnPressed?.call();
                 ref
                     .read(
-                      vehicleConfiguratorPageControllerProvider.notifier,
+                      equipmentConfiguratorPageControllerProvider.notifier,
                     )
                     .previousPage();
               }
@@ -208,31 +206,26 @@ class VehicleConfiguratorPreviousButton extends ConsumerWidget {
       );
 }
 
-/// A button that applies the vehicle configuration in
-/// [configuredVehicleProvider] to the [mainVehicleProvider].
-class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
+/// A button that applies the equipment configuration in
+/// [configuredEquipmentProvider] to the attached hierarchy
+/// in the simulator.
+class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
   /// A button that applies the vehicle configuration in
-  /// [configuredVehicleProvider] to the [mainVehicleProvider].
-  const _ApplyConfigurationToMainVehicleButton();
+  /// [configuredVehicleProvider] to the attached hierarchy
+  /// in the simulator.
+  const _ApplyConfigurationToAttachedEquipmentButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
         onPressed: () {
-          final position =
-              ref.watch(mainVehicleProvider.select((value) => value.position));
-          final bearing =
-              ref.watch(mainVehicleProvider.select((value) => value.bearing));
-
-          final vehicle = ref.watch(configuredVehicleProvider)
-            ..position = position
-            ..bearing = bearing
+          final equipment = ref.watch(configuredEquipmentProvider)
             ..lastUsed = DateTime.now();
 
-          ref.read(mainVehicleProvider.notifier).update(vehicle);
+          ref
+              .read(simInputProvider.notifier)
+              .send((updatedEquipment: equipment));
 
-          ref.read(simInputProvider.notifier).send(vehicle);
-
-          ref.read(SaveVehicleProvider(vehicle));
+          ref.read(SaveEquipmentProvider(equipment));
 
           Navigator.of(context).pop();
         },

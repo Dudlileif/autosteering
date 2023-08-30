@@ -64,7 +64,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
                       .mapIndexed(
                         (sectionUpdate, sectionMap) => sectionMap.values
                             .mapIndexed(
-                              (segment, line) => line != null
+                              (section, line) => line != null
                                   ? Polyline(
                                       points: sectionUpdate ==
                                               equipment.length - 1
@@ -72,7 +72,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
                                               ...line.map((e) => e.latLng),
                                               equipments
                                                   .elementAt(equipmentIndex)
-                                                  .segmentCenter(segment)
+                                                  .sectionCenter(section)
                                                   .latLng,
                                             ]
                                           : line.map((e) => e.latLng).toList(),
@@ -81,7 +81,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
                                           .withOpacity(0.25),
                                       strokeWidth: equipments
                                           .elementAt(equipmentIndex)
-                                          .segmentWidths[segment],
+                                          .sectionWidths[section],
                                       useStrokeWidthInMeter: true,
                                       strokeCap: StrokeCap.butt,
                                       strokeJoin: StrokeJoin.bevel,
@@ -102,12 +102,12 @@ class EquipmentDebugLayer extends ConsumerWidget {
           //             .map(
           //               (sectionMap) => sectionMap.values
           //                   .mapIndexed(
-          //                     (segment, line) => line != null
+          //                     (section, line) => line != null
           //                         ? [
           //                             ...line,
           //                             equipments
           //                                 .elementAt(equipmentIndex)
-          //                                 .segmentCenter(segment),
+          //                                 .sectionCenter(section),
           //                           ].map(
           //                             (point) => CircleMarker(
           //                               point: point.latLng,

@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/network/widgets/widgets.dart';
@@ -26,6 +27,7 @@ class MainScaffold extends StatelessWidget {
               const MapMenu(),
               const GuidanceMenu(),
               const VehicleMenu(),
+              const EquipmentMenu(),
               if (!Device.isWeb) const NetworkMenu(),
               const DebugMenu(),
               const SimMenu(),

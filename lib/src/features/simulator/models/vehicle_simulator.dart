@@ -543,22 +543,37 @@ class _VehicleSimulatorState {
     }
     // Attach a new equipment. Detach by sending null as the equipment with
     // the same hitch position.
-    else if (message is ({Equipment? child, Hitch position})) {
+    else if (message is ({Equipment child, Hitch position})) {
       vehicle?.attachChild(message.child, message.position);
     }
-    // Update the active segments of the equipment with the given uuid.
-    else if (message is ({String uuid, List<bool> activeSegments})) {
+    // Attach a new equipment. Detach by sending null as the equipment with
+    // the same hitch position.
+    else if (message is ({
+      String parentUuid,
+      Equipment child,
+      Hitch position
+    })) {
+      vehicle?.attachChildTo(
+        message.parentUuid,
+        message.child,
+        message.position,
+      );
+    }
+
+    /// Update an already attached equipment in the hierarchy.
+    else if (message is ({Equipment updatedEquipment})) {
+      vehicle?.updateChild(message.updatedEquipment);
+    }
+
+    /// Update an already attached equipment in the hierarchy.
+    else if (message is ({String detachUuid})) {
+      vehicle?.detachChild(message.detachUuid);
+    }
+    // Update the active sections of the equipment with the given uuid.
+    else if (message is ({String uuid, List<bool> activeSections})) {
       final equipment = vehicle?.findChildRecursive(message.uuid);
       if (equipment != null && equipment is Equipment) {
-        equipment.activeSegments = message.activeSegments;
-      }
-    }
-    // Detach the equipment with the given uuid.
-    else if (message is ({String detachUuid})) {
-      final equipment = vehicle?.findChildRecursive(message.detachUuid);
-      if (equipment != null) {
-        final parent = equipment.hitchParent;
-        if (parent != null) {}
+        equipment.activeSections = message.activeSections;
       }
     }
     // Update the AB-line to follow

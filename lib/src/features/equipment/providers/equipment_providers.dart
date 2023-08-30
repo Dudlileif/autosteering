@@ -1,14 +1,15 @@
+import 'dart:convert';
+
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_io/io.dart';
 
 part 'equipment_providers.g.dart';
 
@@ -23,64 +24,6 @@ class ShowEquipmentDebug extends _$ShowEquipmentDebug {
 
   /// Invert the current [state].
   void toggle() => Future(() => state = !state);
-}
-
-/// A provider for a equipment that can be configured.
-@Riverpod(keepAlive: true)
-class ConfiguredEquipment extends _$ConfiguredEquipment {
-  @override
-  Equipment build() {
-    ref.listenSelf((previous, next) {
-      ref.read(allEquipmentsProvider.notifier).update(next);
-    });
-
-    return Equipment(hitchType: HitchType.fixed);
-  }
-
-  /// Update the [state] to [equipment].
-  void update(Equipment equipment) => Future(() => state = equipment);
-
-  /// Attach the [state] equipment to the front fixed hitch of the main vehicle.
-  void attachToVehicleFront() => Future(
-        () {
-          state = state.copyWith(
-            hitchParent: ref.watch(mainVehicleProvider),
-            hitchType: HitchType.fixed,
-          );
-          ref.read(simInputProvider.notifier).send(
-            (child: state, position: Hitch.frontFixed),
-          );
-        },
-      );
-
-  /// Attach the [state] equipment to the rear fixed hitch of the main
-  /// vehicle.
-  void attachToVehicleRear() => Future(
-        () {
-          state = state.copyWith(
-            hitchParent: ref.watch(mainVehicleProvider),
-            hitchType: HitchType.fixed,
-          );
-          ref.read(simInputProvider.notifier).send(
-            (child: state, position: Hitch.rearFixed),
-          );
-        },
-      );
-
-  /// Attach the [state] equipment to the rear towbar hitch of the main vehicle.
-  void attachToVehicleTowbar() => Future(
-        () {
-          state = state.copyWith(
-            hitchParent: ref.watch(mainVehicleProvider),
-            hitchType: HitchType.towbar,
-            drawbarLength: 4,
-            hitchToChildRearTowbarHitchLength: 6,
-          );
-          ref.read(simInputProvider.notifier).send(
-            (child: state, position: Hitch.rearTowbar),
-          );
-        },
-      );
 }
 
 /// A provider that holds all of the equipments.
@@ -116,15 +59,15 @@ class AllEquipments extends _$AllEquipments {
       });
 
   /// Handles the event of a tap on the map. If [point] is within one of the
-  /// equipments' segments, then the segment will be toggled.
+  /// equipments' sections, then the section will be toggled.
   void handleMapOnTap(TapPosition tapPosition, LatLng point) {
     for (final equipment in state.values) {
-      equipment.segmentPolygons.forEachIndexed((index, segment) {
-        if (segment.contains(point.gbPosition)) {
+      equipment.sectionPolygons.forEachIndexed((index, section) {
+        if (section.contains(point.gbPosition)) {
           ref.read(simInputProvider.notifier).send(
             (
               uuid: equipment.uuid,
-              activeSegments: (equipment..toggleSegment(index)).activeSegments
+              activeSections: (equipment..toggleSection(index)).activeSections
             ),
           );
         }
@@ -133,12 +76,12 @@ class AllEquipments extends _$AllEquipments {
   }
 
   /// Handles the event of a pointer hovering on the map. If [point] is within
-  /// one of the equipments' segments, the [equipmentHoveredProvider] is
+  /// one of the equipments' sections, the [equipmentHoveredProvider] is
   /// set to true, otherwise false.
   void handleMapOnPointerHover(PointerHoverEvent event, LatLng point) {
     for (final equipment in state.values) {
-      for (final segment in equipment.segmentPolygons) {
-        if (segment.contains(point.gbPosition)) {
+      for (final section in equipment.sectionPolygons) {
+        if (section.contains(point.gbPosition)) {
           return ref
               .read(equipmentHoveredProvider.notifier)
               .update(value: true);
@@ -149,7 +92,7 @@ class AllEquipments extends _$AllEquipments {
   }
 }
 
-/// Whether or not a cursor is hovering over an equipment segment.
+/// Whether or not a cursor is hovering over an equipment section.
 @Riverpod(keepAlive: true)
 class EquipmentHovered extends _$EquipmentHovered {
   @override
@@ -162,7 +105,7 @@ class EquipmentHovered extends _$EquipmentHovered {
 /// A provider for tracking the worked paths for the given equipment [uuid].
 @riverpod
 class EquipmentPaths extends _$EquipmentPaths {
-  var _lastActiveSegments = <bool>[];
+  var _lastActiveSections = <bool>[];
 
   @override
   List<Map<int, List<Geographic>?>> build(String uuid) => [];
@@ -170,40 +113,40 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
         // Activation/deactivation
-        if (!equipment.activeSegments.equals(_lastActiveSegments) ||
+        if (!equipment.activeSections.equals(_lastActiveSections) ||
             state.isEmpty) {
-          // If we're deactivating segments, update the state positions
+          // If we're deactivating sections, update the state positions
           // before we start new paths.
           _addPointsIfDeactivation(equipment);
 
-          final points = equipment.activeSegments.mapIndexed(
-            (segment, active) => active &&
-                    (_lastActiveSegments.elementAtOrNull(segment) ?? false)
+          final points = equipment.activeSections.mapIndexed(
+            (section, active) => active &&
+                    (_lastActiveSections.elementAtOrNull(section) ?? false)
                 ? [
-                    state.last[segment]?.last ??
-                        equipment.segmentCenter(segment),
+                    state.last[section]?.last ??
+                        equipment.sectionCenter(section),
                   ]
                 : active
-                    ? [equipment.segmentCenter(segment)]
+                    ? [equipment.sectionCenter(section)]
                     : null,
           );
 
-          final segmentLines = Map<int, List<Geographic>?>.fromEntries(
+          final sectionLines = Map<int, List<Geographic>?>.fromEntries(
             points.mapIndexed(MapEntry.new),
           );
-          state = state..add(segmentLines);
-          _lastActiveSegments = equipment.activeSegments;
+          state = state..add(sectionLines);
+          _lastActiveSections = equipment.activeSections;
         }
 
         // Continuation
         else {
           final positions = List.generate(
-            _lastActiveSegments.length,
-            (segment) => equipment.segmentCenter(segment),
+            _lastActiveSections.length,
+            (section) => equipment.sectionCenter(section),
           );
           final addNext = positions
               .mapIndexed(
-                (segment, position) => shouldAddNext(position, segment),
+                (section, position) => shouldAddNext(position, section),
               )
               .reduce((value, element) => value || element);
 
@@ -217,14 +160,14 @@ class EquipmentPaths extends _$EquipmentPaths {
       });
 
   /// Add the current positions to the state if we're deactivating a
-  /// segment, before we start a new set of paths.
+  /// section, before we start a new set of paths.
   void _addPointsIfDeactivation(Equipment equipment) {
-    final prevActive = _lastActiveSegments.fold(
+    final prevActive = _lastActiveSections.fold(
       0,
       (previousValue, element) =>
           element == true ? previousValue + 1 : previousValue,
     );
-    final nextActive = equipment.activeSegments.fold(
+    final nextActive = equipment.activeSections.fold(
       0,
       (previousValue, element) =>
           element == true ? previousValue + 1 : previousValue,
@@ -232,24 +175,24 @@ class EquipmentPaths extends _$EquipmentPaths {
     if (nextActive < prevActive) {
       state = state
         ..last.updateAll(
-          (key, value) => value?..add(equipment.segmentCenter(key)),
+          (key, value) => value?..add(equipment.sectionCenter(key)),
         );
     }
   }
 
-  /// Whether the [next] point for this [segment] is necessary to keep the
+  /// Whether the [next] point for this [section] is necessary to keep the
   /// path up to date.
-  bool shouldAddNext(Geographic next, int segment) {
-    final prev = state.last[segment]?.last;
+  bool shouldAddNext(Geographic next, int section) {
+    final prev = state.last[section]?.last;
 
     if (state.isNotEmpty && prev != null) {
       final distance = prev.spherical.distanceTo(next);
 
       if (distance > 20) {
         return true;
-      } else if (distance > 1 && (state.last[segment]?.length ?? 0) >= 2) {
+      } else if (distance > 1 && (state.last[section]?.length ?? 0) >= 2) {
         final secondPrev =
-            state.last[segment]![state.last[segment]!.length - 2];
+            state.last[section]![state.last[section]!.length - 2];
         final prevBearing = secondPrev.spherical.initialBearingTo(prev);
         final nextBearing = prev.spherical.finalBearingTo(next);
 
@@ -258,7 +201,7 @@ class EquipmentPaths extends _$EquipmentPaths {
         if (bearingDiff > 1) {
           return true;
         }
-      } else if ((state.last[segment]?.length ?? 0) < 2 && distance > 1) {
+      } else if ((state.last[section]?.length ?? 0) < 2 && distance > 1) {
         return true;
       }
     }
@@ -273,4 +216,77 @@ class EquipmentPaths extends _$EquipmentPaths {
     List<Map<int, List<Geographic>?>> next,
   ) =>
       true;
+}
+
+/// A provider for loading an [Equipment] from a file at [path], if it's valid.
+@riverpod
+FutureOr<Equipment?> loadEquipmentFromFile(
+  LoadEquipmentFromFileRef ref,
+  String path,
+) async {
+  final file = File(path);
+  if (file.existsSync()) {
+    final json = jsonDecode(await file.readAsString());
+    if (json is Map) {
+      final vehicle = Equipment.fromJson(Map<String, dynamic>.from(json));
+
+      return vehicle;
+    }
+  }
+  return null;
+}
+
+/// A provider for saving [equipment] to a file in the user file directory.
+@riverpod
+FutureOr<void> saveEquipment(
+  SaveEquipmentRef ref,
+  Equipment equipment,
+) async {
+  final name = equipment.name ?? equipment.uuid;
+
+  final file = File(
+    '''${ref.watch(fileDirectoryProvider).requireValue.path}/equipment/$name.json''',
+  );
+
+  await file.create(recursive: true);
+
+  await file
+      .writeAsString(const JsonEncoder.withIndent('    ').convert(equipment));
+}
+
+/// A provider for reading and holding all the saved vehicles in the
+/// user file directory.
+@Riverpod(keepAlive: true)
+FutureOr<List<Equipment>> savedEquipments(SavedEquipmentsRef ref) async {
+  final dir = Directory(
+    [ref.watch(fileDirectoryProvider).requireValue.path, '/equipment'].join(),
+  );
+
+  if (!dir.existsSync()) {
+    dir.createSync(recursive: true);
+  }
+
+  // Remake the list if there are any file changes in the folder.
+  dir.watch(recursive: true).listen((event) {
+    ref.invalidateSelf();
+  });
+
+  final equipments = <Equipment>[];
+
+  if (dir.existsSync()) {
+    final fileEntities = dir.listSync(recursive: true);
+
+    if (fileEntities.isNotEmpty) {
+      for (final fileEntity in fileEntities) {
+        final file = File.fromUri(fileEntity.uri);
+
+        final json = jsonDecode(await file.readAsString());
+
+        if (json is Map) {
+          equipments.add(Equipment.fromJson(Map<String, dynamic>.from(json)));
+        }
+      }
+    }
+  }
+  return equipments;
 }
