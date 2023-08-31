@@ -29,7 +29,7 @@
 
 - Saving/loading of vehicles, equipment
 
-- Receive IMU sensor data form hardware, UDP/WebSocket
+- Receive IMU sensor data from hardware, UDP/WebSocket (http only, won't work from https hosted site)
 
 ## To be implemented
 
