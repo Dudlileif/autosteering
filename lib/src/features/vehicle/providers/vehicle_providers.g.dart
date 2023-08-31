@@ -6,7 +6,7 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveVehicleHash() => r'3d46a3daa803c51050290e7d5b6ff8819980b1fe';
+String _$saveVehicleHash() => r'415d3b593a6564ac3e02ce073cc5d00e62656ccc';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -167,7 +167,7 @@ class _SaveVehicleProviderElement extends AutoDisposeFutureProviderElement<void>
   Vehicle get vehicle => (origin as SaveVehicleProvider).vehicle;
 }
 
-String _$savedVehiclesHash() => r'1ef9b53975a6e354c3b95c6bf0fec9ae203f7ac6';
+String _$savedVehiclesHash() => r'04a770fcb915f36d949e9491b8d29fdbec7a7f4e';
 
 /// A provider for reading and holding all the saved vehicles in the
 /// user file directory.

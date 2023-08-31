@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_dimensions_page.dart';
 import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_hitches_page.dart';
@@ -225,8 +226,9 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
               .read(simInputProvider.notifier)
               .send((updatedEquipment: equipment));
 
-          ref.read(SaveEquipmentProvider(equipment));
-
+          if (!Device.isWeb) {
+            ref.read(SaveEquipmentProvider(equipment));
+          }
           Navigator.of(context).pop();
         },
         icon: const Icon(Icons.check),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
@@ -11,6 +12,7 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
 import 'package:udp/udp.dart';
 import 'package:universal_io/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// A class for simulating how vehicles should move given their position,
 /// bearing, steering angle and velocity.
@@ -71,7 +73,7 @@ class VehicleSimulator {
 
     final udpSendStream = StreamController<String>();
 
-    state.udpSendStream = udpSendStream;
+    state.networkSendStream = udpSendStream;
 
     udpSendStream.stream.listen(
       (event) async => udp.send(utf8.encode(event), serverEndPoint),
@@ -92,7 +94,7 @@ class VehicleSimulator {
     });
 
     udp.asStream().listen(
-          (datagram) => _udpListener(datagram, state),
+          (datagram) => _networkListener(datagram?.data, state),
         );
 
     // Handle incoming messages from other dart isolates.
@@ -116,7 +118,7 @@ class VehicleSimulator {
         udp = await UDP.bind(endPoint);
 
         udp.asStream().listen(
-              (datagram) => _udpListener(datagram, state),
+              (datagram) => _networkListener(datagram?.data, state),
             );
 
         await udp.send(
@@ -155,25 +157,31 @@ class VehicleSimulator {
     Isolate.exit();
   }
 
-  static void _udpListener(Datagram? datagram, _VehicleSimulatorState state) {
-    if (datagram != null) {
-      final str = String.fromCharCodes(datagram.data);
+  static void _networkListener(Uint8List? data, _VehicleSimulatorState state) {
+    if (data != null) {
+      final str = String.fromCharCodes(data);
       if (str.startsWith('{')) {
         try {
           final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
-          final bearing = -(data['yaw'] as double);
-          final pitch = -(data['pitch'] as double);
-          final roll = data['roll'] as double;
+          final bearing = data['yaw'] as double?;
+          final pitch = data['pitch'] as double?;
+          final roll = data['roll'] as double?;
 
-          if (state.useIMUBearing) {
+          if (state.useIMUBearing && bearing != null) {
             state.vehicle?.bearing =
-                (bearing - state.imuZero.bearingZero).wrap360();
+                (-bearing - state.imuZero.bearingZero).wrap360();
           }
-          state.vehicle?.pitch = pitch - state.imuZero.pitchZero;
-
-          state.vehicle?.roll = roll - state.imuZero.rollZero;
-
-          state.imuInputRaw = (bearing: bearing, pitch: pitch, roll: roll);
+          if (pitch != null) {
+            state.vehicle?.pitch = -pitch - state.imuZero.pitchZero;
+          }
+          if (roll != null) {
+            state.vehicle?.roll = roll - state.imuZero.rollZero;
+          }
+          state.imuInputRaw = (
+            bearing: bearing ?? state.imuInputRaw.bearing,
+            pitch: pitch ?? state.imuInputRaw.pitch,
+            roll: roll ?? state.imuInputRaw.roll
+          );
         } catch (e) {
           log(e.toString());
         }
@@ -201,8 +209,33 @@ class VehicleSimulator {
     // The state of the simulation.
     final state = _VehicleSimulatorState();
 
+    WebSocketChannel? socket;
+
     // Handle the incoming messages.
-    vehicleEvents.listen(state.handleMessage);
+    vehicleEvents.listen((message) async {
+      if (message is ({String hardwareIPAdress, int hardwareWebSocketPort})) {
+        await socket?.sink.close();
+        final address = Uri.parse(
+          [
+            'ws://',
+            message.hardwareIPAdress,
+            ':',
+            message.hardwareWebSocketPort.toString(),
+            '/ws',
+          ].join(),
+        );
+        socket = WebSocketChannel.connect(address);
+        socket!.stream.listen(
+          (event) {
+            if (event is Uint8List) {
+              _networkListener(event, state);
+            }
+          },
+        );
+      } else {
+        state.handleMessage(message);
+      }
+    });
 
     final streamController = StreamController<
         ({
@@ -261,7 +294,7 @@ class _VehicleSimulatorState {
 
   /// A stream controller for forwarding events to send with UDP, only used on
   /// native platforms.
-  StreamController<String>? udpSendStream;
+  StreamController<String>? networkSendStream;
 
   /// The current vehicle of the simulation.
   Vehicle? vehicle;
@@ -444,7 +477,8 @@ class _VehicleSimulatorState {
     // Enable/disable auto steering.
     else if (message is ({bool autoSteerEnabled})) {
       autoSteerEnabled = message.autoSteerEnabled;
-      udpSendStream?.add(jsonEncode({'autoSteerEnabled': autoSteerEnabled}));
+      networkSendStream
+          ?.add(jsonEncode({'autoSteerEnabled': autoSteerEnabled}));
     }
     // Set the path tracking model.
     else if (message is ({PathTracking? pathTracking})) {

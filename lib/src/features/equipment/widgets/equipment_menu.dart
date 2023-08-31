@@ -55,7 +55,10 @@ class EquipmentMenu extends StatelessWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) => MenuItemButton(
-            leadingIcon: const Icon(Icons.clear),
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.clear),
+            ),
             onPressed: ref.read(allEquipmentsProvider.notifier).clear,
             child: child,
           ),

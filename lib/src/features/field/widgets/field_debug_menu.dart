@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:universal_html/html.dart' as html;
 import 'package:universal_io/io.dart';
 
 /// A menu with attached submenu for debugging the field feature.
@@ -34,19 +35,36 @@ class FieldDebugMenu extends ConsumerWidget {
             title: child,
             onTap: () async {
               final result = await FilePicker.platform.pickFiles(
-                initialDirectory:
-                    ref.watch(fileDirectoryProvider).requireValue.path,
+                initialDirectory: Device.isWeb
+                    ? null
+                    : [
+                        ref.watch(fileDirectoryProvider).requireValue.path,
+                        '/fields',
+                      ].join(),
                 dialogTitle: 'Open field json file',
                 allowedExtensions: ['json'],
+                type: FileType.custom,
               );
               if (result != null) {
-                final path = result.paths.first;
-                if (path != null) {
-                  final data = jsonDecode(File(path).readAsStringSync());
-                  if (data is Map) {
-                    ref.read(testFieldProvider.notifier).update(
-                          Field.fromJson(Map<String, dynamic>.from(data)),
-                        );
+                if (Device.isWeb) {
+                  final data = result.files.first.bytes;
+                  if (data != null) {
+                    final json = jsonDecode(String.fromCharCodes(data));
+                    if (json is Map) {
+                      ref.read(testFieldProvider.notifier).update(
+                            Field.fromJson(Map<String, dynamic>.from(json)),
+                          );
+                    }
+                  }
+                } else {
+                  final path = result.paths.first;
+                  if (path != null) {
+                    final json = jsonDecode(File(path).readAsStringSync());
+                    if (json is Map) {
+                      ref.read(testFieldProvider.notifier).update(
+                            Field.fromJson(Map<String, dynamic>.from(json)),
+                          );
+                    }
                   }
                 }
               }
@@ -241,20 +259,31 @@ class FieldDebugMenu extends ConsumerWidget {
             ),
           ),
         ],
-        if (!Device.isWeb)
-          Consumer(
-            child: Text(
-              'Save field',
-              style: textStyle,
-            ),
-            builder: (context, ref, child) {
-              final field = ref.watch(testFieldProvider);
+        Consumer(
+          child: Text(
+            'Save field',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) {
+            final field = ref.watch(testFieldProvider);
 
-              return ListTile(
-                title: child,
-                leading: const Icon(Icons.save),
-                onTap: field != null
-                    ? () async {
+            return ListTile(
+              title: child,
+              leading: const Icon(Icons.save),
+              onTap: field != null
+                  ? () async {
+                      if (Device.isWeb) {
+                        html.AnchorElement()
+                          ..href = '${Uri.dataFromString(
+                            const JsonEncoder.withIndent('    ')
+                                .convert(field.toJson()),
+                            mimeType: 'text/plain',
+                            encoding: utf8,
+                          )}'
+                          ..download = '${field.name}.json'
+                          ..style.display = 'none'
+                          ..click();
+                      } else {
                         final path = [
                           ref.watch(fileDirectoryProvider).requireValue.path,
                           '/fields/test.json',
@@ -268,11 +297,12 @@ class FieldDebugMenu extends ConsumerWidget {
                           const JsonEncoder.withIndent('    ').convert(field),
                         );
                       }
-                    : null,
-              );
-            },
-          ),
-        if (ref.watch(showBufferedTestFieldProvider) && !Device.isWeb)
+                    }
+                  : null,
+            );
+          },
+        ),
+        if (ref.watch(showBufferedTestFieldProvider))
           Consumer(
             child: Text(
               'Save buffered field',
@@ -286,18 +316,31 @@ class FieldDebugMenu extends ConsumerWidget {
                 leading: const Icon(Icons.save),
                 onTap: field != null
                     ? () async {
-                        final path = [
-                          ref.watch(fileDirectoryProvider).requireValue.path,
-                          '/fields/test_buffered.json',
-                        ].join();
+                        if (Device.isWeb) {
+                          html.AnchorElement()
+                            ..href = '${Uri.dataFromString(
+                              const JsonEncoder.withIndent('    ')
+                                  .convert(field.toJson()),
+                              mimeType: 'text/plain',
+                              encoding: utf8,
+                            )}'
+                            ..download = '${field.name}.json'
+                            ..style.display = 'none'
+                            ..click();
+                        } else {
+                          final path = [
+                            ref.watch(fileDirectoryProvider).requireValue.path,
+                            '/fields/test_buffered.json',
+                          ].join();
 
-                        final file = File(path);
-                        if (!file.existsSync()) {
-                          await file.create(recursive: true);
+                          final file = File(path);
+                          if (!file.existsSync()) {
+                            await file.create(recursive: true);
+                          }
+                          await file.writeAsString(
+                            const JsonEncoder.withIndent('    ').convert(field),
+                          );
                         }
-                        await file.writeAsString(
-                          const JsonEncoder.withIndent('    ').convert(field),
-                        );
                       }
                     : null,
               );

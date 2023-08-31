@@ -13,49 +13,52 @@ class NetworkMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(hardwareCommunicationConfigProvider);
+    if (!Device.isWeb) ref.watch(hardwareCommunicationConfigProvider);
+    if (Device.isWeb) ref.watch(hardwareWebCommunicationConfigProvider);
 
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Network',
       icon: Icons.settings_ethernet,
       menuChildren: [
-        Consumer(
-          builder: (context, ref, child) {
-            final ip = ref.watch(deviceIPAdressWlanProvider).when(
-                  data: (data) => data ?? 'No connection',
-                  error: (error, stackTrace) => 'Error',
-                  loading: () => 'loading',
-                );
-            return ListTile(
-              leading: const Icon(Icons.wifi),
-              title: Text(
-                '''
+        if (!Device.isWeb)
+          Consumer(
+            builder: (context, ref, child) {
+              final ip = ref.watch(deviceIPAdressWlanProvider).when(
+                    data: (data) => data ?? 'No connection',
+                    error: (error, stackTrace) => 'Error',
+                    loading: () => 'loading',
+                  );
+              return ListTile(
+                leading: const Icon(Icons.wifi),
+                title: Text(
+                  '''
 This device wlan:
 $ip''',
-                style: textStyle,
-              ),
-            );
-          },
-        ),
-        Consumer(
-          builder: (context, ref, child) {
-            final ip = ref.watch(deviceIPAdressEthernetProvider).when(
-                  data: (data) => data ?? 'No connection',
-                  error: (error, stackTrace) => 'Error',
-                  loading: () => 'loading',
-                );
-            return ListTile(
-              leading: const Icon(Icons.cable),
-              title: Text(
-                '''
+                  style: textStyle,
+                ),
+              );
+            },
+          ),
+        if (!Device.isWeb)
+          Consumer(
+            builder: (context, ref, child) {
+              final ip = ref.watch(deviceIPAdressEthernetProvider).when(
+                    data: (data) => data ?? 'No connection',
+                    error: (error, stackTrace) => 'Error',
+                    loading: () => 'loading',
+                  );
+              return ListTile(
+                leading: const Icon(Icons.cable),
+                title: Text(
+                  '''
 This device ethernet:
 $ip''',
-                style: textStyle,
-              ),
-            );
-          },
-        ),
+                  style: textStyle,
+                ),
+              );
+            },
+          ),
         Consumer(
           builder: (context, ref, child) => ListTile(
             leading: const Icon(Icons.router),
@@ -77,59 +80,88 @@ $ip''',
             ),
           ),
         ),
-        Consumer(
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.call_received),
-            title: TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Receive port',
-                labelStyle: textStyle,
-                floatingLabelStyle: textStyle,
-              ),
-              keyboardType: TextInputType.number,
-              maxLength: 5,
-              maxLengthEnforcement: MaxLengthEnforcement.enforced,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {
-                final port = value != null ? int.tryParse(value) : null;
+        if (!Device.isWeb)
+          Consumer(
+            builder: (context, ref, child) => ListTile(
+              leading: const Icon(Icons.call_received),
+              title: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Receive port',
+                  labelStyle: textStyle,
+                  floatingLabelStyle: textStyle,
+                ),
+                keyboardType: TextInputType.number,
+                maxLength: 5,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) {
+                  final port = value != null ? int.tryParse(value) : null;
 
-                return port != null && port >= 1000 && port <= 65535
-                    ? 'Valid Port'
-                    : 'Invalid Port';
-              },
-              initialValue:
-                  ref.watch(hardwareUDPReceivePortProvider).toString(),
-              onChanged: ref
-                  .read(hardwareUDPReceivePortProvider.notifier)
-                  .updateFromString,
+                  return port != null && port >= 1000 && port <= 65535
+                      ? 'Valid Port'
+                      : 'Invalid Port';
+                },
+                initialValue:
+                    ref.watch(hardwareUDPReceivePortProvider).toString(),
+                onChanged: ref
+                    .read(hardwareUDPReceivePortProvider.notifier)
+                    .updateFromString,
+              ),
             ),
           ),
-        ),
-        Consumer(
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.send),
-            title: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Send port',
-              ),
-              keyboardType: TextInputType.number,
-              maxLength: 5,
-              maxLengthEnforcement: MaxLengthEnforcement.enforced,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {
-                final port = value != null ? int.tryParse(value) : null;
+        if (!Device.isWeb)
+          Consumer(
+            builder: (context, ref, child) => ListTile(
+              leading: const Icon(Icons.send),
+              title: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Send port',
+                ),
+                keyboardType: TextInputType.number,
+                maxLength: 5,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) {
+                  final port = value != null ? int.tryParse(value) : null;
 
-                return port != null && port >= 1000 && port <= 65535
-                    ? 'Valid Port'
-                    : 'Invalid Port';
-              },
-              initialValue: ref.watch(hardwareUDPSendPortProvider).toString(),
-              onChanged: ref
-                  .read(hardwareUDPSendPortProvider.notifier)
-                  .updateFromString,
+                  return port != null && port >= 1000 && port <= 65535
+                      ? 'Valid Port'
+                      : 'Invalid Port';
+                },
+                initialValue: ref.watch(hardwareUDPSendPortProvider).toString(),
+                onChanged: ref
+                    .read(hardwareUDPSendPortProvider.notifier)
+                    .updateFromString,
+              ),
             ),
           ),
-        ),
+        if (Device.isWeb)
+          Consumer(
+            builder: (context, ref, child) => ListTile(
+              leading: const Icon(Icons.send),
+              title: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Socket port',
+                ),
+                keyboardType: TextInputType.number,
+                maxLength: 5,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) {
+                  final port = value != null ? int.tryParse(value) : null;
+
+                  return port != null && port >= 1 && port <= 65535
+                      ? 'Valid Port'
+                      : 'Invalid Port';
+                },
+                initialValue:
+                    ref.watch(hardwareWebSocketPortProvider).toString(),
+                onChanged: ref
+                    .read(hardwareWebSocketPortProvider.notifier)
+                    .updateFromString,
+              ),
+            ),
+          ),
       ],
     );
   }

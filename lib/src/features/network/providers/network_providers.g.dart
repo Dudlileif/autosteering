@@ -74,7 +74,30 @@ typedef HardwareCommunicationConfigRef = ProviderRef<
       int hardwareUDPReceivePort,
       int hardwareUDPSendPort
     })>;
-String _$hardwareIPAdressHash() => r'4e1d03593b82c071847884ed91e12d974c7f3c43';
+String _$hardwareWebCommunicationConfigHash() =>
+    r'ffa785022e1c36c2883c7a23898f55a16a1b1567';
+
+/// A provider for the combined state of the [HardwareIPAdress],
+/// [HardwareWebSocketPort].
+///
+/// The updated state is automatically sent to the
+///
+/// Copied from [hardwareWebCommunicationConfig].
+@ProviderFor(hardwareWebCommunicationConfig)
+final hardwareWebCommunicationConfigProvider =
+    Provider<({String hardwareIPAdress, int hardwareWebSocketPort})>.internal(
+  hardwareWebCommunicationConfig,
+  name: r'hardwareWebCommunicationConfigProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hardwareWebCommunicationConfigHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef HardwareWebCommunicationConfigRef
+    = ProviderRef<({String hardwareIPAdress, int hardwareWebSocketPort})>;
+String _$hardwareIPAdressHash() => r'9e16807c2fc2e38718ce21576b0ea9a32d5c87f0';
 
 /// A provider for the IP adress of the hardware we want to communicate with.
 ///
@@ -93,7 +116,7 @@ final hardwareIPAdressProvider =
 
 typedef _$HardwareIPAdress = Notifier<String>;
 String _$hardwareUDPReceivePortHash() =>
-    r'00d027c40fdf1f82128e0a4f6bd2430894a1ba74';
+    r'b3dcb3a4792c18833d84b60b7d559199b7868510';
 
 /// A provider for the UDP receive port for the device.
 ///
@@ -112,7 +135,7 @@ final hardwareUDPReceivePortProvider =
 
 typedef _$HardwareUDPReceivePort = Notifier<int>;
 String _$hardwareUDPSendPortHash() =>
-    r'88d58ea54179863cc7e7d1fc652c2479060ebe58';
+    r'bd08e39eec4b4b1216c6072a64dfe6af0f2ed76a';
 
 /// A provider for the UDP send port for the device to send messages to
 /// the hardware in [HardwareIPAdress].
@@ -131,5 +154,25 @@ final hardwareUDPSendPortProvider =
 );
 
 typedef _$HardwareUDPSendPort = Notifier<int>;
+String _$hardwareWebSocketPortHash() =>
+    r'e5cc5998b00cce1c57443a9c928d1dcd3ab5ccb7';
+
+/// A provider for the UDP send port for the device to send messages to
+/// the hardware in [HardwareIPAdress].
+///
+/// Copied from [HardwareWebSocketPort].
+@ProviderFor(HardwareWebSocketPort)
+final hardwareWebSocketPortProvider =
+    NotifierProvider<HardwareWebSocketPort, int>.internal(
+  HardwareWebSocketPort.new,
+  name: r'hardwareWebSocketPortProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hardwareWebSocketPortHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$HardwareWebSocketPort = Notifier<int>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

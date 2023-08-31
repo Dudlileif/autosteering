@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_antenna_page.dart';
@@ -111,7 +112,12 @@ class VehicleConfigurator extends ConsumerWidget {
       );
 }
 
+/// A button for loading an [Vehicle] to the [configuredVehicleProvider]
+/// from a file.
 class _LoadButton extends ConsumerWidget {
+  /// A button for loading an [Vehicle] to the [configuredVehicleProvider]
+  /// from a file.
+
   const _LoadButton();
 
   @override
@@ -124,7 +130,11 @@ class _LoadButton extends ConsumerWidget {
   }
 }
 
+/// A button for saving the [Vehicle] int [configuredVehicleProvider] to
+/// a file.
 class _SaveButton extends ConsumerWidget {
+  /// A button for saving the [Vehicle] int [configuredVehicleProvider] to
+  /// a file.
   const _SaveButton();
 
   @override
@@ -231,9 +241,9 @@ class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
           ref.read(mainVehicleProvider.notifier).update(vehicle);
 
           ref.read(simInputProvider.notifier).send(vehicle);
-
-          ref.read(SaveVehicleProvider(vehicle));
-
+          if (!Device.isWeb) {
+            ref.read(SaveVehicleProvider(vehicle));
+          }
           Navigator.of(context).pop();
         },
         icon: const Icon(Icons.check),

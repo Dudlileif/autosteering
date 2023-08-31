@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:file_picker/file_picker.dart';
@@ -124,28 +126,43 @@ AsyncValue<Vehicle?> loadFileConfiguredVehicle(
 ) {
   FilePicker.platform.pickFiles(
     allowedExtensions: ['json'],
+    type: FileType.custom,
     dialogTitle: 'Choose vehicle file',
-    initialDirectory: [
-      ref.watch(fileDirectoryProvider).requireValue.path,
-      '/vehicles',
-    ].join(),
+    initialDirectory: Device.isWeb
+        ? null
+        : [
+            ref.watch(fileDirectoryProvider).requireValue.path,
+            '/vehicles',
+          ].join(),
   ).then((pickedFiles) {
-    final filePath = pickedFiles?.paths.first;
-    if (filePath != null) {
-      return ref.watch(loadVehicleFromFileProvider(filePath)).when(
-            data: (data) {
-              if (data != null) {
-                ref.read(configuredVehicleProvider.notifier).update(data);
-                ref.invalidate(configuredVehicleNameTextControllerProvider);
-                return AsyncData(data);
-              }
-              return const AsyncData(null);
-            },
-            error: (error, stackTrace) => AsyncError.new,
-            loading: () => AsyncLoading.new,
-          );
+    if (Device.isWeb) {
+      final data = pickedFiles?.files.first.bytes;
+      if (data != null) {
+        final json = jsonDecode(String.fromCharCodes(data));
+        if (json is Map) {
+          final vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json));
+          ref.read(configuredVehicleProvider.notifier).update(vehicle);
+          ref.invalidate(configuredVehicleNameTextControllerProvider);
+          return AsyncData(vehicle);
+        }
+      }
+    } else {
+      final filePath = pickedFiles?.paths.first;
+      if (filePath != null) {
+        return ref.watch(loadVehicleFromFileProvider(filePath)).when(
+              data: (data) {
+                if (data != null) {
+                  ref.read(configuredVehicleProvider.notifier).update(data);
+                  ref.invalidate(configuredVehicleNameTextControllerProvider);
+                  return AsyncData(data);
+                }
+                return const AsyncData(null);
+              },
+              error: (error, stackTrace) => AsyncError.new,
+              loading: () => AsyncLoading.new,
+            );
+      }
     }
-
     return const AsyncData(null);
   });
   return const AsyncLoading();

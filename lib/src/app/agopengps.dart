@@ -29,7 +29,7 @@ class _AgOpenGpsState extends ConsumerState<AgOpenGps> {
         Future.delayed(
           const Duration(milliseconds: 500),
           () => setState(
-            () => loading = false,
+            () => loading = ref.watch(lastUsedVehicleProvider) is! AsyncData,
           ),
         );
       }

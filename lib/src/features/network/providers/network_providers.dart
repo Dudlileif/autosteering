@@ -51,7 +51,7 @@ class HardwareIPAdress extends _$HardwareIPAdress {
 
     if (ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.simAutoSlowDown)) {
+        .containsKey(SettingsKey.hardwareIPAdress)) {
       return ref
               .read(settingsProvider.notifier)
               .getString(SettingsKey.hardwareIPAdress) ??
@@ -83,7 +83,7 @@ class HardwareUDPReceivePort extends _$HardwareUDPReceivePort {
 
     if (ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.simAutoSlowDown)) {
+        .containsKey(SettingsKey.hardwareUDPReceivePort)) {
       return ref
               .read(settingsProvider.notifier)
               .getInt(SettingsKey.hardwareUDPReceivePort) ??
@@ -122,7 +122,7 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
 
     if (ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.simAutoSlowDown)) {
+        .containsKey(SettingsKey.hardwareUDPSendPort)) {
       return ref
               .read(settingsProvider.notifier)
               .getInt(SettingsKey.hardwareUDPSendPort) ??
@@ -163,5 +163,64 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
     hardwareIPAdress: ref.watch(hardwareIPAdressProvider),
     hardwareUDPReceivePort: ref.watch(hardwareUDPReceivePortProvider),
     hardwareUDPSendPort: ref.watch(hardwareUDPSendPortProvider)
+  );
+}
+
+/// A provider for the UDP send port for the device to send messages to
+/// the hardware in [HardwareIPAdress].
+@Riverpod(keepAlive: true)
+class HardwareWebSocketPort extends _$HardwareWebSocketPort {
+  @override
+  int build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.hardwareWebSocketPort, next);
+      }
+    });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.hardwareWebSocketPort)) {
+      return ref
+              .read(settingsProvider.notifier)
+              .getInt(SettingsKey.hardwareWebSocketPort) ??
+          80;
+    }
+
+    return 80;
+  }
+
+  /// Update the [state] to [value].
+  void update(int value) => Future(() => state = value);
+
+  /// Update the [state] to [value] if it's a valid integer.
+  void updateFromString(String value) => Future(() {
+        final port = int.tryParse(value);
+        if (port != null) {
+          if (port >= 1 && port <= 65535) {
+            state = port;
+          }
+        }
+      });
+}
+
+/// A provider for the combined state of the [HardwareIPAdress],
+/// [HardwareWebSocketPort].
+///
+/// The updated state is automatically sent to the
+@Riverpod(keepAlive: true)
+({String hardwareIPAdress, int hardwareWebSocketPort})
+    hardwareWebCommunicationConfig(HardwareWebCommunicationConfigRef ref) {
+  ref.listenSelf((previous, next) {
+    if (next != previous) {
+      ref.read(simInputProvider.notifier).send(next);
+    }
+  });
+
+  return (
+    hardwareIPAdress: ref.watch(hardwareIPAdressProvider),
+    hardwareWebSocketPort: ref.watch(hardwareWebSocketPortProvider),
   );
 }

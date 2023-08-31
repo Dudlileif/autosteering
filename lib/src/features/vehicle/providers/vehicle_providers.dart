@@ -6,6 +6,7 @@ import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_html/html.dart' as html;
 import 'package:universal_io/io.dart';
 
 part 'vehicle_providers.g.dart';
@@ -95,20 +96,35 @@ FutureOr<void> saveVehicle(
 ) async {
   final name = vehicle.name ?? vehicle.uuid;
 
-  final file = File(
-    '''${ref.watch(fileDirectoryProvider).requireValue.path}/vehicles/$name.json''',
-  );
+  if (Device.isWeb) {
+    html.AnchorElement()
+      ..href = '${Uri.dataFromString(
+        const JsonEncoder.withIndent('    ').convert(vehicle.toJson()),
+        mimeType: 'text/plain',
+        encoding: utf8,
+      )}'
+      ..download = '$name.json'
+      ..style.display = 'none'
+      ..click();
+  } else {
+    final file = File(
+      '''${ref.watch(fileDirectoryProvider).requireValue.path}/vehicles/$name.json''',
+    );
 
-  await file.create(recursive: true);
+    await file.create(recursive: true);
 
-  await file
-      .writeAsString(const JsonEncoder.withIndent('    ').convert(vehicle));
+    await file
+        .writeAsString(const JsonEncoder.withIndent('    ').convert(vehicle));
+  }
 }
 
 /// A provider for reading and holding all the saved vehicles in the
 /// user file directory.
 @Riverpod(keepAlive: true)
 FutureOr<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) async {
+  if (Device.isWeb) {
+    return [];
+  }
   final dir = Directory(
     [ref.watch(fileDirectoryProvider).requireValue.path, '/vehicles'].join(),
   );

@@ -5,6 +5,7 @@ enum SettingsKey {
   hardwareIPAdress('hardware.ip_address'),
   hardwareUDPReceivePort('hardware.udp_receive_port'),
   hardwareUDPSendPort('hardware.udp_send_port'),
+  hardwareWebSocketPort('hardware.web_socket_port'),
   mapAllowDownload('map.allow_download'),
   copernicusInstanceId('map.copernicus_instance_id'),
   currentCountry('map.current_country'),

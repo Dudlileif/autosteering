@@ -9,6 +9,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_html/html.dart' as html;
 import 'package:universal_io/io.dart';
 
 part 'equipment_providers.g.dart';
@@ -244,20 +245,35 @@ FutureOr<void> saveEquipment(
 ) async {
   final name = equipment.name ?? equipment.uuid;
 
-  final file = File(
-    '''${ref.watch(fileDirectoryProvider).requireValue.path}/equipment/$name.json''',
-  );
+  if (Device.isWeb) {
+    html.AnchorElement()
+      ..href = '${Uri.dataFromString(
+        const JsonEncoder.withIndent('    ').convert(equipment.toJson()),
+        mimeType: 'text/plain',
+        encoding: utf8,
+      )}'
+      ..download = '$name.json'
+      ..style.display = 'none'
+      ..click();
+  } else {
+    final file = File(
+      '''${ref.watch(fileDirectoryProvider).requireValue.path}/equipment/$name.json''',
+    );
 
-  await file.create(recursive: true);
+    await file.create(recursive: true);
 
-  await file
-      .writeAsString(const JsonEncoder.withIndent('    ').convert(equipment));
+    await file
+        .writeAsString(const JsonEncoder.withIndent('    ').convert(equipment));
+  }
 }
 
 /// A provider for reading and holding all the saved vehicles in the
 /// user file directory.
 @Riverpod(keepAlive: true)
 FutureOr<List<Equipment>> savedEquipments(SavedEquipmentsRef ref) async {
+  if (Device.isWeb) {
+    return [];
+  }
   final dir = Directory(
     [ref.watch(fileDirectoryProvider).requireValue.path, '/equipment'].join(),
   );

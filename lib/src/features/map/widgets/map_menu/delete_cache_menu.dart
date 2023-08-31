@@ -19,7 +19,10 @@ class DeleteCacheMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (Device.isWeb) {
       return const MenuItemButton(
-        leadingIcon: Icon(Icons.delete),
+        leadingIcon: Padding(
+          padding: EdgeInsets.only(left: 8),
+          child: Icon(Icons.delete),
+        ),
         onPressed: FastCachedImageConfig.clearAllCachedImages,
         child: Text('Delete cache'),
       );

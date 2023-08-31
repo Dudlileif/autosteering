@@ -170,7 +170,7 @@ class _LoadEquipmentFromFileProviderElement
   String get path => (origin as LoadEquipmentFromFileProvider).path;
 }
 
-String _$saveEquipmentHash() => r'a40001386ea0fbe1b5b87ca43368b39efa140952';
+String _$saveEquipmentHash() => r'43b8d912559999938b43aab6f6e04d8d6e843a95';
 
 /// A provider for saving [equipment] to a file in the user file directory.
 ///
@@ -310,7 +310,7 @@ class _SaveEquipmentProviderElement
   Equipment get equipment => (origin as SaveEquipmentProvider).equipment;
 }
 
-String _$savedEquipmentsHash() => r'fa789532ed465b735f3cb4a539e326df91b951f3';
+String _$savedEquipmentsHash() => r'74435c13ee025fed36703983558786c957b5eb60';
 
 /// A provider for reading and holding all the saved vehicles in the
 /// user file directory.

@@ -7,7 +7,7 @@ part of 'vehicle_configurator_providers.dart';
 // **************************************************************************
 
 String _$loadFileConfiguredVehicleHash() =>
-    r'c2ba6c2e90afaa701a7135c5ef1f0230b6101d78';
+    r'a0960f2ba2976556452ec574a98c2cdd4b9f3787';
 
 /// A provider for loading a vehicle configuration from the user file directory
 /// and applying it to the [ConfiguredVehicle] provider.
