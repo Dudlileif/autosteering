@@ -16,6 +16,7 @@ class SimMenu extends StatelessWidget {
 
     return MenuButtonWithChildren(
       text: 'Sim',
+      icon: Icons.gamepad_outlined,
       menuChildren: [
         const VehicleSimMenu(),
         Consumer(

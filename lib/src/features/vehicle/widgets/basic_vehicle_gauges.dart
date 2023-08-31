@@ -32,7 +32,7 @@ class BasicVehicleGauges extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Consumer(
                   builder: (context, ref, child) => Text(
-                    'Travelled distance: ${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1)} m',
+                    '''Travelled distance: ${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1)} m''',
                   ),
                 ),
               ),
@@ -49,7 +49,7 @@ class BasicVehicleGauges extends StatelessWidget {
                 ),
                 Consumer(
                   builder: (context, ref, child) => Text(
-                    '${ref.watch(gaugeVelocityProvider).toStringAsFixed(1)} m/s',
+                    '''${ref.watch(gaugeVelocityProvider).toStringAsFixed(1)} m/s''',
                   ),
                 ),
               ],
@@ -59,7 +59,7 @@ class BasicVehicleGauges extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Consumer(
               builder: (context, ref, child) => Text(
-                'Bearing: ${ref.watch(gaugeBearingProvider).toStringAsFixed(1)}º',
+                '''Bearing: ${ref.watch(gaugeBearingProvider).toStringAsFixed(1)}º''',
               ),
             ),
           ),

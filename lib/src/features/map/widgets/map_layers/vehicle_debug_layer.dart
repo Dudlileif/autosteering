@@ -16,6 +16,7 @@ class VehicleDebugLayer extends ConsumerWidget {
     final debugSteering = ref.watch(debugSteeringProvider);
     final debugPolygons = ref.watch(debugVehiclePolygonsProvider);
     final debugHitches = ref.watch(debugVehicleHitchesProvider);
+    final debugAntennaPosition = ref.watch(debugVehicleAntennaPositionProvider);
 
     final vehicle = ref.watch(mainVehicleProvider);
     final travelledPath = ref.watch(debugTravelledPathListProvider);
@@ -55,39 +56,47 @@ class VehicleDebugLayer extends ConsumerWidget {
               ),
             ],
           ),
-        if (debugHitches)
-          CircleLayer(
-            circles: vehicle.hitchPoints
-                .map(
-                  (hitch) => CircleMarker(
-                    point: hitch.latLng,
-                    radius: 5,
-                    color: Colors.orange,
-                  ),
-                )
-                .toList(),
-          ),
-        if (debugSteering)
-          CircleLayer(
-            circles: [
-              if (debugSteering) ...vehicle.steeringDebugMarkers,
-              if (vehicle.currentTurningRadius != null)
-                CircleMarker(
-                  point: vehicle.turningRadiusCenter!.latLng,
-                  radius: vehicle.currentTurningRadius!,
-                  useRadiusInMeter: true,
-                  color: Colors.blue.withOpacity(0.2),
+        CircleLayer(
+          circles: [
+            if (debugHitches)
+              ...vehicle.hitchPoints.map(
+                (hitch) => CircleMarker(
+                  point: hitch.latLng,
+                  radius: 5,
+                  color: Colors.orange,
                 ),
-              if (vehicle is ArticulatedTractor &&
-                  vehicle.currentRearTurningRadius != null)
-                CircleMarker(
-                  point: vehicle.turningRadiusCenter!.latLng,
-                  radius: vehicle.currentRearTurningRadius!,
-                  useRadiusInMeter: true,
-                  color: Colors.red.withOpacity(0.2),
-                )
+              ),
+            if (debugSteering) ...vehicle.steeringDebugMarkers,
+            if (debugSteering && vehicle.currentTurningRadius != null)
+              CircleMarker(
+                point: vehicle.turningRadiusCenter!.latLng,
+                radius: vehicle.currentTurningRadius!,
+                useRadiusInMeter: true,
+                color: Colors.blue.withOpacity(0.2),
+              ),
+            if (debugSteering &&
+                vehicle is ArticulatedTractor &&
+                vehicle.currentRearTurningRadius != null)
+              CircleMarker(
+                point: vehicle.turningRadiusCenter!.latLng,
+                radius: vehicle.currentRearTurningRadius!,
+                useRadiusInMeter: true,
+                color: Colors.red.withOpacity(0.2),
+              ),
+            if (debugAntennaPosition) ...[
+              CircleMarker(
+                point: vehicle.position.latLng,
+                radius: 10,
+                color: Colors.yellow,
+              ),
+              CircleMarker(
+                point: vehicle.antennaPosition.latLng,
+                radius: 10,
+                color: Colors.purple,
+              ),
             ],
-          ),
+          ],
+        ),
       ],
     );
   }

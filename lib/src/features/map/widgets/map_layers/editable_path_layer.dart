@@ -25,9 +25,9 @@ class EditablePathLayer extends ConsumerWidget {
                   Polyline(
                     points: [
                       ...points.map((point) => point.position.latLng),
-                      if (closedPath) points.first.position.latLng
+                      if (closedPath) points.first.position.latLng,
                     ],
-                  )
+                  ),
                 ],
               ),
               MarkerLayer(
@@ -89,7 +89,7 @@ class EditablePathLayer extends ConsumerWidget {
                     ),
                   ),
                 ],
-              )
+              ),
             ]
           : const [],
     );

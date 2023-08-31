@@ -1,11 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_html/html.dart' as html;
+import 'package:universal_io/io.dart';
 
 part 'vehicle_providers.g.dart';
 
@@ -13,50 +15,12 @@ part 'vehicle_providers.g.dart';
 @Riverpod(keepAlive: true)
 class MainVehicle extends _$MainVehicle {
   @override
-  Vehicle build() => Tractor(
-        position: ref.read(homePositionProvider).gbPosition,
-        antennaHeight: 2.822,
-        length: 4.358,
-        width: 2.360,
-        trackWidth: 1.8,
-        wheelBase: 2.550,
-        solidAxleDistance: 1.275,
-        minTurningRadius: 4.25,
-        steeringAngleMax: 32,
-        simulated: true,
-      );
-
-  /// Set the velocity of the [state] to [value].
-  void setVelocity(double value) {
-    if (value != state.velocity) {
-      Future(() => state = state.copyWith(velocity: value));
-    }
-  }
-
-  /// Set the steering angle input of the [state] to [value].
-  void setSteeringAngle(double value) {
-    if (value != state.steeringAngle) {
-      Future(() => state = state.copyWith(steeringAngleInput: value));
-    }
-  }
-
-  /// Set the position of the [state] to [value].
-  void setPositon(Geographic value) {
-    if (value != state.position) {
-      Future(() => state = state.copyWith(position: value));
-    }
-  }
-
-  /// Set the bearing of the [state] to [value].
-
-  void setBearing(double value) {
-    if (value != state.bearing) {
-      Future(() => state = state.copyWith(bearing: value));
-    }
-  }
+  Vehicle build() => ref.read(lastUsedVehicleProvider).requireValue
+    ..position = ref.read(homePositionProvider).gbPosition;
 
   /// Update the [state] to [vehicle].
-  void update(Vehicle vehicle) => Future(() => state = vehicle);
+  void update(Vehicle vehicle) =>
+      Future(() => state = vehicle..lastUsed = DateTime.now());
 
   /// Update the [state] with only the position, velocity, bearing and
   /// steering input angle from [vehicle].
@@ -66,8 +30,17 @@ class MainVehicle extends _$MainVehicle {
           bearing: vehicle.bearing,
           steeringAngleInput: vehicle.steeringAngleInput,
           position: vehicle.position,
-        );
+        )..lastUsed = DateTime.now();
       });
+
+  /// Update the [state] to a new [vehicle] configuration, but keep the
+  /// position and bearing.
+  void updateConfig(Vehicle vehicle) => Future(
+        () => state = vehicle.copyWith(
+          position: state.position,
+          bearing: state.bearing,
+        )..lastUsed = DateTime.now(),
+      );
 
   /// Reset the [state] to the initial value by recreating the [state].
   void reset() => ref.invalidateSelf();
@@ -93,3 +66,133 @@ class AutoSteerEnabled extends _$AutoSteerEnabled {
   /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
+
+/// A provider for whether the vehicle's bearing is set by the IMU input.
+@Riverpod(keepAlive: true)
+class UseIMUBearing extends _$UseIMUBearing {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != next) {
+        ref.read(simInputProvider.notifier).send((useIMUBearing: next));
+      }
+    });
+
+    return false;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}
+
+/// A provider for saving [vehicle] to a file in the user file directory.
+@riverpod
+FutureOr<void> saveVehicle(
+  SaveVehicleRef ref,
+  Vehicle vehicle,
+) async {
+  final name = vehicle.name ?? vehicle.uuid;
+
+  if (Device.isWeb) {
+    html.AnchorElement()
+      ..href = '${Uri.dataFromString(
+        const JsonEncoder.withIndent('    ').convert(vehicle.toJson()),
+        mimeType: 'text/plain',
+        encoding: utf8,
+      )}'
+      ..download = '$name.json'
+      ..style.display = 'none'
+      ..click();
+  } else {
+    final file = File(
+      '''${ref.watch(fileDirectoryProvider).requireValue.path}/vehicles/$name.json''',
+    );
+
+    await file.create(recursive: true);
+
+    await file
+        .writeAsString(const JsonEncoder.withIndent('    ').convert(vehicle));
+  }
+}
+
+/// A provider for reading and holding all the saved vehicles in the
+/// user file directory.
+@Riverpod(keepAlive: true)
+FutureOr<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) async {
+  if (Device.isWeb) {
+    return [];
+  }
+  final dir = Directory(
+    [ref.watch(fileDirectoryProvider).requireValue.path, '/vehicles'].join(),
+  );
+
+  if (!dir.existsSync()) {
+    dir.createSync(recursive: true);
+  }
+
+  // Remake the list if there are any file changes in the folder.
+  dir.watch(recursive: true).listen((event) {
+    ref.invalidateSelf();
+  });
+
+  final vehicles = <Vehicle>[];
+
+  if (dir.existsSync()) {
+    final fileEntities = dir.listSync(recursive: true);
+
+    if (fileEntities.isNotEmpty) {
+      for (final fileEntity in fileEntities) {
+        final file = File.fromUri(fileEntity.uri);
+
+        final json = jsonDecode(await file.readAsString());
+
+        if (json is Map) {
+          vehicles.add(Vehicle.fromJson(Map<String, dynamic>.from(json)));
+        }
+      }
+    }
+  }
+
+  return vehicles;
+}
+
+/// A provider for loading a [Vehicle] from a file at [path], if it's valid.
+@riverpod
+FutureOr<Vehicle?> loadVehicleFromFile(
+  LoadVehicleFromFileRef ref,
+  String path,
+) async {
+  final file = File(path);
+  if (file.existsSync()) {
+    final json = jsonDecode(await file.readAsString());
+    if (json is Map) {
+      final vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json));
+
+      return vehicle;
+    }
+  }
+  return null;
+}
+
+/// A provider for the most recently used [Vehicle].
+///
+/// The vehicle is found by sorting the saved vehicles by their last used
+/// property.
+@Riverpod(keepAlive: true)
+AsyncValue<Vehicle> lastUsedVehicle(LastUsedVehicleRef ref) =>
+    ref.watch(savedVehiclesProvider).when(
+          data: (data) {
+            if (data.isNotEmpty) {
+              final sorted = data
+                ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+
+              return AsyncData(sorted.first);
+            }
+            return AsyncData(PreconfiguredVehicles.tractor);
+          },
+          error: AsyncError.new,
+          loading: AsyncLoading.new,
+        );

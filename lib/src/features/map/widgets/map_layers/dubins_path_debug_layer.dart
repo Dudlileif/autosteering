@@ -106,7 +106,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                             distance: 2,
                             bearing: dubinsPath.start.bearing,
                           )
-                          .latLng
+                          .latLng,
                     ],
                     color: Colors.blue,
                     strokeWidth: 5,
@@ -119,7 +119,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                             distance: 2,
                             bearing: dubinsPath.end.bearing,
                           )
-                          .latLng
+                          .latLng,
                     ],
                     color: Colors.red,
                     strokeWidth: 5,
@@ -130,7 +130,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                         e.position.latLng,
                         e.position.spherical
                             .destinationPoint(distance: 0.5, bearing: e.bearing)
-                            .latLng
+                            .latLng,
                       ],
                       strokeWidth: 2,
                     ),
@@ -166,7 +166,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           );
         }
@@ -205,7 +205,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                 ),
               ),
           ],
-        )
+        ),
       ],
     );
   }

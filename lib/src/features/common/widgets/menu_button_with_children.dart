@@ -19,6 +19,7 @@ class MenuButtonWithChildren extends StatelessWidget {
     this.menuChildren = const [],
     this.icon,
     this.iconRotation,
+    this.iconOverrideWidget,
     super.key,
   });
 
@@ -33,6 +34,9 @@ class MenuButtonWithChildren extends StatelessWidget {
   /// Expected to be in degrees.
   final double? iconRotation;
 
+  /// A widget for overriding the default leading padded [Icon] widget.
+  final Widget? iconOverrideWidget;
+
   /// The text to show on the button.
   final String text;
 
@@ -45,7 +49,7 @@ class MenuButtonWithChildren extends StatelessWidget {
 
     return SubmenuButton(
       menuChildren: menuChildren,
-      child: icon != null
+      child: icon != null || iconOverrideWidget != null
           ? Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -54,14 +58,14 @@ class MenuButtonWithChildren extends StatelessWidget {
                   child: iconRotation != null
                       ? Transform.rotate(
                           angle: iconRotation! / 180 * pi,
-                          child: Icon(icon),
+                          child: iconOverrideWidget ?? Icon(icon),
                         )
-                      : Icon(icon),
+                      : iconOverrideWidget ?? Icon(icon),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 4),
                   child: textWidget,
-                )
+                ),
               ],
             )
           : textWidget,

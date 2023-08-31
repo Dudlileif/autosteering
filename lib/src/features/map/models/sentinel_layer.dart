@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sentinel_layer.freezed.dart';
@@ -32,6 +33,10 @@ class SentinelLayer with _$SentinelLayer {
 
   /// The name of the layer type.
   String get name => layerType.name;
+
+  /// A layer data object to simplify the caching process.
+  TileLayerData get layerData =>
+      TileLayerData(name: name, folderName: 'Sentinel');
 
   /// The url template for getting map tiles for this layer.
   String urlTemplate(double maxCloudCoveragePercent) => layerType.urlTemplate(

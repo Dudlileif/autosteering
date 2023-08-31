@@ -8,10 +8,21 @@ class PidParameters extends Equatable {
   /// [i] is the integral gain.
   /// [d] is the derivative gain.
   const PidParameters({
-    required this.p,
-    required this.i,
-    required this.d,
+    this.p = 0.5,
+    this.i = 2.7,
+    this.d = 0.15,
   });
+
+  /// A factory constructor that takes an input map of the form:
+  ///
+  /// ```
+  /// {'p': 0.5, 'i': 2.7, 'd':0.15}
+  /// ```
+  factory PidParameters.fromJson(Map<String, dynamic> json) => PidParameters(
+        p: json['p'] as double,
+        i: json['i'] as double,
+        d: json['d'] as double,
+      );
 
   /// Proportional gain.
   final double p;
@@ -29,4 +40,7 @@ class PidParameters extends Equatable {
   /// A list of objects to check for equatability.
   @override
   List<Object?> get props => [p, i, d];
+
+  /// A json compatible serialization of this class.
+  Map<String, dynamic> toJson() => {'p': p, 'i': i, 'd': d};
 }

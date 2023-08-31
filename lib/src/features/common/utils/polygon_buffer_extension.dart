@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
-import 'package:maps_toolkit2/maps_toolkit2.dart';
 
 /// An extension to allow for interfacing with different geometry and
 /// map tool packages to make insetting and extending [Polygon]s easy.
@@ -29,7 +28,7 @@ extension PolygonBufferExtension on Polygon {
         ).map((point) => point.values).flattened,
       );
 
-  /// The buffered [LatLng] points for a polygon's holes that has been inset or
+  /// The buffered [PositionArray]s for a polygon's holes that has been inset or
   /// extended by [distance] meters. Insetting requires negative [distance],
   /// extending requires positive [distance].
   Iterable<PositionArray> bufferedInterior({
@@ -116,23 +115,23 @@ extension PolygonBufferExtension on Polygon {
     };
   }
 
-  /// Returns the area of a closed path on Earth.
-  /// @param path A closed path.
-  /// @return The path's area in square meters.
+  /// Returns the area of a closed path on Earth in square meters.
+  ///
+  /// [path] A closed path.
   static num computeArea(Iterable<Geographic> path) =>
       computeSignedArea(path).abs();
 
-  /// Returns the signed area of a closed path on Earth. The sign of the area
-  /// may be used to determine the orientation of the path.
+  /// Returns the signed area of a closed path on Earth in square meters.
+  /// The sign of the area may be used to determine the orientation of the path.
   /// "inside" is the surface that does not contain the South Pole.
-  /// @param path A closed path.
-  /// @return The loop's area in square meters.
+  ///
+  /// [path] A closed path.
+  ///
   static num computeSignedArea(Iterable<Geographic> path) =>
-      _computeSignedArea(path, earthRadius);
+      _computeSignedArea(path, 6371000);
 
-  /// Returns the signed area of a closed path on a sphere of given radius.
+  /// Returns the signed area of a closed [path] on a sphere of given [radius].
   /// The computed area uses the same units as the radius squared.
-  /// Used by SphericalUtilTest.
   static num _computeSignedArea(Iterable<Geographic> path, num radius) {
     if (path.length < 3) {
       return 0;
@@ -164,6 +163,7 @@ extension PolygonBufferExtension on Polygon {
   /// the included angle" as per "Spherical Trigonometry" by Todhunter, page 71,
   /// section 103, point 2.
   /// See http://books.google.com/books?id=3uBHAAAAIAAJ&pg=PA71
+  ///
   /// The arguments named "tan" are tan((pi/2 - latitude)/2).
   static num _polarTriangleArea(num tan1, num lng1, num tan2, num lng2) {
     final deltaLng = lng1 - lng2;

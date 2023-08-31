@@ -104,3 +104,43 @@ class DebugVehicleHitches extends _$DebugVehicleHitches {
   /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
+
+/// Whether to show vehicle antenna position debug.
+@Riverpod(keepAlive: true)
+class DebugVehicleAntennaPosition extends _$DebugVehicleAntennaPosition {
+  @override
+  bool build() => false;
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}
+
+/// Whether to show vehicle antenna position debug.
+@Riverpod(keepAlive: true)
+class DebugVehicleIMU extends _$DebugVehicleIMU {
+  @override
+  bool build() => false;
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}
+
+/// Whether to show vehicle autosteer parameters debug.
+@Riverpod(keepAlive: true)
+class DebugVehicleAutosteerParameters
+    extends _$DebugVehicleAutosteerParameters {
+  @override
+  bool build() => false;
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}

@@ -1,5 +1,4 @@
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'look_ahead_providers.g.dart';
@@ -33,12 +32,3 @@ class LookAheadVelocityGain extends _$LookAheadVelocityGain {
   /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
-
-/// A provider for the effective look ahead distance, i.e. the sum of
-/// [LookAheadDistance] and [mainVehicleProvider]'s velocity multiplied with
-/// [LookAheadVelocityGain].
-@riverpod
-double effectiveLookAheadDistance(EffectiveLookAheadDistanceRef ref) =>
-    ref.watch(lookAheadDistanceProvider) +
-    ref.watch(mainVehicleProvider.select((value) => value.velocity.abs())) *
-        ref.watch(lookAheadVelocityGainProvider);

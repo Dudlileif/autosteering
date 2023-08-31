@@ -4,12 +4,15 @@ import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:agopengps_flutter/src/features/gnss/providers/device_position_providers.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/network/network.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:async/async.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -52,6 +55,10 @@ class SimInput extends _$SimInput {
 @riverpod
 void simVehicleDriving(SimVehicleDrivingRef ref) {
   if (ref.watch(mapReadyProvider)) {
+    if (ref.watch(devicePositionAsVehiclePositionProvider)) {
+      ref.watch(devicePositionProvider);
+    }
+
     ref
       ..watch(simVehicleAutoCenterSteeringProvider)
       ..watch(simVehicleAutoSlowDownProvider);
@@ -145,7 +152,7 @@ Stream<Vehicle?> simVehicleWebStream(
     ref
         .read(gaugeTravelledDistanceProvider.notifier)
         .updateWith(event.distance.toDouble());
-    ref.read(displayPurePursuitProvider.notifier).update(event.purePursuit);
+    ref.read(displayPathTrackingProvider.notifier).update(event.pathTracking);
     ref.read(displayABLineProvider.notifier).update(event.abLine);
 
     return event.vehicle;
@@ -153,7 +160,7 @@ Stream<Vehicle?> simVehicleWebStream(
 }
 
 /// A provider that creates a stream and watches the vehicle simulator on the
-/// native platform.
+/// native platforms.
 ///
 /// It will update the stream with vehicle updates from the simulator and also
 /// update the vehicle gauge providers.
@@ -171,8 +178,11 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
   final events = StreamQueue<dynamic>(recievePort);
 
   final sendPort = await events.next as SendPort;
+
   ref.read(_simVehicleIsolatePortProvider.notifier).update(sendPort);
+
   sendPort
+    ..send(ref.read(hardwareCommunicationConfigProvider))
     ..send(ref.read(mainVehicleProvider))
     ..send((autoSlowDown: ref.read(simVehicleAutoSlowDownProvider)))
     ..send(
@@ -186,14 +196,38 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
     ref.read(_simVehicleIsolatePortProvider.notifier).update(null);
   });
 
+  // Give the simulator isolate 1 second to start.
+  var lastMessageTime = DateTime.now().add(const Duration(seconds: 1));
+
+  // How long we will wait for a message until we restart the simulator, in
+  // seconds.
+  // An increased time is used for debug mode to allow for hot reloading
+  // without destroying the sim state.
+  final heartbeatThreshold = switch (kDebugMode) {
+    false => 0.5,
+    true => 5,
+  };
+
   while (true) {
+    final latestUpdate = DateTime.now();
+
+    // Restart simulator if we've not received a message within the
+    // heartbeatThreshold
+    final difference = latestUpdate.difference(lastMessageTime);
+    if (difference.inMicroseconds > 1e6 * heartbeatThreshold) {
+      log('Simulator isolate unresponsive/died... Restarting...');
+      ref.invalidateSelf();
+    }
+    lastMessageTime = latestUpdate;
+
     final message = await events.next;
+
     if (message is ({
       Vehicle vehicle,
       double velocity,
       double bearing,
       double distance,
-      PurePursuit? purePursuit,
+      PathTracking? pathTracking,
       ABLine? abLine,
     })) {
       ref.read(gaugeVelocityProvider.notifier).update(message.velocity);
@@ -201,7 +235,9 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
       ref
           .read(gaugeTravelledDistanceProvider.notifier)
           .updateWith(message.distance);
-      ref.read(displayPurePursuitProvider.notifier).update(message.purePursuit);
+      ref
+          .read(displayPathTrackingProvider.notifier)
+          .update(message.pathTracking);
       ref.read(displayABLineProvider.notifier).update(message.abLine);
 
       yield message.vehicle;

@@ -38,7 +38,7 @@ class MapOffsetMenu extends ConsumerWidget {
               min: -40,
               max: 40,
               divisions: 80,
-            )
+            ),
           ],
         ),
         Column(
@@ -57,7 +57,7 @@ class MapOffsetMenu extends ConsumerWidget {
               min: -40,
               max: 40,
               divisions: 80,
-            )
+            ),
           ],
         ),
       ],

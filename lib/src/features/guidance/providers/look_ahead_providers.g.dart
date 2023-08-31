@@ -6,26 +6,6 @@ part of 'look_ahead_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$effectiveLookAheadDistanceHash() =>
-    r'65687af28663cda2b8242e6448d911f3d537614e';
-
-/// A provider for the effective look ahead distance, i.e. the sum of
-/// [LookAheadDistance] and [mainVehicleProvider]'s velocity multiplied with
-/// [LookAheadVelocityGain].
-///
-/// Copied from [effectiveLookAheadDistance].
-@ProviderFor(effectiveLookAheadDistance)
-final effectiveLookAheadDistanceProvider = AutoDisposeProvider<double>.internal(
-  effectiveLookAheadDistance,
-  name: r'effectiveLookAheadDistanceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$effectiveLookAheadDistanceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef EffectiveLookAheadDistanceRef = AutoDisposeProviderRef<double>;
 String _$lookAheadDistanceHash() => r'88a53a0827e724b4c8d9d671fa62054cea09f0c1';
 
 /// A provider for the look ahead distance for the guidance modes.

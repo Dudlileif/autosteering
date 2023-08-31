@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:universal_io/io.dart';
 
 /// A configuration class for a map tile layer.
 class TileLayerData {
@@ -23,6 +24,7 @@ class TileLayerData {
   /// when using dark mode, primarily useful for non-satellite maps.
   const TileLayerData({
     required this.name,
+    this.folderName,
     this.urlTemplate,
     this.subdomains = const [],
     this.wmsOptions,
@@ -35,6 +37,9 @@ class TileLayerData {
 
   /// The name of the layer.
   final String name;
+
+  /// The name of the folder to put this layer in, if there is one.
+  final String? folderName;
 
   /// The url template for getting map tiles for this layer.
   final String? urlTemplate;
@@ -63,4 +68,14 @@ class TileLayerData {
     BuildContext,
     Widget,
   )? themedTileLayerBuilder;
+
+  /// The folder which the cached image tiles of this layer is stored in.
+  Directory cacheDirectory(String userFolder) => Directory(
+        [
+          userFolder,
+          'map_image_cache',
+          if (folderName != null) folderName,
+          name,
+        ].join('/'),
+      );
 }

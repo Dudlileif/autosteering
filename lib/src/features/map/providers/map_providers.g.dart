@@ -41,6 +41,192 @@ final offsetVehiclePositionProvider = Provider<LatLng>.internal(
 );
 
 typedef OffsetVehiclePositionRef = ProviderRef<LatLng>;
+String _$mapCacheDateHash() => r'0b10a2822bb4319c72710f2de30016f2b501372c';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+/// A provider for finding the first cache date of the map layer cache
+/// at the given [path].
+///
+/// Copied from [mapCacheDate].
+@ProviderFor(mapCacheDate)
+const mapCacheDateProvider = MapCacheDateFamily();
+
+/// A provider for finding the first cache date of the map layer cache
+/// at the given [path].
+///
+/// Copied from [mapCacheDate].
+class MapCacheDateFamily extends Family<AsyncValue<DateTime?>> {
+  /// A provider for finding the first cache date of the map layer cache
+  /// at the given [path].
+  ///
+  /// Copied from [mapCacheDate].
+  const MapCacheDateFamily();
+
+  /// A provider for finding the first cache date of the map layer cache
+  /// at the given [path].
+  ///
+  /// Copied from [mapCacheDate].
+  MapCacheDateProvider call(
+    String path,
+  ) {
+    return MapCacheDateProvider(
+      path,
+    );
+  }
+
+  @override
+  MapCacheDateProvider getProviderOverride(
+    covariant MapCacheDateProvider provider,
+  ) {
+    return call(
+      provider.path,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'mapCacheDateProvider';
+}
+
+/// A provider for finding the first cache date of the map layer cache
+/// at the given [path].
+///
+/// Copied from [mapCacheDate].
+class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
+  /// A provider for finding the first cache date of the map layer cache
+  /// at the given [path].
+  ///
+  /// Copied from [mapCacheDate].
+  MapCacheDateProvider(
+    String path,
+  ) : this._internal(
+          (ref) => mapCacheDate(
+            ref as MapCacheDateRef,
+            path,
+          ),
+          from: mapCacheDateProvider,
+          name: r'mapCacheDateProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$mapCacheDateHash,
+          dependencies: MapCacheDateFamily._dependencies,
+          allTransitiveDependencies:
+              MapCacheDateFamily._allTransitiveDependencies,
+          path: path,
+        );
+
+  MapCacheDateProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.path,
+  }) : super.internal();
+
+  final String path;
+
+  @override
+  Override overrideWith(
+    FutureOr<DateTime?> Function(MapCacheDateRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: MapCacheDateProvider._internal(
+        (ref) => create(ref as MapCacheDateRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        path: path,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<DateTime?> createElement() {
+    return _MapCacheDateProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MapCacheDateProvider && other.path == path;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, path.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin MapCacheDateRef on AutoDisposeFutureProviderRef<DateTime?> {
+  /// The parameter `path` of this provider.
+  String get path;
+}
+
+class _MapCacheDateProviderElement
+    extends AutoDisposeFutureProviderElement<DateTime?> with MapCacheDateRef {
+  _MapCacheDateProviderElement(super.provider);
+
+  @override
+  String get path => (origin as MapCacheDateProvider).path;
+}
+
+String _$mapCacheDirectoriesHash() =>
+    r'466efc3812ee4ab6265fa42d67f9be292e413542';
+
+/// A provider for listing all the map layer cache folders.
+///
+/// Copied from [mapCacheDirectories].
+@ProviderFor(mapCacheDirectories)
+final mapCacheDirectoriesProvider =
+    AutoDisposeFutureProvider<List<String>>.internal(
+  mapCacheDirectories,
+  name: r'mapCacheDirectoriesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$mapCacheDirectoriesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef MapCacheDirectoriesRef = AutoDisposeFutureProviderRef<List<String>>;
 String _$mapReadyHash() => r'2931061d7ad71c99e4d4b04386d2adc722b6e029';
 
 /// Whether the map is ready to be shown or not.
@@ -226,5 +412,39 @@ final map3DPerspectiveAngleProvider =
 );
 
 typedef _$Map3DPerspectiveAngle = Notifier<double>;
+String _$mapZoomHash() => r'070ace7cb8cec2c2a0c7b1c56a4c50f8bb51a379';
+
+/// The zoom value that the map should use when being created.
+///
+/// Copied from [MapZoom].
+@ProviderFor(MapZoom)
+final mapZoomProvider = NotifierProvider<MapZoom, double>.internal(
+  MapZoom.new,
+  name: r'mapZoomProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$mapZoomHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MapZoom = Notifier<double>;
+String _$mapAllowDownloadHash() => r'7c11393246dcc8e12c809f33c655bb676157b6a9';
+
+/// Whether the map should be allowed to download tiles over the internet.
+///
+/// Copied from [MapAllowDownload].
+@ProviderFor(MapAllowDownload)
+final mapAllowDownloadProvider =
+    NotifierProvider<MapAllowDownload, bool>.internal(
+  MapAllowDownload.new,
+  name: r'mapAllowDownloadProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$mapAllowDownloadHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MapAllowDownload = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

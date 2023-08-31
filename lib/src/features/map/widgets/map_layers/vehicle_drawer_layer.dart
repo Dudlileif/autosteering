@@ -21,40 +21,48 @@ class VehicleDrawerLayer extends ConsumerWidget {
               topLeftCorner: vehicle.polygons.first.points.first,
               bottomLeftCorner: vehicle.polygons.first.points.last,
               bottomRightCorner: vehicle.polygons.first.points[2],
-              imageProvider: const AssetImage('assets/images/Tractor.png'),
+              imageProvider: const AssetImage(
+                'assets/images/vehicle_types/top_view/Tractor.png',
+              ),
             ),
             RotatedOverlayImage(
               topLeftCorner: vehicle.wheelPoints()[2].latLng,
               bottomLeftCorner: vehicle.wheelPoints()[1].latLng,
               bottomRightCorner: vehicle.wheelPoints().first.latLng,
-              imageProvider: const AssetImage('assets/images/FrontWheel.png'),
+              imageProvider:
+                  const AssetImage('assets/images/wheels/FrontWheel.png'),
             ),
             RotatedOverlayImage(
               topLeftCorner: vehicle.wheelPoints(left: false).last.latLng,
               bottomLeftCorner: vehicle.wheelPoints(left: false)[0].latLng,
               bottomRightCorner: vehicle.wheelPoints(left: false)[1].latLng,
-              imageProvider: const AssetImage('assets/images/FrontWheel.png'),
-            )
+              imageProvider:
+                  const AssetImage('assets/images/wheels/FrontWheel.png'),
+            ),
           ],
         Harvester() => [
             RotatedOverlayImage(
               topLeftCorner: vehicle.polygons.first.points.first,
               bottomLeftCorner: vehicle.polygons.first.points.last,
               bottomRightCorner: vehicle.polygons.first.points[2],
-              imageProvider: const AssetImage('assets/images/Harvester.png'),
+              imageProvider: const AssetImage(
+                'assets/images/vehicle_types/top_view/Harvester.png',
+              ),
             ),
             RotatedOverlayImage(
               topLeftCorner: vehicle.wheelPoints()[2].latLng,
               bottomLeftCorner: vehicle.wheelPoints()[1].latLng,
               bottomRightCorner: vehicle.wheelPoints().first.latLng,
-              imageProvider: const AssetImage('assets/images/FrontWheel.png'),
+              imageProvider:
+                  const AssetImage('assets/images/wheels/FrontWheel.png'),
             ),
             RotatedOverlayImage(
               topLeftCorner: vehicle.wheelPoints(left: false).last.latLng,
               bottomLeftCorner: vehicle.wheelPoints(left: false)[0].latLng,
               bottomRightCorner: vehicle.wheelPoints(left: false)[1].latLng,
-              imageProvider: const AssetImage('assets/images/FrontWheel.png'),
-            )
+              imageProvider:
+                  const AssetImage('assets/images/wheels/FrontWheel.png'),
+            ),
           ],
         ArticulatedTractor() => [
             RotatedOverlayImage(
@@ -86,7 +94,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
                   )
                   .latLng,
               imageProvider: const AssetImage(
-                'assets/images/ArticulatedTractorRear.png',
+                'assets/images/vehicle_types/top_view/ArticulatedTractorRear.png',
               ),
             ),
             RotatedOverlayImage(
@@ -121,9 +129,9 @@ class VehicleDrawerLayer extends ConsumerWidget {
                   )
                   .latLng,
               imageProvider: const AssetImage(
-                'assets/images/ArticulatedTractorFront.png',
+                'assets/images/vehicle_types/top_view/ArticulatedTractorFront.png',
               ),
-            )
+            ),
           ],
       },
     );

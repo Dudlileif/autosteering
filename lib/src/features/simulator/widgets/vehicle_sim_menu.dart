@@ -43,7 +43,7 @@ class VehicleSimMenu extends StatelessWidget {
                             trackWidth: 1.8,
                             minTurningRadius: 4.25,
                             steeringAngleMax: 31,
-                            simulated: true,
+                            isSimulated: true,
                           ),
                         );
                     ref.invalidate(debugTravelledPathListProvider);
@@ -72,7 +72,7 @@ class VehicleSimMenu extends StatelessWidget {
                             wheelWidth: 0.710,
                             minTurningRadius: 5.7,
                             steeringAngleMax: 38,
-                            simulated: true,
+                            isSimulated: true,
                           ),
                         );
                     ref.invalidate(debugTravelledPathListProvider);
@@ -101,7 +101,7 @@ class VehicleSimMenu extends StatelessWidget {
                             steeringAxleWheelDiameter: 1.25,
                             minTurningRadius: 4.25,
                             steeringAngleMax: 35,
-                            simulated: true,
+                            isSimulated: true,
                           ),
                         );
                     ref.invalidate(debugTravelledPathListProvider);
@@ -110,7 +110,7 @@ class VehicleSimMenu extends StatelessWidget {
                     'Harvester',
                     style: textStyle,
                   ),
-                )
+                ),
               ],
             );
           },
@@ -144,7 +144,7 @@ class VehicleSimMenu extends StatelessWidget {
                     .update(value: value)
                 : null,
           ),
-        )
+        ),
       ],
     );
   }

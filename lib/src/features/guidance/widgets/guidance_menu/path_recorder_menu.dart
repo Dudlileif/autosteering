@@ -95,7 +95,7 @@ class PathRecorderMenu extends StatelessWidget {
                 ),
                 Icon(
                   Icons.crop_square,
-                )
+                ),
               ],
             ),
           ),
@@ -136,7 +136,9 @@ class PathRecorderMenu extends StatelessWidget {
           ),
           builder: (context, ref, child) => ListTile(
             title: child,
-            leading: const Icon(Icons.waves),
+            leading: const Stack(
+              children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+            ),
             onTap: () {
               final points = ref.watch(finishedPathRecordingListProvider);
               if (points != null) {
@@ -146,7 +148,7 @@ class PathRecorderMenu extends StatelessWidget {
                         polygon: Polygon([
                           PositionArray.view(
                             points.map((e) => e.position.values).flattened,
-                          )
+                          ),
                         ]),
                         boundingBox: GeoBox.from(points.map((e) => e.position)),
                       ),

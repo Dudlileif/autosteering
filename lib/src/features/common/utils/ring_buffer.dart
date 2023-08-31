@@ -47,7 +47,8 @@ class RingBuffer {
   /// numSmoothingPoints = (smoothingFactor * circleSecantLength / distance.abs()).floor()
   ///```
   ///
-  /// The circleSecantLength
+  /// The circleSecantLength is the distance from the intersection points
+  /// on the buffer distance circle.
   static Iterable<Geographic> bufferCircular({
     required Iterable<Geographic> ring,
     required double distance,
@@ -171,7 +172,7 @@ class RingBuffer {
           bufferCircleStart,
           ...joinPoints,
           bufferCircleEnd,
-          nextBuffer
+          nextBuffer,
         ],
       );
     }

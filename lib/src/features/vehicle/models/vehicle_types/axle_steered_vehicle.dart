@@ -10,12 +10,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
   AxleSteeredVehicle({
     required this.wheelBase,
     required this.solidAxleDistance,
-    required super.position,
     required super.antennaHeight,
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
-    required super.pidParameters,
     this.solidAxleToFrontHitchDistance,
     this.solidAxleToRearHitchDistance,
     this.solidAxleToRearTowbarDistance,
@@ -24,17 +22,26 @@ sealed class AxleSteeredVehicle extends Vehicle {
     this.solidAxleWheelDiameter = 1.8,
     this.steeringAxleWheelWidth = 0.48,
     this.solidAxleWheelWidth = 0.6,
-    super.invertSteeringInput = false,
-    super.velocity = 0,
-    super.bearing = 0,
-    super.steeringAngleInput = 0,
+    super.pathTrackingMode,
+    super.pidParameters,
+    super.purePursuitParameters,
+    super.stanleyParameters,
+    super.antennaLateralOffset,
+    super.position,
+    super.invertSteeringInput,
+    super.velocity,
+    super.bearing,
+    super.steeringAngleInput,
     super.length = 4,
     super.width = 2.5,
-    super.simulated = false,
+    super.isSimulated,
+    super.useIMUPitchAndRoll,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
+    super.uuid,
+    super.lastUsed,
   });
 
   /// The distance between the axles.
@@ -133,7 +140,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
           point: steeringAxlePosition.latLng,
           radius: 10,
           color: Colors.blue,
-        )
+        ),
       ];
 
   /// Basic polylines for showing the vehicle's steering related
@@ -205,6 +212,172 @@ sealed class AxleSteeredVehicle extends Vehicle {
               .wrap360(),
         )
       : null;
+
+  @override
+  void updatePositionAndBearingTurning(
+    double period,
+    Geographic turningCircleCenter,
+  ) {
+    // How many degrees of the turning circle the current angular
+    // velocity during the period amounts to. Relative to the current
+    // position, is negative when reversing.
+    final turningCircleAngle = angularVelocity! * period;
+
+    // The angle from the turning circle center to the projected
+    // position.
+    final angle = switch (isTurningLeft) {
+      // Turning left
+      true => bearing + 90 - turningCircleAngle,
+      // Turning right
+      false => bearing - 90 + turningCircleAngle,
+    };
+    // Projected solid axle position from the turning radius
+    // center.
+    final solidAxlePosition = turningCircleCenter.spherical.destinationPoint(
+      distance: currentTurningRadius!,
+      bearing: angle.wrap360(),
+    );
+
+    // The bearing of the vehicle at the projected position.
+    final projectedBearing = switch (isTurningLeft) {
+      true => bearing - turningCircleAngle,
+      false => bearing + turningCircleAngle,
+    }
+        .wrap360();
+
+    // The vehicle center position, which is offset from the solid
+    // axle position.
+    final vehiclePosition = solidAxlePosition.spherical.destinationPoint(
+      distance: solidAxleDistance,
+      bearing: switch (this) {
+        Tractor() => projectedBearing,
+        Harvester() => projectedBearing + 180,
+      },
+    );
+
+    // Update the vehicle state.
+
+    position = vehiclePosition;
+    bearing = projectedBearing;
+  }
+
+  @override
+  ({Geographic position, double bearing}) predictedLookAheadPositionTurning(
+    double period,
+    double steeringAngle,
+  ) {
+    final currentTurningRadius = AckermannSteering(
+      steeringAngle: steeringAngle,
+      wheelBase: wheelBase,
+      trackWidth: trackWidth,
+      steeringRatio: ackermannSteeringRatio,
+    ).turningRadius;
+
+    final turningRadiusCenter =
+        this.solidAxlePosition.spherical.destinationPoint(
+              distance: currentTurningRadius,
+              bearing: switch (isTurningLeft) {
+                true => bearing - 90,
+                false => bearing + 90
+              }
+                  .wrap360(),
+            );
+
+    final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
+
+    // How many degrees of the turning circle the current angular
+    // velocity during the period amounts to. Relative to the current
+    // position, is negative when reversing.
+    final turningCircleAngle = angularVelocity * period;
+
+    // The angle from the turning circle center to the projected
+    // position.
+    final angle = switch (isTurningLeft) {
+      // Turning left
+      true => bearing + 90 - turningCircleAngle,
+      // Turning right
+      false => bearing - 90 + turningCircleAngle,
+    };
+
+    // Projected solid axle position from the turning radius
+    // center.
+    final solidAxlePosition = turningRadiusCenter.spherical.destinationPoint(
+      distance: currentTurningRadius,
+      bearing: angle.wrap360(),
+    );
+
+    // The bearing of the vehicle at the projected position.
+    final projectedBearing = switch (isTurningLeft) {
+      true => bearing - turningCircleAngle,
+      false => bearing + turningCircleAngle,
+    }
+        .wrap360();
+
+    return (position: solidAxlePosition, bearing: projectedBearing);
+  }
+
+  @override
+  ({Geographic position, double bearing}) predictedStanleyPositionTurning(
+    double period,
+    double steeringAngle,
+  ) {
+    final currentTurningRadius = AckermannSteering(
+      steeringAngle: steeringAngle,
+      wheelBase: wheelBase,
+      trackWidth: trackWidth,
+      steeringRatio: ackermannSteeringRatio,
+    ).turningRadius;
+
+    final turningRadiusCenter =
+        this.solidAxlePosition.spherical.destinationPoint(
+              distance: currentTurningRadius,
+              bearing: switch (isTurningLeft) {
+                true => bearing - 90,
+                false => bearing + 90
+              }
+                  .wrap360(),
+            );
+
+    final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
+
+    // How many degrees of the turning circle the current angular
+    // velocity during the period amounts to. Relative to the current
+    // position, is negative when reversing.
+    final turningCircleAngle = angularVelocity * period;
+
+    // The angle from the turning circle center to the projected
+    // position.
+    final angle = switch (isTurningLeft) {
+      // Turning left
+      true => bearing + 90 - turningCircleAngle,
+      // Turning right
+      false => bearing - 90 + turningCircleAngle,
+    };
+
+    // Projected solid axle position from the turning radius
+    // center.
+    final solidAxlePosition = turningRadiusCenter.spherical.destinationPoint(
+      distance: currentTurningRadius,
+      bearing: angle.wrap360(),
+    );
+
+    // The bearing of the vehicle at the projected position.
+    final projectedBearing = switch (isTurningLeft) {
+      true => bearing - turningCircleAngle,
+      false => bearing + turningCircleAngle,
+    }
+        .wrap360();
+
+    final stanleyAxlePosition = solidAxlePosition.spherical.destinationPoint(
+      distance: wheelBase,
+      bearing: switch (isReversing) {
+        false => projectedBearing,
+        true => projectedBearing + 180
+      },
+    );
+
+    return (position: stanleyAxlePosition, bearing: projectedBearing);
+  }
 
   /// The bounds of the left steering wheel, or the right steering wheel if
   /// [left] is set to false.
@@ -459,7 +632,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
           points: points.map((e) => e.latLng).toList(),
           isFilled: true,
           color: Colors.yellow.withOpacity(0.5),
-        )
+        ),
       ];
 
   /// Returns a new [AxleSteeredVehicle] based on this one, but with
@@ -468,6 +641,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   AxleSteeredVehicle copyWith({
     Geographic? position,
     double? antennaHeight,
+    double? antennaLateralOffset,
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
@@ -478,18 +652,56 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? solidAxleWheelDiameter,
     double? steeringAxleWheelWidth,
     double? solidAxleWheelWidth,
+    double? solidAxleToFrontHitchDistance,
+    double? solidAxleToRearHitchDistance,
+    double? solidAxleToRearTowbarDistance,
     bool? invertSteeringInput,
+    PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
+    PurePursuitParameters? purePursuitParameters,
+    StanleyParameters? stanleyParameters,
     double? velocity,
     double? bearing,
     double? steeringAngleInput,
     double? length,
     double? width,
-    bool? simulated,
+    bool? isSimulated,
+    bool? useIMUPitchAndRoll,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
     String? name,
+    String? uuid,
   });
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = super.toJson();
+
+    map['dimensions'] = Map<String, dynamic>.from(map['dimensions'] as Map)
+      ..addAll(
+        {
+          'wheel_base': wheelBase,
+          'solid_axle_distance': solidAxleDistance,
+          'wheels': {
+            'steering_axle_wheel_diameter': steeringAxleWheelDiameter,
+            'solid_axle_wheel_diameter': solidAxleWheelDiameter,
+            'steering_axle_wheel_width': steeringAxleWheelWidth,
+            'solid_axle_wheel_width': solidAxleWheelWidth,
+          },
+        },
+      );
+
+    map['steering'] = Map<String, dynamic>.from(map['steering'] as Map)
+      ..addAll({'ackermann_steering_ratio': ackermannSteeringRatio});
+
+    map['hitches'] = {
+      'solid_axle_to_front_hitch_distance': solidAxleToFrontHitchDistance,
+      'solid_axle_to_rear_hitch_distance': solidAxleToRearHitchDistance,
+      'solid_axle_to_rear_towbar_distance': solidAxleToRearTowbarDistance,
+    };
+
+    return map;
+  }
 }

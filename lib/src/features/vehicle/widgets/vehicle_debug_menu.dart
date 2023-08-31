@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/gnss/providers/device_position_providers.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -17,8 +18,8 @@ class VehicleDebugMenu extends StatelessWidget {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Vehicle',
-      icon: Icons.agriculture,
+      text: 'Debug',
+      icon: Icons.bug_report,
       menuChildren: [
         Consumer(
           child: Text(
@@ -117,6 +118,79 @@ class VehicleDebugMenu extends StatelessWidget {
             onChanged: (value) => value != null
                 ? ref
                     .read(debugVehiclePolygonsProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Antenna position',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(debugVehicleAntennaPositionProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugVehicleAntennaPositionProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'IMU / Pitch and Roll',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(debugVehicleIMUProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugVehicleIMUProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Autosteering parameters',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(debugVehicleAutosteerParametersProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugVehicleAutosteerParametersProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Use IMU bearing',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(useIMUBearingProvider),
+            onChanged: (value) => value != null
+                ? ref.read(useIMUBearingProvider.notifier).update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Use device position',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(devicePositionAsVehiclePositionProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(devicePositionAsVehiclePositionProvider.notifier)
                     .update(value: value)
                 : null,
             secondary: child,

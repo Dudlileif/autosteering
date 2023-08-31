@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -27,7 +28,10 @@ class CountryLayers extends ConsumerWidget {
             minNativeZoom: layer.minNativeZoom,
             maxNativeZoom: layer.maxNativeZoom,
             subdomains: layer.subdomains,
-            tileProvider: CachedTileProvider(layer: layer),
+            tileProvider: switch (Device.isWeb) {
+              true => HiveCachedTileProvider(layer: layer),
+              false => FileCachedTileProvider(layer: layer, ref: ref)
+            },
             maxZoom: 22,
             userAgentPackageName: 'agopengps_flutter',
           ),

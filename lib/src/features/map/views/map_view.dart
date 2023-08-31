@@ -2,6 +2,7 @@ import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_autosteer_parameter_configurator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,13 +27,13 @@ class MapAndGaugeStackView extends ConsumerWidget {
             if (event is KeyDownEvent)
               shiftModifier = true
             else if (event is KeyUpEvent)
-              shiftModifier = false
+              shiftModifier = false,
           },
         LogicalKeyboardKey.altLeft => {
             if (event is KeyDownEvent)
               altModifier = true
             else if (event is KeyUpEvent)
-              altModifier = false
+              altModifier = false,
           },
         LogicalKeyboardKey.minus => {
             if (event is KeyUpEvent)
@@ -49,12 +50,14 @@ class MapAndGaugeStackView extends ConsumerWidget {
         LogicalKeyboardKey.enter => {
             if (Device.isDesktop && altModifier)
               if (event is KeyDownEvent)
-                windowManager.setFullScreen(!await windowManager.isFullScreen())
+                windowManager
+                    .setFullScreen(!await windowManager.isFullScreen()),
           },
         LogicalKeyboardKey.f11 => {
             if (Device.isDesktop)
               if (event is KeyDownEvent)
-                windowManager.setFullScreen(!await windowManager.isFullScreen())
+                windowManager
+                    .setFullScreen(!await windowManager.isFullScreen()),
           },
         LogicalKeyboardKey.space => {
             if (event is KeyDownEvent)
@@ -73,7 +76,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             else if (event is KeyUpEvent)
               ref
                   .read(simInputProvider.notifier)
-                  .send((velocityChange: SimInputChange.hold))
+                  .send((velocityChange: SimInputChange.hold)),
           },
         LogicalKeyboardKey.keyS || LogicalKeyboardKey.arrowDown => {
             if (event is KeyDownEvent)
@@ -83,7 +86,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             else if (event is KeyUpEvent)
               ref
                   .read(simInputProvider.notifier)
-                  .send((velocityChange: SimInputChange.hold))
+                  .send((velocityChange: SimInputChange.hold)),
           },
         LogicalKeyboardKey.keyA || LogicalKeyboardKey.arrowLeft => {
             if (event is KeyDownEvent)
@@ -93,7 +96,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             else if (event is KeyUpEvent)
               ref
                   .read(simInputProvider.notifier)
-                  .send((steeringChange: SimInputChange.hold))
+                  .send((steeringChange: SimInputChange.hold)),
           },
         LogicalKeyboardKey.keyD || LogicalKeyboardKey.arrowRight => {
             if (event is KeyDownEvent)
@@ -103,7 +106,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             else if (event is KeyUpEvent)
               ref
                   .read(simInputProvider.notifier)
-                  .send((steeringChange: SimInputChange.hold))
+                  .send((steeringChange: SimInputChange.hold)),
           },
         _ => null
       },
@@ -141,10 +144,26 @@ class MapAndGaugeStackView extends ConsumerWidget {
               child: BasicVehicleGauges(),
             ),
           ),
+          if (ref.watch(debugVehicleIMUProvider))
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: PitchAndRollDebugGauges(),
+              ),
+            ),
+          if (ref.watch(debugVehicleAutosteerParametersProvider))
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: VehicleAutosteerParameterConfigurator(),
+              ),
+            ),
           if (ref.watch(showABLineDebugLayerProvider))
             const ABLineOffsetDebugControls(),
-          if (ref.watch(showPurePursuitDebugLayerProvider))
-            const PurePursuitDebugWidget()
+          if (ref.watch(showPathTrackingDebugLayerProvider))
+            const PathTrackingDebugWidget(),
         ],
       ),
     );

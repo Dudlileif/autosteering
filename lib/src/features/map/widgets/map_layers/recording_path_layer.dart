@@ -29,7 +29,7 @@ class RecordingPathLayer extends ConsumerWidget {
                       ...points.map((point) => point.position.latLng),
                       vehiclePosition.latLng,
                     ],
-                  )
+                  ),
                 ],
               ),
               CircleLayer(

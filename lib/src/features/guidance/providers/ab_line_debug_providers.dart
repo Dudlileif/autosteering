@@ -97,6 +97,38 @@ class ABLineWidth extends _$ABLineWidth {
   void update(double value) => Future(() => state = value);
 }
 
+/// A provider for the turning radius of an AB-line.
+@Riverpod(keepAlive: true)
+class ABLineTurningRadius extends _$ABLineTurningRadius {
+  @override
+  double build() => ref.read(
+        mainVehicleProvider.select((value) => 1.25 * value.minTurningRadius),
+      );
+
+  /// Updates [state] to [value].
+  void update(double value) => Future(() => state = value);
+}
+
+/// A provider for the width of an AB-line.
+@Riverpod(keepAlive: true)
+class ABLineTurnOffsetIncrease extends _$ABLineTurnOffsetIncrease {
+  @override
+  int build() => 1;
+
+  /// Updates [state] to [value].
+  void update(int value) => Future(() => state = value);
+}
+
+/// A provider for the width of an AB-line.
+@Riverpod(keepAlive: true)
+class ABLineLimitMode extends _$ABLineLimitMode {
+  @override
+  ABLimitMode build() => ABLimitMode.limitedTurnWithin;
+
+  /// Updates [state] to [value].
+  void update(ABLimitMode value) => Future(() => state = value);
+}
+
 /// A provider for the AB-line object to debug.
 @Riverpod(keepAlive: true)
 class ABLineDebug extends _$ABLineDebug {
@@ -110,20 +142,24 @@ class ABLineDebug extends _$ABLineDebug {
         start: a,
         end: b,
         width: ref.watch(aBLineWidthProvider),
+        turningRadius: ref.watch(aBLineTurningRadiusProvider),
+        turnOffsetIncrease: ref.watch(aBLineTurnOffsetIncreaseProvider),
+        limitMode: ref.watch(aBLineLimitModeProvider),
       );
     }
 
     return null;
   }
 
-  /// Move the line by one offset step to the right relative to [heading].
-  void moveOffsetRight(Geographic point, double heading) =>
-      Future(() => state = state?..moveOffsetRight(point, heading));
+  /// Move the line by one offset step to the right relative to the [vehicle]'s
+  /// bearing.
+  void moveOffsetRight(Vehicle vehicle) =>
+      Future(() => state = state?..moveOffsetRight(vehicle));
 
-  /// Move the line by one offset step to the left relative to [heading].
-
-  void moveOffsetLeft(Geographic point, double heading) =>
-      Future(() => state = state?..moveOffsetLeft(point, heading));
+  /// Move the line by one offset step to the left relative to the [vehicle]'s
+  /// bearing.
+  void moveOffsetLeft(Vehicle vehicle) =>
+      Future(() => state = state?..moveOffsetLeft(vehicle));
 
   /// Update whether the closest line automatically should be selected.
   void updateSnapToClosestLine({required bool value}) =>
@@ -153,9 +189,5 @@ double? abLinePerpendicularDistance(AbLinePerpendicularDistanceRef ref) =>
       false => ref.watch(aBLineDebugProvider)
     }
         ?.signedPerpendicularDistanceToCurrentLine(
-      point: ref.watch(
-        mainVehicleProvider.select((vehicle) => vehicle.pursuitAxlePosition),
-      ),
-      heading:
-          ref.watch(mainVehicleProvider.select((vehicle) => vehicle.bearing)),
+      ref.watch(mainVehicleProvider),
     );

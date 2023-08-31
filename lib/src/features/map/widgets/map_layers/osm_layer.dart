@@ -1,23 +1,33 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A layer for the OpenStreetMap map tiles.
 ///
 /// The map tiles are themed when in dark mode.
-class OSMLayer extends StatelessWidget {
+class OSMLayer extends ConsumerWidget {
   /// A layer for the OpenStreetMap map tiles.
   ///
   /// The map tiles are themed when in dark mode.
   const OSMLayer({super.key});
 
   @override
-  Widget build(BuildContext context) => themedTileLayerBuilder(
+  Widget build(BuildContext context, WidgetRef ref) => themedTileLayerBuilder(
         context,
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           subdomains: const ['x', 'y', 'z'],
-          tileProvider: CachedTileProvider(),
+          tileProvider: switch (Device.isWeb) {
+            true => HiveCachedTileProvider(
+                layer: const TileLayerData(name: 'OpenStreetMap'),
+              ),
+            false => FileCachedTileProvider(
+                layer: const TileLayerData(name: 'OpenStreetMap'),
+                ref: ref,
+              )
+          },
           userAgentPackageName: 'agopengps_flutter',
           maxNativeZoom: 19,
           maxZoom: 22,

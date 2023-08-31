@@ -122,7 +122,7 @@ class VehicleSimScreenControls extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Steering Angle: ${steeringAngle.toStringAsFixed(1)}°',
+                            '''Steering Angle: ${steeringAngle.toStringAsFixed(1)}°''',
                           ),
                           SizedBox(
                             height: 50,

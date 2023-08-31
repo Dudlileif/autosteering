@@ -6,7 +6,7 @@ part of 'vehicle_simulator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$simVehicleDrivingHash() => r'62db147a7fbd7f30a94c0420c95a948a887bb4f7';
+String _$simVehicleDrivingHash() => r'1683fcdfb3e9842634beeca97e827360a233d860';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -25,7 +25,7 @@ final simVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 
 typedef SimVehicleDrivingRef = AutoDisposeProviderRef<void>;
 String _$simVehicleWebStreamHash() =>
-    r'c9159c416ab30141a91232864c114e87533cf0f7';
+    r'68c68c237ffc5664d50d986d0a0d5380786fdc5d';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
@@ -48,10 +48,10 @@ final simVehicleWebStreamProvider =
 
 typedef SimVehicleWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simVehicleIsolateStreamHash() =>
-    r'34ce98ad9bf728932aff8e741905227fc93629dc';
+    r'824efc8074cfff66280d0f786b8069a80dd3340f';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
-/// native platform.
+/// native platforms.
 ///
 /// It will update the stream with vehicle updates from the simulator and also
 /// update the vehicle gauge providers.

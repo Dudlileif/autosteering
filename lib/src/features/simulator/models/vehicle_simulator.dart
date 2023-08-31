@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
@@ -8,8 +10,9 @@ import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
-
-//TODO: look into making the simulation only return data similar to nmea from gps
+import 'package:udp/udp.dart';
+import 'package:universal_io/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// A class for simulating how vehicles should move given their position,
 /// bearing, steering angle and velocity.
@@ -25,6 +28,11 @@ class VehicleSimulator {
     sendPort.send(commandPort.sendPort);
 
     log('Sim vehicle isolate spawn confirmation');
+
+    // Heartbeat signal to show that the simulator isolate is alive.
+    Timer.periodic(const Duration(milliseconds: 250), (timer) {
+      sendPort.send('Heartbeat');
+    });
 
     // The state of the simulation.
     final state = _VehicleSimulatorState();
@@ -44,7 +52,7 @@ class VehicleSimulator {
               velocity: state.gaugeVelocity,
               bearing: state.gaugeBearing,
               distance: state.distance,
-              purePursuit: state.purePursuit,
+              pathTracking: state.pathTracking,
               abLine: state.abLine,
             ),
           );
@@ -52,9 +60,82 @@ class VehicleSimulator {
       }
     });
 
-    // Handle incoming messages.
+    var serverEndPoint = Endpoint.unicast(
+      InternetAddress('192.168.4.1'),
+      port: const Port(6666),
+    );
+
+    var endPoint = Endpoint.any(
+      port: const Port(3333),
+    );
+
+    var udp = await UDP.bind(endPoint);
+
+    final udpSendStream = StreamController<String>();
+
+    state.networkSendStream = udpSendStream;
+
+    udpSendStream.stream.listen(
+      (event) async => udp.send(utf8.encode(event), serverEndPoint),
+    );
+
+    unawaited(
+      udp.send(
+        utf8.encode('${Platform.operatingSystem}: Simulator started'),
+        serverEndPoint,
+      ),
+    );
+
+    var udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      udp.send(
+        utf8.encode('${Platform.operatingSystem}: Heartbeat'),
+        serverEndPoint,
+      );
+    });
+
+    udp.asStream().listen(
+          (datagram) => _networkListener(datagram?.data, state),
+        );
+
+    // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
-      if (message != null) {
+      // Update the udp ip adress for the hardware.
+      if (message is ({
+        String hardwareIPAdress,
+        int hardwareUDPReceivePort,
+        int hardwareUDPSendPort
+      })) {
+        udpHeartbeatTimer.cancel();
+
+        serverEndPoint = Endpoint.unicast(
+          InternetAddress(message.hardwareIPAdress),
+          port: Port(message.hardwareUDPSendPort),
+        );
+
+        endPoint = Endpoint.any(port: Port(message.hardwareUDPReceivePort));
+
+        udp.close();
+        udp = await UDP.bind(endPoint);
+
+        udp.asStream().listen(
+              (datagram) => _networkListener(datagram?.data, state),
+            );
+
+        await udp.send(
+          utf8.encode('Simulator started'),
+          serverEndPoint,
+        );
+
+        udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          udp.send(
+            utf8.encode('${Platform.operatingSystem}: Heartbeat'),
+            serverEndPoint,
+          );
+        });
+      }
+
+      // Messages for the state.
+      else if (message != null) {
         state.handleMessage(message);
       }
       // Shut down the isolate.
@@ -63,8 +144,49 @@ class VehicleSimulator {
         break;
       }
     }
+
+    // Isolate shut down procedure
+    await udp.send(
+      utf8.encode('Simulator shut down'),
+      serverEndPoint,
+    );
+
+    udp.close();
+
     log('Sim vehicle isolate exited.');
     Isolate.exit();
+  }
+
+  static void _networkListener(Uint8List? data, _VehicleSimulatorState state) {
+    if (data != null) {
+      final str = String.fromCharCodes(data);
+      if (str.startsWith('{')) {
+        try {
+          final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
+          final bearing = data['yaw'] as double?;
+          final pitch = data['pitch'] as double?;
+          final roll = data['roll'] as double?;
+
+          if (state.useIMUBearing && bearing != null) {
+            state.vehicle?.bearing =
+                (-bearing - state.imuZero.bearingZero).wrap360();
+          }
+          if (pitch != null) {
+            state.vehicle?.pitch = -pitch - state.imuZero.pitchZero;
+          }
+          if (roll != null) {
+            state.vehicle?.roll = roll - state.imuZero.rollZero;
+          }
+          state.imuInputRaw = (
+            bearing: bearing ?? state.imuInputRaw.bearing,
+            pitch: pitch ?? state.imuInputRaw.pitch,
+            roll: roll ?? state.imuInputRaw.roll
+          );
+        } catch (e) {
+          log(e.toString());
+        }
+      }
+    }
   }
 
   /// Used in web version since multithreading isn't possible.
@@ -77,7 +199,7 @@ class VehicleSimulator {
         num velocity,
         num bearing,
         num distance,
-        PurePursuit? purePursuit,
+        PathTracking? pathTracking,
         ABLine? abLine,
       })> webWorker(
     Stream<dynamic> vehicleEvents,
@@ -87,8 +209,33 @@ class VehicleSimulator {
     // The state of the simulation.
     final state = _VehicleSimulatorState();
 
+    WebSocketChannel? socket;
+
     // Handle the incoming messages.
-    vehicleEvents.listen(state.handleMessage);
+    vehicleEvents.listen((message) async {
+      if (message is ({String hardwareIPAdress, int hardwareWebSocketPort})) {
+        await socket?.sink.close();
+        final address = Uri.parse(
+          [
+            'ws://',
+            message.hardwareIPAdress,
+            ':',
+            message.hardwareWebSocketPort.toString(),
+            '/ws',
+          ].join(),
+        );
+        socket = WebSocketChannel.connect(address);
+        socket!.stream.listen(
+          (event) {
+            if (event is Uint8List) {
+              _networkListener(event, state);
+            }
+          },
+        );
+      } else {
+        state.handleMessage(message);
+      }
+    });
 
     final streamController = StreamController<
         ({
@@ -96,7 +243,7 @@ class VehicleSimulator {
           num velocity,
           num bearing,
           num distance,
-          PurePursuit? purePursuit,
+          PathTracking? pathTracking,
           ABLine? abLine,
         })>();
 
@@ -114,7 +261,7 @@ class VehicleSimulator {
             velocity: state.gaugeVelocity,
             bearing: state.gaugeBearing,
             distance: state.distance,
-            purePursuit: state.purePursuit,
+            pathTracking: state.pathTracking,
             abLine: state.abLine,
           ),
         );
@@ -143,6 +290,12 @@ enum SimInputChange {
 
 /// A class for holding and updating the state of the [VehicleSimulator].
 class _VehicleSimulatorState {
+  _VehicleSimulatorState();
+
+  /// A stream controller for forwarding events to send with UDP, only used on
+  /// native platforms.
+  StreamController<String>? networkSendStream;
+
   /// The current vehicle of the simulation.
   Vehicle? vehicle;
 
@@ -164,7 +317,7 @@ class _VehicleSimulatorState {
   bool didChange = true;
 
   /// The pure pursuit to drive after, if there is one.
-  PurePursuit? purePursuit;
+  PathTracking? pathTracking;
 
   /// The AB-line to drive after, if there is one.
   ABLine? abLine;
@@ -193,34 +346,38 @@ class _VehicleSimulatorState {
   /// given.
   bool autoCenterSteering = false;
 
-  /// Whether the vehicle should use the [purePursuit] model to steer.
-  bool enablePurePursuit = false;
+  /// Whether the vehicle should use the [pathTracking] model to steer.
+  bool enablePathTracking = false;
 
   /// Whehter the vehicle should automatically steer.
   bool autoSteerEnabled = false;
 
-  /// Which mode the [purePursuit] should use to go from the last to the first
+  /// Which mode the [pathTracking] should use to go from the last to the first
   /// waypoint.
-  PurePursuitLoopMode pursuitLoopMode = PurePursuitLoopMode.none;
+  PathTrackingLoopMode pathTrackingLoopMode = PathTrackingLoopMode.none;
 
-  /// Which steering mode the [purePursuit] should use.
-  PurePursuitMode pursuitMode = PurePursuitMode.pid;
+  /// Which steering mode the [pathTracking] should use.
+  PathTrackingMode pathTrackingMode = PathTrackingMode.purePursuit;
 
-  /// A temporary steering mode for the [purePursuit], only used when the
-  /// [pursuitMode] is [PurePursuitMode.pid] and the lateral distance to
+  /// A temporary steering mode for the [PathTracking], only used when the
+  /// [pathTrackingMode] is [PathTrackingMode.pid] and the lateral distance to
   /// the path is larger than the vehicle's min turning radius.
-  PurePursuitMode tempPursuitMode = PurePursuitMode.pid;
+  PathTrackingMode tempPathTrackingMode = PathTrackingMode.purePursuit;
 
-  /// The interpolation distance for points in the [purePursuit]
-  double pursuitInterpolationDistance = 4;
+  /// The interpolation distance for points in the [pathTracking]
+  double pathInterpolationDistance = 4;
 
-  /// The distance ahead of the vehicle the [purePursuit] should look for the
-  /// path when in look ahead mode.
-  double lookAheadDistance = 4;
+  /// Whether the bearing from the IMU input should be used.
+  bool useIMUBearing = false;
 
-  /// A multiplicator for how much of the [vehicle]'s velocity we want to
-  /// add to the [lookAheadDistance].
-  double lookAheadVelocityGain = 0.5;
+  /// A record of the raw IMU input.
+  ({double bearing, double pitch, double roll}) imuInputRaw =
+      (bearing: 0, pitch: 0, roll: 0);
+
+  /// A record with the zero values for the IMU. These can be updated to
+  /// change what is perceived as zero for each axis.
+  ({double bearingZero, double pitchZero, double rollZero}) imuZero =
+      (bearingZero: 0, pitchZero: 0, rollZero: 0);
 
   /// The previous time of when the simulation was updated.
   DateTime prevUpdateTime = DateTime.now();
@@ -233,14 +390,6 @@ class _VehicleSimulatorState {
   /// Whether we should force update for the next update, i.e. send the state.
   bool forceChange = false;
 
-  double get effectiveLookAheadDistance {
-    if (vehicle != null) {
-      return lookAheadDistance +
-          vehicle!.velocity.abs() * lookAheadVelocityGain;
-    }
-    return lookAheadDistance;
-  }
-
   /// Update the [prevUpdateTime] and the [period] for the next simulation.
   void updateTime() {
     final now = DateTime.now();
@@ -250,10 +399,10 @@ class _VehicleSimulatorState {
 
   /// Change state parameters/values according to the incomming [message].
   ///
-  /// This can be [Vehicle], [PurePursuitMode] or records for the vehicle's
-  /// position, velocity(Delta), steeringAngle(Delta), [purePursuit],
-  /// [autoSlowDown], [autoCenterSteering], [enablePurePursuit],
-  /// [lookAheadDistance] or [pursuitLoopMode].
+  /// This can be [Vehicle], [PathTrackingMode] or records for the vehicle's
+  /// position, velocity(Delta), steeringAngle(Delta), [pathTracking],
+  /// [autoSlowDown], [autoCenterSteering], [enablePathTracking] or
+  /// [pathTrackingLoopMode].
   void handleMessage(dynamic message) {
     // Force update to reflect changes in case we haven't moved.
     forceChange = true;
@@ -266,8 +415,18 @@ class _VehicleSimulatorState {
         steeringAngleInput: vehicle?.steeringAngleInput
             .clamp(-message.steeringAngleMax, message.steeringAngleMax),
       );
+      pathTrackingMode = message.pathTrackingMode;
     }
-
+    // Update whether the vehicle position should take the roll and pitch into
+    // account when an IMU is connected.
+    else if (message is ({bool useIMUPitchAndRoll})) {
+      vehicle?.useIMUPitchAndRoll = message.useIMUPitchAndRoll;
+    }
+    // Update whether the vehicle bearing should be set by the IMU when it's
+    // connected.
+    else if (message is ({bool useIMUBearing})) {
+      useIMUBearing = message.useIMUBearing;
+    }
     // Update the vehicle position.
     else if (message is ({Geographic position})) {
       vehicle?.position = message.position;
@@ -277,7 +436,30 @@ class _VehicleSimulatorState {
       vehicle?.velocity = message.velocity.toDouble();
       velocityChange = SimInputChange.hold;
     }
-
+    // Update bearing
+    else if (message is ({double bearing})) {
+      vehicle?.bearing = message.bearing;
+    }
+    // Update pitch
+    else if (message is ({double pitch})) {
+      vehicle?.pitch = message.pitch;
+    }
+    // Update roll
+    else if (message is ({double roll})) {
+      vehicle?.roll = message.roll;
+    }
+    // Set the zero points for the IMU
+    else if (message is ({bool setZeroIMU})) {
+      if (message.setZeroIMU) {
+        imuZero = (
+          bearingZero: 0,
+          pitchZero: imuInputRaw.pitch,
+          rollZero: imuInputRaw.roll,
+        );
+      } else {
+        imuZero = (bearingZero: 0, pitchZero: 0, rollZero: 0);
+      }
+    }
     // Update the vehicle velocity at a set rate.
     else if (message is ({SimInputChange velocityChange})) {
       velocityChange = message.velocityChange;
@@ -295,10 +477,12 @@ class _VehicleSimulatorState {
     // Enable/disable auto steering.
     else if (message is ({bool autoSteerEnabled})) {
       autoSteerEnabled = message.autoSteerEnabled;
+      networkSendStream
+          ?.add(jsonEncode({'autoSteerEnabled': autoSteerEnabled}));
     }
-    // Set the pure pursuit model.
-    else if (message is ({PurePursuit? purePursuit})) {
-      purePursuit = message.purePursuit;
+    // Set the path tracking model.
+    else if (message is ({PathTracking? pathTracking})) {
+      pathTracking = message.pathTracking;
     }
     // Update whether to automatically slow down.
     else if (message is ({bool autoSlowDown})) {
@@ -308,69 +492,122 @@ class _VehicleSimulatorState {
     else if (message is ({bool autoCenterSteering})) {
       autoCenterSteering = message.autoCenterSteering;
     }
-    // Enable/disable pure pursuit.
-    else if (message is ({bool enablePurePursuit})) {
-      enablePurePursuit = message.enablePurePursuit;
-      if (vehicle != null && purePursuit != null) {
-        purePursuit?.currentIndex = purePursuit!.closestIndex(vehicle!);
+    // Enable/disable path tracking.
+    else if (message is ({bool enablePathTracking})) {
+      enablePathTracking = message.enablePathTracking;
+      if (vehicle != null && pathTracking != null) {
+        pathTracking?.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
       }
     }
+    // Update pid parameters.
+    else if (message is PidParameters) {
+      vehicle?.pidParameters = message;
+    }
+    // Update pure pursuit parameters.
+    else if (message is PurePursuitParameters) {
+      vehicle?.purePursuitParameters = message;
+    }
+    // Update Stanley parameters.
+    else if (message is StanleyParameters) {
+      vehicle?.stanleyParameters = message;
+    }
+
     // Change pure pursuit mode.
-    else if (message is PurePursuitMode) {
-      pursuitMode = message;
-      tempPursuitMode = pursuitMode;
-    } else if (message is ({double pursuitInterpolationDistance})) {
-      pursuitInterpolationDistance = message.pursuitInterpolationDistance;
+    else if (message is PathTrackingMode) {
+      pathTrackingMode = message;
+      tempPathTrackingMode = pathTrackingMode;
+      vehicle?.pathTrackingMode = pathTrackingMode;
+      if (pathTracking != null) {
+        final index = pathTracking!.currentIndex;
+        pathTracking = switch (pathTrackingMode) {
+          PathTrackingMode.pid ||
+          PathTrackingMode.purePursuit =>
+            PurePursuitPathTracking(
+              wayPoints: pathTracking!.wayPoints,
+              interpolationDistance: pathInterpolationDistance,
+              loopMode: pathTrackingLoopMode,
+            ),
+          PathTrackingMode.stanley => StanleyPathTracking(
+              wayPoints: pathTracking!.wayPoints,
+              interpolationDistance: pathInterpolationDistance,
+              loopMode: pathTrackingLoopMode,
+            ),
+        }
+          ..cumulativeIndex = index;
+      }
+    } else if (message is ({double pathInterpolationDistance})) {
+      pathInterpolationDistance = message.pathInterpolationDistance;
       // Interpolate the path with new max distance.
-      purePursuit?.interPolateWayPoints(
-        maxDistance: pursuitInterpolationDistance,
-        loopMode: pursuitLoopMode,
+      pathTracking?.interPolateWayPoints(
+        maxDistance: pathInterpolationDistance,
+        loopMode: pathTrackingLoopMode,
       );
       // Find the current index as the closest point since the path has updated.
-      if (purePursuit != null && vehicle != null) {
-        purePursuit!.currentIndex = purePursuit!.closestIndex(vehicle!);
+      if (pathTracking != null && vehicle != null) {
+        pathTracking!.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
       }
     }
     // Set new look ahead distance.
     else if (message is ({num lookAheadDistance})) {
-      lookAheadDistance = message.lookAheadDistance.toDouble();
+      if (vehicle != null) {
+        vehicle!.purePursuitParameters = vehicle!.purePursuitParameters
+            .copyWith(lookAheadDistance: message.lookAheadDistance.toDouble());
+      }
     }
     // Set the look ahead distance velocity gain.
     else if (message is ({double lookAheadVelocityGain})) {
-      lookAheadVelocityGain = message.lookAheadVelocityGain;
+      if (vehicle != null) {
+        vehicle!.purePursuitParameters = vehicle!.purePursuitParameters
+            .copyWith(lookAheadVelocityGain: message.lookAheadVelocityGain);
+      }
     }
     // Change the pure pursuit loop mode, i.e. if/how to go from the last to
     // the first point.
-    else if (message is ({PurePursuitLoopMode pursuitLoopMode})) {
-      pursuitLoopMode = message.pursuitLoopMode;
+    else if (message is ({PathTrackingLoopMode pathTrackingLoopMode})) {
+      pathTrackingLoopMode = message.pathTrackingLoopMode;
       // Interpolate the path since we might have new points.
-      purePursuit?.interPolateWayPoints(
-        maxDistance: pursuitInterpolationDistance,
-        loopMode: pursuitLoopMode,
+      pathTracking?.interPolateWayPoints(
+        maxDistance: pathInterpolationDistance,
+        loopMode: pathTrackingLoopMode,
       );
       // Find the current index as the closest point since the path has updated.
-      if (purePursuit != null && vehicle != null) {
-        purePursuit!.currentIndex = purePursuit!.closestIndex(vehicle!);
+      if (pathTracking != null && vehicle != null) {
+        pathTracking!.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
       }
     }
     // Attach a new equipment. Detach by sending null as the equipment with
     // the same hitch position.
-    else if (message is ({Equipment? child, Hitch position})) {
+    else if (message is ({Equipment child, Hitch position})) {
       vehicle?.attachChild(message.child, message.position);
     }
-    // Update the active segments of the equipment with the given uuid.
-    else if (message is ({String uuid, List<bool> activeSegments})) {
+    // Attach a new equipment. Detach by sending null as the equipment with
+    // the same hitch position.
+    else if (message is ({
+      String parentUuid,
+      Equipment child,
+      Hitch position
+    })) {
+      vehicle?.attachChildTo(
+        message.parentUuid,
+        message.child,
+        message.position,
+      );
+    }
+
+    /// Update an already attached equipment in the hierarchy.
+    else if (message is ({Equipment updatedEquipment})) {
+      vehicle?.updateChild(message.updatedEquipment);
+    }
+
+    /// Update an already attached equipment in the hierarchy.
+    else if (message is ({String detachUuid})) {
+      vehicle?.detachChild(message.detachUuid);
+    }
+    // Update the active sections of the equipment with the given uuid.
+    else if (message is ({String uuid, List<bool> activeSections})) {
       final equipment = vehicle?.findChildRecursive(message.uuid);
       if (equipment != null && equipment is Equipment) {
-        equipment.activeSegments = message.activeSegments;
-      }
-    }
-    // Detach the equipment with the given uuid.
-    else if (message is ({String detachUuid})) {
-      final equipment = vehicle?.findChildRecursive(message.detachUuid);
-      if (equipment != null) {
-        final parent = equipment.hitchParent;
-        if (parent != null) {}
+        equipment.activeSections = message.activeSections;
       }
     }
     // Update the AB-line to follow
@@ -381,21 +618,34 @@ class _VehicleSimulatorState {
     else if (message is ({bool abLineSnapping})) {
       abLine?.snapToClosestLine = message.abLineSnapping;
     }
+    // Update the turning radius of the AB-line.
+    else if (message is ({double abTurningRadius})) {
+      abLine?.turningRadius = message.abTurningRadius;
+    }
+    // Update how many lines the AB-line should move when skipping to the
+    // next one.
+    else if (message is ({int abTurnOffsetIncrease})) {
+      abLine?.turnOffsetIncrease = message.abTurnOffsetIncrease;
+    }
+    // Update which way the upcoming turn of the AB-line should be.
+    else if (message is ({bool abToggleTurnDirection})) {
+      if (abLine != null) {
+        abLine!.offsetOppositeTurn = !abLine!.offsetOppositeTurn;
+      }
+    }
+    // Update the limit mode of the AB-line.
+    else if (message is ABLimitMode) {
+      abLine?.limitMode = message;
+    }
     // Move the AB-line offset by 1 to the left if negative or to the
     // right if positive.
     else if (message is ({int abLineMoveOffset})) {
       if (vehicle != null) {
         switch (message.abLineMoveOffset.isNegative) {
           case true:
-            abLine?.moveOffsetLeft(
-              vehicle!.pursuitAxlePosition,
-              vehicle!.bearing,
-            );
+            abLine?.moveOffsetLeft(vehicle!);
           case false:
-            abLine?.moveOffsetRight(
-              vehicle!.pursuitAxlePosition,
-              vehicle!.bearing,
-            );
+            abLine?.moveOffsetRight(vehicle!);
         }
       }
     }
@@ -511,43 +761,21 @@ class _VehicleSimulatorState {
     if (autoSteerEnabled && vehicle != null && !receivingManualInput) {
       var steeringAngle = 0.0;
       if (abLine != null) {
-        steeringAngle = abLine!.nextSteeringAngleLookAhead(
-          vehicle: vehicle!,
-          lookAheadDistance: effectiveLookAheadDistance,
+        checkIfPidModeIsValid(
+          abLine!.signedPerpendicularDistanceToCurrentLine(vehicle!).abs(),
         );
-      } else if (purePursuit != null) {
-        purePursuit!.tryChangeWayPoint(vehicle!);
 
-        if (enablePurePursuit && vehicle != null && !receivingManualInput) {
-          // Swap to look ahead if the distance is farther than the vehicle's
-          // min turning radius, as we'd be doing circles otherwise.
-          if (pursuitMode == PurePursuitMode.pid) {
-            final lateralDistance =
-                purePursuit!.perpendicularDistance(vehicle!).abs();
+        steeringAngle =
+            abLine!.nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
+      } else if (pathTracking != null) {
+        pathTracking!.tryChangeWayPoint(vehicle!);
 
-            // Switch if the distance is larger than 0.7 times the turning
-            // radius, this value is experimental to find a smoother transition
-            // to swap mode.
-            if (lateralDistance > 0.7 * vehicle!.minTurningRadius &&
-                tempPursuitMode != PurePursuitMode.lookAhead) {
-              tempPursuitMode = PurePursuitMode.lookAhead;
-            }
-            // Swap back to the pid mode when we're within the turning circle
-            // radius of the path.
-            else if (pursuitMode == PurePursuitMode.pid &&
-                lateralDistance < vehicle!.minTurningRadius) {
-              tempPursuitMode = pursuitMode;
-            }
-          }
-
-          steeringAngle = switch (tempPursuitMode) {
-            PurePursuitMode.pid => purePursuit!.nextSteeringAnglePid(vehicle!),
-            PurePursuitMode.lookAhead =>
-              purePursuit!.nextSteeringAngleLookAhead(
-                vehicle!,
-                effectiveLookAheadDistance,
-              )
-          };
+        if (enablePathTracking) {
+          checkIfPidModeIsValid(
+            pathTracking!.perpendicularDistance(vehicle!).abs(),
+          );
+          steeringAngle = pathTracking!
+              .nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
         }
       }
 
@@ -564,139 +792,23 @@ class _VehicleSimulatorState {
     }
   }
 
-  /// Calculate the next position and bearing of the vehicle and then
-  /// updates the state.
-  void updatePosition() {
-    if (vehicle != null && period > 0) {
-      // Turning
-      if (vehicle!.angularVelocity != null && turningCircleCenter != null) {
-        switch (vehicle!) {
-          case AxleSteeredVehicle():
-            {
-              // A local vehicle variable to simplify null safe syntax.
-              final vehicle = this.vehicle! as AxleSteeredVehicle;
-
-              // How many degrees of the turning circle the current angular
-              // velocity during the period amounts to. Relative to the current
-              // position, is negative when reversing.
-              final turningCircleAngle = vehicle.angularVelocity! * period;
-
-              // The angle from the turning circle center to the projected
-              // position.
-              final angle = switch (vehicle.isTurningLeft) {
-                // Turning left
-                true => vehicle.bearing + 90 - turningCircleAngle,
-                // Turning right
-                false => vehicle.bearing - 90 + turningCircleAngle,
-              };
-              // Projected solid axle position from the turning radius
-              // center.
-              final solidAxlePositon =
-                  turningCircleCenter!.spherical.destinationPoint(
-                distance: vehicle.currentTurningRadius!,
-                bearing: angle.wrap360(),
-              );
-
-              // The bearing of the vehicle at the projected position.
-              final bearing = switch (vehicle.isTurningLeft) {
-                true => vehicle.bearing - turningCircleAngle,
-                false => vehicle.bearing + turningCircleAngle,
-              }
-                  .wrap360();
-
-              // The vehicle center position, which is offset from the solid
-              // axle position.
-              final vehiclePosition =
-                  solidAxlePositon.spherical.destinationPoint(
-                distance: vehicle.solidAxleDistance,
-                bearing: switch (vehicle) {
-                  Tractor() => bearing,
-                  Harvester() => bearing + 180,
-                },
-              );
-
-              // Update the vehicle state.
-              this.vehicle
-                ?..position = vehiclePosition
-                ..bearing = bearing;
-            }
-          case ArticulatedTractor():
-            {
-              // A local vehicle variable to simplify null safe syntax.
-              final vehicle = this.vehicle! as ArticulatedTractor;
-
-              // How many degrees of the turning circle the current angular
-              // velocity
-              // during the period amounts to. Relative to the current position,
-              // is negative when reversing.
-              final turningCircleAngle = vehicle.angularVelocity! * period;
-
-              // The current angle from the turning radius center to the
-              // front axle center.
-              final turningCenterToFrontAxleAngle =
-                  switch (vehicle.isTurningLeft) {
-                // Turning left
-                true => vehicle.frontAxleAngle + 90,
-                // Turning right
-                false => vehicle.frontAxleAngle - 90,
-              }
-                      .wrap360();
-
-              // The angle from the turning circle center to the projected front
-              // axle position.
-              final projectedFrontAxleAngle = switch (vehicle.isTurningLeft) {
-                // Turning left
-                true => turningCenterToFrontAxleAngle - turningCircleAngle,
-                // Turning right
-                false => turningCenterToFrontAxleAngle + turningCircleAngle,
-              };
-
-              // Projected vehicle front axle position from the turning radius
-              // center.
-              final frontAxlePosition =
-                  turningCircleCenter!.spherical.destinationPoint(
-                distance: vehicle.currentTurningRadius!,
-                bearing: projectedFrontAxleAngle,
-              );
-
-              // The bearing of the front body of the vehicle at the projected
-              // position.
-              final frontBodyBearing = switch (vehicle.isTurningLeft) {
-                true =>
-                  projectedFrontAxleAngle - 90 - vehicle.steeringAngle / 2,
-                false =>
-                  projectedFrontAxleAngle + 90 - vehicle.steeringAngle / 2,
-              };
-
-              // The vehicle antenna position, projected from the front axle
-              // position.
-              final vehiclePosition =
-                  frontAxlePosition.spherical.destinationPoint(
-                distance:
-                    vehicle.pivotToFrontAxle - vehicle.pivotToAntennaDistance,
-                bearing: frontBodyBearing - 180 + vehicle.steeringAngle / 2,
-              );
-
-              // Update the vehicle state.
-              this.vehicle
-                ?..position = vehiclePosition
-                ..bearing = frontBodyBearing;
-            }
-        }
+  void checkIfPidModeIsValid(double lateralDistance) {
+    // Swap to look ahead if the distance is farther than the vehicle's
+    // min turning radius, as we'd be doing circles otherwise.
+    if (pathTrackingMode == PathTrackingMode.pid) {
+      // Switch if the distance is larger than 0.7 times the turning
+      // radius, this value is experimental to find a smoother transition
+      // to swap mode.
+      if (lateralDistance > 0.7 * vehicle!.minTurningRadius &&
+          tempPathTrackingMode != PathTrackingMode.purePursuit) {
+        tempPathTrackingMode = PathTrackingMode.purePursuit;
       }
-
-      // Going straight.
-      else {
-        final position = vehicle!.position.spherical.destinationPoint(
-          distance: vehicle!.velocity * period,
-          bearing: vehicle!.bearing,
-        );
-
-        // Update the vehicle state.
-        vehicle?.position = position;
+      // Swap back to the pid mode when we're within the turning circle
+      // radius of the path.
+      else if (pathTrackingMode == PathTrackingMode.pid &&
+          lateralDistance < vehicle!.minTurningRadius) {
+        tempPathTrackingMode = pathTrackingMode;
       }
-      // Update the connected equipment/children.
-      vehicle?.updateChildren();
     }
   }
 
@@ -728,7 +840,7 @@ class _VehicleSimulatorState {
         (vehicle?.velocity.abs() ?? 1) > 0.5) {
       // Discard bearing changes over 10 degrees for one simulation step.
       if (bearingDifference(prevVehicle!.bearing, vehicle!.bearing) < 10) {
-        gaugeBearing = switch (vehicle!.isReversing) {
+        final bearing = switch (vehicle!.isReversing) {
           true => vehicle!.position.spherical.finalBearingTo(
               prevVehicle!.position,
             ),
@@ -736,6 +848,9 @@ class _VehicleSimulatorState {
               vehicle!.position,
             ),
         };
+        if (!bearing.isNaN) {
+          gaugeBearing = bearing;
+        }
       }
     }
   }
@@ -746,7 +861,10 @@ class _VehicleSimulatorState {
     updateVehicleVelocityAndSteering();
     checkTurningCircle();
     updateTime();
-    updatePosition();
+    vehicle?.updatePositionAndBearing(
+      period,
+      turningCircleCenter,
+    );
     updateGauges();
 
     didChange = forceChange || prevVehicle != vehicle;

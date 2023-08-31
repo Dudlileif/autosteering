@@ -1,1 +1,2 @@
-export 'equipment_debug_menu.dart';
+export 'equipment_configurator/equipment_configurator.dart';
+export 'equipment_menu.dart';

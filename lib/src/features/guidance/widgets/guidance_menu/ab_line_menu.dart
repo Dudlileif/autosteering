@@ -1,5 +1,6 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,27 @@ class ABLineMenu extends ConsumerWidget {
             ),
           ),
         Consumer(
+          builder: (context, ref, child) {
+            final limitMode = ref.watch(aBLineLimitModeProvider);
+            return MenuButtonWithChildren(
+              text: 'Limit mode',
+              icon: Icons.u_turn_right,
+              menuChildren: ABLimitMode.values
+                  .map(
+                    (mode) => CheckboxListTile(
+                      secondary: Text(mode.name, style: textStyle),
+                      value: limitMode == mode,
+                      onChanged: (value) {
+                        ref.read(simInputProvider.notifier).send(mode);
+                        ref.read(aBLineLimitModeProvider.notifier).update(mode);
+                      },
+                    ),
+                  )
+                  .toList(),
+            );
+          },
+        ),
+        Consumer(
           child: Text(
             'Set A',
             style: textStyle,
@@ -97,7 +119,64 @@ class ABLineMenu extends ConsumerWidget {
                   min: 4,
                   max: 20,
                   divisions: 16,
-                )
+                ),
+              ],
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final width = ref.watch(aBLineTurningRadiusProvider);
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Turning radius: $width m',
+                  style: textStyle,
+                ),
+                Slider.adaptive(
+                  value: width,
+                  onChanged: (value) {
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send((abTurningRadius: value));
+                    ref
+                        .read(aBLineTurningRadiusProvider.notifier)
+                        .update(value);
+                  },
+                  min: 4,
+                  max: 20,
+                  divisions: 16,
+                ),
+              ],
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final turnOffsetIncrease =
+                ref.watch(aBLineTurnOffsetIncreaseProvider);
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Turn offset: $turnOffsetIncrease',
+                  style: textStyle,
+                ),
+                Slider.adaptive(
+                  value: turnOffsetIncrease.toDouble(),
+                  onChanged: (value) {
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send((abTurnOffsetIncrease: value.round()));
+                    ref
+                        .read(aBLineTurnOffsetIncreaseProvider.notifier)
+                        .update(value.round());
+                  },
+                  min: 1,
+                  max: 10,
+                  divisions: 10,
+                ),
               ],
             );
           },
@@ -119,7 +198,7 @@ class ABLineMenu extends ConsumerWidget {
                       .update(value),
                   max: 10,
                   divisions: 20,
-                )
+                ),
               ],
             );
           },
@@ -141,7 +220,7 @@ class ABLineMenu extends ConsumerWidget {
                       .update(value.round()),
                   max: 10,
                   divisions: 10,
-                )
+                ),
               ],
             );
           },
@@ -164,7 +243,7 @@ class ABLineMenu extends ConsumerWidget {
                       .update(value.round()),
                   max: 10,
                   divisions: 10,
-                )
+                ),
               ],
             );
           },

@@ -14,14 +14,22 @@
 
 - Basic path recording
 
-- Basic pure pursuit autosteering with PID or look ahead modes
+- Pure pursuit and Stanley autosteering modes
 
-- Basic AB lines with autosteering
+- Basic AB lines with autosteering, u-turn at the ends
 
 - Basic equipment simulation
   - Front and rear fixed hitch (three point)
   - Rear towbar hitch
   - Equipment can be chained in any configuration
+
+- Map layer caching/offline
+
+- Vehicle/equipment configurator/builder
+
+- Saving/loading of vehicles, equipment
+
+- Receive IMU sensor data form hardware, UDP/WebSocket
 
 ## To be implemented
 
@@ -30,23 +38,19 @@
 
 - Improved vehicle simulation, though good enough for testing features now
 
-- Equipment simulation, maybe make segments a separate class, sideways offset, draw some polygon when no segments (i.e. tank/trailer)
+- Equipment simulation, maybe make sections a separate class, draw some polygon when no sections (i.e. tank/trailer)
 
-- Saving/loading of vehicles, equipment, fields etc...
-
-- Vehicle/equipment configurator/builder, chained equipment presets
+- Chained equipment presets
 
 - Fields, AB lines/curves etc.
 
 - Improve autosteering, look at more algorithms
 
-- Hardware communication, probably UDP first
+- Two way hardware comms, send steering signals etc..
 
 - Debugging graphs/logs
 
 - Import/export to the original AgOpenGps
-
-- Map layer caching/offline
 
 - Custom hotkeys, also from hardware
 

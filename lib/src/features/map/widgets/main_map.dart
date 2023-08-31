@@ -1,6 +1,7 @@
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +21,8 @@ class MainMap extends ConsumerWidget {
       key: const Key('Map'),
       mapController: ref.watch(mainMapControllerProvider),
       options: MapOptions(
-        zoom: 19,
+        // Initial zoom
+        zoom: ref.watch(mapZoomProvider),
         minZoom: 4,
         maxZoom: 22,
         interactiveFlags: ref.watch(centerMapOnVehicleProvider)
@@ -48,7 +50,19 @@ class MainMap extends ConsumerWidget {
               ref.read(mainMapControllerProvider).rotate(0);
             }
           }
+          ref.read(mapZoomProvider.notifier).update(event.zoom);
         },
+
+        // Starting center
+        center: ref.watch(offsetVehiclePositionProvider),
+        // Starting rotation
+        rotation: switch (ref.watch(alwaysPointNorthProvider)) {
+          true => 0,
+          false => ref.watch(
+              mainVehicleProvider.select((value) => value.bearing),
+            )
+        },
+
         onMapReady: ref.read(mapReadyProvider.notifier).ready,
         onTap: (tapPosition, point) {
           ref
@@ -79,8 +93,8 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),
         if (ref.watch(showEquipmentDebugLayerProvider))
           const EquipmentDebugLayer(),
-        if (ref.watch(showPurePursuitDebugLayerProvider))
-          const PurePursuitDebugLayer(),
+        if (ref.watch(showPathTrackingDebugLayerProvider))
+          const PathTrackingDebugLayer(),
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showDubinsPathDebugLayerProvider))
           const DubinsPathDebugLayer(),

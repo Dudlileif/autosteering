@@ -10,6 +10,7 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_io/io.dart';
 
 part 'map_providers.g.dart';
 
@@ -335,4 +336,70 @@ class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
 
   /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
+}
+
+/// The zoom value that the map should use when being created.
+@Riverpod(keepAlive: true)
+class MapZoom extends _$MapZoom {
+  @override
+  double build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref.read(settingsProvider.notifier).update(SettingsKey.mapZoom, next);
+      }
+    });
+
+    return ref.read(settingsProvider.notifier).getDouble(SettingsKey.mapZoom) ??
+        19;
+  }
+
+  /// Update the [state] to [value].
+  void update(double value) => Future(() => state = value);
+}
+
+/// A provider for finding the first cache date of the map layer cache
+/// at the given [path].
+@riverpod
+FutureOr<DateTime?> mapCacheDate(MapCacheDateRef ref, String path) async {
+  final file = File([path, 'created'].join('/'));
+
+  if (file.existsSync()) {
+    return DateTime.tryParse(await file.readAsString());
+  }
+  return null;
+}
+
+/// A provider for listing all the map layer cache folders.
+@riverpod
+FutureOr<List<String>> mapCacheDirectories(MapCacheDirectoriesRef ref) async =>
+    await Directory(
+      [
+        ref.watch(fileDirectoryProvider).requireValue.path,
+        'map_image_cache',
+      ].join('/'),
+    ).findSubfoldersWithTargetFile();
+
+/// Whether the map should be allowed to download tiles over the internet.
+@Riverpod(keepAlive: true)
+class MapAllowDownload extends _$MapAllowDownload {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapAllowDownload, next);
+      }
+    });
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.mapAllowDownload) ??
+        true;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
 }

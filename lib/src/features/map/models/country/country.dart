@@ -12,10 +12,15 @@ abstract class Country {
   ///
   /// This is aimed at layers that are specific for a country, or perhaps region
   /// locked to a country.
-  const Country(this.name);
+  const Country(this.name) : folderName = 'Country/$name';
 
   /// The name of the country.
   final String name;
+
+  /// The local path to the folder for this country.
+  ///
+  /// Usually 'Country/[name]'.
+  final String folderName;
 
   /// A list of the country's layers.
   List<TileLayerData> get availableLayers;

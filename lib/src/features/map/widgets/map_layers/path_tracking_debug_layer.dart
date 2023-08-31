@@ -6,65 +6,74 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A combination layer for debuggin the pure pursuit functionality.
-class PurePursuitDebugLayer extends ConsumerWidget {
-  /// A combination layer for debuggin the pure pursuit functionality.
-  const PurePursuitDebugLayer({super.key});
+/// A combination layer for debugging the path tracking functionality.
+class PathTrackingDebugLayer extends ConsumerWidget {
+  /// A combination layer for debugging the path tracking functionality.
+  const PathTrackingDebugLayer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pursuit = ref.watch(displayPurePursuitProvider);
-    final pursuitMode = ref.watch(pursuitModeProvider);
-    final lookAheadDistance = ref.watch(effectiveLookAheadDistanceProvider);
+    final tracking = ref.watch(displayPathTrackingProvider);
     final vehicle = ref.watch(mainVehicleProvider);
+    final trackingMode = vehicle.pathTrackingMode;
+    final lookAheadDistance = vehicle.lookAheadDistance;
 
     return Stack(
-      children: pursuit != null
+      children: tracking != null
           ? [
               PolylineLayer(
                 polylineCulling: true,
                 polylines: [
                   Polyline(
-                    points: pursuit.path
+                    points: tracking.path
                         .map((point) => point.position.latLng)
                         .toList(),
                   ),
-                  Polyline(
-                    points: [
-                      vehicle.pursuitAxlePosition.latLng,
-                      pursuit.perpendicularIntersect(vehicle).latLng
-                    ],
-                    color: Colors.white,
-                  ),
-                  if (pursuitMode == PurePursuitMode.lookAhead) ...[
+                  if (tracking is PurePursuitPathTracking)
+                    Polyline(
+                      points: [
+                        vehicle.lookAheadStartPosition.latLng,
+                        tracking.perpendicularIntersect(vehicle).latLng,
+                      ],
+                      color: Colors.white,
+                    )
+                  else if (tracking is StanleyPathTracking)
+                    Polyline(
+                      points: [
+                        vehicle.stanleyAxlePosition.latLng,
+                        tracking.perpendicularIntersect(vehicle).latLng,
+                      ],
+                      color: Colors.white,
+                    ),
+                  if (tracking is PurePursuitPathTracking) ...[
                     Polyline(
                       color: Colors.black,
                       points: [
                         vehicle.lookAheadStartPosition.latLng,
-                        if (pursuit.lookAheadVehicleToLineProjection(
+                        if (tracking.lookAheadVehicleToLineProjection(
                               vehicle,
                               lookAheadDistance,
                             ) !=
                             null)
-                          pursuit
+                          tracking
                               .lookAheadVehicleToLineProjection(
                                 vehicle,
                                 lookAheadDistance,
                               )!
                               .latLng,
-                        pursuit
+                        tracking
                             .findLookAheadLinePoints(vehicle, lookAheadDistance)
                             .inside
                             .position
                             .latLng,
-                        if (pursuit
+                        if (tracking
                                 .findLookAheadLinePoints(
                                   vehicle,
                                   lookAheadDistance,
                                 )
                                 .outside !=
                             null)
-                          pursuit
+                          tracking
                               .findLookAheadLinePoints(
                                 vehicle,
                                 lookAheadDistance,
@@ -77,42 +86,42 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                     Polyline(
                       points: [
                         vehicle.lookAheadStartPosition.latLng,
-                        pursuit
+                        tracking
                             .findLookAheadCirclePoints(
                               vehicle,
                               lookAheadDistance,
                             )
                             .best
                             .position
-                            .latLng
+                            .latLng,
                       ],
                       color: Colors.pink,
                     ),
-                    if (pursuit.lookAheadVehicleToLineProjection(
+                    if (tracking.lookAheadVehicleToLineProjection(
                           vehicle,
                           lookAheadDistance,
                         ) !=
                         null)
                       Polyline(
                         points: [
-                          pursuit
+                          tracking
                               .lookAheadVehicleToLineProjection(
                                 vehicle,
                                 lookAheadDistance,
                               )!
                               .latLng,
-                          pursuit
+                          tracking
                               .findLookAheadCirclePoints(
                                 vehicle,
                                 lookAheadDistance,
                               )
                               .best
                               .position
-                              .latLng
+                              .latLng,
                         ],
                         color: Colors.pink,
                       ),
-                    if (pursuit
+                    if (tracking
                             .findLookAheadCirclePoints(
                               vehicle,
                               lookAheadDistance,
@@ -122,78 +131,78 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                       Polyline(
                         points: [
                           vehicle.lookAheadStartPosition.latLng,
-                          pursuit
+                          tracking
                               .findLookAheadCirclePoints(
                                 vehicle,
                                 lookAheadDistance,
                               )
                               .worst!
                               .position
-                              .latLng
+                              .latLng,
                         ],
                         color: Colors.blue,
                       ),
-                      if (pursuit.lookAheadVehicleToLineProjection(
+                      if (tracking.lookAheadVehicleToLineProjection(
                             vehicle,
                             lookAheadDistance,
                           ) !=
                           null)
                         Polyline(
                           points: [
-                            pursuit
+                            tracking
                                 .lookAheadVehicleToLineProjection(
                                   vehicle,
                                   lookAheadDistance,
                                 )!
                                 .latLng,
-                            pursuit
+                            tracking
                                 .findLookAheadCirclePoints(
                                   vehicle,
                                   lookAheadDistance,
                                 )
                                 .worst!
                                 .position
-                                .latLng
+                                .latLng,
                           ],
                           color: Colors.blue,
-                        )
-                    ]
-                  ]
+                        ),
+                    ],
+                  ],
                 ],
               ),
               CircleLayer(
                 circles: [
-                  ...pursuit.path.map(
+                  ...tracking.path.map(
                     (point) => CircleMarker(
                       point: point.position.latLng,
                       radius: 5,
                     ),
                   ),
-                  if (pursuitMode == PurePursuitMode.pid) ...[
+                  if (trackingMode == PathTrackingMode.pid) ...[
                     CircleMarker(
-                      point: pursuit.currentWayPoint.position.latLng,
+                      point: tracking.currentWayPoint(vehicle).position.latLng,
                       radius: 3,
                       color: Colors.black,
                     ),
                     CircleMarker(
-                      point: pursuit.nextWayPoint(vehicle).position.latLng,
+                      point: tracking.nextWayPoint(vehicle).position.latLng,
                       radius: 3,
                       color: Colors.white,
                     ),
-                  ] else if (pursuitMode == PurePursuitMode.lookAhead) ...[
+                  ] else if (tracking is PurePursuitPathTracking) ...[
                     CircleMarker(
                       point: vehicle.lookAheadStartPosition.latLng,
                       radius: lookAheadDistance,
                       useRadiusInMeter: true,
                       color: Colors.pink.withOpacity(0.2),
                     ),
-                    if (pursuit.lookAheadVehicleToLineProjection(
+                    if (tracking.lookAheadVehicleToLineProjection(
                           vehicle,
                           lookAheadDistance,
                         ) !=
                         null)
                       CircleMarker(
-                        point: pursuit
+                        point: tracking
                             .lookAheadVehicleToLineProjection(
                               vehicle,
                               lookAheadDistance,
@@ -203,7 +212,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                         color: Colors.black,
                       ),
                     CircleMarker(
-                      point: pursuit
+                      point: tracking
                           .findLookAheadLinePoints(
                             vehicle,
                             lookAheadDistance,
@@ -214,7 +223,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                       radius: 3,
                       color: Colors.white,
                     ),
-                    if (pursuit
+                    if (tracking
                             .findLookAheadLinePoints(
                               vehicle,
                               lookAheadDistance,
@@ -222,7 +231,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                             .outside !=
                         null)
                       CircleMarker(
-                        point: pursuit
+                        point: tracking
                             .findLookAheadLinePoints(
                               vehicle,
                               lookAheadDistance,
@@ -234,7 +243,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                         color: Colors.white,
                       ),
                     CircleMarker(
-                      point: pursuit
+                      point: tracking
                           .findLookAheadCirclePoints(
                             vehicle,
                             lookAheadDistance,
@@ -245,7 +254,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                       radius: 5,
                       color: Colors.pink,
                     ),
-                    if (pursuit
+                    if (tracking
                             .findLookAheadCirclePoints(
                               vehicle,
                               lookAheadDistance,
@@ -253,7 +262,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                             .worst !=
                         null)
                       CircleMarker(
-                        point: pursuit
+                        point: tracking
                             .findLookAheadCirclePoints(
                               vehicle,
                               lookAheadDistance,
@@ -266,7 +275,7 @@ class PurePursuitDebugLayer extends ConsumerWidget {
                       ),
                   ],
                   CircleMarker(
-                    point: pursuit.perpendicularIntersect(vehicle).latLng,
+                    point: tracking.perpendicularIntersect(vehicle).latLng,
                     radius: 5,
                     color: Colors.grey,
                   ),
@@ -280,10 +289,10 @@ class PurePursuitDebugLayer extends ConsumerWidget {
 
 /// A Widget for displaying the distance from the pure pursuit line to the
 /// vehicle.
-class PurePursuitDebugWidget extends ConsumerWidget {
+class PathTrackingDebugWidget extends ConsumerWidget {
   /// A Widget for displaying the distance from the pure pursuit line to the
   /// vehicle.
-  const PurePursuitDebugWidget({super.key});
+  const PathTrackingDebugWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -298,7 +307,7 @@ class PurePursuitDebugWidget extends ConsumerWidget {
           child: Consumer(
             builder: (context, ref, child) {
               return Text(
-                (ref.watch(purePursuitPerpendicularDistanceProvider) ?? 0)
+                (ref.watch(pathTrackingPerpendicularDistanceProvider) ?? 0)
                     .toStringAsFixed(3),
                 style: theme.menuButtonWithChildrenText,
               );

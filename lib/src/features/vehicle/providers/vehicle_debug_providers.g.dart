@@ -136,5 +136,61 @@ final debugVehicleHitchesProvider =
 );
 
 typedef _$DebugVehicleHitches = Notifier<bool>;
+String _$debugVehicleAntennaPositionHash() =>
+    r'01e2df818d2995610c08b0a90b5030a616fbe179';
+
+/// Whether to show vehicle antenna position debug.
+///
+/// Copied from [DebugVehicleAntennaPosition].
+@ProviderFor(DebugVehicleAntennaPosition)
+final debugVehicleAntennaPositionProvider =
+    NotifierProvider<DebugVehicleAntennaPosition, bool>.internal(
+  DebugVehicleAntennaPosition.new,
+  name: r'debugVehicleAntennaPositionProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugVehicleAntennaPositionHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugVehicleAntennaPosition = Notifier<bool>;
+String _$debugVehicleIMUHash() => r'e95486e3ec7bd909ebdf31deffdf10729e077fa3';
+
+/// Whether to show vehicle antenna position debug.
+///
+/// Copied from [DebugVehicleIMU].
+@ProviderFor(DebugVehicleIMU)
+final debugVehicleIMUProvider =
+    NotifierProvider<DebugVehicleIMU, bool>.internal(
+  DebugVehicleIMU.new,
+  name: r'debugVehicleIMUProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugVehicleIMUHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugVehicleIMU = Notifier<bool>;
+String _$debugVehicleAutosteerParametersHash() =>
+    r'9a7ced139e78bfa75cf5d975973420c15a9748a7';
+
+/// Whether to show vehicle autosteer parameters debug.
+///
+/// Copied from [DebugVehicleAutosteerParameters].
+@ProviderFor(DebugVehicleAutosteerParameters)
+final debugVehicleAutosteerParametersProvider =
+    NotifierProvider<DebugVehicleAutosteerParameters, bool>.internal(
+  DebugVehicleAutosteerParameters.new,
+  name: r'debugVehicleAutosteerParametersProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugVehicleAutosteerParametersHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugVehicleAutosteerParameters = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

@@ -1,32 +1,4 @@
-import 'dart:math';
-
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:geobase/geobase.dart';
-
-/// An enumerator for which steering mode the [PurePursuit] model should
-/// use.
-enum PurePursuitMode {
-  /// Use a PID-controller mode to control the steering.
-  pid,
-
-  /// Use a look ahead mode to control the steering.
-  lookAhead,
-}
-
-/// An enumerator for if/how the last and first points of the path of the
-/// [PurePursuit] should loop.
-enum PurePursuitLoopMode {
-  /// Don't loop when reaching the end.
-  none,
-
-  /// Loop to the start point by using a straight line from the end point.
-  straight,
-
-  /// Loop to the start point by using a Dubins path from the end point.
-  dubins,
-}
+part of '../path_tracking.dart';
 
 /// A class for path tracking that utilizes the pure pursuit algorithm.
 ///
@@ -34,7 +6,7 @@ enum PurePursuitLoopMode {
 /// attempts to chase it. This continually happens until the end of the path is
 /// reached, where it can loop back to the starting point in a couple different
 /// ways or stop tracking.
-class PurePursuit {
+final class PurePursuitPathTracking extends PathTracking {
   /// A class for path tracking that utilizes the pure pursuit algorithm.
   ///
   /// The pure pursuit algorithm finds a point a certain distance ahead of it
@@ -43,210 +15,88 @@ class PurePursuit {
   /// different ways or stop tracking.
   ///
   /// The [wayPoints] gives the path that the vehicle should follow.
-  /// The [interpolationDistance] is the maximum distance between points in the
-  /// path, points will be interpolated if the [wayPoints] are too far apart.
-  /// The [loopMode] dictates what the vehicle should do when it finishes the
-  /// path.
-  PurePursuit({
-    required this.wayPoints,
-    double interpolationDistance = 4,
-    PurePursuitLoopMode loopMode = PurePursuitLoopMode.none,
-  }) {
-    interPolateWayPoints(
-      maxDistance: interpolationDistance,
-      loopMode: loopMode,
-    );
-  }
-
-  /// The list of waypoints to interpolate from.
-  final List<WayPoint> wayPoints;
-
-  /// The list of waypoints that the vehicle should follow.
-  late List<WayPoint> path;
-
-  /// The PID controller for controlling the steering angle.
-  final pidController = PidController();
-
-  /// The index of the current way point.
-  int currentIndex = 0;
-
-  /// Interpolates the [wayPoints] and puts the result in [path].
   ///
-  /// The maximum distances between the points are [maxDistance] and if
-  /// [loopMode] is specified, a path from the last point to the first
-  /// is added.
-  void interPolateWayPoints({
-    double maxDistance = 4,
-    PurePursuitLoopMode loopMode = PurePursuitLoopMode.none,
-  }) {
-    path = List<WayPoint>.from(wayPoints);
+  /// The [interpolationDistance] is the maximum distance between
+  /// points in the path, points will be interpolated if the [wayPoints] are
+  /// too far apart.
+  ///
+  /// The [loopMode] dictates what the vehicle should do when it
+  /// finishes the path.
+  PurePursuitPathTracking({
+    required super.wayPoints,
+    super.interpolationDistance,
+    super.loopMode,
+  });
 
-    var index = 0;
-
-    while (index + 1 < path.length) {
-      final point = path[index];
-      final nextPoint = path[index + 1];
-      if (point.position.spherical.distanceTo(nextPoint.position) >
-          maxDistance) {
-        path.insert(
-          index + 1,
-          point.copyWith(
-            position: point.position.spherical.destinationPoint(
-              distance: maxDistance,
-              bearing:
-                  point.position.spherical.initialBearingTo(nextPoint.position),
-            ),
-          ),
-        );
-      }
-      index++;
-    }
-
-    if (loopMode == PurePursuitLoopMode.straight) {
-      while (path.last.position.spherical.distanceTo(
-            path.first.position,
-          ) >
-          maxDistance) {
-        path.add(
-          path.last.copyWith(
-            position: path.last.position.spherical.destinationPoint(
-              distance: maxDistance,
-              bearing: path.last.position.spherical
-                  .initialBearingTo(path.first.position),
-            ),
-          ),
-        );
-      }
-    } else if (loopMode == PurePursuitLoopMode.dubins) {
-      final dubinsPath = DubinsPath(
-        start: path.last,
-        end: path.first,
-        turningRadius: 6,
-        stepSize: maxDistance / 3,
-      ).bestDubinsPathPlan?.wayPoints;
-
-      if (dubinsPath != null) {
-        // Skip the first and last point of the dubins path to avoid duplicates
-        // that cause wrong calculations.
-        path.addAll(dubinsPath.getRange(1, dubinsPath.length - 2));
-      }
-    }
-  }
-
-  /// The index of the next waypoint when driving forward.
-  int get nextForwardIndex => switch (currentIndex == path.length - 1) {
-        true => 0,
-        false => currentIndex + 1
-      };
-
-  /// The index of the next (previous) waypoint when driving in reverse.
-  int get nextReversingIndex => switch (currentIndex == 0) {
-        true => path.length - 1,
-        false => currentIndex - 1
-      };
-
-  /// The current waypoint.
-  WayPoint get currentWayPoint => path[currentIndex];
-
-  /// The next waypoint when driving forward.
-  WayPoint get nextForwardWayPoint => path[nextForwardIndex];
-
-  /// The next waypoint when driving in reverse.
-  WayPoint get nextReversingWayPoint => path[nextReversingIndex];
-
-  /// The next waypoint index with vehicle driving direction taken into
-  /// consideration.
-  int nextIndex(Vehicle vehicle) => switch (vehicle.isReversing) {
-        true => nextReversingIndex,
-        false => nextForwardIndex,
-      };
-
-  /// The next waypoint with vehicle driving direction taken into consideration.
-  WayPoint nextWayPoint(Vehicle vehicle) => switch (vehicle.isReversing) {
-        true => nextReversingWayPoint,
-        false => nextForwardWayPoint,
-      };
+  /// The PID controller for controlling the steering angle in the PID steering
+  /// mode.
+  final pidController = PidController();
 
   /// The intersection point that is projected from the vehicle onto the
   /// line from the current to the next waypoint.
-  Geographic perpendicularIntersect(
-    Vehicle vehicle,
-  ) {
+  @override
+  Geographic perpendicularIntersect(Vehicle vehicle) {
     final nextPoint = nextWayPoint(vehicle).position;
 
-    final distanceAlong = vehicle.pursuitAxlePosition.spherical
-        .alongTrackDistanceTo(start: currentWayPoint.position, end: nextPoint);
+    final currentPoint = currentWayPoint(vehicle);
 
-    final bearing =
-        currentWayPoint.position.spherical.initialBearingTo(nextPoint);
+    final distanceAlong = vehicle.lookAheadStartPosition.spherical
+        .alongTrackDistanceTo(start: currentPoint.position, end: nextPoint);
 
-    assert(!bearing.isNaN, 'Bearing error');
+    var bearing = currentPoint.position.spherical.initialBearingTo(nextPoint);
 
-    return currentWayPoint.position.spherical
+    if (bearing.isNaN) {
+      bearing = currentPoint.bearing;
+    }
+
+    return currentPoint.position.spherical
         .destinationPoint(distance: distanceAlong, bearing: bearing);
   }
 
   /// The distance from the vehicle to the [perpendicularIntersect] point.
   ///
   /// The value is negative if the vehicle is to the left of the line.
-  double perpendicularDistance(
-    Vehicle vehicle,
-  ) {
+  @override
+  double perpendicularDistance(Vehicle vehicle) {
     final sign = switch (vehicle.isReversing) {
       false => 1,
       true => -1,
     };
 
     return sign *
-        vehicle.pursuitAxlePosition.spherical.crossTrackDistanceTo(
-          start: currentWayPoint.position,
+        vehicle.lookAheadStartPosition.spherical.crossTrackDistanceTo(
+          start: currentWayPoint(vehicle).position,
           end: nextWayPoint(vehicle).position,
         );
   }
 
   /// The waypoint in [path] that is closest to the [vehicle].
-  WayPoint closestWayPoint(
-    Vehicle vehicle,
-  ) =>
-      path.reduce(
+  @override
+  WayPoint closestWayPoint(Vehicle vehicle) => path.reduce(
         (value, element) => element.position.spherical.distanceTo(
-                  vehicle.pursuitAxlePosition,
+                  vehicle.lookAheadStartPosition,
                 ) <
-                value.position.spherical.distanceTo(vehicle.pursuitAxlePosition)
+                value.position.spherical
+                    .distanceTo(vehicle.lookAheadStartPosition)
             ? element
             : value,
       );
 
-  /// The index of the [closestWayPoint].
-  int closestIndex(Vehicle vehicle) => path.indexOf(closestWayPoint(vehicle));
-
   /// Try to advance to the next waypoint in the list.
-  void tryChangeWayPoint(
-    Vehicle vehicle,
-  ) {
+  @override
+  void tryChangeWayPoint(Vehicle vehicle) {
     final nextPoint = nextWayPoint(vehicle).position;
 
-    final progress = vehicle.pursuitAxlePosition.spherical.alongTrackDistanceTo(
-      start: currentWayPoint.position,
+    final currentPoint = currentWayPoint(vehicle);
+
+    final progress =
+        vehicle.lookAheadStartPosition.spherical.alongTrackDistanceTo(
+      start: currentPoint.position,
       end: nextPoint,
     );
-    if (progress > currentWayPoint.position.spherical.distanceTo(nextPoint)) {
-      currentIndex = nextIndex(vehicle);
+    if (progress > currentPoint.position.spherical.distanceTo(nextPoint)) {
+      cumulativeIndex = nextIndex(vehicle);
     }
-  }
-
-  /// Calculates the steering angle needed to reach the target point when
-  /// using a PID controller.
-  double nextSteeringAnglePid(Vehicle vehicle) {
-    final steeringAngle = pidController.nextValue(
-      perpendicularDistance(vehicle),
-      vehicle.pidParameters,
-    );
-
-    return steeringAngle.clamp(
-      -vehicle.steeringAngleMax,
-      vehicle.steeringAngleMax,
-    );
   }
 
   /// Finds the points that we use to get the secant line that intersects
@@ -299,6 +149,31 @@ class PurePursuit {
         break;
       }
     }
+
+    if (loopMode == PathTrackingLoopMode.none) {
+      if (vehicle.isReversing && outsidePoint == path.last) {
+        return (
+          inside: path.first.moveSpherical(
+            distance: vehicle.lookAheadDistance -
+                vehicle.lookAheadStartPosition.spherical
+                    .distanceTo(path.first.position)
+                    .clamp(0, vehicle.lookAheadDistance),
+          ),
+          outside: null
+        );
+      } else if (!vehicle.isReversing && outsidePoint == path.first) {
+        return (
+          inside: path.last.moveSpherical(
+            distance: vehicle.lookAheadDistance -
+                vehicle.lookAheadStartPosition.spherical
+                    .distanceTo(path.last.position)
+                    .clamp(0, vehicle.lookAheadDistance),
+          ),
+          outside: null
+        );
+      }
+    }
+
     return (inside: insidePoint, outside: outsidePoint);
   }
 
@@ -414,14 +289,14 @@ class PurePursuit {
   /// using a the look ahead method.
   ///
   /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
-  double nextSteeringAngleLookAhead(
-    Vehicle vehicle,
-    double lookAheadDistance,
-  ) {
-    final bearingToPoint =
-        vehicle.lookAheadStartPosition.spherical.initialBearingTo(
-      findLookAheadCirclePoints(vehicle, lookAheadDistance).best.position,
-    );
+  double _nextSteeringAngleLookAhead(Vehicle vehicle) {
+    final lookAheadPoint =
+        findLookAheadCirclePoints(vehicle, vehicle.lookAheadDistance)
+            .best
+            .position;
+
+    final bearingToPoint = vehicle.lookAheadStartPosition.spherical
+        .initialBearingTo(lookAheadPoint);
 
     final angle = signedBearingDifference(
       vehicle.bearing,
@@ -429,12 +304,39 @@ class PurePursuit {
     );
 
     final steeringAngle = atan(
-      2 * vehicle.wheelBase * sin(angle.toRadians()) / lookAheadDistance,
+      2 *
+          vehicle.wheelBase *
+          sin(angle.toRadians()) /
+          vehicle.lookAheadDistance,
     ).toDegrees();
 
     return steeringAngle.clamp(
       -vehicle.steeringAngleMax,
       vehicle.steeringAngleMax,
     );
+  }
+
+  /// Calculates the steering angle needed to reach the target point when
+  /// using a PID controller.
+  double _nextSteeringAnglePid(Vehicle vehicle) {
+    final steeringAngle = pidController.nextValue(
+      perpendicularDistance(vehicle),
+      vehicle.pidParameters,
+    );
+
+    return steeringAngle.clamp(
+      -vehicle.steeringAngleMax,
+      vehicle.steeringAngleMax,
+    );
+  }
+
+  ///
+  @override
+  double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) {
+    tryChangeWayPoint(vehicle);
+    return switch (mode ?? vehicle.pathTrackingMode) {
+      PathTrackingMode.pid => _nextSteeringAnglePid(vehicle),
+      PathTrackingMode.purePursuit || _ => _nextSteeringAngleLookAhead(vehicle)
+    };
   }
 }

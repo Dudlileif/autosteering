@@ -14,13 +14,18 @@ enum HitchType {
 /// Which position and hitch type a hitch is.
 enum Hitch {
   /// The front three point hitch.
-  frontFixed,
+  frontFixed('Front fixed'),
 
   /// The rear three point hitch.
-  rearFixed,
+  rearFixed('Rear fixed'),
 
   /// The rear towbar or similar articulating hitch.
-  rearTowbar;
+  rearTowbar('Rear towbar');
+
+  const Hitch(this.name);
+
+  /// The name of this enumeration value.
+  final String name;
 }
 
 //?: make this sealed/final for vehicle and equipment
@@ -39,7 +44,7 @@ abstract class Hitchable {
   /// [hitchRearTowbarChild] to attach children to this hitchable.
   ///
   Hitchable({
-    this.name = 'No name',
+    this.name,
     this.hitchParent,
     this.hitchFrontFixedChild,
     this.hitchRearFixedChild,
@@ -51,7 +56,7 @@ abstract class Hitchable {
   final String uuid;
 
   /// The name/id of this.
-  String name;
+  String? name;
 
   /// The parent of this, if there is one.
   Hitchable? hitchParent;
@@ -90,26 +95,53 @@ abstract class Hitchable {
   bool get isReversing => velocity < 0;
 
   /// Attach a [child] hitchable (equipment) to this at the given [position].
-  ///
-  /// The [child] can be null to remove/detach at the given [position].
   void attachChild(
-    Hitchable? child, [
+    Hitchable child, [
     Hitch position = Hitch.rearFixed,
   ]) {
+    var childToAttach = child;
+
+    final uuidAlreadyAttached = findChildRecursive(child.uuid);
+    if (uuidAlreadyAttached != null) {
+      childToAttach = child.copyWith(uuid: const Uuid().v4());
+    }
+
     switch (position) {
       case Hitch.frontFixed:
-        hitchFrontFixedChild = child?..parentHitch = Hitch.frontFixed;
+        hitchFrontFixedChild = childToAttach..parentHitch = Hitch.frontFixed;
 
       case Hitch.rearFixed:
-        hitchRearFixedChild = child?..parentHitch = Hitch.rearFixed;
+        hitchRearFixedChild = childToAttach..parentHitch = Hitch.rearFixed;
 
       case Hitch.rearTowbar:
-        hitchRearTowbarChild = child?..parentHitch = Hitch.rearTowbar;
+        hitchRearTowbarChild = childToAttach..parentHitch = Hitch.rearTowbar;
     }
     updateChildren();
   }
 
-  /// Recursively looks through the  connected children of this to find a
+  /// Attach the [child] to the parent [Hitchable] with uuid [parentUuid] at
+  /// the [position] hitch.
+  void attachChildTo(
+    String parentUuid,
+    Hitchable child, [
+    Hitch position = Hitch.rearFixed,
+  ]) {
+    var childToAttach = child;
+
+    final uuidAlreadyAttached = findChildRecursive(child.uuid);
+    if (uuidAlreadyAttached != null) {
+      childToAttach = child.copyWith(uuid: const Uuid().v4());
+    }
+
+    if (uuid == parentUuid) {
+      attachChild(childToAttach, position);
+    } else {
+      final foundChild = findChildRecursive(parentUuid);
+      foundChild?.attachChild(childToAttach, position);
+    }
+  }
+
+  /// Recursively looks through the connected children of this to find a
   /// [Hitchable] with the given [uuid]. If there isn't one, null is returned.
   Hitchable? findChildRecursive(String uuid) {
     for (final element in hitchChildren) {
@@ -122,6 +154,37 @@ abstract class Hitchable {
       }
     }
     return null;
+  }
+
+  /// Update the [child] at the correct point/position in the hierarchy.
+  void updateChild(Hitchable child) {
+    final foundChild = findChildRecursive(child.uuid);
+
+    foundChild?.hitchParent?.attachChild(
+      child.copyWith(
+        hitchFrontFixedChild: foundChild.hitchFrontFixedChild,
+        hitchRearFixedChild: foundChild.hitchRearFixedChild,
+        hitchRearTowbarChild: foundChild.hitchRearTowbarChild,
+      ),
+      foundChild.parentHitch ?? Hitch.rearFixed,
+    );
+  }
+
+  /// Detaches the child with the given [uuid] from the hierarchy.
+  void detachChild(String uuid) {
+    final foundChild = findChildRecursive(uuid);
+
+    switch (foundChild?.parentHitch) {
+      case Hitch.frontFixed:
+        foundChild?.hitchParent?.hitchFrontFixedChild = null;
+      case Hitch.rearFixed:
+        foundChild?.hitchParent?.hitchRearFixedChild = null;
+
+      case Hitch.rearTowbar:
+        foundChild?.hitchParent?.hitchRearTowbarChild = null;
+      case null:
+    }
+    foundChild?.hitchParent = null;
   }
 
   /// A list of the currently attached children.
@@ -144,7 +207,7 @@ abstract class Hitchable {
   Iterable<Geographic> get hitchPoints => [
         hitchFrontFixedPoint,
         hitchRearFixedPoint,
-        hitchRearTowbarPoint
+        hitchRearTowbarPoint,
       ].whereNotNull();
 
   /// Update the children connected to this.
@@ -168,5 +231,6 @@ abstract class Hitchable {
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
     String? name,
+    String? uuid,
   });
 }

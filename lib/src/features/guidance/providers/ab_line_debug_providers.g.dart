@@ -7,7 +7,7 @@ part of 'ab_line_debug_providers.dart';
 // **************************************************************************
 
 String _$abLinePerpendicularDistanceHash() =>
-    r'701ce8f8fede74b09d882e390a5ca4f0f4651830';
+    r'9ef46fcde66597293521e4bafae8f416cdafcaff';
 
 /// A provider for the perpendicular distance from the [ABLineDebug] line
 /// to the [MainVehicle].
@@ -173,7 +173,63 @@ final aBLineWidthProvider = NotifierProvider<ABLineWidth, double>.internal(
 );
 
 typedef _$ABLineWidth = Notifier<double>;
-String _$aBLineDebugHash() => r'344150ffadb4b0cb72f1458e3b1dfddae094d0cb';
+String _$aBLineTurningRadiusHash() =>
+    r'3e468042f514c5e18763e85418fc374f304f48ac';
+
+/// A provider for the turning radius of an AB-line.
+///
+/// Copied from [ABLineTurningRadius].
+@ProviderFor(ABLineTurningRadius)
+final aBLineTurningRadiusProvider =
+    NotifierProvider<ABLineTurningRadius, double>.internal(
+  ABLineTurningRadius.new,
+  name: r'aBLineTurningRadiusProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$aBLineTurningRadiusHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ABLineTurningRadius = Notifier<double>;
+String _$aBLineTurnOffsetIncreaseHash() =>
+    r'd37b062f3b3666b843f77cc4314f7f51bb2df98f';
+
+/// A provider for the width of an AB-line.
+///
+/// Copied from [ABLineTurnOffsetIncrease].
+@ProviderFor(ABLineTurnOffsetIncrease)
+final aBLineTurnOffsetIncreaseProvider =
+    NotifierProvider<ABLineTurnOffsetIncrease, int>.internal(
+  ABLineTurnOffsetIncrease.new,
+  name: r'aBLineTurnOffsetIncreaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$aBLineTurnOffsetIncreaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ABLineTurnOffsetIncrease = Notifier<int>;
+String _$aBLineLimitModeHash() => r'a6a108849a81c9b37204079512516ff170c049e4';
+
+/// A provider for the width of an AB-line.
+///
+/// Copied from [ABLineLimitMode].
+@ProviderFor(ABLineLimitMode)
+final aBLineLimitModeProvider =
+    NotifierProvider<ABLineLimitMode, ABLimitMode>.internal(
+  ABLineLimitMode.new,
+  name: r'aBLineLimitModeProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$aBLineLimitModeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ABLineLimitMode = Notifier<ABLimitMode>;
+String _$aBLineDebugHash() => r'40051f22be154963bb8ce82e72a80390660ee91c';
 
 /// A provider for the AB-line object to debug.
 ///

@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_map/plugin_api.dart';
 
 /// A [TileProvider] for network images that will be cached.
-class CachedTileProvider extends TileProvider {
+class HiveCachedTileProvider extends TileProvider {
   /// A [TileProvider] for network images that will be cached.
   ///
   /// Supply custom [headers] if needed.
@@ -17,7 +17,7 @@ class CachedTileProvider extends TileProvider {
   /// Additional [layer] data can be supplied which get shown int the debug log,
   /// mainly the name of the [layer], to easier distinguish between layers when
   /// several layers are active.
-  CachedTileProvider({
+  HiveCachedTileProvider({
     this.layer,
     this.debugPrint = false,
     super.headers,
@@ -41,7 +41,7 @@ Layer: ${layer?.name}
 $coordinates
 Url: $url
 ''',
-        name: 'CachedTileProvider',
+        name: 'HiveCachedTileProvider',
         time: DateTime.timestamp(),
       );
     }

@@ -37,6 +37,26 @@ class WayPoint extends Equatable {
         velocity: velocity ?? this.velocity,
       );
 
+  /// Move the waypoint with a spherical great line by [distance] in the
+  /// direction of [bearing] + [angleFromBearing].
+  ///
+  /// The updated bearing will be calculated at the new point as the
+  /// bearing from old position to new minus the [angleFromBearing].
+  WayPoint moveSpherical({
+    required double distance,
+    double angleFromBearing = 0,
+  }) {
+    final newPos = position.spherical.destinationPoint(
+      distance: distance,
+      bearing: bearing + angleFromBearing,
+    );
+
+    return copyWith(
+      position: newPos,
+      bearing: position.spherical.finalBearingTo(newPos) - angleFromBearing,
+    );
+  }
+
   /// Properties used to compare with [Equatable].
   @override
   List<Object?> get props => [

@@ -24,26 +24,22 @@ class ABLineDebugLayer extends ConsumerWidget {
       false => ref.watch(aBLineDebugProvider)
     };
 
-    final lookAheadDistance = ref.watch(effectiveLookAheadDistanceProvider);
-
     final vehicle = ref.watch(mainVehicleProvider);
 
-    final currentPerpendicularIntersect = abLine
-        ?.currentPerpendicularIntersect(
-          vehicle.pursuitAxlePosition,
-        )
-        .latLng;
+    final currentPerpendicularIntersect =
+        abLine?.currentPerpendicularIntersect(vehicle).latLng;
 
-    final lookAheadLinePoints =
-        abLine?.findLookAheadLinePoints(vehicle, lookAheadDistance);
+    final lookAheadLinePoints = abLine?.findLookAheadLinePoints(
+      vehicle,
+    );
 
-    final lookAheadCirclePoints =
-        abLine?.findLookAheadCirclePoints(vehicle, lookAheadDistance);
+    final lookAheadCirclePoints = abLine?.findLookAheadCirclePoints(
+      vehicle,
+    );
 
     final vehicleToLineProjection = abLine
         ?.vehicleToLookAheadLineProjection(
           vehicle,
-          lookAheadDistance,
         )
         ?.latLng;
 
@@ -53,10 +49,38 @@ class ABLineDebugLayer extends ConsumerWidget {
           PolylineLayer(
             polylines: [
               Polyline(points: [abLine.start.latLng, abLine.end.latLng]),
+              Polyline(
+                points: [
+                  abLine.currentStart.latLng,
+                  abLine.currentEnd.latLng,
+                ],
+              ),
+              if (abLine.limitMode != ABLimitMode.unlimited)
+                Polyline(
+                  points: [
+                    abLine.nextStart.latLng,
+                    abLine.nextEnd.latLng,
+                  ],
+                  color: Colors.blue,
+                ),
+              if (abLine.upcomingTurn != null)
+                Polyline(
+                  points: abLine.upcomingTurn!.path
+                      .map((e) => e.position.latLng)
+                      .toList(),
+                  color: Colors.blue,
+                ),
+              if (abLine.activeTurn != null)
+                Polyline(
+                  points: abLine.activeTurn!.path
+                      .map((e) => e.position.latLng)
+                      .toList(),
+                  color: Colors.blue,
+                ),
               if (currentPerpendicularIntersect != null)
                 Polyline(
                   points: [
-                    vehicle.pursuitAxlePosition.latLng,
+                    vehicle.lookAheadStartPosition.latLng,
                     currentPerpendicularIntersect,
                   ],
                   color: Colors.white,
@@ -77,7 +101,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                 Polyline(
                   points: [
                     vehicle.lookAheadStartPosition.latLng,
-                    lookAheadCirclePoints.best.latLng
+                    lookAheadCirclePoints.best.latLng,
                   ],
                   color: Colors.green,
                 ),
@@ -87,7 +111,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                 Polyline(
                   points: [
                     vehicleToLineProjection,
-                    lookAheadCirclePoints.best.latLng
+                    lookAheadCirclePoints.best.latLng,
                   ],
                   color: Colors.green,
                 ),
@@ -98,7 +122,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                 Polyline(
                   points: [
                     vehicle.lookAheadStartPosition.latLng,
-                    lookAheadCirclePoints.worst!.latLng
+                    lookAheadCirclePoints.worst!.latLng,
                   ],
                   color: Colors.red,
                 ),
@@ -106,11 +130,20 @@ class ABLineDebugLayer extends ConsumerWidget {
                   Polyline(
                     points: [
                       vehicleToLineProjection,
-                      lookAheadCirclePoints.worst!.latLng
+                      lookAheadCirclePoints.worst!.latLng,
                     ],
                     color: Colors.red,
-                  )
-              ]
+                  ),
+              ],
+              if (abLine.activeTurn != null)
+                ...abLine.activeTurn!.path.map(
+                  (point) => Polyline(
+                    points: [
+                      point.position.latLng,
+                      point.moveSpherical(distance: 0.4).position.latLng,
+                    ],
+                  ),
+                ),
             ],
           ),
         if (abLine != null || pointA != null || pointB != null)
@@ -119,10 +152,29 @@ class ABLineDebugLayer extends ConsumerWidget {
               if (pointA != null) CircleMarker(point: pointA.latLng, radius: 5),
               if (pointB != null) CircleMarker(point: pointB.latLng, radius: 5),
               if (abLine != null) ...[
-                if (autoSteerEnabled)
+                CircleMarker(
+                  point: abLine.currentStart.latLng,
+                  radius: 5,
+                ),
+                CircleMarker(
+                  point: abLine.currentEnd.latLng,
+                  radius: 5,
+                ),
+                CircleMarker(
+                  point: abLine.nextStart.latLng,
+                  radius: 5,
+                  color: Colors.blue,
+                ),
+                CircleMarker(
+                  point: abLine.nextEnd.latLng,
+                  radius: 5,
+                  color: Colors.blue,
+                ),
+                if (autoSteerEnabled &&
+                    vehicle.pathTrackingMode == PathTrackingMode.purePursuit)
                   CircleMarker(
                     point: vehicle.lookAheadStartPosition.latLng,
-                    radius: lookAheadDistance,
+                    radius: vehicle.lookAheadDistance,
                     useRadiusInMeter: true,
                     color: Colors.pink.withOpacity(0.2),
                   ),
@@ -134,8 +186,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                   ),
                 ...abLine
                     .pointsAhead(
-                      point: vehicle.position,
-                      heading: vehicle.bearing,
+                      vehicle,
                       num: ref.watch(aBLineDebugNumPointsAheadProvider),
                       stepSize: ref.watch(aBLineDebugStepSizeProvider),
                     )
@@ -148,8 +199,7 @@ class ABLineDebugLayer extends ConsumerWidget {
                     ),
                 ...abLine
                     .pointsBehind(
-                      point: vehicle.position,
-                      heading: vehicle.bearing,
+                      vehicle,
                       num: ref.watch(aBLineDebugNumPointsBehindProvider),
                       stepSize: ref.watch(aBLineDebugStepSizeProvider),
                     )
@@ -159,10 +209,91 @@ class ABLineDebugLayer extends ConsumerWidget {
                         radius: 3,
                         color: Colors.orange,
                       ),
-                    )
-              ]
+                    ),
+                if (abLine.activeTurn is PurePursuitPathTracking)
+                  CircleMarker(
+                    point: (abLine.activeTurn! as PurePursuitPathTracking)
+                        .findLookAheadCirclePoints(
+                          vehicle,
+                          vehicle.lookAheadDistance,
+                        )
+                        .best
+                        .position
+                        .latLng,
+                    radius: 5,
+                    color: Colors.pink,
+                  ),
+              ],
             ],
           ),
+        MarkerLayer(
+          markers: [
+            if (abLine != null) ...[
+              Marker(
+                point: abLine.start.latLng,
+                builder: (context) => const Text(
+                  'A',
+                  style: TextStyle(color: Colors.white),
+                ),
+                rotate: true,
+                width: 50,
+                height: 50,
+              ),
+              Marker(
+                point: abLine.end.latLng,
+                builder: (context) => const Text(
+                  'B',
+                  style: TextStyle(color: Colors.white),
+                ),
+                rotate: true,
+                width: 50,
+                height: 50,
+              ),
+              Marker(
+                point: abLine.currentStart.latLng,
+                builder: (context) => Text(
+                  'A${abLine.currentOffset}',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                rotate: true,
+                width: 50,
+                height: 50,
+              ),
+              Marker(
+                point: abLine.currentEnd.latLng,
+                builder: (context) => Text(
+                  'B${abLine.currentOffset}',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                rotate: true,
+                width: 50,
+                height: 50,
+              ),
+              if (abLine.limitMode != ABLimitMode.unlimited) ...[
+                Marker(
+                  point: abLine.nextStart.latLng,
+                  builder: (context) => Text(
+                    'A${abLine.nextOffset}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  rotate: true,
+                  width: 50,
+                  height: 50,
+                ),
+                Marker(
+                  point: abLine.nextEnd.latLng,
+                  builder: (context) => Text(
+                    'B${abLine.nextOffset}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  rotate: true,
+                  width: 50,
+                  height: 50,
+                ),
+              ],
+            ],
+          ],
+        ),
       ],
     );
   }
@@ -213,14 +344,7 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                         onPressed: () {
                           ref.read(aBLineDebugProvider.notifier).moveOffsetLeft(
                                 ref.watch(
-                                  mainVehicleProvider.select(
-                                    (vehicle) => vehicle.pursuitAxlePosition,
-                                  ),
-                                ),
-                                ref.watch(
-                                  mainVehicleProvider.select(
-                                    (vehicle) => vehicle.bearing,
-                                  ),
+                                  mainVehicleProvider,
                                 ),
                               );
                           ref
@@ -251,14 +375,7 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                               .read(aBLineDebugProvider.notifier)
                               .moveOffsetRight(
                                 ref.watch(
-                                  mainVehicleProvider.select(
-                                    (vehicle) => vehicle.pursuitAxlePosition,
-                                  ),
-                                ),
-                                ref.watch(
-                                  mainVehicleProvider.select(
-                                    (vehicle) => vehicle.bearing,
-                                  ),
+                                  mainVehicleProvider,
                                 ),
                               );
                           ref
@@ -269,6 +386,16 @@ class ABLineOffsetDebugControls extends ConsumerWidget {
                       ),
                     ),
                   ],
+                ),
+                Consumer(
+                  builder: (context, ref, child) => IconButton.filled(
+                    onPressed: () {
+                      ref
+                          .read(simInputProvider.notifier)
+                          .send((abToggleTurnDirection: true));
+                    },
+                    icon: const Icon(Icons.compare_arrows),
+                  ),
                 ),
               ],
             ),

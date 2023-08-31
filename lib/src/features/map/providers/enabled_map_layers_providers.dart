@@ -102,12 +102,14 @@ bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {
   final debugSteering = ref.watch(debugSteeringProvider);
   final debugPolygons = ref.watch(debugVehiclePolygonsProvider);
   final debugHitches = ref.watch(debugVehicleHitchesProvider);
+  final debugAntennaPosition = ref.watch(debugVehicleAntennaPositionProvider);
 
   final enabled = debugTravelledPath ||
       debugTrajectory ||
       debugSteering ||
       debugPolygons ||
-      debugHitches;
+      debugHitches ||
+      debugAntennaPosition;
   return enabled;
 }
 
@@ -118,8 +120,8 @@ bool showDubinsPathDebugLayer(ShowDubinsPathDebugLayerRef ref) =>
 
 /// Whether the debugging layer for the pure pursuit should be shown.
 @riverpod
-bool showPurePursuitDebugLayer(ShowPurePursuitDebugLayerRef ref) =>
-    ref.watch(debugPurePursuitProvider);
+bool showPathTrackingDebugLayer(ShowPathTrackingDebugLayerRef ref) =>
+    ref.watch(debugPathTrackingProvider);
 
 /// Whether the debugging layer for the test field should be shown.
 @riverpod

@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,13 @@ class SentinelLayers extends ConsumerWidget {
                 maxNativeZoom: 18,
                 userAgentPackageName: 'agopengps_flutter',
                 maxZoom: 22,
+                tileProvider: switch (Device.isWeb) {
+                  true => null,
+                  false => FileCachedTileProvider(
+                      layer: layer.layerData,
+                      ref: ref,
+                    )
+                },
               ),
             ),
           )

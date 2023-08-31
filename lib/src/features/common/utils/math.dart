@@ -22,3 +22,15 @@ double signedBearingDifference(double bearing1, double bearing2) {
 
   return difference;
 }
+
+/// Provides the size [bytes] in a more readable format with binary suffix.
+///
+/// Number of [decimals] can be adjusted.
+String fileEntitySize(int bytes, {int decimals = 1}) {
+  const suffixes = ['B', 'kB', 'MB', 'GB'];
+  final i = (log(bytes) / log(1024)).floor();
+
+  final value = (bytes / pow(1024, i)).toStringAsFixed(decimals);
+
+  return '$value ${suffixes.elementAtOrNull(i)}';
+}

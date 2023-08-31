@@ -51,7 +51,7 @@ class CountryLayerSelector extends ConsumerWidget {
             height: 240,
             width: 300,
             child: listView,
-          )
+          ),
         ],
       );
     }
@@ -134,7 +134,7 @@ class _CountryLayerMenuItemButton extends StatelessWidget {
               child: Icon(Icons.drag_handle),
             ),
           ),
-        )
+        ),
       ],
     );
   }
