@@ -7,7 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:universal_html/html.dart' as html;
 import 'package:universal_io/io.dart';
 
 /// A menu with attached submenu for debugging the field feature.
@@ -271,33 +270,7 @@ class FieldDebugMenu extends ConsumerWidget {
               title: child,
               leading: const Icon(Icons.save),
               onTap: field != null
-                  ? () async {
-                      if (Device.isWeb) {
-                        html.AnchorElement()
-                          ..href = '${Uri.dataFromString(
-                            const JsonEncoder.withIndent('    ')
-                                .convert(field.toJson()),
-                            mimeType: 'text/plain',
-                            encoding: utf8,
-                          )}'
-                          ..download = '${field.name}.json'
-                          ..style.display = 'none'
-                          ..click();
-                      } else {
-                        final path = [
-                          ref.watch(fileDirectoryProvider).requireValue.path,
-                          '/fields/test.json',
-                        ].join();
-
-                        final file = File(path);
-                        if (!file.existsSync()) {
-                          await file.create(recursive: true);
-                        }
-                        await file.writeAsString(
-                          const JsonEncoder.withIndent('    ').convert(field),
-                        );
-                      }
-                    }
+                  ? () => ref.watch(saveFieldProvider(field))
                   : null,
             );
           },
@@ -315,33 +288,12 @@ class FieldDebugMenu extends ConsumerWidget {
                 title: child,
                 leading: const Icon(Icons.save),
                 onTap: field != null
-                    ? () async {
-                        if (Device.isWeb) {
-                          html.AnchorElement()
-                            ..href = '${Uri.dataFromString(
-                              const JsonEncoder.withIndent('    ')
-                                  .convert(field.toJson()),
-                              mimeType: 'text/plain',
-                              encoding: utf8,
-                            )}'
-                            ..download = '${field.name}.json'
-                            ..style.display = 'none'
-                            ..click();
-                        } else {
-                          final path = [
-                            ref.watch(fileDirectoryProvider).requireValue.path,
-                            '/fields/test_buffered.json',
-                          ].join();
-
-                          final file = File(path);
-                          if (!file.existsSync()) {
-                            await file.create(recursive: true);
-                          }
-                          await file.writeAsString(
-                            const JsonEncoder.withIndent('    ').convert(field),
-                          );
-                        }
-                      }
+                    ? () => ref.watch(
+                          saveFieldProvider(
+                            field,
+                            overrideName: 'Buffered test',
+                          ),
+                        )
                     : null,
               );
             },

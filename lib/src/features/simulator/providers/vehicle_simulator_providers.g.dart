@@ -6,7 +6,7 @@ part of 'vehicle_simulator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$simVehicleDrivingHash() => r'1683fcdfb3e9842634beeca97e827360a233d860';
+String _$simVehicleDrivingHash() => r'0b2c44c19f73a6df936c716e4be70236ab7930a2';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.

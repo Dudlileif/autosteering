@@ -6,7 +6,7 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveVehicleHash() => r'415d3b593a6564ac3e02ce073cc5d00e62656ccc';
+String _$saveVehicleHash() => r'6d304997a173080a3f603e628a34ddea27a4b59b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,27 +31,37 @@ class _SystemHash {
 
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
+/// Override the file name with [overrideName].
+///
 /// Copied from [saveVehicle].
 @ProviderFor(saveVehicle)
 const saveVehicleProvider = SaveVehicleFamily();
 
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
+/// Override the file name with [overrideName].
+///
 /// Copied from [saveVehicle].
 class SaveVehicleFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [vehicle] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
   ///
   /// Copied from [saveVehicle].
   const SaveVehicleFamily();
 
   /// A provider for saving [vehicle] to a file in the user file directory.
   ///
+  /// Override the file name with [overrideName].
+  ///
   /// Copied from [saveVehicle].
   SaveVehicleProvider call(
-    Vehicle vehicle,
-  ) {
+    Vehicle vehicle, {
+    String? overrideName,
+  }) {
     return SaveVehicleProvider(
       vehicle,
+      overrideName: overrideName,
     );
   }
 
@@ -61,6 +71,7 @@ class SaveVehicleFamily extends Family<AsyncValue<void>> {
   ) {
     return call(
       provider.vehicle,
+      overrideName: provider.overrideName,
     );
   }
 
@@ -81,17 +92,23 @@ class SaveVehicleFamily extends Family<AsyncValue<void>> {
 
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
+/// Override the file name with [overrideName].
+///
 /// Copied from [saveVehicle].
-class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
+class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
   /// A provider for saving [vehicle] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
   ///
   /// Copied from [saveVehicle].
   SaveVehicleProvider(
-    Vehicle vehicle,
-  ) : this._internal(
+    Vehicle vehicle, {
+    String? overrideName,
+  }) : this._internal(
           (ref) => saveVehicle(
             ref as SaveVehicleRef,
             vehicle,
+            overrideName: overrideName,
           ),
           from: saveVehicleProvider,
           name: r'saveVehicleProvider',
@@ -103,6 +120,7 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
           allTransitiveDependencies:
               SaveVehicleFamily._allTransitiveDependencies,
           vehicle: vehicle,
+          overrideName: overrideName,
         );
 
   SaveVehicleProvider._internal(
@@ -113,13 +131,15 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.vehicle,
+    required this.overrideName,
   }) : super.internal();
 
   final Vehicle vehicle;
+  final String? overrideName;
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveVehicleRef provider) create,
+    AsyncValue<void> Function(SaveVehicleRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -131,50 +151,59 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         vehicle: vehicle,
+        overrideName: overrideName,
       ),
     );
   }
 
   @override
-  AutoDisposeFutureProviderElement<void> createElement() {
+  AutoDisposeProviderElement<AsyncValue<void>> createElement() {
     return _SaveVehicleProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is SaveVehicleProvider && other.vehicle == vehicle;
+    return other is SaveVehicleProvider &&
+        other.vehicle == vehicle &&
+        other.overrideName == overrideName;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, vehicle.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin SaveVehicleRef on AutoDisposeFutureProviderRef<void> {
+mixin SaveVehicleRef on AutoDisposeProviderRef<AsyncValue<void>> {
   /// The parameter `vehicle` of this provider.
   Vehicle get vehicle;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
 }
 
-class _SaveVehicleProviderElement extends AutoDisposeFutureProviderElement<void>
-    with SaveVehicleRef {
+class _SaveVehicleProviderElement
+    extends AutoDisposeProviderElement<AsyncValue<void>> with SaveVehicleRef {
   _SaveVehicleProviderElement(super.provider);
 
   @override
   Vehicle get vehicle => (origin as SaveVehicleProvider).vehicle;
+  @override
+  String? get overrideName => (origin as SaveVehicleProvider).overrideName;
 }
 
-String _$savedVehiclesHash() => r'04a770fcb915f36d949e9491b8d29fdbec7a7f4e';
+String _$savedVehiclesHash() => r'190531becfc42a2ee178024312b531e53bce546d';
 
-/// A provider for reading and holding all the saved vehicles in the
+/// A provider for reading and holding all the saved [Vehicle]s in the
 /// user file directory.
 ///
 /// Copied from [savedVehicles].
 @ProviderFor(savedVehicles)
-final savedVehiclesProvider = FutureProvider<List<Vehicle>>.internal(
+final savedVehiclesProvider = Provider<AsyncValue<List<Vehicle>>>.internal(
   savedVehicles,
   name: r'savedVehiclesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -184,7 +213,7 @@ final savedVehiclesProvider = FutureProvider<List<Vehicle>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef SavedVehiclesRef = FutureProviderRef<List<Vehicle>>;
+typedef SavedVehiclesRef = ProviderRef<AsyncValue<List<Vehicle>>>;
 String _$loadVehicleFromFileHash() =>
     r'c0fbeb362d82690b35e0b1a891ff6a8cf62848ba';
 

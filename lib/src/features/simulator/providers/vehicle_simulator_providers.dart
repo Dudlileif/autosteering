@@ -84,7 +84,7 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
       } else {
         ref.read(mainVehicleProvider.notifier).update(vehicle);
       }
-      for (final equipment in vehicle.hitchChildren.whereType<Equipment>()) {
+      for (final equipment in vehicle.hitchChildren) {
         equipment.runFunctionRecursively(
           ref.read(allEquipmentsProvider.notifier).update,
         );

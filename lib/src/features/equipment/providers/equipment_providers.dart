@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:universal_html/html.dart' as html;
 import 'package:universal_io/io.dart';
 
 part 'equipment_providers.g.dart';
@@ -44,12 +44,12 @@ class AllEquipments extends _$AllEquipments {
   }
 
   /// Update the [equipment] in the [state].
-  void update(Equipment equipment) => Future(
+  void update(Hitchable equipment) => Future(
         () => state = Map.of(state)
           ..update(
             equipment.uuid,
-            (value) => equipment,
-            ifAbsent: () => equipment,
+            (value) => equipment as Equipment,
+            ifAbsent: () => equipment as Equipment,
           ),
       );
 
@@ -114,48 +114,50 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
         // Activation/deactivation
-        if (!equipment.activeSections.equals(_lastActiveSections) ||
-            state.isEmpty) {
-          // If we're deactivating sections, update the state positions
-          // before we start new paths.
-          _addPointsIfDeactivation(equipment);
+        if (equipment.sections > 0) {
+          if (!equipment.activeSections.equals(_lastActiveSections) ||
+              state.isEmpty) {
+            // If we're deactivating sections, update the state positions
+            // before we start new paths.
+            _addPointsIfDeactivation(equipment);
 
-          final points = equipment.activeSections.mapIndexed(
-            (section, active) => active &&
-                    (_lastActiveSections.elementAtOrNull(section) ?? false)
-                ? [
-                    state.last[section]?.last ??
-                        equipment.sectionCenter(section),
-                  ]
-                : active
-                    ? [equipment.sectionCenter(section)]
-                    : null,
-          );
+            final points = equipment.activeSections.mapIndexed(
+              (section, active) => active &&
+                      (_lastActiveSections.elementAtOrNull(section) ?? false)
+                  ? [
+                      state.last[section]?.last ??
+                          equipment.sectionCenter(section),
+                    ]
+                  : active
+                      ? [equipment.sectionCenter(section)]
+                      : null,
+            );
 
-          final sectionLines = Map<int, List<Geographic>?>.fromEntries(
-            points.mapIndexed(MapEntry.new),
-          );
-          state = state..add(sectionLines);
-          _lastActiveSections = equipment.activeSections;
-        }
+            final sectionLines = Map<int, List<Geographic>?>.fromEntries(
+              points.mapIndexed(MapEntry.new),
+            );
+            state = state..add(sectionLines);
+            _lastActiveSections = equipment.activeSections;
+          }
 
-        // Continuation
-        else {
-          final positions = List.generate(
-            _lastActiveSections.length,
-            (section) => equipment.sectionCenter(section),
-          );
-          final addNext = positions
-              .mapIndexed(
-                (section, position) => shouldAddNext(position, section),
-              )
-              .reduce((value, element) => value || element);
+          // Continuation
+          else {
+            final positions = List.generate(
+              _lastActiveSections.length,
+              (section) => equipment.sectionCenter(section),
+            );
+            final addNext = positions
+                .mapIndexed(
+                  (section, position) => shouldAddNext(position, section),
+                )
+                .reduce((value, element) => value || element);
 
-          if (addNext) {
-            state = state
-              ..last.updateAll(
-                (key, value) => value?..add(positions[key]),
-              );
+            if (addNext) {
+              state = state
+                ..last.updateAll(
+                  (key, value) => value?..add(positions[key]),
+                );
+            }
           }
         }
       });
@@ -238,71 +240,32 @@ FutureOr<Equipment?> loadEquipmentFromFile(
 }
 
 /// A provider for saving [equipment] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
 @riverpod
-FutureOr<void> saveEquipment(
+AsyncValue<void> saveEquipment(
   SaveEquipmentRef ref,
-  Equipment equipment,
-) async {
-  final name = equipment.name ?? equipment.uuid;
-
-  if (Device.isWeb) {
-    html.AnchorElement()
-      ..href = '${Uri.dataFromString(
-        const JsonEncoder.withIndent('    ').convert(equipment.toJson()),
-        mimeType: 'text/plain',
-        encoding: utf8,
-      )}'
-      ..download = '$name.json'
-      ..style.display = 'none'
-      ..click();
-  } else {
-    final file = File(
-      '''${ref.watch(fileDirectoryProvider).requireValue.path}/equipment/$name.json''',
+  Equipment equipment, {
+  String? overrideName,
+}) =>
+    ref.watch(
+      saveJsonToFileDirectoryProvider(
+        object: equipment,
+        fileName: overrideName ?? equipment.name ?? equipment.uuid,
+        folder: 'equipment',
+      ),
     );
 
-    await file.create(recursive: true);
-
-    await file
-        .writeAsString(const JsonEncoder.withIndent('    ').convert(equipment));
-  }
-}
-
-/// A provider for reading and holding all the saved vehicles in the
+/// A provider for reading and holding all the saved [Equipment] in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-FutureOr<List<Equipment>> savedEquipments(SavedEquipmentsRef ref) async {
-  if (Device.isWeb) {
-    return [];
-  }
-  final dir = Directory(
-    [ref.watch(fileDirectoryProvider).requireValue.path, '/equipment'].join(),
-  );
-
-  if (!dir.existsSync()) {
-    dir.createSync(recursive: true);
-  }
-
-  // Remake the list if there are any file changes in the folder.
-  dir.watch(recursive: true).listen((event) {
-    ref.invalidateSelf();
-  });
-
-  final equipments = <Equipment>[];
-
-  if (dir.existsSync()) {
-    final fileEntities = dir.listSync(recursive: true);
-
-    if (fileEntities.isNotEmpty) {
-      for (final fileEntity in fileEntities) {
-        final file = File.fromUri(fileEntity.uri);
-
-        final json = jsonDecode(await file.readAsString());
-
-        if (json is Map) {
-          equipments.add(Equipment.fromJson(Map<String, dynamic>.from(json)));
-        }
-      }
-    }
-  }
-  return equipments;
-}
+AsyncValue<List<Equipment>> savedEquipments(SavedEquipmentsRef ref) => ref
+    .watch(
+      savedFilesProvider(
+        fromJson: Equipment.fromJson,
+        folder: 'equipment',
+      ),
+    )
+    .whenData(
+      (data) => data.cast(),
+    );

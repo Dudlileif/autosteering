@@ -149,18 +149,16 @@ AsyncValue<Vehicle?> loadFileConfiguredVehicle(
     } else {
       final filePath = pickedFiles?.paths.first;
       if (filePath != null) {
-        return ref.watch(loadVehicleFromFileProvider(filePath)).when(
-              data: (data) {
-                if (data != null) {
-                  ref.read(configuredVehicleProvider.notifier).update(data);
-                  ref.invalidate(configuredVehicleNameTextControllerProvider);
-                  return AsyncData(data);
-                }
-                return const AsyncData(null);
-              },
-              error: (error, stackTrace) => AsyncError.new,
-              loading: () => AsyncLoading.new,
-            );
+        return ref.watch(loadVehicleFromFileProvider(filePath)).whenData(
+          (data) {
+            if (data != null) {
+              ref.read(configuredVehicleProvider.notifier).update(data);
+              ref.invalidate(configuredVehicleNameTextControllerProvider);
+              return data;
+            }
+            return null;
+          },
+        );
       }
     }
     return const AsyncData(null);

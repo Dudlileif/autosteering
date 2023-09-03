@@ -146,7 +146,7 @@ class _SaveButton extends ConsumerWidget {
         ),
       )
           ? () => ref
-              .watch(SaveVehicleProvider(ref.watch(configuredVehicleProvider)))
+              .watch(saveVehicleProvider(ref.watch(configuredVehicleProvider)))
           : null,
       icon: const Icon(Icons.save),
       label: const Text('Save'),
@@ -242,7 +242,7 @@ class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
 
           ref.read(simInputProvider.notifier).send(vehicle);
           if (!Device.isWeb) {
-            ref.read(SaveVehicleProvider(vehicle));
+            ref.read(saveVehicleProvider(vehicle));
           }
           Navigator.of(context).pop();
         },

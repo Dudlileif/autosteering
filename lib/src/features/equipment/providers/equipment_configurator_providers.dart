@@ -157,18 +157,16 @@ AsyncValue<Equipment?> loadFileConfiguredEquipment(
     } else {
       final filePath = pickedFiles?.paths.first;
       if (filePath != null) {
-        return ref.watch(loadEquipmentFromFileProvider(filePath)).when(
-              data: (data) {
-                if (data != null) {
-                  ref.read(configuredEquipmentProvider.notifier).update(data);
-                  ref.invalidate(configuredEquipmentNameTextControllerProvider);
-                  return AsyncData(data);
-                }
-                return const AsyncData(null);
-              },
-              error: (error, stackTrace) => AsyncError.new,
-              loading: () => AsyncLoading.new,
-            );
+        return ref.watch(loadEquipmentFromFileProvider(filePath)).whenData(
+          (data) {
+            if (data != null) {
+              ref.read(configuredEquipmentProvider.notifier).update(data);
+              ref.invalidate(configuredEquipmentNameTextControllerProvider);
+              return data;
+            }
+            return null;
+          },
+        );
       }
 
       return const AsyncData(null);

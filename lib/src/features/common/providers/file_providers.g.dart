@@ -347,5 +347,362 @@ class _DirectoryDeleteProviderElement
   @override
   String get path => (origin as DirectoryDeleteProvider).path;
 }
+
+String _$saveJsonToFileDirectoryHash() =>
+    r'a6356174d603eddb0d0e5de65a449290b78eb137';
+
+/// A provider for saving [object] to [fileName].json to a file in the [folder]
+/// in the file drectory.
+///
+/// Caution: Expects [object] to have a .toJson() method implemented.
+///
+/// Copied from [saveJsonToFileDirectory].
+@ProviderFor(saveJsonToFileDirectory)
+const saveJsonToFileDirectoryProvider = SaveJsonToFileDirectoryFamily();
+
+/// A provider for saving [object] to [fileName].json to a file in the [folder]
+/// in the file drectory.
+///
+/// Caution: Expects [object] to have a .toJson() method implemented.
+///
+/// Copied from [saveJsonToFileDirectory].
+class SaveJsonToFileDirectoryFamily extends Family<AsyncValue<void>> {
+  /// A provider for saving [object] to [fileName].json to a file in the [folder]
+  /// in the file drectory.
+  ///
+  /// Caution: Expects [object] to have a .toJson() method implemented.
+  ///
+  /// Copied from [saveJsonToFileDirectory].
+  const SaveJsonToFileDirectoryFamily();
+
+  /// A provider for saving [object] to [fileName].json to a file in the [folder]
+  /// in the file drectory.
+  ///
+  /// Caution: Expects [object] to have a .toJson() method implemented.
+  ///
+  /// Copied from [saveJsonToFileDirectory].
+  SaveJsonToFileDirectoryProvider call({
+    required dynamic object,
+    required String fileName,
+    required String folder,
+  }) {
+    return SaveJsonToFileDirectoryProvider(
+      object: object,
+      fileName: fileName,
+      folder: folder,
+    );
+  }
+
+  @override
+  SaveJsonToFileDirectoryProvider getProviderOverride(
+    covariant SaveJsonToFileDirectoryProvider provider,
+  ) {
+    return call(
+      object: provider.object,
+      fileName: provider.fileName,
+      folder: provider.folder,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveJsonToFileDirectoryProvider';
+}
+
+/// A provider for saving [object] to [fileName].json to a file in the [folder]
+/// in the file drectory.
+///
+/// Caution: Expects [object] to have a .toJson() method implemented.
+///
+/// Copied from [saveJsonToFileDirectory].
+class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for saving [object] to [fileName].json to a file in the [folder]
+  /// in the file drectory.
+  ///
+  /// Caution: Expects [object] to have a .toJson() method implemented.
+  ///
+  /// Copied from [saveJsonToFileDirectory].
+  SaveJsonToFileDirectoryProvider({
+    required dynamic object,
+    required String fileName,
+    required String folder,
+  }) : this._internal(
+          (ref) => saveJsonToFileDirectory(
+            ref as SaveJsonToFileDirectoryRef,
+            object: object,
+            fileName: fileName,
+            folder: folder,
+          ),
+          from: saveJsonToFileDirectoryProvider,
+          name: r'saveJsonToFileDirectoryProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$saveJsonToFileDirectoryHash,
+          dependencies: SaveJsonToFileDirectoryFamily._dependencies,
+          allTransitiveDependencies:
+              SaveJsonToFileDirectoryFamily._allTransitiveDependencies,
+          object: object,
+          fileName: fileName,
+          folder: folder,
+        );
+
+  SaveJsonToFileDirectoryProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.object,
+    required this.fileName,
+    required this.folder,
+  }) : super.internal();
+
+  final dynamic object;
+  final String fileName;
+  final String folder;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(SaveJsonToFileDirectoryRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SaveJsonToFileDirectoryProvider._internal(
+        (ref) => create(ref as SaveJsonToFileDirectoryRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        object: object,
+        fileName: fileName,
+        folder: folder,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _SaveJsonToFileDirectoryProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SaveJsonToFileDirectoryProvider &&
+        other.object == object &&
+        other.fileName == fileName &&
+        other.folder == folder;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, object.hashCode);
+    hash = _SystemHash.combine(hash, fileName.hashCode);
+    hash = _SystemHash.combine(hash, folder.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin SaveJsonToFileDirectoryRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `object` of this provider.
+  dynamic get object;
+
+  /// The parameter `fileName` of this provider.
+  String get fileName;
+
+  /// The parameter `folder` of this provider.
+  String get folder;
+}
+
+class _SaveJsonToFileDirectoryProviderElement
+    extends AutoDisposeFutureProviderElement<void>
+    with SaveJsonToFileDirectoryRef {
+  _SaveJsonToFileDirectoryProviderElement(super.provider);
+
+  @override
+  dynamic get object => (origin as SaveJsonToFileDirectoryProvider).object;
+  @override
+  String get fileName => (origin as SaveJsonToFileDirectoryProvider).fileName;
+  @override
+  String get folder => (origin as SaveJsonToFileDirectoryProvider).folder;
+}
+
+String _$savedFilesHash() => r'80dcda251e998c82aa8f57e62d8d085aa4138558';
+
+/// A provider for reading and holding all the saved equipment setups in the
+/// user file directory.
+///
+/// Copied from [savedFiles].
+@ProviderFor(savedFiles)
+const savedFilesProvider = SavedFilesFamily();
+
+/// A provider for reading and holding all the saved equipment setups in the
+/// user file directory.
+///
+/// Copied from [savedFiles].
+class SavedFilesFamily extends Family<AsyncValue<List<dynamic>>> {
+  /// A provider for reading and holding all the saved equipment setups in the
+  /// user file directory.
+  ///
+  /// Copied from [savedFiles].
+  const SavedFilesFamily();
+
+  /// A provider for reading and holding all the saved equipment setups in the
+  /// user file directory.
+  ///
+  /// Copied from [savedFiles].
+  SavedFilesProvider call({
+    required dynamic Function(Map<String, dynamic>) fromJson,
+    required String folder,
+  }) {
+    return SavedFilesProvider(
+      fromJson: fromJson,
+      folder: folder,
+    );
+  }
+
+  @override
+  SavedFilesProvider getProviderOverride(
+    covariant SavedFilesProvider provider,
+  ) {
+    return call(
+      fromJson: provider.fromJson,
+      folder: provider.folder,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'savedFilesProvider';
+}
+
+/// A provider for reading and holding all the saved equipment setups in the
+/// user file directory.
+///
+/// Copied from [savedFiles].
+class SavedFilesProvider extends FutureProvider<List<dynamic>> {
+  /// A provider for reading and holding all the saved equipment setups in the
+  /// user file directory.
+  ///
+  /// Copied from [savedFiles].
+  SavedFilesProvider({
+    required dynamic Function(Map<String, dynamic>) fromJson,
+    required String folder,
+  }) : this._internal(
+          (ref) => savedFiles(
+            ref as SavedFilesRef,
+            fromJson: fromJson,
+            folder: folder,
+          ),
+          from: savedFilesProvider,
+          name: r'savedFilesProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$savedFilesHash,
+          dependencies: SavedFilesFamily._dependencies,
+          allTransitiveDependencies:
+              SavedFilesFamily._allTransitiveDependencies,
+          fromJson: fromJson,
+          folder: folder,
+        );
+
+  SavedFilesProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.fromJson,
+    required this.folder,
+  }) : super.internal();
+
+  final dynamic Function(Map<String, dynamic>) fromJson;
+  final String folder;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<dynamic>> Function(SavedFilesRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SavedFilesProvider._internal(
+        (ref) => create(ref as SavedFilesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        fromJson: fromJson,
+        folder: folder,
+      ),
+    );
+  }
+
+  @override
+  FutureProviderElement<List<dynamic>> createElement() {
+    return _SavedFilesProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SavedFilesProvider &&
+        other.fromJson == fromJson &&
+        other.folder == folder;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, fromJson.hashCode);
+    hash = _SystemHash.combine(hash, folder.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin SavedFilesRef on FutureProviderRef<List<dynamic>> {
+  /// The parameter `fromJson` of this provider.
+  dynamic Function(Map<String, dynamic>) get fromJson;
+
+  /// The parameter `folder` of this provider.
+  String get folder;
+}
+
+class _SavedFilesProviderElement extends FutureProviderElement<List<dynamic>>
+    with SavedFilesRef {
+  _SavedFilesProviderElement(super.provider);
+
+  @override
+  dynamic Function(Map<String, dynamic>) get fromJson =>
+      (origin as SavedFilesProvider).fromJson;
+  @override
+  String get folder => (origin as SavedFilesProvider).folder;
+}
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

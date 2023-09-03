@@ -6,7 +6,6 @@ import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:universal_html/html.dart' as html;
 import 'package:universal_io/io.dart';
 
 part 'vehicle_providers.g.dart';
@@ -89,75 +88,33 @@ class UseIMUBearing extends _$UseIMUBearing {
 }
 
 /// A provider for saving [vehicle] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
 @riverpod
-FutureOr<void> saveVehicle(
+AsyncValue<void> saveVehicle(
   SaveVehicleRef ref,
-  Vehicle vehicle,
-) async {
-  final name = vehicle.name ?? vehicle.uuid;
-
-  if (Device.isWeb) {
-    html.AnchorElement()
-      ..href = '${Uri.dataFromString(
-        const JsonEncoder.withIndent('    ').convert(vehicle.toJson()),
-        mimeType: 'text/plain',
-        encoding: utf8,
-      )}'
-      ..download = '$name.json'
-      ..style.display = 'none'
-      ..click();
-  } else {
-    final file = File(
-      '''${ref.watch(fileDirectoryProvider).requireValue.path}/vehicles/$name.json''',
+  Vehicle vehicle, {
+  String? overrideName,
+}) =>
+    ref.watch(
+      saveJsonToFileDirectoryProvider(
+        object: vehicle,
+        fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
+        folder: 'vehicles',
+      ),
     );
 
-    await file.create(recursive: true);
-
-    await file
-        .writeAsString(const JsonEncoder.withIndent('    ').convert(vehicle));
-  }
-}
-
-/// A provider for reading and holding all the saved vehicles in the
+/// A provider for reading and holding all the saved [Vehicle]s in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-FutureOr<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) async {
-  if (Device.isWeb) {
-    return [];
-  }
-  final dir = Directory(
-    [ref.watch(fileDirectoryProvider).requireValue.path, '/vehicles'].join(),
-  );
-
-  if (!dir.existsSync()) {
-    dir.createSync(recursive: true);
-  }
-
-  // Remake the list if there are any file changes in the folder.
-  dir.watch(recursive: true).listen((event) {
-    ref.invalidateSelf();
-  });
-
-  final vehicles = <Vehicle>[];
-
-  if (dir.existsSync()) {
-    final fileEntities = dir.listSync(recursive: true);
-
-    if (fileEntities.isNotEmpty) {
-      for (final fileEntity in fileEntities) {
-        final file = File.fromUri(fileEntity.uri);
-
-        final json = jsonDecode(await file.readAsString());
-
-        if (json is Map) {
-          vehicles.add(Vehicle.fromJson(Map<String, dynamic>.from(json)));
-        }
-      }
-    }
-  }
-
-  return vehicles;
-}
+AsyncValue<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) => ref
+    .watch(
+      savedFilesProvider(
+        fromJson: Vehicle.fromJson,
+        folder: 'vehicles',
+      ),
+    )
+    .whenData((data) => data.cast());
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 @riverpod
@@ -183,16 +140,13 @@ FutureOr<Vehicle?> loadVehicleFromFile(
 /// property.
 @Riverpod(keepAlive: true)
 AsyncValue<Vehicle> lastUsedVehicle(LastUsedVehicleRef ref) =>
-    ref.watch(savedVehiclesProvider).when(
-          data: (data) {
-            if (data.isNotEmpty) {
-              final sorted = data
-                ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+    ref.watch(savedVehiclesProvider).whenData(
+      (data) {
+        if (data.isNotEmpty) {
+          final sorted = data..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
-              return AsyncData(sorted.first);
-            }
-            return AsyncData(PreconfiguredVehicles.tractor);
-          },
-          error: AsyncError.new,
-          loading: AsyncLoading.new,
-        );
+          return sorted.first;
+        }
+        return PreconfiguredVehicles.tractor;
+      },
+    );

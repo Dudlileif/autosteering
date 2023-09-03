@@ -170,9 +170,11 @@ class _LoadEquipmentFromFileProviderElement
   String get path => (origin as LoadEquipmentFromFileProvider).path;
 }
 
-String _$saveEquipmentHash() => r'43b8d912559999938b43aab6f6e04d8d6e843a95';
+String _$saveEquipmentHash() => r'79b127695ddd5594fbca9735c10a1f3c509b02f2';
 
 /// A provider for saving [equipment] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
 ///
 /// Copied from [saveEquipment].
 @ProviderFor(saveEquipment)
@@ -180,21 +182,29 @@ const saveEquipmentProvider = SaveEquipmentFamily();
 
 /// A provider for saving [equipment] to a file in the user file directory.
 ///
+/// Override the file name with [overrideName].
+///
 /// Copied from [saveEquipment].
 class SaveEquipmentFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [equipment] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
   ///
   /// Copied from [saveEquipment].
   const SaveEquipmentFamily();
 
   /// A provider for saving [equipment] to a file in the user file directory.
   ///
+  /// Override the file name with [overrideName].
+  ///
   /// Copied from [saveEquipment].
   SaveEquipmentProvider call(
-    Equipment equipment,
-  ) {
+    Equipment equipment, {
+    String? overrideName,
+  }) {
     return SaveEquipmentProvider(
       equipment,
+      overrideName: overrideName,
     );
   }
 
@@ -204,6 +214,7 @@ class SaveEquipmentFamily extends Family<AsyncValue<void>> {
   ) {
     return call(
       provider.equipment,
+      overrideName: provider.overrideName,
     );
   }
 
@@ -224,17 +235,23 @@ class SaveEquipmentFamily extends Family<AsyncValue<void>> {
 
 /// A provider for saving [equipment] to a file in the user file directory.
 ///
+/// Override the file name with [overrideName].
+///
 /// Copied from [saveEquipment].
-class SaveEquipmentProvider extends AutoDisposeFutureProvider<void> {
+class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
   /// A provider for saving [equipment] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
   ///
   /// Copied from [saveEquipment].
   SaveEquipmentProvider(
-    Equipment equipment,
-  ) : this._internal(
+    Equipment equipment, {
+    String? overrideName,
+  }) : this._internal(
           (ref) => saveEquipment(
             ref as SaveEquipmentRef,
             equipment,
+            overrideName: overrideName,
           ),
           from: saveEquipmentProvider,
           name: r'saveEquipmentProvider',
@@ -246,6 +263,7 @@ class SaveEquipmentProvider extends AutoDisposeFutureProvider<void> {
           allTransitiveDependencies:
               SaveEquipmentFamily._allTransitiveDependencies,
           equipment: equipment,
+          overrideName: overrideName,
         );
 
   SaveEquipmentProvider._internal(
@@ -256,13 +274,15 @@ class SaveEquipmentProvider extends AutoDisposeFutureProvider<void> {
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.equipment,
+    required this.overrideName,
   }) : super.internal();
 
   final Equipment equipment;
+  final String? overrideName;
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveEquipmentRef provider) create,
+    AsyncValue<void> Function(SaveEquipmentRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -274,50 +294,59 @@ class SaveEquipmentProvider extends AutoDisposeFutureProvider<void> {
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         equipment: equipment,
+        overrideName: overrideName,
       ),
     );
   }
 
   @override
-  AutoDisposeFutureProviderElement<void> createElement() {
+  AutoDisposeProviderElement<AsyncValue<void>> createElement() {
     return _SaveEquipmentProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is SaveEquipmentProvider && other.equipment == equipment;
+    return other is SaveEquipmentProvider &&
+        other.equipment == equipment &&
+        other.overrideName == overrideName;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, equipment.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin SaveEquipmentRef on AutoDisposeFutureProviderRef<void> {
+mixin SaveEquipmentRef on AutoDisposeProviderRef<AsyncValue<void>> {
   /// The parameter `equipment` of this provider.
   Equipment get equipment;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
 }
 
 class _SaveEquipmentProviderElement
-    extends AutoDisposeFutureProviderElement<void> with SaveEquipmentRef {
+    extends AutoDisposeProviderElement<AsyncValue<void>> with SaveEquipmentRef {
   _SaveEquipmentProviderElement(super.provider);
 
   @override
   Equipment get equipment => (origin as SaveEquipmentProvider).equipment;
+  @override
+  String? get overrideName => (origin as SaveEquipmentProvider).overrideName;
 }
 
-String _$savedEquipmentsHash() => r'74435c13ee025fed36703983558786c957b5eb60';
+String _$savedEquipmentsHash() => r'072cb7e149bc0ff8c574bafad2fcb33f7a14d0fe';
 
-/// A provider for reading and holding all the saved vehicles in the
+/// A provider for reading and holding all the saved [Equipment] in the
 /// user file directory.
 ///
 /// Copied from [savedEquipments].
 @ProviderFor(savedEquipments)
-final savedEquipmentsProvider = FutureProvider<List<Equipment>>.internal(
+final savedEquipmentsProvider = Provider<AsyncValue<List<Equipment>>>.internal(
   savedEquipments,
   name: r'savedEquipmentsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -327,7 +356,7 @@ final savedEquipmentsProvider = FutureProvider<List<Equipment>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef SavedEquipmentsRef = FutureProviderRef<List<Equipment>>;
+typedef SavedEquipmentsRef = ProviderRef<AsyncValue<List<Equipment>>>;
 String _$showEquipmentDebugHash() =>
     r'a4130310d497a5d7a8b6cc65d8d843968f668d28';
 
@@ -347,7 +376,7 @@ final showEquipmentDebugProvider =
 );
 
 typedef _$ShowEquipmentDebug = Notifier<bool>;
-String _$allEquipmentsHash() => r'4039e573bffde9ff4be9a3dac936bf2e052ab934';
+String _$allEquipmentsHash() => r'a6940a2eb2dde3c4cba38ebfa57a7c29acd2ac1c';
 
 /// A provider that holds all of the equipments.
 ///
@@ -383,7 +412,7 @@ final equipmentHoveredProvider =
 );
 
 typedef _$EquipmentHovered = Notifier<bool>;
-String _$equipmentPathsHash() => r'3157984d64489bf4dcc5d00f938479e7f630d053';
+String _$equipmentPathsHash() => r'3d786a2d2f9552aca6de0849562eec0e9d07b5ac';
 
 abstract class _$EquipmentPaths
     extends BuildlessAutoDisposeNotifier<List<Map<int, List<Geographic>?>>> {

@@ -23,6 +23,195 @@ final bufferedTestFieldProvider = AutoDisposeProvider<Field?>.internal(
 );
 
 typedef BufferedTestFieldRef = AutoDisposeProviderRef<Field?>;
+String _$saveFieldHash() => r'8b466b70606fc1c306fa7546945a0a45eb752f1a';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+/// A provider for saving [field] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [saveField].
+@ProviderFor(saveField)
+const saveFieldProvider = SaveFieldFamily();
+
+/// A provider for saving [field] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [saveField].
+class SaveFieldFamily extends Family<AsyncValue<void>> {
+  /// A provider for saving [field] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [saveField].
+  const SaveFieldFamily();
+
+  /// A provider for saving [field] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [saveField].
+  SaveFieldProvider call(
+    Field field, {
+    String? overrideName,
+  }) {
+    return SaveFieldProvider(
+      field,
+      overrideName: overrideName,
+    );
+  }
+
+  @override
+  SaveFieldProvider getProviderOverride(
+    covariant SaveFieldProvider provider,
+  ) {
+    return call(
+      provider.field,
+      overrideName: provider.overrideName,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveFieldProvider';
+}
+
+/// A provider for saving [field] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [saveField].
+class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for saving [field] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [saveField].
+  SaveFieldProvider(
+    Field field, {
+    String? overrideName,
+  }) : this._internal(
+          (ref) => saveField(
+            ref as SaveFieldRef,
+            field,
+            overrideName: overrideName,
+          ),
+          from: saveFieldProvider,
+          name: r'saveFieldProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$saveFieldHash,
+          dependencies: SaveFieldFamily._dependencies,
+          allTransitiveDependencies: SaveFieldFamily._allTransitiveDependencies,
+          field: field,
+          overrideName: overrideName,
+        );
+
+  SaveFieldProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.field,
+    required this.overrideName,
+  }) : super.internal();
+
+  final Field field;
+  final String? overrideName;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(SaveFieldRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SaveFieldProvider._internal(
+        (ref) => create(ref as SaveFieldRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        field: field,
+        overrideName: overrideName,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _SaveFieldProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SaveFieldProvider &&
+        other.field == field &&
+        other.overrideName == overrideName;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, field.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin SaveFieldRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `field` of this provider.
+  Field get field;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+}
+
+class _SaveFieldProviderElement extends AutoDisposeFutureProviderElement<void>
+    with SaveFieldRef {
+  _SaveFieldProviderElement(super.provider);
+
+  @override
+  Field get field => (origin as SaveFieldProvider).field;
+  @override
+  String? get overrideName => (origin as SaveFieldProvider).overrideName;
+}
+
 String _$showTestFieldHash() => r'a3993988e676a7ab37cae6cf51099d1bdcce4c02';
 
 /// A provider for whether the test field should be shown.

@@ -76,7 +76,7 @@ class _LoadVehicleMenu extends ConsumerWidget {
 
                 ref.read(simInputProvider.notifier).send(vehicle);
 
-                ref.read(SaveVehicleProvider(vehicle));
+                ref.read(saveVehicleProvider(vehicle));
 
                 ref.read(configuredVehicleProvider.notifier).update(vehicle);
                 ref.invalidate(configuredVehicleNameTextControllerProvider);

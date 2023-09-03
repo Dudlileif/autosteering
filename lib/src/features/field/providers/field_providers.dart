@@ -177,3 +177,20 @@ class TestFieldBufferGetRawPoints extends _$TestFieldBufferGetRawPoints {
   /// Invert the current state.
   void toggle() => Future(() => state = !state);
 }
+
+/// A provider for saving [field] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+@riverpod
+AsyncValue<void> saveField(
+  SaveFieldRef ref,
+  Field field, {
+  String? overrideName,
+}) =>
+    ref.watch(
+      saveJsonToFileDirectoryProvider(
+        object: field,
+        fileName: overrideName ?? field.name,
+        folder: 'fields',
+      ),
+    );
