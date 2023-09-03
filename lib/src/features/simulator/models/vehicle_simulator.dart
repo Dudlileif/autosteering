@@ -414,6 +414,12 @@ class _VehicleSimulatorState {
         bearing: vehicle?.bearing,
         steeringAngleInput: vehicle?.steeringAngleInput
             .clamp(-message.steeringAngleMax, message.steeringAngleMax),
+        hitchFrontFixedChild:
+            message.hitchFrontFixedChild ?? vehicle?.hitchFrontFixedChild,
+        hitchRearFixedChild:
+            message.hitchRearFixedChild ?? vehicle?.hitchRearFixedChild,
+        hitchRearTowbarChild:
+            message.hitchRearTowbarChild ?? vehicle?.hitchRearTowbarChild,
       );
       pathTrackingMode = message.pathTrackingMode;
     }
@@ -593,15 +599,25 @@ class _VehicleSimulatorState {
         message.position,
       );
     }
-
-    /// Update an already attached equipment in the hierarchy.
+    // Update an already attached equipment in the hierarchy.
     else if (message is ({Equipment updatedEquipment})) {
       vehicle?.updateChild(message.updatedEquipment);
     }
-
-    /// Update an already attached equipment in the hierarchy.
+    // Detach an equipment in the hierarchy.
     else if (message is ({String detachUuid})) {
       vehicle?.detachChild(message.detachUuid);
+    }
+    // Detach all equipment in the hierarchy from the parent with the given
+    // uuid.
+    else if (message is ({String detachAllFromUuid})) {
+      vehicle?.detachAllFrom(message.detachAllFromUuid);
+    }
+    // Apply the sent equipment setup to the chosen parent.
+    else if (message is ({EquipmentSetup equipmentSetup, String parentUuid})) {
+      final parent = vehicle?.findChildRecursive(message.parentUuid);
+      if (parent != null) {
+        message.equipmentSetup.attachChildrenTo(parent);
+      }
     }
     // Update the active sections of the equipment with the given uuid.
     else if (message is ({String uuid, List<bool> activeSections})) {
@@ -610,6 +626,7 @@ class _VehicleSimulatorState {
         equipment.activeSections = message.activeSections;
       }
     }
+
     // Update the AB-line to follow
     else if (message is ({ABLine? abLine})) {
       abLine = message.abLine;

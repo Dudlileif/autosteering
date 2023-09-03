@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:uuid/uuid.dart';
@@ -94,11 +95,23 @@ abstract class Hitchable {
   /// Whether or not the hitchable is reversing.
   bool get isReversing => velocity < 0;
 
+  /// Run the given [function] on this and all of its children recursively.
+  ///
+  /// Mainly used to update a Map of equipments in a provider.
+  void runFunctionRecursively(void Function(Hitchable hitchable) function) {
+    function(this);
+    for (final element in hitchChildren) {
+      function(element);
+      element.runFunctionRecursively(function);
+    }
+  }
+
   /// Attach a [child] hitchable (equipment) to this at the given [position].
   void attachChild(
     Hitchable child, [
     Hitch position = Hitch.rearFixed,
   ]) {
+    child.runFunctionRecursively((hitchable) => hitchable.bearing = bearing);
     var childToAttach = child;
 
     final uuidAlreadyAttached = findChildRecursive(child.uuid);
@@ -141,13 +154,14 @@ abstract class Hitchable {
     }
   }
 
-  /// Recursively looks through the connected children of this to find a
-  /// [Hitchable] with the given [uuid]. If there isn't one, null is returned.
+  /// Recursively looks through the connected children of this and itself to
+  /// find a [Hitchable] with the given [uuid]. If there isn't one, null is
+  /// returned.
   Hitchable? findChildRecursive(String uuid) {
+    if (uuid == this.uuid) {
+      return this;
+    }
     for (final element in hitchChildren) {
-      if (element.uuid == uuid) {
-        return element;
-      }
       final recursiveChild = element.findChildRecursive(uuid);
       if (recursiveChild != null) {
         return recursiveChild;
@@ -187,6 +201,20 @@ abstract class Hitchable {
     foundChild?.hitchParent = null;
   }
 
+  /// Detaches all children from the child with given [uuid] from the hierarchy.
+  void detachAllFrom(String uuid) {
+    final foundChild = findChildRecursive(uuid);
+
+    foundChild?.hitchFrontFixedChild?.hitchParent = null;
+    foundChild?.hitchFrontFixedChild = null;
+
+    foundChild?.hitchRearFixedChild?.hitchParent = null;
+    foundChild?.hitchRearFixedChild = null;
+
+    foundChild?.hitchRearTowbarChild?.hitchParent = null;
+    foundChild?.hitchRearTowbarChild = null;
+  }
+
   /// A list of the currently attached children.
   List<Hitchable> get hitchChildren => [
         if (hitchFrontFixedChild != null) hitchFrontFixedChild!,
@@ -210,18 +238,31 @@ abstract class Hitchable {
         hitchRearTowbarPoint,
       ].whereNotNull();
 
+  /// The number of children recursively attached to this.
+  int get numAttachedChildren => hitchChildren.fold(
+        hitchChildren.length,
+        (previousValue, element) => previousValue + element.numAttachedChildren,
+      );
+
   /// Update the children connected to this.
   void updateChildren() {
-    hitchFrontFixedChild
-      ?..hitchParent = this
-      ..updateChildren();
-    hitchRearFixedChild
-      ?..hitchParent = this
-      ..updateChildren();
-    hitchRearTowbarChild
-      ?..hitchParent = this
-      ..updateChildren();
+    hitchFrontFixedChild?.hitchParent = this;
+    hitchFrontFixedChild?.updateChildren();
+    hitchRearFixedChild?.hitchParent = this;
+    hitchRearFixedChild?.updateChildren();
+    hitchRearTowbarChild?.hitchParent = this;
+    hitchRearTowbarChild?.updateChildren();
   }
+
+  /// Creates an [EquipmentSetup] for the attached children.
+  ///
+  /// The setup requires a [name].
+  EquipmentSetup equipmentSetup(String name) => EquipmentSetup(
+        name: name,
+        frontFixedChild: hitchFrontFixedChild,
+        rearFixedChild: hitchRearFixedChild,
+        rearTowbarChild: hitchRearTowbarChild,
+      );
 
   /// Create a new [Hitchable] based on this one, but with parameters/variables
   /// changed.
@@ -233,4 +274,21 @@ abstract class Hitchable {
     String? name,
     String? uuid,
   });
+
+  /// Converts the object to a json compatible structure.
+  Map<String, dynamic> toJson();
+
+  /// Converts the object to a json compatible structure with all the
+  /// connected children added recursively.
+  Map<String, dynamic> toJsonWithChildren() {
+    final map = toJson();
+
+    map['children'] = {
+      'front_fixed': hitchFrontFixedChild?.toJsonWithChildren(),
+      'rear_fixed': hitchRearFixedChild?.toJsonWithChildren(),
+      'rear_towbar': hitchRearTowbarChild?.toJsonWithChildren(),
+    };
+
+    return map;
+  }
 }

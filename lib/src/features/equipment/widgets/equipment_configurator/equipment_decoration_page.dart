@@ -2,10 +2,10 @@ import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A page for configuring the equipment's dimensions.
-class EquipmentDimensionsPage extends ConsumerWidget {
-  /// A page for configuring the equipment's dimensions.
-  const EquipmentDimensionsPage({super.key});
+/// A page for configuring the equipment's decoration.
+class EquipmentDecorationPage extends ConsumerWidget {
+  /// A page for configuring the equipment's decoratoin.
+  const EquipmentDecorationPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -15,58 +15,78 @@ class EquipmentDimensionsPage extends ConsumerWidget {
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),
-          labelText: 'Equipment tow/drawbar length',
+          labelText: 'Hitch to decoration start',
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
-          configuredEquipmentProvider
-              .select((value) => value.drawbarLength.toString()),
+          configuredEquipmentProvider.select(
+            (value) => value.hitchToDecorationStartLength?.toString(),
+          ),
         ),
         onChanged: (value) {
           final length = double.tryParse(value.replaceAll(',', '.'));
 
           ref
               .read(configuredEquipmentProvider.notifier)
-              .update(equipment.copyWith(drawbarLength: length?.abs()));
+              .update(equipment.copyWith(hitchToDecorationStartLength: length));
         },
       ),
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),
-          labelText: 'Working area length',
+          labelText: 'Decoration length',
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredEquipmentProvider
-              .select((value) => value.workingAreaLength.toString()),
+              .select((value) => value.decorationLength?.toString()),
         ),
         onChanged: (value) {
-          final width = double.tryParse(value.replaceAll(',', '.'));
+          final length = double.tryParse(value.replaceAll(',', '.'));
 
           ref
               .read(configuredEquipmentProvider.notifier)
-              .update(equipment.copyWith(workingAreaLength: width?.abs()));
+              .update(equipment.copyWith(decorationLength: length?.abs()));
         },
       ),
       TextFormField(
         decoration: const InputDecoration(
           icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
-          labelText: 'Sideways offset (-left / +right)',
+          labelText: 'Decoration width',
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredEquipmentProvider
-              .select((value) => value.sidewaysOffset.toString()),
+              .select((value) => value.decorationWidth?.toString()),
+        ),
+        onChanged: (value) {
+          final length = double.tryParse(value.replaceAll(',', '.'));
+
+          ref
+              .read(configuredEquipmentProvider.notifier)
+              .update(equipment.copyWith(decorationWidth: length?.abs()));
+        },
+      ),
+      TextFormField(
+        decoration: const InputDecoration(
+          icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+          labelText: 'Decoration sideways offset (-left / +right)',
+          suffixText: 'm',
+        ),
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        initialValue: ref.read(
+          configuredEquipmentProvider
+              .select((value) => value.decorationSidewaysOffset?.toString()),
         ),
         onChanged: (value) {
           final offset = double.tryParse(value.replaceAll(',', '.'));
 
           ref
               .read(configuredEquipmentProvider.notifier)
-              .update(equipment.copyWith(sidewaysOffset: offset));
+              .update(equipment.copyWith(decorationSidewaysOffset: offset));
         },
       ),
     ];

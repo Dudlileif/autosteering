@@ -35,6 +35,7 @@ class Equipment extends Hitchable with EquatableMixin {
   Equipment({
     required this.hitchType,
     super.hitchParent,
+    super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
@@ -47,6 +48,10 @@ class Equipment extends Hitchable with EquatableMixin {
     this.hitchToChildFrontFixedHitchLength,
     this.hitchToChildRearFixedHitchLength,
     this.hitchToChildRearTowbarHitchLength,
+    this.hitchToDecorationStartLength,
+    this.decorationSidewaysOffset,
+    this.decorationLength,
+    this.decorationWidth,
     DateTime? lastUsed,
     double bearing = 0,
     Geographic position = const Geographic(lat: 0, lon: 0),
@@ -66,7 +71,11 @@ class Equipment extends Hitchable with EquatableMixin {
     final sections = Map<String, dynamic>.from(json['sections'] as Map);
     final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
 
-    return Equipment(
+    final decoration = dimensions['decoration'] != null
+        ? Map<String, dynamic>.from(dimensions['decoration'] as Map)
+        : null;
+
+    final equipment = Equipment(
       hitchType: HitchType.values.firstWhere(
         (element) => element.name == info['hitch_type'] as String,
       ),
@@ -83,8 +92,48 @@ class Equipment extends Hitchable with EquatableMixin {
           hitches['hitch_to_child_rear_fixed_hitch_length'] as double?,
       hitchToChildRearTowbarHitchLength:
           hitches['hitch_to_child_rear_towbar_hitch_length'] as double?,
+      hitchToDecorationStartLength:
+          decoration?['hitch_to_decoration_start_length'] as double?,
+      decorationLength: decoration?['decoration_length'] as double?,
+      decorationWidth: decoration?['decoration_width'] as double?,
+      decorationSidewaysOffset:
+          decoration?['decoration_sideways_offset'] as double?,
       lastUsed: DateTime.tryParse(info['last_used'] as String),
     );
+
+    final children = json['children'] != null
+        ? Map<String, Map<String, dynamic>?>.from(
+            json['children'] as Map,
+          )
+        : null;
+
+    final hitchFrontFixedChild = children?['front_fixed'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['front_fixed']!),
+          )
+        : null;
+    final hitchRearFixedChild = children?['rear_fixed'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['rear_fixed']!),
+          )
+        : null;
+    final hitchRearTowbarChild = children?['rear_towbar'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['rear_towbar']!),
+          )
+        : null;
+
+    if (hitchFrontFixedChild != null) {
+      equipment.attachChild(hitchFrontFixedChild, Hitch.frontFixed);
+    }
+    if (hitchRearFixedChild != null) {
+      equipment.attachChild(hitchRearFixedChild);
+    }
+    if (hitchRearTowbarChild != null) {
+      equipment.attachChild(hitchRearTowbarChild, Hitch.rearTowbar);
+    }
+
+    return equipment;
   }
 
   /// The last time this equipment was used.
@@ -127,6 +176,19 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The length from the primary hitch point to the child rear towbar hitch at
   /// the rear, if there is one.
   double? hitchToChildRearTowbarHitchLength;
+
+  /// The distance from the hitch [position] to the start of the decoration
+  /// polygon.
+  double? hitchToDecorationStartLength;
+
+  /// The length of the decoration polygon.
+  double? decorationLength;
+
+  /// The width of the decoration polygon.
+  double? decorationWidth;
+
+  /// The sideways offset for the decoration polygon.
+  double? decorationSidewaysOffset;
 
   /// The position of the equipment, used to specifically set the [position].
   Geographic _position = const Geographic(lon: 0, lat: 0);
@@ -183,17 +245,6 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// The total width of the equipment. Found by summing the [sectionWidths].
   double get width => sectionWidths.sum;
-
-  /// Run the given [function] on this and all of its children recursively.
-  ///
-  ///  Mainly used to update a Map of equipments in a provider.
-  void runFunctionRecursively(void Function(Equipment equipment) function) {
-    function(this);
-    for (final element in hitchChildren.whereType<Equipment>()) {
-      function(element);
-      element.runFunctionRecursively(function);
-    }
-  }
 
   /// Activate the given [section].
   void activateSection(int section) => activeSections[section] = true;
@@ -299,7 +350,7 @@ class Equipment extends Hitchable with EquatableMixin {
 
       // Only change bearing if we're moving.
       if (hitchParent!.velocity.abs() > 0) {
-        bearing = (_bearing + bearingChange).wrap360();
+        bearing = _bearing + bearingChange;
       }
       _velocity = hitchParent!.velocity * -cos(hitchAngle);
     }
@@ -431,16 +482,28 @@ class Equipment extends Hitchable with EquatableMixin {
               borderColor: Colors.black,
               points: [
                 position.spherical
-                    .destinationPoint(distance: 0.05, bearing: bearing - 90)
+                    .destinationPoint(
+                      distance: 0.05,
+                      bearing: bearing - 90,
+                    )
                     .latLng,
                 drawbarEnd.spherical
-                    .destinationPoint(distance: 0.05, bearing: bearing - 90)
+                    .destinationPoint(
+                      distance: 0.05,
+                      bearing: bearing - 90,
+                    )
                     .latLng,
                 drawbarEnd.spherical
-                    .destinationPoint(distance: 0.05, bearing: bearing + 90)
+                    .destinationPoint(
+                      distance: 0.05,
+                      bearing: bearing + 90,
+                    )
                     .latLng,
                 position.spherical
-                    .destinationPoint(distance: 0.05, bearing: bearing + 90)
+                    .destinationPoint(
+                      distance: 0.05,
+                      bearing: bearing + 90,
+                    )
                     .latLng,
               ],
             ),
@@ -454,16 +517,28 @@ class Equipment extends Hitchable with EquatableMixin {
               borderColor: Colors.black,
               points: [
                 position.spherical
-                    .destinationPoint(distance: 0.35, bearing: bearing - 90)
+                    .destinationPoint(
+                      distance: 0.35,
+                      bearing: bearing - 90,
+                    )
                     .latLng,
                 drawbarEnd.spherical
-                    .destinationPoint(distance: 0.35, bearing: bearing - 90)
+                    .destinationPoint(
+                      distance: 0.35,
+                      bearing: bearing - 90,
+                    )
                     .latLng,
                 drawbarEnd.spherical
-                    .destinationPoint(distance: 0.3, bearing: bearing - 90)
+                    .destinationPoint(
+                      distance: 0.3,
+                      bearing: bearing - 90,
+                    )
                     .latLng,
                 position.spherical
-                    .destinationPoint(distance: 0.3, bearing: bearing - 90)
+                    .destinationPoint(
+                      distance: 0.3,
+                      bearing: bearing - 90,
+                    )
                     .latLng,
               ],
             ),
@@ -475,27 +550,90 @@ class Equipment extends Hitchable with EquatableMixin {
               borderColor: Colors.black,
               points: [
                 position.spherical
-                    .destinationPoint(distance: 0.35, bearing: bearing + 90)
+                    .destinationPoint(
+                      distance: 0.35,
+                      bearing: bearing + 90,
+                    )
                     .latLng,
                 drawbarEnd.spherical
-                    .destinationPoint(distance: 0.35, bearing: bearing + 90)
+                    .destinationPoint(
+                      distance: 0.35,
+                      bearing: bearing + 90,
+                    )
                     .latLng,
                 drawbarEnd.spherical
-                    .destinationPoint(distance: 0.3, bearing: bearing + 90)
+                    .destinationPoint(
+                      distance: 0.3,
+                      bearing: bearing + 90,
+                    )
                     .latLng,
                 position.spherical
-                    .destinationPoint(distance: 0.3, bearing: bearing + 90)
+                    .destinationPoint(
+                      distance: 0.3,
+                      bearing: bearing + 90,
+                    )
                     .latLng,
               ],
             ),
           ]
       };
 
+  /// A polygon drawing the decoration of the equipment.
+  map.Polygon? get decorationPolygon {
+    if (hitchToDecorationStartLength != null &&
+        decorationLength != null &&
+        decorationWidth != null) {
+      final decorationStart = position.spherical
+          .destinationPoint(
+            distance: hitchToDecorationStartLength!,
+            bearing: bearing - 180,
+          )
+          .spherical
+          .destinationPoint(
+            distance: decorationSidewaysOffset ?? 0,
+            bearing: bearing + 90,
+          );
+      final decorationEnd = decorationStart.spherical.destinationPoint(
+        distance: decorationLength!,
+        bearing: bearing - 180,
+      );
+
+      final points = [
+        decorationStart.spherical.destinationPoint(
+          distance: decorationWidth! / 2,
+          bearing: bearing + 90,
+        ),
+        decorationEnd.spherical.destinationPoint(
+          distance: decorationWidth! / 2,
+          bearing: bearing + 90,
+        ),
+        decorationEnd.spherical.destinationPoint(
+          distance: decorationWidth! / 2,
+          bearing: bearing - 90,
+        ),
+        decorationStart.spherical.destinationPoint(
+          distance: decorationWidth! / 2,
+          bearing: bearing - 90,
+        ),
+      ];
+
+      return map.Polygon(
+        isFilled: true,
+        borderStrokeWidth: 3,
+        color: Colors.grey.shade800.withOpacity(0.7),
+        borderColor: Colors.black,
+        points: points.map((e) => e.latLng).toList(),
+      );
+    }
+    return null;
+  }
+
   /// A list of all the polygons for the equipment, i.e. [drawbarMapPolygons]
   /// and all the [sectionMapPolygon]s.
   List<map.Polygon> get mapPolygons {
     return [
       ...drawbarMapPolygons,
+      if (decorationPolygon != null) decorationPolygon!,
       ...List.generate(sections, sectionMapPolygon, growable: false)
           .whereNotNull(),
     ];
@@ -539,6 +677,11 @@ class Equipment extends Hitchable with EquatableMixin {
     double? hitchToChildFrontFixedHitchLength,
     double? hitchToChildRearFixedHitchLength,
     double? hitchToChildRearTowbarHitchLength,
+    double? hitchToDecorationStartLength,
+    double? decorationSidewaysOffset,
+    double? decorationLength,
+    double? decorationWidth,
+    DateTime? lastUsed,
   }) =>
       Equipment(
         name: name ?? this.name,
@@ -560,9 +703,17 @@ class Equipment extends Hitchable with EquatableMixin {
             this.hitchToChildRearFixedHitchLength,
         hitchToChildRearTowbarHitchLength: hitchToChildRearTowbarHitchLength ??
             this.hitchToChildRearTowbarHitchLength,
+        hitchToDecorationStartLength:
+            hitchToDecorationStartLength ?? this.hitchToDecorationStartLength,
+        decorationLength: decorationLength ?? this.decorationLength,
+        decorationWidth: decorationWidth ?? this.decorationWidth,
+        decorationSidewaysOffset:
+            decorationSidewaysOffset ?? this.decorationSidewaysOffset,
+        lastUsed: lastUsed ?? this.lastUsed,
       );
 
   /// Converts the object to a json compatible structure.
+  @override
   Map<String, dynamic> toJson() {
     final map = SplayTreeMap<String, dynamic>();
 
@@ -573,11 +724,25 @@ class Equipment extends Hitchable with EquatableMixin {
       'hitch_type': hitchType.name,
     };
 
+    Map<String, double?>? decoration;
+
+    if (hitchToDecorationStartLength != null &&
+        decorationLength != null &&
+        decorationWidth != null) {
+      decoration = {
+        'hitch_to_decoration_start_length': hitchToDecorationStartLength,
+        'decoration_length': decorationLength,
+        'decoration_width': decorationWidth,
+        'decoration_sideways_offset': decorationSidewaysOffset,
+      };
+    }
+
     map['dimensions'] = {
       'drawbar_length': drawbarLength,
       'sideways_offset': sidewaysOffset,
       'width': width,
       'working_area_length': workingAreaLength,
+      'decoration': decoration,
     };
 
     map['sections'] = {

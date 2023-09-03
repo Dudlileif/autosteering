@@ -52,24 +52,6 @@ final class Harvester extends AxleSteeredVehicle {
 
     final steering = Map<String, dynamic>.from(json['steering'] as Map);
 
-    final pidParameters = json.containsKey('pid_parameters')
-        ? PidParameters.fromJson(
-            Map<String, dynamic>.from(json['pid_parameters'] as Map),
-          )
-        : null;
-
-    final purePursuitParameters = json.containsKey('pure_pursuit_parameters')
-        ? PurePursuitParameters.fromJson(
-            Map<String, dynamic>.from(json['pure_pursuit_parameters'] as Map),
-          )
-        : null;
-
-    final stanleyParameters = json.containsKey('stanley_parameters')
-        ? StanleyParameters.fromJson(
-            Map<String, dynamic>.from(json['stanley_parameters'] as Map),
-          )
-        : null;
-
     final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
 
     return Harvester(
@@ -95,9 +77,6 @@ final class Harvester extends AxleSteeredVehicle {
       pathTrackingMode: PathTrackingMode.values.firstWhere(
         (element) => element.name == steering['path_tracking_mode'] as String,
       ),
-      pidParameters: pidParameters,
-      purePursuitParameters: purePursuitParameters,
-      stanleyParameters: stanleyParameters,
       solidAxleToFrontHitchDistance:
           hitches['solid_axle_to_front_hitch_distance'] as double?,
       solidAxleToRearHitchDistance:
@@ -231,7 +210,7 @@ final class Harvester extends AxleSteeredVehicle {
     final map = super.toJson();
 
     map['info'] = Map<String, dynamic>.from(map['info'] as Map)
-      ..addAll({'type': 'Harvester'});
+      ..addAll({'vehicle_type': 'Harvester'});
 
     return map;
   }

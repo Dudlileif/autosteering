@@ -20,6 +20,7 @@ class EquipmentMenu extends StatelessWidget {
       text: 'Equipment',
       icon: Icons.handyman,
       menuChildren: [
+        const _LoadEquipmentSetupMenu(),
         const _LoadEquipmentMenu(),
         MenuItemButton(
           leadingIcon: const Padding(
@@ -32,7 +33,9 @@ class EquipmentMenu extends StatelessWidget {
             builder: (context) => const EquipmentConfigurator(),
           ),
         ),
-        const _AttachMenu(),
+        const _SaveEquipmentSetup(),
+        const _AttachEquipmentMenu(),
+        const _AttachEquipmentSetupMenu(),
         const _DetachMenu(),
         Consumer(
           child: Text(
@@ -64,6 +67,81 @@ class EquipmentMenu extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _SaveEquipmentSetup extends StatelessWidget {
+  const _SaveEquipmentSetup();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      child: const Text('Save setup'),
+      builder: (context, ref, child) {
+        if (ref.watch(
+          mainVehicleProvider.select((value) => value.numAttachedChildren > 1),
+        )) {
+          return MenuItemButton(
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.save),
+            ),
+            child: child,
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) {
+                var name = '';
+                return StatefulBuilder(
+                  builder: (context, setState) {
+                    return SimpleDialog(
+                      title: const Text('Name the setup'),
+                      children: [
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.label_outline),
+                            labelText: 'Name',
+                          ),
+                          initialValue: name,
+                          onChanged: (value) => setState(() => name = value),
+                          onFieldSubmitted: (value) =>
+                              setState(() => name = value),
+                          keyboardType: TextInputType.text,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) => value != null &&
+                                  value.isNotEmpty &&
+                                  !value.startsWith(' ')
+                              ? null
+                              : '''No name entered! Please enter a name so that the setup can be saved!''',
+                        ),
+                        Consumer(
+                          child: child,
+                          builder: (context, ref, child) => FilledButton(
+                            onPressed: () {
+                              ref.read(
+                                saveEquipmentSetupProvider(
+                                  ref.read(
+                                    mainVehicleProvider.select(
+                                      (value) => value.equipmentSetup(name),
+                                    ),
+                                  ),
+                                ),
+                              );
+                              Navigator.of(context).pop();
+                            },
+                            child: child,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }
@@ -100,8 +178,47 @@ class _LoadEquipmentMenu extends ConsumerWidget {
                     .update(equipment);
 
                 ref
-                  ..read(SaveEquipmentProvider(equipment))
+                  ..read(saveEquipmentProvider(equipment))
                   ..invalidate(configuredEquipmentNameTextControllerProvider);
+              },
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+/// A menu for loading an [EquipmentSetup] from saved equipments.
+class _LoadEquipmentSetupMenu extends ConsumerWidget {
+  /// A menu for loading an [EquipmentSetup] from saved equipments.
+  const _LoadEquipmentSetupMenu();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final setups = ref.watch(savedEquipmentSetupsProvider).when(
+          data: (data) => data,
+          error: (error, stackTrace) => <EquipmentSetup>[],
+          loading: () => <EquipmentSetup>[],
+        )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+
+    if (setups.isEmpty) {
+      return Container();
+    }
+
+    return MenuButtonWithChildren(
+      text: 'Load setup',
+      icon: Icons.history,
+      menuChildren: setups
+          .map(
+            (setup) => MenuItemButton(
+              child: Text(setup.name),
+              onPressed: () {
+                setup.lastUsed = DateTime.now();
+
+                ref.read(saveEquipmentSetupProvider(setup));
+                ref
+                    .read(configuredEquipmentSetupProvider.notifier)
+                    .update(setup);
               },
             ),
           )
@@ -112,10 +229,10 @@ class _LoadEquipmentMenu extends ConsumerWidget {
 
 /// A menu for attaching the [Equipment] in [configuredEquipmentProvider] to
 /// the hierarchy.
-class _AttachMenu extends ConsumerWidget {
+class _AttachEquipmentMenu extends ConsumerWidget {
   /// A menu for attaching the [Equipment] in [configuredEquipmentProvider] to
   /// the hierarchy.
-  const _AttachMenu();
+  const _AttachEquipmentMenu();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -127,11 +244,15 @@ class _AttachMenu extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final equipmentName = ref.watch(
+      configuredEquipmentProvider.select((value) => value.name ?? 'Unnamed'),
+    );
+
     return MenuButtonWithChildren(
-      text: 'Attach',
+      text: 'Attach\n$equipmentName',
       icon: Icons.commit,
       menuChildren: [
-        _RecursiveAttachMenu(
+        _RecursiveAttachEquipmentMenu(
           parent: ref.watch(mainVehicleProvider),
           child: ref.watch(configuredEquipmentProvider),
         ),
@@ -142,12 +263,15 @@ class _AttachMenu extends ConsumerWidget {
 
 /// A recursive menu entry for attaching the [Equipment] in
 /// [configuredEquipmentProvider] the hierarchy.
-class _RecursiveAttachMenu extends ConsumerWidget {
+class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
   /// A recursive menu entry for attaching the [Equipment] in
   /// [configuredEquipmentProvider] the hierarchy.
   ///
   /// [parent] is which [Hitchable] the [child] should connect to.
-  const _RecursiveAttachMenu({required this.parent, required this.child});
+  const _RecursiveAttachEquipmentMenu({
+    required this.parent,
+    required this.child,
+  });
 
   final Hitchable parent;
   final Equipment child;
@@ -171,7 +295,7 @@ class _RecursiveAttachMenu extends ConsumerWidget {
       text: text,
       menuChildren: [
         if (parent.hitchFrontFixedChild != null)
-          _RecursiveAttachMenu(
+          _RecursiveAttachEquipmentMenu(
             parent: parent.hitchFrontFixedChild!,
             child: child,
           )
@@ -189,7 +313,7 @@ class _RecursiveAttachMenu extends ConsumerWidget {
             child: const Text('Front fixed'),
           ),
         if (parent.hitchRearFixedChild != null)
-          _RecursiveAttachMenu(
+          _RecursiveAttachEquipmentMenu(
             parent: parent.hitchRearFixedChild!,
             child: child,
           )
@@ -207,7 +331,7 @@ class _RecursiveAttachMenu extends ConsumerWidget {
             child: const Text('Rear fixed'),
           ),
         if (parent.hitchRearTowbarChild != null)
-          _RecursiveAttachMenu(
+          _RecursiveAttachEquipmentMenu(
             parent: parent.hitchRearTowbarChild!,
             child: child,
           )
@@ -223,6 +347,102 @@ class _RecursiveAttachMenu extends ConsumerWidget {
                     )
                 : null,
             child: const Text('Tow bar'),
+          ),
+      ],
+    );
+  }
+}
+
+/// A menu for attaching the [EquipmentSetup] in
+/// [configuredEquipmentSetupProvider] to the hierarchy.
+class _AttachEquipmentSetupMenu extends ConsumerWidget {
+  /// A menu for attaching the [EquipmentSetup] in
+  /// [configuredEquipmentSetupProvider] to the hierarchy.
+  const _AttachEquipmentSetupMenu();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hasHitches = ref.watch(
+      mainVehicleProvider.select((value) => value.hitchPoints.isNotEmpty),
+    );
+
+    final setup = ref.watch(configuredEquipmentSetupProvider);
+
+    if (!hasHitches || setup == null) {
+      return const SizedBox.shrink();
+    }
+
+    return MenuButtonWithChildren(
+      text: 'Attach setup\n${setup.name}',
+      icon: Icons.commit,
+      menuChildren: [
+        _RecursiveAttachEquipmentSetupMenu(
+          parent: ref.watch(mainVehicleProvider),
+          setup: setup,
+        ),
+      ],
+    );
+  }
+}
+
+/// A recursive menu for attaching the [EquipmentSetup] in
+/// [configuredEquipmentSetupProvider] to the hierarchy.
+class _RecursiveAttachEquipmentSetupMenu extends ConsumerWidget {
+  /// A recursive menu for attaching the [EquipmentSetup] in
+  /// [configuredEquipmentSetupProvider] to the hierarchy.
+  ///
+  /// [parent] is which [Hitchable] the [setup] should apply/attach to.
+  const _RecursiveAttachEquipmentSetupMenu({
+    required this.parent,
+    required this.setup,
+  });
+
+  final Hitchable parent;
+  final EquipmentSetup setup;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final text = [
+      if (parent.parentHitch != null) parent.parentHitch!.name,
+      (parent.name ?? parent.uuid),
+    ].join('\n');
+
+    if (parent.hitchPoints.isEmpty) {
+      return MenuItemButton(
+        child: Text(
+          text,
+        ),
+      );
+    }
+
+    if (parent.hitchPoints.isNotEmpty && parent.hitchChildren.isEmpty) {
+      return MenuItemButton(
+        child: Text(text),
+        onPressed: () {
+          ref
+              .read(simInputProvider.notifier)
+              .send((equipmentSetup: setup, parentUuid: parent.uuid));
+        },
+      );
+    }
+
+    return MenuButtonWithChildren(
+      text: text,
+      menuChildren: [
+        if (parent.hitchFrontFixedChild != null)
+          _RecursiveAttachEquipmentSetupMenu(
+            parent: parent.hitchFrontFixedChild!,
+            setup: setup,
+          ),
+        if (parent.hitchRearFixedChild != null)
+          _RecursiveAttachEquipmentSetupMenu(
+            parent: parent.hitchRearFixedChild!,
+            setup: setup,
+          ),
+        if (parent.hitchRearTowbarChild != null)
+          _RecursiveAttachEquipmentSetupMenu(
+            parent: parent.hitchRearTowbarChild!,
+            setup: setup,
           ),
       ],
     );
@@ -249,6 +469,15 @@ class _DetachMenu extends ConsumerWidget {
       text: 'Detach',
       icon: Icons.commit,
       menuChildren: [
+        MenuItemButton(
+          child: const Text('Detach all'),
+          onPressed: () => ref.read(simInputProvider.notifier).send(
+            (
+              detachAllFromUuid:
+                  ref.read(mainVehicleProvider.select((value) => value.uuid))
+            ),
+          ),
+        ),
         _RecursiveDetachMenu(parent: ref.watch(mainVehicleProvider)),
       ],
     );

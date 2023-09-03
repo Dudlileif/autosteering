@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -66,13 +67,70 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// [ArticulatedTractor]
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     final info = Map<String, dynamic>.from(json['info'] as Map);
-    final type = info['type'];
-    return switch (type) {
+    final type = info['vehicle_type'];
+
+    final vehicle = switch (type) {
       'Tractor' => Tractor.fromJson(json),
       'Harvester' => Harvester.fromJson(json),
       'Articulated tractor' => ArticulatedTractor.fromJson(json),
       _ => Tractor.fromJson(json),
     };
+
+    final children = json['children'] != null
+        ? Map<String, Map<String, dynamic>?>.from(
+            json['children'] as Map,
+          )
+        : null;
+
+    final hitchFrontFixedChild = children?['front_fixed'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['front_fixed']!),
+          )
+        : null;
+    final hitchRearFixedChild = children?['rear_fixed'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['rear_fixed']!),
+          )
+        : null;
+    final hitchRearTowbarChild = children?['rear_towbar'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['rear_towbar']!),
+          )
+        : null;
+
+    if (hitchFrontFixedChild != null) {
+      vehicle.attachChild(hitchFrontFixedChild, Hitch.frontFixed);
+    }
+    if (hitchRearFixedChild != null) {
+      vehicle.attachChild(hitchRearFixedChild);
+    }
+    if (hitchRearTowbarChild != null) {
+      vehicle.attachChild(hitchRearTowbarChild, Hitch.rearTowbar);
+    }
+
+    final pidParameters = json.containsKey('pid_parameters')
+        ? PidParameters.fromJson(
+            Map<String, dynamic>.from(json['pid_parameters'] as Map),
+          )
+        : null;
+
+    final purePursuitParameters = json.containsKey('pure_pursuit_parameters')
+        ? PurePursuitParameters.fromJson(
+            Map<String, dynamic>.from(json['pure_pursuit_parameters'] as Map),
+          )
+        : null;
+
+    final stanleyParameters = json.containsKey('stanley_parameters')
+        ? StanleyParameters.fromJson(
+            Map<String, dynamic>.from(json['stanley_parameters'] as Map),
+          )
+        : null;
+
+    return vehicle.copyWith(
+      pidParameters: pidParameters,
+      purePursuitParameters: purePursuitParameters,
+      stanleyParameters: stanleyParameters,
+    );
   }
 
   /// The last time this vehicle was used.
@@ -444,6 +502,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   });
 
   /// Converts the object to a json compatible structure.
+  @override
   Map<String, dynamic> toJson() {
     final map = SplayTreeMap<String, dynamic>();
     map['info'] = {

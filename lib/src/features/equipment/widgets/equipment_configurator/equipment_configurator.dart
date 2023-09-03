@@ -1,5 +1,6 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_decoration_page.dart';
 import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_dimensions_page.dart';
 import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_hitches_page.dart';
 import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_sections_page.dart';
@@ -66,6 +67,10 @@ class EquipmentConfigurator extends ConsumerWidget {
                         label: Text('Sections'),
                       ),
                       NavigationRailDestination(
+                        icon: Icon(Icons.square_rounded),
+                        label: Text('Decoration'),
+                      ),
+                      NavigationRailDestination(
                         icon: Icon(Icons.commit),
                         label: Text('Hitches'),
                       ),
@@ -90,6 +95,7 @@ class EquipmentConfigurator extends ConsumerWidget {
                       EquipmentTypeSelectorPage(),
                       EquipmentDimensionsPage(),
                       EquipmentSectionsPage(),
+                      EquipmentDecorationPage(),
                       EquipmentHitchesPage(),
                     ],
                   ),
@@ -134,7 +140,7 @@ class _SaveButton extends ConsumerWidget {
         ),
       )
           ? () => ref.watch(
-                SaveEquipmentProvider(ref.watch(configuredEquipmentProvider)),
+                saveEquipmentProvider(ref.watch(configuredEquipmentProvider)),
               )
           : null,
       icon: const Icon(Icons.save),
@@ -227,7 +233,7 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
               .send((updatedEquipment: equipment));
 
           if (!Device.isWeb) {
-            ref.read(SaveEquipmentProvider(equipment));
+            ref.read(saveEquipmentProvider(equipment));
           }
           Navigator.of(context).pop();
         },
