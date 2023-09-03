@@ -1,6 +1,5 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/ab_line_menu.dart';
-import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/look_ahead_menu.dart';
 import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/path_recorder_menu.dart';
 import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/path_tracking_menu.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ class GuidanceMenu extends StatelessWidget {
       text: 'Guidance',
       icon: Icons.navigation,
       menuChildren: [
-        LookAheadMenu(),
         PathRecorderMenu(),
         PathTrackingMenu(),
         ABLineMenu(),

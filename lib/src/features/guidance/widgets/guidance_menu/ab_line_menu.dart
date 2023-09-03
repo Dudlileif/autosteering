@@ -110,15 +110,15 @@ class ABLineMenu extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Width: $width m',
+                  'Width: ${width.toStringAsFixed(2)} m',
                   style: textStyle,
                 ),
                 Slider.adaptive(
                   value: width,
                   onChanged: ref.read(aBLineWidthProvider.notifier).update,
-                  min: 4,
+                  min: 0.5,
                   max: 20,
-                  divisions: 16,
+                  divisions: 390,
                 ),
               ],
             );

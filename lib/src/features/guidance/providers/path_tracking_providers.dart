@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'path_tracking_providers.g.dart';
 
-/// A provider for the velocity gain for the [LookAheadDistance].
+/// A provider for the path interpolation distance.
 @Riverpod(keepAlive: true)
 class PathInterpolationDistance extends _$PathInterpolationDistance {
   @override
