@@ -7,9 +7,9 @@ import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A menu with attached submenu for debugging the equipment feature.
+/// A menu with attached submenu for interacting with the equipment feature.
 class EquipmentMenu extends StatelessWidget {
-  /// A menu with attached submenu for debugging the equipment feature.
+  /// A menu with attached submenu for interacting with the equipment feature.
   const EquipmentMenu({super.key});
 
   @override
@@ -160,7 +160,7 @@ class _LoadEquipmentMenu extends ConsumerWidget {
         )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
     if (equipments.isEmpty) {
-      return Container();
+      return const SizedBox.shrink();
     }
 
     return MenuButtonWithChildren(
@@ -202,7 +202,7 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
         )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
     if (setups.isEmpty) {
-      return Container();
+      return const SizedBox.shrink();
     }
 
     return MenuButtonWithChildren(

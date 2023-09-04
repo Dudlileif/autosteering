@@ -1,16 +1,13 @@
-import 'dart:convert';
-
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:universal_io/io.dart';
 
 part 'field_providers.g.dart';
 
-/// A provider for whether the test field should be shown.
+/// A provider for whether the active field should be shown.
 @Riverpod(keepAlive: true)
-class ShowTestField extends _$ShowTestField {
+class ShowField extends _$ShowField {
   @override
   bool build() => false;
 
@@ -21,31 +18,19 @@ class ShowTestField extends _$ShowTestField {
   void toggle() => Future(() => state = !state);
 }
 
-/// A provider for a test field.
+/// A provider for the active field.
 @Riverpod(keepAlive: true)
-class TestField extends _$TestField {
+class ActiveField extends _$ActiveField {
   @override
-  Field? build() {
-    if (!Device.isWeb) {
-      final dir = ref.watch(fileDirectoryProvider).requireValue;
-      final file = File([dir.path, '/fields/test.json'].join());
-      if (file.existsSync()) {
-        final decoded = jsonDecode(file.readAsStringSync());
-        if (decoded is Map) {
-          return Field.fromJson(Map<String, dynamic>.from(decoded));
-        }
-      }
-    }
-    return null;
-  }
+  Field? build() => null;
 
   /// Update the [state] to [field].
   void update(Field field) => Future(() => state = field);
 }
 
-/// A provider for whether bounding box of the test field should be shown.
+/// A provider for whether bounding box of the active field should be shown.
 @Riverpod(keepAlive: true)
-class ShowTestFieldBoundingBox extends _$ShowTestFieldBoundingBox {
+class ShowFieldBoundingBox extends _$ShowFieldBoundingBox {
   @override
   bool build() => false;
 
@@ -59,7 +44,7 @@ class ShowTestFieldBoundingBox extends _$ShowTestFieldBoundingBox {
 /// A provider for which type of join should be used when buffering the
 /// exterior.
 @Riverpod(keepAlive: true)
-class TestFieldExteriorBufferJoin extends _$TestFieldExteriorBufferJoin {
+class FieldExteriorBufferJoin extends _$FieldExteriorBufferJoin {
   @override
   BufferJoin build() => BufferJoin.round;
 
@@ -76,7 +61,7 @@ class TestFieldExteriorBufferJoin extends _$TestFieldExteriorBufferJoin {
 /// A provider for which type of join should be used when buffering the
 /// interior holes.
 @Riverpod(keepAlive: true)
-class TestFieldInteriorBufferJoin extends _$TestFieldInteriorBufferJoin {
+class FieldInteriorBufferJoin extends _$FieldInteriorBufferJoin {
   @override
   BufferJoin build() => BufferJoin.round;
 
@@ -93,8 +78,7 @@ class TestFieldInteriorBufferJoin extends _$TestFieldInteriorBufferJoin {
 /// A provider for the distance that the test [Field.polygon] exterior should
 /// be buffered.
 @Riverpod(keepAlive: true)
-class TestFieldExteriorBufferDistance
-    extends _$TestFieldExteriorBufferDistance {
+class FieldExteriorBufferDistance extends _$FieldExteriorBufferDistance {
   @override
   double build() => 5;
 
@@ -105,8 +89,7 @@ class TestFieldExteriorBufferDistance
 /// A provider for the distance that the test [Field.polygon] interior should
 /// be buffered.
 @Riverpod(keepAlive: true)
-class TestFieldInteriorBufferDistance
-    extends _$TestFieldInteriorBufferDistance {
+class FieldInteriorBufferDistance extends _$FieldInteriorBufferDistance {
   @override
   double build() => 5;
 
@@ -116,7 +99,7 @@ class TestFieldInteriorBufferDistance
 
 /// A provider for whether the buffered test field should be shown.
 @Riverpod(keepAlive: true)
-class ShowBufferedTestField extends _$ShowBufferedTestField {
+class ShowBufferedField extends _$ShowBufferedField {
   @override
   bool build() => false;
 
@@ -129,15 +112,15 @@ class ShowBufferedTestField extends _$ShowBufferedTestField {
 
 /// A provider for creating and updating the buffered test field.
 @riverpod
-Field? bufferedTestField(BufferedTestFieldRef ref) {
-  final field = ref.watch(testFieldProvider);
+Field? bufferedField(BufferedFieldRef ref) {
+  final field = ref.watch(activeFieldProvider);
   if (field != null) {
     final bufferedPolygon = field.polygon.bufferedPolygon(
-      exteriorDistance: ref.watch(testFieldExteriorBufferDistanceProvider),
-      interiorDistance: ref.watch(testFieldInteriorBufferDistanceProvider),
-      exteriorJoinType: ref.watch(testFieldExteriorBufferJoinProvider),
-      interiorJoinType: ref.watch(testFieldInteriorBufferJoinProvider),
-      getRawPoints: ref.watch(testFieldBufferGetRawPointsProvider),
+      exteriorDistance: ref.watch(fieldExteriorBufferDistanceProvider),
+      interiorDistance: ref.watch(fieldInteriorBufferDistanceProvider),
+      exteriorJoinType: ref.watch(fieldExteriorBufferJoinProvider),
+      interiorJoinType: ref.watch(fieldInteriorBufferJoinProvider),
+      getRawPoints: ref.watch(fieldBufferGetRawPointsProvider),
     );
 
     return field.copyWith(
@@ -153,8 +136,7 @@ Field? bufferedTestField(BufferedTestFieldRef ref) {
 
 /// A provider for whether bounding box of the test field should be shown.
 @Riverpod(keepAlive: true)
-class ShowBufferedTestFieldBoundingBox
-    extends _$ShowBufferedTestFieldBoundingBox {
+class ShowBufferedFieldBoundingBox extends _$ShowBufferedFieldBoundingBox {
   @override
   bool build() => false;
 
@@ -167,7 +149,7 @@ class ShowBufferedTestFieldBoundingBox
 
 /// A provider for whether bounding box of the test field should be shown.
 @Riverpod(keepAlive: true)
-class TestFieldBufferGetRawPoints extends _$TestFieldBufferGetRawPoints {
+class FieldBufferGetRawPoints extends _$FieldBufferGetRawPoints {
   @override
   bool build() => false;
 
@@ -194,3 +176,10 @@ AsyncValue<void> saveField(
         folder: 'fields',
       ),
     );
+
+/// A provider for reading and holding all the saved [Field]s in the
+/// user file directory.
+@Riverpod(keepAlive: true)
+AsyncValue<List<Field>> savedFields(SavedFieldsRef ref) => ref
+    .watch(savedFilesProvider(fromJson: Field.fromJson, folder: 'fields'))
+    .whenData((data) => data.cast());

@@ -6,23 +6,23 @@ part of 'field_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bufferedTestFieldHash() => r'd7c4bccea7d56059eb954fe107f67293aaf8553c';
+String _$bufferedFieldHash() => r'3f077101ed3d63cd539b1baabc87304faa65da1d';
 
 /// A provider for creating and updating the buffered test field.
 ///
-/// Copied from [bufferedTestField].
-@ProviderFor(bufferedTestField)
-final bufferedTestFieldProvider = AutoDisposeProvider<Field?>.internal(
-  bufferedTestField,
-  name: r'bufferedTestFieldProvider',
+/// Copied from [bufferedField].
+@ProviderFor(bufferedField)
+final bufferedFieldProvider = AutoDisposeProvider<Field?>.internal(
+  bufferedField,
+  name: r'bufferedFieldProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$bufferedTestFieldHash,
+      : _$bufferedFieldHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef BufferedTestFieldRef = AutoDisposeProviderRef<Field?>;
+typedef BufferedFieldRef = AutoDisposeProviderRef<Field?>;
 String _$saveFieldHash() => r'6618b0c9eb255bde804a6dc997047d5098089801';
 
 /// Copied from Dart SDK
@@ -212,194 +212,209 @@ class _SaveFieldProviderElement
   String? get overrideName => (origin as SaveFieldProvider).overrideName;
 }
 
-String _$showTestFieldHash() => r'a3993988e676a7ab37cae6cf51099d1bdcce4c02';
+String _$savedFieldsHash() => r'e00c8b585fa3074ce2c60744e8a8b05c79da1a54';
 
-/// A provider for whether the test field should be shown.
+/// A provider for reading and holding all the saved [Field]s in the
+/// user file directory.
 ///
-/// Copied from [ShowTestField].
-@ProviderFor(ShowTestField)
-final showTestFieldProvider = NotifierProvider<ShowTestField, bool>.internal(
-  ShowTestField.new,
-  name: r'showTestFieldProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showTestFieldHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ShowTestField = Notifier<bool>;
-String _$testFieldHash() => r'c1bbd41747c33e123d55c5e06fb3cb600ec8c842';
-
-/// A provider for a test field.
-///
-/// Copied from [TestField].
-@ProviderFor(TestField)
-final testFieldProvider = NotifierProvider<TestField, Field?>.internal(
-  TestField.new,
-  name: r'testFieldProvider',
+/// Copied from [savedFields].
+@ProviderFor(savedFields)
+final savedFieldsProvider = Provider<AsyncValue<List<Field>>>.internal(
+  savedFields,
+  name: r'savedFieldsProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$testFieldHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$savedFieldsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TestField = Notifier<Field?>;
-String _$showTestFieldBoundingBoxHash() =>
-    r'ec6d2646331fa347f9cd762a8ccdf00762538fb0';
+typedef SavedFieldsRef = ProviderRef<AsyncValue<List<Field>>>;
+String _$showFieldHash() => r'200fa084f26d542561e262d80440c1815df35f7a';
 
-/// A provider for whether bounding box of the test field should be shown.
+/// A provider for whether the active field should be shown.
 ///
-/// Copied from [ShowTestFieldBoundingBox].
-@ProviderFor(ShowTestFieldBoundingBox)
-final showTestFieldBoundingBoxProvider =
-    NotifierProvider<ShowTestFieldBoundingBox, bool>.internal(
-  ShowTestFieldBoundingBox.new,
-  name: r'showTestFieldBoundingBoxProvider',
+/// Copied from [ShowField].
+@ProviderFor(ShowField)
+final showFieldProvider = NotifierProvider<ShowField, bool>.internal(
+  ShowField.new,
+  name: r'showFieldProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$showFieldHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowField = Notifier<bool>;
+String _$activeFieldHash() => r'1748d540c188a01efa133d71f24d1904b578b4f6';
+
+/// A provider for the active field.
+///
+/// Copied from [ActiveField].
+@ProviderFor(ActiveField)
+final activeFieldProvider = NotifierProvider<ActiveField, Field?>.internal(
+  ActiveField.new,
+  name: r'activeFieldProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$activeFieldHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ActiveField = Notifier<Field?>;
+String _$showFieldBoundingBoxHash() =>
+    r'3e70292800ffeea15d7e02ed37cf1b40622e7b69';
+
+/// A provider for whether bounding box of the active field should be shown.
+///
+/// Copied from [ShowFieldBoundingBox].
+@ProviderFor(ShowFieldBoundingBox)
+final showFieldBoundingBoxProvider =
+    NotifierProvider<ShowFieldBoundingBox, bool>.internal(
+  ShowFieldBoundingBox.new,
+  name: r'showFieldBoundingBoxProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$showTestFieldBoundingBoxHash,
+      : _$showFieldBoundingBoxHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowTestFieldBoundingBox = Notifier<bool>;
-String _$testFieldExteriorBufferJoinHash() =>
-    r'e7bb38ffbdcb1035e13de68ad41edb49e51471f1';
+typedef _$ShowFieldBoundingBox = Notifier<bool>;
+String _$fieldExteriorBufferJoinHash() =>
+    r'796c3ea0136fee705c8d8110d559a4fb988d1c32';
 
 /// A provider for which type of join should be used when buffering the
 /// exterior.
 ///
-/// Copied from [TestFieldExteriorBufferJoin].
-@ProviderFor(TestFieldExteriorBufferJoin)
-final testFieldExteriorBufferJoinProvider =
-    NotifierProvider<TestFieldExteriorBufferJoin, BufferJoin>.internal(
-  TestFieldExteriorBufferJoin.new,
-  name: r'testFieldExteriorBufferJoinProvider',
+/// Copied from [FieldExteriorBufferJoin].
+@ProviderFor(FieldExteriorBufferJoin)
+final fieldExteriorBufferJoinProvider =
+    NotifierProvider<FieldExteriorBufferJoin, BufferJoin>.internal(
+  FieldExteriorBufferJoin.new,
+  name: r'fieldExteriorBufferJoinProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$testFieldExteriorBufferJoinHash,
+      : _$fieldExteriorBufferJoinHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TestFieldExteriorBufferJoin = Notifier<BufferJoin>;
-String _$testFieldInteriorBufferJoinHash() =>
-    r'946bc828c562fafbaa8308f297f7f8c05e03c95a';
+typedef _$FieldExteriorBufferJoin = Notifier<BufferJoin>;
+String _$fieldInteriorBufferJoinHash() =>
+    r'871e2407321b8aa38922a125be5f6d4cb692a302';
 
 /// A provider for which type of join should be used when buffering the
 /// interior holes.
 ///
-/// Copied from [TestFieldInteriorBufferJoin].
-@ProviderFor(TestFieldInteriorBufferJoin)
-final testFieldInteriorBufferJoinProvider =
-    NotifierProvider<TestFieldInteriorBufferJoin, BufferJoin>.internal(
-  TestFieldInteriorBufferJoin.new,
-  name: r'testFieldInteriorBufferJoinProvider',
+/// Copied from [FieldInteriorBufferJoin].
+@ProviderFor(FieldInteriorBufferJoin)
+final fieldInteriorBufferJoinProvider =
+    NotifierProvider<FieldInteriorBufferJoin, BufferJoin>.internal(
+  FieldInteriorBufferJoin.new,
+  name: r'fieldInteriorBufferJoinProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$testFieldInteriorBufferJoinHash,
+      : _$fieldInteriorBufferJoinHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TestFieldInteriorBufferJoin = Notifier<BufferJoin>;
-String _$testFieldExteriorBufferDistanceHash() =>
-    r'8e78e437129733750d660be1bd17d6804adbd92f';
+typedef _$FieldInteriorBufferJoin = Notifier<BufferJoin>;
+String _$fieldExteriorBufferDistanceHash() =>
+    r'0b890bcb959b792a4ed6ffe06328747a4c5edd1a';
 
 /// A provider for the distance that the test [Field.polygon] exterior should
 /// be buffered.
 ///
-/// Copied from [TestFieldExteriorBufferDistance].
-@ProviderFor(TestFieldExteriorBufferDistance)
-final testFieldExteriorBufferDistanceProvider =
-    NotifierProvider<TestFieldExteriorBufferDistance, double>.internal(
-  TestFieldExteriorBufferDistance.new,
-  name: r'testFieldExteriorBufferDistanceProvider',
+/// Copied from [FieldExteriorBufferDistance].
+@ProviderFor(FieldExteriorBufferDistance)
+final fieldExteriorBufferDistanceProvider =
+    NotifierProvider<FieldExteriorBufferDistance, double>.internal(
+  FieldExteriorBufferDistance.new,
+  name: r'fieldExteriorBufferDistanceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$testFieldExteriorBufferDistanceHash,
+      : _$fieldExteriorBufferDistanceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TestFieldExteriorBufferDistance = Notifier<double>;
-String _$testFieldInteriorBufferDistanceHash() =>
-    r'58813242eab697b0bb3db7c1f032be760d924e4b';
+typedef _$FieldExteriorBufferDistance = Notifier<double>;
+String _$fieldInteriorBufferDistanceHash() =>
+    r'e32da69d4e33be67288838bfb61c1a21dc3cf6c8';
 
 /// A provider for the distance that the test [Field.polygon] interior should
 /// be buffered.
 ///
-/// Copied from [TestFieldInteriorBufferDistance].
-@ProviderFor(TestFieldInteriorBufferDistance)
-final testFieldInteriorBufferDistanceProvider =
-    NotifierProvider<TestFieldInteriorBufferDistance, double>.internal(
-  TestFieldInteriorBufferDistance.new,
-  name: r'testFieldInteriorBufferDistanceProvider',
+/// Copied from [FieldInteriorBufferDistance].
+@ProviderFor(FieldInteriorBufferDistance)
+final fieldInteriorBufferDistanceProvider =
+    NotifierProvider<FieldInteriorBufferDistance, double>.internal(
+  FieldInteriorBufferDistance.new,
+  name: r'fieldInteriorBufferDistanceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$testFieldInteriorBufferDistanceHash,
+      : _$fieldInteriorBufferDistanceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TestFieldInteriorBufferDistance = Notifier<double>;
-String _$showBufferedTestFieldHash() =>
-    r'f8c51b9c66d6ee3b8718f1f04cdb38d315d6e698';
+typedef _$FieldInteriorBufferDistance = Notifier<double>;
+String _$showBufferedFieldHash() => r'cf5a7873736143e204602485c35222ce2788739d';
 
 /// A provider for whether the buffered test field should be shown.
 ///
-/// Copied from [ShowBufferedTestField].
-@ProviderFor(ShowBufferedTestField)
-final showBufferedTestFieldProvider =
-    NotifierProvider<ShowBufferedTestField, bool>.internal(
-  ShowBufferedTestField.new,
-  name: r'showBufferedTestFieldProvider',
+/// Copied from [ShowBufferedField].
+@ProviderFor(ShowBufferedField)
+final showBufferedFieldProvider =
+    NotifierProvider<ShowBufferedField, bool>.internal(
+  ShowBufferedField.new,
+  name: r'showBufferedFieldProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$showBufferedTestFieldHash,
+      : _$showBufferedFieldHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowBufferedTestField = Notifier<bool>;
-String _$showBufferedTestFieldBoundingBoxHash() =>
-    r'f95243b447996f54815738c36dc1a485c192fde7';
+typedef _$ShowBufferedField = Notifier<bool>;
+String _$showBufferedFieldBoundingBoxHash() =>
+    r'4c34d79c7b64b263a6fa54134b1153740c2709eb';
 
 /// A provider for whether bounding box of the test field should be shown.
 ///
-/// Copied from [ShowBufferedTestFieldBoundingBox].
-@ProviderFor(ShowBufferedTestFieldBoundingBox)
-final showBufferedTestFieldBoundingBoxProvider =
-    NotifierProvider<ShowBufferedTestFieldBoundingBox, bool>.internal(
-  ShowBufferedTestFieldBoundingBox.new,
-  name: r'showBufferedTestFieldBoundingBoxProvider',
+/// Copied from [ShowBufferedFieldBoundingBox].
+@ProviderFor(ShowBufferedFieldBoundingBox)
+final showBufferedFieldBoundingBoxProvider =
+    NotifierProvider<ShowBufferedFieldBoundingBox, bool>.internal(
+  ShowBufferedFieldBoundingBox.new,
+  name: r'showBufferedFieldBoundingBoxProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$showBufferedTestFieldBoundingBoxHash,
+      : _$showBufferedFieldBoundingBoxHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowBufferedTestFieldBoundingBox = Notifier<bool>;
-String _$testFieldBufferGetRawPointsHash() =>
-    r'7b4cc16f5238849a684f0f6c447eac72ec06f4f9';
+typedef _$ShowBufferedFieldBoundingBox = Notifier<bool>;
+String _$fieldBufferGetRawPointsHash() =>
+    r'a4474508c937cec9e5a205b8aab69445bdb419af';
 
 /// A provider for whether bounding box of the test field should be shown.
 ///
-/// Copied from [TestFieldBufferGetRawPoints].
-@ProviderFor(TestFieldBufferGetRawPoints)
-final testFieldBufferGetRawPointsProvider =
-    NotifierProvider<TestFieldBufferGetRawPoints, bool>.internal(
-  TestFieldBufferGetRawPoints.new,
-  name: r'testFieldBufferGetRawPointsProvider',
+/// Copied from [FieldBufferGetRawPoints].
+@ProviderFor(FieldBufferGetRawPoints)
+final fieldBufferGetRawPointsProvider =
+    NotifierProvider<FieldBufferGetRawPoints, bool>.internal(
+  FieldBufferGetRawPoints.new,
+  name: r'fieldBufferGetRawPointsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$testFieldBufferGetRawPointsHash,
+      : _$fieldBufferGetRawPointsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TestFieldBufferGetRawPoints = Notifier<bool>;
+typedef _$FieldBufferGetRawPoints = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

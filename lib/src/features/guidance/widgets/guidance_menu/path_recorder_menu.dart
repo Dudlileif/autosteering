@@ -129,46 +129,95 @@ class PathRecorderMenu extends StatelessWidget {
                 : null,
           ),
         ),
+        const _CreateField(),
         Consumer(
-          child: Text(
-            'Make test field of recorded path',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => ListTile(
-            title: child,
-            leading: const Stack(
-              children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
-            ),
-            onTap: () {
-              final points = ref.watch(finishedPathRecordingListProvider);
-              if (points != null) {
-                ref.read(testFieldProvider.notifier).update(
-                      Field(
-                        name: 'Test',
-                        polygon: Polygon([
-                          PositionArray.view(
-                            points.map((e) => e.position.values).flattened,
-                          ),
-                        ]),
-                        boundingBox: GeoBox.from(points.map((e) => e.position)),
-                      ),
-                    );
-              }
-            },
-          ),
-        ),
-        Consumer(
-          child: Text(
-            'Clear recorded path',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => ListTile(
-            title: child,
-            leading: const Icon(Icons.clear),
-            onTap: ref.read(finishedPathRecordingListProvider.notifier).clear,
+          builder: (context, ref, child) => MenuItemButton(
+            leadingIcon: const Icon(Icons.clear),
+            onPressed:
+                ref.read(finishedPathRecordingListProvider.notifier).clear,
+            child: const Text('Clear recorded path'),
           ),
         ),
       ],
+    );
+  }
+}
+
+/// A [MenuItemButton] for creating a [Field] from the recorded path.
+class _CreateField extends ConsumerWidget {
+  /// A [MenuItemButton] for creating a [Field] from the recorded path.
+  const _CreateField();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MenuItemButton(
+      leadingIcon: const Stack(
+        children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+      ),
+      onPressed: () async {
+        final points = ref.watch(finishedPathRecordingListProvider);
+        if (points != null) {
+          await showDialog<void>(
+            context: context,
+            builder: (context) {
+              var name = '';
+              return StatefulBuilder(
+                builder: (context, setState) {
+                  return SimpleDialog(
+                    title: const Text('Name the field'),
+                    children: [
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.label_outline),
+                          labelText: 'Name',
+                        ),
+                        initialValue: name,
+                        onChanged: (value) => setState(() => name = value),
+                        onFieldSubmitted: (value) =>
+                            setState(() => name = value),
+                        keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) => value != null &&
+                                value.isNotEmpty &&
+                                !value.startsWith(' ')
+                            ? null
+                            : '''No name entered! Please enter a name so that the field can be saved!''',
+                      ),
+                      Consumer(
+                        child: const Text('Save field'),
+                        builder: (context, ref, child) => FilledButton(
+                          onPressed: () {
+                            ref.read(activeFieldProvider.notifier).update(
+                                  Field(
+                                    name: name,
+                                    polygon: Polygon([
+                                      PositionArray.view(
+                                        points
+                                            .map(
+                                              (e) => e.position.values,
+                                            )
+                                            .flattened,
+                                      ),
+                                    ]),
+                                    boundingBox: GeoBox.from(
+                                      points.map((e) => e.position),
+                                    ),
+                                  ),
+                                );
+                            Navigator.of(context).pop();
+                          },
+                          child: child,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          );
+        }
+      },
+      child: const Text('Create field from recorded path'),
     );
   }
 }

@@ -13,22 +13,22 @@ class FieldLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final field = ref.watch(testFieldProvider);
+    final field = ref.watch(activeFieldProvider);
 
     if (field != null) {
       final enabled = ref.watch(showFieldDebugLayerProvider);
       if (enabled) {
-        final bufferedField = ref.watch(bufferedTestFieldProvider);
+        final bufferedField = ref.watch(bufferedFieldProvider);
 
-        final showField = ref.watch(showTestFieldProvider);
+        final showField = ref.watch(showFieldProvider);
         final showBufferedField =
-            ref.watch(showBufferedTestFieldProvider) && bufferedField != null;
+            ref.watch(showBufferedFieldProvider) && bufferedField != null;
 
         final showFieldBoundingBox =
-            ref.watch(showTestFieldBoundingBoxProvider) && showField;
+            ref.watch(showFieldBoundingBoxProvider) && showField;
 
         final showBufferedFieldBoundingBox =
-            ref.watch(showBufferedTestFieldBoundingBoxProvider) &&
+            ref.watch(showBufferedFieldBoundingBoxProvider) &&
                 bufferedField != null;
 
         return Stack(

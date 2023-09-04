@@ -50,7 +50,7 @@ class _LoadVehicleMenu extends ConsumerWidget {
         )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
     if (vehicles.isEmpty) {
-      return Container();
+      return const SizedBox.shrink();
     }
 
     return MenuButtonWithChildren(

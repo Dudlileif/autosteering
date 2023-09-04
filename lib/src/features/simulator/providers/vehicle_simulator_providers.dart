@@ -274,10 +274,10 @@ class SimVehicleAutoCenterSteering extends _$SimVehicleAutoCenterSteering {
       return ref
               .read(settingsProvider.notifier)
               .getBool(SettingsKey.simAutoCenterSteering) ??
-          false;
+          true;
     }
 
-    return false;
+    return true;
   }
 
   /// Update the [state] to [value].

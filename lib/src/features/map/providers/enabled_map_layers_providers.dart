@@ -126,11 +126,11 @@ bool showPathTrackingDebugLayer(ShowPathTrackingDebugLayerRef ref) =>
 /// Whether the debugging layer for the test field should be shown.
 @riverpod
 bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
-  final showTestField = ref.watch(showTestFieldProvider);
-  final showBufferedTestField = ref.watch(showBufferedTestFieldProvider);
-  final testFieldExists = ref.watch(testFieldProvider) != null;
+  final showField = ref.watch(showFieldProvider);
+  final showBufferedField = ref.watch(showBufferedFieldProvider);
+  final fieldExists = ref.watch(activeFieldProvider) != null;
 
-  final enabled = (showTestField || showBufferedTestField) && testFieldExists;
+  final enabled = (showField || showBufferedField) && fieldExists;
   return enabled;
 }
 

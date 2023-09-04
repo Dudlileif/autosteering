@@ -1,5 +1,4 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +13,6 @@ class DebugMenu extends StatelessWidget {
       text: 'Debug',
       icon: Icons.bug_report,
       menuChildren: [
-        FieldDebugMenu(),
         DubinsPathDebugMenu(),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/network/network.dart';
@@ -25,6 +26,7 @@ class MainScaffold extends StatelessWidget {
           child: MenuBar(
             children: [
               MapMenu(),
+              FieldMenu(),
               GuidanceMenu(),
               VehicleMenu(),
               EquipmentMenu(),

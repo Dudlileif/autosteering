@@ -6,15 +6,16 @@ import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
 
 /// A base class for a field.
-class Field extends Equatable {
+class Field with EquatableMixin {
   /// A class for representing a field in the real world.
   ///
   /// The field needs a [name] for identifying purposes.
-  const Field({
+  Field({
     required this.name,
     required this.polygon,
     required this.boundingBox,
-  });
+    DateTime? lastUsed,
+  }) : lastUsed = lastUsed ?? DateTime.now();
 
   /// Creates a [Field] from a json map object.
   ///
@@ -32,11 +33,17 @@ class Field extends Equatable {
 
   factory Field.fromJson(Map<String, dynamic> json) {
     final name = json['name'] as String;
+    final lastUsed = DateTime.tryParse(json['last_used'] as String);
     final polygon = Polygon.parse(json['polygon'] as String);
     final boundingBox = polygon.exterior != null
         ? GeoBox.from(polygon.exterior!.toGeographicPositions)
         : null;
-    return Field(name: name, polygon: polygon, boundingBox: boundingBox);
+    return Field(
+      name: name,
+      polygon: polygon,
+      boundingBox: boundingBox,
+      lastUsed: lastUsed,
+    );
   }
 
   /// The name of the field.
@@ -51,6 +58,9 @@ class Field extends Equatable {
   /// The box has parameters for the min and max for both longitude and
   /// latitude.
   final GeoBox? boundingBox;
+
+  /// The last time this field was used.
+  DateTime lastUsed;
 
   /// A map-ready polygon for the field
   map.Polygon get mapPolygon => map.Polygon(
@@ -143,11 +153,13 @@ class Field extends Equatable {
     String? name,
     Polygon? polygon,
     GeoBox? boundingBox,
+    DateTime? lastUsed,
   }) =>
       Field(
         name: name ?? this.name,
         polygon: polygon ?? this.polygon,
         boundingBox: boundingBox ?? this.boundingBox,
+        lastUsed: lastUsed ?? this.lastUsed,
       );
 
   /// Properties used for checking for equality.
@@ -156,6 +168,7 @@ class Field extends Equatable {
         name,
         polygon,
         boundingBox,
+        lastUsed,
       ];
 
   /// Convert the model to a json compatible map.
@@ -163,6 +176,7 @@ class Field extends Equatable {
     final map = <String, dynamic>{};
 
     map['name'] = name;
+    map['last_used'] = lastUsed.toIso8601String();
     map['polygon'] = polygon.toText();
     return map;
   }

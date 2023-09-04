@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
 
-/// A menu with attached submenu for debugging the field feature.
-class FieldDebugMenu extends ConsumerWidget {
-  /// A menu with attached submenu for debugging the field feature.
-  const FieldDebugMenu({super.key});
+/// A menu with attached submenu for interacting with the field feature.
+class FieldMenu extends ConsumerWidget {
+  /// A menu with attached submenu for interacting with the field feature.
+  const FieldMenu({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,9 +24,10 @@ class FieldDebugMenu extends ConsumerWidget {
         children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
       ),
       menuChildren: [
+        const _LoadFieldMenu(),
         Consumer(
           child: Text(
-            'Open field',
+            'Import field',
             style: textStyle,
           ),
           builder: (context, ref, child) => ListTile(
@@ -50,7 +51,7 @@ class FieldDebugMenu extends ConsumerWidget {
                   if (data != null) {
                     final json = jsonDecode(String.fromCharCodes(data));
                     if (json is Map) {
-                      ref.read(testFieldProvider.notifier).update(
+                      ref.read(activeFieldProvider.notifier).update(
                             Field.fromJson(Map<String, dynamic>.from(json)),
                           );
                     }
@@ -60,7 +61,7 @@ class FieldDebugMenu extends ConsumerWidget {
                   if (path != null) {
                     final json = jsonDecode(File(path).readAsStringSync());
                     if (json is Map) {
-                      ref.read(testFieldProvider.notifier).update(
+                      ref.read(activeFieldProvider.notifier).update(
                             Field.fromJson(Map<String, dynamic>.from(json)),
                           );
                     }
@@ -72,18 +73,18 @@ class FieldDebugMenu extends ConsumerWidget {
         ),
         Consumer(
           child: Text(
-            'Show test field',
+            'Show field',
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(
             secondary: child,
-            value: ref.watch(showTestFieldProvider),
+            value: ref.watch(showFieldProvider),
             onChanged: (value) => value != null
-                ? ref.read(showTestFieldProvider.notifier).update(value: value)
+                ? ref.read(showFieldProvider.notifier).update(value: value)
                 : null,
           ),
         ),
-        if (ref.watch(showTestFieldProvider))
+        if (ref.watch(showFieldProvider))
           Consumer(
             child: Text(
               'Show bounding box',
@@ -91,30 +92,30 @@ class FieldDebugMenu extends ConsumerWidget {
             ),
             builder: (context, ref, child) => CheckboxListTile(
               secondary: child,
-              value: ref.watch(showTestFieldBoundingBoxProvider),
+              value: ref.watch(showFieldBoundingBoxProvider),
               onChanged: (value) => value != null
                   ? ref
-                      .read(showTestFieldBoundingBoxProvider.notifier)
+                      .read(showFieldBoundingBoxProvider.notifier)
                       .update(value: value)
                   : null,
             ),
           ),
         Consumer(
           child: Text(
-            'Show buffered test field',
+            'Show buffered  field',
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(
             secondary: child,
-            value: ref.watch(showBufferedTestFieldProvider),
+            value: ref.watch(showBufferedFieldProvider),
             onChanged: (value) => value != null
                 ? ref
-                    .read(showBufferedTestFieldProvider.notifier)
+                    .read(showBufferedFieldProvider.notifier)
                     .update(value: value)
                 : null,
           ),
         ),
-        if (ref.watch(showTestFieldProvider)) ...[
+        if (ref.watch(showFieldProvider)) ...[
           Consumer(
             child: Text(
               'Show buffered bounding box',
@@ -122,18 +123,17 @@ class FieldDebugMenu extends ConsumerWidget {
             ),
             builder: (context, ref, child) => CheckboxListTile(
               secondary: child,
-              value: ref.watch(showBufferedTestFieldBoundingBoxProvider),
+              value: ref.watch(showBufferedFieldBoundingBoxProvider),
               onChanged: (value) => value != null
                   ? ref
-                      .read(showBufferedTestFieldBoundingBoxProvider.notifier)
+                      .read(showBufferedFieldBoundingBoxProvider.notifier)
                       .update(value: value)
                   : null,
             ),
           ),
           Consumer(
             builder: (context, ref, child) {
-              final distance =
-                  ref.watch(testFieldExteriorBufferDistanceProvider);
+              final distance = ref.watch(fieldExteriorBufferDistanceProvider);
 
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -145,7 +145,7 @@ class FieldDebugMenu extends ConsumerWidget {
                   Slider(
                     value: distance,
                     onChanged: ref
-                        .read(testFieldExteriorBufferDistanceProvider.notifier)
+                        .read(fieldExteriorBufferDistanceProvider.notifier)
                         .update,
                     min: -10,
                     max: 10,
@@ -155,12 +155,11 @@ class FieldDebugMenu extends ConsumerWidget {
               );
             },
           ),
-          if (ref.watch(testFieldProvider)?.polygon.interior.isNotEmpty ??
+          if (ref.watch(activeFieldProvider)?.polygon.interior.isNotEmpty ??
               false)
             Consumer(
               builder: (context, ref, child) {
-                final distance =
-                    ref.watch(testFieldInteriorBufferDistanceProvider);
+                final distance = ref.watch(fieldInteriorBufferDistanceProvider);
 
                 return Column(
                   mainAxisSize: MainAxisSize.min,
@@ -173,7 +172,7 @@ class FieldDebugMenu extends ConsumerWidget {
                       value: distance,
                       onChanged: ref
                           .read(
-                            testFieldInteriorBufferDistanceProvider.notifier,
+                            fieldInteriorBufferDistanceProvider.notifier,
                           )
                           .update,
                       min: -10,
@@ -184,11 +183,10 @@ class FieldDebugMenu extends ConsumerWidget {
                 );
               },
             ),
-          if (ref.watch(showBufferedTestFieldProvider))
+          if (ref.watch(showBufferedFieldProvider))
             Consumer(
               builder: (context, ref, child) {
-                final activeMode =
-                    ref.watch(testFieldExteriorBufferJoinProvider);
+                final activeMode = ref.watch(fieldExteriorBufferJoinProvider);
                 return MenuButtonWithChildren(
                   text: 'Exterior buffer join mode',
                   icon: Icons.rounded_corner,
@@ -201,8 +199,7 @@ class FieldDebugMenu extends ConsumerWidget {
                           onChanged: (value) => value != null && value
                               ? ref
                                   .read(
-                                    testFieldExteriorBufferJoinProvider
-                                        .notifier,
+                                    fieldExteriorBufferJoinProvider.notifier,
                                   )
                                   .update(mode)
                               : null,
@@ -212,13 +209,12 @@ class FieldDebugMenu extends ConsumerWidget {
                 );
               },
             ),
-          if (ref.watch(showBufferedTestFieldProvider) &&
-              (ref.watch(testFieldProvider)?.polygon.interior.isNotEmpty ??
+          if (ref.watch(showBufferedFieldProvider) &&
+              (ref.watch(activeFieldProvider)?.polygon.interior.isNotEmpty ??
                   false))
             Consumer(
               builder: (context, ref, child) {
-                final activeMode =
-                    ref.watch(testFieldInteriorBufferJoinProvider);
+                final activeMode = ref.watch(fieldInteriorBufferJoinProvider);
                 return MenuButtonWithChildren(
                   text: 'Interior buffer join mode',
                   icon: Icons.rounded_corner,
@@ -231,8 +227,7 @@ class FieldDebugMenu extends ConsumerWidget {
                           onChanged: (value) => value != null && value
                               ? ref
                                   .read(
-                                    testFieldInteriorBufferJoinProvider
-                                        .notifier,
+                                    fieldInteriorBufferJoinProvider.notifier,
                                   )
                                   .update(mode)
                               : null,
@@ -249,10 +244,10 @@ class FieldDebugMenu extends ConsumerWidget {
             ),
             builder: (context, ref, child) => CheckboxListTile(
               secondary: child,
-              value: ref.watch(testFieldBufferGetRawPointsProvider),
+              value: ref.watch(fieldBufferGetRawPointsProvider),
               onChanged: (value) => value != null
                   ? ref
-                      .read(testFieldBufferGetRawPointsProvider.notifier)
+                      .read(fieldBufferGetRawPointsProvider.notifier)
                       .update(value: value)
                   : null,
             ),
@@ -264,25 +259,27 @@ class FieldDebugMenu extends ConsumerWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) {
-            final field = ref.watch(testFieldProvider);
+            final field = ref.watch(activeFieldProvider);
 
             return ListTile(
               title: child,
               leading: const Icon(Icons.save),
               onTap: field != null
-                  ? () => ref.watch(saveFieldProvider(field))
+                  ? () => ref.watch(
+                        saveFieldProvider(field..lastUsed = DateTime.now()),
+                      )
                   : null,
             );
           },
         ),
-        if (ref.watch(showBufferedTestFieldProvider))
+        if (ref.watch(showBufferedFieldProvider))
           Consumer(
             child: Text(
               'Save buffered field',
               style: textStyle,
             ),
             builder: (context, ref, child) {
-              final field = ref.watch(bufferedTestFieldProvider);
+              final field = ref.watch(bufferedFieldProvider);
 
               return ListTile(
                 title: child,
@@ -290,8 +287,11 @@ class FieldDebugMenu extends ConsumerWidget {
                 onTap: field != null
                     ? () => ref.watch(
                           saveFieldProvider(
-                            field,
-                            overrideName: 'Buffered test',
+                            field.copyWith(
+                              name: '${field.name} buffered',
+                              lastUsed: DateTime.now(),
+                            ),
+                            overrideName: '${field.name} buffered',
                           ),
                         )
                     : null,
@@ -299,6 +299,44 @@ class FieldDebugMenu extends ConsumerWidget {
             },
           ),
       ],
+    );
+  }
+}
+
+/// A menu for loading a [Field] from saved fields.
+class _LoadFieldMenu extends ConsumerWidget {
+  /// A menu for loading an [Field] from saved fields.
+  const _LoadFieldMenu();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final fields = ref.watch(savedFieldsProvider).when(
+          data: (data) => data,
+          error: (error, stackTrace) => <Field>[],
+          loading: () => <Field>[],
+        )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+
+    if (fields.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return MenuButtonWithChildren(
+      text: 'Load',
+      icon: Icons.history,
+      menuChildren: fields
+          .map(
+            (field) => MenuItemButton(
+              child: Text(field.name),
+              onPressed: () {
+                field.lastUsed = DateTime.now();
+
+                ref.read(activeFieldProvider.notifier).update(field);
+
+                ref.read(saveFieldProvider(field));
+              },
+            ),
+          )
+          .toList(),
     );
   }
 }
