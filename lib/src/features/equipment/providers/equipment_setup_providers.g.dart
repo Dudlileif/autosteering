@@ -200,7 +200,7 @@ class _SaveEquipmentSetupProviderElement
 }
 
 String _$savedEquipmentSetupsHash() =>
-    r'024e15815e1e836f6c91cbe23f4e4b4dc92e4875';
+    r'58613a2f727b9ebbcb46e388043dbd4f301c12c7';
 
 /// A provider for reading and holding all the saved [EquipmentSetup]s in the
 /// user file directory.
@@ -239,4 +239,4 @@ final configuredEquipmentSetupProvider =
 
 typedef _$ConfiguredEquipmentSetup = Notifier<EquipmentSetup?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

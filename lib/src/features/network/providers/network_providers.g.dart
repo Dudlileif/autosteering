@@ -97,6 +97,25 @@ final hardwareWebCommunicationConfigProvider =
 
 typedef HardwareWebCommunicationConfigRef
     = ProviderRef<({String hardwareIPAdress, int hardwareWebSocketPort})>;
+String _$hardwareIsConnectedHash() =>
+    r'868c2a8319a69cbd23814e20bc583381cccd7a8c';
+
+/// A provider for whether there is a connection with the hardware.
+///
+/// Copied from [HardwareIsConnected].
+@ProviderFor(HardwareIsConnected)
+final hardwareIsConnectedProvider =
+    NotifierProvider<HardwareIsConnected, bool>.internal(
+  HardwareIsConnected.new,
+  name: r'hardwareIsConnectedProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hardwareIsConnectedHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$HardwareIsConnected = Notifier<bool>;
 String _$hardwareIPAdressHash() => r'9e16807c2fc2e38718ce21576b0ea9a32d5c87f0';
 
 /// A provider for the IP adress of the hardware we want to communicate with.
@@ -175,4 +194,4 @@ final hardwareWebSocketPortProvider =
 
 typedef _$HardwareWebSocketPort = Notifier<int>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

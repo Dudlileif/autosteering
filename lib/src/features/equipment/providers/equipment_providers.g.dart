@@ -339,7 +339,7 @@ class _SaveEquipmentProviderElement
   String? get overrideName => (origin as SaveEquipmentProvider).overrideName;
 }
 
-String _$savedEquipmentsHash() => r'072cb7e149bc0ff8c574bafad2fcb33f7a14d0fe';
+String _$savedEquipmentsHash() => r'07c737a4e45444ae43c789a36be7caf450add31d';
 
 /// A provider for reading and holding all the saved [Equipment] in the
 /// user file directory.
@@ -568,4 +568,4 @@ class _EquipmentPathsProviderElement extends AutoDisposeNotifierProviderElement<
   String get uuid => (origin as EquipmentPathsProvider).uuid;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

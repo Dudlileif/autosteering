@@ -29,7 +29,7 @@ typedef PathTrackingPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
 String _$pathInterpolationDistanceHash() =>
     r'3838e0d5947ecf47190196f1fa4998a29f429156';
 
-/// A provider for the velocity gain for the [LookAheadDistance].
+/// A provider for the path interpolation distance.
 ///
 /// Copied from [PathInterpolationDistance].
 @ProviderFor(PathInterpolationDistance)
@@ -144,4 +144,4 @@ final debugPathTrackingProvider =
 
 typedef _$DebugPathTracking = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

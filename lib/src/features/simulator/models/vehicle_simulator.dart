@@ -37,15 +37,26 @@ class VehicleSimulator {
     // The state of the simulation.
     final state = _VehicleSimulatorState();
 
+    DateTime? lastHardwareMessageTime;
+
+    var prevHardwareIsConnected = false;
+
     // A timer for periodically updating the simulation.
     final timer = Timer.periodic(
         const Duration(microseconds: _targetPeriodMicroSeconds), (timer) {
       if (state.vehicle != null) {
         state.update();
 
+        // Assume that hardware is connected if less than 500 ms since
+        // last message.
+        final hardwareIsConnected = DateTime.now()
+                .difference(lastHardwareMessageTime ?? DateTime(0))
+                .inMilliseconds <
+            500;
         // If the state has changed we send the new state back to the
         // main/UI isolate.
-        if (state.didChange) {
+        if (state.didChange || hardwareIsConnected != prevHardwareIsConnected) {
+          prevHardwareIsConnected = hardwareIsConnected;
           sendPort.send(
             (
               vehicle: state.vehicle,
@@ -54,6 +65,7 @@ class VehicleSimulator {
               distance: state.distance,
               pathTracking: state.pathTracking,
               abLine: state.abLine,
+              hardwareIsConnected: hardwareIsConnected,
             ),
           );
         }
@@ -94,8 +106,11 @@ class VehicleSimulator {
     });
 
     udp.asStream().listen(
-          (datagram) => _networkListener(datagram?.data, state),
-        );
+      (datagram) {
+        lastHardwareMessageTime = DateTime.now();
+        _networkListener(datagram?.data, state);
+      },
+    );
 
     // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
@@ -118,8 +133,11 @@ class VehicleSimulator {
         udp = await UDP.bind(endPoint);
 
         udp.asStream().listen(
-              (datagram) => _networkListener(datagram?.data, state),
-            );
+          (datagram) {
+            lastHardwareMessageTime = DateTime.now();
+            _networkListener(datagram?.data, state);
+          },
+        );
 
         await udp.send(
           utf8.encode('Simulator started'),
@@ -157,7 +175,10 @@ class VehicleSimulator {
     Isolate.exit();
   }
 
-  static void _networkListener(Uint8List? data, _VehicleSimulatorState state) {
+  static DateTime _networkListener(
+    Uint8List? data,
+    _VehicleSimulatorState state,
+  ) {
     if (data != null) {
       final str = String.fromCharCodes(data);
       if (str.startsWith('{')) {
@@ -187,6 +208,7 @@ class VehicleSimulator {
         }
       }
     }
+    return DateTime.now();
   }
 
   /// Used in web version since multithreading isn't possible.
@@ -201,6 +223,7 @@ class VehicleSimulator {
         num distance,
         PathTracking? pathTracking,
         ABLine? abLine,
+        bool hardwareIsConnected,
       })> webWorker(
     Stream<dynamic> vehicleEvents,
   ) {
@@ -210,6 +233,8 @@ class VehicleSimulator {
     final state = _VehicleSimulatorState();
 
     WebSocketChannel? socket;
+
+    DateTime? lastHardwareMessageTime;
 
     // Handle the incoming messages.
     vehicleEvents.listen((message) async {
@@ -228,6 +253,7 @@ class VehicleSimulator {
         socket!.stream.listen(
           (event) {
             if (event is Uint8List) {
+              lastHardwareMessageTime = DateTime.now();
               _networkListener(event, state);
             }
           },
@@ -245,26 +271,38 @@ class VehicleSimulator {
           num distance,
           PathTracking? pathTracking,
           ABLine? abLine,
+          bool hardwareIsConnected,
         })>();
+
+    var prevHardwareIsConnected = false;
 
     // A stream event generator that periodically updates the simulation and
     // sends the state.
     Timer.periodic(const Duration(microseconds: _targetPeriodMicroSeconds),
         (timer) {
       state.update();
-
-      // If the state has changed we add the new state to the stream.
-      if (state.didChange && streamController.hasListener) {
-        streamController.add(
-          (
-            vehicle: state.vehicle,
-            velocity: state.gaugeVelocity,
-            bearing: state.gaugeBearing,
-            distance: state.distance,
-            pathTracking: state.pathTracking,
-            abLine: state.abLine,
-          ),
-        );
+      if (streamController.hasListener) {
+        // Assume that hardware is connected if less than 500 ms since
+        // last message.
+        final hardwareIsConnected = DateTime.now()
+                .difference(lastHardwareMessageTime ?? DateTime(0))
+                .inMilliseconds <
+            500;
+        // If the state has changed we add the new state to the stream.
+        if (state.didChange || hardwareIsConnected != prevHardwareIsConnected) {
+          prevHardwareIsConnected = hardwareIsConnected;
+          streamController.add(
+            (
+              vehicle: state.vehicle,
+              velocity: state.gaugeVelocity,
+              bearing: state.gaugeBearing,
+              distance: state.distance,
+              pathTracking: state.pathTracking,
+              abLine: state.abLine,
+              hardwareIsConnected: hardwareIsConnected,
+            ),
+          );
+        }
       }
     });
 

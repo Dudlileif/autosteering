@@ -6,6 +6,16 @@ import 'package:universal_io/io.dart';
 
 part 'network_providers.g.dart';
 
+/// A provider for whether there is a connection with the hardware.
+@Riverpod(keepAlive: true)
+class HardwareIsConnected extends _$HardwareIsConnected {
+  @override
+  bool build() => false;
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
+
 /// A provider for the wireless IP adress of the device.
 @riverpod
 FutureOr<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) =>

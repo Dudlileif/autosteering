@@ -154,6 +154,9 @@ Stream<Vehicle?> simVehicleWebStream(
         .updateWith(event.distance.toDouble());
     ref.read(displayPathTrackingProvider.notifier).update(event.pathTracking);
     ref.read(displayABLineProvider.notifier).update(event.abLine);
+    ref
+        .read(hardwareIsConnectedProvider.notifier)
+        .update(value: event.hardwareIsConnected);
 
     return event.vehicle;
   });
@@ -229,6 +232,7 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
       double distance,
       PathTracking? pathTracking,
       ABLine? abLine,
+      bool hardwareIsConnected,
     })) {
       ref.read(gaugeVelocityProvider.notifier).update(message.velocity);
       ref.read(gaugeBearingProvider.notifier).update(message.bearing);
@@ -239,6 +243,9 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
           .read(displayPathTrackingProvider.notifier)
           .update(message.pathTracking);
       ref.read(displayABLineProvider.notifier).update(message.abLine);
+      ref
+          .read(hardwareIsConnectedProvider.notifier)
+          .update(value: message.hardwareIsConnected);
 
       yield message.vehicle;
     }

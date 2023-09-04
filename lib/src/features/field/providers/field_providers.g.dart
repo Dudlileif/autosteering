@@ -23,7 +23,7 @@ final bufferedTestFieldProvider = AutoDisposeProvider<Field?>.internal(
 );
 
 typedef BufferedTestFieldRef = AutoDisposeProviderRef<Field?>;
-String _$saveFieldHash() => r'8b466b70606fc1c306fa7546945a0a45eb752f1a';
+String _$saveFieldHash() => r'6618b0c9eb255bde804a6dc997047d5098089801';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -112,7 +112,7 @@ class SaveFieldFamily extends Family<AsyncValue<void>> {
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveField].
-class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
+class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
   /// A provider for saving [field] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
@@ -155,7 +155,7 @@ class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveFieldRef provider) create,
+    AsyncValue<void> Function(SaveFieldRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -173,7 +173,7 @@ class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<void> createElement() {
+  AutoDisposeProviderElement<AsyncValue<void>> createElement() {
     return _SaveFieldProviderElement(this);
   }
 
@@ -194,7 +194,7 @@ class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
-mixin SaveFieldRef on AutoDisposeFutureProviderRef<void> {
+mixin SaveFieldRef on AutoDisposeProviderRef<AsyncValue<void>> {
   /// The parameter `field` of this provider.
   Field get field;
 
@@ -202,8 +202,8 @@ mixin SaveFieldRef on AutoDisposeFutureProviderRef<void> {
   String? get overrideName;
 }
 
-class _SaveFieldProviderElement extends AutoDisposeFutureProviderElement<void>
-    with SaveFieldRef {
+class _SaveFieldProviderElement
+    extends AutoDisposeProviderElement<AsyncValue<void>> with SaveFieldRef {
   _SaveFieldProviderElement(super.provider);
 
   @override
@@ -402,4 +402,4 @@ final testFieldBufferGetRawPointsProvider =
 
 typedef _$TestFieldBufferGetRawPoints = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -7,7 +7,7 @@ part of 'vehicle_configurator_providers.dart';
 // **************************************************************************
 
 String _$loadFileConfiguredVehicleHash() =>
-    r'a0960f2ba2976556452ec574a98c2cdd4b9f3787';
+    r'70a2c52d50a27056e9775baa7eb847e717924a63';
 
 /// A provider for loading a vehicle configuration from the user file directory
 /// and applying it to the [ConfiguredVehicle] provider.
@@ -107,4 +107,4 @@ final configuredVehicleNameTextControllerProvider = NotifierProvider<
 
 typedef _$ConfiguredVehicleNameTextController = Notifier<TextEditingController>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

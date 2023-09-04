@@ -59,10 +59,20 @@ $ip''',
               );
             },
           ),
-        Consumer(
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.router),
-            title: TextFormField(
+        ListTile(
+          leading: Column(
+            children: [
+              Consumer(
+                builder: (context, ref, child) =>
+                    ref.watch(hardwareIsConnectedProvider)
+                        ? const Icon(Icons.check, color: Colors.green)
+                        : const Icon(Icons.clear, color: Colors.red),
+              ),
+              const Icon(Icons.router),
+            ],
+          ),
+          title: Consumer(
+            builder: (context, ref, child) => TextFormField(
               decoration: const InputDecoration(
                 labelText: 'Hardware IP',
               ),

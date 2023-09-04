@@ -196,7 +196,7 @@ class _SaveVehicleProviderElement
   String? get overrideName => (origin as SaveVehicleProvider).overrideName;
 }
 
-String _$savedVehiclesHash() => r'190531becfc42a2ee178024312b531e53bce546d';
+String _$savedVehiclesHash() => r'2fd0ed9dde2e0b21456e5153b95a2b4232c61d17';
 
 /// A provider for reading and holding all the saved [Vehicle]s in the
 /// user file directory.
@@ -356,7 +356,7 @@ class _LoadVehicleFromFileProviderElement
   String get path => (origin as LoadVehicleFromFileProvider).path;
 }
 
-String _$lastUsedVehicleHash() => r'3d62a3873e68a5e9ae6935a079aa5bdadca6b8d4';
+String _$lastUsedVehicleHash() => r'0661f70142802a8325d22f39a600871ca7049560';
 
 /// A provider for the most recently used [Vehicle].
 ///
@@ -428,4 +428,4 @@ final useIMUBearingProvider = NotifierProvider<UseIMUBearing, bool>.internal(
 
 typedef _$UseIMUBearing = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
