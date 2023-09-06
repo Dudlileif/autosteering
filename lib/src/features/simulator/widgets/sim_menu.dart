@@ -15,9 +15,21 @@ class SimMenu extends StatelessWidget {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Sim',
-      icon: Icons.gamepad_outlined,
+      text: 'Sim core',
+      icon: Icons.memory,
       menuChildren: [
+        Consumer(
+          child: const Text('Allow manual sim controls'),
+          builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            value: ref.watch(simCoreAllowManualInputProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(simCoreAllowManualInputProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
         const VehicleSimMenu(),
         Consumer(
           child: Text(
@@ -46,7 +58,7 @@ class SimMenu extends StatelessWidget {
               style: textStyle,
             ),
             builder: (context, ref, child) => ListTile(
-              onTap: () => ref.invalidate(simVehicleIsolateStreamProvider),
+              onTap: () => ref.invalidate(simCoreIsolateStreamProvider),
               leading: const Icon(Icons.replay),
               title: child,
             ),

@@ -42,7 +42,7 @@ final miniMapControllerProvider =
 
 typedef _$MiniMapController = Notifier<MapController>;
 String _$miniMapLockToFieldHash() =>
-    r'1316d97e0555b0fa03ea0993ff99461527f3f183';
+    r'1fb26e5501974fa90cd1099871778919474edf8f';
 
 /// Whether the mini map always should point to the north and not rotate.
 ///

@@ -13,7 +13,6 @@ class PreconfiguredVehicles {
         trackWidth: 1.8,
         minTurningRadius: 4.25,
         steeringAngleMax: 31,
-        isSimulated: true,
       );
 
   /// NH T9.700 -ish
@@ -29,7 +28,6 @@ class PreconfiguredVehicles {
         wheelWidth: 0.710,
         minTurningRadius: 5.7,
         steeringAngleMax: 38,
-        isSimulated: true,
       );
 
   /// MF Activa 7345-ish
@@ -45,6 +43,5 @@ class PreconfiguredVehicles {
         steeringAxleWheelDiameter: 1.25,
         minTurningRadius: 4.25,
         steeringAngleMax: 35,
-        isSimulated: true,
       );
 }

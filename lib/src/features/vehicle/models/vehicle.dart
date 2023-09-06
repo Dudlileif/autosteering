@@ -34,7 +34,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     this.width = 2.5,
     this.pitch = 0,
     this.roll = 0,
-    this.isSimulated = false,
     this.useIMUPitchAndRoll = true,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
@@ -182,9 +181,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The width of the vehicle, in meters.
   double width;
-
-  /// Whether the vehicle is simulated.
-  bool isSimulated;
 
   /// Whether the roll and pitch should affect the [position].
   bool useIMUPitchAndRoll;
@@ -468,7 +464,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         steeringAngleInput,
         length,
         width,
-        isSimulated,
       ];
 
   /// Returns a new [Vehicle] based on this one, but with
@@ -491,7 +486,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleInput,
     double? length,
     double? width,
-    bool? isSimulated,
     bool? useIMUPitchAndRoll,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,

@@ -16,13 +16,13 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// A class for simulating how vehicles should move given their position,
 /// bearing, steering angle and velocity.
-class VehicleSimulator {
+class SimulatorCore {
   /// Targets 60 hz => 16666.66... micro seconds
   static const _targetPeriodMicroSeconds = 16667;
 
   /// Used on native platforms since they can easily be multithreaded.
   static Future<void> isolateWorker(SendPort sendPort) async {
-    final commandPort = ReceivePort('SimVehicle');
+    final commandPort = ReceivePort('Simcore');
 
     // Send a communication port in return.
     sendPort.send(commandPort.sendPort);
@@ -35,7 +35,7 @@ class VehicleSimulator {
     });
 
     // The state of the simulation.
-    final state = _VehicleSimulatorState();
+    final state = _SimulatorCoreState();
 
     DateTime? lastHardwareMessageTime;
 
@@ -177,7 +177,7 @@ class VehicleSimulator {
 
   static DateTime _networkListener(
     Uint8List? data,
-    _VehicleSimulatorState state,
+    _SimulatorCoreState state,
   ) {
     if (data != null) {
       final str = String.fromCharCodes(data);
@@ -230,7 +230,7 @@ class VehicleSimulator {
     log('Sim vehicle worker spawned');
 
     // The state of the simulation.
-    final state = _VehicleSimulatorState();
+    final state = _SimulatorCoreState();
 
     WebSocketChannel? socket;
 
@@ -310,7 +310,7 @@ class VehicleSimulator {
   }
 }
 
-/// An enumerator used to signal how a value in the [_VehicleSimulatorState]
+/// An enumerator used to signal how a value in the [_SimulatorCoreState]
 /// should change.
 enum SimInputChange {
   /// Increase the value.
@@ -326,13 +326,17 @@ enum SimInputChange {
   reset,
 }
 
-/// A class for holding and updating the state of the [VehicleSimulator].
-class _VehicleSimulatorState {
-  _VehicleSimulatorState();
+/// A class for holding and updating the state of the [SimulatorCore].
+class _SimulatorCoreState {
+  _SimulatorCoreState();
 
   /// A stream controller for forwarding events to send with UDP, only used on
   /// native platforms.
   StreamController<String>? networkSendStream;
+
+  /// Whether the simulation should accept incoming control input from
+  /// keyboard, gamepad, sliders etc...
+  bool allowManualSimInput = false;
 
   /// The current vehicle of the simulation.
   Vehicle? vehicle;
@@ -460,6 +464,8 @@ class _VehicleSimulatorState {
             message.hitchRearTowbarChild ?? vehicle?.hitchRearTowbarChild,
       );
       pathTrackingMode = message.pathTrackingMode;
+    } else if (message is ({bool allowManualSimInput})) {
+      allowManualSimInput = message.allowManualSimInput;
     }
     // Update whether the vehicle position should take the roll and pitch into
     // account when an IMU is connected.
@@ -477,8 +483,10 @@ class _VehicleSimulatorState {
     }
     // Update the vehicle velocity
     else if (message is ({num velocity})) {
-      vehicle?.velocity = message.velocity.toDouble();
-      velocityChange = SimInputChange.hold;
+      if (allowManualSimInput) {
+        vehicle?.velocity = message.velocity.toDouble();
+        velocityChange = SimInputChange.hold;
+      }
     }
     // Update bearing
     else if (message is ({double bearing})) {
@@ -506,17 +514,23 @@ class _VehicleSimulatorState {
     }
     // Update the vehicle velocity at a set rate.
     else if (message is ({SimInputChange velocityChange})) {
-      velocityChange = message.velocityChange;
+      if (allowManualSimInput) {
+        velocityChange = message.velocityChange;
+      }
     }
     // Update the vehicle steering angle at a set rate.
     else if (message is ({SimInputChange steeringChange})) {
-      receivingManualInput = message.steeringChange != SimInputChange.hold;
-      steeringChange = message.steeringChange;
+      if (allowManualSimInput) {
+        receivingManualInput = message.steeringChange != SimInputChange.hold;
+        steeringChange = message.steeringChange;
+      }
     }
     // Update the vehicle steering angle input.
     else if (message is ({num steeringAngle})) {
-      vehicle?.steeringAngleInput = message.steeringAngle.toDouble();
-      steeringChange = SimInputChange.hold;
+      if (allowManualSimInput) {
+        vehicle?.steeringAngleInput = message.steeringAngle.toDouble();
+        steeringChange = SimInputChange.hold;
+      }
     }
     // Enable/disable auto steering.
     else if (message is ({bool autoSteerEnabled})) {

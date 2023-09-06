@@ -1,1 +1,1 @@
-export 'vehicle_simulator_providers.dart';
+export 'simulator_core_providers.dart';

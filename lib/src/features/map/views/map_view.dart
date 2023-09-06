@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -125,28 +126,46 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 child: map,
               ),
           },
-          if (ref.watch(showMiniMapProvider))
-            const Align(
-              alignment: Alignment.bottomLeft,
-              child: MiniMap(),
-            ),
-          const Align(
-            alignment: Alignment.bottomRight,
-            child: MapContributionWidget(),
-          ),
-          const Align(
-            alignment: Alignment.topRight,
-            child: MapControlButtons(),
-          ),
-          const Align(
-            alignment: Alignment.bottomRight,
-            child: VehicleSimScreenControls(),
-          ),
           const Align(
             alignment: Alignment.topLeft,
             child: Padding(
               padding: EdgeInsets.all(8),
               child: BasicVehicleGauges(),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (ref.watch(simCoreAllowManualInputProvider))
+                    const SimVehicleSteeringSlider(),
+                  if (ref.watch(showMiniMapProvider)) const MiniMap(),
+                ],
+              ),
+            ),
+          ),
+          const Align(
+            alignment: Alignment.bottomRight,
+            child: MapContributionWidget(),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const MapControlButtons(),
+                  const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: EnableAutosteeringButton(),
+                  ),
+                  if (ref.watch(simCoreAllowManualInputProvider))
+                    const SimVehicleVelocityControls(),
+                ],
+              ),
             ),
           ),
           if (ref.watch(debugVehicleIMUProvider))

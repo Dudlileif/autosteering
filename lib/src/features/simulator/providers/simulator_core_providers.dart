@@ -15,7 +15,7 @@ import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'vehicle_simulator_providers.g.dart';
+part 'simulator_core_providers.g.dart';
 
 /// An enumeration class for determining which platform we're running on.
 enum SimPlatform {
@@ -41,10 +41,10 @@ class SimInput extends _$SimInput {
   /// Send some [input] to the simulator.
   void send(dynamic input) => switch (state) {
         SimPlatform.web => Future(
-            () => ref.read(_simVehicleWebInputProvider).add(input),
+            () => ref.read(_simCoreWebInputProvider).add(input),
           ),
         SimPlatform.native => Future(
-            () => ref.read(_simVehicleIsolatePortProvider)?.send(input),
+            () => ref.read(_simCoreIsolatePortProvider)?.send(input),
           ),
       };
 }
@@ -52,23 +52,19 @@ class SimInput extends _$SimInput {
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
 @riverpod
-void simVehicleDriving(SimVehicleDrivingRef ref) {
+void simCoreVehicleDriving(SimCoreVehicleDrivingRef ref) {
   if (ref.watch(mapReadyProvider)) {
     if (ref.watch(devicePositionAsVehiclePositionProvider)) {
       ref.watch(devicePositionProvider);
     }
 
-    ref
-      ..watch(simVehicleAutoCenterSteeringProvider)
-      ..watch(simVehicleAutoSlowDownProvider);
-
     final vehicle = switch (ref.watch(simInputProvider)) {
-      SimPlatform.web => ref.watch(simVehicleWebStreamProvider).when(
+      SimPlatform.web => ref.watch(simCoreWebStreamProvider).when(
             data: (data) => data,
             error: (error, stackTrace) => ref.watch(mainVehicleProvider),
             loading: () => ref.watch(mainVehicleProvider),
           ),
-      SimPlatform.native => ref.watch(simVehicleIsolateStreamProvider).when(
+      SimPlatform.native => ref.watch(simCoreIsolateStreamProvider).when(
             data: (data) => data,
             error: (error, stackTrace) => ref.watch(mainVehicleProvider),
             loading: () => ref.watch(mainVehicleProvider),
@@ -104,7 +100,7 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
 /// A provider for keeping the isolate [SendPort] for when working on a
 /// native platform. Vehicle inputs gets directed here from [SimInput].
 @Riverpod(keepAlive: true)
-class _SimVehicleIsolatePort extends _$SimVehicleIsolatePort {
+class _SimCoreIsolatePort extends _$SimCoreIsolatePort {
   @override
   SendPort? build() => null;
 
@@ -114,7 +110,7 @@ class _SimVehicleIsolatePort extends _$SimVehicleIsolatePort {
 /// A provider that creates a stream for sending vehicle inputs to the
 /// vehicle simulator when on the web platform.
 @Riverpod(keepAlive: true)
-class _SimVehicleWebInput extends _$SimVehicleWebInput {
+class _SimCoreWebInput extends _$SimCoreWebInput {
   @override
   StreamController<dynamic> build() => StreamController<dynamic>();
 
@@ -127,11 +123,11 @@ class _SimVehicleWebInput extends _$SimVehicleWebInput {
 /// It will update the stream with vehicle updates from the simulator and also
 /// update the vehicle gauge providers.
 @riverpod
-Stream<Vehicle?> simVehicleWebStream(
-  SimVehicleWebStreamRef ref,
+Stream<Vehicle?> simCoreWebStream(
+  SimCoreWebStreamRef ref,
 ) {
-  final stream = VehicleSimulator.webWorker(
-    ref.watch(_simVehicleWebInputProvider.notifier).stream(),
+  final stream = SimulatorCore.webWorker(
+    ref.watch(_simCoreWebInputProvider.notifier).stream(),
   );
 
   return stream.map((event) {
@@ -156,11 +152,11 @@ Stream<Vehicle?> simVehicleWebStream(
 /// It will update the stream with vehicle updates from the simulator and also
 /// update the vehicle gauge providers.
 @riverpod
-Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
+Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
   final recievePort = ReceivePort('Recieve from sim port');
 
   await Isolate.spawn(
-    VehicleSimulator.isolateWorker,
+    SimulatorCore.isolateWorker,
     recievePort.sendPort,
     debugName: 'VehicleSimulator',
   );
@@ -170,21 +166,22 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
 
   final sendPort = await events.next as SendPort;
 
-  ref.read(_simVehicleIsolatePortProvider.notifier).update(sendPort);
+  ref.read(_simCoreIsolatePortProvider.notifier).update(sendPort);
 
   sendPort
     ..send(ref.read(hardwareCommunicationConfigProvider))
     ..send(ref.read(mainVehicleProvider))
-    ..send((autoSlowDown: ref.read(simVehicleAutoSlowDownProvider)))
+    ..send((autoSlowDown: ref.read(simCoreVehicleAutoSlowDownProvider)))
     ..send(
-      (autoCenterSteering: ref.read(simVehicleAutoCenterSteeringProvider)),
-    );
+      (autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider)),
+    )
+    ..send((allowManualSimInput: ref.read(simCoreAllowManualInputProvider)));
 
   // Exit isolate when provider is disposed.
   ref.onDispose(() {
     sendPort.send(null);
     events.cancel();
-    ref.read(_simVehicleIsolatePortProvider.notifier).update(null);
+    ref.read(_simCoreIsolatePortProvider.notifier).update(null);
   });
 
   // Give the simulator isolate 1 second to start.
@@ -243,7 +240,43 @@ Stream<Vehicle> simVehicleIsolateStream(SimVehicleIsolateStreamRef ref) async* {
 /// A provider for whether the steering automatically should recenter when
 /// no input is provided.
 @Riverpod(keepAlive: true)
-class SimVehicleAutoCenterSteering extends _$SimVehicleAutoCenterSteering {
+class SimCoreAllowManualInput extends _$SimCoreAllowManualInput {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      ref.read(simInputProvider.notifier).send((allowManualSimInput: next));
+
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.simAllowManualInput, next);
+      }
+    });
+
+    if (ref
+        .read(settingsProvider.notifier)
+        .containsKey(SettingsKey.simAllowManualInput)) {
+      return ref
+              .read(settingsProvider.notifier)
+              .getBool(SettingsKey.simAllowManualInput) ??
+          true;
+    }
+
+    return true;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state != state);
+}
+
+/// A provider for whether the steering automatically should recenter when
+/// no input is provided.
+@Riverpod(keepAlive: true)
+class SimCoreVehicleAutoCenterSteering
+    extends _$SimCoreVehicleAutoCenterSteering {
   @override
   bool build() {
     ref.listenSelf((previous, next) {
@@ -278,7 +311,7 @@ class SimVehicleAutoCenterSteering extends _$SimVehicleAutoCenterSteering {
 /// A provider for whether the vehicle should slow down when no input is
 /// provided.
 @Riverpod(keepAlive: true)
-class SimVehicleAutoSlowDown extends _$SimVehicleAutoSlowDown {
+class SimCoreVehicleAutoSlowDown extends _$SimCoreVehicleAutoSlowDown {
   @override
   bool build() {
     ref.listenSelf((previous, next) {

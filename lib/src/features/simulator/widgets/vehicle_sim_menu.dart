@@ -43,7 +43,6 @@ class VehicleSimMenu extends StatelessWidget {
                             trackWidth: 1.8,
                             minTurningRadius: 4.25,
                             steeringAngleMax: 31,
-                            isSimulated: true,
                           ),
                         );
                     ref.invalidate(debugTravelledPathListProvider);
@@ -72,7 +71,6 @@ class VehicleSimMenu extends StatelessWidget {
                             wheelWidth: 0.710,
                             minTurningRadius: 5.7,
                             steeringAngleMax: 38,
-                            isSimulated: true,
                           ),
                         );
                     ref.invalidate(debugTravelledPathListProvider);
@@ -101,7 +99,6 @@ class VehicleSimMenu extends StatelessWidget {
                             steeringAxleWheelDiameter: 1.25,
                             minTurningRadius: 4.25,
                             steeringAngleMax: 35,
-                            isSimulated: true,
                           ),
                         );
                     ref.invalidate(debugTravelledPathListProvider);
@@ -122,10 +119,10 @@ class VehicleSimMenu extends StatelessWidget {
           ),
           builder: (context, ref, child) => CheckboxListTile(
             secondary: child,
-            value: ref.watch(simVehicleAutoCenterSteeringProvider),
+            value: ref.watch(simCoreVehicleAutoCenterSteeringProvider),
             onChanged: (value) => value != null
                 ? ref
-                    .read(simVehicleAutoCenterSteeringProvider.notifier)
+                    .read(simCoreVehicleAutoCenterSteeringProvider.notifier)
                     .update(value: value)
                 : null,
           ),
@@ -137,10 +134,10 @@ class VehicleSimMenu extends StatelessWidget {
           ),
           builder: (context, ref, child) => CheckboxListTile(
             secondary: child,
-            value: ref.watch(simVehicleAutoSlowDownProvider),
+            value: ref.watch(simCoreVehicleAutoSlowDownProvider),
             onChanged: (value) => value != null
                 ? ref
-                    .read(simVehicleAutoSlowDownProvider.notifier)
+                    .read(simCoreVehicleAutoSlowDownProvider.notifier)
                     .update(value: value)
                 : null,
           ),

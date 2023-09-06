@@ -28,6 +28,7 @@ enum SettingsKey {
   miniMapLockToField('mini_map.lock_to_field'),
   miniMapSize('mini_map.size'),
   sentinelLayersOpacities('map.layers.sentinel.opacities'),
+  simAllowManualInput('sim.allow_manual_input'),
   simAutoCenterSteering('sim.auto_center_steering'),
   simAutoSlowDown('sim.auto_slow_down'),
   themeColorScheme('theme.color_scheme'),
