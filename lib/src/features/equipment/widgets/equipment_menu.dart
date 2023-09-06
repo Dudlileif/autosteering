@@ -97,39 +97,47 @@ class _SaveEquipmentSetup extends StatelessWidget {
                     return SimpleDialog(
                       title: const Text('Name the setup'),
                       children: [
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.label_outline),
-                            labelText: 'Name',
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.label_outline),
+                              labelText: 'Name',
+                            ),
+                            initialValue: name,
+                            onChanged: (value) => setState(() => name = value),
+                            onFieldSubmitted: (value) =>
+                                setState(() => name = value),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) => value != null &&
+                                    value.isNotEmpty &&
+                                    !value.startsWith(' ')
+                                ? null
+                                : '''No name entered! Please enter a name so that the setup can be saved!''',
                           ),
-                          initialValue: name,
-                          onChanged: (value) => setState(() => name = value),
-                          onFieldSubmitted: (value) =>
-                              setState(() => name = value),
-                          keyboardType: TextInputType.text,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => value != null &&
-                                  value.isNotEmpty &&
-                                  !value.startsWith(' ')
-                              ? null
-                              : '''No name entered! Please enter a name so that the setup can be saved!''',
                         ),
-                        Consumer(
-                          child: child,
-                          builder: (context, ref, child) => FilledButton(
-                            onPressed: () {
-                              ref.read(
-                                saveEquipmentSetupProvider(
-                                  ref.read(
-                                    mainVehicleProvider.select(
-                                      (value) => value.equipmentSetup(name),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 8, right: 8, top: 8),
+                          child: Consumer(
+                            child: child,
+                            builder: (context, ref, child) => FilledButton(
+                              onPressed: () {
+                                ref.read(
+                                  saveEquipmentSetupProvider(
+                                    ref.read(
+                                      mainVehicleProvider.select(
+                                        (value) => value.equipmentSetup(name),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                              Navigator.of(context).pop();
-                            },
-                            child: child,
+                                );
+                                Navigator.of(context).pop();
+                              },
+                              child: child,
+                            ),
                           ),
                         ),
                       ],

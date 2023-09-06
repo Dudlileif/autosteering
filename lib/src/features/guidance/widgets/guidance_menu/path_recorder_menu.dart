@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
@@ -132,7 +134,10 @@ class PathRecorderMenu extends StatelessWidget {
         const _CreateField(),
         Consumer(
           builder: (context, ref, child) => MenuItemButton(
-            leadingIcon: const Icon(Icons.clear),
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.clear),
+            ),
             onPressed:
                 ref.read(finishedPathRecordingListProvider.notifier).clear,
             child: const Text('Clear recorded path'),
@@ -151,69 +156,84 @@ class _CreateField extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MenuItemButton(
-      leadingIcon: const Stack(
-        children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Stack(
+          children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+        ),
       ),
       onPressed: () async {
         final points = ref.watch(finishedPathRecordingListProvider);
         if (points != null) {
-          await showDialog<void>(
-            context: context,
-            builder: (context) {
-              var name = '';
-              return StatefulBuilder(
-                builder: (context, setState) {
-                  return SimpleDialog(
-                    title: const Text('Name the field'),
-                    children: [
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.label_outline),
-                          labelText: 'Name',
+          unawaited(
+            showDialog<void>(
+              context: context,
+              builder: (context) {
+                var name = '';
+                return StatefulBuilder(
+                  builder: (context, setState) {
+                    return SimpleDialog(
+                      title: const Text('Name the field'),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.label_outline),
+                              labelText: 'Name',
+                            ),
+                            initialValue: name,
+                            onChanged: (value) => setState(() => name = value),
+                            onFieldSubmitted: (value) =>
+                                setState(() => name = value),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) => value != null &&
+                                    value.isNotEmpty &&
+                                    !value.startsWith(' ')
+                                ? null
+                                : '''No name entered! Please enter a name so that the field can be saved!''',
+                          ),
                         ),
-                        initialValue: name,
-                        onChanged: (value) => setState(() => name = value),
-                        onFieldSubmitted: (value) =>
-                            setState(() => name = value),
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) => value != null &&
-                                value.isNotEmpty &&
-                                !value.startsWith(' ')
-                            ? null
-                            : '''No name entered! Please enter a name so that the field can be saved!''',
-                      ),
-                      Consumer(
-                        child: const Text('Save field'),
-                        builder: (context, ref, child) => FilledButton(
-                          onPressed: () {
-                            ref.read(activeFieldProvider.notifier).update(
-                                  Field(
-                                    name: name,
-                                    polygon: Polygon([
-                                      PositionArray.view(
-                                        points
-                                            .map(
-                                              (e) => e.position.values,
-                                            )
-                                            .flattened,
-                                      ),
-                                    ]),
-                                    boundingBox: GeoBox.from(
-                                      points.map((e) => e.position),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 8, right: 8, top: 8),
+                          child: Consumer(
+                            child: const Text('Save field'),
+                            builder: (context, ref, child) => FilledButton(
+                              onPressed: () {
+                                final field = Field(
+                                  name: name,
+                                  polygon: Polygon([
+                                    PositionArray.view(
+                                      points
+                                          .map(
+                                            (e) => e.position.values,
+                                          )
+                                          .flattened,
                                     ),
+                                  ]),
+                                  boundingBox: GeoBox.from(
+                                    points.map((e) => e.position),
                                   ),
                                 );
-                            Navigator.of(context).pop();
-                          },
-                          child: child,
+                                ref.read(saveFieldProvider(field));
+                                ref
+                                    .read(activeFieldProvider.notifier)
+                                    .update(field);
+                                Navigator.of(context).pop();
+                              },
+                              child: child,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           );
         }
       },
