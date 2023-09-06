@@ -6,5 +6,6 @@ export 'map_layers/layers.dart';
 export 'map_menu/map_menu.dart';
 export 'map_menu/map_offset_menu.dart';
 export 'map_menu/sentinel_layer_selector.dart';
+export 'mini_map.dart';
 export 'movable_map_marker.dart';
 export 'themed_tiles_container_builder.dart';

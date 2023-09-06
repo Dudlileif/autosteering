@@ -4,6 +4,7 @@ import 'package:agopengps_flutter/src/features/map/widgets/map_menu/country_laye
 import 'package:agopengps_flutter/src/features/map/widgets/map_menu/delete_cache_menu.dart';
 import 'package:agopengps_flutter/src/features/map/widgets/map_menu/home_position_menu.dart';
 import 'package:agopengps_flutter/src/features/map/widgets/map_menu/map_perspective_menu.dart';
+import 'package:agopengps_flutter/src/features/map/widgets/map_menu/mini_map_menu.dart';
 import 'package:agopengps_flutter/src/features/map/widgets/map_menu/osm_layer_button.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class MapMenu extends StatelessWidget {
       text: 'Map',
       icon: Icons.map,
       menuChildren: [
+        MiniMapMenu(),
         HomePositionMenu(),
         Align(
           alignment: Alignment.centerRight,

@@ -1,7 +1,6 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
 
@@ -77,8 +76,6 @@ class Field with EquatableMixin {
             )
             .toList(),
         borderStrokeWidth: 1,
-        isFilled: true,
-        color: Colors.yellow.withOpacity(0.25),
       );
 
   /// Map the [polygon]'s exterior ring points with [map].
@@ -146,6 +143,27 @@ class Field with EquatableMixin {
   ///
   /// Unit: square meters
   double get holesArea => polygon.holesArea;
+
+  /// A bounding box for the field that is sized large enough by extending to
+  /// the smallest square that contains the field. This bounding box can be
+  /// rotated without cutting off any parts of the field.
+  GeoBox? get squaredByDiagonalBoundingBox {
+    if (boundingBox != null) {
+      final center = boundingBox!.min.spherical
+          .intermediatePointTo(boundingBox!.max, fraction: 0.5);
+
+      final diagonal =
+          boundingBox!.min.spherical.distanceTo(boundingBox!.max) / 2;
+
+      return GeoBox.from([
+        center.spherical.destinationPoint(distance: diagonal, bearing: 0),
+        center.spherical.destinationPoint(distance: diagonal, bearing: 90),
+        center.spherical.destinationPoint(distance: diagonal, bearing: 180),
+        center.spherical.destinationPoint(distance: diagonal, bearing: 270),
+      ]);
+    }
+    return null;
+  }
 
   /// Returns a new [Field] based on the this one, but with
   /// parameters/variables altered.

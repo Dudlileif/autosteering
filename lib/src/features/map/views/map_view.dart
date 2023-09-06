@@ -125,6 +125,11 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 child: map,
               ),
           },
+          if (ref.watch(showMiniMapProvider))
+            const Align(
+              alignment: Alignment.bottomLeft,
+              child: MiniMap(),
+            ),
           const Align(
             alignment: Alignment.bottomRight,
             child: MapContributionWidget(),
