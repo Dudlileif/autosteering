@@ -18,9 +18,14 @@ class FieldLayer extends ConsumerWidget {
     if (field != null) {
       final enabled = ref.watch(showFieldDebugLayerProvider);
       if (enabled) {
-        final bufferedField = ref.watch(bufferedFieldProvider);
+        final bufferedField = ref.watch(bufferedFieldProvider).when(
+              data: (data) => data,
+              error: (error, stackTrace) => null,
+              loading: () => null,
+            );
 
         final showField = ref.watch(showFieldProvider);
+
         final showBufferedField =
             ref.watch(showBufferedFieldProvider) && bufferedField != null;
 
@@ -30,6 +35,8 @@ class FieldLayer extends ConsumerWidget {
         final showBufferedFieldBoundingBox =
             ref.watch(showBufferedFieldBoundingBoxProvider) &&
                 bufferedField != null;
+
+        final showBorderPoints = ref.watch(showFieldBorderPointsProvider);
 
         return Stack(
           children: [
@@ -59,30 +66,33 @@ class FieldLayer extends ConsumerWidget {
                   ),
               ],
             ),
-            CircleLayer(
-              circles: [
-                if (showField) ...[
-                  ...field.mapExteriorPoints(
-                    (point) => CircleMarker(point: point.latLng, radius: 2),
-                  ),
-                  ...field
-                      .mapInteriorPoints(
-                        (point) => CircleMarker(point: point.latLng, radius: 2),
-                      )
-                      .flattened,
+            if (showBorderPoints)
+              CircleLayer(
+                circles: [
+                  if (showField) ...[
+                    ...field.mapExteriorPoints(
+                      (point) => CircleMarker(point: point.latLng, radius: 2),
+                    ),
+                    ...field
+                        .mapInteriorPoints(
+                          (point) =>
+                              CircleMarker(point: point.latLng, radius: 2),
+                        )
+                        .flattened,
+                  ],
+                  if (showBufferedField) ...[
+                    ...bufferedField.mapExteriorPoints(
+                      (point) => CircleMarker(point: point.latLng, radius: 2),
+                    ),
+                    ...bufferedField
+                        .mapInteriorPoints(
+                          (point) =>
+                              CircleMarker(point: point.latLng, radius: 2),
+                        )
+                        .flattened,
+                  ],
                 ],
-                if (showBufferedField) ...[
-                  ...bufferedField.mapExteriorPoints(
-                    (point) => CircleMarker(point: point.latLng, radius: 2),
-                  ),
-                  ...bufferedField
-                      .mapInteriorPoints(
-                        (point) => CircleMarker(point: point.latLng, radius: 2),
-                      )
-                      .flattened,
-                ],
-              ],
-            ),
+              ),
           ],
         );
       }

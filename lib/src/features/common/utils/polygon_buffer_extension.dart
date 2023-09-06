@@ -77,6 +77,31 @@ extension PolygonBufferExtension on Polygon {
           ...interior,
       ]);
 
+  /// A json compatibale string for an inset or extended polygon that has been
+  /// extended or inset by [exteriorDistance] meters. Insetting requires
+  /// negative [exteriorDistance], extending requires positive
+  /// [exteriorDistance]. [interiorDistance] needs to be set if the interior
+  /// holes also should be inset/extended in the same manner.
+  ///
+  /// Primarly used to run the buffer operation in an isolate.
+  static String bufferedPolygonString({
+    required String polygonJsonString,
+    double? exteriorDistance,
+    double? interiorDistance,
+    BufferJoin exteriorJoinType = BufferJoin.round,
+    BufferJoin interiorJoinType = BufferJoin.round,
+    bool getRawPoints = false,
+  }) =>
+      Polygon.parse(polygonJsonString)
+          .bufferedPolygon(
+            exteriorDistance: exteriorDistance,
+            interiorDistance: interiorDistance,
+            exteriorJoinType: exteriorJoinType,
+            interiorJoinType: interiorJoinType,
+            getRawPoints: getRawPoints,
+          )
+          .toString();
+
   /// Area of the polygon in square meters.
   double get area => exterior != null
       ? computeArea(exterior!.toGeographicPositions).toDouble()

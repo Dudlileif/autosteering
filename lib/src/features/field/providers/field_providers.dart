@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:geobase/geobase.dart';
@@ -26,6 +28,19 @@ class ActiveField extends _$ActiveField {
 
   /// Update the [state] to [field].
   void update(Field field) => Future(() => state = field);
+}
+
+/// A provider for whether the active field's border's points should be shown.
+@Riverpod(keepAlive: true)
+class ShowFieldBorderPoints extends _$ShowFieldBorderPoints {
+  @override
+  bool build() => false;
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
 }
 
 /// A provider for whether bounding box of the active field should be shown.
@@ -112,16 +127,35 @@ class ShowBufferedField extends _$ShowBufferedField {
 
 /// A provider for creating and updating the buffered test field.
 @riverpod
-Field? bufferedField(BufferedFieldRef ref) {
+Future<Field?> bufferedField(BufferedFieldRef ref) async {
   final field = ref.watch(activeFieldProvider);
   if (field != null) {
-    final bufferedPolygon = field.polygon.bufferedPolygon(
-      exteriorDistance: ref.watch(fieldExteriorBufferDistanceProvider),
-      interiorDistance: ref.watch(fieldInteriorBufferDistanceProvider),
-      exteriorJoinType: ref.watch(fieldExteriorBufferJoinProvider),
-      interiorJoinType: ref.watch(fieldInteriorBufferJoinProvider),
-      getRawPoints: ref.watch(fieldBufferGetRawPointsProvider),
-    );
+    final exteriorDistance = ref.watch(fieldExteriorBufferDistanceProvider);
+    final interiorDistance = ref.watch(fieldInteriorBufferDistanceProvider);
+    final exteriorJoinType = ref.watch(fieldExteriorBufferJoinProvider);
+    final interiorJoinType = ref.watch(fieldInteriorBufferJoinProvider);
+    final getRawPoints = ref.watch(fieldBufferGetRawPointsProvider);
+    final bufferedPolygon = switch (Device.isWeb) {
+      true => field.polygon.bufferedPolygon(
+          exteriorDistance: exteriorDistance,
+          interiorDistance: interiorDistance,
+          exteriorJoinType: exteriorJoinType,
+          interiorJoinType: interiorJoinType,
+          getRawPoints: getRawPoints,
+        ),
+      false => Polygon.parse(
+          await Isolate.run(
+            () => PolygonBufferExtension.bufferedPolygonString(
+              polygonJsonString: field.polygon.toString(),
+              exteriorDistance: exteriorDistance,
+              interiorDistance: interiorDistance,
+              exteriorJoinType: exteriorJoinType,
+              interiorJoinType: interiorJoinType,
+              getRawPoints: getRawPoints,
+            ),
+          ),
+        ),
+    };
 
     return field.copyWith(
       polygon: bufferedPolygon,

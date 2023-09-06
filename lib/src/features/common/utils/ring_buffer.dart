@@ -60,15 +60,15 @@ class RingBuffer {
       return ring;
     }
 
-// Check area under the curve to see if we're CCW or CW.
-    var sum = 0.0;
+    // Check area under the curve to see if we're CCW or CW.
+    var area = 0.0;
     for (var i = 0; i < ring.length; i++) {
       final point = ring.elementAt(i);
       final nextPoint = ring.elementAt((i + 1) % ring.length);
-      sum += (nextPoint.x - point.x) * (nextPoint.y + point.y);
+      area += (nextPoint.x - point.x) * (nextPoint.y + point.y);
     }
     // Whether the ring is counterclockwise (CCW).
-    final isCCW = sum.isNegative;
+    final isCCW = area.isNegative;
 
     final sign = switch (isCCW) {
       true => 1,
@@ -128,7 +128,7 @@ class RingBuffer {
                 point.spherical.destinationPoint(
                   distance: distance,
                   bearing: point.spherical.initialBearingTo(bufferCircleStart) +
-                      i * angleSection +
+                      sign * i * angleSection +
                       switch (distance.isNegative) {
                         false => 0,
                         true => 180,

@@ -6,13 +6,13 @@ part of 'field_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bufferedFieldHash() => r'3f077101ed3d63cd539b1baabc87304faa65da1d';
+String _$bufferedFieldHash() => r'7f535ffd0688354e716d498819f90e58b8cdb1f4';
 
 /// A provider for creating and updating the buffered test field.
 ///
 /// Copied from [bufferedField].
 @ProviderFor(bufferedField)
-final bufferedFieldProvider = AutoDisposeProvider<Field?>.internal(
+final bufferedFieldProvider = AutoDisposeFutureProvider<Field?>.internal(
   bufferedField,
   name: r'bufferedFieldProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,7 +22,7 @@ final bufferedFieldProvider = AutoDisposeProvider<Field?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef BufferedFieldRef = AutoDisposeProviderRef<Field?>;
+typedef BufferedFieldRef = AutoDisposeFutureProviderRef<Field?>;
 String _$saveFieldHash() => r'6618b0c9eb255bde804a6dc997047d5098089801';
 
 /// Copied from Dart SDK
@@ -261,6 +261,25 @@ final activeFieldProvider = NotifierProvider<ActiveField, Field?>.internal(
 );
 
 typedef _$ActiveField = Notifier<Field?>;
+String _$showFieldBorderPointsHash() =>
+    r'11acdacf420ead33ce1cc33abb7d1c74df1252ca';
+
+/// A provider for whether the active field's border's points should be shown.
+///
+/// Copied from [ShowFieldBorderPoints].
+@ProviderFor(ShowFieldBorderPoints)
+final showFieldBorderPointsProvider =
+    NotifierProvider<ShowFieldBorderPoints, bool>.internal(
+  ShowFieldBorderPoints.new,
+  name: r'showFieldBorderPointsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showFieldBorderPointsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowFieldBorderPoints = Notifier<bool>;
 String _$showFieldBoundingBoxHash() =>
     r'3e70292800ffeea15d7e02ed37cf1b40622e7b69';
 
