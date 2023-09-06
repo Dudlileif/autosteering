@@ -26,7 +26,7 @@ final copernicusInstanceIdProvider =
 
 typedef _$CopernicusInstanceId = Notifier<String?>;
 String _$availableSentinelLayersHash() =>
-    r'e54c0aefca7d5e1309260b740cbd2397ea1cc1b3';
+    r'4688cac88b4633ea62d07fa6edbb08d0efaae116';
 
 /// A provider for the available Sentinel layers.
 ///

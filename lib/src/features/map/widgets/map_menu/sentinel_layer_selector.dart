@@ -12,6 +12,7 @@ class SentinelLayerSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (ref.watch(mapReadyProvider)) {
+      ref.watch(copernicusInstanceIdProvider);
       final availableLayers = ref.watch(availableSentinelLayersProvider);
 
       if (availableLayers.isEmpty) {

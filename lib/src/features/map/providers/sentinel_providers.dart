@@ -38,8 +38,10 @@ class CopernicusInstanceId extends _$CopernicusInstanceId {
 class AvailableSentinelLayers extends _$AvailableSentinelLayers {
   @override
   List<SentinelLayer> build() {
+    final instanceId = ref.watch(copernicusInstanceIdProvider);
+
     ref.listenSelf((previous, next) {
-      if (previous != null && previous != next) {
+      if (previous != null && previous != next && instanceId != null) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.sortedAvailableSentinelLayers,
               next.map((e) => e.layerType.id).toList(),
@@ -47,7 +49,6 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
       }
     });
 
-    final instanceId = ref.watch(copernicusInstanceIdProvider);
     if (instanceId != null) {
       if (ref
           .read(settingsProvider.notifier)
