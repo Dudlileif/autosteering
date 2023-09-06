@@ -130,7 +130,7 @@ final _simVehicleWebInputProvider =
 
 typedef _$SimVehicleWebInput = Notifier<StreamController<dynamic>>;
 String _$simVehicleAutoCenterSteeringHash() =>
-    r'f0ef7498715fdcc0908fb2e5b867129c8484496d';
+    r'0eca9e56022bb9da2765a9c85a6b9580de9307b2';
 
 /// A provider for whether the steering automatically should recenter when
 /// no input is provided.

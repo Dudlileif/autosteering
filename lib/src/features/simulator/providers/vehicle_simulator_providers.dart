@@ -13,7 +13,6 @@ import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
-import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'vehicle_simulator_providers.g.dart';
@@ -89,25 +88,14 @@ void simVehicleDriving(SimVehicleDrivingRef ref) {
           ref.read(allEquipmentsProvider.notifier).update,
         );
       }
-
-      if (vehicle.position !=
-              ref.watch(
-                mainMapControllerProvider
-                    .select((controller) => controller.center.gbPosition),
-              ) &&
+      final mapController = ref.watch(mainMapControllerProvider);
+      if (vehicle.position != mapController.center.gbPosition &&
           ref.watch(centerMapOnVehicleProvider)) {
-        ref.read(mainMapControllerProvider).moveAndRotate(
-              ref.watch(offsetVehiclePositionProvider),
-              ref.watch(
-                mainMapControllerProvider
-                    .select((controller) => controller.zoom),
-              ),
-              -ref
-                  .watch(
-                    mainVehicleProvider.select((vehicle) => vehicle.bearing),
-                  )
-                  .wrap360(),
-            );
+        mapController.moveAndRotate(
+          ref.watch(offsetVehiclePositionProvider),
+          mapController.zoom,
+          -ref.watch(mainVehicleProvider.select((value) => value.bearing)),
+        );
       }
     }
   }
