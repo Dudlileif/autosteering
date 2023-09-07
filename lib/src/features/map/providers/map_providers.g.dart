@@ -354,7 +354,7 @@ final mapOffset3DProvider =
 );
 
 typedef _$MapOffset3D = Notifier<MapCenterOffset>;
-String _$alwaysPointNorthHash() => r'4c5a4f69391405ba0f11fabe94c3fc9e492e5ad4';
+String _$alwaysPointNorthHash() => r'dbef2b125c4fe4b8c1073a5e1abdd37b3df1b3c5';
 
 /// Whether the map always should point to the north and not rotate.
 ///

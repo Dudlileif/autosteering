@@ -7,7 +7,7 @@ part of 'simulator_core_providers.dart';
 // **************************************************************************
 
 String _$simCoreVehicleDrivingHash() =>
-    r'ce6a7975d517a83b98f20da7d9fdf875d72d086a';
+    r'8acb9b5d9174501d183dc8f36bca8474a8ac5f53';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -47,7 +47,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'516ce2c3346fc970e3b3946e1cdb5dca899149ea';
+    r'5acb12447e1f9e86574abfe5e16cd4d6bfbc29b5';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.

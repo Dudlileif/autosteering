@@ -229,7 +229,7 @@ final savedFieldsProvider = Provider<AsyncValue<List<Field>>>.internal(
 );
 
 typedef SavedFieldsRef = ProviderRef<AsyncValue<List<Field>>>;
-String _$showFieldHash() => r'200fa084f26d542561e262d80440c1815df35f7a';
+String _$showFieldHash() => r'ebab742cb524d06aa00b5ac6dfa2ee9419256ec8';
 
 /// A provider for whether the active field should be shown.
 ///

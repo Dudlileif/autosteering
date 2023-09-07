@@ -55,7 +55,7 @@ class SimInput extends _$SimInput {
 void simCoreVehicleDriving(SimCoreVehicleDrivingRef ref) {
   if (ref.watch(mapReadyProvider)) {
     if (ref.watch(devicePositionAsVehiclePositionProvider)) {
-      ref.watch(devicePositionProvider);
+      ref.watch(updatePositionFromDeviceProvider);
     }
 
     final vehicle = switch (ref.watch(simInputProvider)) {

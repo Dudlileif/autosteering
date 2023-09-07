@@ -1,33 +1,14 @@
-import 'dart:developer';
-
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:geobase/geobase.dart' show Geographic;
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_io/io.dart';
 
 part 'device_position_providers.g.dart';
 
-/// A provider for the position stream for the device.
-@riverpod
-Stream<Position> devicePositionStream(DevicePositionStreamRef ref) =>
-    Geolocator.getPositionStream();
-
 /// A provider for the position of the device.
 @riverpod
-FutureOr<Geographic?> devicePosition(DevicePositionRef ref) async {
-  ref.listenSelf((previous, next) {
-    next.when(
-      data: (data) {
-        if (data != null &&
-            ref.watch(devicePositionAsVehiclePositionProvider)) {
-          ref.read(simInputProvider.notifier).send((position: data));
-        }
-      },
-      error: (error, stackTrace) => log(error.toString()),
-      loading: () => null,
-    );
-  });
-
+FutureOr<bool> devicePositionPermission(DevicePositionPermissionRef ref) async {
   bool serviceEnabled;
   LocationPermission permission;
 
@@ -70,14 +51,7 @@ FutureOr<Geographic?> devicePosition(DevicePositionRef ref) async {
 
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
-
-  return ref.watch(devicePositionStreamProvider).when(
-        data: (data) {
-          return Geographic(lon: data.longitude, lat: data.latitude);
-        },
-        error: (error, stackTrace) => null,
-        loading: () => null,
-      );
+  return true;
 }
 
 /// A provider for whether the device's position should be used for the vehicle.
@@ -89,4 +63,45 @@ class DevicePositionAsVehiclePosition
 
   /// Updates the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
+}
+
+/// A provider for the raw position stream from the device.
+@riverpod
+Stream<Position> rawDevicePositionStream(RawDevicePositionStreamRef ref) =>
+    Geolocator.getPositionStream(
+      locationSettings: Platform.isAndroid
+          ? AndroidSettings(intervalDuration: const Duration(seconds: 1))
+          : null,
+    );
+
+/// A provider that sends device position updates to the simulation core
+/// if [DevicePositionAsVehiclePosition] and [devicePositionPermission] allow
+/// it.
+@riverpod
+void updatePositionFromDevice(UpdatePositionFromDeviceRef ref) {
+  final enabled = ref.watch(devicePositionAsVehiclePositionProvider);
+  if (enabled) {
+    final permission = ref.watch(devicePositionPermissionProvider).when(
+          data: (data) => data,
+          error: (error, stackTrace) => false,
+          loading: () => false,
+        );
+    if (permission) {
+      ref.watch(rawDevicePositionStreamProvider).when(
+            data: (data) {
+              ref.read(simInputProvider.notifier).send(
+                (
+                  gnssPosition: Geographic(
+                    lon: data.longitude,
+                    lat: data.latitude,
+                  ),
+                  time: data.timestamp
+                ),
+              );
+            },
+            error: (error, stackTrace) => null,
+            loading: () => null,
+          );
+    }
+  }
 }

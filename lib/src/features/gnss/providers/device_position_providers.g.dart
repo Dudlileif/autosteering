@@ -6,42 +6,64 @@ part of 'device_position_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$devicePositionStreamHash() =>
-    r'd3e3ab06752f0c602fd261bf29f91ea151d9919a';
-
-/// A provider for the position stream for the device.
-///
-/// Copied from [devicePositionStream].
-@ProviderFor(devicePositionStream)
-final devicePositionStreamProvider =
-    AutoDisposeStreamProvider<Position>.internal(
-  devicePositionStream,
-  name: r'devicePositionStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$devicePositionStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef DevicePositionStreamRef = AutoDisposeStreamProviderRef<Position>;
-String _$devicePositionHash() => r'd2fa19a5d9175ae8cad335f0d06dbfd199260dd2';
+String _$devicePositionPermissionHash() =>
+    r'4ba94c52e62fddd18373ef89c409a44ba8955e37';
 
 /// A provider for the position of the device.
 ///
-/// Copied from [devicePosition].
-@ProviderFor(devicePosition)
-final devicePositionProvider = AutoDisposeFutureProvider<Geographic?>.internal(
-  devicePosition,
-  name: r'devicePositionProvider',
+/// Copied from [devicePositionPermission].
+@ProviderFor(devicePositionPermission)
+final devicePositionPermissionProvider =
+    AutoDisposeFutureProvider<bool>.internal(
+  devicePositionPermission,
+  name: r'devicePositionPermissionProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$devicePositionHash,
+      : _$devicePositionPermissionHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef DevicePositionRef = AutoDisposeFutureProviderRef<Geographic?>;
+typedef DevicePositionPermissionRef = AutoDisposeFutureProviderRef<bool>;
+String _$rawDevicePositionStreamHash() =>
+    r'3f95716627b9a33d6f838643d0f4c848e30fdba7';
+
+/// A provider for the raw position stream from the device.
+///
+/// Copied from [rawDevicePositionStream].
+@ProviderFor(rawDevicePositionStream)
+final rawDevicePositionStreamProvider =
+    AutoDisposeStreamProvider<Position>.internal(
+  rawDevicePositionStream,
+  name: r'rawDevicePositionStreamProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$rawDevicePositionStreamHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef RawDevicePositionStreamRef = AutoDisposeStreamProviderRef<Position>;
+String _$updatePositionFromDeviceHash() =>
+    r'de530db2013952ca203a557a20c20efaa4eebf11';
+
+/// A provider that sends device position updates to the simulation core
+/// if [DevicePositionAsVehiclePosition] and [devicePositionPermission] allow
+/// it.
+///
+/// Copied from [updatePositionFromDevice].
+@ProviderFor(updatePositionFromDevice)
+final updatePositionFromDeviceProvider = AutoDisposeProvider<void>.internal(
+  updatePositionFromDevice,
+  name: r'updatePositionFromDeviceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$updatePositionFromDeviceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef UpdatePositionFromDeviceRef = AutoDisposeProviderRef<void>;
 String _$devicePositionAsVehiclePositionHash() =>
     r'e3451b702e226ec7e1546e0560ebe5ed9c4f720f';
 

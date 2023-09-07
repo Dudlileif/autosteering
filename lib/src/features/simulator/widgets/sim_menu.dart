@@ -19,7 +19,10 @@ class SimMenu extends StatelessWidget {
       icon: Icons.memory,
       menuChildren: [
         Consumer(
-          child: const Text('Allow manual sim controls'),
+          child: Text(
+            'Allow manual sim controls',
+            style: textStyle,
+          ),
           builder: (context, ref, child) => CheckboxListTile(
             title: child,
             value: ref.watch(simCoreAllowManualInputProvider),

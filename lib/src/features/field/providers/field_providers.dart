@@ -11,7 +11,7 @@ part 'field_providers.g.dart';
 @Riverpod(keepAlive: true)
 class ShowField extends _$ShowField {
   @override
-  bool build() => false;
+  bool build() => true;
 
   /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);

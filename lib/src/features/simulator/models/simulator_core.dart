@@ -191,6 +191,8 @@ class SimulatorCore {
           if (state.useIMUBearing && bearing != null) {
             state.vehicle?.bearing =
                 (-bearing - state.imuZero.bearingZero).wrap360();
+            state.gaugeBearing =
+                (-bearing - state.imuZero.bearingZero).wrap360();
           }
           if (pitch != null) {
             state.vehicle?.pitch = -pitch - state.imuZero.pitchZero;
@@ -347,6 +349,12 @@ class _SimulatorCoreState {
   /// The distance from the previous vehicle state to the current vehicle state.
   double distance = 0;
 
+  /// The previous GNSS update position and time.
+  ({Geographic gnssPosition, DateTime time})? prevGnssUpdate;
+
+  /// The current GNSS update position and time.
+  ({Geographic gnssPosition, DateTime time})? gnssUpdate;
+
   /// The velocity of the current vehicle, as calculated from the [distance] and
   /// [period].
   double gaugeVelocity = 0;
@@ -480,6 +488,12 @@ class _SimulatorCoreState {
     // Update the vehicle position.
     else if (message is ({Geographic position})) {
       vehicle?.position = message.position;
+    }
+    // Update the vehicle position from GNSS.
+    else if (message is ({Geographic gnssPosition, DateTime time})) {
+      vehicle?.position = message.gnssPosition;
+      prevGnssUpdate = gnssUpdate;
+      gnssUpdate = message;
     }
     // Update the vehicle velocity
     else if (message is ({num velocity})) {
@@ -883,6 +897,37 @@ class _SimulatorCoreState {
 
   /// Updates the calculated gauges for the vehicle state.
   void updateGauges() {
+    if (gnssUpdate != null && prevGnssUpdate != null) {
+      distance = gnssUpdate!.gnssPosition.spherical
+          .distanceTo(prevGnssUpdate!.gnssPosition);
+
+      final bearing = prevGnssUpdate!.gnssPosition.spherical
+          .finalBearingTo(gnssUpdate!.gnssPosition);
+
+      if (!bearing.isNaN) {
+        final directionSign =
+            switch (bearingDifference(vehicle?.bearing ?? 0, bearing) > 120) {
+          true => -1,
+          false => 1,
+        };
+
+        final period =
+            gnssUpdate!.time.difference(prevGnssUpdate!.time).inMicroseconds /
+                1e6;
+        gaugeVelocity = directionSign * distance / period;
+
+        if (!useIMUBearing) {
+          gaugeBearing = (bearing +
+                  switch (directionSign.isNegative) { true => 180, false => 0 })
+              .wrap360();
+        }
+      }
+
+      prevGnssUpdate = gnssUpdate;
+      gnssUpdate = null;
+
+      return;
+    }
     // Distance
     if (vehicle != null && prevVehicle != null) {
       final movedDistance =
@@ -895,32 +940,35 @@ class _SimulatorCoreState {
     } else {
       distance = 0;
     }
-
-    // Velocity
-    if (period > 0) {
-      gaugeVelocity = distance / period;
-    } else {
-      gaugeVelocity = 0;
-    }
-
-    // Bearing, only updated if we're moving to keep bearing while stationary.
-    if (vehicle != null &&
-        prevVehicle != null &&
-        (vehicle?.velocity.abs() ?? 1) > 0.5) {
-      // Discard bearing changes over 10 degrees for one simulation step.
-      if (bearingDifference(prevVehicle!.bearing, vehicle!.bearing) < 10) {
-        final bearing = switch (vehicle!.isReversing) {
-          true => vehicle!.position.spherical.finalBearingTo(
-              prevVehicle!.position,
-            ),
-          false => prevVehicle!.position.spherical.finalBearingTo(
-              vehicle!.position,
-            ),
-        };
-        if (!bearing.isNaN) {
-          gaugeBearing = bearing;
+    if (!useIMUBearing) {
+      // Bearing, only updated if we're moving to keep bearing while stationary.
+      if (vehicle != null &&
+          prevVehicle != null &&
+          (vehicle?.velocity.abs() ?? 0) > 0.3) {
+        // Discard bearing changes over 10 degrees for one simulation step.
+        if (bearingDifference(prevVehicle!.bearing, vehicle!.bearing) < 10) {
+          final bearing = prevVehicle!.position.spherical.finalBearingTo(
+            vehicle!.position,
+          );
+          if (!bearing.isNaN) {
+            gaugeBearing = bearing;
+          }
         }
       }
+    }
+
+    // Velocity
+    if (period > 0 && allowManualSimInput) {
+      // If the position change bearing is more than 120 deg from the
+      // vehicle's bearing, assume we're in reverse.
+      final directionSign = switch (
+          bearingDifference(vehicle?.bearing ?? 0, gaugeBearing) > 120) {
+        true => -1,
+        false => 1,
+      };
+      gaugeVelocity = directionSign * distance / period;
+    } else {
+      gaugeVelocity = 0;
     }
   }
 
@@ -935,6 +983,12 @@ class _SimulatorCoreState {
       turningCircleCenter,
     );
     updateGauges();
+
+    if (!allowManualSimInput) {
+      vehicle
+        ?..velocity = gaugeVelocity
+        ..bearing = gaugeBearing;
+    }
 
     didChange = forceChange || prevVehicle != vehicle;
 
