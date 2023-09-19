@@ -29,63 +29,6 @@ final class StanleyPathTracking extends PathTracking {
     super.loopMode,
   });
 
-  @override
-  Geographic perpendicularIntersect(Vehicle vehicle) {
-    final nextPoint = nextWayPoint(vehicle).position;
-
-    final currentPoint = currentWayPoint(vehicle);
-
-    final distanceAlong = vehicle.stanleyAxlePosition.spherical
-        .alongTrackDistanceTo(start: currentPoint.position, end: nextPoint);
-
-    var bearing = currentPoint.position.spherical.initialBearingTo(nextPoint);
-
-    if (bearing.isNaN) {
-      bearing = currentPoint.bearing;
-    }
-    return currentPoint.position.spherical
-        .destinationPoint(distance: distanceAlong, bearing: bearing);
-  }
-
-  @override
-  double perpendicularDistance(Vehicle vehicle) {
-    final sign = switch (vehicle.isReversing) {
-      false => 1,
-      true => -1,
-    };
-
-    return sign *
-        vehicle.stanleyAxlePosition.spherical.crossTrackDistanceTo(
-          start: currentWayPoint(vehicle).position,
-          end: nextWayPoint(vehicle).position,
-        );
-  }
-
-  @override
-  WayPoint closestWayPoint(Vehicle vehicle) => path.reduce(
-        (value, element) => element.position.spherical.distanceTo(
-                  vehicle.stanleyAxlePosition,
-                ) <
-                value.position.spherical.distanceTo(vehicle.stanleyAxlePosition)
-            ? element
-            : value,
-      );
-
-  @override
-  void tryChangeWayPoint(Vehicle vehicle) {
-    final nextPoint = nextWayPoint(vehicle).position;
-
-    final currentPoint = currentWayPoint(vehicle);
-
-    final progress = vehicle.stanleyAxlePosition.spherical.alongTrackDistanceTo(
-      start: currentPoint.position,
-      end: nextPoint,
-    );
-    if (progress > currentPoint.position.spherical.distanceTo(nextPoint)) {
-      cumulativeIndex = nextIndex(vehicle);
-    }
-  }
-
   /// The next steering angle for the [vehicle] for following the [path].
   ///
   /// [mode] does nothing for this tracking type.
