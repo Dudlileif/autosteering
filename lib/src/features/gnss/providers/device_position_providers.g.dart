@@ -26,7 +26,7 @@ final devicePositionPermissionProvider =
 
 typedef DevicePositionPermissionRef = AutoDisposeFutureProviderRef<bool>;
 String _$rawDevicePositionStreamHash() =>
-    r'3f95716627b9a33d6f838643d0f4c848e30fdba7';
+    r'63e28abff8784d72cb720afae4aa2b9accdec03e';
 
 /// A provider for the raw position stream from the device.
 ///

@@ -57,7 +57,7 @@ class SimMenu extends StatelessWidget {
         if (!Device.isWeb)
           Consumer(
             child: Text(
-              'Restart sim',
+              'Restart sim core',
               style: textStyle,
             ),
             builder: (context, ref, child) => ListTile(

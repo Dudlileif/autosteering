@@ -266,7 +266,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Update the bearing of the vehicle, [value] in degrees.
   @override
-  set bearing(double value) => _bearing = value;
+  set bearing(double value) => _bearing = value.wrap360();
 
   /// The distance from the ground position to the antenna position.
   double get positionToAntennaDistance =>
