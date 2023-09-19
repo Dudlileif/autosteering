@@ -6,7 +6,7 @@ part of 'mini_map_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$showMiniMapHash() => r'b82ead444cd9748a7d5f3c5ea55668fef41010fd';
+String _$showMiniMapHash() => r'93e6b21d8fef86825bd91e1ab8c13e70b876f1b9';
 
 /// Whether the mini map should be shown.
 ///
@@ -61,7 +61,7 @@ final miniMapLockToFieldProvider =
 
 typedef _$MiniMapLockToField = Notifier<bool>;
 String _$miniMapAlwaysPointNorthHash() =>
-    r'71a5bbb2de89e41df811320f98fe21f8725ede40';
+    r'9283bc2da3ce50c44899953ce5e1a3b220669584';
 
 /// Whether the mini map always should point to the north and not rotate.
 ///
