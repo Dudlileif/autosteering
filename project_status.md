@@ -16,12 +16,14 @@
 
 - Pure pursuit and Stanley autosteering modes
 
-- Basic AB lines with autosteering, u-turn at the ends
+- Basic AB lines and curves with autosteering, u-turn at the ends
 
 - Basic equipment simulation
   - Front and rear fixed hitch (three point)
   - Rear towbar hitch
   - Equipment can be chained in any configuration
+  - Decorative square for trailers etc..
+  - Save and load presets/setups with multiple/chained equipment
 
 - Map layer caching/offline
 
@@ -38,9 +40,7 @@
 
 - Improved vehicle simulation, though good enough for testing features now
 
-- Equipment simulation, maybe make sections a separate class, draw some polygon when no sections (i.e. tank/trailer)
-
-- Chained equipment presets
+- Equipment simulation, maybe make sections a separate class
 
 - Fields, AB lines/curves etc.
 
