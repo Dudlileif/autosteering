@@ -102,7 +102,14 @@ void simCoreVehicleDriving(SimCoreVehicleDrivingRef ref) {
 @Riverpod(keepAlive: true)
 class _SimCoreIsolatePort extends _$SimCoreIsolatePort {
   @override
-  SendPort? build() => null;
+  SendPort? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null) {
+        ref.read(_initializeSimCoreProvider);
+      }
+    });
+    return null;
+  }
 
   void update(SendPort? port) => Future(() => state = port);
 }
@@ -112,9 +119,31 @@ class _SimCoreIsolatePort extends _$SimCoreIsolatePort {
 @Riverpod(keepAlive: true)
 class _SimCoreWebInput extends _$SimCoreWebInput {
   @override
-  StreamController<dynamic> build() => StreamController<dynamic>();
+  StreamController<dynamic> build() {
+    ref.listenSelf((previous, next) {
+      ref.read(_initializeSimCoreProvider);
+    });
+    return StreamController<dynamic>();
+  }
 
   Stream<dynamic> stream() => state.stream;
+}
+
+/// Sends initial parameters to  the sim core.
+@riverpod
+void _initializeSimCore(_InitializeSimCoreRef ref) {
+  ref.read(simInputProvider.notifier)
+    ..send(ref.read(hardwareCommunicationConfigProvider))
+    ..send(ref.read(mainVehicleProvider))
+    ..send((autoSlowDown: ref.read(simCoreVehicleAutoSlowDownProvider)))
+    ..send(
+      (autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider)),
+    )
+    ..send((allowManualSimInput: ref.read(simCoreAllowManualInputProvider)))
+    ..send(ref.read(activeABConfigProvider))
+    ..send((pathTracking: ref.read(displayPathTrackingProvider)))
+    ..send((abTracking: ref.read(displayABTrackingProvider)))
+    ..send((autoSteerEnabled: ref.read(autoSteerEnabledProvider)));
 }
 
 /// A provider that creates a stream and watches the vehicle simulator on the
@@ -137,7 +166,7 @@ Stream<Vehicle?> simCoreWebStream(
         .read(gaugeTravelledDistanceProvider.notifier)
         .updateWith(event.distance.toDouble());
     ref.read(displayPathTrackingProvider.notifier).update(event.pathTracking);
-    ref.read(displayABLineProvider.notifier).update(event.abLine);
+    ref.read(displayABTrackingProvider.notifier).update(event.abTracking);
     ref
         .read(hardwareIsConnectedProvider.notifier)
         .update(value: event.hardwareIsConnected);
@@ -158,7 +187,7 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
   await Isolate.spawn(
     SimulatorCore.isolateWorker,
     recievePort.sendPort,
-    debugName: 'VehicleSimulator',
+    debugName: 'Simulator Core',
   );
   log('Sim vehicle isolate spawned');
 
@@ -168,24 +197,12 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
 
   ref.read(_simCoreIsolatePortProvider.notifier).update(sendPort);
 
-  sendPort
-    ..send(ref.read(hardwareCommunicationConfigProvider))
-    ..send(ref.read(mainVehicleProvider))
-    ..send((autoSlowDown: ref.read(simCoreVehicleAutoSlowDownProvider)))
-    ..send(
-      (autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider)),
-    )
-    ..send((allowManualSimInput: ref.read(simCoreAllowManualInputProvider)));
-
   // Exit isolate when provider is disposed.
   ref.onDispose(() {
     sendPort.send(null);
     events.cancel();
     ref.read(_simCoreIsolatePortProvider.notifier).update(null);
   });
-
-  // Give the simulator isolate 1 second to start.
-  var lastMessageTime = DateTime.now().add(const Duration(seconds: 1));
 
   // How long we will wait for a message until we restart the simulator, in
   // seconds.
@@ -196,27 +213,25 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
     true => 5,
   };
 
-  while (true) {
-    final latestUpdate = DateTime.now();
+  Timer? restartTimer;
 
-    // Restart simulator if we've not received a message within the
-    // heartbeatThreshold
-    final difference = latestUpdate.difference(lastMessageTime);
-    if (difference.inMicroseconds > 1e6 * heartbeatThreshold) {
+  while (true) {
+    restartTimer =
+        Timer(Duration(milliseconds: (heartbeatThreshold * 1000).round()), () {
       log('Simulator isolate unresponsive/died... Restarting...');
+
       ref.invalidateSelf();
-    }
-    lastMessageTime = latestUpdate;
+    });
 
     final message = await events.next;
-
+    restartTimer.cancel();
     if (message is ({
       Vehicle vehicle,
       double velocity,
       double bearing,
       double distance,
       PathTracking? pathTracking,
-      ABLine? abLine,
+      ABTracking? abTracking,
       bool hardwareIsConnected,
     })) {
       ref.read(gaugeVelocityProvider.notifier).update(message.velocity);
@@ -227,7 +242,7 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
       ref
           .read(displayPathTrackingProvider.notifier)
           .update(message.pathTracking);
-      ref.read(displayABLineProvider.notifier).update(message.abLine);
+      ref.read(displayABTrackingProvider.notifier).update(message.abTracking);
       ref
           .read(hardwareIsConnectedProvider.notifier)
           .update(value: message.hardwareIsConnected);
@@ -237,8 +252,8 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
   }
 }
 
-/// A provider for whether the steering automatically should recenter when
-/// no input is provided.
+/// A provider for whether the sim core should allow manual inputs from the
+/// user, i.e. not only sensors from the vehicle.
 @Riverpod(keepAlive: true)
 class SimCoreAllowManualInput extends _$SimCoreAllowManualInput {
   @override
