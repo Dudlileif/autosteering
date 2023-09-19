@@ -46,6 +46,9 @@ class WayPoint extends Equatable {
     required double distance,
     double angleFromBearing = 0,
   }) {
+    if (distance == 0) {
+      return this;
+    }
     final newPos = position.spherical.destinationPoint(
       distance: distance,
       bearing: bearing + angleFromBearing,
@@ -53,9 +56,34 @@ class WayPoint extends Equatable {
 
     return copyWith(
       position: newPos,
-      bearing: position.spherical.finalBearingTo(newPos) - angleFromBearing,
+      bearing: position.spherical.finalBearingTo(newPos) -
+          angleFromBearing * distance.sign,
     );
   }
+
+  /// Rotates the way point by [angle] degrees clockwise.
+  WayPoint rotateByAngle(double angle) =>
+      copyWith(bearing: (bearing + angle).wrap360());
+
+  /// The distance in meters to [other].
+  double distanceToSpherical(WayPoint other) =>
+      position.spherical.distanceTo(other.position);
+
+  /// The initial spherical bearing towards [other].
+  double initialBearingToSpherical(WayPoint other) =>
+      position.spherical.initialBearingTo(other.position);
+
+  /// The final spherical bearing towards [other].
+  double finalBearingToSpherical(WayPoint other) =>
+      position.spherical.finalBearingTo(other.position);
+
+  /// The distance this waypoint is along the line from [start] to [end].
+  double alongTrackDistanceToSpherical({
+    required WayPoint start,
+    required WayPoint end,
+  }) =>
+      position.spherical
+          .alongTrackDistanceTo(start: start.position, end: end.position);
 
   /// Properties used to compare with [Equatable].
   @override
