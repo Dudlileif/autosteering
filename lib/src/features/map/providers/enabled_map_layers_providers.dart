@@ -139,7 +139,7 @@ bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
 bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) =>
     ref.watch(showEquipmentDebugProvider);
 
-/// Whether the debugging layer for the AB-line should be shown.
+/// Whether the debugging layer for AB-trackng should be shown.
 @riverpod
-bool showABLineDebugLayer(ShowABLineDebugLayerRef ref) =>
-    ref.watch(aBLineDebugShowProvider);
+bool showABTrackingDebugLayer(ShowABTrackingDebugLayerRef ref) =>
+    ref.watch(aBTrackingDebugShowProvider);
