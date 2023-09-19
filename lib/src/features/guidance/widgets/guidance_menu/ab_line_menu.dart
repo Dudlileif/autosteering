@@ -15,6 +15,8 @@ class ABLineMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(activeABConfigProvider);
+
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     final abLine = ref.watch(aBLineDebugProvider);
@@ -23,27 +25,13 @@ class ABLineMenu extends ConsumerWidget {
       text: 'AB-line',
       menuChildren: [
         Consumer(
-          child: Text('Enabled', style: textStyle),
-          builder: (context, ref, child) => CheckboxListTile(
-            title: child,
-            value: ref.watch(aBLineDebugEnabledProvider),
-            onChanged: (value) {
-              if (value != null) {
-                ref
-                    .read(aBLineDebugEnabledProvider.notifier)
-                    .update(value: value);
-              }
-            },
-          ),
-        ),
-        Consumer(
           child: Text('Show', style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             title: child,
-            value: ref.watch(aBLineDebugShowProvider),
+            value: ref.watch(aBTrackingDebugShowProvider),
             onChanged: (value) => value != null
                 ? ref
-                    .read(aBLineDebugShowProvider.notifier)
+                    .read(aBTrackingDebugShowProvider.notifier)
                     .update(value: value)
                 : null,
           ),
@@ -56,7 +44,7 @@ class ABLineMenu extends ConsumerWidget {
           ),
         Consumer(
           builder: (context, ref, child) {
-            final limitMode = ref.watch(aBLineLimitModeProvider);
+            final limitMode = ref.watch(aBTrackingLimitModeProvider);
             return MenuButtonWithChildren(
               text: 'Limit mode',
               icon: Icons.u_turn_right,
@@ -67,7 +55,9 @@ class ABLineMenu extends ConsumerWidget {
                       value: limitMode == mode,
                       onChanged: (value) {
                         ref.read(simInputProvider.notifier).send(mode);
-                        ref.read(aBLineLimitModeProvider.notifier).update(mode);
+                        ref
+                            .read(aBTrackingLimitModeProvider.notifier)
+                            .update(mode);
                       },
                     ),
                   )
@@ -82,11 +72,16 @@ class ABLineMenu extends ConsumerWidget {
           ),
           builder: (context, ref, child) => ListTile(
             title: child,
-            onTap: () => ref.read(aBLinePointAProvider.notifier).update(
-                  ref.watch(
-                    mainVehicleProvider.select((vehicle) => vehicle.position),
-                  ),
-                ),
+            onTap: () {
+              ref.read(aBPointAProvider.notifier).update(
+                    ref.watch(
+                      mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
+                    ),
+                  );
+              ref
+                  .read(aBTrackingDebugShowProvider.notifier)
+                  .update(value: true);
+            },
           ),
         ),
         Consumer(
@@ -96,16 +91,21 @@ class ABLineMenu extends ConsumerWidget {
           ),
           builder: (context, ref, child) => ListTile(
             title: child,
-            onTap: () => ref.read(aBLinePointBProvider.notifier).update(
-                  ref.watch(
-                    mainVehicleProvider.select((vehicle) => vehicle.position),
-                  ),
-                ),
+            onTap: () {
+              ref.read(aBPointBProvider.notifier).update(
+                    ref.watch(
+                      mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
+                    ),
+                  );
+              ref
+                  .read(aBTrackingDebugShowProvider.notifier)
+                  .update(value: true);
+            },
           ),
         ),
         Consumer(
           builder: (context, ref, child) {
-            final width = ref.watch(aBLineWidthProvider);
+            final width = ref.watch(aBWidthProvider);
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -115,7 +115,7 @@ class ABLineMenu extends ConsumerWidget {
                 ),
                 Slider.adaptive(
                   value: width,
-                  onChanged: ref.read(aBLineWidthProvider.notifier).update,
+                  onChanged: ref.read(aBWidthProvider.notifier).update,
                   min: 0.5,
                   max: 20,
                   divisions: 390,
@@ -126,7 +126,7 @@ class ABLineMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final width = ref.watch(aBLineTurningRadiusProvider);
+            final width = ref.watch(aBTurningRadiusProvider);
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -140,9 +140,7 @@ class ABLineMenu extends ConsumerWidget {
                     ref
                         .read(simInputProvider.notifier)
                         .send((abTurningRadius: value));
-                    ref
-                        .read(aBLineTurningRadiusProvider.notifier)
-                        .update(value);
+                    ref.read(aBTurningRadiusProvider.notifier).update(value);
                   },
                   min: 4,
                   max: 20,
@@ -154,8 +152,7 @@ class ABLineMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final turnOffsetIncrease =
-                ref.watch(aBLineTurnOffsetIncreaseProvider);
+            final turnOffsetIncrease = ref.watch(aBTurnOffsetIncreaseProvider);
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -170,7 +167,7 @@ class ABLineMenu extends ConsumerWidget {
                         .read(simInputProvider.notifier)
                         .send((abTurnOffsetIncrease: value.round()));
                     ref
-                        .read(aBLineTurnOffsetIncreaseProvider.notifier)
+                        .read(aBTurnOffsetIncreaseProvider.notifier)
                         .update(value.round());
                   },
                   min: 1,
@@ -183,7 +180,7 @@ class ABLineMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final stepSize = ref.watch(aBLineDebugStepSizeProvider);
+            final stepSize = ref.watch(aBDebugStepSizeProvider);
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -193,9 +190,8 @@ class ABLineMenu extends ConsumerWidget {
                 ),
                 Slider.adaptive(
                   value: stepSize,
-                  onChanged: (value) => ref
-                      .read(aBLineDebugStepSizeProvider.notifier)
-                      .update(value),
+                  onChanged: (value) =>
+                      ref.read(aBDebugStepSizeProvider.notifier).update(value),
                   max: 10,
                   divisions: 20,
                 ),
@@ -205,7 +201,7 @@ class ABLineMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final numPointsAhead = ref.watch(aBLineDebugNumPointsAheadProvider);
+            final numPointsAhead = ref.watch(aBDebugNumPointsAheadProvider);
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -216,7 +212,7 @@ class ABLineMenu extends ConsumerWidget {
                 Slider.adaptive(
                   value: numPointsAhead.toDouble(),
                   onChanged: (value) => ref
-                      .read(aBLineDebugNumPointsAheadProvider.notifier)
+                      .read(aBDebugNumPointsAheadProvider.notifier)
                       .update(value.round()),
                   max: 10,
                   divisions: 10,
@@ -227,8 +223,7 @@ class ABLineMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final numPointsBehind =
-                ref.watch(aBLineDebugNumPointsBehindProvider);
+            final numPointsBehind = ref.watch(aBDebugNumPointsBehindProvider);
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -239,7 +234,7 @@ class ABLineMenu extends ConsumerWidget {
                 Slider.adaptive(
                   value: numPointsBehind.toDouble(),
                   onChanged: (value) => ref
-                      .read(aBLineDebugNumPointsBehindProvider.notifier)
+                      .read(aBDebugNumPointsBehindProvider.notifier)
                       .update(value.round()),
                   max: 10,
                   divisions: 10,
