@@ -98,7 +98,8 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showDubinsPathDebugLayerProvider))
           const DubinsPathDebugLayer(),
-        if (ref.watch(showABLineDebugLayerProvider)) const ABLineDebugLayer(),
+        if (ref.watch(showABTrackingDebugLayerProvider))
+          const ABTrackingDebugLayer(),
       ],
     );
   }
