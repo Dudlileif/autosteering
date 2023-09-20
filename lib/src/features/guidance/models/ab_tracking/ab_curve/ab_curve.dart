@@ -35,6 +35,8 @@ class ABCurve extends ABTracking {
           : prevValue,
     );
     nextPathTracking = PurePursuitPathTracking(wayPoints: nextCurve);
+    _curves[0] = baseCurve;
+    _curves[nextOffset] = nextCurve;
   }
 
   /// The recorded base curve.
@@ -55,6 +57,9 @@ class ABCurve extends ABTracking {
 
   /// The path tracking for the [nextCurve].
   late PathTracking nextPathTracking;
+
+  /// A map of the already calculated offset curves.
+  final Map<int, List<WayPoint>> _curves = {};
 
   @override
   set currentOffset(int newOffset) {
@@ -94,6 +99,10 @@ class ABCurve extends ABTracking {
   ///
   /// Negative [offset] means the point is offset in the opposite direction.
   List<WayPoint> offsetCurve(int offset) {
+    if (_curves[offset] != null) {
+      return _curves[offset]!;
+    }
+
     final buffered = RingBuffer.bufferCircular(
       ring: baseCurve.map((e) => e.position).toList()
         ..add(
@@ -195,7 +204,7 @@ class ABCurve extends ABTracking {
             .finalBearingToSpherical(newCurve.last),
       );
     }
-
+    _curves[offset] = newCurve;
     return newCurve;
   }
 
