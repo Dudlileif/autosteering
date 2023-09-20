@@ -3,7 +3,6 @@ import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -244,24 +243,6 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                   height: 50,
                 ),
               ],
-              if (abTracking is ABCurve)
-                ...abTracking.currentPathTracking.path.mapIndexed(
-                  (index, e) => Marker(
-                    point: e.position.latLng,
-                    builder: (context) => Text('$index'),
-                    rotate: true,
-                  ),
-                ),
-              if (abTracking is ABCurve)
-                ...abTracking.nextPathTracking.path.mapIndexed(
-                  (index, e) => Marker(
-                    point: e.position.latLng,
-                    builder: (context) => Text(
-                      '$index',
-                    ),
-                    rotate: true,
-                  ),
-                ),
             ],
           ],
         ),
