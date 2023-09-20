@@ -36,7 +36,7 @@ class ABCurve extends ABTracking {
     );
     nextPathTracking = PurePursuitPathTracking(wayPoints: nextCurve);
     _curves[0] = baseCurve;
-    _curves[nextOffset] = nextCurve;
+    _curves[nextOffset] = offsetCurve(nextOffset);
   }
 
   /// The recorded base curve.
@@ -88,12 +88,10 @@ class ABCurve extends ABTracking {
       : currentPathTracking.path.first;
 
   @override
-  WayPoint get nextStart =>
-      pathAlongAToB ? nextPathTracking.path.last : nextPathTracking.path.first;
+  WayPoint get nextStart => offsetCurve(nextOffset).first;
 
   @override
-  WayPoint get nextEnd =>
-      pathAlongAToB ? nextPathTracking.path.first : nextPathTracking.path.last;
+  WayPoint get nextEnd => offsetCurve(nextOffset).last;
 
   /// Offsets the [baseCurve] point by [offset]*[width] meters to the side.
   ///
