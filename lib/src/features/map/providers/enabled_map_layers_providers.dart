@@ -55,17 +55,6 @@ bool showFinishedPathLayer(ShowFinishedPathLayerRef ref) {
   return enabled;
 }
 
-/// Whether the polygon contained by the finished recorded path should be
-/// shown.
-@riverpod
-bool showFinishedPolygonLayer(ShowFinishedPolygonLayerRef ref) {
-  final showPolygon = ref.watch(showFinishedPolygonProvider);
-  final finishedPathPoints = ref.watch(finishedPathRecordingListProvider);
-
-  final enabled = showPolygon && finishedPathPoints != null;
-  return enabled;
-}
-
 /// Whether the currently recording path should be shown.
 @riverpod
 bool showRecordingPathLayer(ShowRecordingPathLayerRef ref) =>

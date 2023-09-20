@@ -70,9 +70,9 @@ class ABLineMenu extends ConsumerWidget {
             'Set A',
             style: textStyle,
           ),
-          builder: (context, ref, child) => ListTile(
-            title: child,
-            onTap: () {
+          builder: (context, ref, child) => MenuItemButton(
+            child: child,
+            onPressed: () {
               ref.read(aBPointAProvider.notifier).update(
                     ref.watch(
                       mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
@@ -89,9 +89,9 @@ class ABLineMenu extends ConsumerWidget {
             'Set B',
             style: textStyle,
           ),
-          builder: (context, ref, child) => ListTile(
-            title: child,
-            onTap: () {
+          builder: (context, ref, child) => MenuItemButton(
+            child: child,
+            onPressed: () {
               ref.read(aBPointBProvider.notifier).update(
                     ref.watch(
                       mainVehicleProvider.select((vehicle) => vehicle.wayPoint),

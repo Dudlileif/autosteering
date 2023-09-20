@@ -5,7 +5,6 @@ export 'editable_path_layer.dart';
 export 'equipment_debug_layer.dart';
 export 'field_layer.dart';
 export 'finished_path_layer.dart';
-export 'finished_polygon_layer.dart';
 export 'osm_layer.dart';
 export 'path_tracking_debug_layer.dart';
 export 'recording_path_layer.dart';

@@ -13,6 +13,25 @@ class ABCurvePoints extends _$ABCurvePoints {
 
   /// Updates [state] to [points].
   void update(List<WayPoint> points) => Future(() => state = points);
+
+  /// Updates [state] from [FinishedPathRecordingList] if possible.
+  Future<void> updateFromRecording() async {
+    ref.read(simInputProvider.notifier).send((abTracking: null));
+
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+
+    final points = ref.read(finishedPathRecordingListProvider);
+    if (points != null && points.isNotEmpty) {
+      update(points);
+
+      ref
+        ..invalidate(pathRecordingListProvider)
+        ..invalidate(finishedPathRecordingListProvider);
+
+      ref.read(showFinishedPathProvider.notifier).update(value: false);
+      ref.read(aBTrackingDebugShowProvider.notifier).update(value: true);
+    }
+  }
 }
 
 /// A provider for the AB-line object to debug.

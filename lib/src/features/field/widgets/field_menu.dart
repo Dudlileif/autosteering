@@ -1,12 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geobase/geobase.dart';
 import 'package:universal_io/io.dart';
 
 /// A menu with attached submenu for interacting with the field feature.
@@ -35,53 +39,56 @@ class FieldMenu extends ConsumerWidget {
             onPressed: () => ref.invalidate(activeFieldProvider),
             child: const Text('Close'),
           ),
-        const _LoadFieldMenu(),
-        Consumer(
-          child: Text(
-            'Import field',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.file_open),
-            title: child,
-            onTap: () async {
-              final result = await FilePicker.platform.pickFiles(
-                initialDirectory: Device.isWeb
-                    ? null
-                    : [
-                        ref.watch(fileDirectoryProvider).requireValue.path,
-                        '/fields',
-                      ].join(),
-                dialogTitle: 'Open field json file',
-                allowedExtensions: ['json'],
-                type: FileType.custom,
-              );
-              if (result != null) {
-                if (Device.isWeb) {
-                  final data = result.files.first.bytes;
-                  if (data != null) {
-                    final json = jsonDecode(String.fromCharCodes(data));
-                    if (json is Map) {
-                      ref.read(activeFieldProvider.notifier).update(
-                            Field.fromJson(Map<String, dynamic>.from(json)),
-                          );
+        if (activeField == null) ...[
+          const _LoadFieldMenu(),
+          const _CreateFieldButton(),
+          Consumer(
+            child: Text(
+              'Import field',
+              style: textStyle,
+            ),
+            builder: (context, ref, child) => ListTile(
+              leading: const Icon(Icons.file_open),
+              title: child,
+              onTap: () async {
+                final result = await FilePicker.platform.pickFiles(
+                  initialDirectory: Device.isWeb
+                      ? null
+                      : [
+                          ref.watch(fileDirectoryProvider).requireValue.path,
+                          '/fields',
+                        ].join(),
+                  dialogTitle: 'Open field json file',
+                  allowedExtensions: ['json'],
+                  type: FileType.custom,
+                );
+                if (result != null) {
+                  if (Device.isWeb) {
+                    final data = result.files.first.bytes;
+                    if (data != null) {
+                      final json = jsonDecode(String.fromCharCodes(data));
+                      if (json is Map) {
+                        ref.read(activeFieldProvider.notifier).update(
+                              Field.fromJson(Map<String, dynamic>.from(json)),
+                            );
+                      }
                     }
-                  }
-                } else {
-                  final path = result.paths.first;
-                  if (path != null) {
-                    final json = jsonDecode(File(path).readAsStringSync());
-                    if (json is Map) {
-                      ref.read(activeFieldProvider.notifier).update(
-                            Field.fromJson(Map<String, dynamic>.from(json)),
-                          );
+                  } else {
+                    final path = result.paths.first;
+                    if (path != null) {
+                      final json = jsonDecode(File(path).readAsStringSync());
+                      if (json is Map) {
+                        ref.read(activeFieldProvider.notifier).update(
+                              Field.fromJson(Map<String, dynamic>.from(json)),
+                            );
+                      }
                     }
                   }
                 }
-              }
-            },
+              },
+            ),
           ),
-        ),
+        ],
         if (activeField != null) ...[
           Consumer(
             child: Text(
@@ -372,6 +379,130 @@ class _LoadFieldMenu extends ConsumerWidget {
             ),
           )
           .toList(),
+    );
+  }
+}
+
+/// A [MenuItemButton] for creating a [Field] from the recorded path.
+class _CreateFieldButton extends ConsumerWidget {
+  /// A [MenuItemButton] for creating a [Field] from the recorded path.
+  const _CreateFieldButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recording = ref.watch(enablePathRecorderProvider);
+
+    if (recording) {
+      return MenuItemButton(
+        leadingIcon: const Padding(
+          padding: EdgeInsets.only(left: 8),
+          child: SizedBox.square(
+            dimension: 24,
+            child: CircularProgressIndicator(),
+          ),
+        ),
+        onPressed: () {
+          ref.read(enablePathRecorderProvider.notifier).update(value: false);
+
+          final pathExists = ref.read(
+            finishedPathRecordingListProvider
+                .select((value) => value?.isNotEmpty ?? false),
+          );
+          unawaited(
+            showDialog<void>(
+              context: context,
+              builder: (context) {
+                var name = '';
+                return StatefulBuilder(
+                  builder: (context, setState) {
+                    return SimpleDialog(
+                      title: const Text('Name the field'),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.label_outline),
+                              labelText: 'Name',
+                            ),
+                            initialValue: name,
+                            onChanged: (value) => setState(() => name = value),
+                            onFieldSubmitted: (value) =>
+                                setState(() => name = value),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) => value != null &&
+                                    value.isNotEmpty &&
+                                    !value.startsWith(' ')
+                                ? null
+                                : '''No name entered! Please enter a name so that the field can be saved!''',
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 8,
+                            right: 8,
+                            top: 8,
+                          ),
+                          child: Consumer(
+                            child: const Text('Save field'),
+                            builder: (context, ref, child) => FilledButton(
+                              onPressed: () {
+                                Future.delayed(
+                                    const Duration(milliseconds: 100), () {
+                                  final points = ref
+                                      .read(finishedPathRecordingListProvider)!;
+
+                                  final field = Field(
+                                    name: name,
+                                    polygon: Polygon([
+                                      PositionArray.view(
+                                        points
+                                            .map(
+                                              (e) => e.position.values,
+                                            )
+                                            .flattened,
+                                      ),
+                                    ]),
+                                    boundingBox: GeoBox.from(
+                                      points.map((e) => e.position),
+                                    ),
+                                  );
+                                  ref.read(saveFieldProvider(field));
+                                  ref
+                                      .read(activeFieldProvider.notifier)
+                                      .update(field);
+                                });
+                                Navigator.of(context).pop();
+                              },
+                              child: child,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        },
+        child: const Text('Recording, tap to finish'),
+      );
+    }
+
+    return MenuItemButton(
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Stack(
+          children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+        ),
+      ),
+      child: const Text('Create field from recording'),
+      onPressed: () {
+        ref.read(enablePathRecorderProvider.notifier).update(value: true);
+      },
     );
   }
 }

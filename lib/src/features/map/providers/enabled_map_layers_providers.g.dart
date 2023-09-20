@@ -59,25 +59,6 @@ final showFinishedPathLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowFinishedPathLayerRef = AutoDisposeProviderRef<bool>;
-String _$showFinishedPolygonLayerHash() =>
-    r'bc3fbb243a3e2955bd42729d782fb89d2c4ec361';
-
-/// Whether the polygon contained by the finished recorded path should be
-/// shown.
-///
-/// Copied from [showFinishedPolygonLayer].
-@ProviderFor(showFinishedPolygonLayer)
-final showFinishedPolygonLayerProvider = AutoDisposeProvider<bool>.internal(
-  showFinishedPolygonLayer,
-  name: r'showFinishedPolygonLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showFinishedPolygonLayerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef ShowFinishedPolygonLayerRef = AutoDisposeProviderRef<bool>;
 String _$showRecordingPathLayerHash() =>
     r'a03194c1186cdfbba9943f6c4fb6658f91b37806';
 

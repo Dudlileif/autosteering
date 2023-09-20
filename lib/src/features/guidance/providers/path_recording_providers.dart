@@ -75,7 +75,6 @@ class PathRecordingList extends _$PathRecordingList {
               ref
                   .read(finishedPathRecordingListProvider.notifier)
                   .update(points);
-              ref.read(showFinishedPathProvider.notifier).update(value: true);
             }
             ref.invalidateSelf();
           }
@@ -130,19 +129,6 @@ class FinishedPathRecordingList extends _$FinishedPathRecordingList {
 /// Whether to show the last fininshed path recording.
 @Riverpod(keepAlive: true)
 class ShowFinishedPath extends _$ShowFinishedPath {
-  @override
-  bool build() => false;
-
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current state.
-  void toggle() => Future(() => state != state);
-}
-
-/// Whether to show the polygon contained by the last fininshed path recording.
-@Riverpod(keepAlive: true)
-class ShowFinishedPolygon extends _$ShowFinishedPolygon {
   @override
   bool build() => false;
 

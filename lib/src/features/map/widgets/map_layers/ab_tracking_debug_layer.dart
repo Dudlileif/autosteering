@@ -16,6 +16,12 @@ class ABTrackingDebugLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final abTracking = ref.watch(displayABTrackingProvider);
 
+    if (abTracking == null) {
+      ref
+        ..read(aBCurveDebugProvider)
+        ..read(aBLineDebugProvider);
+    }
+
     final pointA = abTracking?.start ?? ref.watch(aBPointAProvider);
 
     final pointB = abTracking?.end ?? ref.watch(aBPointBProvider);

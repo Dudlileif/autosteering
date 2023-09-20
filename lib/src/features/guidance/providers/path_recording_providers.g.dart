@@ -25,7 +25,7 @@ final enablePathRecorderProvider =
 );
 
 typedef _$EnablePathRecorder = Notifier<bool>;
-String _$pathRecordingListHash() => r'33dbe104abe107b219ee4fb3d6bba45a56b7b10e';
+String _$pathRecordingListHash() => r'8070e77f69e1450825c97eb05ed7aef49318ccec';
 
 /// A list of the currently recording points.
 ///
@@ -80,25 +80,6 @@ final showFinishedPathProvider =
 );
 
 typedef _$ShowFinishedPath = Notifier<bool>;
-String _$showFinishedPolygonHash() =>
-    r'0fa3bd17b79894df87db88328f82dc90f46d0e5e';
-
-/// Whether to show the polygon contained by the last fininshed path recording.
-///
-/// Copied from [ShowFinishedPolygon].
-@ProviderFor(ShowFinishedPolygon)
-final showFinishedPolygonProvider =
-    NotifierProvider<ShowFinishedPolygon, bool>.internal(
-  ShowFinishedPolygon.new,
-  name: r'showFinishedPolygonProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showFinishedPolygonHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ShowFinishedPolygon = Notifier<bool>;
 String _$editFinishedPathHash() => r'9343300ae45482c100ab819f01af800f3baae4a3';
 
 /// Whether to activate editing of the last finished path recording.

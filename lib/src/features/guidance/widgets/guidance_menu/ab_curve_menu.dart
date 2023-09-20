@@ -59,49 +59,31 @@ class ABCurveMenu extends ConsumerWidget {
           },
         ),
         Consumer(
-          child: Text(
-            'Record path',
-            style: textStyle,
-          ),
           builder: (context, ref, child) {
             final enabled = ref.watch(enablePathRecorderProvider);
-            return CheckboxListTile(
-              title: child,
-              secondary: enabled
-                  ? const Icon(Icons.stop)
-                  : const Icon(Icons.play_arrow),
-              value: enabled,
-              onChanged: (value) async {
-                if (value != null) {
-                  if (value == true) {
-                    ref
-                        .read(simInputProvider.notifier)
-                        .send((abTracking: null));
-                  }
+            return MenuItemButton(
+              leadingIcon: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: enabled
+                    ? const SizedBox.square(
+                        dimension: 24,
+                        child: CircularProgressIndicator(),
+                      )
+                    : const Icon(Icons.play_arrow),
+              ),
+              onPressed: () {
+                ref
+                    .read(enablePathRecorderProvider.notifier)
+                    .update(value: !enabled);
 
+                if (enabled == true) {
                   ref
-                      .read(enablePathRecorderProvider.notifier)
-                      .update(value: value);
-
-                  await Future<void>.delayed(const Duration(milliseconds: 100));
-
-                  final points = ref.read(finishedPathRecordingListProvider);
-                  if (value == false && points != null && points.isNotEmpty) {
-                    ref.read(aBCurvePointsProvider.notifier).update(points);
-
-                    ref
-                      ..invalidate(pathRecordingListProvider)
-                      ..invalidate(finishedPathRecordingListProvider);
-
-                    ref
-                        .read(showFinishedPathProvider.notifier)
-                        .update(value: false);
-                    ref
-                        .read(aBTrackingDebugShowProvider.notifier)
-                        .update(value: true);
-                  }
+                      .read(aBCurvePointsProvider.notifier)
+                      .updateFromRecording();
                 }
               },
+              child:
+                  Text(enabled ? 'Recording, tap to finish' : 'Record curve'),
             );
           },
         ),

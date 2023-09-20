@@ -135,27 +135,32 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
     final exteriorJoinType = ref.watch(fieldExteriorBufferJoinProvider);
     final interiorJoinType = ref.watch(fieldInteriorBufferJoinProvider);
     final getRawPoints = ref.watch(fieldBufferGetRawPointsProvider);
-    final bufferedPolygon = switch (Device.isWeb) {
-      true => field.polygon.bufferedPolygon(
-          exteriorDistance: exteriorDistance,
-          interiorDistance: interiorDistance,
-          exteriorJoinType: exteriorJoinType,
-          interiorJoinType: interiorJoinType,
-          getRawPoints: getRawPoints,
-        ),
-      false => Polygon.parse(
-          await Isolate.run(
-            () => PolygonBufferExtension.bufferedPolygonString(
-              polygonJsonString: field.polygon.toString(),
-              exteriorDistance: exteriorDistance,
-              interiorDistance: interiorDistance,
-              exteriorJoinType: exteriorJoinType,
-              interiorJoinType: interiorJoinType,
-              getRawPoints: getRawPoints,
-            ),
+
+    late final Polygon bufferedPolygon;
+    if (Device.isWeb) {
+      bufferedPolygon = field.polygon.bufferedPolygon(
+        exteriorDistance: exteriorDistance,
+        interiorDistance: interiorDistance,
+        exteriorJoinType: exteriorJoinType,
+        interiorJoinType: interiorJoinType,
+        getRawPoints: getRawPoints,
+      );
+    } else {
+      final polygonString = field.polygon.toString();
+      bufferedPolygon = Polygon.parse(
+        await Isolate.run(
+          () => PolygonBufferExtension.bufferedPolygonString(
+            polygonJsonString: polygonString,
+            exteriorDistance: exteriorDistance,
+            interiorDistance: interiorDistance,
+            exteriorJoinType: exteriorJoinType,
+            interiorJoinType: interiorJoinType,
+            getRawPoints: getRawPoints,
           ),
+          debugName: 'Field Buffering: ${field.name}',
         ),
-    };
+      );
+    }
 
     return field.copyWith(
       polygon: bufferedPolygon,
