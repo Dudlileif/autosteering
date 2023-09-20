@@ -249,6 +249,18 @@ class ABCurve extends ABTracking {
       : offsetCurve(currentOffset);
 
   @override
+  void moveOffsetRight(Vehicle vehicle, {int offset = 1}) {
+    super.moveOffsetRight(vehicle, offset: offset);
+    currentPathTracking.setIndexToClosestPoint(vehicle);
+  }
+
+  @override
+  void moveOffsetLeft(Vehicle vehicle, {int offset = 1}) {
+    super.moveOffsetLeft(vehicle, offset: offset);
+    currentPathTracking.setIndexToClosestPoint(vehicle);
+  }
+
+  @override
   int compareToBearing(Vehicle vehicle) {
     updatePathAlongAToB(vehicle);
 
