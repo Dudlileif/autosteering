@@ -27,7 +27,7 @@ class SimulatorCore {
     // Send a communication port in return.
     sendPort.send(commandPort.sendPort);
 
-    log('Sim vehicle isolate spawn confirmation');
+    log('Simulator Core isolate spawn confirmation');
 
     // Heartbeat signal to show that the simulator isolate is alive.
     Timer.periodic(const Duration(milliseconds: 250), (timer) {
@@ -171,7 +171,7 @@ class SimulatorCore {
 
     udp.close();
 
-    log('Sim vehicle isolate exited.');
+    log('Simulator Core isolate exited.');
     Isolate.exit();
   }
 
@@ -229,7 +229,7 @@ class SimulatorCore {
       })> webWorker(
     Stream<dynamic> vehicleEvents,
   ) {
-    log('Sim vehicle worker spawned');
+    log('Simulator Core worker spawned');
 
     // The state of the simulation.
     final state = _SimulatorCoreState();

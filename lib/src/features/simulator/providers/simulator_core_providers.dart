@@ -175,6 +175,18 @@ Stream<Vehicle?> simCoreWebStream(
   });
 }
 
+/// A provider for whether long breaks in the program (i.e. when using
+/// breakpoints) should be allowed and not restart the sim core in
+/// debug mode.
+@Riverpod(keepAlive: true)
+class SimCoreDebugAllowLongBreaks extends _$SimCoreDebugAllowLongBreaks {
+  @override
+  bool build() => true;
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
+
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.
 ///
@@ -189,7 +201,7 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
     recievePort.sendPort,
     debugName: 'Simulator Core',
   );
-  log('Sim vehicle isolate spawned');
+  log('Simulator Core isolate spawned');
 
   final events = StreamQueue<dynamic>(recievePort);
 
@@ -197,10 +209,13 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
 
   ref.read(_simCoreIsolatePortProvider.notifier).update(sendPort);
 
+  Timer? restartTimer;
+
   // Exit isolate when provider is disposed.
   ref.onDispose(() {
     sendPort.send(null);
     events.cancel();
+    restartTimer?.cancel();
     ref.read(_simCoreIsolatePortProvider.notifier).update(null);
   });
 
@@ -213,18 +228,20 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
     true => 5,
   };
 
-  Timer? restartTimer;
-
   while (true) {
-    restartTimer =
-        Timer(Duration(milliseconds: (heartbeatThreshold * 1000).round()), () {
-      log('Simulator isolate unresponsive/died... Restarting...');
+    // Use the restart timer if we're not in debug mode or if we're in
+    // debug mode and don't allow long breaks.
+    if (!kDebugMode || !ref.watch(simCoreDebugAllowLongBreaksProvider)) {
+      restartTimer = Timer(
+          Duration(milliseconds: (heartbeatThreshold * 1000).round()), () {
+        log('Simulator Core isolate unresponsive/died... Restarting...');
 
-      ref.invalidateSelf();
-    });
+        ref.invalidateSelf();
+      });
+    }
 
     final message = await events.next;
-    restartTimer.cancel();
+    restartTimer?.cancel();
     if (message is ({
       Vehicle vehicle,
       double velocity,

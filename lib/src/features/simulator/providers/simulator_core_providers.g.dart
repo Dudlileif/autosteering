@@ -64,7 +64,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'fc543f6ce701d9b1af71fc8ad1926fd67a5cfc10';
+    r'6b0dd889a9dcb0e07bf50b953003dc192e7c992d';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.
@@ -144,6 +144,27 @@ final _simCoreWebInputProvider =
 );
 
 typedef _$SimCoreWebInput = Notifier<StreamController<dynamic>>;
+String _$simCoreDebugAllowLongBreaksHash() =>
+    r'f53980f91f616f7793d52dd2332281cab8661f26';
+
+/// A provider for whether long breaks in the program (i.e. when using
+/// breakpoints) should be allowed and not restart the sim core in
+/// debug mode.
+///
+/// Copied from [SimCoreDebugAllowLongBreaks].
+@ProviderFor(SimCoreDebugAllowLongBreaks)
+final simCoreDebugAllowLongBreaksProvider =
+    NotifierProvider<SimCoreDebugAllowLongBreaks, bool>.internal(
+  SimCoreDebugAllowLongBreaks.new,
+  name: r'simCoreDebugAllowLongBreaksProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simCoreDebugAllowLongBreaksHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimCoreDebugAllowLongBreaks = Notifier<bool>;
 String _$simCoreAllowManualInputHash() =>
     r'2d610224146e2bb67d3cf747cc462a72a5769943';
 
