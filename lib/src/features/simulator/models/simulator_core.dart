@@ -734,6 +734,10 @@ class _SimulatorCoreState {
     else if (message is ({bool allowManualTrackingUpdates})) {
       allowManualTrackingUpdates = message.allowManualTrackingUpdates;
     }
+    // Unknown message, log it to figure out what it is.
+    else {
+      log(message.toString());
+    }
   }
 
   /// Check if [autoSlowDown] or [autoCenterSteering] should decrease the

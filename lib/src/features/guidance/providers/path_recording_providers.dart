@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
@@ -18,6 +19,39 @@ class EnablePathRecorder extends _$EnablePathRecorder {
   void toggle() => Future(() => state != state);
 }
 
+/// A provider for the minimum distance between recorded points, i.e. when
+/// to add new points when going turning.
+@Riverpod(keepAlive: true)
+class PathRecordingTurnMinDistance extends _$PathRecordingTurnMinDistance {
+  @override
+  double build() => 1;
+
+  /// Updates [state] to [value].
+  void update(double value) => Future(() => state = value);
+}
+
+/// A provider for the maximum distance between recorded points, i.e. when
+/// to add new points when going straight.
+@Riverpod(keepAlive: true)
+class PathRecordingMaxDistance extends _$PathRecordingMaxDistance {
+  @override
+  double build() => 20;
+
+  /// Updates [state] to [value].
+  void update(double value) => Future(() => state = value);
+}
+
+/// A provider for the maximum angle between recorded points, i.e. when to
+/// add new points in turns if after [PathRecordingMinDistance] has been passed.
+@Riverpod(keepAlive: true)
+class PathRecordingTriggerAngle extends _$PathRecordingTriggerAngle {
+  @override
+  double build() => 1;
+
+  /// Updates [state] to [value].
+  void update(double value) => Future(() => state = value);
+}
+
 /// A list of the currently recording points.
 @Riverpod(keepAlive: true)
 class PathRecordingList extends _$PathRecordingList {
@@ -36,9 +70,11 @@ class PathRecordingList extends _$PathRecordingList {
                 final distance = points.last.position.spherical.distanceTo(
                   wayPoint.position,
                 );
-                if (distance > 20) {
+                if (distance > ref.read(pathRecordingMaxDistanceProvider)) {
                   await add(wayPoint);
-                } else if (distance > 1 && points.length >= 2) {
+                } else if (distance >
+                        ref.read(pathRecordingTurnMinDistanceProvider) &&
+                    points.length >= 2) {
                   final prevBearing = points[points.length - 2]
                       .position
                       .spherical
@@ -50,9 +86,8 @@ class PathRecordingList extends _$PathRecordingList {
                     wayPoint.position,
                   );
 
-                  final bearingDiff = (prevBearing - bearing).abs();
-
-                  if (bearingDiff > 1) {
+                  if (bearingDifference(prevBearing, bearing) >
+                      ref.read(pathRecordingTriggerAngleProvider)) {
                     await add(wayPoint);
                   }
                 } else if (points.length < 2 && distance > 1) {

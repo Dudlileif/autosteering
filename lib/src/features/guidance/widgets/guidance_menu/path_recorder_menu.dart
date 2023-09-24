@@ -46,6 +46,75 @@ class PathRecorderMenu extends ConsumerWidget {
             );
           },
         ),
+        Consumer(
+          builder: (context, ref, child) {
+            final distance = ref.watch(pathRecordingMaxDistanceProvider);
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Straight max distance: ${distance.toStringAsFixed(1)} m',
+                  style: textStyle,
+                ),
+                Slider.adaptive(
+                  value: distance,
+                  onChanged: ref
+                      .read(pathRecordingMaxDistanceProvider.notifier)
+                      .update,
+                  min: 1,
+                  max: 100,
+                  divisions: 99,
+                ),
+              ],
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final distance = ref.watch(pathRecordingTurnMinDistanceProvider);
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Turn min distance: ${distance.toStringAsFixed(1)} m',
+                  style: textStyle,
+                ),
+                Slider.adaptive(
+                  value: distance,
+                  onChanged: ref
+                      .read(pathRecordingTurnMinDistanceProvider.notifier)
+                      .update,
+                  min: 0.1,
+                  max: 2,
+                  divisions: 19,
+                ),
+              ],
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final angle = ref.watch(pathRecordingTriggerAngleProvider);
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Turn trigger angle: ${angle.toStringAsFixed(1)}°',
+                  style: textStyle,
+                ),
+                Slider.adaptive(
+                  value: angle,
+                  onChanged: ref
+                      .read(pathRecordingTriggerAngleProvider.notifier)
+                      .update,
+                  min: 0.1,
+                  max: 2,
+                  divisions: 19,
+                ),
+              ],
+            );
+          },
+        ),
         if (ref.watch(
           finishedPathRecordingListProvider
               .select((value) => value?.isNotEmpty ?? false),
