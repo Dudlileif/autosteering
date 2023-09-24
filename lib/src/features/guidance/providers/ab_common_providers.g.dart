@@ -26,7 +26,7 @@ final abTrackingPerpendicularDistanceProvider =
 );
 
 typedef AbTrackingPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
-String _$activeABConfigHash() => r'fdd85355687c7dd5bae150febf686ddbeb626d96';
+String _$activeABConfigHash() => r'01913754703105bf7b2eb131e99cbebe0cd06b8d';
 
 /// A provider for the currently active AB configuration.
 ///
@@ -154,27 +154,27 @@ final aBTurningRadiusProvider =
 );
 
 typedef _$ABTurningRadius = Notifier<double>;
-String _$aBTurnOffsetIncreaseHash() =>
-    r'4473ee8f30813d5f3d23b382e8f10ad58fc5a5f7';
+String _$aBTurnOffsetMinSkipsHash() =>
+    r'6f3450111f49b0865b57f009cd9c8520d7d5612f';
 
 /// A provider for the width of an AB-line.
 ///
-/// Copied from [ABTurnOffsetIncrease].
-@ProviderFor(ABTurnOffsetIncrease)
-final aBTurnOffsetIncreaseProvider =
-    NotifierProvider<ABTurnOffsetIncrease, int>.internal(
-  ABTurnOffsetIncrease.new,
-  name: r'aBTurnOffsetIncreaseProvider',
+/// Copied from [ABTurnOffsetMinSkips].
+@ProviderFor(ABTurnOffsetMinSkips)
+final aBTurnOffsetMinSkipsProvider =
+    NotifierProvider<ABTurnOffsetMinSkips, int>.internal(
+  ABTurnOffsetMinSkips.new,
+  name: r'aBTurnOffsetMinSkipsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$aBTurnOffsetIncreaseHash,
+      : _$aBTurnOffsetMinSkipsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ABTurnOffsetIncrease = Notifier<int>;
+typedef _$ABTurnOffsetMinSkips = Notifier<int>;
 String _$aBTrackingLimitModeHash() =>
-    r'7469272c296c01744a490a79506d8293b7ad02a3';
+    r'55d1f4397f68b4921c1985c25dcb3b86fdbd704e';
 
 /// A provider for which limit mode the AB tracking should use.
 ///
@@ -248,6 +248,25 @@ final displayABTrackingProvider =
 );
 
 typedef _$DisplayABTracking = Notifier<ABTracking?>;
+String _$displayABTrackingLinesHash() =>
+    r'84f7128b54aa99eb72494ee13284f6c61288e87c';
+
+/// A provider for the calculated AB lines/curves.
+///
+/// Copied from [DisplayABTrackingLines].
+@ProviderFor(DisplayABTrackingLines)
+final displayABTrackingLinesProvider = NotifierProvider<DisplayABTrackingLines,
+    Map<int, List<WayPoint>>?>.internal(
+  DisplayABTrackingLines.new,
+  name: r'displayABTrackingLinesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$displayABTrackingLinesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DisplayABTrackingLines = Notifier<Map<int, List<WayPoint>>?>;
 String _$aBPointAHash() => r'3f3444083a6d7b5cc9f028c51165af3989992b95';
 
 /// A provider for the starting point A of an AB-line.

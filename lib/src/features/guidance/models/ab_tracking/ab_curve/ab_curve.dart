@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -12,252 +14,225 @@ class ABCurve extends ABTracking {
   ///
   /// The parallel lines are spaced by [width].
   ABCurve({
-    required this.baseCurve,
-    required super.start,
-    required super.end,
+    required super.baseLine,
     required super.width,
-    super.turningRadius = 10,
-    super.turnOffsetIncrease = 1,
-    super.limitMode = ABLimitMode.limitedTurnWithin,
-    super.snapToClosestLine = false,
+    super.boundary,
+    super.boundaryString,
+    super.turningRadius,
+    super.turnOffsetMinSkips,
+    super.limitMode,
+    super.snapToClosestLine,
+    super.calculateLinesOnCreation,
   })  : assert(
-          baseCurve.length >= 2,
+          baseLine.length >= 2,
           'Base curve has to have at least two points',
         ),
-        currentPathTracking = PurePursuitPathTracking(wayPoints: baseCurve),
-        baseCurvePathTracking = PurePursuitPathTracking(wayPoints: baseCurve),
-        isCCW = isCurveCounterclockwise(baseCurve.map((e) => e.position)) {
-    super.length = baseCurve.foldIndexed(
+        currentPathTracking = PurePursuitPathTracking(wayPoints: baseLine),
+        baseLinePathTracking = PurePursuitPathTracking(wayPoints: baseLine) {
+    super.length = baseLine.foldIndexed(
       0,
-      (index, prevValue, element) => index + 1 < baseCurve.length
+      (index, prevValue, element) => index + 1 < baseLine.length
           ? prevValue +
-              element.distanceToSpherical(baseCurve.elementAt(index + 1))
+              element.distanceToSpherical(baseLine.elementAt(index + 1))
           : prevValue,
     );
-    nextPathTracking = PurePursuitPathTracking(wayPoints: nextCurve);
-    _curves[0] = baseCurve;
-    _curves[nextOffset] = offsetCurve(nextOffset);
+    if (boundary == null) {
+      currentPathTracking = PurePursuitPathTracking(wayPoints: baseLine);
+      nextPathTracking = PurePursuitPathTracking(wayPoints: nextLine);
+      lines[0] = baseLine;
+      lines[nextOffset] = offsetLine(nextOffset);
+    }
   }
 
-  /// The recorded base curve.
-  final List<WayPoint> baseCurve;
+  /// Creates an ABCurve
+  ABCurve.preCalculated({
+    required super.baseLine,
+    required super.width,
+    super.boundary,
+    super.turningRadius,
+    super.turnOffsetMinSkips,
+    super.limitMode,
+    super.snapToClosestLine,
+    Map<int, List<WayPoint>>? lines,
+    Iterable<int>? finishedOffsets,
+    Iterable<int>? offsetsInsideBoundary,
+    super.calculateLinesOnCreation = false,
+  })  : baseLinePathTracking = PurePursuitPathTracking(wayPoints: baseLine),
+        currentPathTracking = PurePursuitPathTracking(wayPoints: baseLine) {
+    this.lines.addAll(lines ?? {});
+    this.finishedOffsets.addAll(finishedOffsets ?? []);
+    if (boundary != null && offsetsInsideBoundary != null) {
+      this.offsetsInsideBoundary = SplayTreeSet.from(offsetsInsideBoundary);
+    }
+  }
 
-  /// Whether the curve is counterclockwise or not (clockwise).
-  final bool isCCW;
+  /// Creates an [ABCurve] from the [json] object.
+  factory ABCurve.fromJson(Map<String, dynamic> json) {
+    final baseLine = List<Map<String, dynamic>>.from(json['base_line'] as List)
+        .map(WayPoint.fromJson)
+        .toList();
+
+    final boundary = json['boundary'] != null
+        ? Polygon.parse(json['boundary'] as String)
+        : null;
+
+    Map<int, List<WayPoint>> getLinesFromMap(Map<String, dynamic> map) {
+      final offsets = List<int>.from(map['offsets'] as List);
+      final rawPaths = List<List<dynamic>>.from(map['paths'] as List);
+      final paths = rawPaths
+          .map(
+            (path) => path
+                .map(
+                  (e) => WayPoint.fromJson(Map<String, dynamic>.from(e as Map)),
+                )
+                .toList(),
+          )
+          .toList();
+      return Map.fromIterables(offsets, paths);
+    }
+
+    final lines = json['lines'] != null
+        ? getLinesFromMap(Map<String, dynamic>.from(json['lines'] as Map))
+        : null;
+
+    final finishedOffsets = json['finished_offsets'] != null
+        ? Set<int>.from(json['finished_offsets'] as Iterable)
+        : null;
+
+    final offsetsInsideBoundary = json['offsets_inside_boundary'] != null
+        ? Set<int>.from(json['offsets_inside_boundary'] as Iterable)
+        : null;
+
+    return ABCurve.preCalculated(
+      baseLine: baseLine,
+      boundary: boundary,
+      width: json['width'] as double,
+      turningRadius: json['turning_radius'] as double? ?? 10,
+      turnOffsetMinSkips: json['turn_offset_skips'] as int? ?? 1,
+      lines: lines,
+      finishedOffsets: finishedOffsets,
+      offsetsInsideBoundary: offsetsInsideBoundary,
+      calculateLinesOnCreation: json['calculate_lines'] as bool,
+    );
+  }
+
+  /// Creates a json compatible structure of the object.
+  @override
+  Map<String, dynamic> toJson() => super.toJson()..['type'] = 'AB Curve';
 
   /// Whether the [currentPathTracking] is in the same or opposite direction as
-  /// [baseCurve].
+  /// [baseLine].
   bool pathAlongAToB = true;
 
-  /// The path tracking for the [baseCurve].
-  PathTracking baseCurvePathTracking;
+  /// The path tracking for the [baseLine].
+  PathTracking baseLinePathTracking;
 
-  /// The path tracking for the [currentCurve].
-  PathTracking currentPathTracking;
+  /// The path tracking for the [currentLine].
+  PathTracking? currentPathTracking;
 
-  /// The path tracking for the [nextCurve].
-  late PathTracking nextPathTracking;
-
-  /// A map of the already calculated offset curves.
-  final Map<int, List<WayPoint>> _curves = {};
+  /// The path tracking for the [nextLine].
+  PathTracking? nextPathTracking;
 
   @override
   set currentOffset(int newOffset) {
     if (currentOffset != newOffset) {
-      super.currentOffset = newOffset;
-      currentPathTracking.interPolateWayPoints(newWayPoints: currentCurve);
+      if ((boundary != null &&
+              offsetsInsideBoundary != null &&
+              (offsetsInsideBoundary?.contains(newOffset) ?? false)) ||
+          boundary == null) {
+        super.currentOffset = newOffset;
+        currentPathTracking?.interPolateWayPoints(newWayPoints: currentLine);
+      }
     }
   }
 
   @override
-  WayPoint offsetStart(int offset) => baseCurve.first
-      .moveSpherical(distance: offset * width, angleFromBearing: 90);
-
-  @override
-  WayPoint offsetEnd(int offset) => baseCurve.last
-      .moveSpherical(distance: offset * width, angleFromBearing: 90);
+  set nextOffset(int newOffset) {
+    if (nextOffset != newOffset) {
+      if ((boundary != null &&
+              offsetsInsideBoundary != null &&
+              (offsetsInsideBoundary?.contains(newOffset) ?? false)) ||
+          boundary == null) {
+        super.nextOffset = newOffset;
+        nextPathTracking?.interPolateWayPoints(newWayPoints: nextLine);
+      }
+    }
+  }
 
   @override
   WayPoint get currentStart => pathAlongAToB
-      ? currentPathTracking.path.first
-      : currentPathTracking.path.last;
+      ? currentLine.firstOrNull ?? super.currentEnd
+      : currentLine.lastOrNull ?? super.currentStart;
 
   @override
   WayPoint get currentEnd => pathAlongAToB
-      ? currentPathTracking.path.last
-      : currentPathTracking.path.first;
+      ? currentLine.lastOrNull ?? super.currentEnd
+      : currentLine.firstOrNull ?? super.currentStart;
 
   @override
-  WayPoint get nextStart => offsetCurve(nextOffset).first;
-
-  @override
-  WayPoint get nextEnd => offsetCurve(nextOffset).last;
-
-  /// Offsets the [baseCurve] point by [offset]*[width] meters to the side.
-  ///
-  /// Negative [offset] means the point is offset in the opposite direction.
-  List<WayPoint> offsetCurve(int offset) {
-    if (_curves[offset] != null) {
-      return _curves[offset]!;
-    }
-
-    final buffered = RingBuffer.bufferCircular(
-      ring: baseCurve.map((e) => e.position).toList()
-        ..add(
-          baseCurve.last.moveSpherical(distance: 100).position,
-        )
-        ..insert(
-          0,
-          baseCurve.first
-              .moveSpherical(distance: 100, angleFromBearing: 180)
-              .position,
-        ),
-      distance: offset * width,
-      extendEnds: false,
-      smoothingFactor: 4.0 * (1 + offset),
-      swapDirectionIfClockwise: !isCCW,
-    );
-
-    final newCurve = <WayPoint>[];
-    if (buffered.length >= 2) {
-      buffered.forEachIndexed((index, element) {
-        if (index == 0) {
-          newCurve.add(
-            WayPoint(
-              position: element,
-              bearing: element.spherical
-                  .initialBearingTo(buffered.elementAt(index + 1)),
-            ),
-          );
-        } else {
-          newCurve.add(
-            WayPoint(
-              position: element,
-              bearing: buffered
-                  .elementAt(index - 1)
-                  .spherical
-                  .finalBearingTo(element),
-            ),
-          );
-        }
-      });
-    }
-    if (newCurve.length > 2) {
-      final pointsToRemove = <WayPoint>[];
-      for (var i = 1; i < newCurve.length - 1; i++) {
-        final point = newCurve[i];
-        final fromStartBearing =
-            newCurve.first.initialBearingToSpherical(point);
-        final fromEndBearing = newCurve.last.initialBearingToSpherical(point);
-
-        if (signedBearingDifference(newCurve.first.bearing, fromStartBearing)
-                    .abs() >
-                90 ||
-            signedBearingDifference(newCurve.last.bearing, fromEndBearing)
-                    .abs() <
-                90) {
-          pointsToRemove.add(point);
-        }
-      }
-      for (final element in pointsToRemove) {
-        newCurve.remove(element);
-      }
-    }
-
-    final bbox = GeoBox.from([
-      offsetStart(offset - 1).position,
-      offsetEnd(offset - 1).position,
-      offsetEnd(offset + 1).position,
-      offsetStart(offset + 1).position,
-    ]);
-
-    // Filter out points outside the bounding box.
-    newCurve
-      ..removeWhere(
-        (element) => !bbox.intersectsPoint2D(element.position),
-      )
-      // Filter out points that are within 10 cm of others to mitigate bearing
-      // errors.
-      ..forEachIndexed((index, element) {
-        if (index == newCurve.length - 1) {
-          if (element.distanceToSpherical(newCurve.elementAt(index - 1)) <
-              0.1) {
-            newCurve.removeAt(index - 1);
-          }
-        } else if (index > 0) {
-          if (element.distanceToSpherical(newCurve.elementAt(index - 1)) <
-              0.1) {
-            newCurve.removeAt(index);
-          }
-        }
-      });
-
-    // Ensure that the end points has the correct bearings.
-    if (newCurve.length >= 2) {
-      newCurve[0] = newCurve.first.copyWith(
-        bearing: newCurve.first.initialBearingToSpherical(newCurve[1]),
-      );
-      newCurve[newCurve.length - 1] = newCurve.last.copyWith(
-        bearing: newCurve[newCurve.length - 2]
-            .finalBearingToSpherical(newCurve.last),
-      );
-    }
-    _curves[offset] = newCurve;
-    return newCurve;
+  void calculateLinesWithinBoundary() {
+    super.calculateLinesWithinBoundary();
+    nextPathTracking = PurePursuitPathTracking(wayPoints: nextLine);
   }
 
   /// Updates [pathAlongAToB] depending on if the [vehicle] is along the
   /// A-B direction.
   void updatePathAlongAToB(Vehicle vehicle) {
-    final bearingAlongStartToEndOfCurrentPath = bearingDifference(
-          vehicle.bearing,
-          currentPathTracking.currentWayPoint(vehicle).bearing,
-        ) <
-        90;
+    if (currentPathTracking != null) {
+      final bearingAlongStartToEndOfCurrentPath = bearingDifference(
+            vehicle.bearing,
+            currentPathTracking!.currentWayPoint(vehicle).bearing,
+          ) <
+          90;
 
-    if (!bearingAlongStartToEndOfCurrentPath && activeTurn == null) {
-      pathAlongAToB = !pathAlongAToB;
-      currentPathTracking
-        ..interPolateWayPoints(newWayPoints: currentCurve)
-        ..cumulativeIndex = switch (vehicle.isReversing) {
-          true => -1,
-          false => 0,
-        };
-      nextPathTracking
-        ..interPolateWayPoints(newWayPoints: nextCurve)
-        ..cumulativeIndex = switch (vehicle.isReversing) {
-          true => -1,
-          false => 0,
-        };
+      if (!bearingAlongStartToEndOfCurrentPath && activeTurn == null) {
+        pathAlongAToB = !pathAlongAToB;
+        currentPathTracking
+          ?..interPolateWayPoints(newWayPoints: currentLine)
+          ..cumulativeIndex = switch (vehicle.isReversing) {
+            true => -1,
+            false => 0,
+          };
+        nextPathTracking
+          ?..interPolateWayPoints(newWayPoints: nextLine)
+          ..cumulativeIndex = switch (vehicle.isReversing) {
+            true => -1,
+            false => 0,
+          };
+      }
     }
   }
 
-  /// The next curve to follow after the current one.
-  List<WayPoint> get nextCurve => pathAlongAToB
-      ? offsetCurve(nextOffset)
+  /// The next line to follow after the current one.
+  @override
+  List<WayPoint> get nextLine => pathAlongAToB
+      ? super
+          .nextLine
           .reversed
           .map((e) => e.copyWith(bearing: (e.bearing + 180).wrap360()))
           .toList()
-      : offsetCurve(nextOffset);
+      : super.nextLine;
 
-  /// The curve for the [currentOffset].
-  List<WayPoint> get currentCurve => !pathAlongAToB
-      ? offsetCurve(currentOffset)
+  /// The line for the [currentOffset].
+  @override
+  List<WayPoint> get currentLine => !pathAlongAToB
+      ? super
+          .currentLine
           .reversed
           .map((e) => e.copyWith(bearing: (e.bearing + 180).wrap360()))
           .toList()
-      : offsetCurve(currentOffset);
+      : super.currentLine;
 
   @override
   void moveOffsetRight(Vehicle vehicle, {int offset = 1}) {
     super.moveOffsetRight(vehicle, offset: offset);
-    currentPathTracking.setIndexToClosestPoint(vehicle);
+    currentPathTracking?.setIndexToClosestPoint(vehicle);
   }
 
   @override
   void moveOffsetLeft(Vehicle vehicle, {int offset = 1}) {
     super.moveOffsetLeft(vehicle, offset: offset);
-    currentPathTracking.setIndexToClosestPoint(vehicle);
+    currentPathTracking?.setIndexToClosestPoint(vehicle);
   }
 
   @override
@@ -270,7 +245,7 @@ class ABCurve extends ABTracking {
     };
   }
 
-  /// The current [PathTracking] of the [currentCurve] for the [Vehicle].
+  /// The current [PathTracking] of the [currentLine] for the [Vehicle].
   void updateCurrentPathTracking(Vehicle vehicle, {bool force = false}) {
     final pathTrackingIsCorrectMode = switch (vehicle.pathTrackingMode) {
       PathTrackingMode.stanley => currentPathTracking is StanleyPathTracking,
@@ -281,34 +256,38 @@ class ABCurve extends ABTracking {
 
     // Return if we're already in the right mode.
     if (!force && pathTrackingIsCorrectMode) {
-      // currentPathTracking.interPolateWayPoints(newWayPoints: currentCurve);
+      // currentPathTracking.interPolateWayPoints(newWayPoints: currentLine);
       return;
     }
 
     currentPathTracking = switch (vehicle.pathTrackingMode) {
-      PathTrackingMode.stanley => StanleyPathTracking(wayPoints: currentCurve),
+      PathTrackingMode.stanley => StanleyPathTracking(wayPoints: currentLine),
       PathTrackingMode.purePursuit ||
       PathTrackingMode.pid =>
-        PurePursuitPathTracking(wayPoints: currentCurve),
+        PurePursuitPathTracking(wayPoints: currentLine),
     }
       ..setIndexToClosestPoint(vehicle);
 
-    nextPathTracking = switch (vehicle.pathTrackingMode) {
-      PathTrackingMode.stanley => StanleyPathTracking(wayPoints: nextCurve),
-      PathTrackingMode.purePursuit ||
-      PathTrackingMode.pid =>
-        PurePursuitPathTracking(wayPoints: nextCurve),
+    if (boundary != null &&
+        !(offsetsInsideBoundary?.contains(nextOffset) ?? false)) {
+      nextPathTracking = null;
+    } else {
+      nextPathTracking = switch (vehicle.pathTrackingMode) {
+        PathTrackingMode.stanley => StanleyPathTracking(wayPoints: nextLine),
+        PathTrackingMode.purePursuit ||
+        PathTrackingMode.pid =>
+          PurePursuitPathTracking(wayPoints: nextLine),
+      }
+        ..cumulativeIndex = switch (vehicle.isReversing) {
+          true => -1,
+          false => 0,
+        };
     }
-      ..cumulativeIndex = switch (vehicle.isReversing) {
-        true => -1,
-        false => 0,
-      };
-
-    baseCurvePathTracking = switch (vehicle.pathTrackingMode) {
-      PathTrackingMode.stanley => StanleyPathTracking(wayPoints: baseCurve),
+    baseLinePathTracking = switch (vehicle.pathTrackingMode) {
+      PathTrackingMode.stanley => StanleyPathTracking(wayPoints: baseLine),
       PathTrackingMode.purePursuit ||
       PathTrackingMode.pid =>
-        PurePursuitPathTracking(wayPoints: baseCurve),
+        PurePursuitPathTracking(wayPoints: baseLine),
     }
       ..setIndexToClosestPoint(vehicle);
 
@@ -318,16 +297,18 @@ class ABCurve extends ABTracking {
   @override
   Geographic currentPerpendicularIntersect(Vehicle vehicle) =>
       activeTurn?.perpendicularIntersect(vehicle) ??
-      currentPathTracking.perpendicularIntersect(vehicle);
+      currentPathTracking?.perpendicularIntersect(vehicle) ??
+      vehicle.pathTrackingPoint;
 
   @override
   double signedPerpendicularDistanceToCurrentLine(Vehicle vehicle) =>
       activeTurn?.perpendicularDistance(vehicle) ??
-      currentPathTracking.perpendicularDistance(vehicle);
+      currentPathTracking?.perpendicularDistance(vehicle) ??
+      0;
 
   @override
   double perpendicularDistanceToBaseLine(Vehicle vehicle) =>
-      baseCurvePathTracking.perpendicularDistance(vehicle);
+      baseLinePathTracking.perpendicularDistance(vehicle);
 
   @override
   double perpendicularDistanceToOffsetLine(int offset, Vehicle vehicle) =>
@@ -345,22 +326,23 @@ class ABCurve extends ABTracking {
     required Vehicle vehicle,
     WayPoint? startPoint,
     WayPoint? endPoint,
-  }) =>
-      switch (pathAlongAToB) {
+  }) {
+    if (currentPathTracking != null) {
+      return switch (pathAlongAToB) {
         true => switch (bearingAlongAToB) {
               true => switch (vehicle.isReversing) {
-                  true =>
-                    currentPathTracking.cumulativePathSegmentLengths.last -
-                        currentPathTracking.distanceAlongPathFromStart(vehicle),
+                  true => currentPathTracking!
+                          .cumulativePathSegmentLengths.last -
+                      currentPathTracking!.distanceAlongPathFromStart(vehicle),
                   false =>
-                    currentPathTracking.distanceAlongPathFromStart(vehicle),
+                    currentPathTracking!.distanceAlongPathFromStart(vehicle),
                 },
               false => switch (vehicle.isReversing) {
-                  true =>
-                    currentPathTracking.cumulativePathSegmentLengths.last -
-                        currentPathTracking.distanceAlongPathFromStart(vehicle),
+                  true => currentPathTracking!
+                          .cumulativePathSegmentLengths.last -
+                      currentPathTracking!.distanceAlongPathFromStart(vehicle),
                   false =>
-                    currentPathTracking.distanceAlongPathFromStart(vehicle),
+                    currentPathTracking!.distanceAlongPathFromStart(vehicle),
                 },
             } +
             switch (vehicle.pathTrackingMode) {
@@ -369,18 +351,18 @@ class ABCurve extends ABTracking {
             },
         false => switch (bearingAlongAToB) {
               true => switch (vehicle.isReversing) {
-                  true =>
-                    currentPathTracking.cumulativePathSegmentLengths.last -
-                        currentPathTracking.distanceAlongPathFromStart(vehicle),
+                  true => currentPathTracking!
+                          .cumulativePathSegmentLengths.last -
+                      currentPathTracking!.distanceAlongPathFromStart(vehicle),
                   false =>
-                    currentPathTracking.distanceAlongPathFromStart(vehicle),
+                    currentPathTracking!.distanceAlongPathFromStart(vehicle),
                 },
               false => switch (vehicle.isReversing) {
-                  true =>
-                    currentPathTracking.cumulativePathSegmentLengths.last -
-                        currentPathTracking.distanceAlongPathFromStart(vehicle),
+                  true => currentPathTracking!
+                          .cumulativePathSegmentLengths.last -
+                      currentPathTracking!.distanceAlongPathFromStart(vehicle),
                   false =>
-                    currentPathTracking.distanceAlongPathFromStart(vehicle),
+                    currentPathTracking!.distanceAlongPathFromStart(vehicle),
                 },
             } +
             switch (vehicle.pathTrackingMode) {
@@ -388,6 +370,9 @@ class ABCurve extends ABTracking {
               _ => 0,
             }
       };
+    }
+    return 0;
+  }
 
   @override
   void updateNextOffset(Vehicle vehicle) {
@@ -405,102 +390,93 @@ class ABCurve extends ABTracking {
       if (activeTurn != null && (activeTurn?.isCompleted ?? false)) {
         finishedOffsets.add(currentOffset);
         currentOffset = nextOffset;
-        updateNextOffset(vehicle);
         passedMiddle = false;
         activeTurn = null;
       } else if (activeTurn != null) {
         upcomingTurn = null;
         passedMiddle = false;
         return;
+      } else if (currentPathTracking?.isCompleted ?? false) {
+        finishedOffsets.add(currentOffset);
       }
-      final bearingAlongAToB = !compareToBearing(vehicle).isNegative;
-
-      final progress = alongProgress(
-        bearingAlongAToB: bearingAlongAToB,
-        vehicle: vehicle,
-      );
-
-      final lineLengthBetweenTurns =
-          currentPathTracking.cumulativePathSegmentLengths.last -
-              switch (limitMode) {
-                ABLimitMode.limitedTurnWithin => turningRadius,
-                _ => 0
-              };
-
-      passedMiddle = progress >= lineLengthBetweenTurns / 2;
-      if (!passedMiddle) {
-        upcomingTurn = null;
-        return;
-      } else if (progress > lineLengthBetweenTurns && upcomingTurn != null
-          // &&vehicle.velocity.abs() > 0
-          ) {
-        activeTurn = upcomingTurn;
-        upcomingTurn = null;
+      if (nextPathTracking == null) {
         return;
       }
+      updateNextOffset(vehicle);
 
-      final startPoint = switch (vehicle.isReversing) {
-        false => currentPathTracking.path.last.moveSpherical(
-            distance: switch (limitMode) {
-              ABLimitMode.limitedTurnWithin => turningRadius,
-              _ => 0
-            },
+      if (currentPathTracking != null &&
+          nextPathTracking != null &&
+          currentOffset != nextOffset) {
+        final bearingAlongAToB = !compareToBearing(vehicle).isNegative;
+
+        final progress = alongProgress(
+          bearingAlongAToB: bearingAlongAToB,
+          vehicle: vehicle,
+        );
+
+        final lineLengthBetweenTurns =
+            currentPathTracking!.cumulativePathSegmentLengths.last -
+                switch (limitMode) {
+                  ABLimitMode.limitedTurnWithin => turningRadius,
+                  _ => 0
+                };
+
+        passedMiddle = progress >= lineLengthBetweenTurns / 2;
+        if (!passedMiddle) {
+          upcomingTurn = null;
+          return;
+        } else if (progress > lineLengthBetweenTurns && upcomingTurn != null) {
+          activeTurn = upcomingTurn;
+          upcomingTurn = null;
+          return;
+        }
+
+        var startPoint = switch (vehicle.isReversing) {
+          false => currentPathTracking!.path.last,
+          true => currentPathTracking!.path.first.rotateByAngle(180),
+        };
+
+        var endPoint = switch (vehicle.isReversing) {
+          false => nextPathTracking!.path.first,
+          true => nextPathTracking!.path.last.rotateByAngle(180),
+        };
+
+        if (limitMode == ABLimitMode.limitedTurnWithin) {
+          startPoint = startPoint.moveSpherical(
+            distance: turningRadius,
             angleFromBearing: 180,
-          ),
-        true => currentPathTracking.path.first
-            .moveSpherical(
-              distance: switch (limitMode) {
-                ABLimitMode.limitedTurnWithin => turningRadius,
-                _ => 0
-              },
-            )
-            .rotateByAngle(180),
-      };
+          );
+          endPoint = endPoint.moveSpherical(distance: turningRadius);
+        }
 
-      final endPoint = switch (vehicle.isReversing) {
-        false => nextPathTracking.path.first.moveSpherical(
-            distance: switch (limitMode) {
-              ABLimitMode.limitedTurnWithin => turningRadius,
-              _ => 0
-            },
-          ),
-        true => nextPathTracking.path.last
-            .moveSpherical(
-              distance: switch (limitMode) {
-                ABLimitMode.limitedTurnWithin => turningRadius,
-                _ => 0
-              },
-              angleFromBearing: 180,
-            )
-            .rotateByAngle(180)
-      };
+        final dubinsPath = DubinsPath(
+              start: startPoint,
+              end: endPoint,
+              turningRadius: turningRadius,
+              stepSize: 0.5,
+              allowCrossingDirectLine: false,
+            ).bestDubinsPathPlan?.wayPoints ??
+            [startPoint, endPoint];
 
-      final dubinsPath = DubinsPath(
-            start: startPoint,
-            end: endPoint,
-            turningRadius: turningRadius,
-            stepSize: 0.5,
-          ).bestDubinsPathPlan?.wayPoints ??
-          [startPoint, endPoint];
+        final turnPath = switch (vehicle.isReversing) {
+          true => dubinsPath.reversed.toList(),
+          false => dubinsPath,
+        };
 
-      final turnPath = switch (vehicle.isReversing) {
-        true => dubinsPath.reversed.toList(),
-        false => dubinsPath,
-      };
+        final turn = switch (vehicle.pathTrackingMode) {
+          PathTrackingMode.purePursuit ||
+          PathTrackingMode.pid =>
+            PurePursuitPathTracking(wayPoints: turnPath),
+          PathTrackingMode.stanley => StanleyPathTracking(wayPoints: turnPath),
+        };
 
-      final turn = switch (vehicle.pathTrackingMode) {
-        PathTrackingMode.purePursuit ||
-        PathTrackingMode.pid =>
-          PurePursuitPathTracking(wayPoints: turnPath),
-        PathTrackingMode.stanley => StanleyPathTracking(wayPoints: turnPath),
-      };
+        if (vehicle.isReversing) {
+          turn.cumulativeIndex--;
+        }
 
-      if (vehicle.isReversing) {
-        turn.cumulativeIndex--;
-      }
-
-      if (passedMiddle) {
-        upcomingTurn = turn;
+        if (passedMiddle) {
+          upcomingTurn = turn;
+        }
       }
     }
   }
@@ -581,7 +557,7 @@ class ABCurve extends ABTracking {
   @override
   double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) {
     updateCurrentPathTracking(vehicle);
-    currentPathTracking.tryChangeWayPoint(vehicle);
+    currentPathTracking?.tryChangeWayPoint(vehicle);
     return super.nextSteeringAngle(vehicle, mode: mode);
   }
 
@@ -591,24 +567,20 @@ class ABCurve extends ABTracking {
     double stepSize = 10,
     int num = 2,
   }) {
-    final oldOffset = currentOffset;
-    if (snapToClosestLine && activeTurn == null) {
-      currentOffset = numOffsetsToClosestLine(vehicle);
-    }
-    checkIfShouldReengageSnap(vehicle);
+    if (currentPathTracking != null) {
+      final currentIndex = currentPathTracking!.currentIndex
+          .clamp(0, currentPathTracking!.path.length - 1);
 
-    if (oldOffset != currentOffset) {
-      updateCurrentPathTracking(vehicle, force: true);
-    }
+      var endIndex = currentIndex + num;
+      if (endIndex >= currentPathTracking!.path.length) {
+        endIndex = currentPathTracking!.path.length - 1;
+      }
 
-    var endIndex = currentPathTracking.currentIndex + num;
-    if (endIndex >= currentPathTracking.path.length) {
-      endIndex = currentPathTracking.path.length - 1;
+      return currentPathTracking!.path
+          .getRange(currentIndex, endIndex)
+          .toList();
     }
-
-    return currentPathTracking.path
-        .getRange(currentPathTracking.currentIndex, endIndex)
-        .toList();
+    return [];
   }
 
   @override
@@ -617,31 +589,27 @@ class ABCurve extends ABTracking {
     double stepSize = 10,
     int num = 2,
   }) {
-    final oldOffset = currentOffset;
-    if (snapToClosestLine && activeTurn == null) {
-      currentOffset = numOffsetsToClosestLine(vehicle);
-    }
-    checkIfShouldReengageSnap(vehicle);
+    if (currentPathTracking != null) {
+      final currentIndex = currentPathTracking!.currentIndex
+          .clamp(0, currentPathTracking!.path.length - 1);
 
-    if (oldOffset != currentOffset) {
-      updateCurrentPathTracking(vehicle, force: true);
+      var startIndex = currentIndex - num;
+      if (startIndex < 0) {
+        startIndex = 0;
+      }
+      return currentPathTracking!.path
+          .getRange(
+            startIndex,
+            currentIndex,
+          )
+          .toList();
     }
-
-    var startIndex = currentPathTracking.currentIndex - num;
-    if (startIndex < 0) {
-      startIndex = 0;
-    }
-    return currentPathTracking.path
-        .getRange(
-          startIndex,
-          currentPathTracking.currentIndex,
-        )
-        .toList();
+    return [];
   }
 
   @override
   void manualUpdate(Vehicle vehicle) {
-    currentPathTracking.tryChangeWayPoint(vehicle);
+    currentPathTracking?.tryChangeWayPoint(vehicle);
     super.manualUpdate(vehicle);
   }
 }

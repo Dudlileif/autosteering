@@ -71,9 +71,9 @@ class ABTurningRadius extends _$ABTurningRadius {
 
 /// A provider for the width of an AB-line.
 @Riverpod(keepAlive: true)
-class ABTurnOffsetIncrease extends _$ABTurnOffsetIncrease {
+class ABTurnOffsetMinSkips extends _$ABTurnOffsetMinSkips {
   @override
-  int build() => 1;
+  int build() => 0;
 
   /// Updates [state] to [value].
   void update(int value) => Future(() => state = value);
@@ -83,7 +83,7 @@ class ABTurnOffsetIncrease extends _$ABTurnOffsetIncrease {
 @Riverpod(keepAlive: true)
 class ABTrackingLimitMode extends _$ABTrackingLimitMode {
   @override
-  ABLimitMode build() => ABLimitMode.limitedTurnWithin;
+  ABLimitMode build() => ABLimitMode.limitedTurnOutside;
 
   /// Updates [state] to [value].
   void update(ABLimitMode value) => Future(() => state = value);
@@ -123,6 +123,16 @@ class DisplayABTracking extends _$DisplayABTracking {
 
   /// Updates [state] to [value].
   void update(ABTracking? value) => Future(() => state = value);
+}
+
+/// A provider for the calculated AB lines/curves.
+@Riverpod(keepAlive: true)
+class DisplayABTrackingLines extends _$DisplayABTrackingLines {
+  @override
+  Map<int, List<WayPoint>>? build() => null;
+
+  /// Updates [state] to [value].
+  void update(Map<int, List<WayPoint>>? value) => Future(() => state = value);
 }
 
 /// A provider for the starting point A of an AB-line.
@@ -167,7 +177,7 @@ ABConfig activeABConfig(ActiveABConfigRef ref) {
   return ABConfig(
     width: ref.watch(aBWidthProvider),
     turningRadius: ref.watch(aBTurningRadiusProvider),
-    turnOffsetIncrease: ref.watch(aBTurnOffsetIncreaseProvider),
+    turnOffsetMinSkips: ref.watch(aBTurnOffsetMinSkipsProvider),
     snapToClosestLine: ref.watch(aBSnapToClosestLineProvider),
     offsetOppositeTurn: ref.watch(aBOffsetOppositeTurnProvider),
     limitMode: ref.watch(aBTrackingLimitModeProvider),

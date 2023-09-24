@@ -7,7 +7,7 @@ class ABConfig extends Equatable {
   const ABConfig({
     required this.width,
     required this.turningRadius,
-    required this.turnOffsetIncrease,
+    required this.turnOffsetMinSkips,
     required this.snapToClosestLine,
     required this.offsetOppositeTurn,
     required this.limitMode,
@@ -17,7 +17,7 @@ class ABConfig extends Equatable {
   final double width;
 
   /// How many offsets we should skip to the next line.
-  final int turnOffsetIncrease;
+  final int turnOffsetMinSkips;
 
   /// The minimum turning radius of any turn between lines.
   final double turningRadius;
@@ -35,7 +35,7 @@ class ABConfig extends Equatable {
   List<Object?> get props => [
         width,
         turningRadius,
-        turnOffsetIncrease,
+        turnOffsetMinSkips,
         snapToClosestLine,
         offsetOppositeTurn,
         limitMode,

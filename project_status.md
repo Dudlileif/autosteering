@@ -17,6 +17,7 @@
 - Pure pursuit and Stanley autosteering modes
 
 - Basic AB lines and curves with autosteering, u-turn at the ends
+  - Can be clipped to field/boundary or unlimited
 
 - Basic equipment simulation
   - Front and rear fixed hitch (three point)
@@ -53,6 +54,8 @@
 - Import/export to the original AgOpenGps
 
 - Custom hotkeys, also from hardware
+
+- Implement BL(E) communication with ESP32 etc...
 
 ## Further ideas
 

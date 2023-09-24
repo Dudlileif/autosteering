@@ -94,6 +94,8 @@ sealed class PathTracking {
             start: path.last.position,
             end: path.last.moveSpherical(distance: 100).position,
           );
+    } else if (currentIndex >= path.length) {
+      cumulativeIndex = path.length - 2;
     }
     return cumulativePathSegmentLengths[currentIndex] +
         vehicle.pathTrackingPoint.spherical.alongTrackDistanceTo(
@@ -201,7 +203,7 @@ sealed class PathTracking {
   /// The next waypoint when driving forward.
   WayPoint get nextForwardWayPoint {
     if (loopMode == PathTrackingLoopMode.none && isCompleted) {
-      return path.last.moveSpherical(distance: 100);
+      return (path.lastOrNull ?? wayPoints.last).moveSpherical(distance: 100);
     }
     return path[nextForwardIndex % path.length];
   }
@@ -209,7 +211,8 @@ sealed class PathTracking {
   /// The next waypoint when driving in reverse.
   WayPoint get nextReversingWayPoint {
     if (loopMode == PathTrackingLoopMode.none && isCompleted) {
-      return path.first.moveSpherical(distance: 100, angleFromBearing: 180);
+      return (path.firstOrNull ?? wayPoints.first)
+          .moveSpherical(distance: 100, angleFromBearing: 180);
     }
     return path[nextReversingIndex % path.length];
   }
@@ -255,18 +258,11 @@ sealed class PathTracking {
   /// The distance from the vehicle to the [perpendicularIntersect] point.
   ///
   /// The value is negative if the vehicle is to the left of the line.
-  double perpendicularDistance(Vehicle vehicle) {
-    final sign = switch (vehicle.isReversing) {
-      false => 1,
-      true => -1,
-    };
-
-    return sign *
-        vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
-          start: currentWayPoint(vehicle).position,
-          end: nextWayPoint(vehicle).position,
-        );
-  }
+  double perpendicularDistance(Vehicle vehicle) =>
+      vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
+        start: currentWayPoint(vehicle).position,
+        end: nextForwardWayPoint.position,
+      );
 
   /// The waypoint in [path] that is closest to the [vehicle].
   WayPoint closestWayPoint(Vehicle vehicle) => path.reduce(

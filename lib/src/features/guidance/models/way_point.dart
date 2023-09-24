@@ -1,3 +1,5 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/animation.dart';
 import 'package:geobase/geobase.dart';
@@ -13,8 +15,15 @@ class WayPoint extends Equatable {
   const WayPoint({
     required this.position,
     required this.bearing,
-    this.velocity = 0,
-  });
+    double? velocity,
+  }) : velocity = velocity ?? 0;
+
+  /// Creates a [WayPoint] object from the [json] object.
+  factory WayPoint.fromJson(Map<String, dynamic> json) => WayPoint(
+        position: Geographic.parse(json['position'] as String),
+        bearing: json['bearing'] as double,
+        velocity: json['velocity'] as double?,
+      );
 
   /// The position of the waypoint.
   final Geographic position;
@@ -36,6 +45,10 @@ class WayPoint extends Equatable {
         bearing: bearing ?? this.bearing,
         velocity: velocity ?? this.velocity,
       );
+
+  /// Whether this way point has valid properties.
+  bool get isValid =>
+      position.values.every((element) => element.isFinite) && bearing.isFinite;
 
   /// Move the waypoint with a spherical great line by [distance] in the
   /// direction of [bearing] + [angleFromBearing].
@@ -85,13 +98,106 @@ class WayPoint extends Equatable {
       position.spherical
           .alongTrackDistanceTo(start: start.position, end: end.position);
 
+  /// The cross track distance from this way point to the line from [start]
+  /// to [end].
+  double crossTrackDistanceToSpherical({
+    required WayPoint start,
+    required WayPoint end,
+  }) =>
+      position.spherical
+          .crossTrackDistanceTo(start: start.position, end: end.position);
+
+  /// Finds a way point along the line from this to [other] at the [fraction]
+  /// of the length of the line.
+  WayPoint intermediatePointToSpherical(
+    WayPoint other, {
+    required double fraction,
+  }) {
+    final newPos = position.spherical
+        .intermediatePointTo(other.position, fraction: fraction);
+
+    return WayPoint(
+      position: newPos,
+      bearing: position.spherical.finalBearingTo(newPos),
+      velocity: velocity,
+    );
+  }
+
+  /// Finds an intersection from this to [ring] with the [bearing] of this.
+  ///
+  /// If [oppositeOfBearing] is true, then [bearing] + 180 is used to look
+  /// for intersections.
+  WayPoint? intersectionWith(
+    Iterable<Geographic> ring, {
+    bool oppositeOfBearing = false,
+  }) {
+    final intersections = <Geographic>[];
+
+    for (var i = 0; i < ring.length; i++) {
+      final start = ring.elementAt(i);
+      final end = ring.elementAt((i + 1) % ring.length);
+
+      final bearingToStart = position.spherical.initialBearingTo(start);
+      final bearingToEnd = position.spherical.initialBearingTo(end);
+
+      // Skip lines that are to behind of this point or ahead if
+      // [oppositeOfBearing].
+      if ((bearingDifference(bearing, bearingToStart) > 90 &&
+              bearingDifference(bearing, bearingToEnd) > 90) &&
+          !oppositeOfBearing) continue;
+
+      final ringIntersection = position.spherical.intersectionWith(
+        bearing: oppositeOfBearing ? (bearing + 180).wrap360() : bearing,
+        other: start,
+        otherBearing: start.spherical.initialBearingTo(end),
+      );
+
+      if (ringIntersection != null) {
+        // Check that we're inside the boundary box.
+        final distanceAlongLine = ringIntersection.spherical
+            .alongTrackDistanceTo(start: start, end: end);
+
+        // Is the intersection on the actual line segment?
+        if (distanceAlongLine >= 0 &&
+            distanceAlongLine <= start.spherical.distanceTo(end)) {
+          if (bearingDifference(
+                oppositeOfBearing ? (bearing + 180).wrap360() : bearing,
+                position.spherical.initialBearingTo(ringIntersection),
+              ) <
+              1) {
+            intersections.add(ringIntersection);
+          }
+        }
+      }
+    }
+    if (intersections.isNotEmpty) {
+      intersections.sortByCompare<double>(
+        (element) => position.spherical.distanceTo(element),
+        (a, b) => a.compareTo(b),
+      );
+
+      return copyWith(
+        position: intersections.first,
+        bearing: position.spherical.finalBearingTo(intersections.first),
+      );
+    }
+    return null;
+  }
+
   /// Properties used to compare with [Equatable].
   @override
-  List<Object?> get props => [
+  List<Object> get props => [
         position,
         bearing,
         velocity,
       ];
+
+  /// Converts the object to a json compatible structure.
+  Map<String, dynamic> toJson() => {
+        'position': position.toString(),
+        'bearing': bearing,
+        'velocity': velocity,
+      };
 }
 
 /// A class for tweening two [WayPoint].

@@ -1,50 +1,80 @@
+import 'dart:convert';
+
+import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ab_line_providers.g.dart';
 
 /// A provider for the AB-line object to debug.
 @Riverpod(keepAlive: true)
-class ABLineDebug extends _$ABLineDebug {
-  @override
-  ABLine? build() {
-    ref.listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send((abTracking: next));
-    });
+Future<ABLine?> aBLineDebug(ABLineDebugRef ref) async {
+  ref.listenSelf((previous, next) {
+    next.when(
+      data: (data) {
+        ref.read(simInputProvider.notifier).send((abTracking: data));
+        ref.read(displayABTrackingLinesProvider.notifier).update(data?.lines);
+      },
+      error: (error, stackTrace) {},
+      loading: () {},
+    );
+  });
 
-    final a = ref.watch(aBPointAProvider);
-    final b = ref.watch(aBPointBProvider);
+  final a = ref.watch(aBPointAProvider);
+  final b = ref.watch(aBPointBProvider);
 
-    if (a != null && b != null) {
+  if (a != null && b != null) {
+    final points = [
+      a.copyWith(bearing: a.initialBearingToSpherical(b)),
+      b.copyWith(bearing: a.finalBearingToSpherical(b)),
+    ];
+    final boundary = ref.watch(bufferedFieldProvider).when(
+          data: (data) =>
+              data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
+          error: (error, stackTrace) => null,
+          loading: () => null,
+        );
+    final width = ref.watch(aBWidthProvider);
+    final turningRadius = ref.read(aBTurningRadiusProvider);
+    final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);
+    final limitMode = ref.read(aBTrackingLimitModeProvider);
+
+    if (kIsWeb) {
       return ABLine(
-        start: a.copyWith(bearing: a.initialBearingToSpherical(b)),
-        end: b.copyWith(bearing: a.finalBearingToSpherical(b)),
-        width: ref.read(aBWidthProvider),
-        turningRadius: ref.read(aBTurningRadiusProvider),
-        turnOffsetIncrease: ref.read(aBTurnOffsetIncreaseProvider),
-        limitMode: ref.read(aBTrackingLimitModeProvider),
+        baseLine: points,
+        boundary: boundary,
+        width: width,
+        turningRadius: turningRadius,
+        turnOffsetMinSkips: turnOffsetMinSkips,
+        limitMode: limitMode,
       );
     }
+    final json = await Future(
+      () => jsonEncode({
+        'base_line': points,
+        'boundary': boundary?.toText(),
+        'width': width,
+        'turning_radius': turningRadius,
+        'turn_offset_skips': turnOffsetMinSkips,
+        'limit_mode': limitMode,
+        'calculate_lines': true,
+      }),
+    );
 
-    return null;
+    final creation = await compute(
+      ABTracking.createAndReturnABTrackingString,
+      json,
+      debugLabel: 'ABLine creation isolate',
+    );
+
+    final data = jsonDecode(creation);
+    if (data is Map) {
+      final abLine = ABLine.fromJson(Map<String, dynamic>.from(data));
+      return abLine;
+    }
   }
 
-  /// Move the line by one offset step to the right relative to the [vehicle]'s
-  /// bearing.
-  void moveOffsetRight(Vehicle vehicle) =>
-      Future(() => state = state?..moveOffsetRight(vehicle));
-
-  /// Move the line by one offset step to the left relative to the [vehicle]'s
-  /// bearing.
-  void moveOffsetLeft(Vehicle vehicle) =>
-      Future(() => state = state?..moveOffsetLeft(vehicle));
-
-  /// Update whether the closest line automatically should be selected.
-  void updateSnapToClosestLine({required bool value}) =>
-      Future(() => state = state?..snapToClosestLine = value);
-
-  @override
-  bool updateShouldNotify(ABLine? previous, ABLine? next) => true;
+  return null;
 }

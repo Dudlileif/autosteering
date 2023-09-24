@@ -1,6 +1,9 @@
+import 'dart:convert';
+
+import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ab_curve_providers.g.dart';
@@ -34,47 +37,70 @@ class ABCurvePoints extends _$ABCurvePoints {
   }
 }
 
-/// A provider for the AB-line object to debug.
+/// A provider for the AB-curve object to debug.
 @Riverpod(keepAlive: true)
-class ABCurveDebug extends _$ABCurveDebug {
-  @override
-  ABCurve? build() {
-    ref.listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send((abTracking: next));
-    });
+Future<ABCurve?> aBCurveDebug(ABCurveDebugRef ref) async {
+  ref.listenSelf((previous, next) {
+    next.when(
+      data: (data) {
+        ref.read(simInputProvider.notifier).send((abTracking: data));
+        ref.read(displayABTrackingLinesProvider.notifier).update(data?.lines);
+      },
+      error: (error, stackTrace) {},
+      loading: () {},
+    );
+  });
 
-    final points = ref.watch(aBCurvePointsProvider);
-    if (points != null) {
-      if ((points.length) >= 2) {
+  final points = ref.watch(aBCurvePointsProvider);
+
+  if (points != null) {
+    if ((points.length) >= 2) {
+      final boundary = ref.watch(bufferedFieldProvider).when(
+            data: (data) =>
+                data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
+            error: (error, stackTrace) => null,
+            loading: () => null,
+          );
+      final width = ref.watch(aBWidthProvider);
+      final turningRadius = ref.read(aBTurningRadiusProvider);
+      final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);
+      final limitMode = ref.read(aBTrackingLimitModeProvider);
+
+      if (kIsWeb) {
         return ABCurve(
-          start: points.first,
-          end: points.last,
-          baseCurve: points,
-          width: ref.read(aBWidthProvider),
-          turningRadius: ref.read(aBTurningRadiusProvider),
-          turnOffsetIncrease: ref.read(aBTurnOffsetIncreaseProvider),
-          limitMode: ref.read(aBTrackingLimitModeProvider),
+          baseLine: points,
+          boundary: boundary,
+          width: width,
+          turningRadius: turningRadius,
+          turnOffsetMinSkips: turnOffsetMinSkips,
+          limitMode: limitMode,
         );
       }
-    }
+      final json = await Future(
+        () => jsonEncode({
+          'base_line': points,
+          'boundary': boundary?.toText(),
+          'width': width,
+          'turning_radius': turningRadius,
+          'turn_offset_skips': turnOffsetMinSkips,
+          'limit_mode': limitMode,
+          'calculate_lines': true,
+        }),
+      );
 
-    return null;
+      final creation = await compute(
+        ABTracking.createAndReturnABTrackingString,
+        json,
+        debugLabel: 'ABCurve creation isolate',
+      );
+
+      final data = jsonDecode(creation);
+      if (data is Map) {
+        final abCurve = ABCurve.fromJson(Map<String, dynamic>.from(data));
+        return abCurve;
+      }
+    }
   }
 
-  /// Move the curve by one offset step to the right relative to the [vehicle]'s
-  /// bearing.
-  void moveOffsetRight(Vehicle vehicle) =>
-      Future(() => state = state?..moveOffsetRight(vehicle));
-
-  /// Move the curve by one offset step to the left relative to the [vehicle]'s
-  /// bearing.
-  void moveOffsetLeft(Vehicle vehicle) =>
-      Future(() => state = state?..moveOffsetLeft(vehicle));
-
-  /// Update whether the closest curve automatically should be selected.
-  void updateSnapToClosestLine({required bool value}) =>
-      Future(() => state = state?..snapToClosestLine = value);
-
-  @override
-  bool updateShouldNotify(ABCurve? previous, ABCurve? next) => true;
+  return null;
 }

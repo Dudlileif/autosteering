@@ -14,6 +14,10 @@ class ABTrackingDebugLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref
+      ..watch(aBCurveDebugProvider)
+      ..watch(aBLineDebugProvider);
+
     final abTracking = ref.watch(displayABTrackingProvider);
 
     if (abTracking == null) {
@@ -21,6 +25,8 @@ class ABTrackingDebugLayer extends ConsumerWidget {
         ..read(aBCurveDebugProvider)
         ..read(aBLineDebugProvider);
     }
+
+    final abLines = ref.watch(displayABTrackingLinesProvider) ?? {};
 
     final pointA = abTracking?.start ?? ref.watch(aBPointAProvider);
 
@@ -39,34 +45,20 @@ class ABTrackingDebugLayer extends ConsumerWidget {
           PolylineLayer(
             polylines: [
               Polyline(
-                points: [
-                  if (abTracking is ABLine) ...[
-                    abTracking.start.position.latLng,
-                    abTracking.end.position.latLng,
-                  ] else if (abTracking is ABCurve)
-                    ...abTracking.baseCurve.map((e) => e.position.latLng),
-                ],
+                points:
+                    abTracking.baseLine.map((e) => e.position.latLng).toList(),
               ),
               Polyline(
-                points: [
-                  if (abTracking is ABLine) ...[
-                    abTracking.currentStart.position.latLng,
-                    abTracking.currentEnd.position.latLng,
-                  ] else if (abTracking is ABCurve)
-                    ...abTracking.currentPathTracking.path
-                        .map((e) => e.position.latLng),
-                ],
+                points: abTracking.currentLine
+                    .map((e) => e.position.latLng)
+                    .toList(),
+                strokeWidth: 2,
               ),
               if (abTracking.limitMode != ABLimitMode.unlimited)
                 Polyline(
-                  points: [
-                    if (abTracking is ABLine) ...[
-                      abTracking.nextStart.position.latLng,
-                      abTracking.nextEnd.position.latLng,
-                    ] else if (abTracking is ABCurve)
-                      ...abTracking.nextPathTracking.path
-                          .map((e) => e.position.latLng),
-                  ],
+                  points: abTracking.nextLine
+                      .map((e) => e.position.latLng)
+                      .toList(),
                   color: Colors.blue,
                 ),
               if (abTracking.upcomingTurn != null)
@@ -91,6 +83,12 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                   ],
                   color: Colors.white,
                 ),
+              ...abLines.values.map(
+                (line) => Polyline(
+                  points: line.map((e) => e.position.latLng).toList(),
+                  color: Colors.grey,
+                ),
+              ),
             ],
           ),
         if (abTracking != null || pointA != null || pointB != null)
