@@ -90,12 +90,25 @@ class FieldInteriorBufferJoin extends _$FieldInteriorBufferJoin {
       );
 }
 
+/// Whether the field buffer functionality should be enabled.
+@Riverpod(keepAlive: true)
+class FieldBufferEnabled extends _$FieldBufferEnabled {
+  @override
+  bool build() => false;
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the [state].
+  void toggle() => Future(() => state = !state);
+}
+
 /// A provider for the distance that the test [Field.polygon] exterior should
 /// be buffered.
 @Riverpod(keepAlive: true)
 class FieldExteriorBufferDistance extends _$FieldExteriorBufferDistance {
   @override
-  double build() => 5;
+  double build() => -5;
 
   /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
@@ -126,8 +139,11 @@ class ShowBufferedField extends _$ShowBufferedField {
 }
 
 /// A provider for creating and updating the buffered test field.
-@riverpod
+@Riverpod(keepAlive: true)
 Future<Field?> bufferedField(BufferedFieldRef ref) async {
+  if (!ref.watch(fieldBufferEnabledProvider)) {
+    return null;
+  }
   final field = ref.watch(activeFieldProvider);
   if (field != null) {
     final exteriorDistance = ref.watch(fieldExteriorBufferDistanceProvider);

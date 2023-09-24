@@ -138,157 +138,192 @@ class FieldMenu extends ConsumerWidget {
             ),
           Consumer(
             child: Text(
-              'Show buffered  field',
+              'Enable field buffer',
               style: textStyle,
             ),
             builder: (context, ref, child) => CheckboxListTile(
               secondary: child,
-              value: ref.watch(showBufferedFieldProvider),
+              value: ref.watch(fieldBufferEnabledProvider),
               onChanged: (value) => value != null
                   ? ref
-                      .read(showBufferedFieldProvider.notifier)
+                      .read(fieldBufferEnabledProvider.notifier)
                       .update(value: value)
                   : null,
             ),
           ),
-          if (ref.watch(showFieldProvider)) ...[
+          if (ref.watch(fieldBufferEnabledProvider)) ...[
             Consumer(
               child: Text(
-                'Show buffered bounding box',
+                'Show buffered field',
                 style: textStyle,
               ),
               builder: (context, ref, child) => CheckboxListTile(
                 secondary: child,
-                value: ref.watch(showBufferedFieldBoundingBoxProvider),
+                value: ref.watch(showBufferedFieldProvider),
                 onChanged: (value) => value != null
                     ? ref
-                        .read(showBufferedFieldBoundingBoxProvider.notifier)
+                        .read(showBufferedFieldProvider.notifier)
                         .update(value: value)
                     : null,
               ),
             ),
-            Consumer(
-              builder: (context, ref, child) {
-                final distance = ref.watch(fieldExteriorBufferDistanceProvider);
+            if (ref.watch(showFieldProvider)) ...[
+              Consumer(
+                child: Text(
+                  'Show buffered bounding box',
+                  style: textStyle,
+                ),
+                builder: (context, ref, child) => CheckboxListTile(
+                  secondary: child,
+                  value: ref.watch(showBufferedFieldBoundingBoxProvider),
+                  onChanged: (value) => value != null
+                      ? ref
+                          .read(showBufferedFieldBoundingBoxProvider.notifier)
+                          .update(value: value)
+                      : null,
+                ),
+              ),
+              Consumer(
+                builder: (context, ref, child) {
+                  var distance = ref.watch(fieldExteriorBufferDistanceProvider);
 
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '''Exterior buffer distance: ${distance.toStringAsFixed(1)} m''',
-                      style: textStyle,
+                  return StatefulBuilder(
+                    builder: (context, setState) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '''Exterior buffer distance: ${distance.toStringAsFixed(1)} m''',
+                          style: textStyle,
+                        ),
+                        Slider(
+                          value: distance,
+                          onChanged: (value) =>
+                              setState(() => distance = value),
+                          onChangeEnd: ref
+                              .read(
+                                fieldExteriorBufferDistanceProvider.notifier,
+                              )
+                              .update,
+                          min: -10,
+                          max: 10,
+                          divisions: 20,
+                        ),
+                      ],
                     ),
-                    Slider(
-                      value: distance,
-                      onChanged: ref
-                          .read(fieldExteriorBufferDistanceProvider.notifier)
-                          .update,
-                      min: -10,
-                      max: 10,
-                      divisions: 20,
-                    ),
-                  ],
-                );
-              },
-            ),
-            if (ref.watch(activeFieldProvider)?.polygon.interior.isNotEmpty ??
-                false)
-              Consumer(
-                builder: (context, ref, child) {
-                  final distance =
-                      ref.watch(fieldInteriorBufferDistanceProvider);
+                  );
+                },
+              ),
+              if (ref.watch(activeFieldProvider)?.polygon.interior.isNotEmpty ??
+                  false)
+                Consumer(
+                  builder: (context, ref, child) {
+                    var distance =
+                        ref.watch(fieldInteriorBufferDistanceProvider);
 
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '''Interior buffer distance: ${distance.toStringAsFixed(1)} m''',
-                        style: textStyle,
-                      ),
-                      Slider(
-                        value: distance,
-                        onChanged: ref
-                            .read(
-                              fieldInteriorBufferDistanceProvider.notifier,
-                            )
-                            .update,
-                        min: -10,
-                        max: 10,
-                        divisions: 40,
-                      ),
-                    ],
-                  );
-                },
-              ),
-            if (ref.watch(showBufferedFieldProvider))
-              Consumer(
-                builder: (context, ref, child) {
-                  final activeMode = ref.watch(fieldExteriorBufferJoinProvider);
-                  return MenuButtonWithChildren(
-                    text: 'Exterior buffer join mode',
-                    icon: Icons.rounded_corner,
-                    menuChildren: BufferJoin.values
-                        .map(
-                          (mode) => CheckboxListTile(
-                            secondary:
-                                Text(mode.name.capitalize, style: textStyle),
-                            value: mode == activeMode,
-                            onChanged: (value) => value != null && value
-                                ? ref
-                                    .read(
-                                      fieldExteriorBufferJoinProvider.notifier,
-                                    )
-                                    .update(mode)
-                                : null,
+                    return StatefulBuilder(
+                      builder: (context, setState) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '''Interior buffer distance: ${distance.toStringAsFixed(1)} m''',
+                            style: textStyle,
                           ),
-                        )
-                        .toList(),
-                  );
-                },
-              ),
-            if (ref.watch(showBufferedFieldProvider) &&
-                (ref.watch(activeFieldProvider)?.polygon.interior.isNotEmpty ??
-                    false))
-              Consumer(
-                builder: (context, ref, child) {
-                  final activeMode = ref.watch(fieldInteriorBufferJoinProvider);
-                  return MenuButtonWithChildren(
-                    text: 'Interior buffer join mode',
-                    icon: Icons.rounded_corner,
-                    menuChildren: BufferJoin.values
-                        .map(
-                          (mode) => CheckboxListTile(
-                            secondary:
-                                Text(mode.name.capitalize, style: textStyle),
-                            value: mode == activeMode,
-                            onChanged: (value) => value != null && value
-                                ? ref
-                                    .read(
-                                      fieldInteriorBufferJoinProvider.notifier,
-                                    )
-                                    .update(mode)
-                                : null,
+                          Slider(
+                            value: distance,
+                            onChanged: (value) =>
+                                setState(() => distance = value),
+                            onChangeEnd: ref
+                                .read(
+                                  fieldInteriorBufferDistanceProvider.notifier,
+                                )
+                                .update,
+                            min: -10,
+                            max: 10,
+                            divisions: 40,
                           ),
-                        )
-                        .toList(),
-                  );
-                },
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              if (ref.watch(showBufferedFieldProvider))
+                Consumer(
+                  builder: (context, ref, child) {
+                    final activeMode =
+                        ref.watch(fieldExteriorBufferJoinProvider);
+                    return MenuButtonWithChildren(
+                      text: 'Exterior buffer join mode',
+                      icon: Icons.rounded_corner,
+                      menuChildren: BufferJoin.values
+                          .map(
+                            (mode) => CheckboxListTile(
+                              secondary:
+                                  Text(mode.name.capitalize, style: textStyle),
+                              value: mode == activeMode,
+                              onChanged: (value) => value != null && value
+                                  ? ref
+                                      .read(
+                                        fieldExteriorBufferJoinProvider
+                                            .notifier,
+                                      )
+                                      .update(mode)
+                                  : null,
+                            ),
+                          )
+                          .toList(),
+                    );
+                  },
+                ),
+              if (ref.watch(showBufferedFieldProvider) &&
+                  (ref
+                          .watch(activeFieldProvider)
+                          ?.polygon
+                          .interior
+                          .isNotEmpty ??
+                      false))
+                Consumer(
+                  builder: (context, ref, child) {
+                    final activeMode =
+                        ref.watch(fieldInteriorBufferJoinProvider);
+                    return MenuButtonWithChildren(
+                      text: 'Interior buffer join mode',
+                      icon: Icons.rounded_corner,
+                      menuChildren: BufferJoin.values
+                          .map(
+                            (mode) => CheckboxListTile(
+                              secondary:
+                                  Text(mode.name.capitalize, style: textStyle),
+                              value: mode == activeMode,
+                              onChanged: (value) => value != null && value
+                                  ? ref
+                                      .read(
+                                        fieldInteriorBufferJoinProvider
+                                            .notifier,
+                                      )
+                                      .update(mode)
+                                  : null,
+                            ),
+                          )
+                          .toList(),
+                    );
+                  },
+                ),
+              Consumer(
+                child: Text(
+                  'Raw buffer points',
+                  style: textStyle,
+                ),
+                builder: (context, ref, child) => CheckboxListTile(
+                  secondary: child,
+                  value: ref.watch(fieldBufferGetRawPointsProvider),
+                  onChanged: (value) => value != null
+                      ? ref
+                          .read(fieldBufferGetRawPointsProvider.notifier)
+                          .update(value: value)
+                      : null,
+                ),
               ),
-            Consumer(
-              child: Text(
-                'Raw buffer points',
-                style: textStyle,
-              ),
-              builder: (context, ref, child) => CheckboxListTile(
-                secondary: child,
-                value: ref.watch(fieldBufferGetRawPointsProvider),
-                onChanged: (value) => value != null
-                    ? ref
-                        .read(fieldBufferGetRawPointsProvider.notifier)
-                        .update(value: value)
-                    : null,
-              ),
-            ),
+            ],
           ],
           Consumer(
             child: Text(
@@ -404,10 +439,6 @@ class _CreateFieldButton extends ConsumerWidget {
         onPressed: () {
           ref.read(enablePathRecorderProvider.notifier).update(value: false);
 
-          final pathExists = ref.read(
-            finishedPathRecordingListProvider
-                .select((value) => value?.isNotEmpty ?? false),
-          );
           unawaited(
             showDialog<void>(
               context: context,
