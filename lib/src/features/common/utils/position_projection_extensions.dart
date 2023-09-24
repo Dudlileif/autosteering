@@ -30,7 +30,7 @@ extension GeographicProjExt on Geographic {
       final start = ring.elementAt(i);
       final end = ring.elementAt((i + 1) % ring.length);
 
-      // Skip lines that are to the north of this point..
+      // Skip lines that are to the north of this point.
       if (start.y > y && end.y > y) continue;
 
       final ringIntersection = spherical.intersectionWith(
