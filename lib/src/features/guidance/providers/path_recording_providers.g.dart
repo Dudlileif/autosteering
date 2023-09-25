@@ -69,7 +69,8 @@ String _$pathRecordingTriggerAngleHash() =>
     r'563ff93aaf6a3bf722e59f59611e0951d2ff3970';
 
 /// A provider for the maximum angle between recorded points, i.e. when to
-/// add new points in turns if after [PathRecordingMinDistance] has been passed.
+/// add new points in turns if after [PathRecordingTurnMinDistance] has been
+/// passed.
 ///
 /// Copied from [PathRecordingTriggerAngle].
 @ProviderFor(PathRecordingTriggerAngle)

@@ -209,16 +209,6 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
 
   ref.read(_simCoreIsolatePortProvider.notifier).update(sendPort);
 
-  Timer? restartTimer;
-
-  // Exit isolate when provider is disposed.
-  ref.onDispose(() {
-    sendPort.send(null);
-    events.cancel();
-    restartTimer?.cancel();
-    ref.read(_simCoreIsolatePortProvider.notifier).update(null);
-  });
-
   // How long we will wait for a message until we restart the simulator, in
   // seconds.
   // An increased time is used for debug mode to allow for hot reloading
@@ -228,20 +218,31 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
     true => 5,
   };
 
-  while (true) {
-    // Use the restart timer if we're not in debug mode or if we're in
-    // debug mode and don't allow long breaks.
-    if (!kDebugMode || !ref.watch(simCoreDebugAllowLongBreaksProvider)) {
-      restartTimer = Timer(
+// Use the restart timer if we're not in debug mode or if we're in
+  // debug mode and don't allow long breaks.
+  final restartTimer =
+      switch (!kDebugMode || !ref.watch(simCoreDebugAllowLongBreaksProvider)) {
+    true => RestartableTimer(
           Duration(milliseconds: (heartbeatThreshold * 1000).round()), () {
         log('Simulator Core isolate unresponsive/died... Restarting...');
 
         ref.invalidateSelf();
-      });
-    }
+      }),
+    false => null
+  };
 
-    final message = await events.next;
+  // Exit isolate when provider is disposed.
+  ref.onDispose(() {
+    sendPort.send(null);
+    events.cancel();
     restartTimer?.cancel();
+    ref.read(_simCoreIsolatePortProvider.notifier).update(null);
+  });
+
+  while (true) {
+    final message = await events.next;
+    restartTimer?.reset();
+
     if (message is ({
       Vehicle vehicle,
       double velocity,

@@ -1,5 +1,7 @@
+import 'package:agopengps_flutter/src/features/common/utils/device.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
+import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/network/network.dart';
@@ -37,11 +39,16 @@ class MainScaffold extends StatelessWidget {
             ],
           ),
         ),
-        actions: const [
-          Padding(
+        actions: [
+          const Padding(
             padding: EdgeInsets.all(8),
             child: _HWConnectionStatus(size: 32),
           ),
+          if (!Device.isWeb)
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: _NTRIPConnectionStatus(size: 32),
+            ),
         ],
       ),
       body: const MapAndGaugeStackView(),
@@ -67,6 +74,28 @@ class _HWConnectionStatus extends StatelessWidget {
           color: ref.watch(hardwareIsConnectedProvider)
               ? Colors.green
               : Colors.red,
+        ),
+      ),
+    );
+  }
+}
+
+class _NTRIPConnectionStatus extends StatelessWidget {
+  const _NTRIPConnectionStatus({this.size});
+
+  final double? size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) => Tooltip(
+        message: ref.watch(ntripAliveProvider)
+            ? 'NTRIP connected'
+            : 'NTRIP not connected',
+        child: Icon(
+          Icons.satellite_alt,
+          size: size,
+          color: ref.watch(ntripAliveProvider) ? Colors.green : Colors.red,
         ),
       ),
     );

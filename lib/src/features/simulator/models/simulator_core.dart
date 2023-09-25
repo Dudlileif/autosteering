@@ -497,8 +497,6 @@ class _SimulatorCoreState {
     }
     // Update the vehicle position from GNSS.
     else if (message is ({Geographic gnssPosition, DateTime time})) {
-      vehicle?.position = message.gnssPosition;
-      prevGnssUpdate = gnssUpdate;
       gnssUpdate = message;
     }
     // Update the vehicle velocity
@@ -734,6 +732,10 @@ class _SimulatorCoreState {
     else if (message is ({bool allowManualTrackingUpdates})) {
       allowManualTrackingUpdates = message.allowManualTrackingUpdates;
     }
+    // Pipe through NTRIP messages to the hardware.
+    else if (message is ({Uint8List ntrip})) {
+      networkSendStream?.add(message.ntrip.toString());
+    }
     // Unknown message, log it to figure out what it is.
     else {
       log(message.toString());
@@ -912,39 +914,9 @@ class _SimulatorCoreState {
     }
   }
 
-  /// Updates the calculated gauges for the vehicle state.
-  void updateGauges() {
-    if (gnssUpdate != null && prevGnssUpdate != null) {
-      distance = gnssUpdate!.gnssPosition.spherical
-          .distanceTo(prevGnssUpdate!.gnssPosition);
-
-      final bearing = prevGnssUpdate!.gnssPosition.spherical
-          .finalBearingTo(gnssUpdate!.gnssPosition);
-
-      if (!bearing.isNaN) {
-        final directionSign =
-            switch (bearingDifference(vehicle?.bearing ?? 0, bearing) > 120) {
-          true => -1,
-          false => 1,
-        };
-
-        final period =
-            gnssUpdate!.time.difference(prevGnssUpdate!.time).inMicroseconds /
-                1e6;
-        gaugeVelocity = directionSign * distance / period;
-
-        if (!useIMUBearing) {
-          gaugeBearing = (bearing +
-                  switch (directionSign.isNegative) { true => 180, false => 0 })
-              .wrap360();
-        }
-      }
-
-      prevGnssUpdate = gnssUpdate;
-      gnssUpdate = null;
-
-      return;
-    }
+  /// Updates the calculated gauges for the vehicle state only by the
+  /// simulation and possibly IMU.
+  void _simGaugeUpdate() {
     // Distance
     if (vehicle != null && prevVehicle != null) {
       final movedDistance =
@@ -989,16 +961,63 @@ class _SimulatorCoreState {
     }
   }
 
+  /// Updates the calculated gauges for the vehicle state.
+  void updateGauges() {
+    // Update based on the last GNSS updates, if we've received one this tick.
+    if (gnssUpdate != null && prevGnssUpdate != null) {
+      distance = gnssUpdate!.gnssPosition.spherical
+          .distanceTo(prevGnssUpdate!.gnssPosition);
+
+      // Only use update points that are more than 5 cm apart to update bearing.
+      if (distance > 0.05) {
+        final bearing = prevGnssUpdate!.gnssPosition.spherical
+            .finalBearingTo(gnssUpdate!.gnssPosition);
+
+        if (!bearing.isNaN) {
+          // Negative if reversing, positive otherwise.
+          final directionSign =
+              switch (bearingDifference(vehicle?.bearing ?? 0, bearing) > 120) {
+            true => -1,
+            false => 1,
+          };
+
+          final period =
+              gnssUpdate!.time.difference(prevGnssUpdate!.time).inMicroseconds /
+                  1e6;
+          gaugeVelocity = directionSign * distance / period;
+
+          if (!useIMUBearing) {
+            gaugeBearing = (bearing +
+                    switch (directionSign.isNegative) {
+                      true => 180,
+                      false => 0
+                    })
+                .wrap360();
+          }
+        }
+        prevGnssUpdate = gnssUpdate;
+        gnssUpdate = null;
+        return;
+      }
+    }
+    _simGaugeUpdate();
+  }
+
   /// Update the simulation, i.e. simulate the next step.
   void update() {
     checkGuidance();
     updateVehicleVelocityAndSteering();
     checkTurningCircle();
     updateTime();
-    vehicle?.updatePositionAndBearing(
-      period,
-      turningCircleCenter,
-    );
+    if (gnssUpdate != null) {
+      vehicle?.position = gnssUpdate!.gnssPosition;
+      vehicle?.updateChildren();
+    } else {
+      vehicle?.updatePositionAndBearing(
+        period,
+        turningCircleCenter,
+      );
+    }
     updateGauges();
 
     if (!allowManualSimInput) {

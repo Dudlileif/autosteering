@@ -42,7 +42,8 @@ class PathRecordingMaxDistance extends _$PathRecordingMaxDistance {
 }
 
 /// A provider for the maximum angle between recorded points, i.e. when to
-/// add new points in turns if after [PathRecordingMinDistance] has been passed.
+/// add new points in turns if after [PathRecordingTurnMinDistance] has been
+/// passed.
 @Riverpod(keepAlive: true)
 class PathRecordingTriggerAngle extends _$PathRecordingTriggerAngle {
   @override
