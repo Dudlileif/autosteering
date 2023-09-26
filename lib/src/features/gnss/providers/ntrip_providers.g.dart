@@ -144,5 +144,23 @@ final ntripAliveProvider = NotifierProvider<NtripAlive, bool>.internal(
 );
 
 typedef _$NtripAlive = Notifier<bool>;
+String _$gnssFixQualityHash() => r'ad05c915537f0d0f6444f66ecc953927c0f9c2dd';
+
+/// A provider for the quality of last GNSS position update.
+///
+/// Copied from [GnssFixQuality].
+@ProviderFor(GnssFixQuality)
+final gnssFixQualityProvider =
+    AutoDisposeNotifierProvider<GnssFixQuality, int>.internal(
+  GnssFixQuality.new,
+  name: r'gnssFixQualityProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$gnssFixQualityHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$GnssFixQuality = AutoDisposeNotifier<int>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

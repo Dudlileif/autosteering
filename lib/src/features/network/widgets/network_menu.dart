@@ -18,6 +18,9 @@ class NetworkMenu extends ConsumerWidget {
     } else if (Device.isWeb) {
       ref.watch(hardwareWebCommunicationConfigProvider);
     }
+    if (Device.supportsSerial) {
+      ref.watch(gnssSerialStreamProvider);
+    }
 
     return MenuButtonWithChildren(
       text: 'Network Menu',
@@ -25,6 +28,7 @@ class NetworkMenu extends ConsumerWidget {
       menuChildren: [
         const NetworkHardwareMenu(),
         if (!Device.isWeb) const NtripMenu(),
+        if (Device.supportsSerial) const GnssSerialMenu(),
       ],
     );
   }

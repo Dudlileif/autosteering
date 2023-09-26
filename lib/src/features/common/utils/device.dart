@@ -12,4 +12,7 @@ class Device {
 
   /// Whether the program is running on a mobile platform.
   static bool get isMobile => !isWeb && (Platform.isAndroid || Platform.isIOS);
+
+  /// Whether the device supports serial communication.
+  static bool get supportsSerial => isDesktop || Platform.isAndroid;
 }

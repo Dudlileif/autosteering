@@ -16,7 +16,7 @@ class NtripMenu extends ConsumerWidget {
 
     return MenuButtonWithChildren(
       text: 'NTRIP Menu',
-      icon: Icons.satellite_alt,
+      icon: Icons.straighten,
       menuChildren: [
         Consumer(
           builder: (context, ref, child) => CheckboxListTile(
