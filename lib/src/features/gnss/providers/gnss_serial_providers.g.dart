@@ -25,7 +25,7 @@ final availableSerialPortsProvider =
 );
 
 typedef AvailableSerialPortsRef = AutoDisposeProviderRef<List<SerialPort>>;
-String _$gnssSerialStreamHash() => r'0edcabfd008112162666e678480753add672ec0f';
+String _$gnssSerialStreamHash() => r'772d1374749ae809dfcf5bf2c7fff4b7115f506e';
 
 /// A stream of the incoming serial data from the GNSS serial hardware.
 ///
@@ -43,7 +43,7 @@ final gnssSerialStreamProvider = StreamProvider<String?>.internal(
 
 typedef GnssSerialStreamRef = StreamProviderRef<String?>;
 String _$gnssSerialBaudRateHash() =>
-    r'edccaf08fc113622ca14eed9f99bb4dc29236014';
+    r'874f5cd83ebbf42df330fa4cf34af78bf81f1da0';
 
 /// A provider for the baud rate for the [GnssSerial] connection.
 ///
@@ -61,7 +61,7 @@ final gnssSerialBaudRateProvider =
 );
 
 typedef _$GnssSerialBaudRate = Notifier<int>;
-String _$gnssSerialHash() => r'00586c0f2214ba87621ffbc684a2337e6cf40f2d';
+String _$gnssSerialHash() => r'972c032a7580d134d8a5a23338d8a900d21c173b';
 
 /// A provider for which port [GnssSerial] should use.
 ///

@@ -34,7 +34,7 @@ class GnssSerialBaudRate extends _$GnssSerialBaudRate {
 
   @override
   int build() {
-    return 406800;
+    return 460800;
   }
 
   /// Updates [state] to [value].
@@ -50,20 +50,19 @@ class GnssSerial extends _$GnssSerial {
       ..baudRate = ref.watch(gnssSerialBaudRateProvider);
 
     ref
-      ..onDispose(
-        () {
+      ..onDispose(() async {
+        await Future(() {
           config.dispose();
           state?.close();
           state?.dispose();
-        },
-      )
+        });
+      })
       ..listenSelf((previous, next) {
         if (previous != next) {
           previous?.close();
         }
-        state
-          ?..config = config
-          ..openReadWrite();
+        state?.openReadWrite();
+        // ?..config = config
       });
 
     return null;
@@ -102,9 +101,12 @@ Stream<String?> gnssSerialStream(GnssSerialStreamRef ref) {
           controller.add(message);
 
           final nmea = decoder.decode(message);
+
           if (nmea is GNGGASentence) {
             if (nmea.quality != null) {
-              ref.read(gnssFixQualityProvider.notifier).update(nmea.quality!);
+              ref
+                  .read(gnssCurrentFixQualityProvider.notifier)
+                  .updateByIndex(nmea.quality!);
             }
             if (nmea.longitude != null && nmea.latitude != null) {
               ref.read(simInputProvider.notifier).send(

@@ -47,7 +47,7 @@ class MainScaffold extends StatelessWidget {
           if (!Device.isWeb)
             const Padding(
               padding: EdgeInsets.all(8),
-              child: _NTRIPConnectionStatus(size: 32),
+              child: _GnssFixQualityStatus(size: 32),
             ),
         ],
       ),
@@ -80,8 +80,8 @@ class _HWConnectionStatus extends StatelessWidget {
   }
 }
 
-class _NTRIPConnectionStatus extends StatelessWidget {
-  const _NTRIPConnectionStatus({this.size});
+class _GnssFixQualityStatus extends StatelessWidget {
+  const _GnssFixQualityStatus({this.size});
 
   final double? size;
 
@@ -89,13 +89,20 @@ class _NTRIPConnectionStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) => Tooltip(
-        message: ref.watch(ntripAliveProvider)
-            ? 'NTRIP connected'
-            : 'NTRIP not connected',
+        message: ref.watch(gnssCurrentFixQualityProvider).name,
         child: Icon(
           Icons.satellite_alt,
           size: size,
-          color: ref.watch(ntripAliveProvider) ? Colors.green : Colors.red,
+          color: switch (ref.watch(gnssCurrentFixQualityProvider)) {
+            GnssFixQuality.rtk => Colors.green,
+            GnssFixQuality.floatRTK || GnssFixQuality.ppsFix => Colors.lime,
+            GnssFixQuality.differentialFix => Colors.yellow,
+            GnssFixQuality.fix => Colors.orange,
+            GnssFixQuality.notAvailable => Colors.red,
+            GnssFixQuality.manualInput => Colors.purple,
+            GnssFixQuality.simulation => Colors.blue,
+            GnssFixQuality.estimated => Colors.blueGrey,
+          },
         ),
       ),
     );

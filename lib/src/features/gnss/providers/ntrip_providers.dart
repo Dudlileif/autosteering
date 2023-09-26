@@ -205,7 +205,7 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
             // final length = ((event[1] & 3) << 8) + (event[2] << 0) + 6;
             // print('Message type: $type, length: $length');
             ref.read(simInputProvider.notifier).send((ntrip: event));
-            // ref.read(gnssSerialProvider)?.write(event);
+            ref.read(gnssSerialProvider)?.write(event);
           }
         });
         ref.onDispose(() => data?.socket.destroy());
@@ -235,12 +235,27 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
 
 /// A provider for the quality of last GNSS position update.
 @riverpod
-class GnssFixQuality extends _$GnssFixQuality {
+class GnssCurrentFixQuality extends _$GnssCurrentFixQuality {
+  Timer? _resetTimer;
+
   @override
-  int build() {
-    return 1;
+  GnssFixQuality build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(seconds: 1),
+        () => ref.invalidateSelf(),
+      );
+    });
+
+    return GnssFixQuality.notAvailable;
   }
 
   /// Updates [state] to [value].
-  void update(int value) => Future(() => state = value);
+  void update(GnssFixQuality value) => Future(() => state = value);
+
+  /// Updates [state] to the [GnssFixQuality] that corresponds to [index].
+  void updateByIndex(int index) => Future(
+        () => state = GnssFixQuality.values.elementAtOrNull(index) ?? state,
+      );
 }

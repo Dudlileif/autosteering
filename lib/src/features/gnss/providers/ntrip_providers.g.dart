@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'0477f41f93a2350470bb6cc4bf35def094b7d609';
+String _$ntripClientHash() => r'd2cfc80ec23670c2e1e303b81c0defa52697c26d';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -144,23 +144,35 @@ final ntripAliveProvider = NotifierProvider<NtripAlive, bool>.internal(
 );
 
 typedef _$NtripAlive = Notifier<bool>;
-String _$gnssFixQualityHash() => r'ad05c915537f0d0f6444f66ecc953927c0f9c2dd';
+String _$gnssCurrentFixQualityHash() =>
+    r'fd13dd1f43fd97252a489ebdd64e0f613e2adaf6';
 
 /// A provider for the quality of last GNSS position update.
+/// Typically 1,2,4 or 5 for our use.
 ///
-/// Copied from [GnssFixQuality].
-@ProviderFor(GnssFixQuality)
-final gnssFixQualityProvider =
-    AutoDisposeNotifierProvider<GnssFixQuality, int>.internal(
-  GnssFixQuality.new,
-  name: r'gnssFixQualityProvider',
+/// 0 - fix not available,
+/// 1 - GPS fix,
+/// 2 - Differential GPS fix
+/// 3 = PPS fix
+/// 4 = Real Time Kinematic
+/// 5 = Float RTK
+/// 6 = estimated (dead reckoning)
+/// 7 = Manual input mode
+/// 8 = Simulation mode
+///
+/// Copied from [GnssCurrentFixQuality].
+@ProviderFor(GnssCurrentFixQuality)
+final gnssCurrentFixQualityProvider =
+    AutoDisposeNotifierProvider<GnssCurrentFixQuality, GnssFixQuality>.internal(
+  GnssCurrentFixQuality.new,
+  name: r'gnssCurrentFixQualityProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$gnssFixQualityHash,
+      : _$gnssCurrentFixQualityHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GnssFixQuality = AutoDisposeNotifier<int>;
+typedef _$GnssCurrentFixQuality = AutoDisposeNotifier<GnssFixQuality>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -4,22 +4,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu for configuring the connection to GNSS hardware over serial.
-class GnssSerialMenu extends ConsumerWidget {
+class GnssSerialMenu extends StatelessWidget {
   /// A menu for configuring the connection to GNSS hardware over serial.
   const GnssSerialMenu({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return MenuButtonWithChildren(
       text: 'GNSS Serial',
-      icon: Icons.satellite_alt,
+      iconOverrideWidget: Consumer(
+        builder: (context, ref, child) => Icon(
+          Icons.satellite_alt,
+          color: ref.watch(gnssSerialProvider.select((value) => value != null))
+              ? Colors.green
+              : null,
+        ),
+      ),
       menuChildren: [
-        if (ref.watch(gnssSerialProvider.select((value) => value != null)))
-          MenuItemButton(
-            leadingIcon: const Icon(Icons.clear),
-            onPressed: () => ref.invalidate(gnssSerialProvider),
-            child: const Text('Close'),
-          ),
+        Consumer(
+          builder: (context, ref, child) {
+            if (ref
+                .watch(gnssSerialProvider.select((value) => value != null))) {
+              return MenuItemButton(
+                leadingIcon: const Icon(Icons.clear),
+                onPressed: () => ref.invalidate(gnssSerialProvider),
+                child: const Text('Close'),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
         Consumer(
           builder: (context, ref, child) => MenuButtonWithChildren(
             icon: Icons.usb,

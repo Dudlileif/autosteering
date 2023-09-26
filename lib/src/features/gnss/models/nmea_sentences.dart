@@ -26,40 +26,66 @@ class GNGGASentence extends TalkerSentence {
   GNGGASentence({required super.raw});
 
   /// The time of the message.
-  DateTime? get utc => DateTime.tryParse(fields[0]);
+  DateTime? get utc {
+    if (fields.length > 1) {
+      final string = fields[1];
+
+      final hour = int.tryParse(string.substring(0, 2));
+      final minute = int.tryParse(string.substring(2, 4));
+      final second = int.tryParse(string.substring(4, 6));
+      var milliSecond = int.tryParse(string.substring(7, 9));
+      if (milliSecond != null) {
+        milliSecond *= 10;
+      }
+      final now = DateTime.timestamp();
+      return DateTime(
+        now.year,
+        now.month,
+        now.day,
+        hour ?? now.hour,
+        minute ?? now.minute,
+        second ?? now.second,
+        milliSecond ?? now.millisecond,
+      );
+    }
+
+    return null;
+  }
 
   /// The latitude of the position.
-  double? get latitude => fields[1].length == 10
-      ? DegreeConverter.decimalDegreesFromDegreeMinutes(fields[1]) *
-          switch (fields[2]) {
+  double? get latitude => fields.length > 3 && fields[2].length == 10
+      ? DegreeConverter.decimalDegreesFromDegreeMinutes(fields[2]) *
+          switch (fields[3]) {
             'S' => -1,
             _ => 1,
           }
       : null;
 
   /// The longitude of the position.
-  double? get longitude => fields[3].length == 11
-      ? DegreeConverter.decimalDegreesFromDegreeMinutes(fields[3]) *
-          switch (fields[4]) {
+  double? get longitude => fields.length > 5 && fields[4].length == 11
+      ? DegreeConverter.decimalDegreesFromDegreeMinutes(fields[4]) *
+          switch (fields[5]) {
             'W' => -1,
             _ => 1,
           }
       : null;
 
   /// The quality of the position fix.
-  int? get quality => int.tryParse(fields[5]);
+  int? get quality => fields.length > 6 ? int.tryParse(fields[6]) : null;
 
   /// The number of satellites used to calculate the position.
-  int? get numSatellites => int.tryParse(fields[6]);
+  int? get numSatellites => fields.length > 7 ? int.tryParse(fields[7]) : null;
 
   /// Horizontal dilution of precision.
-  double? get hdop => double.tryParse(fields[7]);
+  double? get hdop => fields.length > 8 ? double.tryParse(fields[8]) : null;
 
   /// Altitude (m) over the geoid (mean sea level).
-  double? get altitudeGeoid => double.tryParse(fields[8]);
+  double? get altitudeGeoid =>
+      fields.length > 9 ? double.tryParse(fields[9]) : null;
 
   /// The separation between the geiod (MSL) and the ellipsoid (WGS-84).
-  double? get geoidalSeparation => double.tryParse(fields[10]);
+  double? get geoidalSeparation =>
+      fields.length > 11 ? double.tryParse(fields[11]) : null;
 }
 
 /// An NMEA message for course over ground and ground velocity data.
@@ -85,17 +111,21 @@ class GNVTGSentence extends TalkerSentence {
   GNVTGSentence({required super.raw});
 
   /// The true bearing/heading/course over the ground.
-  double? get trueCourseOverGround => double.tryParse(fields[0]);
+  double? get trueCourseOverGround =>
+      fields.length > 1 ? double.tryParse(fields[1]) : null;
 
   /// The magnetic bearing/heading/course over the ground.
-  double? get magneticCourseOverGround => double.tryParse(fields[2]);
+  double? get magneticCourseOverGround =>
+      fields.length > 3 ? double.tryParse(fields[3]) : null;
 
   /// The ground velocity in knots.
-  double? get velocityKnots => double.tryParse(fields[4]);
+  double? get velocityKnots =>
+      fields.length > 5 ? double.tryParse(fields[5]) : null;
 
   /// The ground velocity in km/h.
-  double? get velocityKMH => double.tryParse(fields[6]);
+  double? get velocityKMH =>
+      fields.length > 7 ? double.tryParse(fields[7]) : null;
 
   /// Mode indicator, should always be A.
-  String? get mode => fields[8];
+  String? get mode => fields.length > 9 ? fields[9] : null;
 }
