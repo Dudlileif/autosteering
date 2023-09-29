@@ -193,5 +193,22 @@ final hardwareWebSocketPortProvider =
 );
 
 typedef _$HardwareWebSocketPort = Notifier<int>;
+String _$tcpServerHash() => r'68cacea275c0950c3038da9f04f3d5c0ea3c52ac';
+
+/// A provider for a TCP server for sending/receiving data via TCP.
+///
+/// Copied from [TcpServer].
+@ProviderFor(TcpServer)
+final tcpServerProvider =
+    AsyncNotifierProvider<TcpServer, ServerSocket>.internal(
+  TcpServer.new,
+  name: r'tcpServerProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$tcpServerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$TcpServer = AsyncNotifier<ServerSocket>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

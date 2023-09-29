@@ -14,7 +14,8 @@ class NetworkMenu extends ConsumerWidget {
     if (!Device.isWeb) {
       ref
         ..watch(hardwareCommunicationConfigProvider)
-        ..watch(ntripClientProvider);
+        ..watch(ntripClientProvider)
+        ..watch(tcpServerProvider);
     } else if (Device.isWeb) {
       ref.watch(hardwareWebCommunicationConfigProvider);
     }

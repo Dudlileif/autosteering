@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'd2cfc80ec23670c2e1e303b81c0defa52697c26d';
+String _$ntripClientHash() => r'6215b81b3a98b2db6be8ad78457aa90f3e7db526';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -145,20 +145,9 @@ final ntripAliveProvider = NotifierProvider<NtripAlive, bool>.internal(
 
 typedef _$NtripAlive = Notifier<bool>;
 String _$gnssCurrentFixQualityHash() =>
-    r'fd13dd1f43fd97252a489ebdd64e0f613e2adaf6';
+    r'1fd6f4d7d0d331b145cb501bd0570554a8116e3f';
 
 /// A provider for the quality of last GNSS position update.
-/// Typically 1,2,4 or 5 for our use.
-///
-/// 0 - fix not available,
-/// 1 - GPS fix,
-/// 2 - Differential GPS fix
-/// 3 = PPS fix
-/// 4 = Real Time Kinematic
-/// 5 = Float RTK
-/// 6 = estimated (dead reckoning)
-/// 7 = Manual input mode
-/// 8 = Simulation mode
 ///
 /// Copied from [GnssCurrentFixQuality].
 @ProviderFor(GnssCurrentFixQuality)
@@ -174,5 +163,24 @@ final gnssCurrentFixQualityProvider =
 );
 
 typedef _$GnssCurrentFixQuality = AutoDisposeNotifier<GnssFixQuality>;
+String _$gnssCurrentNumSatellitesHash() =>
+    r'df8161205b086b7e55479130e707be87a9b31563';
+
+/// A provider for the quality of last GNSS position update.
+///
+/// Copied from [GnssCurrentNumSatellites].
+@ProviderFor(GnssCurrentNumSatellites)
+final gnssCurrentNumSatellitesProvider =
+    AutoDisposeNotifierProvider<GnssCurrentNumSatellites, int?>.internal(
+  GnssCurrentNumSatellites.new,
+  name: r'gnssCurrentNumSatellitesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$gnssCurrentNumSatellitesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$GnssCurrentNumSatellites = AutoDisposeNotifier<int?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

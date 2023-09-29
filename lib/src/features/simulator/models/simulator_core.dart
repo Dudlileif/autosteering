@@ -2,14 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:isolate';
-import 'dart:typed_data';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
+import 'package:nmea/nmea.dart';
 import 'package:udp/udp.dart';
 import 'package:universal_io/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -34,8 +36,15 @@ class SimulatorCore {
       sendPort.send('Heartbeat');
     });
 
+    // A stream controller for sending messages to the main thread.
+    final updateMainThreadStream = StreamController<dynamic>()
+      ..stream.listen((event) {
+        sendPort.send(event);
+      });
+
     // The state of the simulation.
-    final state = _SimulatorCoreState();
+    final state = _SimulatorCoreState()
+      ..mainThreadSendStream = updateMainThreadStream;
 
     DateTime? lastHardwareMessageTime;
 
@@ -83,12 +92,12 @@ class SimulatorCore {
 
     var udp = await UDP.bind(endPoint);
 
-    final udpSendStream = StreamController<String>();
+    final udpSendStream = StreamController<Uint8List>();
 
     state.networkSendStream = udpSendStream;
 
     udpSendStream.stream.listen(
-      (event) async => udp.send(utf8.encode(event), serverEndPoint),
+      (event) async => udp.send(event, serverEndPoint),
     );
 
     unawaited(
@@ -105,12 +114,30 @@ class SimulatorCore {
       );
     });
 
-    udp.asStream().listen(
-      (datagram) {
-        lastHardwareMessageTime = DateTime.now();
-        _networkListener(datagram?.data, state);
-      },
-    );
+    Uint8List? prevGGNData;
+    Uint8List? prevVTGData;
+
+    void handleUdpData(Datagram? datagram) {
+      if (datagram != null) {
+        if (listEquals(datagram.data, prevGGNData) ||
+            listEquals(datagram.data, prevVTGData)) {
+          return;
+        } else if (String.fromCharCodes(datagram.data).startsWith(r'$GNGGA')) {
+          prevGGNData = datagram.data;
+        } else if (String.fromCharCodes(datagram.data).startsWith(r'$GNVTG')) {
+          prevVTGData = datagram.data;
+        }
+      }
+
+      lastHardwareMessageTime = DateTime.now();
+      _networkListener(
+        datagram?.data,
+        state,
+        updateMainThreadStream: updateMainThreadStream,
+      );
+    }
+
+    udp.asStream().listen(handleUdpData);
 
     // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
@@ -132,12 +159,7 @@ class SimulatorCore {
         udp.close();
         udp = await UDP.bind(endPoint);
 
-        udp.asStream().listen(
-          (datagram) {
-            lastHardwareMessageTime = DateTime.now();
-            _networkListener(datagram?.data, state);
-          },
-        );
+        udp.asStream().listen(handleUdpData);
 
         await udp.send(
           utf8.encode('Simulator started'),
@@ -177,37 +199,77 @@ class SimulatorCore {
 
   static DateTime _networkListener(
     Uint8List? data,
-    _SimulatorCoreState state,
-  ) {
+    _SimulatorCoreState state, {
+    StreamController<dynamic>? updateMainThreadStream,
+  }) {
     if (data != null) {
-      final str = String.fromCharCodes(data);
-      if (str.startsWith('{')) {
-        try {
-          final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
-          final bearing = data['yaw'] as double?;
-          final pitch = data['pitch'] as double?;
-          final roll = data['roll'] as double?;
+      try {
+        final decoded = String.fromCharCodes(data);
+        for (final str in decoded.split('\n')
+          ..removeWhere((element) => element.isEmpty)) {
+          if (str.startsWith('{')) {
+            try {
+              final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
+              final bearing = data['yaw'] as double?;
+              final pitch = data['pitch'] as double?;
+              final roll = data['roll'] as double?;
 
-          if (state.useIMUBearing && bearing != null) {
-            state.vehicle?.bearing =
-                (-bearing - state.imuZero.bearingZero).wrap360();
-            state.gaugeBearing =
-                (-bearing - state.imuZero.bearingZero).wrap360();
+              if (state.useIMUBearing && bearing != null) {
+                state.vehicle?.bearing =
+                    (-bearing - (state.vehicle?.imuZero.bearingZero ?? 0))
+                        .wrap360();
+                state.gaugeBearing =
+                    (-bearing - (state.vehicle?.imuZero.bearingZero ?? 0))
+                        .wrap360();
+              }
+              if (pitch != null) {
+                state.vehicle?.pitch =
+                    -pitch - (state.vehicle?.imuZero.pitchZero ?? 0);
+              }
+              if (roll != null) {
+                state.vehicle?.roll =
+                    roll - (state.vehicle?.imuZero.rollZero ?? 0);
+              }
+              state.imuInputRaw = (
+                bearing: bearing ?? state.imuInputRaw.bearing,
+                pitch: pitch ?? state.imuInputRaw.pitch,
+                roll: roll ?? state.imuInputRaw.roll
+              );
+            } catch (e) {
+              // log(e.toString());
+            }
+          } else if (str.startsWith(r'$')) {
+            final decoder = NmeaDecoder()
+              ..registerTalkerSentence('GGA', (line) => GGASentence(raw: line))
+              ..registerTalkerSentence('VTG', (line) => VTGSentence(raw: line));
+            final nmea = decoder.decode(str);
+            if (nmea is GGASentence) {
+              // if (nmea.utc != null) {
+              //   // print(
+              //   //   '${DateTime.timestamp().difference(nmea.utc!) - const Duration(hours: 2)}',
+              //   // );
+              // }
+              if (nmea.quality != null) {
+                updateMainThreadStream?.add((gnssFixQuality: nmea.quality!));
+              }
+              updateMainThreadStream?.add((numSatellites: nmea.numSatellites));
+
+              if (nmea.longitude != null && nmea.latitude != null) {
+                state.gnssUpdate = (
+                  gnssPosition: Geographic(
+                    lon: nmea.longitude!,
+                    lat: nmea.latitude!,
+                  ),
+                  time: nmea.utc ?? DateTime.now(),
+                );
+              }
+            }
+          } else {
+            log(str);
           }
-          if (pitch != null) {
-            state.vehicle?.pitch = -pitch - state.imuZero.pitchZero;
-          }
-          if (roll != null) {
-            state.vehicle?.roll = roll - state.imuZero.rollZero;
-          }
-          state.imuInputRaw = (
-            bearing: bearing ?? state.imuInputRaw.bearing,
-            pitch: pitch ?? state.imuInputRaw.pitch,
-            roll: roll ?? state.imuInputRaw.roll
-          );
-        } catch (e) {
-          log(e.toString());
         }
+      } catch (e) {
+        log('Invalid message', error: e);
       }
     }
     return DateTime.now();
@@ -334,7 +396,10 @@ class _SimulatorCoreState {
   _SimulatorCoreState();
 
   /// A stream controller for forwarding events to send over the network.
-  StreamController<String>? networkSendStream;
+  StreamController<Uint8List>? networkSendStream;
+
+  /// A stream controller for sending messages to the main thread.
+  StreamController<dynamic>? mainThreadSendStream;
 
   /// Whether the simulation should accept incoming control input from
   /// keyboard, gamepad, sliders etc...
@@ -431,11 +496,6 @@ class _SimulatorCoreState {
   ({double bearing, double pitch, double roll}) imuInputRaw =
       (bearing: 0, pitch: 0, roll: 0);
 
-  /// A record with the zero values for the IMU. These can be updated to
-  /// change what is perceived as zero for each axis.
-  ({double bearingZero, double pitchZero, double rollZero}) imuZero =
-      (bearingZero: 0, pitchZero: 0, rollZero: 0);
-
   /// The previous time of when the simulation was updated.
   DateTime prevUpdateTime = DateTime.now();
 
@@ -521,13 +581,12 @@ class _SimulatorCoreState {
     // Set the zero points for the IMU
     else if (message is ({bool setZeroIMU})) {
       if (message.setZeroIMU) {
-        imuZero = (
-          bearingZero: 0,
+        vehicle?.imuZero = ImuZeroValues(
           pitchZero: imuInputRaw.pitch,
           rollZero: imuInputRaw.roll,
         );
       } else {
-        imuZero = (bearingZero: 0, pitchZero: 0, rollZero: 0);
+        vehicle?.imuZero = const ImuZeroValues();
       }
     }
     // Update the vehicle velocity at a set rate.
@@ -553,8 +612,10 @@ class _SimulatorCoreState {
     // Enable/disable auto steering.
     else if (message is ({bool autoSteerEnabled})) {
       autoSteerEnabled = message.autoSteerEnabled;
-      networkSendStream
-          ?.add(jsonEncode({'autoSteerEnabled': autoSteerEnabled}));
+      networkSendStream?.add(
+        const Utf8Encoder()
+            .convert(jsonEncode({'autoSteerEnabled': autoSteerEnabled})),
+      );
     }
     // Set the path tracking model.
     else if (message is ({PathTracking? pathTracking})) {
@@ -732,9 +793,9 @@ class _SimulatorCoreState {
     else if (message is ({bool allowManualTrackingUpdates})) {
       allowManualTrackingUpdates = message.allowManualTrackingUpdates;
     }
-    // Pipe through NTRIP messages to the hardware.
-    else if (message is ({Uint8List ntrip})) {
-      networkSendStream?.add(message.ntrip.toString());
+    // Tell hardware to connect to this device as tcp ntrip server.
+    else if (message is ({Uint8List useAsNtripServer})) {
+      networkSendStream?.add(message.useAsNtripServer);
     }
     // Unknown message, log it to figure out what it is.
     else {

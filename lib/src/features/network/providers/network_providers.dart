@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:typed_data';
+
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:collection/collection.dart';
@@ -233,4 +236,64 @@ class HardwareWebSocketPort extends _$HardwareWebSocketPort {
     hardwareIPAdress: ref.watch(hardwareIPAdressProvider),
     hardwareWebSocketPort: ref.watch(hardwareWebSocketPortProvider),
   );
+}
+
+/// A provider for a TCP server for sending/receiving data via TCP.
+@Riverpod(keepAlive: true)
+class TcpServer extends _$TcpServer {
+  Socket? _lastActiveSocket;
+  @override
+  Future<ServerSocket> build() async {
+    ref.listenSelf((previous, next) {
+      next.when(
+        data: (data) {
+          data.listen((socket) {
+            _lastActiveSocket?.close();
+            _lastActiveSocket?.destroy();
+            _lastActiveSocket = socket
+              ..listen(
+                (event) {
+                  log(
+                    '''Received from  ${socket.remoteAddress}:${socket.remotePort}''',
+                  );
+                  log(String.fromCharCodes(event));
+                },
+                onDone: () {
+                  socket
+                    ..close()
+                    ..destroy();
+                  _lastActiveSocket = null;
+                },
+                onError: (error, stackTrace) {
+                  socket
+                    ..close()
+                    ..destroy();
+                  _lastActiveSocket = null;
+                },
+              );
+          });
+        },
+        error: (error, stackTrace) {},
+        loading: () {},
+      );
+    });
+
+    return ServerSocket.bind('0.0.0.0', 9999);
+  }
+
+  /// Sends [data] to the [_lastActiveSocket] if it's connected.
+  ///
+  /// It will send a message to the hardware to create a new connection.
+  void send(Uint8List data) {
+    // Send notification to hardware to use this device as Ntrip server.
+    if (_lastActiveSocket == null) {
+      ref.read(simInputProvider.notifier).send(
+        (
+          useAsNtripServer:
+              Uint8List.fromList('Use me as Ntrip server!'.codeUnits)
+        ),
+      );
+    }
+    Future(() => _lastActiveSocket?.add(data));
+  }
 }
