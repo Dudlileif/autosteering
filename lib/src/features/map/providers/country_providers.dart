@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/map/map.dart';
@@ -221,14 +222,24 @@ List<TileLayerData> sortedCountryLayers(SortedCountryLayersRef ref) {
 /// specified.
 @Riverpod(keepAlive: true)
 class CountryLayerOpacities extends _$CountryLayerOpacities {
+  Timer? _saveToSettingsTimer;
+
   @override
   Map<String, double> build() {
     ref.listenSelf((previous, next) {
-      ref.read(settingsProvider.notifier).update(
-            SettingsKey.countryLayersOpacities,
-            Map<String, double>.from(next)
-              ..removeWhere((key, value) => value == 0.5),
+      if (previous != null) {
+        if (!const DeepCollectionEquality().equals(previous, next)) {
+          _saveToSettingsTimer?.cancel();
+          _saveToSettingsTimer = Timer(
+            const Duration(seconds: 1),
+            () => ref.read(settingsProvider.notifier).update(
+                  SettingsKey.countryLayersOpacities,
+                  Map<String, double>.from(next)
+                    ..removeWhere((key, value) => value == 0.5),
+                ),
           );
+        }
+      }
     });
 
     final country = ref.watch(currentCountryProvider);

@@ -160,13 +160,20 @@ MapCenterOffset mapOffset(MapOffsetRef ref) {
 /// 2D view.
 @Riverpod(keepAlive: true)
 class MapOffset2D extends _$MapOffset2D {
+  Timer? _saveToSettingsTimer;
+
   @override
   MapCenterOffset build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.mapCenterOffset2D, state);
+        _saveToSettingsTimer?.cancel();
+
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.mapCenterOffset3D, state),
+        );
       }
     });
 
@@ -196,13 +203,20 @@ class MapOffset2D extends _$MapOffset2D {
 /// 3D view.
 @Riverpod(keepAlive: true)
 class MapOffset3D extends _$MapOffset3D {
+  Timer? _saveToSettingsTimer;
+
   @override
   MapCenterOffset build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.mapCenterOffset3D, state);
+        _saveToSettingsTimer?.cancel();
+
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.mapCenterOffset3D, state),
+        );
       }
     });
 
@@ -324,13 +338,20 @@ class MapUse3DPerspective extends _$MapUse3DPerspective {
 /// from the orthogonal view.
 @Riverpod(keepAlive: true)
 class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
+  Timer? _saveToSettingsTimer;
+
   @override
   double build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.mapPerspectiveAngle, next);
+        _saveToSettingsTimer?.cancel();
+
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.mapPerspectiveAngle, next),
+        );
       }
     });
 
@@ -347,11 +368,19 @@ class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
 /// The zoom value that the map should use when being created.
 @Riverpod(keepAlive: true)
 class MapZoom extends _$MapZoom {
+  Timer? _saveToSettingsTimer;
+
   @override
   double build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref.read(settingsProvider.notifier).update(SettingsKey.mapZoom, next);
+        _saveToSettingsTimer?.cancel();
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.mapZoom, next),
+        );
       }
     });
 

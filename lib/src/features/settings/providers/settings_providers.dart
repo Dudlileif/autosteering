@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
@@ -29,20 +30,15 @@ Storage webLocalStorage(WebLocalStorageRef ref) => window.localStorage;
 @Riverpod(keepAlive: true)
 class Settings extends _$Settings {
   @override
-  Map<String, dynamic> build() {
+  SplayTreeMap<String, dynamic> build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        final sortedMap = SplayTreeMap.of(
-          next,
-          (key1, key2) => key1.compareTo(key2),
-        );
-
+        log('Saved settings to file.');
         if (Device.isWeb) {
-          ref.watch(webLocalStorageProvider)['settings'] =
-              jsonEncode(sortedMap);
+          ref.watch(webLocalStorageProvider)['settings'] = jsonEncode(next);
         } else {
           ref.watch(settingsFileProvider).requireValue.writeAsString(
-                const JsonEncoder.withIndent('    ').convert(sortedMap),
+                const JsonEncoder.withIndent('    ').convert(next),
               );
         }
       }
@@ -55,21 +51,30 @@ class Settings extends _$Settings {
     if (fileString.isEmpty) {
       fileString = '{}';
     }
-    return Map<String, dynamic>.from(
-      jsonDecode(
-        fileString,
-      ) as Map,
-    );
+    return SplayTreeMap<String, dynamic>.from(jsonDecode(fileString) as Map);
   }
 
   /// Update the setting [key] to [value].
   void update(SettingsKey key, dynamic value) => Future(
-        () => state = Map<String, dynamic>.from(state)
-          ..update(
-            key.name,
-            (oldValue) => value,
-            ifAbsent: () => value,
-          ),
+        () {
+          final oldValue = state[key.name];
+          // Skip if value is not new.
+          if (oldValue is Iterable) {
+            if (const DeepCollectionEquality().equals(oldValue, value)) {
+              return;
+            }
+          } else if (oldValue == value) {
+            return;
+          }
+          log('Updated setting ${key.name}: ${state[key.name]} => $value');
+
+          state = SplayTreeMap.from(state)
+            ..update(
+              key.name,
+              (oldValue) => value,
+              ifAbsent: () => value,
+            );
+        },
       );
 
   /// Whether the settings contains a value for [key].

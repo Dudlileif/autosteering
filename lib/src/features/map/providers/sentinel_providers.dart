@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
@@ -187,14 +189,25 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
 /// A map for the Sentinel layers and their opacities, which can be specified.
 @Riverpod(keepAlive: true)
 class SentinelLayerOpacities extends _$SentinelLayerOpacities {
+  Timer? _saveToSettingsTimer;
+
   @override
   Map<SentinelLayerType, double> build() {
     ref.listenSelf((previous, next) {
-      ref.read(settingsProvider.notifier).update(
-            SettingsKey.sentinelLayersOpacities,
-            next.map<String, double>((key, value) => MapEntry(key.id, value))
-              ..removeWhere((key, value) => value == 0.5),
+      if (previous != null) {
+        if (!const DeepCollectionEquality().equals(previous, next)) {
+          _saveToSettingsTimer?.cancel();
+          _saveToSettingsTimer = Timer(
+            const Duration(seconds: 1),
+            () => ref.read(settingsProvider.notifier).update(
+                  SettingsKey.sentinelLayersOpacities,
+                  next.map<String, double>(
+                    (key, value) => MapEntry(key.id, value),
+                  )..removeWhere((key, value) => value == 0.5),
+                ),
           );
+        }
+      }
     });
 
     final layers = {for (final layer in SentinelLayerType.values) layer: 0.5};
