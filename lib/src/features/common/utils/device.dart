@@ -14,5 +14,6 @@ class Device {
   static bool get isMobile => !isWeb && (Platform.isAndroid || Platform.isIOS);
 
   /// Whether the device supports serial communication.
-  static bool get supportsSerial => isDesktop || Platform.isAndroid;
+  static bool get supportsSerial => isDesktop; // || Platform.isAndroid;
+  // TODO(dudlileif): update Android implementation to usb_serial package
 }
