@@ -214,7 +214,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       : null;
 
   @override
-  void updatePositionAndBearingTurning(
+  ({Geographic position, double bearing}) updatedPositionAndBearingTurning(
     double period,
     Geographic turningCircleCenter,
   ) {
@@ -255,10 +255,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       },
     );
 
-    // Update the vehicle state.
-
-    position = vehiclePosition;
-    bearing = projectedBearing;
+    return (position: vehiclePosition, bearing: projectedBearing);
   }
 
   @override

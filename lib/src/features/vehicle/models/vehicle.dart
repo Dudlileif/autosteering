@@ -32,8 +32,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
-    this.pitch = 0,
-    this.roll = 0,
     this.useIMUPitchAndRoll = true,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
@@ -48,8 +46,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     DateTime? lastUsed,
     Geographic position = const Geographic(lon: 0, lat: 0),
     double bearing = 0,
+    double pitch = 0,
+    double roll = 0,
     double velocity = 0,
   })  : _bearing = bearing,
+        _pitch = pitch,
+        _roll = roll,
         _velocity = velocity,
         antennaPosition = position,
         imuZero = imuZero ?? const ImuZeroValues(),
@@ -196,11 +198,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The pitch of the vehicle as degrees of inclination around the x-axis
   /// (across) the vehicle in the forward direction.
-  double pitch;
+  double _pitch;
 
   /// The roll of the vehicle as degrees of roll around the y-axis (along) the
   /// vehicle in the forward direction.
-  double roll;
+  double _roll;
 
   /// Bearing as set from the outside.
   double _bearing = 0;
@@ -211,16 +213,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Antenna position of the vehicle.
   Geographic antennaPosition;
 
-  /// The [antennaPosition] moved to the center line of the vehicle.
-  Geographic get centeredAntennaPosition =>
-      switch (antennaLateralOffset.abs() > 0) {
-        false => antennaPosition,
-        true => antennaPosition.spherical.destinationPoint(
-            distance: antennaLateralOffset,
-            bearing: bearing + 90,
-          )
-      };
-
   /// The lateral offset of the the antenna's true ground position to the
   /// mounted position.
   double get antennaRollLateralOffset => sin(roll.toRadians()) * antennaHeight;
@@ -230,8 +222,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   double get antennaPitchLongitudinalOffset =>
       sin(pitch.toRadians()) * antennaHeight;
 
-  /// The projected ground position of the antenna of this vehicle accounting
-  /// for [pitch] and [roll].
+  /// The projected ground position of the centered antenna of this vehicle
+  /// accounting for [pitch] and [roll].
   @override
   Geographic get position => switch (useIMUPitchAndRoll) {
         false => antennaPosition,
@@ -245,23 +237,41 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
               distance: antennaPitchLongitudinalOffset,
               bearing: bearing,
             ),
-      };
+      }
+          .spherical
+          .destinationPoint(
+            distance: antennaLateralOffset,
+            bearing: bearing + 90,
+          );
 
   @override
-  set position(Geographic value) =>
-      antennaPosition = switch (useIMUPitchAndRoll) {
-        false => value,
-        true => value.spherical
-            .destinationPoint(
-              distance: -antennaRollLateralOffset,
-              bearing: bearing - 90,
-            )
-            .spherical
-            .destinationPoint(
-              distance: -antennaPitchLongitudinalOffset,
-              bearing: bearing,
-            )
-      };
+  set position(Geographic value) => antennaPosition = value;
+
+  /// A method for setting the [position] correctly when not directly
+  /// inputting the [antennaPosition] from hardware.
+  ///
+  /// Essentially we move the position opposite of the getter for [position],
+  /// to end at the correct [antennaPosition].
+  void setPositionSim(Geographic value) {
+    final unCentered = value.spherical.destinationPoint(
+      distance: antennaLateralOffset,
+      bearing: bearing - 90,
+    );
+
+    antennaPosition = switch (useIMUPitchAndRoll) {
+      false => unCentered,
+      true => unCentered.spherical
+          .destinationPoint(
+            distance: -antennaRollLateralOffset,
+            bearing: bearing - 90,
+          )
+          .spherical
+          .destinationPoint(
+            distance: -antennaPitchLongitudinalOffset,
+            bearing: bearing,
+          )
+    };
+  }
 
   /// The velocity of the vehicle, in m/s, meters per second, in the bearing
   /// direction.
@@ -274,18 +284,30 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The bearing of the vehicle, in degrees.
   @override
-  double get bearing => _bearing;
+  double get bearing => (_bearing - imuZero.bearingZero).wrap360();
 
   /// Update the bearing of the vehicle, [value] in degrees.
   @override
   set bearing(double value) => _bearing = value.wrap360();
 
+  /// The pitch of the vehicle as degrees of inclination around the x-axis
+  /// (across) the vehicle in the forward direction.
+  double get pitch => (_pitch - imuZero.pitchZero).clamp(-90, 90);
+
+  set pitch(double value) => _pitch = value;
+
+  /// The roll of the vehicle as degrees of roll around the y-axis (along) the
+  /// vehicle in the forward direction.
+  double get roll => (_roll - imuZero.rollZero).clamp(-180, 180);
+
+  set roll(double value) => _roll = value;
+
   /// The distance from the ground position to the antenna position.
-  double get positionToAntennaDistance =>
+  double get groundPositionToAntennaDistance =>
       position.spherical.distanceTo(antennaPosition);
 
   /// The bearing from the ground position to the antenna position.
-  double get positionToAntennaBearing =>
+  double get groundPositionToAntennaBearing =>
       position.spherical.initialBearingTo(antennaPosition);
 
   /// The distance between the wheel axles.
@@ -378,9 +400,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   ) {
     if (period > 0) {
       if (angularVelocity != null && turningCircleCenter != null) {
-        updatePositionAndBearingTurning(period, turningCircleCenter);
+        final updated =
+            updatedPositionAndBearingTurning(period, turningCircleCenter);
+        setPositionSim(updated.position);
+        bearing = updated.bearing;
       } else if (velocity.abs() > 0) {
-        updatePositionStraight(period);
+        setPositionSim(updatedPositionStraight(period));
       }
       updateChildren();
     }
@@ -389,14 +414,14 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Updates the [position] and [bearing] for the next [period] seconds when
   /// turning around [turningCircleCenter], i.e. with a constant
   /// [steeringAngle].
-  void updatePositionAndBearingTurning(
+  ({Geographic position, double bearing}) updatedPositionAndBearingTurning(
     double period,
     Geographic turningCircleCenter,
   );
 
   /// Updates the [position] for the next [period] seconds when going straight.
-  void updatePositionStraight(double period) =>
-      position = position.spherical.destinationPoint(
+  Geographic updatedPositionStraight(double period) =>
+      position.spherical.destinationPoint(
         distance: velocity * period,
         bearing: bearing,
       );

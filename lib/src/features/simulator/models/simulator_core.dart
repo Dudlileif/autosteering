@@ -215,20 +215,14 @@ class SimulatorCore {
               final roll = data['roll'] as double?;
 
               if (state.useIMUBearing && bearing != null) {
-                state.vehicle?.bearing =
-                    (-bearing - (state.vehicle?.imuZero.bearingZero ?? 0))
-                        .wrap360();
-                state.gaugeBearing =
-                    (-bearing - (state.vehicle?.imuZero.bearingZero ?? 0))
-                        .wrap360();
+                state.vehicle?.bearing = (-bearing).wrap360();
+                state.gaugeBearing = (-bearing).wrap360();
               }
               if (pitch != null) {
-                state.vehicle?.pitch =
-                    -pitch - (state.vehicle?.imuZero.pitchZero ?? 0);
+                state.vehicle?.pitch = pitch;
               }
               if (roll != null) {
-                state.vehicle?.roll =
-                    roll - (state.vehicle?.imuZero.rollZero ?? 0);
+                state.vehicle?.roll = roll;
               }
               state.imuInputRaw = (
                 bearing: bearing ?? state.imuInputRaw.bearing,

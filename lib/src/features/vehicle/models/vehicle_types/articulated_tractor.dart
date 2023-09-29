@@ -195,7 +195,7 @@ final class ArticulatedTractor extends Vehicle {
       };
 
   @override
-  void updatePositionAndBearingTurning(
+  ({Geographic position, double bearing}) updatedPositionAndBearingTurning(
     double period,
     Geographic turningCircleCenter,
   ) {
@@ -245,10 +245,7 @@ final class ArticulatedTractor extends Vehicle {
       bearing: frontBodyBearing - 180 + steeringAngle / 2,
     );
 
-    // Update the vehicle state.
-
-    position = vehiclePosition;
-    bearing = frontBodyBearing;
+    return (position: vehiclePosition, bearing: frontBodyBearing);
   }
 
   @override
