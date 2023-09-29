@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:agopengps_flutter/src/features/simulator/providers/providers.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -115,9 +117,22 @@ class PitchAndRollDebugGauges extends StatelessWidget {
               child: const Text('Zero IMU'),
               builder: (context, ref, child) => ListTile(
                 title: child,
-                onTap: () => ref
-                    .read(simInputProvider.notifier)
-                    .send((setZeroIMU: true)),
+                onTap: () {
+                  final oldValues = ref.read(
+                    mainVehicleProvider.select((value) => value.imuZero),
+                  );
+                  ref.read(simInputProvider.notifier).send((setZeroIMU: true));
+                  // Wait a short while before saving the hopefully updated
+                  // vehicle.
+                  Future.delayed(
+                    const Duration(milliseconds: 100),
+                    () {
+                      final vehicle = ref.watch(mainVehicleProvider);
+                      ref.read(saveVehicleProvider(vehicle));
+                      log('''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imuZero}''');
+                    },
+                  );
+                },
               ),
             ),
           ],

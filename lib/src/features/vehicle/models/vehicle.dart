@@ -41,6 +41,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     super.name,
     super.uuid,
     this.pathTrackingMode = PathTrackingMode.purePursuit,
+    ImuZeroValues? imuZero,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
@@ -51,6 +52,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   })  : _bearing = bearing,
         _velocity = velocity,
         antennaPosition = position,
+        imuZero = imuZero ?? const ImuZeroValues(),
         pidParameters = pidParameters ?? const PidParameters(),
         stanleyParameters = stanleyParameters ?? const StanleyParameters(),
         purePursuitParameters =
@@ -107,6 +109,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       vehicle.attachChild(hitchRearTowbarChild, Hitch.rearTowbar);
     }
 
+    final imuZero = json.containsKey('imu_zero_values')
+        ? ImuZeroValues.fromJson(
+            Map<String, dynamic>.from(json['imu_zero_values'] as Map),
+          )
+        : null;
+
     final pidParameters = json.containsKey('pid_parameters')
         ? PidParameters.fromJson(
             Map<String, dynamic>.from(json['pid_parameters'] as Map),
@@ -126,6 +134,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         : null;
 
     return vehicle.copyWith(
+      imuZero: imuZero,
       pidParameters: pidParameters,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
@@ -195,6 +204,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Bearing as set from the outside.
   double _bearing = 0;
+
+  /// The zero values for the IMU in the vehicle.
+  ImuZeroValues imuZero;
 
   /// Antenna position of the vehicle.
   Geographic antennaPosition;
@@ -477,6 +489,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleMax,
     double? trackWidth,
     bool? invertSteeringInput,
+    ImuZeroValues? imuZero,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -513,6 +526,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       'width': width,
       'track_width': trackWidth,
     };
+
+    map['imu_zero_values'] = imuZero;
 
     map['pid_parameters'] = pidParameters;
 

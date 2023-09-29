@@ -21,6 +21,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.steeringAxleWheelWidth,
     super.solidAxleWheelWidth,
     super.invertSteeringInput,
+    super.imuZero,
     super.pathTrackingMode,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 2),
     super.purePursuitParameters,
@@ -142,6 +143,7 @@ final class Harvester extends AxleSteeredVehicle {
     double? steeringAxleWheelWidth,
     double? solidAxleWheelWidth,
     bool? invertSteeringInput,
+    ImuZeroValues? imuZero,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -184,6 +186,7 @@ final class Harvester extends AxleSteeredVehicle {
             steeringAxleWheelWidth ?? this.steeringAxleWheelWidth,
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
+        imuZero: imuZero ?? this.imuZero,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:

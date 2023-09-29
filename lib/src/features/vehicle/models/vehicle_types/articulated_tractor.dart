@@ -27,6 +27,7 @@ final class ArticulatedTractor extends Vehicle {
     super.antennaLateralOffset,
     super.invertSteeringInput,
     super.pathTrackingMode,
+    super.imuZero,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
     super.purePursuitParameters =
         const PurePursuitParameters(lookAheadDistance: 1),
@@ -778,6 +779,7 @@ final class ArticulatedTractor extends Vehicle {
     double? wheelSpacing,
     int? numWheels,
     bool? invertSteeringInput,
+    ImuZeroValues? imuZero,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     StanleyParameters? stanleyParameters,
@@ -817,6 +819,7 @@ final class ArticulatedTractor extends Vehicle {
         rearAxleToTowbarDistance:
             rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
+        imuZero: imuZero ?? this.imuZero,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:
