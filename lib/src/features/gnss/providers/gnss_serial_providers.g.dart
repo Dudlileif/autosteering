@@ -9,7 +9,7 @@ part of 'gnss_serial_providers.dart';
 String _$availableSerialPortsHash() =>
     r'c8572cd86484a91be1ff9fd0fa5efe702e911172';
 
-/// A provider for the available serial ports
+/// A provider for the available serial ports.
 ///
 /// Copied from [availableSerialPorts].
 @ProviderFor(availableSerialPorts)
@@ -25,7 +25,7 @@ final availableSerialPortsProvider =
 );
 
 typedef AvailableSerialPortsRef = AutoDisposeProviderRef<List<SerialPort>>;
-String _$gnssSerialStreamHash() => r'772d1374749ae809dfcf5bf2c7fff4b7115f506e';
+String _$gnssSerialStreamHash() => r'35ba3a92516efbd95539122fe2ce2ea09afbf37a';
 
 /// A stream of the incoming serial data from the GNSS serial hardware.
 ///

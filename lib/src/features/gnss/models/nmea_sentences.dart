@@ -1,8 +1,8 @@
-import 'package:agopengps_flutter/src/features/gnss/models/degree_converter.dart';
+import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:nmea/nmea.dart';
 
 /// An NMEA message for position data.
-class GNGGASentence extends TalkerSentence {
+class GGASentence extends TalkerSentence {
   /// An NMEA message for position data parsed from the [raw] string.
   ///
   /// Example message:
@@ -23,7 +23,7 @@ class GNGGASentence extends TalkerSentence {
   /// Altitude unit: M,
   /// Age of differential data: ,    *** Empty, we don't care about this one ***
   /// Checksum: *72
-  GNGGASentence({required super.raw});
+  GGASentence({required super.raw});
 
   /// The time of the message.
   DateTime? get utc {
@@ -89,7 +89,7 @@ class GNGGASentence extends TalkerSentence {
 }
 
 /// An NMEA message for course over ground and ground velocity data.
-class GNVTGSentence extends TalkerSentence {
+class VTGSentence extends TalkerSentence {
   /// An NMEA message for course over ground and ground velocity data parsed
   /// from the [raw] string.
   ///
@@ -108,7 +108,7 @@ class GNVTGSentence extends TalkerSentence {
   /// Mode indicator: A,
   /// Checksum: *3A
 
-  GNVTGSentence({required super.raw});
+  VTGSentence({required super.raw});
 
   /// The true bearing/heading/course over the ground.
   double? get trueCourseOverGround =>

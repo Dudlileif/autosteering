@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gnss_serial_providers.g.dart';
 
-/// A provider for the available serial ports
+/// A provider for the available serial ports.
 @riverpod
 List<SerialPort> availableSerialPorts(AvailableSerialPortsRef ref) =>
     SerialPort.availablePorts.map(SerialPort.new).toList();
@@ -88,8 +88,8 @@ Stream<String?> gnssSerialStream(GnssSerialStreamRef ref) {
 
   if (serial != null) {
     final decoder = NmeaDecoder()
-      ..registerTalkerSentence('GGA', (line) => GNGGASentence(raw: line))
-      ..registerTalkerSentence('VTG', (line) => GNVTGSentence(raw: line));
+      ..registerTalkerSentence('GGA', (line) => GGASentence(raw: line))
+      ..registerTalkerSentence('VTG', (line) => VTGSentence(raw: line));
 
     timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       final bytesSize = serial.bytesAvailable;
@@ -102,7 +102,7 @@ Stream<String?> gnssSerialStream(GnssSerialStreamRef ref) {
 
           final nmea = decoder.decode(message);
 
-          if (nmea is GNGGASentence) {
+          if (nmea is GGASentence) {
             if (nmea.quality != null) {
               ref
                   .read(gnssCurrentFixQualityProvider.notifier)
@@ -115,7 +115,7 @@ Stream<String?> gnssSerialStream(GnssSerialStreamRef ref) {
                     lon: nmea.longitude!,
                     lat: nmea.latitude!,
                   ),
-                  time: nmea.utc,
+                  time: nmea.utc ?? DateTime.now(),
                 ),
               );
             }
