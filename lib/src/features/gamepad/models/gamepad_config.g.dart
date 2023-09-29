@@ -6,8 +6,8 @@ part of 'gamepad_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_GamepadConfig _$$_GamepadConfigFromJson(Map<String, dynamic> json) =>
-    _$_GamepadConfig(
+_$GamepadConfigImpl _$$GamepadConfigImplFromJson(Map<String, dynamic> json) =>
+    _$GamepadConfigImpl(
       analogMaxValue: json['analogMaxValue'] as int? ?? 65535,
       analogDeadZoneMax:
           (json['analogDeadZoneMax'] as Map<String, dynamic>?)?.map(
@@ -23,7 +23,7 @@ _$_GamepadConfig _$$_GamepadConfigFromJson(Map<String, dynamic> json) =>
               const {},
     );
 
-Map<String, dynamic> _$$_GamepadConfigToJson(_$_GamepadConfig instance) =>
+Map<String, dynamic> _$$GamepadConfigImplToJson(_$GamepadConfigImpl instance) =>
     <String, dynamic>{
       'analogMaxValue': instance.analogMaxValue,
       'analogDeadZoneMax': instance.analogDeadZoneMax

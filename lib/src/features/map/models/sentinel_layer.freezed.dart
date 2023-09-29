@@ -74,22 +74,22 @@ class _$SentinelLayerCopyWithImpl<$Res, $Val extends SentinelLayer>
 }
 
 /// @nodoc
-abstract class _$$_SentinelLayerCopyWith<$Res>
+abstract class _$$SentinelLayerImplCopyWith<$Res>
     implements $SentinelLayerCopyWith<$Res> {
-  factory _$$_SentinelLayerCopyWith(
-          _$_SentinelLayer value, $Res Function(_$_SentinelLayer) then) =
-      __$$_SentinelLayerCopyWithImpl<$Res>;
+  factory _$$SentinelLayerImplCopyWith(
+          _$SentinelLayerImpl value, $Res Function(_$SentinelLayerImpl) then) =
+      __$$SentinelLayerImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String instanceId, SentinelLayerType layerType});
 }
 
 /// @nodoc
-class __$$_SentinelLayerCopyWithImpl<$Res>
-    extends _$SentinelLayerCopyWithImpl<$Res, _$_SentinelLayer>
-    implements _$$_SentinelLayerCopyWith<$Res> {
-  __$$_SentinelLayerCopyWithImpl(
-      _$_SentinelLayer _value, $Res Function(_$_SentinelLayer) _then)
+class __$$SentinelLayerImplCopyWithImpl<$Res>
+    extends _$SentinelLayerCopyWithImpl<$Res, _$SentinelLayerImpl>
+    implements _$$SentinelLayerImplCopyWith<$Res> {
+  __$$SentinelLayerImplCopyWithImpl(
+      _$SentinelLayerImpl _value, $Res Function(_$SentinelLayerImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -98,7 +98,7 @@ class __$$_SentinelLayerCopyWithImpl<$Res>
     Object? instanceId = null,
     Object? layerType = null,
   }) {
-    return _then(_$_SentinelLayer(
+    return _then(_$SentinelLayerImpl(
       instanceId: null == instanceId
           ? _value.instanceId
           : instanceId // ignore: cast_nullable_to_non_nullable
@@ -113,12 +113,12 @@ class __$$_SentinelLayerCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_SentinelLayer extends _SentinelLayer {
-  const _$_SentinelLayer({required this.instanceId, required this.layerType})
+class _$SentinelLayerImpl extends _SentinelLayer {
+  const _$SentinelLayerImpl({required this.instanceId, required this.layerType})
       : super._();
 
-  factory _$_SentinelLayer.fromJson(Map<String, dynamic> json) =>
-      _$$_SentinelLayerFromJson(json);
+  factory _$SentinelLayerImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SentinelLayerImplFromJson(json);
 
   /// The Coperincus dataspace instanceId api-key.
   /// Register a user at [https://dataspace.copernicus.eu/],
@@ -140,7 +140,7 @@ class _$_SentinelLayer extends _SentinelLayer {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SentinelLayer &&
+            other is _$SentinelLayerImpl &&
             (identical(other.instanceId, instanceId) ||
                 other.instanceId == instanceId) &&
             (identical(other.layerType, layerType) ||
@@ -154,12 +154,12 @@ class _$_SentinelLayer extends _SentinelLayer {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SentinelLayerCopyWith<_$_SentinelLayer> get copyWith =>
-      __$$_SentinelLayerCopyWithImpl<_$_SentinelLayer>(this, _$identity);
+  _$$SentinelLayerImplCopyWith<_$SentinelLayerImpl> get copyWith =>
+      __$$SentinelLayerImplCopyWithImpl<_$SentinelLayerImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_SentinelLayerToJson(
+    return _$$SentinelLayerImplToJson(
       this,
     );
   }
@@ -168,11 +168,11 @@ class _$_SentinelLayer extends _SentinelLayer {
 abstract class _SentinelLayer extends SentinelLayer {
   const factory _SentinelLayer(
       {required final String instanceId,
-      required final SentinelLayerType layerType}) = _$_SentinelLayer;
+      required final SentinelLayerType layerType}) = _$SentinelLayerImpl;
   const _SentinelLayer._() : super._();
 
   factory _SentinelLayer.fromJson(Map<String, dynamic> json) =
-      _$_SentinelLayer.fromJson;
+      _$SentinelLayerImpl.fromJson;
 
   @override
 
@@ -187,6 +187,6 @@ abstract class _SentinelLayer extends SentinelLayer {
   SentinelLayerType get layerType;
   @override
   @JsonKey(ignore: true)
-  _$$_SentinelLayerCopyWith<_$_SentinelLayer> get copyWith =>
+  _$$SentinelLayerImplCopyWith<_$SentinelLayerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

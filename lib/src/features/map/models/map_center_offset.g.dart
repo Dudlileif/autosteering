@@ -6,13 +6,15 @@ part of 'map_center_offset.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_MapCenterOffset _$$_MapCenterOffsetFromJson(Map<String, dynamic> json) =>
-    _$_MapCenterOffset(
+_$MapCenterOffsetImpl _$$MapCenterOffsetImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MapCenterOffsetImpl(
       x: (json['x'] as num?)?.toDouble() ?? 0,
       y: (json['y'] as num?)?.toDouble() ?? 0,
     );
 
-Map<String, dynamic> _$$_MapCenterOffsetToJson(_$_MapCenterOffset instance) =>
+Map<String, dynamic> _$$MapCenterOffsetImplToJson(
+        _$MapCenterOffsetImpl instance) =>
     <String, dynamic>{
       'x': instance.x,
       'y': instance.y,
