@@ -4,7 +4,7 @@ import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/gnss/providers/device_position_providers.dart';
+import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/network/network.dart';
@@ -266,6 +266,14 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
           .update(value: message.hardwareIsConnected);
 
       yield message.vehicle;
+    } else if (message is ({int gnssFixQuality})) {
+      ref
+          .read(gnssCurrentFixQualityProvider.notifier)
+          .updateByIndex(message.gnssFixQuality);
+    } else if (message is ({int? numSatellites})) {
+      ref
+          .read(gnssCurrentNumSatellitesProvider.notifier)
+          .update(message.numSatellites);
     }
   }
 }

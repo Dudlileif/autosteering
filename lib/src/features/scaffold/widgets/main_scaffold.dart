@@ -74,6 +74,9 @@ class _HWConnectionStatus extends StatelessWidget {
           color: ref.watch(hardwareIsConnectedProvider)
               ? Colors.green
               : Colors.red,
+          shadows: const [
+            Shadow(offset: Offset(0, 1)),
+          ],
         ),
       ),
     );
@@ -88,23 +91,46 @@ class _GnssFixQualityStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (context, ref, child) => Tooltip(
-        message: ref.watch(gnssCurrentFixQualityProvider).name,
-        child: Icon(
-          Icons.satellite_alt,
-          size: size,
-          color: switch (ref.watch(gnssCurrentFixQualityProvider)) {
-            GnssFixQuality.rtk => Colors.green,
-            GnssFixQuality.floatRTK || GnssFixQuality.ppsFix => Colors.lime,
-            GnssFixQuality.differentialFix => Colors.yellow,
-            GnssFixQuality.fix => Colors.orange,
-            GnssFixQuality.notAvailable => Colors.red,
-            GnssFixQuality.manualInput => Colors.purple,
-            GnssFixQuality.simulation => Colors.blue,
-            GnssFixQuality.estimated => Colors.blueGrey,
-          },
-        ),
-      ),
+      builder: (context, ref, child) {
+        final fixQuality = ref.watch(gnssCurrentFixQualityProvider);
+        final numSatellites = ref.watch(gnssCurrentNumSatellitesProvider) ?? 0;
+        return Tooltip(
+          message: fixQuality.name,
+          child: Stack(
+            children: [
+              Align(
+                child: Icon(
+                  Icons.satellite_alt,
+                  size: size,
+                  color: switch (fixQuality) {
+                    GnssFixQuality.rtk => Colors.green,
+                    GnssFixQuality.floatRTK ||
+                    GnssFixQuality.ppsFix =>
+                      Colors.lime,
+                    GnssFixQuality.differentialFix => Colors.yellow,
+                    GnssFixQuality.fix => Colors.orange,
+                    GnssFixQuality.notAvailable => Colors.red,
+                    GnssFixQuality.manualInput => Colors.purple,
+                    GnssFixQuality.simulation => Colors.blue,
+                    GnssFixQuality.estimated => Colors.blueGrey,
+                  },
+                  shadows: const [
+                    Shadow(offset: Offset(1, 0)),
+                    Shadow(offset: Offset(0, 1)),
+                  ],
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  child: Text('$numSatellites'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
