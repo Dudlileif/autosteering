@@ -20,15 +20,9 @@ class CopernicusInstanceId extends _$CopernicusInstanceId {
       }
     });
 
-    if (ref
+    return ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.copernicusInstanceId)) {
-      return ref
-          .read(settingsProvider.notifier)
-          .getString(SettingsKey.copernicusInstanceId);
-    }
-
-    return null;
+        .getString(SettingsKey.copernicusInstanceId);
   }
 
   /// Update the [state] to [value].

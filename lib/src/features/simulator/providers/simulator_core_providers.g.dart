@@ -166,7 +166,7 @@ final simCoreDebugAllowLongBreaksProvider =
 
 typedef _$SimCoreDebugAllowLongBreaks = Notifier<bool>;
 String _$simCoreAllowManualInputHash() =>
-    r'2d610224146e2bb67d3cf747cc462a72a5769943';
+    r'6d5c8c79ee57841155736403f685c88f7587f39e';
 
 /// A provider for whether the sim core should allow manual inputs from the
 /// user, i.e. not only sensors from the vehicle.
@@ -186,7 +186,7 @@ final simCoreAllowManualInputProvider =
 
 typedef _$SimCoreAllowManualInput = Notifier<bool>;
 String _$simCoreVehicleAutoCenterSteeringHash() =>
-    r'ce2af638380722f81e78cc3406720e787cb72518';
+    r'0d48d6d46f67170250b16d9a8bc0b1dd43d0cc6b';
 
 /// A provider for whether the steering automatically should recenter when
 /// no input is provided.
@@ -206,7 +206,7 @@ final simCoreVehicleAutoCenterSteeringProvider =
 
 typedef _$SimCoreVehicleAutoCenterSteering = Notifier<bool>;
 String _$simCoreVehicleAutoSlowDownHash() =>
-    r'c5d7a66ec2ed0e6612817a991524413c67035f93';
+    r'daeeb925351e6d9b780309d0afe5556b2913705b';
 
 /// A provider for whether the vehicle should slow down when no input is
 /// provided.

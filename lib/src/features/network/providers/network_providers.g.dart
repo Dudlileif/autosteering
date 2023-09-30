@@ -116,7 +116,7 @@ final hardwareIsConnectedProvider =
 );
 
 typedef _$HardwareIsConnected = Notifier<bool>;
-String _$hardwareIPAdressHash() => r'9e16807c2fc2e38718ce21576b0ea9a32d5c87f0';
+String _$hardwareIPAdressHash() => r'93c5230172faa73ea94b9f2f351ca9ad11264274';
 
 /// A provider for the IP adress of the hardware we want to communicate with.
 ///
@@ -135,7 +135,7 @@ final hardwareIPAdressProvider =
 
 typedef _$HardwareIPAdress = Notifier<String>;
 String _$hardwareUDPReceivePortHash() =>
-    r'b3dcb3a4792c18833d84b60b7d559199b7868510';
+    r'91dbd7461ad74145dfdb3e30087d93af782aac83';
 
 /// A provider for the UDP receive port for the device.
 ///
@@ -154,7 +154,7 @@ final hardwareUDPReceivePortProvider =
 
 typedef _$HardwareUDPReceivePort = Notifier<int>;
 String _$hardwareUDPSendPortHash() =>
-    r'bd08e39eec4b4b1216c6072a64dfe6af0f2ed76a';
+    r'8fb2c394511108ca165925cab8e4d31e8abda11c';
 
 /// A provider for the UDP send port for the device to send messages to
 /// the hardware in [HardwareIPAdress].
@@ -174,7 +174,7 @@ final hardwareUDPSendPortProvider =
 
 typedef _$HardwareUDPSendPort = Notifier<int>;
 String _$hardwareWebSocketPortHash() =>
-    r'e5cc5998b00cce1c57443a9c928d1dcd3ab5ccb7';
+    r'afb7bbd829445135aabd30dbc368f7649dbffb61';
 
 /// A provider for the UDP send port for the device to send messages to
 /// the hardware in [HardwareIPAdress].

@@ -294,16 +294,10 @@ class SimCoreAllowManualInput extends _$SimCoreAllowManualInput {
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.simAllowManualInput)) {
-      return ref
-              .read(settingsProvider.notifier)
-              .getBool(SettingsKey.simAllowManualInput) ??
-          true;
-    }
-
-    return true;
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.simAllowManualInput) ??
+        true;
   }
 
   /// Update the [state] to [value].
@@ -330,16 +324,10 @@ class SimCoreVehicleAutoCenterSteering
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.simAutoCenterSteering)) {
-      return ref
-              .read(settingsProvider.notifier)
-              .getBool(SettingsKey.simAutoCenterSteering) ??
-          true;
-    }
-
-    return true;
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.simAutoCenterSteering) ??
+        true;
   }
 
   /// Update the [state] to [value].
@@ -365,15 +353,10 @@ class SimCoreVehicleAutoSlowDown extends _$SimCoreVehicleAutoSlowDown {
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.simAutoSlowDown)) {
-      return ref
-              .read(settingsProvider.notifier)
-              .getBool(SettingsKey.simAutoSlowDown) ??
-          false;
-    }
-    return false;
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.simAutoSlowDown) ??
+        false;
   }
 
   /// Update the [state] to [value].

@@ -87,7 +87,7 @@ final enabledCountryLayersProvider =
 
 typedef _$EnabledCountryLayers = Notifier<Set<TileLayerData>>;
 String _$countryLayerOpacitiesHash() =>
-    r'6d8fa520c12e300a0dc37cd0a382c527c5c965cf';
+    r'a7cd4c867af5b365932975fc477358a4389915cd';
 
 /// A map of the available country layers and their opacities, which can be
 /// specified.

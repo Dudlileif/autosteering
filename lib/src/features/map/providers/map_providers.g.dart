@@ -318,7 +318,7 @@ final zoomTimerControllerProvider =
 );
 
 typedef _$ZoomTimerController = AutoDisposeNotifier<Timer?>;
-String _$mapOffset2DHash() => r'bacee10fe6dceef24cc755af969461bc872bf088';
+String _$mapOffset2DHash() => r'e7ba7e93982dfcb53ac2bdae646d5c93f36713e3';
 
 /// How much the map center should be offset from the vehicle when using
 /// 2D view.
@@ -336,7 +336,7 @@ final mapOffset2DProvider =
 );
 
 typedef _$MapOffset2D = Notifier<MapCenterOffset>;
-String _$mapOffset3DHash() => r'eed798ad2fa9d9781af96898d913a23068763984';
+String _$mapOffset3DHash() => r'6a86104bd72a60b53e1733f5c6999bb975c38cd9';
 
 /// How much the map center should be offset from the vehicle when using
 /// 3D view.
@@ -393,7 +393,7 @@ final mapUse3DPerspectiveProvider =
 
 typedef _$MapUse3DPerspective = Notifier<bool>;
 String _$map3DPerspectiveAngleHash() =>
-    r'2d41f3d840e1281e01a58b107c01bec1596c1188';
+    r'eb3b4bf927f82b4447dd979acd9edee3aa68a946';
 
 /// The angle that the 3D perspective should be seen from, as in radians
 /// from the orthogonal view.
@@ -412,7 +412,7 @@ final map3DPerspectiveAngleProvider =
 );
 
 typedef _$Map3DPerspectiveAngle = Notifier<double>;
-String _$mapZoomHash() => r'070ace7cb8cec2c2a0c7b1c56a4c50f8bb51a379';
+String _$mapZoomHash() => r'5fc8d7397026ab36f2c9549587d7648e38d2bc45';
 
 /// The zoom value that the map should use when being created.
 ///

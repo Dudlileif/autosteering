@@ -7,7 +7,7 @@ part of 'sentinel_providers.dart';
 // **************************************************************************
 
 String _$copernicusInstanceIdHash() =>
-    r'0a1e6f470a8443ceed23cc711bf09573fcec32ce';
+    r'd6612eaaa609bbce1f4ef073940f381e37a69044';
 
 /// A provider for the Sentinel Dataspace instance id.
 ///
@@ -84,7 +84,7 @@ final enabledSentinelLayersProvider =
 
 typedef _$EnabledSentinelLayers = Notifier<Set<SentinelLayer>>;
 String _$sentinelLayerOpacitiesHash() =>
-    r'2f422a371d0e56d26d580f18f1d3876048f75902';
+    r'5bec0934ea30512c86d2d5d62a9ccbd26b351458';
 
 /// A map for the Sentinel layers and their opacities, which can be specified.
 ///

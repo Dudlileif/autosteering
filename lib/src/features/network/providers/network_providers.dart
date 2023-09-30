@@ -62,15 +62,10 @@ class HardwareIPAdress extends _$HardwareIPAdress {
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.hardwareIPAdress)) {
-      return ref
-              .read(settingsProvider.notifier)
-              .getString(SettingsKey.hardwareIPAdress) ??
-          '192.168.4.1';
-    }
-    return '192.168.4.1';
+    return ref
+            .read(settingsProvider.notifier)
+            .getString(SettingsKey.hardwareIPAdress) ??
+        '192.168.4.1';
   }
 
   /// Update the [state] to [value] if it's a valid IP adress.
@@ -94,15 +89,10 @@ class HardwareUDPReceivePort extends _$HardwareUDPReceivePort {
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.hardwareUDPReceivePort)) {
-      return ref
-              .read(settingsProvider.notifier)
-              .getInt(SettingsKey.hardwareUDPReceivePort) ??
-          3333;
-    }
-    return 3333;
+    return ref
+            .read(settingsProvider.notifier)
+            .getInt(SettingsKey.hardwareUDPReceivePort) ??
+        3333;
   }
 
   /// Update the [state] to [value].
@@ -133,16 +123,10 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.hardwareUDPSendPort)) {
-      return ref
-              .read(settingsProvider.notifier)
-              .getInt(SettingsKey.hardwareUDPSendPort) ??
-          6666;
-    }
-
-    return 6666;
+    return ref
+            .read(settingsProvider.notifier)
+            .getInt(SettingsKey.hardwareUDPSendPort) ??
+        6666;
   }
 
   /// Update the [state] to [value].
@@ -193,16 +177,10 @@ class HardwareWebSocketPort extends _$HardwareWebSocketPort {
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.hardwareWebSocketPort)) {
-      return ref
-              .read(settingsProvider.notifier)
-              .getInt(SettingsKey.hardwareWebSocketPort) ??
-          80;
-    }
-
-    return 80;
+    return ref
+            .read(settingsProvider.notifier)
+            .getInt(SettingsKey.hardwareWebSocketPort) ??
+        80;
   }
 
   /// Update the [state] to [value].
