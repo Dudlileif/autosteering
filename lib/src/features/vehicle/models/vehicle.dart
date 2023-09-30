@@ -250,7 +250,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   set position(Geographic value) => antennaPosition = value;
 
   /// A method for setting the [position] correctly when not directly
-  /// inputting the [antennaPosition] from hardware.
+  /// inputting the [antennaPosition] from hardware. The [value] is the new
+  /// proposed ground [position] for the vehicle.
   ///
   /// Essentially we move the position opposite of the getter for [position],
   /// to end at the correct [antennaPosition].
@@ -523,6 +524,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     StanleyParameters? stanleyParameters,
     double? velocity,
     double? bearing,
+    double? pitch,
+    double? roll,
     double? steeringAngleInput,
     double? length,
     double? width,

@@ -1020,7 +1020,9 @@ class _SimulatorCoreState {
   void updateGauges() {
     // Update based on the last GNSS updates, if we've received one this tick.
     if (gnssUpdate != null) {
-      if (gnssUpdate != null && prevGnssUpdate != null) {
+      if (gnssUpdate != null &&
+          prevGnssUpdate != null &&
+          !allowManualSimInput) {
         distance = gnssUpdate!.gnssPosition.spherical
             .distanceTo(prevGnssUpdate!.gnssPosition);
         // Only use update points that are more than 5 cm apart to update
@@ -1068,15 +1070,18 @@ class _SimulatorCoreState {
     updateVehicleVelocityAndSteering();
     checkTurningCircle();
     updateTime();
-    if (gnssUpdate != null) {
+
+    if (gnssUpdate != null && !allowManualSimInput) {
       vehicle?.position = gnssUpdate!.gnssPosition;
       vehicle?.updateChildren();
+      turningCircleCenter = vehicle?.turningRadiusCenter;
     } else {
       vehicle?.updatePositionAndBearing(
         period,
         turningCircleCenter,
       );
     }
+
     updateGauges();
 
     if (!allowManualSimInput) {
@@ -1086,7 +1091,6 @@ class _SimulatorCoreState {
     }
 
     didChange = forceChange || prevVehicle != vehicle;
-
     prevVehicle = vehicle?.copyWith();
     forceChange = false;
   }
