@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -28,6 +29,12 @@ class PathInterpolationDistance extends _$PathInterpolationDistance {
 class ConfiguredPathTracking extends _$ConfiguredPathTracking {
   @override
   PathTracking? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null || previous != null) {
+        Logger.instance.i('Path tracking set to ${next?.runtimeType}');
+      }
+    });
+
     final wayPoints = ref.watch(finishedPathRecordingListProvider);
     if (wayPoints != null) {
       return switch (ref.watch(

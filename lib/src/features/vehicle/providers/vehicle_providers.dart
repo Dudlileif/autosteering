@@ -52,7 +52,7 @@ class AutoSteerEnabled extends _$AutoSteerEnabled {
   bool build() {
     ref.listenSelf((previous, next) {
       if (next != previous) {
-        ref.read(simInputProvider.notifier).send((autoSteerEnabled: next));
+        ref.read(simInputProvider.notifier).send((enableAutoSteer: next));
       }
     });
 
@@ -145,8 +145,15 @@ AsyncValue<Vehicle> lastUsedVehicle(LastUsedVehicleRef ref) =>
         if (data.isNotEmpty) {
           final sorted = data..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
-          return sorted.first;
+          final vehicle = sorted.first;
+          Logger.instance.i(
+            'Last used vehicle found: ${vehicle.name} | uuid: ${vehicle.uuid}.',
+          );
+
+          return vehicle;
         }
+        Logger.instance.i('Last used vehicle not found, creating new.');
+
         return PreconfiguredVehicles.tractor;
       },
     );

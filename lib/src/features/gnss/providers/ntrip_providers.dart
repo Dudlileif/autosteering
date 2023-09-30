@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/network/network.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
@@ -200,6 +200,7 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {
+        Logger.instance.i('NTRIP client connected.');
         data?.socket.listen((event) {
           ref.read(ntripAliveProvider.notifier).update(value: true);
 
@@ -239,17 +240,17 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
               ref.read(tcpServerProvider.notifier).send(message);
               ref.read(gnssSerialProvider)?.write(message);
             }
-            // print(
-            //   'Messages: ${messages.length}\nTypes: $types\nLengths: $lengths',
-            // );
-            // print(event.length);
           } else {
-            log('Unknown NTRIP message: ${String.fromCharCodes(event)}');
+            Logger.instance.w('Unknown NTRIP message: $event');
           }
         });
         ref.onDispose(() => data?.socket.destroy());
       },
-      error: (error, stackTrace) {},
+      error: (error, stackTrace) => Logger.instance.e(
+        'Failed to create NTRIP client.',
+        error: error,
+        stackTrace: stackTrace,
+      ),
       loading: () {},
     );
   });

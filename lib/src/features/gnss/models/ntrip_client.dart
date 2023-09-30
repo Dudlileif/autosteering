@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:universal_io/io.dart';
 
 /// A client for receiving NTRIP messages from an NTRIP caster.
@@ -26,21 +26,17 @@ class NtripClient {
     int port = 2101,
     Socket? connectedSocket,
   }) async {
-    try {
-      final socket = connectedSocket ?? await Socket.connect(host, port);
-
-      final auth =
-          const Base64Encoder().convert('$username:$password'.codeUnits);
-
-      final message = '''
+    final auth = const Base64Encoder().convert('$username:$password'.codeUnits);
+    final message = '''
 GET /$mountPoint HTTP/1.1\r
 User-Agent: NTRIP NTRIPClient/0.1\r
 Authorization: Basic $auth\r
 Accept: */*\r
 Connection: close\r
       ''';
-
-      socket.add(message.codeUnits);
+    try {
+      final socket = (connectedSocket ?? await Socket.connect(host, port))
+        ..add(message.codeUnits);
 
       return NtripClient._(
         host: host,
@@ -51,7 +47,10 @@ Connection: close\r
         socket: socket,
       );
     } catch (error) {
-      log(error.toString());
+      Logger.instance.e(
+        'Failed to connect to NTRIP server $host:$port with message: $message',
+        error: error,
+      );
       return null;
     }
   }

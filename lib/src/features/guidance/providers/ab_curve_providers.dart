@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
@@ -12,7 +13,14 @@ part 'ab_curve_providers.g.dart';
 @Riverpod(keepAlive: true)
 class ABCurvePoints extends _$ABCurvePoints {
   @override
-  List<WayPoint>? build() => null;
+  List<WayPoint>? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null) {
+        Logger.instance.i('AB curve recorded points: ${next.length}.');
+      }
+    });
+    return null;
+  }
 
   /// Updates [state] to [points].
   void update(List<WayPoint> points) => Future(() => state = points);
@@ -43,6 +51,15 @@ Future<ABCurve?> aBCurveDebug(ABCurveDebugRef ref) async {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {
+        if (data != null) {
+          ref.listenSelf((previous, next) {
+            Logger.instance.i(
+              '''ABCurve created: A:${data.start}, B: ${data.end}, points: ${data.baseLine.length}, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
+            );
+          });
+        } else if (previous?.value != null && data == null) {
+          Logger.instance.i('ABCurve deleted.');
+        }
         ref.read(simInputProvider.notifier).send((abTracking: data));
         ref.read(displayABTrackingLinesProvider.notifier).update(data?.lines);
       },

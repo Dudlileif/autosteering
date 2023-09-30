@@ -10,7 +10,17 @@ part 'path_recording_providers.g.dart';
 @Riverpod(keepAlive: true)
 class EnablePathRecorder extends _$EnablePathRecorder {
   @override
-  bool build() => false;
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (next || previous != null) {
+        Logger.instance.i('Path recorder ${switch (next) {
+          true => 'enabled',
+          false => 'disabled'
+        }}.');
+      }
+    });
+    return false;
+  }
 
   /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
@@ -133,7 +143,15 @@ class PathRecordingList extends _$PathRecordingList {
 @Riverpod(keepAlive: true)
 class FinishedPathRecordingList extends _$FinishedPathRecordingList {
   @override
-  List<WayPoint>? build() => null;
+  List<WayPoint>? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null || previous != null) {
+        Logger.instance
+            .i('Finished path recording list: ${next?.length} points.');
+      }
+    });
+    return null;
+  }
 
   /// Update the [state] to [points].
   void update(List<WayPoint> points) => Future(() => state = points);
@@ -179,7 +197,14 @@ class ShowFinishedPath extends _$ShowFinishedPath {
 @Riverpod(keepAlive: true)
 class EditFinishedPath extends _$EditFinishedPath {
   @override
-  bool build() => false;
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (next || previous != null) {
+        Logger.instance.i('Editing recorded path: $next.');
+      }
+    });
+    return false;
+  }
 
   /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);

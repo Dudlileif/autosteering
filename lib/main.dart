@@ -7,23 +7,32 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
+  Logger.instance.i('Application startup initiated...');
   WidgetsFlutterBinding.ensureInitialized();
   if (!Device.isWeb) {
     await WakelockPlus.enable();
+    Logger.instance.i('Wakelock enabled.');
   }
 
   if (Device.isDesktop) {
     await windowManager.ensureInitialized();
+    Logger.instance.i(
+      'Desktop window manager initalized, waiting until ready to show window.',
+    );
 
     await windowManager.waitUntilReadyToShow(const WindowOptions(), () async {
       await windowManager.show();
       await windowManager.focus();
     });
+    Logger.instance.i('Desktop window showing and in focus.');
   }
 
   if (Device.isWeb) {
     await FastCachedImageConfig.init(subDir: 'AgOpenGPS_flutter/image_cache/');
+    Logger.instance.i('Configured CachedImage directory');
   }
+
+  Logger.instance.i('Starting main application...');
 
   runApp(
     const ProviderScope(

@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/simulator/providers/providers.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +128,9 @@ class PitchAndRollDebugGauges extends StatelessWidget {
                     () {
                       final vehicle = ref.watch(mainVehicleProvider);
                       ref.read(saveVehicleProvider(vehicle));
-                      log('''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imuZero}''');
+                      Logger.instance.i(
+                        '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imuZero}''',
+                      );
                     },
                   );
                 },

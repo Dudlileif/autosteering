@@ -24,7 +24,17 @@ class ShowField extends _$ShowField {
 @Riverpod(keepAlive: true)
 class ActiveField extends _$ActiveField {
   @override
-  Field? build() => null;
+  Field? build() {
+    ref
+      ..onDispose(() => Logger.instance.i('Closed active field.'))
+      ..listenSelf((previous, next) {
+        if (next != null) {
+          Logger.instance.i('Loaded active field: ${next.name}.');
+        }
+      });
+
+    return null;
+  }
 
   /// Update the [state] to [field].
   void update(Field field) => Future(() => state = field);
@@ -141,6 +151,8 @@ class ShowBufferedField extends _$ShowBufferedField {
 /// A provider for creating and updating the buffered test field.
 @Riverpod(keepAlive: true)
 Future<Field?> bufferedField(BufferedFieldRef ref) async {
+  ref.onDispose(() => Logger.instance.i('Closed buffered field.'));
+
   if (!ref.watch(fieldBufferEnabledProvider)) {
     return null;
   }
@@ -151,6 +163,30 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
     final exteriorJoinType = ref.watch(fieldExteriorBufferJoinProvider);
     final interiorJoinType = ref.watch(fieldInteriorBufferJoinProvider);
     final getRawPoints = ref.watch(fieldBufferGetRawPointsProvider);
+
+    ref.listenSelf((previous, next) {
+      final bufferSpecs = {
+        'exteriorDistance': exteriorDistance,
+        'interiorDistance': interiorDistance,
+        'exteriorJoinType': exteriorJoinType,
+        'interiorJoinType': interiorJoinType,
+        'getRawPoints': getRawPoints,
+      };
+
+      next.when(
+        data: (data) {
+          if (data != null) {
+            Logger.instance.i('Buffered field ${data.name} with $bufferSpecs.');
+          }
+        },
+        error: (error, stackTrace) => Logger.instance.e(
+          'Error when buffering field ${field.name} with $bufferSpecs',
+          error: error,
+          stackTrace: stackTrace,
+        ),
+        loading: () {},
+      );
+    });
 
     late final Polygon bufferedPolygon;
     if (Device.isWeb) {

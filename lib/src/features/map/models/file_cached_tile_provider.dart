@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:dio/dio.dart';
@@ -75,14 +73,13 @@ class FileCachedTileProvider extends TileProvider {
 
     if (file.existsSync()) {
       if (debugPrint) {
-        log(
+        Logger.instance.i(
           '''
+FileCachedTileProvider found tile:
 Layer: ${layer?.name}
 $coordinates
 File: ${file.path}
 ''',
-          name: 'FileCachedTileProvider',
-          time: DateTime.timestamp(),
         );
       }
 
@@ -102,15 +99,14 @@ File: ${file.path}
       );
 
       if (debugPrint) {
-        log(
+        Logger.instance.i(
           '''
+FileCachedTileProvider downloading tile:
 Layer: ${layer?.name}
 $coordinates
 Url: $url
 File: ${file.path}
 ''',
-          name: 'FileCachedTileProvider',
-          time: DateTime.timestamp(),
         );
       }
 

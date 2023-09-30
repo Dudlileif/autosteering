@@ -356,7 +356,7 @@ class _LoadVehicleFromFileProviderElement
   String get path => (origin as LoadVehicleFromFileProvider).path;
 }
 
-String _$lastUsedVehicleHash() => r'0661f70142802a8325d22f39a600871ca7049560';
+String _$lastUsedVehicleHash() => r'2283fa9b07f408eb6584ed6ac5a14d42cdf2cec9';
 
 /// A provider for the most recently used [Vehicle].
 ///

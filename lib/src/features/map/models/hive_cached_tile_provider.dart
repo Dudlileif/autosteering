@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/widgets.dart';
@@ -35,14 +34,13 @@ class HiveCachedTileProvider extends TileProvider {
   ImageProvider getImage(TileCoordinates coordinates, TileLayer options) {
     final url = getTileUrl(coordinates, options);
     if (debugPrint) {
-      log(
+      Logger.instance.i(
         '''
+HiveCachedTileProvider getting tile: 
 Layer: ${layer?.name}
 $coordinates
 Url: $url
 ''',
-        name: 'HiveCachedTileProvider',
-        time: DateTime.timestamp(),
       );
     }
 

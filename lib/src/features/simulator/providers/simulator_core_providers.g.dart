@@ -25,7 +25,7 @@ final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
-String _$initializeSimCoreHash() => r'201179f56c27edbcd95650f5c81850b2d9ab4664';
+String _$initializeSimCoreHash() => r'1ae9a7d60ad25aab1eb337d77bae209a1506f648';
 
 /// Sends initial parameters to  the sim core.
 ///
@@ -42,7 +42,7 @@ final _initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef _InitializeSimCoreRef = AutoDisposeProviderRef<void>;
-String _$simCoreWebStreamHash() => r'45bce31ced40f40f34556285e47b541b851694a2';
+String _$simCoreWebStreamHash() => r'3d093a0a5d8cb189e9129eed03269add826f306a';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
@@ -64,7 +64,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'35a9cb26d88a67c2ae8155f42412428944531a20';
+    r'd375c8d6962b3b5646c22bb03c8eb8b6f1172cae';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.
@@ -86,7 +86,7 @@ final simCoreIsolateStreamProvider =
 );
 
 typedef SimCoreIsolateStreamRef = AutoDisposeStreamProviderRef<Vehicle>;
-String _$simInputHash() => r'926721dd39a10596031a61d756176822f7f2c035';
+String _$simInputHash() => r'65f035ef813a68d16247eaac30516c9fc57895f9';
 
 /// A provider used to send vehicle input data to the simulation thread/worker.
 ///
@@ -106,7 +106,7 @@ final simInputProvider = NotifierProvider<SimInput, SimPlatform>.internal(
 
 typedef _$SimInput = Notifier<SimPlatform>;
 String _$simCoreIsolatePortHash() =>
-    r'3d1d09a1be9085167f72414d929620d0e0ecd951';
+    r'2cf09d1f8eab081032c86565cd2b830a0e335cab';
 
 /// A provider for keeping the isolate [SendPort] for when working on a
 /// native platform. Vehicle inputs gets directed here from [SimInput].

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
@@ -24,27 +23,27 @@ class SimulatorCore {
 
   /// Used on native platforms since they can easily be multithreaded.
   static Future<void> isolateWorker(SendPort sendPort) async {
-    final commandPort = ReceivePort('Simcore');
+    final commandPort = ReceivePort('Simulation Core receive port');
 
     // Send a communication port in return.
     sendPort.send(commandPort.sendPort);
 
-    log('Simulator Core isolate spawn confirmation');
+    // A stream controller for sending messages to the main thread.
+    final updateMainThreadStream = StreamController<dynamic>()
+      ..stream.listen((event) {
+        sendPort.send(event);
+      })
+      ..add(
+        LogEvent(Level.info, 'Simulator Core isolate spawn confirmation'),
+      );
 
     // Heartbeat signal to show that the simulator isolate is alive.
     Timer.periodic(const Duration(milliseconds: 250), (timer) {
       sendPort.send('Heartbeat');
     });
 
-    // A stream controller for sending messages to the main thread.
-    final updateMainThreadStream = StreamController<dynamic>()
-      ..stream.listen((event) {
-        sendPort.send(event);
-      });
-
     // The state of the simulation.
-    final state = _SimulatorCoreState()
-      ..mainThreadSendStream = updateMainThreadStream;
+    final state = _SimulatorCoreState(updateMainThreadStream);
 
     DateTime? lastHardwareMessageTime;
 
@@ -74,6 +73,7 @@ class SimulatorCore {
               distance: state.distance,
               pathTracking: state.pathTracking,
               abTracking: state.abTracking,
+              autoSteerEnabled: state.autoSteerEnabled,
               hardwareIsConnected: hardwareIsConnected,
             ),
           );
@@ -91,6 +91,13 @@ class SimulatorCore {
     );
 
     var udp = await UDP.bind(endPoint);
+
+    updateMainThreadStream.add(
+      LogEvent(
+        Level.info,
+        '''Set up local UDP endpoint on IP: ${udp.local.address}, port: ${udp.local.port?.value}''',
+      ),
+    );
 
     final udpSendStream = StreamController<Uint8List>();
 
@@ -133,11 +140,18 @@ class SimulatorCore {
       _networkListener(
         datagram?.data,
         state,
-        updateMainThreadStream: updateMainThreadStream,
+        updateMainThreadStream,
       );
     }
 
     udp.asStream().listen(handleUdpData);
+
+    updateMainThreadStream.add(
+      LogEvent(
+        Level.info,
+        '''Listening to server UDP endpoint IP: ${serverEndPoint.address}, port: ${serverEndPoint.port?.value}''',
+      ),
+    );
 
     // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
@@ -157,9 +171,30 @@ class SimulatorCore {
         endPoint = Endpoint.any(port: Port(message.hardwareUDPReceivePort));
 
         udp.close();
+        updateMainThreadStream.add(
+          LogEvent(
+            Level.info,
+            'Closed current UDP instance and sockets.',
+          ),
+        );
+
         udp = await UDP.bind(endPoint);
 
+        updateMainThreadStream.add(
+          LogEvent(
+            Level.info,
+            '''Set up local UDP endpoint on IP: ${udp.local.address}, port: ${udp.local.port?.value}''',
+          ),
+        );
+
         udp.asStream().listen(handleUdpData);
+
+        updateMainThreadStream.add(
+          LogEvent(
+            Level.info,
+            '''Listening to server UDP endpoint IP: ${serverEndPoint.address}, port: ${serverEndPoint.port?.value}''',
+          ),
+        );
 
         await udp.send(
           utf8.encode('Simulator started'),
@@ -187,21 +222,23 @@ class SimulatorCore {
 
     // Isolate shut down procedure
     await udp.send(
-      utf8.encode('Simulator shut down'),
+      utf8.encode('Simulator shut down.'),
       serverEndPoint,
     );
 
     udp.close();
 
-    log('Simulator Core isolate exited.');
+    updateMainThreadStream.add(
+      LogEvent(Level.info, 'Simulator Core isolate exited.'),
+    );
     Isolate.exit();
   }
 
   static DateTime _networkListener(
     Uint8List? data,
-    _SimulatorCoreState state, {
-    StreamController<dynamic>? updateMainThreadStream,
-  }) {
+    _SimulatorCoreState state,
+    StreamController<dynamic> updateMainThreadStream,
+  ) {
     if (data != null) {
       try {
         final decoded = String.fromCharCodes(data);
@@ -230,7 +267,13 @@ class SimulatorCore {
                 roll: roll ?? state.imuInputRaw.roll
               );
             } catch (e) {
-              // log(e.toString());
+              updateMainThreadStream.add(
+                LogEvent(
+                  Level.error,
+                  'Failed to decode string starting with "{": $str',
+                  error: e,
+                ),
+              );
             }
           } else if (str.startsWith(r'$')) {
             final decoder = NmeaDecoder()
@@ -244,9 +287,9 @@ class SimulatorCore {
               //   // );
               // }
               if (nmea.quality != null) {
-                updateMainThreadStream?.add((gnssFixQuality: nmea.quality!));
+                updateMainThreadStream.add((gnssFixQuality: nmea.quality!));
               }
-              updateMainThreadStream?.add((numSatellites: nmea.numSatellites));
+              updateMainThreadStream.add((numSatellites: nmea.numSatellites));
 
               if (nmea.longitude != null && nmea.latitude != null) {
                 state.gnssUpdate = (
@@ -259,11 +302,15 @@ class SimulatorCore {
               }
             }
           } else {
-            log(str);
+            updateMainThreadStream.add(
+              LogEvent(Level.warning, 'Unknown message received: $str'),
+            );
           }
         }
       } catch (e) {
-        log('Invalid message', error: e);
+        updateMainThreadStream.add(
+          LogEvent(Level.error, 'Failed to decode data: $data', error: e),
+        );
       }
     }
     return DateTime.now();
@@ -281,14 +328,16 @@ class SimulatorCore {
         num distance,
         PathTracking? pathTracking,
         ABTracking? abTracking,
+        bool autoSteerEnabled,
         bool hardwareIsConnected,
       })> webWorker(
     Stream<dynamic> vehicleEvents,
+    StreamController<dynamic> updateMainStream,
   ) {
-    log('Simulator Core worker spawned');
+    updateMainStream.add(LogEvent(Level.info, 'Simulator Core worker spawned'));
 
     // The state of the simulation.
-    final state = _SimulatorCoreState();
+    final state = _SimulatorCoreState(updateMainStream);
 
     WebSocketChannel? socket;
 
@@ -312,7 +361,7 @@ class SimulatorCore {
           (event) {
             if (event is Uint8List) {
               lastHardwareMessageTime = DateTime.now();
-              _networkListener(event, state);
+              _networkListener(event, state, updateMainStream);
             }
           },
         );
@@ -329,6 +378,7 @@ class SimulatorCore {
           num distance,
           PathTracking? pathTracking,
           ABTracking? abTracking,
+          bool autoSteerEnabled,
           bool hardwareIsConnected,
         })>();
 
@@ -357,6 +407,7 @@ class SimulatorCore {
               distance: state.distance,
               pathTracking: state.pathTracking,
               abTracking: state.abTracking,
+              autoSteerEnabled: state.autoSteerEnabled,
               hardwareIsConnected: hardwareIsConnected,
             ),
           );
@@ -387,13 +438,13 @@ enum SimInputChange {
 /// A class for holding and updating the state of the [SimulatorCore].
 class _SimulatorCoreState {
   /// A class for holding and updating the state of the [SimulatorCore].
-  _SimulatorCoreState();
+  _SimulatorCoreState(this.mainThreadSendStream);
 
   /// A stream controller for forwarding events to send over the network.
   StreamController<Uint8List>? networkSendStream;
 
   /// A stream controller for sending messages to the main thread.
-  StreamController<dynamic>? mainThreadSendStream;
+  StreamController<dynamic> mainThreadSendStream;
 
   /// Whether the simulation should accept incoming control input from
   /// keyboard, gamepad, sliders etc...
@@ -604,12 +655,45 @@ class _SimulatorCoreState {
       }
     }
     // Enable/disable auto steering.
-    else if (message is ({bool autoSteerEnabled})) {
-      autoSteerEnabled = message.autoSteerEnabled;
-      networkSendStream?.add(
-        const Utf8Encoder()
-            .convert(jsonEncode({'autoSteerEnabled': autoSteerEnabled})),
-      );
+    else if (message is ({bool enableAutoSteer})) {
+      if (message.enableAutoSteer) {
+        mainThreadSendStream
+            .add(LogEvent(Level.warning, 'Attempting to activate Autosteer.'));
+
+        if (abTracking != null || pathTracking != null) {
+          autoSteerEnabled = true;
+          mainThreadSendStream
+              .add(LogEvent(Level.warning, 'Autosteer enabled!'));
+
+          networkSendStream?.add(
+            const Utf8Encoder()
+                .convert(jsonEncode({'autoSteerEnabled': autoSteerEnabled})),
+          );
+        } else {
+          autoSteerEnabled = false;
+          networkSendStream?.add(
+            const Utf8Encoder()
+                .convert(jsonEncode({'autoSteerEnabled': false})),
+          );
+          mainThreadSendStream.add(
+            LogEvent(
+              Level.warning,
+              'Autosteer disabled! No guidance available to track after.',
+            ),
+          );
+        }
+      } else {
+        autoSteerEnabled = false;
+        networkSendStream?.add(
+          const Utf8Encoder().convert(jsonEncode({'autoSteerEnabled': false})),
+        );
+        mainThreadSendStream.add(
+          LogEvent(
+            Level.warning,
+            'Autosteer disabled!',
+          ),
+        );
+      }
     }
     // Set the path tracking model.
     else if (message is ({PathTracking? pathTracking})) {
@@ -793,7 +877,12 @@ class _SimulatorCoreState {
     }
     // Unknown message, log it to figure out what it is.
     else {
-      log(message.toString());
+      mainThreadSendStream.add(
+        LogEvent(
+          Level.warning,
+          'Simulator Core received unknown message: $message',
+        ),
+      );
     }
   }
 

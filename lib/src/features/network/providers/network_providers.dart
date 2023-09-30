@@ -1,6 +1,6 @@
-import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:collection/collection.dart';
@@ -231,10 +231,12 @@ class TcpServer extends _$TcpServer {
             _lastActiveSocket = socket
               ..listen(
                 (event) {
-                  log(
-                    '''Received from  ${socket.remoteAddress}:${socket.remotePort}''',
+                  Logger.instance.i(
+                    '''
+Received from  ${socket.remoteAddress}:${socket.remotePort}:
+${String.fromCharCodes(event)}
+''',
                   );
-                  log(String.fromCharCodes(event));
                 },
                 onDone: () {
                   socket
@@ -251,7 +253,11 @@ class TcpServer extends _$TcpServer {
               );
           });
         },
-        error: (error, stackTrace) {},
+        error: (error, stackTrace) => Logger.instance.e(
+          'Failed to create ServerSocket.',
+          error: error,
+          stackTrace: stackTrace,
+        ),
         loading: () {},
       );
     });
@@ -271,6 +277,7 @@ class TcpServer extends _$TcpServer {
               Uint8List.fromList('Use me as Ntrip server!'.codeUnits)
         ),
       );
+      Logger.instance.i('Sent request to become NTRIP server.');
     }
     Future(() => _lastActiveSocket?.add(data));
   }

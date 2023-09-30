@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -30,7 +31,7 @@ class ABDebugStepSize extends _$ABDebugStepSize {
 @Riverpod(keepAlive: true)
 class ABDebugNumPointsAhead extends _$ABDebugNumPointsAhead {
   @override
-  int build() => 5;
+  int build() => 0;
 
   /// Updates [state] to [value].
   void update(int value) => Future(() => state = value);
@@ -139,7 +140,14 @@ class DisplayABTrackingLines extends _$DisplayABTrackingLines {
 @Riverpod(keepAlive: true)
 class ABPointA extends _$ABPointA {
   @override
-  WayPoint? build() => null;
+  WayPoint? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null) {
+        Logger.instance.i('AB point A set to: $next');
+      }
+    });
+    return null;
+  }
 
   /// Updates [state] to [point].
   void update(WayPoint point) => Future(() => state = point);
@@ -149,7 +157,14 @@ class ABPointA extends _$ABPointA {
 @Riverpod(keepAlive: true)
 class ABPointB extends _$ABPointB {
   @override
-  WayPoint? build() => null;
+  WayPoint? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null) {
+        Logger.instance.i('AB point B set to: $next');
+      }
+    });
+    return null;
+  }
 
   /// Updates [state] to [point].
   void update(WayPoint point) => Future(() => state = point);

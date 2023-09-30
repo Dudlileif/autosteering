@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/common/utils/device.dart';
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/gnss/gnss.dart';

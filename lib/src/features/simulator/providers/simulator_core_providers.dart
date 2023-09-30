@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
@@ -33,10 +32,16 @@ enum SimPlatform {
 @Riverpod(keepAlive: true)
 class SimInput extends _$SimInput {
   @override
-  SimPlatform build() => switch (Device.isWeb) {
-        true => SimPlatform.web,
-        false => SimPlatform.native,
-      };
+  SimPlatform build() {
+    ref.listenSelf(
+      (previous, next) => Logger.instance.i('Simulator Platform set to $next.'),
+    );
+
+    return switch (Device.isWeb) {
+      true => SimPlatform.web,
+      false => SimPlatform.native,
+    };
+  }
 
   /// Send some [input] to the simulator.
   void send(dynamic input) => switch (state) {
@@ -104,6 +109,7 @@ class _SimCoreIsolatePort extends _$SimCoreIsolatePort {
   @override
   SendPort? build() {
     ref.listenSelf((previous, next) {
+      Logger.instance.i('Simulator Core sendport set to: $next');
       if (next != null) {
         ref.read(_initializeSimCoreProvider);
       }
@@ -132,6 +138,7 @@ class _SimCoreWebInput extends _$SimCoreWebInput {
 /// Sends initial parameters to  the sim core.
 @riverpod
 void _initializeSimCore(_InitializeSimCoreRef ref) {
+  Logger.instance.i('Sending initial data to Simulator Core...');
   ref.read(simInputProvider.notifier)
     ..send(ref.read(hardwareCommunicationConfigProvider))
     ..send(ref.read(mainVehicleProvider))
@@ -143,7 +150,7 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
     ..send(ref.read(activeABConfigProvider))
     ..send((pathTracking: ref.read(displayPathTrackingProvider)))
     ..send((abTracking: ref.read(displayABTrackingProvider)))
-    ..send((autoSteerEnabled: ref.read(autoSteerEnabledProvider)));
+    ..send((enableAutoSteer: ref.read(autoSteerEnabledProvider)));
 }
 
 /// A provider that creates a stream and watches the vehicle simulator on the
@@ -155,8 +162,31 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
 Stream<Vehicle?> simCoreWebStream(
   SimCoreWebStreamRef ref,
 ) {
+  ref.onDispose(() => Logger.instance.i('Simulator Core shut down.'));
+  final updateMainStreamController = StreamController<dynamic>()
+    ..stream.listen((event) {
+      if (event is LogEvent) {
+        Logger.instance.log(
+          event.level,
+          event.message,
+          error: event.error,
+          time: event.time,
+          stackTrace: event.stackTrace,
+        );
+      } else if (event is ({int gnssFixQuality})) {
+        ref
+            .read(gnssCurrentFixQualityProvider.notifier)
+            .updateByIndex(event.gnssFixQuality);
+      } else if (event is ({int? numSatellites})) {
+        ref
+            .read(gnssCurrentNumSatellitesProvider.notifier)
+            .update(event.numSatellites);
+      }
+    });
+
   final stream = SimulatorCore.webWorker(
     ref.watch(_simCoreWebInputProvider.notifier).stream(),
+    updateMainStreamController,
   );
 
   return stream.map((event) {
@@ -167,6 +197,9 @@ Stream<Vehicle?> simCoreWebStream(
         .updateWith(event.distance.toDouble());
     ref.read(displayPathTrackingProvider.notifier).update(event.pathTracking);
     ref.read(displayABTrackingProvider.notifier).update(event.abTracking);
+    ref
+        .read(autoSteerEnabledProvider.notifier)
+        .update(value: event.autoSteerEnabled);
     ref
         .read(hardwareIsConnectedProvider.notifier)
         .update(value: event.hardwareIsConnected);
@@ -201,7 +234,7 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
     recievePort.sendPort,
     debugName: 'Simulator Core',
   );
-  log('Simulator Core isolate spawned');
+  Logger.instance.i('Simulator Core isolate spawned and started.');
 
   final events = StreamQueue<dynamic>(recievePort);
 
@@ -224,7 +257,8 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
       switch (!kDebugMode || !ref.watch(simCoreDebugAllowLongBreaksProvider)) {
     true => RestartableTimer(
           Duration(milliseconds: (heartbeatThreshold * 1000).round()), () {
-        log('Simulator Core isolate unresponsive/died... Restarting...');
+        Logger.instance
+            .w('Simulator Core isolate unresponsive/died... Restarting...');
 
         ref.invalidateSelf();
       }),
@@ -237,6 +271,7 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
     events.cancel();
     restartTimer?.cancel();
     ref.read(_simCoreIsolatePortProvider.notifier).update(null);
+    Logger.instance.w('Simulator Core shut down.');
   });
 
   while (true) {
@@ -250,6 +285,7 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
       double distance,
       PathTracking? pathTracking,
       ABTracking? abTracking,
+      bool autoSteerEnabled,
       bool hardwareIsConnected,
     })) {
       ref.read(gaugeVelocityProvider.notifier).update(message.velocity);
@@ -261,6 +297,9 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
           .read(displayPathTrackingProvider.notifier)
           .update(message.pathTracking);
       ref.read(displayABTrackingProvider.notifier).update(message.abTracking);
+      ref
+          .read(autoSteerEnabledProvider.notifier)
+          .update(value: message.autoSteerEnabled);
       ref
           .read(hardwareIsConnectedProvider.notifier)
           .update(value: message.hardwareIsConnected);
@@ -274,6 +313,14 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
       ref
           .read(gnssCurrentNumSatellitesProvider.notifier)
           .update(message.numSatellites);
+    } else if (message is LogEvent) {
+      Logger.instance.log(
+        message.level,
+        message.message,
+        error: message.error,
+        time: message.time,
+        stackTrace: message.stackTrace,
+      );
     }
   }
 }
