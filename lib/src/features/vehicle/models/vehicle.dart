@@ -244,6 +244,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
             bearing: bearing + 90,
           );
 
+  /// Updates the [antennaPosition] of the vehicle, as the ground [position] is
+  /// derived from it.
   @override
   set position(Geographic value) => antennaPosition = value;
 

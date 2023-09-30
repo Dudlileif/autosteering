@@ -1019,41 +1019,45 @@ class _SimulatorCoreState {
   /// Updates the calculated gauges for the vehicle state.
   void updateGauges() {
     // Update based on the last GNSS updates, if we've received one this tick.
-    if (gnssUpdate != null && prevGnssUpdate != null) {
-      distance = gnssUpdate!.gnssPosition.spherical
-          .distanceTo(prevGnssUpdate!.gnssPosition);
+    if (gnssUpdate != null) {
+      if (gnssUpdate != null && prevGnssUpdate != null) {
+        distance = gnssUpdate!.gnssPosition.spherical
+            .distanceTo(prevGnssUpdate!.gnssPosition);
+        // Only use update points that are more than 5 cm apart to update
+        // bearing.
+        if (distance > 0.05) {
+          final bearing = prevGnssUpdate!.gnssPosition.spherical
+              .finalBearingTo(gnssUpdate!.gnssPosition);
+          if (!bearing.isNaN) {
+            // Negative if reversing, positive otherwise.
+            final directionSign = switch (
+                bearingDifference(vehicle?.bearing ?? 0, bearing) > 120) {
+              true => -1,
+              false => 1,
+            };
 
-      // Only use update points that are more than 5 cm apart to update bearing.
-      if (distance > 0.05) {
-        final bearing = prevGnssUpdate!.gnssPosition.spherical
-            .finalBearingTo(gnssUpdate!.gnssPosition);
+            final period = gnssUpdate!.time
+                    .difference(prevGnssUpdate!.time)
+                    .inMicroseconds /
+                1e6;
+            gaugeVelocity = directionSign * distance / period;
 
-        if (!bearing.isNaN) {
-          // Negative if reversing, positive otherwise.
-          final directionSign =
-              switch (bearingDifference(vehicle?.bearing ?? 0, bearing) > 120) {
-            true => -1,
-            false => 1,
-          };
-
-          final period =
-              gnssUpdate!.time.difference(prevGnssUpdate!.time).inMicroseconds /
-                  1e6;
-          gaugeVelocity = directionSign * distance / period;
-
-          if (!useIMUBearing) {
-            gaugeBearing = (bearing +
-                    switch (directionSign.isNegative) {
-                      true => 180,
-                      false => 0
-                    })
-                .wrap360();
+            if (!useIMUBearing) {
+              gaugeBearing = (bearing +
+                      switch (directionSign.isNegative) {
+                        true => 180,
+                        false => 0
+                      })
+                  .wrap360();
+            }
           }
         }
         prevGnssUpdate = gnssUpdate;
         gnssUpdate = null;
         return;
       }
+      prevGnssUpdate = gnssUpdate;
+      gnssUpdate = null;
     }
     _simGaugeUpdate();
   }
