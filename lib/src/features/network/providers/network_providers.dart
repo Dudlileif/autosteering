@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
@@ -220,6 +221,7 @@ class HardwareWebSocketPort extends _$HardwareWebSocketPort {
 @Riverpod(keepAlive: true)
 class TcpServer extends _$TcpServer {
   Socket? _lastActiveSocket;
+  Timer? _ntripRequestTimer;
   @override
   Future<ServerSocket> build() async {
     ref.listenSelf((previous, next) {
@@ -233,7 +235,7 @@ class TcpServer extends _$TcpServer {
                 (event) {
                   Logger.instance.i(
                     '''
-Received from  ${socket.remoteAddress}:${socket.remotePort}:
+Received from ${socket.remoteAddress}, port ${socket.remotePort}:
 ${String.fromCharCodes(event)}
 ''',
                   );
@@ -262,7 +264,7 @@ ${String.fromCharCodes(event)}
       );
     });
 
-    return ServerSocket.bind('0.0.0.0', 9999);
+    return ServerSocket.bind('0.0.0.0', 9999, shared: true);
   }
 
   /// Sends [data] to the [_lastActiveSocket] if it's connected.
@@ -270,7 +272,11 @@ ${String.fromCharCodes(event)}
   /// It will send a message to the hardware to create a new connection.
   void send(Uint8List data) {
     // Send notification to hardware to use this device as Ntrip server.
-    if (_lastActiveSocket == null) {
+    // We use a timer to avoid unnecessary spamming, as it would create
+    // a bunch of sockets on the hardware attempting to connect.
+    if (_lastActiveSocket == null &&
+        _ntripRequestTimer == null &&
+        ref.watch(hardwareIsConnectedProvider)) {
       ref.read(simInputProvider.notifier).send(
         (
           useAsNtripServer:
@@ -278,6 +284,8 @@ ${String.fromCharCodes(event)}
         ),
       );
       Logger.instance.i('Sent request to become NTRIP server.');
+      _ntripRequestTimer =
+          Timer(const Duration(seconds: 1), () => _ntripRequestTimer = null);
     }
     Future(() => _lastActiveSocket?.add(data));
   }

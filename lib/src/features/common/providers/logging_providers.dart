@@ -120,9 +120,18 @@ Logger logging(LoggingRef ref) {
     return Logger.instance..fileLogger = null;
   }
 
+  final elevatedPrinter = PrettyPrinter(
+    colors: false,
+    printTime: true,
+  );
+
   return Logger.instance
     ..fileLogger = implementation.Logger(
-      printer: SimplePrinter(printTime: true, colors: false),
+      printer: HybridPrinter(
+        SimplePrinter(printTime: true, colors: false),
+        error: elevatedPrinter,
+        fatal: elevatedPrinter,
+      ),
       output: FileOutput(file: file!),
     );
 }

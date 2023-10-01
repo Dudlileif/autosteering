@@ -200,51 +200,62 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {
-        Logger.instance.i('NTRIP client connected.');
-        data?.socket.listen((event) {
-          ref.read(ntripAliveProvider.notifier).update(value: true);
+        if (data != null) {
+          Logger.instance.i(
+              'NTRIP client connecting to ${data.host}:${data.port} asking for station ${data.mountPoint}.');
+          data.socket.listen((event) {
+            ref.read(ntripAliveProvider.notifier).update(value: true);
 
-          // Only send messages that start with 0xD3 = 211 which RTCM starts
-          // with.
+            // Only forward messages that start with 0xD3 = 211 which RTCM starts
+            // with.
+            if (event.first == 0xD3) {
+              // ref.read(tcpServerProvider.notifier).send(event);
 
-          if (event.first == 0xD3) {
-            // ref.read(tcpServerProvider.notifier).send(event);
+              // The messages can be bunched up, so we split them up to send
+              // them separatley to the receiver.
+              final indices = <int>[];
+              final types = <int>[];
+              final lengths = <int>[];
+              final messages = <Uint8List>[];
+              var i = 0;
+              while (i < event.length) {
+                if (event[i] == 0xD3) {
+                  indices.add(i);
+                  final type = (event[i + 3] << 4) + (event[i + 4] >> 4);
+                  types.add(type);
+                  final length =
+                      ((event[i + 1] & 3) << 8) + (event[i + 2] << 0) + 6;
+                  lengths.add(length);
+                  messages.add(
+                    Uint8List.fromList(
+                      event.getRange(i, i + length).toList(),
+                    ),
+                  );
+                  i += length;
+                } else {
+                  i++;
+                }
+              }
 
-            // The messages can be bunched up, so we split them up to send
-            // them separatley to the receiver.
-            final indices = <int>[];
-            final types = <int>[];
-            final lengths = <int>[];
-            final messages = <Uint8List>[];
-            var i = 0;
-            while (i < event.length) {
-              if (event[i] == 0xD3) {
-                indices.add(i);
-                final type = (event[i + 3] << 4) + (event[i + 4] >> 4);
-                types.add(type);
-                final length =
-                    ((event[i + 1] & 3) << 8) + (event[i + 2] << 0) + 6;
-                lengths.add(length);
-                messages.add(
-                  Uint8List.fromList(
-                    event.getRange(i, i + length).toList(),
-                  ),
-                );
-                i += length;
-              } else {
-                i++;
+              for (final message in messages) {
+                ref.read(tcpServerProvider.notifier).send(message);
+                ref.read(gnssSerialProvider)?.write(message);
               }
             }
-
-            for (final message in messages) {
-              ref.read(tcpServerProvider.notifier).send(message);
-              ref.read(gnssSerialProvider)?.write(message);
+            //If message is 'ICY 200 OK', we have a confirmed connection.
+            else if (String.fromCharCodes(event) == 'ICY 200 OK\r\n') {
+              Logger.instance.i('NTRIP client connection confirmed.');
+            } else {
+              Logger.instance.w(
+                'Unknown NTRIP message: $event -> ${String.fromCharCodes(event)}',
+              );
             }
-          } else {
-            Logger.instance.w('Unknown NTRIP message: $event');
-          }
-        });
-        ref.onDispose(() => data?.socket.destroy());
+          });
+          ref.onDispose(() {
+            data.socket.destroy();
+            Logger.instance.i('NTRIP client closed.');
+          });
+        }
       },
       error: (error, stackTrace) => Logger.instance.e(
         'Failed to create NTRIP client.',

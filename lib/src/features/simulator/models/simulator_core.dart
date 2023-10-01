@@ -245,33 +245,42 @@ class SimulatorCore {
         for (final str in decoded.split('\n')
           ..removeWhere((element) => element.isEmpty)) {
           if (str.startsWith('{')) {
-            try {
-              final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
-              final bearing = data['yaw'] as double?;
-              final pitch = data['pitch'] as double?;
-              final roll = data['roll'] as double?;
+            if (str.contains('}')) {
+              try {
+                final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
+                final bearing = data['yaw'] as double?;
+                final pitch = data['pitch'] as double?;
+                final roll = data['roll'] as double?;
 
-              if (state.useIMUBearing && bearing != null) {
-                state.vehicle?.bearing = (-bearing).wrap360();
-                state.gaugeBearing = (-bearing).wrap360();
+                if (state.useIMUBearing && bearing != null) {
+                  state.vehicle?.bearing = (-bearing).wrap360();
+                  state.gaugeBearing = (-bearing).wrap360();
+                }
+                if (pitch != null) {
+                  state.vehicle?.pitch = pitch;
+                }
+                if (roll != null) {
+                  state.vehicle?.roll = roll;
+                }
+                state.imuInputRaw = (
+                  bearing: bearing ?? state.imuInputRaw.bearing,
+                  pitch: pitch ?? state.imuInputRaw.pitch,
+                  roll: roll ?? state.imuInputRaw.roll
+                );
+              } catch (e) {
+                updateMainThreadStream.add(
+                  LogEvent(
+                    Level.error,
+                    '''Failed to decode string starting with "{" and containing "}": $str''',
+                    error: e,
+                  ),
+                );
               }
-              if (pitch != null) {
-                state.vehicle?.pitch = pitch;
-              }
-              if (roll != null) {
-                state.vehicle?.roll = roll;
-              }
-              state.imuInputRaw = (
-                bearing: bearing ?? state.imuInputRaw.bearing,
-                pitch: pitch ?? state.imuInputRaw.pitch,
-                roll: roll ?? state.imuInputRaw.roll
-              );
-            } catch (e) {
+            } else {
               updateMainThreadStream.add(
                 LogEvent(
-                  Level.error,
-                  'Failed to decode string starting with "{": $str',
-                  error: e,
+                  Level.warning,
+                  'Message starting with "{" does NOT contain "}": $str',
                 ),
               );
             }
@@ -281,11 +290,6 @@ class SimulatorCore {
               ..registerTalkerSentence('VTG', (line) => VTGSentence(raw: line));
             final nmea = decoder.decode(str);
             if (nmea is GGASentence) {
-              // if (nmea.utc != null) {
-              //   // print(
-              //   //   '${DateTime.timestamp().difference(nmea.utc!) - const Duration(hours: 2)}',
-              //   // );
-              // }
               if (nmea.quality != null) {
                 updateMainThreadStream.add((gnssFixQuality: nmea.quality!));
               }
