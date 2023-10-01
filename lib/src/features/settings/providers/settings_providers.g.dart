@@ -6,7 +6,7 @@ part of 'settings_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$settingsFileHash() => r'242e242247c30ef47dfd4c6acc0fe3c36405d0a9';
+String _$settingsFileHash() => r'5ae326d6deaa1de3aae96f532d59da0ed6e6106a';
 
 /// A provider for the main settings file for the application.
 ///
@@ -22,7 +22,7 @@ final settingsFileProvider = FutureProvider<File>.internal(
 );
 
 typedef SettingsFileRef = FutureProviderRef<File>;
-String _$webLocalStorageHash() => r'f788e27429c323d83c5f78f17bb7659f56bb308b';
+String _$webLocalStorageHash() => r'4539d261f98b68fbd255a7cbbd3a04f3947cc9ad';
 
 /// A provider for the local storage data map for the web version of the
 /// application.
@@ -40,7 +40,7 @@ final webLocalStorageProvider = Provider<Storage>.internal(
 );
 
 typedef WebLocalStorageRef = ProviderRef<Storage>;
-String _$settingsHash() => r'709e84f76cebb963d991fd23f6436c4e22df2c90';
+String _$settingsHash() => r'9854ab732cfc8758af67f5456e9f7ff6cce13be0';
 
 /// A provider for the settings map for the application.
 ///

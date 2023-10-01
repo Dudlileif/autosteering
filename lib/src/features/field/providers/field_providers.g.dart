@@ -6,7 +6,7 @@ part of 'field_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bufferedFieldHash() => r'1bed37754936905cd61baf7138bb450698163081';
+String _$bufferedFieldHash() => r'38f927aafadeb1381ef452de0fd5f9a7fbb86a07';
 
 /// A provider for creating and updating the buffered test field.
 ///
@@ -245,7 +245,7 @@ final showFieldProvider = NotifierProvider<ShowField, bool>.internal(
 );
 
 typedef _$ShowField = Notifier<bool>;
-String _$activeFieldHash() => r'deb486da13fd2f783d103f72586c52f4046efc2b';
+String _$activeFieldHash() => r'cfafb2d250b006032865db2e2e719c9c6fc7cad2';
 
 /// A provider for the active field.
 ///

@@ -6,7 +6,7 @@ part of 'logging_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loggingFileHash() => r'1686c73d176db3741d2781a203b120e8b9fff7c0';
+String _$loggingFileHash() => r'ed46d8c91fabcf7c7d1bfcbd8a4e3b70be91377b';
 
 /// A provider for creating a logging file for the session.
 ///
@@ -22,7 +22,7 @@ final loggingFileProvider = FutureProvider<File?>.internal(
 );
 
 typedef LoggingFileRef = FutureProviderRef<File?>;
-String _$loggingHash() => r'c3daef15934f73489c9c9a9fec1c418d9d712579';
+String _$loggingHash() => r'dbcbf5822913d13ee9d90299cd962b050b7303f2';
 
 /// A provider for the [Logger] that prints the logs to console and a file
 /// if on native platforms.

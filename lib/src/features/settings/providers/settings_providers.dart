@@ -118,8 +118,8 @@ class Settings extends _$Settings {
       state.containsKey(key.name) ? state[key.name] as String : null;
 
   /// Get the value of type [Map] for the setting [key], if it exists.
-  Map<String, dynamic>? getMap(SettingsKey key) => state.containsKey(key.name)
-      ? Map<String, dynamic>.from(state[key.name] as Map)
+  Map<String, Object?>? getMap(SettingsKey key) => state.containsKey(key.name)
+      ? Map<String, Object?>.from(state[key.name] as Map)
       : null;
 
   /// Get the value of type [List] for the setting [key], if it exists.

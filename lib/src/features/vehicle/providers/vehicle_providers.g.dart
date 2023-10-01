@@ -356,7 +356,7 @@ class _LoadVehicleFromFileProviderElement
   String get path => (origin as LoadVehicleFromFileProvider).path;
 }
 
-String _$lastUsedVehicleHash() => r'2283fa9b07f408eb6584ed6ac5a14d42cdf2cec9';
+String _$lastUsedVehicleHash() => r'685997d196ec06b072c0af95be50bfc5fe78b202';
 
 /// A provider for the most recently used [Vehicle].
 ///
@@ -392,7 +392,7 @@ final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
 );
 
 typedef _$MainVehicle = Notifier<Vehicle>;
-String _$autoSteerEnabledHash() => r'491f89abd6aa83fa8ef8a6fb8c79430e99631e54';
+String _$autoSteerEnabledHash() => r'42fc0d65ab5f1a2badd2b1f933048c4b71c8a0b5';
 
 /// A provider for whether the vehicle should steer automatically.
 ///

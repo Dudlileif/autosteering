@@ -23,7 +23,7 @@ final mapOffsetProvider = Provider<MapCenterOffset>.internal(
 
 typedef MapOffsetRef = ProviderRef<MapCenterOffset>;
 String _$offsetVehiclePositionHash() =>
-    r'932c255b65d3b9b8faf7fab7176808ba3387308b';
+    r'7cd975b403f08193fae0d838448b3ae3614fe2a8';
 
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.
@@ -393,7 +393,7 @@ final mapUse3DPerspectiveProvider =
 
 typedef _$MapUse3DPerspective = Notifier<bool>;
 String _$map3DPerspectiveAngleHash() =>
-    r'eb3b4bf927f82b4447dd979acd9edee3aa68a946';
+    r'c99b3fab3fff1e4cf8b480cf014947feb4b36d91';
 
 /// The angle that the 3D perspective should be seen from, as in radians
 /// from the orthogonal view.

@@ -6,7 +6,7 @@ part of 'file_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fileDirectoryHash() => r'370712d81a20524536eb63f1435bf3d3e5c1f48f';
+String _$fileDirectoryHash() => r'9ce8299dcaa4fd7e00474b3e0a7ec6a9ade1025f';
 
 /// A provider for the main user file directory for the application.
 ///
@@ -196,7 +196,7 @@ class _DirectorySizeProviderElement
   String get path => (origin as DirectorySizeProvider).path;
 }
 
-String _$directoryDeleteHash() => r'4edeb463982ed4a2a40857cabf18a243b469514a';
+String _$directoryDeleteHash() => r'9c1a9cb0b2160ab903903f0d0a22cd7fb12de594';
 
 /// A provider for deleting the [Directory] at [path].
 ///
@@ -349,7 +349,7 @@ class _DirectoryDeleteProviderElement
 }
 
 String _$saveJsonToFileDirectoryHash() =>
-    r'910d2132310ef50265a607a6e3c5a3d63c592ffc';
+    r'f2b143be20fe6606a7a1adb5a0d775a3f3560ca3';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -541,7 +541,7 @@ class _SaveJsonToFileDirectoryProviderElement
   String get folder => (origin as SaveJsonToFileDirectoryProvider).folder;
 }
 
-String _$savedFilesHash() => r'09342e8c9d2156cd992f84acbf176df2a873446e';
+String _$savedFilesHash() => r'ed8d314141f69b478fc607bcad51cb63977ab752';
 
 /// A provider for reading and holding all the saved equipment setups in the
 /// user file directory.

@@ -6,7 +6,7 @@ part of 'ab_line_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$aBLineDebugHash() => r'469c5a93786875567aa50b0561150ad6c738133b';
+String _$aBLineDebugHash() => r'62fee5ff194ee3f0db12f6f60e051687d205a1bf';
 
 /// A provider for the AB-line object to debug.
 ///

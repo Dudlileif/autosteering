@@ -81,7 +81,7 @@ final aBDebugStepSizeProvider =
 
 typedef _$ABDebugStepSize = Notifier<double>;
 String _$aBDebugNumPointsAheadHash() =>
-    r'736dd5a7c2e1e64a7b6b442a29b6f6293d2e5451';
+    r'a24e5516cdedc8d4985daaf97909b1d807e202ce';
 
 /// A provider for the number of points of the closest AB-line to be
 /// generated ahead of the vehicle.
@@ -267,7 +267,7 @@ final displayABTrackingLinesProvider = NotifierProvider<DisplayABTrackingLines,
 );
 
 typedef _$DisplayABTrackingLines = Notifier<Map<int, List<WayPoint>>?>;
-String _$aBPointAHash() => r'3f3444083a6d7b5cc9f028c51165af3989992b95';
+String _$aBPointAHash() => r'e252191ee1e97e99fda0adb571430f78018385d5';
 
 /// A provider for the starting point A of an AB-line.
 ///
@@ -283,7 +283,7 @@ final aBPointAProvider = NotifierProvider<ABPointA, WayPoint?>.internal(
 );
 
 typedef _$ABPointA = Notifier<WayPoint?>;
-String _$aBPointBHash() => r'8f47b74d3cf5391e5ec3982d8dd7b4d383a2cbe4';
+String _$aBPointBHash() => r'7d313dff3f305bd28b49fdee7268389566b35b42';
 
 /// A provider for the ending point B of an AB-line.
 ///

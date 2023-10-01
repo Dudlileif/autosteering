@@ -193,7 +193,7 @@ final hardwareWebSocketPortProvider =
 );
 
 typedef _$HardwareWebSocketPort = Notifier<int>;
-String _$tcpServerHash() => r'68cacea275c0950c3038da9f04f3d5c0ea3c52ac';
+String _$tcpServerHash() => r'9f8718b465a4db13e386ecfc1d3b81f3b396bfc7';
 
 /// A provider for a TCP server for sending/receiving data via TCP.
 ///

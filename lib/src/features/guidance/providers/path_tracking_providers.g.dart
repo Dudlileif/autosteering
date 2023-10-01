@@ -46,7 +46,7 @@ final pathInterpolationDistanceProvider =
 
 typedef _$PathInterpolationDistance = Notifier<double>;
 String _$configuredPathTrackingHash() =>
-    r'638ded14b11a180b7a14826876258032e10297a9';
+    r'e5ab0aadda82fe9b08349f141304de69e048a9c2';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.

@@ -7,7 +7,7 @@ part of 'path_recording_providers.dart';
 // **************************************************************************
 
 String _$enablePathRecorderHash() =>
-    r'46976f30ef4bb77980c70721adb3f8e56a0bfa8d';
+    r'6fedacb5e80d10808ae682a6f69169af3e3e1323';
 
 /// Whether the recorder is enabled.
 ///
@@ -105,7 +105,7 @@ final pathRecordingListProvider =
 
 typedef _$PathRecordingList = Notifier<List<WayPoint>>;
 String _$finishedPathRecordingListHash() =>
-    r'a9eb350deb822e89a3b6ce05ab7f1eec9c5105b6';
+    r'84206f6ede8bfa70999c723360dc764a1a30a26f';
 
 /// A list of path points for the last finished recording.
 ///
@@ -141,7 +141,7 @@ final showFinishedPathProvider =
 );
 
 typedef _$ShowFinishedPath = Notifier<bool>;
-String _$editFinishedPathHash() => r'9343300ae45482c100ab819f01af800f3baae4a3';
+String _$editFinishedPathHash() => r'0ab5beaa8cb235809637c1249ae5ae99ff37832f';
 
 /// Whether to activate editing of the last finished path recording.
 ///
