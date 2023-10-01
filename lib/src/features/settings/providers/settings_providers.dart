@@ -107,7 +107,7 @@ class Settings extends _$Settings {
 
   /// Get the value of type [double] for the setting [key], if it exists.
   double? getDouble(SettingsKey key) =>
-      state.containsKey(key.name) ? state[key.name] as double : null;
+      state.containsKey(key.name) ? (state[key.name] as num).toDouble() : null;
 
   /// Get the value of type [int] for the setting [key], if it exists.
   int? getInt(SettingsKey key) =>

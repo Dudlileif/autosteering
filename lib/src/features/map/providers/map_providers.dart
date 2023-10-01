@@ -266,7 +266,7 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
       .destinationPoint(
         distance: switch (use3DPerspective) {
           false => offset.y,
-          true => offset.y * (1 + tan(perspectiveAngle)),
+          true => offset.y * (1 + tan(perspectiveAngle.toRadians())),
         },
         bearing: vehicle.bearing,
       )
@@ -358,7 +358,7 @@ class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
     return ref
             .read(settingsProvider.notifier)
             .getDouble(SettingsKey.mapPerspectiveAngle) ??
-        40 * pi / 180;
+        40;
   }
 
   /// Update the [state] to [value].

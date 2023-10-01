@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
@@ -42,13 +40,13 @@ class MapPerspectiveMenu extends StatelessWidget {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('${(angle * 180 / pi).round()}°'),
+                  Text('$angle°'),
                   Slider(
                     value: angle,
                     onChanged:
                         ref.read(map3DPerspectiveAngleProvider.notifier).update,
-                    min: 10 * pi / 180,
-                    max: 70 * pi / 180,
+                    min: 10,
+                    max: 70,
                     divisions: 12,
                   ),
                 ],
