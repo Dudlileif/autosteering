@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'fdc8a163d8f77a4d6bf5b1f2f91afeae649cfd59';
+String _$ntripClientHash() => r'44c8a35e570352d2f458f77c85c6e2b08f7bbb78';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -125,7 +125,7 @@ final ntripPasswordProvider = NotifierProvider<NtripPassword, String?>.internal(
 );
 
 typedef _$NtripPassword = Notifier<String?>;
-String _$ntripAliveHash() => r'23beb40747c96933bad2dbd8d61153e381c15f5f';
+String _$ntripAliveHash() => r'3481bdcba2f93ca35cee15524a21a2c9dcc3ad4f';
 
 /// A provider for telling whether the [ntripClient] is receiving data.
 ///
@@ -145,7 +145,7 @@ final ntripAliveProvider = NotifierProvider<NtripAlive, bool>.internal(
 
 typedef _$NtripAlive = Notifier<bool>;
 String _$gnssCurrentFixQualityHash() =>
-    r'1fd6f4d7d0d331b145cb501bd0570554a8116e3f';
+    r'b497d1ea971ad523deeef0f09cac27668b62e95c';
 
 /// A provider for the quality of last GNSS position update.
 ///
@@ -164,7 +164,7 @@ final gnssCurrentFixQualityProvider =
 
 typedef _$GnssCurrentFixQuality = AutoDisposeNotifier<GnssFixQuality>;
 String _$gnssCurrentNumSatellitesHash() =>
-    r'df8161205b086b7e55479130e707be87a9b31563';
+    r'a29891d754c979e83ead329b8da4a2ebbc082f9a';
 
 /// A provider for the quality of last GNSS position update.
 ///

@@ -104,22 +104,23 @@ class SimulatorCore {
     state.networkSendStream = udpSendStream;
 
     udpSendStream.stream.listen(
-      (event) async => udp.send(event, serverEndPoint),
+      (event) => udp.send(event, serverEndPoint),
     );
 
-    unawaited(
-      udp.send(
+    udpSendStream.add(
+      Uint8List.fromList(
         utf8.encode('${Platform.operatingSystem}: Simulator started'),
-        serverEndPoint,
       ),
     );
 
-    var udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      udp.send(
-        utf8.encode('${Platform.operatingSystem}: Heartbeat'),
-        serverEndPoint,
-      );
-    });
+    final heartbeatUDPMessage = Uint8List.fromList(
+      utf8.encode('${Platform.operatingSystem}: Heartbeat'),
+    );
+
+    var udpHeartbeatTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) => udpSendStream.add(heartbeatUDPMessage),
+    );
 
     Uint8List? prevGGNData;
     Uint8List? prevVTGData;
@@ -196,17 +197,14 @@ class SimulatorCore {
           ),
         );
 
-        await udp.send(
-          utf8.encode('Simulator started'),
-          serverEndPoint,
+        udpSendStream.add(
+          Uint8List.fromList(utf8.encode('Simulator started')),
         );
 
-        udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-          udp.send(
-            utf8.encode('${Platform.operatingSystem}: Heartbeat'),
-            serverEndPoint,
-          );
-        });
+        udpHeartbeatTimer = Timer.periodic(
+          const Duration(seconds: 1),
+          (timer) => udpSendStream.add(heartbeatUDPMessage),
+        );
       }
 
       // Messages for the state.
@@ -221,9 +219,10 @@ class SimulatorCore {
     }
 
     // Isolate shut down procedure
-    await udp.send(
-      utf8.encode('Simulator shut down.'),
-      serverEndPoint,
+    udpSendStream.add(
+      Uint8List.fromList(
+        utf8.encode('Simulator shut down.'),
+      ),
     );
 
     udp.close();
@@ -450,6 +449,9 @@ class _SimulatorCoreState {
   /// A stream controller for sending messages to the main thread.
   StreamController<dynamic> mainThreadSendStream;
 
+  /// Whether the Simulator Core should send messages to the hardware.
+  bool sendMessagesToHardware = false;
+
   /// Whether the simulation should accept incoming control input from
   /// keyboard, gamepad, sliders etc...
   bool allowManualSimInput = false;
@@ -572,8 +574,13 @@ class _SimulatorCoreState {
   void handleMessage(dynamic message) {
     // Force update to reflect changes in case we haven't moved.
     forceChange = true;
+
+    // Enable/disable sending messages to the hardware.
+    if (message is ({bool sendMessagesToHardware})) {
+      sendMessagesToHardware = message.sendMessagesToHardware;
+    }
     // Set the vehicle to simulate.
-    if (message is Vehicle) {
+    else if (message is Vehicle) {
       vehicle = message.copyWith(
         velocity: vehicle?.velocity,
         bearing: vehicle?.bearing,

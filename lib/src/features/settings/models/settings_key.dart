@@ -3,6 +3,7 @@
 /// An enumerator for all the settings of the program.
 enum SettingsKey {
   hardwareIPAdress('hardware.ip_address'),
+  hardwareSendMessages('hardware.send_messages'),
   hardwareUDPReceivePort('hardware.udp_receive_port'),
   hardwareUDPSendPort('hardware.udp_send_port'),
   hardwareWebSocketPort('hardware.web_socket_port'),

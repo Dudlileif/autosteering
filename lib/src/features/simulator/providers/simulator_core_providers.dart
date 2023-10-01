@@ -54,6 +54,42 @@ class SimInput extends _$SimInput {
       };
 }
 
+/// A provider for whether we should send messages to the hardware from the
+/// Simulator Core when network is available, see[networkAvailable].
+@Riverpod(keepAlive: true)
+class SendMessagesToHardwareIfNetwork
+    extends _$SendMessagesToHardwareIfNetwork {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.hardwareSendMessages, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.hardwareSendMessages) ??
+        true;
+  }
+
+  /// Updates the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
+
+/// A provider for whether we should send messages to the hardware.
+@riverpod
+bool sendMessagesToHardware(SendMessagesToHardwareRef ref) {
+  ref.listenSelf((previous, next) {
+    ref.read(simInputProvider.notifier).send((sendMessagesToHardware: next));
+  });
+
+  return ref.watch(sendMessagesToHardwareIfNetworkProvider) &&
+      ref.watch(networkAvailableProvider);
+}
+
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
 @riverpod
@@ -150,7 +186,8 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
     ..send(ref.read(activeABConfigProvider))
     ..send((pathTracking: ref.read(displayPathTrackingProvider)))
     ..send((abTracking: ref.read(displayABTrackingProvider)))
-    ..send((enableAutoSteer: ref.read(autoSteerEnabledProvider)));
+    ..send((enableAutoSteer: ref.read(autoSteerEnabledProvider)))
+    ..send((sendMessagesToHardware: ref.read(sendMessagesToHardwareProvider)));
 }
 
 /// A provider that creates a stream and watches the vehicle simulator on the
@@ -227,18 +264,24 @@ class SimCoreDebugAllowLongBreaks extends _$SimCoreDebugAllowLongBreaks {
 /// update the vehicle gauge providers.
 @riverpod
 Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
-  final recievePort = ReceivePort('Recieve from sim port');
+  final receivePort = ReceivePort('Recieve from sim port');
 
-  await Isolate.spawn(
+  final isolate = await Isolate.spawn(
     SimulatorCore.isolateWorker,
-    recievePort.sendPort,
+    receivePort.sendPort,
     debugName: 'Simulator Core',
   );
+  isolate.addErrorListener(receivePort.sendPort);
+  // ..addOnExitListener(
+  //   receivePort.sendPort,
+  //   response: LogEvent(Level.warning, 'Isolate exited.'),
+  // );
+
   Logger.instance.i('Simulator Core isolate spawned and started.');
 
-  final events = StreamQueue<dynamic>(recievePort);
+  final simCoreReceiveStream = StreamQueue<dynamic>(receivePort);
 
-  final sendPort = await events.next as SendPort;
+  final sendPort = await simCoreReceiveStream.next as SendPort;
 
   ref.read(_simCoreIsolatePortProvider.notifier).update(sendPort);
 
@@ -268,14 +311,14 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
   // Exit isolate when provider is disposed.
   ref.onDispose(() {
     sendPort.send(null);
-    events.cancel();
+    simCoreReceiveStream.cancel();
     restartTimer?.cancel();
     ref.read(_simCoreIsolatePortProvider.notifier).update(null);
     Logger.instance.w('Simulator Core shut down.');
   });
 
   while (true) {
-    final message = await events.next;
+    final message = await simCoreReceiveStream.next;
     restartTimer?.reset();
 
     if (message is ({
@@ -320,6 +363,20 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
         error: message.error,
         time: message.time,
         stackTrace: message.stackTrace,
+      );
+    } else if (message == 'Heartbeat') {
+    } else if (message is List) {
+      if (true) {
+        Logger.instance.log(
+          Level.error,
+          'Simulator Core hit error, restarting...: $message',
+        );
+        ref.invalidateSelf();
+      }
+    } else {
+      Logger.instance.log(
+        Level.warning,
+        'Received unknown message from Simulator Core: $message',
       );
     }
   }

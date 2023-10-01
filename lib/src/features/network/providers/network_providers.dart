@@ -5,6 +5,7 @@ import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:collection/collection.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -289,4 +290,61 @@ ${String.fromCharCodes(event)}
     }
     Future(() => _lastActiveSocket?.add(data));
   }
+}
+
+/// A provider for the current connection of the device.
+@Riverpod(keepAlive: true)
+Stream<ConnectivityResult> currentConnection(CurrentConnectionRef ref) {
+  ref.listenSelf((previous, next) {
+    next.when(
+      data: (data) {
+        if (data != previous?.value) {
+          if (previous != next) {
+            Logger.instance.i('Device connection: ${data.name}');
+          }
+        }
+      },
+      error: (error, stackTrace) => Logger.instance.e(
+        'Error getting device connection.',
+        error: error,
+        stackTrace: stackTrace,
+      ),
+      loading: () {},
+    );
+  });
+  return Connectivity().onConnectivityChanged;
+}
+
+/// A provider for whether a network connection can be made.
+///
+// TODO(dudlileif): VPN and mobile may not work though, have to test as the
+// device can be connected to mobile with vpn while being a WiFi access point.
+// Also bluetooth may be an option at some point.
+@Riverpod(keepAlive: true)
+bool networkAvailable(NetworkAvailableRef ref) {
+  ref.listenSelf((previous, next) {
+    if (previous != next) {
+      Logger.instance.i('Network available: $next');
+    }
+  });
+
+  return ref.watch(currentConnectionProvider).when(
+        data: (data) => switch (data) {
+          ConnectivityResult.ethernet ||
+          ConnectivityResult.wifi ||
+          ConnectivityResult.mobile ||
+          ConnectivityResult.vpn =>
+            true,
+          _ => false,
+        },
+        error: (error, stackTrace) {
+          Logger.instance.e(
+            'Failed to find current connection type.',
+            error: error,
+            stackTrace: stackTrace,
+          );
+          return false;
+        },
+        loading: () => false,
+      );
 }

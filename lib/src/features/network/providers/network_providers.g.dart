@@ -97,6 +97,41 @@ final hardwareWebCommunicationConfigProvider =
 
 typedef HardwareWebCommunicationConfigRef
     = ProviderRef<({String hardwareIPAdress, int hardwareWebSocketPort})>;
+String _$currentConnectionHash() => r'e780fb086d27c63045c0df36c7ad0a10ab0a0425';
+
+/// A provider for the current connection of the device.
+///
+/// Copied from [currentConnection].
+@ProviderFor(currentConnection)
+final currentConnectionProvider = StreamProvider<ConnectivityResult>.internal(
+  currentConnection,
+  name: r'currentConnectionProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentConnectionHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef CurrentConnectionRef = StreamProviderRef<ConnectivityResult>;
+String _$networkAvailableHash() => r'efd28f567476da1835b14284f781709ced58fcfe';
+
+/// A provider for whether a network connection can be made.
+///
+///
+/// Copied from [networkAvailable].
+@ProviderFor(networkAvailable)
+final networkAvailableProvider = Provider<bool>.internal(
+  networkAvailable,
+  name: r'networkAvailableProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$networkAvailableHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef NetworkAvailableRef = ProviderRef<bool>;
 String _$hardwareIsConnectedHash() =>
     r'868c2a8319a69cbd23814e20bc583381cccd7a8c';
 

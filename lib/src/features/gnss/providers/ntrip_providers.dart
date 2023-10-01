@@ -177,6 +177,8 @@ class NtripAlive extends _$NtripAlive {
           const Duration(seconds: 5),
           () => ref.invalidateSelf(),
         );
+      } else {
+        Logger.instance.i('NTRIP client disconnected.');
       }
     });
 
@@ -202,12 +204,13 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
       data: (data) {
         if (data != null) {
           Logger.instance.i(
-              'NTRIP client connecting to ${data.host}:${data.port} asking for station ${data.mountPoint}.');
+            '''NTRIP client connecting to ${data.host}:${data.port} asking for station ${data.mountPoint}.''',
+          );
           data.socket.listen((event) {
             ref.read(ntripAliveProvider.notifier).update(value: true);
 
-            // Only forward messages that start with 0xD3 = 211 which RTCM starts
-            // with.
+            // Only forward messages that start with 0xD3 = 211 which RTCM start
+            // swith.
             if (event.first == 0xD3) {
               // ref.read(tcpServerProvider.notifier).send(event);
 
@@ -247,7 +250,7 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
               Logger.instance.i('NTRIP client connection confirmed.');
             } else {
               Logger.instance.w(
-                'Unknown NTRIP message: $event -> ${String.fromCharCodes(event)}',
+                '''Unknown NTRIP message: $event -> ${String.fromCharCodes(event)}''',
               );
             }
           });
@@ -302,6 +305,10 @@ class GnssCurrentFixQuality extends _$GnssCurrentFixQuality {
         const Duration(milliseconds: 350),
         () => ref.invalidateSelf(),
       );
+      if (previous != next) {
+        Logger.instance
+            .i('GPS fix quality: ${next.name}, NMEA code: ${next.nmeaValue}');
+      }
     });
 
     return GnssFixQuality.notAvailable;
@@ -329,6 +336,9 @@ class GnssCurrentNumSatellites extends _$GnssCurrentNumSatellites {
         const Duration(milliseconds: 350),
         ref.invalidateSelf,
       );
+      if (previous != next) {
+        Logger.instance.i('GPS satellite count: $next');
+      }
     });
 
     return null;

@@ -1,5 +1,6 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/network/network.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,6 +57,21 @@ $ip''',
               );
             },
           ),
+        Consumer(
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(sendMessagesToHardwareIfNetworkProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(sendMessagesToHardwareIfNetworkProvider.notifier)
+                    .update(value: value)
+                : null,
+            title: Text(
+              'Send messages',
+              style: textStyle,
+            ),
+            secondary: const Icon(Icons.message),
+          ),
+        ),
         ListTile(
           leading: Column(
             children: [

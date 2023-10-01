@@ -6,6 +6,24 @@ part of 'simulator_core_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$sendMessagesToHardwareHash() =>
+    r'139814ce487ed859535b886067e87e51fd310660';
+
+/// A provider for whether we should send messages to the hardware.
+///
+/// Copied from [sendMessagesToHardware].
+@ProviderFor(sendMessagesToHardware)
+final sendMessagesToHardwareProvider = AutoDisposeProvider<bool>.internal(
+  sendMessagesToHardware,
+  name: r'sendMessagesToHardwareProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$sendMessagesToHardwareHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SendMessagesToHardwareRef = AutoDisposeProviderRef<bool>;
 String _$simCoreVehicleDrivingHash() =>
     r'8acb9b5d9174501d183dc8f36bca8474a8ac5f53';
 
@@ -25,7 +43,7 @@ final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
-String _$initializeSimCoreHash() => r'ef3b997ec3d5f6c90419b4ccd021fb29dba28f74';
+String _$initializeSimCoreHash() => r'2ee638e418ea316fd6137a8e1126cdae0ad67696';
 
 /// Sends initial parameters to  the sim core.
 ///
@@ -64,7 +82,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'5b8ca5dcb5b4b9e83129cc495ba2ffdcd1f1ff7a';
+    r'dded4a8312d516495b300da868d16d4ce3548860';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.
@@ -105,6 +123,26 @@ final simInputProvider = NotifierProvider<SimInput, SimPlatform>.internal(
 );
 
 typedef _$SimInput = Notifier<SimPlatform>;
+String _$sendMessagesToHardwareIfNetworkHash() =>
+    r'1b5a38b11f282c2c53f4856f113c833dbe3ca675';
+
+/// A provider for whether we should send messages to the hardware from the
+/// Simulator Core when network is available, see[networkAvailable].
+///
+/// Copied from [SendMessagesToHardwareIfNetwork].
+@ProviderFor(SendMessagesToHardwareIfNetwork)
+final sendMessagesToHardwareIfNetworkProvider =
+    NotifierProvider<SendMessagesToHardwareIfNetwork, bool>.internal(
+  SendMessagesToHardwareIfNetwork.new,
+  name: r'sendMessagesToHardwareIfNetworkProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$sendMessagesToHardwareIfNetworkHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SendMessagesToHardwareIfNetwork = Notifier<bool>;
 String _$simCoreIsolatePortHash() =>
     r'a1f214c5b2285183a8bffac6fb49c45d592b0d83';
 
