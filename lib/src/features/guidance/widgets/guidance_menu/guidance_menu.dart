@@ -6,6 +6,9 @@ import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/pa
 import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/path_tracking_menu.dart';
 import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/virtual_led_bar_menu.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,6 +19,7 @@ class GuidanceMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Guidance',
       icon: Icons.navigation,
@@ -40,6 +44,56 @@ class GuidanceMenu extends StatelessWidget {
             }
             return const SizedBox.shrink();
           },
+        ),
+        ListTile(
+          title: Text(
+            'Tracking mode',
+            style: textStyle,
+          ),
+          trailing: Consumer(
+            builder: (context, ref, child) {
+              final pursuitMode = ref.watch(
+                mainVehicleProvider
+                    .select((vehicle) => vehicle.pathTrackingMode),
+              );
+
+              return ToggleButtons(
+                onPressed: (index) {
+                  final oldValue = ref.read(
+                    mainVehicleProvider
+                        .select((value) => value.pathTrackingMode),
+                  );
+
+                  ref
+                      .read(simInputProvider.notifier)
+                      .send(PathTrackingMode.values[index]);
+
+                  // Wait a short while before saving the hopefully
+                  // updated vehicle.
+                  Future.delayed(const Duration(milliseconds: 250), () {
+                    final vehicle = ref.read(mainVehicleProvider);
+                    ref.read(saveVehicleProvider(vehicle));
+                    Logger.instance.i(
+                      '''Updated vehicle path tracking mode: $oldValue -> ${vehicle.pathTrackingMode}''',
+                    );
+                  });
+                },
+                isSelected: PathTrackingMode.values
+                    .map((mode) => mode == pursuitMode)
+                    .toList(),
+                children: PathTrackingMode.values
+                    .map(
+                      (mode) => Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Text(
+                          mode.name.capitalize,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              );
+            },
+          ),
         ),
         const PathRecorderMenu(),
         const PathTrackingMenu(),
