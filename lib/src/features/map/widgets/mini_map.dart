@@ -127,6 +127,7 @@ class _MiniMapView extends ConsumerWidget {
     });
     return FlutterMap(
       key: const Key('Field mini map'),
+      
       mapController: mapController,
       options: MapOptions(
         interactiveFlags: InteractiveFlag.none,
@@ -137,6 +138,7 @@ class _MiniMapView extends ConsumerWidget {
           mainVehicleProvider.select((value) => -value.bearing),
         ),
         zoom: 15,
+        onMapReady: ref.read(miniMapReadyProvider.notifier).ready,
         onMapEvent: (event) {
           if (event is MapEventScrollWheelZoom) {
             mapController.move(

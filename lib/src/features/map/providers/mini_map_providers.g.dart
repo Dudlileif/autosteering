@@ -22,6 +22,22 @@ final showMiniMapProvider = NotifierProvider<ShowMiniMap, bool>.internal(
 );
 
 typedef _$ShowMiniMap = Notifier<bool>;
+String _$miniMapReadyHash() => r'ded8c7d96056a32ee3954e84edaa1daf8e2928e4';
+
+/// Whether the map is ready to be shown or not.
+///
+/// Copied from [MiniMapReady].
+@ProviderFor(MiniMapReady)
+final miniMapReadyProvider = NotifierProvider<MiniMapReady, bool>.internal(
+  MiniMapReady.new,
+  name: r'miniMapReadyProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$miniMapReadyHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MiniMapReady = Notifier<bool>;
 String _$miniMapControllerHash() => r'004a44e3e7f94e0004cba26f0d0bf1d651196aa0';
 
 /// The mini map [MapController] provider, which allows controlling the
@@ -61,7 +77,7 @@ final miniMapLockToFieldProvider =
 
 typedef _$MiniMapLockToField = Notifier<bool>;
 String _$miniMapAlwaysPointNorthHash() =>
-    r'9283bc2da3ce50c44899953ce5e1a3b220669584';
+    r'1060b12d398b845b570b648e5a7ad4c7f77ca72f';
 
 /// Whether the mini map always should point to the north and not rotate.
 ///

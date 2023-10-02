@@ -53,6 +53,16 @@ class ShowMiniMap extends _$ShowMiniMap {
   void toggle() => Future(() => state = !state);
 }
 
+/// Whether the map is ready to be shown or not.
+@Riverpod(keepAlive: true)
+class MiniMapReady extends _$MiniMapReady {
+  @override
+  bool build() => false;
+
+  /// Set the [state] to true to indicate that the map is ready.
+  void ready() => Future(() => state = true);
+}
+
 /// The mini map [MapController] provider, which allows controlling the
 /// map from outside the widget code itself.
 @Riverpod(keepAlive: true)
@@ -140,6 +150,7 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
   @override
   bool build() {
     ref.listenSelf((previous, next) {
+      if (ref.read(miniMapReadyProvider)) {
       if (next) {
         ref.read(miniMapControllerProvider).rotate(0);
       } else {
@@ -147,7 +158,7 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
               ref.read(mainVehicleProvider.select((value) => -value.bearing)),
             );
       }
-
+      }
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
