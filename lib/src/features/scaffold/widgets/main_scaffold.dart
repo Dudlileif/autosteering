@@ -5,7 +5,6 @@ import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/network/network.dart';
-import 'package:agopengps_flutter/src/features/scaffold/widgets/debug_menu.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -33,7 +32,6 @@ class MainScaffold extends StatelessWidget {
               VehicleMenu(),
               EquipmentMenu(),
               NetworkMenu(),
-              DebugMenu(),
               SimCoreMenu(),
               ThemeMenu(),
             ],
