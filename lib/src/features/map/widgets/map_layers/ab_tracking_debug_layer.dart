@@ -292,7 +292,7 @@ class ABTrackingOffsetDebugControls extends ConsumerWidget {
               children: [
                 Consumer(
                   builder: (context, ref, child) => Text(
-                    '${(-(ref.watch(abTrackingPerpendicularDistanceProvider) ?? 0)).toStringAsFixed(3)} m',
+                    '''${(-(ref.watch(abTrackingPerpendicularDistanceProvider) ?? 0)).toStringAsFixed(3)} m''',
                     style: theme.menuButtonWithChildrenText,
                   ),
                 ),

@@ -141,7 +141,7 @@ class VirtualLedBarMenu extends ConsumerWidget {
               final max = config.leftOfCenterCount * config.distancePerLed;
 
               final distance =
-                  (ref.watch(virtualLedBarTestingDistanceProvider) ?? 0)
+                  -(ref.watch(virtualLedBarTestingDistanceProvider) ?? 0)
                       .clamp(min, max);
 
               return Column(
@@ -153,9 +153,9 @@ class VirtualLedBarMenu extends ConsumerWidget {
                   ),
                   Slider.adaptive(
                     value: distance,
-                    onChanged: ref
+                    onChanged: (value) => ref
                         .read(virtualLedBarTestingDistanceProvider.notifier)
-                        .update,
+                        .update(-value),
                     min: min,
                     max: max,
                   ),
