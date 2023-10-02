@@ -32,14 +32,13 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
-    this.useIMUPitchAndRoll = true,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
     super.uuid,
     this.pathTrackingMode = PathTrackingMode.purePursuit,
-    ImuZeroValues? imuZero,
+    ImuConfig? imuConfig,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
@@ -54,7 +53,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         _roll = roll,
         _velocity = velocity,
         antennaPosition = position,
-        imuZero = imuZero ?? const ImuZeroValues(),
+        imuConfig = imuConfig ?? const ImuConfig(),
         pidParameters = pidParameters ?? const PidParameters(),
         stanleyParameters = stanleyParameters ?? const StanleyParameters(),
         purePursuitParameters =
@@ -71,6 +70,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     final info = Map<String, dynamic>.from(json['info'] as Map);
     final type = info['vehicle_type'];
+
 
     final vehicle = switch (type) {
       'Tractor' => Tractor.fromJson(json),
@@ -111,11 +111,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       vehicle.attachChild(hitchRearTowbarChild, Hitch.rearTowbar);
     }
 
-    final imuZero = json.containsKey('imu_zero_values')
-        ? ImuZeroValues.fromJson(
-            Map<String, dynamic>.from(json['imu_zero_values'] as Map),
+    final imuConfig = json.containsKey('imu_config')
+        ? ImuConfig.fromJson(
+            Map<String, dynamic>.from(json['imu_config'] as Map),
           )
         : null;
+
 
     final pidParameters = json.containsKey('pid_parameters')
         ? PidParameters.fromJson(
@@ -135,11 +136,14 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
           )
         : null;
 
+  
+
     return vehicle.copyWith(
-      imuZero: imuZero,
+      imuConfig: imuConfig,
       pidParameters: pidParameters,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
+  
     );
   }
 
@@ -193,9 +197,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The width of the vehicle, in meters.
   double width;
 
-  /// Whether the roll and pitch should affect the [position].
-  bool useIMUPitchAndRoll;
-
   /// The pitch of the vehicle as degrees of inclination around the x-axis
   /// (across) the vehicle in the forward direction.
   double _pitch;
@@ -207,8 +208,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Bearing as set from the outside.
   double _bearing = 0;
 
-  /// The zero values for the IMU in the vehicle.
-  ImuZeroValues imuZero;
+  /// The IMU (inertial measurement unit) configuration for this vehicle.
+  ImuConfig imuConfig;
 
   /// Antenna position of the vehicle.
   Geographic antennaPosition;
@@ -225,7 +226,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The projected ground position of the centered antenna of this vehicle
   /// accounting for [pitch] and [roll].
   @override
-  Geographic get position => switch (useIMUPitchAndRoll) {
+  Geographic get position => switch (imuConfig.usePitchAndRoll) {
         false => antennaPosition,
         true => antennaPosition.spherical
             .destinationPoint(
@@ -261,7 +262,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       bearing: bearing - 90,
     );
 
-    antennaPosition = switch (useIMUPitchAndRoll) {
+    antennaPosition = switch (imuConfig.usePitchAndRoll) {
       false => unCentered,
       true => unCentered.spherical
           .destinationPoint(
@@ -287,7 +288,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The bearing of the vehicle, in degrees.
   @override
-  double get bearing => (_bearing - imuZero.bearingZero).wrap360();
+  double get bearing => (_bearing - imuConfig.zeroValues.bearingZero).wrap360();
 
   /// Update the bearing of the vehicle, [value] in degrees.
   @override
@@ -295,13 +296,31 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The pitch of the vehicle as degrees of inclination around the x-axis
   /// (across) the vehicle in the forward direction.
-  double get pitch => (_pitch - imuZero.pitchZero).clamp(-90, 90);
+  double get pitch =>
+      switch (imuConfig.swapPitchAndRoll) {
+        false => (_pitch - imuConfig.zeroValues.pitchZero).clamp(-90, 90),
+        true => (_roll - imuConfig.zeroValues.rollZero).clamp(-180, 180)
+      } *
+      switch (imuConfig.invertPitch) {
+        true => -1,
+        false => 1,
+      } *
+      imuConfig.pitchGain;
 
   set pitch(double value) => _pitch = value;
 
   /// The roll of the vehicle as degrees of roll around the y-axis (along) the
   /// vehicle in the forward direction.
-  double get roll => (_roll - imuZero.rollZero).clamp(-180, 180);
+  double get roll =>
+      switch (imuConfig.swapPitchAndRoll) {
+        false => (_roll - imuConfig.zeroValues.rollZero).clamp(-180, 180),
+        true => (_pitch - imuConfig.zeroValues.pitchZero).clamp(-90, 90)
+      } *
+      switch (imuConfig.invertRoll) {
+        true => -1,
+        false => 1,
+      } *
+      imuConfig.rollGain;
 
   set roll(double value) => _roll = value;
 
@@ -517,7 +536,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleMax,
     double? trackWidth,
     bool? invertSteeringInput,
-    ImuZeroValues? imuZero,
+    ImuConfig? imuConfig,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -529,7 +548,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleInput,
     double? length,
     double? width,
-    bool? useIMUPitchAndRoll,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
@@ -557,7 +575,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       'track_width': trackWidth,
     };
 
-    map['imu_zero_values'] = imuZero;
+    map['imu_config'] = imuConfig;
 
     map['pid_parameters'] = pidParameters;
 
@@ -568,7 +586,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     map['steering'] = {
       'invert_steering_input': invertSteeringInput,
       'min_turning_radius': minTurningRadius,
-      'path_tracking_mode': pathTrackingMode.name,
+      'path_tracking_mode': pathTrackingMode,
       'steering_angle_max': steeringAngleMax,
     };
 

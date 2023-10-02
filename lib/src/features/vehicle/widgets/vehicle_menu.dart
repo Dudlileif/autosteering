@@ -32,6 +32,36 @@ class VehicleMenu extends StatelessWidget {
             builder: (context) => const VehicleConfigurator(),
           ),
         ),
+        Consumer(
+          child: Text(
+            'IMU Configurator',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(debugVehicleIMUProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugVehicleIMUProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Autosteering parameters',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(debugVehicleAutosteerParametersProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugVehicleAutosteerParametersProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
         const VehicleDebugMenu(),
       ],
     );

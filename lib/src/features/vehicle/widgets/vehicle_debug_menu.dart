@@ -140,49 +140,6 @@ class VehicleDebugMenu extends StatelessWidget {
         ),
         Consumer(
           child: Text(
-            'IMU / Pitch and Roll',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(debugVehicleIMUProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(debugVehicleIMUProvider.notifier)
-                    .update(value: value)
-                : null,
-            secondary: child,
-          ),
-        ),
-        Consumer(
-          child: Text(
-            'Autosteering parameters',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(debugVehicleAutosteerParametersProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(debugVehicleAutosteerParametersProvider.notifier)
-                    .update(value: value)
-                : null,
-            secondary: child,
-          ),
-        ),
-        Consumer(
-          child: Text(
-            'Use IMU bearing',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(useIMUBearingProvider),
-            onChanged: (value) => value != null
-                ? ref.read(useIMUBearingProvider.notifier).update(value: value)
-                : null,
-            secondary: child,
-          ),
-        ),
-        Consumer(
-          child: Text(
             'Use device position',
             style: textStyle,
           ),

@@ -27,7 +27,7 @@ final class ArticulatedTractor extends Vehicle {
     super.antennaLateralOffset,
     super.invertSteeringInput,
     super.pathTrackingMode,
-    super.imuZero,
+    super.imuConfig,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
     super.purePursuitParameters =
         const PurePursuitParameters(lookAheadDistance: 1),
@@ -40,7 +40,7 @@ final class ArticulatedTractor extends Vehicle {
     super.steeringAngleInput,
     super.length = 4,
     super.width = 2.5,
-    super.useIMUPitchAndRoll,
+
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
@@ -82,9 +82,9 @@ final class ArticulatedTractor extends Vehicle {
       wheelDiameter: wheels['wheel_diameter'] as double,
       wheelWidth: wheels['wheel_width'] as double,
       wheelSpacing: wheels['wheel_spacing'] as double,
-      pathTrackingMode: PathTrackingMode.values.firstWhere(
-        (element) => element.name == steering['path_tracking_mode'] as String,
-      ),
+      pathTrackingMode: steering.containsKey('path_tracking_mode')
+          ? PathTrackingMode.fromJson(steering['path_tracking_mode'] as String)
+          : PathTrackingMode.purePursuit,
       frontAxleToHitchDistance:
           hitches['front_axle_to_front_hitch_distance'] as double?,
       rearAxleToHitchDistance:
@@ -778,7 +778,7 @@ final class ArticulatedTractor extends Vehicle {
     double? wheelSpacing,
     int? numWheels,
     bool? invertSteeringInput,
-    ImuZeroValues? imuZero,
+    ImuConfig? imuConfig,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     StanleyParameters? stanleyParameters,
@@ -790,7 +790,6 @@ final class ArticulatedTractor extends Vehicle {
     double? steeringAngleInput,
     double? length,
     double? width,
-    bool? useIMUPitchAndRoll,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
@@ -820,20 +819,20 @@ final class ArticulatedTractor extends Vehicle {
         rearAxleToTowbarDistance:
             rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
-        imuZero: imuZero ?? this.imuZero,
+        imuConfig: imuConfig ?? this.imuConfig,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:
             purePursuitParameters ?? this.purePursuitParameters,
         stanleyParameters: stanleyParameters ?? this.stanleyParameters,
         velocity: velocity ?? this.velocity,
-        bearing: (bearing ?? this.bearing) + this.imuZero.bearingZero,
-        pitch: (pitch ?? this.pitch) + this.imuZero.pitchZero,
-        roll: (roll ?? this.roll) + this.imuZero.rollZero,
+        bearing:
+            (bearing ?? this.bearing) + this.imuConfig.zeroValues.bearingZero,
+        pitch: (pitch ?? this.pitch) + this.imuConfig.zeroValues.pitchZero,
+        roll: (roll ?? this.roll) + this.imuConfig.zeroValues.rollZero,
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,
-        useIMUPitchAndRoll: useIMUPitchAndRoll ?? this.useIMUPitchAndRoll,
         hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,

@@ -173,7 +173,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.all(8),
-                child: PitchAndRollDebugGauges(),
+                child: ImuConfigurator(),
               ),
             ),
           if (ref.watch(debugVehicleAutosteerParametersProvider))
@@ -186,7 +186,11 @@ class MapAndGaugeStackView extends ConsumerWidget {
             ),
           Column(
             children: [
-              if (ref.watch(virtualLedBarEnabledProvider))
+              if (ref.watch(virtualLedBarEnabledProvider) &&
+                  ref.watch(
+                    virtualLedBarPerpendicularDistanceProvider
+                        .select((value) => value != null),
+                  ))
                 const Padding(
               padding: EdgeInsets.all(8),
               child: VirtualLedBar(),

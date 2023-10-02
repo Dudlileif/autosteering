@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -60,26 +59,8 @@ class AutoSteerEnabled extends _$AutoSteerEnabled {
   void toggle() => Future(() => state = !state);
 }
 
-/// A provider for whether the vehicle's bearing is set by the IMU input.
-@Riverpod(keepAlive: true)
-class UseIMUBearing extends _$UseIMUBearing {
-  @override
-  bool build() {
-    ref.listenSelf((previous, next) {
-      if (previous != next) {
-        ref.read(simInputProvider.notifier).send((useIMUBearing: next));
-      }
-    });
 
-    return false;
-  }
 
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current [state].
-  void toggle() => Future(() => state = !state);
-}
 
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
