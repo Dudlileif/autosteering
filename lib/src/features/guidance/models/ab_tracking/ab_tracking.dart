@@ -243,16 +243,16 @@ abstract class ABTracking {
       return lines[offset]!;
     }
 
-    final extendedStart = baseLine.first
-        .moveSpherical(
-          distance: extraStraightDistance ?? 100,
-          angleFromBearing: 180,
-        )
-        .position;
+    final extendedStart = baseLine.first.position.spherical.destinationPoint(
+      distance: extraStraightDistance ?? 100,
+      bearing: baseLine[1].finalBearingToSpherical(baseLine.first),
+    );
 
-    final extendedEnd = baseLine.last
-        .moveSpherical(distance: extraStraightDistance ?? 100)
-        .position;
+    final extendedEnd = baseLine.last.position.spherical.destinationPoint(
+      distance: extraStraightDistance ?? 100,
+      bearing:
+          baseLine[baseLine.length - 2].finalBearingToSpherical(baseLine.last),
+    );
 
     final path = baseLine.map((e) => e.position).toList()
       ..insert(0, extendedStart)
@@ -787,7 +787,7 @@ abstract class ABTracking {
     WayPoint? endPoint,
   });
 
-  /// Calculates a list of [num] points along the current offset line ahead of
+  /// Calculates a list of [count] points along the current offset line ahead of
   /// the [vehicle]'s path tracking point, in the forward direction of the
   /// vehicle according to the [vehicle]'s bearing.
   ///
@@ -795,10 +795,10 @@ abstract class ABTracking {
   List<WayPoint> pointsAhead(
     Vehicle vehicle, {
     double stepSize = 10,
-    int num = 2,
+    int count = 2,
   });
 
-  /// Calculates a list of [num] points along the current line behind of the
+  /// Calculates a list of [count] points along the current line behind of the
   /// [vehicle]'s path tracking point, in the rearward direction of the vehicle
   ///  according to the [vehicle]'s bearing.
   ///
@@ -806,7 +806,7 @@ abstract class ABTracking {
   List<WayPoint> pointsBehind(
     Vehicle vehicle, {
     double stepSize = 10,
-    int num = 2,
+    int count = 2,
   });
 
   /// The next point on the [currentOffset]'s line in the [vehicle]'s bearing

@@ -565,13 +565,13 @@ class ABCurve extends ABTracking {
   List<WayPoint> pointsAhead(
     Vehicle vehicle, {
     double stepSize = 10,
-    int num = 2,
+    int count = 2,
   }) {
     if (currentPathTracking != null) {
       final currentIndex = currentPathTracking!.currentIndex
           .clamp(0, currentPathTracking!.path.length - 1);
 
-      var endIndex = currentIndex + num;
+      var endIndex = currentIndex + count;
       if (endIndex >= currentPathTracking!.path.length) {
         endIndex = currentPathTracking!.path.length - 1;
       }
@@ -587,13 +587,13 @@ class ABCurve extends ABTracking {
   List<WayPoint> pointsBehind(
     Vehicle vehicle, {
     double stepSize = 10,
-    int num = 2,
+    int count = 2,
   }) {
     if (currentPathTracking != null) {
       final currentIndex = currentPathTracking!.currentIndex
           .clamp(0, currentPathTracking!.path.length - 1);
 
-      var startIndex = currentIndex - num;
+      var startIndex = currentIndex - count;
       if (startIndex < 0) {
         startIndex = 0;
       }

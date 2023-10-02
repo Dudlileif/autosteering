@@ -54,6 +54,19 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                     .toList(),
                 strokeWidth: 2,
               ),
+              if (abTracking.limitMode == ABLimitMode.unlimited &&
+                  abTracking is ABLine)
+                Polyline(
+                  points: [
+                    ...abTracking
+                        .pointsAhead(vehicle, stepSize: 100, count: 5)
+                        .map((e) => e.position.latLng),
+                    ...abTracking
+                        .pointsBehind(vehicle, stepSize: 100, count: 5)
+                        .map((e) => e.position.latLng),
+                  ],
+                  strokeWidth: 2,
+                ),
               if (abTracking.limitMode != ABLimitMode.unlimited)
                 Polyline(
                   points: abTracking.nextLine
@@ -156,7 +169,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                 ...abTracking
                     .pointsAhead(
                       vehicle,
-                      num: ref.watch(aBDebugNumPointsAheadProvider),
+                      count: ref.watch(aBDebugNumPointsAheadProvider),
                       stepSize: ref.watch(aBDebugStepSizeProvider),
                     )
                     .map(
@@ -169,7 +182,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                 ...abTracking
                     .pointsBehind(
                       vehicle,
-                      num: ref.watch(aBDebugNumPointsBehindProvider),
+                      count: ref.watch(aBDebugNumPointsBehindProvider),
                       stepSize: ref.watch(aBDebugStepSizeProvider),
                     )
                     .map(
@@ -279,8 +292,7 @@ class ABTrackingOffsetDebugControls extends ConsumerWidget {
               children: [
                 Consumer(
                   builder: (context, ref, child) => Text(
-                    (ref.watch(abTrackingPerpendicularDistanceProvider) ?? 0)
-                        .toStringAsFixed(3),
+                    '${(-(ref.watch(abTrackingPerpendicularDistanceProvider) ?? 0)).toStringAsFixed(3)} m',
                     style: theme.menuButtonWithChildrenText,
                   ),
                 ),

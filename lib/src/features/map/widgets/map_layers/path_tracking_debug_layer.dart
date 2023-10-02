@@ -298,7 +298,7 @@ class PathTrackingDebugWidget extends ConsumerWidget {
           child: Consumer(
             builder: (context, ref, child) {
               return Text(
-                (ref.watch(pathTrackingPerpendicularDistanceProvider) ?? 0)
+                (-(ref.watch(pathTrackingPerpendicularDistanceProvider) ?? 0))
                     .toStringAsFixed(3),
                 style: theme.menuButtonWithChildrenText,
               );

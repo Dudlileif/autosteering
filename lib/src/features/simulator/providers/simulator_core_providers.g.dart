@@ -82,7 +82,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'dded4a8312d516495b300da868d16d4ce3548860';
+    r'3959b2db5879a701f8143dd56ae59d2487b74738';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.

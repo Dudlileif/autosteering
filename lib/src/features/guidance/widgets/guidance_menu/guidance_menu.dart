@@ -4,6 +4,7 @@ import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/ab
 import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/ab_line_menu.dart';
 import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/path_recorder_menu.dart';
 import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/path_tracking_menu.dart';
+import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/virtual_led_bar_menu.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,6 +45,7 @@ class GuidanceMenu extends StatelessWidget {
         const PathTrackingMenu(),
         const ABLineMenu(),
         const ABCurveMenu(),
+        const VirtualLedBarMenu(),
       ],
     );
   }

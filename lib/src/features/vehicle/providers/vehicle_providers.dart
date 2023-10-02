@@ -46,18 +46,12 @@ class MainVehicle extends _$MainVehicle {
 }
 
 /// A provider for whether the vehicle should steer automatically.
+
 @Riverpod(keepAlive: true)
 class AutoSteerEnabled extends _$AutoSteerEnabled {
-  @override
-  bool build() {
-    ref.listenSelf((previous, next) {
-      if (next != previous) {
-        ref.read(simInputProvider.notifier).send((enableAutoSteer: next));
-      }
-    });
 
-    return false;
-  }
+  @override
+  bool build() => false;
 
   /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);

@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -98,6 +99,8 @@ class MainMap extends ConsumerWidget {
           const DubinsPathDebugLayer(),
         if (ref.watch(showABTrackingDebugLayerProvider))
           const ABTrackingDebugLayer(),
+        if (ref.watch(virtualLedBarTestingProvider))
+          const VirtualLedBarTestLayer(),
       ],
     );
   }

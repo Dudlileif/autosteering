@@ -186,7 +186,9 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
     ..send(ref.read(activeABConfigProvider))
     ..send((pathTracking: ref.read(displayPathTrackingProvider)))
     ..send((abTracking: ref.read(displayABTrackingProvider)))
-    ..send((enableAutoSteer: ref.read(autoSteerEnabledProvider)))
+    ..send(
+      (enableAutoSteer: ref.read(autoSteerEnabledProvider)),
+    )
     ..send((sendMessagesToHardware: ref.read(sendMessagesToHardwareProvider)));
 }
 
@@ -366,7 +368,7 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
       );
     } else if (message == 'Heartbeat') {
     } else if (message is List) {
-      if (true) {
+      if (message.any((element) => element is Exception)) {
         Logger.instance.log(
           Level.error,
           'Simulator Core hit error, restarting...: $message',

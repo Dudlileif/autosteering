@@ -392,7 +392,7 @@ final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
 );
 
 typedef _$MainVehicle = Notifier<Vehicle>;
-String _$autoSteerEnabledHash() => r'42fc0d65ab5f1a2badd2b1f933048c4b71c8a0b5';
+String _$autoSteerEnabledHash() => r'3825c9c26ad90ae171f028e130ee99ac03c94f61';
 
 /// A provider for whether the vehicle should steer automatically.
 ///

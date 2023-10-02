@@ -184,10 +184,19 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 child: VehicleAutosteerParameterConfigurator(),
               ),
             ),
-          if (ref.watch(showABTrackingDebugLayerProvider))
-            const ABTrackingOffsetDebugControls(),
-          if (ref.watch(showPathTrackingDebugLayerProvider))
-            const PathTrackingDebugWidget(),
+          Column(
+            children: [
+              if (ref.watch(virtualLedBarEnabledProvider))
+                const Padding(
+              padding: EdgeInsets.all(8),
+              child: VirtualLedBar(),
+            ),
+              if (ref.watch(showABTrackingDebugLayerProvider))
+                const ABTrackingOffsetDebugControls(),
+              if (ref.watch(showPathTrackingDebugLayerProvider))
+                const PathTrackingDebugWidget(),
+            ],
+          ),
         ],
       ),
     );

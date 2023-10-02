@@ -74,6 +74,21 @@ class WayPoint extends Equatable {
     );
   }
 
+  /// Finds a way point on the line from this to [end]. The [distance] to
+  /// the way point is from this, the start, in the direction towards the [end]
+  /// point.
+  WayPoint alongLineByDistanceFromStart({
+    required WayPoint end,
+    required double distance,
+  }) {
+    if (distance == 0) {
+      return this;
+    }
+    final fraction = distance / distanceToSpherical(end);
+
+    return intermediatePointToSpherical(end, fraction: fraction);
+  }
+
   /// Rotates the way point by [angle] degrees clockwise.
   WayPoint rotateByAngle(double angle) =>
       copyWith(bearing: (bearing + angle).wrap360());

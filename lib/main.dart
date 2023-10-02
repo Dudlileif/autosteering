@@ -3,6 +3,7 @@ import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_shaders/flutter_shaders.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -31,6 +32,9 @@ Future<void> main() async {
     await FastCachedImageConfig.init(subDir: 'AgOpenGPS_flutter/image_cache/');
     Logger.instance.i('Configured CachedImage directory');
   }
+
+  Logger.instance.i('Precaching shader: assets/shaders/glow.frag');
+  await ShaderBuilder.precacheShader('assets/shaders/glow.frag');
 
   Logger.instance.i('Starting main application...');
 

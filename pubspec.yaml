@@ -43,6 +43,7 @@ dependencies:
     flutter_libserialport: ^0.3.0
     flutter_map: ^5.0.0
     flutter_riverpod: ^2.4.1
+    flutter_shaders: ^0.1.2
     freezed_annotation: ^2.4.1
     # gamepads: ^0.1.1
     geobase: ^0.5.1
@@ -91,3 +92,6 @@ flutter:
         - assets/images/vehicle_types/side_view/
         - assets/images/vehicle_types/top_view/
         - assets/images/wheels/
+
+    shaders:
+        - assets/shaders/glow.frag

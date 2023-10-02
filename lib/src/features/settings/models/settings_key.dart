@@ -40,7 +40,9 @@ enum SettingsKey {
   simAutoCenterSteering('sim.auto_center_steering'),
   simAutoSlowDown('sim.auto_slow_down'),
   themeColorScheme('theme.color_scheme'),
-  themeMode('theme.mode');
+  themeMode('theme.mode'),
+  virtualLedBarConfig('virtual_led_bar.config'),
+  virtualLedBarEnabled('virtual_led_bar.enabled');
 
   const SettingsKey(this.name);
 
