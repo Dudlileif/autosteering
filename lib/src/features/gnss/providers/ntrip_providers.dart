@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/network/network.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
-import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ntrip_providers.g.dart';
@@ -162,25 +160,29 @@ class NtripPassword extends _$NtripPassword {
 
 /// A provider for telling whether the [ntripClient] is receiving data.
 ///
-/// If not set to true in the last 5 seconds, it will invalidate itself and
-/// restart as false.
+/// If not set to true in the last 5 seconds, it will invalidate itself and the
+/// [ntripClient].
 @Riverpod(keepAlive: true)
 class NtripAlive extends _$NtripAlive {
   Timer? _resetTimer;
 
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
-      if (next) {
-        _resetTimer?.cancel();
-        _resetTimer = Timer(
-          const Duration(seconds: 5),
-          () => ref.invalidateSelf(),
-        );
-      } else {
-        Logger.instance.i('NTRIP client disconnected.');
-      }
-    });
+    ref
+      ..listenSelf((previous, next) {
+        if (next) {
+          _resetTimer?.cancel();
+          _resetTimer = Timer(
+            const Duration(seconds: 5),
+            () => ref.invalidateSelf(),
+          );
+        } else {
+          Logger.instance.i('NTRIP client disconnected.');
+        }
+      })
+      ..onDispose(() {
+        ref.invalidate(ntripClientProvider);
+      });
 
     return false;
   }
@@ -191,83 +193,55 @@ class NtripAlive extends _$NtripAlive {
 
 /// A provider for creating and listening to an [NtripClient].
 ///
-/// The receives NTRIP messages will be sent to the simulation core
-/// to be sent to the hardware.
+/// The received NTRIP messages will be split into parts and sent to the
+/// connected [GnssSerial] if connected or the [TcpServer].
 @Riverpod(keepAlive: true)
 Future<NtripClient?> ntripClient(NtripClientRef ref) async {
   if (!ref.watch(ntripEnabledProvider)) {
     return null;
   }
 
-  ref.listenSelf((previous, next) {
-    next.when(
-      data: (data) {
-        if (data != null) {
-          Logger.instance.i(
-            '''NTRIP client connecting to ${data.host}:${data.port} asking for station ${data.mountPoint}.''',
-          );
-          data.socket.listen((event) {
-            ref.read(ntripAliveProvider.notifier).update(value: true);
+  ref
+    ..onDispose(() {
+      Logger.instance.i('NTRIP client disconnected.');
+    })
+    ..listenSelf((previous, next) {
+      next.when(
+        data: (data) {
+          if (data != null) {
+            Logger.instance.i(
+              '''NTRIP client connecting to ${data.host}:${data.port} asking for station ${data.mountPoint}.''',
+            );
+            data.socket.listen((event) {
+              ref.read(ntripAliveProvider.notifier).update(value: true);
 
-            // Only forward messages that start with 0xD3 = 211 which RTCM start
-            // swith.
-            if (event.first == 0xD3) {
-              // ref.read(tcpServerProvider.notifier).send(event);
+              if (ref.read(gnssSerialProvider) != null) {
+                ref.read(gnssSerialProvider)?.write(event);
+              } else {
+                ref.read(tcpServerProvider.notifier).send(event);
+              }
 
-              // The messages can be bunched up, so we split them up to send
-              // them separatley to the receiver.
-              final indices = <int>[];
-              final types = <int>[];
-              final lengths = <int>[];
-              final messages = <Uint8List>[];
-              var i = 0;
-              while (i < event.length) {
-                if (event[i] == 0xD3) {
-                  indices.add(i);
-                  final type = (event[i + 3] << 4) + (event[i + 4] >> 4);
-                  types.add(type);
-                  final length =
-                      ((event[i + 1] & 3) << 8) + (event[i + 2] << 0) + 6;
-                  lengths.add(length);
-                  messages.add(
-                    Uint8List.fromList(
-                      event.getRange(i, i + length).toList(),
-                    ),
-                  );
-                  i += length;
-                } else {
-                  i++;
+              if (event.length == 12) {
+                //If message is 'ICY 200 OK', we have a confirmed connection.
+                if (String.fromCharCodes(event) == 'ICY 200 OK\r\n') {
+                  Logger.instance.i('NTRIP client connection confirmed.');
                 }
               }
-
-              for (final message in messages) {
-                ref.read(tcpServerProvider.notifier).send(message);
-                ref.read(gnssSerialProvider)?.write(message);
-              }
-            }
-            //If message is 'ICY 200 OK', we have a confirmed connection.
-            else if (String.fromCharCodes(event) == 'ICY 200 OK\r\n') {
-              Logger.instance.i('NTRIP client connection confirmed.');
-            } else {
-              Logger.instance.w(
-                '''Unknown NTRIP message: $event -> ${String.fromCharCodes(event)}''',
-              );
-            }
-          });
-          ref.onDispose(() {
-            data.socket.destroy();
-            Logger.instance.i('NTRIP client closed.');
-          });
-        }
-      },
-      error: (error, stackTrace) => Logger.instance.e(
-        'Failed to create NTRIP client.',
-        error: error,
-        stackTrace: stackTrace,
-      ),
-      loading: () {},
-    );
-  });
+            });
+            ref.onDispose(() {
+              data.socket.destroy();
+              Logger.instance.i('NTRIP client closed.');
+            });
+          }
+        },
+        error: (error, stackTrace) => Logger.instance.e(
+          'Failed to create NTRIP client.',
+          error: error,
+          stackTrace: stackTrace,
+        ),
+        loading: () {},
+      );
+    });
 
   final host = ref.watch(ntripHostProvider);
   final port = ref.watch(ntripPortProvider);
@@ -285,65 +259,4 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
     );
   }
   return null;
-}
-
-/// A provider for the quality of last GNSS position update.
-@riverpod
-class GnssCurrentFixQuality extends _$GnssCurrentFixQuality {
-  Timer? _resetTimer;
-  // DateTime? _prev;
-  @override
-  GnssFixQuality build() {
-    ref.listenSelf((previous, next) {
-      // final now = DateTime.now();
-      // if (_prev != null) {
-      //   print(now.difference(_prev!).inMicroseconds);
-      // }
-      // _prev = now;
-      _resetTimer?.cancel();
-      _resetTimer = Timer(
-        const Duration(milliseconds: 350),
-        () => ref.invalidateSelf(),
-      );
-      if (previous != next) {
-        Logger.instance
-            .i('GPS fix quality: ${next.name}, NMEA code: ${next.nmeaValue}');
-      }
-    });
-
-    return GnssFixQuality.notAvailable;
-  }
-
-  /// Updates [state] to [value].
-  void update(GnssFixQuality value) => Future(() => state = value);
-
-  /// Updates [state] to the [GnssFixQuality] that corresponds to [index].
-  void updateByIndex(int index) => Future(
-        () => state = GnssFixQuality.values.elementAtOrNull(index) ?? state,
-      );
-}
-
-/// A provider for the quality of last GNSS position update.
-@riverpod
-class GnssCurrentNumSatellites extends _$GnssCurrentNumSatellites {
-  Timer? _resetTimer;
-
-  @override
-  int? build() {
-    ref.listenSelf((previous, next) {
-      _resetTimer?.cancel();
-      _resetTimer = Timer(
-        const Duration(milliseconds: 350),
-        ref.invalidateSelf,
-      );
-      if (previous != next) {
-        Logger.instance.i('GPS satellite count: $next');
-      }
-    });
-
-    return null;
-  }
-
-  /// Updates [state] to [value].
-  void update(int? value) => Future(() => state = value);
 }

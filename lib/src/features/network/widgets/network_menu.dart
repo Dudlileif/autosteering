@@ -1,7 +1,6 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/network/network.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,25 +11,14 @@ class NetworkMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!Device.isWeb) {
-      ref
-        ..watch(hardwareCommunicationConfigProvider)
-        ..watch(ntripClientProvider)
-        ..watch(tcpServerProvider);
-    } else if (Device.isWeb) {
-      ref.watch(hardwareWebCommunicationConfigProvider);
-    }
-    if (Device.supportsSerial) {
-      ref.watch(gnssSerialStreamProvider);
-    }
-    ref.watch(sendMessagesToHardwareProvider);
+    ref.watch(combinedCommunicationProvider);
 
     return MenuButtonWithChildren(
       text: 'Network Menu',
       icon: Icons.settings_ethernet,
       menuChildren: [
         const NetworkHardwareMenu(),
-        if (!Device.isWeb) const NtripMenu(),
+        if (Device.isNative) const NtripMenu(),
         if (Device.supportsSerial) const GnssSerialMenu(),
       ],
     );

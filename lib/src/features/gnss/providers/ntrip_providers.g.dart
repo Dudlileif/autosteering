@@ -6,12 +6,12 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'44c8a35e570352d2f458f77c85c6e2b08f7bbb78';
+String _$ntripClientHash() => r'28642ca5102c537ce41a807921354c40a74d8f4d';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
-/// The receives NTRIP messages will be sent to the simulation core
-/// to be sent to the hardware.
+/// The received NTRIP messages will be split into parts and sent to the
+/// connected [GnssSerial] if connected or the [TcpServer].
 ///
 /// Copied from [ntripClient].
 @ProviderFor(ntripClient)
@@ -125,12 +125,12 @@ final ntripPasswordProvider = NotifierProvider<NtripPassword, String?>.internal(
 );
 
 typedef _$NtripPassword = Notifier<String?>;
-String _$ntripAliveHash() => r'3481bdcba2f93ca35cee15524a21a2c9dcc3ad4f';
+String _$ntripAliveHash() => r'49b669a2a8a8f00a00d88a92fb8745b0c118e9da';
 
 /// A provider for telling whether the [ntripClient] is receiving data.
 ///
-/// If not set to true in the last 5 seconds, it will invalidate itself and
-/// restart as false.
+/// If not set to true in the last 5 seconds, it will invalidate itself and the
+/// [ntripClient].
 ///
 /// Copied from [NtripAlive].
 @ProviderFor(NtripAlive)
@@ -144,43 +144,5 @@ final ntripAliveProvider = NotifierProvider<NtripAlive, bool>.internal(
 );
 
 typedef _$NtripAlive = Notifier<bool>;
-String _$gnssCurrentFixQualityHash() =>
-    r'b497d1ea971ad523deeef0f09cac27668b62e95c';
-
-/// A provider for the quality of last GNSS position update.
-///
-/// Copied from [GnssCurrentFixQuality].
-@ProviderFor(GnssCurrentFixQuality)
-final gnssCurrentFixQualityProvider =
-    AutoDisposeNotifierProvider<GnssCurrentFixQuality, GnssFixQuality>.internal(
-  GnssCurrentFixQuality.new,
-  name: r'gnssCurrentFixQualityProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gnssCurrentFixQualityHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$GnssCurrentFixQuality = AutoDisposeNotifier<GnssFixQuality>;
-String _$gnssCurrentNumSatellitesHash() =>
-    r'a29891d754c979e83ead329b8da4a2ebbc082f9a';
-
-/// A provider for the quality of last GNSS position update.
-///
-/// Copied from [GnssCurrentNumSatellites].
-@ProviderFor(GnssCurrentNumSatellites)
-final gnssCurrentNumSatellitesProvider =
-    AutoDisposeNotifierProvider<GnssCurrentNumSatellites, int?>.internal(
-  GnssCurrentNumSatellites.new,
-  name: r'gnssCurrentNumSatellitesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gnssCurrentNumSatellitesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$GnssCurrentNumSatellites = AutoDisposeNotifier<int?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

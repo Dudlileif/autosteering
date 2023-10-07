@@ -358,6 +358,34 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
       ref
           .read(gnssCurrentNumSatellitesProvider.notifier)
           .update(message.numSatellites);
+    } else if (message is ({double gnssHdop})) {
+      ref.read(gnssCurrentHdopProvider.notifier).update(message.gnssHdop);
+    } else if (message is ({double gnssAltitude})) {
+      ref
+          .read(gnssCurrentAltitudeProvider.notifier)
+          .update(message.gnssAltitude);
+    } else if (message is ({
+      DateTime gnssUpdateTimeDevice,
+      DateTime? gnssUpdateTimeReceiver,
+      Duration? gnssUpdateDelay,
+    })) {
+      ref.read(gnssLastUpdateTimeProvider.notifier).update(
+        (
+          device: message.gnssUpdateTimeDevice,
+          receiver: message.gnssUpdateTimeReceiver,
+          delay: message.gnssUpdateDelay,
+        ),
+      );
+    } else if (message is ({double? gnssCurrentFrequency})) {
+      ref
+          .read(gnssCurrentFrequencyProvider.notifier)
+          .update(message.gnssCurrentFrequency);
+    } else if (message is ({ImuReading? imuLatestRaw})) {
+      ref.read(imuCurrentReadingProvider.notifier).update(message.imuLatestRaw);
+    } else if (message is ({double? imuCurrentFrequency})) {
+      ref
+          .read(imuCurrentFrequencyProvider.notifier)
+          .update(message.imuCurrentFrequency);
     } else if (message is LogEvent) {
       Logger.instance.log(
         message.level,

@@ -15,9 +15,14 @@ class GnssSerialMenu extends StatelessWidget {
       iconOverrideWidget: Consumer(
         builder: (context, ref, child) => Icon(
           Icons.satellite_alt,
-          color: ref.watch(gnssSerialProvider.select((value) => value != null))
-              ? Colors.green
-              : null,
+          color: switch (
+              ref.watch(gnssSerialProvider.select((value) => value != null))) {
+            true => switch (ref.watch(gnssSerialAliveProvider)) {
+                true => Colors.green,
+                false => Colors.orange,
+              },
+            false => null
+          },
         ),
       ),
       menuChildren: [
