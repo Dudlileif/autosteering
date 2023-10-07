@@ -19,7 +19,7 @@ class NetworkHardwareMenu extends ConsumerWidget {
       text: 'Hardware',
       icon: Icons.router,
       menuChildren: [
-        if (!Device.isWeb)
+        if (Device.isNative)
           Consumer(
             builder: (context, ref, child) {
               final ip = ref.watch(deviceIPAdressWlanProvider).when(
@@ -38,7 +38,7 @@ $ip''',
               );
             },
           ),
-        if (!Device.isWeb)
+        if (Device.isNative)
           Consumer(
             builder: (context, ref, child) {
               final ip = ref.watch(deviceIPAdressEthernetProvider).when(
@@ -103,7 +103,7 @@ $ip''',
             ),
           ),
         ),
-        if (!Device.isWeb)
+        if (Device.isNative)
           Consumer(
             builder: (context, ref, child) => ListTile(
               leading: const Icon(Icons.call_received),
@@ -132,7 +132,7 @@ $ip''',
               ),
             ),
           ),
-        if (!Device.isWeb)
+        if (Device.isNative)
           Consumer(
             builder: (context, ref, child) => ListTile(
               leading: const Icon(Icons.send),

@@ -52,12 +52,12 @@ class FieldMenu extends ConsumerWidget {
               title: child,
               onTap: () async {
                 final result = await FilePicker.platform.pickFiles(
-                  initialDirectory: Device.isWeb
-                      ? null
-                      : [
+                  initialDirectory: Device.isNative
+                      ? [
                           ref.watch(fileDirectoryProvider).requireValue.path,
                           '/fields',
-                        ].join(),
+                        ].join()
+                      : null,
                   dialogTitle: 'Open field json file',
                   allowedExtensions: ['json'],
                   type: FileType.custom,

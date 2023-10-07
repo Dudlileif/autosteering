@@ -7,7 +7,7 @@ part of 'equipment_configurator_providers.dart';
 // **************************************************************************
 
 String _$loadFileConfiguredEquipmentHash() =>
-    r'9aa5faa431702a0b338e96ea978fdbb7f456a93f';
+    r'2c50b664e21f4cce3943c07b540c4934dc834834';
 
 /// A provider for loading a vehicle configuration from the user file directory
 /// and applying it to the [ConfiguredEquipment] provider.
@@ -56,7 +56,7 @@ String _$equipmentConfiguratorPageControllerHash() =>
 /// Copied from [EquipmentConfiguratorPageController].
 @ProviderFor(EquipmentConfiguratorPageController)
 final equipmentConfiguratorPageControllerProvider = AutoDisposeNotifierProvider<
-    EquipmentConfiguratorPageController, PageController>.internal(
+    EquipmentConfiguratorPageController, Raw<PageController>>.internal(
   EquipmentConfiguratorPageController.new,
   name: r'equipmentConfiguratorPageControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -67,7 +67,7 @@ final equipmentConfiguratorPageControllerProvider = AutoDisposeNotifierProvider<
 );
 
 typedef _$EquipmentConfiguratorPageController
-    = AutoDisposeNotifier<PageController>;
+    = AutoDisposeNotifier<Raw<PageController>>;
 String _$configuredEquipmentHash() =>
     r'd6fcdb2c7a05e34cfc6c8202508159aa8b1f5ee1';
 
@@ -96,7 +96,7 @@ String _$configuredEquipmentNameTextControllerHash() =>
 /// Copied from [ConfiguredEquipmentNameTextController].
 @ProviderFor(ConfiguredEquipmentNameTextController)
 final configuredEquipmentNameTextControllerProvider = NotifierProvider<
-    ConfiguredEquipmentNameTextController, TextEditingController>.internal(
+    ConfiguredEquipmentNameTextController, Raw<TextEditingController>>.internal(
   ConfiguredEquipmentNameTextController.new,
   name: r'configuredEquipmentNameTextControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -107,6 +107,6 @@ final configuredEquipmentNameTextControllerProvider = NotifierProvider<
 );
 
 typedef _$ConfiguredEquipmentNameTextController
-    = Notifier<TextEditingController>;
+    = Notifier<Raw<TextEditingController>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

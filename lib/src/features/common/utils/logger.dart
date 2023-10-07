@@ -25,7 +25,7 @@ class Logger {
   implementation.Logger? _fileLogger;
 
   set fileLogger(implementation.Logger? newLogger) {
-    if (!Device.isWeb && newLogger != null) {
+    if (Device.isNative && newLogger != null) {
       final messages = memoryOutput.buffer.toList(growable: false);
       memoryOutput.buffer.clear();
       for (final message in messages) {
@@ -133,7 +133,7 @@ class Logger {
       stackTrace: stackTrace,
     );
 
-    if (!Device.isWeb) {
+    if (Device.isNative) {
       (_fileLogger ??
               implementation.Logger(
                 printer: SimplePrinter(colors: false, printTime: true),

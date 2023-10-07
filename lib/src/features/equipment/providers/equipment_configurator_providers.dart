@@ -136,12 +136,12 @@ AsyncValue<Equipment?> loadFileConfiguredEquipment(
     allowedExtensions: ['json'],
     type: FileType.custom,
     dialogTitle: 'Choose equipment file',
-    initialDirectory: Device.isWeb
-        ? null
-        : [
+    initialDirectory: Device.isNative
+        ? [
             ref.watch(fileDirectoryProvider).requireValue.path,
             '/equipment',
-          ].join(),
+          ].join()
+        : null,
   ).then((pickedFiles) {
     if (Device.isWeb) {
       final data = pickedFiles?.files.first.bytes;

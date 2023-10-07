@@ -6,6 +6,9 @@ class Device {
   /// Whether the program is running in a web browser.
   static bool get isWeb => kIsWeb;
 
+  /// Whether the program is running on a native platform.
+  static bool get isNative => !kIsWeb;
+
   /// Whether the program is running on a desktop platform.
   static bool get isDesktop =>
       !isWeb && (Platform.isLinux || Platform.isWindows || Platform.isMacOS);

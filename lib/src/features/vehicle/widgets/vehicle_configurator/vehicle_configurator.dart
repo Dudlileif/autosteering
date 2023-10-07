@@ -241,7 +241,7 @@ class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
           ref.read(mainVehicleProvider.notifier).update(vehicle);
 
           ref.read(simInputProvider.notifier).send(vehicle);
-          if (!Device.isWeb) {
+          if (Device.isNative) {
             ref.read(saveVehicleProvider(vehicle));
           }
           Navigator.of(context).pop();

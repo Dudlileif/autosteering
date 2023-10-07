@@ -56,7 +56,7 @@ class SimCoreMenu extends StatelessWidget {
             title: child,
           ),
         ),
-        if (!Device.isWeb)
+        if (Device.isNative)
           Consumer(
             child: Text(
               'Restart sim core',

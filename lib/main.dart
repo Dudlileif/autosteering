@@ -10,7 +10,7 @@ import 'package:window_manager/window_manager.dart';
 Future<void> main() async {
   Logger.instance.i('Application startup initiated...');
   WidgetsFlutterBinding.ensureInitialized();
-  if (!Device.isWeb) {
+  if (Device.isNative) {
     await WakelockPlus.enable();
     Logger.instance.i('Wakelock enabled.');
   }

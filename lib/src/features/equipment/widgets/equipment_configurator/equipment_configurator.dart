@@ -234,7 +234,7 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
               .read(simInputProvider.notifier)
               .send((updatedEquipment: equipment));
 
-          if (!Device.isWeb) {
+          if (Device.isNative) {
             ref.read(saveEquipmentProvider(equipment));
           }
           Navigator.of(context).pop();

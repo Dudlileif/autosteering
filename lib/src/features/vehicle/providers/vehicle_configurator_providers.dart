@@ -128,12 +128,12 @@ AsyncValue<Vehicle?> loadFileConfiguredVehicle(
     allowedExtensions: ['json'],
     type: FileType.custom,
     dialogTitle: 'Choose vehicle file',
-    initialDirectory: Device.isWeb
-        ? null
-        : [
+    initialDirectory: Device.isNative
+        ? [
             ref.watch(fileDirectoryProvider).requireValue.path,
             '/vehicles',
-          ].join(),
+          ].join()
+        : null,
   ).then((pickedFiles) {
     if (Device.isWeb) {
       final data = pickedFiles?.files.first.bytes;

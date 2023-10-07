@@ -42,7 +42,7 @@ dependencies:
         sdk: flutter
     flutter_libserialport: ^0.3.0
     flutter_map: ^5.0.0
-    flutter_riverpod: ^2.4.1
+    flutter_riverpod: ^2.4.3
     flutter_shaders: ^0.1.2
     freezed_annotation: ^2.4.1
     # gamepads: ^0.1.1
@@ -53,8 +53,8 @@ dependencies:
     logger: ^2.0.2+1
     nmea: ^3.2.0
     path_provider: ^2.1.1
-    permission_handler: ^11.0.0
-    riverpod_annotation: ^2.1.6
+    permission_handler: ^11.0.1
+    riverpod_annotation: ^2.2.0
     themed: ^4.0.0
     udp: ^5.0.3
     universal_html: ^2.2.4
@@ -72,8 +72,8 @@ dev_dependencies:
         sdk: flutter
     freezed: ^2.4.3
     json_serializable: ^6.7.1
-    riverpod_generator: ^2.3.3
-    riverpod_lint: ^2.1.1
+    riverpod_generator: ^3.0.0-dev.3
+    riverpod_lint: ^2.3.0
     very_good_analysis: ^5.1.0
 
 # For information on the generic Dart part of this file, see the

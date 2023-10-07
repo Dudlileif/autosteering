@@ -36,12 +36,12 @@ class SentinelLayers extends ConsumerWidget {
                 maxNativeZoom: 18,
                 userAgentPackageName: 'agopengps_flutter',
                 maxZoom: 22,
-                tileProvider: switch (Device.isWeb) {
-                  true => null,
-                  false => FileCachedTileProvider(
+                tileProvider: switch (Device.isNative) {
+                  true => FileCachedTileProvider(
                       layer: layer.layerData,
                       ref: ref,
-                    )
+                    ),
+                  false => null,
                 },
               ),
             ),

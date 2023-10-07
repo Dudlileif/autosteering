@@ -80,6 +80,7 @@ class DirectorySizeFamily extends Family<AsyncValue<int?>> {
     );
   }
 
+  @visibleForOverriding
   @override
   DirectorySizeProvider getProviderOverride(
     covariant DirectorySizeProvider provider,
@@ -232,6 +233,7 @@ class DirectoryDeleteFamily extends Family<AsyncValue<bool>> {
     );
   }
 
+  @visibleForOverriding
   @override
   DirectoryDeleteProvider getProviderOverride(
     covariant DirectoryDeleteProvider provider,
@@ -393,6 +395,7 @@ class SaveJsonToFileDirectoryFamily extends Family<AsyncValue<void>> {
     );
   }
 
+  @visibleForOverriding
   @override
   SaveJsonToFileDirectoryProvider getProviderOverride(
     covariant SaveJsonToFileDirectoryProvider provider,
@@ -566,7 +569,7 @@ class SavedFilesFamily extends Family<AsyncValue<List<dynamic>>> {
   ///
   /// Copied from [savedFiles].
   SavedFilesProvider call({
-    required dynamic Function(Map<String, dynamic>) fromJson,
+    required dynamic Function(Map<String, dynamic> json) fromJson,
     required String folder,
   }) {
     return SavedFilesProvider(
@@ -575,6 +578,7 @@ class SavedFilesFamily extends Family<AsyncValue<List<dynamic>>> {
     );
   }
 
+  @visibleForOverriding
   @override
   SavedFilesProvider getProviderOverride(
     covariant SavedFilesProvider provider,
@@ -610,7 +614,7 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
   ///
   /// Copied from [savedFiles].
   SavedFilesProvider({
-    required dynamic Function(Map<String, dynamic>) fromJson,
+    required dynamic Function(Map<String, dynamic> json) fromJson,
     required String folder,
   }) : this._internal(
           (ref) => savedFiles(
@@ -642,7 +646,7 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
     required this.folder,
   }) : super.internal();
 
-  final dynamic Function(Map<String, dynamic>) fromJson;
+  final dynamic Function(Map<String, dynamic> json) fromJson;
   final String folder;
 
   @override
@@ -688,7 +692,7 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
 
 mixin SavedFilesRef on FutureProviderRef<List<dynamic>> {
   /// The parameter `fromJson` of this provider.
-  dynamic Function(Map<String, dynamic>) get fromJson;
+  dynamic Function(Map<String, dynamic> json) get fromJson;
 
   /// The parameter `folder` of this provider.
   String get folder;
@@ -699,10 +703,10 @@ class _SavedFilesProviderElement extends FutureProviderElement<List<dynamic>>
   _SavedFilesProviderElement(super.provider);
 
   @override
-  dynamic Function(Map<String, dynamic>) get fromJson =>
+  dynamic Function(Map<String, dynamic> json) get fromJson =>
       (origin as SavedFilesProvider).fromJson;
   @override
   String get folder => (origin as SavedFilesProvider).folder;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter
