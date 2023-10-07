@@ -65,6 +65,7 @@ class SaveVehicleFamily extends Family<AsyncValue<void>> {
     );
   }
 
+  @visibleForOverriding
   @override
   SaveVehicleProvider getProviderOverride(
     covariant SaveVehicleProvider provider,
@@ -243,6 +244,7 @@ class LoadVehicleFromFileFamily extends Family<AsyncValue<Vehicle?>> {
     );
   }
 
+  @visibleForOverriding
   @override
   LoadVehicleFromFileProvider getProviderOverride(
     covariant LoadVehicleFromFileProvider provider,
@@ -410,5 +412,219 @@ final autoSteerEnabledProvider =
 );
 
 typedef _$AutoSteerEnabled = Notifier<bool>;
+String _$gaugesAverageCountHash() =>
+    r'8b36c1bc95239048650b55ea1f7da6920ea3ddc0';
+
+/// A provider for the number of previous positions to use for calculating
+/// the gauge velocity and bearing values.
+///
+/// Copied from [GaugesAverageCount].
+@ProviderFor(GaugesAverageCount)
+final gaugesAverageCountProvider =
+    NotifierProvider<GaugesAverageCount, int>.internal(
+  GaugesAverageCount.new,
+  name: r'gaugesAverageCountProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$gaugesAverageCountHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$GaugesAverageCount = Notifier<int>;
+String _$imuCurrentFrequencyHash() =>
+    r'37d83d64c27e1793cca6b546e9777fa0157c86bc';
+
+/// A provider for the frequency of the IMU updates.
+///
+/// Copied from [ImuCurrentFrequency].
+@ProviderFor(ImuCurrentFrequency)
+final imuCurrentFrequencyProvider =
+    AutoDisposeNotifierProvider<ImuCurrentFrequency, double?>.internal(
+  ImuCurrentFrequency.new,
+  name: r'imuCurrentFrequencyProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$imuCurrentFrequencyHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ImuCurrentFrequency = AutoDisposeNotifier<double?>;
+String _$imuCurrentReadingHash() => r'52018dd12927d1890edb4af3670eee380615e279';
+
+/// A provider for the current raw [ImuReading] from the hardware.
+///
+/// Copied from [ImuCurrentReading].
+@ProviderFor(ImuCurrentReading)
+final imuCurrentReadingProvider =
+    AutoDisposeNotifierProvider<ImuCurrentReading, ImuReading?>.internal(
+  ImuCurrentReading.new,
+  name: r'imuCurrentReadingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$imuCurrentReadingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ImuCurrentReading = AutoDisposeNotifier<ImuReading?>;
+String _$imuSerialFrequencyHash() =>
+    r'3bed921ac11f6dd6d1f76a9424c244b95fcbc6f0';
+
+abstract class _$ImuSerialFrequency
+    extends BuildlessAutoDisposeNotifier<double?> {
+  late final int count;
+
+  double? build({
+    int count = 20,
+  });
+}
+
+/// A provider for the current frequency of IMU updates over serial.
+///
+/// Copied from [ImuSerialFrequency].
+@ProviderFor(ImuSerialFrequency)
+const imuSerialFrequencyProvider = ImuSerialFrequencyFamily();
+
+/// A provider for the current frequency of IMU updates over serial.
+///
+/// Copied from [ImuSerialFrequency].
+class ImuSerialFrequencyFamily extends Family<double?> {
+  /// A provider for the current frequency of IMU updates over serial.
+  ///
+  /// Copied from [ImuSerialFrequency].
+  const ImuSerialFrequencyFamily();
+
+  /// A provider for the current frequency of IMU updates over serial.
+  ///
+  /// Copied from [ImuSerialFrequency].
+  ImuSerialFrequencyProvider call({
+    int count = 20,
+  }) {
+    return ImuSerialFrequencyProvider(
+      count: count,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ImuSerialFrequencyProvider getProviderOverride(
+    covariant ImuSerialFrequencyProvider provider,
+  ) {
+    return call(
+      count: provider.count,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'imuSerialFrequencyProvider';
+}
+
+/// A provider for the current frequency of IMU updates over serial.
+///
+/// Copied from [ImuSerialFrequency].
+class ImuSerialFrequencyProvider
+    extends AutoDisposeNotifierProviderImpl<ImuSerialFrequency, double?> {
+  /// A provider for the current frequency of IMU updates over serial.
+  ///
+  /// Copied from [ImuSerialFrequency].
+  ImuSerialFrequencyProvider({
+    int count = 20,
+  }) : this._internal(
+          () => ImuSerialFrequency()..count = count,
+          from: imuSerialFrequencyProvider,
+          name: r'imuSerialFrequencyProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$imuSerialFrequencyHash,
+          dependencies: ImuSerialFrequencyFamily._dependencies,
+          allTransitiveDependencies:
+              ImuSerialFrequencyFamily._allTransitiveDependencies,
+          count: count,
+        );
+
+  ImuSerialFrequencyProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.count,
+  }) : super.internal();
+
+  final int count;
+
+  @override
+  double? runNotifierBuild(
+    covariant ImuSerialFrequency notifier,
+  ) {
+    return notifier.build(
+      count: count,
+    );
+  }
+
+  @override
+  Override overrideWith(ImuSerialFrequency Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: ImuSerialFrequencyProvider._internal(
+        () => create()..count = count,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        count: count,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeNotifierProviderElement<ImuSerialFrequency, double?>
+      createElement() {
+    return _ImuSerialFrequencyProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImuSerialFrequencyProvider && other.count == count;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, count.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ImuSerialFrequencyRef on AutoDisposeNotifierProviderRef<double?> {
+  /// The parameter `count` of this provider.
+  int get count;
+}
+
+class _ImuSerialFrequencyProviderElement
+    extends AutoDisposeNotifierProviderElement<ImuSerialFrequency, double?>
+    with ImuSerialFrequencyRef {
+  _ImuSerialFrequencyProviderElement(super.provider);
+
+  @override
+  int get count => (origin as ImuSerialFrequencyProvider).count;
+}
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

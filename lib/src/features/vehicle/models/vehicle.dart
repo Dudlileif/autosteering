@@ -38,7 +38,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     super.name,
     super.uuid,
     this.pathTrackingMode = PathTrackingMode.purePursuit,
-    ImuConfig? imuConfig,
+    Imu? imu,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
@@ -53,7 +53,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         _roll = roll,
         _velocity = velocity,
         antennaPosition = position,
-        imuConfig = imuConfig ?? const ImuConfig(),
+        imu = imu ?? Imu(),
         pidParameters = pidParameters ?? const PidParameters(),
         stanleyParameters = stanleyParameters ?? const StanleyParameters(),
         purePursuitParameters =
@@ -70,7 +70,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     final info = Map<String, dynamic>.from(json['info'] as Map);
     final type = info['vehicle_type'];
-
 
     final vehicle = switch (type) {
       'Tractor' => Tractor.fromJson(json),
@@ -111,39 +110,42 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       vehicle.attachChild(hitchRearTowbarChild, Hitch.rearTowbar);
     }
 
-    final imuConfig = json.containsKey('imu_config')
-        ? ImuConfig.fromJson(
-            Map<String, dynamic>.from(json['imu_config'] as Map),
+    final steering = Map<String, dynamic>.from(json['steering'] as Map);
+
+    final imu = json.containsKey('imu_config')
+        ? Imu(
+            config: ImuConfig.fromJson(
+              Map<String, dynamic>.from(json['imu_config'] as Map),
+            ),
           )
-        : null;
+        : Imu();
 
-
-    final pidParameters = json.containsKey('pid_parameters')
+    final pidParameters = steering.containsKey('pid_parameters')
         ? PidParameters.fromJson(
-            Map<String, dynamic>.from(json['pid_parameters'] as Map),
+            Map<String, dynamic>.from(steering['pid_parameters'] as Map),
           )
         : null;
 
-    final purePursuitParameters = json.containsKey('pure_pursuit_parameters')
-        ? PurePursuitParameters.fromJson(
-            Map<String, dynamic>.from(json['pure_pursuit_parameters'] as Map),
-          )
-        : null;
+    final purePursuitParameters =
+        steering.containsKey('pure_pursuit_parameters')
+            ? PurePursuitParameters.fromJson(
+                Map<String, dynamic>.from(
+                  steering['pure_pursuit_parameters'] as Map,
+                ),
+              )
+            : null;
 
-    final stanleyParameters = json.containsKey('stanley_parameters')
+    final stanleyParameters = steering.containsKey('stanley_parameters')
         ? StanleyParameters.fromJson(
-            Map<String, dynamic>.from(json['stanley_parameters'] as Map),
+            Map<String, dynamic>.from(steering['stanley_parameters'] as Map),
           )
         : null;
-
-  
 
     return vehicle.copyWith(
-      imuConfig: imuConfig,
+      imu: imu,
       pidParameters: pidParameters,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
-  
     );
   }
 
@@ -208,8 +210,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Bearing as set from the outside.
   double _bearing = 0;
 
-  /// The IMU (inertial measurement unit) configuration for this vehicle.
-  ImuConfig imuConfig;
+  /// The IMU (inertial measurement unit) for this vehicle.
+  Imu imu;
 
   /// Antenna position of the vehicle.
   Geographic antennaPosition;
@@ -226,7 +228,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The projected ground position of the centered antenna of this vehicle
   /// accounting for [pitch] and [roll].
   @override
-  Geographic get position => switch (imuConfig.usePitchAndRoll) {
+  Geographic get position => switch (imu.config.usePitchAndRoll) {
         false => antennaPosition,
         true => antennaPosition.spherical
             .destinationPoint(
@@ -262,7 +264,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       bearing: bearing - 90,
     );
 
-    antennaPosition = switch (imuConfig.usePitchAndRoll) {
+    antennaPosition = switch (imu.config.usePitchAndRoll) {
       false => unCentered,
       true => unCentered.spherical
           .destinationPoint(
@@ -288,7 +290,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The bearing of the vehicle, in degrees.
   @override
-  double get bearing => (_bearing - imuConfig.zeroValues.bearingZero).wrap360();
+  double get bearing =>
+      switch (imu.config.useYaw) { true => imu.bearing, false => _bearing };
+
+  /// The raw outside set bearing of the vehicle, typically from
+  /// GNSS point to point bearing.
+  double get bearingRaw => _bearing;
 
   /// Update the bearing of the vehicle, [value] in degrees.
   @override
@@ -296,31 +303,17 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The pitch of the vehicle as degrees of inclination around the x-axis
   /// (across) the vehicle in the forward direction.
-  double get pitch =>
-      switch (imuConfig.swapPitchAndRoll) {
-        false => (_pitch - imuConfig.zeroValues.pitchZero).clamp(-90, 90),
-        true => (_roll - imuConfig.zeroValues.rollZero).clamp(-180, 180)
-      } *
-      switch (imuConfig.invertPitch) {
-        true => -1,
-        false => 1,
-      } *
-      imuConfig.pitchGain;
+  double get pitch => switch (imu.config.usePitchAndRoll) {
+        true => imu.pitch,
+        false => _pitch
+      };
 
   set pitch(double value) => _pitch = value;
 
   /// The roll of the vehicle as degrees of roll around the y-axis (along) the
   /// vehicle in the forward direction.
   double get roll =>
-      switch (imuConfig.swapPitchAndRoll) {
-        false => (_roll - imuConfig.zeroValues.rollZero).clamp(-180, 180),
-        true => (_pitch - imuConfig.zeroValues.pitchZero).clamp(-90, 90)
-      } *
-      switch (imuConfig.invertRoll) {
-        true => -1,
-        false => 1,
-      } *
-      imuConfig.rollGain;
+      switch (imu.config.usePitchAndRoll) { true => imu.roll, false => _roll };
 
   set roll(double value) => _roll = value;
 
@@ -418,15 +411,16 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// afterwards.
   void updatePositionAndBearing(
     double period,
-    Geographic? turningCircleCenter,
-  ) {
+    Geographic? turningCircleCenter, {
+    bool force = false,
+  }) {
     if (period > 0) {
       if (angularVelocity != null && turningCircleCenter != null) {
         final updated =
             updatedPositionAndBearingTurning(period, turningCircleCenter);
         setPositionSim(updated.position);
         bearing = updated.bearing;
-      } else if (velocity.abs() > 0) {
+      } else if (velocity.abs() > 0 || force) {
         setPositionSim(updatedPositionStraight(period));
       }
       updateChildren();
@@ -536,7 +530,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleMax,
     double? trackWidth,
     bool? invertSteeringInput,
-    ImuConfig? imuConfig,
+    Imu? imu,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -575,7 +569,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       'track_width': trackWidth,
     };
 
-    map['imu_config'] = imuConfig;
+    map['imu_config'] = imu.config;
 
     map['pid_parameters'] = pidParameters;
 

@@ -42,18 +42,18 @@ class ImuConfigurator extends StatelessWidget {
             children: [
               Consumer(
                 child: Text(
-                  'Use IMU bearing',
+                  'Use IMU yaw',
                   style: theme.textTheme.bodyLarge,
                 ),
                 builder: (context, ref, child) => CheckboxListTile(
                   value: ref.watch(
                     mainVehicleProvider
-                        .select((value) => value.imuConfig.useBearing),
+                        .select((value) => value.imu.config.useYaw),
                   ),
                   onChanged: (value) {
                     if (value != null) {
                       ref.read(simInputProvider.notifier).send(
-                        (useIMUBearing: value),
+                        (useIMUYaw: value),
                       );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
@@ -61,7 +61,7 @@ class ImuConfigurator extends StatelessWidget {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
-                          '''Updated vehicle IMU use bearing: ${!value} -> ${vehicle.imuConfig.useBearing}''',
+                          '''Updated vehicle IMU use yaw: ${!value} -> ${vehicle.imu.config.useYaw}''',
                         );
                       });
                     }
@@ -77,7 +77,7 @@ class ImuConfigurator extends StatelessWidget {
                 builder: (context, ref, child) => CheckboxListTile(
                   value: ref.watch(
                     mainVehicleProvider.select(
-                      (vehicle) => vehicle.imuConfig.usePitchAndRoll,
+                      (vehicle) => vehicle.imu.config.usePitchAndRoll,
                     ),
                   ),
                   onChanged: (value) {
@@ -91,7 +91,7 @@ class ImuConfigurator extends StatelessWidget {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
-                          '''Updated vehicle IMU use pitch and roll: ${!value} -> ${vehicle.imuConfig.usePitchAndRoll}''',
+                          '''Updated vehicle IMU use pitch and roll: ${!value} -> ${vehicle.imu.config.usePitchAndRoll}''',
                         );
                       });
                     }
@@ -107,7 +107,7 @@ class ImuConfigurator extends StatelessWidget {
                 builder: (context, ref, child) => CheckboxListTile(
                   value: ref.watch(
                     mainVehicleProvider.select(
-                      (vehicle) => vehicle.imuConfig.swapPitchAndRoll,
+                      (vehicle) => vehicle.imu.config.swapPitchAndRoll,
                     ),
                   ),
                   onChanged: (value) {
@@ -121,7 +121,7 @@ class ImuConfigurator extends StatelessWidget {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
-                          '''Updated vehicle IMU swap pitch and roll: ${!value} -> ${vehicle.imuConfig.swapPitchAndRoll}''',
+                          '''Updated vehicle IMU swap pitch and roll: ${!value} -> ${vehicle.imu.config.swapPitchAndRoll}''',
                         );
                       });
                     }
@@ -137,7 +137,7 @@ class ImuConfigurator extends StatelessWidget {
                 builder: (context, ref, child) => CheckboxListTile(
                   value: ref.watch(
                     mainVehicleProvider
-                        .select((vehicle) => vehicle.imuConfig.invertPitch),
+                        .select((vehicle) => vehicle.imu.config.invertPitch),
                   ),
                   onChanged: (value) {
                     if (value != null) {
@@ -150,7 +150,7 @@ class ImuConfigurator extends StatelessWidget {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
-                          '''Updated vehicle IMU invert pitch: ${!value} -> ${vehicle.imuConfig.invertPitch}''',
+                          '''Updated vehicle IMU invert pitch: ${!value} -> ${vehicle.imu.config.invertPitch}''',
                         );
                       });
                     }
@@ -166,7 +166,7 @@ class ImuConfigurator extends StatelessWidget {
                 builder: (context, ref, child) => CheckboxListTile(
                   value: ref.watch(
                     mainVehicleProvider
-                        .select((vehicle) => vehicle.imuConfig.invertRoll),
+                        .select((vehicle) => vehicle.imu.config.invertRoll),
                   ),
                   onChanged: (value) {
                     if (value != null) {
@@ -179,7 +179,7 @@ class ImuConfigurator extends StatelessWidget {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
-                          '''Updated vehicle IMU invert roll: ${!value} -> ${vehicle.imuConfig.invertRoll}''',
+                          '''Updated vehicle IMU invert roll: ${!value} -> ${vehicle.imu.config.invertRoll}''',
                         );
                       });
                     }
@@ -266,7 +266,7 @@ class ImuConfigurator extends StatelessWidget {
                 builder: (context, ref, child) {
                   var pitchGain = ref.read(
                     mainVehicleProvider
-                        .select((value) => value.imuConfig.pitchGain),
+                        .select((value) => value.imu.config.pitchGain),
                   );
                   return StatefulBuilder(
                     builder: (context, setState) => Column(
@@ -293,7 +293,7 @@ class ImuConfigurator extends StatelessWidget {
                                         ref.watch(mainVehicleProvider);
                                     ref.read(saveVehicleProvider(vehicle));
                                     Logger.instance.i(
-                                      '''Updated vehicle IMU pitch gain: $oldValue -> ${vehicle.imuConfig.pitchGain}''',
+                                      '''Updated vehicle IMU pitch gain: $oldValue -> ${vehicle.imu.config.pitchGain}''',
                                     );
                                   },
                                 );
@@ -309,7 +309,7 @@ class ImuConfigurator extends StatelessWidget {
                           onChangeEnd: (value) {
                             final oldValue = ref.read(
                               mainVehicleProvider.select(
-                                (value) => value.imuConfig.pitchGain,
+                                (value) => value.imu.config.pitchGain,
                               ),
                             );
                             ref
@@ -323,7 +323,7 @@ class ImuConfigurator extends StatelessWidget {
                                 final vehicle = ref.watch(mainVehicleProvider);
                                 ref.read(saveVehicleProvider(vehicle));
                                 Logger.instance.i(
-                                  '''Updated vehicle IMU pitch gain: $oldValue -> ${vehicle.imuConfig.pitchGain}''',
+                                  '''Updated vehicle IMU pitch gain: $oldValue -> ${vehicle.imu.config.pitchGain}''',
                                 );
                               },
                             );
@@ -340,7 +340,7 @@ class ImuConfigurator extends StatelessWidget {
                 builder: (context, ref, child) {
                   var rollGain = ref.read(
                     mainVehicleProvider
-                        .select((value) => value.imuConfig.rollGain),
+                        .select((value) => value.imu.config.rollGain),
                   );
                   return StatefulBuilder(
                     builder: (context, setState) => Column(
@@ -369,7 +369,7 @@ class ImuConfigurator extends StatelessWidget {
                                       saveVehicleProvider(vehicle),
                                     );
                                     Logger.instance.i(
-                                      '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imuConfig.rollGain}''',
+                                      '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imu.config.rollGain}''',
                                     );
                                   },
                                 );
@@ -385,7 +385,7 @@ class ImuConfigurator extends StatelessWidget {
                           onChangeEnd: (value) {
                             final oldValue = ref.read(
                               mainVehicleProvider.select(
-                                (value) => value.imuConfig.rollGain,
+                                (value) => value.imu.config.rollGain,
                               ),
                             );
                             ref
@@ -399,7 +399,7 @@ class ImuConfigurator extends StatelessWidget {
                                 final vehicle = ref.watch(mainVehicleProvider);
                                 ref.read(saveVehicleProvider(vehicle));
                                 Logger.instance.i(
-                                  '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imuConfig.rollGain}''',
+                                  '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imu.config.rollGain}''',
                                 );
                               },
                             );
@@ -422,7 +422,7 @@ class ImuConfigurator extends StatelessWidget {
                   onTap: () {
                     final oldValues = ref.read(
                       mainVehicleProvider
-                          .select((value) => value.imuConfig.zeroValues),
+                          .select((value) => value.imu.config.zeroValues),
                     );
                     ref
                         .read(simInputProvider.notifier)
@@ -435,7 +435,7 @@ class ImuConfigurator extends StatelessWidget {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
-                          '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imuConfig.zeroValues}''',
+                          '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imu.config.zeroValues}''',
                         );
                       },
                     );
@@ -452,7 +452,7 @@ class ImuConfigurator extends StatelessWidget {
                   onTap: () {
                     final oldValues = ref.read(
                       mainVehicleProvider
-                          .select((value) => value.imuConfig.zeroValues),
+                          .select((value) => value.imu.config.zeroValues),
                     );
                     ref
                         .read(simInputProvider.notifier)
@@ -465,7 +465,7 @@ class ImuConfigurator extends StatelessWidget {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
-                          '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imuConfig.zeroValues}''',
+                          '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imu.config.zeroValues}''',
                         );
                       },
                     );
@@ -482,7 +482,7 @@ class ImuConfigurator extends StatelessWidget {
                   onTap: () {
                     final oldValues = ref.read(
                       mainVehicleProvider
-                          .select((value) => value.imuConfig.zeroValues),
+                          .select((value) => value.imu.config.zeroValues),
                     );
                     ref
                         .read(simInputProvider.notifier)
@@ -495,9 +495,49 @@ class ImuConfigurator extends StatelessWidget {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
-                          '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imuConfig.zeroValues}''',
+                          '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imu.config.zeroValues}''',
                         );
                       },
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final imuReading = ref.watch(imuCurrentReadingProvider);
+
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Raw IMU readings',
+                          style: theme.textTheme.bodyLarge,
+                        ),
+                        if (imuReading != null) ...[
+                          Text(
+                            '''Yaw from startup: ${imuReading.yawFromStartup.toStringAsFixed(1)}º''',
+                          ),
+                          Text(
+                            'Pitch: ${imuReading.pitch.toStringAsFixed(1)}º',
+                          ),
+                          Text(
+                            'Roll: ${imuReading.roll.toStringAsFixed(1)}º',
+                          ),
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final freq =
+                                  ref.watch(imuCurrentFrequencyProvider);
+
+                              return Text(
+                                '''Update frequency: ${freq?.toStringAsFixed(1)} Hz''',
+                              );
+                            },
+                          ),
+                        ] else
+                          const Text('Not receiving IMU readings'),
+                      ],
                     );
                   },
                 ),

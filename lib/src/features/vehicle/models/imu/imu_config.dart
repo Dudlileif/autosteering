@@ -18,8 +18,10 @@ class ImuConfig with _$ImuConfig {
   ///
   /// [zeroValues] are the zero values for each of the axes of the IMU.
   ///
-  /// [useBearing] is whether the vehicle's bearing should be the one from the
-  /// IMU.
+  /// [useYaw] is whether the vehicle's yaw should be corrected by the
+  /// yaw from the IMU.
+  ///
+  /// [invertYaw] is whether the yaw axis should be inverted.
   ///
   /// [invertPitch] is whether the pich axis should be inverted.
   ///
@@ -40,7 +42,10 @@ class ImuConfig with _$ImuConfig {
     @Default(ImuZeroValues()) ImuZeroValues zeroValues,
 
     /// Whether the vehicle's bearing should be the one from the IMU.
-    @Default(false) bool useBearing,
+    @Default(false) bool useYaw,
+
+    /// Whether the bearing axis should be inverted.
+    @Default(false) bool invertYaw,
 
     /// Whether the pitch axis should be inverted.
     @Default(false) bool invertPitch,

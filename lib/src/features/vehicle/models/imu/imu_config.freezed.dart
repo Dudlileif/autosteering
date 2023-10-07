@@ -31,7 +31,10 @@ mixin _$ImuConfig {
   ImuZeroValues get zeroValues => throw _privateConstructorUsedError;
 
   /// Whether the vehicle's bearing should be the one from the IMU.
-  bool get useBearing => throw _privateConstructorUsedError;
+  bool get useYaw => throw _privateConstructorUsedError;
+
+  /// Whether the bearing axis should be inverted.
+  bool get invertYaw => throw _privateConstructorUsedError;
 
   /// Whether the pitch axis should be inverted.
   bool get invertPitch => throw _privateConstructorUsedError;
@@ -60,7 +63,8 @@ abstract class $ImuConfigCopyWith<$Res> {
       {bool usePitchAndRoll,
       bool swapPitchAndRoll,
       ImuZeroValues zeroValues,
-      bool useBearing,
+      bool useYaw,
+      bool invertYaw,
       bool invertPitch,
       bool invertRoll,
       double pitchGain,
@@ -85,7 +89,8 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
     Object? usePitchAndRoll = null,
     Object? swapPitchAndRoll = null,
     Object? zeroValues = null,
-    Object? useBearing = null,
+    Object? useYaw = null,
+    Object? invertYaw = null,
     Object? invertPitch = null,
     Object? invertRoll = null,
     Object? pitchGain = null,
@@ -104,9 +109,13 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
           ? _value.zeroValues
           : zeroValues // ignore: cast_nullable_to_non_nullable
               as ImuZeroValues,
-      useBearing: null == useBearing
-          ? _value.useBearing
-          : useBearing // ignore: cast_nullable_to_non_nullable
+      useYaw: null == useYaw
+          ? _value.useYaw
+          : useYaw // ignore: cast_nullable_to_non_nullable
+              as bool,
+      invertYaw: null == invertYaw
+          ? _value.invertYaw
+          : invertYaw // ignore: cast_nullable_to_non_nullable
               as bool,
       invertPitch: null == invertPitch
           ? _value.invertPitch
@@ -148,7 +157,8 @@ abstract class _$$ImuConfigImplCopyWith<$Res>
       {bool usePitchAndRoll,
       bool swapPitchAndRoll,
       ImuZeroValues zeroValues,
-      bool useBearing,
+      bool useYaw,
+      bool invertYaw,
       bool invertPitch,
       bool invertRoll,
       double pitchGain,
@@ -172,7 +182,8 @@ class __$$ImuConfigImplCopyWithImpl<$Res>
     Object? usePitchAndRoll = null,
     Object? swapPitchAndRoll = null,
     Object? zeroValues = null,
-    Object? useBearing = null,
+    Object? useYaw = null,
+    Object? invertYaw = null,
     Object? invertPitch = null,
     Object? invertRoll = null,
     Object? pitchGain = null,
@@ -191,9 +202,13 @@ class __$$ImuConfigImplCopyWithImpl<$Res>
           ? _value.zeroValues
           : zeroValues // ignore: cast_nullable_to_non_nullable
               as ImuZeroValues,
-      useBearing: null == useBearing
-          ? _value.useBearing
-          : useBearing // ignore: cast_nullable_to_non_nullable
+      useYaw: null == useYaw
+          ? _value.useYaw
+          : useYaw // ignore: cast_nullable_to_non_nullable
+              as bool,
+      invertYaw: null == invertYaw
+          ? _value.invertYaw
+          : invertYaw // ignore: cast_nullable_to_non_nullable
               as bool,
       invertPitch: null == invertPitch
           ? _value.invertPitch
@@ -222,7 +237,8 @@ class _$ImuConfigImpl implements _ImuConfig {
       {this.usePitchAndRoll = true,
       this.swapPitchAndRoll = false,
       this.zeroValues = const ImuZeroValues(),
-      this.useBearing = false,
+      this.useYaw = false,
+      this.invertYaw = false,
       this.invertPitch = false,
       this.invertRoll = false,
       this.pitchGain = 1,
@@ -250,7 +266,12 @@ class _$ImuConfigImpl implements _ImuConfig {
   /// Whether the vehicle's bearing should be the one from the IMU.
   @override
   @JsonKey()
-  final bool useBearing;
+  final bool useYaw;
+
+  /// Whether the bearing axis should be inverted.
+  @override
+  @JsonKey()
+  final bool invertYaw;
 
   /// Whether the pitch axis should be inverted.
   @override
@@ -274,7 +295,7 @@ class _$ImuConfigImpl implements _ImuConfig {
 
   @override
   String toString() {
-    return 'ImuConfig(usePitchAndRoll: $usePitchAndRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useBearing: $useBearing, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain)';
+    return 'ImuConfig(usePitchAndRoll: $usePitchAndRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain)';
   }
 
   @override
@@ -288,8 +309,9 @@ class _$ImuConfigImpl implements _ImuConfig {
                 other.swapPitchAndRoll == swapPitchAndRoll) &&
             (identical(other.zeroValues, zeroValues) ||
                 other.zeroValues == zeroValues) &&
-            (identical(other.useBearing, useBearing) ||
-                other.useBearing == useBearing) &&
+            (identical(other.useYaw, useYaw) || other.useYaw == useYaw) &&
+            (identical(other.invertYaw, invertYaw) ||
+                other.invertYaw == invertYaw) &&
             (identical(other.invertPitch, invertPitch) ||
                 other.invertPitch == invertPitch) &&
             (identical(other.invertRoll, invertRoll) ||
@@ -307,7 +329,8 @@ class _$ImuConfigImpl implements _ImuConfig {
       usePitchAndRoll,
       swapPitchAndRoll,
       zeroValues,
-      useBearing,
+      useYaw,
+      invertYaw,
       invertPitch,
       invertRoll,
       pitchGain,
@@ -332,7 +355,8 @@ abstract class _ImuConfig implements ImuConfig {
       {final bool usePitchAndRoll,
       final bool swapPitchAndRoll,
       final ImuZeroValues zeroValues,
-      final bool useBearing,
+      final bool useYaw,
+      final bool invertYaw,
       final bool invertPitch,
       final bool invertRoll,
       final double pitchGain,
@@ -357,7 +381,11 @@ abstract class _ImuConfig implements ImuConfig {
   @override
 
   /// Whether the vehicle's bearing should be the one from the IMU.
-  bool get useBearing;
+  bool get useYaw;
+  @override
+
+  /// Whether the bearing axis should be inverted.
+  bool get invertYaw;
   @override
 
   /// Whether the pitch axis should be inverted.

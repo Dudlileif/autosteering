@@ -14,13 +14,13 @@ class ImuZeroValues with _$ImuZeroValues {
   /// perfectly flat surface. (concrete pad/garage/road etc...)
   const factory ImuZeroValues({
     /// The zero (North) value for the bearing.
-    @Default(0) double bearingZero,
+    @Default(0) num bearingZero,
 
     /// The zero level for the pitch.
-    @Default(0) double pitchZero,
+    @Default(0) num pitchZero,
 
     /// The zero level for the roll.
-    @Default(0) double rollZero,
+    @Default(0) num rollZero,
   }) = _ImuZeroValues;
 
   /// Creates

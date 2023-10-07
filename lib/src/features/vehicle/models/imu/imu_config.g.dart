@@ -13,7 +13,8 @@ _$ImuConfigImpl _$$ImuConfigImplFromJson(Map<String, dynamic> json) =>
       zeroValues: json['zeroValues'] == null
           ? const ImuZeroValues()
           : ImuZeroValues.fromJson(json['zeroValues'] as Map<String, dynamic>),
-      useBearing: json['useBearing'] as bool? ?? false,
+      useYaw: json['useYaw'] as bool? ?? false,
+      invertYaw: json['invertYaw'] as bool? ?? false,
       invertPitch: json['invertPitch'] as bool? ?? false,
       invertRoll: json['invertRoll'] as bool? ?? false,
       pitchGain: (json['pitchGain'] as num?)?.toDouble() ?? 1,
@@ -25,7 +26,8 @@ Map<String, dynamic> _$$ImuConfigImplToJson(_$ImuConfigImpl instance) =>
       'usePitchAndRoll': instance.usePitchAndRoll,
       'swapPitchAndRoll': instance.swapPitchAndRoll,
       'zeroValues': instance.zeroValues,
-      'useBearing': instance.useBearing,
+      'useYaw': instance.useYaw,
+      'invertYaw': instance.invertYaw,
       'invertPitch': instance.invertPitch,
       'invertRoll': instance.invertRoll,
       'pitchGain': instance.pitchGain,

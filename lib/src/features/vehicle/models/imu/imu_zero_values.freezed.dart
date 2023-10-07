@@ -21,13 +21,13 @@ ImuZeroValues _$ImuZeroValuesFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ImuZeroValues {
   /// The zero (North) value for the bearing.
-  double get bearingZero => throw _privateConstructorUsedError;
+  num get bearingZero => throw _privateConstructorUsedError;
 
   /// The zero level for the pitch.
-  double get pitchZero => throw _privateConstructorUsedError;
+  num get pitchZero => throw _privateConstructorUsedError;
 
   /// The zero level for the roll.
-  double get rollZero => throw _privateConstructorUsedError;
+  num get rollZero => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +41,7 @@ abstract class $ImuZeroValuesCopyWith<$Res> {
           ImuZeroValues value, $Res Function(ImuZeroValues) then) =
       _$ImuZeroValuesCopyWithImpl<$Res, ImuZeroValues>;
   @useResult
-  $Res call({double bearingZero, double pitchZero, double rollZero});
+  $Res call({num bearingZero, num pitchZero, num rollZero});
 }
 
 /// @nodoc
@@ -65,15 +65,15 @@ class _$ImuZeroValuesCopyWithImpl<$Res, $Val extends ImuZeroValues>
       bearingZero: null == bearingZero
           ? _value.bearingZero
           : bearingZero // ignore: cast_nullable_to_non_nullable
-              as double,
+              as num,
       pitchZero: null == pitchZero
           ? _value.pitchZero
           : pitchZero // ignore: cast_nullable_to_non_nullable
-              as double,
+              as num,
       rollZero: null == rollZero
           ? _value.rollZero
           : rollZero // ignore: cast_nullable_to_non_nullable
-              as double,
+              as num,
     ) as $Val);
   }
 }
@@ -86,7 +86,7 @@ abstract class _$$ImuZeroValuesImplCopyWith<$Res>
       __$$ImuZeroValuesImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double bearingZero, double pitchZero, double rollZero});
+  $Res call({num bearingZero, num pitchZero, num rollZero});
 }
 
 /// @nodoc
@@ -108,15 +108,15 @@ class __$$ImuZeroValuesImplCopyWithImpl<$Res>
       bearingZero: null == bearingZero
           ? _value.bearingZero
           : bearingZero // ignore: cast_nullable_to_non_nullable
-              as double,
+              as num,
       pitchZero: null == pitchZero
           ? _value.pitchZero
           : pitchZero // ignore: cast_nullable_to_non_nullable
-              as double,
+              as num,
       rollZero: null == rollZero
           ? _value.rollZero
           : rollZero // ignore: cast_nullable_to_non_nullable
-              as double,
+              as num,
     ));
   }
 }
@@ -133,17 +133,17 @@ class _$ImuZeroValuesImpl implements _ImuZeroValues {
   /// The zero (North) value for the bearing.
   @override
   @JsonKey()
-  final double bearingZero;
+  final num bearingZero;
 
   /// The zero level for the pitch.
   @override
   @JsonKey()
-  final double pitchZero;
+  final num pitchZero;
 
   /// The zero level for the roll.
   @override
   @JsonKey()
-  final double rollZero;
+  final num rollZero;
 
   @override
   String toString() {
@@ -184,9 +184,9 @@ class _$ImuZeroValuesImpl implements _ImuZeroValues {
 
 abstract class _ImuZeroValues implements ImuZeroValues {
   const factory _ImuZeroValues(
-      {final double bearingZero,
-      final double pitchZero,
-      final double rollZero}) = _$ImuZeroValuesImpl;
+      {final num bearingZero,
+      final num pitchZero,
+      final num rollZero}) = _$ImuZeroValuesImpl;
 
   factory _ImuZeroValues.fromJson(Map<String, dynamic> json) =
       _$ImuZeroValuesImpl.fromJson;
@@ -194,15 +194,15 @@ abstract class _ImuZeroValues implements ImuZeroValues {
   @override
 
   /// The zero (North) value for the bearing.
-  double get bearingZero;
+  num get bearingZero;
   @override
 
   /// The zero level for the pitch.
-  double get pitchZero;
+  num get pitchZero;
   @override
 
   /// The zero level for the roll.
-  double get rollZero;
+  num get rollZero;
   @override
   @JsonKey(ignore: true)
   _$$ImuZeroValuesImplCopyWith<_$ImuZeroValuesImpl> get copyWith =>

@@ -2,6 +2,7 @@
 
 /// An enumerator for all the settings of the program.
 enum SettingsKey {
+  gaugesAverageCount('gauges.average_count'),
   hardwareIPAdress('hardware.ip_address'),
   hardwareSendMessages('hardware.send_messages'),
   hardwareUDPReceivePort('hardware.udp_receive_port'),

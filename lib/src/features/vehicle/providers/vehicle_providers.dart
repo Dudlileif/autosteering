@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -48,7 +49,6 @@ class MainVehicle extends _$MainVehicle {
 
 @Riverpod(keepAlive: true)
 class AutoSteerEnabled extends _$AutoSteerEnabled {
-
   @override
   bool build() => false;
 
@@ -58,9 +58,6 @@ class AutoSteerEnabled extends _$AutoSteerEnabled {
   /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
-
-
-
 
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
@@ -132,3 +129,100 @@ AsyncValue<Vehicle> lastUsedVehicle(LastUsedVehicleRef ref) =>
         return PreconfiguredVehicles.tractor;
       },
     );
+
+/// A provider for the number of previous positions to use for calculating
+/// the gauge velocity and bearing values.
+@Riverpod(keepAlive: true)
+class GaugesAverageCount extends _$GaugesAverageCount {
+  @override
+  int build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.gaugesAverageCount, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getInt(SettingsKey.gaugesAverageCount) ??
+        10;
+  }
+
+  /// Update the [state] to [value].
+  void update(int value) => Future(() => state = value);
+}
+
+/// A provider for the frequency of the IMU updates.
+@riverpod
+class ImuCurrentFrequency extends _$ImuCurrentFrequency {
+  Timer? _resetTimer;
+
+  @override
+  double? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
+
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for the current raw [ImuReading] from the hardware.
+@riverpod
+class ImuCurrentReading extends _$ImuCurrentReading {
+  Timer? _resetTimer;
+
+  @override
+  ImuReading? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
+
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(ImuReading? value) => Future(() => state = value);
+}
+
+/// A provider for the current frequency of IMU updates over serial.
+@riverpod
+class ImuSerialFrequency extends _$ImuSerialFrequency {
+  final List<DateTime> _times = [];
+
+  @override
+  double? build({int count = 20}) {
+    ref.listenSelf(
+      (previous, next) =>
+          ref.read(imuCurrentFrequencyProvider.notifier).update(next),
+    );
+
+    return null;
+  }
+
+  /// Updates the [state] by finding the new frequency from [_times] and
+  /// [count].
+  void update(DateTime time) {
+    _times.add(time);
+    while (_times.length > count) {
+      _times.removeAt(0);
+    }
+    final freq =
+        _times.length / (time.difference(_times.first).inMicroseconds / 1e6);
+
+    Future(() => state = freq);
+  }
+}

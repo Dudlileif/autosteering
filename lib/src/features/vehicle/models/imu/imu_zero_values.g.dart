@@ -8,9 +8,9 @@ part of 'imu_zero_values.dart';
 
 _$ImuZeroValuesImpl _$$ImuZeroValuesImplFromJson(Map<String, dynamic> json) =>
     _$ImuZeroValuesImpl(
-      bearingZero: (json['bearingZero'] as num?)?.toDouble() ?? 0,
-      pitchZero: (json['pitchZero'] as num?)?.toDouble() ?? 0,
-      rollZero: (json['rollZero'] as num?)?.toDouble() ?? 0,
+      bearingZero: json['bearingZero'] as num? ?? 0,
+      pitchZero: json['pitchZero'] as num? ?? 0,
+      rollZero: json['rollZero'] as num? ?? 0,
     );
 
 Map<String, dynamic> _$$ImuZeroValuesImplToJson(_$ImuZeroValuesImpl instance) =>

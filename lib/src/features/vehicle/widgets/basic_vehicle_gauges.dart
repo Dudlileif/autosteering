@@ -49,7 +49,7 @@ class BasicVehicleGauges extends StatelessWidget {
                 ),
                 Consumer(
                   builder: (context, ref, child) => Text(
-                    '''${ref.watch(gaugeVelocityProvider).toStringAsFixed(1)} m/s''',
+                    '''${(ref.watch(gaugeVelocityProvider) * 3.6).toStringAsFixed(1)} km/h''',
                   ),
                 ),
               ],

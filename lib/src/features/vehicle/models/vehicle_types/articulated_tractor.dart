@@ -27,7 +27,7 @@ final class ArticulatedTractor extends Vehicle {
     super.antennaLateralOffset,
     super.invertSteeringInput,
     super.pathTrackingMode,
-    super.imuConfig,
+    super.imu,
     super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
     super.purePursuitParameters =
         const PurePursuitParameters(lookAheadDistance: 1),
@@ -40,7 +40,6 @@ final class ArticulatedTractor extends Vehicle {
     super.steeringAngleInput,
     super.length = 4,
     super.width = 2.5,
-
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
@@ -778,7 +777,7 @@ final class ArticulatedTractor extends Vehicle {
     double? wheelSpacing,
     int? numWheels,
     bool? invertSteeringInput,
-    ImuConfig? imuConfig,
+    Imu? imu,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     StanleyParameters? stanleyParameters,
@@ -819,17 +818,16 @@ final class ArticulatedTractor extends Vehicle {
         rearAxleToTowbarDistance:
             rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
-        imuConfig: imuConfig ?? this.imuConfig,
+        imu: imu ?? this.imu,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:
             purePursuitParameters ?? this.purePursuitParameters,
         stanleyParameters: stanleyParameters ?? this.stanleyParameters,
         velocity: velocity ?? this.velocity,
-        bearing:
-            (bearing ?? this.bearing) + this.imuConfig.zeroValues.bearingZero,
-        pitch: (pitch ?? this.pitch) + this.imuConfig.zeroValues.pitchZero,
-        roll: (roll ?? this.roll) + this.imuConfig.zeroValues.rollZero,
+bearing: bearing ?? _bearing,
+        pitch: pitch ?? _pitch,
+        roll: roll ?? _roll,
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,
