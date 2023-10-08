@@ -1,8 +1,19 @@
 import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:nmea/nmea.dart';
 
+/// An abstract implementation class for an interface to interchangeably use the
+/// receive time and delay of [GGASentence] and [PANDASentence] objects.
+abstract class SentenceReceiveTime {
+  /// The time this message was received by this device.
+  DateTime get deviceReceiveTime;
+
+  /// The time delta from the message was created to it was received by this
+  /// device.
+  Duration? get deviceReceiveDelay;
+}
+
 /// An NMEA message for position data.
-class GGASentence extends TalkerSentence {
+class GGASentence extends TalkerSentence implements SentenceReceiveTime {
   /// An NMEA message for position data parsed from the [raw] string.
   ///
   /// Example message:
@@ -25,6 +36,10 @@ class GGASentence extends TalkerSentence {
   /// Age of differential data: ,    *** Empty, we don't care about this one ***
   /// Checksum: *72
   GGASentence({required super.raw}) : deviceReceiveTime = DateTime.now();
+
+  /// The time this message was received by this device.
+  @override
+  final DateTime deviceReceiveTime;
 
   /// The creation time of the message.
   DateTime? get utc {
@@ -52,9 +67,6 @@ class GGASentence extends TalkerSentence {
 
     return null;
   }
-
-  /// The time this message was received by this device.
-  DateTime deviceReceiveTime;
 
   /// The latitude of the position.
   double? get latitude => fields.length > 3 && fields[2].length == 10
@@ -93,6 +105,7 @@ class GGASentence extends TalkerSentence {
 
   /// The time delta from the message was created to it was received by this
   /// device.
+  @override
   Duration? get deviceReceiveDelay => switch (utc != null) {
         true => deviceReceiveTime.difference(utc!.toLocal()),
         false => null,
@@ -168,7 +181,7 @@ class TXTSentence extends TalkerSentence {
 
 /// An AgOpenGPS compatible $PANDA sentence for a combined sentence with
 /// position, velocity and IMU.
-class PANDASentence extends ProprietarySentence {
+class PANDASentence extends ProprietarySentence implements SentenceReceiveTime {
   // ignore: lines_longer_than_80_chars
   /// An AgOpenGPS compatible $PANDA sentence for a combined sentence with
   /// position, velocity and IMU.
@@ -225,6 +238,7 @@ class PANDASentence extends ProprietarySentence {
   }
 
   /// The time this message was received by this device.
+  @override
   final DateTime deviceReceiveTime;
 
   /// The latitude of the position.
@@ -281,6 +295,7 @@ class PANDASentence extends ProprietarySentence {
 
   /// The time delta from the message was created to it was received by this
   /// device.
+  @override
   Duration? get deviceReceiveDelay => switch (utc != null) {
         true => deviceReceiveTime.difference(utc!.toLocal()),
         false => null,
