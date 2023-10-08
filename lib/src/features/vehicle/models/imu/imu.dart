@@ -26,15 +26,22 @@ class Imu {
   /// The latest reading from the hardware sensor.
   ImuReading reading;
 
+  /// Whether the bearing is set for the IMU.
+  /// Should be set to true after a GNSS bearing is used to update the
+  /// [config.zeroValues.bearingZero].
+  bool bearingIsSet = false;
+
   /// The bearing reading accounted for [config.zeroValues.bearingZero].
-  double get bearing =>
-      ((reading.yawFromStartup - config.zeroValues.bearingZero) *
-              switch (config.invertYaw) {
-                true => -1,
-                false => 1,
-              })
-          .toDouble()
-          .wrap360();
+  double? get bearing => switch (bearingIsSet) {
+        true => ((reading.yawFromStartup - config.zeroValues.bearingZero) *
+                switch (config.invertYaw) {
+                  true => -1,
+                  false => 1,
+                })
+            .toDouble()
+            .wrap360(),
+        false => null
+      };
 
   /// The pitch reading accounted for [config.zeroValues.pitchZero].
   double get pitch =>
@@ -84,4 +91,6 @@ class Imu {
   /// values.
   void setBearingZeroToCurrentReading() =>
       setBearingZeroTo(reading.yawFromStartup);
+
+  
 }

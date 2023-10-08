@@ -218,28 +218,19 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The lateral offset of the the antenna's true ground position to the
   /// mounted position.
-  double get antennaRollLateralOffset => sin(roll.toRadians()) * antennaHeight;
+  double get antennaRollLateralOffset => tan(roll.toRadians()) * antennaHeight;
 
   /// The longitudinal offset of the the antenna's true ground position to the
   /// mounted position.
   double get antennaPitchLongitudinalOffset =>
-      sin(pitch.toRadians()) * antennaHeight;
+      tan(pitch.toRadians()) * antennaHeight;
 
   /// The projected ground position of the centered antenna of this vehicle
   /// accounting for [pitch] and [roll].
   @override
   Geographic get position => switch (imu.config.usePitchAndRoll) {
         false => antennaPosition,
-        true => antennaPosition.spherical
-            .destinationPoint(
-              distance: antennaRollLateralOffset,
-              bearing: bearing - 90,
-            )
-            .spherical
-            .destinationPoint(
-              distance: antennaPitchLongitudinalOffset,
-              bearing: bearing,
-            ),
+        true => correctPositionForRollAndPitch(antennaPosition),
       }
           .spherical
           .destinationPoint(
@@ -251,6 +242,20 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// derived from it.
   @override
   set position(Geographic value) => antennaPosition = value;
+
+  /// Moves the input [position] to a position corrected for [pitch] and [roll]
+  /// with [antennaPitchLongitudinalOffset] and [antennaRollLateralOffset].
+  Geographic correctPositionForRollAndPitch(Geographic position) =>
+      position.spherical
+          .destinationPoint(
+            distance: antennaRollLateralOffset,
+            bearing: bearing - 90,
+          )
+          .spherical
+          .destinationPoint(
+            distance: antennaPitchLongitudinalOffset,
+            bearing: bearing,
+          );
 
   /// A method for setting the [position] correctly when not directly
   /// inputting the [antennaPosition] from hardware. The [value] is the new
@@ -291,7 +296,10 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The bearing of the vehicle, in degrees.
   @override
   double get bearing =>
-      switch (imu.config.useYaw) { true => imu.bearing, false => _bearing };
+      switch (imu.config.useYaw) {
+        true => imu.bearing ?? 0,
+        false => _bearing
+      };
 
   /// The raw outside set bearing of the vehicle, typically from
   /// GNSS point to point bearing.

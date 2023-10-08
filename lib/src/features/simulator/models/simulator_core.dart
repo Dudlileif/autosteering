@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
-import 'dart:math';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
@@ -123,23 +122,9 @@ class SimulatorCore {
       (timer) => udpSendStream.add(heartbeatUDPMessage),
     );
 
-    Uint8List? prevGGNData;
-    Uint8List? prevVTGData;
-
     final messageDecoder = MessageDecoder();
 
     void handleUdpData(Datagram? datagram) {
-      if (datagram != null) {
-        if (listEquals(datagram.data, prevGGNData) ||
-            listEquals(datagram.data, prevVTGData)) {
-          return;
-        } else if (String.fromCharCodes(datagram.data).startsWith(r'$GNGGA')) {
-          prevGGNData = datagram.data;
-        } else if (String.fromCharCodes(datagram.data).startsWith(r'$GNVTG')) {
-          prevVTGData = datagram.data;
-        }
-      }
-
       lastHardwareMessageTime = DateTime.now();
       _networkListener(
         datagram?.data,
@@ -415,6 +400,10 @@ class _SimulatorCoreState {
   /// The current GNSS update position and time.
   ({Geographic gnssPosition, DateTime time})? gnssUpdate;
 
+  /// The minimum distance between GNSS updates for updating the bearing
+  /// gauge.
+  double minBearingUpdateDistance = 0.05;
+
   /// The velocity of the current vehicle, as calculated from the [distance] and
   /// [period].
   double gaugeVelocity = 0;
@@ -425,10 +414,6 @@ class _SimulatorCoreState {
 
   /// The sign for which direction the vehicle is driving.
   int drivingDirectionSign = 1;
-
-  /// A flag which can tell us to use the next GNSS bearing update to find
-  /// the approptiate zero for the IMU bearing.
-  bool setIMUZeroBearingToNextGNSSBearing = false;
 
   /// Whether the state changed in the last update.
   bool didChange = true;
@@ -602,7 +587,9 @@ class _SimulatorCoreState {
     }
     // Update the vehicle position from GNSS.
     else if (message is ({Geographic gnssPosition, DateTime time})) {
-      gnssUpdate = message;
+      if (!allowManualSimInput) {
+        gnssUpdate = message;
+      }
     }
     // Update the vehicle velocity
     else if (message is ({num velocity})) {
@@ -652,14 +639,8 @@ class _SimulatorCoreState {
       }
     } // Set the zero point for the IMU bearing to the next GNSS bearing.
     else if (message is ({bool setZeroIMUBearingToNextGNSSBearing})) {
-      setIMUZeroBearingToNextGNSSBearing =
-          message.setZeroIMUBearingToNextGNSSBearing;
       if (!message.setZeroIMUBearingToNextGNSSBearing && vehicle != null) {
-        vehicle!.imu.config = vehicle!.imu.config.copyWith(
-          zeroValues: vehicle!.imu.config.zeroValues.copyWith(
-            bearingZero: 0,
-          ),
-        );
+        vehicle!.imu.bearingIsSet = false;
       }
     }
     // Update the vehicle velocity at a set rate.
@@ -1142,86 +1123,165 @@ class _SimulatorCoreState {
       if (gnssUpdate != null && prevGnssUpdates.lastOrNull != null
           // &&          !allowManualSimInput
           ) {
-        final distances = prevGnssUpdates.map(
-          (e) => e.gnssPosition.spherical.distanceTo(gnssUpdate!.gnssPosition),
-        );
+        // Correct for roll and pitch if IMU bearing is set.
+        if (vehicle!.imu.bearingIsSet && vehicle!.imu.config.usePitchAndRoll) {
+          gnssUpdate = (
+            gnssPosition: vehicle!
+                .correctPositionForRollAndPitch(gnssUpdate!.gnssPosition),
+            time: gnssUpdate!.time
+          );
+        }
 
-        final velocities = prevGnssUpdates.mapIndexed(
+        var distances = prevGnssUpdates
+            .map(
+              (e) =>
+                  e.gnssPosition.spherical.distanceTo(gnssUpdate!.gnssPosition),
+            )
+            .toList();
+
+        distance = distances.last;
+
+        var velocities = prevGnssUpdates.mapIndexed(
           (index, element) =>
               distances.elementAt(index) /
               ((gnssUpdate!.time.difference(element.time).inMicroseconds) /
                   1e6),
         );
-        final velocityAvg = velocities.average;
+        var velocityAvg = velocities.average;
 
-        // Only update bearing if velocity is larger than 0.1 m/s.
-        if (velocityAvg > 0.1) {
-          distance = distances.last;
+        CheckIfUpdateIsUsable:
+        // We only set the initial bearing for the IMU if we have a velocity
+        // > 0.5 m/s.
+        if (velocityAvg.abs() < 0.5 && !vehicle!.imu.bearingIsSet) {
+          gaugeVelocity = velocityAvg * vehicle!.velocity.sign;
+        }
+        // Set the initial bearing for the IMU.  The direction travelled will
+        // be set as forward.
+        else if (!vehicle!.imu.bearingIsSet) {
+          // We need a few previous points to get a good bearing.
+          if (prevGnssUpdates.length < 2) {
+            gaugeVelocity = velocityAvg * vehicle!.velocity.sign;
+            break CheckIfUpdateIsUsable;
+          }
 
-          final bearings = prevGnssUpdates.map(
-            (e) {
-              final bearing = e.gnssPosition.spherical
-                  .finalBearingTo(gnssUpdate!.gnssPosition);
+          final bearing = prevGnssUpdates[prevGnssUpdates.length - 2]
+              .gnssPosition
+              .spherical
+              .finalBearingTo(gnssUpdate!.gnssPosition);
 
-              if (!bearing.isFinite) {
-                return gaugeBearing;
-              }
-              return bearing;
-            },
-          );
+          if (!bearing.isFinite) {
+            gaugeVelocity = velocityAvg * vehicle!.velocity.sign;
+            break CheckIfUpdateIsUsable;
+          }
 
-          // Create unit vectors and take the average of them to find the
-          // average angle/bearing.
-          final unitX = bearings.map(cos);
-          final unitY = bearings.map(sin);
+          vehicle!.imu
+            ..config = vehicle!.imu.config.copyWith(
+              zeroValues: vehicle!.imu.config.zeroValues.copyWith(
+                bearingZero:
+                    (vehicle!.imu.reading.yawFromStartup - bearing).wrap360(),
+              ),
+            )
+            ..bearingIsSet = true;
 
-          final bearingMean = atan2(unitY.average, unitX.average);
+          // Update the already recorded positions to correct for the
+          // vehicle pitch and roll.
+          if (vehicle!.imu.config.usePitchAndRoll) {
+            gnssUpdate = (
+              gnssPosition: vehicle!
+                  .correctPositionForRollAndPitch(gnssUpdate!.gnssPosition),
+              time: gnssUpdate!.time
+            );
+            prevGnssUpdates = prevGnssUpdates
+                .map(
+                  (e) => (
+                    gnssPosition:
+                        vehicle!.correctPositionForRollAndPitch(e.gnssPosition),
+                    time: e.time
+                  ),
+                )
+                .toList();
+
+            // Update the distances and velocities based on the corrected
+            // positions.
+            distances = prevGnssUpdates
+                .map(
+                  (e) => e.gnssPosition.spherical
+                      .distanceTo(gnssUpdate!.gnssPosition),
+                )
+                .toList();
+
+            velocities = prevGnssUpdates.mapIndexed(
+              (index, element) =>
+                  distances.elementAt(index) /
+                  ((gnssUpdate!.time.difference(element.time).inMicroseconds) /
+                      1e6),
+            );
+
+            velocityAvg = velocities.average;
+
+            gaugeVelocity = velocityAvg;
+            gaugeBearing = bearing;
+          }
+        } else {
+          // Only update bearing if distance to a previous position is larger
+          // than 0.05 m.
+          final prevPositionIndex = distances
+              .lastIndexWhere((element) => element > minBearingUpdateDistance);
+
+          double? bearing;
+          if (prevPositionIndex > -1) {
+            bearing = prevGnssUpdates
+                .elementAt(prevPositionIndex)
+                .gnssPosition
+                .spherical
+                .finalBearingTo(gnssUpdate!.gnssPosition);
+          }
+          if (bearing == null) {
+            gaugeVelocity = velocityAvg * vehicle!.velocity.sign;
+            if (vehicle!.imu.bearingIsSet && vehicle!.imu.bearing != null) {
+              gaugeBearing = vehicle!.imu.bearing!;
+            }
+            break CheckIfUpdateIsUsable;
+          }
 
           final bearingReference = switch (allowManualSimInput) {
             true => vehicle!.bearingRaw,
-            false => vehicle!.imu.bearing,
+            false => vehicle!.imu.bearing ?? vehicle!.bearingRaw,
           };
 
-          drivingDirectionSign = switch (bearings.any(
-            (element) => bearingDifference(bearingMean, bearingReference) > 120,
-          )) {
+          drivingDirectionSign =
+              switch (bearingDifference(bearing, bearingReference) > 90) {
             true => -1,
             false => 1,
           };
 
           final directionCorrectedBearing = switch (
               drivingDirectionSign.isNegative) {
-            true => (bearingMean + 180).wrap360(),
-            false => bearingMean
+            true => (bearing + 180).wrap360(),
+            false => bearing
           };
 
-          // If IMU bearing not in use.
-          if (!vehicle!.imu.config.useYaw) {
-            gaugeBearing = directionCorrectedBearing;
-          }
-
-          // Set IMU zero value to correspond with current GNSS bearing.
-          if (setIMUZeroBearingToNextGNSSBearing && vehicle != null) {
-            vehicle!.imu.config = vehicle!.imu.config.copyWith(
+          // Update IMU bearing zero to direction corrected bearing.
+          vehicle!.imu
+            ..config = vehicle!.imu.config.copyWith(
               zeroValues: vehicle!.imu.config.zeroValues.copyWith(
                 bearingZero: (vehicle!.imu.reading.yawFromStartup -
                         directionCorrectedBearing)
                     .wrap360(),
               ),
-            );
-            setIMUZeroBearingToNextGNSSBearing = false;
-          }
-        } else if (vehicle!.imu.config.useYaw) {
-          gaugeBearing = vehicle!.imu.bearing;
-        }
+            )
+            ..bearingIsSet = true;
 
-        gaugeVelocity = drivingDirectionSign * velocityAvg;
+          gaugeBearing = directionCorrectedBearing;
+
+          gaugeVelocity = drivingDirectionSign * velocityAvg;
+        }
 
         prevGnssUpdates.add(gnssUpdate!);
         gnssUpdate = null;
 
-        // Remove the oldest updates if there are more than 10 in the
-        // current list.
+        // Remove the oldest updates if there are more than [gaugesAverageCount]
+        // in the current list.
         while (prevGnssUpdates.length > gaugesAverageCount) {
           prevGnssUpdates.removeAt(0);
         }
@@ -1231,8 +1291,8 @@ class _SimulatorCoreState {
       prevGnssUpdates.add(gnssUpdate!);
       gnssUpdate = null;
 
-      // Remove the oldest updates if there are more than 10 in the
-      // current list.
+      // Remove the oldest updates if there are more than [gaugesAverageCount]
+      // in the current list.
       while (prevGnssUpdates.length > gaugesAverageCount) {
         prevGnssUpdates.removeAt(0);
       }
