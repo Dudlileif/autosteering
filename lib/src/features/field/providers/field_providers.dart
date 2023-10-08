@@ -1,7 +1,8 @@
-import 'dart:isolate';
+import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -199,17 +200,23 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
       );
     } else {
       final polygonString = field.polygon.toString();
+
+      final json = await Future(
+        () => jsonEncode({
+          'polygon': polygonString,
+          'exterior_distance': exteriorDistance,
+          'interior_distance': interiorDistance,
+          'exterior_join_type': exteriorJoinType.name,
+          'interior_join_type': interiorJoinType.name,
+          'get_raw_points': getRawPoints,
+        }),
+      );
+
       bufferedPolygon = Polygon.parse(
-        await Isolate.run(
-          () => PolygonBufferExtension.bufferedPolygonString(
-            polygonJsonString: polygonString,
-            exteriorDistance: exteriorDistance,
-            interiorDistance: interiorDistance,
-            exteriorJoinType: exteriorJoinType,
-            interiorJoinType: interiorJoinType,
-            getRawPoints: getRawPoints,
-          ),
-          debugName: 'Field Buffering: ${field.name}',
+        await compute(
+          PolygonBufferExtension.bufferedPolygonFromJson,
+          json,
+          debugLabel: 'Field Buffering: ${field.name}',
         ),
       );
     }
