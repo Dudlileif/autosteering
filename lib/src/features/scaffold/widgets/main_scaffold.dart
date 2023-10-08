@@ -43,9 +43,14 @@ class MainScaffold extends StatelessWidget {
             child: _HWConnectionStatus(size: 32),
           ),
           if (Device.isNative)
-            const Padding(
+            const Focus(
+              canRequestFocus: false,
+              descendantsAreFocusable: false,
+              descendantsAreTraversable: false,
+              child: Padding(
               padding: EdgeInsets.all(8),
               child: GnssQualityStatusIcon(size: 32),
+              ),
             ),
         ],
       ),
