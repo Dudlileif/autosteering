@@ -530,7 +530,10 @@ class _CreateFieldButton extends ConsumerWidget {
           children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
         ),
       ),
-      child: const Text('Create field from recording'),
+      child: Text(
+        'Create field from recording',
+        style: Theme.of(context).menuButtonWithChildrenText,
+      ),
       onPressed: () {
         ref.read(enablePathRecorderProvider.notifier).update(value: true);
       },

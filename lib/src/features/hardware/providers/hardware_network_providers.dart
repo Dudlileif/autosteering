@@ -27,7 +27,9 @@ FutureOr<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) =>
     NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {
       if (interfaces.isNotEmpty) {
         return interfaces
-            .firstWhereOrNull((element) => element.name.startsWith('w'))
+            .firstWhereOrNull(
+              (element) => element.name.toLowerCase().startsWith('w'),
+            )
             ?.addresses
             .first
             .address;
@@ -43,7 +45,9 @@ FutureOr<String?> deviceIPAdressEthernet(
     NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {
       if (interfaces.isNotEmpty) {
         return interfaces
-            .firstWhereOrNull((element) => element.name.startsWith('e'))
+            .firstWhereOrNull(
+              (element) => element.name.toLowerCase().startsWith('e'),
+            )
             ?.addresses
             .first
             .address;

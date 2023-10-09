@@ -42,7 +42,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             else if (event is KeyDownEvent)
               ref.read(zoomTimerControllerProvider.notifier).zoomOut(),
           },
-        LogicalKeyboardKey.add => {
+        LogicalKeyboardKey.add || LogicalKeyboardKey.equal => {
             if (event is KeyUpEvent)
               ref.read(zoomTimerControllerProvider.notifier).cancel()
             else if (event is KeyDownEvent)
