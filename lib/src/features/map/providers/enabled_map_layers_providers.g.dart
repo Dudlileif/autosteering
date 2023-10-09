@@ -203,7 +203,7 @@ final showABTrackingDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowABTrackingDebugLayerRef = AutoDisposeProviderRef<bool>;
-String _$showOSMLayerHash() => r'f74aac3e4858c8090ae861b3677ab68ccac3a9a7';
+String _$showOSMLayerHash() => r'279974104f0b019cf6a41ab2ce3c20ef7ec5a580';
 
 /// Whether the OpenStreetMap layer should be shown.
 ///

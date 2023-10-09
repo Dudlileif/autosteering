@@ -35,6 +35,23 @@ class SimCoreMenu extends StatelessWidget {
                 : null,
           ),
         ),
+        Consumer(
+          child: Text(
+            'Allow sim interpolation',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            secondary: const Icon(Icons.timer_outlined),
+            title: child,
+            subtitle: const Text('Interpolation between GNSS updates'),
+            value: ref.watch(simCoreAllowInterpolationProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(simCoreAllowInterpolationProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
         const VehicleSimMenu(),
         Consumer(
           child: Text(

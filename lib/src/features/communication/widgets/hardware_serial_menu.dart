@@ -1,23 +1,23 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
+import 'package:agopengps_flutter/src/features/communication/communication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A menu for configuring the connection to GNSS hardware over serial.
-class GnssSerialMenu extends StatelessWidget {
-  /// A menu for configuring the connection to GNSS hardware over serial.
-  const GnssSerialMenu({super.key});
+/// A menu for configuring the connection to hardware over serial.
+class HardwareSerialMenu extends StatelessWidget {
+  /// A menu for configuring the connection to hardware over serial.
+  const HardwareSerialMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MenuButtonWithChildren(
-      text: 'GNSS Serial',
+      text: 'USB / Serial',
       iconOverrideWidget: Consumer(
         builder: (context, ref, child) => Icon(
-          Icons.satellite_alt,
-          color: switch (
-              ref.watch(gnssSerialProvider.select((value) => value != null))) {
-            true => switch (ref.watch(gnssSerialAliveProvider)) {
+          Icons.usb,
+          color: switch (ref
+              .watch(hardwareSerialProvider.select((value) => value != null))) {
+            true => switch (ref.watch(hardwareSerialAliveProvider)) {
                 true => Colors.green,
                 false => Colors.orange,
               },
@@ -28,11 +28,12 @@ class GnssSerialMenu extends StatelessWidget {
       menuChildren: [
         Consumer(
           builder: (context, ref, child) {
-            if (ref
-                .watch(gnssSerialProvider.select((value) => value != null))) {
+            if (ref.watch(
+              hardwareSerialProvider.select((value) => value != null),
+            )) {
               return MenuItemButton(
                 leadingIcon: const Icon(Icons.clear),
-                onPressed: () => ref.invalidate(gnssSerialProvider),
+                onPressed: () => ref.invalidate(hardwareSerialProvider),
                 child: const Text('Close'),
               );
             }
@@ -49,8 +50,9 @@ class GnssSerialMenu extends StatelessWidget {
                   (port) => MenuItemButton(
                     onPressed: port.isOpen
                         ? null
-                        : () =>
-                            ref.read(gnssSerialProvider.notifier).update(port),
+                        : () => ref
+                            .read(hardwareSerialProvider.notifier)
+                            .update(port),
                     child: Text(port.name ?? '${port.address}'),
                   ),
                 )
@@ -59,17 +61,17 @@ class GnssSerialMenu extends StatelessWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final activeRate = ref.watch(gnssSerialBaudRateProvider);
+            final activeRate = ref.watch(hardwareSerialBaudRateProvider);
             return MenuButtonWithChildren(
               icon: Icons.speed,
               text: 'Baud rate',
-              menuChildren: GnssSerialBaudRate.rates
+              menuChildren: HardwareSerialBaudRate.rates
                   .map(
                     (rate) => MenuItemButton(
                       onPressed: activeRate == rate
                           ? null
                           : () => ref
-                              .read(gnssSerialBaudRateProvider.notifier)
+                              .read(hardwareSerialBaudRateProvider.notifier)
                               .update(rate),
                       child: Text('$rate'),
                     ),

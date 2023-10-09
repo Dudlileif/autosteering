@@ -26,7 +26,7 @@ final sortedCountryLayersProvider =
 );
 
 typedef SortedCountryLayersRef = AutoDisposeProviderRef<List<TileLayerData>>;
-String _$currentCountryHash() => r'b4e1485b70d819f76f000649a529f08cad697fc0';
+String _$currentCountryHash() => r'87ca6af26700067a32aa67cfe0652f963ba05dab';
 
 /// A provider fort showing the country we are currently in, if the country
 /// has defined custom map layers.
@@ -48,7 +48,7 @@ final currentCountryProvider =
 
 typedef _$CurrentCountry = Notifier<Country?>;
 String _$availableCountryLayersHash() =>
-    r'4dc452083bdeb44bb635faac383b3689691dcea8';
+    r'd0730bb4a9eda773043017382e4b866334be5fb1';
 
 /// A provider that contains all the custom layers available for the
 /// [CurrentCountry].
@@ -68,7 +68,7 @@ final availableCountryLayersProvider =
 
 typedef _$AvailableCountryLayers = Notifier<List<TileLayerData>>;
 String _$enabledCountryLayersHash() =>
-    r'f919be9712abeef57d130c40107bea4dfccfd6a3';
+    r'ac3ed79ec6b25024c39da4f65df3e613fdd05e87';
 
 /// A set of the current selction of custom layers for the [CurrentCountry].
 ///
@@ -87,7 +87,7 @@ final enabledCountryLayersProvider =
 
 typedef _$EnabledCountryLayers = Notifier<Set<TileLayerData>>;
 String _$countryLayerOpacitiesHash() =>
-    r'a7cd4c867af5b365932975fc477358a4389915cd';
+    r'88510f313e7d4573af8bff064b7d01393af081b5';
 
 /// A map of the available country layers and their opacities, which can be
 /// specified.

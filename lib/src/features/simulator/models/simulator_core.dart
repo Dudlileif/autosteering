@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/communication/communication.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
-import 'package:agopengps_flutter/src/features/network/network.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -382,6 +382,10 @@ class _SimulatorCoreState {
   /// keyboard, gamepad, sliders etc...
   bool allowManualSimInput = false;
 
+  /// Whether the simulation should run between GNSS updates when hardware
+  /// is connected.
+  bool allowSimInterpolation = true;
+
   /// The current vehicle of the simulation.
   Vehicle? vehicle;
 
@@ -523,8 +527,15 @@ class _SimulatorCoreState {
             message.hitchRearTowbarChild ?? vehicle?.hitchRearTowbarChild,
       );
       pathTrackingMode = message.pathTrackingMode;
-    } else if (message is ({bool allowManualSimInput})) {
+    }
+    // Update whether the simulation should accept manual controls.
+    else if (message is ({bool allowManualSimInput})) {
       allowManualSimInput = message.allowManualSimInput;
+    }
+    // Update whether the simulation should interpolate between the GNSS
+    // updates.
+    else if (message is ({bool allowSimInterpolation})) {
+      allowManualSimInput = message.allowSimInterpolation;
     }
     // Update whether the vehicle position should take the roll and pitch into
     // account when an IMU is connected.
@@ -1316,7 +1327,7 @@ class _SimulatorCoreState {
         vehicle!.position = gnssUpdate!.gnssPosition;
         vehicle!.updateChildren();
         turningCircleCenter = vehicle?.turningRadiusCenter;
-      } else {
+      } else if (allowManualSimInput || allowSimInterpolation) {
         vehicle!.updatePositionAndBearing(
           period,
           turningCircleCenter,

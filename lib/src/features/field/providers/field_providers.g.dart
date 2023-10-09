@@ -6,7 +6,7 @@ part of 'field_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bufferedFieldHash() => r'38f927aafadeb1381ef452de0fd5f9a7fbb86a07';
+String _$bufferedFieldHash() => r'e464ccb490ddf7b887c7ec2447fcc686901a3366';
 
 /// A provider for creating and updating the buffered test field.
 ///

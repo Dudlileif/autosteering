@@ -25,7 +25,7 @@ final _combinedNativeNetworkProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef _CombinedNativeNetworkRef = AutoDisposeProviderRef<void>;
-String _$combinedSerialHash() => r'6956dee7e189e4622bdf650619f0f48fcb7c37ad';
+String _$combinedSerialHash() => r'c160e97b55277932fb8e3b3697f590d04158fc5d';
 
 /// A provider for combining the serial providers that need to be watched.
 ///
@@ -61,5 +61,23 @@ final combinedCommunicationProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef CombinedCommunicationRef = AutoDisposeProviderRef<void>;
+String _$hardwareAliveHash() => r'158f328c1db19e884059d53dec8cce39bb60c838';
+
+/// A provider for whether any hardware is connected and communicating with
+/// us.
+///
+/// Copied from [hardwareAlive].
+@ProviderFor(hardwareAlive)
+final hardwareAliveProvider = AutoDisposeProvider<bool>.internal(
+  hardwareAlive,
+  name: r'hardwareAliveProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hardwareAliveHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef HardwareAliveRef = AutoDisposeProviderRef<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

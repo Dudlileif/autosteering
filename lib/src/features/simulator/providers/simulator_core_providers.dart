@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/communication/communication.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/network/network.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -55,7 +55,7 @@ class SimInput extends _$SimInput {
 }
 
 /// A provider for whether we should send messages to the hardware from the
-/// Simulator Core when network is available, see[networkAvailable].
+/// Simulator Core when network is available, see [networkAvailable].
 @Riverpod(keepAlive: true)
 class SendMessagesToHardwareIfNetwork
     extends _$SendMessagesToHardwareIfNetwork {
@@ -65,13 +65,13 @@ class SendMessagesToHardwareIfNetwork
       if (previous != null && next != previous) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.hardwareSendMessages, next);
+            .update(SettingsKey.hardwareNetworkSendMessages, next);
       }
     });
 
     return ref
             .read(settingsProvider.notifier)
-            .getBool(SettingsKey.hardwareSendMessages) ??
+            .getBool(SettingsKey.hardwareNetworkSendMessages) ??
         true;
   }
 
@@ -183,6 +183,7 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
       (autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider)),
     )
     ..send((allowManualSimInput: ref.read(simCoreAllowManualInputProvider)))
+    ..send((allowSimInterpolation: ref.read(simCoreAllowInterpolationProvider)))
     ..send(ref.read(activeABConfigProvider))
     ..send((pathTracking: ref.read(displayPathTrackingProvider)))
     ..send((abTracking: ref.read(displayABTrackingProvider)))
@@ -240,7 +241,7 @@ Stream<Vehicle?> simCoreWebStream(
         .read(autoSteerEnabledProvider.notifier)
         .update(value: event.autoSteerEnabled);
     ref
-        .read(hardwareIsConnectedProvider.notifier)
+        .read(hardwareNetworkAliveProvider.notifier)
         .update(value: event.hardwareIsConnected);
 
     return event.vehicle;
@@ -346,7 +347,7 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
           .read(autoSteerEnabledProvider.notifier)
           .update(value: message.autoSteerEnabled);
       ref
-          .read(hardwareIsConnectedProvider.notifier)
+          .read(hardwareNetworkAliveProvider.notifier)
           .update(value: message.hardwareIsConnected);
 
       yield message.vehicle;
@@ -431,6 +432,35 @@ class SimCoreAllowManualInput extends _$SimCoreAllowManualInput {
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.simAllowManualInput) ??
+        true;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state != state);
+}
+
+/// A provider for whether the sim core should allow interpolation steps
+/// between the hardware GNSS updates.
+@Riverpod(keepAlive: true)
+class SimCoreAllowInterpolation extends _$SimCoreAllowInterpolation {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      ref.read(simInputProvider.notifier).send((allowSimInterpolation: next));
+
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.simAllowInterpolation, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.simAllowInterpolation) ??
         true;
   }
 

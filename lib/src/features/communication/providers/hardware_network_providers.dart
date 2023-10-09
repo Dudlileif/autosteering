@@ -9,11 +9,11 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
-part 'network_providers.g.dart';
+part 'hardware_network_providers.g.dart';
 
 /// A provider for whether there is a connection with the hardware.
 @Riverpod(keepAlive: true)
-class HardwareIsConnected extends _$HardwareIsConnected {
+class HardwareNetworkAlive extends _$HardwareNetworkAlive {
   @override
   bool build() => false;
 
@@ -277,7 +277,7 @@ ${String.fromCharCodes(event)}
     // a bunch of sockets on the hardware attempting to connect.
     if (_lastActiveSocket == null &&
         _ntripRequestTimer == null &&
-        ref.watch(hardwareIsConnectedProvider)) {
+        ref.watch(hardwareNetworkAliveProvider)) {
       ref.read(simInputProvider.notifier).send(
         (
           useAsNtripServer:

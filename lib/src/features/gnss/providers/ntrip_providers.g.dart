@@ -6,12 +6,12 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'28642ca5102c537ce41a807921354c40a74d8f4d';
+String _$ntripClientHash() => r'be43bc87fe1449bb28cd693786c7b205aa66857d';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
 /// The received NTRIP messages will be split into parts and sent to the
-/// connected [GnssSerial] if connected or the [TcpServer].
+/// connected [HardwareSerial] if connected or the [TcpServer].
 ///
 /// Copied from [ntripClient].
 @ProviderFor(ntripClient)

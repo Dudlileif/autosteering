@@ -1,5 +1,5 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/network/network.dart';
+import 'package:agopengps_flutter/src/features/communication/communication.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -8,16 +8,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
 
 /// A menu for changing network settings to connect to the hardware.
-class NetworkHardwareMenu extends ConsumerWidget {
+class HardwareNetworkMenu extends ConsumerWidget {
   /// A menu for changing network settings to connect to the hardware.
-  const NetworkHardwareMenu({super.key});
+  const HardwareNetworkMenu({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuButtonWithChildren(
-      text: 'Hardware',
-      icon: Icons.router,
+      text: 'Network',
+      icon: Icons.settings_ethernet,
       menuChildren: [
         if (Device.isNative)
           Consumer(
@@ -77,7 +77,7 @@ $ip''',
             children: [
               Consumer(
                 builder: (context, ref, child) =>
-                    ref.watch(hardwareIsConnectedProvider)
+                    ref.watch(hardwareNetworkAliveProvider)
                         ? const Icon(Icons.check, color: Colors.green)
                         : const Icon(Icons.clear, color: Colors.red),
               ),

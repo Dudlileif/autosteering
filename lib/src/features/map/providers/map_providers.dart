@@ -51,15 +51,17 @@ class HomePosition extends _$HomePosition {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.homePosition, next);
+            .update(SettingsKey.mapHomePosition, next);
       }
     });
 
     if (ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.homePosition)) {
+        .containsKey(SettingsKey.mapHomePosition)) {
       return LatLng.fromJson(
-        ref.read(settingsProvider.notifier).getMap(SettingsKey.homePosition)!,
+        ref
+            .read(settingsProvider.notifier)
+            .getMap(SettingsKey.mapHomePosition)!,
       );
     }
 
@@ -82,12 +84,12 @@ class CenterMapOnVehicle extends _$CenterMapOnVehicle {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.centerMapOnVehicle, next);
+            .update(SettingsKey.mapCenterMapOnVehicle, next);
       }
     });
     return ref
             .read(settingsProvider.notifier)
-            .getBool(SettingsKey.centerMapOnVehicle) ??
+            .getBool(SettingsKey.mapCenterMapOnVehicle) ??
         true;
   }
 
@@ -291,12 +293,12 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.alwaysPointNorth, next);
+            .update(SettingsKey.mapAlwaysPointNorth, next);
       }
     });
     return ref
             .read(settingsProvider.notifier)
-            .getBool(SettingsKey.alwaysPointNorth) ??
+            .getBool(SettingsKey.mapAlwaysPointNorth) ??
         false;
   }
 
@@ -317,13 +319,13 @@ class MapUse3DPerspective extends _$MapUse3DPerspective {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.enableMap3D, next);
+            .update(SettingsKey.mapEnable3D, next);
       }
     });
 
     return ref
             .read(settingsProvider.notifier)
-            .getBool(SettingsKey.enableMap3D) ??
+            .getBool(SettingsKey.mapEnable3D) ??
         false;
   }
 
@@ -350,14 +352,14 @@ class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
           const Duration(seconds: 1),
           () => ref
               .read(settingsProvider.notifier)
-              .update(SettingsKey.mapPerspectiveAngle, next),
+              .update(SettingsKey.map3DPerspectiveAngle, next),
         );
       }
     });
 
     return ref
             .read(settingsProvider.notifier)
-            .getDouble(SettingsKey.mapPerspectiveAngle) ??
+            .getDouble(SettingsKey.map3DPerspectiveAngle) ??
         40;
   }
 

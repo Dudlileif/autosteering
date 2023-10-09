@@ -9,9 +9,11 @@ import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:nmea/nmea.dart';
 
-/// A message decoder for decoding [Uint8List] data received from the network.
+/// A message decoder for decoding [Uint8List] data received from connected
+/// hardware.
 class MessageDecoder {
-  /// A message decoder for decoding [Uint8List] data received from the network.
+  /// A message decoder for decoding [Uint8List] data received from
+  /// connected hardware.
   ///
   ///[messagesToKeep] is ghw many messages to keep for the different list of
   /// previous messages. This will also set the length for how many
@@ -33,7 +35,7 @@ class MessageDecoder {
   /// A list of the previous [messagesToKeep] count of [GGASentence]s and
   /// [PANDASentence]s decoded.
   /// Used for calculating the [gnssFrequency].
-  List<SentenceReceiveTime> gnssSentences = [];
+  List<GnssPositionCommonSentence> gnssSentences = [];
 
   /// A list of the previous [messagesToKeep] count of [VTGSentence]s decoded.
   List<VTGSentence> vtgSentences = [];
@@ -292,8 +294,10 @@ class MessageDecoder {
             );
           }
         } else if (str.startsWith(r'$')) {
-          final decoder = NmeaDecoder()
-            ..registerTalkerSentence(
+          final decoder = NmeaDecoder(
+            onUnknownSentence: (line) => PANDASentence(raw: line),
+          )
+            ..registerCustomSentence(
               'GGA',
               (line) => GGASentence(raw: line),
             )
@@ -305,8 +309,8 @@ class MessageDecoder {
               'TXT',
               (line) => TXTSentence(raw: line),
             )
-            ..registerProprietarySentence(
-              'ANDA',
+            ..registerCustomSentence(
+              'PANDA',
               (line) => PANDASentence(raw: line),
             );
           final nmea = decoder.decode(str);
@@ -323,7 +327,7 @@ class MessageDecoder {
                 'TXT message from GNSS hardware: ${nmea.raw}',
               ),
             );
-          } else if (nmea is GGASentence) {
+          } else if (nmea is GnssPositionCommonSentence) {
             if (nmea.quality != null) {
               messages.add((gnssFixQuality: nmea.quality!));
             }
@@ -363,60 +367,28 @@ class MessageDecoder {
               gnssSentences.removeAt(0);
             }
             messages.add((gnssCurrentFrequency: gnssFrequency));
-          } else if (nmea is PANDASentence) {
-            if (nmea.quality != null) {
-              messages.add((gnssFixQuality: nmea.quality!));
-            }
-            if (nmea.numSatellites != null) {
-              messages.add((numSatellites: nmea.numSatellites));
-            }
-            if (nmea.longitude != null && nmea.latitude != null) {
-              messages.add(
-                (
-                  gnssPosition: Geographic(
-                    lon: nmea.longitude!,
-                    lat: nmea.latitude!,
-                  ),
-                  time: nmea.utc ?? DateTime.now(),
-                ),
-              );
-            }
-            if (nmea.hdop != null) {
-              messages.add((gnssHdop: nmea.hdop!));
-            }
-            if (nmea.altitudeGeoid != null) {
-              messages.add((gnssAltitude: nmea.altitudeGeoid!));
-            }
-            if (nmea.imuHeading != null &&
-                nmea.imuPitch != null &&
-                nmea.imuRoll != null) {
-              final reading = ImuReading(receiveTime: nmea.deviceReceiveTime);
-              imuReadings.add(reading);
-              while (imuReadings.length > messagesToKeep * 5) {
-                imuReadings.removeAt(0);
+
+            if (nmea is PANDASentence) {
+              if (nmea.imuHeading != null &&
+                  nmea.imuPitch != null &&
+                  nmea.imuRoll != null) {
+                final reading = ImuReading(
+                  receiveTime: nmea.deviceReceiveTime,
+                  yawFromStartup: nmea.imuHeading! / 10,
+                  pitch: nmea.imuPitch! / 10,
+                  roll: nmea.imuRoll! / 10,
+                );
+                imuReadings.add(reading);
+                while (imuReadings.length > messagesToKeep * 5) {
+                  imuReadings.removeAt(0);
+                }
+                messages.addAll([
+                  imuReadingMatchingGnssDelay,
+                  (imuCurrentFrequency: imuFrequency),
+                  (imuLatestRaw: reading),
+                ]);
               }
-              messages.addAll([
-                imuReadingMatchingGnssDelay,
-                (imuCurrentFrequency: imuFrequency),
-                (imuLatestRaw: reading),
-              ]);
             }
-
-            messages.add(
-              (
-                gnssUpdateTimeDevice: nmea.deviceReceiveTime,
-                gnssUpdateTimeReceiver: nmea.utc?.toLocal(),
-                gnssUpdateDelay: nmea.deviceReceiveDelay,
-              ),
-            );
-
-            if (nmea.valid) {
-              gnssSentences.add(nmea);
-            }
-            while (gnssSentences.length > messagesToKeep) {
-              gnssSentences.removeAt(0);
-            }
-            messages.add((gnssCurrentFrequency: gnssFrequency));
           }
         } else if (str.startsWith('Message unfinished')) {
           messages.add(LogEvent(Level.trace, str));

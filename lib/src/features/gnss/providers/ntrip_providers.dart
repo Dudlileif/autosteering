@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:agopengps_flutter/src/features/communication/communication.dart';
 import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
-import 'package:agopengps_flutter/src/features/network/network.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -194,7 +194,7 @@ class NtripAlive extends _$NtripAlive {
 /// A provider for creating and listening to an [NtripClient].
 ///
 /// The received NTRIP messages will be split into parts and sent to the
-/// connected [GnssSerial] if connected or the [TcpServer].
+/// connected [HardwareSerial] if connected or the [TcpServer].
 @Riverpod(keepAlive: true)
 Future<NtripClient?> ntripClient(NtripClientRef ref) async {
   if (!ref.watch(ntripEnabledProvider)) {
@@ -215,8 +215,8 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
             data.socket.listen((event) {
               ref.read(ntripAliveProvider.notifier).update(value: true);
 
-              if (ref.read(gnssSerialProvider) != null) {
-                ref.read(gnssSerialProvider)?.write(event);
+              if (ref.read(hardwareSerialProvider) != null) {
+                ref.read(hardwareSerialProvider)?.write(event);
               } else {
                 ref.read(tcpServerProvider.notifier).send(event);
               }

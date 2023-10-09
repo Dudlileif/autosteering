@@ -22,14 +22,15 @@ class CurrentCountry extends _$CurrentCountry {
         if (next != previous) {
           ref
               .read(settingsProvider.notifier)
-              .update(SettingsKey.currentCountry, next?.name);
+              .update(SettingsKey.mapCurrentCountry, next?.name);
         }
       },
     );
     if (ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.currentCountry)) {
-      final name = ref.read(settingsProvider)[SettingsKey.currentCountry.name];
+        .containsKey(SettingsKey.mapCurrentCountry)) {
+      final name =
+          ref.read(settingsProvider)[SettingsKey.mapCurrentCountry.name];
       if (name != null) {
         final country = Countries.current(name as String);
         if (country != null) {
@@ -89,7 +90,7 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref.read(settingsProvider.notifier).update(
-              SettingsKey.sortedAvailableCountryLayers,
+              SettingsKey.mapLayersCountrySorted,
               next.map((e) => e.name).toList(),
             );
       }
@@ -99,10 +100,10 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
     if (country != null) {
       if (ref
           .read(settingsProvider.notifier)
-          .containsKey(SettingsKey.sortedAvailableCountryLayers)) {
+          .containsKey(SettingsKey.mapLayersCountrySorted)) {
         final layerList = ref
             .read(settingsProvider.notifier)
-            .getList(SettingsKey.sortedAvailableCountryLayers)!;
+            .getList(SettingsKey.mapLayersCountrySorted)!;
 
         return List<String>.from(layerList)
             .map(
@@ -143,7 +144,7 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref.read(settingsProvider.notifier).update(
-              SettingsKey.enabledCountryLayers,
+              SettingsKey.mapLayersCountryEnabled,
               next.map((e) => e.name).toList(),
             );
       }
@@ -155,10 +156,10 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
     if (country != null) {
       if (ref
           .read(settingsProvider.notifier)
-          .containsKey(SettingsKey.enabledCountryLayers)) {
+          .containsKey(SettingsKey.mapLayersCountryEnabled)) {
         final countryList = ref
             .read(settingsProvider.notifier)
-            .getList(SettingsKey.enabledCountryLayers)!;
+            .getList(SettingsKey.mapLayersCountryEnabled)!;
 
         for (final name in List<String>.from(countryList)) {
           final layer = country.layer(name);
@@ -233,7 +234,7 @@ class CountryLayerOpacities extends _$CountryLayerOpacities {
           _saveToSettingsTimer = Timer(
             const Duration(seconds: 1),
             () => ref.read(settingsProvider.notifier).update(
-                  SettingsKey.countryLayersOpacities,
+                  SettingsKey.mapLayersCountryOpacities,
                   Map<String, double>.from(next)
                     ..removeWhere((key, value) => value == 0.5),
                 ),
@@ -250,10 +251,10 @@ class CountryLayerOpacities extends _$CountryLayerOpacities {
     if (country != null) {
       if (ref
           .read(settingsProvider.notifier)
-          .containsKey(SettingsKey.countryLayersOpacities)) {
+          .containsKey(SettingsKey.mapLayersCountryOpacities)) {
         final countryMap = ref
             .read(settingsProvider.notifier)
-            .getMap(SettingsKey.countryLayersOpacities)!;
+            .getMap(SettingsKey.mapLayersCountryOpacities)!;
 
         Map<String, double>.from(countryMap).forEach((name, opacity) {
           final layer = country.layer(name);

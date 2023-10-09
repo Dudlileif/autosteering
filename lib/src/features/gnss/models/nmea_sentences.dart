@@ -2,67 +2,42 @@ import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:nmea/nmea.dart';
 
 /// An abstract implementation class for an interface to interchangeably use the
-/// receive time and delay of [GGASentence] and [PANDASentence] objects.
-abstract class SentenceReceiveTime {
-  /// The time this message was received by this device.
-  DateTime get deviceReceiveTime;
-
-  /// The time delta from the message was created to it was received by this
-  /// device.
-  Duration? get deviceReceiveDelay;
-}
-
-/// An NMEA message for position data.
-class GGASentence extends TalkerSentence implements SentenceReceiveTime {
-  /// An NMEA message for position data parsed from the [raw] string.
+/// identical parts of [GGASentence] and [PANDASentence] objects.
+abstract class GnssPositionCommonSentence extends CustomSentence {
+  /// An abstract implementation class for an interface to interchangeably use
+  /// the identical parts of [GGASentence] and [PANDASentence] objects.
   ///
-  /// Example message:
-  /// ```$GNGGA,124816.90,6000.00000,N,01000.00000,E,1,12,0.83,91.7,M,
-  /// 39.5,M,,*72```
-  ///
-  /// Type: $GNGGA,
-  /// UTC (HHMMSS.SS): 124816.90,
-  /// Latitude (DDMM.MMMMM): 6000.00000,
-  /// N/S: N,
-  /// Longitude (DDDMM.MMMMM): 01000.00000,
-  /// E/W: E,
-  /// Quality: 1,
-  /// Num sats: 12,
-  /// HDOP: 0.83,
-  /// Altitude geoid: 91.7,
-  /// Altitude unit: M,
-  /// Geodial separation: 39.5,
-  /// Altitude unit: M,
-  /// Age of differential data: ,    *** Empty, we don't care about this one ***
-  /// Checksum: *72
-  GGASentence({required super.raw}) : deviceReceiveTime = DateTime.now();
+  /// [raw] is the raw string of the sentence.
+  /// [type] is what kind of NMEA sentence this is.
+  GnssPositionCommonSentence({required super.identifier, required super.raw})
+      : deviceReceiveTime = DateTime.now();
 
   /// The time this message was received by this device.
-  @override
   final DateTime deviceReceiveTime;
 
   /// The creation time of the message.
   DateTime? get utc {
     if (fields.length > 1) {
       final string = fields[1];
-
-      final hour = int.tryParse(string.substring(0, 2));
-      final minute = int.tryParse(string.substring(2, 4));
-      final second = int.tryParse(string.substring(4, 6));
-      var milliSecond = int.tryParse(string.substring(7, 9));
-      if (milliSecond != null) {
-        milliSecond *= 10;
+      if (string.length >= 9) {
+        final hour = int.tryParse(string.substring(0, 2));
+        final minute = int.tryParse(string.substring(2, 4));
+        final second = int.tryParse(string.substring(4, 6));
+        var milliSecond = int.tryParse(string.substring(7, 9));
+        if (milliSecond != null) {
+          milliSecond *= 10;
+        }
+        final now = DateTime.timestamp();
+        return DateTime.utc(
+          now.year,
+          now.month,
+          now.day,
+          hour ?? now.hour,
+          minute ?? now.minute,
+          second ?? now.second,
+          milliSecond ?? now.millisecond,
+        );
       }
-      final now = DateTime.timestamp();
-      return DateTime.utc(
-        now.year,
-        now.month,
-        now.day,
-        hour ?? now.hour,
-        minute ?? now.minute,
-        second ?? now.second,
-        milliSecond ?? now.millisecond,
-      );
     }
 
     return null;
@@ -99,17 +74,50 @@ class GGASentence extends TalkerSentence implements SentenceReceiveTime {
   double? get altitudeGeoid =>
       fields.length > 9 ? double.tryParse(fields[9]) : null;
 
-  /// The separation between the geiod (MSL) and the ellipsoid (WGS-84).
-  double? get geoidalSeparation =>
-      fields.length > 11 ? double.tryParse(fields[11]) : null;
+  /// The time in seconds since the last differential update.
+  double? get timeSinceLastDGPSUpdate;
 
   /// The time delta from the message was created to it was received by this
   /// device.
-  @override
   Duration? get deviceReceiveDelay => switch (utc != null) {
         true => deviceReceiveTime.difference(utc!.toLocal()),
         false => null,
       };
+}
+
+/// An NMEA message for position data.
+class GGASentence extends GnssPositionCommonSentence {
+  /// An NMEA message for position data parsed from the [raw] string.
+  ///
+  /// Example message:
+  /// ```$GNGGA,124816.90,6000.00000,N,01000.00000,E,1,12,0.83,91.7,M,
+  /// 39.5,M,,*72```
+  ///
+  /// Type: $GNGGA,
+  /// UTC (HHMMSS.SS): 124816.90,
+  /// Latitude (DDMM.MMMMM): 6000.00000,
+  /// N/S: N,
+  /// Longitude (DDDMM.MMMMM): 01000.00000,
+  /// E/W: E,
+  /// Quality: 1,
+  /// Num sats: 12,
+  /// HDOP: 0.83,
+  /// Altitude geoid: 91.7,
+  /// Altitude unit: M,
+  /// Geodial separation: 39.5,
+  /// Altitude unit: M,
+  /// Age of differential data: ,    *** Empty, we don't care about this one ***
+  /// Checksum: *72
+  GGASentence({required super.raw}) : super(identifier: 'GNGGA');
+
+  /// The separation between the geiod (MSL) and the ellipsoid (WGS-84).
+  double? get geoidalSeparation =>
+      fields.length > 11 ? double.tryParse(fields[11]) : null;
+
+  /// The time in seconds since the last differential update.
+  @override
+  double? get timeSinceLastDGPSUpdate =>
+      fields.length > 13 ? double.tryParse(fields[13]) : null;
 }
 
 /// An NMEA message for course over ground and ground velocity data.
@@ -181,7 +189,7 @@ class TXTSentence extends TalkerSentence {
 
 /// An AgOpenGPS compatible $PANDA sentence for a combined sentence with
 /// position, velocity and IMU.
-class PANDASentence extends ProprietarySentence implements SentenceReceiveTime {
+class PANDASentence extends GnssPositionCommonSentence {
   // ignore: lines_longer_than_80_chars
   /// An AgOpenGPS compatible $PANDA sentence for a combined sentence with
   /// position, velocity and IMU.
@@ -207,72 +215,11 @@ class PANDASentence extends ProprietarySentence implements SentenceReceiveTime {
   /// IMU pitch (degrees * 10): -23,
   /// Yaw rate (degres / second): 0,
   /// Checksum: *70
-  PANDASentence({required super.raw, super.manufacturer = 'ANDA'})
-      : deviceReceiveTime = DateTime.now();
+  PANDASentence({
+    required super.raw,
+  }) : super(identifier: 'PANDA');
 
-  /// The creation time of the message.
-  DateTime? get utc {
-    if (fields.length > 1) {
-      final string = fields[1];
-
-      final hour = int.tryParse(string.substring(0, 2));
-      final minute = int.tryParse(string.substring(2, 4));
-      final second = int.tryParse(string.substring(4, 6));
-      var milliSecond = int.tryParse(string.substring(7, 9));
-      if (milliSecond != null) {
-        milliSecond *= 10;
-      }
-      final now = DateTime.timestamp();
-      return DateTime.utc(
-        now.year,
-        now.month,
-        now.day,
-        hour ?? now.hour,
-        minute ?? now.minute,
-        second ?? now.second,
-        milliSecond ?? now.millisecond,
-      );
-    }
-
-    return null;
-  }
-
-  /// The time this message was received by this device.
   @override
-  final DateTime deviceReceiveTime;
-
-  /// The latitude of the position.
-  double? get latitude => fields.length > 3 && fields[2].length == 10
-      ? DegreeConverter.decimalDegreesFromDegreeMinutes(fields[2]) *
-          switch (fields[3]) {
-            'S' => -1,
-            _ => 1,
-          }
-      : null;
-
-  /// The longitude of the position.
-  double? get longitude => fields.length > 5 && fields[4].length == 11
-      ? DegreeConverter.decimalDegreesFromDegreeMinutes(fields[4]) *
-          switch (fields[5]) {
-            'W' => -1,
-            _ => 1,
-          }
-      : null;
-
-  /// The quality of the position fix.
-  int? get quality => fields.length > 6 ? int.tryParse(fields[6]) : null;
-
-  /// The number of satellites used to calculate the position.
-  int? get numSatellites => fields.length > 7 ? int.tryParse(fields[7]) : null;
-
-  /// Horizontal dilution of precision.
-  double? get hdop => fields.length > 8 ? double.tryParse(fields[8]) : null;
-
-  /// Altitude (m) over the geoid (mean sea level).
-  double? get altitudeGeoid =>
-      fields.length > 9 ? double.tryParse(fields[9]) : null;
-
-  /// The time in seconds since the last update.
   double? get timeSinceLastDGPSUpdate =>
       fields.length > 10 ? double.tryParse(fields[10]) : null;
 
@@ -292,12 +239,4 @@ class PANDASentence extends ProprietarySentence implements SentenceReceiveTime {
   /// The IMU yaw rate in degrees/second.
   double? get imuYawRate =>
       fields.length > 15 ? double.tryParse(fields[15]) : null;
-
-  /// The time delta from the message was created to it was received by this
-  /// device.
-  @override
-  Duration? get deviceReceiveDelay => switch (utc != null) {
-        true => deviceReceiveTime.difference(utc!.toLocal()),
-        false => null,
-      };
 }

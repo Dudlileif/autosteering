@@ -16,13 +16,13 @@ class CopernicusInstanceId extends _$CopernicusInstanceId {
       if (previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.copernicusInstanceId, next);
+            .update(SettingsKey.mapCopernicusInstanceId, next);
       }
     });
 
     return ref
         .read(settingsProvider.notifier)
-        .getString(SettingsKey.copernicusInstanceId);
+        .getString(SettingsKey.mapCopernicusInstanceId);
   }
 
   /// Update the [state] to [value].
@@ -39,7 +39,7 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next && instanceId != null) {
         ref.read(settingsProvider.notifier).update(
-              SettingsKey.sortedAvailableSentinelLayers,
+              SettingsKey.mapLayersSentinelSorted,
               next.map((e) => e.layerType.id).toList(),
             );
       }
@@ -48,10 +48,10 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
     if (instanceId != null) {
       if (ref
           .read(settingsProvider.notifier)
-          .containsKey(SettingsKey.sortedAvailableSentinelLayers)) {
+          .containsKey(SettingsKey.mapLayersSentinelSorted)) {
         final layerList = ref
             .read(settingsProvider.notifier)
-            .getList(SettingsKey.sortedAvailableSentinelLayers)!;
+            .getList(SettingsKey.mapLayersSentinelSorted)!;
 
         return List<String>.from(layerList)
             .map(
@@ -114,7 +114,7 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref.read(settingsProvider.notifier).update(
-              SettingsKey.enabledSentinelLayers,
+              SettingsKey.mapLayersSentinelEnabled,
               next.map((e) => e.layerType.id).toList(),
             );
       }
@@ -126,10 +126,10 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
     if (instanceId != null) {
       if (ref
           .read(settingsProvider.notifier)
-          .containsKey(SettingsKey.enabledSentinelLayers)) {
+          .containsKey(SettingsKey.mapLayersSentinelEnabled)) {
         final layerList = ref
             .read(settingsProvider.notifier)
-            .getList(SettingsKey.enabledSentinelLayers)!;
+            .getList(SettingsKey.mapLayersSentinelEnabled)!;
 
         for (final layerId in List<String>.from(layerList)) {
           final layerType = SentinelLayerType.values
@@ -194,7 +194,7 @@ class SentinelLayerOpacities extends _$SentinelLayerOpacities {
           _saveToSettingsTimer = Timer(
             const Duration(seconds: 1),
             () => ref.read(settingsProvider.notifier).update(
-                  SettingsKey.sentinelLayersOpacities,
+                  SettingsKey.mapLayersSentinelOpacities,
                   next.map<String, double>(
                     (key, value) => MapEntry(key.id, value),
                   )..removeWhere((key, value) => value == 0.5),
@@ -208,10 +208,10 @@ class SentinelLayerOpacities extends _$SentinelLayerOpacities {
 
     if (ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.sentinelLayersOpacities)) {
+        .containsKey(SettingsKey.mapLayersSentinelOpacities)) {
       final layerMap = ref
           .read(settingsProvider.notifier)
-          .getMap(SettingsKey.sentinelLayersOpacities)!;
+          .getMap(SettingsKey.mapLayersSentinelOpacities)!;
       Map<String, double>.from(layerMap).forEach((key, value) {
         final layerType = SentinelLayerType.values
             .firstWhereOrNull((element) => element.id == key);

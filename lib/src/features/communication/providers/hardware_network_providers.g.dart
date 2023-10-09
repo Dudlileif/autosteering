@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'network_providers.dart';
+part of 'hardware_network_providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -132,25 +132,25 @@ final networkAvailableProvider = Provider<bool>.internal(
 );
 
 typedef NetworkAvailableRef = ProviderRef<bool>;
-String _$hardwareIsConnectedHash() =>
-    r'868c2a8319a69cbd23814e20bc583381cccd7a8c';
+String _$hardwareNetworkAliveHash() =>
+    r'34d239e447fc1d306a7aedb2179959c9d78560d8';
 
 /// A provider for whether there is a connection with the hardware.
 ///
-/// Copied from [HardwareIsConnected].
-@ProviderFor(HardwareIsConnected)
-final hardwareIsConnectedProvider =
-    NotifierProvider<HardwareIsConnected, bool>.internal(
-  HardwareIsConnected.new,
-  name: r'hardwareIsConnectedProvider',
+/// Copied from [HardwareNetworkAlive].
+@ProviderFor(HardwareNetworkAlive)
+final hardwareNetworkAliveProvider =
+    NotifierProvider<HardwareNetworkAlive, bool>.internal(
+  HardwareNetworkAlive.new,
+  name: r'hardwareNetworkAliveProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$hardwareIsConnectedHash,
+      : _$hardwareNetworkAliveHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$HardwareIsConnected = Notifier<bool>;
+typedef _$HardwareNetworkAlive = Notifier<bool>;
 String _$hardwareIPAdressHash() => r'93c5230172faa73ea94b9f2f351ca9ad11264274';
 
 /// A provider for the IP adress of the hardware we want to communicate with.
@@ -228,7 +228,7 @@ final hardwareWebSocketPortProvider =
 );
 
 typedef _$HardwareWebSocketPort = Notifier<int>;
-String _$tcpServerHash() => r'9f8718b465a4db13e386ecfc1d3b81f3b396bfc7';
+String _$tcpServerHash() => r'2d075ffd4a3fb8fb20b0d34ba4a1ce07e6107e32';
 
 /// A provider for a TCP server for sending/receiving data via TCP.
 ///

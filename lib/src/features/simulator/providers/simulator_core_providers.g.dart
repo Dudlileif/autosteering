@@ -43,7 +43,7 @@ final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
-String _$initializeSimCoreHash() => r'2ee638e418ea316fd6137a8e1126cdae0ad67696';
+String _$initializeSimCoreHash() => r'3fb7254a2d7d2a89f9b422b05dcf20907f6a0712';
 
 /// Sends initial parameters to  the sim core.
 ///
@@ -60,7 +60,7 @@ final _initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef _InitializeSimCoreRef = AutoDisposeProviderRef<void>;
-String _$simCoreWebStreamHash() => r'9adb7c7309f9f39a0d0a8dde5e91699d91e0b009';
+String _$simCoreWebStreamHash() => r'997a0464647be260496b9decfe1dd88c3fd32861';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
@@ -82,7 +82,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'3745a591355d6f992036c5c713cf05481a331b63';
+    r'fda1059785e4540c3808fb924a1e4c77913fa271';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.
@@ -124,10 +124,10 @@ final simInputProvider = NotifierProvider<SimInput, SimPlatform>.internal(
 
 typedef _$SimInput = Notifier<SimPlatform>;
 String _$sendMessagesToHardwareIfNetworkHash() =>
-    r'1b5a38b11f282c2c53f4856f113c833dbe3ca675';
+    r'6d7cdb5fd546be2709271925379a3056e929aadf';
 
 /// A provider for whether we should send messages to the hardware from the
-/// Simulator Core when network is available, see[networkAvailable].
+/// Simulator Core when network is available, see [networkAvailable].
 ///
 /// Copied from [SendMessagesToHardwareIfNetwork].
 @ProviderFor(SendMessagesToHardwareIfNetwork)
@@ -223,6 +223,26 @@ final simCoreAllowManualInputProvider =
 );
 
 typedef _$SimCoreAllowManualInput = Notifier<bool>;
+String _$simCoreAllowInterpolationHash() =>
+    r'62d3d9034ad5436e5e2df9e507b2c2096755b1e1';
+
+/// A provider for whether the sim core should allow interpolation steps
+/// between the hardware GNSS updates.
+///
+/// Copied from [SimCoreAllowInterpolation].
+@ProviderFor(SimCoreAllowInterpolation)
+final simCoreAllowInterpolationProvider =
+    NotifierProvider<SimCoreAllowInterpolation, bool>.internal(
+  SimCoreAllowInterpolation.new,
+  name: r'simCoreAllowInterpolationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simCoreAllowInterpolationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimCoreAllowInterpolation = Notifier<bool>;
 String _$simCoreVehicleAutoCenterSteeringHash() =>
     r'0d48d6d46f67170250b16d9a8bc0b1dd43d0cc6b';
 

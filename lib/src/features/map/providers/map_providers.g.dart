@@ -263,7 +263,7 @@ final mainMapControllerProvider =
 );
 
 typedef _$MainMapController = Notifier<MapController>;
-String _$homePositionHash() => r'9887c76d9fd12dbfe3d8dbe1040f342b26aaa652';
+String _$homePositionHash() => r'565fba2f6435effb444ac537767fbdbd1e5abc65';
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
 ///
@@ -280,7 +280,7 @@ final homePositionProvider = NotifierProvider<HomePosition, LatLng>.internal(
 
 typedef _$HomePosition = Notifier<LatLng>;
 String _$centerMapOnVehicleHash() =>
-    r'6268ec68323bb1790b8585e16fcdb04b57ec6e4b';
+    r'44efa38a7de6f7d3f022323aca5d2d4ebc17d7af';
 
 /// Whether the map should center on the vehicle or if it could be moved freely.
 ///
@@ -355,7 +355,7 @@ final mapOffset3DProvider =
 );
 
 typedef _$MapOffset3D = Notifier<MapCenterOffset>;
-String _$alwaysPointNorthHash() => r'd2dc5ebbc011a5c3503b45653eb9c9bc7dcc70b8';
+String _$alwaysPointNorthHash() => r'3c0833b6f831c68a304e12ee171f753f71afd35e';
 
 /// Whether the map always should point to the north and not rotate.
 ///
@@ -374,7 +374,7 @@ final alwaysPointNorthProvider =
 
 typedef _$AlwaysPointNorth = Notifier<bool>;
 String _$mapUse3DPerspectiveHash() =>
-    r'e2a44a841ae01677fcc8ea2de4c63e33677e2a06';
+    r'f66d81d9c1e7b801d9e776fdc14b8ecb906757d3';
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
@@ -394,7 +394,7 @@ final mapUse3DPerspectiveProvider =
 
 typedef _$MapUse3DPerspective = Notifier<bool>;
 String _$map3DPerspectiveAngleHash() =>
-    r'c99b3fab3fff1e4cf8b480cf014947feb4b36d91';
+    r'6074a76785fbe4b8a74b0d0a97a30d74e76ae350';
 
 /// The angle that the 3D perspective should be seen from, as in radians
 /// from the orthogonal view.
