@@ -15,15 +15,11 @@ class MessageDecoder {
   /// A message decoder for decoding [Uint8List] data received from
   /// connected hardware.
   ///
-  ///[messagesToKeep] is ghw many messages to keep for the different list of
-  /// previous messages. This will also set the length for how many
-  /// [GGASentence]s will be used to calculate the [gnssFrequency].
-  ///
-  /// The [imuReadings] length will be set higher to due to the higher frequency
-  /// of readings and to ensure that there is a [imuReadingMatchingGnssDelay]
-  /// for the [gnssDelayMicroseconds]. The length will be set to
-  /// ```5 * messagesToKeep```.
-  MessageDecoder({this.messagesToKeep = 20});
+  ///[messagesToKeep] is how many messages to keep for the different list of
+  /// previous messages. This will also set the count for how many updates
+  /// to use for calculating [gnssFrequency] and [imuFrequency].
+
+  MessageDecoder({this.messagesToKeep = 100});
 
   /// How many messages to keep for the different list of previous messages.
   final int messagesToKeep;
@@ -268,7 +264,7 @@ class MessageDecoder {
                 receiveTime: DateTime.now(),
               );
               imuReadings.add(reading);
-              while (imuReadings.length > messagesToKeep * 5) {
+              while (imuReadings.length > messagesToKeep) {
                 imuReadings.removeAt(0);
               }
               messages.addAll([
@@ -379,7 +375,7 @@ class MessageDecoder {
                   roll: nmea.imuRoll! / 10,
                 );
                 imuReadings.add(reading);
-                while (imuReadings.length > messagesToKeep * 5) {
+                while (imuReadings.length > messagesToKeep) {
                   imuReadings.removeAt(0);
                 }
                 messages.addAll([

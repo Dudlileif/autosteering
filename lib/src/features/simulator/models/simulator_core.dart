@@ -4,6 +4,7 @@ import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
@@ -232,6 +233,9 @@ class SimulatorCore {
       final messages = decoder.decode(data);
 
       for (final message in messages) {
+        if (message is ({int gnssFixQuality})) {
+          state.handleMessage(message);
+        }
         if (message is ImuReading ||
             message is ({Geographic gnssPosition, DateTime time})) {
           state.handleMessage(message);
@@ -404,9 +408,19 @@ class _SimulatorCoreState {
   /// The current GNSS update position and time.
   ({Geographic gnssPosition, DateTime time})? gnssUpdate;
 
+  /// The quality of the last GNSS fix.
+  GnssFixQuality gnssFixQuality = GnssFixQuality.notAvailable;
+
   /// The minimum distance between GNSS updates for updating the bearing
   /// gauge.
-  double minBearingUpdateDistance = 0.05;
+  double get minBearingUpdateDistance => switch (gnssFixQuality) {
+        GnssFixQuality.fix => 1,
+        GnssFixQuality.differentialFix => 0.6,
+        GnssFixQuality.floatRTK => 0.3,
+        GnssFixQuality.ppsFix => 0.2,
+        GnssFixQuality.rtk => 0.05,
+        _ => double.infinity,
+      };
 
   /// The velocity of the current vehicle, as calculated from the [distance] and
   /// [period].
@@ -602,6 +616,10 @@ class _SimulatorCoreState {
         gnssUpdate = message;
       }
     }
+    // Update the vehicle GNSS fix quality.
+    else if (message is ({int gnssFixQuality})) {
+      gnssFixQuality = GnssFixQuality.values[message.gnssFixQuality];
+    }
     // Update the vehicle velocity
     else if (message is ({num velocity})) {
       if (allowManualSimInput) {
@@ -650,7 +668,7 @@ class _SimulatorCoreState {
       }
     } // Set the zero point for the IMU bearing to the next GNSS bearing.
     else if (message is ({bool setZeroIMUBearingToNextGNSSBearing})) {
-      if (!message.setZeroIMUBearingToNextGNSSBearing && vehicle != null) {
+      if (message.setZeroIMUBearingToNextGNSSBearing && vehicle != null) {
         vehicle!.imu.bearingIsSet = false;
       }
     }
@@ -1235,7 +1253,7 @@ class _SimulatorCoreState {
           }
         } else {
           // Only update bearing if distance to a previous position is larger
-          // than 0.05 m.
+          // than [minBearingUpdateDistance].
           final prevPositionIndex = distances
               .lastIndexWhere((element) => element > minBearingUpdateDistance);
 
@@ -1307,8 +1325,7 @@ class _SimulatorCoreState {
       while (prevGnssUpdates.length > gaugesAverageCount) {
         prevGnssUpdates.removeAt(0);
       }
-    }
-    else if (allowManualSimInput) {
+    } else if (allowManualSimInput) {
       _simGaugeUpdate();
     }
   }

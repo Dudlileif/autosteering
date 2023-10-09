@@ -115,6 +115,7 @@ Stream<String?> hardwareSerialStream(HardwareSerialStreamRef ref) {
             ref
                 .read(gnssCurrentFixQualityProvider.notifier)
                 .updateByIndex(message.gnssFixQuality);
+            ref.read(simInputProvider.notifier).send(message);
           } else if (message is ({int? numSatellites})) {
             ref
                 .read(gnssCurrentNumSatellitesProvider.notifier)
