@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/communication/communication.dart';
 import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
+import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

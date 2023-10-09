@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/communication/communication.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
 import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
@@ -535,7 +535,7 @@ class _SimulatorCoreState {
     // Update whether the simulation should interpolate between the GNSS
     // updates.
     else if (message is ({bool allowSimInterpolation})) {
-      allowManualSimInput = message.allowSimInterpolation;
+      allowSimInterpolation = message.allowSimInterpolation;
     }
     // Update whether the vehicle position should take the roll and pitch into
     // account when an IMU is connected.
@@ -1308,7 +1308,7 @@ class _SimulatorCoreState {
         prevGnssUpdates.removeAt(0);
       }
     }
-    if (allowManualSimInput) {
+    else if (allowManualSimInput) {
       _simGaugeUpdate();
     }
   }

@@ -1,9 +1,9 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/communication/communication.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';

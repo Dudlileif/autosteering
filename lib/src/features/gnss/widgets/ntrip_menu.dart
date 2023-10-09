@@ -15,7 +15,7 @@ class NtripMenu extends ConsumerWidget {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'NTRIP Menu',
+      text: 'NTRIP (RTK)',
       iconOverrideWidget: Consumer(
         builder: (context, ref, child) => Icon(
           Icons.straighten,
