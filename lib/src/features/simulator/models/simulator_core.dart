@@ -233,14 +233,14 @@ class SimulatorCore {
       final messages = decoder.decode(data);
 
       for (final message in messages) {
-        if (message is ({int gnssFixQuality})) {
-          state.handleMessage(message);
-        }
         if (message is ImuReading ||
             message is ({Geographic gnssPosition, DateTime time})) {
           state.handleMessage(message);
         } else if (message != null) {
           updateMainThreadStream.add(message);
+          if (message is GnssPositionCommonSentence) {
+            state.handleMessage((gnssFixQuality: message.quality ?? 0));
+          }
         }
       }
     }
@@ -416,9 +416,9 @@ class _SimulatorCoreState {
   double get minBearingUpdateDistance => switch (gnssFixQuality) {
         GnssFixQuality.fix => 1,
         GnssFixQuality.differentialFix => 0.6,
-        GnssFixQuality.floatRTK => 0.3,
-        GnssFixQuality.ppsFix => 0.2,
-        GnssFixQuality.rtk => 0.05,
+        GnssFixQuality.floatRTK => 0.5,
+        GnssFixQuality.ppsFix => 0.4,
+        GnssFixQuality.rtk => 0.1,
         _ => double.infinity,
       };
 
@@ -1325,6 +1325,8 @@ class _SimulatorCoreState {
       while (prevGnssUpdates.length > gaugesAverageCount) {
         prevGnssUpdates.removeAt(0);
       }
+    } else if (gnssUpdate == null && !allowManualSimInput) {
+      distance = 0;
     } else if (allowManualSimInput) {
       _simGaugeUpdate();
     }
