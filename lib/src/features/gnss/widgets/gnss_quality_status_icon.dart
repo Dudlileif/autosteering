@@ -26,15 +26,21 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
   final OverlayPortalController portalController = OverlayPortalController();
 
   String get message {
-    final textLines = [ref.watch(gnssCurrentFixQualityProvider).name];
+    final nmea = ref.watch(gnssCurrentSentenceProvider);
 
-    final hdop = ref.watch(gnssCurrentHdopProvider);
+    final textLines = [GnssFixQuality.values[nmea?.quality ?? 0].name];
+
+    final hdop = nmea?.hdop;
     if (hdop != null) {
       textLines.add('HDOP: $hdop');
     }
-    final altitude = ref.watch(gnssCurrentAltitudeProvider);
+    final altitude = nmea?.altitudeGeoid;
     if (altitude != null) {
       textLines.add('Altitude: ${altitude.toStringAsFixed(1)} m');
+    }
+    final age = nmea?.timeSinceLastDGPSUpdate;
+    if (age != null) {
+      textLines.add('Age: ${age.toStringAsFixed(1)} s');
     }
     textLines.add(
       '${ref.watch(gnssCurrentFrequencyProvider)?.toStringAsFixed(1)} Hz',
@@ -85,9 +91,16 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
         },
         child: Consumer(
           builder: (context, ref, child) {
-            final fixQuality = ref.watch(gnssCurrentFixQualityProvider);
+            final fixQuality = GnssFixQuality.values[ref.watch(
+                  gnssCurrentSentenceProvider.select((value) => value?.quality),
+                ) ??
+                0];
             final numSatellites =
-                ref.watch(gnssCurrentNumSatellitesProvider) ?? 0;
+                ref.watch(
+                  gnssCurrentSentenceProvider
+                      .select((value) => value?.numSatellites),
+                ) ??
+                0;
             return Stack(
               children: [
                 Align(

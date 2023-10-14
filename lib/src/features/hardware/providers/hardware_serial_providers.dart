@@ -111,21 +111,8 @@ Stream<String?> hardwareSerialStream(HardwareSerialStreamRef ref) {
           if (message is ImuReading ||
               message is ({Geographic gnssPosition, DateTime time})) {
             ref.read(simInputProvider.notifier).send(message);
-          } else if (message is ({int gnssFixQuality})) {
-            ref
-                .read(gnssCurrentFixQualityProvider.notifier)
-                .updateByIndex(message.gnssFixQuality);
-            ref.read(simInputProvider.notifier).send(message);
-          } else if (message is ({int? numSatellites})) {
-            ref
-                .read(gnssCurrentNumSatellitesProvider.notifier)
-                .update(message.numSatellites);
-          } else if (message is ({double gnssHdop})) {
-            ref.read(gnssCurrentHdopProvider.notifier).update(message.gnssHdop);
-          } else if (message is ({double gnssAltitude})) {
-            ref
-                .read(gnssCurrentAltitudeProvider.notifier)
-                .update(message.gnssAltitude);
+          } else if (message is GnssPositionCommonSentence) {
+            ref.read(gnssCurrentSentenceProvider.notifier).update(message);
           } else if (message is ({
             DateTime gnssUpdateTimeDevice,
             DateTime? gnssUpdateTimeReceiver,

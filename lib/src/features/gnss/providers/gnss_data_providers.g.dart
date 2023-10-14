@@ -6,81 +6,26 @@ part of 'gnss_data_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$gnssCurrentFixQualityHash() =>
-    r'fd392c786494039b8e98c28688897ff753c7a135';
+String _$gnssCurrentSentenceHash() =>
+    r'1a25c17a04907b7bcdfab9cfeb90cf18016268e3';
 
 /// A provider for the quality of last GNSS position update.
 ///
-/// Copied from [GnssCurrentFixQuality].
-@ProviderFor(GnssCurrentFixQuality)
-final gnssCurrentFixQualityProvider =
-    AutoDisposeNotifierProvider<GnssCurrentFixQuality, GnssFixQuality>.internal(
-  GnssCurrentFixQuality.new,
-  name: r'gnssCurrentFixQualityProvider',
+/// Copied from [GnssCurrentSentence].
+@ProviderFor(GnssCurrentSentence)
+final gnssCurrentSentenceProvider = AutoDisposeNotifierProvider<
+    GnssCurrentSentence, GnssPositionCommonSentence?>.internal(
+  GnssCurrentSentence.new,
+  name: r'gnssCurrentSentenceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$gnssCurrentFixQualityHash,
+      : _$gnssCurrentSentenceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GnssCurrentFixQuality = AutoDisposeNotifier<GnssFixQuality>;
-String _$gnssCurrentNumSatellitesHash() =>
-    r'b05fb57c7253ab659d7253e499a3e26efc1b2a28';
-
-/// A provider for the quality of last GNSS position update.
-///
-/// Copied from [GnssCurrentNumSatellites].
-@ProviderFor(GnssCurrentNumSatellites)
-final gnssCurrentNumSatellitesProvider =
-    AutoDisposeNotifierProvider<GnssCurrentNumSatellites, int?>.internal(
-  GnssCurrentNumSatellites.new,
-  name: r'gnssCurrentNumSatellitesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gnssCurrentNumSatellitesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$GnssCurrentNumSatellites = AutoDisposeNotifier<int?>;
-String _$gnssCurrentHdopHash() => r'422908b71836c9ddd1764fcb47e8a05309f42c32';
-
-/// A provider for the HDOP (horizontal dilution of position) of the GNSS fix.
-///
-/// Copied from [GnssCurrentHdop].
-@ProviderFor(GnssCurrentHdop)
-final gnssCurrentHdopProvider =
-    AutoDisposeNotifierProvider<GnssCurrentHdop, double?>.internal(
-  GnssCurrentHdop.new,
-  name: r'gnssCurrentHdopProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gnssCurrentHdopHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$GnssCurrentHdop = AutoDisposeNotifier<double?>;
-String _$gnssCurrentAltitudeHash() =>
-    r'9c80e97b198302e0822b0735415bfcff6b3bdc44';
-
-/// A provider for the GNSS altifude.
-///
-/// Copied from [GnssCurrentAltitude].
-@ProviderFor(GnssCurrentAltitude)
-final gnssCurrentAltitudeProvider =
-    AutoDisposeNotifierProvider<GnssCurrentAltitude, double?>.internal(
-  GnssCurrentAltitude.new,
-  name: r'gnssCurrentAltitudeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gnssCurrentAltitudeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$GnssCurrentAltitude = AutoDisposeNotifier<double?>;
+typedef _$GnssCurrentSentence
+    = AutoDisposeNotifier<GnssPositionCommonSentence?>;
 String _$gnssCurrentFrequencyHash() =>
     r'a9f9e06836850d0f3029ceaf86e30a0bb6e4dc37';
 

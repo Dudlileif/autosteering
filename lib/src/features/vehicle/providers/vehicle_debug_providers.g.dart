@@ -99,7 +99,7 @@ final debugTravelledPathSizeProvider =
 
 typedef _$DebugTravelledPathSize = Notifier<int>;
 String _$debugTravelledPathListHash() =>
-    r'1c3cb1277562092280683c8f7cc1ce06cc095355';
+    r'b6e423e4ff98f9347d6d0f2abee98e0792953660';
 
 /// A list of the last [DebugTravelledPathSize] position points for the vehicle.
 ///

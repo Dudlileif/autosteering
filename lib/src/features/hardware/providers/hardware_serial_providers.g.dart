@@ -26,7 +26,7 @@ final availableSerialPortsProvider =
 
 typedef AvailableSerialPortsRef = AutoDisposeProviderRef<List<SerialPort>>;
 String _$hardwareSerialStreamHash() =>
-    r'17dd33109d23fdf558a506c200ba486154cdc40d';
+    r'b4d7f6ba0054851b7e014f2dcc687826ab4e9b6b';
 
 /// A stream of the incoming serial data from the connected hardware.
 ///

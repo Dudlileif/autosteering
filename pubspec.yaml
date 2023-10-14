@@ -36,7 +36,7 @@ dependencies:
     dio: ^5.3.3
     equatable: ^2.0.5
     fast_cached_network_image: ^1.2.0
-    file_picker: ^5.5.0
+    file_picker: ^6.0.0
     flex_color_scheme: ^7.3.1
     flutter:
         sdk: flutter
@@ -61,7 +61,7 @@ dependencies:
     universal_io: ^2.2.2
     usb_serial: ^0.5.1
     uuid: ^3.0.7
-    wakelock_plus: ^1.1.1
+    wakelock_plus: ^1.1.2
     web_socket_channel: ^2.4.0
     window_manager: ^0.3.7
 
@@ -70,7 +70,7 @@ dev_dependencies:
     custom_lint: ^0.5.3
     flutter_test:
         sdk: flutter
-    freezed: ^2.4.3
+    freezed: ^2.4.5
     json_serializable: ^6.7.1
     riverpod_generator: ^3.0.0-dev.3
     riverpod_lint: ^2.3.0

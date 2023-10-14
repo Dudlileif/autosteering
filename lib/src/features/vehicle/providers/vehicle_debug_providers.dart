@@ -75,7 +75,7 @@ class DebugTravelledPathList extends _$DebugTravelledPathList {
     if (ref.watch(debugTravelledPathProvider)) {
       ref.listen(
         mainVehicleProvider,
-        (previous, next) => add(next.lookAheadStartPosition.latLng),
+        (previous, next) => add(next.position.latLng),
         fireImmediately: true,
       );
     }

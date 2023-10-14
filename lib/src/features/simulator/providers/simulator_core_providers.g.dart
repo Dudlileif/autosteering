@@ -60,7 +60,7 @@ final _initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef _InitializeSimCoreRef = AutoDisposeProviderRef<void>;
-String _$simCoreWebStreamHash() => r'997a0464647be260496b9decfe1dd88c3fd32861';
+String _$simCoreWebStreamHash() => r'2255bc683e20fe29672f43438b194a86a0c78d9b';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
@@ -82,7 +82,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'fda1059785e4540c3808fb924a1e4c77913fa271';
+    r'52fe688909a2886c6839572b9986514adaa9855a';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.

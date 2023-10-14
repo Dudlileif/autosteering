@@ -8,60 +8,27 @@ part 'gnss_data_providers.g.dart';
 
 /// A provider for the quality of last GNSS position update.
 @riverpod
-class GnssCurrentFixQuality extends _$GnssCurrentFixQuality {
+class GnssCurrentSentence extends _$GnssCurrentSentence {
   Timer? _resetTimer;
-  // DateTime? _prev;
+ 
   @override
-  GnssFixQuality build() {
+  GnssPositionCommonSentence? build() {
     ref.listenSelf((previous, next) {
-      // final now = DateTime.now();
-      // if (_prev != null) {
-      //   print(now.difference(_prev!).inMicroseconds);
-      // }
-      // _prev = now;
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 350),
         ref.invalidateSelf,
       );
-      if (previous != next) {
+      if (previous?.quality != next?.quality) {
         Logger.instance
-            .i('GPS fix quality: ${next.name}, NMEA code: ${next.nmeaValue}');
+            .i(
+          '''GPS fix quality: ${GnssFixQuality.values[next?.quality ?? 0]}, NMEA code: ${next?.quality}''',
+        );
       }
-    });
-
-    return GnssFixQuality.notAvailable;
-  }
-
-  /// Updates [state] to [value].
-  void update(GnssFixQuality value) => Future(() => state = value);
-
-  /// Updates [state] to the [GnssFixQuality] that corresponds to [index].
-  void updateByIndex(int index) => Future(
-        () => state = GnssFixQuality.values.elementAtOrNull(index) ?? state,
-      );
-}
-
-/// A provider for the quality of last GNSS position update.
-@riverpod
-class GnssCurrentNumSatellites extends _$GnssCurrentNumSatellites {
-  Timer? _resetTimer;
-
-  @override
-  int? build() {
-    ref.listenSelf((previous, next) {
-      _resetTimer?.cancel();
-      _resetTimer = Timer(
-        const Duration(milliseconds: 350),
-        () {
-          if (state != null) {
-            Logger.instance.w('Too long since last GNSS update.');
-          }
-          ref.invalidateSelf();
-        },
-      );
-      if (previous != next) {
-        Logger.instance.i('GNSS satellite count: $next');
+      if (previous?.numSatellites != next?.numSatellites) {
+        Logger.instance.i(
+          'GPS satellite count: ${next?.numSatellites}',
+        );
       }
     });
 
@@ -69,52 +36,11 @@ class GnssCurrentNumSatellites extends _$GnssCurrentNumSatellites {
   }
 
   /// Updates [state] to [value].
-  void update(int? value) => Future(() => state = value);
+  void update(GnssPositionCommonSentence? value) => Future(() => state = value);
+
 }
 
-/// A provider for the HDOP (horizontal dilution of position) of the GNSS fix.
-@riverpod
-class GnssCurrentHdop extends _$GnssCurrentHdop {
-  Timer? _resetTimer;
 
-  @override
-  double? build() {
-    ref.listenSelf((previous, next) {
-      _resetTimer?.cancel();
-      _resetTimer = Timer(
-        const Duration(milliseconds: 350),
-        ref.invalidateSelf,
-      );
-    });
-
-    return null;
-  }
-
-  /// Updates [state] to [value].
-  void update(double? value) => Future(() => state = value);
-}
-
-/// A provider for the GNSS altifude.
-@riverpod
-class GnssCurrentAltitude extends _$GnssCurrentAltitude {
-  Timer? _resetTimer;
-
-  @override
-  double? build() {
-    ref.listenSelf((previous, next) {
-      _resetTimer?.cancel();
-      _resetTimer = Timer(
-        const Duration(milliseconds: 350),
-        ref.invalidateSelf,
-      );
-    });
-
-    return null;
-  }
-
-  /// Updates [state] to [value].
-  void update(double? value) => Future(() => state = value);
-}
 
 /// A provider for the frequency of the GNSS updates.
 @riverpod

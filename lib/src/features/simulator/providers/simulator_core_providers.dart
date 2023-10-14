@@ -213,14 +213,8 @@ Stream<Vehicle?> simCoreWebStream(
           time: event.time,
           stackTrace: event.stackTrace,
         );
-      } else if (event is ({int gnssFixQuality})) {
-        ref
-            .read(gnssCurrentFixQualityProvider.notifier)
-            .updateByIndex(event.gnssFixQuality);
-      } else if (event is ({int? numSatellites})) {
-        ref
-            .read(gnssCurrentNumSatellitesProvider.notifier)
-            .update(event.numSatellites);
+      } else if (event is GnssPositionCommonSentence) {
+        ref.read(gnssCurrentSentenceProvider.notifier).update(event);
       }
     });
 
@@ -351,20 +345,8 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
           .update(value: message.hardwareIsConnected);
 
       yield message.vehicle;
-    } else if (message is ({int gnssFixQuality})) {
-      ref
-          .read(gnssCurrentFixQualityProvider.notifier)
-          .updateByIndex(message.gnssFixQuality);
-    } else if (message is ({int? numSatellites})) {
-      ref
-          .read(gnssCurrentNumSatellitesProvider.notifier)
-          .update(message.numSatellites);
-    } else if (message is ({double gnssHdop})) {
-      ref.read(gnssCurrentHdopProvider.notifier).update(message.gnssHdop);
-    } else if (message is ({double gnssAltitude})) {
-      ref
-          .read(gnssCurrentAltitudeProvider.notifier)
-          .update(message.gnssAltitude);
+    } else if (message is GnssPositionCommonSentence) {
+      ref.read(gnssCurrentSentenceProvider.notifier).update(message);
     } else if (message is ({
       DateTime gnssUpdateTimeDevice,
       DateTime? gnssUpdateTimeReceiver,
