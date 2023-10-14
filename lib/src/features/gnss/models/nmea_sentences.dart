@@ -3,7 +3,7 @@ import 'package:nmea/nmea.dart';
 
 /// An abstract implementation class for an interface to interchangeably use the
 /// identical parts of [GGASentence] and [PANDASentence] objects.
-abstract class GnssPositionCommonSentence extends CustomSentence {
+abstract class GnssPositionCommonSentence extends CustomChecksumSentence {
   /// An abstract implementation class for an interface to interchangeably use
   /// the identical parts of [GGASentence] and [PANDASentence] objects.
   ///

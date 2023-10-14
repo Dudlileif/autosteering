@@ -291,12 +291,15 @@ class MessageDecoder {
           }
         } else if (str.startsWith(r'$')) {
           final decoder = NmeaDecoder(
-            onUnknownSentence: (line) => PANDASentence(raw: line),
+            onUnknownSentence: (line) {
+              if (line.startsWith(r'$PANDA')) {
+                return PANDASentence(raw: line);
+              } else if (line.startsWith(r'$GNGGA')) {
+                return GGASentence(raw: line);
+              }
+              return null;
+            },
           )
-            ..registerCustomSentence(
-              'GGA',
-              (line) => GGASentence(raw: line),
-            )
             ..registerTalkerSentence(
               'VTG',
               (line) => VTGSentence(raw: line),
@@ -304,10 +307,6 @@ class MessageDecoder {
             ..registerTalkerSentence(
               'TXT',
               (line) => TXTSentence(raw: line),
-            )
-            ..registerCustomSentence(
-              'PANDA',
-              (line) => PANDASentence(raw: line),
             );
           final nmea = decoder.decode(str);
           if (nmea is VTGSentence) {
@@ -323,68 +322,61 @@ class MessageDecoder {
                 'TXT message from GNSS hardware: ${nmea.raw}',
               ),
             );
-          } else if (nmea is GnssPositionCommonSentence) {
-            if (nmea.quality != null) {
-              messages.add((gnssFixQuality: nmea.quality!));
-            }
-            if (nmea.numSatellites != null) {
-              messages.add((numSatellites: nmea.numSatellites));
-            }
-            if (nmea.longitude != null && nmea.latitude != null) {
-              messages.add(
-                (
-                  gnssPosition: Geographic(
-                    lon: nmea.longitude!,
-                    lat: nmea.latitude!,
+          } else if (nmea is GnssPositionCommonSentence &&
+              nmea.hasValidChecksum) {
+            if (nmea.hasValidChecksum) {
+              if (nmea.longitude != null && nmea.latitude != null) {
+                messages.add(
+                  (
+                    gnssPosition: Geographic(
+                      lon: nmea.longitude!,
+                      lat: nmea.latitude!,
+                    ),
+                    time: nmea.utc ?? DateTime.now(),
                   ),
-                  time: nmea.utc ?? DateTime.now(),
-                ),
-              );
-            }
-            if (nmea.hdop != null) {
-              messages.add((gnssHdop: nmea.hdop!));
-            }
-            if (nmea.altitudeGeoid != null) {
-              messages.add((gnssAltitude: nmea.altitudeGeoid!));
-            }
-
-            messages.add(
-              (
-                gnssUpdateTimeDevice: nmea.deviceReceiveTime,
-                gnssUpdateTimeReceiver: nmea.utc?.toLocal(),
-                gnssUpdateDelay: nmea.deviceReceiveDelay,
-              ),
-            );
-
-            if (nmea.valid) {
+                );
+              }
+              messages
+                ..add(
+                  (
+                    gnssUpdateTimeDevice: nmea.deviceReceiveTime,
+                    gnssUpdateTimeReceiver: nmea.utc?.toLocal(),
+                    gnssUpdateDelay: nmea.deviceReceiveDelay,
+                  ),
+                )
+                ..add(nmea);
               gnssSentences.add(nmea);
+
+              if (nmea is PANDASentence) {
+                if (nmea.imuHeading != null &&
+                    nmea.imuPitch != null &&
+                    nmea.imuRoll != null) {
+                  final reading = ImuReading(
+                    receiveTime: nmea.deviceReceiveTime,
+                    yawFromStartup: nmea.imuHeading! / 10,
+                    pitch: nmea.imuPitch! / 10,
+                    roll: nmea.imuRoll! / 10,
+                  );
+                  imuReadings.add(reading);
+                  while (imuReadings.length > messagesToKeep) {
+                    imuReadings.removeAt(0);
+                  }
+                  messages.addAll([
+                    imuReadingMatchingGnssDelay,
+                    (imuCurrentFrequency: imuFrequency),
+                    (imuLatestRaw: reading),
+                  ]);
+                }
+              }
+            } else {
+              messages.add(
+                LogEvent(Level.warning, 'Invalid NMEA message: ${nmea.raw}'),
+              );
             }
             while (gnssSentences.length > messagesToKeep) {
               gnssSentences.removeAt(0);
             }
             messages.add((gnssCurrentFrequency: gnssFrequency));
-
-            if (nmea is PANDASentence) {
-              if (nmea.imuHeading != null &&
-                  nmea.imuPitch != null &&
-                  nmea.imuRoll != null) {
-                final reading = ImuReading(
-                  receiveTime: nmea.deviceReceiveTime,
-                  yawFromStartup: nmea.imuHeading! / 10,
-                  pitch: nmea.imuPitch! / 10,
-                  roll: nmea.imuRoll! / 10,
-                );
-                imuReadings.add(reading);
-                while (imuReadings.length > messagesToKeep) {
-                  imuReadings.removeAt(0);
-                }
-                messages.addAll([
-                  imuReadingMatchingGnssDelay,
-                  (imuCurrentFrequency: imuFrequency),
-                  (imuLatestRaw: reading),
-                ]);
-              }
-            }
           }
         } else if (str.startsWith('Message unfinished')) {
           messages.add(LogEvent(Level.trace, str));
