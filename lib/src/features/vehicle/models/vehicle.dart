@@ -39,6 +39,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     super.uuid,
     this.pathTrackingMode = PathTrackingMode.purePursuit,
     Imu? imu,
+    Was? was,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
@@ -54,6 +55,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         _velocity = velocity,
         antennaPosition = position,
         imu = imu ?? Imu(),
+        was = was ?? Was(),
         pidParameters = pidParameters ?? const PidParameters(),
         stanleyParameters = stanleyParameters ?? const StanleyParameters(),
         purePursuitParameters =
@@ -120,6 +122,14 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
           )
         : Imu();
 
+    final was = steering.containsKey('was_config')
+        ? Was(
+            config: WasConfig.fromJson(
+              Map<String, dynamic>.from(steering['was_config'] as Map),
+            ),
+          )
+        : Was();
+
     final pidParameters = steering.containsKey('pid_parameters')
         ? PidParameters.fromJson(
             Map<String, dynamic>.from(steering['pid_parameters'] as Map),
@@ -143,6 +153,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
     return vehicle.copyWith(
       imu: imu,
+      was: was,
       pidParameters: pidParameters,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
@@ -174,6 +185,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Whether the [steeringAngleInput] should be inverted.
   bool invertSteeringInput;
+
+  /// The Wheel Angle Sensor object representation of this vehicle.
+  Was was;
 
   /// The PID parameters for controlling the steering of this vehicle
   /// when using a PID controller mode.
@@ -295,8 +309,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The bearing of the vehicle, in degrees.
   @override
-  double get bearing =>
-      switch (imu.config.useYaw) {
+  double get bearing => switch (imu.config.useYaw) {
         true => imu.bearing ?? 0,
         false => _bearing
       };
@@ -332,6 +345,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The bearing from the ground position to the antenna position.
   double get groundPositionToAntennaBearing =>
       position.spherical.initialBearingTo(antennaPosition);
+
+  /// Sets the steering angle of the vehicle by the [was].reading.
+  void setSteeringAngleByWasReading() {
+    steeringAngleInput = (was.readingNormalizedInRange * steeringAngleMax)
+        .clamp(-steeringAngleMax, steeringAngleMax);
+  }
 
   /// The distance between the wheel axles.
   double get wheelBase;
@@ -538,6 +557,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleMax,
     double? trackWidth,
     bool? invertSteeringInput,
+    Was? was,
     Imu? imu,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
@@ -590,6 +610,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       'min_turning_radius': minTurningRadius,
       'path_tracking_mode': pathTrackingMode,
       'steering_angle_max': steeringAngleMax,
+      'was_config': was.config,
     };
 
     return map;

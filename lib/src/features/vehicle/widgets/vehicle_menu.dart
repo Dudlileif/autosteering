@@ -33,15 +33,48 @@ class VehicleMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text(
-            'IMU Configurator',
-            style: textStyle,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.memory),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(
+                  'IMU Configurator',
+                  style: textStyle,
+                ),
+              ),
+            ],
           ),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(debugVehicleIMUProvider),
             onChanged: (value) => value != null
                 ? ref
                     .read(debugVehicleIMUProvider.notifier)
+                    .update(value: value)
+                : null,
+            secondary: child,
+          ),
+        ),
+        Consumer(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.electric_meter),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(
+                  'WAS Configurator',
+                  style: textStyle,
+                ),
+              ),
+            ],
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(debugVehicleWASProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugVehicleWASProvider.notifier)
                     .update(value: value)
                 : null,
             secondary: child,

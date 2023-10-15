@@ -118,7 +118,7 @@ class DebugVehicleAntennaPosition extends _$DebugVehicleAntennaPosition {
   void toggle() => Future(() => state = !state);
 }
 
-/// Whether to show vehicle antenna position debug.
+/// Whether to show vehicle IMU.
 @Riverpod(keepAlive: true)
 class DebugVehicleIMU extends _$DebugVehicleIMU {
   @override
@@ -130,6 +130,20 @@ class DebugVehicleIMU extends _$DebugVehicleIMU {
   /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
+
+/// Whether to show vehicle WAS.
+@Riverpod(keepAlive: true)
+class DebugVehicleWAS extends _$DebugVehicleWAS {
+  @override
+  bool build() => false;
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}
+
 
 /// Whether to show vehicle autosteer parameters debug.
 @Riverpod(keepAlive: true)

@@ -24,7 +24,7 @@ mixin _$ImuReading {
   @DateTimeSerializer()
   DateTime get receiveTime => throw _privateConstructorUsedError;
 
-  /// The IMU input bearing.
+  /// The IMU input yaw/bearing from startup.
   num get yawFromStartup => throw _privateConstructorUsedError;
 
   /// The IMU input pitch.
@@ -160,7 +160,7 @@ class _$ImuReadingImpl implements _ImuReading {
   @DateTimeSerializer()
   final DateTime receiveTime;
 
-  /// The IMU input bearing.
+  /// The IMU input yaw/bearing from startup.
   @override
   @JsonKey()
   final num yawFromStartup;
@@ -229,7 +229,7 @@ abstract class _ImuReading implements ImuReading {
   DateTime get receiveTime;
   @override
 
-  /// The IMU input bearing.
+  /// The IMU input yaw/bearing from startup.
   num get yawFromStartup;
   @override
 

@@ -53,7 +53,9 @@ class HardwareSerialMenu extends StatelessWidget {
                         : () => ref
                             .read(hardwareSerialProvider.notifier)
                             .update(port),
-                    child: Text(port.name ?? '${port.address}'),
+                    child: Text(
+                      '${port.name ?? port.address}: ${port.manufacturer}',
+                    ),
                   ),
                 )
                 .toList(),

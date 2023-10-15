@@ -39,6 +39,9 @@ class MessageDecoder {
   /// A list of the previous [messagesToKeep] count of [ImuReading]s decoded.
   List<ImuReading> imuReadings = [];
 
+  /// A list of the previous [messagesToKeep] count of [WasReading]s decoded.
+  List<WasReading> wasReadings = [];
+
   /// The frequency of valid GNSS updates being decoded in [decode].
   ///
   /// It will look for the [gnssSentences] first, and if that is empty it will
@@ -57,6 +60,16 @@ class MessageDecoder {
         true => imuReadings.length /
             (DateTime.now()
                     .difference(imuReadings.first.receiveTime)
+                    .inMicroseconds /
+                1e6),
+        false => null
+      };
+
+  /// The frequency of [WasReading] updates being decoded in [decode].
+  double? get wasFrequency => switch (wasReadings.isNotEmpty) {
+        true => wasReadings.length /
+            (DateTime.now()
+                    .difference(wasReadings.first.receiveTime)
                     .inMicroseconds /
                 1e6),
         false => null
@@ -257,21 +270,44 @@ class MessageDecoder {
           if (str.contains('}')) {
             try {
               final data = Map<String, dynamic>.from(jsonDecode(str) as Map);
-              final reading = ImuReading(
-                yawFromStartup: data['yaw'] as num,
-                pitch: data['pitch'] as num,
-                roll: data['roll'] as num,
-                receiveTime: DateTime.now(),
-              );
-              imuReadings.add(reading);
-              while (imuReadings.length > messagesToKeep) {
-                imuReadings.removeAt(0);
+              // IMU sensor
+              if (data['yaw'] is num &&
+                  data['pitch'] is num &&
+                  data['roll'] is num) {
+                final reading = ImuReading(
+                  yawFromStartup: data['yaw'] as num,
+                  pitch: data['pitch'] as num,
+                  roll: data['roll'] as num,
+                  receiveTime: DateTime.now(),
+                );
+                imuReadings.add(reading);
+                while (imuReadings.length > messagesToKeep) {
+                  imuReadings.removeAt(0);
+                }
+                messages.addAll([
+                  imuReadingMatchingGnssDelay,
+                  (imuCurrentFrequency: imuFrequency),
+                  (imuLatestRaw: reading),
+                ]);
               }
-              messages.addAll([
-                imuReadingMatchingGnssDelay,
-                (imuCurrentFrequency: imuFrequency),
-                (imuLatestRaw: reading),
-              ]);
+
+              // WAS sensor
+              if (data['was'] is int) {
+                final reading = WasReading(
+                  value: data['was'] as int,
+                  receiveTime: DateTime.now(),
+                );
+
+                wasReadings.add(reading);
+                while (wasReadings.length > messagesToKeep) {
+                  wasReadings.removeAt(0);
+                }
+                messages.addAll([
+                  reading,
+                  (wasCurrentFrequency: wasFrequency),
+                  (wasLatestRaw: reading),
+                ]);
+              }
             } catch (e) {
               messages.add(
                 LogEvent(

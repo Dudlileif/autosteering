@@ -176,6 +176,14 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 child: SizedBox(height: 700, child: ImuConfigurator()),
               ),
             ),
+          if (ref.watch(debugVehicleWASProvider))
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: SizedBox(height: 700, child: WasConfigurator()),
+              ),
+            ),
           if (ref.watch(debugVehicleAutosteerParametersProvider))
             const Align(
               alignment: Alignment.centerLeft,

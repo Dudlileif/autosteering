@@ -12,7 +12,7 @@ class ImuReading with _$ImuReading {
     /// The time of the reading being received.
     @DateTimeSerializer() required DateTime receiveTime,
 
-    /// The IMU input bearing.
+    /// The IMU input yaw/bearing from startup.
     @Default(0) num yawFromStartup,
 
     /// The IMU input pitch.

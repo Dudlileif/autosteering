@@ -2,7 +2,6 @@ import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'combined_communication_providers.g.dart';
@@ -17,9 +16,8 @@ void _combinedNativeNetwork(_CombinedNativeNetworkRef ref) => ref
 
 /// A provider for combining the serial providers that need to be watched.
 @riverpod
-void _combinedSerial(_CombinedSerialRef ref) => ref
-  ..watch(hardwareSerialStreamProvider)
-  ..watch(imuSerialFrequencyProvider());
+void _combinedSerial(_CombinedSerialRef ref) =>
+    ref.watch(hardwareSerialStreamProvider);
 
 /// A provider for combining all the network and hardware communication
 /// providers that need to be watched.

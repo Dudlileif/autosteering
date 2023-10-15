@@ -23,6 +23,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.position,
     super.pathTrackingMode,
     super.imu,
+    super.was,
     super.pidParameters = const PidParameters(p: 30, i: 0, d: 2),
     super.purePursuitParameters,
     super.stanleyParameters,
@@ -142,8 +143,8 @@ final class Tractor extends AxleSteeredVehicle {
     double? steeringAxleWheelWidth,
     double? solidAxleWheelWidth,
     bool? invertSteeringInput,
-    Imu? imu,    
-    
+    Imu? imu,
+    Was? was,    
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -188,6 +189,7 @@ final class Tractor extends AxleSteeredVehicle {
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         imu: imu ?? this.imu,
+        was: was ?? this.was,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:

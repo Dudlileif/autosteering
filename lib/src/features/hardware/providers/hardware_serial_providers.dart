@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
@@ -60,19 +59,28 @@ class HardwareSerial extends _$HardwareSerial {
 
     ref
       ..onDispose(() async {
+        ref.invalidate(hardwareSerialAliveProvider);
         await Future(() {
+          Logger.instance.i(
+            'Closing serial port: ${state?.name ?? state?.address}',
+          );
           config.dispose();
           state?.close();
           state?.dispose();
         });
-        ref.invalidate(hardwareSerialAliveProvider);
       })
       ..listenSelf((previous, next) {
         if (previous != next) {
           previous?.close();
+          previous?.dispose();
         }
-        state?.openReadWrite();
-        // ?..config = config
+        if (next != null) {
+          next.openReadWrite();
+
+          Logger.instance.i(
+            '''Opening serial port: ${next.name ?? next.address} with baud rate: ${config.baudRate}''',
+          );
+        }
       });
 
     return null;
@@ -109,41 +117,14 @@ Stream<String?> hardwareSerialStream(HardwareSerialStreamRef ref) {
 
         for (final message in messages) {
           if (message is ImuReading ||
-              message is ({Geographic gnssPosition, DateTime time})) {
+              message is ({Geographic gnssPosition, DateTime time}) ||
+              message is WasReading) {
             ref.read(simInputProvider.notifier).send(message);
-          } else if (message is GnssPositionCommonSentence) {
-            ref.read(gnssCurrentSentenceProvider.notifier).update(message);
-          } else if (message is ({
-            DateTime gnssUpdateTimeDevice,
-            DateTime? gnssUpdateTimeReceiver,
-            Duration? gnssUpdateDelay,
-          })) {
-            ref.read(gnssLastUpdateTimeProvider.notifier).update(
-              (
-                device: message.gnssUpdateTimeDevice,
-                receiver: message.gnssUpdateTimeReceiver,
-                delay: message.gnssUpdateDelay,
-              ),
-            );
-          } else if (message is ({double? gnssCurrentFrequency})) {
-            ref
-                .read(gnssCurrentFrequencyProvider.notifier)
-                .update(message.gnssCurrentFrequency);
-          } else if (message is ({ImuReading? imuLatestRaw})) {
-            ref
-                .read(imuCurrentReadingProvider.notifier)
-                .update(message.imuLatestRaw);
-          } else if (message is ({double? imuCurrentFrequency})) {
-            ref
-                .read(imuCurrentFrequencyProvider.notifier)
-                .update(message.imuCurrentFrequency);
-          } else if (message is LogEvent) {
+          } else if (CommonMessageHandler.handleHardwareMessage(ref, message)) {
+          } else {
             Logger.instance.log(
-              message.level,
-              message.message,
-              error: message.error,
-              time: message.time,
-              stackTrace: message.stackTrace,
+              Level.warning,
+              'Received unknown message from serial: $message',
             );
           }
         }
@@ -170,7 +151,7 @@ class HardwareSerialAlive extends _$HardwareSerialAlive {
           const Duration(seconds: 1),
           ref.invalidateSelf,
         );
-      } else {
+      } else if (previous != null && previous != next) {
         Logger.instance.i('Hardware serial data not being received.');
       }
     });

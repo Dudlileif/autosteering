@@ -26,7 +26,7 @@ final availableSerialPortsProvider =
 
 typedef AvailableSerialPortsRef = AutoDisposeProviderRef<List<SerialPort>>;
 String _$hardwareSerialStreamHash() =>
-    r'b4d7f6ba0054851b7e014f2dcc687826ab4e9b6b';
+    r'65cbcac9fdbe1e201c3d0e899582fba83cefb65b';
 
 /// A stream of the incoming serial data from the connected hardware.
 ///
@@ -62,7 +62,7 @@ final hardwareSerialBaudRateProvider =
 );
 
 typedef _$HardwareSerialBaudRate = Notifier<int>;
-String _$hardwareSerialHash() => r'c3ca0aa09f23c1163729edf3ccf97a54592a5e3c';
+String _$hardwareSerialHash() => r'22d1f326278613f910663e918ac98af363ecf0af';
 
 /// A provider for the hardware serial connection.
 ///
@@ -81,7 +81,7 @@ final hardwareSerialProvider =
 
 typedef _$HardwareSerial = Notifier<SerialPort?>;
 String _$hardwareSerialAliveHash() =>
-    r'a417b5ed2368d79950973ac4fbaa935a98583ae9';
+    r'6b241bdd065caa0090ff1211560115098e20a838';
 
 /// A provider for telling whether the [HardwareSerial] is receiving data.
 ///

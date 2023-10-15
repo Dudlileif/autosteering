@@ -234,7 +234,8 @@ class SimulatorCore {
 
       for (final message in messages) {
         if (message is ImuReading ||
-            message is ({Geographic gnssPosition, DateTime time})) {
+            message is ({Geographic gnssPosition, DateTime time}) ||
+            message is WasReading) {
           state.handleMessage(message);
         } else if (message != null) {
           updateMainThreadStream.add(message);
@@ -550,62 +551,12 @@ class _SimulatorCoreState {
     // updates.
     else if (message is ({bool allowSimInterpolation})) {
       allowSimInterpolation = message.allowSimInterpolation;
+    } 
+    // Update the IMU config of the vehicle.
+    else if (message is ImuConfig) {
+      vehicle?.imu.config = message;
     }
-    // Update whether the vehicle position should take the roll and pitch into
-    // account when an IMU is connected.
-    else if (message is ({bool useIMUPitchAndRoll})) {
-      if (vehicle != null) {
-        vehicle!.imu.config = vehicle!.imu.config
-            .copyWith(usePitchAndRoll: message.useIMUPitchAndRoll);
-      }
-    }
-    // Update whether the vehicle bearing should be corrected by the
-    // IMU raw.
-    else if (message is ({bool useIMUYaw})) {
-      if (vehicle != null) {
-        vehicle!.imu.config =
-            vehicle!.imu.config.copyWith(useYaw: message.useIMUYaw);
-      }
-    }
-    // Update the IMU configuration for swapping pitch and roll axes.
-    else if (message is ({bool swapPitchAndRoll})) {
-      if (vehicle != null) {
-        vehicle!.imu.config = vehicle!.imu.config
-            .copyWith(swapPitchAndRoll: message.swapPitchAndRoll);
-      }
-    }
-    // Update the IMU configuration for inverting the pitch axis.
-    else if (message is ({bool invertPitch})) {
-      if (vehicle != null) {
-        vehicle!.imu.config = vehicle!.imu.config.copyWith(
-          invertPitch: message.invertPitch,
-        );
-      }
-    }
-    // Update the IMU configuration for inverting the roll axis.
-    else if (message is ({bool invertRoll})) {
-      if (vehicle != null) {
-        vehicle!.imu.config = vehicle!.imu.config.copyWith(
-          invertRoll: message.invertRoll,
-        );
-      }
-    }
-    // Update the IMU configuration with a new pitch gain.
-    else if (message is ({double pitchGain})) {
-      if (vehicle != null) {
-        vehicle!.imu.config = vehicle!.imu.config.copyWith(
-          pitchGain: message.pitchGain,
-        );
-      }
-    }
-    // Update the IMU configuration with a new roll gain.
-    else if (message is ({double rollGain})) {
-      if (vehicle != null) {
-        vehicle!.imu.config = vehicle!.imu.config.copyWith(
-          rollGain: message.rollGain,
-        );
-      }
-    }
+
     // Update the vehicle position.
     else if (message is ({Geographic position})) {
       vehicle?.position = message.position;
@@ -631,6 +582,12 @@ class _SimulatorCoreState {
     else if (message is ImuReading) {
       vehicle?.imu.reading = message;
     }
+
+    // Update the WAS config of the vehicle.
+    else if (message is WasConfig) {
+      vehicle?.was.config = message;
+    }
+
     // Update bearing
     else if (message is ({double bearing})) {
       vehicle?.bearing = message.bearing;
@@ -642,6 +599,13 @@ class _SimulatorCoreState {
     // Update roll
     else if (message is ({double roll})) {
       vehicle?.roll = message.roll;
+    }
+    // Update the WAS reading of the vehicle.
+    else if (message is WasReading) {
+      if (vehicle != null) {
+        vehicle!.was.reading = message;
+        vehicle!.setSteeringAngleByWasReading();
+      }
     }
     // Update number of updates to use for gauge averages.
     else if (message is ({int gaugesAverageCount})) {

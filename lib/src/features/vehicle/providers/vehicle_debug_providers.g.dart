@@ -157,7 +157,7 @@ final debugVehicleAntennaPositionProvider =
 typedef _$DebugVehicleAntennaPosition = Notifier<bool>;
 String _$debugVehicleIMUHash() => r'e95486e3ec7bd909ebdf31deffdf10729e077fa3';
 
-/// Whether to show vehicle antenna position debug.
+/// Whether to show vehicle IMU.
 ///
 /// Copied from [DebugVehicleIMU].
 @ProviderFor(DebugVehicleIMU)
@@ -173,6 +173,24 @@ final debugVehicleIMUProvider =
 );
 
 typedef _$DebugVehicleIMU = Notifier<bool>;
+String _$debugVehicleWASHash() => r'7d402a5f483f9a4089cccf9cfd3fd1baa3a3a8a1';
+
+/// Whether to show vehicle WAS.
+///
+/// Copied from [DebugVehicleWAS].
+@ProviderFor(DebugVehicleWAS)
+final debugVehicleWASProvider =
+    NotifierProvider<DebugVehicleWAS, bool>.internal(
+  DebugVehicleWAS.new,
+  name: r'debugVehicleWASProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugVehicleWASHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugVehicleWAS = Notifier<bool>;
 String _$debugVehicleAutosteerParametersHash() =>
     r'9a7ced139e78bfa75cf5d975973420c15a9748a7';
 

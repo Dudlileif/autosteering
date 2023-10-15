@@ -198,31 +198,48 @@ class ImuCurrentReading extends _$ImuCurrentReading {
   void update(ImuReading? value) => Future(() => state = value);
 }
 
-/// A provider for the current frequency of IMU updates over serial.
+
+/// A provider for the frequency of the WAS updates.
 @riverpod
-class ImuSerialFrequency extends _$ImuSerialFrequency {
-  final List<DateTime> _times = [];
+class WasCurrentFrequency extends _$WasCurrentFrequency {
+  Timer? _resetTimer;
 
   @override
-  double? build({int count = 20}) {
-    ref.listenSelf(
-      (previous, next) =>
-          ref.read(imuCurrentFrequencyProvider.notifier).update(next),
-    );
+  double? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
 
     return null;
   }
 
-  /// Updates the [state] by finding the new frequency from [_times] and
-  /// [count].
-  void update(DateTime time) {
-    _times.add(time);
-    while (_times.length > count) {
-      _times.removeAt(0);
-    }
-    final freq =
-        _times.length / (time.difference(_times.first).inMicroseconds / 1e6);
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
 
-    Future(() => state = freq);
+
+/// A provider for the current raw [WasReading] from the hardware.
+@riverpod
+class WasCurrentReading extends _$WasCurrentReading {
+  Timer? _resetTimer;
+
+  @override
+  WasReading? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
+
+    return null;
   }
+
+  /// Updates [state] to [value].
+  void update(WasReading? value) => Future(() => state = value);
 }

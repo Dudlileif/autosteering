@@ -24,6 +24,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     this.solidAxleWheelWidth = 0.6,
     super.pathTrackingMode,
     super.imu,
+    super.was,
     super.pidParameters,
     super.purePursuitParameters,
     super.stanleyParameters,
@@ -69,7 +70,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
   ///
   /// A higher value will cause a sharper turn, and a lower value a looser
   /// turn.
-  /// ackermannAngle = [steeringAngleInput] / [ackermannSteeringRatio]
+  ///
+  /// ```ackermannAngle = steeringAngleInput / ackermannSteeringRatio```
   double ackermannSteeringRatio;
 
   /// The diameter of the steering axle wheels.
@@ -171,6 +173,25 @@ sealed class AxleSteeredVehicle extends Vehicle {
         ),
       ];
 
+  /// Sets the steeringInputAngle by using the [WheelAngleToAckermann] class
+  /// for figuring out the Ackermann angle for the given wheel angle input.
+  @override
+  void setSteeringAngleByWasReading() {
+    final wheelAngle = switch (was.readingNormalizedInRange < 0) {
+      true => (was.readingNormalizedInRange * maxOppositeSteeringAngle)
+          .clamp(-maxOppositeSteeringAngle, 0.0),
+      false => (was.readingNormalizedInRange * steeringAngleMax)
+          .clamp(0.0, steeringAngleMax)
+    };
+
+    steeringAngleInput = WheelAngleToAckermann(
+      wheelAngle: wheelAngle,
+      wheelBase: wheelBase,
+      trackWidth: trackWidth,
+      steeringRatio: ackermannSteeringRatio,
+    ).ackermannAngle.toDegrees();
+  }
+
   /// The Ackermann steering geometry of the vehicle.
   AckermannSteering get ackermannSteering => AckermannSteering(
         steeringAngle: steeringAngle,
@@ -187,7 +208,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// The max opposite steering angle for the wheel the angle sensor is
   /// mounted to. I.e. the angle to the right for a front left steering wheel.
-  double get maxOppositeSteeringAngle => AckermannOppositeAngle(
+  double get maxOppositeSteeringAngle => WheelAngleToAckermann(
         wheelAngle: steeringAngleMax,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
@@ -655,6 +676,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? solidAxleToRearTowbarDistance,
     bool? invertSteeringInput,
     Imu? imu,
+    Was? was,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,

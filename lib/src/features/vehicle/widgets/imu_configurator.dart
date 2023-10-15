@@ -53,8 +53,13 @@ class ImuConfigurator extends StatelessWidget {
                   onChanged: (value) {
                     if (value != null) {
                       ref.read(simInputProvider.notifier).send(
-                        (useIMUYaw: value),
-                      );
+                            ref
+                                .read(
+                                  mainVehicleProvider
+                                      .select((value) => value.imu.config),
+                                )
+                                .copyWith(useYaw: value),
+                          );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
                       Future.delayed(const Duration(milliseconds: 100), () {
@@ -82,9 +87,14 @@ class ImuConfigurator extends StatelessWidget {
                   ),
                   onChanged: (value) {
                     if (value != null) {
-                      ref
-                          .read(simInputProvider.notifier)
-                          .send((useIMUPitchAndRoll: value));
+                      ref.read(simInputProvider.notifier).send(
+                            ref
+                                .read(
+                                  mainVehicleProvider
+                                      .select((value) => value.imu.config),
+                                )
+                                .copyWith(usePitchAndRoll: value),
+                          );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
                       Future.delayed(const Duration(milliseconds: 100), () {
@@ -112,9 +122,14 @@ class ImuConfigurator extends StatelessWidget {
                   ),
                   onChanged: (value) {
                     if (value != null) {
-                      ref
-                          .read(simInputProvider.notifier)
-                          .send((swapPitchAndRoll: value));
+                      ref.read(simInputProvider.notifier).send(
+                            ref
+                                .read(
+                                  mainVehicleProvider
+                                      .select((value) => value.imu.config),
+                                )
+                                .copyWith(swapPitchAndRoll: value),
+                          );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
                       Future.delayed(const Duration(milliseconds: 100), () {
@@ -141,9 +156,14 @@ class ImuConfigurator extends StatelessWidget {
                   ),
                   onChanged: (value) {
                     if (value != null) {
-                      ref
-                          .read(simInputProvider.notifier)
-                          .send((invertPitch: value));
+                      ref.read(simInputProvider.notifier).send(
+                            ref
+                                .read(
+                                  mainVehicleProvider
+                                      .select((value) => value.imu.config),
+                                )
+                                .copyWith(invertPitch: value),
+                          );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
                       Future.delayed(const Duration(milliseconds: 100), () {
@@ -170,9 +190,14 @@ class ImuConfigurator extends StatelessWidget {
                   ),
                   onChanged: (value) {
                     if (value != null) {
-                      ref
-                          .read(simInputProvider.notifier)
-                          .send((invertRoll: value));
+                      ref.read(simInputProvider.notifier).send(
+                            ref
+                                .read(
+                                  mainVehicleProvider
+                                      .select((value) => value.imu.config),
+                                )
+                                .copyWith(invertRoll: value),
+                          );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
                       Future.delayed(const Duration(milliseconds: 100), () {
@@ -281,9 +306,15 @@ class ImuConfigurator extends StatelessWidget {
                             IconButton(
                               onPressed: () {
                                 final oldValue = pitchGain;
-                                ref
-                                    .read(simInputProvider.notifier)
-                                    .send((pitchGain: 1.0));
+                                ref.read(simInputProvider.notifier).send(
+                                      ref
+                                          .read(
+                                            mainVehicleProvider.select(
+                                              (value) => value.imu.config,
+                                            ),
+                                          )
+                                          .copyWith(pitchGain: 1),
+                                    );
                                 // Wait a short while before saving the
                                 // hopefully updated vehicle.
                                 Future.delayed(
@@ -312,9 +343,15 @@ class ImuConfigurator extends StatelessWidget {
                                 (value) => value.imu.config.pitchGain,
                               ),
                             );
-                            ref
-                                .read(simInputProvider.notifier)
-                                .send((pitchGain: pitchGain));
+                            ref.read(simInputProvider.notifier).send(
+                                  ref
+                                      .read(
+                                        mainVehicleProvider.select(
+                                          (value) => value.imu.config,
+                                        ),
+                                      )
+                                      .copyWith(pitchGain: pitchGain),
+                                );
                             // Wait a short while before saving the
                             // hopefully updated vehicle.
                             Future.delayed(
@@ -357,7 +394,15 @@ class ImuConfigurator extends StatelessWidget {
                                 final oldValue = rollGain;
                                 ref
                                     .read(simInputProvider.notifier)
-                                    .send((rollGain: 1.0));
+                                    .send(
+                                      ref
+                                          .read(
+                                            mainVehicleProvider.select(
+                                              (value) => value.imu.config,
+                                            ),
+                                          )
+                                          .copyWith(rollGain: 1),
+                                    );
                                 // Wait a short while before saving the
                                 // hopefully updated vehicle.
                                 Future.delayed(
@@ -388,9 +433,15 @@ class ImuConfigurator extends StatelessWidget {
                                 (value) => value.imu.config.rollGain,
                               ),
                             );
-                            ref
-                                .read(simInputProvider.notifier)
-                                .send((rollGain: rollGain));
+                            ref.read(simInputProvider.notifier).send(
+                                  ref
+                                      .read(
+                                        mainVehicleProvider.select(
+                                          (value) => value.imu.config,
+                                        ),
+                                      )
+                                      .copyWith(rollGain: rollGain),
+                                );
                             // Wait a short while before saving the hopefully
                             // updated vehicle.
                             Future.delayed(

@@ -79,11 +79,11 @@ class AckermannSteering {
   Turning radius: $turningRadius''';
 }
 
-/// A class used to find the angle of the opposite steering wheel with
-/// Ackermann steering geometry.
-class AckermannOppositeAngle {
-  /// A class used to find the angle of the opposite steering wheel with
-  /// Ackermann steering geometry.
+/// A class used to find the Ackermann angle and the angle of the opposite
+/// steering wheel.
+class WheelAngleToAckermann {
+  /// A class used to find the Ackermann angle and the angle of the opposite
+  /// steering wheel.
   ///
   /// [wheelAngle] is the steering angle of the measured wheel.
   ///
@@ -93,7 +93,7 @@ class AckermannOppositeAngle {
   /// [trackWidth] is the distance between the wheels on the same axle.
   ///
   /// [steeringRatio] is a ratio to change how fast the steering turns.
-  const AckermannOppositeAngle({
+  const WheelAngleToAckermann({
     required this.wheelAngle,
     required this.wheelBase,
     required this.trackWidth,

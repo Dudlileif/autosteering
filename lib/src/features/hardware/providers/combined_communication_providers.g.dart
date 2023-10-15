@@ -25,7 +25,7 @@ final _combinedNativeNetworkProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef _CombinedNativeNetworkRef = AutoDisposeProviderRef<void>;
-String _$combinedSerialHash() => r'c160e97b55277932fb8e3b3697f590d04158fc5d';
+String _$combinedSerialHash() => r'1be0dcfb897a650492502310a5db5e310c1d7e33';
 
 /// A provider for combining the serial providers that need to be watched.
 ///

@@ -345,38 +345,8 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
           .update(value: message.hardwareIsConnected);
 
       yield message.vehicle;
-    } else if (message is GnssPositionCommonSentence) {
-      ref.read(gnssCurrentSentenceProvider.notifier).update(message);
-    } else if (message is ({
-      DateTime gnssUpdateTimeDevice,
-      DateTime? gnssUpdateTimeReceiver,
-      Duration? gnssUpdateDelay,
-    })) {
-      ref.read(gnssLastUpdateTimeProvider.notifier).update(
-        (
-          device: message.gnssUpdateTimeDevice,
-          receiver: message.gnssUpdateTimeReceiver,
-          delay: message.gnssUpdateDelay,
-        ),
-      );
-    } else if (message is ({double? gnssCurrentFrequency})) {
-      ref
-          .read(gnssCurrentFrequencyProvider.notifier)
-          .update(message.gnssCurrentFrequency);
-    } else if (message is ({ImuReading? imuLatestRaw})) {
-      ref.read(imuCurrentReadingProvider.notifier).update(message.imuLatestRaw);
-    } else if (message is ({double? imuCurrentFrequency})) {
-      ref
-          .read(imuCurrentFrequencyProvider.notifier)
-          .update(message.imuCurrentFrequency);
-    } else if (message is LogEvent) {
-      Logger.instance.log(
-        message.level,
-        message.message,
-        error: message.error,
-        time: message.time,
-        stackTrace: message.stackTrace,
-      );
+      
+    } else if (CommonMessageHandler.handleHardwareMessage(ref, message)) {
     } else if (message == 'Heartbeat') {
     } else if (message is List) {
       if (message.any((element) => element is Exception)) {
