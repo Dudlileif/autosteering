@@ -175,20 +175,22 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// Sets the steeringInputAngle by using the [WheelAngleToAckermann] class
   /// for figuring out the Ackermann angle for the given wheel angle input.
+  ///
+  /// It will find the wheel angle of the inner wheel and then find the
+  /// corresponding Ackermann angle as the steering input angle.
   @override
   void setSteeringAngleByWasReading() {
-    final wheelAngle = switch (was.readingNormalizedInRange < 0) {
-      true => (was.readingNormalizedInRange * maxOppositeSteeringAngle)
-          .clamp(-maxOppositeSteeringAngle, 0.0),
+    final innerWheelAngle = switch (was.readingNormalizedInRange < 0) {
+      true => (was.readingNormalizedInRange * steeringAngleMax)
+          .clamp(-steeringAngleMax, 0.0),
       false => (was.readingNormalizedInRange * steeringAngleMax)
           .clamp(0.0, steeringAngleMax)
     };
 
     steeringAngleInput = WheelAngleToAckermann(
-      wheelAngle: wheelAngle,
+      wheelAngle: innerWheelAngle,
       wheelBase: wheelBase,
       trackWidth: trackWidth,
-      steeringRatio: ackermannSteeringRatio,
     ).ackermannAngle.toDegrees();
   }
 
@@ -212,7 +214,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
         wheelAngle: steeringAngleMax,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
-        steeringRatio: ackermannSteeringRatio,
       ).oppositeAngle;
 
   /// The turning radius corresponding to the current [steeringAngle].
