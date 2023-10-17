@@ -32,6 +32,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
+    this.wheelsRolledDistance = 0,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
@@ -50,6 +51,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double pitch = 0,
     double roll = 0,
     double velocity = 0,
+    
   })  : _bearing = bearing,
         _pitch = pitch,
         _roll = roll,
@@ -221,10 +223,10 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The velocity of the vehicle as set from the outside.
   double _velocity;
 
-  /// The length of the vehicle, in meters.
+  /// The length of the vehicle excluding wheels, in meters.
   double length;
 
-  /// The width of the vehicle, in meters.
+  /// The width of the vehicle excluding wheels, in meters.
   double width;
 
   /// The pitch of the vehicle as degrees of inclination around the x-axis
@@ -243,6 +245,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Antenna position of the vehicle.
   Geographic antennaPosition;
+
+  /// The distance the wheels has rolled since the start.
+  ///
+  /// Reversing will subtract from this value.
+  /// Used to draw rolling wheels.
+  double wheelsRolledDistance;
 
   /// The lateral offset of the the antenna's true ground position to the
   /// mounted position.
@@ -602,6 +610,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleInput,
     double? length,
     double? width,
+    double? wheelsRolledDistance,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,

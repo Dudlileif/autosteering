@@ -18,7 +18,7 @@ class VehicleDimensionsPage extends ConsumerWidget {
             quarterTurns: 1,
             child: Icon(Icons.expand),
           ),
-          labelText: 'Vehicle total width, including wheels',
+          labelText: 'Vehicle body width, excluding wheels',
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -36,7 +36,7 @@ class VehicleDimensionsPage extends ConsumerWidget {
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),
-          labelText: 'Vehicle total length',
+          labelText: 'Vehicle body length, excluding wheels',
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),

@@ -36,6 +36,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.steeringAngleInput,
     super.length = 4,
     super.width = 2.5,
+    super.wheelsRolledDistance,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
@@ -163,6 +164,7 @@ final class Harvester extends AxleSteeredVehicle {
     double? steeringAngleInput,
     double? length,
     double? width,
+    double? wheelsRolledDistance,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
@@ -212,12 +214,14 @@ final class Harvester extends AxleSteeredVehicle {
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,
+        wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
+
         hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
         uuid: uuid ?? this.uuid,
-      );
+      )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override
   Map<String, dynamic> toJson() {

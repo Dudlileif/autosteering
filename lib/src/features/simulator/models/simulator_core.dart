@@ -1376,6 +1376,11 @@ class _SimulatorCoreState {
         vehicle!.velocity = gaugeVelocity;
       }
       gnssUpdate = null;
+      vehicle!.wheelsRolledDistance += distance *
+          switch (vehicle!.velocity < 0) {
+            true => -1,
+            false => 1,
+          };
     }
 
     didChange = forceChange ||

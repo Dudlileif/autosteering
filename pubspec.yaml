@@ -92,7 +92,6 @@ flutter:
         - assets/images/
         - assets/images/vehicle_types/side_view/
         - assets/images/vehicle_types/top_view/
-        - assets/images/wheels/
 
     shaders:
         - assets/shaders/glow.frag
