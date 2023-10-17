@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -63,18 +62,11 @@ class HardwareSerial extends _$HardwareSerial {
 /// A stream of the incoming serial data from the connected hardware.
 @Riverpod(keepAlive: true)
 Stream<String?> hardwareSerialStream(HardwareSerialStreamRef ref) {
-  Timer? timer;
 
   final controller = StreamController<String?>();
 
-  ref.onDispose(() {
-    timer?.cancel();
-    controller.close();
-  });
+  ref.onDispose(controller.close);
 
-  final serial = ref.watch(hardwareSerialProvider);
-
-  final decoder = MessageDecoder();
 
   return controller.stream;
 }
