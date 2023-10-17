@@ -60,7 +60,223 @@ final _initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef _InitializeSimCoreRef = AutoDisposeProviderRef<void>;
-String _$simCoreWebStreamHash() => r'2255bc683e20fe29672f43438b194a86a0c78d9b';
+String _$commonSimCoreMessageHandlerHash() =>
+    r'bd864618f7cb1d377dc405b132ddd2b1c72e3dba';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+/// A provider for handling the common sim core messages for the state of the
+/// simulation.
+///
+/// Copied from [commonSimCoreMessageHandler].
+@ProviderFor(commonSimCoreMessageHandler)
+const commonSimCoreMessageHandlerProvider = CommonSimCoreMessageHandlerFamily();
+
+/// A provider for handling the common sim core messages for the state of the
+/// simulation.
+///
+/// Copied from [commonSimCoreMessageHandler].
+class CommonSimCoreMessageHandlerFamily extends Family<void> {
+  /// A provider for handling the common sim core messages for the state of the
+  /// simulation.
+  ///
+  /// Copied from [commonSimCoreMessageHandler].
+  const CommonSimCoreMessageHandlerFamily();
+
+  /// A provider for handling the common sim core messages for the state of the
+  /// simulation.
+  ///
+  /// Copied from [commonSimCoreMessageHandler].
+  CommonSimCoreMessageHandlerProvider call(
+    ({
+      Vehicle? vehicle,
+      num velocity,
+      num bearing,
+      num distance,
+      PathTracking? pathTracking,
+      ABTracking? abTracking,
+      bool autoSteerEnabled,
+      bool hardwareIsConnected
+    }) message,
+  ) {
+    return CommonSimCoreMessageHandlerProvider(
+      message,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  CommonSimCoreMessageHandlerProvider getProviderOverride(
+    covariant CommonSimCoreMessageHandlerProvider provider,
+  ) {
+    return call(
+      provider.message,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'commonSimCoreMessageHandlerProvider';
+}
+
+/// A provider for handling the common sim core messages for the state of the
+/// simulation.
+///
+/// Copied from [commonSimCoreMessageHandler].
+class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
+  /// A provider for handling the common sim core messages for the state of the
+  /// simulation.
+  ///
+  /// Copied from [commonSimCoreMessageHandler].
+  CommonSimCoreMessageHandlerProvider(
+    ({
+      Vehicle? vehicle,
+      num velocity,
+      num bearing,
+      num distance,
+      PathTracking? pathTracking,
+      ABTracking? abTracking,
+      bool autoSteerEnabled,
+      bool hardwareIsConnected
+    }) message,
+  ) : this._internal(
+          (ref) => commonSimCoreMessageHandler(
+            ref as CommonSimCoreMessageHandlerRef,
+            message,
+          ),
+          from: commonSimCoreMessageHandlerProvider,
+          name: r'commonSimCoreMessageHandlerProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$commonSimCoreMessageHandlerHash,
+          dependencies: CommonSimCoreMessageHandlerFamily._dependencies,
+          allTransitiveDependencies:
+              CommonSimCoreMessageHandlerFamily._allTransitiveDependencies,
+          message: message,
+        );
+
+  CommonSimCoreMessageHandlerProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.message,
+  }) : super.internal();
+
+  final ({
+    Vehicle? vehicle,
+    num velocity,
+    num bearing,
+    num distance,
+    PathTracking? pathTracking,
+    ABTracking? abTracking,
+    bool autoSteerEnabled,
+    bool hardwareIsConnected
+  }) message;
+
+  @override
+  Override overrideWith(
+    void Function(CommonSimCoreMessageHandlerRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: CommonSimCoreMessageHandlerProvider._internal(
+        (ref) => create(ref as CommonSimCoreMessageHandlerRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        message: message,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<void> createElement() {
+    return _CommonSimCoreMessageHandlerProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CommonSimCoreMessageHandlerProvider &&
+        other.message == message;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, message.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin CommonSimCoreMessageHandlerRef on AutoDisposeProviderRef<void> {
+  /// The parameter `message` of this provider.
+  ({
+    Vehicle? vehicle,
+    num velocity,
+    num bearing,
+    num distance,
+    PathTracking? pathTracking,
+    ABTracking? abTracking,
+    bool autoSteerEnabled,
+    bool hardwareIsConnected
+  }) get message;
+}
+
+class _CommonSimCoreMessageHandlerProviderElement
+    extends AutoDisposeProviderElement<void>
+    with CommonSimCoreMessageHandlerRef {
+  _CommonSimCoreMessageHandlerProviderElement(super.provider);
+
+  @override
+  ({
+    Vehicle? vehicle,
+    num velocity,
+    num bearing,
+    num distance,
+    PathTracking? pathTracking,
+    ABTracking? abTracking,
+    bool autoSteerEnabled,
+    bool hardwareIsConnected
+  }) get message => (origin as CommonSimCoreMessageHandlerProvider).message;
+}
+
+String _$simCoreWebStreamHash() => r'3286cb2b4f8a7df5917b3a5ab2caf3d64f3c70a6';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
@@ -82,7 +298,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'18d195950d32166474f38f46b64c52192953e831';
+    r'bab4e2218d888d714795685c37440ab9f80267f7';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.

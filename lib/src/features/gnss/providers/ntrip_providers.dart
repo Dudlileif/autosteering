@@ -216,7 +216,7 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
               ref.read(ntripAliveProvider.notifier).update(value: true);
 
               if (ref.read(hardwareSerialProvider) != null) {
-                ref.read(hardwareSerialProvider)?.write(event);
+                ref.read(hardwareSerialProvider.notifier).write(event);
               } else {
                 ref.read(tcpServerProvider.notifier).send(event);
               }

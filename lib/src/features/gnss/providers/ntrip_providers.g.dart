@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'be43bc87fe1449bb28cd693786c7b205aa66857d';
+String _$ntripClientHash() => r'6bf9bd6eeeea17453b91f5f7c369b64b8f9cb469';
 
 /// A provider for creating and listening to an [NtripClient].
 ///

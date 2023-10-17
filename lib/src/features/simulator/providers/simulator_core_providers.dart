@@ -193,6 +193,37 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
     ..send((sendMessagesToHardware: ref.read(sendMessagesToHardwareProvider)));
 }
 
+/// A provider for handling the common sim core messages for the state of the
+/// simulation.
+@riverpod
+void commonSimCoreMessageHandler(
+  CommonSimCoreMessageHandlerRef ref,
+  ({
+    Vehicle? vehicle,
+    num velocity,
+    num bearing,
+    num distance,
+    PathTracking? pathTracking,
+    ABTracking? abTracking,
+    bool autoSteerEnabled,
+    bool hardwareIsConnected,
+  }) message,
+) {
+  ref.read(gaugeVelocityProvider.notifier).update(message.velocity.toDouble());
+  ref.read(gaugeBearingProvider.notifier).update(message.bearing.toDouble());
+  ref
+      .read(gaugeTravelledDistanceProvider.notifier)
+      .updateWith(message.distance.toDouble());
+  ref.read(displayPathTrackingProvider.notifier).update(message.pathTracking);
+  ref.read(displayABTrackingProvider.notifier).update(message.abTracking);
+  ref
+      .read(autoSteerEnabledProvider.notifier)
+      .update(value: message.autoSteerEnabled);
+  ref
+      .read(hardwareNetworkAliveProvider.notifier)
+      .update(value: message.hardwareIsConnected);
+}
+
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
 ///
@@ -205,17 +236,7 @@ Stream<Vehicle?> simCoreWebStream(
   ref.onDispose(() => Logger.instance.i('Simulator Core shut down.'));
   final updateMainStreamController = StreamController<dynamic>()
     ..stream.listen((event) {
-      if (event is LogEvent) {
-        Logger.instance.log(
-          event.level,
-          event.message,
-          error: event.error,
-          time: event.time,
-          stackTrace: event.stackTrace,
-        );
-      } else if (event is GnssPositionCommonSentence) {
-        ref.read(gnssCurrentSentenceProvider.notifier).update(event);
-      }
+      CommonMessageHandler.handleHardwareMessage(ref, event);
     });
 
   final stream = SimulatorCore.webWorker(
@@ -224,20 +245,7 @@ Stream<Vehicle?> simCoreWebStream(
   );
 
   return stream.map((event) {
-    ref.read(gaugeVelocityProvider.notifier).update(event.velocity.toDouble());
-    ref.read(gaugeBearingProvider.notifier).update(event.bearing.toDouble());
-    ref
-        .read(gaugeTravelledDistanceProvider.notifier)
-        .updateWith(event.distance.toDouble());
-    ref.read(displayPathTrackingProvider.notifier).update(event.pathTracking);
-    ref.read(displayABTrackingProvider.notifier).update(event.abTracking);
-    ref
-        .read(autoSteerEnabledProvider.notifier)
-        .update(value: event.autoSteerEnabled);
-    ref
-        .read(hardwareNetworkAliveProvider.notifier)
-        .update(value: event.hardwareIsConnected);
-
+    ref.read(commonSimCoreMessageHandlerProvider(event));
     return event.vehicle;
   });
 }
@@ -320,32 +328,16 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
 
     if (message is ({
       Vehicle vehicle,
-      double velocity,
-      double bearing,
-      double distance,
+      num velocity,
+      num bearing,
+      num distance,
       PathTracking? pathTracking,
       ABTracking? abTracking,
       bool autoSteerEnabled,
       bool hardwareIsConnected,
     })) {
-      ref.read(gaugeVelocityProvider.notifier).update(message.velocity);
-      ref.read(gaugeBearingProvider.notifier).update(message.bearing);
-      ref
-          .read(gaugeTravelledDistanceProvider.notifier)
-          .updateWith(message.distance);
-      ref
-          .read(displayPathTrackingProvider.notifier)
-          .update(message.pathTracking);
-      ref.read(displayABTrackingProvider.notifier).update(message.abTracking);
-      ref
-          .read(autoSteerEnabledProvider.notifier)
-          .update(value: message.autoSteerEnabled);
-      ref
-          .read(hardwareNetworkAliveProvider.notifier)
-          .update(value: message.hardwareIsConnected);
-
+      ref.read(commonSimCoreMessageHandlerProvider(message));
       yield message.vehicle;
-      
     } else if (CommonMessageHandler.handleHardwareMessage(ref, message)) {
     } else if (message == 'Heartbeat') {
     } else if (message is List) {
