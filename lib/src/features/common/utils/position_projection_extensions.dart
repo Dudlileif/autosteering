@@ -57,3 +57,10 @@ extension GeographicProjExt on Geographic {
     return intersects.isOdd;
   }
 }
+
+/// An extension to easily get [Geographic] positions from a [PositionSeries].
+extension GeographicPositions on PositionSeries {
+  /// Creates an iterable of [Geographic] positions from [positions].
+  Iterable<Geographic> get toGeographicPositions =>
+      positionsAs(to: Geographic.create);
+}

@@ -457,10 +457,10 @@ packages:
     dependency: "direct main"
     description:
       name: geobase
-      sha256: b14f1ee9f9078975d696c7896c3a0a2f0d16e2e8c5faad10536050bfe493c5c1
+      sha256: "20ab78aa9c3dd469421cd7fae5cd690a4025efe16fecab0ea461433174cef75b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1"
+    version: "0.6.0"
   geolocator:
     dependency: "direct main"
     description:

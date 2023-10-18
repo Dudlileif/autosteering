@@ -439,8 +439,8 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The polygon for the given [section].
   Polygon sectionPolygon(int section) => Polygon(
         [
-          PositionArray.view(
-            sectionPoints(section).map((e) => e.values).flattened,
+          PositionSeries.view(
+            sectionPoints(section).map((e) => e.values).flattened.toList(),
           ),
         ],
       );

@@ -14,25 +14,25 @@ extension PolygonBufferExtension on Polygon {
   /// The buffered [Geographic] points for a geometry that has been inset or
   /// extended by [distance] meters. Insetting requires negative [distance],
   /// extending requires positive [distance].
-  PositionArray bufferedPoints({
-    required PositionArray ring,
+  PositionSeries bufferedPoints({
+    required PositionSeries ring,
     required double distance,
     BufferJoin joinType = BufferJoin.round,
     bool getRawPoints = false,
   }) =>
-      PositionArray.view(
+      PositionSeries.view(
         RingBuffer.bufferCircular(
           ring: ring.toGeographicPositions,
           distance: distance,
           joinType: joinType,
           getRawPoints: getRawPoints,
-        ).map((point) => point.values).flattened,
+        ).map((point) => point.values).flattened.toList(),
       );
 
-  /// The buffered [PositionArray]s for a polygon's holes that has been inset or
+  /// The buffered [PositionSeries] for a polygon's holes that has been inset or
   /// extended by [distance] meters. Insetting requires negative [distance],
   /// extending requires positive [distance].
-  Iterable<PositionArray> bufferedInterior({
+  Iterable<PositionSeries> bufferedInterior({
     required double distance,
     BufferJoin joinType = BufferJoin.round,
     bool getRawPoints = false,

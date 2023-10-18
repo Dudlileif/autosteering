@@ -488,12 +488,13 @@ class _CreateFieldButton extends ConsumerWidget {
                                   final field = Field(
                                     name: name,
                                     polygon: Polygon([
-                                      PositionArray.view(
+                                      PositionSeries.view(
                                         points
                                             .map(
                                               (e) => e.position.values,
                                             )
-                                            .flattened,
+                                            .flattened
+                                            .toList(),
                                       ),
                                     ]),
                                     boundingBox: GeoBox.from(
