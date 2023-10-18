@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:agopengps_flutter/src/app/agopengps.dart';
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -13,6 +16,18 @@ Future<void> main() async {
   if (Device.isNative) {
     await WakelockPlus.enable();
     Logger.instance.i('Wakelock enabled.');
+  }
+
+  if (Device.isMobile) {
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    await SystemChrome.setSystemUIChangeCallback(
+        (systemOverlaysAreVisible) async {
+      if (systemOverlaysAreVisible) {
+        Timer(const Duration(milliseconds: 1500), () async {
+          await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+        });
+      }
+    });
   }
 
   if (Device.isDesktop) {
