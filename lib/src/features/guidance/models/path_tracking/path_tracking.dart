@@ -20,7 +20,14 @@ enum PathTrackingMode {
   purePursuit,
 
   /// Use Stanley path tracking to control the steering.
-  stanley,
+  stanley;
+
+  /// Converts the enumerator value to a json compatible string.
+  String toJson() => name;
+
+  /// Finds the corresponding [PathTrackingMode] to the [json] string value.
+  static PathTrackingMode fromJson(String json) =>
+      values.firstWhere((element) => element.name == json);
 }
 
 /// An enumerator for if/how the last and first points of the path of the

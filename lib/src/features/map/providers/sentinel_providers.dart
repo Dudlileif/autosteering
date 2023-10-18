@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
@@ -14,19 +16,13 @@ class CopernicusInstanceId extends _$CopernicusInstanceId {
       if (previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.copernicusInstanceId, next);
+            .update(SettingsKey.mapCopernicusInstanceId, next);
       }
     });
 
-    if (ref
+    return ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.copernicusInstanceId)) {
-      return ref
-          .read(settingsProvider.notifier)
-          .getString(SettingsKey.copernicusInstanceId);
-    }
-
-    return null;
+        .getString(SettingsKey.mapCopernicusInstanceId);
   }
 
   /// Update the [state] to [value].
@@ -43,7 +39,7 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next && instanceId != null) {
         ref.read(settingsProvider.notifier).update(
-              SettingsKey.sortedAvailableSentinelLayers,
+              SettingsKey.mapLayersSentinelSorted,
               next.map((e) => e.layerType.id).toList(),
             );
       }
@@ -52,10 +48,10 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
     if (instanceId != null) {
       if (ref
           .read(settingsProvider.notifier)
-          .containsKey(SettingsKey.sortedAvailableSentinelLayers)) {
+          .containsKey(SettingsKey.mapLayersSentinelSorted)) {
         final layerList = ref
             .read(settingsProvider.notifier)
-            .getList(SettingsKey.sortedAvailableSentinelLayers)!;
+            .getList(SettingsKey.mapLayersSentinelSorted)!;
 
         return List<String>.from(layerList)
             .map(
@@ -118,7 +114,7 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref.read(settingsProvider.notifier).update(
-              SettingsKey.enabledSentinelLayers,
+              SettingsKey.mapLayersSentinelEnabled,
               next.map((e) => e.layerType.id).toList(),
             );
       }
@@ -130,10 +126,10 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
     if (instanceId != null) {
       if (ref
           .read(settingsProvider.notifier)
-          .containsKey(SettingsKey.enabledSentinelLayers)) {
+          .containsKey(SettingsKey.mapLayersSentinelEnabled)) {
         final layerList = ref
             .read(settingsProvider.notifier)
-            .getList(SettingsKey.enabledSentinelLayers)!;
+            .getList(SettingsKey.mapLayersSentinelEnabled)!;
 
         for (final layerId in List<String>.from(layerList)) {
           final layerType = SentinelLayerType.values
@@ -187,24 +183,35 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
 /// A map for the Sentinel layers and their opacities, which can be specified.
 @Riverpod(keepAlive: true)
 class SentinelLayerOpacities extends _$SentinelLayerOpacities {
+  Timer? _saveToSettingsTimer;
+
   @override
   Map<SentinelLayerType, double> build() {
     ref.listenSelf((previous, next) {
-      ref.read(settingsProvider.notifier).update(
-            SettingsKey.sentinelLayersOpacities,
-            next.map<String, double>((key, value) => MapEntry(key.id, value))
-              ..removeWhere((key, value) => value == 0.5),
+      if (previous != null) {
+        if (!const DeepCollectionEquality().equals(previous, next)) {
+          _saveToSettingsTimer?.cancel();
+          _saveToSettingsTimer = Timer(
+            const Duration(seconds: 1),
+            () => ref.read(settingsProvider.notifier).update(
+                  SettingsKey.mapLayersSentinelOpacities,
+                  next.map<String, double>(
+                    (key, value) => MapEntry(key.id, value),
+                  )..removeWhere((key, value) => value == 0.5),
+                ),
           );
+        }
+      }
     });
 
     final layers = {for (final layer in SentinelLayerType.values) layer: 0.5};
 
     if (ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.sentinelLayersOpacities)) {
+        .containsKey(SettingsKey.mapLayersSentinelOpacities)) {
       final layerMap = ref
           .read(settingsProvider.notifier)
-          .getMap(SettingsKey.sentinelLayersOpacities)!;
+          .getMap(SettingsKey.mapLayersSentinelOpacities)!;
       Map<String, double>.from(layerMap).forEach((key, value) {
         final layerType = SentinelLayerType.values
             .firstWhereOrNull((element) => element.id == key);

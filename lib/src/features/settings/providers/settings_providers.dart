@@ -13,63 +13,89 @@ part 'settings_providers.g.dart';
 /// A provider for the main settings file for the application.
 @Riverpod(keepAlive: true)
 Future<File> settingsFile(SettingsFileRef ref) async {
-  final file = await File(
-    '${ref.watch(fileDirectoryProvider).requireValue.path}/settings.json',
-  ).create(recursive: true);
+  final path =
+      '${ref.watch(fileDirectoryProvider).requireValue.path}/settings.json';
+  final file = File(path);
 
+  if (file.existsSync()) {
+    Logger.instance.i('Settings file found: $path');
+    return file;
+  }
+
+  await file.create(recursive: true);
+  Logger.instance.i('Settings file created: $path');
   return file;
 }
 
 /// A provider for the local storage data map for the web version of the
 /// application.
 @Riverpod(keepAlive: true)
-Storage webLocalStorage(WebLocalStorageRef ref) => window.localStorage;
+Storage webLocalStorage(WebLocalStorageRef ref) {
+  Logger.instance.i('Loaded web window localStorage');
+  return window.localStorage;
+}
 
 /// A provider for the settings map for the application.
 @Riverpod(keepAlive: true)
 class Settings extends _$Settings {
   @override
-  Map<String, dynamic> build() {
+  SplayTreeMap<String, dynamic> build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        final sortedMap = SplayTreeMap.of(
-          next,
-          (key1, key2) => key1.compareTo(key2),
-        );
-
         if (Device.isWeb) {
-          ref.watch(webLocalStorageProvider)['settings'] =
-              jsonEncode(sortedMap);
+          ref.watch(webLocalStorageProvider)['settings'] = jsonEncode(next);
+          Logger.instance.i('Saved settings to web localStorage.');
         } else {
-          ref.watch(settingsFileProvider).requireValue.writeAsString(
-                const JsonEncoder.withIndent('    ').convert(sortedMap),
+          ref
+              .watch(settingsFileProvider)
+              .requireValue
+              .writeAsString(
+                const JsonEncoder.withIndent('    ').convert(next),
+              )
+              .then(
+                (value) => Logger.instance.i('Saved settings to file.'),
               );
         }
       }
     });
 
-    var fileString = switch (Device.isWeb) {
+    final fileString = switch (Device.isWeb) {
       true => ref.watch(webLocalStorageProvider)['settings'] ?? '',
       false => ref.watch(settingsFileProvider).requireValue.readAsStringSync(),
     };
+
     if (fileString.isEmpty) {
-      fileString = '{}';
+      Logger.instance.i('No previous settings found, creating new.');
+      return SplayTreeMap<String, dynamic>();
     }
-    return Map<String, dynamic>.from(
-      jsonDecode(
-        fileString,
-      ) as Map,
-    );
+
+    final settings = jsonDecode(fileString) as Map;
+    Logger.instance.i('Loaded ${settings.length} settings from storage.');
+    return SplayTreeMap<String, dynamic>.from(settings);
   }
 
   /// Update the setting [key] to [value].
   void update(SettingsKey key, dynamic value) => Future(
-        () => state = Map<String, dynamic>.from(state)
-          ..update(
-            key.name,
-            (oldValue) => value,
-            ifAbsent: () => value,
-          ),
+        () {
+          final oldValue = state[key.name];
+          // Skip if value is not new.
+          if (oldValue is Iterable) {
+            if (const DeepCollectionEquality().equals(oldValue, value)) {
+              return;
+            }
+          } else if (oldValue == value) {
+            return;
+          }
+
+          state = SplayTreeMap.from(state)
+            ..update(
+              key.name,
+              (oldValue) => value,
+              ifAbsent: () => value,
+            );
+
+          Logger.instance.i('Updated setting ${key.name}: $oldValue => $value');
+        },
       );
 
   /// Whether the settings contains a value for [key].
@@ -81,7 +107,7 @@ class Settings extends _$Settings {
 
   /// Get the value of type [double] for the setting [key], if it exists.
   double? getDouble(SettingsKey key) =>
-      state.containsKey(key.name) ? state[key.name] as double : null;
+      state.containsKey(key.name) ? (state[key.name] as num).toDouble() : null;
 
   /// Get the value of type [int] for the setting [key], if it exists.
   int? getInt(SettingsKey key) =>
@@ -92,8 +118,8 @@ class Settings extends _$Settings {
       state.containsKey(key.name) ? state[key.name] as String : null;
 
   /// Get the value of type [Map] for the setting [key], if it exists.
-  Map<String, dynamic>? getMap(SettingsKey key) => state.containsKey(key.name)
-      ? Map<String, dynamic>.from(state[key.name] as Map)
+  Map<String, Object?>? getMap(SettingsKey key) => state.containsKey(key.name)
+      ? Map<String, Object?>.from(state[key.name] as Map)
       : null;
 
   /// Get the value of type [List] for the setting [key], if it exists.

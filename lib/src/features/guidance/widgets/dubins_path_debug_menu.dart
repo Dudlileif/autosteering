@@ -166,7 +166,7 @@ class DubinsPathDebugMenu extends StatelessWidget {
               onTap: () {
                 final center = ref.watch(
                   mainMapControllerProvider
-                      .select((controller) => controller.center),
+                      .select((controller) => controller.camera.center),
                 );
                 ref.read(dubinsPathDebugStartPointProvider.notifier).update(
                       WayPoint(

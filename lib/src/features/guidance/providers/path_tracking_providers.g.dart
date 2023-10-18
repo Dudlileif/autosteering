@@ -46,7 +46,7 @@ final pathInterpolationDistanceProvider =
 
 typedef _$PathInterpolationDistance = Notifier<double>;
 String _$configuredPathTrackingHash() =>
-    r'638ded14b11a180b7a14826876258032e10297a9';
+    r'e5ab0aadda82fe9b08349f141304de69e048a9c2';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.
@@ -144,4 +144,4 @@ final debugPathTrackingProvider =
 
 typedef _$DebugPathTracking = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

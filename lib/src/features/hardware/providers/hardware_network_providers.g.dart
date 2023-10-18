@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'network_providers.dart';
+part of 'hardware_network_providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
 String _$deviceIPAdressWlanHash() =>
-    r'ec2d871c08b0813194a7519595f738d1f00b3efa';
+    r'f83be2448781de1c928f2c96940a5098ffad153e';
 
 /// A provider for the wireless IP adress of the device.
 ///
@@ -25,7 +25,7 @@ final deviceIPAdressWlanProvider = AutoDisposeFutureProvider<String?>.internal(
 
 typedef DeviceIPAdressWlanRef = AutoDisposeFutureProviderRef<String?>;
 String _$deviceIPAdressEthernetHash() =>
-    r'4a7c7ec62c2bd4531a202830bada839e890dc0ac';
+    r'c97b95b9563fec16579d200be6b447507c4c80af';
 
 /// A provider for the wireless IP adress of the device.
 ///
@@ -97,26 +97,61 @@ final hardwareWebCommunicationConfigProvider =
 
 typedef HardwareWebCommunicationConfigRef
     = ProviderRef<({String hardwareIPAdress, int hardwareWebSocketPort})>;
-String _$hardwareIsConnectedHash() =>
-    r'868c2a8319a69cbd23814e20bc583381cccd7a8c';
+String _$currentConnectionHash() => r'e780fb086d27c63045c0df36c7ad0a10ab0a0425';
 
-/// A provider for whether there is a connection with the hardware.
+/// A provider for the current connection of the device.
 ///
-/// Copied from [HardwareIsConnected].
-@ProviderFor(HardwareIsConnected)
-final hardwareIsConnectedProvider =
-    NotifierProvider<HardwareIsConnected, bool>.internal(
-  HardwareIsConnected.new,
-  name: r'hardwareIsConnectedProvider',
+/// Copied from [currentConnection].
+@ProviderFor(currentConnection)
+final currentConnectionProvider = StreamProvider<ConnectivityResult>.internal(
+  currentConnection,
+  name: r'currentConnectionProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$hardwareIsConnectedHash,
+      : _$currentConnectionHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$HardwareIsConnected = Notifier<bool>;
-String _$hardwareIPAdressHash() => r'9e16807c2fc2e38718ce21576b0ea9a32d5c87f0';
+typedef CurrentConnectionRef = StreamProviderRef<ConnectivityResult>;
+String _$networkAvailableHash() => r'efd28f567476da1835b14284f781709ced58fcfe';
+
+/// A provider for whether a network connection can be made.
+///
+///
+/// Copied from [networkAvailable].
+@ProviderFor(networkAvailable)
+final networkAvailableProvider = Provider<bool>.internal(
+  networkAvailable,
+  name: r'networkAvailableProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$networkAvailableHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef NetworkAvailableRef = ProviderRef<bool>;
+String _$hardwareNetworkAliveHash() =>
+    r'34d239e447fc1d306a7aedb2179959c9d78560d8';
+
+/// A provider for whether there is a connection with the hardware.
+///
+/// Copied from [HardwareNetworkAlive].
+@ProviderFor(HardwareNetworkAlive)
+final hardwareNetworkAliveProvider =
+    NotifierProvider<HardwareNetworkAlive, bool>.internal(
+  HardwareNetworkAlive.new,
+  name: r'hardwareNetworkAliveProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hardwareNetworkAliveHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$HardwareNetworkAlive = Notifier<bool>;
+String _$hardwareIPAdressHash() => r'93c5230172faa73ea94b9f2f351ca9ad11264274';
 
 /// A provider for the IP adress of the hardware we want to communicate with.
 ///
@@ -135,7 +170,7 @@ final hardwareIPAdressProvider =
 
 typedef _$HardwareIPAdress = Notifier<String>;
 String _$hardwareUDPReceivePortHash() =>
-    r'b3dcb3a4792c18833d84b60b7d559199b7868510';
+    r'91dbd7461ad74145dfdb3e30087d93af782aac83';
 
 /// A provider for the UDP receive port for the device.
 ///
@@ -154,7 +189,7 @@ final hardwareUDPReceivePortProvider =
 
 typedef _$HardwareUDPReceivePort = Notifier<int>;
 String _$hardwareUDPSendPortHash() =>
-    r'bd08e39eec4b4b1216c6072a64dfe6af0f2ed76a';
+    r'8fb2c394511108ca165925cab8e4d31e8abda11c';
 
 /// A provider for the UDP send port for the device to send messages to
 /// the hardware in [HardwareIPAdress].
@@ -174,7 +209,7 @@ final hardwareUDPSendPortProvider =
 
 typedef _$HardwareUDPSendPort = Notifier<int>;
 String _$hardwareWebSocketPortHash() =>
-    r'e5cc5998b00cce1c57443a9c928d1dcd3ab5ccb7';
+    r'afb7bbd829445135aabd30dbc368f7649dbffb61';
 
 /// A provider for the UDP send port for the device to send messages to
 /// the hardware in [HardwareIPAdress].
@@ -193,5 +228,22 @@ final hardwareWebSocketPortProvider =
 );
 
 typedef _$HardwareWebSocketPort = Notifier<int>;
+String _$tcpServerHash() => r'2d075ffd4a3fb8fb20b0d34ba4a1ce07e6107e32';
+
+/// A provider for a TCP server for sending/receiving data via TCP.
+///
+/// Copied from [TcpServer].
+@ProviderFor(TcpServer)
+final tcpServerProvider =
+    AsyncNotifierProvider<TcpServer, ServerSocket>.internal(
+  TcpServer.new,
+  name: r'tcpServerProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$tcpServerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$TcpServer = AsyncNotifier<ServerSocket>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

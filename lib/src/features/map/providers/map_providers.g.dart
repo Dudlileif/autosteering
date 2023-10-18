@@ -23,7 +23,7 @@ final mapOffsetProvider = Provider<MapCenterOffset>.internal(
 
 typedef MapOffsetRef = ProviderRef<MapCenterOffset>;
 String _$offsetVehiclePositionHash() =>
-    r'932c255b65d3b9b8faf7fab7176808ba3387308b';
+    r'7cd975b403f08193fae0d838448b3ae3614fe2a8';
 
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.
@@ -94,6 +94,7 @@ class MapCacheDateFamily extends Family<AsyncValue<DateTime?>> {
     );
   }
 
+  @visibleForOverriding
   @override
   MapCacheDateProvider getProviderOverride(
     covariant MapCacheDateProvider provider,
@@ -262,7 +263,7 @@ final mainMapControllerProvider =
 );
 
 typedef _$MainMapController = Notifier<MapController>;
-String _$homePositionHash() => r'9887c76d9fd12dbfe3d8dbe1040f342b26aaa652';
+String _$homePositionHash() => r'565fba2f6435effb444ac537767fbdbd1e5abc65';
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
 ///
@@ -279,7 +280,7 @@ final homePositionProvider = NotifierProvider<HomePosition, LatLng>.internal(
 
 typedef _$HomePosition = Notifier<LatLng>;
 String _$centerMapOnVehicleHash() =>
-    r'6268ec68323bb1790b8585e16fcdb04b57ec6e4b';
+    r'44efa38a7de6f7d3f022323aca5d2d4ebc17d7af';
 
 /// Whether the map should center on the vehicle or if it could be moved freely.
 ///
@@ -318,7 +319,7 @@ final zoomTimerControllerProvider =
 );
 
 typedef _$ZoomTimerController = AutoDisposeNotifier<Timer?>;
-String _$mapOffset2DHash() => r'bacee10fe6dceef24cc755af969461bc872bf088';
+String _$mapOffset2DHash() => r'e7ba7e93982dfcb53ac2bdae646d5c93f36713e3';
 
 /// How much the map center should be offset from the vehicle when using
 /// 2D view.
@@ -336,7 +337,7 @@ final mapOffset2DProvider =
 );
 
 typedef _$MapOffset2D = Notifier<MapCenterOffset>;
-String _$mapOffset3DHash() => r'eed798ad2fa9d9781af96898d913a23068763984';
+String _$mapOffset3DHash() => r'6a86104bd72a60b53e1733f5c6999bb975c38cd9';
 
 /// How much the map center should be offset from the vehicle when using
 /// 3D view.
@@ -354,7 +355,7 @@ final mapOffset3DProvider =
 );
 
 typedef _$MapOffset3D = Notifier<MapCenterOffset>;
-String _$alwaysPointNorthHash() => r'd2dc5ebbc011a5c3503b45653eb9c9bc7dcc70b8';
+String _$alwaysPointNorthHash() => r'3c0833b6f831c68a304e12ee171f753f71afd35e';
 
 /// Whether the map always should point to the north and not rotate.
 ///
@@ -373,7 +374,7 @@ final alwaysPointNorthProvider =
 
 typedef _$AlwaysPointNorth = Notifier<bool>;
 String _$mapUse3DPerspectiveHash() =>
-    r'e2a44a841ae01677fcc8ea2de4c63e33677e2a06';
+    r'f66d81d9c1e7b801d9e776fdc14b8ecb906757d3';
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
@@ -393,7 +394,7 @@ final mapUse3DPerspectiveProvider =
 
 typedef _$MapUse3DPerspective = Notifier<bool>;
 String _$map3DPerspectiveAngleHash() =>
-    r'2d41f3d840e1281e01a58b107c01bec1596c1188';
+    r'6074a76785fbe4b8a74b0d0a97a30d74e76ae350';
 
 /// The angle that the 3D perspective should be seen from, as in radians
 /// from the orthogonal view.
@@ -412,7 +413,7 @@ final map3DPerspectiveAngleProvider =
 );
 
 typedef _$Map3DPerspectiveAngle = Notifier<double>;
-String _$mapZoomHash() => r'070ace7cb8cec2c2a0c7b1c56a4c50f8bb51a379';
+String _$mapZoomHash() => r'5fc8d7397026ab36f2c9549587d7648e38d2bc45';
 
 /// The zoom value that the map should use when being created.
 ///
@@ -447,4 +448,4 @@ final mapAllowDownloadProvider =
 
 typedef _$MapAllowDownload = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

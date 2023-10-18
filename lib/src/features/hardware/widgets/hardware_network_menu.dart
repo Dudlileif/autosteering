@@ -1,5 +1,6 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/network/network.dart';
+import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
+import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,21 +8,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
 
 /// A menu for changing network settings to connect to the hardware.
-class NetworkMenu extends ConsumerWidget {
+class HardwareNetworkMenu extends ConsumerWidget {
   /// A menu for changing network settings to connect to the hardware.
-  const NetworkMenu({super.key});
+  const HardwareNetworkMenu({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!Device.isWeb) ref.watch(hardwareCommunicationConfigProvider);
-    if (Device.isWeb) ref.watch(hardwareWebCommunicationConfigProvider);
-
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Network',
       icon: Icons.settings_ethernet,
       menuChildren: [
-        if (!Device.isWeb)
+        if (Device.isNative)
           Consumer(
             builder: (context, ref, child) {
               final ip = ref.watch(deviceIPAdressWlanProvider).when(
@@ -40,7 +38,7 @@ $ip''',
               );
             },
           ),
-        if (!Device.isWeb)
+        if (Device.isNative)
           Consumer(
             builder: (context, ref, child) {
               final ip = ref.watch(deviceIPAdressEthernetProvider).when(
@@ -59,12 +57,27 @@ $ip''',
               );
             },
           ),
+        Consumer(
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(sendMessagesToHardwareIfNetworkProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(sendMessagesToHardwareIfNetworkProvider.notifier)
+                    .update(value: value)
+                : null,
+            title: Text(
+              'Send messages',
+              style: textStyle,
+            ),
+            secondary: const Icon(Icons.message),
+          ),
+        ),
         ListTile(
           leading: Column(
             children: [
               Consumer(
                 builder: (context, ref, child) =>
-                    ref.watch(hardwareIsConnectedProvider)
+                    ref.watch(hardwareNetworkAliveProvider)
                         ? const Icon(Icons.check, color: Colors.green)
                         : const Icon(Icons.clear, color: Colors.red),
               ),
@@ -90,7 +103,7 @@ $ip''',
             ),
           ),
         ),
-        if (!Device.isWeb)
+        if (Device.isNative)
           Consumer(
             builder: (context, ref, child) => ListTile(
               leading: const Icon(Icons.call_received),
@@ -119,7 +132,7 @@ $ip''',
               ),
             ),
           ),
-        if (!Device.isWeb)
+        if (Device.isNative)
           Consumer(
             builder: (context, ref, child) => ListTile(
               leading: const Icon(Icons.send),

@@ -32,25 +32,30 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
-    this.pitch = 0,
-    this.roll = 0,
-    this.useIMUPitchAndRoll = true,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
     super.uuid,
     this.pathTrackingMode = PathTrackingMode.purePursuit,
+    Imu? imu,
+    Was? was,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     DateTime? lastUsed,
     Geographic position = const Geographic(lon: 0, lat: 0),
     double bearing = 0,
+    double pitch = 0,
+    double roll = 0,
     double velocity = 0,
   })  : _bearing = bearing,
+        _pitch = pitch,
+        _roll = roll,
         _velocity = velocity,
         antennaPosition = position,
+        imu = imu ?? Imu(),
+        was = was ?? Was(),
         pidParameters = pidParameters ?? const PidParameters(),
         stanleyParameters = stanleyParameters ?? const StanleyParameters(),
         purePursuitParameters =
@@ -107,25 +112,48 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       vehicle.attachChild(hitchRearTowbarChild, Hitch.rearTowbar);
     }
 
-    final pidParameters = json.containsKey('pid_parameters')
+    final steering = Map<String, dynamic>.from(json['steering'] as Map);
+
+    final imu = json.containsKey('imu_config')
+        ? Imu(
+            config: ImuConfig.fromJson(
+              Map<String, dynamic>.from(json['imu_config'] as Map),
+            ),
+          )
+        : Imu();
+
+    final was = steering.containsKey('was_config')
+        ? Was(
+            config: WasConfig.fromJson(
+              Map<String, dynamic>.from(steering['was_config'] as Map),
+            ),
+          )
+        : Was();
+
+    final pidParameters = steering.containsKey('pid_parameters')
         ? PidParameters.fromJson(
-            Map<String, dynamic>.from(json['pid_parameters'] as Map),
+            Map<String, dynamic>.from(steering['pid_parameters'] as Map),
           )
         : null;
 
-    final purePursuitParameters = json.containsKey('pure_pursuit_parameters')
-        ? PurePursuitParameters.fromJson(
-            Map<String, dynamic>.from(json['pure_pursuit_parameters'] as Map),
-          )
-        : null;
+    final purePursuitParameters =
+        steering.containsKey('pure_pursuit_parameters')
+            ? PurePursuitParameters.fromJson(
+                Map<String, dynamic>.from(
+                  steering['pure_pursuit_parameters'] as Map,
+                ),
+              )
+            : null;
 
-    final stanleyParameters = json.containsKey('stanley_parameters')
+    final stanleyParameters = steering.containsKey('stanley_parameters')
         ? StanleyParameters.fromJson(
-            Map<String, dynamic>.from(json['stanley_parameters'] as Map),
+            Map<String, dynamic>.from(steering['stanley_parameters'] as Map),
           )
         : null;
 
     return vehicle.copyWith(
+      imu: imu,
+      was: was,
       pidParameters: pidParameters,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
@@ -158,6 +186,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Whether the [steeringAngleInput] should be inverted.
   bool invertSteeringInput;
 
+  /// The Wheel Angle Sensor object representation of this vehicle.
+  Was was;
+
   /// The PID parameters for controlling the steering of this vehicle
   /// when using a PID controller mode.
   PidParameters pidParameters;
@@ -182,74 +213,90 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The width of the vehicle, in meters.
   double width;
 
-  /// Whether the roll and pitch should affect the [position].
-  bool useIMUPitchAndRoll;
-
   /// The pitch of the vehicle as degrees of inclination around the x-axis
   /// (across) the vehicle in the forward direction.
-  double pitch;
+  double _pitch;
 
   /// The roll of the vehicle as degrees of roll around the y-axis (along) the
   /// vehicle in the forward direction.
-  double roll;
+  double _roll;
 
   /// Bearing as set from the outside.
   double _bearing = 0;
 
+  /// The IMU (inertial measurement unit) for this vehicle.
+  Imu imu;
+
   /// Antenna position of the vehicle.
   Geographic antennaPosition;
 
-  /// The [antennaPosition] moved to the center line of the vehicle.
-  Geographic get centeredAntennaPosition =>
-      switch (antennaLateralOffset.abs() > 0) {
-        false => antennaPosition,
-        true => antennaPosition.spherical.destinationPoint(
-            distance: antennaLateralOffset,
-            bearing: bearing + 90,
-          )
-      };
-
   /// The lateral offset of the the antenna's true ground position to the
   /// mounted position.
-  double get antennaRollLateralOffset => sin(roll.toRadians()) * antennaHeight;
+  double get antennaRollLateralOffset => tan(roll.toRadians()) * antennaHeight;
 
   /// The longitudinal offset of the the antenna's true ground position to the
   /// mounted position.
   double get antennaPitchLongitudinalOffset =>
-      sin(pitch.toRadians()) * antennaHeight;
+      tan(pitch.toRadians()) * antennaHeight;
 
-  /// The projected ground position of the antenna of this vehicle accounting
-  /// for [pitch] and [roll].
+  /// The projected ground position of the centered antenna of this vehicle
+  /// accounting for [pitch] and [roll].
   @override
-  Geographic get position => switch (useIMUPitchAndRoll) {
+  Geographic get position => switch (imu.config.usePitchAndRoll) {
         false => antennaPosition,
-        true => antennaPosition.spherical
-            .destinationPoint(
-              distance: antennaRollLateralOffset,
-              bearing: bearing - 90,
-            )
-            .spherical
-            .destinationPoint(
-              distance: antennaPitchLongitudinalOffset,
-              bearing: bearing,
-            ),
-      };
+        true => correctPositionForRollAndPitch(antennaPosition),
+      }
+          .spherical
+          .destinationPoint(
+            distance: antennaLateralOffset,
+            bearing: bearing + 90,
+          );
 
+  /// Updates the [antennaPosition] of the vehicle, as the ground [position] is
+  /// derived from it.
   @override
-  set position(Geographic value) =>
-      antennaPosition = switch (useIMUPitchAndRoll) {
-        false => value,
-        true => value.spherical
-            .destinationPoint(
-              distance: -antennaRollLateralOffset,
-              bearing: bearing - 90,
-            )
-            .spherical
-            .destinationPoint(
-              distance: -antennaPitchLongitudinalOffset,
-              bearing: bearing,
-            )
-      };
+  set position(Geographic value) => antennaPosition = value;
+
+  /// Moves the input [position] to a position corrected for [pitch] and [roll]
+  /// with [antennaPitchLongitudinalOffset] and [antennaRollLateralOffset].
+  Geographic correctPositionForRollAndPitch(Geographic position) =>
+      position.spherical
+          .destinationPoint(
+            distance: antennaRollLateralOffset,
+            bearing: bearing - 90,
+          )
+          .spherical
+          .destinationPoint(
+            distance: antennaPitchLongitudinalOffset,
+            bearing: bearing,
+          );
+
+  /// A method for setting the [position] correctly when not directly
+  /// inputting the [antennaPosition] from hardware. The [value] is the new
+  /// proposed ground [position] for the vehicle.
+  ///
+  /// Essentially we move the position opposite of the getter for [position],
+  /// to end at the correct [antennaPosition].
+  void setPositionSim(Geographic value) {
+    final unCentered = value.spherical.destinationPoint(
+      distance: antennaLateralOffset,
+      bearing: bearing - 90,
+    );
+
+    antennaPosition = switch (imu.config.usePitchAndRoll) {
+      false => unCentered,
+      true => unCentered.spherical
+          .destinationPoint(
+            distance: -antennaRollLateralOffset,
+            bearing: bearing - 90,
+          )
+          .spherical
+          .destinationPoint(
+            distance: -antennaPitchLongitudinalOffset,
+            bearing: bearing,
+          )
+    };
+  }
 
   /// The velocity of the vehicle, in m/s, meters per second, in the bearing
   /// direction.
@@ -262,19 +309,48 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The bearing of the vehicle, in degrees.
   @override
-  double get bearing => _bearing;
+  double get bearing => switch (imu.config.useYaw) {
+        true => imu.bearing ?? 0,
+        false => _bearing
+      };
+
+  /// The raw outside set bearing of the vehicle, typically from
+  /// GNSS point to point bearing.
+  double get bearingRaw => _bearing;
 
   /// Update the bearing of the vehicle, [value] in degrees.
   @override
   set bearing(double value) => _bearing = value.wrap360();
 
+  /// The pitch of the vehicle as degrees of inclination around the x-axis
+  /// (across) the vehicle in the forward direction.
+  double get pitch => switch (imu.config.usePitchAndRoll) {
+        true => imu.pitch,
+        false => _pitch
+      };
+
+  set pitch(double value) => _pitch = value;
+
+  /// The roll of the vehicle as degrees of roll around the y-axis (along) the
+  /// vehicle in the forward direction.
+  double get roll =>
+      switch (imu.config.usePitchAndRoll) { true => imu.roll, false => _roll };
+
+  set roll(double value) => _roll = value;
+
   /// The distance from the ground position to the antenna position.
-  double get positionToAntennaDistance =>
+  double get groundPositionToAntennaDistance =>
       position.spherical.distanceTo(antennaPosition);
 
   /// The bearing from the ground position to the antenna position.
-  double get positionToAntennaBearing =>
+  double get groundPositionToAntennaBearing =>
       position.spherical.initialBearingTo(antennaPosition);
+
+  /// Sets the steering angle of the vehicle by the [was].reading.
+  void setSteeringAngleByWasReading() {
+    steeringAngleInput = (was.readingNormalizedInRange * steeringAngleMax)
+        .clamp(-steeringAngleMax, steeringAngleMax);
+  }
 
   /// The distance between the wheel axles.
   double get wheelBase;
@@ -362,13 +438,17 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// afterwards.
   void updatePositionAndBearing(
     double period,
-    Geographic? turningCircleCenter,
-  ) {
+    Geographic? turningCircleCenter, {
+    bool force = false,
+  }) {
     if (period > 0) {
       if (angularVelocity != null && turningCircleCenter != null) {
-        updatePositionAndBearingTurning(period, turningCircleCenter);
-      } else if (velocity.abs() > 0) {
-        updatePositionStraight(period);
+        final updated =
+            updatedPositionAndBearingTurning(period, turningCircleCenter);
+        setPositionSim(updated.position);
+        bearing = updated.bearing;
+      } else if (velocity.abs() > 0 || force) {
+        setPositionSim(updatedPositionStraight(period));
       }
       updateChildren();
     }
@@ -377,14 +457,14 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Updates the [position] and [bearing] for the next [period] seconds when
   /// turning around [turningCircleCenter], i.e. with a constant
   /// [steeringAngle].
-  void updatePositionAndBearingTurning(
+  ({Geographic position, double bearing}) updatedPositionAndBearingTurning(
     double period,
     Geographic turningCircleCenter,
   );
 
   /// Updates the [position] for the next [period] seconds when going straight.
-  void updatePositionStraight(double period) =>
-      position = position.spherical.destinationPoint(
+  Geographic updatedPositionStraight(double period) =>
+      position.spherical.destinationPoint(
         distance: velocity * period,
         bearing: bearing,
       );
@@ -477,16 +557,19 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleMax,
     double? trackWidth,
     bool? invertSteeringInput,
+    Was? was,
+    Imu? imu,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     double? velocity,
     double? bearing,
+    double? pitch,
+    double? roll,
     double? steeringAngleInput,
     double? length,
     double? width,
-    bool? useIMUPitchAndRoll,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
@@ -514,6 +597,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       'track_width': trackWidth,
     };
 
+    map['imu_config'] = imu.config;
+
     map['pid_parameters'] = pidParameters;
 
     map['pure_pursuit_parameters'] = purePursuitParameters;
@@ -523,8 +608,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     map['steering'] = {
       'invert_steering_input': invertSteeringInput,
       'min_turning_radius': minTurningRadius,
-      'path_tracking_mode': pathTrackingMode.name,
+      'path_tracking_mode': pathTrackingMode,
       'steering_angle_max': steeringAngleMax,
+      'was_config': was.config,
     };
 
     return map;

@@ -65,6 +65,7 @@ class SaveVehicleFamily extends Family<AsyncValue<void>> {
     );
   }
 
+  @visibleForOverriding
   @override
   SaveVehicleProvider getProviderOverride(
     covariant SaveVehicleProvider provider,
@@ -243,6 +244,7 @@ class LoadVehicleFromFileFamily extends Family<AsyncValue<Vehicle?>> {
     );
   }
 
+  @visibleForOverriding
   @override
   LoadVehicleFromFileProvider getProviderOverride(
     covariant LoadVehicleFromFileProvider provider,
@@ -356,7 +358,7 @@ class _LoadVehicleFromFileProviderElement
   String get path => (origin as LoadVehicleFromFileProvider).path;
 }
 
-String _$lastUsedVehicleHash() => r'0661f70142802a8325d22f39a600871ca7049560';
+String _$lastUsedVehicleHash() => r'685997d196ec06b072c0af95be50bfc5fe78b202';
 
 /// A provider for the most recently used [Vehicle].
 ///
@@ -392,7 +394,7 @@ final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
 );
 
 typedef _$MainVehicle = Notifier<Vehicle>;
-String _$autoSteerEnabledHash() => r'491f89abd6aa83fa8ef8a6fb8c79430e99631e54';
+String _$autoSteerEnabledHash() => r'3825c9c26ad90ae171f028e130ee99ac03c94f61';
 
 /// A provider for whether the vehicle should steer automatically.
 ///
@@ -410,22 +412,99 @@ final autoSteerEnabledProvider =
 );
 
 typedef _$AutoSteerEnabled = Notifier<bool>;
-String _$useIMUBearingHash() => r'7011a616009be1e5664d6bd7c0560bfe1e27593d';
+String _$gaugesAverageCountHash() =>
+    r'8b36c1bc95239048650b55ea1f7da6920ea3ddc0';
 
-/// A provider for whether the vehicle's bearing is set by the IMU input.
+/// A provider for the number of previous positions to use for calculating
+/// the gauge velocity and bearing values.
 ///
-/// Copied from [UseIMUBearing].
-@ProviderFor(UseIMUBearing)
-final useIMUBearingProvider = NotifierProvider<UseIMUBearing, bool>.internal(
-  UseIMUBearing.new,
-  name: r'useIMUBearingProvider',
+/// Copied from [GaugesAverageCount].
+@ProviderFor(GaugesAverageCount)
+final gaugesAverageCountProvider =
+    NotifierProvider<GaugesAverageCount, int>.internal(
+  GaugesAverageCount.new,
+  name: r'gaugesAverageCountProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$useIMUBearingHash,
+      : _$gaugesAverageCountHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$UseIMUBearing = Notifier<bool>;
+typedef _$GaugesAverageCount = Notifier<int>;
+String _$imuCurrentFrequencyHash() =>
+    r'37d83d64c27e1793cca6b546e9777fa0157c86bc';
+
+/// A provider for the frequency of the IMU updates.
+///
+/// Copied from [ImuCurrentFrequency].
+@ProviderFor(ImuCurrentFrequency)
+final imuCurrentFrequencyProvider =
+    AutoDisposeNotifierProvider<ImuCurrentFrequency, double?>.internal(
+  ImuCurrentFrequency.new,
+  name: r'imuCurrentFrequencyProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$imuCurrentFrequencyHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ImuCurrentFrequency = AutoDisposeNotifier<double?>;
+String _$imuCurrentReadingHash() => r'52018dd12927d1890edb4af3670eee380615e279';
+
+/// A provider for the current raw [ImuReading] from the hardware.
+///
+/// Copied from [ImuCurrentReading].
+@ProviderFor(ImuCurrentReading)
+final imuCurrentReadingProvider =
+    AutoDisposeNotifierProvider<ImuCurrentReading, ImuReading?>.internal(
+  ImuCurrentReading.new,
+  name: r'imuCurrentReadingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$imuCurrentReadingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ImuCurrentReading = AutoDisposeNotifier<ImuReading?>;
+String _$wasCurrentFrequencyHash() =>
+    r'c5c45a14fc33f405dc840d21ddeb43c7971cea4d';
+
+/// A provider for the frequency of the WAS updates.
+///
+/// Copied from [WasCurrentFrequency].
+@ProviderFor(WasCurrentFrequency)
+final wasCurrentFrequencyProvider =
+    AutoDisposeNotifierProvider<WasCurrentFrequency, double?>.internal(
+  WasCurrentFrequency.new,
+  name: r'wasCurrentFrequencyProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$wasCurrentFrequencyHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$WasCurrentFrequency = AutoDisposeNotifier<double?>;
+String _$wasCurrentReadingHash() => r'9307def230e7852695d3854e367308e81b21249d';
+
+/// A provider for the current raw [WasReading] from the hardware.
+///
+/// Copied from [WasCurrentReading].
+@ProviderFor(WasCurrentReading)
+final wasCurrentReadingProvider =
+    AutoDisposeNotifierProvider<WasCurrentReading, WasReading?>.internal(
+  WasCurrentReading.new,
+  name: r'wasCurrentReadingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$wasCurrentReadingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$WasCurrentReading = AutoDisposeNotifier<WasReading?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

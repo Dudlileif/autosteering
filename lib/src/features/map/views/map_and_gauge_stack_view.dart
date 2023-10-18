@@ -42,7 +42,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             else if (event is KeyDownEvent)
               ref.read(zoomTimerControllerProvider.notifier).zoomOut(),
           },
-        LogicalKeyboardKey.add => {
+        LogicalKeyboardKey.add || LogicalKeyboardKey.equal => {
             if (event is KeyUpEvent)
               ref.read(zoomTimerControllerProvider.notifier).cancel()
             else if (event is KeyDownEvent)
@@ -173,7 +173,15 @@ class MapAndGaugeStackView extends ConsumerWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.all(8),
-                child: PitchAndRollDebugGauges(),
+                child: SizedBox(height: 700, child: ImuConfigurator()),
+              ),
+            ),
+          if (ref.watch(debugVehicleWASProvider))
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: SizedBox(height: 700, child: WasConfigurator()),
               ),
             ),
           if (ref.watch(debugVehicleAutosteerParametersProvider))
@@ -184,10 +192,23 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 child: VehicleAutosteerParameterConfigurator(),
               ),
             ),
-          if (ref.watch(showABTrackingDebugLayerProvider))
-            const ABTrackingOffsetDebugControls(),
-          if (ref.watch(showPathTrackingDebugLayerProvider))
-            const PathTrackingDebugWidget(),
+          Column(
+            children: [
+              if (ref.watch(virtualLedBarEnabledProvider) &&
+                  ref.watch(
+                    virtualLedBarPerpendicularDistanceProvider
+                        .select((value) => value != null),
+                  ))
+                const Padding(
+              padding: EdgeInsets.all(8),
+              child: VirtualLedBar(),
+            ),
+              if (ref.watch(showABTrackingDebugLayerProvider))
+                const ABTrackingOffsetDebugControls(),
+              if (ref.watch(showPathTrackingDebugLayerProvider))
+                const PathTrackingDebugWidget(),
+            ],
+          ),
         ],
       ),
     );

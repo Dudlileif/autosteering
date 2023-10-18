@@ -12,9 +12,18 @@ part 'file_providers.g.dart';
 @Riverpod(keepAlive: true)
 FutureOr<Directory> fileDirectory(FileDirectoryRef ref) async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
-  final directory =
-      Directory([documentsDirectory.path, '/AgOpenGPS_flutter'].join());
+  final path = [documentsDirectory.path, '/AgOpenGPS_flutter'].join();
+  final directory = Directory(path);
+
+  if (directory.existsSync()) {
+    Logger.instance.i('File directory found: $path');
+    return directory;
+  }
+  Logger.instance.i('Attempting to create file directory: $path');
+
   await directory.create(recursive: true);
+
+  Logger.instance.i('File directory created: $path');
 
   return directory;
 }
@@ -43,9 +52,19 @@ FutureOr<bool> directoryDelete(DirectoryDeleteRef ref, String path) async {
   final directory = Directory(path);
 
   if (directory.existsSync()) {
-    return !(await directory.delete(recursive: true)).existsSync();
+    final wasDeleted = !(await directory.delete(recursive: true)).existsSync();
+    Logger.instance.i('${switch (wasDeleted) {
+      true => 'Deleted',
+      false => 'Failed to delete'
+    }} directory: $path');
+    return wasDeleted;
   }
-  return !directory.existsSync();
+  final deleted = !directory.existsSync();
+  Logger.instance.i('${switch (deleted) {
+    true => 'Attempted to delete already deleted',
+    false => 'Attempted to delete, but failed for'
+  }} directory: $path');
+  return deleted;
 }
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
@@ -72,12 +91,12 @@ FutureOr<void> saveJsonToFileDirectory(
       ..style.display = 'none'
       ..click();
   } else {
-    final file = File(
-      '''${ref.watch(fileDirectoryProvider).requireValue.path}/$folder/$fileName.json''',
-    );
+    final path =
+        '${ref.watch(fileDirectoryProvider).requireValue.path}/$folder/$fileName.json';
+    final file = File(path);
     await file.create(recursive: true);
-
     await file.writeAsString(dataString);
+    Logger.instance.i('Created and wrote data to $path');
   }
 }
 
@@ -93,15 +112,16 @@ FutureOr<List<dynamic>> savedFiles(
     return [];
   }
 
-  final dir = Directory(
-    [
-      ref.watch(fileDirectoryProvider).requireValue.path,
-      folder,
-    ].join('/'),
-  );
+  final dirPath = [
+    ref.watch(fileDirectoryProvider).requireValue.path,
+    folder,
+  ].join('/');
 
+  Logger.instance.i('Attempting to read saved files in: $dirPath');
+  final dir = Directory(dirPath);
   if (!dir.existsSync()) {
-    dir.createSync(recursive: true);
+    Logger.instance.i('Directory not found: $dirPath');
+    return [];
   }
 
   // Remake the list if there are any file changes in the folder.
@@ -131,5 +151,7 @@ FutureOr<List<dynamic>> savedFiles(
       }
     }
   }
+  Logger.instance
+      .i('Directory found with ${savedItems.length} items: $dirPath');
   return savedItems;
 }

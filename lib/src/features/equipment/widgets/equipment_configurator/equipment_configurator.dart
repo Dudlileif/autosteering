@@ -12,13 +12,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A [SimpleDialog] for configuring an equipment, with ability to apply to the
 /// one in the attached hierarchy, save to file or load from file.
-class EquipmentConfigurator extends ConsumerWidget {
+class EquipmentConfigurator extends StatelessWidget {
   /// A [SimpleDialog] for configuring an equipment, with ability to apply to
   /// the equipment in the attached hierarchy, save to file or load from file.
   const EquipmentConfigurator({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => SimpleDialog(
+  Widget build(BuildContext context) => SimpleDialog(
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -87,17 +87,19 @@ class EquipmentConfigurator extends ConsumerWidget {
                 ),
                 const VerticalDivider(),
                 Expanded(
-                  child: PageView(
-                    scrollDirection: Axis.vertical,
-                    controller:
-                        ref.watch(equipmentConfiguratorPageControllerProvider),
-                    children: const [
-                      EquipmentTypeSelectorPage(),
-                      EquipmentDimensionsPage(),
-                      EquipmentSectionsPage(),
-                      EquipmentDecorationPage(),
-                      EquipmentHitchesPage(),
-                    ],
+                  child: Consumer(
+                    builder: (context, ref, child) => PageView(
+                      scrollDirection: Axis.vertical,
+                      controller: ref
+                          .watch(equipmentConfiguratorPageControllerProvider),
+                      children: const [
+                        EquipmentTypeSelectorPage(),
+                        EquipmentDimensionsPage(),
+                        EquipmentSectionsPage(),
+                        EquipmentDecorationPage(),
+                        EquipmentHitchesPage(),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -232,7 +234,7 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
               .read(simInputProvider.notifier)
               .send((updatedEquipment: equipment));
 
-          if (!Device.isWeb) {
+          if (Device.isNative) {
             ref.read(saveEquipmentProvider(equipment));
           }
           Navigator.of(context).pop();

@@ -1,6 +1,6 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:geobase/geobase.dart';
 
 /// A marker that will insert a new point to the editable path.
@@ -65,7 +65,7 @@ class _AddPointMarkerState extends State<AddPointMarker> {
 
   @override
   Widget build(BuildContext context) {
-    final map = FlutterMapState.of(context);
+    final map = MapController.of(context).camera;
 
     var radiusToUse = widget.radius;
 

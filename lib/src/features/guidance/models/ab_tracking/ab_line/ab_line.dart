@@ -370,7 +370,7 @@ class ABLine extends ABTracking with EquatableMixin {
   List<WayPoint> pointsAhead(
     Vehicle vehicle, {
     double stepSize = 10,
-    int num = 2,
+    int count = 2,
   }) {
     // Whether the heading closer to the line bearing or the opposite bearing.
     final sign = compareToBearing(vehicle);
@@ -386,14 +386,14 @@ class ABLine extends ABTracking with EquatableMixin {
       stepOffset--;
     }
 
+    
+
     return List.generate(
-      num,
-      (index) => currentStart.moveSpherical(
-        distance: stepSize * (index + sign * stepOffset),
-        angleFromBearing: switch (sign.isNegative) {
-          true => 180,
-          false => 0,
-        },
+      count,
+      (index) => currentStart.alongLineByDistanceFromStart(
+        end: currentEnd,
+        distance: sign * stepSize * (index + sign * stepOffset),
+      
       ),
       growable: false,
     );
@@ -403,7 +403,7 @@ class ABLine extends ABTracking with EquatableMixin {
   List<WayPoint> pointsBehind(
     Vehicle vehicle, {
     double stepSize = 10,
-    int num = 2,
+    int count = 2,
   }) {
     // Whether the heading is closer to the line bearing or the opposite
     // bearing.
@@ -419,15 +419,13 @@ class ABLine extends ABTracking with EquatableMixin {
     if (sign.isNegative) {
       stepOffset++;
     }
+  
 
     return List.generate(
-      num,
-      (index) => currentStart.moveSpherical(
-        distance: stepSize * (index - sign * stepOffset),
-        angleFromBearing: switch (sign.isNegative) {
-          true => 0,
-          false => 180,
-        },
+      count,
+      (index) => currentStart.alongLineByDistanceFromStart(
+        end: currentEnd,
+        distance: -sign * stepSize * (index - sign * stepOffset),
       ),
       growable: false,
     );

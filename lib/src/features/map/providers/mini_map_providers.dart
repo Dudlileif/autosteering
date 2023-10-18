@@ -27,7 +27,7 @@ class ShowMiniMap extends _$ShowMiniMap {
             );
             mapController.moveAndRotate(
               vehicle.position.latLng,
-              mapController.zoom,
+              mapController.camera.zoom,
               -vehicle.bearing,
             );
           }
@@ -53,6 +53,16 @@ class ShowMiniMap extends _$ShowMiniMap {
   void toggle() => Future(() => state = !state);
 }
 
+/// Whether the map is ready to be shown or not.
+@Riverpod(keepAlive: true)
+class MiniMapReady extends _$MiniMapReady {
+  @override
+  bool build() => false;
+
+  /// Set the [state] to true to indicate that the map is ready.
+  void ready() => Future(() => state = true);
+}
+
 /// The mini map [MapController] provider, which allows controlling the
 /// map from outside the widget code itself.
 @Riverpod(keepAlive: true)
@@ -62,12 +72,12 @@ class MiniMapController extends _$MiniMapController {
 
   /// Increase the zoom value of the [state] by [value].
   void zoomIn(double value) => Future(
-        () => state.move(state.center, state.zoom + value),
+        () => state.move(state.camera.center, state.camera.zoom + value),
       );
 
   /// Decrease the zoom value of the [state] by [value].
   void zoomOut(double value) => Future(
-        () => state.move(state.center, state.zoom - value),
+        () => state.move(state.camera.center, state.camera.zoom - value),
       );
 }
 
@@ -106,22 +116,28 @@ class MiniMapLockToField extends _$MiniMapLockToField {
       final mapController = ref.watch(miniMapControllerProvider);
       final bbox = field.squaredByDiagonalBoundingBox;
       if (bbox != null) {
-        final rotation = mapController.rotation;
+        final rotation = mapController.camera.rotation;
         mapController
           ..rotate(0)
-          ..fitBounds(
+          ..fitCamera(
+            CameraFit.bounds(
+              bounds: 
             LatLngBounds.fromPoints(
               bbox.corners2D.map((point) => point.latLng).toList(),
             ),
-            options: const FitBoundsOptions(padding: EdgeInsets.all(4)),
+              padding: const EdgeInsets.all(4),
+            ),
           )
           ..rotate(rotation);
       } else {
-        mapController.fitBounds(
+        mapController.fitCamera(
+          CameraFit.bounds(
+            bounds: 
           LatLngBounds.fromPoints(
             field.mapBoundingBox((point) => point.latLng).toList(),
           ),
-          options: const FitBoundsOptions(padding: EdgeInsets.all(4)),
+            padding: const EdgeInsets.all(4),
+          ),
         );
       }
     }
@@ -140,6 +156,7 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
   @override
   bool build() {
     ref.listenSelf((previous, next) {
+      if (ref.read(miniMapReadyProvider)) {
       if (next) {
         ref.read(miniMapControllerProvider).rotate(0);
       } else {
@@ -147,7 +164,7 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
               ref.read(mainVehicleProvider.select((value) => -value.bearing)),
             );
       }
-
+      }
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)

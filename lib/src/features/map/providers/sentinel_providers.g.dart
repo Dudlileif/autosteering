@@ -7,7 +7,7 @@ part of 'sentinel_providers.dart';
 // **************************************************************************
 
 String _$copernicusInstanceIdHash() =>
-    r'0a1e6f470a8443ceed23cc711bf09573fcec32ce';
+    r'7fc92ae04ff4ef5fbde7820a05d1909de8a2d66d';
 
 /// A provider for the Sentinel Dataspace instance id.
 ///
@@ -26,7 +26,7 @@ final copernicusInstanceIdProvider =
 
 typedef _$CopernicusInstanceId = Notifier<String?>;
 String _$availableSentinelLayersHash() =>
-    r'4688cac88b4633ea62d07fa6edbb08d0efaae116';
+    r'eb168d1d4f38693da430b87ee711bb57651bf4fa';
 
 /// A provider for the available Sentinel layers.
 ///
@@ -65,7 +65,7 @@ final sentinelMaxCloudCoveragePercentProvider =
 
 typedef _$SentinelMaxCloudCoveragePercent = Notifier<double>;
 String _$enabledSentinelLayersHash() =>
-    r'5cd9eb2132a9573e8834b563f6563c8d1cf82837';
+    r'7d3df238eeb7a99b493a8c691a522bbcf97593ba';
 
 /// A provider for the set of selected Sentinel layers.
 ///
@@ -84,7 +84,7 @@ final enabledSentinelLayersProvider =
 
 typedef _$EnabledSentinelLayers = Notifier<Set<SentinelLayer>>;
 String _$sentinelLayerOpacitiesHash() =>
-    r'2f422a371d0e56d26d580f18f1d3876048f75902';
+    r'bcba725a1766b2ff36ff8dc515314fb307ba2e52';
 
 /// A map for the Sentinel layers and their opacities, which can be specified.
 ///
@@ -103,4 +103,4 @@ final sentinelLayerOpacitiesProvider = NotifierProvider<SentinelLayerOpacities,
 
 typedef _$SentinelLayerOpacities = Notifier<Map<SentinelLayerType, double>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

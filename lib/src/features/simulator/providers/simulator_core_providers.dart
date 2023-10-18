@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/gnss/providers/device_position_providers.dart';
+import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/network/network.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -33,10 +32,16 @@ enum SimPlatform {
 @Riverpod(keepAlive: true)
 class SimInput extends _$SimInput {
   @override
-  SimPlatform build() => switch (Device.isWeb) {
-        true => SimPlatform.web,
-        false => SimPlatform.native,
-      };
+  SimPlatform build() {
+    ref.listenSelf(
+      (previous, next) => Logger.instance.i('Simulator Platform set to $next.'),
+    );
+
+    return switch (Device.isWeb) {
+      true => SimPlatform.web,
+      false => SimPlatform.native,
+    };
+  }
 
   /// Send some [input] to the simulator.
   void send(dynamic input) => switch (state) {
@@ -47,6 +52,42 @@ class SimInput extends _$SimInput {
             () => ref.read(_simCoreIsolatePortProvider)?.send(input),
           ),
       };
+}
+
+/// A provider for whether we should send messages to the hardware from the
+/// Simulator Core when network is available, see [networkAvailable].
+@Riverpod(keepAlive: true)
+class SendMessagesToHardwareIfNetwork
+    extends _$SendMessagesToHardwareIfNetwork {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.hardwareNetworkSendMessages, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.hardwareNetworkSendMessages) ??
+        true;
+  }
+
+  /// Updates the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
+
+/// A provider for whether we should send messages to the hardware.
+@riverpod
+bool sendMessagesToHardware(SendMessagesToHardwareRef ref) {
+  ref.listenSelf((previous, next) {
+    ref.read(simInputProvider.notifier).send((sendMessagesToHardware: next));
+  });
+
+  return ref.watch(sendMessagesToHardwareIfNetworkProvider) &&
+      ref.watch(networkAvailableProvider);
 }
 
 /// A provider that watches the simulated vehicle and updates the map
@@ -85,11 +126,11 @@ void simCoreVehicleDriving(SimCoreVehicleDrivingRef ref) {
         );
       }
       final mapController = ref.watch(mainMapControllerProvider);
-      if (vehicle.position != mapController.center.gbPosition &&
+      if (vehicle.position != mapController.camera.center.gbPosition &&
           ref.watch(centerMapOnVehicleProvider)) {
         mapController.moveAndRotate(
           ref.watch(offsetVehiclePositionProvider),
-          mapController.zoom,
+          mapController.camera.zoom,
           -ref.watch(mainVehicleProvider.select((value) => value.bearing)),
         );
       }
@@ -104,6 +145,7 @@ class _SimCoreIsolatePort extends _$SimCoreIsolatePort {
   @override
   SendPort? build() {
     ref.listenSelf((previous, next) {
+      Logger.instance.i('Simulator Core sendport set to: $next');
       if (next != null) {
         ref.read(_initializeSimCoreProvider);
       }
@@ -132,6 +174,7 @@ class _SimCoreWebInput extends _$SimCoreWebInput {
 /// Sends initial parameters to  the sim core.
 @riverpod
 void _initializeSimCore(_InitializeSimCoreRef ref) {
+  Logger.instance.i('Sending initial data to Simulator Core...');
   ref.read(simInputProvider.notifier)
     ..send(ref.read(hardwareCommunicationConfigProvider))
     ..send(ref.read(mainVehicleProvider))
@@ -140,10 +183,45 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
       (autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider)),
     )
     ..send((allowManualSimInput: ref.read(simCoreAllowManualInputProvider)))
+    ..send((allowSimInterpolation: ref.read(simCoreAllowInterpolationProvider)))
     ..send(ref.read(activeABConfigProvider))
     ..send((pathTracking: ref.read(displayPathTrackingProvider)))
     ..send((abTracking: ref.read(displayABTrackingProvider)))
-    ..send((autoSteerEnabled: ref.read(autoSteerEnabledProvider)));
+    ..send(
+      (enableAutoSteer: ref.read(autoSteerEnabledProvider)),
+    )
+    ..send((sendMessagesToHardware: ref.read(sendMessagesToHardwareProvider)));
+}
+
+/// A provider for handling the common sim core messages for the state of the
+/// simulation.
+@riverpod
+void commonSimCoreMessageHandler(
+  CommonSimCoreMessageHandlerRef ref,
+  ({
+    Vehicle? vehicle,
+    num velocity,
+    num bearing,
+    num distance,
+    PathTracking? pathTracking,
+    ABTracking? abTracking,
+    bool autoSteerEnabled,
+    bool hardwareIsConnected,
+  }) message,
+) {
+  ref.read(gaugeVelocityProvider.notifier).update(message.velocity.toDouble());
+  ref.read(gaugeBearingProvider.notifier).update(message.bearing.toDouble());
+  ref
+      .read(gaugeTravelledDistanceProvider.notifier)
+      .updateWith(message.distance.toDouble());
+  ref.read(displayPathTrackingProvider.notifier).update(message.pathTracking);
+  ref.read(displayABTrackingProvider.notifier).update(message.abTracking);
+  ref
+      .read(autoSteerEnabledProvider.notifier)
+      .update(value: message.autoSteerEnabled);
+  ref
+      .read(hardwareNetworkAliveProvider.notifier)
+      .update(value: message.hardwareIsConnected);
 }
 
 /// A provider that creates a stream and watches the vehicle simulator on the
@@ -155,22 +233,19 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
 Stream<Vehicle?> simCoreWebStream(
   SimCoreWebStreamRef ref,
 ) {
+  ref.onDispose(() => Logger.instance.i('Simulator Core shut down.'));
+  final updateMainStreamController = StreamController<dynamic>()
+    ..stream.listen((event) {
+      CommonMessageHandler.handleHardwareMessage(ref, event);
+    });
+
   final stream = SimulatorCore.webWorker(
     ref.watch(_simCoreWebInputProvider.notifier).stream(),
+    updateMainStreamController,
   );
 
   return stream.map((event) {
-    ref.read(gaugeVelocityProvider.notifier).update(event.velocity.toDouble());
-    ref.read(gaugeBearingProvider.notifier).update(event.bearing.toDouble());
-    ref
-        .read(gaugeTravelledDistanceProvider.notifier)
-        .updateWith(event.distance.toDouble());
-    ref.read(displayPathTrackingProvider.notifier).update(event.pathTracking);
-    ref.read(displayABTrackingProvider.notifier).update(event.abTracking);
-    ref
-        .read(hardwareIsConnectedProvider.notifier)
-        .update(value: event.hardwareIsConnected);
-
+    ref.read(commonSimCoreMessageHandlerProvider(event));
     return event.vehicle;
   });
 }
@@ -194,30 +269,26 @@ class SimCoreDebugAllowLongBreaks extends _$SimCoreDebugAllowLongBreaks {
 /// update the vehicle gauge providers.
 @riverpod
 Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
-  final recievePort = ReceivePort('Recieve from sim port');
+  final receivePort = ReceivePort('Recieve from sim port');
 
-  await Isolate.spawn(
+  final isolate = await Isolate.spawn(
     SimulatorCore.isolateWorker,
-    recievePort.sendPort,
+    receivePort.sendPort,
     debugName: 'Simulator Core',
   );
-  log('Simulator Core isolate spawned');
+  isolate.addErrorListener(receivePort.sendPort);
+  // ..addOnExitListener(
+  //   receivePort.sendPort,
+  //   response: LogEvent(Level.warning, 'Isolate exited.'),
+  // );
 
-  final events = StreamQueue<dynamic>(recievePort);
+  Logger.instance.i('Simulator Core isolate spawned and started.');
 
-  final sendPort = await events.next as SendPort;
+  final simCoreReceiveStream = StreamQueue<dynamic>(receivePort);
+
+  final sendPort = await simCoreReceiveStream.next as SendPort;
 
   ref.read(_simCoreIsolatePortProvider.notifier).update(sendPort);
-
-  Timer? restartTimer;
-
-  // Exit isolate when provider is disposed.
-  ref.onDispose(() {
-    sendPort.send(null);
-    events.cancel();
-    restartTimer?.cancel();
-    ref.read(_simCoreIsolatePortProvider.notifier).update(null);
-  });
 
   // How long we will wait for a message until we restart the simulator, in
   // seconds.
@@ -228,43 +299,60 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
     true => 5,
   };
 
-  while (true) {
-    // Use the restart timer if we're not in debug mode or if we're in
-    // debug mode and don't allow long breaks.
-    if (!kDebugMode || !ref.watch(simCoreDebugAllowLongBreaksProvider)) {
-      restartTimer = Timer(
+// Use the restart timer if we're not in debug mode or if we're in
+  // debug mode and don't allow long breaks.
+  final restartTimer =
+      switch (!kDebugMode || !ref.watch(simCoreDebugAllowLongBreaksProvider)) {
+    true => RestartableTimer(
           Duration(milliseconds: (heartbeatThreshold * 1000).round()), () {
-        log('Simulator Core isolate unresponsive/died... Restarting...');
+        Logger.instance
+            .w('Simulator Core isolate unresponsive/died... Restarting...');
 
         ref.invalidateSelf();
-      });
-    }
+      }),
+    false => null
+  };
 
-    final message = await events.next;
+  // Exit isolate when provider is disposed.
+  ref.onDispose(() {
+    sendPort.send(null);
+    simCoreReceiveStream.cancel();
     restartTimer?.cancel();
+    ref.read(_simCoreIsolatePortProvider.notifier).update(null);
+    Logger.instance.w('Simulator Core shut down.');
+  });
+
+  while (true) {
+    final message = await simCoreReceiveStream.next;
+    restartTimer?.reset();
+
     if (message is ({
       Vehicle vehicle,
-      double velocity,
-      double bearing,
-      double distance,
+      num velocity,
+      num bearing,
+      num distance,
       PathTracking? pathTracking,
       ABTracking? abTracking,
+      bool autoSteerEnabled,
       bool hardwareIsConnected,
     })) {
-      ref.read(gaugeVelocityProvider.notifier).update(message.velocity);
-      ref.read(gaugeBearingProvider.notifier).update(message.bearing);
-      ref
-          .read(gaugeTravelledDistanceProvider.notifier)
-          .updateWith(message.distance);
-      ref
-          .read(displayPathTrackingProvider.notifier)
-          .update(message.pathTracking);
-      ref.read(displayABTrackingProvider.notifier).update(message.abTracking);
-      ref
-          .read(hardwareIsConnectedProvider.notifier)
-          .update(value: message.hardwareIsConnected);
-
+      ref.read(commonSimCoreMessageHandlerProvider(message));
       yield message.vehicle;
+    } else if (CommonMessageHandler.handleHardwareMessage(ref, message)) {
+    } else if (message == 'Heartbeat') {
+    } else if (message is List) {
+      if (message.any((element) => element is Exception)) {
+        Logger.instance.log(
+          Level.error,
+          'Simulator Core hit error, restarting...: $message',
+        );
+        ref.invalidateSelf();
+      }
+    } else {
+      Logger.instance.log(
+        Level.warning,
+        'Received unknown message from Simulator Core: $message',
+      );
     }
   }
 }
@@ -285,16 +373,39 @@ class SimCoreAllowManualInput extends _$SimCoreAllowManualInput {
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.simAllowManualInput)) {
-      return ref
-              .read(settingsProvider.notifier)
-              .getBool(SettingsKey.simAllowManualInput) ??
-          true;
-    }
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.simAllowManualInput) ??
+        true;
+  }
 
-    return true;
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state != state);
+}
+
+/// A provider for whether the sim core should allow interpolation steps
+/// between the hardware GNSS updates.
+@Riverpod(keepAlive: true)
+class SimCoreAllowInterpolation extends _$SimCoreAllowInterpolation {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      ref.read(simInputProvider.notifier).send((allowSimInterpolation: next));
+
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.simAllowInterpolation, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.simAllowInterpolation) ??
+        true;
   }
 
   /// Update the [state] to [value].
@@ -321,16 +432,10 @@ class SimCoreVehicleAutoCenterSteering
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.simAutoCenterSteering)) {
-      return ref
-              .read(settingsProvider.notifier)
-              .getBool(SettingsKey.simAutoCenterSteering) ??
-          true;
-    }
-
-    return true;
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.simAutoCenterSteering) ??
+        true;
   }
 
   /// Update the [state] to [value].
@@ -356,15 +461,10 @@ class SimCoreVehicleAutoSlowDown extends _$SimCoreVehicleAutoSlowDown {
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.simAutoSlowDown)) {
-      return ref
-              .read(settingsProvider.notifier)
-              .getBool(SettingsKey.simAutoSlowDown) ??
-          false;
-    }
-    return false;
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.simAutoSlowDown) ??
+        false;
   }
 
   /// Update the [state] to [value].

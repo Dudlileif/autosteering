@@ -93,3 +93,17 @@ class EquipmentSetup with EquatableMixin {
         lastUsed,
       ];
 }
+
+/// An extension for getting the [EquipmentSetup] of the attached children
+/// of a [Hitchable].
+extension EquipmentSetupOfHitchable on Hitchable {
+  /// Creates an [EquipmentSetup] for the attached children.
+  ///
+  /// The setup requires a [name].
+  EquipmentSetup equipmentSetup(String name) => EquipmentSetup(
+        name: name,
+        frontFixedChild: hitchFrontFixedChild,
+        rearFixedChild: hitchRearFixedChild,
+        rearTowbarChild: hitchRearTowbarChild,
+      );
+}

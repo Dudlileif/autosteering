@@ -56,6 +56,7 @@ class LoadEquipmentFromFileFamily extends Family<AsyncValue<Equipment?>> {
     );
   }
 
+  @visibleForOverriding
   @override
   LoadEquipmentFromFileProvider getProviderOverride(
     covariant LoadEquipmentFromFileProvider provider,
@@ -208,6 +209,7 @@ class SaveEquipmentFamily extends Family<AsyncValue<void>> {
     );
   }
 
+  @visibleForOverriding
   @override
   SaveEquipmentProvider getProviderOverride(
     covariant SaveEquipmentProvider provider,
@@ -449,6 +451,7 @@ class EquipmentPathsFamily extends Family<List<Map<int, List<Geographic>?>>> {
     );
   }
 
+  @visibleForOverriding
   @override
   EquipmentPathsProvider getProviderOverride(
     covariant EquipmentPathsProvider provider,
@@ -568,4 +571,4 @@ class _EquipmentPathsProviderElement extends AutoDisposeNotifierProviderElement<
   String get uuid => (origin as EquipmentPathsProvider).uuid;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

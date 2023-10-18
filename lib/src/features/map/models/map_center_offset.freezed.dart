@@ -71,22 +71,22 @@ class _$MapCenterOffsetCopyWithImpl<$Res, $Val extends MapCenterOffset>
 }
 
 /// @nodoc
-abstract class _$$_MapCenterOffsetCopyWith<$Res>
+abstract class _$$MapCenterOffsetImplCopyWith<$Res>
     implements $MapCenterOffsetCopyWith<$Res> {
-  factory _$$_MapCenterOffsetCopyWith(
-          _$_MapCenterOffset value, $Res Function(_$_MapCenterOffset) then) =
-      __$$_MapCenterOffsetCopyWithImpl<$Res>;
+  factory _$$MapCenterOffsetImplCopyWith(_$MapCenterOffsetImpl value,
+          $Res Function(_$MapCenterOffsetImpl) then) =
+      __$$MapCenterOffsetImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double x, double y});
 }
 
 /// @nodoc
-class __$$_MapCenterOffsetCopyWithImpl<$Res>
-    extends _$MapCenterOffsetCopyWithImpl<$Res, _$_MapCenterOffset>
-    implements _$$_MapCenterOffsetCopyWith<$Res> {
-  __$$_MapCenterOffsetCopyWithImpl(
-      _$_MapCenterOffset _value, $Res Function(_$_MapCenterOffset) _then)
+class __$$MapCenterOffsetImplCopyWithImpl<$Res>
+    extends _$MapCenterOffsetCopyWithImpl<$Res, _$MapCenterOffsetImpl>
+    implements _$$MapCenterOffsetImplCopyWith<$Res> {
+  __$$MapCenterOffsetImplCopyWithImpl(
+      _$MapCenterOffsetImpl _value, $Res Function(_$MapCenterOffsetImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -95,7 +95,7 @@ class __$$_MapCenterOffsetCopyWithImpl<$Res>
     Object? x = null,
     Object? y = null,
   }) {
-    return _then(_$_MapCenterOffset(
+    return _then(_$MapCenterOffsetImpl(
       x: null == x
           ? _value.x
           : x // ignore: cast_nullable_to_non_nullable
@@ -110,11 +110,11 @@ class __$$_MapCenterOffsetCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MapCenterOffset implements _MapCenterOffset {
-  const _$_MapCenterOffset({this.x = 0, this.y = 0});
+class _$MapCenterOffsetImpl implements _MapCenterOffset {
+  const _$MapCenterOffsetImpl({this.x = 0, this.y = 0});
 
-  factory _$_MapCenterOffset.fromJson(Map<String, dynamic> json) =>
-      _$$_MapCenterOffsetFromJson(json);
+  factory _$MapCenterOffsetImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MapCenterOffsetImplFromJson(json);
 
   /// Longitudinal offset in meters from the center point.
   @override
@@ -135,7 +135,7 @@ class _$_MapCenterOffset implements _MapCenterOffset {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MapCenterOffset &&
+            other is _$MapCenterOffsetImpl &&
             (identical(other.x, x) || other.x == x) &&
             (identical(other.y, y) || other.y == y));
   }
@@ -147,12 +147,13 @@ class _$_MapCenterOffset implements _MapCenterOffset {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MapCenterOffsetCopyWith<_$_MapCenterOffset> get copyWith =>
-      __$$_MapCenterOffsetCopyWithImpl<_$_MapCenterOffset>(this, _$identity);
+  _$$MapCenterOffsetImplCopyWith<_$MapCenterOffsetImpl> get copyWith =>
+      __$$MapCenterOffsetImplCopyWithImpl<_$MapCenterOffsetImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MapCenterOffsetToJson(
+    return _$$MapCenterOffsetImplToJson(
       this,
     );
   }
@@ -160,10 +161,10 @@ class _$_MapCenterOffset implements _MapCenterOffset {
 
 abstract class _MapCenterOffset implements MapCenterOffset {
   const factory _MapCenterOffset({final double x, final double y}) =
-      _$_MapCenterOffset;
+      _$MapCenterOffsetImpl;
 
   factory _MapCenterOffset.fromJson(Map<String, dynamic> json) =
-      _$_MapCenterOffset.fromJson;
+      _$MapCenterOffsetImpl.fromJson;
 
   @override
 
@@ -175,6 +176,6 @@ abstract class _MapCenterOffset implements MapCenterOffset {
   double get y;
   @override
   @JsonKey(ignore: true)
-  _$$_MapCenterOffsetCopyWith<_$_MapCenterOffset> get copyWith =>
+  _$$MapCenterOffsetImplCopyWith<_$MapCenterOffsetImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

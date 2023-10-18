@@ -6,7 +6,6 @@ import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map/plugin_api.dart';
 import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -33,12 +32,12 @@ class MainMapController extends _$MainMapController {
 
   /// Increase the zoom value of the [state] by [value].
   void zoomIn(double value) => Future(
-        () => state.move(state.center, state.zoom + value),
+        () => state.move(state.camera.center, state.camera.zoom + value),
       );
 
   /// Decrease the zoom value of the [state] by [value].
   void zoomOut(double value) => Future(
-        () => state.move(state.center, state.zoom - value),
+        () => state.move(state.camera.center, state.camera.zoom - value),
       );
 }
 
@@ -51,15 +50,17 @@ class HomePosition extends _$HomePosition {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.homePosition, next);
+            .update(SettingsKey.mapHomePosition, next);
       }
     });
 
     if (ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.homePosition)) {
+        .containsKey(SettingsKey.mapHomePosition)) {
       return LatLng.fromJson(
-        ref.read(settingsProvider.notifier).getMap(SettingsKey.homePosition)!,
+        ref
+            .read(settingsProvider.notifier)
+            .getMap(SettingsKey.mapHomePosition)!,
       );
     }
 
@@ -82,12 +83,12 @@ class CenterMapOnVehicle extends _$CenterMapOnVehicle {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.centerMapOnVehicle, next);
+            .update(SettingsKey.mapCenterMapOnVehicle, next);
       }
     });
     return ref
             .read(settingsProvider.notifier)
-            .getBool(SettingsKey.centerMapOnVehicle) ??
+            .getBool(SettingsKey.mapCenterMapOnVehicle) ??
         true;
   }
 
@@ -100,7 +101,7 @@ class CenterMapOnVehicle extends _$CenterMapOnVehicle {
               ref.watch(offsetVehiclePositionProvider),
               ref.watch(
                 mainMapControllerProvider
-                    .select((controller) => controller.zoom),
+                    .select((controller) => controller.camera.zoom),
               ),
             );
       }
@@ -160,13 +161,20 @@ MapCenterOffset mapOffset(MapOffsetRef ref) {
 /// 2D view.
 @Riverpod(keepAlive: true)
 class MapOffset2D extends _$MapOffset2D {
+  Timer? _saveToSettingsTimer;
+
   @override
   MapCenterOffset build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.mapCenterOffset2D, state);
+        _saveToSettingsTimer?.cancel();
+
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.mapCenterOffset3D, state),
+        );
       }
     });
 
@@ -196,13 +204,20 @@ class MapOffset2D extends _$MapOffset2D {
 /// 3D view.
 @Riverpod(keepAlive: true)
 class MapOffset3D extends _$MapOffset3D {
+  Timer? _saveToSettingsTimer;
+
   @override
   MapCenterOffset build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.mapCenterOffset3D, state);
+        _saveToSettingsTimer?.cancel();
+
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.mapCenterOffset3D, state),
+        );
       }
     });
 
@@ -252,7 +267,7 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
       .destinationPoint(
         distance: switch (use3DPerspective) {
           false => offset.y,
-          true => offset.y * (1 + tan(perspectiveAngle)),
+          true => offset.y * (1 + tan(perspectiveAngle.toRadians())),
         },
         bearing: vehicle.bearing,
       )
@@ -277,12 +292,12 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.alwaysPointNorth, next);
+            .update(SettingsKey.mapAlwaysPointNorth, next);
       }
     });
     return ref
             .read(settingsProvider.notifier)
-            .getBool(SettingsKey.alwaysPointNorth) ??
+            .getBool(SettingsKey.mapAlwaysPointNorth) ??
         false;
   }
 
@@ -303,13 +318,13 @@ class MapUse3DPerspective extends _$MapUse3DPerspective {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.enableMap3D, next);
+            .update(SettingsKey.mapEnable3D, next);
       }
     });
 
     return ref
             .read(settingsProvider.notifier)
-            .getBool(SettingsKey.enableMap3D) ??
+            .getBool(SettingsKey.mapEnable3D) ??
         false;
   }
 
@@ -324,20 +339,27 @@ class MapUse3DPerspective extends _$MapUse3DPerspective {
 /// from the orthogonal view.
 @Riverpod(keepAlive: true)
 class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
+  Timer? _saveToSettingsTimer;
+
   @override
   double build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.mapPerspectiveAngle, next);
+        _saveToSettingsTimer?.cancel();
+
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.map3DPerspectiveAngle, next),
+        );
       }
     });
 
     return ref
             .read(settingsProvider.notifier)
-            .getDouble(SettingsKey.mapPerspectiveAngle) ??
-        40 * pi / 180;
+            .getDouble(SettingsKey.map3DPerspectiveAngle) ??
+        40;
   }
 
   /// Update the [state] to [value].
@@ -347,11 +369,19 @@ class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
 /// The zoom value that the map should use when being created.
 @Riverpod(keepAlive: true)
 class MapZoom extends _$MapZoom {
+  Timer? _saveToSettingsTimer;
+
   @override
   double build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref.read(settingsProvider.notifier).update(SettingsKey.mapZoom, next);
+        _saveToSettingsTimer?.cancel();
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.mapZoom, next),
+        );
       }
     });
 

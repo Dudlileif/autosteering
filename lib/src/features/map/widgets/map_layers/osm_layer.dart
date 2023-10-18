@@ -29,7 +29,6 @@ class OSMLayer extends ConsumerWidget {
               )
           },
           userAgentPackageName: 'agopengps_flutter',
-          maxNativeZoom: 19,
           maxZoom: 22,
         ),
       );

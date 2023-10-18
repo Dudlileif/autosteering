@@ -52,12 +52,12 @@ class FieldMenu extends ConsumerWidget {
               title: child,
               onTap: () async {
                 final result = await FilePicker.platform.pickFiles(
-                  initialDirectory: Device.isWeb
-                      ? null
-                      : [
+                  initialDirectory: Device.isNative
+                      ? [
                           ref.watch(fileDirectoryProvider).requireValue.path,
                           '/fields',
-                        ].join(),
+                        ].join()
+                      : null,
                   dialogTitle: 'Open field json file',
                   allowedExtensions: ['json'],
                   type: FileType.custom,
@@ -488,12 +488,13 @@ class _CreateFieldButton extends ConsumerWidget {
                                   final field = Field(
                                     name: name,
                                     polygon: Polygon([
-                                      PositionArray.view(
+                                      PositionSeries.view(
                                         points
                                             .map(
                                               (e) => e.position.values,
                                             )
-                                            .flattened,
+                                            .flattened
+                                            .toList(),
                                       ),
                                     ]),
                                     boundingBox: GeoBox.from(
@@ -530,7 +531,10 @@ class _CreateFieldButton extends ConsumerWidget {
           children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
         ),
       ),
-      child: const Text('Create field from recording'),
+      child: Text(
+        'Create field from recording',
+        style: Theme.of(context).menuButtonWithChildrenText,
+      ),
       onPressed: () {
         ref.read(enablePathRecorderProvider.notifier).update(value: true);
       },

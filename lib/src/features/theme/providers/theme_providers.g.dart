@@ -25,7 +25,7 @@ final appThemeProvider = AutoDisposeProvider<AppTheme>.internal(
 );
 
 typedef AppThemeRef = AutoDisposeProviderRef<AppTheme>;
-String _$activeThemeModeHash() => r'7947ef6d5863e016244b0daea29420e0188907f2';
+String _$activeThemeModeHash() => r'05dfb332b1df0291fc57bbea0779d5960a50d0f7';
 
 /// A provider that contains the current theme mode state.
 ///
@@ -43,7 +43,7 @@ final activeThemeModeProvider =
 );
 
 typedef _$ActiveThemeMode = AutoDisposeNotifier<ThemeMode>;
-String _$manufacturerHash() => r'f8b1a7a97736615dd20edbdb33963e0dc174d045';
+String _$manufacturerHash() => r'e8abc4e7e65b32958b89ee02a0c5d799fbb159f6';
 
 /// A provider that contains theme color state.
 ///
@@ -61,4 +61,4 @@ final manufacturerProvider =
 
 typedef _$Manufacturer = AutoDisposeNotifier<ManufacturerColor>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

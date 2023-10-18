@@ -68,9 +68,9 @@ class Norway extends Country {
         folderName: folderName,
         wmsOptions: WMSTileLayerOptions(
           baseUrl: 'https://wms.geonorge.no/skwms1/wms.hoyde-dtm?',
-          layers: ['DTM:skyggerelieff'],
+          layers: const ['DTM:skyggerelieff'],
           version: '1.3.0',
-          styles: ['default'],
+          styles: const ['default'],
         ),
       );
 
@@ -79,9 +79,9 @@ class Norway extends Country {
         folderName: folderName,
         wmsOptions: WMSTileLayerOptions(
           baseUrl: 'https://wms.geonorge.no/skwms1/wms.hoyde-dtm?',
-          layers: ['DTM:multiskyggerelieff'],
+          layers: const ['DTM:multiskyggerelieff'],
           version: '1.3.0',
-          styles: ['default'],
+          styles: const ['default'],
         ),
       );
 
@@ -90,9 +90,9 @@ class Norway extends Country {
         folderName: folderName,
         wmsOptions: WMSTileLayerOptions(
           baseUrl: 'https://wms.geonorge.no/skwms1/wms.hoyde-dom?',
-          layers: ['DOM:skyggerelieff'],
+          layers: const ['DOM:skyggerelieff'],
           version: '1.3.0',
-          styles: ['default'],
+          styles: const ['default'],
         ),
       );
 }

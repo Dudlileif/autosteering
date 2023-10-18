@@ -1,7 +1,8 @@
-import 'dart:isolate';
+import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,7 +25,17 @@ class ShowField extends _$ShowField {
 @Riverpod(keepAlive: true)
 class ActiveField extends _$ActiveField {
   @override
-  Field? build() => null;
+  Field? build() {
+    ref
+      ..onDispose(() => Logger.instance.i('Closed active field.'))
+      ..listenSelf((previous, next) {
+        if (next != null) {
+          Logger.instance.i('Loaded active field: ${next.name}.');
+        }
+      });
+
+    return null;
+  }
 
   /// Update the [state] to [field].
   void update(Field field) => Future(() => state = field);
@@ -141,6 +152,8 @@ class ShowBufferedField extends _$ShowBufferedField {
 /// A provider for creating and updating the buffered test field.
 @Riverpod(keepAlive: true)
 Future<Field?> bufferedField(BufferedFieldRef ref) async {
+  ref.onDispose(() => Logger.instance.i('Closed buffered field.'));
+
   if (!ref.watch(fieldBufferEnabledProvider)) {
     return null;
   }
@@ -151,6 +164,30 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
     final exteriorJoinType = ref.watch(fieldExteriorBufferJoinProvider);
     final interiorJoinType = ref.watch(fieldInteriorBufferJoinProvider);
     final getRawPoints = ref.watch(fieldBufferGetRawPointsProvider);
+
+    ref.listenSelf((previous, next) {
+      final bufferSpecs = {
+        'exteriorDistance': exteriorDistance,
+        'interiorDistance': interiorDistance,
+        'exteriorJoinType': exteriorJoinType,
+        'interiorJoinType': interiorJoinType,
+        'getRawPoints': getRawPoints,
+      };
+
+      next.when(
+        data: (data) {
+          if (data != null) {
+            Logger.instance.i('Buffered field ${data.name} with $bufferSpecs.');
+          }
+        },
+        error: (error, stackTrace) => Logger.instance.e(
+          'Error when buffering field ${field.name} with $bufferSpecs',
+          error: error,
+          stackTrace: stackTrace,
+        ),
+        loading: () {},
+      );
+    });
 
     late final Polygon bufferedPolygon;
     if (Device.isWeb) {
@@ -163,17 +200,23 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
       );
     } else {
       final polygonString = field.polygon.toString();
+
+      final json = await Future(
+        () => jsonEncode({
+          'polygon': polygonString,
+          'exterior_distance': exteriorDistance,
+          'interior_distance': interiorDistance,
+          'exterior_join_type': exteriorJoinType.name,
+          'interior_join_type': interiorJoinType.name,
+          'get_raw_points': getRawPoints,
+        }),
+      );
+
       bufferedPolygon = Polygon.parse(
-        await Isolate.run(
-          () => PolygonBufferExtension.bufferedPolygonString(
-            polygonJsonString: polygonString,
-            exteriorDistance: exteriorDistance,
-            interiorDistance: interiorDistance,
-            exteriorJoinType: exteriorJoinType,
-            interiorJoinType: interiorJoinType,
-            getRawPoints: getRawPoints,
-          ),
-          debugName: 'Field Buffering: ${field.name}',
+        await compute(
+          PolygonBufferExtension.bufferedPolygonFromJson,
+          json,
+          debugLabel: 'Field Buffering: ${field.name}',
         ),
       );
     }

@@ -17,13 +17,13 @@ class ShowOSMLayer extends _$ShowOSMLayer {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.showOpenStreetMap, next);
+            .update(SettingsKey.mapLayersShowOpenStreetMap, next);
       }
     });
 
     return ref
             .read(settingsProvider.notifier)
-            .getBool(SettingsKey.showOpenStreetMap) ??
+            .getBool(SettingsKey.mapLayersShowOpenStreetMap) ??
         true;
   }
 

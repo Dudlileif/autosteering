@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geobase/geobase.dart';
 
 /// An extended surface area that is displayed at an angle. The area will
 /// overflow the screen edges further back to fill more of the screen further
@@ -9,7 +10,7 @@ class PerspectiveWithOverflow extends StatelessWidget {
   /// ahead.
   ///
   /// The [child] will be displayed on the surface area.
-  /// The [perspectiveAngle] dictates how many radians the surface should be
+  /// The [perspectiveAngle] dictates how many degrees the surface should be
   /// rotated around the X-axis.
   /// The [heightFactor] and [widthFactor] can be set to make the surface area
   /// larger, but large areas can become expensive, so be careful.
@@ -24,7 +25,7 @@ class PerspectiveWithOverflow extends StatelessWidget {
   /// The widget that is displayed on the surface area.
   final Widget child;
 
-  /// How many radians the surface should be rotated around the X-axis.
+  /// How many degrees the surface should be rotated around the X-axis.
   final double perspectiveAngle;
 
   /// A multiplier for the height of the surface area.
@@ -39,7 +40,7 @@ class PerspectiveWithOverflow extends StatelessWidget {
       alignment: Alignment.center,
       transform: Matrix4.identity()
         ..setEntry(3, 2, 0.001) // Perspective narrowing modifier
-        ..rotateX(-perspectiveAngle),
+        ..rotateX(-perspectiveAngle.toRadians()),
       child: FractionallySizedBox(
         heightFactor: heightFactor,
         widthFactor: widthFactor,

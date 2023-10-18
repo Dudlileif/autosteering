@@ -1,4 +1,5 @@
 import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
@@ -22,12 +23,14 @@ class MainMap extends ConsumerWidget {
       mapController: ref.watch(mainMapControllerProvider),
       options: MapOptions(
         // Initial zoom
-        zoom: ref.watch(mapZoomProvider),
+        initialZoom: ref.watch(mapZoomProvider),
         minZoom: 4,
         maxZoom: 22,
-        interactiveFlags: ref.watch(centerMapOnVehicleProvider)
+        interactionOptions: InteractionOptions(
+          flags: ref.watch(centerMapOnVehicleProvider)
             ? InteractiveFlag.pinchZoom | InteractiveFlag.doubleTapZoom
-            : InteractiveFlag.all,
+              : InteractiveFlag.all,
+        ),
         onMapEvent: (event) {
           // Force scrolling zoom events to keep position when the map
           // should be centered on the vehicle. Otherwise it would
@@ -36,27 +39,24 @@ class MainMap extends ConsumerWidget {
             if (event is MapEventScrollWheelZoom) {
               ref
                   .read(mainMapControllerProvider)
-                  .move(event.center, event.targetZoom);
+                  .move(event.camera.center, event.camera.zoom);
             } else if (event is MapEventDoubleTapZoom) {
               ref
                   .read(mainMapControllerProvider)
-                  .move(event.center, event.targetZoom + 1);
+                  .move(event.camera.center, event.camera.zoom + 1);
             }
           }
 
           // Force map to not allow rotation when it should always point north.
           if (ref.watch(alwaysPointNorthProvider) && event is MapEventRotate) {
-            if (event.targetRotation != 0) {
+            if (event.camera.rotation != 0) {
               ref.read(mainMapControllerProvider).rotate(0);
             }
           }
-          ref.read(mapZoomProvider.notifier).update(event.zoom);
+          ref.read(mapZoomProvider.notifier).update(event.camera.zoom);
         },
-
-        // Starting center
-        center: ref.watch(offsetVehiclePositionProvider),
-        // Starting rotation
-        rotation: switch (ref.watch(alwaysPointNorthProvider)) {
+        initialCenter: ref.watch(offsetVehiclePositionProvider),
+        initialRotation: switch (ref.watch(alwaysPointNorthProvider)) {
           true => 0,
           false => ref.watch(
               mainVehicleProvider.select((value) => value.bearing),
@@ -67,7 +67,7 @@ class MainMap extends ConsumerWidget {
         onTap: (tapPosition, point) {
           ref
               .read(allEquipmentsProvider.notifier)
-              .handleMapOnTap(tapPosition, point);
+              .handleMapOnTap(point);
         },
         onPointerHover: (event, point) {
           ref
@@ -98,6 +98,8 @@ class MainMap extends ConsumerWidget {
           const DubinsPathDebugLayer(),
         if (ref.watch(showABTrackingDebugLayerProvider))
           const ABTrackingDebugLayer(),
+        if (ref.watch(virtualLedBarTestingProvider))
+          const VirtualLedBarTestLayer(),
       ],
     );
   }

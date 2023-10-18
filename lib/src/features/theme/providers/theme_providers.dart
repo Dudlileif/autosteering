@@ -19,17 +19,12 @@ class ActiveThemeMode extends _$ActiveThemeMode {
       }
     });
 
-    if (ref
-        .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.themeMode)) {
-      final name =
-          ref.read(settingsProvider.notifier).getString(SettingsKey.themeMode);
-      return ThemeMode.values
-              .firstWhereOrNull((element) => element.name == name) ??
-          ThemeMode.system;
-    }
+    final name =
+        ref.read(settingsProvider.notifier).getString(SettingsKey.themeMode);
 
-    return ThemeMode.system;
+    return ThemeMode.values
+            .firstWhereOrNull((element) => element.name == name) ??
+        ThemeMode.system;
   }
 
   /// Update the [state] to [newMode].
@@ -59,18 +54,13 @@ class Manufacturer extends _$Manufacturer {
       }
     });
 
-    if (ref
+    final name = ref
         .read(settingsProvider.notifier)
-        .containsKey(SettingsKey.themeColorScheme)) {
-      final name = ref
-          .read(settingsProvider.notifier)
-          .getString(SettingsKey.themeColorScheme);
-      return ManufacturerColor.values
-              .firstWhereOrNull((element) => element.name == name) ??
-          ManufacturerColor.masseyFerguson;
-    }
+        .getString(SettingsKey.themeColorScheme);
 
-    return ManufacturerColor.masseyFerguson;
+    return ManufacturerColor.values
+            .firstWhereOrNull((element) => element.name == name) ??
+        ManufacturerColor.masseyFerguson;
   }
 
   /// Update the [state] to [newScheme].

@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -46,39 +46,11 @@ class MainVehicle extends _$MainVehicle {
 }
 
 /// A provider for whether the vehicle should steer automatically.
+
 @Riverpod(keepAlive: true)
 class AutoSteerEnabled extends _$AutoSteerEnabled {
   @override
-  bool build() {
-    ref.listenSelf((previous, next) {
-      if (next != previous) {
-        ref.read(simInputProvider.notifier).send((autoSteerEnabled: next));
-      }
-    });
-
-    return false;
-  }
-
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current [state].
-  void toggle() => Future(() => state = !state);
-}
-
-/// A provider for whether the vehicle's bearing is set by the IMU input.
-@Riverpod(keepAlive: true)
-class UseIMUBearing extends _$UseIMUBearing {
-  @override
-  bool build() {
-    ref.listenSelf((previous, next) {
-      if (previous != next) {
-        ref.read(simInputProvider.notifier).send((useIMUBearing: next));
-      }
-    });
-
-    return false;
-  }
+  bool build() => false;
 
   /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
@@ -145,8 +117,129 @@ AsyncValue<Vehicle> lastUsedVehicle(LastUsedVehicleRef ref) =>
         if (data.isNotEmpty) {
           final sorted = data..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
-          return sorted.first;
+          final vehicle = sorted.first;
+          Logger.instance.i(
+            'Last used vehicle found: ${vehicle.name} | uuid: ${vehicle.uuid}.',
+          );
+
+          return vehicle;
         }
+        Logger.instance.i('Last used vehicle not found, creating new.');
+
         return PreconfiguredVehicles.tractor;
       },
     );
+
+/// A provider for the number of previous positions to use for calculating
+/// the gauge velocity and bearing values.
+@Riverpod(keepAlive: true)
+class GaugesAverageCount extends _$GaugesAverageCount {
+  @override
+  int build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.gaugesAverageCount, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getInt(SettingsKey.gaugesAverageCount) ??
+        10;
+  }
+
+  /// Update the [state] to [value].
+  void update(int value) => Future(() => state = value);
+}
+
+/// A provider for the frequency of the IMU updates.
+@riverpod
+class ImuCurrentFrequency extends _$ImuCurrentFrequency {
+  Timer? _resetTimer;
+
+  @override
+  double? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
+
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for the current raw [ImuReading] from the hardware.
+@riverpod
+class ImuCurrentReading extends _$ImuCurrentReading {
+  Timer? _resetTimer;
+
+  @override
+  ImuReading? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
+
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(ImuReading? value) => Future(() => state = value);
+}
+
+
+/// A provider for the frequency of the WAS updates.
+@riverpod
+class WasCurrentFrequency extends _$WasCurrentFrequency {
+  Timer? _resetTimer;
+
+  @override
+  double? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
+
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
+
+
+/// A provider for the current raw [WasReading] from the hardware.
+@riverpod
+class WasCurrentReading extends _$WasCurrentReading {
+  Timer? _resetTimer;
+
+  @override
+  WasReading? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
+
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(WasReading? value) => Future(() => state = value);
+}

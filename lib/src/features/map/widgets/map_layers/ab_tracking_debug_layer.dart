@@ -54,6 +54,19 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                     .toList(),
                 strokeWidth: 2,
               ),
+              if (abTracking.limitMode == ABLimitMode.unlimited &&
+                  abTracking is ABLine)
+                Polyline(
+                  points: [
+                    ...abTracking
+                        .pointsAhead(vehicle, stepSize: 100, count: 5)
+                        .map((e) => e.position.latLng),
+                    ...abTracking
+                        .pointsBehind(vehicle, stepSize: 100, count: 5)
+                        .map((e) => e.position.latLng),
+                  ],
+                  strokeWidth: 2,
+                ),
               if (abTracking.limitMode != ABLimitMode.unlimited)
                 Polyline(
                   points: abTracking.nextLine
@@ -156,7 +169,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                 ...abTracking
                     .pointsAhead(
                       vehicle,
-                      num: ref.watch(aBDebugNumPointsAheadProvider),
+                      count: ref.watch(aBDebugNumPointsAheadProvider),
                       stepSize: ref.watch(aBDebugStepSizeProvider),
                     )
                     .map(
@@ -169,7 +182,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                 ...abTracking
                     .pointsBehind(
                       vehicle,
-                      num: ref.watch(aBDebugNumPointsBehindProvider),
+                      count: ref.watch(aBDebugNumPointsBehindProvider),
                       stepSize: ref.watch(aBDebugStepSizeProvider),
                     )
                     .map(
@@ -187,7 +200,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
             if (abTracking != null) ...[
               Marker(
                 point: abTracking.start.position.latLng,
-                builder: (context) => const Text(
+                child: const Text(
                   'A',
                   style: TextStyle(color: Colors.white),
                 ),
@@ -197,7 +210,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               ),
               Marker(
                 point: abTracking.end.position.latLng,
-                builder: (context) => const Text(
+                child: const Text(
                   'B',
                   style: TextStyle(color: Colors.white),
                 ),
@@ -207,7 +220,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               ),
               Marker(
                 point: abTracking.currentStart.position.latLng,
-                builder: (context) => Text(
+                child: Text(
                   'A${abTracking.currentOffset}',
                   style: const TextStyle(color: Colors.white),
                 ),
@@ -217,7 +230,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               ),
               Marker(
                 point: abTracking.currentEnd.position.latLng,
-                builder: (context) => Text(
+                child: Text(
                   'B${abTracking.currentOffset}',
                   style: const TextStyle(color: Colors.white),
                 ),
@@ -228,7 +241,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               if (abTracking.limitMode != ABLimitMode.unlimited) ...[
                 Marker(
                   point: abTracking.nextStart.position.latLng,
-                  builder: (context) => Text(
+                  child: Text(
                     'A${abTracking.nextOffset}',
                     style: const TextStyle(color: Colors.white),
                   ),
@@ -238,7 +251,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                 ),
                 Marker(
                   point: abTracking.nextEnd.position.latLng,
-                  builder: (context) => Text(
+                  child: Text(
                     'B${abTracking.nextOffset}',
                     style: const TextStyle(color: Colors.white),
                   ),
@@ -279,8 +292,7 @@ class ABTrackingOffsetDebugControls extends ConsumerWidget {
               children: [
                 Consumer(
                   builder: (context, ref, child) => Text(
-                    (ref.watch(abTrackingPerpendicularDistanceProvider) ?? 0)
-                        .toStringAsFixed(3),
+                    '''${(-(ref.watch(abTrackingPerpendicularDistanceProvider) ?? 0)).toStringAsFixed(3)} m''',
                     style: theme.menuButtonWithChildrenText,
                   ),
                 ),

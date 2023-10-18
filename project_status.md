@@ -32,7 +32,13 @@
 
 - Saving/loading of vehicles, equipment
 
-- Receive IMU sensor data from hardware, UDP/WebSocket (http only, won't work from https hosted site)
+- IMU, WAS and GNSS comms with hardware
+  - USB/Serial or network UDP, WebSocket possible for http hosted site
+  - WAS and IMU configurator
+
+- NTRIP client for sending RTCM to GNSS hardware.
+
+- Basic logging
 
 ## To be implemented
 
@@ -43,11 +49,11 @@
 
 - Equipment simulation, maybe make sections a separate class
 
-- Fields, AB lines/curves etc.
+- Improved equipment recording/coverage.
 
 - Improve autosteering, look at more algorithms
 
-- Two way hardware comms, send steering signals etc..
+- Autosteering comms with hardware
 
 - Debugging graphs/logs
 

@@ -6,7 +6,7 @@ part of 'field_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bufferedFieldHash() => r'97f5b22f26b076475002714893cee317abe31334';
+String _$bufferedFieldHash() => r'e464ccb490ddf7b887c7ec2447fcc686901a3366';
 
 /// A provider for creating and updating the buffered test field.
 ///
@@ -82,6 +82,7 @@ class SaveFieldFamily extends Family<AsyncValue<void>> {
     );
   }
 
+  @visibleForOverriding
   @override
   SaveFieldProvider getProviderOverride(
     covariant SaveFieldProvider provider,
@@ -245,7 +246,7 @@ final showFieldProvider = NotifierProvider<ShowField, bool>.internal(
 );
 
 typedef _$ShowField = Notifier<bool>;
-String _$activeFieldHash() => r'1748d540c188a01efa133d71f24d1904b578b4f6';
+String _$activeFieldHash() => r'cfafb2d250b006032865db2e2e719c9c6fc7cad2';
 
 /// A provider for the active field.
 ///
@@ -455,4 +456,4 @@ final fieldBufferGetRawPointsProvider =
 
 typedef _$FieldBufferGetRawPoints = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

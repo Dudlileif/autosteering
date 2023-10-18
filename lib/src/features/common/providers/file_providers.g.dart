@@ -6,7 +6,7 @@ part of 'file_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fileDirectoryHash() => r'0080a2a62693229d011134fffccce3b51fd5d52b';
+String _$fileDirectoryHash() => r'9ce8299dcaa4fd7e00474b3e0a7ec6a9ade1025f';
 
 /// A provider for the main user file directory for the application.
 ///
@@ -80,6 +80,7 @@ class DirectorySizeFamily extends Family<AsyncValue<int?>> {
     );
   }
 
+  @visibleForOverriding
   @override
   DirectorySizeProvider getProviderOverride(
     covariant DirectorySizeProvider provider,
@@ -196,7 +197,7 @@ class _DirectorySizeProviderElement
   String get path => (origin as DirectorySizeProvider).path;
 }
 
-String _$directoryDeleteHash() => r'1bc28a5c77a52476af58a451f219f4f6b481cc44';
+String _$directoryDeleteHash() => r'9c1a9cb0b2160ab903903f0d0a22cd7fb12de594';
 
 /// A provider for deleting the [Directory] at [path].
 ///
@@ -232,6 +233,7 @@ class DirectoryDeleteFamily extends Family<AsyncValue<bool>> {
     );
   }
 
+  @visibleForOverriding
   @override
   DirectoryDeleteProvider getProviderOverride(
     covariant DirectoryDeleteProvider provider,
@@ -349,7 +351,7 @@ class _DirectoryDeleteProviderElement
 }
 
 String _$saveJsonToFileDirectoryHash() =>
-    r'a6356174d603eddb0d0e5de65a449290b78eb137';
+    r'f2b143be20fe6606a7a1adb5a0d775a3f3560ca3';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -393,6 +395,7 @@ class SaveJsonToFileDirectoryFamily extends Family<AsyncValue<void>> {
     );
   }
 
+  @visibleForOverriding
   @override
   SaveJsonToFileDirectoryProvider getProviderOverride(
     covariant SaveJsonToFileDirectoryProvider provider,
@@ -541,7 +544,7 @@ class _SaveJsonToFileDirectoryProviderElement
   String get folder => (origin as SaveJsonToFileDirectoryProvider).folder;
 }
 
-String _$savedFilesHash() => r'80dcda251e998c82aa8f57e62d8d085aa4138558';
+String _$savedFilesHash() => r'ed8d314141f69b478fc607bcad51cb63977ab752';
 
 /// A provider for reading and holding all the saved equipment setups in the
 /// user file directory.
@@ -566,7 +569,7 @@ class SavedFilesFamily extends Family<AsyncValue<List<dynamic>>> {
   ///
   /// Copied from [savedFiles].
   SavedFilesProvider call({
-    required dynamic Function(Map<String, dynamic>) fromJson,
+    required dynamic Function(Map<String, dynamic> json) fromJson,
     required String folder,
   }) {
     return SavedFilesProvider(
@@ -575,6 +578,7 @@ class SavedFilesFamily extends Family<AsyncValue<List<dynamic>>> {
     );
   }
 
+  @visibleForOverriding
   @override
   SavedFilesProvider getProviderOverride(
     covariant SavedFilesProvider provider,
@@ -610,7 +614,7 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
   ///
   /// Copied from [savedFiles].
   SavedFilesProvider({
-    required dynamic Function(Map<String, dynamic>) fromJson,
+    required dynamic Function(Map<String, dynamic> json) fromJson,
     required String folder,
   }) : this._internal(
           (ref) => savedFiles(
@@ -642,7 +646,7 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
     required this.folder,
   }) : super.internal();
 
-  final dynamic Function(Map<String, dynamic>) fromJson;
+  final dynamic Function(Map<String, dynamic> json) fromJson;
   final String folder;
 
   @override
@@ -688,7 +692,7 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
 
 mixin SavedFilesRef on FutureProviderRef<List<dynamic>> {
   /// The parameter `fromJson` of this provider.
-  dynamic Function(Map<String, dynamic>) get fromJson;
+  dynamic Function(Map<String, dynamic> json) get fromJson;
 
   /// The parameter `folder` of this provider.
   String get folder;
@@ -699,10 +703,10 @@ class _SavedFilesProviderElement extends FutureProviderElement<List<dynamic>>
   _SavedFilesProviderElement(super.provider);
 
   @override
-  dynamic Function(Map<String, dynamic>) get fromJson =>
+  dynamic Function(Map<String, dynamic> json) get fromJson =>
       (origin as SavedFilesProvider).fromJson;
   @override
   String get folder => (origin as SavedFilesProvider).folder;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

@@ -3,7 +3,7 @@ import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A combination layer for the editable points and the lines between.
@@ -42,7 +42,7 @@ class EditablePathLayer extends ConsumerWidget {
 
                       return Marker(
                         point: midPoint.position.latLng,
-                        builder: (context) => AddPointMarker(
+                        child: AddPointMarker(
                           point: midPoint.position,
                           radius: 5,
                           onTap: () => ref
@@ -60,7 +60,7 @@ class EditablePathLayer extends ConsumerWidget {
                   ...points.mapIndexed(
                     (index, point) => Marker(
                       point: point.position.latLng,
-                      builder: (context) => GestureDetector(
+                      child: GestureDetector(
                         onSecondaryTap: () => ref
                             .read(finishedPathRecordingListProvider.notifier)
                             .remove(index),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:agopengps_flutter/src/features/common/common.dart';
@@ -13,25 +14,25 @@ extension PolygonBufferExtension on Polygon {
   /// The buffered [Geographic] points for a geometry that has been inset or
   /// extended by [distance] meters. Insetting requires negative [distance],
   /// extending requires positive [distance].
-  PositionArray bufferedPoints({
-    required PositionArray ring,
+  PositionSeries bufferedPoints({
+    required PositionSeries ring,
     required double distance,
     BufferJoin joinType = BufferJoin.round,
     bool getRawPoints = false,
   }) =>
-      PositionArray.view(
+      PositionSeries.view(
         RingBuffer.bufferCircular(
           ring: ring.toGeographicPositions,
           distance: distance,
           joinType: joinType,
           getRawPoints: getRawPoints,
-        ).map((point) => point.values).flattened,
+        ).map((point) => point.values).flattened.toList(),
       );
 
-  /// The buffered [PositionArray]s for a polygon's holes that has been inset or
+  /// The buffered [PositionSeries] for a polygon's holes that has been inset or
   /// extended by [distance] meters. Insetting requires negative [distance],
   /// extending requires positive [distance].
-  Iterable<PositionArray> bufferedInterior({
+  Iterable<PositionSeries> bufferedInterior({
     required double distance,
     BufferJoin joinType = BufferJoin.round,
     bool getRawPoints = false,
@@ -77,30 +78,27 @@ extension PolygonBufferExtension on Polygon {
           ...interior,
       ]);
 
-  /// A json compatibale string for an inset or extended polygon that has been
-  /// extended or inset by [exteriorDistance] meters. Insetting requires
-  /// negative [exteriorDistance], extending requires positive
-  /// [exteriorDistance]. [interiorDistance] needs to be set if the interior
-  /// holes also should be inset/extended in the same manner.
+  /// A JSON string compatible verison of [bufferedPolygon].
   ///
   /// Primarly used to run the buffer operation in an isolate.
-  static String bufferedPolygonString({
-    required String polygonJsonString,
-    double? exteriorDistance,
-    double? interiorDistance,
-    BufferJoin exteriorJoinType = BufferJoin.round,
-    BufferJoin interiorJoinType = BufferJoin.round,
-    bool getRawPoints = false,
-  }) =>
-      Polygon.parse(polygonJsonString)
-          .bufferedPolygon(
-            exteriorDistance: exteriorDistance,
-            interiorDistance: interiorDistance,
-            exteriorJoinType: exteriorJoinType,
-            interiorJoinType: interiorJoinType,
-            getRawPoints: getRawPoints,
-          )
-          .toString();
+  static String bufferedPolygonFromJson(String json) {
+    final data = Map<String, dynamic>.from(jsonDecode(json) as Map);
+    final polygon = Polygon.parse(data['polygon'] as String);
+
+    return polygon
+        .bufferedPolygon(
+          exteriorDistance: (data['exterior_distance'] as num).toDouble(),
+          interiorDistance: (data['interior_distance'] as num).toDouble(),
+          exteriorJoinType: BufferJoin.values.firstWhere(
+            (element) => element.name == (data['exterior_join_type'] as String),
+          ),
+          interiorJoinType: BufferJoin.values.firstWhere(
+            (element) => element.name == (data['interior_join_type'] as String),
+          ),
+          getRawPoints: data['get_raw_points'] as bool,
+        )
+        .toString();
+  }
 
   /// Area of the polygon in square meters.
   double get area => exterior != null

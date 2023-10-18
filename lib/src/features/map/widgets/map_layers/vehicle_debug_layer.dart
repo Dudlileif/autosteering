@@ -97,6 +97,20 @@ class VehicleDebugLayer extends ConsumerWidget {
             ],
           ],
         ),
+        if (debugAntennaPosition)
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: vehicle.antennaPosition.latLng,
+                rotate: true,
+                child: const Icon(
+                  Icons.settings_input_antenna,
+                  size: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
       ],
     );
   }

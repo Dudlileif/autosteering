@@ -99,7 +99,7 @@ final debugTravelledPathSizeProvider =
 
 typedef _$DebugTravelledPathSize = Notifier<int>;
 String _$debugTravelledPathListHash() =>
-    r'1c3cb1277562092280683c8f7cc1ce06cc095355';
+    r'b6e423e4ff98f9347d6d0f2abee98e0792953660';
 
 /// A list of the last [DebugTravelledPathSize] position points for the vehicle.
 ///
@@ -157,7 +157,7 @@ final debugVehicleAntennaPositionProvider =
 typedef _$DebugVehicleAntennaPosition = Notifier<bool>;
 String _$debugVehicleIMUHash() => r'e95486e3ec7bd909ebdf31deffdf10729e077fa3';
 
-/// Whether to show vehicle antenna position debug.
+/// Whether to show vehicle IMU.
 ///
 /// Copied from [DebugVehicleIMU].
 @ProviderFor(DebugVehicleIMU)
@@ -173,6 +173,24 @@ final debugVehicleIMUProvider =
 );
 
 typedef _$DebugVehicleIMU = Notifier<bool>;
+String _$debugVehicleWASHash() => r'7d402a5f483f9a4089cccf9cfd3fd1baa3a3a8a1';
+
+/// Whether to show vehicle WAS.
+///
+/// Copied from [DebugVehicleWAS].
+@ProviderFor(DebugVehicleWAS)
+final debugVehicleWASProvider =
+    NotifierProvider<DebugVehicleWAS, bool>.internal(
+  DebugVehicleWAS.new,
+  name: r'debugVehicleWASProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugVehicleWASHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugVehicleWAS = Notifier<bool>;
 String _$debugVehicleAutosteerParametersHash() =>
     r'9a7ced139e78bfa75cf5d975973420c15a9748a7';
 
@@ -193,4 +211,4 @@ final debugVehicleAutosteerParametersProvider =
 
 typedef _$DebugVehicleAutosteerParameters = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

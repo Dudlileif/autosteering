@@ -203,7 +203,7 @@ final showABTrackingDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowABTrackingDebugLayerRef = AutoDisposeProviderRef<bool>;
-String _$showOSMLayerHash() => r'f74aac3e4858c8090ae861b3677ab68ccac3a9a7';
+String _$showOSMLayerHash() => r'279974104f0b019cf6a41ab2ce3c20ef7ec5a580';
 
 /// Whether the OpenStreetMap layer should be shown.
 ///
@@ -239,4 +239,4 @@ final showVehicleDrawingLayerProvider =
 
 typedef _$ShowVehicleDrawingLayer = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

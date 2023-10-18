@@ -23,6 +23,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
     this.steeringAxleWheelWidth = 0.48,
     this.solidAxleWheelWidth = 0.6,
     super.pathTrackingMode,
+    super.imu,
+    super.was,
     super.pidParameters,
     super.purePursuitParameters,
     super.stanleyParameters,
@@ -31,10 +33,11 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.invertSteeringInput,
     super.velocity,
     super.bearing,
+    super.pitch,
+    super.roll,
     super.steeringAngleInput,
     super.length = 4,
     super.width = 2.5,
-    super.useIMUPitchAndRoll,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
@@ -67,7 +70,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
   ///
   /// A higher value will cause a sharper turn, and a lower value a looser
   /// turn.
-  /// ackermannAngle = [steeringAngleInput] / [ackermannSteeringRatio]
+  ///
+  /// ```ackermannAngle = steeringAngleInput / ackermannSteeringRatio```
   double ackermannSteeringRatio;
 
   /// The diameter of the steering axle wheels.
@@ -169,6 +173,27 @@ sealed class AxleSteeredVehicle extends Vehicle {
         ),
       ];
 
+  /// Sets the steeringInputAngle by using the [WheelAngleToAckermann] class
+  /// for figuring out the Ackermann angle for the given wheel angle input.
+  ///
+  /// It will find the wheel angle of the inner wheel and then find the
+  /// corresponding Ackermann angle as the steering input angle.
+  @override
+  void setSteeringAngleByWasReading() {
+    final innerWheelAngle = switch (was.readingNormalizedInRange < 0) {
+      true => (was.readingNormalizedInRange * steeringAngleMax)
+          .clamp(-steeringAngleMax, 0.0),
+      false => (was.readingNormalizedInRange * steeringAngleMax)
+          .clamp(0.0, steeringAngleMax)
+    };
+
+    steeringAngleInput = WheelAngleToAckermann(
+      wheelAngle: innerWheelAngle,
+      wheelBase: wheelBase,
+      trackWidth: trackWidth,
+    ).ackermannAngle.toDegrees();
+  }
+
   /// The Ackermann steering geometry of the vehicle.
   AckermannSteering get ackermannSteering => AckermannSteering(
         steeringAngle: steeringAngle,
@@ -185,11 +210,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// The max opposite steering angle for the wheel the angle sensor is
   /// mounted to. I.e. the angle to the right for a front left steering wheel.
-  double get maxOppositeSteeringAngle => AckermannOppositeAngle(
+  double get maxOppositeSteeringAngle => WheelAngleToAckermann(
         wheelAngle: steeringAngleMax,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
-        steeringRatio: ackermannSteeringRatio,
       ).oppositeAngle;
 
   /// The turning radius corresponding to the current [steeringAngle].
@@ -213,7 +237,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       : null;
 
   @override
-  void updatePositionAndBearingTurning(
+  ({Geographic position, double bearing}) updatedPositionAndBearingTurning(
     double period,
     Geographic turningCircleCenter,
   ) {
@@ -254,10 +278,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       },
     );
 
-    // Update the vehicle state.
-
-    position = vehiclePosition;
-    bearing = projectedBearing;
+    return (position: vehiclePosition, bearing: projectedBearing);
   }
 
   @override
@@ -655,16 +676,19 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? solidAxleToRearHitchDistance,
     double? solidAxleToRearTowbarDistance,
     bool? invertSteeringInput,
+    Imu? imu,
+    Was? was,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     double? velocity,
     double? bearing,
+    double? pitch,
+    double? roll,
     double? steeringAngleInput,
     double? length,
     double? width,
-    bool? useIMUPitchAndRoll,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,

@@ -51,7 +51,7 @@ class MapControlButtons extends StatelessWidget {
                       ref.watch(alwaysPointNorthProvider) &&
                           ref.watch(
                                 mainMapControllerProvider.select(
-                                  (controller) => controller.rotation,
+                                  (controller) => controller.camera.rotation,
                                 ),
                               ) ==
                               0;

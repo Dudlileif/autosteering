@@ -25,8 +25,8 @@ class CountryLayers extends ConsumerWidget {
           child: TileLayer(
             urlTemplate: layer.urlTemplate,
             wmsOptions: layer.wmsOptions,
-            minNativeZoom: layer.minNativeZoom,
-            maxNativeZoom: layer.maxNativeZoom,
+            minNativeZoom: layer.minNativeZoom ?? 0,
+            maxNativeZoom: layer.maxNativeZoom ?? 19,
             subdomains: layer.subdomains,
             tileProvider: switch (Device.isWeb) {
               true => HiveCachedTileProvider(layer: layer),

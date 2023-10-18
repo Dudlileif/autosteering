@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
@@ -14,10 +15,20 @@ Future<ABLine?> aBLineDebug(ABLineDebugRef ref) async {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {
+        if (data != null) {
+          ref.listenSelf((previous, next) {
+            Logger.instance.i(
+              '''ABLine created: A:${data.start}, B: ${data.end}, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
+            );
+          });
+        } else if (previous?.value != null && data == null) {
+          Logger.instance.i('ABLine deleted.');
+        }
         ref.read(simInputProvider.notifier).send((abTracking: data));
         ref.read(displayABTrackingLinesProvider.notifier).update(data?.lines);
       },
-      error: (error, stackTrace) {},
+      error: (error, stackTrace) => Logger.instance
+          .e('Failed to create ABLine.', error: error, stackTrace: stackTrace),
       loading: () {},
     );
   });

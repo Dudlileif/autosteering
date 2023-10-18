@@ -1,4 +1,3 @@
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:uuid/uuid.dart';
@@ -254,15 +253,6 @@ abstract class Hitchable {
     hitchRearTowbarChild?.updateChildren();
   }
 
-  /// Creates an [EquipmentSetup] for the attached children.
-  ///
-  /// The setup requires a [name].
-  EquipmentSetup equipmentSetup(String name) => EquipmentSetup(
-        name: name,
-        frontFixedChild: hitchFrontFixedChild,
-        rearFixedChild: hitchRearFixedChild,
-        rearTowbarChild: hitchRearTowbarChild,
-      );
 
   /// Create a new [Hitchable] based on this one, but with parameters/variables
   /// changed.

@@ -1,3 +1,4 @@
+import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -23,23 +24,56 @@ class VehicleAutosteerParameterConfigurator extends StatelessWidget {
       color: Colors.transparent,
       child: SizedBox(
         width: 300,
-        height: 270,
+        height: 325,
         child: DefaultTabController(
           length: 3,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
-            appBar: const TabBar(
-              tabs: _tabs,
-            ),
-            body: const Padding(
-              padding: EdgeInsets.all(8),
-              child: TabBarView(
+            appBar: AppBar(
+              primary: false,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _PidParametersConfigurator(),
-                  _PurePursuitConfigurator(),
-                  _StanleyParametersConfigurator(),
+                  Text(
+                    'Autosteering configurator',
+                    style: theme.textTheme.bodyLarge,
+                  ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return CloseButton(
+                        onPressed: () => ref
+                            .read(
+                              debugVehicleAutosteerParametersProvider.notifier,
+                            )
+                            .update(value: false),
+                      );
+                    },
+                  ),
                 ],
               ),
+            ),
+            body: Column(
+              children: [
+                TabBar(
+                  labelStyle: theme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w900),
+                  unselectedLabelStyle: theme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w300),
+                  tabs: _tabs,
+                ),
+                const Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: TabBarView(
+                      children: [
+                        _PidParametersConfigurator(),
+                        _PurePursuitConfigurator(),
+                        _StanleyParametersConfigurator(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -50,6 +84,18 @@ class VehicleAutosteerParameterConfigurator extends StatelessWidget {
 
 class _PidParametersConfigurator extends ConsumerWidget {
   const _PidParametersConfigurator();
+
+  void onChangeEnd(double value, WidgetRef ref) {
+    // Wait a short while before saving the hopefully
+    // updated vehicle.
+    Future.delayed(const Duration(milliseconds: 100), () {
+      final vehicle = ref.watch(mainVehicleProvider);
+      ref.read(saveVehicleProvider(vehicle));
+      Logger.instance.i(
+        '''Updated vehicle PID parameters: ${vehicle.pidParameters}''',
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -90,6 +136,8 @@ class _PidParametersConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
+                  onChangeEnd: (value) => onChangeEnd(value, ref),
+
                 ),
               ],
             );
@@ -129,6 +177,8 @@ class _PidParametersConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
+                  onChangeEnd: (value) => onChangeEnd(value, ref),
+
                 ),
               ],
             );
@@ -168,6 +218,8 @@ class _PidParametersConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
+                  onChangeEnd: (value) => onChangeEnd(value, ref),
+
                 ),
               ],
             );
@@ -180,6 +232,18 @@ class _PidParametersConfigurator extends ConsumerWidget {
 
 class _PurePursuitConfigurator extends ConsumerWidget {
   const _PurePursuitConfigurator();
+
+  void onChangeEnd(double value, WidgetRef ref) {
+    // Wait a short while before saving the hopefully
+    // updated vehicle.
+    Future.delayed(const Duration(milliseconds: 100), () {
+      final vehicle = ref.watch(mainVehicleProvider);
+      ref.read(saveVehicleProvider(vehicle));
+      Logger.instance.i(
+        '''Updated vehicle pure pursuit parameters: ${vehicle.purePursuitParameters}''',
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -223,6 +287,7 @@ class _PurePursuitConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
+                  onChangeEnd: (value) => onChangeEnd(value, ref),
                 ),
               ],
             );
@@ -266,6 +331,7 @@ class _PurePursuitConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
+                  onChangeEnd: (value) => onChangeEnd(value, ref),
                 ),
               ],
             );
@@ -278,6 +344,18 @@ class _PurePursuitConfigurator extends ConsumerWidget {
 
 class _StanleyParametersConfigurator extends ConsumerWidget {
   const _StanleyParametersConfigurator();
+
+  void onChangeEnd(double value, WidgetRef ref) {
+    // Wait a short while before saving the hopefully
+    // updated vehicle.
+    Future.delayed(const Duration(milliseconds: 100), () {
+      final vehicle = ref.watch(mainVehicleProvider);
+      ref.read(saveVehicleProvider(vehicle));
+      Logger.instance.i(
+        '''Updated vehicle Stanley parameters: ${vehicle.stanleyParameters}''',
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -321,6 +399,8 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
+                  onChangeEnd: (value) => onChangeEnd(value, ref),
+
                 ),
               ],
             );
@@ -364,6 +444,8 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
+                  onChangeEnd: (value) => onChangeEnd(value, ref),
+
                 ),
               ],
             );
@@ -405,6 +487,8 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
+                  onChangeEnd: (value) => onChangeEnd(value, ref),
+
                 ),
               ],
             );

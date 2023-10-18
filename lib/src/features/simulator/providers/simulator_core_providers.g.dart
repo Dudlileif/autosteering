@@ -6,6 +6,24 @@ part of 'simulator_core_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$sendMessagesToHardwareHash() =>
+    r'139814ce487ed859535b886067e87e51fd310660';
+
+/// A provider for whether we should send messages to the hardware.
+///
+/// Copied from [sendMessagesToHardware].
+@ProviderFor(sendMessagesToHardware)
+final sendMessagesToHardwareProvider = AutoDisposeProvider<bool>.internal(
+  sendMessagesToHardware,
+  name: r'sendMessagesToHardwareProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$sendMessagesToHardwareHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SendMessagesToHardwareRef = AutoDisposeProviderRef<bool>;
 String _$simCoreVehicleDrivingHash() =>
     r'8acb9b5d9174501d183dc8f36bca8474a8ac5f53';
 
@@ -25,7 +43,7 @@ final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
-String _$initializeSimCoreHash() => r'201179f56c27edbcd95650f5c81850b2d9ab4664';
+String _$initializeSimCoreHash() => r'3fb7254a2d7d2a89f9b422b05dcf20907f6a0712';
 
 /// Sends initial parameters to  the sim core.
 ///
@@ -42,7 +60,223 @@ final _initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef _InitializeSimCoreRef = AutoDisposeProviderRef<void>;
-String _$simCoreWebStreamHash() => r'45bce31ced40f40f34556285e47b541b851694a2';
+String _$commonSimCoreMessageHandlerHash() =>
+    r'bd864618f7cb1d377dc405b132ddd2b1c72e3dba';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+/// A provider for handling the common sim core messages for the state of the
+/// simulation.
+///
+/// Copied from [commonSimCoreMessageHandler].
+@ProviderFor(commonSimCoreMessageHandler)
+const commonSimCoreMessageHandlerProvider = CommonSimCoreMessageHandlerFamily();
+
+/// A provider for handling the common sim core messages for the state of the
+/// simulation.
+///
+/// Copied from [commonSimCoreMessageHandler].
+class CommonSimCoreMessageHandlerFamily extends Family<void> {
+  /// A provider for handling the common sim core messages for the state of the
+  /// simulation.
+  ///
+  /// Copied from [commonSimCoreMessageHandler].
+  const CommonSimCoreMessageHandlerFamily();
+
+  /// A provider for handling the common sim core messages for the state of the
+  /// simulation.
+  ///
+  /// Copied from [commonSimCoreMessageHandler].
+  CommonSimCoreMessageHandlerProvider call(
+    ({
+      Vehicle? vehicle,
+      num velocity,
+      num bearing,
+      num distance,
+      PathTracking? pathTracking,
+      ABTracking? abTracking,
+      bool autoSteerEnabled,
+      bool hardwareIsConnected
+    }) message,
+  ) {
+    return CommonSimCoreMessageHandlerProvider(
+      message,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  CommonSimCoreMessageHandlerProvider getProviderOverride(
+    covariant CommonSimCoreMessageHandlerProvider provider,
+  ) {
+    return call(
+      provider.message,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'commonSimCoreMessageHandlerProvider';
+}
+
+/// A provider for handling the common sim core messages for the state of the
+/// simulation.
+///
+/// Copied from [commonSimCoreMessageHandler].
+class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
+  /// A provider for handling the common sim core messages for the state of the
+  /// simulation.
+  ///
+  /// Copied from [commonSimCoreMessageHandler].
+  CommonSimCoreMessageHandlerProvider(
+    ({
+      Vehicle? vehicle,
+      num velocity,
+      num bearing,
+      num distance,
+      PathTracking? pathTracking,
+      ABTracking? abTracking,
+      bool autoSteerEnabled,
+      bool hardwareIsConnected
+    }) message,
+  ) : this._internal(
+          (ref) => commonSimCoreMessageHandler(
+            ref as CommonSimCoreMessageHandlerRef,
+            message,
+          ),
+          from: commonSimCoreMessageHandlerProvider,
+          name: r'commonSimCoreMessageHandlerProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$commonSimCoreMessageHandlerHash,
+          dependencies: CommonSimCoreMessageHandlerFamily._dependencies,
+          allTransitiveDependencies:
+              CommonSimCoreMessageHandlerFamily._allTransitiveDependencies,
+          message: message,
+        );
+
+  CommonSimCoreMessageHandlerProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.message,
+  }) : super.internal();
+
+  final ({
+    Vehicle? vehicle,
+    num velocity,
+    num bearing,
+    num distance,
+    PathTracking? pathTracking,
+    ABTracking? abTracking,
+    bool autoSteerEnabled,
+    bool hardwareIsConnected
+  }) message;
+
+  @override
+  Override overrideWith(
+    void Function(CommonSimCoreMessageHandlerRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: CommonSimCoreMessageHandlerProvider._internal(
+        (ref) => create(ref as CommonSimCoreMessageHandlerRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        message: message,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<void> createElement() {
+    return _CommonSimCoreMessageHandlerProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CommonSimCoreMessageHandlerProvider &&
+        other.message == message;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, message.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin CommonSimCoreMessageHandlerRef on AutoDisposeProviderRef<void> {
+  /// The parameter `message` of this provider.
+  ({
+    Vehicle? vehicle,
+    num velocity,
+    num bearing,
+    num distance,
+    PathTracking? pathTracking,
+    ABTracking? abTracking,
+    bool autoSteerEnabled,
+    bool hardwareIsConnected
+  }) get message;
+}
+
+class _CommonSimCoreMessageHandlerProviderElement
+    extends AutoDisposeProviderElement<void>
+    with CommonSimCoreMessageHandlerRef {
+  _CommonSimCoreMessageHandlerProviderElement(super.provider);
+
+  @override
+  ({
+    Vehicle? vehicle,
+    num velocity,
+    num bearing,
+    num distance,
+    PathTracking? pathTracking,
+    ABTracking? abTracking,
+    bool autoSteerEnabled,
+    bool hardwareIsConnected
+  }) get message => (origin as CommonSimCoreMessageHandlerProvider).message;
+}
+
+String _$simCoreWebStreamHash() => r'3286cb2b4f8a7df5917b3a5ab2caf3d64f3c70a6';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
@@ -64,7 +298,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'6b0dd889a9dcb0e07bf50b953003dc192e7c992d';
+    r'bab4e2218d888d714795685c37440ab9f80267f7';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.
@@ -86,7 +320,7 @@ final simCoreIsolateStreamProvider =
 );
 
 typedef SimCoreIsolateStreamRef = AutoDisposeStreamProviderRef<Vehicle>;
-String _$simInputHash() => r'926721dd39a10596031a61d756176822f7f2c035';
+String _$simInputHash() => r'febc933bd84e5bd518cebd4caf8fe8ebf3506abb';
 
 /// A provider used to send vehicle input data to the simulation thread/worker.
 ///
@@ -105,8 +339,28 @@ final simInputProvider = NotifierProvider<SimInput, SimPlatform>.internal(
 );
 
 typedef _$SimInput = Notifier<SimPlatform>;
+String _$sendMessagesToHardwareIfNetworkHash() =>
+    r'6d7cdb5fd546be2709271925379a3056e929aadf';
+
+/// A provider for whether we should send messages to the hardware from the
+/// Simulator Core when network is available, see [networkAvailable].
+///
+/// Copied from [SendMessagesToHardwareIfNetwork].
+@ProviderFor(SendMessagesToHardwareIfNetwork)
+final sendMessagesToHardwareIfNetworkProvider =
+    NotifierProvider<SendMessagesToHardwareIfNetwork, bool>.internal(
+  SendMessagesToHardwareIfNetwork.new,
+  name: r'sendMessagesToHardwareIfNetworkProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$sendMessagesToHardwareIfNetworkHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SendMessagesToHardwareIfNetwork = Notifier<bool>;
 String _$simCoreIsolatePortHash() =>
-    r'3d1d09a1be9085167f72414d929620d0e0ecd951';
+    r'a1f214c5b2285183a8bffac6fb49c45d592b0d83';
 
 /// A provider for keeping the isolate [SendPort] for when working on a
 /// native platform. Vehicle inputs gets directed here from [SimInput].
@@ -166,7 +420,7 @@ final simCoreDebugAllowLongBreaksProvider =
 
 typedef _$SimCoreDebugAllowLongBreaks = Notifier<bool>;
 String _$simCoreAllowManualInputHash() =>
-    r'2d610224146e2bb67d3cf747cc462a72a5769943';
+    r'6d5c8c79ee57841155736403f685c88f7587f39e';
 
 /// A provider for whether the sim core should allow manual inputs from the
 /// user, i.e. not only sensors from the vehicle.
@@ -185,8 +439,28 @@ final simCoreAllowManualInputProvider =
 );
 
 typedef _$SimCoreAllowManualInput = Notifier<bool>;
+String _$simCoreAllowInterpolationHash() =>
+    r'62d3d9034ad5436e5e2df9e507b2c2096755b1e1';
+
+/// A provider for whether the sim core should allow interpolation steps
+/// between the hardware GNSS updates.
+///
+/// Copied from [SimCoreAllowInterpolation].
+@ProviderFor(SimCoreAllowInterpolation)
+final simCoreAllowInterpolationProvider =
+    NotifierProvider<SimCoreAllowInterpolation, bool>.internal(
+  SimCoreAllowInterpolation.new,
+  name: r'simCoreAllowInterpolationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simCoreAllowInterpolationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimCoreAllowInterpolation = Notifier<bool>;
 String _$simCoreVehicleAutoCenterSteeringHash() =>
-    r'ce2af638380722f81e78cc3406720e787cb72518';
+    r'0d48d6d46f67170250b16d9a8bc0b1dd43d0cc6b';
 
 /// A provider for whether the steering automatically should recenter when
 /// no input is provided.
@@ -206,7 +480,7 @@ final simCoreVehicleAutoCenterSteeringProvider =
 
 typedef _$SimCoreVehicleAutoCenterSteering = Notifier<bool>;
 String _$simCoreVehicleAutoSlowDownHash() =>
-    r'c5d7a66ec2ed0e6612817a991524413c67035f93';
+    r'daeeb925351e6d9b780309d0afe5556b2913705b';
 
 /// A provider for whether the vehicle should slow down when no input is
 /// provided.
@@ -226,4 +500,4 @@ final simCoreVehicleAutoSlowDownProvider =
 
 typedef _$SimCoreVehicleAutoSlowDown = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter

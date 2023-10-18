@@ -7,7 +7,7 @@ part of 'vehicle_configurator_providers.dart';
 // **************************************************************************
 
 String _$loadFileConfiguredVehicleHash() =>
-    r'70a2c52d50a27056e9775baa7eb847e717924a63';
+    r'384bd3dac75187c0bb5113174af4e267f8c094f3';
 
 /// A provider for loading a vehicle configuration from the user file directory
 /// and applying it to the [ConfiguredVehicle] provider.
@@ -56,7 +56,7 @@ String _$vehicleConfiguratorPageControllerHash() =>
 /// Copied from [VehicleConfiguratorPageController].
 @ProviderFor(VehicleConfiguratorPageController)
 final vehicleConfiguratorPageControllerProvider = AutoDisposeNotifierProvider<
-    VehicleConfiguratorPageController, PageController>.internal(
+    VehicleConfiguratorPageController, Raw<PageController>>.internal(
   VehicleConfiguratorPageController.new,
   name: r'vehicleConfiguratorPageControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -67,7 +67,7 @@ final vehicleConfiguratorPageControllerProvider = AutoDisposeNotifierProvider<
 );
 
 typedef _$VehicleConfiguratorPageController
-    = AutoDisposeNotifier<PageController>;
+    = AutoDisposeNotifier<Raw<PageController>>;
 String _$configuredVehicleHash() => r'eb1f64783782544db4e453b41900d68d6c47a02f';
 
 /// A provider for the vehicle from the configurator.
@@ -95,7 +95,7 @@ String _$configuredVehicleNameTextControllerHash() =>
 /// Copied from [ConfiguredVehicleNameTextController].
 @ProviderFor(ConfiguredVehicleNameTextController)
 final configuredVehicleNameTextControllerProvider = NotifierProvider<
-    ConfiguredVehicleNameTextController, TextEditingController>.internal(
+    ConfiguredVehicleNameTextController, Raw<TextEditingController>>.internal(
   ConfiguredVehicleNameTextController.new,
   name: r'configuredVehicleNameTextControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -105,6 +105,7 @@ final configuredVehicleNameTextControllerProvider = NotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$ConfiguredVehicleNameTextController = Notifier<TextEditingController>;
+typedef _$ConfiguredVehicleNameTextController
+    = Notifier<Raw<TextEditingController>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter
