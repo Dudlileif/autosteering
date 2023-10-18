@@ -141,7 +141,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                 markers: [
                   Marker(
                     point: dubinsPath.start.position.latLng,
-                    builder: (context) => MovableMapMarker(
+                    child: MovableMapMarker(
                       point: dubinsPath.start.position,
                       onMoved: (position) => ref
                           .read(dubinsPathDebugStartPointProvider.notifier)
@@ -154,7 +154,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                   ),
                   Marker(
                     point: dubinsPath.end.position.latLng,
-                    builder: (context) => MovableMapMarker(
+                    child: MovableMapMarker(
                       point: dubinsPath.end.position,
                       onMoved: (position) => ref
                           .read(dubinsPathDebugEndPointProvider.notifier)
@@ -183,7 +183,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
             if (start != null)
               Marker(
                 point: start.position.latLng,
-                builder: (context) => MovableMapMarker(
+                child: MovableMapMarker(
                   point: start.position,
                   onMoved: (position) => ref
                       .read(dubinsPathDebugStartPointProvider.notifier)
@@ -195,7 +195,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
             if (end != null)
               Marker(
                 point: end.position.latLng,
-                builder: (context) => MovableMapMarker(
+                child: MovableMapMarker(
                   point: end.position,
                   onMoved: (position) => ref
                       .read(dubinsPathDebugEndPointProvider.notifier)

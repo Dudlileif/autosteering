@@ -200,7 +200,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
             if (abTracking != null) ...[
               Marker(
                 point: abTracking.start.position.latLng,
-                builder: (context) => const Text(
+                child: const Text(
                   'A',
                   style: TextStyle(color: Colors.white),
                 ),
@@ -210,7 +210,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               ),
               Marker(
                 point: abTracking.end.position.latLng,
-                builder: (context) => const Text(
+                child: const Text(
                   'B',
                   style: TextStyle(color: Colors.white),
                 ),
@@ -220,7 +220,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               ),
               Marker(
                 point: abTracking.currentStart.position.latLng,
-                builder: (context) => Text(
+                child: Text(
                   'A${abTracking.currentOffset}',
                   style: const TextStyle(color: Colors.white),
                 ),
@@ -230,7 +230,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               ),
               Marker(
                 point: abTracking.currentEnd.position.latLng,
-                builder: (context) => Text(
+                child: Text(
                   'B${abTracking.currentOffset}',
                   style: const TextStyle(color: Colors.white),
                 ),
@@ -241,7 +241,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               if (abTracking.limitMode != ABLimitMode.unlimited) ...[
                 Marker(
                   point: abTracking.nextStart.position.latLng,
-                  builder: (context) => Text(
+                  child: Text(
                     'A${abTracking.nextOffset}',
                     style: const TextStyle(color: Colors.white),
                   ),
@@ -251,7 +251,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                 ),
                 Marker(
                   point: abTracking.nextEnd.position.latLng,
-                  builder: (context) => Text(
+                  child: Text(
                     'B${abTracking.nextOffset}',
                     style: const TextStyle(color: Colors.white),
                   ),

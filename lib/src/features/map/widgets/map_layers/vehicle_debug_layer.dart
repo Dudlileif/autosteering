@@ -103,7 +103,7 @@ class VehicleDebugLayer extends ConsumerWidget {
               Marker(
                 point: vehicle.antennaPosition.latLng,
                 rotate: true,
-                builder: (context) => const Icon(
+                child: const Icon(
                   Icons.settings_input_antenna,
                   size: 16,
                   color: Colors.white,

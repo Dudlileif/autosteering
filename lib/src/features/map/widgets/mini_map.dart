@@ -118,7 +118,7 @@ class _MiniMapView extends ConsumerWidget {
           ref.watch(activeFieldProvider) == null) {
         mapController.moveAndRotate(
           next.position.latLng,
-          mapController.zoom,
+          mapController.camera.zoom,
           -next.bearing,
         );
       } else {
@@ -130,20 +130,23 @@ class _MiniMapView extends ConsumerWidget {
       
       mapController: mapController,
       options: MapOptions(
-        interactiveFlags: InteractiveFlag.none,
-        center: ref.read(
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.none,
+          enableScrollWheel: false,
+        ),
+        initialCenter: ref.read(
           mainVehicleProvider.select((value) => value.position.latLng),
         ),
-        rotation: ref.read(
+        initialRotation: ref.read(
           mainVehicleProvider.select((value) => -value.bearing),
         ),
-        zoom: 15,
+        initialZoom: 15,
         onMapReady: ref.read(miniMapReadyProvider.notifier).ready,
         onMapEvent: (event) {
           if (event is MapEventScrollWheelZoom) {
             mapController.move(
-              event.center,
-              event.zoom,
+              event.camera.center,
+              event.camera.zoom,
             );
           }
 
@@ -151,7 +154,7 @@ class _MiniMapView extends ConsumerWidget {
           // point north.
           if (ref.watch(miniMapAlwaysPointNorthProvider) &&
               event is MapEventRotate) {
-            if (event.targetRotation != 0) {
+            if (event.camera.rotation != 0) {
               mapController.rotate(0);
             }
           }
@@ -171,7 +174,7 @@ class _MiniMapView extends ConsumerWidget {
               point: ref.watch(
                 mainVehicleProvider.select((value) => value.position.latLng),
               ),
-              builder: (context) => Transform.rotate(
+              child: Transform.rotate(
                 angle: ref.watch(
                   mainVehicleProvider
                       .select((value) => value.bearing.toRadians()),

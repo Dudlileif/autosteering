@@ -6,7 +6,6 @@ import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
 import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map/plugin_api.dart';
 import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -33,12 +32,12 @@ class MainMapController extends _$MainMapController {
 
   /// Increase the zoom value of the [state] by [value].
   void zoomIn(double value) => Future(
-        () => state.move(state.center, state.zoom + value),
+        () => state.move(state.camera.center, state.camera.zoom + value),
       );
 
   /// Decrease the zoom value of the [state] by [value].
   void zoomOut(double value) => Future(
-        () => state.move(state.center, state.zoom - value),
+        () => state.move(state.camera.center, state.camera.zoom - value),
       );
 }
 
@@ -102,7 +101,7 @@ class CenterMapOnVehicle extends _$CenterMapOnVehicle {
               ref.watch(offsetVehiclePositionProvider),
               ref.watch(
                 mainMapControllerProvider
-                    .select((controller) => controller.zoom),
+                    .select((controller) => controller.camera.zoom),
               ),
             );
       }

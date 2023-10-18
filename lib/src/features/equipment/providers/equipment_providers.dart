@@ -6,7 +6,6 @@ import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -61,7 +60,7 @@ class AllEquipments extends _$AllEquipments {
 
   /// Handles the event of a tap on the map. If [point] is within one of the
   /// equipments' sections, then the section will be toggled.
-  void handleMapOnTap(TapPosition tapPosition, LatLng point) {
+  void handleMapOnTap(LatLng point) {
     for (final equipment in state.values) {
       equipment.sectionPolygons.forEachIndexed((index, section) {
         if (section.contains(point.gbPosition)) {

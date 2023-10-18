@@ -1,7 +1,9 @@
+import 'dart:math';
+
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/plugin_api.dart';
-import 'package:geobase/geobase.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geobase/geobase.dart' hide Point;
 
 /// A movable map marker used to edit the position of points in editable paths.
 class MovableMapMarker extends StatefulWidget {
@@ -51,7 +53,7 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
 
   @override
   Widget build(BuildContext context) {
-    final map = FlutterMapState.of(context);
+    final map = MapController.of(context).camera;
 
     var radiusToUse = widget.radius;
 
@@ -74,7 +76,7 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
       ignoringFeedbackPointer: false,
       dragAnchorStrategy: pointerDragAnchorStrategy,
       onDragUpdate: (details) {
-        final point = CustomPoint(
+        final point = Point(
           details.globalPosition.dx,
           details.globalPosition.dy - kToolbarHeight,
         );
