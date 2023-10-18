@@ -6,13 +6,13 @@ part of 'field_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bufferedFieldHash() => r'7f535ffd0688354e716d498819f90e58b8cdb1f4';
+String _$bufferedFieldHash() => r'97f5b22f26b076475002714893cee317abe31334';
 
 /// A provider for creating and updating the buffered test field.
 ///
 /// Copied from [bufferedField].
 @ProviderFor(bufferedField)
-final bufferedFieldProvider = AutoDisposeFutureProvider<Field?>.internal(
+final bufferedFieldProvider = FutureProvider<Field?>.internal(
   bufferedField,
   name: r'bufferedFieldProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,7 +22,7 @@ final bufferedFieldProvider = AutoDisposeFutureProvider<Field?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef BufferedFieldRef = AutoDisposeFutureProviderRef<Field?>;
+typedef BufferedFieldRef = FutureProviderRef<Field?>;
 String _$saveFieldHash() => r'6618b0c9eb255bde804a6dc997047d5098089801';
 
 /// Copied from Dart SDK
@@ -339,8 +339,27 @@ final fieldInteriorBufferJoinProvider =
 );
 
 typedef _$FieldInteriorBufferJoin = Notifier<BufferJoin>;
+String _$fieldBufferEnabledHash() =>
+    r'b63d6f348ec45ee7d6ba061321dd2608225b0685';
+
+/// Whether the field buffer functionality should be enabled.
+///
+/// Copied from [FieldBufferEnabled].
+@ProviderFor(FieldBufferEnabled)
+final fieldBufferEnabledProvider =
+    NotifierProvider<FieldBufferEnabled, bool>.internal(
+  FieldBufferEnabled.new,
+  name: r'fieldBufferEnabledProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fieldBufferEnabledHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$FieldBufferEnabled = Notifier<bool>;
 String _$fieldExteriorBufferDistanceHash() =>
-    r'0b890bcb959b792a4ed6ffe06328747a4c5edd1a';
+    r'105f35fd275a4aed8b16bb80cdad26a65ce629bb';
 
 /// A provider for the distance that the test [Field.polygon] exterior should
 /// be buffered.

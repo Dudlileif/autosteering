@@ -84,6 +84,7 @@ class DubinsPath {
     required this.end,
     required this.turningRadius,
     required this.stepSize,
+    this.allowCrossingDirectLine = true,
   }) {
     /// The number of degrees that [stepSize] meters along a turning circle
     /// amounts to.
@@ -120,10 +121,24 @@ class DubinsPath {
 
     // Find the best path
     bestPathData = _pathDataIterable.reduce(
-      (value, element) => (element?.totalLength ?? double.infinity) <
-              (value?.totalLength ?? double.infinity)
-          ? element
-          : value,
+      (value, element) {
+        if (!allowCrossingDirectLine) {
+          final isCrossing = element?.tangentStart
+                  .crossTrackDistanceToSpherical(start: start, end: end)
+                  .sign !=
+              element?.tangentEnd
+                  .crossTrackDistanceToSpherical(start: start, end: end)
+                  .sign;
+          if (isCrossing) {
+            return value;
+          }
+        }
+
+        return (element?.totalLength ?? double.infinity) <
+                (value?.totalLength ?? double.infinity)
+            ? element
+            : value;
+      },
     );
   }
 
@@ -138,6 +153,9 @@ class DubinsPath {
 
   /// The distance in meter between each interpolated point.
   final double stepSize;
+
+  /// Whether the best path can cross the straight line from [start] to [end].
+  final bool allowCrossingDirectLine;
 
   /// The number of degrees that [stepSize] meters along a turning circle
   /// amounts to.

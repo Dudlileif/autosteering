@@ -25,7 +25,24 @@ final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
-String _$simCoreWebStreamHash() => r'058f68c20d1b6621b4b596a66f9f0a199d150ac6';
+String _$initializeSimCoreHash() => r'201179f56c27edbcd95650f5c81850b2d9ab4664';
+
+/// Sends initial parameters to  the sim core.
+///
+/// Copied from [_initializeSimCore].
+@ProviderFor(_initializeSimCore)
+final _initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
+  _initializeSimCore,
+  name: r'_initializeSimCoreProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$initializeSimCoreHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _InitializeSimCoreRef = AutoDisposeProviderRef<void>;
+String _$simCoreWebStreamHash() => r'45bce31ced40f40f34556285e47b541b851694a2';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
@@ -47,7 +64,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'5acb12447e1f9e86574abfe5e16cd4d6bfbc29b5';
+    r'6b0dd889a9dcb0e07bf50b953003dc192e7c992d';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.
@@ -89,7 +106,7 @@ final simInputProvider = NotifierProvider<SimInput, SimPlatform>.internal(
 
 typedef _$SimInput = Notifier<SimPlatform>;
 String _$simCoreIsolatePortHash() =>
-    r'ec18ccf2fc3e7ed57eecfa5c764ddca7c3ca8f7f';
+    r'3d1d09a1be9085167f72414d929620d0e0ecd951';
 
 /// A provider for keeping the isolate [SendPort] for when working on a
 /// native platform. Vehicle inputs gets directed here from [SimInput].
@@ -108,7 +125,7 @@ final _simCoreIsolatePortProvider =
 );
 
 typedef _$SimCoreIsolatePort = Notifier<SendPort?>;
-String _$simCoreWebInputHash() => r'65903b67486f8720aed32e93f7a2f2526fd8c4b6';
+String _$simCoreWebInputHash() => r'f4a93494026dd13f1138a894b7a23f84cf39c9de';
 
 /// A provider that creates a stream for sending vehicle inputs to the
 /// vehicle simulator when on the web platform.
@@ -127,11 +144,32 @@ final _simCoreWebInputProvider =
 );
 
 typedef _$SimCoreWebInput = Notifier<StreamController<dynamic>>;
+String _$simCoreDebugAllowLongBreaksHash() =>
+    r'f53980f91f616f7793d52dd2332281cab8661f26';
+
+/// A provider for whether long breaks in the program (i.e. when using
+/// breakpoints) should be allowed and not restart the sim core in
+/// debug mode.
+///
+/// Copied from [SimCoreDebugAllowLongBreaks].
+@ProviderFor(SimCoreDebugAllowLongBreaks)
+final simCoreDebugAllowLongBreaksProvider =
+    NotifierProvider<SimCoreDebugAllowLongBreaks, bool>.internal(
+  SimCoreDebugAllowLongBreaks.new,
+  name: r'simCoreDebugAllowLongBreaksProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simCoreDebugAllowLongBreaksHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimCoreDebugAllowLongBreaks = Notifier<bool>;
 String _$simCoreAllowManualInputHash() =>
     r'2d610224146e2bb67d3cf747cc462a72a5769943';
 
-/// A provider for whether the steering automatically should recenter when
-/// no input is provided.
+/// A provider for whether the sim core should allow manual inputs from the
+/// user, i.e. not only sensors from the vehicle.
 ///
 /// Copied from [SimCoreAllowManualInput].
 @ProviderFor(SimCoreAllowManualInput)

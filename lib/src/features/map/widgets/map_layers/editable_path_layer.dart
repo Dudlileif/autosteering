@@ -14,7 +14,6 @@ class EditablePathLayer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final points = ref.watch(finishedPathRecordingListProvider) ?? const [];
-    final closedPath = ref.watch(showFinishedPolygonProvider);
 
     return Stack(
       children: points.isNotEmpty
@@ -25,19 +24,13 @@ class EditablePathLayer extends ConsumerWidget {
                   Polyline(
                     points: [
                       ...points.map((point) => point.position.latLng),
-                      if (closedPath) points.first.position.latLng,
                     ],
                   ),
                 ],
               ),
               MarkerLayer(
                 markers: [
-                  ...points
-                      .getRange(
-                    0,
-                    closedPath ? points.length : points.length - 1,
-                  )
-                      .mapIndexed(
+                  ...points.mapIndexed(
                     (index, point) {
                       final nextPoint = index == points.length - 1
                           ? points.first

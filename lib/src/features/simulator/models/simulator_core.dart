@@ -27,7 +27,7 @@ class SimulatorCore {
     // Send a communication port in return.
     sendPort.send(commandPort.sendPort);
 
-    log('Sim vehicle isolate spawn confirmation');
+    log('Simulator Core isolate spawn confirmation');
 
     // Heartbeat signal to show that the simulator isolate is alive.
     Timer.periodic(const Duration(milliseconds: 250), (timer) {
@@ -64,7 +64,7 @@ class SimulatorCore {
               bearing: state.gaugeBearing,
               distance: state.distance,
               pathTracking: state.pathTracking,
-              abLine: state.abLine,
+              abTracking: state.abTracking,
               hardwareIsConnected: hardwareIsConnected,
             ),
           );
@@ -171,7 +171,7 @@ class SimulatorCore {
 
     udp.close();
 
-    log('Sim vehicle isolate exited.');
+    log('Simulator Core isolate exited.');
     Isolate.exit();
   }
 
@@ -224,12 +224,12 @@ class SimulatorCore {
         num bearing,
         num distance,
         PathTracking? pathTracking,
-        ABLine? abLine,
+        ABTracking? abTracking,
         bool hardwareIsConnected,
       })> webWorker(
     Stream<dynamic> vehicleEvents,
   ) {
-    log('Sim vehicle worker spawned');
+    log('Simulator Core worker spawned');
 
     // The state of the simulation.
     final state = _SimulatorCoreState();
@@ -272,7 +272,7 @@ class SimulatorCore {
           num bearing,
           num distance,
           PathTracking? pathTracking,
-          ABLine? abLine,
+          ABTracking? abTracking,
           bool hardwareIsConnected,
         })>();
 
@@ -300,7 +300,7 @@ class SimulatorCore {
               bearing: state.gaugeBearing,
               distance: state.distance,
               pathTracking: state.pathTracking,
-              abLine: state.abLine,
+              abTracking: state.abTracking,
               hardwareIsConnected: hardwareIsConnected,
             ),
           );
@@ -330,10 +330,10 @@ enum SimInputChange {
 
 /// A class for holding and updating the state of the [SimulatorCore].
 class _SimulatorCoreState {
+  /// A class for holding and updating the state of the [SimulatorCore].
   _SimulatorCoreState();
 
-  /// A stream controller for forwarding events to send with UDP, only used on
-  /// native platforms.
+  /// A stream controller for forwarding events to send over the network.
   StreamController<String>? networkSendStream;
 
   /// Whether the simulation should accept incoming control input from
@@ -366,11 +366,18 @@ class _SimulatorCoreState {
   /// Whether the state changed in the last update.
   bool didChange = true;
 
-  /// The pure pursuit to drive after, if there is one.
+  /// The recorded path tracking to drive after, if there is one.
   PathTracking? pathTracking;
 
-  /// The AB-line to drive after, if there is one.
-  ABLine? abLine;
+  /// The AB-line or curve to drive after, if there is one.
+  ABTracking? abTracking;
+
+  /// A configuration for [abTracking] parameters.
+  ABConfig? abConfig;
+
+  /// Whether driving without [autoSteerEnabled] should update path
+  /// tracking paths.
+  bool allowManualTrackingUpdates = true;
 
   /// A static turning circle center to keep while the steering angle is
   /// constant. We use this due to small errors when using the
@@ -456,7 +463,6 @@ class _SimulatorCoreState {
   void handleMessage(dynamic message) {
     // Force update to reflect changes in case we haven't moved.
     forceChange = true;
-
     // Set the vehicle to simulate.
     if (message is Vehicle) {
       vehicle = message.copyWith(
@@ -611,8 +617,8 @@ class _SimulatorCoreState {
       pathInterpolationDistance = message.pathInterpolationDistance;
       // Interpolate the path with new max distance.
       pathTracking?.interPolateWayPoints(
-        maxDistance: pathInterpolationDistance,
-        loopMode: pathTrackingLoopMode,
+        newInterpolationDistance: pathInterpolationDistance,
+        newLoopMode: pathTrackingLoopMode,
       );
       // Find the current index as the closest point since the path has updated.
       if (pathTracking != null && vehicle != null) {
@@ -639,8 +645,8 @@ class _SimulatorCoreState {
       pathTrackingLoopMode = message.pathTrackingLoopMode;
       // Interpolate the path since we might have new points.
       pathTracking?.interPolateWayPoints(
-        maxDistance: pathInterpolationDistance,
-        loopMode: pathTrackingLoopMode,
+        newInterpolationDistance: pathInterpolationDistance,
+        newLoopMode: pathTrackingLoopMode,
       );
       // Find the current index as the closest point since the path has updated.
       if (pathTracking != null && vehicle != null) {
@@ -692,45 +698,45 @@ class _SimulatorCoreState {
         equipment.activeSections = message.activeSections;
       }
     }
-
     // Update the AB-line to follow
-    else if (message is ({ABLine? abLine})) {
-      abLine = message.abLine;
+    else if (message is ({ABTracking? abTracking})) {
+      abTracking = message.abTracking?..applyConfig(abConfig);
     }
-    // Update if the AB-line should automatically snap to the next offset.
-    else if (message is ({bool abLineSnapping})) {
-      abLine?.snapToClosestLine = message.abLineSnapping;
-    }
-    // Update the turning radius of the AB-line.
-    else if (message is ({double abTurningRadius})) {
-      abLine?.turningRadius = message.abTurningRadius;
-    }
-    // Update how many lines the AB-line should move when skipping to the
-    // next one.
-    else if (message is ({int abTurnOffsetIncrease})) {
-      abLine?.turnOffsetIncrease = message.abTurnOffsetIncrease;
-    }
-    // Update which way the upcoming turn of the AB-line should be.
-    else if (message is ({bool abToggleTurnDirection})) {
-      if (abLine != null) {
-        abLine!.offsetOppositeTurn = !abLine!.offsetOppositeTurn;
+    // Update if the AB-tracking to the new config
+    else if (message is ABConfig) {
+      abConfig = message;
+      abTracking?.applyConfig(message);
+      if (vehicle != null && abTracking is ABCurve) {
+        abTracking?.updateNextOffset(vehicle!);
+        (abTracking! as ABCurve)
+            .updateCurrentPathTracking(vehicle!, force: true);
       }
     }
-    // Update the limit mode of the AB-line.
-    else if (message is ABLimitMode) {
-      abLine?.limitMode = message;
-    }
-    // Move the AB-line offset by 1 to the left if negative or to the
+    // Move the AB-tracking offset by 1 to the left if negative or to the
     // right if positive.
-    else if (message is ({int abLineMoveOffset})) {
+    else if (message is ({int abMoveOffset})) {
       if (vehicle != null) {
-        switch (message.abLineMoveOffset.isNegative) {
+        switch (message.abMoveOffset.isNegative) {
           case true:
-            abLine?.moveOffsetLeft(vehicle!);
+            abTracking?.moveOffsetLeft(
+              vehicle!,
+              offset: message.abMoveOffset.abs(),
+            );
           case false:
-            abLine?.moveOffsetRight(vehicle!);
+            abTracking?.moveOffsetRight(
+              vehicle!,
+              offset: message.abMoveOffset.abs(),
+            );
         }
       }
+    }
+    // Update whether manual driving should update path tracking.
+    else if (message is ({bool allowManualTrackingUpdates})) {
+      allowManualTrackingUpdates = message.allowManualTrackingUpdates;
+    }
+    // Unknown message, log it to figure out what it is.
+    else {
+      log(message.toString());
     }
   }
 
@@ -806,7 +812,7 @@ class _SimulatorCoreState {
 
         case SimInputChange.hold:
           receivingManualInput = false;
-          if (autoCenterSteering) {
+          if (autoCenterSteering && !autoSteerEnabled) {
             // Centering rate deg/s
             const centeringRate = 25;
 
@@ -839,38 +845,49 @@ class _SimulatorCoreState {
     }
   }
 
-  /// Check and update the steering of the vehicle if [autoSteerEnabled].
-  void checkAutoSteering() {
-    if (autoSteerEnabled && vehicle != null && !receivingManualInput) {
-      var steeringAngle = 0.0;
-      if (abLine != null) {
-        checkIfPidModeIsValid(
-          abLine!.signedPerpendicularDistanceToCurrentLine(vehicle!).abs(),
-        );
-
-        steeringAngle =
-            abLine!.nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
-      } else if (pathTracking != null) {
-        pathTracking!.tryChangeWayPoint(vehicle!);
-
-        if (enablePathTracking) {
-          checkIfPidModeIsValid(
-            pathTracking!.perpendicularDistance(vehicle!).abs(),
-          );
-          steeringAngle = pathTracking!
-              .nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
-        }
+  /// Check and update the guidance, autosteering etc..
+  ///
+  /// Checks and updates the [abTracking] and [pathTracking].
+  /// If [autoSteerEnabled] the steering will
+  void checkGuidance() {
+    if (vehicle != null) {
+      abTracking?.checkAutoOffsetSnap(vehicle!);
+      if (!autoSteerEnabled && allowManualTrackingUpdates) {
+        abTracking?.manualUpdate(vehicle!);
       }
+      if (autoSteerEnabled && !receivingManualInput) {
+        var steeringAngle = 0.0;
+        if (abTracking != null) {
+          checkIfPidModeIsValid(
+            abTracking!
+                .signedPerpendicularDistanceToCurrentLine(vehicle!)
+                .abs(),
+          );
 
-      // Only allow steering if vehicle is moving to prevent jitter that moves
-      // the vehicle when stationary.
-      if (steeringAngle == vehicle!.steeringAngleInput ||
-          vehicle!.velocity == 0) {
-        steeringChange = SimInputChange.hold;
-      } else if (steeringAngle < vehicle!.steeringAngleInput) {
-        steeringChange = SimInputChange.decrease;
-      } else if (steeringAngle > vehicle!.steeringAngleInput) {
-        steeringChange = SimInputChange.increase;
+          steeringAngle = abTracking!
+              .nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
+        } else if (pathTracking != null) {
+          pathTracking!.tryChangeWayPoint(vehicle!);
+
+          if (enablePathTracking) {
+            checkIfPidModeIsValid(
+              pathTracking!.perpendicularDistance(vehicle!).abs(),
+            );
+            steeringAngle = pathTracking!
+                .nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
+          }
+        }
+
+        // Only allow steering if vehicle is moving to prevent jitter that moves
+        // the vehicle when stationary.
+        if (steeringAngle == vehicle!.steeringAngleInput ||
+            vehicle!.velocity == 0) {
+          steeringChange = SimInputChange.hold;
+        } else if (steeringAngle < vehicle!.steeringAngleInput) {
+          steeringChange = SimInputChange.decrease;
+        } else if (steeringAngle > vehicle!.steeringAngleInput) {
+          steeringChange = SimInputChange.increase;
+        }
       }
     }
   }
@@ -974,7 +991,7 @@ class _SimulatorCoreState {
 
   /// Update the simulation, i.e. simulate the next step.
   void update() {
-    checkAutoSteering();
+    checkGuidance();
     updateVehicleVelocityAndSteering();
     checkTurningCircle();
     updateTime();

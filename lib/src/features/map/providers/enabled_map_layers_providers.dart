@@ -55,17 +55,6 @@ bool showFinishedPathLayer(ShowFinishedPathLayerRef ref) {
   return enabled;
 }
 
-/// Whether the polygon contained by the finished recorded path should be
-/// shown.
-@riverpod
-bool showFinishedPolygonLayer(ShowFinishedPolygonLayerRef ref) {
-  final showPolygon = ref.watch(showFinishedPolygonProvider);
-  final finishedPathPoints = ref.watch(finishedPathRecordingListProvider);
-
-  final enabled = showPolygon && finishedPathPoints != null;
-  return enabled;
-}
-
 /// Whether the currently recording path should be shown.
 @riverpod
 bool showRecordingPathLayer(ShowRecordingPathLayerRef ref) =>
@@ -139,7 +128,7 @@ bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
 bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) =>
     ref.watch(showEquipmentDebugProvider);
 
-/// Whether the debugging layer for the AB-line should be shown.
+/// Whether the debugging layer for AB-trackng should be shown.
 @riverpod
-bool showABLineDebugLayer(ShowABLineDebugLayerRef ref) =>
-    ref.watch(aBLineDebugShowProvider);
+bool showABTrackingDebugLayer(ShowABTrackingDebugLayerRef ref) =>
+    ref.watch(aBTrackingDebugShowProvider);

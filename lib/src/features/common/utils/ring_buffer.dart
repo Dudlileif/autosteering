@@ -47,30 +47,27 @@ class RingBuffer {
   /// numSmoothingPoints = (smoothingFactor * circleSecantLength / distance.abs()).floor()
   ///```
   ///
-  /// The circleSecantLength is the distance from the intersection points
-  /// on the buffer distance circle.
+  /// The circleSecantLength is the distance from the intersection
+  /// (start and end) points on the buffer distance circle.
   static Iterable<Geographic> bufferCircular({
     required Iterable<Geographic> ring,
     required double distance,
     BufferJoin joinType = BufferJoin.round,
     double smoothingFactor = 4,
     bool getRawPoints = false,
+    bool extendEnds = true,
+    bool filteredIntersections = true,
+    bool getIntersectionsOnly = false,
+    bool swapDirectionIfClockwise = false,
   }) {
     if (ring.length < 2 || distance.abs() == 0) {
       return ring;
     }
 
-    // Check area under the curve to see if we're CCW or CW.
-    var area = 0.0;
-    for (var i = 0; i < ring.length; i++) {
-      final point = ring.elementAt(i);
-      final nextPoint = ring.elementAt((i + 1) % ring.length);
-      area += (nextPoint.x - point.x) * (nextPoint.y + point.y);
-    }
     // Whether the ring is counterclockwise (CCW).
-    final isCCW = area.isNegative;
+    final isCCW = isCurveCounterclockwise(ring);
 
-    final sign = switch (isCCW) {
+    final sign = switch ((!isCCW && swapDirectionIfClockwise) || isCCW) {
       true => 1,
       false => -1,
     };
@@ -78,6 +75,9 @@ class RingBuffer {
     final resultRing = <Geographic>{};
 
     for (var i = 0; i < ring.length; i++) {
+      if ((i == 0 || i == ring.length - 1) && !extendEnds) {
+        continue;
+      }
       final prevPoint = ring.elementAt((i - 1) % ring.length);
       final point = ring.elementAt(i);
       final nextPoint = ring.elementAt((i + 1) % ring.length);
@@ -183,42 +183,40 @@ class RingBuffer {
             bufferedRing: resultRing,
             distance: distance,
             joinType: joinType,
-            inside: distance.isNegative,
+            extendEnds: extendEnds,
+            filtered: filteredIntersections,
+            getIntersectionsOnly: getIntersectionsOnly,
           );
   }
 
-  /// Cleans up [bufferedRing] by removing points that extends outside
-  /// intersections between non-adjacent lines.
+  /// Finds all the intersections in [bufferedRing].
   ///
   /// By using the [originalRing] and buffer [distance] we can skip
   /// intersections that are too close to the original ring.
-  ///
-  /// Mostly useful when the [bufferedRing] has been shrunk or is concave.
-  static Iterable<Geographic> findAndInsertIntersections({
+  static List<({int begin, int end, Geographic intersection})>
+      findIntersections({
     required Iterable<Geographic> originalRing,
-    required Iterable<Geographic> bufferedRing,
+    required List<Geographic> bufferedRing,
     required double distance,
     BufferJoin joinType = BufferJoin.round,
-    bool inside = false,
-    bool getIntersectionsOnly = false,
+    bool filtered = true,
+    bool includeEnds = true,
   }) {
     final intersectionList =
         <({int begin, int end, Geographic intersection})>[];
 
-    final resultRing = <Geographic>[...bufferedRing];
+    for (var i = 0; i < bufferedRing.length - 1; i++) {
+      final start1 = bufferedRing.elementAt(i);
+      final end1 = bufferedRing.elementAt(i + 1);
 
-    for (var i = 0; i < resultRing.length - 1; i++) {
-      final start1 = resultRing.elementAt(i);
-      final end1 = resultRing.elementAt(i + 1);
-
-      for (var j = 0; j < resultRing.length - 1; j++) {
+      for (var j = 0; j < bufferedRing.length - 1; j++) {
         // Skip adjacent lines
         if ((i - j).abs() < 2) {
           continue;
         }
 
-        final end2 = resultRing.elementAt(j);
-        final start2 = resultRing.elementAt(j + 1);
+        final end2 = bufferedRing.elementAt(j);
+        final start2 = bufferedRing.elementAt(j + 1);
 
         final intersection = start1.spherical.intersectionWith(
           bearing: start1.spherical.initialBearingTo(end1),
@@ -242,8 +240,8 @@ class RingBuffer {
             _ => 0.98 * distance.abs()
           };
 
-          final startIndex = resultRing.indexOf(end1);
-          final endIndex = resultRing.indexOf(start2);
+          final startIndex = bufferedRing.indexOf(end1);
+          final endIndex = bufferedRing.indexOf(start2);
 
           // Filter out intersections that are too close to the original ring
           if (originalRing.any(
@@ -276,47 +274,79 @@ class RingBuffer {
         }
       }
     }
-
-    if (getIntersectionsOnly) {
-      return intersectionList.map((e) => e.intersection).toSet();
+    if (!filtered) {
+      return intersectionList;
     }
-
     // A list of the intersections that we will filter to only the necessary
     // ones.
-    final filtered = [...intersectionList];
+    final filteredIntersections = [...intersectionList];
 
     // Remove duplicates which start at the opposite ends.
     for (final intersection in intersectionList) {
-      filtered.removeWhere(
+      filteredIntersections.removeWhere(
         (other) =>
-            filtered.contains(intersection) &&
+            filteredIntersections.contains(intersection) &&
             intersection.begin == other.end &&
             intersection.end == other.begin &&
             intersection.begin < other.begin,
       );
     }
 
-    if (filtered.isNotEmpty) {
+    if (filteredIntersections.isNotEmpty) {
       // Sort by how many points the intersections will replace.
       // From few to many.
-      filtered.sortByCompare(
+      filteredIntersections.sortByCompare(
         (element) {
           final length = element.end - element.begin;
-          final lengthAroundStart =
-              resultRing.length - element.end + element.begin;
+          final lengthAroundStart = includeEnds
+              ? bufferedRing.length - element.end + element.begin
+              : double.maxFinite.floor();
           final min = [length, lengthAroundStart].min;
           return min;
         },
         (a, b) => a.compareTo(b),
       );
     }
+    return filteredIntersections;
+  }
+
+  /// Cleans up [bufferedRing] by removing points that extends outside
+  /// intersections between non-adjacent lines.
+  ///
+  /// By using the [originalRing] and buffer [distance] we can skip
+  /// intersections that are too close to the original ring.
+  ///
+  /// Mostly useful when the [bufferedRing] has been shrunk or is concave.
+  static Iterable<Geographic> findAndInsertIntersections({
+    required Iterable<Geographic> originalRing,
+    required Iterable<Geographic> bufferedRing,
+    required double distance,
+    BufferJoin joinType = BufferJoin.round,
+    bool getIntersectionsOnly = false,
+    bool filtered = true,
+    bool extendEnds = true,
+  }) {
+    final intersectionList = findIntersections(
+      originalRing: originalRing,
+      bufferedRing: bufferedRing.toList(),
+      distance: distance,
+      joinType: joinType,
+      filtered: filtered,
+      includeEnds: extendEnds,
+    );
+    if (getIntersectionsOnly) {
+      return intersectionList.map((e) => e.intersection).toSet();
+    }
+
+    final resultRing = [...bufferedRing];
 
     // Apply the replacement intersections for their ranges, i.e. the lowest
     // number of indices from begin to end.
-    for (final replacement in filtered) {
+    for (final replacement in intersectionList) {
       final length = replacement.end - replacement.begin;
-      final lengthAroundStart =
-          resultRing.length - replacement.end + replacement.begin;
+      final lengthAroundStart = extendEnds
+          ? resultRing.length - replacement.end + replacement.begin
+          : double.maxFinite.floor();
 
       // Wraps around the end of the ring
       if (lengthAroundStart < length) {
@@ -342,7 +372,6 @@ class RingBuffer {
         );
       }
     }
-
     return resultRing.toSet();
   }
 }

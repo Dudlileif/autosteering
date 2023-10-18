@@ -25,7 +25,67 @@ final enablePathRecorderProvider =
 );
 
 typedef _$EnablePathRecorder = Notifier<bool>;
-String _$pathRecordingListHash() => r'33dbe104abe107b219ee4fb3d6bba45a56b7b10e';
+String _$pathRecordingTurnMinDistanceHash() =>
+    r'2fc96e554d84755bb3ae7b330d45071ed07f132f';
+
+/// A provider for the minimum distance between recorded points, i.e. when
+/// to add new points when going turning.
+///
+/// Copied from [PathRecordingTurnMinDistance].
+@ProviderFor(PathRecordingTurnMinDistance)
+final pathRecordingTurnMinDistanceProvider =
+    NotifierProvider<PathRecordingTurnMinDistance, double>.internal(
+  PathRecordingTurnMinDistance.new,
+  name: r'pathRecordingTurnMinDistanceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pathRecordingTurnMinDistanceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$PathRecordingTurnMinDistance = Notifier<double>;
+String _$pathRecordingMaxDistanceHash() =>
+    r'dc29fe85645b38941363eb0a6043fd2d36975194';
+
+/// A provider for the maximum distance between recorded points, i.e. when
+/// to add new points when going straight.
+///
+/// Copied from [PathRecordingMaxDistance].
+@ProviderFor(PathRecordingMaxDistance)
+final pathRecordingMaxDistanceProvider =
+    NotifierProvider<PathRecordingMaxDistance, double>.internal(
+  PathRecordingMaxDistance.new,
+  name: r'pathRecordingMaxDistanceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pathRecordingMaxDistanceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$PathRecordingMaxDistance = Notifier<double>;
+String _$pathRecordingTriggerAngleHash() =>
+    r'563ff93aaf6a3bf722e59f59611e0951d2ff3970';
+
+/// A provider for the maximum angle between recorded points, i.e. when to
+/// add new points in turns if after [PathRecordingMinDistance] has been passed.
+///
+/// Copied from [PathRecordingTriggerAngle].
+@ProviderFor(PathRecordingTriggerAngle)
+final pathRecordingTriggerAngleProvider =
+    NotifierProvider<PathRecordingTriggerAngle, double>.internal(
+  PathRecordingTriggerAngle.new,
+  name: r'pathRecordingTriggerAngleProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pathRecordingTriggerAngleHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$PathRecordingTriggerAngle = Notifier<double>;
+String _$pathRecordingListHash() => r'8b963ec8e144ec262bc9ff7484714a3126db1657';
 
 /// A list of the currently recording points.
 ///
@@ -80,25 +140,6 @@ final showFinishedPathProvider =
 );
 
 typedef _$ShowFinishedPath = Notifier<bool>;
-String _$showFinishedPolygonHash() =>
-    r'0fa3bd17b79894df87db88328f82dc90f46d0e5e';
-
-/// Whether to show the polygon contained by the last fininshed path recording.
-///
-/// Copied from [ShowFinishedPolygon].
-@ProviderFor(ShowFinishedPolygon)
-final showFinishedPolygonProvider =
-    NotifierProvider<ShowFinishedPolygon, bool>.internal(
-  ShowFinishedPolygon.new,
-  name: r'showFinishedPolygonProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showFinishedPolygonHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ShowFinishedPolygon = Notifier<bool>;
 String _$editFinishedPathHash() => r'9343300ae45482c100ab819f01af800f3baae4a3';
 
 /// Whether to activate editing of the last finished path recording.

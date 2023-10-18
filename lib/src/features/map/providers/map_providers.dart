@@ -265,8 +265,14 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
   @override
   bool build() {
     ref.listenSelf((previous, next) {
-      if (next && ref.read(mapReadyProvider)) {
-        ref.read(mainMapControllerProvider).rotate(0);
+      if (ref.read(mapReadyProvider)) {
+        if (next) {
+          ref.read(mainMapControllerProvider).rotate(0);
+        } else {
+          ref.read(mainMapControllerProvider).rotate(
+                ref.read(mainVehicleProvider.select((value) => -value.bearing)),
+              );
+        }
       }
       if (previous != null && previous != next) {
         ref

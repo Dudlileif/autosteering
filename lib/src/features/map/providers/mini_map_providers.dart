@@ -1,6 +1,7 @@
 import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/field/field.dart';
 import 'package:agopengps_flutter/src/features/settings/settings.dart';
+import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -12,13 +13,33 @@ part 'mini_map_providers.g.dart';
 class ShowMiniMap extends _$ShowMiniMap {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
-      if (previous != null && previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.miniMapShow, next);
-      }
-    });
+    ref
+      ..listen(activeFieldProvider, (previous, next) {
+        if (ref.read(miniMapLockToFieldProvider)) {
+          if (next != null) {
+            ref.read(miniMapLockToFieldProvider.notifier).updateBounds();
+          } else {
+            final mapController = ref.read(miniMapControllerProvider);
+            final vehicle = ref.read(
+              mainVehicleProvider.select(
+                (value) => (position: value.position, bearing: value.bearing),
+              ),
+            );
+            mapController.moveAndRotate(
+              vehicle.position.latLng,
+              mapController.zoom,
+              -vehicle.bearing,
+            );
+          }
+        }
+      })
+      ..listenSelf((previous, next) {
+        if (previous != null && previous != next) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.miniMapShow, next);
+        }
+      });
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.miniMapShow) ??
@@ -121,6 +142,10 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
     ref.listenSelf((previous, next) {
       if (next) {
         ref.read(miniMapControllerProvider).rotate(0);
+      } else {
+        ref.read(miniMapControllerProvider).rotate(
+              ref.read(mainVehicleProvider.select((value) => -value.bearing)),
+            );
       }
 
       if (previous != null && previous != next) {

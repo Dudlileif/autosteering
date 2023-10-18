@@ -29,22 +29,13 @@ class PathTrackingDebugLayer extends ConsumerWidget {
                         .map((point) => point.position.latLng)
                         .toList(),
                   ),
-                  if (tracking is PurePursuitPathTracking)
-                    Polyline(
-                      points: [
-                        vehicle.lookAheadStartPosition.latLng,
-                        tracking.perpendicularIntersect(vehicle).latLng,
-                      ],
-                      color: Colors.white,
-                    )
-                  else if (tracking is StanleyPathTracking)
-                    Polyline(
-                      points: [
-                        vehicle.stanleyAxlePosition.latLng,
-                        tracking.perpendicularIntersect(vehicle).latLng,
-                      ],
-                      color: Colors.white,
-                    ),
+                  Polyline(
+                    points: [
+                      vehicle.pathTrackingPoint.latLng,
+                      tracking.perpendicularIntersect(vehicle).latLng,
+                    ],
+                    color: Colors.white,
+                  ),
                   if (tracking is PurePursuitPathTracking) ...[
                     Polyline(
                       color: Colors.black,

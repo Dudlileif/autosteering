@@ -2,13 +2,14 @@ import 'package:agopengps_flutter/src/features/common/common.dart';
 import 'package:agopengps_flutter/src/features/map/map.dart';
 import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
 import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button with attached submenu for configuring the simulator.
-class SimMenu extends StatelessWidget {
+class SimCoreMenu extends StatelessWidget {
   /// A menu button with attached submenu for configuring the simulator.
-  const SimMenu({super.key});
+  const SimCoreMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,7 @@ class SimMenu extends StatelessWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(
+            secondary: const Icon(Icons.gamepad),
             title: child,
             value: ref.watch(simCoreAllowManualInputProvider),
             onChanged: (value) => value != null
@@ -57,7 +59,7 @@ class SimMenu extends StatelessWidget {
         if (!Device.isWeb)
           Consumer(
             child: Text(
-              'Restart sim',
+              'Restart sim core',
               style: textStyle,
             ),
             builder: (context, ref, child) => ListTile(
@@ -65,6 +67,29 @@ class SimMenu extends StatelessWidget {
               leading: const Icon(Icons.replay),
               title: child,
             ),
+          ),
+        if (kDebugMode)
+          Consumer(
+            child: Text(
+              'Allow long breaks',
+              style: textStyle,
+            ),
+            builder: (context, ref, child) {
+              final allowBreaks =
+                  ref.watch(simCoreDebugAllowLongBreaksProvider);
+              return CheckboxListTile(
+                secondary: allowBreaks
+                    ? const Icon(Icons.timer_off_outlined)
+                    : const Icon(Icons.timer_outlined),
+                value: allowBreaks,
+                onChanged: (value) => value != null
+                    ? ref
+                        .read(simCoreDebugAllowLongBreaksProvider.notifier)
+                        .update(value: value)
+                    : null,
+                title: child,
+              );
+            },
           ),
       ],
     );

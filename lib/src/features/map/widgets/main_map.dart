@@ -84,8 +84,6 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showSentinelLayersProvider)) const SentinelLayers(),
         if (ref.watch(showFieldDebugLayerProvider)) const FieldLayer(),
         if (ref.watch(showFinishedPathLayerProvider)) const FinishedPathLayer(),
-        if (ref.watch(showFinishedPolygonLayerProvider))
-          const FinishedPolygonLayer(),
         if (ref.watch(showVehicleDrawingLayerProvider))
           const VehicleDrawerLayer(),
         if (ref.watch(showRecordingPathLayerProvider))
@@ -98,7 +96,8 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showDubinsPathDebugLayerProvider))
           const DubinsPathDebugLayer(),
-        if (ref.watch(showABLineDebugLayerProvider)) const ABLineDebugLayer(),
+        if (ref.watch(showABTrackingDebugLayerProvider))
+          const ABTrackingDebugLayer(),
       ],
     );
   }

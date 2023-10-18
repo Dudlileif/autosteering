@@ -32,7 +32,7 @@ class MainScaffold extends StatelessWidget {
               EquipmentMenu(),
               NetworkMenu(),
               DebugMenu(),
-              SimMenu(),
+              SimCoreMenu(),
               ThemeMenu(),
             ],
           ),

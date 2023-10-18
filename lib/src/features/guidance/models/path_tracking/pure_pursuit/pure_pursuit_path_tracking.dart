@@ -32,73 +32,6 @@ final class PurePursuitPathTracking extends PathTracking {
   /// mode.
   final pidController = PidController();
 
-  /// The intersection point that is projected from the vehicle onto the
-  /// line from the current to the next waypoint.
-  @override
-  Geographic perpendicularIntersect(Vehicle vehicle) {
-    final nextPoint = nextWayPoint(vehicle).position;
-
-    final currentPoint = currentWayPoint(vehicle);
-
-    final distanceAlong = vehicle.lookAheadStartPosition.spherical
-        .alongTrackDistanceTo(start: currentPoint.position, end: nextPoint);
-
-    var bearing = currentPoint.position.spherical.initialBearingTo(nextPoint);
-
-    if (bearing.isNaN) {
-      bearing = currentPoint.bearing;
-    }
-
-    return currentPoint.position.spherical
-        .destinationPoint(distance: distanceAlong, bearing: bearing);
-  }
-
-  /// The distance from the vehicle to the [perpendicularIntersect] point.
-  ///
-  /// The value is negative if the vehicle is to the left of the line.
-  @override
-  double perpendicularDistance(Vehicle vehicle) {
-    final sign = switch (vehicle.isReversing) {
-      false => 1,
-      true => -1,
-    };
-
-    return sign *
-        vehicle.lookAheadStartPosition.spherical.crossTrackDistanceTo(
-          start: currentWayPoint(vehicle).position,
-          end: nextWayPoint(vehicle).position,
-        );
-  }
-
-  /// The waypoint in [path] that is closest to the [vehicle].
-  @override
-  WayPoint closestWayPoint(Vehicle vehicle) => path.reduce(
-        (value, element) => element.position.spherical.distanceTo(
-                  vehicle.lookAheadStartPosition,
-                ) <
-                value.position.spherical
-                    .distanceTo(vehicle.lookAheadStartPosition)
-            ? element
-            : value,
-      );
-
-  /// Try to advance to the next waypoint in the list.
-  @override
-  void tryChangeWayPoint(Vehicle vehicle) {
-    final nextPoint = nextWayPoint(vehicle).position;
-
-    final currentPoint = currentWayPoint(vehicle);
-
-    final progress =
-        vehicle.lookAheadStartPosition.spherical.alongTrackDistanceTo(
-      start: currentPoint.position,
-      end: nextPoint,
-    );
-    if (progress > currentPoint.position.spherical.distanceTo(nextPoint)) {
-      cumulativeIndex = nextIndex(vehicle);
-    }
-  }
-
   /// Finds the points that we use to get the secant line that intersects
   /// the circle with radius [lookAheadDistance] from the [vehicle]'s
   /// starting point.
@@ -106,9 +39,9 @@ final class PurePursuitPathTracking extends PathTracking {
   /// If the closest point is outside the circle, only this point will be
   /// returned.
   ({WayPoint inside, WayPoint? outside}) findLookAheadLinePoints(
-    Vehicle vehicle,
-    double lookAheadDistance,
-  ) {
+    Vehicle vehicle, [
+    double? lookAheadDistance,
+  ]) {
     var insidePoint = nextWayPoint(vehicle);
 
     var insideDistance = vehicle.lookAheadStartPosition.spherical.distanceTo(
@@ -117,11 +50,11 @@ final class PurePursuitPathTracking extends PathTracking {
 
     // If the closest point is outside look ahead circle we create an
     // intermediate point on the circle in the direction of the closest point.
-    if (insideDistance >= lookAheadDistance) {
+    if (insideDistance >= (lookAheadDistance ?? vehicle.lookAheadDistance)) {
       return (
         inside: insidePoint.copyWith(
           position: vehicle.lookAheadStartPosition.spherical.destinationPoint(
-            distance: lookAheadDistance,
+            distance: lookAheadDistance ?? vehicle.lookAheadDistance,
             bearing: vehicle.lookAheadStartPosition.spherical
                 .initialBearingTo(insidePoint.position),
           ),
@@ -141,7 +74,7 @@ final class PurePursuitPathTracking extends PathTracking {
       final point = path[index % path.length];
       final distance =
           vehicle.lookAheadStartPosition.spherical.distanceTo(point.position);
-      if (distance <= lookAheadDistance) {
+      if (distance <= (lookAheadDistance ?? vehicle.lookAheadDistance)) {
         insidePoint = point;
         insideDistance = distance;
       } else {
@@ -215,10 +148,13 @@ final class PurePursuitPathTracking extends PathTracking {
   /// the next point outside the circle. The best point is what should be
   /// used for path tracking.
   ({WayPoint best, WayPoint? worst}) findLookAheadCirclePoints(
-    Vehicle vehicle,
-    double lookAheadDistance,
-  ) {
-    final points = findLookAheadLinePoints(vehicle, lookAheadDistance);
+    Vehicle vehicle, [
+    double? lookAheadDistance,
+  ]) {
+    final points = findLookAheadLinePoints(
+      vehicle,
+      lookAheadDistance ?? vehicle.lookAheadDistance,
+    );
 
     if (points.outside == null) {
       return (best: points.inside, worst: null);
@@ -236,8 +172,10 @@ final class PurePursuitPathTracking extends PathTracking {
       end: points.outside!.position,
     );
 
-    final projectionToCircleDistance =
-        sqrt(pow(lookAheadDistance, 2) - pow(vehicleToLineDistance, 2));
+    final projectionToCircleDistance = sqrt(
+      pow(lookAheadDistance ?? vehicle.lookAheadDistance, 2) -
+          pow(vehicleToLineDistance, 2),
+    );
 
     final secantBearing = points.inside.position.spherical
         .initialBearingTo(points.outside!.position);
@@ -330,7 +268,6 @@ final class PurePursuitPathTracking extends PathTracking {
     );
   }
 
-  ///
   @override
   double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) {
     tryChangeWayPoint(vehicle);
