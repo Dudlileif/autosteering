@@ -40,7 +40,8 @@ Lon: ${position.longitude.toStringAsFixed(6)}''',
             onTap: () {
               ref.read(homePositionProvider.notifier).update(
                     ref.watch(
-                      mainMapControllerProvider.select((value) => value.center),
+                      mainMapControllerProvider
+                          .select((value) => value.camera.center),
                     ),
                   );
               ref.read(currentCountryProvider.notifier).update();

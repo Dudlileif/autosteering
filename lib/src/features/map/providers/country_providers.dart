@@ -49,7 +49,7 @@ class CurrentCountry extends _$CurrentCountry {
             final dio = Dio();
             final position = ref.watch(
               mainMapControllerProvider
-                  .select((controller) => controller.center),
+                  .select((controller) => controller.camera.center),
             );
             final response = await dio.get<String>(
               'https://nominatim.openstreetmap.org/reverse.php',

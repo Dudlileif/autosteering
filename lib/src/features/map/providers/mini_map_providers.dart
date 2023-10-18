@@ -27,7 +27,7 @@ class ShowMiniMap extends _$ShowMiniMap {
             );
             mapController.moveAndRotate(
               vehicle.position.latLng,
-              mapController.zoom,
+              mapController.camera.zoom,
               -vehicle.bearing,
             );
           }
@@ -72,12 +72,12 @@ class MiniMapController extends _$MiniMapController {
 
   /// Increase the zoom value of the [state] by [value].
   void zoomIn(double value) => Future(
-        () => state.move(state.center, state.zoom + value),
+        () => state.move(state.camera.center, state.camera.zoom + value),
       );
 
   /// Decrease the zoom value of the [state] by [value].
   void zoomOut(double value) => Future(
-        () => state.move(state.center, state.zoom - value),
+        () => state.move(state.camera.center, state.camera.zoom - value),
       );
 }
 
@@ -116,22 +116,28 @@ class MiniMapLockToField extends _$MiniMapLockToField {
       final mapController = ref.watch(miniMapControllerProvider);
       final bbox = field.squaredByDiagonalBoundingBox;
       if (bbox != null) {
-        final rotation = mapController.rotation;
+        final rotation = mapController.camera.rotation;
         mapController
           ..rotate(0)
-          ..fitBounds(
+          ..fitCamera(
+            CameraFit.bounds(
+              bounds: 
             LatLngBounds.fromPoints(
               bbox.corners2D.map((point) => point.latLng).toList(),
             ),
-            options: const FitBoundsOptions(padding: EdgeInsets.all(4)),
+              padding: const EdgeInsets.all(4),
+            ),
           )
           ..rotate(rotation);
       } else {
-        mapController.fitBounds(
+        mapController.fitCamera(
+          CameraFit.bounds(
+            bounds: 
           LatLngBounds.fromPoints(
             field.mapBoundingBox((point) => point.latLng).toList(),
           ),
-          options: const FitBoundsOptions(padding: EdgeInsets.all(4)),
+            padding: const EdgeInsets.all(4),
+          ),
         );
       }
     }
