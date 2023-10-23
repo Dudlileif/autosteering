@@ -39,11 +39,11 @@ class MainMap extends ConsumerWidget {
             if (event is MapEventScrollWheelZoom) {
               ref
                   .read(mainMapControllerProvider)
-                  .move(event.camera.center, event.camera.zoom);
+                  .move(event.oldCamera.center, event.camera.zoom);
             } else if (event is MapEventDoubleTapZoom) {
               ref
                   .read(mainMapControllerProvider)
-                  .move(event.camera.center, event.camera.zoom + 1);
+                  .move(event.oldCamera.center, event.camera.zoom + 1);
             }
           }
 

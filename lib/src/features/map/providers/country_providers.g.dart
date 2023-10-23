@@ -26,7 +26,7 @@ final sortedCountryLayersProvider =
 );
 
 typedef SortedCountryLayersRef = AutoDisposeProviderRef<List<TileLayerData>>;
-String _$currentCountryHash() => r'87ca6af26700067a32aa67cfe0652f963ba05dab';
+String _$currentCountryHash() => r'082612c2647e2abb2ce483dde9c9391ab9163dab';
 
 /// A provider fort showing the country we are currently in, if the country
 /// has defined custom map layers.
@@ -107,4 +107,4 @@ final countryLayerOpacitiesProvider =
 
 typedef _$CountryLayerOpacities = Notifier<Map<String, double>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

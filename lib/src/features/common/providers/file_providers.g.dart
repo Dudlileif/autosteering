@@ -166,6 +166,11 @@ class DirectorySizeProvider extends AutoDisposeFutureProvider<int?> {
   }
 
   @override
+  (String,) get argument {
+    return (path,);
+  }
+
+  @override
   AutoDisposeFutureProviderElement<int?> createElement() {
     return _DirectorySizeProviderElement(this);
   }
@@ -316,6 +321,11 @@ class DirectoryDeleteProvider extends AutoDisposeFutureProvider<bool> {
         path: path,
       ),
     );
+  }
+
+  @override
+  (String,) get argument {
+    return (path,);
   }
 
   @override
@@ -497,6 +507,19 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
+  ({
+    dynamic object,
+    String fileName,
+    String folder,
+  }) get argument {
+    return (
+      object: object,
+      fileName: fileName,
+      folder: folder,
+    );
+  }
+
+  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveJsonToFileDirectoryProviderElement(this);
   }
@@ -669,6 +692,17 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
   }
 
   @override
+  ({
+    dynamic Function(Map<String, dynamic> json) fromJson,
+    String folder,
+  }) get argument {
+    return (
+      fromJson: fromJson,
+      folder: folder,
+    );
+  }
+
+  @override
   FutureProviderElement<List<dynamic>> createElement() {
     return _SavedFilesProviderElement(this);
   }
@@ -709,4 +743,4 @@ class _SavedFilesProviderElement extends FutureProviderElement<List<dynamic>>
   String get folder => (origin as SavedFilesProvider).folder;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

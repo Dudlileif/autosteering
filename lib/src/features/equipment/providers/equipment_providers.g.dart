@@ -139,6 +139,11 @@ class LoadEquipmentFromFileProvider
   }
 
   @override
+  (String,) get argument {
+    return (path,);
+  }
+
+  @override
   AutoDisposeFutureProviderElement<Equipment?> createElement() {
     return _LoadEquipmentFromFileProviderElement(this);
   }
@@ -302,6 +307,17 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 
   @override
+  (
+    Equipment, {
+    String? overrideName,
+  }) get argument {
+    return (
+      equipment,
+      overrideName: overrideName,
+    );
+  }
+
+  @override
   AutoDisposeProviderElement<AsyncValue<void>> createElement() {
     return _SaveEquipmentProviderElement(this);
   }
@@ -378,7 +394,7 @@ final showEquipmentDebugProvider =
 );
 
 typedef _$ShowEquipmentDebug = Notifier<bool>;
-String _$allEquipmentsHash() => r'a6940a2eb2dde3c4cba38ebfa57a7c29acd2ac1c';
+String _$allEquipmentsHash() => r'bf89273a1d05fa62e0061b8f9898861ade4d6baf';
 
 /// A provider that holds all of the equipments.
 ///
@@ -538,6 +554,11 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
   }
 
   @override
+  (String,) get argument {
+    return (uuid,);
+  }
+
+  @override
   AutoDisposeNotifierProviderElement<EquipmentPaths,
       List<Map<int, List<Geographic>?>>> createElement() {
     return _EquipmentPathsProviderElement(this);
@@ -571,4 +592,4 @@ class _EquipmentPathsProviderElement extends AutoDisposeNotifierProviderElement<
   String get uuid => (origin as EquipmentPathsProvider).uuid;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

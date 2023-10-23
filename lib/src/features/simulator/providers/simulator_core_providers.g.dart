@@ -25,7 +25,7 @@ final sendMessagesToHardwareProvider = AutoDisposeProvider<bool>.internal(
 
 typedef SendMessagesToHardwareRef = AutoDisposeProviderRef<bool>;
 String _$simCoreVehicleDrivingHash() =>
-    r'8acb9b5d9174501d183dc8f36bca8474a8ac5f53';
+    r'1ac2c515e2313360dd397ff103568d578c8df611';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -222,6 +222,22 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
         message: message,
       ),
     );
+  }
+
+  @override
+  (
+    ({
+      Vehicle? vehicle,
+      num velocity,
+      num bearing,
+      num distance,
+      PathTracking? pathTracking,
+      ABTracking? abTracking,
+      bool autoSteerEnabled,
+      bool hardwareIsConnected
+    }),
+  ) get argument {
+    return (message,);
   }
 
   @override
@@ -500,4 +516,4 @@ final simCoreVehicleAutoSlowDownProvider =
 
 typedef _$SimCoreVehicleAutoSlowDown = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

@@ -6,7 +6,7 @@ part of 'mini_map_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$showMiniMapHash() => r'93e6b21d8fef86825bd91e1ab8c13e70b876f1b9';
+String _$showMiniMapHash() => r'a24979994252d3ac874fea635631e323d0106eb6';
 
 /// Whether the mini map should be shown.
 ///
@@ -38,7 +38,7 @@ final miniMapReadyProvider = NotifierProvider<MiniMapReady, bool>.internal(
 );
 
 typedef _$MiniMapReady = Notifier<bool>;
-String _$miniMapControllerHash() => r'004a44e3e7f94e0004cba26f0d0bf1d651196aa0';
+String _$miniMapControllerHash() => r'7e44e646a23fd34c4f6798edbcd67e4d11824e13';
 
 /// The mini map [MapController] provider, which allows controlling the
 /// map from outside the widget code itself.
@@ -58,7 +58,7 @@ final miniMapControllerProvider =
 
 typedef _$MiniMapController = Notifier<MapController>;
 String _$miniMapLockToFieldHash() =>
-    r'1fb26e5501974fa90cd1099871778919474edf8f';
+    r'a10b9a3d175688c65f38896fb9c3292bf0965902';
 
 /// Whether the mini map always should point to the north and not rotate.
 ///
@@ -112,4 +112,4 @@ final miniMapSizeProvider = NotifierProvider<MiniMapSize, double>.internal(
 
 typedef _$MiniMapSize = Notifier<double>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
