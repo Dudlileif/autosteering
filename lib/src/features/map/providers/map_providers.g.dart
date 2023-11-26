@@ -75,12 +75,26 @@ const mapCacheDateProvider = MapCacheDateFamily();
 /// at the given [path].
 ///
 /// Copied from [mapCacheDate].
-class MapCacheDateFamily extends Family<AsyncValue<DateTime?>> {
+class MapCacheDateFamily extends Family {
   /// A provider for finding the first cache date of the map layer cache
   /// at the given [path].
   ///
   /// Copied from [mapCacheDate].
   const MapCacheDateFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'mapCacheDateProvider';
 
   /// A provider for finding the first cache date of the map layer cache
   /// at the given [path].
@@ -104,19 +118,27 @@ class MapCacheDateFamily extends Family<AsyncValue<DateTime?>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<DateTime?> Function(MapCacheDateRef ref) create) {
+    return _$MapCacheDateFamilyOverride(this, create);
+  }
+}
+
+class _$MapCacheDateFamilyOverride implements FamilyOverride {
+  _$MapCacheDateFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<DateTime?> Function(MapCacheDateRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final MapCacheDateFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'mapCacheDateProvider';
+  MapCacheDateProvider getProviderOverride(
+    covariant MapCacheDateProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for finding the first cache date of the map layer cache
@@ -148,7 +170,7 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
         );
 
   MapCacheDateProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -161,7 +183,7 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
 
   @override
   Override overrideWith(
-    FutureOr<DateTime?> Function(MapCacheDateRef provider) create,
+    FutureOr<DateTime?> Function(MapCacheDateRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -185,6 +207,20 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
   @override
   AutoDisposeFutureProviderElement<DateTime?> createElement() {
     return _MapCacheDateProviderElement(this);
+  }
+
+  MapCacheDateProvider _copyWith(
+    FutureOr<DateTime?> Function(MapCacheDateRef ref) create,
+  ) {
+    return MapCacheDateProvider._internal(
+      (ref) => create(ref as MapCacheDateRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      path: path,
+    );
   }
 
   @override

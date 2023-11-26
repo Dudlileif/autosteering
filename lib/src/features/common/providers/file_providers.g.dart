@@ -59,13 +59,27 @@ const directorySizeProvider = DirectorySizeFamily();
 /// Returns the size in number of bytes.
 ///
 /// Copied from [directorySize].
-class DirectorySizeFamily extends Family<AsyncValue<int?>> {
+class DirectorySizeFamily extends Family {
   /// A provider for finding the size of the [Directory] at [path].
   ///
   /// Returns the size in number of bytes.
   ///
   /// Copied from [directorySize].
   const DirectorySizeFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'directorySizeProvider';
 
   /// A provider for finding the size of the [Directory] at [path].
   ///
@@ -90,19 +104,26 @@ class DirectorySizeFamily extends Family<AsyncValue<int?>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(FutureOr<int?> Function(DirectorySizeRef ref) create) {
+    return _$DirectorySizeFamilyOverride(this, create);
+  }
+}
+
+class _$DirectorySizeFamilyOverride implements FamilyOverride {
+  _$DirectorySizeFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<int?> Function(DirectorySizeRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final DirectorySizeFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'directorySizeProvider';
+  DirectorySizeProvider getProviderOverride(
+    covariant DirectorySizeProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for finding the size of the [Directory] at [path].
@@ -136,7 +157,7 @@ class DirectorySizeProvider extends AutoDisposeFutureProvider<int?> {
         );
 
   DirectorySizeProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -149,7 +170,7 @@ class DirectorySizeProvider extends AutoDisposeFutureProvider<int?> {
 
   @override
   Override overrideWith(
-    FutureOr<int?> Function(DirectorySizeRef provider) create,
+    FutureOr<int?> Function(DirectorySizeRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -173,6 +194,20 @@ class DirectorySizeProvider extends AutoDisposeFutureProvider<int?> {
   @override
   AutoDisposeFutureProviderElement<int?> createElement() {
     return _DirectorySizeProviderElement(this);
+  }
+
+  DirectorySizeProvider _copyWith(
+    FutureOr<int?> Function(DirectorySizeRef ref) create,
+  ) {
+    return DirectorySizeProvider._internal(
+      (ref) => create(ref as DirectorySizeRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      path: path,
+    );
   }
 
   @override
@@ -217,13 +252,27 @@ const directoryDeleteProvider = DirectoryDeleteFamily();
 /// Returns true if the directory no longer exists.
 ///
 /// Copied from [directoryDelete].
-class DirectoryDeleteFamily extends Family<AsyncValue<bool>> {
+class DirectoryDeleteFamily extends Family {
   /// A provider for deleting the [Directory] at [path].
   ///
   /// Returns true if the directory no longer exists.
   ///
   /// Copied from [directoryDelete].
   const DirectoryDeleteFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'directoryDeleteProvider';
 
   /// A provider for deleting the [Directory] at [path].
   ///
@@ -248,19 +297,27 @@ class DirectoryDeleteFamily extends Family<AsyncValue<bool>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<bool> Function(DirectoryDeleteRef ref) create) {
+    return _$DirectoryDeleteFamilyOverride(this, create);
+  }
+}
+
+class _$DirectoryDeleteFamilyOverride implements FamilyOverride {
+  _$DirectoryDeleteFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<bool> Function(DirectoryDeleteRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final DirectoryDeleteFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'directoryDeleteProvider';
+  DirectoryDeleteProvider getProviderOverride(
+    covariant DirectoryDeleteProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for deleting the [Directory] at [path].
@@ -294,7 +351,7 @@ class DirectoryDeleteProvider extends AutoDisposeFutureProvider<bool> {
         );
 
   DirectoryDeleteProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -307,7 +364,7 @@ class DirectoryDeleteProvider extends AutoDisposeFutureProvider<bool> {
 
   @override
   Override overrideWith(
-    FutureOr<bool> Function(DirectoryDeleteRef provider) create,
+    FutureOr<bool> Function(DirectoryDeleteRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -331,6 +388,20 @@ class DirectoryDeleteProvider extends AutoDisposeFutureProvider<bool> {
   @override
   AutoDisposeFutureProviderElement<bool> createElement() {
     return _DirectoryDeleteProviderElement(this);
+  }
+
+  DirectoryDeleteProvider _copyWith(
+    FutureOr<bool> Function(DirectoryDeleteRef ref) create,
+  ) {
+    return DirectoryDeleteProvider._internal(
+      (ref) => create(ref as DirectoryDeleteRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      path: path,
+    );
   }
 
   @override
@@ -378,7 +449,7 @@ const saveJsonToFileDirectoryProvider = SaveJsonToFileDirectoryFamily();
 /// Caution: Expects [object] to have a .toJson() method implemented.
 ///
 /// Copied from [saveJsonToFileDirectory].
-class SaveJsonToFileDirectoryFamily extends Family<AsyncValue<void>> {
+class SaveJsonToFileDirectoryFamily extends Family {
   /// A provider for saving [object] to [fileName].json to a file in the [folder]
   /// in the file drectory.
   ///
@@ -386,6 +457,20 @@ class SaveJsonToFileDirectoryFamily extends Family<AsyncValue<void>> {
   ///
   /// Copied from [saveJsonToFileDirectory].
   const SaveJsonToFileDirectoryFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveJsonToFileDirectoryProvider';
 
   /// A provider for saving [object] to [fileName].json to a file in the [folder]
   /// in the file drectory.
@@ -417,19 +502,27 @@ class SaveJsonToFileDirectoryFamily extends Family<AsyncValue<void>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(SaveJsonToFileDirectoryRef ref) create) {
+    return _$SaveJsonToFileDirectoryFamilyOverride(this, create);
+  }
+}
+
+class _$SaveJsonToFileDirectoryFamilyOverride implements FamilyOverride {
+  _$SaveJsonToFileDirectoryFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(SaveJsonToFileDirectoryRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final SaveJsonToFileDirectoryFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveJsonToFileDirectoryProvider';
+  SaveJsonToFileDirectoryProvider getProviderOverride(
+    covariant SaveJsonToFileDirectoryProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
@@ -471,7 +564,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
         );
 
   SaveJsonToFileDirectoryProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -488,7 +581,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveJsonToFileDirectoryRef provider) create,
+    FutureOr<void> Function(SaveJsonToFileDirectoryRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -522,6 +615,22 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
   @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveJsonToFileDirectoryProviderElement(this);
+  }
+
+  SaveJsonToFileDirectoryProvider _copyWith(
+    FutureOr<void> Function(SaveJsonToFileDirectoryRef ref) create,
+  ) {
+    return SaveJsonToFileDirectoryProvider._internal(
+      (ref) => create(ref as SaveJsonToFileDirectoryRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      object: object,
+      fileName: fileName,
+      folder: folder,
+    );
   }
 
   @override
@@ -580,12 +689,26 @@ const savedFilesProvider = SavedFilesFamily();
 /// user file directory.
 ///
 /// Copied from [savedFiles].
-class SavedFilesFamily extends Family<AsyncValue<List<dynamic>>> {
+class SavedFilesFamily extends Family {
   /// A provider for reading and holding all the saved equipment setups in the
   /// user file directory.
   ///
   /// Copied from [savedFiles].
   const SavedFilesFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'savedFilesProvider';
 
   /// A provider for reading and holding all the saved equipment setups in the
   /// user file directory.
@@ -612,19 +735,27 @@ class SavedFilesFamily extends Family<AsyncValue<List<dynamic>>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<List<dynamic>> Function(SavedFilesRef ref) create) {
+    return _$SavedFilesFamilyOverride(this, create);
+  }
+}
+
+class _$SavedFilesFamilyOverride implements FamilyOverride {
+  _$SavedFilesFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<List<dynamic>> Function(SavedFilesRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final SavedFilesFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'savedFilesProvider';
+  SavedFilesProvider getProviderOverride(
+    covariant SavedFilesProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for reading and holding all the saved equipment setups in the
@@ -659,7 +790,7 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
         );
 
   SavedFilesProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -674,7 +805,7 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
 
   @override
   Override overrideWith(
-    FutureOr<List<dynamic>> Function(SavedFilesRef provider) create,
+    FutureOr<List<dynamic>> Function(SavedFilesRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -705,6 +836,21 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
   @override
   FutureProviderElement<List<dynamic>> createElement() {
     return _SavedFilesProviderElement(this);
+  }
+
+  SavedFilesProvider _copyWith(
+    FutureOr<List<dynamic>> Function(SavedFilesRef ref) create,
+  ) {
+    return SavedFilesProvider._internal(
+      (ref) => create(ref as SavedFilesRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      fromJson: fromJson,
+      folder: folder,
+    );
   }
 
   @override

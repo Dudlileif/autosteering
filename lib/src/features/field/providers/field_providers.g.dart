@@ -6,7 +6,7 @@ part of 'field_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bufferedFieldHash() => r'e464ccb490ddf7b887c7ec2447fcc686901a3366';
+String _$bufferedFieldHash() => r'fc5a46a11891012983087d68adae337a2cc4b9cb';
 
 /// A provider for creating and updating the buffered test field.
 ///
@@ -59,13 +59,27 @@ const saveFieldProvider = SaveFieldFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveField].
-class SaveFieldFamily extends Family<AsyncValue<void>> {
+class SaveFieldFamily extends Family {
   /// A provider for saving [field] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveField].
   const SaveFieldFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveFieldProvider';
 
   /// A provider for saving [field] to a file in the user file directory.
   ///
@@ -93,19 +107,26 @@ class SaveFieldFamily extends Family<AsyncValue<void>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(AsyncValue<void> Function(SaveFieldRef ref) create) {
+    return _$SaveFieldFamilyOverride(this, create);
+  }
+}
+
+class _$SaveFieldFamilyOverride implements FamilyOverride {
+  _$SaveFieldFamilyOverride(this.overriddenFamily, this.create);
+
+  final AsyncValue<void> Function(SaveFieldRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final SaveFieldFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveFieldProvider';
+  SaveFieldProvider getProviderOverride(
+    covariant SaveFieldProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for saving [field] to a file in the user file directory.
@@ -141,7 +162,7 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
         );
 
   SaveFieldProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -156,7 +177,7 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
 
   @override
   Override overrideWith(
-    AsyncValue<void> Function(SaveFieldRef provider) create,
+    AsyncValue<void> Function(SaveFieldRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -187,6 +208,21 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
   @override
   AutoDisposeProviderElement<AsyncValue<void>> createElement() {
     return _SaveFieldProviderElement(this);
+  }
+
+  SaveFieldProvider _copyWith(
+    AsyncValue<void> Function(SaveFieldRef ref) create,
+  ) {
+    return SaveFieldProvider._internal(
+      (ref) => create(ref as SaveFieldRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      field: field,
+      overrideName: overrideName,
+    );
   }
 
   @override

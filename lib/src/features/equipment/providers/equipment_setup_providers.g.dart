@@ -43,13 +43,27 @@ const saveEquipmentSetupProvider = SaveEquipmentSetupFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveEquipmentSetup].
-class SaveEquipmentSetupFamily extends Family<AsyncValue<void>> {
+class SaveEquipmentSetupFamily extends Family {
   /// A provider for saving [setup] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveEquipmentSetup].
   const SaveEquipmentSetupFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveEquipmentSetupProvider';
 
   /// A provider for saving [setup] to a file in the user file directory.
   ///
@@ -77,19 +91,27 @@ class SaveEquipmentSetupFamily extends Family<AsyncValue<void>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      AsyncValue<void> Function(SaveEquipmentSetupRef ref) create) {
+    return _$SaveEquipmentSetupFamilyOverride(this, create);
+  }
+}
+
+class _$SaveEquipmentSetupFamilyOverride implements FamilyOverride {
+  _$SaveEquipmentSetupFamilyOverride(this.overriddenFamily, this.create);
+
+  final AsyncValue<void> Function(SaveEquipmentSetupRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final SaveEquipmentSetupFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveEquipmentSetupProvider';
+  SaveEquipmentSetupProvider getProviderOverride(
+    covariant SaveEquipmentSetupProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for saving [setup] to a file in the user file directory.
@@ -126,7 +148,7 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
         );
 
   SaveEquipmentSetupProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -141,7 +163,7 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
 
   @override
   Override overrideWith(
-    AsyncValue<void> Function(SaveEquipmentSetupRef provider) create,
+    AsyncValue<void> Function(SaveEquipmentSetupRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -172,6 +194,21 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
   @override
   AutoDisposeProviderElement<AsyncValue<void>> createElement() {
     return _SaveEquipmentSetupProviderElement(this);
+  }
+
+  SaveEquipmentSetupProvider _copyWith(
+    AsyncValue<void> Function(SaveEquipmentSetupRef ref) create,
+  ) {
+    return SaveEquipmentSetupProvider._internal(
+      (ref) => create(ref as SaveEquipmentSetupRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      setup: setup,
+      overrideName: overrideName,
+    );
   }
 
   @override

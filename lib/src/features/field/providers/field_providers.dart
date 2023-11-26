@@ -224,7 +224,7 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
     return field.copyWith(
       polygon: bufferedPolygon,
       boundingBox: bufferedPolygon.exterior != null &&
-              (bufferedPolygon.exterior?.isNotEmpty ?? false)
+              (!bufferedPolygon.exterior!.isEmptyByGeometry)
           ? GeoBox.from(bufferedPolygon.exterior!.toGeographicPositions)
           : null,
     );
