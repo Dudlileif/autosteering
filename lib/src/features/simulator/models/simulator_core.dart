@@ -434,6 +434,15 @@ class _SimulatorCoreState {
   /// The sign for which direction the vehicle is driving.
   int drivingDirectionSign = 1;
 
+  /// The velocity threshold for activating auto steering.
+  double autoSteerThresholdVelocity = 0.1;
+
+  /// The target steering angle when guidance is active.
+  double? steeringAngleTarget;
+
+  /// The target RPM for the steering motor.
+  double? motorTargetRPM;
+
   /// Whether the state changed in the last update.
   bool didChange = true;
 
@@ -551,7 +560,7 @@ class _SimulatorCoreState {
     // updates.
     else if (message is ({bool allowSimInterpolation})) {
       allowSimInterpolation = message.allowSimInterpolation;
-    } 
+    }
     // Update the IMU config of the vehicle.
     else if (message is ImuConfig) {
       vehicle?.imu.config = message;
@@ -666,17 +675,8 @@ class _SimulatorCoreState {
           autoSteerEnabled = true;
           mainThreadSendStream
               .add(LogEvent(Level.warning, 'Autosteer enabled!'));
-
-          networkSendStream?.add(
-            const Utf8Encoder()
-                .convert(jsonEncode({'autoSteerEnabled': autoSteerEnabled})),
-          );
         } else {
           autoSteerEnabled = false;
-          networkSendStream?.add(
-            const Utf8Encoder()
-                .convert(jsonEncode({'autoSteerEnabled': false})),
-          );
           mainThreadSendStream.add(
             LogEvent(
               Level.warning,
@@ -684,11 +684,8 @@ class _SimulatorCoreState {
             ),
           );
         }
-      } else {
+      } else if (autoSteerEnabled) {
         autoSteerEnabled = false;
-        networkSendStream?.add(
-          const Utf8Encoder().convert(jsonEncode({'autoSteerEnabled': false})),
-        );
         mainThreadSendStream.add(
           LogEvent(
             Level.warning,
@@ -1003,40 +1000,63 @@ class _SimulatorCoreState {
       if (!autoSteerEnabled && allowManualTrackingUpdates) {
         abTracking?.manualUpdate(vehicle!);
       }
-      if (autoSteerEnabled && !receivingManualInput) {
-        var steeringAngle = 0.0;
-        if (abTracking != null) {
+      
+      steeringAngleTarget = 0.0;
+      if (abTracking != null) {
+        checkIfPidModeIsValid(
+          abTracking!.signedPerpendicularDistanceToCurrentLine(vehicle!).abs(),
+        );
+
+        steeringAngleTarget =
+            abTracking!.nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
+      } else if (pathTracking != null) {
+        pathTracking!.tryChangeWayPoint(vehicle!);
+
+        if (enablePathTracking) {
           checkIfPidModeIsValid(
-            abTracking!
-                .signedPerpendicularDistanceToCurrentLine(vehicle!)
-                .abs(),
+            pathTracking!.perpendicularDistance(vehicle!).abs(),
           );
-
-          steeringAngle = abTracking!
+          steeringAngleTarget = pathTracking!
               .nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
-        } else if (pathTracking != null) {
-          pathTracking!.tryChangeWayPoint(vehicle!);
-
-          if (enablePathTracking) {
-            checkIfPidModeIsValid(
-              pathTracking!.perpendicularDistance(vehicle!).abs(),
-            );
-            steeringAngle = pathTracking!
-                .nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
-          }
-        }
-
-        // Only allow steering if vehicle is moving to prevent jitter that moves
-        // the vehicle when stationary.
-        if (steeringAngle == vehicle!.steeringAngleInput ||
-            vehicle!.velocity == 0) {
-          steeringChange = SimInputChange.hold;
-        } else if (steeringAngle < vehicle!.steeringAngleInput) {
-          steeringChange = SimInputChange.decrease;
-        } else if (steeringAngle > vehicle!.steeringAngleInput) {
-          steeringChange = SimInputChange.increase;
         }
       }
+
+      if (autoSteerEnabled && !receivingManualInput) {
+        // Only allow steering if vehicle is moving to prevent jitter that
+        // moves the vehicle when stationary.
+        if (steeringAngleTarget == vehicle!.steeringAngleInput ||
+            vehicle!.velocity == 0) {
+          steeringChange = SimInputChange.hold;
+        } else if (steeringAngleTarget! < vehicle!.steeringAngleInput) {
+          steeringChange = SimInputChange.decrease;
+        } else if (steeringAngleTarget! > vehicle!.steeringAngleInput) {
+          steeringChange = SimInputChange.increase;
+        }
+
+        motorTargetRPM = 0.0;
+        if (vehicle!.velocity.abs() > autoSteerThresholdVelocity &&
+            steeringAngleTarget != vehicle!.steeringAngleInput) {
+          motorTargetRPM =
+              (steeringAngleTarget! - vehicle!.steeringAngleInput) /
+                  (vehicle!.steeringAngleMax) *
+                  500;
+        }
+        networkSendStream?.add(
+          const Utf8Encoder().convert(
+            jsonEncode(
+              {
+                'motor_rpm': motorTargetRPM,
+                'enable_motor': autoSteerEnabled,
+              },
+            ),
+          ),
+        );
+      } else {
+        motorTargetRPM = null;
+      }
+      mainThreadSendStream
+        ..add((steeringAngleTarget: steeringAngleTarget))
+        ..add((motorTargetRPM: motorTargetRPM));
     }
   }
 
@@ -1299,7 +1319,9 @@ class _SimulatorCoreState {
   /// Update the simulation, i.e. simulate the next step.
   void update() {
     checkGuidance();
+
     updateVehicleVelocityAndSteering();
+
     checkTurningCircle();
     updateTime();
 

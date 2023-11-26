@@ -308,6 +308,29 @@ class MessageDecoder {
                   (wasLatestRaw: reading),
                 ]);
               }
+
+              // Motor info
+              if (data['motor_enabled'] is bool) {
+                messages.add((motorEnabled: data['motor_enabled'] as bool));
+              }
+              if (data['motor_rpm'] is double) {
+                messages.add((motorActualRPM: data['motor_rpm'] as double));
+              }
+              if (data['motor_stalled'] is bool) {
+                messages
+                  ..add((motorStalled: data['motor_stalled'] as bool))
+                  ..add(LogEvent(Level.warning, 'Motor stalled!'));
+              }
+              if (data['motor_no_command'] is bool) {
+                messages
+                  ..add((motorNoCommand: data['motor_no_command'] as bool))
+                  ..add(
+                    LogEvent(
+                      Level.warning,
+                      'Motor stopped, too long since last command!',
+                    ),
+                  );
+              }
             } catch (e) {
               messages.add(
                 LogEvent(

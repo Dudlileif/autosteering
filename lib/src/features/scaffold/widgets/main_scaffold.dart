@@ -41,6 +41,15 @@ class MainScaffold extends StatelessWidget {
             padding: EdgeInsets.all(8),
             child: HardwareStatusIcon(size: 32),
           ),
+          const Focus(
+            canRequestFocus: false,
+            descendantsAreFocusable: false,
+            descendantsAreTraversable: false,
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: MotorStatusIcon(size: 32),
+            ),
+          ),
           if (Device.isNative)
             const Focus(
               canRequestFocus: false,

@@ -46,7 +46,6 @@ class MainVehicle extends _$MainVehicle {
 }
 
 /// A provider for whether the vehicle should steer automatically.
-
 @Riverpod(keepAlive: true)
 class AutoSteerEnabled extends _$AutoSteerEnabled {
   @override
@@ -198,7 +197,6 @@ class ImuCurrentReading extends _$ImuCurrentReading {
   void update(ImuReading? value) => Future(() => state = value);
 }
 
-
 /// A provider for the frequency of the WAS updates.
 @riverpod
 class WasCurrentFrequency extends _$WasCurrentFrequency {
@@ -221,7 +219,6 @@ class WasCurrentFrequency extends _$WasCurrentFrequency {
   void update(double? value) => Future(() => state = value);
 }
 
-
 /// A provider for the current raw [WasReading] from the hardware.
 @riverpod
 class WasCurrentReading extends _$WasCurrentReading {
@@ -242,4 +239,14 @@ class WasCurrentReading extends _$WasCurrentReading {
 
   /// Updates [state] to [value].
   void update(WasReading? value) => Future(() => state = value);
+}
+
+/// A provider for the target steering angle when using guidance.
+@riverpod
+class VehicleSteeringAngleTarget extends _$VehicleSteeringAngleTarget {
+  @override
+  double? build() => null;
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
 }
