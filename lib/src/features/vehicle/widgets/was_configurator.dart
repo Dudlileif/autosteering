@@ -148,7 +148,7 @@ class WasConfigurator extends StatelessWidget {
                     final reading = ref
                         .watch(
                           mainVehicleProvider.select(
-                            (vehicle) => vehicle.was.inversionCorrectedReading,
+                            (vehicle) => vehicle.was.reading.value,
                           ),
                         )
                         .clamp(0, pow(2, config.bits) - 1);
@@ -258,7 +258,7 @@ class WasConfigurator extends StatelessWidget {
                                           center: ref.read(
                                             mainVehicleProvider.select(
                                               (value) => value.was
-                                                  .inversionCorrectedReading,
+                                                  .reading.value,
                                             ),
                                           ),
                                         ),
@@ -359,7 +359,7 @@ class WasConfigurator extends StatelessWidget {
                                           min: ref.read(
                                             mainVehicleProvider.select(
                                               (value) => value.was
-                                                  .inversionCorrectedReading,
+                                                  .reading.value,
                                             ),
                                           ),
                                         ),
@@ -462,7 +462,7 @@ class WasConfigurator extends StatelessWidget {
                                           max: ref.read(
                                             mainVehicleProvider.select(
                                               (value) => value.was
-                                                  .inversionCorrectedReading,
+                                                  .reading.value,
                                             ),
                                           ),
                                         ),
