@@ -16,6 +16,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.solidAxleToRearHitchDistance,
     super.solidAxleToRearTowbarDistance = 6,
     super.ackermannSteeringRatio,
+    super.ackermannPercentage,
     super.steeringAxleWheelDiameter,
     super.solidAxleWheelDiameter,
     super.steeringAxleWheelWidth,
@@ -71,6 +72,7 @@ final class Harvester extends AxleSteeredVehicle {
       steeringAngleMax: steering['steering_angle_max'] as double,
       invertSteeringInput: steering['invert_steering_input'] as bool,
       ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
+      ackermannPercentage: steering['ackermann_percentage'] as double? ?? 100,
       steeringAxleWheelDiameter:
           wheels['steering_axle_wheel_diameter'] as double,
       solidAxleWheelDiameter: wheels['solid_axle_wheel_diameter'] as double,
@@ -140,6 +142,7 @@ final class Harvester extends AxleSteeredVehicle {
     double? solidAxleToRearTowbarDistance,
     double? solidAxleToRearHitchDistance,
     double? ackermannSteeringRatio,
+    double? ackermannPercentage,
     double? steeringAxleWheelDiameter,
     double? solidAxleWheelDiameter,
     double? steeringAxleWheelWidth,
@@ -170,7 +173,7 @@ final class Harvester extends AxleSteeredVehicle {
         antennaHeight: antennaHeight ?? this.antennaHeight,
         antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,
-        steeringAngleMax: steeringAngleMax ?? this.steeringAngleMax,
+        steeringAngleMax: steeringAngleMax ?? _steeringAngleMaxRaw,
         trackWidth: trackWidth ?? this.trackWidth,
         wheelBase: wheelBase ?? this.wheelBase,
         solidAxleDistance: solidAxleDistance ?? this.solidAxleDistance,
@@ -182,6 +185,7 @@ final class Harvester extends AxleSteeredVehicle {
             solidAxleToRearTowbarDistance ?? this.solidAxleToRearTowbarDistance,
         ackermannSteeringRatio:
             ackermannSteeringRatio ?? this.ackermannSteeringRatio,
+        ackermannPercentage: ackermannPercentage ?? this.ackermannPercentage,
         steeringAxleWheelDiameter:
             steeringAxleWheelDiameter ?? this.steeringAxleWheelDiameter,
         solidAxleWheelDiameter:

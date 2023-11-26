@@ -12,12 +12,13 @@ sealed class AxleSteeredVehicle extends Vehicle {
     required this.solidAxleDistance,
     required super.antennaHeight,
     required super.minTurningRadius,
-    required super.steeringAngleMax,
     required super.trackWidth,
+    required super.steeringAngleMax,
     this.solidAxleToFrontHitchDistance,
     this.solidAxleToRearHitchDistance,
     this.solidAxleToRearTowbarDistance,
     this.ackermannSteeringRatio = 1,
+    this.ackermannPercentage = 100,
     this.steeringAxleWheelDiameter = 1.1,
     this.solidAxleWheelDiameter = 1.8,
     this.steeringAxleWheelWidth = 0.48,
@@ -44,7 +45,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.name,
     super.uuid,
     super.lastUsed,
-  });
+  }) : _steeringAngleMaxRaw = steeringAngleMax;
 
   /// The distance between the axles.
   @override
@@ -56,6 +57,20 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// Expected positive for front wheel steered,
   /// negative for rear wheel steered.
   double solidAxleDistance;
+
+  double _steeringAngleMaxRaw;
+
+  @override
+  set steeringAngleMax(double value) => _steeringAngleMaxRaw = value;
+
+  @override
+  double get steeringAngleMax => WheelAngleToAckermann(
+        wheelAngle: _steeringAngleMaxRaw,
+        wheelBase: wheelBase,
+        trackWidth: trackWidth,
+        steeringRatio: ackermannSteeringRatio,
+        ackermannPercentage: ackermannPercentage,
+      ).ackermannAngle.toDegrees();
 
   /// The distance to the front hitch point from the solid axle.
   double? solidAxleToFrontHitchDistance;
@@ -73,6 +88,11 @@ sealed class AxleSteeredVehicle extends Vehicle {
   ///
   /// ```ackermannAngle = steeringAngleInput / ackermannSteeringRatio```
   double ackermannSteeringRatio;
+
+  /// A modifier to adjust the outside wheel angle by
+  /// ```outsideAngle = innerAngle -
+  ///   ackermannPercentage*(innerAngle-ackermannAngle)```
+  double ackermannPercentage;
 
   /// The diameter of the steering axle wheels.
   double steeringAxleWheelDiameter;
@@ -181,16 +201,18 @@ sealed class AxleSteeredVehicle extends Vehicle {
   @override
   void setSteeringAngleByWasReading() {
     final innerWheelAngle = switch (was.readingNormalizedInRange < 0) {
-      true => (was.readingNormalizedInRange * steeringAngleMax)
-          .clamp(-steeringAngleMax, 0.0),
-      false => (was.readingNormalizedInRange * steeringAngleMax)
-          .clamp(0.0, steeringAngleMax)
+      true => (was.readingNormalizedInRange * _steeringAngleMaxRaw)
+          .clamp(-_steeringAngleMaxRaw, 0.0),
+      false => (was.readingNormalizedInRange * _steeringAngleMaxRaw)
+          .clamp(0.0, _steeringAngleMaxRaw)
     };
 
     steeringAngleInput = WheelAngleToAckermann(
       wheelAngle: innerWheelAngle,
       wheelBase: wheelBase,
       trackWidth: trackWidth,
+      steeringRatio: ackermannSteeringRatio,
+      ackermannPercentage: ackermannPercentage,
     ).ackermannAngle.toDegrees();
   }
 
@@ -200,6 +222,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
         wheelBase: wheelBase,
         trackWidth: trackWidth,
         steeringRatio: ackermannSteeringRatio,
+        ackermannPercentage: ackermannPercentage,
       );
 
   /// The angle of the left steering wheel when using Ackermann steering.
@@ -211,9 +234,11 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The max opposite steering angle for the wheel the angle sensor is
   /// mounted to. I.e. the angle to the right for a front left steering wheel.
   double get maxOppositeSteeringAngle => WheelAngleToAckermann(
-        wheelAngle: steeringAngleMax,
+        wheelAngle: _steeringAngleMaxRaw,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
+        steeringRatio: ackermannSteeringRatio,
+        ackermannPercentage: ackermannPercentage,
       ).oppositeAngle;
 
   /// The turning radius corresponding to the current [steeringAngle].
@@ -519,10 +544,11 @@ sealed class AxleSteeredVehicle extends Vehicle {
       final minTurningCircumference = 2 *
           pi *
           AckermannSteering(
-            steeringAngle: steeringAngleMax,
+            steeringAngle: _steeringAngleMaxRaw,
             wheelBase: wheelBase,
             trackWidth: trackWidth,
             steeringRatio: ackermannSteeringRatio,
+            ackermannPercentage: ackermannPercentage,
           ).turningRadius;
 
       // Clamp the number of turning revolutions so that we only display
@@ -716,7 +742,15 @@ sealed class AxleSteeredVehicle extends Vehicle {
       );
 
     map['steering'] = Map<String, dynamic>.from(map['steering'] as Map)
-      ..addAll({'ackermann_steering_ratio': ackermannSteeringRatio});
+      ..addAll({
+        'ackermann_steering_ratio': ackermannSteeringRatio,
+        'ackermann_percentage': ackermannPercentage,
+      })
+      ..update(
+        'steering_angle_max',
+        (value) => _steeringAngleMaxRaw,
+        ifAbsent: () => _steeringAngleMaxRaw,
+      );
 
     map['hitches'] = {
       'solid_axle_to_front_hitch_distance': solidAxleToFrontHitchDistance,
