@@ -20,11 +20,14 @@ WasConfig _$WasConfigFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WasConfig {
+  bool get useWas => throw _privateConstructorUsedError;
   bool get invertInput => throw _privateConstructorUsedError;
+  bool get invertMotorOutput => throw _privateConstructorUsedError;
   int get bits => throw _privateConstructorUsedError;
   int get min => throw _privateConstructorUsedError;
   int get max => throw _privateConstructorUsedError;
   int get center => throw _privateConstructorUsedError;
+  int get maxMotorRPM => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +40,15 @@ abstract class $WasConfigCopyWith<$Res> {
   factory $WasConfigCopyWith(WasConfig value, $Res Function(WasConfig) then) =
       _$WasConfigCopyWithImpl<$Res, WasConfig>;
   @useResult
-  $Res call({bool invertInput, int bits, int min, int max, int center});
+  $Res call(
+      {bool useWas,
+      bool invertInput,
+      bool invertMotorOutput,
+      int bits,
+      int min,
+      int max,
+      int center,
+      int maxMotorRPM});
 }
 
 /// @nodoc
@@ -53,16 +64,27 @@ class _$WasConfigCopyWithImpl<$Res, $Val extends WasConfig>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? useWas = null,
     Object? invertInput = null,
+    Object? invertMotorOutput = null,
     Object? bits = null,
     Object? min = null,
     Object? max = null,
     Object? center = null,
+    Object? maxMotorRPM = null,
   }) {
     return _then(_value.copyWith(
+      useWas: null == useWas
+          ? _value.useWas
+          : useWas // ignore: cast_nullable_to_non_nullable
+              as bool,
       invertInput: null == invertInput
           ? _value.invertInput
           : invertInput // ignore: cast_nullable_to_non_nullable
+              as bool,
+      invertMotorOutput: null == invertMotorOutput
+          ? _value.invertMotorOutput
+          : invertMotorOutput // ignore: cast_nullable_to_non_nullable
               as bool,
       bits: null == bits
           ? _value.bits
@@ -79,6 +101,10 @@ class _$WasConfigCopyWithImpl<$Res, $Val extends WasConfig>
       center: null == center
           ? _value.center
           : center // ignore: cast_nullable_to_non_nullable
+              as int,
+      maxMotorRPM: null == maxMotorRPM
+          ? _value.maxMotorRPM
+          : maxMotorRPM // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -92,7 +118,15 @@ abstract class _$$WasConfigImplCopyWith<$Res>
       __$$WasConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool invertInput, int bits, int min, int max, int center});
+  $Res call(
+      {bool useWas,
+      bool invertInput,
+      bool invertMotorOutput,
+      int bits,
+      int min,
+      int max,
+      int center,
+      int maxMotorRPM});
 }
 
 /// @nodoc
@@ -106,16 +140,27 @@ class __$$WasConfigImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? useWas = null,
     Object? invertInput = null,
+    Object? invertMotorOutput = null,
     Object? bits = null,
     Object? min = null,
     Object? max = null,
     Object? center = null,
+    Object? maxMotorRPM = null,
   }) {
     return _then(_$WasConfigImpl(
+      useWas: null == useWas
+          ? _value.useWas
+          : useWas // ignore: cast_nullable_to_non_nullable
+              as bool,
       invertInput: null == invertInput
           ? _value.invertInput
           : invertInput // ignore: cast_nullable_to_non_nullable
+              as bool,
+      invertMotorOutput: null == invertMotorOutput
+          ? _value.invertMotorOutput
+          : invertMotorOutput // ignore: cast_nullable_to_non_nullable
               as bool,
       bits: null == bits
           ? _value.bits
@@ -133,6 +178,10 @@ class __$$WasConfigImplCopyWithImpl<$Res>
           ? _value.center
           : center // ignore: cast_nullable_to_non_nullable
               as int,
+      maxMotorRPM: null == maxMotorRPM
+          ? _value.maxMotorRPM
+          : maxMotorRPM // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -141,18 +190,27 @@ class __$$WasConfigImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WasConfigImpl implements _WasConfig {
   const _$WasConfigImpl(
-      {this.invertInput = false,
+      {this.useWas = true,
+      this.invertInput = false,
+      this.invertMotorOutput = false,
       this.bits = 12,
       this.min = 0,
       this.max = 4095,
-      this.center = 2047});
+      this.center = 2047,
+      this.maxMotorRPM = 250});
 
   factory _$WasConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$WasConfigImplFromJson(json);
 
   @override
   @JsonKey()
+  final bool useWas;
+  @override
+  @JsonKey()
   final bool invertInput;
+  @override
+  @JsonKey()
+  final bool invertMotorOutput;
   @override
   @JsonKey()
   final int bits;
@@ -165,29 +223,37 @@ class _$WasConfigImpl implements _WasConfig {
   @override
   @JsonKey()
   final int center;
+  @override
+  @JsonKey()
+  final int maxMotorRPM;
 
   @override
   String toString() {
-    return 'WasConfig(invertInput: $invertInput, bits: $bits, min: $min, max: $max, center: $center)';
+    return 'WasConfig(useWas: $useWas, invertInput: $invertInput, invertMotorOutput: $invertMotorOutput, bits: $bits, min: $min, max: $max, center: $center, maxMotorRPM: $maxMotorRPM)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$WasConfigImpl &&
+            (identical(other.useWas, useWas) || other.useWas == useWas) &&
             (identical(other.invertInput, invertInput) ||
                 other.invertInput == invertInput) &&
+            (identical(other.invertMotorOutput, invertMotorOutput) ||
+                other.invertMotorOutput == invertMotorOutput) &&
             (identical(other.bits, bits) || other.bits == bits) &&
             (identical(other.min, min) || other.min == min) &&
             (identical(other.max, max) || other.max == max) &&
-            (identical(other.center, center) || other.center == center));
+            (identical(other.center, center) || other.center == center) &&
+            (identical(other.maxMotorRPM, maxMotorRPM) ||
+                other.maxMotorRPM == maxMotorRPM));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, invertInput, bits, min, max, center);
+  int get hashCode => Object.hash(runtimeType, useWas, invertInput,
+      invertMotorOutput, bits, min, max, center, maxMotorRPM);
 
   @JsonKey(ignore: true)
   @override
@@ -205,17 +271,24 @@ class _$WasConfigImpl implements _WasConfig {
 
 abstract class _WasConfig implements WasConfig {
   const factory _WasConfig(
-      {final bool invertInput,
+      {final bool useWas,
+      final bool invertInput,
+      final bool invertMotorOutput,
       final int bits,
       final int min,
       final int max,
-      final int center}) = _$WasConfigImpl;
+      final int center,
+      final int maxMotorRPM}) = _$WasConfigImpl;
 
   factory _WasConfig.fromJson(Map<String, dynamic> json) =
       _$WasConfigImpl.fromJson;
 
   @override
+  bool get useWas;
+  @override
   bool get invertInput;
+  @override
+  bool get invertMotorOutput;
   @override
   int get bits;
   @override
@@ -224,6 +297,8 @@ abstract class _WasConfig implements WasConfig {
   int get max;
   @override
   int get center;
+  @override
+  int get maxMotorRPM;
   @override
   @JsonKey(ignore: true)
   _$$WasConfigImplCopyWith<_$WasConfigImpl> get copyWith =>

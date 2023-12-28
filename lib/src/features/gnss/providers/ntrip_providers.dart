@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
-import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
-import 'package:agopengps_flutter/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ntrip_providers.g.dart';
@@ -52,7 +52,7 @@ class NtripHost extends _$NtripHost {
     return ref
             .read(settingsProvider.notifier)
             .getString(SettingsKey.ntripHost) ??
-        '3.143.243.81';
+        'rtk2go.com';
   }
 
   /// Updates [state] to [value].

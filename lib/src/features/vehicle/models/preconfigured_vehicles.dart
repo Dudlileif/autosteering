@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 
 /// A class with preconfigured vehicles to get some useful starting points
 /// when configuring vehicles.

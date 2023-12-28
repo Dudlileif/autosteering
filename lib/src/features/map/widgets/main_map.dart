@@ -1,8 +1,8 @@
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

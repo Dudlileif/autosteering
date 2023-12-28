@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geobase/geobase.dart';
 
@@ -13,8 +13,6 @@ part 'stanley_path_tracking/stanley_path_tracking.dart';
 
 /// An enumerator for which path tracking mode to use.
 enum PathTrackingMode {
-  /// Use a PID-controller to control the steering.
-  pid,
 
   /// Use Pure Pursuit (look ahead) to control the steering.
   purePursuit,
@@ -321,6 +319,6 @@ extension PathTrackingExtension on Vehicle {
   /// Finds the point position corresponding to the [pathTrackingMode].
   Geographic get pathTrackingPoint => switch (pathTrackingMode) {
         PathTrackingMode.purePursuit => lookAheadStartPosition,
-        PathTrackingMode.stanley || PathTrackingMode.pid => stanleyAxlePosition,
+        PathTrackingMode.stanley => stanleyAxlePosition,
       };
 }

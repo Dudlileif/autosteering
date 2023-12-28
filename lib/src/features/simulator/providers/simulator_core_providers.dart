@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
-import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/settings/settings.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
 import 'package:async/async.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

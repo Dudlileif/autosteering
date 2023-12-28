@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/gamepad/gamepad.dart';
+import 'package:autosteering/src/features/gamepad/gamepad.dart';
 import 'package:gamepads/gamepads.dart';
 
 /// A wrapping class for [GamepadEvent] for applying deadzones and a better

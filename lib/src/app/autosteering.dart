@@ -1,23 +1,23 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/scaffold/widgets/main_scaffold.dart';
-import 'package:agopengps_flutter/src/features/settings/settings.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/scaffold/widgets/main_scaffold.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The main [MaterialApp] wrapper for the whole application.
-class AgOpenGps extends ConsumerStatefulWidget {
+class Autosteering extends ConsumerStatefulWidget {
   /// The main [MaterialApp] wrapper for the whole application.
   ///
   /// Will show a [CircularProgressIndicator] during initial loading.
-  const AgOpenGps({super.key});
+  const Autosteering({super.key});
 
   @override
-  ConsumerState<AgOpenGps> createState() => _AgOpenGpsState();
+  ConsumerState<Autosteering> createState() => _AutosteeringState();
 }
 
-class _AgOpenGpsState extends ConsumerState<AgOpenGps> {
+class _AutosteeringState extends ConsumerState<Autosteering> {
   /// The initial state is loading that we later disengage.
   bool loading = true;
 

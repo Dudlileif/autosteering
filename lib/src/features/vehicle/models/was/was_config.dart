@@ -8,11 +8,14 @@ part 'was_config.g.dart';
 class WasConfig with _$WasConfig {
   /// A configuration for the Wheel Angle Sensor of a vehicle.
   const factory WasConfig({
+    @Default(true) bool useWas,
     @Default(false) bool invertInput,
+    @Default(false) bool invertMotorOutput,
     @Default(12) int bits,
     @Default(0) int min,
     @Default(4095) int max,
     @Default(2047) int center,
+    @Default(250) int maxMotorRPM,
   }) = _WasConfig;
 
   /// Creates a [WasConfig] from the [json] object.

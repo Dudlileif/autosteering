@@ -2,9 +2,9 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
@@ -111,10 +111,6 @@ abstract class ABTracking {
   /// Whether the upcoming turn should be the opposite direction to the usual
   /// direction.
   bool offsetOppositeTurn = false;
-
-  /// The PID controller for controlling the steering angle when
-  /// using [PathTrackingMode.pid].
-  final pidController = PidController();
 
   /// Whether the vehicle has passed the middle point of the line in the
   /// driving direction.
@@ -1049,19 +1045,7 @@ abstract class ABTracking {
     );
   }
 
-  /// Calculates the steering angle needed to reach the target point when
-  /// using a PID controller.
-  double nextSteeringAnglePid(Vehicle vehicle) {
-    final steeringAngle = pidController.nextValue(
-      signedPerpendicularDistanceToCurrentLine(vehicle),
-      vehicle.pidParameters,
-    );
 
-    return steeringAngle.clamp(
-      -vehicle.steeringAngleMax,
-      vehicle.steeringAngleMax,
-    );
-  }
 
   /// The next steering angle for chasing the line.
   ///
@@ -1073,7 +1057,6 @@ abstract class ABTracking {
       return activeTurn!.nextSteeringAngle(vehicle, mode: mode);
     }
     return switch (mode ?? vehicle.pathTrackingMode) {
-      PathTrackingMode.pid => nextSteeringAnglePid(vehicle),
       PathTrackingMode.purePursuit => nextSteeringAngleLookAhead(vehicle),
       PathTrackingMode.stanley => nextSteeringAngleStanley(vehicle),
     };

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:universal_io/io.dart';
 
 /// A client for receiving NTRIP messages from an NTRIP caster.

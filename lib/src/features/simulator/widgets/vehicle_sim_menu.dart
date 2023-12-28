@@ -1,6 +1,6 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

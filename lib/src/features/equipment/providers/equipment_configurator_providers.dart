@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

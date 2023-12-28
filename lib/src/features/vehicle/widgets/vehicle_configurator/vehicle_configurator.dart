@@ -1,12 +1,12 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_antenna_page.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_dimensions_page.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_hitches_page.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_steering_page.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_type_selector_page.dart';
-import 'package:agopengps_flutter/src/features/vehicle/widgets/vehicle_configurator/vehicle_wheels_page.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_antenna_page.dart';
+import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_dimensions_page.dart';
+import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_hitches_page.dart';
+import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_steering_page.dart';
+import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_type_selector_page.dart';
+import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_wheels_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

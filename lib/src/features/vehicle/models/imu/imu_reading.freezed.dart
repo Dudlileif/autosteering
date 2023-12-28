@@ -181,7 +181,7 @@ class _$ImuReadingImpl implements _ImuReading {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ImuReadingImpl &&

@@ -1,4 +1,4 @@
-package com.dudlileif.agopengps_flutter
+package com.dudlileif.autosteering
 
 import io.flutter.embedding.android.FlutterActivity
 

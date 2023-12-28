@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:logger/logger.dart' as implementation;
 import 'package:riverpod_annotation/riverpod_annotation.dart';

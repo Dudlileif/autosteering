@@ -1,7 +1,7 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
-import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'combined_communication_providers.g.dart';

@@ -1,6 +1,6 @@
 {
-    "name": "agopengps_flutter",
-    "short_name": "agopengps_flutter",
+    "name": "Autosteering",
+    "short_name": "Autosteering",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

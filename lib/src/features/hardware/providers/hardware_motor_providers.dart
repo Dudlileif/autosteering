@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hardware_motor_providers.g.dart';
@@ -68,4 +69,108 @@ class SteeringMotorStatus extends _$SteeringMotorStatus {
     }
     Future(() => state = value);
   }
+}
+
+/// A provider for the steering motor Stallguard reading.
+@riverpod
+class SteeringMotorCurrentScale extends _$SteeringMotorCurrentScale {
+  Timer? _resetTimer;
+
+  @override
+  int? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 5000),
+        ref.invalidateSelf,
+      );
+    });
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(int? value) => Future(() => state = value);
+}
+
+/// A provider for the steering motor Stallguard reading.
+@riverpod
+class SteeringMotorStallguard extends _$SteeringMotorStallguard {
+  Timer? _resetTimer;
+
+  @override
+  int? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 5000),
+        ref.invalidateSelf,
+      );
+    });
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(int? value) => Future(() => state = value);
+}
+
+/// A provider whether the steering motor should be in calibration mode.
+@Riverpod(keepAlive: true)
+class SteeringMotorEnableCalibration extends _$SteeringMotorEnableCalibration {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != next) {
+        ref
+            .read(simInputProvider.notifier)
+            .send((enableMotorCalibration: next));
+      }
+    });
+    return false;
+  }
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
+
+/// A provider for the current rotational position of the steering motor.
+@riverpod
+class SteeringMotorRotation extends _$SteeringMotorRotation {
+  Timer? _resetTimer;
+
+  @override
+  double? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 5000),
+        ref.invalidateSelf,
+      );
+    });
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for target rotational position of the steering motor,
+/// only used in calibration mode.
+@riverpod
+class SteeringMotorTargetRotation extends _$SteeringMotorTargetRotation {
+  Timer? _resetTimer;
+
+  @override
+  double? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 5000),
+        ref.invalidateSelf,
+      );
+    });
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
 }

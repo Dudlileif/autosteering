@@ -1,7 +1,7 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +13,7 @@ class VehicleMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
       text: 'Vehicle',
       icon: Icons.agriculture,
@@ -116,13 +117,16 @@ class _LoadVehicleMenu extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
       text: 'Load',
       icon: Icons.history,
       menuChildren: vehicles
           .map(
             (vehicle) => MenuItemButton(
-              child: Text(vehicle.name ?? vehicle.uuid),
+              closeOnActivate: false,
+              child: Text(vehicle.name ?? vehicle.uuid, style: textStyle),
               onPressed: () {
                 final position = ref.watch(
                   mainVehicleProvider.select((value) => value.position),

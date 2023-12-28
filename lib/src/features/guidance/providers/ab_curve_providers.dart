@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/field/field.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/field/field.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

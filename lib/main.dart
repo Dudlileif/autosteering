@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:agopengps_flutter/src/app/agopengps.dart';
-import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:autosteering/src/app/autosteering.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,7 +44,7 @@ Future<void> main() async {
   }
 
   if (Device.isWeb) {
-    await FastCachedImageConfig.init(subDir: 'AgOpenGPS_flutter/image_cache/');
+    await FastCachedImageConfig.init(subDir: 'autosteering/image_cache/');
     Logger.instance.i('Configured CachedImage directory');
   }
 
@@ -55,7 +55,7 @@ Future<void> main() async {
 
   runApp(
     const ProviderScope(
-      child: AgOpenGps(),
+      child: Autosteering(),
     ),
   );
 }

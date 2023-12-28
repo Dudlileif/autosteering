@@ -41,7 +41,7 @@ final ntripEnabledProvider = NotifierProvider<NtripEnabled, bool>.internal(
 );
 
 typedef _$NtripEnabled = Notifier<bool>;
-String _$ntripHostHash() => r'fcd36a33b8ab6214d5de1ede4d8e4ce6a34829c1';
+String _$ntripHostHash() => r'ac1883525d3e5d2a90987ce8973b9506cd405128';
 
 /// A provider for the NTRIP caster host address.
 ///

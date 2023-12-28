@@ -1,5 +1,5 @@
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:equatable/equatable.dart';
 
 /// A class that contains a setup for attached [Equipment]s that

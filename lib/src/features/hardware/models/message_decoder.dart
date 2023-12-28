@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:nmea/nmea.dart';
@@ -266,6 +266,7 @@ class MessageDecoder {
       final strings = rawStrings(data);
 
       for (final str in strings.where((element) => element.isNotEmpty)) {
+
         if (str.startsWith('{')) {
           if (str.contains('}')) {
             try {
@@ -330,6 +331,19 @@ class MessageDecoder {
                       'Motor stopped, too long since last command!',
                     ),
                   );
+              }
+              if (data['motor_cs'] is int) {
+                messages.add((motorCurrentScale: data['motor_pos'] as int));
+              }
+              if (data['motor_sg'] is double) {
+                messages.add((motorStallguard: data['motor_sg'] as int));
+              }
+              if (data['motor_pos'] is double) {
+                messages.add((motorRotation: data['motor_pos'] as double));
+              }
+              if (data['motor_target'] is double) {
+                messages
+                    .add((motorTargetRotation: data['motor_target'] as double));
               }
             } catch (e) {
               messages.add(

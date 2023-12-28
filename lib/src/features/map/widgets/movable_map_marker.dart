@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geobase/geobase.dart' hide Point;

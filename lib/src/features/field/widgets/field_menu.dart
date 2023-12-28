@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/field/field.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/field/field.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
@@ -32,12 +32,13 @@ class FieldMenu extends ConsumerWidget {
       menuChildren: [
         if (activeField != null)
           MenuItemButton(
+            closeOnActivate: false,
             leadingIcon: const Padding(
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.clear),
             ),
             onPressed: () => ref.invalidate(activeFieldProvider),
-            child: const Text('Close'),
+            child: Text('Close', style: textStyle),
           ),
         if (activeField == null) ...[
           const _LoadFieldMenu(),
@@ -397,13 +398,15 @@ class _LoadFieldMenu extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
       text: 'Load',
       icon: Icons.history,
       menuChildren: fields
           .map(
             (field) => MenuItemButton(
-              child: Text(field.name),
+              closeOnActivate: false,
               onPressed: () {
                 field.lastUsed = DateTime.now();
 
@@ -411,6 +414,7 @@ class _LoadFieldMenu extends ConsumerWidget {
 
                 ref.read(saveFieldProvider(field));
               },
+              child: Text(field.name, style: textStyle),
             ),
           )
           .toList(),
@@ -425,6 +429,8 @@ class _CreateFieldButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     final recording = ref.watch(enablePathRecorderProvider);
 
     if (recording) {
@@ -520,7 +526,10 @@ class _CreateFieldButton extends ConsumerWidget {
             ),
           );
         },
-        child: const Text('Recording, tap to finish'),
+        child: Text(
+          'Recording, tap to finish',
+          style: textStyle,
+        ),
       );
     }
 
@@ -533,7 +542,7 @@ class _CreateFieldButton extends ConsumerWidget {
       ),
       child: Text(
         'Create field from recording',
-        style: Theme.of(context).menuButtonWithChildrenText,
+        style: textStyle,
       ),
       onPressed: () {
         ref.read(enablePathRecorderProvider.notifier).update(value: true);

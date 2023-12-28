@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/simulator/providers/providers.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/simulator/providers/providers.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,6 +42,81 @@ class WasConfigurator extends StatelessWidget {
           ),
           body: ListView(
             children: [
+              // Use WAS
+              Consumer(
+                child: Text(
+                  'Use WAS',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                builder: (context, ref, child) => CheckboxListTile(
+                  value: ref.watch(
+                    mainVehicleProvider.select(
+                      (vehicle) => vehicle.was.config.useWas,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(simInputProvider.notifier).send(
+                            ref
+                                .read(
+                                  mainVehicleProvider
+                                      .select((value) => value.was.config),
+                                )
+                                .copyWith(useWas: value),
+                          );
+
+                      // Wait a short while before saving the hopefully
+                      // updated vehicle.
+                      Future.delayed(const Duration(milliseconds: 100), () {
+                        final vehicle = ref.watch(mainVehicleProvider);
+                        ref.read(saveVehicleProvider(vehicle));
+                        Logger.instance.i(
+                          '''Updated vehicle WAS config use WAS: ${!value} -> ${vehicle.was.config.useWas}''',
+                        );
+                      });
+                    }
+                  },
+                  secondary: child,
+                ),
+              ),
+              // Invert motor output
+              Consumer(
+                child: Text(
+                  'Invert motor output',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                builder: (context, ref, child) => CheckboxListTile(
+                  value: ref.watch(
+                    mainVehicleProvider.select(
+                      (vehicle) => vehicle.was.config.invertMotorOutput,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(simInputProvider.notifier).send(
+                            ref
+                                .read(
+                                  mainVehicleProvider
+                                      .select((value) => value.was.config),
+                                )
+                                .copyWith(invertMotorOutput: value),
+                          );
+
+                      // Wait a short while before saving the hopefully
+                      // updated vehicle.
+                      Future.delayed(const Duration(milliseconds: 100), () {
+                        final vehicle = ref.watch(mainVehicleProvider);
+                        ref.read(saveVehicleProvider(vehicle));
+                        Logger.instance.i(
+                          '''Updated vehicle WAS config invert motor output: ${!value} -> ${vehicle.was.config.invertMotorOutput}''',
+                        );
+                      });
+                    }
+                  },
+                  secondary: child,
+                ),
+              ),
+              // Invert sensor
               Consumer(
                 child: Text(
                   'Invert sensor input',
@@ -77,6 +152,7 @@ class WasConfigurator extends StatelessWidget {
                   secondary: child,
                 ),
               ),
+              // Bits
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Consumer(
@@ -137,6 +213,7 @@ class WasConfigurator extends StatelessWidget {
                   },
                 ),
               ),
+              // Sensor discrete reading
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Consumer(
@@ -181,6 +258,7 @@ class WasConfigurator extends StatelessWidget {
                   },
                 ),
               ),
+              // Sensor normalized reading
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Consumer(
@@ -208,6 +286,7 @@ class WasConfigurator extends StatelessWidget {
                   },
                 ),
               ),
+              // Range center
               Consumer(
                 builder: (context, ref, child) {
                   final config = ref.watch(
@@ -312,6 +391,7 @@ class WasConfigurator extends StatelessWidget {
                   );
                 },
               ),
+              // Range min
               Consumer(
                 builder: (context, ref, child) {
                   final config = ref.watch(
@@ -413,6 +493,7 @@ class WasConfigurator extends StatelessWidget {
                   );
                 },
               ),
+              // Range max
               Consumer(
                 builder: (context, ref, child) {
                   final config = ref.watch(
@@ -516,6 +597,7 @@ class WasConfigurator extends StatelessWidget {
                   );
                 },
               ),
+              // Raw data
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Consumer(

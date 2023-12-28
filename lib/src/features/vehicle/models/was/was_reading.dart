@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'was_reading.freezed.dart';

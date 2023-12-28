@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/field/field.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/field/field.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

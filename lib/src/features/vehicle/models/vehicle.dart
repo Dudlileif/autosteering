@@ -1,11 +1,11 @@
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
@@ -183,6 +183,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// articulated tractor.
   double steeringAngleInput;
 
+  /// A PID steering controller for use with autosteering.
+  PidController pidController = PidController();
+
   /// Whether the [steeringAngleInput] should be inverted.
   bool invertSteeringInput;
 
@@ -348,8 +351,10 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Sets the steering angle of the vehicle by the [was].reading.
   void setSteeringAngleByWasReading() {
-    steeringAngleInput = (was.readingNormalizedInRange * steeringAngleMax)
-        .clamp(-steeringAngleMax, steeringAngleMax);
+    if (was.config.useWas) {
+      steeringAngleInput = (was.readingNormalizedInRange * steeringAngleMax)
+          .clamp(-steeringAngleMax, steeringAngleMax);
+    }
   }
 
   /// The distance between the wheel axles.
@@ -468,6 +473,21 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         distance: velocity * period,
         bearing: bearing,
       );
+
+  /// Calculates the next steering angle to reach [targetSteeringAngle] from
+  /// [steeringAngleInput] by using the [pidController].
+  ///
+  /// [integralSize] is how many steps the integral should take into account.
+  double nextSteeringAnglePid(
+    double targetSteeringAngle, {
+    double integralSize = 1000,
+  }) {
+    return pidController.nextValue(
+      targetSteeringAngle - steeringAngleInput,
+      pidParameters,
+      integralSize: integralSize,
+    );
+  }
 
   /// The predicted look ahead axle position and bearing when continuing the
   /// vehicle's movement with [steeringAngle] for a time [period] in seconds.

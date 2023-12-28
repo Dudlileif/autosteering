@@ -1,5 +1,5 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,7 +28,7 @@ class OSMLayer extends ConsumerWidget {
                 ref: ref,
               )
           },
-          userAgentPackageName: 'agopengps_flutter',
+          userAgentPackageName: 'autosteering',
           maxZoom: 22,
         ),
       );

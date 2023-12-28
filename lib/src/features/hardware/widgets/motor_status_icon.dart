@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -82,6 +82,26 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
     final actualRPM = ref.watch(steeringMotorActualRPMProvider);
     if (actualRPM != null) {
       textLines.add('Actual RPM: ${actualRPM.toStringAsFixed(1)}');
+    }
+
+    final currentScaleValue = ref.watch(steeringMotorCurrentScaleProvider);
+    if (currentScaleValue != null) {
+      textLines.add('CS: $currentScaleValue');
+    }
+
+    final stallguardValue = ref.watch(steeringMotorStallguardProvider);
+    if (stallguardValue != null) {
+      textLines.add('Stallguard: $stallguardValue');
+    }
+
+    final calibrationTarget = ref.watch(steeringMotorTargetRotationProvider);
+    if (calibrationTarget != null) {
+      textLines.add('Target: $calibrationTarget');
+    }
+
+    final rotation = ref.watch(steeringMotorRotationProvider);
+    if (rotation != null) {
+      textLines.add('Rotation: $rotation');
     }
 
     return textLines.join('\n');

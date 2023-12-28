@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "agopengps_flutter",
+            "name": "autosteering",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "agopengps_flutter (profile mode)",
+            "name": "autosteering (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "agopengps_flutter (release mode)",
+            "name": "autosteering (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

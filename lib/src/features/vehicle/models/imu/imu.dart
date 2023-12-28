@@ -1,5 +1,5 @@
-import 'package:agopengps_flutter/src/features/vehicle/models/imu/imu_config.dart';
-import 'package:agopengps_flutter/src/features/vehicle/models/imu/imu_reading.dart';
+import 'package:autosteering/src/features/vehicle/models/imu/imu_config.dart';
+import 'package:autosteering/src/features/vehicle/models/imu/imu_reading.dart';
 import 'package:geobase/geobase.dart';
 
 export 'imu_config.dart';

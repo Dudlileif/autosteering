@@ -46,7 +46,7 @@ final pathInterpolationDistanceProvider =
 
 typedef _$PathInterpolationDistance = Notifier<double>;
 String _$configuredPathTrackingHash() =>
-    r'e5ab0aadda82fe9b08349f141304de69e048a9c2';
+    r'8876f25e4563aa652268516ee9c5f05f10bb58b4';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.
@@ -105,7 +105,7 @@ final pathTrackingLoopProvider =
 
 typedef _$PathTrackingLoop = Notifier<PathTrackingLoopMode>;
 String _$displayPathTrackingHash() =>
-    r'702008a43c19219bd6ab7e5910fec0f670001753';
+    r'440a5082ac278976f00104bd84d764d94b43f785';
 
 /// A provider for the activated [ConfiguredPathTracking] model, typically
 /// recieved and updated from the simulator.
@@ -113,7 +113,7 @@ String _$displayPathTrackingHash() =>
 /// Copied from [DisplayPathTracking].
 @ProviderFor(DisplayPathTracking)
 final displayPathTrackingProvider =
-    AutoDisposeNotifierProvider<DisplayPathTracking, PathTracking?>.internal(
+    NotifierProvider<DisplayPathTracking, PathTracking?>.internal(
   DisplayPathTracking.new,
   name: r'displayPathTrackingProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -123,7 +123,7 @@ final displayPathTrackingProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DisplayPathTracking = AutoDisposeNotifier<PathTracking?>;
+typedef _$DisplayPathTracking = Notifier<PathTracking?>;
 String _$debugPathTrackingHash() => r'db41c00fa0d4a921e7251aea9fce8d341463b4c9';
 
 /// A provider for whether or not the path tracking debugging features should

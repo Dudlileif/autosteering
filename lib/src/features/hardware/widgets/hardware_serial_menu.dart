@@ -1,5 +1,6 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/theme/utils/menu_button_text_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,6 +11,8 @@ class HardwareSerialMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
       text: 'USB / Serial',
       iconOverrideWidget: Consumer(
@@ -32,6 +35,7 @@ class HardwareSerialMenu extends StatelessWidget {
               hardwareSerialProvider.select((value) => value != null),
             )) {
               return MenuItemButton(
+                closeOnActivate: false,
                 leadingIcon: const Icon(Icons.clear),
                 onPressed: () => ref.invalidate(hardwareSerialProvider),
                 child: const Text('Close'),
@@ -48,6 +52,7 @@ class HardwareSerialMenu extends StatelessWidget {
                 .watch(availableSerialPortsProvider)
                 .map(
                   (port) => MenuItemButton(
+                    closeOnActivate: false,
                     onPressed: port.isOpen
                         ? null
                         : () => ref
@@ -55,6 +60,7 @@ class HardwareSerialMenu extends StatelessWidget {
                             .update(port),
                     child: Text(
                       '${port.name ?? port.address}: ${port.manufacturer}',
+                      style: textStyle,
                     ),
                   ),
                 )
@@ -63,19 +69,21 @@ class HardwareSerialMenu extends StatelessWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final activeRate = ref.watch(hardwareSerialBaudRateProvider);
+            final activeBaudRate = ref.watch(hardwareSerialBaudRateProvider);
+            
             return MenuButtonWithChildren(
               icon: Icons.speed,
               text: 'Baud rate',
               menuChildren: HardwareSerialBaudRate.rates
                   .map(
-                    (rate) => MenuItemButton(
-                      onPressed: activeRate == rate
+                    (baudRate) => MenuItemButton(
+                      closeOnActivate: false,
+                      onPressed: activeBaudRate == baudRate
                           ? null
                           : () => ref
                               .read(hardwareSerialBaudRateProvider.notifier)
-                              .update(rate),
-                      child: Text('$rate'),
+                              .update(baudRate),
+                      child: Text('$baudRate', style: textStyle),
                     ),
                   )
                   .toList(),

@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:geobase/geobase.dart' show Geographic;
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

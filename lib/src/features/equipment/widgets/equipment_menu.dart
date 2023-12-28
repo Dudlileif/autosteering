@@ -1,9 +1,9 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,7 +27,7 @@ class EquipmentMenu extends StatelessWidget {
             padding: EdgeInsets.only(left: 8),
             child: Icon(Icons.settings),
           ),
-          child: const Text('Configure'),
+          child: Text('Configure', style: textStyle),
           onPressed: () => showDialog<void>(
             context: context,
             builder: (context) => const EquipmentConfigurator(),
@@ -76,13 +76,19 @@ class _SaveEquipmentSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return Consumer(
-      child: const Text('Save setup'),
+      child: Text(
+        'Save setup',
+        style: textStyle,
+      ),
       builder: (context, ref, child) {
         if (ref.watch(
           mainVehicleProvider.select((value) => value.numAttachedChildren > 1),
         )) {
           return MenuItemButton(
+            closeOnActivate: false,
             leadingIcon: const Padding(
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.save),
@@ -171,13 +177,14 @@ class _LoadEquipmentMenu extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
       text: 'Load',
       icon: Icons.history,
       menuChildren: equipments
           .map(
             (equipment) => MenuItemButton(
-              child: Text(equipment.name ?? equipment.uuid),
               onPressed: () {
                 equipment.lastUsed = DateTime.now();
 
@@ -189,6 +196,8 @@ class _LoadEquipmentMenu extends ConsumerWidget {
                   ..read(saveEquipmentProvider(equipment))
                   ..invalidate(configuredEquipmentNameTextControllerProvider);
               },
+              closeOnActivate: false,
+              child: Text(equipment.name ?? equipment.uuid, style: textStyle),
             ),
           )
           .toList(),
@@ -213,13 +222,15 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
       text: 'Load setup',
       icon: Icons.history,
       menuChildren: setups
           .map(
             (setup) => MenuItemButton(
-              child: Text(setup.name),
+              closeOnActivate: false,
               onPressed: () {
                 setup.lastUsed = DateTime.now();
 
@@ -228,6 +239,7 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
                     .read(configuredEquipmentSetupProvider.notifier)
                     .update(setup);
               },
+              child: Text(setup.name, style: textStyle),
             ),
           )
           .toList(),
@@ -291,11 +303,11 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
       (parent.name ?? parent.uuid),
     ].join('\n');
 
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     if (parent.hitchPoints.isEmpty) {
       return MenuItemButton(
-        child: Text(
-          text,
-        ),
+        child: Text(text, style: textStyle),
       );
     }
 
@@ -318,7 +330,8 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
                       ),
                     )
                 : null,
-            child: const Text('Front fixed'),
+            closeOnActivate: false,
+            child: Text('Front fixed', style: textStyle),
           ),
         if (parent.hitchRearFixedChild != null)
           _RecursiveAttachEquipmentMenu(
@@ -336,7 +349,8 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
                       ),
                     )
                 : null,
-            child: const Text('Rear fixed'),
+            closeOnActivate: false,
+            child: Text('Rear fixed', style: textStyle),
           ),
         if (parent.hitchRearTowbarChild != null)
           _RecursiveAttachEquipmentMenu(
@@ -354,7 +368,8 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
                       ),
                     )
                 : null,
-            child: const Text('Tow bar'),
+            closeOnActivate: false,
+            child: Text('Tow bar', style: textStyle),
           ),
       ],
     );
@@ -415,22 +430,23 @@ class _RecursiveAttachEquipmentSetupMenu extends ConsumerWidget {
       (parent.name ?? parent.uuid),
     ].join('\n');
 
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     if (parent.hitchPoints.isEmpty) {
       return MenuItemButton(
-        child: Text(
-          text,
-        ),
+        child: Text(text, style: textStyle),
       );
     }
 
     if (parent.hitchPoints.isNotEmpty && parent.hitchChildren.isEmpty) {
       return MenuItemButton(
-        child: Text(text),
+        closeOnActivate: false,
         onPressed: () {
           ref
               .read(simInputProvider.notifier)
               .send((equipmentSetup: setup, parentUuid: parent.uuid));
         },
+        child: Text(text, style: textStyle),
       );
     }
 
@@ -478,12 +494,16 @@ class _DetachMenu extends ConsumerWidget {
       icon: Icons.commit,
       menuChildren: [
         MenuItemButton(
-          child: const Text('Detach all'),
+          closeOnActivate: false,
           onPressed: () => ref.read(simInputProvider.notifier).send(
             (
               detachAllFromUuid:
                   ref.read(mainVehicleProvider.select((value) => value.uuid))
             ),
+          ),
+          child: Text(
+            'Detach all',
+            style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
         _RecursiveDetachMenu(parent: ref.watch(mainVehicleProvider)),
@@ -509,9 +529,11 @@ class _RecursiveDetachMenu extends ConsumerWidget {
       (parent.name ?? parent.uuid),
     ].join('\n');
 
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     if (parent.hitchChildren.isEmpty && parent is! Vehicle) {
       return MenuItemButton(
-        child: Text(text),
+        child: Text(text, style: textStyle),
         onPressed: () =>
             ref.read(simInputProvider.notifier).send((detachUuid: parent.uuid)),
       );

@@ -1,5 +1,5 @@
-import 'package:agopengps_flutter/src/features/vehicle/models/was/was_config.dart';
-import 'package:agopengps_flutter/src/features/vehicle/models/was/was_reading.dart';
+import 'package:autosteering/src/features/vehicle/models/was/was_config.dart';
+import 'package:autosteering/src/features/vehicle/models/was/was_reading.dart';
 
 export 'was_config.dart';
 export 'was_reading.dart';

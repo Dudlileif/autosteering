@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:developer' as dev;
 import 'dart:math';
 
-import 'package:agopengps_flutter/src/features/gamepad/gamepad.dart';
-import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/gamepad/gamepad.dart';
+import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

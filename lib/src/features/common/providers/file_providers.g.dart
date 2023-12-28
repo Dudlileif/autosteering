@@ -6,7 +6,7 @@ part of 'file_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fileDirectoryHash() => r'9ce8299dcaa4fd7e00474b3e0a7ec6a9ade1025f';
+String _$fileDirectoryHash() => r'e6a3328b4716ad17d353e807dafbdc48ff31f5f1';
 
 /// A provider for the main user file directory for the application.
 ///

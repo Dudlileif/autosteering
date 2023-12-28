@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

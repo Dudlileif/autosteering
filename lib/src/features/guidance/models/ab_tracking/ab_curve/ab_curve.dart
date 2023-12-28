@@ -1,8 +1,8 @@
 import 'dart:collection';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 
@@ -249,8 +249,7 @@ class ABCurve extends ABTracking {
   void updateCurrentPathTracking(Vehicle vehicle, {bool force = false}) {
     final pathTrackingIsCorrectMode = switch (vehicle.pathTrackingMode) {
       PathTrackingMode.stanley => currentPathTracking is StanleyPathTracking,
-      PathTrackingMode.purePursuit ||
-      PathTrackingMode.pid =>
+      PathTrackingMode.purePursuit =>
         currentPathTracking is PurePursuitPathTracking
     };
 
@@ -262,8 +261,7 @@ class ABCurve extends ABTracking {
 
     currentPathTracking = switch (vehicle.pathTrackingMode) {
       PathTrackingMode.stanley => StanleyPathTracking(wayPoints: currentLine),
-      PathTrackingMode.purePursuit ||
-      PathTrackingMode.pid =>
+      PathTrackingMode.purePursuit =>
         PurePursuitPathTracking(wayPoints: currentLine),
     }
       ..setIndexToClosestPoint(vehicle);
@@ -274,8 +272,7 @@ class ABCurve extends ABTracking {
     } else {
       nextPathTracking = switch (vehicle.pathTrackingMode) {
         PathTrackingMode.stanley => StanleyPathTracking(wayPoints: nextLine),
-        PathTrackingMode.purePursuit ||
-        PathTrackingMode.pid =>
+        PathTrackingMode.purePursuit =>
           PurePursuitPathTracking(wayPoints: nextLine),
       }
         ..cumulativeIndex = switch (vehicle.isReversing) {
@@ -285,8 +282,7 @@ class ABCurve extends ABTracking {
     }
     baseLinePathTracking = switch (vehicle.pathTrackingMode) {
       PathTrackingMode.stanley => StanleyPathTracking(wayPoints: baseLine),
-      PathTrackingMode.purePursuit ||
-      PathTrackingMode.pid =>
+      PathTrackingMode.purePursuit =>
         PurePursuitPathTracking(wayPoints: baseLine),
     }
       ..setIndexToClosestPoint(vehicle);
@@ -464,8 +460,7 @@ class ABCurve extends ABTracking {
         };
 
         final turn = switch (vehicle.pathTrackingMode) {
-          PathTrackingMode.purePursuit ||
-          PathTrackingMode.pid =>
+          PathTrackingMode.purePursuit =>
             PurePursuitPathTracking(wayPoints: turnPath),
           PathTrackingMode.stanley => StanleyPathTracking(wayPoints: turnPath),
         };
@@ -534,24 +529,12 @@ class ABCurve extends ABTracking {
   }
 
   @override
-  double nextSteeringAnglePid(Vehicle vehicle) {
-    final pathTracking = currentPathTracking;
-    if (pathTracking is PurePursuitPathTracking) {
-      return pathTracking.nextSteeringAngle(
-        vehicle,
-        mode: PathTrackingMode.pid,
-      );
-    }
-    return super.nextSteeringAnglePid(vehicle);
-  }
-
-  @override
   double nextSteeringAngleStanley(Vehicle vehicle) {
     final pathTracking = currentPathTracking;
     if (pathTracking is StanleyPathTracking) {
       return pathTracking.nextSteeringAngle(vehicle);
     }
-    return super.nextSteeringAnglePid(vehicle);
+    return super.nextSteeringAngleLookAhead(vehicle);
   }
 
   @override

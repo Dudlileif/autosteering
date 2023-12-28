@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:nmea/nmea.dart';
 
 /// An abstract implementation class for an interface to interchangeably use the

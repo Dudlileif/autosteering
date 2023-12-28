@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:agopengps_flutter/src/features/guidance/providers/virtual_led_bar_providers.dart';
-import 'package:agopengps_flutter/src/features/guidance/widgets/virtual_led_bar/virtual_led.dart';
+import 'package:autosteering/src/features/guidance/providers/virtual_led_bar_providers.dart';
+import 'package:autosteering/src/features/guidance/widgets/virtual_led_bar/virtual_led.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

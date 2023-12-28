@@ -1,4 +1,4 @@
-# AgOpenGps - Flutter port
+# Autosteering - Built with Flutter
 
 ## Implemented functionality
 
@@ -42,8 +42,10 @@
 
 ## To be implemented
 
-- Better performance, <s>the current immutable/copyWith implementation might be
-    too taxing</s> improved with mutable vehicle/equipments, reduce conversion steps with latlng/xy-coordinates (change algorithms to xy-coords)
+- Better performance,
+  - ~~Immutable/copyWith vehicle/equipment implementation is too taxing~~ improved with mutable vehicle/equipments
+  - Maybe reduce conversion steps with latlng/xy-coordinates (change algorithms to xy-coords)
+  - Look into `canvas.drawVertices` for drawing the worked equipment paths
 
 - Improved vehicle simulation, though good enough for testing features now
 

@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.dudlileif" "\0"
-            VALUE "FileDescription", "agopengps_flutter" "\0"
+            VALUE "FileDescription", "autosteering" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "agopengps_flutter" "\0"
+            VALUE "InternalName", "com.dudlileif.autosteering" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.dudlileif. All rights reserved." "\0"
-            VALUE "OriginalFilename", "agopengps_flutter.exe" "\0"
-            VALUE "ProductName", "agopengps_flutter" "\0"
+            VALUE "OriginalFilename", "autosteering.exe" "\0"
+            VALUE "ProductName", "autosteering" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
