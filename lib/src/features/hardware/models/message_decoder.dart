@@ -333,9 +333,9 @@ class MessageDecoder {
                   );
               }
               if (data['motor_cs'] is int) {
-                messages.add((motorCurrentScale: data['motor_pos'] as int));
+                messages.add((motorCurrentScale: data['motor_cs'] as int));
               }
-              if (data['motor_sg'] is double) {
+              if (data['motor_sg'] is int) {
                 messages.add((motorStallguard: data['motor_sg'] as int));
               }
               if (data['motor_pos'] is double) {

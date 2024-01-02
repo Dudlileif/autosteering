@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'6bf9bd6eeeea17453b91f5f7c369b64b8f9cb469';
+String _$ntripClientHash() => r'b7920d16b0e90d317e7b8113da571139bccc27d4';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -125,6 +125,25 @@ final ntripPasswordProvider = NotifierProvider<NtripPassword, String?>.internal(
 );
 
 typedef _$NtripPassword = Notifier<String?>;
+String _$ntripDataUsageSessionHash() =>
+    r'fa7c2e5b463dff14668b2ba57d943472d7f80767';
+
+/// A provider for the NTRIP data usage in bytes for this session.
+///
+/// Copied from [NtripDataUsageSession].
+@ProviderFor(NtripDataUsageSession)
+final ntripDataUsageSessionProvider =
+    NotifierProvider<NtripDataUsageSession, int?>.internal(
+  NtripDataUsageSession.new,
+  name: r'ntripDataUsageSessionProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ntripDataUsageSessionHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NtripDataUsageSession = Notifier<int?>;
 String _$ntripAliveHash() => r'49b669a2a8a8f00a00d88a92fb8745b0c118e9da';
 
 /// A provider for telling whether the [ntripClient] is receiving data.
@@ -144,5 +163,25 @@ final ntripAliveProvider = NotifierProvider<NtripAlive, bool>.internal(
 );
 
 typedef _$NtripAlive = Notifier<bool>;
+String _$ntripDataUsageByMonthHash() =>
+    r'547675788e5b041e5a0c662d553b38c24d0607b7';
+
+/// A provider for a map of all recorded months with their corresponding
+/// data usage.
+///
+/// Copied from [NtripDataUsageByMonth].
+@ProviderFor(NtripDataUsageByMonth)
+final ntripDataUsageByMonthProvider =
+    NotifierProvider<NtripDataUsageByMonth, Map<String, int>>.internal(
+  NtripDataUsageByMonth.new,
+  name: r'ntripDataUsageByMonthProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ntripDataUsageByMonthHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NtripDataUsageByMonth = Notifier<Map<String, int>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

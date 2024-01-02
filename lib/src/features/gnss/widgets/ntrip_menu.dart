@@ -106,6 +106,41 @@ class NtripMenu extends ConsumerWidget {
             ),
           ),
         ),
+        Consumer(
+          builder: (context, ref, child) {
+            final dataUsage = ref.watch(ntripDataUsageSessionProvider);
+            if (dataUsage == null) {
+              return const SizedBox.shrink();
+            }
+
+            return ListTile(
+              leading: const Icon(Icons.data_usage),
+              title: Text(
+                '''Data usage (session): ${fileEntitySize(dataUsage, decimals: 3)}''',
+                style: textStyle,
+              ),
+            );
+          },
+        ),
+        if (Device.isNative)
+          Consumer(
+            builder: (context, ref, child) {
+              final usageMap = ref.watch(ntripDataUsageByMonthProvider);
+              final dataUsage =
+                  usageMap[DateTime.now().toIso8601String().substring(0, 7)];
+              if (dataUsage == null) {
+                return const SizedBox.shrink();
+              }
+
+              return ListTile(
+                leading: const Icon(Icons.data_usage),
+                title: Text(
+                  '''Data usage (month): ${fileEntitySize(dataUsage, decimals: 3)}''',
+                  style: textStyle,
+                ),
+              );
+            },
+          ),
       ],
     );
   }

@@ -12,7 +12,9 @@ part 'combined_communication_providers.g.dart';
 void _combinedNativeNetwork(_CombinedNativeNetworkRef ref) => ref
   ..watch(hardwareCommunicationConfigProvider)
   ..watch(ntripClientProvider)
-  ..watch(tcpServerProvider);
+  ..watch(tcpServerProvider)
+  ..watch(ntripDataUsageSessionProvider)
+  ..watch(ntripDataUsageByMonthProvider);
 
 /// A provider for combining the serial providers that need to be watched.
 @riverpod
