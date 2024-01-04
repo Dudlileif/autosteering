@@ -1,9 +1,11 @@
 import 'dart:math';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/plugin_api.dart';
-import 'package:geobase/geobase.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geobase/geobase.dart' hide Point;
+
+//TODO(dudlileif): Fix position when map camera isn't pointing north.
 
 /// A dynamic wheel painter both in size and movement.
 class WheelPainter extends StatelessWidget {
@@ -43,7 +45,7 @@ class WheelPainter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final map = FlutterMapState.of(context);
+    final map = MapController.of(context).camera;
     final bearing = (vehicleBearing + steeringAngle).wrap360();
 
     final offset = map.getOffsetFromOrigin(innerPosition.latLng);
@@ -63,22 +65,12 @@ class WheelPainter extends StatelessWidget {
         (offset - map.getOffsetFromOrigin(frontPosition.latLng)).distance * 2;
 
     final mapPoint = map.project(innerPosition.latLng);
-    final point = mapPoint - map.pixelOrigin;
-
-    final anchor = Anchor.fromPos(
-      AnchorPos.align(AnchorAlign.center),
-      width,
-      height,
-    );
-    final rightPortion = width - anchor.left;
-    final leftPortion = anchor.left;
-    final bottomPortion = height - anchor.top;
-    final topPortion = anchor.top;
+    final point = mapPoint - map.pixelOrigin.toDoublePoint();
 
     if (!map.pixelBounds.containsPartialBounds(
       Bounds(
-        CustomPoint(mapPoint.x + leftPortion, mapPoint.y - bottomPortion),
-        CustomPoint(mapPoint.x - rightPortion, mapPoint.y + topPortion),
+        Point(mapPoint.x, mapPoint.y - height / 2),
+        Point(mapPoint.x + width, mapPoint.y + height / 2),
       ),
     )) {
       return const SizedBox.shrink();
@@ -91,10 +83,10 @@ class WheelPainter extends StatelessWidget {
         Positioned(
           width: width,
           height: height,
-          left: point.x - rightPortion,
-          top: point.y - bottomPortion,
+          left: point.x - width / 2,
+          top: point.y - height / 2,
           child: Transform.rotate(
-            angle: bearing.toRadians(),
+            angle: (map.rotation + bearing).toRadians(),
             child: CustomPaint(
               painter: _WheelPainterImplementation(
                 width: width,
