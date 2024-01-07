@@ -25,7 +25,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.pathTrackingMode,
     super.imu,
     super.was,
-    super.pidParameters = const PidParameters(p: 30, i: 0, d: 2),
+    super.pidParameters,
     super.purePursuitParameters,
     super.stanleyParameters,
     super.velocity,

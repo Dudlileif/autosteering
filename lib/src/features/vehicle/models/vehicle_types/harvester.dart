@@ -25,7 +25,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.imu,
     super.was,
     super.pathTrackingMode,
-    super.pidParameters = const PidParameters(p: 20, i: 0, d: 2),
+    super.pidParameters,
     super.purePursuitParameters,
     super.stanleyParameters,
     super.velocity,

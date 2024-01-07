@@ -619,18 +619,15 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
     map['imu_config'] = imu.config;
 
-    map['pid_parameters'] = pidParameters;
-
-    map['pure_pursuit_parameters'] = purePursuitParameters;
-
-    map['stanley_parameters'] = stanleyParameters;
-
     map['steering'] = {
       'invert_steering_input': invertSteeringInput,
       'min_turning_radius': minTurningRadius,
       'path_tracking_mode': pathTrackingMode,
       'steering_angle_max': steeringAngleMax,
       'was_config': was.config,
+      'pid_parameters': pidParameters,
+      'pure_pursuit_parameters': purePursuitParameters,
+      'stanley_parameters': stanleyParameters,
     };
 
     return map;

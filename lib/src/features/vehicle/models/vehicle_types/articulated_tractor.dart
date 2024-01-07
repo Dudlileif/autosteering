@@ -29,7 +29,7 @@ final class ArticulatedTractor extends Vehicle {
     super.pathTrackingMode,
     super.imu,
     super.was,
-    super.pidParameters = const PidParameters(p: 20, i: 0, d: 10),
+    super.pidParameters,
     super.purePursuitParameters =
         const PurePursuitParameters(lookAheadDistance: 1),
     super.stanleyParameters,

@@ -137,7 +137,6 @@ class _PidParametersConfigurator extends ConsumerWidget {
                         );
                   },
                   onChangeEnd: (value) => onChangeEnd(value, ref),
-
                 ),
               ],
             );
@@ -152,11 +151,11 @@ class _PidParametersConfigurator extends ConsumerWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('I: ${i.toStringAsFixed(1)}'),
+                Text('I: ${i.toStringAsFixed(3)}'),
                 Slider(
                   value: i,
                   max: 2,
-                  divisions: 40,
+                  divisions: 200,
                   onChanged: (value) {
                     ref.read(simInputProvider.notifier).send(
                           ref
@@ -178,7 +177,6 @@ class _PidParametersConfigurator extends ConsumerWidget {
                         );
                   },
                   onChangeEnd: (value) => onChangeEnd(value, ref),
-
                 ),
               ],
             );
@@ -190,14 +188,14 @@ class _PidParametersConfigurator extends ConsumerWidget {
             final d = ref.watch(
               mainVehicleProvider.select((vehicle) => vehicle.pidParameters.d),
             );
-            return Column(
+            return Column(  
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('D: ${d.toStringAsFixed(1)}'),
+                Text('D: ${d.toStringAsFixed(3)}'),
                 Slider(
                   value: d,
-                  max: 50,
-                  divisions: 50,
+                  max: 0.5,
+                  divisions: 500,
                   onChanged: (value) {
                     ref.read(simInputProvider.notifier).send(
                           ref
@@ -219,7 +217,6 @@ class _PidParametersConfigurator extends ConsumerWidget {
                         );
                   },
                   onChangeEnd: (value) => onChangeEnd(value, ref),
-
                 ),
               ],
             );
@@ -400,7 +397,6 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                         );
                   },
                   onChangeEnd: (value) => onChangeEnd(value, ref),
-
                 ),
               ],
             );
@@ -445,7 +441,6 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                         );
                   },
                   onChangeEnd: (value) => onChangeEnd(value, ref),
-
                 ),
               ],
             );
@@ -488,7 +483,6 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                         );
                   },
                   onChangeEnd: (value) => onChangeEnd(value, ref),
-
                 ),
               ],
             );

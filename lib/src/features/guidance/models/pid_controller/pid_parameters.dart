@@ -9,7 +9,7 @@ class PidParameters extends Equatable {
   /// [d] is the derivative gain.
   const PidParameters({
     this.p = 0.5,
-    this.i = 2.7,
+    this.i = 0.1,
     this.d = 0.15,
   });
 
