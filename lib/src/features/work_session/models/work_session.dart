@@ -1,8 +1,8 @@
 import 'dart:collection';
 
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/field/field.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/field/field.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
 
 /// A class that contains info about a work session on a [Field].
