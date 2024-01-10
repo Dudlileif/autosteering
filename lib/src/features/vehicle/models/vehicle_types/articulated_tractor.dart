@@ -29,6 +29,7 @@ final class ArticulatedTractor extends Vehicle {
     super.pathTrackingMode,
     super.imu,
     super.was,
+    super.motorConfig,
     super.pidParameters,
     super.purePursuitParameters =
         const PurePursuitParameters(lookAheadDistance: 1),
@@ -780,6 +781,7 @@ final class ArticulatedTractor extends Vehicle {
     bool? invertSteeringInput,
     Imu? imu,
     Was? was,
+    MotorConfig? motorConfig,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     StanleyParameters? stanleyParameters,
@@ -822,6 +824,7 @@ final class ArticulatedTractor extends Vehicle {
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         imu: imu ?? this.imu,
         was: was ?? this.was,
+        motorConfig: motorConfig ?? this.motorConfig,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:

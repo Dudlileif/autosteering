@@ -22,12 +22,12 @@ class GnssCurrentSentence extends _$GnssCurrentSentence {
       if (previous?.quality != next?.quality) {
         Logger.instance
             .i(
-          '''GPS fix quality: ${GnssFixQuality.values[next?.quality ?? 0]}, NMEA code: ${next?.quality}''',
+          '''GNSS fix quality: ${GnssFixQuality.values[next?.quality ?? 0]}, NMEA code: ${next?.quality}''',
         );
       }
       if (previous?.numSatellites != next?.numSatellites) {
         Logger.instance.i(
-          'GPS satellite count: ${next?.numSatellites}',
+          'GNSS satellite count: ${next?.numSatellites}',
         );
       }
     });

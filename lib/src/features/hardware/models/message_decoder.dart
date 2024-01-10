@@ -165,6 +165,11 @@ class MessageDecoder {
         }
       }
       for (final pair in nmeaMessages) {
+        // Discard unfinished message data if an illegal pair is found.
+        if (pair.end < pair.start) {
+          unfinishedMessage.clear();
+          return [];
+        }
         messages.add(characters.getRange(pair.start, pair.end + 1).join());
         characters.replaceRange(
           pair.start,
@@ -213,6 +218,11 @@ class MessageDecoder {
         }
       }
       for (final pair in jsonMessages) {
+        // Discard unfinished message data if an illegal pair is found.
+        if (pair.end < pair.start) {
+          unfinishedMessage.clear();
+          return [];
+        }
         // Skip json message if there is an unfinished NMEA message inside it.
         if (nmeaStartIndices.any(
           (nmeaStart) =>
@@ -266,7 +276,6 @@ class MessageDecoder {
       final strings = rawStrings(data);
 
       for (final str in strings.where((element) => element.isNotEmpty)) {
-
         if (str.startsWith('{')) {
           if (str.contains('}')) {
             try {
@@ -318,19 +327,11 @@ class MessageDecoder {
                 messages.add((motorActualRPM: data['motor_rpm'] as double));
               }
               if (data['motor_stalled'] is bool) {
-                messages
-                  ..add((motorStalled: data['motor_stalled'] as bool))
-                  ..add(LogEvent(Level.warning, 'Motor stalled!'));
+                messages.add((motorStalled: data['motor_stalled'] as bool));
               }
               if (data['motor_no_command'] is bool) {
                 messages
-                  ..add((motorNoCommand: data['motor_no_command'] as bool))
-                  ..add(
-                    LogEvent(
-                      Level.warning,
-                      'Motor stopped, too long since last command!',
-                    ),
-                  );
+                    .add((motorNoCommand: data['motor_no_command'] as bool));
               }
               if (data['motor_cs'] is int) {
                 messages.add((motorCurrentScale: data['motor_cs'] as int));

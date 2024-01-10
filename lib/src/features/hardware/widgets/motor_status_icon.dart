@@ -38,7 +38,7 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
       if (rpm.abs() > 0) {
         final tick =
             (elapsed.inMicroseconds - prevTickerTimeMicroseconds) / 1e6;
-        final radiansPerTick = 2 * pi * (rpm / 60) * tick;
+        final radiansPerTick = 2 * pi * (-rpm / 60) * tick;
         setState(
           () => motorRotationAngle =
               (motorRotationAngle + radiansPerTick) % (2 * pi),

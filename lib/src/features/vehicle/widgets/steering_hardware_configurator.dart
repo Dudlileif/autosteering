@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A configurator widget for configuring how to use the WAS with the vehicle.
-class WasConfigurator extends StatelessWidget {
+class SteeringHardwareConfigurator extends StatelessWidget {
   /// A configurator widget for configuring how to use the WAS with the vehicle.
-  const WasConfigurator({super.key});
+  const SteeringHardwareConfigurator({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class WasConfigurator extends StatelessWidget {
     return Card(
       color: Colors.transparent,
       child: SizedBox(
-        width: 260,
+        width: 300,
         child: Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
           appBar: AppBar(
@@ -26,10 +26,7 @@ class WasConfigurator extends StatelessWidget {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'WAS Configurator',
-                  style: theme.textTheme.bodyLarge,
-                ),
+                const Text('Steering Configurator'),
                 Consumer(
                   builder: (context, ref, child) => CloseButton(
                     onPressed: () => ref
@@ -42,6 +39,134 @@ class WasConfigurator extends StatelessWidget {
           ),
           body: ListView(
             children: [
+              Text(
+                'Motor',
+                style: theme.textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+              // Motor max RPM
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final rpm = ref.watch(
+                      mainVehicleProvider
+                          .select((vehicle) => vehicle.motorConfig.maxRPM),
+                    );
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Max RPM: $rpm',
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                ref.read(simInputProvider.notifier).send(
+                                      ref
+                                          .read(
+                                            mainVehicleProvider.select(
+                                              (value) => value.motorConfig,
+                                            ),
+                                          )
+                                          .copyWith(maxRPM: 200),
+                                    );
+                                // Wait a short while before saving the
+                                // hopefully updated vehicle.
+                                Future.delayed(
+                                    const Duration(milliseconds: 100), () {
+                                  final vehicle =
+                                      ref.watch(mainVehicleProvider);
+                                  ref.read(saveVehicleProvider(vehicle));
+                                  Logger.instance.i(
+                                    '''Updated vehicle motor config max RPM: $rpm -> ${vehicle.motorConfig.maxRPM}''',
+                                  );
+                                });
+                              },
+                              icon: const Icon(Icons.refresh),
+                            ),
+                          ],
+                        ),
+                        Slider(
+                          value: rpm.toDouble(),
+                          onChanged: (value) {
+                            ref.read(simInputProvider.notifier).send(
+                                  ref
+                                      .read(
+                                        mainVehicleProvider.select(
+                                          (value) => value.motorConfig,
+                                        ),
+                                      )
+                                      .copyWith(
+                                        maxRPM: value.round(),
+                                      ),
+                                );
+                            // Wait a short while before saving the hopefully
+                            // updated vehicle.
+                            Future.delayed(const Duration(milliseconds: 100),
+                                () {
+                              final vehicle = ref.watch(mainVehicleProvider);
+                              ref.read(saveVehicleProvider(vehicle));
+                              Logger.instance.i(
+                                '''Updated vehicle motor config max RPM: $rpm -> ${vehicle.motorConfig.maxRPM}''',
+                              );
+                            });
+                          },
+                          max: 500,
+                          divisions: 10,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              // Invert motor output
+              Consumer(
+                child: Text(
+                  'Invert motor output',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                builder: (context, ref, child) => CheckboxListTile(
+                  value: ref.watch(
+                    mainVehicleProvider.select(
+                      (vehicle) => vehicle.motorConfig.invertOutput,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(simInputProvider.notifier).send(
+                            ref
+                                .read(
+                                  mainVehicleProvider
+                                      .select((value) => value.motorConfig),
+                                )
+                                .copyWith(invertOutput: value),
+                          );
+
+                      // Wait a short while before saving the hopefully
+                      // updated vehicle.
+                      Future.delayed(const Duration(milliseconds: 100), () {
+                        final vehicle = ref.watch(mainVehicleProvider);
+                        ref.read(saveVehicleProvider(vehicle));
+                        Logger.instance.i(
+                          '''Updated vehicle motor config invert output: ${!value} -> ${vehicle.motorConfig.invertOutput}''',
+                        );
+                      });
+                    }
+                  },
+                  secondary: child,
+                ),
+              ),
+              const Divider(),
+              Text(
+                'WAS',
+                style: theme.textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+
               // Use WAS
               Consumer(
                 child: Text(
@@ -79,43 +204,7 @@ class WasConfigurator extends StatelessWidget {
                   secondary: child,
                 ),
               ),
-              // Invert motor output
-              Consumer(
-                child: Text(
-                  'Invert motor output',
-                  style: theme.textTheme.bodyLarge,
-                ),
-                builder: (context, ref, child) => CheckboxListTile(
-                  value: ref.watch(
-                    mainVehicleProvider.select(
-                      (vehicle) => vehicle.was.config.invertMotorOutput,
-                    ),
-                  ),
-                  onChanged: (value) {
-                    if (value != null) {
-                      ref.read(simInputProvider.notifier).send(
-                            ref
-                                .read(
-                                  mainVehicleProvider
-                                      .select((value) => value.was.config),
-                                )
-                                .copyWith(invertMotorOutput: value),
-                          );
 
-                      // Wait a short while before saving the hopefully
-                      // updated vehicle.
-                      Future.delayed(const Duration(milliseconds: 100), () {
-                        final vehicle = ref.watch(mainVehicleProvider);
-                        ref.read(saveVehicleProvider(vehicle));
-                        Logger.instance.i(
-                          '''Updated vehicle WAS config invert motor output: ${!value} -> ${vehicle.was.config.invertMotorOutput}''',
-                        );
-                      });
-                    }
-                  },
-                  secondary: child,
-                ),
-              ),
               // Invert sensor
               Consumer(
                 child: Text(
@@ -172,38 +261,61 @@ class WasConfigurator extends StatelessWidget {
                               style: theme.textTheme.bodyLarge,
                             ),
                             IconButton(
-                              onPressed: () =>
-                                  ref.read(simInputProvider.notifier).send(
-                                        ref
-                                            .read(
-                                              mainVehicleProvider.select(
-                                                (value) => value.was.config,
-                                              ),
-                                            )
-                                            .copyWith(bits: 12),
-                                      ),
+                              onPressed: () {
+                                ref.read(simInputProvider.notifier).send(
+                                      ref
+                                          .read(
+                                            mainVehicleProvider.select(
+                                              (value) => value.was.config,
+                                            ),
+                                          )
+                                          .copyWith(bits: 12),
+                                    );
+                                // Wait a short while before saving the
+                                // hopefully updated vehicle.
+                                Future.delayed(
+                                    const Duration(milliseconds: 100), () {
+                                  final vehicle =
+                                      ref.watch(mainVehicleProvider);
+                                  ref.read(saveVehicleProvider(vehicle));
+                                  Logger.instance.i(
+                                    '''Updated vehicle WAS config bits: $bits -> ${vehicle.was.config.bits}''',
+                                  );
+                                });
+                              },
                               icon: const Icon(Icons.refresh),
                             ),
                           ],
                         ),
                         Slider(
                           value: bits.toDouble(),
-                          onChanged: (value) => ref
-                              .read(simInputProvider.notifier)
-                              .send(
-                                ref
-                                    .read(
-                                      mainVehicleProvider.select(
-                                        (value) => value.was.config,
+                          onChanged: (value) {
+                            ref.read(simInputProvider.notifier).send(
+                                  ref
+                                      .read(
+                                        mainVehicleProvider.select(
+                                          (value) => value.was.config,
+                                        ),
+                                      )
+                                      .copyWith(
+                                        bits: value.round(),
+                                        max:
+                                            (pow(2, value.round()) - 1).round(),
+                                        center: (pow(2, value.round() - 1) - 1)
+                                            .round(),
                                       ),
-                                    )
-                                    .copyWith(
-                                      bits: value.round(),
-                                      max: (pow(2, value.round()) - 1).round(),
-                                      center: (pow(2, value.round() - 1) - 1)
-                                          .round(),
-                                    ),
-                              ),
+                                );
+                            // Wait a short while before saving the hopefully
+                            // updated vehicle.
+                            Future.delayed(const Duration(milliseconds: 100),
+                                () {
+                              final vehicle = ref.watch(mainVehicleProvider);
+                              ref.read(saveVehicleProvider(vehicle));
+                              Logger.instance.i(
+                                '''Updated vehicle WAS config bits: $bits -> ${vehicle.was.config.bits}''',
+                              );
+                            });
+                          },
                           min: 10,
                           max: 20,
                           divisions: 10,
@@ -336,8 +448,8 @@ class WasConfigurator extends StatelessWidget {
                                         config.copyWith(
                                           center: ref.read(
                                             mainVehicleProvider.select(
-                                              (value) => value.was
-                                                  .reading.value,
+                                              (value) =>
+                                                  value.was.reading.value,
                                             ),
                                           ),
                                         ),
@@ -438,8 +550,8 @@ class WasConfigurator extends StatelessWidget {
                                         config.copyWith(
                                           min: ref.read(
                                             mainVehicleProvider.select(
-                                              (value) => value.was
-                                                  .reading.value,
+                                              (value) =>
+                                                  value.was.reading.value,
                                             ),
                                           ),
                                         ),
@@ -542,8 +654,8 @@ class WasConfigurator extends StatelessWidget {
                                         config.copyWith(
                                           max: ref.read(
                                             mainVehicleProvider.select(
-                                              (value) => value.was
-                                                  .reading.value,
+                                              (value) =>
+                                                  value.was.reading.value,
                                             ),
                                           ),
                                         ),

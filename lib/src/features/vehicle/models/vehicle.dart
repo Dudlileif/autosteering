@@ -40,6 +40,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     this.pathTrackingMode = PathTrackingMode.purePursuit,
     Imu? imu,
     Was? was,
+    MotorConfig? motorConfig,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
@@ -56,6 +57,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         antennaPosition = position,
         imu = imu ?? Imu(),
         was = was ?? Was(),
+        motorConfig = motorConfig ?? const MotorConfig(),
         pidParameters = pidParameters ?? const PidParameters(),
         stanleyParameters = stanleyParameters ?? const StanleyParameters(),
         purePursuitParameters =
@@ -129,6 +131,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
             ),
           )
         : Was();
+    final motorConfig = steering.containsKey('motor_config')
+        ? MotorConfig.fromJson(
+            Map<String, dynamic>.from(steering['motor_config'] as Map),
+          )
+        : const MotorConfig();
 
     final pidParameters = steering.containsKey('pid_parameters')
         ? PidParameters.fromJson(
@@ -154,6 +161,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     return vehicle.copyWith(
       imu: imu,
       was: was,
+      motorConfig: motorConfig,
       pidParameters: pidParameters,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
@@ -191,6 +199,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The Wheel Angle Sensor object representation of this vehicle.
   Was was;
+
+  /// The configuration for the steering wheel motor of the vehicle.
+  MotorConfig motorConfig;
 
   /// The PID parameters for controlling the steering of this vehicle
   /// when using a PID controller mode.
@@ -579,6 +590,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     bool? invertSteeringInput,
     Was? was,
     Imu? imu,
+    MotorConfig? motorConfig,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -624,6 +636,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       'min_turning_radius': minTurningRadius,
       'path_tracking_mode': pathTrackingMode,
       'steering_angle_max': steeringAngleMax,
+      'motor_config': motorConfig,
       'was_config': was.config,
       'pid_parameters': pidParameters,
       'pure_pursuit_parameters': purePursuitParameters,

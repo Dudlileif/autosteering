@@ -65,9 +65,9 @@ class VehicleMenu extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 8),
                 child: Text(
-                  'WAS Configurator',
+                  'Steering Configurator',
                   style: textStyle,
-                ),
+                ),  
               ),
             ],
           ),

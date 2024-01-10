@@ -24,6 +24,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.invertSteeringInput,
     super.imu,
     super.was,
+    super.motorConfig,
     super.pathTrackingMode,
     super.pidParameters,
     super.purePursuitParameters,
@@ -150,6 +151,7 @@ final class Harvester extends AxleSteeredVehicle {
     bool? invertSteeringInput,
     Imu? imu,
     Was? was,
+    MotorConfig? motorConfig,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -196,6 +198,7 @@ final class Harvester extends AxleSteeredVehicle {
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         imu: imu ?? this.imu,
         was: was ?? this.was,
+        motorConfig: motorConfig ?? this.motorConfig,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:

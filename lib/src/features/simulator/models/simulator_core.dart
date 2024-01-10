@@ -616,6 +616,10 @@ class _SimulatorCoreState {
     // Update the WAS config of the vehicle.
     else if (message is WasConfig) {
       vehicle?.was.config = message;
+    } 
+    // Update the motor config of the vehicle.
+    else if (message is MotorConfig) {
+      vehicle?.motorConfig = message;
     }
 
     // Update bearing
@@ -707,7 +711,9 @@ class _SimulatorCoreState {
             ),
           );
         }
-      } else if (autoSteerEnabled) {
+      }
+      // Disable autosteer and motor
+      else if (autoSteerEnabled) {
         autoSteerEnabled = false;
         mainThreadSendStream.add(
           LogEvent(
@@ -893,7 +899,7 @@ class _SimulatorCoreState {
     // Tell hardware to connect to this device as tcp ntrip server.
     else if (message is ({Uint8List useAsNtripServer})) {
       networkSendStream?.add(message.useAsNtripServer);
-    } 
+    }
     // Enable/disable motor calibration.
     else if (message is ({bool enableMotorCalibration})) {
       motorCalibrationEnabled = message.enableMotorCalibration;
@@ -1056,13 +1062,13 @@ class _SimulatorCoreState {
         if (vehicle!.velocity.abs() > autoSteerThresholdVelocity
             // &&    steeringAngleTarget != vehicle!.steeringAngleInput
             ) {
-          motorTargetRPM = ((vehicle!.was.config.invertMotorOutput ? -1 : 1) *
+          motorTargetRPM = ((vehicle!.motorConfig.invertOutput ? -1 : 1) *
                   vehicle!.nextSteeringAnglePid(steeringAngleTarget!) /
                   (vehicle!.steeringAngleMax) *
-                  vehicle!.was.config.maxMotorRPM)
+                  vehicle!.motorConfig.maxRPM)
               .clamp(
-            -vehicle!.was.config.maxMotorRPM.toDouble(),
-            vehicle!.was.config.maxMotorRPM.toDouble(),
+            -vehicle!.motorConfig.maxRPM.toDouble(),
+            vehicle!.motorConfig.maxRPM.toDouble(),
           );
         }
         networkSendStream?.add(

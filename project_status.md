@@ -36,6 +36,8 @@
   - USB/Serial or network UDP, WebSocket possible for http hosted site
   - WAS and IMU configurator
 
+- Autosteering comms with hardware
+
 - NTRIP client for sending RTCM to GNSS hardware.
 
 - Basic logging
@@ -55,9 +57,11 @@
 
 - Improve autosteering, look at more algorithms
 
-- Autosteering comms with hardware
-
 - Debugging graphs/logs
+
+- Audio alerts
+
+- Safety measures
 
 - Import/export to the original AgOpenGps
 

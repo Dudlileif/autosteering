@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -46,6 +47,13 @@ class SteeringMotorStatus extends _$SteeringMotorStatus {
   @override
   MotorStatus? build() {
     ref.listenSelf((previous, next) {
+      if (previous != next) {
+        Logger.instance.log(
+          Level.warning,
+          'Motor status: $next',
+        );
+      }
+
       _resetTimer?.cancel();
       _resetTimer = Timer(
         Duration(
