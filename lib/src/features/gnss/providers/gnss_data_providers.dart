@@ -10,7 +10,7 @@ part 'gnss_data_providers.g.dart';
 @riverpod
 class GnssCurrentSentence extends _$GnssCurrentSentence {
   Timer? _resetTimer;
- 
+
   @override
   GnssPositionCommonSentence? build() {
     ref.listenSelf((previous, next) {
@@ -19,16 +19,29 @@ class GnssCurrentSentence extends _$GnssCurrentSentence {
         const Duration(milliseconds: 350),
         ref.invalidateSelf,
       );
+
+      final logStrings = <String>[];
+
       if (previous?.quality != next?.quality) {
-        Logger.instance
-            .i(
-          '''GNSS fix quality: ${GnssFixQuality.values[next?.quality ?? 0]}, NMEA code: ${next?.quality}''',
+        logStrings.add(
+          '''GNSS fix quality: ${next?.fixQuality}, NMEA GGA code: ${next?.quality}''',
+        );
+      }
+      if (previous?.posMode != next?.posMode) {
+        logStrings.add(
+          '''GNSS fix quality: ${next?.fixQuality}, NMEA GNS flags: ${next?.posMode}''',
+        );
+      }
+      if (previous?.ubxNavStatus != next?.ubxNavStatus) {
+        logStrings.add(
+          '''GNSS fix quality: ${next?.fixQuality}, PUBX nav status: ${next?.ubxNavStatus}''',
         );
       }
       if (previous?.numSatellites != next?.numSatellites) {
-        Logger.instance.i(
-          'GNSS satellite count: ${next?.numSatellites}',
-        );
+        logStrings.add('GNSS satellite count: ${next?.numSatellites}');
+      }
+      if (logStrings.isNotEmpty) {
+        Logger.instance.i(logStrings.join('\n'));
       }
     });
 
@@ -37,10 +50,7 @@ class GnssCurrentSentence extends _$GnssCurrentSentence {
 
   /// Updates [state] to [value].
   void update(GnssPositionCommonSentence? value) => Future(() => state = value);
-
 }
-
-
 
 /// A provider for the frequency of the GNSS updates.
 @riverpod

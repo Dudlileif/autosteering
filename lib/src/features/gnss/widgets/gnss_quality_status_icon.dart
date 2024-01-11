@@ -28,11 +28,38 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
   String get message {
     final nmea = ref.watch(gnssCurrentSentenceProvider);
 
-    final textLines = [GnssFixQuality.values[nmea?.quality ?? 0].name];
+    final textLines = <String>[];
+    if (nmea?.posMode != null) {
+      textLines.add(
+        '''${nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name} | ${nmea?.posMode}''',
+      );
+    } else if (nmea?.ubxNavStatus != null) {
+      textLines.add(
+        '''${nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name} | ${nmea?.ubxNavStatus}''',
+      );
+    } else {
+      textLines.add(nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name);
+    }
 
     final hdop = nmea?.hdop;
     if (hdop != null) {
       textLines.add('HDOP: $hdop');
+    }
+    final vdop = nmea?.vdop;
+    if (vdop != null) {
+      textLines.add('VDOP: $vdop');
+    }
+    final tdop = nmea?.tdop;
+    if (tdop != null) {
+      textLines.add('TDOP: $tdop');
+    }
+    final horizontalAccuracy = nmea?.horizontalAccuracy;
+    if (horizontalAccuracy != null) {
+      textLines.add('HorAcc: $horizontalAccuracy m');
+    }
+    final verticalAccuracy = nmea?.verticalAccuracy;
+    if (verticalAccuracy != null) {
+      textLines.add('VerAcc: $verticalAccuracy m');
     }
     final altitude = nmea?.altitudeGeoid;
     if (altitude != null) {
@@ -91,16 +118,9 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
         },
         child: Consumer(
           builder: (context, ref, child) {
-            final fixQuality = GnssFixQuality.values[ref.watch(
-                  gnssCurrentSentenceProvider.select((value) => value?.quality),
-                ) ??
-                0];
-            final numSatellites =
-                ref.watch(
-                  gnssCurrentSentenceProvider
-                      .select((value) => value?.numSatellites),
-                ) ??
-                0;
+            final nmea = ref.watch(gnssCurrentSentenceProvider);
+            final fixQuality = nmea?.fixQuality ?? GnssFixQuality.notAvailable;
+            final numSatellites = nmea?.numSatellites ?? 0;
             return Stack(
               children: [
                 Align(

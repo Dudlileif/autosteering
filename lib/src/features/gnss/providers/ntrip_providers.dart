@@ -302,10 +302,23 @@ class NtripDataUsageByMonth extends _$NtripDataUsageByMonth {
     final file = File('$path/data_usage_ntrip.json');
     if (!file.existsSync()) {
       file.createSync(recursive: true);
+      Logger.instance.log(
+        Level.info,
+        'Created data usage file: ${file.path}',
+      );
+    } else {
+      Logger.instance.log(
+        Level.info,
+        'Found data usage file: ${file.path}\n${file.readAsStringSync()}',
+      );
     }
     ref.listenSelf((previous, next) {
       if (!file.existsSync()) {
         file.createSync(recursive: true);
+        Logger.instance.log(
+          Level.info,
+          'Created data usage file not found, new created: ${file.path}',
+        );
       }
       file.writeAsString(const JsonEncoder.withIndent('    ').convert(next));
     });
