@@ -23,6 +23,8 @@ class GnssQualityStatusIcon extends ConsumerStatefulWidget {
 }
 
 class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
+  Geoid? geoid;
+
   final OverlayPortalController portalController = OverlayPortalController();
 
   String get message {
@@ -41,6 +43,14 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
       textLines.add(nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name);
     }
 
+    final latitude = nmea?.latitude;
+    if (latitude != null) {
+      textLines.add('Lat: ${latitude.toStringAsFixed(9)}');
+    }
+    final longitude = nmea?.longitude;
+    if (longitude != null) {
+      textLines.add('Lon: ${longitude.toStringAsFixed(9)}');
+    }
     final hdop = nmea?.hdop;
     if (hdop != null) {
       textLines.add('HDOP: $hdop');
@@ -55,16 +65,41 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
     }
     final horizontalAccuracy = nmea?.horizontalAccuracy;
     if (horizontalAccuracy != null) {
-      textLines.add('HorAcc: $horizontalAccuracy m');
+      textLines.add('Pos. Acc: $horizontalAccuracy m');
     }
     final verticalAccuracy = nmea?.verticalAccuracy;
     if (verticalAccuracy != null) {
-      textLines.add('VerAcc: $verticalAccuracy m');
+      textLines.add('Alt. Acc: $verticalAccuracy m');
     }
-    final altitude = nmea?.altitudeGeoid;
+    final altitude = nmea?.altitudeMSL;
+    final geoidSep = nmea?.geoidSeparation;
     if (altitude != null) {
-      textLines.add('Altitude: ${altitude.toStringAsFixed(1)} m');
+      if (geoidSep != null) {
+        if (geoid != null && latitude != null && longitude != null) {
+          textLines.add(
+            '''Altitude MSL: ${(altitude + geoidSep - geoid!.height(lat: latitude, lon: longitude)).toStringAsFixed(1)} m''',
+          );
+        } else {
+          Geoid.egm96_5().then((value) => geoid = value);
+        }
+        textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
+      }
     }
+    final altitudeRef = nmea?.altitudeRef;
+    if (altitudeRef != null &&
+        nmea?.latitude != null &&
+        nmea?.longitude != null) {
+      textLines.add('Altitude HAE: ${altitudeRef.toStringAsFixed(1)} m');
+
+      if (geoid != null && latitude != null && longitude != null) {
+        textLines.add(
+          '''Altitude MSL: ${(altitudeRef - geoid!.height(lat: latitude, lon: longitude)).toStringAsFixed(1)} m''',
+        );
+      } else {
+        Geoid.egm96_5().then((value) => geoid = value);
+      }
+    }
+
     final age = nmea?.timeSinceLastDGPSUpdate;
     if (age != null) {
       textLines.add('Age: ${age.toStringAsFixed(1)} s');
@@ -88,6 +123,7 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
 
   @override
   Widget build(BuildContext context) {
+    
     return InkWell(
       onTap: () => switch (portalController.isShowing) {
         true => portalController.hide(),

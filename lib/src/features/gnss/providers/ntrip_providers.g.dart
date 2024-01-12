@@ -164,7 +164,7 @@ final ntripAliveProvider = NotifierProvider<NtripAlive, bool>.internal(
 
 typedef _$NtripAlive = Notifier<bool>;
 String _$ntripDataUsageByMonthHash() =>
-    r'547675788e5b041e5a0c662d553b38c24d0607b7';
+    r'df57fee66524b28d3148555e618e28e8f7214068';
 
 /// A provider for a map of all recorded months with their corresponding
 /// data usage.

@@ -38,7 +38,10 @@ class HardwareSerialMenu extends StatelessWidget {
                 closeOnActivate: false,
                 leadingIcon: const Icon(Icons.clear),
                 onPressed: () => ref.invalidate(hardwareSerialProvider),
-                child: const Text('Close'),
+                child: Text(
+                  'Close',
+                  style: textStyle,
+                ),
               );
             }
             return const SizedBox.shrink();

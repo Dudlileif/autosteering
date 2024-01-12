@@ -166,7 +166,13 @@ mixin GnssPositionCommonSentence on NmeaSentence {
   double? get verticalAccuracy => null;
 
   /// Altitude (m) over the geoid (mean sea level).
-  double? get altitudeGeoid => _doubleFromField(9);
+  double? get altitudeMSL => _doubleFromField(9);
+
+  /// Altitude (m) HAE,
+  double? get altitudeRef => null;
+
+  /// Geoid separation (m) from the ellipsoid.
+  double? get geoidSeparation => null;
 
   /// The speed over ground in km/h.
   double? get speedOverGround => null;
@@ -220,8 +226,8 @@ class GGASentence extends TalkerSentence with GnssPositionCommonSentence {
   @override
   int? get quality => _intFromField(6);
 
-  /// The separation between the geiod (MSL) and the ellipsoid (WGS-84).
-  double? get geoidalSeparation => _doubleFromField(11);
+  @override
+  double? get geoidSeparation => _doubleFromField(11);
 
   /// The time in seconds since the last differential update.
   @override
@@ -261,8 +267,8 @@ class GNSSentence extends TalkerSentence with GnssPositionCommonSentence {
   @override
   String? get posMode => fields.elementAtOrNull(6);
 
-  /// The separation between the geiod (MSL) and the ellipsoid (WGS-84).
-  double? get geoidalSeparation => _doubleFromField(10);
+  @override
+  double? get geoidSeparation => _doubleFromField(10);
 
   /// The time in seconds since the last differential update.
   @override
@@ -436,7 +442,7 @@ class PUBXSentence extends ProprietarySentence
   double? get longitude => _longitudeFromField(5);
 
   @override
-  double? get altitudeGeoid => _doubleFromField(7);
+  double? get altitudeRef => _doubleFromField(7);
 
   @override
   String? get ubxNavStatus => fields.elementAtOrNull(8);
@@ -474,4 +480,7 @@ class PUBXSentence extends ProprietarySentence
   @override
   GnssFixQuality? get fixQuality => GnssFixQuality.values
       .firstWhereOrNull((element) => element.ubxNavStatus == ubxNavStatus);
+
+  @override
+  double? get altitudeMSL => null;
 }
