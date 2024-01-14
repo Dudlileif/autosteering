@@ -11,7 +11,7 @@ enum GnssFixQuality {
   differentialFix('Differential fix', 2, 'D', 'D2'),
 
   /// Precise Position Service.
-  ppsFix('PPS fix', 3, null, 'D2'),
+  ppsFix('PPS fix', 3, 'P', 'D2'),
 
   /// Normal GNSS fix.
   fix('Fix', 1, 'A', 'G3'),
@@ -20,10 +20,10 @@ enum GnssFixQuality {
   estimated('Estimated (dead reckoning)', 6, 'E', 'DR'),
 
   /// Manual input mode.
-  manualInput('Manual input mode', 7, null, null),
+  manualInput('Manual input mode', 7, 'M', null),
 
   /// Simulation mode.
-  simulation('Simulation mode', 8, null, null),
+  simulation('Simulation mode', 8, 'S', null),
 
   /// No fix.
   notAvailable('Not available', 0, 'N', 'NF');
