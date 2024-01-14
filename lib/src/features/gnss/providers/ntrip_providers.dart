@@ -255,9 +255,11 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
                   Logger.instance.i('NTRIP client connection confirmed.');
                 }
               }
+
               ref
                   .read(ntripDataUsageSessionProvider.notifier)
-                  .updateBy(event.length);
+                  .updateBy(event.lengthInBytes);
+
             });
             ref.onDispose(() {
               data.socket.destroy();

@@ -81,7 +81,9 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
           );
         } else {
           Geoid.egm96_5().then((value) => geoid = value);
+          textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
         }
+      } else {
         textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
       }
     }
@@ -123,7 +125,6 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
 
   @override
   Widget build(BuildContext context) {
-    
     return InkWell(
       onTap: () => switch (portalController.isShowing) {
         true => portalController.hide(),

@@ -1,3 +1,9 @@
+/// A collection of NMEA sentences for receiving GNSS position data.
+///
+/// See the [u-blox F9P HPG 1.32 Interface Description](https://content.u-blox.com/sites/default/files/documents/u-blox-F9-HPG-1.32_InterfaceDescription_UBX-22008968.pdf), chapter 2
+/// a list of useable NMEA message types.
+library nmea_sentences;
+
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:collection/collection.dart';
 import 'package:nmea/nmea.dart';
