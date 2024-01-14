@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:logger/logger.dart' as implementation;
 
 export 'package:logger/logger.dart' hide Logger;

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/settings/settings.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -57,28 +57,26 @@ FutureOr<String?> deviceIPAdressEthernet(
 
 /// A provider for the IP adress of the hardware we want to communicate with.
 @Riverpod(keepAlive: true)
-class HardwareIPAdress extends _$HardwareIPAdress {
+class HardwareAddress extends _$HardwareAddress {
   @override
   String build() {
     ref.listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.hardwareIPAdress, next);
+            .update(SettingsKey.hardwareAdress, next);
       }
     });
 
     return ref
             .read(settingsProvider.notifier)
-            .getString(SettingsKey.hardwareIPAdress) ??
-        '192.168.4.1';
+            .getString(SettingsKey.hardwareAdress) ??
+        'autosteering.local';
   }
 
   /// Update the [state] to [value] if it's a valid IP adress.
   void update(String value) => Future(() {
-        if (InternetAddress.tryParse(value) != null) {
-          state = value;
-        }
+        state = value;
       });
 }
 
@@ -116,7 +114,7 @@ class HardwareUDPReceivePort extends _$HardwareUDPReceivePort {
 }
 
 /// A provider for the UDP send port for the device to send messages to
-/// the hardware in [HardwareIPAdress].
+/// the hardware in [HardwareAddress].
 @Riverpod(keepAlive: true)
 class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   @override
@@ -149,12 +147,12 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
       });
 }
 
-/// A provider for the combined state of the [HardwareIPAdress],
+/// A provider for the combined state of the [HardwareAddress],
 /// [HardwareUDPReceivePort] and [HardwareUDPSendPort].
 ///
 /// The updated state is automatically sent to the
 @Riverpod(keepAlive: true)
-({String hardwareIPAdress, int hardwareUDPReceivePort, int hardwareUDPSendPort})
+({String hardwareAddress, int hardwareUDPReceivePort, int hardwareUDPSendPort})
     hardwareCommunicationConfig(HardwareCommunicationConfigRef ref) {
   ref.listenSelf((previous, next) {
     if (next != previous) {
@@ -163,14 +161,14 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   });
 
   return (
-    hardwareIPAdress: ref.watch(hardwareIPAdressProvider),
+    hardwareAddress: ref.watch(hardwareAddressProvider),
     hardwareUDPReceivePort: ref.watch(hardwareUDPReceivePortProvider),
     hardwareUDPSendPort: ref.watch(hardwareUDPSendPortProvider)
   );
 }
 
 /// A provider for the UDP send port for the device to send messages to
-/// the hardware in [HardwareIPAdress].
+/// the hardware in [HardwareAddress].
 @Riverpod(keepAlive: true)
 class HardwareWebSocketPort extends _$HardwareWebSocketPort {
   @override
@@ -203,12 +201,12 @@ class HardwareWebSocketPort extends _$HardwareWebSocketPort {
       });
 }
 
-/// A provider for the combined state of the [HardwareIPAdress],
+/// A provider for the combined state of the [HardwareAddress],
 /// [HardwareWebSocketPort].
 ///
 /// The updated state is automatically sent to the
 @Riverpod(keepAlive: true)
-({String hardwareIPAdress, int hardwareWebSocketPort})
+({String hardwareAddress, int hardwareWebSocketPort})
     hardwareWebCommunicationConfig(HardwareWebCommunicationConfigRef ref) {
   ref.listenSelf((previous, next) {
     if (next != previous) {
@@ -217,7 +215,7 @@ class HardwareWebSocketPort extends _$HardwareWebSocketPort {
   });
 
   return (
-    hardwareIPAdress: ref.watch(hardwareIPAdressProvider),
+    hardwareAddress: ref.watch(hardwareAddressProvider),
     hardwareWebSocketPort: ref.watch(hardwareWebSocketPortProvider),
   );
 }

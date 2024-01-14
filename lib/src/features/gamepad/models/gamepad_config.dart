@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/gamepad/gamepad.dart';
+import 'package:autosteering/src/features/gamepad/gamepad.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'gamepad_config.freezed.dart';

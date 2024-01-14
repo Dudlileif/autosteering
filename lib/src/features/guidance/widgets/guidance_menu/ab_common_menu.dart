@@ -1,6 +1,6 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -183,7 +183,7 @@ class ABCommonMenu extends StatelessWidget {
           },
         ),
         Consumer(
-          child: const Text('Recalc bounded lines'),
+          child: Text('Recalc bounded lines', style: textStyle),
           builder: (context, ref, child) => MenuItemButton(
             child: child,
             onPressed: () => ref

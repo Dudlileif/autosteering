@@ -132,7 +132,7 @@ class _$MapCenterOffsetImpl implements _MapCenterOffset {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapCenterOffsetImpl &&

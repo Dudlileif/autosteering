@@ -254,26 +254,9 @@ final class PurePursuitPathTracking extends PathTracking {
     );
   }
 
-  /// Calculates the steering angle needed to reach the target point when
-  /// using a PID controller.
-  double _nextSteeringAnglePid(Vehicle vehicle) {
-    final steeringAngle = pidController.nextValue(
-      perpendicularDistance(vehicle),
-      vehicle.pidParameters,
-    );
-
-    return steeringAngle.clamp(
-      -vehicle.steeringAngleMax,
-      vehicle.steeringAngleMax,
-    );
-  }
-
   @override
   double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) {
     tryChangeWayPoint(vehicle);
-    return switch (mode ?? vehicle.pathTrackingMode) {
-      PathTrackingMode.pid => _nextSteeringAnglePid(vehicle),
-      PathTrackingMode.purePursuit || _ => _nextSteeringAngleLookAhead(vehicle)
-    };
+    return _nextSteeringAngleLookAhead(vehicle);
   }
 }

@@ -1,12 +1,12 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_decoration_page.dart';
-import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_dimensions_page.dart';
-import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_hitches_page.dart';
-import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_sections_page.dart';
-import 'package:agopengps_flutter/src/features/equipment/widgets/equipment_configurator/equipment_type_selector_page.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_decoration_page.dart';
+import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_dimensions_page.dart';
+import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_hitches_page.dart';
+import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_sections_page.dart';
+import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_type_selector_page.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -142,7 +142,10 @@ class _SaveButton extends ConsumerWidget {
         ),
       )
           ? () => ref.watch(
-                saveEquipmentProvider(ref.watch(configuredEquipmentProvider)),
+                saveEquipmentProvider(
+                  ref.watch(configuredEquipmentProvider),
+                  downloadIfWeb: true,
+                ),
               )
           : null,
       icon: const Icon(Icons.save),

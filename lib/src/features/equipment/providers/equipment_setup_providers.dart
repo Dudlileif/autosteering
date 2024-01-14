@@ -1,5 +1,5 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'equipment_setup_providers.g.dart';
@@ -22,12 +22,14 @@ AsyncValue<void> saveEquipmentSetup(
   SaveEquipmentSetupRef ref,
   EquipmentSetup setup, {
   String? overrideName,
+  bool downloadIfWeb = false,
 }) =>
     ref.watch(
       saveJsonToFileDirectoryProvider(
         object: setup,
         fileName: overrideName ?? setup.name,
         folder: 'equipment/setups',
+        downloadIfWeb: downloadIfWeb,
       ),
     );
 

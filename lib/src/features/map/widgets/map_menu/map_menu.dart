@@ -1,12 +1,12 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/map/widgets/map_menu/country_layer_selector.dart';
-import 'package:agopengps_flutter/src/features/map/widgets/map_menu/delete_cache_menu.dart';
-import 'package:agopengps_flutter/src/features/map/widgets/map_menu/home_position_menu.dart';
-import 'package:agopengps_flutter/src/features/map/widgets/map_menu/map_perspective_menu.dart';
-import 'package:agopengps_flutter/src/features/map/widgets/map_menu/mini_map_menu.dart';
-import 'package:agopengps_flutter/src/features/map/widgets/map_menu/osm_layer_button.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/map/widgets/map_menu/country_layer_selector.dart';
+import 'package:autosteering/src/features/map/widgets/map_menu/delete_cache_menu.dart';
+import 'package:autosteering/src/features/map/widgets/map_menu/home_position_menu.dart';
+import 'package:autosteering/src/features/map/widgets/map_menu/map_perspective_menu.dart';
+import 'package:autosteering/src/features/map/widgets/map_menu/mini_map_menu.dart';
+import 'package:autosteering/src/features/map/widgets/map_menu/osm_layer_button.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -64,6 +64,8 @@ class _CopernicusIDButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final id = ref.watch(copernicusInstanceIdProvider);
 
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     if (id != null && id.length == 36) {
       return MenuButtonWithChildren(
         icon: Icons.check,
@@ -74,7 +76,10 @@ class _CopernicusIDButton extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.clear),
             ),
-            child: const Text('Reset'),
+            child: Text(
+              'Reset',
+              style: textStyle,
+            ),
             onPressed: () =>
                 ref.read(copernicusInstanceIdProvider.notifier).update(null),
           ),
@@ -86,7 +91,10 @@ class _CopernicusIDButton extends ConsumerWidget {
         padding: EdgeInsets.only(left: 8),
         child: Icon(Icons.satellite_alt),
       ),
-      child: const Text('Enter Copernicus ID'),
+      child: Text(
+        'Enter Copernicus ID',
+        style: textStyle,
+      ),
       onPressed: () => showDialog<void>(
         context: context,
         builder: (context) {

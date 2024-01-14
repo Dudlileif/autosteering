@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:geobase/geobase.dart';
@@ -33,9 +33,11 @@ class AllEquipments extends _$AllEquipments {
   Map<String, Equipment> build() {
     ref.listenSelf((previous, next) {
       for (final equipment in next.values) {
+        if (ref.exists(equipmentPathsProvider(equipment.uuid))) {
         ref
             .read(equipmentPathsProvider(equipment.uuid).notifier)
             .update(equipment);
+        }
       }
     });
 
@@ -55,7 +57,6 @@ class AllEquipments extends _$AllEquipments {
   /// Remove all the equipment.
   void clear() => Future(() {
         state = {};
-        ref.read(simInputProvider.notifier).send(());
       });
 
   /// Handles the event of a tap on the map. If [point] is within one of the
@@ -136,6 +137,7 @@ class EquipmentPaths extends _$EquipmentPaths {
               points.mapIndexed(MapEntry.new),
             );
             state = state..add(sectionLines);
+            
             _lastActiveSections = equipment.activeSections;
           }
 
@@ -246,12 +248,14 @@ AsyncValue<void> saveEquipment(
   SaveEquipmentRef ref,
   Equipment equipment, {
   String? overrideName,
+  bool downloadIfWeb = false,
 }) =>
     ref.watch(
       saveJsonToFileDirectoryProvider(
         object: equipment,
         fileName: overrideName ?? equipment.name ?? equipment.uuid,
         folder: 'equipment',
+        downloadIfWeb: downloadIfWeb,
       ),
     );
 

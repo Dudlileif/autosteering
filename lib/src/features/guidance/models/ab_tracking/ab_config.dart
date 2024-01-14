@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:equatable/equatable.dart';
 
 /// A configuration class for setting parameters of an [ABTracking] object.

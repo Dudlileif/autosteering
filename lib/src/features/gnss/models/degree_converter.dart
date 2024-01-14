@@ -5,12 +5,14 @@ import 'package:geobase/geobase.dart';
 class DegreeConverter {
   /// Converts a decimal minute angle to a decimal degree angle.
   ///
-  /// (D)DDMM.MMMMM -> decimal
+  /// (D)DDMM.MMMMM... -> decimal
   static double decimalDegreesFromDegreeMinutes(String degreeMinutes) {
-    final degreesPart = degreeMinutes.substring(0, degreeMinutes.length - 8);
-    return (double.tryParse(degreesPart) ?? 0) +
-        (double.tryParse(degreeMinutes.substring(degreesPart.length)) ?? 0) /
-            60;
+    final pointIndex = degreeMinutes.indexOf('.');
+    final degrees =
+        double.tryParse(degreeMinutes.substring(0, pointIndex - 2)) ?? 0;
+    final minutes =
+        double.tryParse(degreeMinutes.substring(pointIndex - 2)) ?? 0;
+    return degrees + minutes / 60;
   }
 
   /// Converts a decimal degree (wrapped to [0, 360>) to the decimal minute

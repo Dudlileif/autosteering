@@ -1,7 +1,7 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'path_tracking_providers.g.dart';
@@ -40,7 +40,7 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
       return switch (ref.watch(
         mainVehicleProvider.select((vehicle) => vehicle.pathTrackingMode),
       )) {
-        PathTrackingMode.pid ||
+      
         PathTrackingMode.purePursuit =>
           PurePursuitPathTracking(
             wayPoints: wayPoints,
@@ -102,7 +102,7 @@ class PathTrackingLoop extends _$PathTrackingLoop {
 
 /// A provider for the activated [ConfiguredPathTracking] model, typically
 /// recieved and updated from the simulator.
-@riverpod
+@Riverpod(keepAlive: true)
 class DisplayPathTracking extends _$DisplayPathTracking {
   @override
   PathTracking? build() => null;

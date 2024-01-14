@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_html/html.dart' as html;
@@ -12,7 +12,7 @@ part 'file_providers.g.dart';
 @Riverpod(keepAlive: true)
 FutureOr<Directory> fileDirectory(FileDirectoryRef ref) async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
-  final path = [documentsDirectory.path, '/AgOpenGPS_flutter'].join();
+  final path = [documentsDirectory.path, '/Autosteering'].join();
   final directory = Directory(path);
 
   if (directory.existsSync()) {
@@ -77,10 +77,11 @@ FutureOr<void> saveJsonToFileDirectory(
   required dynamic object,
   required String fileName,
   required String folder,
+  bool downloadIfWeb = false,
 }) async {
   final dataString = const JsonEncoder.withIndent('    ').convert(object);
 
-  if (Device.isWeb) {
+  if (Device.isWeb && downloadIfWeb) {
     html.AnchorElement()
       ..href = '${Uri.dataFromString(
         dataString,

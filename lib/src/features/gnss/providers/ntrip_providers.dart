@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
-import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
-import 'package:agopengps_flutter/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_io/io.dart';
 
 part 'ntrip_providers.g.dart';
 
@@ -52,7 +55,7 @@ class NtripHost extends _$NtripHost {
     return ref
             .read(settingsProvider.notifier)
             .getString(SettingsKey.ntripHost) ??
-        '3.143.243.81';
+        'rtk2go.com';
   }
 
   /// Updates [state] to [value].
@@ -158,6 +161,31 @@ class NtripPassword extends _$NtripPassword {
   void update(String? value) => Future(() => state = value);
 }
 
+/// A provider for the NTRIP data usage in bytes for this session.
+@Riverpod(keepAlive: true)
+class NtripDataUsageSession extends _$NtripDataUsageSession {
+  @override
+  int? build() {
+    return null;
+  }
+
+  /// Updates [state] to [value].
+
+  void update(int? value) => Future(() => state = value);
+
+  /// Updates [state] by [value].
+  void updateBy(int value) => Future(() {
+        if (Device.isNative) {
+          ref.read(ntripDataUsageByMonthProvider.notifier).updateBy(
+                date: DateTime.now(),
+                value: value,
+              );
+        }
+
+        return state = (state ?? 0) + value;
+      });
+}
+
 /// A provider for telling whether the [ntripClient] is receiving data.
 ///
 /// If not set to true in the last 5 seconds, it will invalidate itself and the
@@ -227,6 +255,11 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
                   Logger.instance.i('NTRIP client connection confirmed.');
                 }
               }
+
+              ref
+                  .read(ntripDataUsageSessionProvider.notifier)
+                  .updateBy(event.lengthInBytes);
+
             });
             ref.onDispose(() {
               data.socket.destroy();
@@ -259,4 +292,68 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
     );
   }
   return null;
+}
+
+/// A provider for a map of all recorded months with their corresponding
+/// data usage.
+@Riverpod(keepAlive: true)
+class NtripDataUsageByMonth extends _$NtripDataUsageByMonth {
+  @override
+  Map<String, int> build() {
+    final path = ref.watch(fileDirectoryProvider).requireValue.path;
+    final file = File('$path/data_usage_ntrip.json');
+    if (!file.existsSync()) {
+      file.createSync(recursive: true);
+      Logger.instance.log(
+        Level.info,
+        'Created data usage file: ${file.path}',
+      );
+    } else {
+      Logger.instance.log(
+        Level.info,
+        'Found data usage file: ${file.path}\n${file.readAsStringSync()}',
+      );
+    }
+    ref.listenSelf((previous, next) {
+      if (!file.existsSync()) {
+        file.createSync(recursive: true);
+        Logger.instance.log(
+          Level.info,
+          'Created data usage file not found, new created: ${file.path}',
+        );
+      }
+      file.writeAsString(const JsonEncoder.withIndent('    ').convert(next));
+    });
+
+    final fileContent = file.readAsStringSync();
+    if (fileContent.isNotEmpty) {
+      final data = jsonDecode(fileContent);
+
+      if (data is Map) {
+        return Map<String, int>.from(data);
+      }
+    }
+
+    return {};
+  }
+
+  /// Updates [state] to [value].
+
+  void update(Map<String, int> value) => Future(() => state = value);
+
+  /// Updates [state] field from [date] by [value].
+  void updateBy({required DateTime date, required int value}) => Future(
+        () => state = Map.from(state)
+          ..update(
+            date.toIso8601String().substring(0, 7),
+            (old) => old + value,
+            ifAbsent: () => value,
+          ),
+      );
+
+  @override
+  bool updateShouldNotify(Map<String, int> previous, Map<String, int> next) {
+    final equal = const DeepCollectionEquality().equals(previous, next);
+    return !equal;
+  }
 }

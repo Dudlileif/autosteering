@@ -39,11 +39,25 @@ const loadEquipmentFromFileProvider = LoadEquipmentFromFileFamily();
 /// A provider for loading an [Equipment] from a file at [path], if it's valid.
 ///
 /// Copied from [loadEquipmentFromFile].
-class LoadEquipmentFromFileFamily extends Family<AsyncValue<Equipment?>> {
+class LoadEquipmentFromFileFamily extends Family {
   /// A provider for loading an [Equipment] from a file at [path], if it's valid.
   ///
   /// Copied from [loadEquipmentFromFile].
   const LoadEquipmentFromFileFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadEquipmentFromFileProvider';
 
   /// A provider for loading an [Equipment] from a file at [path], if it's valid.
   ///
@@ -66,19 +80,27 @@ class LoadEquipmentFromFileFamily extends Family<AsyncValue<Equipment?>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<Equipment?> Function(LoadEquipmentFromFileRef ref) create) {
+    return _$LoadEquipmentFromFileFamilyOverride(this, create);
+  }
+}
+
+class _$LoadEquipmentFromFileFamilyOverride implements FamilyOverride {
+  _$LoadEquipmentFromFileFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<Equipment?> Function(LoadEquipmentFromFileRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final LoadEquipmentFromFileFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadEquipmentFromFileProvider';
+  LoadEquipmentFromFileProvider getProviderOverride(
+    covariant LoadEquipmentFromFileProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for loading an [Equipment] from a file at [path], if it's valid.
@@ -109,7 +131,7 @@ class LoadEquipmentFromFileProvider
         );
 
   LoadEquipmentFromFileProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -122,7 +144,7 @@ class LoadEquipmentFromFileProvider
 
   @override
   Override overrideWith(
-    FutureOr<Equipment?> Function(LoadEquipmentFromFileRef provider) create,
+    FutureOr<Equipment?> Function(LoadEquipmentFromFileRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -146,6 +168,20 @@ class LoadEquipmentFromFileProvider
   @override
   AutoDisposeFutureProviderElement<Equipment?> createElement() {
     return _LoadEquipmentFromFileProviderElement(this);
+  }
+
+  LoadEquipmentFromFileProvider _copyWith(
+    FutureOr<Equipment?> Function(LoadEquipmentFromFileRef ref) create,
+  ) {
+    return LoadEquipmentFromFileProvider._internal(
+      (ref) => create(ref as LoadEquipmentFromFileRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      path: path,
+    );
   }
 
   @override
@@ -176,7 +212,7 @@ class _LoadEquipmentFromFileProviderElement
   String get path => (origin as LoadEquipmentFromFileProvider).path;
 }
 
-String _$saveEquipmentHash() => r'79b127695ddd5594fbca9735c10a1f3c509b02f2';
+String _$saveEquipmentHash() => r'334b2e5eea0212d284f05afd1df4da4904c6fe80';
 
 /// A provider for saving [equipment] to a file in the user file directory.
 ///
@@ -191,13 +227,27 @@ const saveEquipmentProvider = SaveEquipmentFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveEquipment].
-class SaveEquipmentFamily extends Family<AsyncValue<void>> {
+class SaveEquipmentFamily extends Family {
   /// A provider for saving [equipment] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveEquipment].
   const SaveEquipmentFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveEquipmentProvider';
 
   /// A provider for saving [equipment] to a file in the user file directory.
   ///
@@ -207,10 +257,12 @@ class SaveEquipmentFamily extends Family<AsyncValue<void>> {
   SaveEquipmentProvider call(
     Equipment equipment, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) {
     return SaveEquipmentProvider(
       equipment,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -222,22 +274,31 @@ class SaveEquipmentFamily extends Family<AsyncValue<void>> {
     return call(
       provider.equipment,
       overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      AsyncValue<void> Function(SaveEquipmentRef ref) create) {
+    return _$SaveEquipmentFamilyOverride(this, create);
+  }
+}
+
+class _$SaveEquipmentFamilyOverride implements FamilyOverride {
+  _$SaveEquipmentFamilyOverride(this.overriddenFamily, this.create);
+
+  final AsyncValue<void> Function(SaveEquipmentRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final SaveEquipmentFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveEquipmentProvider';
+  SaveEquipmentProvider getProviderOverride(
+    covariant SaveEquipmentProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for saving [equipment] to a file in the user file directory.
@@ -254,11 +315,13 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
   SaveEquipmentProvider(
     Equipment equipment, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) : this._internal(
           (ref) => saveEquipment(
             ref as SaveEquipmentRef,
             equipment,
             overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
           ),
           from: saveEquipmentProvider,
           name: r'saveEquipmentProvider',
@@ -271,10 +334,11 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
               SaveEquipmentFamily._allTransitiveDependencies,
           equipment: equipment,
           overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
         );
 
   SaveEquipmentProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -282,14 +346,16 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
     required super.from,
     required this.equipment,
     required this.overrideName,
+    required this.downloadIfWeb,
   }) : super.internal();
 
   final Equipment equipment;
   final String? overrideName;
+  final bool downloadIfWeb;
 
   @override
   Override overrideWith(
-    AsyncValue<void> Function(SaveEquipmentRef provider) create,
+    AsyncValue<void> Function(SaveEquipmentRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -302,6 +368,7 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
         debugGetCreateSourceHash: null,
         equipment: equipment,
         overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
       ),
     );
   }
@@ -310,10 +377,12 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
   (
     Equipment, {
     String? overrideName,
+    bool downloadIfWeb,
   }) get argument {
     return (
       equipment,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -322,11 +391,28 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
     return _SaveEquipmentProviderElement(this);
   }
 
+  SaveEquipmentProvider _copyWith(
+    AsyncValue<void> Function(SaveEquipmentRef ref) create,
+  ) {
+    return SaveEquipmentProvider._internal(
+      (ref) => create(ref as SaveEquipmentRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      equipment: equipment,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is SaveEquipmentProvider &&
         other.equipment == equipment &&
-        other.overrideName == overrideName;
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
   }
 
   @override
@@ -334,6 +420,7 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, equipment.hashCode);
     hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -345,6 +432,9 @@ mixin SaveEquipmentRef on AutoDisposeProviderRef<AsyncValue<void>> {
 
   /// The parameter `overrideName` of this provider.
   String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
 }
 
 class _SaveEquipmentProviderElement
@@ -355,6 +445,8 @@ class _SaveEquipmentProviderElement
   Equipment get equipment => (origin as SaveEquipmentProvider).equipment;
   @override
   String? get overrideName => (origin as SaveEquipmentProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as SaveEquipmentProvider).downloadIfWeb;
 }
 
 String _$savedEquipmentsHash() => r'07c737a4e45444ae43c789a36be7caf450add31d';
@@ -394,7 +486,7 @@ final showEquipmentDebugProvider =
 );
 
 typedef _$ShowEquipmentDebug = Notifier<bool>;
-String _$allEquipmentsHash() => r'bf89273a1d05fa62e0061b8f9898861ade4d6baf';
+String _$allEquipmentsHash() => r'16fb9c297e1f743fdab66c424c606039a393b8d8';
 
 /// A provider that holds all of the equipments.
 ///
@@ -450,11 +542,25 @@ const equipmentPathsProvider = EquipmentPathsFamily();
 /// A provider for tracking the worked paths for the given equipment [uuid].
 ///
 /// Copied from [EquipmentPaths].
-class EquipmentPathsFamily extends Family<List<Map<int, List<Geographic>?>>> {
+class EquipmentPathsFamily extends Family {
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
   /// Copied from [EquipmentPaths].
   const EquipmentPathsFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'equipmentPathsProvider';
 
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
@@ -477,19 +583,26 @@ class EquipmentPathsFamily extends Family<List<Map<int, List<Geographic>?>>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(EquipmentPaths Function() create) {
+    return _$EquipmentPathsFamilyOverride(this, create);
+  }
+}
+
+class _$EquipmentPathsFamilyOverride implements FamilyOverride {
+  _$EquipmentPathsFamilyOverride(this.overriddenFamily, this.create);
+
+  final EquipmentPaths Function() create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final EquipmentPathsFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'equipmentPathsProvider';
+  EquipmentPathsProvider getProviderOverride(
+    covariant EquipmentPathsProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for tracking the worked paths for the given equipment [uuid].
@@ -517,7 +630,7 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
         );
 
   EquipmentPathsProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -562,6 +675,20 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
   AutoDisposeNotifierProviderElement<EquipmentPaths,
       List<Map<int, List<Geographic>?>>> createElement() {
     return _EquipmentPathsProviderElement(this);
+  }
+
+  EquipmentPathsProvider _copyWith(
+    EquipmentPaths Function() create,
+  ) {
+    return EquipmentPathsProvider._internal(
+      () => create()..uuid = uuid,
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      uuid: uuid,
+    );
   }
 
   @override

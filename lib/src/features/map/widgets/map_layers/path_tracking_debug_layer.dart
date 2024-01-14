@@ -1,7 +1,7 @@
-import 'package:agopengps_flutter/src/features/common/utils/position_projection_extensions.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/utils/position_projection_extensions.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +15,6 @@ class PathTrackingDebugLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tracking = ref.watch(displayPathTrackingProvider);
     final vehicle = ref.watch(mainVehicleProvider);
-    final trackingMode = vehicle.pathTrackingMode;
     final lookAheadDistance = vehicle.lookAheadDistance;
 
     return Stack(
@@ -169,18 +168,7 @@ class PathTrackingDebugLayer extends ConsumerWidget {
                       radius: 5,
                     ),
                   ),
-                  if (trackingMode == PathTrackingMode.pid) ...[
-                    CircleMarker(
-                      point: tracking.currentWayPoint(vehicle).position.latLng,
-                      radius: 3,
-                      color: Colors.black,
-                    ),
-                    CircleMarker(
-                      point: tracking.nextWayPoint(vehicle).position.latLng,
-                      radius: 3,
-                      color: Colors.white,
-                    ),
-                  ] else if (tracking is PurePursuitPathTracking) ...[
+                  if (tracking is PurePursuitPathTracking) ...[
                     CircleMarker(
                       point: vehicle.lookAheadStartPosition.latLng,
                       radius: lookAheadDistance,

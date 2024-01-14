@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,21 +23,85 @@ class GnssQualityStatusIcon extends ConsumerStatefulWidget {
 }
 
 class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
+  Geoid? geoid;
+
   final OverlayPortalController portalController = OverlayPortalController();
 
   String get message {
     final nmea = ref.watch(gnssCurrentSentenceProvider);
 
-    final textLines = [GnssFixQuality.values[nmea?.quality ?? 0].name];
+    final textLines = <String>[];
+    if (nmea?.posMode != null) {
+      textLines.add(
+        '''${nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name} | ${nmea?.posMode}''',
+      );
+    } else if (nmea?.ubxNavStatus != null) {
+      textLines.add(
+        '''${nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name} | ${nmea?.ubxNavStatus}''',
+      );
+    } else {
+      textLines.add(nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name);
+    }
 
+    final latitude = nmea?.latitude;
+    if (latitude != null) {
+      textLines.add('Lat: ${latitude.toStringAsFixed(9)}');
+    }
+    final longitude = nmea?.longitude;
+    if (longitude != null) {
+      textLines.add('Lon: ${longitude.toStringAsFixed(9)}');
+    }
     final hdop = nmea?.hdop;
     if (hdop != null) {
       textLines.add('HDOP: $hdop');
     }
-    final altitude = nmea?.altitudeGeoid;
-    if (altitude != null) {
-      textLines.add('Altitude: ${altitude.toStringAsFixed(1)} m');
+    final vdop = nmea?.vdop;
+    if (vdop != null) {
+      textLines.add('VDOP: $vdop');
     }
+    final tdop = nmea?.tdop;
+    if (tdop != null) {
+      textLines.add('TDOP: $tdop');
+    }
+    final horizontalAccuracy = nmea?.horizontalAccuracy;
+    if (horizontalAccuracy != null) {
+      textLines.add('Pos. Acc: $horizontalAccuracy m');
+    }
+    final verticalAccuracy = nmea?.verticalAccuracy;
+    if (verticalAccuracy != null) {
+      textLines.add('Alt. Acc: $verticalAccuracy m');
+    }
+    final altitude = nmea?.altitudeMSL;
+    final geoidSep = nmea?.geoidSeparation;
+    if (altitude != null) {
+      if (geoidSep != null) {
+        if (geoid != null && latitude != null && longitude != null) {
+          textLines.add(
+            '''Altitude MSL: ${(altitude + geoidSep - geoid!.height(lat: latitude, lon: longitude)).toStringAsFixed(1)} m''',
+          );
+        } else {
+          Geoid.egm96_5().then((value) => geoid = value);
+          textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
+        }
+      } else {
+        textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
+      }
+    }
+    final altitudeRef = nmea?.altitudeRef;
+    if (altitudeRef != null &&
+        nmea?.latitude != null &&
+        nmea?.longitude != null) {
+      textLines.add('Altitude HAE: ${altitudeRef.toStringAsFixed(1)} m');
+
+      if (geoid != null && latitude != null && longitude != null) {
+        textLines.add(
+          '''Altitude MSL: ${(altitudeRef - geoid!.height(lat: latitude, lon: longitude)).toStringAsFixed(1)} m''',
+        );
+      } else {
+        Geoid.egm96_5().then((value) => geoid = value);
+      }
+    }
+
     final age = nmea?.timeSinceLastDGPSUpdate;
     if (age != null) {
       textLines.add('Age: ${age.toStringAsFixed(1)} s');
@@ -91,16 +155,9 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
         },
         child: Consumer(
           builder: (context, ref, child) {
-            final fixQuality = GnssFixQuality.values[ref.watch(
-                  gnssCurrentSentenceProvider.select((value) => value?.quality),
-                ) ??
-                0];
-            final numSatellites =
-                ref.watch(
-                  gnssCurrentSentenceProvider
-                      .select((value) => value?.numSatellites),
-                ) ??
-                0;
+            final nmea = ref.watch(gnssCurrentSentenceProvider);
+            final fixQuality = nmea?.fixQuality ?? GnssFixQuality.notAvailable;
+            final numSatellites = nmea?.numSatellites ?? 0;
             return Stack(
               children: [
                 Align(

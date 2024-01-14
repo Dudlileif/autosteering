@@ -1,5 +1,5 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/map/map.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,8 +59,10 @@ class _CacheDeleter extends ConsumerWidget {
     final pathSplit = path.split('/').reversed;
 
     return MenuItemButton(
+      closeOnActivate: false,
       trailingIcon: const Icon(Icons.delete),
       child: Column(
+
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(

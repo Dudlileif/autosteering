@@ -34,7 +34,7 @@ jobs:
               run: flutter pub get
 
             - name: Build web app
-              run: flutter build web --release --web-renderer canvaskit --base-href /agopengps_flutter/
+              run: flutter build web --release --web-renderer canvaskit --base-href /autosteering/
 
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v2

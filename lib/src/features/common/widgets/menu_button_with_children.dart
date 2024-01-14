@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 /// A standardized menu button useful for keeping consistent styling of

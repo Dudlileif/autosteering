@@ -1,6 +1,6 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,6 +23,8 @@ class PathRecorderMenu extends ConsumerWidget {
           builder: (context, ref, child) {
             final enabled = ref.watch(enablePathRecorderProvider);
             return MenuItemButton(
+              closeOnActivate: false,
+
               leadingIcon: Padding(
                 padding: const EdgeInsets.only(left: 8),
                 child: enabled
@@ -42,7 +44,10 @@ class PathRecorderMenu extends ConsumerWidget {
                       .update(value: true);
                 }
               },
-              child: Text(enabled ? 'Recording, tap to finish' : 'Record'),
+              child: Text(
+                enabled ? 'Recording, tap to finish' : 'Record',
+                style: textStyle,
+              ),
             );
           },
         ),
@@ -159,7 +164,10 @@ class PathRecorderMenu extends ConsumerWidget {
               ),
               onPressed:
                   ref.read(finishedPathRecordingListProvider.notifier).clear,
-              child: const Text('Clear recorded path'),
+              child: Text(
+                'Clear recorded path',
+                style: textStyle,
+              ),
             ),
           ),
         ],

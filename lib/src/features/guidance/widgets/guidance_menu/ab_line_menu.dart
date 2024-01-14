@@ -1,8 +1,8 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/ab_common_menu.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/guidance/widgets/guidance_menu/ab_common_menu.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -51,7 +51,7 @@ class ABLineMenu extends ConsumerWidget {
                       icon: const Icon(Icons.clear),
                     )
                   : null,
-              child: child,
+              closeOnActivate: false,
               onPressed: () {
                 ref.read(aBPointAProvider.notifier).update(
                       ref.watch(
@@ -63,6 +63,7 @@ class ABLineMenu extends ConsumerWidget {
                     .read(aBTrackingDebugShowProvider.notifier)
                     .update(value: true);
               },
+              child: child,
             );
           },
         ),
@@ -86,7 +87,7 @@ class ABLineMenu extends ConsumerWidget {
                       icon: const Icon(Icons.clear),
                     )
                   : null,
-              child: child,
+              closeOnActivate: false,
               onPressed: () {
                 ref.read(aBPointBProvider.notifier).update(
                       ref.watch(
@@ -98,6 +99,7 @@ class ABLineMenu extends ConsumerWidget {
                     .read(aBTrackingDebugShowProvider.notifier)
                     .update(value: true);
               },
+              child: child,
             );
           },
         ),

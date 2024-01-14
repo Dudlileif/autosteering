@@ -6,7 +6,7 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveVehicleHash() => r'6d304997a173080a3f603e628a34ddea27a4b59b';
+String _$saveVehicleHash() => r'f869da254a86f9bcea5bf4ead72636ab01c6a148';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -42,13 +42,27 @@ const saveVehicleProvider = SaveVehicleFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveVehicle].
-class SaveVehicleFamily extends Family<AsyncValue<void>> {
+class SaveVehicleFamily extends Family {
   /// A provider for saving [vehicle] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveVehicle].
   const SaveVehicleFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveVehicleProvider';
 
   /// A provider for saving [vehicle] to a file in the user file directory.
   ///
@@ -58,10 +72,12 @@ class SaveVehicleFamily extends Family<AsyncValue<void>> {
   SaveVehicleProvider call(
     Vehicle vehicle, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) {
     return SaveVehicleProvider(
       vehicle,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -73,22 +89,30 @@ class SaveVehicleFamily extends Family<AsyncValue<void>> {
     return call(
       provider.vehicle,
       overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(AsyncValue<void> Function(SaveVehicleRef ref) create) {
+    return _$SaveVehicleFamilyOverride(this, create);
+  }
+}
+
+class _$SaveVehicleFamilyOverride implements FamilyOverride {
+  _$SaveVehicleFamilyOverride(this.overriddenFamily, this.create);
+
+  final AsyncValue<void> Function(SaveVehicleRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final SaveVehicleFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveVehicleProvider';
+  SaveVehicleProvider getProviderOverride(
+    covariant SaveVehicleProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for saving [vehicle] to a file in the user file directory.
@@ -105,11 +129,13 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
   SaveVehicleProvider(
     Vehicle vehicle, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) : this._internal(
           (ref) => saveVehicle(
             ref as SaveVehicleRef,
             vehicle,
             overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
           ),
           from: saveVehicleProvider,
           name: r'saveVehicleProvider',
@@ -122,10 +148,11 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
               SaveVehicleFamily._allTransitiveDependencies,
           vehicle: vehicle,
           overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
         );
 
   SaveVehicleProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -133,14 +160,16 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
     required super.from,
     required this.vehicle,
     required this.overrideName,
+    required this.downloadIfWeb,
   }) : super.internal();
 
   final Vehicle vehicle;
   final String? overrideName;
+  final bool downloadIfWeb;
 
   @override
   Override overrideWith(
-    AsyncValue<void> Function(SaveVehicleRef provider) create,
+    AsyncValue<void> Function(SaveVehicleRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -153,6 +182,7 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
         debugGetCreateSourceHash: null,
         vehicle: vehicle,
         overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
       ),
     );
   }
@@ -161,10 +191,12 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
   (
     Vehicle, {
     String? overrideName,
+    bool downloadIfWeb,
   }) get argument {
     return (
       vehicle,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -173,11 +205,28 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
     return _SaveVehicleProviderElement(this);
   }
 
+  SaveVehicleProvider _copyWith(
+    AsyncValue<void> Function(SaveVehicleRef ref) create,
+  ) {
+    return SaveVehicleProvider._internal(
+      (ref) => create(ref as SaveVehicleRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      vehicle: vehicle,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is SaveVehicleProvider &&
         other.vehicle == vehicle &&
-        other.overrideName == overrideName;
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
   }
 
   @override
@@ -185,6 +234,7 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, vehicle.hashCode);
     hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -196,6 +246,9 @@ mixin SaveVehicleRef on AutoDisposeProviderRef<AsyncValue<void>> {
 
   /// The parameter `overrideName` of this provider.
   String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
 }
 
 class _SaveVehicleProviderElement
@@ -206,6 +259,8 @@ class _SaveVehicleProviderElement
   Vehicle get vehicle => (origin as SaveVehicleProvider).vehicle;
   @override
   String? get overrideName => (origin as SaveVehicleProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as SaveVehicleProvider).downloadIfWeb;
 }
 
 String _$savedVehiclesHash() => r'2fd0ed9dde2e0b21456e5153b95a2b4232c61d17';
@@ -238,11 +293,25 @@ const loadVehicleFromFileProvider = LoadVehicleFromFileFamily();
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 ///
 /// Copied from [loadVehicleFromFile].
-class LoadVehicleFromFileFamily extends Family<AsyncValue<Vehicle?>> {
+class LoadVehicleFromFileFamily extends Family {
   /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
   ///
   /// Copied from [loadVehicleFromFile].
   const LoadVehicleFromFileFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadVehicleFromFileProvider';
 
   /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
   ///
@@ -265,19 +334,27 @@ class LoadVehicleFromFileFamily extends Family<AsyncValue<Vehicle?>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<Vehicle?> Function(LoadVehicleFromFileRef ref) create) {
+    return _$LoadVehicleFromFileFamilyOverride(this, create);
+  }
+}
+
+class _$LoadVehicleFromFileFamilyOverride implements FamilyOverride {
+  _$LoadVehicleFromFileFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<Vehicle?> Function(LoadVehicleFromFileRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final LoadVehicleFromFileFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadVehicleFromFileProvider';
+  LoadVehicleFromFileProvider getProviderOverride(
+    covariant LoadVehicleFromFileProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
@@ -307,7 +384,7 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
         );
 
   LoadVehicleFromFileProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -320,7 +397,7 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
 
   @override
   Override overrideWith(
-    FutureOr<Vehicle?> Function(LoadVehicleFromFileRef provider) create,
+    FutureOr<Vehicle?> Function(LoadVehicleFromFileRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -344,6 +421,20 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
   @override
   AutoDisposeFutureProviderElement<Vehicle?> createElement() {
     return _LoadVehicleFromFileProviderElement(this);
+  }
+
+  LoadVehicleFromFileProvider _copyWith(
+    FutureOr<Vehicle?> Function(LoadVehicleFromFileRef ref) create,
+  ) {
+    return LoadVehicleFromFileProvider._internal(
+      (ref) => create(ref as LoadVehicleFromFileRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      path: path,
+    );
   }
 
   @override
@@ -522,5 +613,24 @@ final wasCurrentReadingProvider =
 );
 
 typedef _$WasCurrentReading = AutoDisposeNotifier<WasReading?>;
+String _$vehicleSteeringAngleTargetHash() =>
+    r'7d5f2ffb6c1757fe4633b37829f487579cf704e0';
+
+/// A provider for the target steering angle when using guidance.
+///
+/// Copied from [VehicleSteeringAngleTarget].
+@ProviderFor(VehicleSteeringAngleTarget)
+final vehicleSteeringAngleTargetProvider =
+    AutoDisposeNotifierProvider<VehicleSteeringAngleTarget, double?>.internal(
+  VehicleSteeringAngleTarget.new,
+  name: r'vehicleSteeringAngleTargetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$vehicleSteeringAngleTargetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$VehicleSteeringAngleTarget = AutoDisposeNotifier<double?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

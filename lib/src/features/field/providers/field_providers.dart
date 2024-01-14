@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/field/field.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/field/field.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -224,7 +224,7 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
     return field.copyWith(
       polygon: bufferedPolygon,
       boundingBox: bufferedPolygon.exterior != null &&
-              (bufferedPolygon.exterior?.isNotEmpty ?? false)
+              (!bufferedPolygon.exterior!.isEmptyByGeometry)
           ? GeoBox.from(bufferedPolygon.exterior!.toGeographicPositions)
           : null,
     );
@@ -266,12 +266,14 @@ AsyncValue<void> saveField(
   SaveFieldRef ref,
   Field field, {
   String? overrideName,
+  bool downloadIfWeb = false,
 }) =>
     ref.watch(
       saveJsonToFileDirectoryProvider(
         object: field,
         fileName: overrideName ?? field.name,
         folder: 'fields',
+        downloadIfWeb: downloadIfWeb,
       ),
     );
 

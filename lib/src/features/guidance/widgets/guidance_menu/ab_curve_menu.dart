@@ -1,6 +1,7 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/guidance/widgets/guidance_menu/ab_common_menu.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/guidance/widgets/guidance_menu/ab_common_menu.dart';
+import 'package:autosteering/src/features/theme/utils/menu_button_text_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -44,8 +45,12 @@ class ABCurveMenu extends ConsumerWidget {
                       .updateFromRecording();
                 }
               },
+              closeOnActivate: false,
               child:
-                  Text(enabled ? 'Recording, tap to finish' : 'Record curve'),
+                  Text(
+                enabled ? 'Recording, tap to finish' : 'Record curve',
+                style: Theme.of(context).menuButtonWithChildrenText,
+              ),
             );
           },
         ),

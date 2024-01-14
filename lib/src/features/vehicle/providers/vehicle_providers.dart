@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/settings/settings.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -46,7 +46,6 @@ class MainVehicle extends _$MainVehicle {
 }
 
 /// A provider for whether the vehicle should steer automatically.
-
 @Riverpod(keepAlive: true)
 class AutoSteerEnabled extends _$AutoSteerEnabled {
   @override
@@ -67,12 +66,14 @@ AsyncValue<void> saveVehicle(
   SaveVehicleRef ref,
   Vehicle vehicle, {
   String? overrideName,
+  bool downloadIfWeb = false,
 }) =>
     ref.watch(
       saveJsonToFileDirectoryProvider(
         object: vehicle,
         fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
         folder: 'vehicles',
+        downloadIfWeb: downloadIfWeb,
       ),
     );
 
@@ -198,7 +199,6 @@ class ImuCurrentReading extends _$ImuCurrentReading {
   void update(ImuReading? value) => Future(() => state = value);
 }
 
-
 /// A provider for the frequency of the WAS updates.
 @riverpod
 class WasCurrentFrequency extends _$WasCurrentFrequency {
@@ -221,7 +221,6 @@ class WasCurrentFrequency extends _$WasCurrentFrequency {
   void update(double? value) => Future(() => state = value);
 }
 
-
 /// A provider for the current raw [WasReading] from the hardware.
 @riverpod
 class WasCurrentReading extends _$WasCurrentReading {
@@ -242,4 +241,14 @@ class WasCurrentReading extends _$WasCurrentReading {
 
   /// Updates [state] to [value].
   void update(WasReading? value) => Future(() => state = value);
+}
+
+/// A provider for the target steering angle when using guidance.
+@riverpod
+class VehicleSteeringAngleTarget extends _$VehicleSteeringAngleTarget {
+  @override
+  double? build() => null;
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
 }

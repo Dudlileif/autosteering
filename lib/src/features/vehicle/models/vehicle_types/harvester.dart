@@ -16,6 +16,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.solidAxleToRearHitchDistance,
     super.solidAxleToRearTowbarDistance = 6,
     super.ackermannSteeringRatio,
+    super.ackermannPercentage,
     super.steeringAxleWheelDiameter,
     super.solidAxleWheelDiameter,
     super.steeringAxleWheelWidth,
@@ -23,8 +24,9 @@ final class Harvester extends AxleSteeredVehicle {
     super.invertSteeringInput,
     super.imu,
     super.was,
+    super.motorConfig,
     super.pathTrackingMode,
-    super.pidParameters = const PidParameters(p: 20, i: 0, d: 2),
+    super.pidParameters,
     super.purePursuitParameters,
     super.stanleyParameters,
     super.velocity,
@@ -71,6 +73,7 @@ final class Harvester extends AxleSteeredVehicle {
       steeringAngleMax: steering['steering_angle_max'] as double,
       invertSteeringInput: steering['invert_steering_input'] as bool,
       ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
+      ackermannPercentage: steering['ackermann_percentage'] as double? ?? 100,
       steeringAxleWheelDiameter:
           wheels['steering_axle_wheel_diameter'] as double,
       solidAxleWheelDiameter: wheels['solid_axle_wheel_diameter'] as double,
@@ -140,6 +143,7 @@ final class Harvester extends AxleSteeredVehicle {
     double? solidAxleToRearTowbarDistance,
     double? solidAxleToRearHitchDistance,
     double? ackermannSteeringRatio,
+    double? ackermannPercentage,
     double? steeringAxleWheelDiameter,
     double? solidAxleWheelDiameter,
     double? steeringAxleWheelWidth,
@@ -147,6 +151,7 @@ final class Harvester extends AxleSteeredVehicle {
     bool? invertSteeringInput,
     Imu? imu,
     Was? was,
+    MotorConfig? motorConfig,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -170,7 +175,7 @@ final class Harvester extends AxleSteeredVehicle {
         antennaHeight: antennaHeight ?? this.antennaHeight,
         antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,
-        steeringAngleMax: steeringAngleMax ?? this.steeringAngleMax,
+        steeringAngleMax: steeringAngleMax ?? _steeringAngleMaxRaw,
         trackWidth: trackWidth ?? this.trackWidth,
         wheelBase: wheelBase ?? this.wheelBase,
         solidAxleDistance: solidAxleDistance ?? this.solidAxleDistance,
@@ -182,6 +187,7 @@ final class Harvester extends AxleSteeredVehicle {
             solidAxleToRearTowbarDistance ?? this.solidAxleToRearTowbarDistance,
         ackermannSteeringRatio:
             ackermannSteeringRatio ?? this.ackermannSteeringRatio,
+        ackermannPercentage: ackermannPercentage ?? this.ackermannPercentage,
         steeringAxleWheelDiameter:
             steeringAxleWheelDiameter ?? this.steeringAxleWheelDiameter,
         solidAxleWheelDiameter:
@@ -192,6 +198,7 @@ final class Harvester extends AxleSteeredVehicle {
         invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         imu: imu ?? this.imu,
         was: was ?? this.was,
+        motorConfig: motorConfig ?? this.motorConfig,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
         pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:

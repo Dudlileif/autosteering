@@ -1,4 +1,4 @@
-# AgOpenGps - Flutter port
+# Autosteering - Built with Flutter
 
 ## Implemented functionality
 
@@ -36,14 +36,18 @@
   - USB/Serial or network UDP, WebSocket possible for http hosted site
   - WAS and IMU configurator
 
+- Autosteering comms with hardware
+
 - NTRIP client for sending RTCM to GNSS hardware.
 
 - Basic logging
 
 ## To be implemented
 
-- Better performance, <s>the current immutable/copyWith implementation might be
-    too taxing</s> improved with mutable vehicle/equipments, reduce conversion steps with latlng/xy-coordinates (change algorithms to xy-coords)
+- Better performance,
+  - ~~Immutable/copyWith vehicle/equipment implementation is too taxing~~ improved with mutable vehicle/equipments
+  - Maybe reduce conversion steps with latlng/xy-coordinates (change algorithms to xy-coords)
+  - Look into `canvas.drawVertices` for drawing the worked equipment paths
 
 - Improved vehicle simulation, though good enough for testing features now
 
@@ -53,9 +57,11 @@
 
 - Improve autosteering, look at more algorithms
 
-- Autosteering comms with hardware
-
 - Debugging graphs/logs
+
+- Audio alerts
+
+- Safety measures
 
 - Import/export to the original AgOpenGps
 

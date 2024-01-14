@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'6bf9bd6eeeea17453b91f5f7c369b64b8f9cb469';
+String _$ntripClientHash() => r'eb3716c27f5d715a11ce0a2e74e38c4f1c40378d';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -41,7 +41,7 @@ final ntripEnabledProvider = NotifierProvider<NtripEnabled, bool>.internal(
 );
 
 typedef _$NtripEnabled = Notifier<bool>;
-String _$ntripHostHash() => r'fcd36a33b8ab6214d5de1ede4d8e4ce6a34829c1';
+String _$ntripHostHash() => r'ac1883525d3e5d2a90987ce8973b9506cd405128';
 
 /// A provider for the NTRIP caster host address.
 ///
@@ -125,6 +125,25 @@ final ntripPasswordProvider = NotifierProvider<NtripPassword, String?>.internal(
 );
 
 typedef _$NtripPassword = Notifier<String?>;
+String _$ntripDataUsageSessionHash() =>
+    r'fa7c2e5b463dff14668b2ba57d943472d7f80767';
+
+/// A provider for the NTRIP data usage in bytes for this session.
+///
+/// Copied from [NtripDataUsageSession].
+@ProviderFor(NtripDataUsageSession)
+final ntripDataUsageSessionProvider =
+    NotifierProvider<NtripDataUsageSession, int?>.internal(
+  NtripDataUsageSession.new,
+  name: r'ntripDataUsageSessionProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ntripDataUsageSessionHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NtripDataUsageSession = Notifier<int?>;
 String _$ntripAliveHash() => r'49b669a2a8a8f00a00d88a92fb8745b0c118e9da';
 
 /// A provider for telling whether the [ntripClient] is receiving data.
@@ -144,5 +163,25 @@ final ntripAliveProvider = NotifierProvider<NtripAlive, bool>.internal(
 );
 
 typedef _$NtripAlive = Notifier<bool>;
+String _$ntripDataUsageByMonthHash() =>
+    r'df57fee66524b28d3148555e618e28e8f7214068';
+
+/// A provider for a map of all recorded months with their corresponding
+/// data usage.
+///
+/// Copied from [NtripDataUsageByMonth].
+@ProviderFor(NtripDataUsageByMonth)
+final ntripDataUsageByMonthProvider =
+    NotifierProvider<NtripDataUsageByMonth, Map<String, int>>.internal(
+  NtripDataUsageByMonth.new,
+  name: r'ntripDataUsageByMonthProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ntripDataUsageByMonthHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NtripDataUsageByMonth = Notifier<Map<String, int>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

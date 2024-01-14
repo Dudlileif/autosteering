@@ -95,12 +95,26 @@ const commonSimCoreMessageHandlerProvider = CommonSimCoreMessageHandlerFamily();
 /// simulation.
 ///
 /// Copied from [commonSimCoreMessageHandler].
-class CommonSimCoreMessageHandlerFamily extends Family<void> {
+class CommonSimCoreMessageHandlerFamily extends Family {
   /// A provider for handling the common sim core messages for the state of the
   /// simulation.
   ///
   /// Copied from [commonSimCoreMessageHandler].
   const CommonSimCoreMessageHandlerFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'commonSimCoreMessageHandlerProvider';
 
   /// A provider for handling the common sim core messages for the state of the
   /// simulation.
@@ -133,19 +147,28 @@ class CommonSimCoreMessageHandlerFamily extends Family<void> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      void Function(CommonSimCoreMessageHandlerRef ref) create) {
+    return _$CommonSimCoreMessageHandlerFamilyOverride(this, create);
+  }
+}
+
+class _$CommonSimCoreMessageHandlerFamilyOverride implements FamilyOverride {
+  _$CommonSimCoreMessageHandlerFamilyOverride(
+      this.overriddenFamily, this.create);
+
+  final void Function(CommonSimCoreMessageHandlerRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final CommonSimCoreMessageHandlerFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'commonSimCoreMessageHandlerProvider';
+  CommonSimCoreMessageHandlerProvider getProviderOverride(
+    covariant CommonSimCoreMessageHandlerProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for handling the common sim core messages for the state of the
@@ -186,7 +209,7 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
         );
 
   CommonSimCoreMessageHandlerProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -208,7 +231,7 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
 
   @override
   Override overrideWith(
-    void Function(CommonSimCoreMessageHandlerRef provider) create,
+    void Function(CommonSimCoreMessageHandlerRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -243,6 +266,20 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
   @override
   AutoDisposeProviderElement<void> createElement() {
     return _CommonSimCoreMessageHandlerProviderElement(this);
+  }
+
+  CommonSimCoreMessageHandlerProvider _copyWith(
+    void Function(CommonSimCoreMessageHandlerRef ref) create,
+  ) {
+    return CommonSimCoreMessageHandlerProvider._internal(
+      (ref) => create(ref as CommonSimCoreMessageHandlerRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      message: message,
+    );
   }
 
   @override

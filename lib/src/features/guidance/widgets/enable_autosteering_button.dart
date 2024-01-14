@@ -1,5 +1,5 @@
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,13 +22,10 @@ class EnableAutosteeringButton extends StatelessWidget {
               .read(simInputProvider.notifier)
               .send((enableAutoSteer: !enabled)),
           backgroundColor: switch (enabled) {
-            true => Colors.orange,
+            true => Colors.red,
             false => Colors.green,
           },
-          foregroundColor: switch (enabled) {
-            true => Colors.black,
-            false => Colors.white
-          },
+          foregroundColor: Colors.white,
           tooltip: switch (enabled) {
             false => 'Enable auto steering',
             true => 'Disable auto steering'
@@ -39,7 +36,7 @@ class EnableAutosteeringButton extends StatelessWidget {
                 heightFactor: 1.5,
                 child: Icon(
                   switch (enabled) {
-                    true => Icons.pause_circle,
+                    true => Icons.stop_circle,
                     false => Icons.play_circle
                   },
                   size: 32,
@@ -51,10 +48,7 @@ class EnableAutosteeringButton extends StatelessWidget {
                   'AUTO',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: switch (enabled) {
-                          true => Colors.black,
-                          false => Colors.white
-                        },
+                        color: Colors.white,
                       ),
                 ),
               ),

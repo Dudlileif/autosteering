@@ -1,4 +1,4 @@
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

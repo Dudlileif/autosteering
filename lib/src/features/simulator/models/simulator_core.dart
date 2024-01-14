@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/equipment/equipment.dart';
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
-import 'package:agopengps_flutter/src/features/hitching/hitching.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
@@ -21,6 +21,10 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class SimulatorCore {
   /// Targets 60 hz => 16666.66... micro seconds
   static const _targetPeriodMicroSeconds = 16667;
+
+  /// The time in seconds between attempts to resolve the hardware host/IP
+  /// address.
+  static const addressLookupRetryPeriod = 5;
 
   /// Used on native platforms since they can easily be multithreaded.
   static Future<void> isolateWorker(SendPort sendPort) async {
@@ -51,7 +55,7 @@ class SimulatorCore {
     var prevHardwareIsConnected = false;
 
     // A timer for periodically updating the simulation.
-    final timer = Timer.periodic(
+    final simulationTimer = Timer.periodic(
         const Duration(microseconds: _targetPeriodMicroSeconds), (timer) {
       if (state.vehicle != null) {
         state.update();
@@ -82,36 +86,20 @@ class SimulatorCore {
       }
     });
 
-    var serverEndPoint = Endpoint.unicast(
-      InternetAddress('192.168.4.1'),
-      port: const Port(6666),
-    );
-
-    var endPoint = Endpoint.any(
-      port: const Port(3333),
-    );
-
-    var udp = await UDP.bind(endPoint);
-
-    updateMainThreadStream.add(
-      LogEvent(
-        Level.info,
-        '''Set up local UDP endpoint on IP: ${udp.local.address}, port: ${udp.local.port?.value}''',
-      ),
-    );
+    Endpoint? serverEndPoint;
+    Endpoint? endPoint;
+    UDP? udp;
 
     final udpSendStream = StreamController<Uint8List>();
 
     state.networkSendStream = udpSendStream;
 
     udpSendStream.stream.listen(
-      (event) => udp.send(event, serverEndPoint),
-    );
-
-    udpSendStream.add(
-      Uint8List.fromList(
-        utf8.encode('${Platform.operatingSystem}: Simulator started'),
-      ),
+      (event) {
+        if (udp != null && serverEndPoint != null) {
+          udp!.send(event, serverEndPoint!);
+        }
+      },
     );
 
     final heartbeatUDPMessage = Uint8List.fromList(
@@ -135,76 +123,111 @@ class SimulatorCore {
       );
     }
 
-    udp.asStream().listen(handleUdpData);
+    Timer? addressLookupRetryTimer;
 
-    updateMainThreadStream.add(
-      LogEvent(
-        Level.info,
-        '''Listening to server UDP endpoint IP: ${serverEndPoint.address}, port: ${serverEndPoint.port?.value}''',
-      ),
-    );
+    Future<void> setupUdp({
+      required String host,
+      required int receivePort,
+      required int sendPort,
+    }) async {
+      try {
+        final hardwareAddress =
+            (await InternetAddress.lookup(host)).firstOrNull;
+        if (hardwareAddress != null) {
+          udpHeartbeatTimer.cancel();
+
+          serverEndPoint = Endpoint.unicast(
+            hardwareAddress,
+            port: Port(sendPort),
+          );
+
+          endPoint = Endpoint.any(port: Port(receivePort));
+
+          udp?.close();
+          updateMainThreadStream.add(
+            LogEvent(
+              Level.info,
+              'Closed current UDP instance and sockets.',
+            ),
+          );
+          if (endPoint != null) {
+            udp = await UDP.bind(endPoint!);
+          }
+          updateMainThreadStream.add(
+            LogEvent(
+              Level.info,
+              '''Set up local UDP endpoint on IP: ${udp?.local.address}, port: ${udp?.local.port?.value}''',
+            ),
+          );
+
+          udp?.asStream().listen(handleUdpData);
+
+          updateMainThreadStream.add(
+            LogEvent(
+              Level.info,
+              '''Listening to server UDP endpoint IP: ${serverEndPoint?.address}, port: ${serverEndPoint?.port?.value}''',
+            ),
+          );
+
+          udpSendStream.add(
+            Uint8List.fromList(utf8.encode('Simulator started')),
+          );
+
+          udpHeartbeatTimer = Timer.periodic(
+            const Duration(seconds: 1),
+            (timer) => udpSendStream.add(heartbeatUDPMessage),
+          );
+        }
+      } catch (error) {
+        // Continue, as the error is the same as previously.
+        addressLookupRetryTimer?.cancel();
+        addressLookupRetryTimer =
+            Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
+          await setupUdp(
+            host: host,
+            receivePort: receivePort,
+            sendPort: sendPort,
+          );
+        });
+      }
+    }
+
+    addressLookupRetryTimer =
+        Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
+      await setupUdp(
+        host: 'autosteering.local',
+        receivePort: 3333,
+        sendPort: 6666,
+      );
+    });
 
     // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
       // Update the udp ip adress for the hardware.
       if (message is ({
-        String hardwareIPAdress,
+        String hardwareAddress,
         int hardwareUDPReceivePort,
         int hardwareUDPSendPort
       })) {
         udpHeartbeatTimer.cancel();
+        addressLookupRetryTimer?.cancel();
 
-        serverEndPoint = Endpoint.unicast(
-          InternetAddress(message.hardwareIPAdress),
-          port: Port(message.hardwareUDPSendPort),
-        );
+        // Start retrying every 5 seconds in case the hardware gets connected
+        // to the network.
 
-        endPoint = Endpoint.any(port: Port(message.hardwareUDPReceivePort));
-
-        udp.close();
-        updateMainThreadStream.add(
-          LogEvent(
-            Level.info,
-            'Closed current UDP instance and sockets.',
-          ),
-        );
-
-        udp = await UDP.bind(endPoint);
-
-        updateMainThreadStream.add(
-          LogEvent(
-            Level.info,
-            '''Set up local UDP endpoint on IP: ${udp.local.address}, port: ${udp.local.port?.value}''',
-          ),
-        );
-
-        udp.asStream().listen(handleUdpData);
-
-        updateMainThreadStream.add(
-          LogEvent(
-            Level.info,
-            '''Listening to server UDP endpoint IP: ${serverEndPoint.address}, port: ${serverEndPoint.port?.value}''',
-          ),
-        );
-
-        udpSendStream.add(
-          Uint8List.fromList(utf8.encode('Simulator started')),
-        );
-
-        udpHeartbeatTimer = Timer.periodic(
-          const Duration(seconds: 1),
-          (timer) => udpSendStream.add(heartbeatUDPMessage),
-        );
+        addressLookupRetryTimer =
+            Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
+          await setupUdp(
+            host: message.hardwareAddress,
+            receivePort: message.hardwareUDPReceivePort,
+            sendPort: message.hardwareUDPSendPort,
+          );
+        });
       }
 
       // Messages for the state.
-      else if (message != null) {
-        state.handleMessage(message);
-      }
-      // Shut down the isolate.
       else {
-        timer.cancel();
-        break;
+        state.handleMessage(message);
       }
     }
 
@@ -215,7 +238,7 @@ class SimulatorCore {
       ),
     );
 
-    udp.close();
+    udp?.close();
 
     updateMainThreadStream.add(
       LogEvent(Level.info, 'Simulator Core isolate exited.'),
@@ -434,6 +457,15 @@ class _SimulatorCoreState {
   /// The sign for which direction the vehicle is driving.
   int drivingDirectionSign = 1;
 
+  /// The velocity threshold for activating auto steering.
+  double autoSteerThresholdVelocity = 0.1;
+
+  /// The target steering angle when guidance is active.
+  double? steeringAngleTarget;
+
+  /// The target RPM for the steering motor.
+  double? motorTargetRPM;
+
   /// Whether the state changed in the last update.
   bool didChange = true;
 
@@ -487,11 +519,6 @@ class _SimulatorCoreState {
   /// Which steering mode the [pathTracking] should use.
   PathTrackingMode pathTrackingMode = PathTrackingMode.purePursuit;
 
-  /// A temporary steering mode for the [PathTracking], only used when the
-  /// [pathTrackingMode] is [PathTrackingMode.pid] and the lateral distance to
-  /// the path is larger than the vehicle's min turning radius.
-  PathTrackingMode tempPathTrackingMode = PathTrackingMode.purePursuit;
-
   /// The interpolation distance for points in the [pathTracking]
   double pathInterpolationDistance = 4;
 
@@ -505,6 +532,9 @@ class _SimulatorCoreState {
 
   /// Whether we should force update for the next update, i.e. send the state.
   bool forceChange = false;
+
+  /// Whether motor calibration mode is active.
+  bool motorCalibrationEnabled = false;
 
   /// Update the [prevUpdateTime] and the [period] for the next simulation.
   void updateTime() {
@@ -551,7 +581,7 @@ class _SimulatorCoreState {
     // updates.
     else if (message is ({bool allowSimInterpolation})) {
       allowSimInterpolation = message.allowSimInterpolation;
-    } 
+    }
     // Update the IMU config of the vehicle.
     else if (message is ImuConfig) {
       vehicle?.imu.config = message;
@@ -586,6 +616,10 @@ class _SimulatorCoreState {
     // Update the WAS config of the vehicle.
     else if (message is WasConfig) {
       vehicle?.was.config = message;
+    } 
+    // Update the motor config of the vehicle.
+    else if (message is MotorConfig) {
+      vehicle?.motorConfig = message;
     }
 
     // Update bearing
@@ -604,7 +638,9 @@ class _SimulatorCoreState {
     else if (message is WasReading) {
       if (vehicle != null) {
         vehicle!.was.reading = message;
-        vehicle!.setSteeringAngleByWasReading();
+        if (vehicle!.was.config.useWas) {
+          vehicle!.setSteeringAngleByWasReading();
+        }
       }
     }
     // Update number of updates to use for gauge averages.
@@ -666,17 +702,8 @@ class _SimulatorCoreState {
           autoSteerEnabled = true;
           mainThreadSendStream
               .add(LogEvent(Level.warning, 'Autosteer enabled!'));
-
-          networkSendStream?.add(
-            const Utf8Encoder()
-                .convert(jsonEncode({'autoSteerEnabled': autoSteerEnabled})),
-          );
         } else {
           autoSteerEnabled = false;
-          networkSendStream?.add(
-            const Utf8Encoder()
-                .convert(jsonEncode({'autoSteerEnabled': false})),
-          );
           mainThreadSendStream.add(
             LogEvent(
               Level.warning,
@@ -684,11 +711,10 @@ class _SimulatorCoreState {
             ),
           );
         }
-      } else {
+      }
+      // Disable autosteer and motor
+      else if (autoSteerEnabled) {
         autoSteerEnabled = false;
-        networkSendStream?.add(
-          const Utf8Encoder().convert(jsonEncode({'autoSteerEnabled': false})),
-        );
         mainThreadSendStream.add(
           LogEvent(
             Level.warning,
@@ -732,14 +758,11 @@ class _SimulatorCoreState {
     // Change pure pursuit mode.
     else if (message is PathTrackingMode) {
       pathTrackingMode = message;
-      tempPathTrackingMode = pathTrackingMode;
       vehicle?.pathTrackingMode = pathTrackingMode;
       if (pathTracking != null) {
         final index = pathTracking!.currentIndex;
         pathTracking = switch (pathTrackingMode) {
-          PathTrackingMode.pid ||
-          PathTrackingMode.purePursuit =>
-            PurePursuitPathTracking(
+          PathTrackingMode.purePursuit => PurePursuitPathTracking(
               wayPoints: pathTracking!.wayPoints,
               interpolationDistance: pathInterpolationDistance,
               loopMode: pathTrackingLoopMode,
@@ -877,6 +900,10 @@ class _SimulatorCoreState {
     else if (message is ({Uint8List useAsNtripServer})) {
       networkSendStream?.add(message.useAsNtripServer);
     }
+    // Enable/disable motor calibration.
+    else if (message is ({bool enableMotorCalibration})) {
+      motorCalibrationEnabled = message.enableMotorCalibration;
+    }
     // Unknown message, log it to figure out what it is.
     else {
       mainThreadSendStream.add(
@@ -890,7 +917,7 @@ class _SimulatorCoreState {
 
   /// Check if [autoSlowDown] or [autoCenterSteering] should decrease the
   /// parameters they control.
-  void updateVehicleVelocityAndSteering() {
+  void simUpdateVehicleVelocityAndSteering() {
     if (vehicle != null) {
       // The acceleration rate of the vehicle, m/s^2.
       const accelerationRate = 3;
@@ -1003,60 +1030,75 @@ class _SimulatorCoreState {
       if (!autoSteerEnabled && allowManualTrackingUpdates) {
         abTracking?.manualUpdate(vehicle!);
       }
-      if (autoSteerEnabled && !receivingManualInput) {
-        var steeringAngle = 0.0;
-        if (abTracking != null) {
-          checkIfPidModeIsValid(
-            abTracking!
-                .signedPerpendicularDistanceToCurrentLine(vehicle!)
-                .abs(),
-          );
 
-          steeringAngle = abTracking!
-              .nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
-        } else if (pathTracking != null) {
-          pathTracking!.tryChangeWayPoint(vehicle!);
+      steeringAngleTarget = 0.0;
+      if (abTracking != null) {
+        steeringAngleTarget =
+            abTracking!.nextSteeringAngle(vehicle!, mode: pathTrackingMode);
+      } else if (pathTracking != null) {
+        pathTracking!.tryChangeWayPoint(vehicle!);
 
-          if (enablePathTracking) {
-            checkIfPidModeIsValid(
-              pathTracking!.perpendicularDistance(vehicle!).abs(),
-            );
-            steeringAngle = pathTracking!
-                .nextSteeringAngle(vehicle!, mode: tempPathTrackingMode);
-          }
+        if (enablePathTracking) {
+          steeringAngleTarget =
+              pathTracking!.nextSteeringAngle(vehicle!, mode: pathTrackingMode);
         }
+      }
 
-        // Only allow steering if vehicle is moving to prevent jitter that moves
-        // the vehicle when stationary.
-        if (steeringAngle == vehicle!.steeringAngleInput ||
+      if (autoSteerEnabled &&
+          !receivingManualInput &&
+          !motorCalibrationEnabled) {
+        // Only allow steering if vehicle is moving to prevent jitter that
+        // moves the vehicle when stationary.
+        if (steeringAngleTarget == vehicle!.steeringAngleInput ||
             vehicle!.velocity == 0) {
           steeringChange = SimInputChange.hold;
-        } else if (steeringAngle < vehicle!.steeringAngleInput) {
+        } else if (steeringAngleTarget! < vehicle!.steeringAngleInput) {
           steeringChange = SimInputChange.decrease;
-        } else if (steeringAngle > vehicle!.steeringAngleInput) {
+        } else if (steeringAngleTarget! > vehicle!.steeringAngleInput) {
           steeringChange = SimInputChange.increase;
         }
-      }
-    }
-  }
 
-  void checkIfPidModeIsValid(double lateralDistance) {
-    // Swap to look ahead if the distance is farther than the vehicle's
-    // min turning radius, as we'd be doing circles otherwise.
-    if (pathTrackingMode == PathTrackingMode.pid) {
-      // Switch if the distance is larger than 0.7 times the turning
-      // radius, this value is experimental to find a smoother transition
-      // to swap mode.
-      if (lateralDistance > 0.7 * vehicle!.minTurningRadius &&
-          tempPathTrackingMode != PathTrackingMode.purePursuit) {
-        tempPathTrackingMode = PathTrackingMode.purePursuit;
+        motorTargetRPM = 0.0;
+        if (vehicle!.velocity.abs() > autoSteerThresholdVelocity
+            // &&    steeringAngleTarget != vehicle!.steeringAngleInput
+            ) {
+          motorTargetRPM = ((vehicle!.motorConfig.invertOutput ? -1 : 1) *
+                  vehicle!.nextSteeringAnglePid(steeringAngleTarget!) /
+                  (vehicle!.steeringAngleMax) *
+                  vehicle!.motorConfig.maxRPM)
+              .clamp(
+            -vehicle!.motorConfig.maxRPM.toDouble(),
+            vehicle!.motorConfig.maxRPM.toDouble(),
+          );
+        }
+        networkSendStream?.add(
+          const Utf8Encoder().convert(
+            jsonEncode(
+              {
+                'motor_rpm': motorTargetRPM,
+                'enable_motor': autoSteerEnabled,
+              },
+            ),
+          ),
+        );
+      } else if (motorCalibrationEnabled) {
+        networkSendStream?.add(
+          const Utf8Encoder().convert(
+            jsonEncode(
+              {
+                'motor_en_cal': motorCalibrationEnabled,
+                'enable_motor': motorCalibrationEnabled,
+              },
+            ),
+          ),
+        );
+        motorTargetRPM = null;
+      } else {
+        motorTargetRPM = null;
       }
-      // Swap back to the pid mode when we're within the turning circle
-      // radius of the path.
-      else if (pathTrackingMode == PathTrackingMode.pid &&
-          lateralDistance < vehicle!.minTurningRadius) {
-        tempPathTrackingMode = pathTrackingMode;
-      }
+      mainThreadSendStream
+        ..add((steeringAngleTarget: steeringAngleTarget))
+        ..add((motorTargetRPM: motorTargetRPM));
     }
   }
 
@@ -1103,6 +1145,9 @@ class _SimulatorCoreState {
           false => 1,
         };
         gaugeVelocity = directionSign * distance / period;
+        if (directionSign == -1) {
+          gaugeBearing = (gaugeBearing + 180).wrap360();
+        }
       } else {
         gaugeVelocity = 0;
       }
@@ -1271,7 +1316,7 @@ class _SimulatorCoreState {
         }
 
         prevGnssUpdates.add(gnssUpdate!);
-        gnssUpdate = null;
+        // gnssUpdate = null;
 
         // Remove the oldest updates if there are more than [gaugesAverageCount]
         // in the current list.
@@ -1282,7 +1327,7 @@ class _SimulatorCoreState {
         return;
       }
       prevGnssUpdates.add(gnssUpdate!);
-      gnssUpdate = null;
+      // gnssUpdate = null;
 
       // Remove the oldest updates if there are more than [gaugesAverageCount]
       // in the current list.
@@ -1299,7 +1344,10 @@ class _SimulatorCoreState {
   /// Update the simulation, i.e. simulate the next step.
   void update() {
     checkGuidance();
-    updateVehicleVelocityAndSteering();
+
+    if (allowManualSimInput) {
+      simUpdateVehicleVelocityAndSteering();
+    }
     checkTurningCircle();
     updateTime();
 
@@ -1317,15 +1365,17 @@ class _SimulatorCoreState {
           // force: gaugeVelocity.abs() > 0,
         );
         // gnssUpdate = (gnssPosition: vehicle!.position, time: DateTime.now());
+        if (allowManualSimInput && gaugeVelocity.sign < 0) {
+          gaugeBearing = (gaugeBearing + 180).wrap360();
+        }
       }
 
       updateGauges();
-
-      if (!allowManualSimInput) {
-        vehicle!
-          ..velocity = gaugeVelocity
-          ..bearing = gaugeBearing;
+      if (gnssUpdate != null && !allowManualSimInput) {
+        vehicle!.bearing = gaugeBearing;
+        vehicle!.velocity = gaugeVelocity;
       }
+      gnssUpdate = null;
     }
 
     didChange = forceChange ||

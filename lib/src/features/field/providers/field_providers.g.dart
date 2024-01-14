@@ -6,7 +6,7 @@ part of 'field_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bufferedFieldHash() => r'e464ccb490ddf7b887c7ec2447fcc686901a3366';
+String _$bufferedFieldHash() => r'fc5a46a11891012983087d68adae337a2cc4b9cb';
 
 /// A provider for creating and updating the buffered test field.
 ///
@@ -23,7 +23,7 @@ final bufferedFieldProvider = FutureProvider<Field?>.internal(
 );
 
 typedef BufferedFieldRef = FutureProviderRef<Field?>;
-String _$saveFieldHash() => r'6618b0c9eb255bde804a6dc997047d5098089801';
+String _$saveFieldHash() => r'd87493445562559fe2948bf09fbaebf19b9cfe72';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -59,13 +59,27 @@ const saveFieldProvider = SaveFieldFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveField].
-class SaveFieldFamily extends Family<AsyncValue<void>> {
+class SaveFieldFamily extends Family {
   /// A provider for saving [field] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveField].
   const SaveFieldFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveFieldProvider';
 
   /// A provider for saving [field] to a file in the user file directory.
   ///
@@ -75,10 +89,12 @@ class SaveFieldFamily extends Family<AsyncValue<void>> {
   SaveFieldProvider call(
     Field field, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) {
     return SaveFieldProvider(
       field,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -90,22 +106,30 @@ class SaveFieldFamily extends Family<AsyncValue<void>> {
     return call(
       provider.field,
       overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(AsyncValue<void> Function(SaveFieldRef ref) create) {
+    return _$SaveFieldFamilyOverride(this, create);
+  }
+}
+
+class _$SaveFieldFamilyOverride implements FamilyOverride {
+  _$SaveFieldFamilyOverride(this.overriddenFamily, this.create);
+
+  final AsyncValue<void> Function(SaveFieldRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final SaveFieldFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveFieldProvider';
+  SaveFieldProvider getProviderOverride(
+    covariant SaveFieldProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// A provider for saving [field] to a file in the user file directory.
@@ -122,11 +146,13 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
   SaveFieldProvider(
     Field field, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) : this._internal(
           (ref) => saveField(
             ref as SaveFieldRef,
             field,
             overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
           ),
           from: saveFieldProvider,
           name: r'saveFieldProvider',
@@ -138,10 +164,11 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
           allTransitiveDependencies: SaveFieldFamily._allTransitiveDependencies,
           field: field,
           overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
         );
 
   SaveFieldProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -149,14 +176,16 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
     required super.from,
     required this.field,
     required this.overrideName,
+    required this.downloadIfWeb,
   }) : super.internal();
 
   final Field field;
   final String? overrideName;
+  final bool downloadIfWeb;
 
   @override
   Override overrideWith(
-    AsyncValue<void> Function(SaveFieldRef provider) create,
+    AsyncValue<void> Function(SaveFieldRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -169,6 +198,7 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
         debugGetCreateSourceHash: null,
         field: field,
         overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
       ),
     );
   }
@@ -177,10 +207,12 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
   (
     Field, {
     String? overrideName,
+    bool downloadIfWeb,
   }) get argument {
     return (
       field,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -189,11 +221,28 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
     return _SaveFieldProviderElement(this);
   }
 
+  SaveFieldProvider _copyWith(
+    AsyncValue<void> Function(SaveFieldRef ref) create,
+  ) {
+    return SaveFieldProvider._internal(
+      (ref) => create(ref as SaveFieldRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      field: field,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is SaveFieldProvider &&
         other.field == field &&
-        other.overrideName == overrideName;
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
   }
 
   @override
@@ -201,6 +250,7 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, field.hashCode);
     hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -212,6 +262,9 @@ mixin SaveFieldRef on AutoDisposeProviderRef<AsyncValue<void>> {
 
   /// The parameter `overrideName` of this provider.
   String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
 }
 
 class _SaveFieldProviderElement
@@ -222,6 +275,8 @@ class _SaveFieldProviderElement
   Field get field => (origin as SaveFieldProvider).field;
   @override
   String? get overrideName => (origin as SaveFieldProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as SaveFieldProvider).downloadIfWeb;
 }
 
 String _$savedFieldsHash() => r'e00c8b585fa3074ce2c60744e8a8b05c79da1a54';

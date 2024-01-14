@@ -1,11 +1,10 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/hardware/hardware.dart';
-import 'package:agopengps_flutter/src/features/simulator/simulator.dart';
-import 'package:agopengps_flutter/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:universal_io/io.dart';
 
 /// A menu for changing network settings to connect to the hardware.
 class HardwareNetworkMenu extends ConsumerWidget {
@@ -72,6 +71,7 @@ $ip''',
             secondary: const Icon(Icons.message),
           ),
         ),
+        
         ListTile(
           leading: Column(
             children: [
@@ -87,19 +87,17 @@ $ip''',
           title: Consumer(
             builder: (context, ref, child) => TextFormField(
               decoration: const InputDecoration(
-                labelText: 'Hardware IP',
+                labelText: 'Hardware Address',
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              maxLength: 15,
-              maxLengthEnforcement: MaxLengthEnforcement.enforced,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) =>
-                  value != null && InternetAddress.tryParse(value) != null
-                      ? 'Valid IP'
-                      : 'Invalid IP',
-              initialValue: ref.watch(hardwareIPAdressProvider),
-              onChanged: ref.read(hardwareIPAdressProvider.notifier).update,
+                  value != null &&
+                      (ref.watch(validInternetAddressProvider(value)).value ??
+                          false)
+                  ? 'Valid IP found'
+                  : 'No IP found',
+              initialValue: ref.watch(hardwareAddressProvider),
+              onChanged: ref.read(hardwareAddressProvider.notifier).update,
             ),
           ),
         ),

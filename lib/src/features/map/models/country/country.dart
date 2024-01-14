@@ -1,5 +1,5 @@
-import 'package:agopengps_flutter/src/features/map/map.dart';
-import 'package:agopengps_flutter/src/features/map/models/country/countries/countries.dart';
+import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/map/models/country/countries/countries.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 

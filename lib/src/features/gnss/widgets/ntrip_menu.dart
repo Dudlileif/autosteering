@@ -1,6 +1,6 @@
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
-import 'package:agopengps_flutter/src/features/theme/utils/menu_button_text_extension.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -106,6 +106,41 @@ class NtripMenu extends ConsumerWidget {
             ),
           ),
         ),
+        Consumer(
+          builder: (context, ref, child) {
+            final dataUsage = ref.watch(ntripDataUsageSessionProvider);
+            if (dataUsage == null) {
+              return const SizedBox.shrink();
+            }
+
+            return ListTile(
+              leading: const Icon(Icons.data_usage),
+              title: Text(
+                '''Data usage (session): ${fileEntitySize(dataUsage, decimals: 3)}''',
+                style: textStyle,
+              ),
+            );
+          },
+        ),
+        if (Device.isNative)
+          Consumer(
+            builder: (context, ref, child) {
+              final usageMap = ref.watch(ntripDataUsageByMonthProvider);
+              final dataUsage =
+                  usageMap[DateTime.now().toIso8601String().substring(0, 7)];
+              if (dataUsage == null) {
+                return const SizedBox.shrink();
+              }
+
+              return ListTile(
+                leading: const Icon(Icons.data_usage),
+                title: Text(
+                  '''Data usage (month): ${fileEntitySize(dataUsage, decimals: 3)}''',
+                  style: textStyle,
+                ),
+              );
+            },
+          ),
       ],
     );
   }

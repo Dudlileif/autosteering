@@ -1,7 +1,7 @@
 import 'dart:collection';
 
-import 'package:agopengps_flutter/src/features/guidance/guidance.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geobase/geobase.dart';
 
@@ -317,8 +317,7 @@ class ABLine extends ABTracking with EquatableMixin {
       };
 
       final turn = switch (vehicle.pathTrackingMode) {
-        PathTrackingMode.purePursuit ||
-        PathTrackingMode.pid =>
+        PathTrackingMode.purePursuit =>
           PurePursuitPathTracking(
             wayPoints: switch (vehicle.isReversing) {
               false => turnPath,

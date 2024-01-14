@@ -20,6 +20,7 @@ WasConfig _$WasConfigFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WasConfig {
+  bool get useWas => throw _privateConstructorUsedError;
   bool get invertInput => throw _privateConstructorUsedError;
   int get bits => throw _privateConstructorUsedError;
   int get min => throw _privateConstructorUsedError;
@@ -37,7 +38,8 @@ abstract class $WasConfigCopyWith<$Res> {
   factory $WasConfigCopyWith(WasConfig value, $Res Function(WasConfig) then) =
       _$WasConfigCopyWithImpl<$Res, WasConfig>;
   @useResult
-  $Res call({bool invertInput, int bits, int min, int max, int center});
+  $Res call(
+      {bool useWas, bool invertInput, int bits, int min, int max, int center});
 }
 
 /// @nodoc
@@ -53,6 +55,7 @@ class _$WasConfigCopyWithImpl<$Res, $Val extends WasConfig>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? useWas = null,
     Object? invertInput = null,
     Object? bits = null,
     Object? min = null,
@@ -60,6 +63,10 @@ class _$WasConfigCopyWithImpl<$Res, $Val extends WasConfig>
     Object? center = null,
   }) {
     return _then(_value.copyWith(
+      useWas: null == useWas
+          ? _value.useWas
+          : useWas // ignore: cast_nullable_to_non_nullable
+              as bool,
       invertInput: null == invertInput
           ? _value.invertInput
           : invertInput // ignore: cast_nullable_to_non_nullable
@@ -92,7 +99,8 @@ abstract class _$$WasConfigImplCopyWith<$Res>
       __$$WasConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool invertInput, int bits, int min, int max, int center});
+  $Res call(
+      {bool useWas, bool invertInput, int bits, int min, int max, int center});
 }
 
 /// @nodoc
@@ -106,6 +114,7 @@ class __$$WasConfigImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? useWas = null,
     Object? invertInput = null,
     Object? bits = null,
     Object? min = null,
@@ -113,6 +122,10 @@ class __$$WasConfigImplCopyWithImpl<$Res>
     Object? center = null,
   }) {
     return _then(_$WasConfigImpl(
+      useWas: null == useWas
+          ? _value.useWas
+          : useWas // ignore: cast_nullable_to_non_nullable
+              as bool,
       invertInput: null == invertInput
           ? _value.invertInput
           : invertInput // ignore: cast_nullable_to_non_nullable
@@ -141,15 +154,19 @@ class __$$WasConfigImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WasConfigImpl implements _WasConfig {
   const _$WasConfigImpl(
-      {this.invertInput = false,
-      this.bits = 12,
-      this.min = 0,
-      this.max = 4095,
-      this.center = 2047});
+      {this.useWas = true,
+      this.invertInput = false,
+      this.bits = 15,
+      this.min = 1000,
+      this.max = 25000,
+      this.center = 10000});
 
   factory _$WasConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$WasConfigImplFromJson(json);
 
+  @override
+  @JsonKey()
+  final bool useWas;
   @override
   @JsonKey()
   final bool invertInput;
@@ -168,14 +185,15 @@ class _$WasConfigImpl implements _WasConfig {
 
   @override
   String toString() {
-    return 'WasConfig(invertInput: $invertInput, bits: $bits, min: $min, max: $max, center: $center)';
+    return 'WasConfig(useWas: $useWas, invertInput: $invertInput, bits: $bits, min: $min, max: $max, center: $center)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$WasConfigImpl &&
+            (identical(other.useWas, useWas) || other.useWas == useWas) &&
             (identical(other.invertInput, invertInput) ||
                 other.invertInput == invertInput) &&
             (identical(other.bits, bits) || other.bits == bits) &&
@@ -187,7 +205,7 @@ class _$WasConfigImpl implements _WasConfig {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, invertInput, bits, min, max, center);
+      Object.hash(runtimeType, useWas, invertInput, bits, min, max, center);
 
   @JsonKey(ignore: true)
   @override
@@ -205,7 +223,8 @@ class _$WasConfigImpl implements _WasConfig {
 
 abstract class _WasConfig implements WasConfig {
   const factory _WasConfig(
-      {final bool invertInput,
+      {final bool useWas,
+      final bool invertInput,
       final int bits,
       final int min,
       final int max,
@@ -214,6 +233,8 @@ abstract class _WasConfig implements WasConfig {
   factory _WasConfig.fromJson(Map<String, dynamic> json) =
       _$WasConfigImpl.fromJson;
 
+  @override
+  bool get useWas;
   @override
   bool get invertInput;
   @override

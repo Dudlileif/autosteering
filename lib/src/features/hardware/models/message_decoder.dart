@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:agopengps_flutter/src/features/common/common.dart';
-import 'package:agopengps_flutter/src/features/gnss/gnss.dart';
-import 'package:agopengps_flutter/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:nmea/nmea.dart';
@@ -24,12 +24,27 @@ class MessageDecoder {
   /// How many messages to keep for the different list of previous messages.
   final int messagesToKeep;
 
+  /// The NMEA message decoder.
+  final nmeaDecoder = NmeaDecoder(
+    onUnknownSentence: (line) {
+      if (line.startsWith(r'$PANDA')) {
+        return PANDASentence(raw: line);
+      }
+      return null;
+    },
+  )
+    ..registerTalkerSentence('GGA', (line) => GGASentence(raw: line))
+    ..registerTalkerSentence('GNS', (line) => GNSSentence(raw: line))
+    ..registerTalkerSentence('VTG', (line) => VTGSentence(raw: line))
+    ..registerTalkerSentence('TXT', (line) => TXTSentence(raw: line))
+    ..registerProprietarySentence('UBX', (line) => PUBXSentence(raw: line));
+
   /// A list of the previous [messagesToKeep] count of messages decoded.
   /// Primarily used while debugging.
   List<String> previousMessages = [];
 
-  /// A list of the previous [messagesToKeep] count of [GGASentence]s and
-  /// [PANDASentence]s decoded.
+  /// A list of the previous [messagesToKeep] count of
+  /// [GnssPositionCommonSentence]s and [PUBXSentence]s decoded.
   /// Used for calculating the [gnssFrequency].
   List<GnssPositionCommonSentence> gnssSentences = [];
 
@@ -165,6 +180,11 @@ class MessageDecoder {
         }
       }
       for (final pair in nmeaMessages) {
+        // Discard unfinished message data if an illegal pair is found.
+        if (pair.end < pair.start) {
+          unfinishedMessage.clear();
+          return [];
+        }
         messages.add(characters.getRange(pair.start, pair.end + 1).join());
         characters.replaceRange(
           pair.start,
@@ -213,6 +233,11 @@ class MessageDecoder {
         }
       }
       for (final pair in jsonMessages) {
+        // Discard unfinished message data if an illegal pair is found.
+        if (pair.end < pair.start) {
+          unfinishedMessage.clear();
+          return [];
+        }
         // Skip json message if there is an unfinished NMEA message inside it.
         if (nmeaStartIndices.any(
           (nmeaStart) =>
@@ -308,6 +333,34 @@ class MessageDecoder {
                   (wasLatestRaw: reading),
                 ]);
               }
+
+              // Motor info
+              if (data['motor_enabled'] is bool) {
+                messages.add((motorEnabled: data['motor_enabled'] as bool));
+              }
+              if (data['motor_rpm'] is double) {
+                messages.add((motorActualRPM: data['motor_rpm'] as double));
+              }
+              if (data['motor_stalled'] is bool) {
+                messages.add((motorStalled: data['motor_stalled'] as bool));
+              }
+              if (data['motor_no_command'] is bool) {
+                messages
+                    .add((motorNoCommand: data['motor_no_command'] as bool));
+              }
+              if (data['motor_cs'] is int) {
+                messages.add((motorCurrentScale: data['motor_cs'] as int));
+              }
+              if (data['motor_sg'] is int) {
+                messages.add((motorStallguard: data['motor_sg'] as int));
+              }
+              if (data['motor_pos'] is double) {
+                messages.add((motorRotation: data['motor_pos'] as double));
+              }
+              if (data['motor_target'] is double) {
+                messages
+                    .add((motorTargetRotation: data['motor_target'] as double));
+              }
             } catch (e) {
               messages.add(
                 LogEvent(
@@ -326,25 +379,8 @@ class MessageDecoder {
             );
           }
         } else if (str.startsWith(r'$')) {
-          final decoder = NmeaDecoder(
-            onUnknownSentence: (line) {
-              if (line.startsWith(r'$PANDA')) {
-                return PANDASentence(raw: line);
-              } else if (line.startsWith(r'$GNGGA')) {
-                return GGASentence(raw: line);
-              }
-              return null;
-            },
-          )
-            ..registerTalkerSentence(
-              'VTG',
-              (line) => VTGSentence(raw: line),
-            )
-            ..registerTalkerSentence(
-              'TXT',
-              (line) => TXTSentence(raw: line),
-            );
-          final nmea = decoder.decode(str);
+          final nmea = nmeaDecoder.decode(str);
+
           if (nmea is VTGSentence) {
             vtgSentences.add(nmea);
             while (vtgSentences.length > messagesToKeep) {
@@ -358,77 +394,75 @@ class MessageDecoder {
                 'TXT message from GNSS hardware: ${nmea.raw}',
               ),
             );
-          } else if (nmea is GnssPositionCommonSentence &&
-              nmea.hasValidChecksum) {
-            if (nmea.hasValidChecksum) {
-              if (nmea.longitude != null && nmea.latitude != null) {
-                messages.add(
-                  (
-                    gnssPosition: Geographic(
-                      lon: nmea.longitude!,
-                      lat: nmea.latitude!,
-                    ),
-                    time: nmea.utc ?? DateTime.now(),
-                  ),
-                );
-              }
-              messages
-                ..add(
-                  (
-                    gnssUpdateTimeDevice: nmea.deviceReceiveTime,
-                    gnssUpdateTimeReceiver: nmea.utc?.toLocal(),
-                    gnssUpdateDelay: nmea.deviceReceiveDelay,
-                  ),
-                )
-                ..add(nmea);
-              gnssSentences.add(nmea);
-
-              if (nmea is PANDASentence) {
-                if (nmea.imuHeading != null &&
-                    nmea.imuPitch != null &&
-                    nmea.imuRoll != null) {
-                  final reading = ImuReading(
-                    receiveTime: nmea.deviceReceiveTime,
-                    yawFromStartup: nmea.imuHeading! / 10,
-                    pitch: nmea.imuPitch! / 10,
-                    roll: nmea.imuRoll! / 10,
-                  );
-                  imuReadings.add(reading);
-                  while (imuReadings.length > messagesToKeep) {
-                    imuReadings.removeAt(0);
-                  }
-                  messages.addAll([
-                    imuReadingMatchingGnssDelay,
-                    (imuCurrentFrequency: imuFrequency),
-                    (imuLatestRaw: reading),
-                  ]);
-                }
-              }
-            } else {
+          } else if (nmea is GnssPositionCommonSentence && nmea.valid) {
+            if (nmea.longitude != null && nmea.latitude != null) {
               messages.add(
-                LogEvent(Level.warning, 'Invalid NMEA message: ${nmea.raw}'),
+                (
+                  gnssPosition: Geographic(
+                    lon: nmea.longitude!,
+                    lat: nmea.latitude!,
+                  ),
+                  time: nmea.utc ?? DateTime.now(),
+                ),
               );
             }
+            messages
+              ..add(
+                (
+                  gnssUpdateTimeDevice: nmea.deviceReceiveTime,
+                  gnssUpdateTimeReceiver: nmea.utc?.toLocal(),
+                  gnssUpdateDelay: nmea.deviceReceiveDelay,
+                ),
+              )
+              ..add(nmea);
+            gnssSentences.add(nmea);
+
+            if (nmea is PANDASentence) {
+              if (nmea.imuHeading != null &&
+                  nmea.imuPitch != null &&
+                  nmea.imuRoll != null) {
+                final reading = ImuReading(
+                  receiveTime: nmea.deviceReceiveTime,
+                  yawFromStartup: nmea.imuHeading! / 10,
+                  pitch: nmea.imuPitch! / 10,
+                  roll: nmea.imuRoll! / 10,
+                );
+                imuReadings.add(reading);
+                while (imuReadings.length > messagesToKeep) {
+                  imuReadings.removeAt(0);
+                }
+                messages.addAll([
+                  imuReadingMatchingGnssDelay,
+                  (imuCurrentFrequency: imuFrequency),
+                  (imuLatestRaw: reading),
+                ]);
+              }
+            }
+
             while (gnssSentences.length > messagesToKeep) {
               gnssSentences.removeAt(0);
             }
             messages.add((gnssCurrentFrequency: gnssFrequency));
+          } else if (nmea != null) {
+            messages.add(
+              LogEvent(Level.warning, 'Invalid NMEA message: ${nmea.raw}'),
+            );
+          } else if (str.startsWith('Message unfinished')) {
+            messages.add(LogEvent(Level.trace, str));
+          } else {
+            messages.add(
+              LogEvent(Level.warning, 'Unknown message received: $str'),
+            );
           }
-        } else if (str.startsWith('Message unfinished')) {
-          messages.add(LogEvent(Level.trace, str));
-        } else {
+        }
+        if (messages.isEmpty) {
           messages.add(
-            LogEvent(Level.warning, 'Unknown message received: $str'),
+            LogEvent(
+              Level.warning,
+              'Garbled message: ${String.fromCharCodes(data)}',
+            ),
           );
         }
-      }
-      if (messages.isEmpty) {
-        messages.add(
-          LogEvent(
-            Level.warning,
-            'Garbled message: ${String.fromCharCodes(data)}',
-          ),
-        );
       }
     } catch (error) {
       messages.add(

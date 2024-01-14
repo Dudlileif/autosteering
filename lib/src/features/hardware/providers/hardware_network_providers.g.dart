@@ -44,9 +44,9 @@ final deviceIPAdressEthernetProvider =
 
 typedef DeviceIPAdressEthernetRef = AutoDisposeFutureProviderRef<String?>;
 String _$hardwareCommunicationConfigHash() =>
-    r'607c3571bb12f80ce8af3d575d72d23622416ee6';
+    r'ec0633874ead1587e91a4e4dc46c2b6040b34908';
 
-/// A provider for the combined state of the [HardwareIPAdress],
+/// A provider for the combined state of the [HardwareAddress],
 /// [HardwareUDPReceivePort] and [HardwareUDPSendPort].
 ///
 /// The updated state is automatically sent to the
@@ -55,7 +55,7 @@ String _$hardwareCommunicationConfigHash() =>
 @ProviderFor(hardwareCommunicationConfig)
 final hardwareCommunicationConfigProvider = Provider<
     ({
-      String hardwareIPAdress,
+      String hardwareAddress,
       int hardwareUDPReceivePort,
       int hardwareUDPSendPort
     })>.internal(
@@ -70,14 +70,14 @@ final hardwareCommunicationConfigProvider = Provider<
 
 typedef HardwareCommunicationConfigRef = ProviderRef<
     ({
-      String hardwareIPAdress,
+      String hardwareAddress,
       int hardwareUDPReceivePort,
       int hardwareUDPSendPort
     })>;
 String _$hardwareWebCommunicationConfigHash() =>
-    r'ffa785022e1c36c2883c7a23898f55a16a1b1567';
+    r'47df5b5aa2fddae18a9ab1376370094762546f54';
 
-/// A provider for the combined state of the [HardwareIPAdress],
+/// A provider for the combined state of the [HardwareAddress],
 /// [HardwareWebSocketPort].
 ///
 /// The updated state is automatically sent to the
@@ -85,7 +85,7 @@ String _$hardwareWebCommunicationConfigHash() =>
 /// Copied from [hardwareWebCommunicationConfig].
 @ProviderFor(hardwareWebCommunicationConfig)
 final hardwareWebCommunicationConfigProvider =
-    Provider<({String hardwareIPAdress, int hardwareWebSocketPort})>.internal(
+    Provider<({String hardwareAddress, int hardwareWebSocketPort})>.internal(
   hardwareWebCommunicationConfig,
   name: r'hardwareWebCommunicationConfigProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -96,7 +96,7 @@ final hardwareWebCommunicationConfigProvider =
 );
 
 typedef HardwareWebCommunicationConfigRef
-    = ProviderRef<({String hardwareIPAdress, int hardwareWebSocketPort})>;
+    = ProviderRef<({String hardwareAddress, int hardwareWebSocketPort})>;
 String _$currentConnectionHash() => r'e780fb086d27c63045c0df36c7ad0a10ab0a0425';
 
 /// A provider for the current connection of the device.
@@ -151,24 +151,24 @@ final hardwareNetworkAliveProvider =
 );
 
 typedef _$HardwareNetworkAlive = Notifier<bool>;
-String _$hardwareIPAdressHash() => r'93c5230172faa73ea94b9f2f351ca9ad11264274';
+String _$hardwareAddressHash() => r'9b1f5003b3de55c4044c9ab861156175cccd572c';
 
 /// A provider for the IP adress of the hardware we want to communicate with.
 ///
-/// Copied from [HardwareIPAdress].
-@ProviderFor(HardwareIPAdress)
-final hardwareIPAdressProvider =
-    NotifierProvider<HardwareIPAdress, String>.internal(
-  HardwareIPAdress.new,
-  name: r'hardwareIPAdressProvider',
+/// Copied from [HardwareAddress].
+@ProviderFor(HardwareAddress)
+final hardwareAddressProvider =
+    NotifierProvider<HardwareAddress, String>.internal(
+  HardwareAddress.new,
+  name: r'hardwareAddressProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$hardwareIPAdressHash,
+      : _$hardwareAddressHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$HardwareIPAdress = Notifier<String>;
+typedef _$HardwareAddress = Notifier<String>;
 String _$hardwareUDPReceivePortHash() =>
     r'91dbd7461ad74145dfdb3e30087d93af782aac83';
 
@@ -192,7 +192,7 @@ String _$hardwareUDPSendPortHash() =>
     r'8fb2c394511108ca165925cab8e4d31e8abda11c';
 
 /// A provider for the UDP send port for the device to send messages to
-/// the hardware in [HardwareIPAdress].
+/// the hardware in [HardwareAddress].
 ///
 /// Copied from [HardwareUDPSendPort].
 @ProviderFor(HardwareUDPSendPort)
@@ -212,7 +212,7 @@ String _$hardwareWebSocketPortHash() =>
     r'afb7bbd829445135aabd30dbc368f7649dbffb61';
 
 /// A provider for the UDP send port for the device to send messages to
-/// the hardware in [HardwareIPAdress].
+/// the hardware in [HardwareAddress].
 ///
 /// Copied from [HardwareWebSocketPort].
 @ProviderFor(HardwareWebSocketPort)
