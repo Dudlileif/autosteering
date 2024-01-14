@@ -19,28 +19,31 @@ class MainScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Focus(
+        title: Focus(
           canRequestFocus: false,
           descendantsAreFocusable: false,
           descendantsAreTraversable: false,    
           child: MenuBar(
             children: [
-              MapMenu(),
-              FieldMenu(),
-              GuidanceMenu(),
-              VehicleMenu(),
-              EquipmentMenu(),
-              HardwareMenu(),
-              SimCoreMenu(),
-              ThemeMenu(),
+              const MapMenu(),
+              const FieldMenu(),
+              const GuidanceMenu(),
+              const VehicleMenu(),
+              const EquipmentMenu(),
+              if (Device.isNative) const HardwareMenu(),
+              const SimCoreMenu(),
+              const ThemeMenu(),
             ],
           ),
         ),
         actions: [
+          if (Device.isNative)
           const Padding(
             padding: EdgeInsets.all(8),
             child: HardwareStatusIcon(size: 32),
           ),
+          
+          if (Device.isNative)
           const Focus(
             canRequestFocus: false,
             descendantsAreFocusable: false,

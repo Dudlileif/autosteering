@@ -339,7 +339,10 @@ class FieldMenu extends ConsumerWidget {
                 leading: const Icon(Icons.save),
                 onTap: field != null
                     ? () => ref.watch(
-                          saveFieldProvider(field..lastUsed = DateTime.now()),
+                          saveFieldProvider(
+                            field..lastUsed = DateTime.now(),
+                            downloadIfWeb: true,
+                          ),
                         )
                     : null,
               );
@@ -369,6 +372,7 @@ class FieldMenu extends ConsumerWidget {
                                 lastUsed: DateTime.now(),
                               ),
                               overrideName: '${field.name} buffered',
+                              downloadIfWeb: true,
                             ),
                           )
                       : null,

@@ -266,12 +266,14 @@ AsyncValue<void> saveField(
   SaveFieldRef ref,
   Field field, {
   String? overrideName,
+  bool downloadIfWeb = false,
 }) =>
     ref.watch(
       saveJsonToFileDirectoryProvider(
         object: field,
         fileName: overrideName ?? field.name,
         folder: 'fields',
+        downloadIfWeb: downloadIfWeb,
       ),
     );
 

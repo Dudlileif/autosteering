@@ -138,6 +138,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
                                         (value) => value.equipmentSetup(name),
                                       ),
                                     ),
+                                    downloadIfWeb: true,
                                   ),
                                 );
                                 Navigator.of(context).pop();

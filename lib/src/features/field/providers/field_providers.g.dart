@@ -23,7 +23,7 @@ final bufferedFieldProvider = FutureProvider<Field?>.internal(
 );
 
 typedef BufferedFieldRef = FutureProviderRef<Field?>;
-String _$saveFieldHash() => r'6618b0c9eb255bde804a6dc997047d5098089801';
+String _$saveFieldHash() => r'd87493445562559fe2948bf09fbaebf19b9cfe72';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -89,10 +89,12 @@ class SaveFieldFamily extends Family {
   SaveFieldProvider call(
     Field field, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) {
     return SaveFieldProvider(
       field,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -104,6 +106,7 @@ class SaveFieldFamily extends Family {
     return call(
       provider.field,
       overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
     );
   }
 
@@ -143,11 +146,13 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
   SaveFieldProvider(
     Field field, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) : this._internal(
           (ref) => saveField(
             ref as SaveFieldRef,
             field,
             overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
           ),
           from: saveFieldProvider,
           name: r'saveFieldProvider',
@@ -159,6 +164,7 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
           allTransitiveDependencies: SaveFieldFamily._allTransitiveDependencies,
           field: field,
           overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
         );
 
   SaveFieldProvider._internal(
@@ -170,10 +176,12 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
     required super.from,
     required this.field,
     required this.overrideName,
+    required this.downloadIfWeb,
   }) : super.internal();
 
   final Field field;
   final String? overrideName;
+  final bool downloadIfWeb;
 
   @override
   Override overrideWith(
@@ -190,6 +198,7 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
         debugGetCreateSourceHash: null,
         field: field,
         overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
       ),
     );
   }
@@ -198,10 +207,12 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
   (
     Field, {
     String? overrideName,
+    bool downloadIfWeb,
   }) get argument {
     return (
       field,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -222,6 +233,7 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
       from: from,
       field: field,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -229,7 +241,8 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
   bool operator ==(Object other) {
     return other is SaveFieldProvider &&
         other.field == field &&
-        other.overrideName == overrideName;
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
   }
 
   @override
@@ -237,6 +250,7 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, field.hashCode);
     hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -248,6 +262,9 @@ mixin SaveFieldRef on AutoDisposeProviderRef<AsyncValue<void>> {
 
   /// The parameter `overrideName` of this provider.
   String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
 }
 
 class _SaveFieldProviderElement
@@ -258,6 +275,8 @@ class _SaveFieldProviderElement
   Field get field => (origin as SaveFieldProvider).field;
   @override
   String? get overrideName => (origin as SaveFieldProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as SaveFieldProvider).downloadIfWeb;
 }
 
 String _$savedFieldsHash() => r'e00c8b585fa3074ce2c60744e8a8b05c79da1a54';

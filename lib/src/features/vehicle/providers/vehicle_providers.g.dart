@@ -6,7 +6,7 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveVehicleHash() => r'6d304997a173080a3f603e628a34ddea27a4b59b';
+String _$saveVehicleHash() => r'f869da254a86f9bcea5bf4ead72636ab01c6a148';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -72,10 +72,12 @@ class SaveVehicleFamily extends Family {
   SaveVehicleProvider call(
     Vehicle vehicle, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) {
     return SaveVehicleProvider(
       vehicle,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -87,6 +89,7 @@ class SaveVehicleFamily extends Family {
     return call(
       provider.vehicle,
       overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
     );
   }
 
@@ -126,11 +129,13 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
   SaveVehicleProvider(
     Vehicle vehicle, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) : this._internal(
           (ref) => saveVehicle(
             ref as SaveVehicleRef,
             vehicle,
             overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
           ),
           from: saveVehicleProvider,
           name: r'saveVehicleProvider',
@@ -143,6 +148,7 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
               SaveVehicleFamily._allTransitiveDependencies,
           vehicle: vehicle,
           overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
         );
 
   SaveVehicleProvider._internal(
@@ -154,10 +160,12 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
     required super.from,
     required this.vehicle,
     required this.overrideName,
+    required this.downloadIfWeb,
   }) : super.internal();
 
   final Vehicle vehicle;
   final String? overrideName;
+  final bool downloadIfWeb;
 
   @override
   Override overrideWith(
@@ -174,6 +182,7 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
         debugGetCreateSourceHash: null,
         vehicle: vehicle,
         overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
       ),
     );
   }
@@ -182,10 +191,12 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
   (
     Vehicle, {
     String? overrideName,
+    bool downloadIfWeb,
   }) get argument {
     return (
       vehicle,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -206,6 +217,7 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
       from: from,
       vehicle: vehicle,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -213,7 +225,8 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
   bool operator ==(Object other) {
     return other is SaveVehicleProvider &&
         other.vehicle == vehicle &&
-        other.overrideName == overrideName;
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
   }
 
   @override
@@ -221,6 +234,7 @@ class SaveVehicleProvider extends AutoDisposeProvider<AsyncValue<void>> {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, vehicle.hashCode);
     hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -232,6 +246,9 @@ mixin SaveVehicleRef on AutoDisposeProviderRef<AsyncValue<void>> {
 
   /// The parameter `overrideName` of this provider.
   String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
 }
 
 class _SaveVehicleProviderElement
@@ -242,6 +259,8 @@ class _SaveVehicleProviderElement
   Vehicle get vehicle => (origin as SaveVehicleProvider).vehicle;
   @override
   String? get overrideName => (origin as SaveVehicleProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as SaveVehicleProvider).downloadIfWeb;
 }
 
 String _$savedVehiclesHash() => r'2fd0ed9dde2e0b21456e5153b95a2b4232c61d17';

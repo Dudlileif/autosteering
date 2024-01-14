@@ -142,7 +142,10 @@ class _SaveButton extends ConsumerWidget {
         ),
       )
           ? () => ref.watch(
-                saveEquipmentProvider(ref.watch(configuredEquipmentProvider)),
+                saveEquipmentProvider(
+                  ref.watch(configuredEquipmentProvider),
+                  downloadIfWeb: true,
+                ),
               )
           : null,
       icon: const Icon(Icons.save),

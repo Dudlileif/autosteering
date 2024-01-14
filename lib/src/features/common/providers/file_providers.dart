@@ -77,10 +77,11 @@ FutureOr<void> saveJsonToFileDirectory(
   required dynamic object,
   required String fileName,
   required String folder,
+  bool downloadIfWeb = false,
 }) async {
   final dataString = const JsonEncoder.withIndent('    ').convert(object);
 
-  if (Device.isWeb) {
+  if (Device.isWeb && downloadIfWeb) {
     html.AnchorElement()
       ..href = '${Uri.dataFromString(
         dataString,

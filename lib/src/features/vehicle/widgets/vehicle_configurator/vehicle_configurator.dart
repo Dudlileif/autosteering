@@ -130,10 +130,10 @@ class _LoadButton extends ConsumerWidget {
   }
 }
 
-/// A button for saving the [Vehicle] int [configuredVehicleProvider] to
+/// A button for saving the [Vehicle] in [configuredVehicleProvider] to
 /// a file.
 class _SaveButton extends ConsumerWidget {
-  /// A button for saving the [Vehicle] int [configuredVehicleProvider] to
+  /// A button for saving the [Vehicle] in [configuredVehicleProvider] to
   /// a file.
   const _SaveButton();
 
@@ -146,7 +146,12 @@ class _SaveButton extends ConsumerWidget {
         ),
       )
           ? () => ref
-              .watch(saveVehicleProvider(ref.watch(configuredVehicleProvider)))
+              .watch(
+                saveVehicleProvider(
+                  ref.watch(configuredVehicleProvider),
+                  downloadIfWeb: true,
+                ),
+              )
           : null,
       icon: const Icon(Icons.save),
       label: const Text('Save'),

@@ -212,7 +212,7 @@ class _LoadEquipmentFromFileProviderElement
   String get path => (origin as LoadEquipmentFromFileProvider).path;
 }
 
-String _$saveEquipmentHash() => r'79b127695ddd5594fbca9735c10a1f3c509b02f2';
+String _$saveEquipmentHash() => r'334b2e5eea0212d284f05afd1df4da4904c6fe80';
 
 /// A provider for saving [equipment] to a file in the user file directory.
 ///
@@ -257,10 +257,12 @@ class SaveEquipmentFamily extends Family {
   SaveEquipmentProvider call(
     Equipment equipment, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) {
     return SaveEquipmentProvider(
       equipment,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -272,6 +274,7 @@ class SaveEquipmentFamily extends Family {
     return call(
       provider.equipment,
       overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
     );
   }
 
@@ -312,11 +315,13 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
   SaveEquipmentProvider(
     Equipment equipment, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) : this._internal(
           (ref) => saveEquipment(
             ref as SaveEquipmentRef,
             equipment,
             overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
           ),
           from: saveEquipmentProvider,
           name: r'saveEquipmentProvider',
@@ -329,6 +334,7 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
               SaveEquipmentFamily._allTransitiveDependencies,
           equipment: equipment,
           overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
         );
 
   SaveEquipmentProvider._internal(
@@ -340,10 +346,12 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
     required super.from,
     required this.equipment,
     required this.overrideName,
+    required this.downloadIfWeb,
   }) : super.internal();
 
   final Equipment equipment;
   final String? overrideName;
+  final bool downloadIfWeb;
 
   @override
   Override overrideWith(
@@ -360,6 +368,7 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
         debugGetCreateSourceHash: null,
         equipment: equipment,
         overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
       ),
     );
   }
@@ -368,10 +377,12 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
   (
     Equipment, {
     String? overrideName,
+    bool downloadIfWeb,
   }) get argument {
     return (
       equipment,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -392,6 +403,7 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
       from: from,
       equipment: equipment,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -399,7 +411,8 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
   bool operator ==(Object other) {
     return other is SaveEquipmentProvider &&
         other.equipment == equipment &&
-        other.overrideName == overrideName;
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
   }
 
   @override
@@ -407,6 +420,7 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, equipment.hashCode);
     hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -418,6 +432,9 @@ mixin SaveEquipmentRef on AutoDisposeProviderRef<AsyncValue<void>> {
 
   /// The parameter `overrideName` of this provider.
   String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
 }
 
 class _SaveEquipmentProviderElement
@@ -428,6 +445,8 @@ class _SaveEquipmentProviderElement
   Equipment get equipment => (origin as SaveEquipmentProvider).equipment;
   @override
   String? get overrideName => (origin as SaveEquipmentProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as SaveEquipmentProvider).downloadIfWeb;
 }
 
 String _$savedEquipmentsHash() => r'07c737a4e45444ae43c789a36be7caf450add31d';

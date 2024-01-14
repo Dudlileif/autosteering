@@ -7,7 +7,7 @@ part of 'equipment_setup_providers.dart';
 // **************************************************************************
 
 String _$saveEquipmentSetupHash() =>
-    r'17d79398f46c531447d9c609fb51b332ce54bfca';
+    r'a7ca6d2f19e49b15171ac3076c6fdfa7c7a64aee';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -73,10 +73,12 @@ class SaveEquipmentSetupFamily extends Family {
   SaveEquipmentSetupProvider call(
     EquipmentSetup setup, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) {
     return SaveEquipmentSetupProvider(
       setup,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -88,6 +90,7 @@ class SaveEquipmentSetupFamily extends Family {
     return call(
       provider.setup,
       overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
     );
   }
 
@@ -128,11 +131,13 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
   SaveEquipmentSetupProvider(
     EquipmentSetup setup, {
     String? overrideName,
+    bool downloadIfWeb = false,
   }) : this._internal(
           (ref) => saveEquipmentSetup(
             ref as SaveEquipmentSetupRef,
             setup,
             overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
           ),
           from: saveEquipmentSetupProvider,
           name: r'saveEquipmentSetupProvider',
@@ -145,6 +150,7 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
               SaveEquipmentSetupFamily._allTransitiveDependencies,
           setup: setup,
           overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
         );
 
   SaveEquipmentSetupProvider._internal(
@@ -156,10 +162,12 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
     required super.from,
     required this.setup,
     required this.overrideName,
+    required this.downloadIfWeb,
   }) : super.internal();
 
   final EquipmentSetup setup;
   final String? overrideName;
+  final bool downloadIfWeb;
 
   @override
   Override overrideWith(
@@ -176,6 +184,7 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
         debugGetCreateSourceHash: null,
         setup: setup,
         overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
       ),
     );
   }
@@ -184,10 +193,12 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
   (
     EquipmentSetup, {
     String? overrideName,
+    bool downloadIfWeb,
   }) get argument {
     return (
       setup,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -208,6 +219,7 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
       from: from,
       setup: setup,
       overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -215,7 +227,8 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
   bool operator ==(Object other) {
     return other is SaveEquipmentSetupProvider &&
         other.setup == setup &&
-        other.overrideName == overrideName;
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
   }
 
   @override
@@ -223,6 +236,7 @@ class SaveEquipmentSetupProvider extends AutoDisposeProvider<AsyncValue<void>> {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, setup.hashCode);
     hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -234,6 +248,9 @@ mixin SaveEquipmentSetupRef on AutoDisposeProviderRef<AsyncValue<void>> {
 
   /// The parameter `overrideName` of this provider.
   String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
 }
 
 class _SaveEquipmentSetupProviderElement
@@ -246,6 +263,9 @@ class _SaveEquipmentSetupProviderElement
   @override
   String? get overrideName =>
       (origin as SaveEquipmentSetupProvider).overrideName;
+  @override
+  bool get downloadIfWeb =>
+      (origin as SaveEquipmentSetupProvider).downloadIfWeb;
 }
 
 String _$savedEquipmentSetupsHash() =>

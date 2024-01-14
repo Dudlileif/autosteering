@@ -22,12 +22,14 @@ AsyncValue<void> saveEquipmentSetup(
   SaveEquipmentSetupRef ref,
   EquipmentSetup setup, {
   String? overrideName,
+  bool downloadIfWeb = false,
 }) =>
     ref.watch(
       saveJsonToFileDirectoryProvider(
         object: setup,
         fileName: overrideName ?? setup.name,
         folder: 'equipment/setups',
+        downloadIfWeb: downloadIfWeb,
       ),
     );
 

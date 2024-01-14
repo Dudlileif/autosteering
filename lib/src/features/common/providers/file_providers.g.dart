@@ -432,7 +432,7 @@ class _DirectoryDeleteProviderElement
 }
 
 String _$saveJsonToFileDirectoryHash() =>
-    r'f2b143be20fe6606a7a1adb5a0d775a3f3560ca3';
+    r'583c411637667502500acfaa4ed25dca7a8bb906';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -482,11 +482,13 @@ class SaveJsonToFileDirectoryFamily extends Family {
     required dynamic object,
     required String fileName,
     required String folder,
+    bool downloadIfWeb = false,
   }) {
     return SaveJsonToFileDirectoryProvider(
       object: object,
       fileName: fileName,
       folder: folder,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -499,6 +501,7 @@ class SaveJsonToFileDirectoryFamily extends Family {
       object: provider.object,
       fileName: provider.fileName,
       folder: provider.folder,
+      downloadIfWeb: provider.downloadIfWeb,
     );
   }
 
@@ -542,12 +545,14 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
     required dynamic object,
     required String fileName,
     required String folder,
+    bool downloadIfWeb = false,
   }) : this._internal(
           (ref) => saveJsonToFileDirectory(
             ref as SaveJsonToFileDirectoryRef,
             object: object,
             fileName: fileName,
             folder: folder,
+            downloadIfWeb: downloadIfWeb,
           ),
           from: saveJsonToFileDirectoryProvider,
           name: r'saveJsonToFileDirectoryProvider',
@@ -561,6 +566,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
           object: object,
           fileName: fileName,
           folder: folder,
+          downloadIfWeb: downloadIfWeb,
         );
 
   SaveJsonToFileDirectoryProvider._internal(
@@ -573,11 +579,13 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
     required this.object,
     required this.fileName,
     required this.folder,
+    required this.downloadIfWeb,
   }) : super.internal();
 
   final dynamic object;
   final String fileName;
   final String folder;
+  final bool downloadIfWeb;
 
   @override
   Override overrideWith(
@@ -595,6 +603,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
         object: object,
         fileName: fileName,
         folder: folder,
+        downloadIfWeb: downloadIfWeb,
       ),
     );
   }
@@ -604,11 +613,13 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
     dynamic object,
     String fileName,
     String folder,
+    bool downloadIfWeb,
   }) get argument {
     return (
       object: object,
       fileName: fileName,
       folder: folder,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -630,6 +641,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
       object: object,
       fileName: fileName,
       folder: folder,
+      downloadIfWeb: downloadIfWeb,
     );
   }
 
@@ -638,7 +650,8 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
     return other is SaveJsonToFileDirectoryProvider &&
         other.object == object &&
         other.fileName == fileName &&
-        other.folder == folder;
+        other.folder == folder &&
+        other.downloadIfWeb == downloadIfWeb;
   }
 
   @override
@@ -647,6 +660,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
     hash = _SystemHash.combine(hash, object.hashCode);
     hash = _SystemHash.combine(hash, fileName.hashCode);
     hash = _SystemHash.combine(hash, folder.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -661,6 +675,9 @@ mixin SaveJsonToFileDirectoryRef on AutoDisposeFutureProviderRef<void> {
 
   /// The parameter `folder` of this provider.
   String get folder;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
 }
 
 class _SaveJsonToFileDirectoryProviderElement
@@ -674,6 +691,9 @@ class _SaveJsonToFileDirectoryProviderElement
   String get fileName => (origin as SaveJsonToFileDirectoryProvider).fileName;
   @override
   String get folder => (origin as SaveJsonToFileDirectoryProvider).folder;
+  @override
+  bool get downloadIfWeb =>
+      (origin as SaveJsonToFileDirectoryProvider).downloadIfWeb;
 }
 
 String _$savedFilesHash() => r'ed8d314141f69b478fc607bcad51cb63977ab752';

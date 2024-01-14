@@ -248,12 +248,14 @@ AsyncValue<void> saveEquipment(
   SaveEquipmentRef ref,
   Equipment equipment, {
   String? overrideName,
+  bool downloadIfWeb = false,
 }) =>
     ref.watch(
       saveJsonToFileDirectoryProvider(
         object: equipment,
         fileName: overrideName ?? equipment.name ?? equipment.uuid,
         folder: 'equipment',
+        downloadIfWeb: downloadIfWeb,
       ),
     );
 
