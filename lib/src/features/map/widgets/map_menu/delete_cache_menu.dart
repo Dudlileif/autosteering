@@ -1,5 +1,6 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/theme/utils/menu_button_text_extension.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,13 +19,17 @@ class DeleteCacheMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (Device.isWeb) {
-      return const MenuItemButton(
-        leadingIcon: Padding(
+      final textStyle = Theme.of(context).menuButtonWithChildrenText;
+      return MenuItemButton(
+        leadingIcon: const Padding(
           padding: EdgeInsets.only(left: 8),
           child: Icon(Icons.delete),
         ),
         onPressed: FastCachedImageConfig.clearAllCachedImages,
-        child: Text('Delete cache'),
+        child: Text(
+          'Delete cache',
+          style: textStyle,
+        ),
       );
     }
     final directories = ref.watch(mapCacheDirectoriesProvider).when(
@@ -62,7 +67,6 @@ class _CacheDeleter extends ConsumerWidget {
       closeOnActivate: false,
       trailingIcon: const Icon(Icons.delete),
       child: Column(
-
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
