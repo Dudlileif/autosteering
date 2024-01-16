@@ -44,6 +44,7 @@ enum SettingsKey {
   simAutoCenterSteering('sim.auto_center_steering'),
   simAutoSlowDown('sim.auto_slow_down'),
   themeColorScheme('theme.color_scheme'),
+  themeColorSchemeCustom('theme.color_scheme_custom'),
   themeMode('theme.mode'),
   virtualLedBarConfig('virtual_led_bar.config'),
   virtualLedBarEnabled('virtual_led_bar.enabled');

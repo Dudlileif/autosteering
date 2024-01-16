@@ -51,12 +51,26 @@ class Manufacturer extends _$Manufacturer {
         ref
             .read(settingsProvider.notifier)
             .update(SettingsKey.themeColorScheme, next.name);
+        if (next.name == 'Custom') {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.themeColorSchemeCustom, next.toJson());
+        }
       }
     });
 
     final name = ref
         .read(settingsProvider.notifier)
         .getString(SettingsKey.themeColorScheme);
+
+    if (name == 'Custom') {
+      final data = ref
+          .read(settingsProvider.notifier)
+          .getMap(SettingsKey.themeColorSchemeCustom);
+      if (data != null) {
+        return ManufacturerColor.fromJson(data);
+      }
+    }
 
     return ManufacturerColor.values
             .firstWhereOrNull((element) => element.name == name) ??
