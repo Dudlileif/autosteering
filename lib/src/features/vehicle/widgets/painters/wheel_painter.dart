@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geobase/geobase.dart' hide Point;
 
-//TODO(dudlileif): Fix position when map camera isn't pointing north.
-
 /// A dynamic wheel painter both in size and movement.
 class WheelPainter extends StatelessWidget {
   /// A dynamic wheel painter both in size and movement.
@@ -14,11 +12,13 @@ class WheelPainter extends StatelessWidget {
     required this.innerPosition,
     required this.vehicleBearing,
     this.steeringAngle = 0,
-    super.key,
     this.width = 0.6,
     this.diameter = 1.8,
     this.rotation = 0,
     this.isRightWheel = false,
+    this.centerMapOnVehicle = true,
+    this.vehicleIsArticulated = false,
+    super.key,
   });
 
   /// The center position of the wheel.
@@ -43,70 +43,66 @@ class WheelPainter extends StatelessWidget {
   /// direction. Otherwise it's assumed to be the left wheel.
   final bool isRightWheel;
 
+  /// Whether the map is centered on the vehicle.
+  final bool centerMapOnVehicle;
+
+  /// Whether the vehicle is steered by an articulated joint.
+  final bool vehicleIsArticulated;
+
   @override
   Widget build(BuildContext context) {
-    final map = MapController.of(context).camera;
+    final camera = MapCamera.of(context);
+
     final bearing = (vehicleBearing + steeringAngle).wrap360();
 
-    final offset = map.getOffsetFromOrigin(innerPosition.latLng);
-
     final centerPosition = innerPosition.spherical.destinationPoint(
-      distance: this.width / 2,
+      distance: width / 2,
       bearing: bearing + switch (isRightWheel) { true => -1, false => 1 } * 90,
     );
 
-    final width =
-        (offset - map.getOffsetFromOrigin(centerPosition.latLng)).distance * 2;
+    final meterScale = (camera.getOffsetFromOrigin(innerPosition.latLng) -
+                camera.getOffsetFromOrigin(centerPosition.latLng))
+            .distance /
+        (width / 2);
 
-    final frontPosition = innerPosition.spherical
-        .destinationPoint(distance: diameter / 2, bearing: bearing);
+    final scaledWidth = meterScale * width;
+    final scaledHeight = meterScale * diameter;
 
-    final height =
-        (offset - map.getOffsetFromOrigin(frontPosition.latLng)).distance * 2;
+    final innerPositionPoint = camera.latLngToScreenPoint(innerPosition.latLng);
 
-    final mapPoint = map.project(innerPosition.latLng);
-    final point = mapPoint - map.pixelOrigin.toDoublePoint();
-
-    if (!map.pixelBounds.containsPartialBounds(
-      Bounds(
-        Point(mapPoint.x, mapPoint.y - height / 2),
-        Point(mapPoint.x + width, mapPoint.y + height / 2),
-      ),
-    )) {
-      return const SizedBox.shrink();
+    var angle = 0.0;
+    if (camera.rotation == 0) {
+      angle = bearing.toRadians();
+    } else {
+      if (centerMapOnVehicle) {
+        if (vehicleIsArticulated) {
+          angle = camera.rotationRad + vehicleBearing.toRadians();
+        } else {
+          angle = steeringAngle.toRadians();
+        }
+      } else {
+        angle = camera.rotationRad + bearing.toRadians();
+      }
     }
 
-    final theme = Theme.of(context);
-
-    return Stack(
-      children: [
-        Positioned(
-          width: width,
-          height: height,
-          left: point.x - width / 2,
-          top: point.y - height / 2,
-          child: Transform.rotate(
-            angle: (map.rotation + bearing).toRadians(),
-            child: CustomPaint(
-              painter: _WheelPainterImplementation(
-                width: width,
-                height: height,
-                ribs: (diameter * 5 * pi).round(),
-                rotation: rotation,
-                isRightWheel: isRightWheel,
-                baseColor: switch (theme.brightness) {
-                  Brightness.light => Colors.black,
-                  Brightness.dark => Colors.black,
-                },
-                ribColor: switch (theme.brightness) {
-                  Brightness.light => Colors.grey.shade800,
-                  Brightness.dark => Colors.grey.shade800,
-                },
-              ),
-            ),
+    return Positioned(
+      width: scaledWidth,
+      height: scaledHeight,
+      left: innerPositionPoint.x - scaledWidth / 2,
+      top: innerPositionPoint.y - scaledHeight / 2,
+      child: Transform.rotate(
+        angle: angle,
+        child: CustomPaint(
+          painter: _WheelPainterImplementation(
+            width: scaledWidth,
+            height: scaledHeight,
+            ribs: (diameter * 5 * pi).round(),
+            rotation: rotation,
+            isRightWheel: isRightWheel,
+            ribColor: Colors.grey.shade800,
           ),
         ),
-      ],
+      ),
     );
   }
 }
@@ -117,7 +113,7 @@ class _WheelPainterImplementation extends CustomPainter {
   _WheelPainterImplementation({
     required this.width,
     required this.height,
-    required this.rotation,
+    this.rotation = 0,
     this.ribs = 10,
     this.isRightWheel = false,
     this.baseColor = Colors.black,
@@ -133,7 +129,7 @@ class _WheelPainterImplementation extends CustomPainter {
   /// The number of
   final int ribs;
 
-  /// The rotation position of the wheel.
+  /// The longitudinal rotation position of the wheel.
   final double rotation;
 
   /// Whether the wheel is on the right side of the vehicle in the forward
@@ -141,6 +137,7 @@ class _WheelPainterImplementation extends CustomPainter {
   final bool isRightWheel;
 
   final Color baseColor;
+
   final Color ribColor;
 
   @override

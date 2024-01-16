@@ -23,6 +23,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     this.solidAxleWheelDiameter = 1.8,
     this.steeringAxleWheelWidth = 0.48,
     this.solidAxleWheelWidth = 0.6,
+    this.solidAxleToFrontDistance = 3,
     super.pathTrackingMode,
     super.imu,
     super.was,
@@ -108,11 +109,23 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The width of the solid axle wheels.
   double solidAxleWheelWidth;
 
+  /// The distance from the [solidAxlePosition] to the frontmost part of the
+  /// vehicle, typically the bonnet or the frame.
+  ///
+  /// Used to draw the vehicle in correct proportions.
+  double solidAxleToFrontDistance;
+
   /// The position of the center of the rear axle.
   Geographic get solidAxlePosition;
 
   /// The position of the center of the front axle.
   Geographic get steeringAxlePosition;
+
+  @override
+  Geographic get topLeftPosition => solidAxlePosition.spherical
+      .destinationPoint(distance: solidAxleToFrontDistance, bearing: bearing)
+      .spherical
+      .destinationPoint(distance: width / 2, bearing: bearing - 90);
 
   @override
   Geographic? get hitchFrontFixedPoint =>
@@ -617,56 +630,23 @@ sealed class AxleSteeredVehicle extends Vehicle {
       solidAxleDistance,
     ]);
 
-  /// The distance from the center of the vehicle the corners.
-  double get centerToCornerDistance =>
-      sqrt(pow(length / 2, 2) + pow(width / 2, 2));
-
-  /// The angle to north-west point of the max extent/bounds of the vehicle
-  /// when it points to the north (0 degrees).
-  double get northWestAngle =>
-      (asin((width / 2) / centerToCornerDistance) * 360 / (2 * pi)).wrap360();
-
-  /// The angle to north-east point of the max extent/bounds of the vehicle
-  /// when it points to the north (0 degrees).
-  double get northEastAngle => (360 - northWestAngle).wrap360();
-
-  /// The bearing for the front left corner of the max extent/bounds of the
-  /// vehicle with regards to the [bearing].
-  double get frontLeftBearing => (bearing - northWestAngle).wrap360();
-
-  /// The bearing for the front right corner of the max extent/bounds of the
-  /// vehicle with regards to the [bearing].
-  double get frontRightBearing => (bearing - northEastAngle).wrap360();
-
-  /// The bearing for the rear right corner of the max extent/bounds of the
-  /// vehicle with regards to the [bearing].
-  double get rearRightBearing => (bearing - (northWestAngle + 180)).wrap360();
-
-  /// The bearing for the rear left corner of the max extent/bounds of the
-  /// vehicle with regards to the [bearing].
-  double get rearLeftBearing => (bearing - (northEastAngle + 180)).wrap360();
-
   /// The max extent/bounds points of the vehicle. The [bearing] is followed.
   List<Geographic> get points {
-    final frontLeft = position.spherical.destinationPoint(
-      distance: centerToCornerDistance,
-      bearing: frontLeftBearing,
+    final frontRight = topLeftPosition.spherical.destinationPoint(
+      distance: width,
+      bearing: bearing + 90,
     );
-    final frontRight = position.spherical.destinationPoint(
-      distance: centerToCornerDistance,
-      bearing: frontRightBearing,
+    final rearRight = frontRight.spherical.destinationPoint(
+      distance: length,
+      bearing: bearing + 180,
     );
-    final rearRight = position.spherical.destinationPoint(
-      distance: centerToCornerDistance,
-      bearing: rearRightBearing,
-    );
-    final rearLeft = position.spherical.destinationPoint(
-      distance: centerToCornerDistance,
-      bearing: rearLeftBearing,
+    final rearLeft = topLeftPosition.spherical.destinationPoint(
+      distance: length,
+      bearing: bearing + 180,
     );
 
     return [
-      frontLeft,
+      topLeftPosition,
       frontRight,
       rearRight,
       rearLeft,

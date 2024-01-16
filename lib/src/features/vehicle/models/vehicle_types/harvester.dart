@@ -109,7 +109,7 @@ final class Harvester extends AxleSteeredVehicle {
   /// The position of the Stanley axle in the the vehicle direction. Used when
   /// calculating the Stanley pursuit values.
   ///
-  /// The mirror position of the steering axle position from the is used
+  /// The mirror position of the steering axle around the solidx axle is used
   /// when the harvester is driving forward.
   @override
   Geographic get stanleyAxlePosition => switch (isReversing) {
@@ -127,6 +127,8 @@ final class Harvester extends AxleSteeredVehicle {
   /// The angle is inverted because the vehicle is rear wheel steered.
   @override
   double get rightSteeringWheelAngle => -ackermannSteering.rightAngle;
+
+
 
   /// Returns a new [Harvester] based on this one, but with
   /// parameters/variables altered.

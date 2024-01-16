@@ -147,11 +147,10 @@ class _VehicleTypeSelector extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  Expanded(
+                  // TODO(dudlileif): make Articulated Tractor drawing
+                  const Expanded(
                     flex: 18,
-                    child: Image.asset(
-                      'assets/images/vehicle_types/side_view/ArticulatedTractor.png',
-                    ),
+                    child: SizedBox.shrink(),
                   ),
                 ],
               ),
@@ -188,11 +187,10 @@ class _VehicleTypeSelector extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 18,
-                    child: Image.asset(
-                      'assets/images/vehicle_types/side_view/Harvester_no_header.png',
-                    ),
+                    child: // TODO(dudlileif): make Harvester drawing
+                        Expanded(flex: 18, child: SizedBox.shrink()),
                   ),
                 ],
               ),

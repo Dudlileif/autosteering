@@ -51,7 +51,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double pitch = 0,
     double roll = 0,
     double velocity = 0,
-    
   })  : _bearing = bearing,
         _pitch = pitch,
         _roll = roll,
@@ -451,6 +450,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Whether the vehicle is turning to the left,
   /// otherwise assumed turning to the right.
   bool get isTurningLeft => steeringAngle < 0;
+
+  /// The furthest ahead and left most position of the vehicle's bounding box.
+  ///
+  /// Useful for drawing the vehicle on the map.
+  Geographic get topLeftPosition;
 
   /// Polygons for visualizing the extent of the vehicle.
   List<map.Polygon> get polygons;

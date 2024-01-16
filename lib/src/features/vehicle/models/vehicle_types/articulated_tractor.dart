@@ -24,6 +24,8 @@ final class ArticulatedTractor extends Vehicle {
     this.wheelWidth = 1.3,
     this.wheelSpacing = 0.15,
     this.numWheels = 2,
+    this.frontAxleToFrontDistance = 1.5,
+    this.rearAxleToEndDistance = 1,
     super.antennaLateralOffset,
     super.invertSteeringInput,
     super.pathTrackingMode,
@@ -128,6 +130,14 @@ final class ArticulatedTractor extends Vehicle {
 
   /// The number of wheels, i.e. twin/triples etc...
   int numWheels;
+
+  /// The distance from the [frontAxlePosition] to the frontmost part of the
+  /// vehicle, typically the bonnet or the frame.
+  double frontAxleToFrontDistance;
+
+  /// The distance from the [rearAxlePosition] to the rearmost part of the
+  /// vehicle, excluding hitches, typically wheel fenders.
+  double rearAxleToEndDistance;
 
   @override
   double get wheelBase => pivotToFrontAxle + pivotToRearAxle;
@@ -500,6 +510,21 @@ final class ArticulatedTractor extends Vehicle {
               .wrap360(),
         )
       : null;
+
+  @override
+  Geographic get topLeftPosition => frontAxlePosition.spherical
+      .destinationPoint(distance: frontAxleToFrontDistance, bearing: bearing)
+      .spherical
+      .destinationPoint(distance: width / 2, bearing: bearing - 90);
+
+  /// The furthest behind and left most position of the vehicle's rear body
+  /// bounding box.
+  ///
+  /// Useful for drawing the vehicle on the map.
+  Geographic get rearBottomLeftPosition => rearAxlePosition.spherical
+      .destinationPoint(distance: rearAxleToEndDistance, bearing: bearing + 180)
+      .spherical
+      .destinationPoint(distance: width / 2, bearing: bearing - 90);
 
   /// The left front wheel polygon.
   map.Polygon get leftFrontWheelPolygon => map.Polygon(

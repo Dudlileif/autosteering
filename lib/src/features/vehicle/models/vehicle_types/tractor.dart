@@ -109,7 +109,7 @@ final class Tractor extends AxleSteeredVehicle {
   /// The position of the Stanley axle in the the vehicle direction. Used when
   /// calculating the Stanley pursuit values.
   ///
-  /// The mirror position of the steering axle position from the is used
+  /// The mirror position of the steering axle around the solid axle is used
   /// when the tractor is reversing.
   @override
   Geographic get stanleyAxlePosition => switch (isReversing) {
@@ -125,6 +125,7 @@ final class Tractor extends AxleSteeredVehicle {
   /// The angle of the right steering wheel when using Ackermann steering.
   @override
   double get rightSteeringWheelAngle => ackermannSteering.rightAngle;
+
 
   /// Returns a new [Tractor] based on this one, but with
   /// parameters/variables altered.
