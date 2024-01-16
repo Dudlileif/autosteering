@@ -1,3 +1,4 @@
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -101,11 +102,16 @@ class _VehicleTypeSelector extends ConsumerWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 18,
-                    child: Image.asset(
-                      'assets/images/vehicle_types/side_view/Tractor.png',
+                    flex: 14,
+                    child: VehicleSidePainter(
+                      type: 'Tractor',
+                      colors: ref.watch(manufacturerProvider),
+                      child: const SizedBox.square(
+                        dimension: 140,
+                      ),
                     ),
                   ),
+                  
                 ],
               ),
               selected: vehicle is Tractor,

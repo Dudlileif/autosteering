@@ -7,3 +7,4 @@ export 'polygon_buffer_extension.dart';
 export 'position_projection_extensions.dart';
 export 'ring_buffer.dart';
 export 'sub_directory_finder_extension.dart';
+export 'xml_element_finder.dart';
