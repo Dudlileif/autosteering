@@ -32,7 +32,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.purePursuitParameters,
     super.stanleyParameters,
     super.antennaLateralOffset,
-    super.position,
+    super.antennaPosition,
     super.invertSteeringInput,
     super.velocity,
     super.bearing,
@@ -57,8 +57,12 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The distance from the antenna [position] to the solid axle,
   /// this means the rear axle on front wheel steered vehicles, and
   /// the front axle on rear wheel steered vehicles.
-  /// Expected positive for front wheel steered,
-  /// negative for rear wheel steered.
+  ///
+  /// The sign of the direction is positive towards the steering axle and
+  /// negative away from it.
+  ///
+  /// Expected positive for front wheel steered and negative for rear wheel
+  /// steered.
   double solidAxleDistance;
 
   double _steeringAngleMaxRaw;
@@ -667,7 +671,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// parameters/variables altered.
   @override
   AxleSteeredVehicle copyWith({
-    Geographic? position,
+    Geographic? antennaPosition,
     double? antennaHeight,
     double? antennaLateralOffset,
     double? minTurningRadius,

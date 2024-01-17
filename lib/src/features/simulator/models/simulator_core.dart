@@ -616,7 +616,7 @@ class _SimulatorCoreState {
     // Update the WAS config of the vehicle.
     else if (message is WasConfig) {
       vehicle?.was.config = message;
-    } 
+    }
     // Update the motor config of the vehicle.
     else if (message is MotorConfig) {
       vehicle?.motorConfig = message;
@@ -1354,11 +1354,14 @@ class _SimulatorCoreState {
     final oldGaugeVelocity = gaugeVelocity;
 
     if (vehicle != null) {
+      // Update by GNSS
       if (gnssUpdate != null && !allowManualSimInput) {
         vehicle!.position = gnssUpdate!.gnssPosition;
         vehicle!.updateChildren();
         turningCircleCenter = vehicle?.turningRadiusCenter;
-      } else if (allowManualSimInput || allowSimInterpolation) {
+      }
+      // Update by simulation
+      else if (allowManualSimInput || allowSimInterpolation) {
         vehicle!.updatePositionAndBearing(
           period,
           turningCircleCenter,
@@ -1382,7 +1385,6 @@ class _SimulatorCoreState {
             false => 1,
           };
     }
-
     didChange = forceChange ||
         prevVehicle != vehicle ||
         oldGaugeVelocity != gaugeVelocity;

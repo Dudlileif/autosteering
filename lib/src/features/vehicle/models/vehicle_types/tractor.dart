@@ -21,7 +21,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.steeringAxleWheelWidth,
     super.solidAxleWheelWidth,
     super.invertSteeringInput,
-    super.position,
+    super.antennaPosition,
     super.pathTrackingMode,
     super.imu,
     super.was,
@@ -131,7 +131,7 @@ final class Tractor extends AxleSteeredVehicle {
   /// parameters/variables altered.
   @override
   Tractor copyWith({
-    Geographic? position,
+    Geographic? antennaPosition,
     double? antennaHeight,
     double? antennaLateralOffset,
     double? minTurningRadius,
@@ -172,7 +172,7 @@ final class Tractor extends AxleSteeredVehicle {
     String? uuid,
   }) =>
       Tractor(
-        position: position ?? antennaPosition,
+        antennaPosition: antennaPosition ?? this.antennaPosition,
         antennaHeight: antennaHeight ?? this.antennaHeight,
         antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,

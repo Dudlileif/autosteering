@@ -36,7 +36,7 @@ final class ArticulatedTractor extends Vehicle {
     super.purePursuitParameters =
         const PurePursuitParameters(lookAheadDistance: 1),
     super.stanleyParameters,
-    super.position,
+    super.antennaPosition,
     super.velocity,
     super.bearing,
     super.pitch,
@@ -794,7 +794,7 @@ final class ArticulatedTractor extends Vehicle {
     double? frontAxleToHitchDistance,
     double? rearAxleToHitchDistance,
     double? rearAxleToTowbarDistance,
-    Geographic? position,
+    Geographic? antennaPosition,
     double? antennaHeight,
     double? antennaLateralOffset,
     double? minTurningRadius,
@@ -828,7 +828,7 @@ final class ArticulatedTractor extends Vehicle {
     String? uuid,
   }) =>
       ArticulatedTractor(
-        position: position ?? this.position,
+        antennaPosition: antennaPosition ?? this.antennaPosition,
         antennaHeight: antennaHeight ?? this.antennaHeight,
         antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,

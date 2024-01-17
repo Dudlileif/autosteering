@@ -10,7 +10,7 @@ final class Harvester extends AxleSteeredVehicle {
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
-    super.position,
+    super.antennaPosition,
     super.antennaLateralOffset,
     super.solidAxleToFrontHitchDistance = 2,
     super.solidAxleToRearHitchDistance,
@@ -134,7 +134,7 @@ final class Harvester extends AxleSteeredVehicle {
   /// parameters/variables altered.
   @override
   Harvester copyWith({
-    Geographic? position,
+    Geographic? antennaPosition,
     double? antennaHeight,
     double? antennaLateralOffset,
     double? minTurningRadius,
@@ -175,7 +175,7 @@ final class Harvester extends AxleSteeredVehicle {
     String? uuid,
   }) =>
       Harvester(
-        position: position ?? this.position,
+        antennaPosition: antennaPosition ?? this.antennaPosition,
         antennaHeight: antennaHeight ?? this.antennaHeight,
         antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,

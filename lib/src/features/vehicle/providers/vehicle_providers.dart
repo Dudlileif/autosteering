@@ -28,7 +28,7 @@ class MainVehicle extends _$MainVehicle {
           velocity: vehicle.velocity,
           bearing: vehicle.bearing,
           steeringAngleInput: vehicle.steeringAngleInput,
-          position: vehicle.position,
+          antennaPosition: vehicle.position,
         )..lastUsed = DateTime.now();
       });
 
@@ -36,7 +36,7 @@ class MainVehicle extends _$MainVehicle {
   /// position and bearing.
   void updateConfig(Vehicle vehicle) => Future(
         () => state = vehicle.copyWith(
-          position: state.position,
+          antennaPosition: state.position,
           bearing: state.bearing,
         )..lastUsed = DateTime.now(),
       );
