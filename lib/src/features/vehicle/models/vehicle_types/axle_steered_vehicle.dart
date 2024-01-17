@@ -48,6 +48,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.name,
     super.uuid,
     super.lastUsed,
+    super.manufacturerColors,
   }) : _steeringAngleMaxRaw = steeringAngleMax;
 
   /// The distance between the axles.
@@ -709,6 +710,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    ManufacturerColors? manufacturerColors,
   });
 
   @override

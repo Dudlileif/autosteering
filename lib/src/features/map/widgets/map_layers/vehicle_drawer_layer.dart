@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
-import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -175,7 +174,6 @@ class VehicleDrawerLayer extends ConsumerWidget {
           ),
         MapVehicleTopDownPainter(
           vehicle: vehicle,
-          colors: ref.watch(manufacturerProvider),
         ),
         if (vehicle is Tractor) ...[
           WheelPainter(

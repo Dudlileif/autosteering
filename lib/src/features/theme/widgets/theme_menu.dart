@@ -12,6 +12,7 @@ class ThemeMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Theme',
       icon: Icons.palette,
@@ -64,32 +65,62 @@ class ThemeMenu extends StatelessWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final colorTheme = ref.watch(manufacturerProvider);
+            final inheritFromVehicle =
+                ref.watch(colorSchemeInheritFromVehicleProvider);
 
-            return MenuButtonWithChildren(
-              text: 'Color theme',
-              iconOverrideWidget: Icon(
-                Icons.palette,
-                color: colorTheme.primary,
+            final listTile = CheckboxListTile(
+              title: Text(
+                'Inherit colors from vehicle',
+                style: textStyle,
               ),
-              menuChildren: ManufacturerColor.values
-                  .map(
-                    (scheme) => ListTile(
-                      leading: Icon(
-                        Icons.palette,
-                        color: scheme.primary,
-                      ),
-                      title: Text(scheme.name),
-                      selected: colorTheme == scheme,
-                      onTap: () => ref
-                          .read(manufacturerProvider.notifier)
-                          .update(scheme),
-                    ),
-                  )
-                  .toList(),
+              value: inheritFromVehicle,
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(colorSchemeInheritFromVehicleProvider.notifier)
+                      .update(value: value)
+                  : null,
             );
+
+            if (!inheritFromVehicle) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  listTile,
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final colorTheme = ref.watch(manufacturerProvider);
+
+                      return MenuButtonWithChildren(
+                        text: 'Color theme',
+                        iconOverrideWidget: Icon(
+                          Icons.palette,
+                          color: colorTheme.primary,
+                        ),
+                        menuChildren: ManufacturerColors.values
+                            .map(
+                              (scheme) => ListTile(
+                                leading: Icon(
+                                  Icons.palette,
+                                  color: scheme.primary,
+                                ),
+                                title: Text(scheme.name),
+                                selected: colorTheme == scheme,
+                                onTap: () => ref
+                                    .read(manufacturerProvider.notifier)
+                                    .update(scheme),
+                              ),
+                            )
+                            .toList(),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
+            return listTile;
           },
         ),
+      
       ],
     );
   }

@@ -43,6 +43,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.name,
     super.uuid,
     super.lastUsed,
+    super.manufacturerColors,
   });
 
   /// Creates a [Harvester] from the [json] object.
@@ -173,6 +174,8 @@ final class Harvester extends AxleSteeredVehicle {
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    ManufacturerColors? manufacturerColors,
+
   }) =>
       Harvester(
         antennaPosition: antennaPosition ?? this.antennaPosition,
@@ -223,6 +226,7 @@ final class Harvester extends AxleSteeredVehicle {
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
         uuid: uuid ?? this.uuid,
+        manufacturerColors: manufacturerColors ?? this.manufacturerColors,
       )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override

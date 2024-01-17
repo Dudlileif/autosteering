@@ -22,7 +22,7 @@ class VehicleSidePainter extends StatefulWidget {
   final String type;
 
   /// The manufacturer colors for the widget.vehicle.
-  final ManufacturerColor colors;
+  final ManufacturerColors colors;
 
   /// Whether the painting should be strecthed out from the original
   /// aspect ratio.

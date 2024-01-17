@@ -19,6 +19,42 @@ class VehicleTypeSelectorPage extends StatelessWidget {
             padding: EdgeInsets.all(8),
             child: _VehicleTypeSelector(),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final textStyle = Theme.of(context).menuButtonWithChildrenText;
+                final vehicle = ref.watch(configuredVehicleProvider);
+                return DropdownMenu<ManufacturerColors>(
+                  leadingIcon: Icon(
+                    Icons.color_lens,
+                    color: vehicle.manufacturerColors.primary,
+                  ),
+                  initialSelection: vehicle.manufacturerColors,
+                  textStyle: textStyle,
+                  onSelected: (value) => ref
+                      .read(configuredVehicleProvider.notifier)
+                      .update(vehicle.copyWith(manufacturerColors: value)),
+                  dropdownMenuEntries: ManufacturerColors.values
+                      .map(
+                        (scheme) => DropdownMenuEntry<ManufacturerColors>(
+                          label: scheme.name,
+                          value: scheme,
+                          leadingIcon: Icon(
+                            Icons.color_lens,
+                            color: scheme.primary,
+                          ),
+                          labelWidget: Text(
+                            scheme.name,
+                            style: textStyle,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                );
+              },
+            ),
+          ),
           const Divider(),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -105,13 +141,12 @@ class _VehicleTypeSelector extends ConsumerWidget {
                     flex: 14,
                     child: VehicleSidePainter(
                       type: 'Tractor',
-                      colors: ref.watch(manufacturerProvider),
+                      colors: vehicle.manufacturerColors,
                       child: const SizedBox.square(
                         dimension: 140,
                       ),
                     ),
                   ),
-                  
                 ],
               ),
               selected: vehicle is Tractor,

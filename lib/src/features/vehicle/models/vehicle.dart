@@ -5,6 +5,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     required this.minTurningRadius,
     required this.steeringAngleMax,
     required this.trackWidth,
+    this.manufacturerColors = ManufacturerColors.masseyFerguson,
     this.antennaLateralOffset = 0,
     this.invertSteeringInput = false,
     this.steeringAngleInput = 0,
@@ -158,6 +160,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
           )
         : null;
 
+    final manufacturerColors = json.containsKey('manufacturer_colors')
+        ? ManufacturerColors.fromJson(
+            Map<String, dynamic>.from(json['manufacturer_colors'] as Map),
+          )
+        : null;
+
     return vehicle.copyWith(
       imu: imu,
       was: was,
@@ -165,11 +173,15 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       pidParameters: pidParameters,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
+      manufacturerColors: manufacturerColors,
     );
   }
 
   /// The last time this vehicle was used.
   DateTime lastUsed;
+
+  /// The manufacturer color scheme of the vehicle.
+  ManufacturerColors manufacturerColors;
 
   /// The height of the antenna above the ground, in meters.
   double antennaHeight;
@@ -626,6 +638,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    ManufacturerColors? manufacturerColors,
   });
 
   /// Converts the object to a json compatible structure.
@@ -660,6 +673,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       'pure_pursuit_parameters': purePursuitParameters,
       'stanley_parameters': stanleyParameters,
     };
+
+    map['manufacturer_colors'] = manufacturerColors;
 
     return map;
   }

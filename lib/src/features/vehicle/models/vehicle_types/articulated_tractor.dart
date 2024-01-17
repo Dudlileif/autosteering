@@ -12,7 +12,6 @@ final class ArticulatedTractor extends Vehicle {
     required this.pivotToFrontAxle,
     required this.pivotToRearAxle,
     required super.antennaHeight,
-
     /// The minimum turning radius of the front axle.
     required super.minTurningRadius,
     required super.steeringAngleMax,
@@ -51,6 +50,7 @@ final class ArticulatedTractor extends Vehicle {
     super.name,
     super.uuid,
     super.lastUsed,
+    super.manufacturerColors,
   });
 
   /// Creates an [ArticulatedTractor] from the [json] object.
@@ -826,6 +826,8 @@ final class ArticulatedTractor extends Vehicle {
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    ManufacturerColors? manufacturerColors,
+
   }) =>
       ArticulatedTractor(
         antennaPosition: antennaPosition ?? this.antennaPosition,
@@ -870,7 +872,8 @@ final class ArticulatedTractor extends Vehicle {
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
         uuid: uuid ?? this.uuid,
-      );
+        manufacturerColors: manufacturerColors ?? this.manufacturerColors,
+      )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override
   Map<String, dynamic> toJson() {

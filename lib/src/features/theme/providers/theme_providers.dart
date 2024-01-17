@@ -1,5 +1,6 @@
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -45,7 +46,7 @@ class ActiveThemeMode extends _$ActiveThemeMode {
 @riverpod
 class Manufacturer extends _$Manufacturer {
   @override
-  ManufacturerColor build() {
+  ManufacturerColors build() {
     ref.listenSelf((previous, next) {
       if (previous != null) {
         ref
@@ -68,22 +69,46 @@ class Manufacturer extends _$Manufacturer {
           .read(settingsProvider.notifier)
           .getMap(SettingsKey.themeColorSchemeCustom);
       if (data != null) {
-        return ManufacturerColor.fromJson(data);
+        return ManufacturerColors.fromJson(data);
       }
     }
 
-    return ManufacturerColor.values
+    return ManufacturerColors.values
             .firstWhereOrNull((element) => element.name == name) ??
-        ManufacturerColor.masseyFerguson;
+        ManufacturerColors.masseyFerguson;
   }
 
   /// Update the [state] to [newScheme].
-  void update(ManufacturerColor newScheme) => Future(() => state = newScheme);
+  void update(ManufacturerColors newScheme) => Future(() => state = newScheme);
 
   /// Update the [state] by using the [index] of the wanted
-  /// [ManufacturerColor].
+  /// [ManufacturerColors].
   void updateByIndex(int index) =>
-      Future(() => state = ManufacturerColor.values[index]);
+      Future(() => state = ManufacturerColors.values[index]);
+}
+
+/// A provider for whether the [appTheme] should use [ManufacturerColors]
+/// inherited from the active vehicle or from a selected one.
+@riverpod
+class ColorSchemeInheritFromVehicle extends _$ColorSchemeInheritFromVehicle {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.themeColorSchemeInheritFromVehicle, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.themeColorSchemeInheritFromVehicle) ??
+        true;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
 }
 
 /// A provider for the app's theme.
@@ -91,14 +116,22 @@ class Manufacturer extends _$Manufacturer {
 /// Updates the [AppTheme] configuration when any of the providers
 /// for the options changes.
 @riverpod
-AppTheme appTheme(AppThemeRef ref) => AppTheme(
-      lightColors: ManufacturerSchemes.scheme(
-        ref.watch(manufacturerProvider),
-        Brightness.light,
-      ),
-      darkColors: ManufacturerSchemes.scheme(
-        ref.watch(manufacturerProvider),
-        Brightness.dark,
-      ),
-      darkIsTrueBlack: true,
-    );
+AppTheme appTheme(AppThemeRef ref) {
+  final manufacturerColors = ref.watch(colorSchemeInheritFromVehicleProvider)
+      ? ref.watch(
+          configuredVehicleProvider.select((value) => value.manufacturerColors),
+        )
+      : ref.watch(manufacturerProvider);
+
+  return AppTheme(
+    lightColors: ManufacturerSchemes.scheme(
+      manufacturerColors,
+      Brightness.light,
+    ),
+    darkColors: ManufacturerSchemes.scheme(
+      manufacturerColors,
+      Brightness.dark,
+    ),
+    darkIsTrueBlack: true,
+  );
+}

@@ -43,6 +43,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.name,
     super.uuid,
     super.lastUsed,
+super.manufacturerColors,
   });
 
   /// Creates a [Tractor] from the [json] object.
@@ -170,6 +171,8 @@ final class Tractor extends AxleSteeredVehicle {
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    ManufacturerColors? manufacturerColors,
+
   }) =>
       Tractor(
         antennaPosition: antennaPosition ?? this.antennaPosition,
@@ -219,6 +222,7 @@ final class Tractor extends AxleSteeredVehicle {
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
         uuid: uuid ?? this.uuid,
+        manufacturerColors: manufacturerColors ?? this.manufacturerColors,
       )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override

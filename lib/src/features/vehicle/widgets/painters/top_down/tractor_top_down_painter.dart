@@ -11,7 +11,7 @@ class _TractorTopDownPainter extends CustomPainter {
     this.steeringAxleWidth,
   });
 
-  final ManufacturerColor colors;
+  final ManufacturerColors colors;
 
   final bool stretch;
 

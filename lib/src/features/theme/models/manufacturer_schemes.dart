@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 class ManufacturerSchemes {
   /// An iterable of the available color schemes with the [brightness] applied.
   static Iterable<FlexSchemeColor> schemes(Brightness brightness) =>
-      ManufacturerColor.values.map(
+      ManufacturerColors.values.map(
         (value) => scheme(value, brightness),
       );
 
   /// A function for getting the appropriate color scheme for the manufacturer
   /// [colors], depending on the theme mode [brightness].
   static FlexSchemeColor scheme(
-    ManufacturerColor colors,
+    ManufacturerColors colors,
     Brightness brightness,
   ) =>
       FlexSchemeColor.from(
@@ -27,10 +27,10 @@ class ManufacturerSchemes {
 
 /// A class that holds information about a vehicle manufacturer's color
 /// scheme.
-class ManufacturerColor {
+class ManufacturerColors {
   /// A class that holds information about a vehicle manufacturer's color
   /// scheme.
-  const ManufacturerColor({
+  const ManufacturerColors({
     required this.name,
     required this.primary,
     required this.secondary,
@@ -41,9 +41,9 @@ class ManufacturerColor {
     this.roof,
   });
 
-  /// Creates a [ManufacturerColor] from the [json] object.
-  factory ManufacturerColor.fromJson(Map<String, dynamic> json) =>
-      ManufacturerColor(
+  /// Creates a [ManufacturerColors] from the [json] object.
+  factory ManufacturerColors.fromJson(Map<String, dynamic> json) =>
+      ManufacturerColors(
         name: json['name'] as String,
         primary: Color(json['primary'] as int),
         secondary: Color(json['secondary'] as int),
@@ -79,7 +79,7 @@ class ManufacturerColor {
   /// The color of the roof for the manufacturer.
   final Color? roof;
 
-  static const caseIH = ManufacturerColor(
+  static const caseIH = ManufacturerColors(
     name: 'Case IH',
     primary: Color.fromRGBO(173, 26, 41, 1),
     secondary: Colors.black,
@@ -87,7 +87,7 @@ class ManufacturerColor {
     rims: Color.fromRGBO(198, 198, 198, 1),
   );
 
-  static const claas = ManufacturerColor(
+  static const claas = ManufacturerColors(
     name: 'Claas',
     primary: Color.fromRGBO(180, 198, 24, 1),
     secondary: Color.fromRGBO(120, 120, 120, 1),
@@ -95,27 +95,27 @@ class ManufacturerColor {
     rims: Colors.red,
   );
 
-  static const deutzFahr = ManufacturerColor(
+  static const deutzFahr = ManufacturerColors(
     name: 'Deutz Fahr',
     primary: Color.fromRGBO(119, 184, 40, 1),
     secondary: Colors.black,
     rims: Color.fromRGBO(180, 180, 180, 1),
   );
 
-  static const fendt = ManufacturerColor(
+  static const fendt = ManufacturerColors(
     name: 'Fendt',
     primary: Color.fromRGBO(69, 170, 2, 1),
     secondary: Color.fromRGBO(120, 120, 120, 1),
     rims: Color.fromRGBO(167, 41, 32, 1),
   );
 
-  static const ford = ManufacturerColor(
+  static const ford = ManufacturerColors(
     name: 'Ford',
     primary: Color.fromRGBO(0, 84, 126, 1),
     secondary: Colors.white,
   );
 
-  static const johnDeere = ManufacturerColor(
+  static const johnDeere = ManufacturerColors(
     name: 'John Deere',
     primary: Color.fromRGBO(54, 124, 43, 1),
     secondary: Color.fromRGBO(255, 222, 0, 1),
@@ -125,40 +125,40 @@ class ManufacturerColor {
     roof: Color.fromRGBO(54, 124, 43, 1),
   );
 
-  static const kubota = ManufacturerColor(
+  static const kubota = ManufacturerColors(
     name: 'Kubota',
     primary: Color.fromRGBO(236, 96, 61, 1),
     secondary: Colors.black,
     rims: Color.fromRGBO(236, 96, 61, 1),
   );
 
-  static const masseyFerguson = ManufacturerColor(
+  static const masseyFerguson = ManufacturerColors(
     name: 'Massey Ferguson',
     primary: Color.fromRGBO(173, 26, 41, 1),
     secondary: Color.fromRGBO(198, 198, 198, 1),
     cabFrame: Color.fromRGBO(198, 198, 198, 1),
   );
 
-  static const newHolland = ManufacturerColor(
+  static const newHolland = ManufacturerColors(
     name: 'New Holland',
     primary: Color.fromRGBO(0, 96, 168, 1),
     secondary: Colors.white,
   );
 
-  static const newHollandHarvester = ManufacturerColor(
+  static const newHollandHarvester = ManufacturerColors(
     name: 'New Holland Harvester',
     primary: Color.fromRGBO(245, 176, 16, 1),
     secondary: Color.fromRGBO(0, 96, 168, 1),
     rims: Colors.white,
   );
 
-  static const valtra = ManufacturerColor(
+  static const valtra = ManufacturerColors(
     name: 'Valtra',
     primary: Color.fromRGBO(172, 29, 47, 1),
     secondary: Colors.white,
   );
 
-  static const List<ManufacturerColor> values = [
+  static const List<ManufacturerColors> values = [
     caseIH,
     claas,
     deutzFahr,

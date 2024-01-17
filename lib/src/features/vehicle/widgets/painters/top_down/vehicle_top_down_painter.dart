@@ -30,7 +30,7 @@ class VehicleTopDownPainter extends StatefulWidget {
   final String type;
 
   /// The manufacturer colors for the vehicle.
-  final ManufacturerColor colors;
+  final ManufacturerColors colors;
 
   /// Whether the painting should be strecthed out from the original
   /// aspect ratio.
@@ -142,15 +142,13 @@ class MapVehicleTopDownPainter extends StatelessWidget {
   /// the correct position and rotation on the [FlutterMap].
   const MapVehicleTopDownPainter({
     required this.vehicle,
-    required this.colors,
     super.key,
   });
 
   /// The vehicle to draw.
   final Vehicle vehicle;
 
-  /// The color scheme to apply during the drawing.
-  final ManufacturerColor colors;
+
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +207,7 @@ class MapVehicleTopDownPainter extends StatelessWidget {
             ArticulatedTractor => 'ArticulatedTractor',
             _ => 'Tractor',
           },
-          colors: colors,
+          colors: vehicle.manufacturerColors,
           stretch: true,
           steeringAxleOffset: steeringAxleOffset,
           steeringAxleWidth: steeringAxleWidth,

@@ -485,7 +485,7 @@ final lastUsedVehicleProvider = Provider<AsyncValue<Vehicle>>.internal(
 );
 
 typedef LastUsedVehicleRef = ProviderRef<AsyncValue<Vehicle>>;
-String _$mainVehicleHash() => r'f058220065edb410ef53ba556dda9569de6c0b6b';
+String _$mainVehicleHash() => r'8ab5e7dab81991354c7ca6a42423d7be9dfec907';
 
 /// The main provider for the vehicle state.
 ///

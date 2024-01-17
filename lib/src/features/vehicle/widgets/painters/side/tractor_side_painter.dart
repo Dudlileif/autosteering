@@ -10,7 +10,7 @@ class _TractorSidePainter extends CustomPainter {
   });
 
   final Map<String, Path> pathMap;
-  final ManufacturerColor colors;
+  final ManufacturerColors colors;
 
   final double sourceWidth;
   final double sourceHeight;
@@ -29,12 +29,12 @@ class _TractorSidePainter extends CustomPainter {
     // Some compensation to fit into the top left corner.
     canvas.translate(-14.5, -18.5);
 
-    drawFrame(canvas, Colors.grey.shade800);
+    drawFrame(canvas);
     drawBonnet(canvas);
     drawFrontFender(canvas, Colors.grey.shade900);
     drawFrontWheel(canvas);
     drawFuelTank(canvas, Colors.grey.shade900);
-    drawRearFender(canvas, colors.primary);
+    drawRearFender(canvas);
     drawRearWheel(canvas);
     drawCab(canvas);
     drawExhaust(canvas);
@@ -73,8 +73,8 @@ class _TractorSidePainter extends CustomPainter {
     }
   }
 
-  void drawFrame(Canvas canvas, Color color) {
-    drawPathFromMap('Frame', canvas, color);
+  void drawFrame(Canvas canvas) {
+    drawPathFromMap('Frame', canvas, colors.frame ?? Colors.grey.shade800);
   }
 
   void drawBonnet(Canvas canvas) {
@@ -100,9 +100,9 @@ class _TractorSidePainter extends CustomPainter {
     drawPathFromMap('Fuel tank', canvas, Colors.grey.shade900);
   }
 
-  void drawRearFender(Canvas canvas, Color color) {
+  void drawRearFender(Canvas canvas) {
     drawPathFromMap('Rear inner fender', canvas, Colors.grey.shade800);
-    drawPathFromMap('Rear fender painted', canvas, color);
+    drawPathFromMap('Rear fender painted', canvas, colors.primary);
   }
 
   void drawRearWheel(Canvas canvas) {

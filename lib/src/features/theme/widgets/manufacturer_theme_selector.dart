@@ -15,13 +15,13 @@ class ManufacturerThemeSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    return PopupMenuButton<ManufacturerColor>(
-      onSelected: (ManufacturerColor scheme) =>
+    return PopupMenuButton<ManufacturerColors>(
+      onSelected: (ManufacturerColors scheme) =>
           ref.read(manufacturerProvider.notifier).update(scheme),
       initialValue: ref.read(manufacturerProvider),
-      itemBuilder: (BuildContext context) => ManufacturerColor.values
+      itemBuilder: (BuildContext context) => ManufacturerColors.values
           .map(
-            (scheme) => PopupMenuItem<ManufacturerColor>(
+            (scheme) => PopupMenuItem<ManufacturerColors>(
               value: scheme,
               child: ListTile(
                 leading: Icon(
