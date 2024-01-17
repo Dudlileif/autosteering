@@ -68,17 +68,27 @@ class VehicleAntennaPage extends ConsumerWidget {
                   const TextInputType.numberWithOptions(decimal: true),
               initialValue: ref.read(
                 configuredVehicleProvider.select(
-                  (value) => (value as AxleSteeredVehicle)
-                      .solidAxleDistance
-                      .toString(),
+                  (value) {
+                    if (value is Harvester) {
+                      return (-value.solidAxleDistance).toString();
+                    }
+                    return (value as AxleSteeredVehicle)
+                        .solidAxleDistance
+                        .toString();
+                  },
                 ),
               ),
               onChanged: (value) {
                 final distance = double.tryParse(value.replaceAll(',', '.'));
 
-                ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle.copyWith(solidAxleDistance: distance?.abs()),
-                    );
+                if (distance != null) {
+                  ref.read(configuredVehicleProvider.notifier).update(
+                        vehicle.copyWith(
+                          solidAxleDistance:
+                              (vehicle is Harvester) ? -distance : distance,
+                        ),
+                      );
+                }
               },
             ),
           ],

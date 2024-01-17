@@ -6,7 +6,7 @@ class PreconfiguredVehicles {
   /// MF 5713S -ish
   static Tractor get tractor => Tractor(
         antennaHeight: 2.822,
-        length: 4.358,
+        length: 3.8,
         width: 2.360,
         wheelBase: 2.550,
         solidAxleDistance: 1.275,
@@ -36,7 +36,7 @@ class PreconfiguredVehicles {
         length: 9,
         width: 3.3,
         wheelBase: 3.7,
-        solidAxleDistance: 1.275,
+        solidAxleDistance: -1.275,
         trackWidth: 2.2,
         solidAxleWheelWidth: 0.65,
         steeringAxleWheelWidth: 0.46,

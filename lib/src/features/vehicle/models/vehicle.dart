@@ -259,18 +259,24 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   double get antennaPitchLongitudinalOffset =>
       tan(pitch.toRadians()) * antennaHeight;
 
+  /// The corrected position of the antenna after accounting for the [pitch]
+  /// and [roll], if enabled by the [imu] config setting
+  /// [ImuConfig.usePitchAndRoll].
+  /// Otherwise the [antennaPosition] is returned.
+  Geographic get correctedAntennaPosition =>
+      switch (imu.config.usePitchAndRoll) {
+        false => antennaPosition,
+        true => correctPositionForRollAndPitch(antennaPosition)
+      };
+
   /// The projected ground position of the centered antenna of this vehicle
   /// accounting for [pitch] and [roll].
   @override
-  Geographic get position => switch (imu.config.usePitchAndRoll) {
-        false => antennaPosition,
-        true => correctPositionForRollAndPitch(antennaPosition),
-      }
-          .spherical
-          .destinationPoint(
-            distance: antennaLateralOffset,
-            bearing: bearing + 90,
-          );
+  Geographic get position =>
+      correctedAntennaPosition.spherical.destinationPoint(
+        distance: antennaLateralOffset,
+        bearing: bearing - 90,
+      );
 
   /// Updates the [antennaPosition] of the vehicle, as the ground [position] is
   /// derived from it.
@@ -300,7 +306,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   void setPositionSim(Geographic value) {
     final unCentered = value.spherical.destinationPoint(
       distance: antennaLateralOffset,
-      bearing: bearing - 90,
+      bearing: bearing + 90,
     );
 
     antennaPosition = switch (imu.config.usePitchAndRoll) {

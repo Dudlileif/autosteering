@@ -1,9 +1,11 @@
 import 'dart:math';
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 
@@ -210,6 +212,18 @@ class VehicleDrawerLayer extends ConsumerWidget {
             centerMapOnVehicle: centerMapOnVehicle,
           ),
         ],
+        CircleLayer(
+          circles: [
+            CircleMarker(
+              point: vehicle.correctedAntennaPosition.latLng,
+              radius: 0.1,
+              useRadiusInMeter: true,
+              color: Colors.white,
+              borderStrokeWidth: 0.03,
+              borderColor: Colors.black,
+            ),
+          ],
+        ),
       ],
     );
   }
