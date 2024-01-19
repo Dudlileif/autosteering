@@ -18,9 +18,6 @@ class EquipmentDebugLayer extends ConsumerWidget {
       ),
     );
 
-    final workedLines = equipments
-        .map((equipment) => ref.watch(equipmentPathsProvider(equipment.uuid)));
-
     return MouseRegion(
       cursor: ref.watch(equipmentHoveredProvider)
           ? SystemMouseCursors.click
@@ -56,74 +53,8 @@ class EquipmentDebugLayer extends ConsumerWidget {
               ),
             ],
           ),
-          PolylineLayer(
-            polylineCulling: true,
-            polylines: workedLines
-                .mapIndexed(
-                  (equipmentIndex, equipment) => equipment
-                      .mapIndexed(
-                        (sectionUpdate, sectionMap) => sectionMap.values
-                            .mapIndexed(
-                              (section, line) => line != null
-                                  ? Polyline(
-                                      points: sectionUpdate ==
-                                              equipment.length - 1
-                                          ? [
-                                              ...line.map((e) => e.latLng),
-                                              equipments
-                                                  .elementAt(equipmentIndex)
-                                                  .sectionCenter(section)
-                                                  .latLng,
-                                            ]
-                                          : line.map((e) => e.latLng).toList(),
-                                      color: Theme.of(context)
-                                          .primaryColor
-                                          .withOpacity(0.25),
-                                      strokeWidth: equipments
-                                          .elementAt(equipmentIndex)
-                                          .sectionWidths[section],
-                                      useStrokeWidthInMeter: true,
-                                      strokeCap: StrokeCap.butt,
-                                      strokeJoin: StrokeJoin.bevel,
-                                    )
-                                  : null,
-                            )
-                            .whereNotNull(),
-                      )
-                      .flattened,
-                )
-                .flattened
-                .toList(),
-          ),
-          // CircleLayer(
-          //   circles: workedLines
-          //       .mapIndexed(
-          //         (equipmentIndex, equipment) => equipment
-          //             .map(
-          //               (sectionMap) => sectionMap.values
-          //                   .mapIndexed(
-          //                     (section, line) => line != null
-          //                         ? [
-          //                             ...line,
-          //                             equipments
-          //                                 .elementAt(equipmentIndex)
-          //                                 .sectionCenter(section),
-          //                           ].map(
-          //                             (point) => CircleMarker(
-          //                               point: point.latLng,
-          //                               radius: 3,
-          //                             ),
-          //                           )
-          //                         : null,
-          //                   )
-          //                   .whereNotNull()
-          //                   .flattened,
-          //             )
-          //             .flattened,
-          //       )
-          //       .flattened
-          //       .toList(),
-          // )
+
+        
         ],
       ),
     );

@@ -34,9 +34,9 @@ class AllEquipments extends _$AllEquipments {
     ref.listenSelf((previous, next) {
       for (final equipment in next.values) {
         if (ref.exists(equipmentPathsProvider(equipment.uuid))) {
-        ref
-            .read(equipmentPathsProvider(equipment.uuid).notifier)
-            .update(equipment);
+          ref
+              .read(equipmentPathsProvider(equipment.uuid).notifier)
+              .update(equipment);
         }
       }
     });
@@ -109,7 +109,7 @@ class EquipmentPaths extends _$EquipmentPaths {
   var _lastActiveSections = <bool>[];
 
   @override
-  List<Map<int, List<Geographic>?>> build(String uuid) => [];
+  List<Map<int, List<(Geographic, Geographic)>?>> build(String uuid) => [];
 
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
@@ -122,22 +122,27 @@ class EquipmentPaths extends _$EquipmentPaths {
             _addPointsIfDeactivation(equipment);
 
             final points = equipment.activeSections.mapIndexed(
-              (section, active) => active &&
-                      (_lastActiveSections.elementAtOrNull(section) ?? false)
-                  ? [
-                      state.last[section]?.last ??
-                          equipment.sectionCenter(section),
-                    ]
-                  : active
-                      ? [equipment.sectionCenter(section)]
-                      : null,
+              (section, active) {
+                final sectionPoints = equipment.sectionPoints(section);
+
+                return active &&
+                        (_lastActiveSections.elementAtOrNull(section) ?? false)
+                    ? [
+                        state.last[section]?.last ??
+                            (sectionPoints[1], sectionPoints[2]),
+                      ]
+                    : active
+                        ? [(sectionPoints[1], sectionPoints[2])]
+                        : null;
+              },
             );
 
-            final sectionLines = Map<int, List<Geographic>?>.fromEntries(
+            final sectionLines =
+                Map<int, List<(Geographic, Geographic)>?>.fromEntries(
               points.mapIndexed(MapEntry.new),
             );
             state = state..add(sectionLines);
-            
+
             _lastActiveSections = equipment.activeSections;
           }
 
@@ -145,7 +150,10 @@ class EquipmentPaths extends _$EquipmentPaths {
           else {
             final positions = List.generate(
               _lastActiveSections.length,
-              (section) => equipment.sectionCenter(section),
+              (section) {
+                final points = equipment.sectionPoints(section);
+                return (points[1], points[2]);
+              },
             );
             final addNext = positions
                 .mapIndexed(
@@ -179,26 +187,33 @@ class EquipmentPaths extends _$EquipmentPaths {
     if (nextActive < prevActive) {
       state = state
         ..last.updateAll(
-          (key, value) => value?..add(equipment.sectionCenter(key)),
+          (key, value) {
+            final points = equipment.sectionPoints(key);
+            return value?..add((points[1], points[2]));
+          },
         );
     }
   }
 
   /// Whether the [next] point for this [section] is necessary to keep the
   /// path up to date.
-  bool shouldAddNext(Geographic next, int section) {
+  bool shouldAddNext((Geographic, Geographic) next, int section) {
     final prev = state.last[section]?.last;
 
     if (state.isNotEmpty && prev != null) {
-      final distance = prev.spherical.distanceTo(next);
+      final distance = [
+        prev.$1.spherical.distanceTo(next.$1),
+        prev.$2.spherical.distanceTo(next.$2),
+      ].max;
 
       if (distance > 20) {
         return true;
       } else if (distance > 1 && (state.last[section]?.length ?? 0) >= 2) {
         final secondPrev =
             state.last[section]![state.last[section]!.length - 2];
-        final prevBearing = secondPrev.spherical.initialBearingTo(prev);
-        final nextBearing = prev.spherical.finalBearingTo(next);
+        final prevBearing = secondPrev.$1.spherical.initialBearingTo(prev.$1);
+
+        final nextBearing = prev.$1.spherical.finalBearingTo(next.$1);
 
         final bearingDiff = bearingDifference(prevBearing, nextBearing);
 
@@ -216,8 +231,8 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// different to the previous state.
   @override
   bool updateShouldNotify(
-    List<Map<int, List<Geographic>?>> previous,
-    List<Map<int, List<Geographic>?>> next,
+    List<Map<int, List<(Geographic, Geographic)>?>> previous,
+    List<Map<int, List<(Geographic, Geographic)>?>> next,
   ) =>
       true;
 }

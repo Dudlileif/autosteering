@@ -522,13 +522,13 @@ final equipmentHoveredProvider =
 );
 
 typedef _$EquipmentHovered = Notifier<bool>;
-String _$equipmentPathsHash() => r'3d786a2d2f9552aca6de0849562eec0e9d07b5ac';
+String _$equipmentPathsHash() => r'7be131fb748aeb4ca21f8ec9eaa91cb3bec4f92f';
 
-abstract class _$EquipmentPaths
-    extends BuildlessAutoDisposeNotifier<List<Map<int, List<Geographic>?>>> {
+abstract class _$EquipmentPaths extends BuildlessAutoDisposeNotifier<
+    List<Map<int, List<(Geographic, Geographic)>?>>> {
   late final String uuid;
 
-  List<Map<int, List<Geographic>?>> build(
+  List<Map<int, List<(Geographic, Geographic)>?>> build(
     String uuid,
   );
 }
@@ -609,7 +609,7 @@ class _$EquipmentPathsFamilyOverride implements FamilyOverride {
 ///
 /// Copied from [EquipmentPaths].
 class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
-    EquipmentPaths, List<Map<int, List<Geographic>?>>> {
+    EquipmentPaths, List<Map<int, List<(Geographic, Geographic)>?>>> {
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
   /// Copied from [EquipmentPaths].
@@ -642,7 +642,7 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
   final String uuid;
 
   @override
-  List<Map<int, List<Geographic>?>> runNotifierBuild(
+  List<Map<int, List<(Geographic, Geographic)>?>> runNotifierBuild(
     covariant EquipmentPaths notifier,
   ) {
     return notifier.build(
@@ -673,7 +673,7 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
 
   @override
   AutoDisposeNotifierProviderElement<EquipmentPaths,
-      List<Map<int, List<Geographic>?>>> createElement() {
+      List<Map<int, List<(Geographic, Geographic)>?>>> createElement() {
     return _EquipmentPathsProviderElement(this);
   }
 
@@ -705,14 +705,15 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
   }
 }
 
-mixin EquipmentPathsRef
-    on AutoDisposeNotifierProviderRef<List<Map<int, List<Geographic>?>>> {
+mixin EquipmentPathsRef on AutoDisposeNotifierProviderRef<
+    List<Map<int, List<(Geographic, Geographic)>?>>> {
   /// The parameter `uuid` of this provider.
   String get uuid;
 }
 
 class _EquipmentPathsProviderElement extends AutoDisposeNotifierProviderElement<
-    EquipmentPaths, List<Map<int, List<Geographic>?>>> with EquipmentPathsRef {
+    EquipmentPaths,
+    List<Map<int, List<(Geographic, Geographic)>?>>> with EquipmentPathsRef {
   _EquipmentPathsProviderElement(super.provider);
 
   @override

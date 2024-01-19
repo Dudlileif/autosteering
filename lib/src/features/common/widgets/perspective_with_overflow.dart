@@ -37,6 +37,7 @@ class PerspectiveWithOverflow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Transform(
+      filterQuality: FilterQuality.low,
       alignment: Alignment.center,
       transform: Matrix4.identity()
         ..setEntry(3, 2, 0.001) // Perspective narrowing modifier
