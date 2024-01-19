@@ -185,6 +185,7 @@ class ABCommonMenu extends StatelessWidget {
         Consumer(
           child: Text('Recalc bounded lines', style: textStyle),
           builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
             child: child,
             onPressed: () => ref
               ..invalidate(aBCurveDebugProvider)

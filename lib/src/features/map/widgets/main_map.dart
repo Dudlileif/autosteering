@@ -22,6 +22,7 @@ class MainMap extends ConsumerWidget {
       key: const Key('Map'),
       mapController: ref.watch(mainMapControllerProvider),
       options: MapOptions(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         // Initial zoom
         initialZoom: ref.watch(mapZoomProvider),
         minZoom: 4,
@@ -84,6 +85,7 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showSentinelLayersProvider)) const SentinelLayers(),
         if (ref.watch(showFieldDebugLayerProvider)) const FieldLayer(),
         if (ref.watch(showFinishedPathLayerProvider)) const FinishedPathLayer(),
+        const EquipmentWorkedPathsLayer(),
         if (ref.watch(showVehicleDrawingLayerProvider))
           const VehicleDrawerLayer(),
         if (ref.watch(showRecordingPathLayerProvider))

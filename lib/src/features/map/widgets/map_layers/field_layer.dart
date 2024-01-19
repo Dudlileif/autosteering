@@ -38,23 +38,30 @@ class FieldLayer extends ConsumerWidget {
 
         final showBorderPoints = ref.watch(showFieldBorderPointsProvider);
 
+        final darkModeEnabled = Theme.of(context).brightness == Brightness.dark;
+
         return Stack(
           children: [
             PolygonLayer(
               polygonCulling: true,
               polygons: [
-                if (showField) field.mapPolygon,
+                if (showField)
+                  field.mapPolygon.copyWith(
+                    borderColor: darkModeEnabled ? Colors.white : Colors.black,
+                    borderStrokeWidth: 2,
+                  ),
                 if (showBufferedField)
                   bufferedField.mapPolygon.copyWith(
-                    color: Colors.red.withOpacity(0.25),
                     borderColor: Colors.red,
+                    borderStrokeWidth: 2,
                   ),
                 if (showFieldBoundingBox)
                   Polygon(
                     points:
                         field.mapBoundingBox((point) => point.latLng).toList(),
                     borderStrokeWidth: 1,
-                    borderColor: Colors.yellow,
+                    borderColor: darkModeEnabled ? Colors.white : Colors.black,
+
                   ),
                 if (showBufferedFieldBoundingBox)
                   Polygon(

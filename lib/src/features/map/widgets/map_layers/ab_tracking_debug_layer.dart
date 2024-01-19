@@ -14,6 +14,8 @@ class ABTrackingDebugLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+const pointTextStyle = TextStyle(color: Colors.white);
+
     ref
       ..watch(aBCurveDebugProvider)
       ..watch(aBLineDebugProvider);
@@ -107,10 +109,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
         if (abTracking != null || pointA != null || pointB != null)
           CircleLayer(
             circles: [
-              if (pointA != null)
-                CircleMarker(point: pointA.position.latLng, radius: 5),
-              if (pointB != null)
-                CircleMarker(point: pointB.position.latLng, radius: 5),
+            
               if (abTracking != null) ...[
                 CircleMarker(
                   point: abTracking.currentStart.position.latLng,
@@ -192,17 +191,25 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                         color: Colors.orange,
                       ),
                     ),
+              ] else if (pointA != null || pointB != null) ...[
+                if (pointA != null)
+                  CircleMarker(point: pointA.position.latLng, radius: 5),
+                if (pointB != null)
+                  CircleMarker(point: pointB.position.latLng, radius: 5),
               ],
             ],
           ),
         MarkerLayer(
           markers: [
+          
             if (abTracking != null) ...[
               Marker(
                 point: abTracking.start.position.latLng,
-                child: const Text(
+                child: const TextWithStroke(
                   'A',
-                  style: TextStyle(color: Colors.white),
+                  style: pointTextStyle,
+                  strokeWidth: 4,
+
                 ),
                 rotate: true,
                 width: 50,
@@ -210,9 +217,11 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               ),
               Marker(
                 point: abTracking.end.position.latLng,
-                child: const Text(
+                child: const TextWithStroke(
                   'B',
-                  style: TextStyle(color: Colors.white),
+                  style: pointTextStyle,
+                  strokeWidth: 4,
+
                 ),
                 rotate: true,
                 width: 50,
@@ -220,9 +229,11 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               ),
               Marker(
                 point: abTracking.currentStart.position.latLng,
-                child: Text(
+                child: TextWithStroke(
                   'A${abTracking.currentOffset}',
-                  style: const TextStyle(color: Colors.white),
+                  style: pointTextStyle,
+                  strokeWidth: 4,
+
                 ),
                 rotate: true,
                 width: 50,
@@ -230,9 +241,11 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               ),
               Marker(
                 point: abTracking.currentEnd.position.latLng,
-                child: Text(
+                child: TextWithStroke(
                   'B${abTracking.currentOffset}',
-                  style: const TextStyle(color: Colors.white),
+                  style: pointTextStyle,
+                  strokeWidth: 4,
+
                 ),
                 rotate: true,
                 width: 50,
@@ -241,9 +254,11 @@ class ABTrackingDebugLayer extends ConsumerWidget {
               if (abTracking.limitMode != ABLimitMode.unlimited) ...[
                 Marker(
                   point: abTracking.nextStart.position.latLng,
-                  child: Text(
+                  child: TextWithStroke(
                     'A${abTracking.nextOffset}',
-                    style: const TextStyle(color: Colors.white),
+                    style: pointTextStyle,
+                    strokeWidth: 4,
+
                   ),
                   rotate: true,
                   width: 50,
@@ -251,16 +266,43 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                 ),
                 Marker(
                   point: abTracking.nextEnd.position.latLng,
-                  child: Text(
+                  child: TextWithStroke(
                     'B${abTracking.nextOffset}',
-                    style: const TextStyle(color: Colors.white),
+                    style: pointTextStyle,
+                    strokeWidth: 4,
                   ),
                   rotate: true,
                   width: 50,
                   height: 50,
                 ),
               ],
-            ],
+            ] else if (pointA != null || pointB != null) ...[
+              if (pointA != null)
+                Marker(
+                  point: pointA.position.latLng,
+                  child: const TextWithStroke(
+                    'A',
+                    style: pointTextStyle,
+                    strokeWidth: 4,
+                  ),
+                  rotate: true,
+                  width: 50,
+                  height: 50,
+                ),
+              if (pointB != null)
+                Marker(
+                  point: pointB.position.latLng,
+                  child: const TextWithStroke(
+                    'B',
+                    style: pointTextStyle,
+                    strokeWidth: 4,
+                  ),
+                  rotate: true,
+                  width: 50,
+                  height: 50,
+                ),
+              ],
+            
           ],
         ),
       ],

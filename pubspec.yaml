@@ -53,7 +53,7 @@ dependencies:
     logger: ^2.0.2+1
     nmea: ^3.2.0
     path_provider: ^2.1.2
-    permission_handler: ^11.1.0
+    permission_handler: ^11.2.0
     riverpod_annotation: ^3.0.0-dev.3
     svg_path_parser: ^1.1.2
     themed: ^5.0.0
