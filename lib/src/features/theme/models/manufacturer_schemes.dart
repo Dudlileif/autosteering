@@ -84,7 +84,10 @@ class ManufacturerColors {
     primary: Color.fromRGBO(173, 26, 41, 1),
     secondary: Colors.black,
     tertiary: Colors.white,
+    cabFrame: Colors.black,
+    frame: Colors.black,
     rims: Color.fromRGBO(198, 198, 198, 1),
+    roof: Color.fromRGBO(173, 26, 41, 1),
   );
 
   static const claas = ManufacturerColors(
@@ -92,27 +95,40 @@ class ManufacturerColors {
     primary: Color.fromRGBO(180, 198, 24, 1),
     secondary: Color.fromRGBO(120, 120, 120, 1),
     tertiary: Colors.white,
+    cabFrame: Colors.black,
+    frame: Color.fromRGBO(100, 100, 100, 1),
     rims: Colors.red,
+    roof: Color.fromRGBO(220, 220, 220, 1),
   );
 
   static const deutzFahr = ManufacturerColors(
     name: 'Deutz Fahr',
     primary: Color.fromRGBO(119, 184, 40, 1),
     secondary: Colors.black,
+    cabFrame: Colors.black,
+    frame: Colors.black,
     rims: Color.fromRGBO(180, 180, 180, 1),
+    roof: Color.fromRGBO(119, 184, 40, 1),
   );
 
   static const fendt = ManufacturerColors(
     name: 'Fendt',
     primary: Color.fromRGBO(69, 170, 2, 1),
-    secondary: Color.fromRGBO(120, 120, 120, 1),
+    secondary: Color.fromRGBO(99, 102, 110, 1),
+    cabFrame: Color.fromRGBO(69, 170, 2, 1),
+    frame: Color.fromRGBO(99, 102, 110, 1),
     rims: Color.fromRGBO(167, 41, 32, 1),
+    roof: Colors.white,
   );
 
   static const ford = ManufacturerColors(
     name: 'Ford',
     primary: Color.fromRGBO(0, 84, 126, 1),
     secondary: Colors.white,
+    cabFrame: Color.fromRGBO(0, 84, 126, 1),
+    frame: Color.fromRGBO(0, 84, 126, 1),
+    rims: Colors.white,
+    roof: Colors.white,
   );
 
   static const johnDeere = ManufacturerColors(
@@ -129,7 +145,10 @@ class ManufacturerColors {
     name: 'Kubota',
     primary: Color.fromRGBO(236, 96, 61, 1),
     secondary: Colors.black,
+    cabFrame: Colors.black,
+    frame: Colors.black,
     rims: Color.fromRGBO(236, 96, 61, 1),
+    roof: Color.fromRGBO(236, 96, 61, 1),
   );
 
   static const masseyFerguson = ManufacturerColors(
@@ -137,25 +156,39 @@ class ManufacturerColors {
     primary: Color.fromRGBO(173, 26, 41, 1),
     secondary: Color.fromRGBO(198, 198, 198, 1),
     cabFrame: Color.fromRGBO(198, 198, 198, 1),
+    frame: Color.fromRGBO(111, 107, 102, 1),
+    rims: Color.fromRGBO(198, 198, 198, 1),
+    roof: Color.fromRGBO(187, 185, 181, 1),
   );
 
   static const newHolland = ManufacturerColors(
     name: 'New Holland',
     primary: Color.fromRGBO(0, 96, 168, 1),
     secondary: Colors.white,
+    cabFrame: Colors.black,
+    frame: Colors.black,
+    rims: Colors.white,
+    roof: Color.fromRGBO(0, 96, 168, 1),
   );
 
   static const newHollandHarvester = ManufacturerColors(
     name: 'New Holland Harvester',
     primary: Color.fromRGBO(245, 176, 16, 1),
     secondary: Color.fromRGBO(0, 96, 168, 1),
+    cabFrame: Colors.black,
+    frame: Colors.black,
     rims: Colors.white,
+    roof: Color.fromRGBO(245, 176, 16, 1),
   );
 
   static const valtra = ManufacturerColors(
     name: 'Valtra',
     primary: Color.fromRGBO(172, 29, 47, 1),
     secondary: Colors.white,
+    cabFrame: Color.fromRGBO(172, 29, 47, 1),
+    frame: Color.fromRGBO(100, 100, 100, 1),
+    rims: Colors.white,
+    roof: Color.fromRGBO(172, 29, 47, 1),
   );
 
   static const List<ManufacturerColors> values = [

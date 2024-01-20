@@ -110,7 +110,7 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
   _EquipentWorkedPathsPainter({
     required this.points,
     this.color = Colors.green,
-    this.opacity = 0.2,
+    this.opacity = 0.4,
   });
 
   /// The nested list of equipment -> section -> path points to draw.
@@ -130,9 +130,12 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (final equipment in points) {
       for (final section in equipment) {
-        // Can only draw 2^16 = 65536 vertices per call of drawVertices.
-        if (section.length > 65536) {
-          final slices = section.slices(65536).map(Float32List.fromList);
+        // We can only draw 2^16 = 65536 vertices per call of drawVertices due
+        // to Vertices.raw.indices being an Uint16List.
+        // Since section is a concatenation of x,y coordinates, 2*65536
+        // corresponds to the length for 65536 vertices.
+        if (section.length > 2 * 65536) {
+          final slices = section.slices(2 * 65536).map(Float32List.fromList);
 
           for (final element in slices) {
             canvas.drawVertices(
