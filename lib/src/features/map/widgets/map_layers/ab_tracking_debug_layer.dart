@@ -301,8 +301,7 @@ const pointTextStyle = TextStyle(color: Colors.white);
                   width: 50,
                   height: 50,
                 ),
-              ],
-            
+            ],
           ],
         ),
       ],

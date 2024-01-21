@@ -2,26 +2,30 @@ import 'dart:collection';
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:geobase/geobase.dart';
 
-/// A class that contains info about a work session on a [Field].
+/// A class that contains objects used in and info about a work session.
 class WorkSession {
-  /// A class that contains info about a work session on a [Field].
+  /// A class that contains objects used in and info about a work session.
   WorkSession({
-    required this.field,
+    this.field,
     this.vehicle,
     this.equipmentSetup,
+    this.abTracking,
+    this.pathRecording,
     this.title,
     this.note,
     this.start,
     this.end,
+    this.workedPaths,
   });
 
   /// Creates a work session object from the [json] object.
   factory WorkSession.fromJson(Map<String, dynamic> json) {
-    final field =
-        Field.fromJson(Map<String, dynamic>.from(json['field'] as Map));
+    final field = json['field'] != null
+        ? Field.fromJson(Map<String, dynamic>.from(json['field'] as Map))
+        : null;
 
     final vehicle = json['vehicle'] != null
         ? Vehicle.fromJson(Map<String, dynamic>.from(json['vehicle'] as Map))
@@ -31,6 +35,18 @@ class WorkSession {
         ? EquipmentSetup.fromJson(
             Map<String, dynamic>.from(json['equipment_setup'] as Map),
           )
+        : null;
+
+    final abTracking = json['ab_tracking'] != null
+        ? ABTracking.fromJson(
+            Map<String, dynamic>.from(json['ab_tracking'] as Map),
+          )
+        : null;
+
+    final pathRecording = json['path_recording'] != null
+        ? List<Map<String, dynamic>>.from(json['path_recording'] as List)
+            .map(WayPoint.fromJson)
+            .toList()
         : null;
 
     final info = Map<String, dynamic>.from(json['info'] as Map);
@@ -46,25 +62,53 @@ class WorkSession {
     final end =
         time['end'] != null ? DateTime.tryParse(time['end'] as String) : null;
 
+    final workedPaths = json['worked_paths'] != null
+        ? (json['worked_paths'] as List)
+            .map(
+              (e) => Map<int, List<dynamic>>.from(e as Map).map(
+                (key, value) => MapEntry(
+                  key,
+                  value
+                      .map(
+                        (pos) => SectionEdgePositions.fromJson(
+                          Map<String, dynamic>.from(pos as Map),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            )
+            .toList()
+        : null;
+
     return WorkSession(
       field: field,
       vehicle: vehicle,
       equipmentSetup: equipmentSetup,
+      abTracking: abTracking,
+      pathRecording: pathRecording,
       title: title,
       note: note,
       start: start,
       end: end,
+      workedPaths: workedPaths,
     );
   }
 
   /// The field this work session was on.
-  final Field field;
+  Field? field;
 
   /// The [Vehicle] used for this session.
-  final Vehicle? vehicle;
+  Vehicle? vehicle;
 
   /// The [EquipmentSetup] (chain) used for this session.
-  final EquipmentSetup? equipmentSetup;
+  EquipmentSetup? equipmentSetup;
+
+  /// The [PathTracking] used in this work session.
+  ABTracking? abTracking;
+
+  /// The recorded path used in this work session.
+  List<WayPoint>? pathRecording;
 
   /// A title for the work session.
   String? title;
@@ -112,7 +156,7 @@ class WorkSession {
   ///   },...
   /// ]
   ///```
-  List<Map<int, List<Geographic>?>> workedPaths = [];
+  List<Map<int, List<SectionEdgePositions>?>>? workedPaths;
 
   /// Creates a json compatible structure of the object.
   Map<String, dynamic> toJson() {
@@ -128,11 +172,15 @@ class WorkSession {
       'note': note,
     };
 
-    map['field'] = field.toJson();
+    map['field'] = field;
 
-    map['vehicle'] = vehicle?.toJson();
+    map['vehicle'] = vehicle;
 
-    map['equipment_setup'] = equipmentSetup?.toJson();
+    map['equipment_setup'] = equipmentSetup;
+
+    map['ab_tracking'] = abTracking;
+
+    map['path_recording'] = pathRecording;
 
     map['worked_paths'] = workedPaths;
 
