@@ -17,7 +17,7 @@ class EquipmentTypeSelectorPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(16),
             child: _EquipmentTypeSelector(),
           ),
           const Divider(),
@@ -49,7 +49,7 @@ class EquipmentTypeSelectorPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(16),
             child: Consumer(
               builder: (context, ref, child) => EquipmentConfiguratorNextButton(
                 enabled: ref.watch(

@@ -31,105 +31,130 @@ class _EquipmentWorkedPathsLayerState
       ),
     );
 
-    final workedLines = equipments
-        .map((equipment) => ref.watch(equipmentPathsProvider(equipment.uuid)));
+    final children = <Widget>[];
+    for (final equipment in equipments) {
+      final workedLines = ref.watch(equipmentPathsProvider(equipment.uuid));
+      if (workedLines.isNotEmpty) {
+        final screenPoints = workedLines
+            .mapIndexed(
+              (activationIndex, activation) =>
+                  activation.map<int, Float32List>((section, points) {
+                if (points != null) {
+                  final offsets = points
+                      .map(
+                        (e) {
+                          final offset1 = camera
+                              .latLngToScreenPoint(e.$1.latLng)
+                              .toOffset();
+                          final offset2 = camera
+                              .latLngToScreenPoint(e.$2.latLng)
+                              .toOffset();
+                          return [
+                            offset1.dx,
+                            offset1.dy,
+                            offset2.dx,
+                            offset2.dy,
+                          ];
+                        },
+                      )
+                      .flattened
+                      .toList();
 
-    final screenPoints = workedLines
-        .mapIndexed(
-          (equipmentIndex, equipment) => equipment.mapIndexed(
-            (sectionUpdate, sectionMap) => sectionMap.values
-                .mapIndexed((section, points) {
-                  if (points != null) {
-                    final offsets = points
-                        .map(
-                          (e) {
-                            final offset1 = camera
-                                .latLngToScreenPoint(e.$1.latLng)
-                                .toOffset();
-                            final offset2 = camera
-                                .latLngToScreenPoint(e.$2.latLng)
-                                .toOffset();
-                            return [
-                              offset1.dx,
-                              offset1.dy,
-                              offset2.dx,
-                              offset2.dy,
-                            ];
-                          },
-                        )
-                        .flattened
-                        .toList();
-
-                    if (sectionUpdate == equipment.length - 1) {
-                      final offset1 = camera
-                          .latLngToScreenPoint(
-                            equipments
-                                .elementAt(equipmentIndex)
-                                .sectionPoints(section)[1]
-                                .latLng,
-                          )
-                          .toOffset();
-                      final offset2 = camera
-                          .latLngToScreenPoint(
-                            equipments
-                                .elementAt(equipmentIndex)
-                                .sectionPoints(section)[2]
-                                .latLng,
-                          )
-                          .toOffset();
-                      offsets.addAll([
-                        offset1.dx,
-                        offset1.dy,
-                        offset2.dx,
-                        offset2.dy,
-                      ]);
-                    }
-                    return Float32List.fromList(offsets);
+                  if (activationIndex == workedLines.length - 1) {
+                    final points = equipment.sectionWorkingPoints(section);
+                    final offset1 =
+                        camera.latLngToScreenPoint(points[1].latLng).toOffset();
+                    final offset2 =
+                        camera.latLngToScreenPoint(points[2].latLng).toOffset();
+                    offsets.addAll([
+                      offset1.dx,
+                      offset1.dy,
+                      offset2.dx,
+                      offset2.dy,
+                    ]);
                   }
-                  return null;
-                })
-                .whereNotNull()
-                .toList(),
-          ),
-        )
-        .flattened
-        .toList();
+                  return MapEntry(section, Float32List.fromList(offsets));
+                }
+                return MapEntry(section, Float32List.fromList([]));
+              })
+                    ..removeWhere((key, value) => value.isEmpty),
+            )
+            .toList();
 
-    return CustomPaint(
-      painter: _EquipentWorkedPathsPainter(
-        points: screenPoints,
-        color: Theme.of(context).primaryColor,
-      ),
-      size: size,
-      isComplex: true,
-    );
+        children.add(
+          CustomPaint(
+            painter: _EquipentWorkedPathsPainter(
+              points: screenPoints,
+              color: Theme.of(context).primaryColor,
+              sectionColors:
+                  equipment.sections.map((e) => e.workedPathColor).toList(),
+            ),
+            size: size,
+            isComplex: true,
+          ),
+        );
+      }
+    }
+
+    if (children.isEmpty) {
+      return const SizedBox.shrink();
+    } else if (children.length == 1) {
+      return children.first;
+    }
+
+    return Stack(children: children);
   }
 }
 
+/// A painter for drawing worked equipment paths on a [Canvas].
 class _EquipentWorkedPathsPainter extends CustomPainter {
+  /// A painter for drawing worked equipment paths on a [Canvas].
+  ///
+  /// [points] is the nested list of activation -> section -> path points to
+  /// draw. The use of [Float32List] is to use the most performant
+  /// [Vertices.raw] mode of [Canvas.drawVertices], so all points should be
+  /// converted to x,y values and concatenated in the float list.
+  ///
+  /// [color] is the color to draw the paths with.
+  /// The individual section colors can be overriden with [sectionColors].
+  ///
+  /// [opacity] is the opacity value to apply to the [color]. This will replace
+  /// the alpha value of the [color] with the alpha value corresponding to
+  /// [opacity].
+  ///
+  /// [sectionColors] is the list of override colors to use for each individual
+  /// section. If the value is null, the default [color] is applied.
   _EquipentWorkedPathsPainter({
     required this.points,
     this.color = Colors.green,
     this.opacity = 0.4,
+    this.sectionColors,
   });
 
   /// The nested list of equipment -> section -> path points to draw.
   /// The use of [Float32List] is to use the most performant [Vertices.raw]
   /// mode of [Canvas.drawVertices], so all points should be converted to x,y
   /// values and concatenated in the float list.
-  final List<List<Float32List>> points;
+  final List<Map<int, Float32List>> points;
 
   /// The color to draw the paths with.
+  /// The individual section colors can be overriden with [sectionColors].
   final Color color;
 
   /// The opacity to apply to the [color]. This will replace the alpha value
   /// of the [color] with the alpha value corresponding to [opacity].
   final double opacity;
 
+  /// A list of override colors to use for each individual section. If the
+  /// value is null, the default [color] is applied.
+  List<Color?>? sectionColors;
+
   @override
   void paint(Canvas canvas, Size size) {
-    for (final equipment in points) {
-      for (final section in equipment) {
+    for (final activation in points) {
+      activation.forEach((sectionIndex, section) {
+        final paintColor = sectionColors?[sectionIndex] ?? color;
+
         // We can only draw 2^16 = 65536 vertices per call of drawVertices due
         // to Vertices.raw.indices being an Uint16List.
         // Since section is a concatenation of x,y coordinates, 2*65536
@@ -141,17 +166,17 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
             canvas.drawVertices(
               Vertices.raw(VertexMode.triangleStrip, element),
               BlendMode.src,
-              Paint()..color = color.withOpacity(opacity),
+              Paint()..color = paintColor.withOpacity(opacity),
             );
           }
         } else {
           canvas.drawVertices(
             Vertices.raw(VertexMode.triangleStrip, section),
             BlendMode.src,
-            Paint()..color = color.withOpacity(opacity),
+            Paint()..color = paintColor.withOpacity(opacity),
           );
         }
-      }
+      });
     }
   }
 

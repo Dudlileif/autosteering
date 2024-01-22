@@ -4,6 +4,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:geobase/geobase.dart';
@@ -56,7 +57,10 @@ class AllEquipments extends _$AllEquipments {
 
   /// Remove all the equipment.
   void clear() => Future(() {
-        state = {};
+        final vehicle = ref.watch(mainVehicleProvider);
+        state.removeWhere(
+          (key, value) => vehicle.findChildRecursive(key) == null,
+        );
       });
 
   /// Handles the event of a tap on the map. If [point] is within one of the
@@ -68,7 +72,8 @@ class AllEquipments extends _$AllEquipments {
           ref.read(simInputProvider.notifier).send(
             (
               uuid: equipment.uuid,
-              activeSections: (equipment..toggleSection(index)).activeSections
+              activeSections:
+                  (equipment..toggleSection(index)).sectionActivationStatus
             ),
           );
         }
@@ -106,7 +111,7 @@ class EquipmentHovered extends _$EquipmentHovered {
 /// A provider for tracking the worked paths for the given equipment [uuid].
 @riverpod
 class EquipmentPaths extends _$EquipmentPaths {
-  var _lastActiveSections = <bool>[];
+  var _prevSectionActivationStatus = <bool>[];
 
   @override
   List<Map<int, List<(Geographic, Geographic)>?>> build(String uuid) => [];
@@ -114,19 +119,22 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
         // Activation/deactivation
-        if (equipment.sections > 0) {
-          if (!equipment.activeSections.equals(_lastActiveSections) ||
+        if (equipment.sections.isNotEmpty) {
+          if (!equipment.sectionActivationStatus
+                  .equals(_prevSectionActivationStatus) ||
               state.isEmpty) {
             // If we're deactivating sections, update the state positions
             // before we start new paths.
             _addPointsIfDeactivation(equipment);
 
-            final points = equipment.activeSections.mapIndexed(
+            final points = equipment.sectionActivationStatus.mapIndexed(
               (section, active) {
-                final sectionPoints = equipment.sectionPoints(section);
+                final sectionPoints = equipment.sectionWorkingPoints(section);
 
                 return active &&
-                        (_lastActiveSections.elementAtOrNull(section) ?? false)
+                        (_prevSectionActivationStatus
+                                .elementAtOrNull(section) ??
+                            false)
                     ? [
                         state.last[section]?.last ??
                             (sectionPoints[1], sectionPoints[2]),
@@ -143,15 +151,15 @@ class EquipmentPaths extends _$EquipmentPaths {
             );
             state = state..add(sectionLines);
 
-            _lastActiveSections = equipment.activeSections;
+            _prevSectionActivationStatus = equipment.sectionActivationStatus;
           }
 
           // Continuation
           else {
             final positions = List.generate(
-              _lastActiveSections.length,
+              _prevSectionActivationStatus.length,
               (section) {
-                final points = equipment.sectionPoints(section);
+                final points = equipment.sectionWorkingPoints(section);
                 return (points[1], points[2]);
               },
             );
@@ -174,12 +182,12 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// Add the current positions to the state if we're deactivating a
   /// section, before we start a new set of paths.
   void _addPointsIfDeactivation(Equipment equipment) {
-    final prevActive = _lastActiveSections.fold(
+    final prevActive = _prevSectionActivationStatus.fold(
       0,
       (previousValue, element) =>
           element == true ? previousValue + 1 : previousValue,
     );
-    final nextActive = equipment.activeSections.fold(
+    final nextActive = equipment.sectionActivationStatus.fold(
       0,
       (previousValue, element) =>
           element == true ? previousValue + 1 : previousValue,
@@ -188,7 +196,7 @@ class EquipmentPaths extends _$EquipmentPaths {
       state = state
         ..last.updateAll(
           (key, value) {
-            final points = equipment.sectionPoints(key);
+            final points = equipment.sectionWorkingPoints(key);
             return value?..add((points[1], points[2]));
           },
         );

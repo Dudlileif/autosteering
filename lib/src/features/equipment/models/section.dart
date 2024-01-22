@@ -14,6 +14,8 @@ class Section {
   ///
   /// [width] is the width of the section in meters.
   ///
+  /// [workingWidth] is the centered working width of the section.
+  ///
   /// [active] is whether the section is active and should paint on the map.
   ///
   /// [automateActivation] is whether the section should automatically turn on
@@ -25,8 +27,9 @@ class Section {
   /// [workedPathColor] is an override color to use when painting the worked
   /// paths on the map.
   Section({
-    required this.index,
-    required this.width,
+    this.index = 0,
+    this.width = 3,
+    this.workingWidth = 3,
     this.active = false,
     this.automateActivation = false,
     this.color,
@@ -37,16 +40,20 @@ class Section {
   factory Section.fromJson(Map<String, dynamic> json) {
     final index = json['index'] as int?;
     final width = json['width'] as double?;
+    final workingWidth = json['working_width'] as double?;
     final active = json['active'] as bool?;
     final automateActivation = json['automate_activation'] as bool?;
-    final color = json['color'] != null ? Color(json['color'] as int) : null;
+    final color = json['color'] != null
+        ? Color(int.parse(json['color'] as String, radix: 16))
+        : null;
     final workedPathColor = json['worked_path_color'] != null
-        ? Color(json['worked_path_color'] as int)
+        ? Color(int.parse(json['worked_path_color'] as String, radix: 16))
         : null;
 
     return Section(
       index: index ?? 0,
       width: width ?? 3,
+      workingWidth: workingWidth ?? 3,
       active: active ?? false,
       automateActivation: automateActivation ?? false,
       color: color,
@@ -58,7 +65,11 @@ class Section {
   final int index;
 
   /// The width of the section in meters.
-  final double width;
+  double width;
+
+  /// The centered working width of the section in meters, defaults to
+  /// the whole [width]
+  double workingWidth;
 
   /// Whether the section is active and should paint on the map.
   bool active;
@@ -73,15 +84,37 @@ class Section {
   /// The override color to use when painting the worked paths on the map.
   Color? workedPathColor;
 
+  /// Returns a new [Section] based on this one, but with
+  /// parameters/variables altered.
+  Section copyWith({
+    int? index,
+    double? width,
+    double? workingWidth,
+    bool? active,
+    bool? automateActivation,
+    Color? color,
+    Color? workedPathColor,
+  }) =>
+      Section(
+        index: index ?? this.index,
+        width: width ?? this.width,
+        workingWidth: workingWidth ?? this.workingWidth,
+        active: active ?? this.active,
+        automateActivation: automateActivation ?? this.automateActivation,
+        color: color,
+        workedPathColor: workedPathColor,
+      );
+
   /// Converts the object to a json compatible structure.
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['index'] = index;
     map['width'] = width;
+    map['working_width'] = workingWidth;
     map['active'] = active;
     map['automate_activation'] = automateActivation;
-    map['color'] = color?.value;
-    map['worked_path_color'] = workedPathColor?.value;
+    map['color'] = color?.value.toRadixString(16);
+    map['worked_path_color'] = workedPathColor?.value.toRadixString(16);
 
     return map;
   }

@@ -42,16 +42,19 @@
 
 - Basic logging
 
+- Custom vehicle painter, dynamically changes color
+  to fit the theme/manufacturer, basic rotating tyres
+
 ## To be implemented
 
-- Better performance,
+- Improved performance,
   - ~~Immutable/copyWith vehicle/equipment implementation is too taxing~~ improved with mutable vehicle/equipments
+  - ~~Look into `canvas.drawVertices` for drawing the worked equipment paths~~ worked paths are now drawn correctly with overlap
   - Maybe reduce conversion steps with latlng/xy-coordinates (change algorithms to xy-coords)
-  - Look into `canvas.drawVertices` for drawing the worked equipment paths
 
 - Improved vehicle simulation, though good enough for testing features now
 
-- Equipment simulation, maybe make sections a separate class
+- Improved equipment simulation
 
 - Improved equipment recording/coverage.
 
@@ -61,13 +64,15 @@
 
 - Audio alerts
 
-- Safety measures
+- Improved safety measures
 
-- Import/export to the original AgOpenGps
+- Import/export to AgOpenGps and other formats
 
 - Custom hotkeys, also from hardware
 
 - Implement BL(E) communication with ESP32 etc...
+
+- Custom equipment painter
 
 ## Further ideas
 
@@ -78,9 +83,5 @@
 - Google Drive / cloud shape files etc...
 
 - Sim integration - gamepad/wheel
-
-- Custom vehicle painter, moving tires etc...
-
-  - Custom equipment painter
 
 - Weather forecast

@@ -857,7 +857,19 @@ class _SimulatorCoreState {
     else if (message is ({String uuid, List<bool> activeSections})) {
       final equipment = vehicle?.findChildRecursive(message.uuid);
       if (equipment != null && equipment is Equipment) {
-        equipment.activeSections = message.activeSections;
+        message.activeSections.forEachIndexed((index, element) {
+          equipment.sections[index].active = element;
+        });
+      }
+    }
+    // Update whether to automate section activation of the equipment with the
+    // given uuid.
+    else if (message is ({String uuid, List<bool> automateActiveSections})) {
+      final equipment = vehicle?.findChildRecursive(message.uuid);
+      if (equipment != null && equipment is Equipment) {
+        message.automateActiveSections.forEachIndexed((index, element) {
+          equipment.sections[index].automateActivation = element;
+        });
       }
     }
     // Update the AB-line to follow

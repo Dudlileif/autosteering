@@ -534,6 +534,7 @@ class _RecursiveDetachMenu extends ConsumerWidget {
 
     if (parent.hitchChildren.isEmpty && parent is! Vehicle) {
       return MenuItemButton(
+        closeOnActivate: false,
         child: Text(text, style: textStyle),
         onPressed: () =>
             ref.read(simInputProvider.notifier).send((detachUuid: parent.uuid)),

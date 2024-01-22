@@ -76,7 +76,7 @@ class EquipmentDimensionsPage extends ConsumerWidget {
       child: Column(
         children: [
           const Padding(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(16),
             child: EquipmentConfiguratorPreviousButton(),
           ),
           ...children.map(
@@ -86,7 +86,7 @@ class EquipmentDimensionsPage extends ConsumerWidget {
             ),
           ),
           const Padding(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(16),
             child: EquipmentConfiguratorNextButton(),
           ),
         ],
