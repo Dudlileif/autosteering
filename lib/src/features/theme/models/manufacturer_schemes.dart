@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs
 
+import 'package:collection/collection.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
@@ -42,18 +43,28 @@ class ManufacturerColors {
   });
 
   /// Creates a [ManufacturerColors] from the [json] object.
-  factory ManufacturerColors.fromJson(Map<String, dynamic> json) =>
-      ManufacturerColors(
-        name: json['name'] as String,
-        primary: Color(json['primary'] as int),
-        secondary: Color(json['secondary'] as int),
-        tertiary:
-            json['tertiary'] != null ? Color(json['tertiary'] as int) : null,
-        cabFrame:
-            json['cabFrame'] != null ? Color(json['cabFrame'] as int) : null,
-        frame: json['frame'] != null ? Color(json['frame'] as int) : null,
-        roof: json['roof'] != null ? Color(json['roof'] as int) : null,
-      );
+  factory ManufacturerColors.fromJson(Map<String, dynamic> json) {
+    final name = json['name'] as String;
+
+    return values.firstWhereOrNull((element) => element.name == name) ??
+        ManufacturerColors(
+          name: name,
+          primary: Color(int.parse(json['primary'] as String, radix: 16)),
+          secondary: Color(int.parse(json['secondary'] as String, radix: 16)),
+          tertiary: json['tertiary'] != null
+              ? Color(int.parse(json['tertiary'] as String, radix: 16))
+              : null,
+          cabFrame: json['cabFrame'] != null
+              ? Color(int.parse(json['cabFrame'] as String, radix: 16))
+              : null,
+          frame: json['frame'] != null
+              ? Color(int.parse(json['frame'] as String, radix: 16))
+              : null,
+          roof: json['roof'] != null
+              ? Color(int.parse(json['roof'] as String, radix: 16))
+              : null,
+        );
+  }
 
   /// The name of the manufacturer.
   final String name;
@@ -208,12 +219,12 @@ class ManufacturerColors {
   /// Creates a json compatible representation of the object.
   Map<String, dynamic> toJson() => {
         'name': name,
-        'primary': primary.value,
-        'secondary': secondary.value,
-        'tertiary': tertiary?.value,
-        'cabFrame': cabFrame?.value,
-        'frame': frame?.value,
-        'rims': rims?.value,
-        'roof': roof?.value,
+        'primary': primary.value.toRadixString(16),
+        'secondary': secondary.value.toRadixString(16),
+        'tertiary': tertiary?.value.toRadixString(16),
+        'cabFrame': cabFrame?.value.toRadixString(16),
+        'frame': frame?.value.toRadixString(16),
+        'rims': rims?.value.toRadixString(16),
+        'roof': roof?.value.toRadixString(16),
       };
 }

@@ -446,6 +446,7 @@ class _CreateFieldButton extends ConsumerWidget {
             child: CircularProgressIndicator(),
           ),
         ),
+        closeOnActivate: false,
         onPressed: () {
           ref.read(enablePathRecorderProvider.notifier).update(value: false);
 
@@ -544,13 +545,14 @@ class _CreateFieldButton extends ConsumerWidget {
           children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
         ),
       ),
+      closeOnActivate: false,
+      onPressed: () {
+        ref.read(enablePathRecorderProvider.notifier).update(value: true);
+      },
       child: Text(
         'Create field from recording',
         style: textStyle,
       ),
-      onPressed: () {
-        ref.read(enablePathRecorderProvider.notifier).update(value: true);
-      },
     );
   }
 }

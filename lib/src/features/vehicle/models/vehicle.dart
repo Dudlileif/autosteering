@@ -674,7 +674,10 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       'stanley_parameters': stanleyParameters,
     };
 
-    map['manufacturer_colors'] = manufacturerColors;
+    map['manufacturer_colors'] = ManufacturerColors.values
+            .any((element) => element.name == manufacturerColors.name)
+        ? {'name': manufacturerColors.name}
+        : manufacturerColors;
 
     return map;
   }
