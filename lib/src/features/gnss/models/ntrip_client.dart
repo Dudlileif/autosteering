@@ -6,7 +6,7 @@ import 'package:universal_io/io.dart';
 /// A client for receiving NTRIP messages from an NTRIP caster.
 class NtripClient {
   /// A client for receiving NTRIP messages from an NTRIP caster.
-  NtripClient._({
+  const NtripClient._({
     required this.host,
     required this.socket,
     required this.username,
@@ -33,6 +33,7 @@ User-Agent: NTRIP NTRIPClient/0.1\r
 Authorization: Basic $auth\r
 Accept: */*\r
 Connection: close\r
+\r
       ''';
     try {
       final socket = (connectedSocket ?? await Socket.connect(host, port))

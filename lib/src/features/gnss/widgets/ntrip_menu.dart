@@ -101,9 +101,21 @@ class NtripMenu extends ConsumerWidget {
               decoration: const InputDecoration(
                 labelText: 'Mount point / base station',
               ),
-              initialValue: ref.watch(ntripMountPointProvider),
-              onChanged: ref.read(ntripMountPointProvider.notifier).update,
+              textCapitalization: TextCapitalization.characters,
+              initialValue: ref.watch(activeNtripMountPointProvider),
+              onChanged:
+                  ref.read(activeNtripMountPointProvider.notifier).update,
             ),
+          ),
+        ),
+        Consumer(
+          builder: (context, ref, child) => ListTile(
+            leading: const Icon(Icons.table_rows),
+            onTap: () => showDialog<String?>(
+              context: context,
+              builder: (context) => const _NtripSourcetableDialog(),
+            ),
+            title: Text('Find closest base station', style: textStyle),
           ),
         ),
         Consumer(
@@ -141,6 +153,138 @@ class NtripMenu extends ConsumerWidget {
               );
             },
           ),
+      ],
+    );
+  }
+}
+
+class _NtripSourcetableDialog extends StatefulWidget {
+  const _NtripSourcetableDialog();
+
+  @override
+  State<_NtripSourcetableDialog> createState() =>
+      _NtripSourcetableDialogState();
+}
+
+class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
+  String? selectedMountPoint;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textStyle = theme.menuButtonWithChildrenText;
+    return SimpleDialog(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              Text(
+                'NTRIP caster sourcetable',
+                style: theme.textTheme.headlineSmall,
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Consumer(
+            builder: (context, ref, child) => ref
+                .watch(ntripMountPointsSortedProvider)
+                .when(
+                  data: (data) {
+                    if (data != null && data.isNotEmpty) {
+                      final entries = data.entries.take(10);
+
+                      return MenuItemButton(
+                        closeOnActivate: false,
+                        child: DropdownMenu(
+                          initialSelection: entries.first,
+                          onSelected: (value) => setState(
+                            () => selectedMountPoint = value?.key.name,
+                          ),
+                          dropdownMenuEntries: entries.map(
+                            (station) {
+                              final label = <String>[];
+                              final name = station.key.name ?? 'No name';
+                              label.add(name);
+                              final identifier = station.key.identifier;
+                              if (identifier != null) {
+                                label.add(identifier);
+                              }
+                              final country = station.key.country;
+                              if (country != null && country != identifier) {
+                                label.add(country);
+                              }
+                              final distance = station.value != null
+                                  ? '''${(station.value! / 1000).toStringAsFixed(1)} km'''
+                                  : null;
+                              if (distance != null) {
+                                label.add(distance);
+                              }
+
+                              return DropdownMenuEntry<
+                                  MapEntry<NtripMountPointStream, double?>>(
+                                value: station,
+                                label: label.join(', '),
+                              );
+                            },
+                          ).toList(),
+                        ),
+                      );
+                    }
+                    return Text(
+                      'No sourcetable found at the host.',
+                      style: textStyle,
+                    );
+                  },
+                  error: (error, stackTrace) => ErrorWidget(error),
+                  loading: () => const Column(
+                    children: [
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SimpleDialogOption(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  'Close',
+                  style: textStyle,
+                ),
+              ),
+              if (selectedMountPoint != null)
+                Consumer(
+                  builder: (context, ref, child) => SimpleDialogOption(
+                    onPressed: () {
+                      ref
+                          .read(activeNtripMountPointProvider.notifier)
+                          .update(selectedMountPoint);
+                      Navigator.of(context).pop();
+                    },
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: Icon(Icons.check),
+                        ),
+                        Text(
+                          'Use $selectedMountPoint',
+                          style: textStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
       ],
     );
   }

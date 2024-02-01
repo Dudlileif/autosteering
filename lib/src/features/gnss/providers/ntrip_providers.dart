@@ -5,6 +5,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -94,7 +95,7 @@ class NtripPort extends _$NtripPort {
 
 /// A provider for the NTRIP caster mounting point.
 @Riverpod(keepAlive: true)
-class NtripMountPoint extends _$NtripMountPoint {
+class ActiveNtripMountPoint extends _$ActiveNtripMountPoint {
   @override
   String? build() {
     ref.listenSelf((previous, next) {
@@ -202,10 +203,10 @@ class NtripAlive extends _$NtripAlive {
           _resetTimer?.cancel();
           _resetTimer = Timer(
             const Duration(seconds: 5),
-            () => ref.invalidateSelf(),
+            ref.invalidateSelf,
           );
         } else {
-          Logger.instance.i('NTRIP client disconnected.');
+          Logger.instance.i('NTRIP client disconnected, timed out.');
         }
       })
       ..onDispose(() {
@@ -243,6 +244,10 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
             data.socket.listen((event) {
               ref.read(ntripAliveProvider.notifier).update(value: true);
 
+              ref
+                  .read(ntripDataUsageSessionProvider.notifier)
+                  .updateBy(event.lengthInBytes);
+
               if (ref.read(hardwareSerialProvider) != null) {
                 ref.read(hardwareSerialProvider.notifier).write(event);
               } else {
@@ -255,11 +260,15 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
                   Logger.instance.i('NTRIP client connection confirmed.');
                 }
               }
-
-              ref
-                  .read(ntripDataUsageSessionProvider.notifier)
-                  .updateBy(event.lengthInBytes);
-
+              if (String.fromCharCodes(event).contains('ENDSOURCETABLE')) {
+                ref.read(ntripEnabledProvider.notifier).update(value: false);
+                Logger.instance.i(
+                  '''NTRIP mount point was not found, but a caster sourcetable was.''',
+                );
+                ref
+                  ..invalidate(ntripSourcetableProvider)
+                  ..invalidateSelf();
+              }
             });
             ref.onDispose(() {
               data.socket.destroy();
@@ -280,7 +289,7 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
   final port = ref.watch(ntripPortProvider);
   final username = ref.watch(ntripUsernameProvider);
   final password = ref.watch(ntripPasswordProvider) ?? '';
-  final mountPoint = ref.watch(ntripMountPointProvider);
+  final mountPoint = ref.watch(activeNtripMountPointProvider);
 
   if (host != null && username != null && mountPoint != null) {
     return NtripClient.create(
@@ -289,6 +298,89 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
       password: password,
       mountPoint: mountPoint,
       username: username,
+    );
+  }
+  return null;
+}
+
+/// A provider for the NTRIP caster sourcetable for the currently selected
+/// NTRIP caster server.
+@riverpod
+Future<Iterable<NtripMountPoint>?> ntripSourcetable(
+  NtripSourcetableRef ref,
+) async {
+  ref.onDispose(() {
+    Logger.instance.i('NTRIP caster sourcetable cleared.');
+  });
+
+  final host = ref.read(ntripHostProvider);
+  final port = ref.read(ntripPortProvider);
+  final username = ref.read(ntripUsernameProvider);
+  final password = ref.read(ntripPasswordProvider);
+  if (host != null) {
+    try {
+      final auth =
+          const Base64Encoder().convert('$username:$password'.codeUnits);
+      final message = '''
+GET / HTTP/1.1\r
+User-Agent: NTRIP NTRIPClient/0.1\r
+Accept: */*\r
+Authorization: Basic $auth\r
+Connection: close\r
+\r
+''';
+
+      Logger.instance
+          .i('Attempting to get NTRIP sourcetable from: $host:$port.');
+
+      final socket = await Socket.connect(host, port);
+      socket.add(message.codeUnits);
+
+      final lines =
+          (await socket.toList()).map(String.fromCharCodes).join().split('\n');
+
+      Logger.instance.i('NTRIP sourcetable found with ${lines.length} lines.');
+
+      final table = lines.map(NtripSourcetableEntry.fromString);
+
+      return table.whereType<NtripMountPoint>();
+    } catch (error, stackTrace) {
+      Logger.instance.i(
+        '''Failed getting the sourcetable for NTRIP caster server: $host:$port.''',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  return null;
+}
+
+/// A provider for sorting the [ntripSourcetable] by their distance to
+/// [MainVehicle].
+@riverpod
+Future<Map<NtripMountPointStream, double?>?> ntripMountPointsSorted(
+  NtripMountPointsSortedRef ref,
+) async {
+  final sourcetable = await ref.watch(ntripSourcetableProvider.future);
+
+  final position =
+      ref.read(mainVehicleProvider.select((value) => value.position));
+  final sorted = sourcetable?.whereType<NtripMountPointStream>().toList()
+    ?..sortByCompare(
+      (element) => element.distanceToPoint(position) ?? double.infinity,
+      (a, b) => a.compareTo(b),
+    );
+
+  if (sorted != null) {
+    final closestDistance = sorted.first.distanceToPoint(position);
+    Logger.instance.i(
+      '''NTRIP sourcetable sorted with ${sorted.length} entries, where ${sorted.first.name}, ${sorted.first.country} - ${closestDistance != null ? '${(closestDistance / 1000).toStringAsFixed(1)} km' : 'unknown position'} was closest.''',
+    );
+
+    return Map.fromIterables(
+      sorted,
+      sorted.map((e) => e.distanceToPoint(position)),
     );
   }
   return null;
