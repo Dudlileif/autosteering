@@ -25,7 +25,8 @@ class OSMLayer extends ConsumerWidget {
               ),
             false => FileCachedTileProvider(
                 layer: const TileLayerData(name: 'OpenStreetMap'),
-                ref: ref,
+                fileDirectory: ref.watch(fileDirectoryProvider).requireValue,
+                allowDownloads: ref.watch(mapAllowDownloadProvider),
               )
           },
           userAgentPackageName: 'autosteering',

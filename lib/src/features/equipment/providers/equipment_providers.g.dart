@@ -486,7 +486,7 @@ final showEquipmentDebugProvider =
 );
 
 typedef _$ShowEquipmentDebug = Notifier<bool>;
-String _$allEquipmentsHash() => r'16fb9c297e1f743fdab66c424c606039a393b8d8';
+String _$allEquipmentsHash() => r'873ebe895d757ee7bef405635ac9c7497e6d13f8';
 
 /// A provider that holds all of the equipments.
 ///
@@ -522,7 +522,7 @@ final equipmentHoveredProvider =
 );
 
 typedef _$EquipmentHovered = Notifier<bool>;
-String _$equipmentPathsHash() => r'7be131fb748aeb4ca21f8ec9eaa91cb3bec4f92f';
+String _$equipmentPathsHash() => r'a8945dbd14133c82c12f0c3f40c20d41a4de181d';
 
 abstract class _$EquipmentPaths extends BuildlessAutoDisposeNotifier<
     List<Map<int, List<(Geographic, Geographic)>?>>> {

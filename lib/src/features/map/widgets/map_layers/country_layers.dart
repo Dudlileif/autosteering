@@ -30,7 +30,11 @@ class CountryLayers extends ConsumerWidget {
             subdomains: layer.subdomains,
             tileProvider: switch (Device.isWeb) {
               true => HiveCachedTileProvider(layer: layer),
-              false => FileCachedTileProvider(layer: layer, ref: ref)
+              false => FileCachedTileProvider(
+                  layer: layer,
+                  fileDirectory: ref.watch(fileDirectoryProvider).requireValue,
+                  allowDownloads: ref.watch(mapAllowDownloadProvider),
+                )
             },
             maxZoom: 22,
             userAgentPackageName: 'autosteering',

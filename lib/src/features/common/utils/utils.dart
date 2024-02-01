@@ -1,5 +1,6 @@
 export 'date_time_serializer.dart';
 export 'device.dart';
+export 'file_cached_network_image_provider.dart';
 export 'logger.dart';
 export 'math.dart';
 export 'polygon_and_polyline_copy_with_extensions.dart';

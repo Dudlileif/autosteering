@@ -39,7 +39,9 @@ class SentinelLayers extends ConsumerWidget {
                 tileProvider: switch (Device.isNative) {
                   true => FileCachedTileProvider(
                       layer: layer.layerData,
-                      ref: ref,
+                      fileDirectory:
+                          ref.watch(fileDirectoryProvider).requireValue,
+                      allowDownloads: ref.watch(mapAllowDownloadProvider),
                     ),
                   false => null,
                 },
