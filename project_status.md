@@ -66,7 +66,7 @@
 
 - Improved safety measures
 
-- Import/export to AgOpenGps and other formats
+- Import/export to AgOpenGps and ISOXML, maybe other formats
 
 - Custom hotkeys, also from hardware
 

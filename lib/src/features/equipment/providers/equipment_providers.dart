@@ -114,7 +114,7 @@ class EquipmentPaths extends _$EquipmentPaths {
   var _prevSectionActivationStatus = <bool>[];
 
   @override
-  List<Map<int, List<(Geographic, Geographic)>?>> build(String uuid) => [];
+  List<Map<int, List<SectionEdgePositions>?>> build(String uuid) => [];
 
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
@@ -129,7 +129,7 @@ class EquipmentPaths extends _$EquipmentPaths {
 
             final points = equipment.sectionActivationStatus.mapIndexed(
               (section, active) {
-                final sectionPoints = equipment.sectionWorkingPoints(section);
+                
 
                 return active &&
                         (_prevSectionActivationStatus
@@ -137,16 +137,16 @@ class EquipmentPaths extends _$EquipmentPaths {
                             false)
                     ? [
                         state.last[section]?.last ??
-                            (sectionPoints[1], sectionPoints[2]),
+                            equipment.sectionEdgePositions(section),
                       ]
                     : active
-                        ? [(sectionPoints[1], sectionPoints[2])]
+                        ? [equipment.sectionEdgePositions(section)]
                         : null;
               },
             );
 
             final sectionLines =
-                Map<int, List<(Geographic, Geographic)>?>.fromEntries(
+                Map<int, List<SectionEdgePositions>?>.fromEntries(
               points.mapIndexed(MapEntry.new),
             );
             state = state..add(sectionLines);
@@ -158,10 +158,7 @@ class EquipmentPaths extends _$EquipmentPaths {
           else {
             final positions = List.generate(
               _prevSectionActivationStatus.length,
-              (section) {
-                final points = equipment.sectionWorkingPoints(section);
-                return (points[1], points[2]);
-              },
+              (section) => equipment.sectionEdgePositions(section),
             );
             final addNext = positions
                 .mapIndexed(
@@ -195,23 +192,20 @@ class EquipmentPaths extends _$EquipmentPaths {
     if (nextActive < prevActive) {
       state = state
         ..last.updateAll(
-          (key, value) {
-            final points = equipment.sectionWorkingPoints(key);
-            return value?..add((points[1], points[2]));
-          },
+          (key, value) => value?..add(equipment.sectionEdgePositions(key)),
         );
     }
   }
 
   /// Whether the [next] point for this [section] is necessary to keep the
   /// path up to date.
-  bool shouldAddNext((Geographic, Geographic) next, int section) {
+  bool shouldAddNext(SectionEdgePositions next, int section) {
     final prev = state.last[section]?.last;
 
     if (state.isNotEmpty && prev != null) {
       final distance = [
-        prev.$1.spherical.distanceTo(next.$1),
-        prev.$2.spherical.distanceTo(next.$2),
+        prev.left.spherical.distanceTo(next.left),
+        prev.right.spherical.distanceTo(next.right),
       ].max;
 
       if (distance > 20) {
@@ -219,9 +213,10 @@ class EquipmentPaths extends _$EquipmentPaths {
       } else if (distance > 1 && (state.last[section]?.length ?? 0) >= 2) {
         final secondPrev =
             state.last[section]![state.last[section]!.length - 2];
-        final prevBearing = secondPrev.$1.spherical.initialBearingTo(prev.$1);
+        final prevBearing =
+            secondPrev.left.spherical.initialBearingTo(prev.left);
 
-        final nextBearing = prev.$1.spherical.finalBearingTo(next.$1);
+        final nextBearing = prev.left.spherical.finalBearingTo(next.left);
 
         final bearingDiff = bearingDifference(prevBearing, nextBearing);
 
@@ -239,8 +234,8 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// different to the previous state.
   @override
   bool updateShouldNotify(
-    List<Map<int, List<(Geographic, Geographic)>?>> previous,
-    List<Map<int, List<(Geographic, Geographic)>?>> next,
+    List<Map<int, List<SectionEdgePositions>?>> previous,
+    List<Map<int, List<SectionEdgePositions>?>> next,
   ) =>
       true;
 }

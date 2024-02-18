@@ -457,8 +457,19 @@ class Equipment extends Hitchable with EquatableMixin {
     ];
   }
 
-  /// The corner points for the working area for the section at [index].
-  List<Geographic> sectionWorkingPoints(int index) {
+  /// The corner points for the working area for the section with index [index].
+  ///
+  /// The order of the points is
+  ///
+  /// ```
+  /// [
+  ///   front left,
+  ///   rear left,
+  ///   rear right,
+  ///   front right,
+  /// ]
+  /// ```
+  List<Geographic> sectionCornerPoints(int index) {
     // The starting point of this equipment, i.e. the center-front point
     // of the working area.
     final equipmentStart = switch (parentHitch) {
@@ -499,6 +510,38 @@ class Equipment extends Hitchable with EquatableMixin {
     ];
   }
 
+  /// Finds the drawing/recording edge positions for the section with index
+  /// [index].
+  ///
+  /// [fraction] is used to get the intermediate positions between the rear and
+  /// the front of the section. 0 means the rear and 1 means the front
+  /// Defaults to the rear, 0.
+  ///
+  /// ```
+  ///  1    ---------
+  ///       |       |
+  ///       |       |
+  /// 0.5   o-------o
+  ///       |       |
+  ///       |       |
+  ///  0    ---------
+  /// ```
+  SectionEdgePositions sectionEdgePositions(
+    int index, {
+    double fraction = 0,
+  }) {
+    final points = sectionCornerPoints(index);
+
+    return SectionEdgePositions(
+      left: points[1]
+          .spherical
+          .intermediatePointTo(points[0], fraction: fraction),
+      right: points[2]
+          .spherical
+          .intermediatePointTo(points[3], fraction: fraction),
+    );
+  }
+
   /// The center point of the given [section].
   Geographic sectionCenter(int section) {
     final points = sectionPoints(section);
@@ -518,7 +561,7 @@ class Equipment extends Hitchable with EquatableMixin {
   Polygon sectionWorkingPolygon(int section) => Polygon(
         [
           PositionSeries.view(
-            sectionWorkingPoints(section)
+            sectionCornerPoints(section)
                 .map((e) => e.values)
                 .flattened
                 .toList(),
@@ -579,7 +622,6 @@ class Equipment extends Hitchable with EquatableMixin {
   Iterable<map.Polygon> get sectionWorkingMapPolygons =>
       List.generate(sections.length, sectionWorkingMapPolygon, growable: false)
           .whereNotNull();
-
 
   /// A list of the polygon(s) for the drawbar(s).
   List<map.Polygon> get drawbarMapPolygons => switch (hitchType) {
@@ -752,8 +794,7 @@ class Equipment extends Hitchable with EquatableMixin {
         sections.length,
         sectionWorkingMapPolygon,
         growable: false,
-      )
-          .whereNotNull(),
+      ).whereNotNull(),
     ];
   }
 

@@ -15,12 +15,7 @@ Future<bool> validInternetAddress(
   }
   try {
     return (await InternetAddress.lookup(address)).isNotEmpty;
-  } catch (error, _stackTrace) {
-    // Logger.instance.i(
-    //   'No IP address found when looking up: $address',
-    //   error: error,
-    //   stackTrace: stackTrace,
-    // );
+  } catch (error) {
+    return false;
   }
-  return false;
 }

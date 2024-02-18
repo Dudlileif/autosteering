@@ -7,7 +7,7 @@ part of 'internet_address_providers.dart';
 // **************************************************************************
 
 String _$validInternetAddressHash() =>
-    r'0e194aceee4198f4f1dab06a472d8b067891d372';
+    r'71472083599d64e828b13b05d67a3fb226ca8251';
 
 /// Copied from Dart SDK
 class _SystemHash {

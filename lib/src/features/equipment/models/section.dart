@@ -5,9 +5,9 @@ import 'package:geobase/geobase.dart';
 
 part 'section_edge_position.dart';
 
-/// A class for representing a [Section] of an [Equipment].
+/// A class for representing a physical section of an [Equipment].
 class Section {
-  /// A class for representing a [Section] of an [Equipment].
+  /// A class for representing a physical section of an [Equipment].
   ///
   /// [index] is the positional index of this section, where 0 is the leftmost
   /// section.

@@ -4,38 +4,20 @@ description: A new Flutter project.
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-# In Windows, build-name is used as the major, minor, and patch parts
-# of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
 environment:
     sdk: ">=3.0.0 <4.0.0"
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
 dependencies:
     async: ^2.11.0
     collection: ^1.17.1
     connectivity_plus: ^5.0.2
     cupertino_icons: ^1.0.6
     device_preview: ^1.1.0
-    dio: ^5.4.0
+    dio: ^5.4.1
     equatable: ^2.0.5
-    fast_cached_network_image: ^1.2.0
+    fast_cached_network_image: ^1.2.7
     file_picker: ^6.1.1
     flex_color_scheme: ^7.3.1
     flutter:
@@ -47,14 +29,14 @@ dependencies:
     freezed_annotation: ^2.4.1
     # gamepads: ^0.1.1
     geobase: ^1.0.0
-    geolocator: ^10.1.0
-    http: ^1.2.0
+    geolocator: ^11.0.0
+    http: ^1.2.1
     json_annotation: ^4.8.1
     latlong2: ^0.9.0
     logger: ^2.0.2+1
     nmea: ^3.2.0
     path_provider: ^2.1.2
-    permission_handler: ^11.2.0
+    permission_handler: ^11.3.0
     riverpod_annotation: ^3.0.0-dev.3
     svg_path_parser: ^1.1.2
     themed: ^5.0.1
@@ -62,9 +44,9 @@ dependencies:
     universal_html: ^2.2.4
     universal_io: ^2.2.2
     usb_serial: ^0.5.1
-    uuid: ^3.0.7
+    uuid: ^4.3.3
     wakelock_plus: ^1.1.4
-    web_socket_channel: ^2.4.0
+    web_socket_channel: ^2.4.4
     window_manager: ^0.3.8
     xml: ^6.5.0
 
@@ -73,7 +55,7 @@ dev_dependencies:
     custom_lint: ^0.5.11
     flutter_test:
         sdk: flutter
-    freezed: ^2.4.6
+    freezed: ^2.4.7
     json_serializable: ^6.7.1
     riverpod_generator: ^3.0.0-dev.11
     riverpod_lint: ^3.0.0-dev.4

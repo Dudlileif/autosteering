@@ -44,10 +44,10 @@ class _EquipmentWorkedPathsLayerState
                       .map(
                         (e) {
                           final offset1 = camera
-                              .latLngToScreenPoint(e.$1.latLng)
+                              .latLngToScreenPoint(e.left.latLng)
                               .toOffset();
                           final offset2 = camera
-                              .latLngToScreenPoint(e.$2.latLng)
+                              .latLngToScreenPoint(e.right.latLng)
                               .toOffset();
                           return [
                             offset1.dx,
@@ -61,11 +61,15 @@ class _EquipmentWorkedPathsLayerState
                       .toList();
 
                   if (activationIndex == workedLines.length - 1) {
-                    final points = equipment.sectionWorkingPoints(section);
+                    final points = equipment.sectionEdgePositions(section);
                     final offset1 =
-                        camera.latLngToScreenPoint(points[1].latLng).toOffset();
+                        camera
+                        .latLngToScreenPoint(points.left.latLng)
+                        .toOffset();
                     final offset2 =
-                        camera.latLngToScreenPoint(points[2].latLng).toOffset();
+                        camera
+                        .latLngToScreenPoint(points.right.latLng)
+                        .toOffset();
                     offsets.addAll([
                       offset1.dx,
                       offset1.dy,
