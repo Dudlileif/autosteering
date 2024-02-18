@@ -1,9 +1,4 @@
-import 'dart:collection';
-
-import 'package:autosteering/src/features/guidance/guidance.dart';
-import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:equatable/equatable.dart';
-import 'package:geobase/geobase.dart';
+part of 'ab_tracking.dart';
 
 /// A class for creating and tracking straight lines by using the bearing
 /// from point A to point B and their positions to create parallel lines.
@@ -317,8 +312,7 @@ class ABLine extends ABTracking with EquatableMixin {
       };
 
       final turn = switch (vehicle.pathTrackingMode) {
-        PathTrackingMode.purePursuit =>
-          PurePursuitPathTracking(
+        PathTrackingMode.purePursuit => PurePursuitPathTracking(
             wayPoints: switch (vehicle.isReversing) {
               false => turnPath,
               true => turnPath.reversed.toList()
@@ -385,14 +379,11 @@ class ABLine extends ABTracking with EquatableMixin {
       stepOffset--;
     }
 
-    
-
     return List.generate(
       count,
       (index) => currentStart.alongLineByDistanceFromStart(
         end: currentEnd,
         distance: sign * stepSize * (index + sign * stepOffset),
-      
       ),
       growable: false,
     );
@@ -418,7 +409,6 @@ class ABLine extends ABTracking with EquatableMixin {
     if (sign.isNegative) {
       stepOffset++;
     }
-  
 
     return List.generate(
       count,

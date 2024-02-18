@@ -1,10 +1,4 @@
-import 'dart:collection';
-
-import 'package:autosteering/src/features/common/common.dart';
-import 'package:autosteering/src/features/guidance/guidance.dart';
-import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:collection/collection.dart';
-import 'package:geobase/geobase.dart';
+part of 'ab_tracking.dart';
 
 /// A class for creating and tracking parallel curved lines from point A to
 /// point B.

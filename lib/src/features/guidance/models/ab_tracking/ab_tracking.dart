@@ -6,15 +6,21 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 
 export 'ab_config.dart';
 export 'ab_limit_mode.dart';
 
+part 'ab_curve.dart';
+part 'ab_line.dart';
+
+//TODO (dudlileif): Fix crash when reaching the final line/curve offset
+
 /// A base class for common variables and methods for AB based guidance
 /// models.
-abstract class ABTracking {
+sealed class ABTracking {
   /// A base class for common variables and methods for AB based guidance
   /// models.
   ABTracking({
@@ -286,7 +292,7 @@ abstract class ABTracking {
         }
       });
     }
-
+    
     if (newCurve.length > 2) {
       final pointsToRemove = <WayPoint>[];
       for (var i = 1; i < newCurve.length - 1; i++) {
@@ -1044,8 +1050,6 @@ abstract class ABTracking {
       vehicle.steeringAngleMax,
     );
   }
-
-
 
   /// The next steering angle for chasing the line.
   ///
