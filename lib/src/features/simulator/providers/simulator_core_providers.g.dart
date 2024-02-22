@@ -43,7 +43,7 @@ final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
-String _$initializeSimCoreHash() => r'3fb7254a2d7d2a89f9b422b05dcf20907f6a0712';
+String _$initializeSimCoreHash() => r'eda6d56bf9f82dec691ab6ac39b4e17d5cfcf101';
 
 /// Sends initial parameters to  the sim core.
 ///

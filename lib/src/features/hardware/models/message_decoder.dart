@@ -8,6 +8,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:nmea/nmea.dart';
+import 'package:universal_io/io.dart';
 
 /// A message decoder for decoding [Uint8List] data received from connected
 /// hardware.
@@ -19,7 +20,7 @@ class MessageDecoder {
   /// previous messages. This will also set the count for how many updates
   /// to use for calculating [gnssFrequency] and [imuFrequency].
 
-  MessageDecoder({this.messagesToKeep = 100});
+  MessageDecoder({this.messagesToKeep = 100, this.logDirectoryPath});
 
   /// How many messages to keep for the different list of previous messages.
   final int messagesToKeep;
@@ -38,6 +39,35 @@ class MessageDecoder {
     ..registerTalkerSentence('VTG', (line) => VTGSentence(raw: line))
     ..registerTalkerSentence('TXT', (line) => TXTSentence(raw: line))
     ..registerProprietarySentence('UBX', (line) => PUBXSentence(raw: line));
+
+  
+  
+  /// Start time of the current NMEA_log, if there is one.
+  DateTime? _gnssLogStartTime;
+
+  /// Start time of the current IMU_log, if there is one.
+  DateTime? _imuLogStartTime;
+
+  /// Start time of the current WAS_log, if there is one.
+  DateTime? _wasLogStartTime;
+
+  /// Start time of the current combined_log, if there is one.
+  DateTime? _combinedLogStartTime;
+
+  /// Whether NMEA logging is active.
+  bool _logGNSS = false;
+
+  /// Whether IMU logging is active.
+  bool _logIMU = false;
+
+  /// Whether WAS logging is active.
+  bool _logWAS = false;
+
+  /// Whether combined logging is active.
+  bool _logCombined = false;
+
+  /// Path to the directory for saving logs.
+  String? logDirectoryPath;
 
   /// A list of the previous [messagesToKeep] count of messages decoded.
   /// Primarily used while debugging.
@@ -117,6 +147,47 @@ class MessageDecoder {
     final indexOfClosest = deltas.indexOf(deltas.min);
 
     return closeReadings.elementAt(indexOfClosest);
+  }
+
+  /// Enable or disable_logging of the different hardware messages.
+  void enableLogging({
+    bool? gnss,
+    bool? imu,
+    bool? was,
+    bool? combined,
+  }) {
+    if (gnss != null) {
+      if (!_logGNSS && gnss) {
+        _gnssLogStartTime = DateTime.now();
+      } else if (_logGNSS && !gnss) {
+        _gnssLogStartTime = null;
+      }
+      _logGNSS = gnss;
+    }
+    if (imu != null) {
+      if (!_logIMU && imu) {
+        _imuLogStartTime = DateTime.now();
+      } else if (_logIMU && !imu) {
+        _imuLogStartTime = null;
+      }
+      _logIMU = imu;
+    }
+    if (was != null) {
+      if (!_logWAS && was) {
+        _wasLogStartTime = DateTime.now();
+      } else if (_logWAS && !was) {
+        _wasLogStartTime = null;
+      }
+      _logWAS = was;
+    }
+    if (combined != null) {
+      if (!_logCombined && combined) {
+        _combinedLogStartTime = DateTime.now();
+      } else if (_logCombined && !combined) {
+        _combinedLogStartTime = null;
+      }
+      _logCombined = combined;
+    }
   }
 
   /// The last unfinished message's characters.
@@ -314,6 +385,19 @@ class MessageDecoder {
                   (imuCurrentFrequency: imuFrequency),
                   (imuLatestRaw: reading),
                 ]);
+
+                if (Device.isNative) {
+                  if (_logIMU && logDirectoryPath != null) {
+                    _imuLogStartTime ??= DateTime.now();
+                    final file = File(
+                      '$logDirectoryPath/imu/${_imuLogStartTime!.toIso8601String()}.log',
+                    );
+                    if (!file.existsSync()) {
+                      file.createSync(recursive: true);
+                    }
+                    file.writeAsStringSync('$reading\n', mode: FileMode.append);
+                  }
+                }
               }
 
               // WAS sensor
@@ -332,6 +416,18 @@ class MessageDecoder {
                   (wasCurrentFrequency: wasFrequency),
                   (wasLatestRaw: reading),
                 ]);
+                if (Device.isNative) {
+                  if (_logWAS && logDirectoryPath != null) {
+                    _wasLogStartTime ??= DateTime.now();
+                    final file = File(
+                      '$logDirectoryPath/was/${_wasLogStartTime!.toIso8601String()}.log',
+                    );
+                    if (!file.existsSync()) {
+                      file.createSync(recursive: true);
+                    }
+                    file.writeAsStringSync('$reading\n', mode: FileMode.append);
+                  }
+                }
               }
 
               // Motor info
@@ -454,6 +550,22 @@ class MessageDecoder {
               LogEvent(Level.warning, 'Unknown message received: $str'),
             );
           }
+
+          if (Device.isNative) {
+            if (_logGNSS && logDirectoryPath != null) {
+              _gnssLogStartTime ??= DateTime.now();
+              final file = File(
+                '$logDirectoryPath/gnss/${_gnssLogStartTime!.toIso8601String()}.log',
+              );
+              if (!file.existsSync()) {
+                file.createSync(recursive: true);
+              }
+              file.writeAsStringSync(
+                '${DateTime.now().toIso8601String()}: ${nmea?.raw}\n',
+                mode: FileMode.append,
+              );
+            }
+          }
         }
         if (messages.isEmpty) {
           messages.add(
@@ -462,6 +574,21 @@ class MessageDecoder {
               'Garbled message: ${String.fromCharCodes(data)}',
             ),
           );
+        }
+        if (Device.isNative) {
+          if (_logCombined && logDirectoryPath != null) {
+            _combinedLogStartTime ??= DateTime.now();
+            final file = File(
+              '$logDirectoryPath/combined/${_combinedLogStartTime!.toIso8601String()}.log',
+            );
+            if (!file.existsSync()) {
+              file.createSync(recursive: true);
+            }
+            file.writeAsStringSync(
+              '${DateTime.now().toIso8601String()}: $str\n',
+              mode: FileMode.append,
+            );
+          }
         }
       }
     } catch (error) {

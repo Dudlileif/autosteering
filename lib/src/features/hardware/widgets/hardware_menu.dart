@@ -1,6 +1,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/hardware/widgets/hardware_logging_menu.dart';
 import 'package:autosteering/src/features/hardware/widgets/hardware_network_menu.dart';
 import 'package:autosteering/src/features/hardware/widgets/hardware_serial_menu.dart'
     if (dart.library.html) 'hardware_serial_menu_web.dart';
@@ -25,6 +26,7 @@ class HardwareMenu extends ConsumerWidget {
         const HardwareNetworkMenu(),
         if (Device.isNative) const NtripMenu(),
         if (Device.supportsSerial) const HardwareSerialMenu(),
+        if (Device.isNative) const HardwareLoggingMenu(),
         Consumer(
           child: Text(
             'Calibrate motor',

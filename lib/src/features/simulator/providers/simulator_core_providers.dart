@@ -190,7 +190,15 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
     ..send(
       (enableAutoSteer: ref.read(autoSteerEnabledProvider)),
     )
-    ..send((sendMessagesToHardware: ref.read(sendMessagesToHardwareProvider)));
+    ..send((sendMessagesToHardware: ref.read(sendMessagesToHardwareProvider)))
+    ..send(
+      (
+        logGNSS: ref.read(hardwareLogGnssProvider),
+        logIMU: ref.read(hardwareLogImuProvider),
+        logWAS: ref.read(hardwareLogWasProvider),
+        logCombined: ref.read(hardwareLogCombinedProvider)
+      ),
+    );
 }
 
 /// A provider for handling the common sim core messages for the state of the

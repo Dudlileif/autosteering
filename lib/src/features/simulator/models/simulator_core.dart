@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
@@ -12,6 +13,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:udp/udp.dart';
 import 'package:universal_io/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -28,6 +30,8 @@ class SimulatorCore {
 
   /// Used on native platforms since they can easily be multithreaded.
   static Future<void> isolateWorker(SendPort sendPort) async {
+    DartPluginRegistrant.ensureInitialized();
+
     final commandPort = ReceivePort('Simulation Core receive port');
 
     // Send a communication port in return.
@@ -111,7 +115,12 @@ class SimulatorCore {
       (timer) => udpSendStream.add(heartbeatUDPMessage),
     );
 
-    final messageDecoder = MessageDecoder();
+
+    final logDirectoryPath = [
+      (await getApplicationDocumentsDirectory()).path,
+      '/Autosteering/logs',
+    ].join();
+    final messageDecoder = MessageDecoder(logDirectoryPath: logDirectoryPath);
 
     void handleUdpData(Datagram? datagram) {
       lastHardwareMessageTime = DateTime.now();
@@ -223,9 +232,19 @@ class SimulatorCore {
             sendPort: message.hardwareUDPSendPort,
           );
         });
-      }
-
-      // Messages for the state.
+      } else if (message is ({
+        bool? logGNSS,
+        bool? logIMU,
+        bool? logWAS,
+        bool? logCombined,
+      })) {
+        messageDecoder.enableLogging(
+          gnss: message.logGNSS,
+          imu: message.logIMU,
+          was: message.logWAS,
+          combined: message.logCombined,
+        );
+      } // Messages for the state.
       else {
         state.handleMessage(message);
       }

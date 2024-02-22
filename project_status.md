@@ -58,6 +58,8 @@
 
 - Improved equipment recording/coverage.
 
+- Grids
+
 - Improve autosteering, look at more algorithms
 
 - Debugging graphs/logs
