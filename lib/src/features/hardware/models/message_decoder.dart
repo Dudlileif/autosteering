@@ -40,8 +40,6 @@ class MessageDecoder {
     ..registerTalkerSentence('TXT', (line) => TXTSentence(raw: line))
     ..registerProprietarySentence('UBX', (line) => PUBXSentence(raw: line));
 
-  
-  
   /// Start time of the current NMEA_log, if there is one.
   DateTime? _gnssLogStartTime;
 
@@ -371,9 +369,15 @@ class MessageDecoder {
                   data['pitch'] is num &&
                   data['roll'] is num) {
                 final reading = ImuReading(
-                  yawFromStartup: data['yaw'] as num,
+                  yaw: data['yaw'] as num,
                   pitch: data['pitch'] as num,
                   roll: data['roll'] as num,
+                  accelerationX:
+                      data['acc_x'] is num ? data['acc_x'] as num : 0,
+                  accelerationY:
+                      data['acc_y'] is num ? data['acc_y'] as num : 0,
+                  accelerationZ:
+                      data['acc_z'] is num ? data['acc_z'] as num : 0,
                   receiveTime: DateTime.now(),
                 );
                 imuReadings.add(reading);
@@ -428,6 +432,18 @@ class MessageDecoder {
                     file.writeAsStringSync('$reading\n', mode: FileMode.append);
                   }
                 }
+              }
+
+              if (data['steps_min_center'] is double) {
+                messages.add(
+                  (stepsPerWasIncrementMinToCenter: data['steps_min_center']),
+                );
+              }
+
+              if (data['steps_center_max'] is double) {
+                messages.add(
+                  (stepsPerWasIncrementCenterToMax: data['steps_center_max']),
+                );
               }
 
               // Motor info
@@ -519,7 +535,7 @@ class MessageDecoder {
                   nmea.imuRoll != null) {
                 final reading = ImuReading(
                   receiveTime: nmea.deviceReceiveTime,
-                  yawFromStartup: nmea.imuHeading! / 10,
+                  yaw: nmea.imuHeading! / 10,
                   pitch: nmea.imuPitch! / 10,
                   roll: nmea.imuRoll! / 10,
                 );

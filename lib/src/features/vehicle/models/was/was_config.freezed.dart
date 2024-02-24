@@ -156,10 +156,10 @@ class _$WasConfigImpl implements _WasConfig {
   const _$WasConfigImpl(
       {this.useWas = true,
       this.invertInput = false,
-      this.bits = 15,
-      this.min = 1000,
-      this.max = 25000,
-      this.center = 10000});
+      this.bits = 12,
+      this.min = 100,
+      this.max = 4000,
+      this.center = 1500});
 
   factory _$WasConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$WasConfigImplFromJson(json);

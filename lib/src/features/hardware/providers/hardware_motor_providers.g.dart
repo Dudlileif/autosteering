@@ -6,25 +6,25 @@ part of 'hardware_motor_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$steeringMotorTargetRPMHash() =>
-    r'0874dfc1c524044c70b77638b9aaa3c648c98bed';
+String _$steeringMotorWasTargetHash() =>
+    r'8c4800171e50833b3f3208064bf689fa6920a60d';
 
-/// A provider for the target steering motor rpm when using guidance.
+/// A provider for the WAS target for the steering motor when using guidance.
 ///
-/// Copied from [SteeringMotorTargetRPM].
-@ProviderFor(SteeringMotorTargetRPM)
-final steeringMotorTargetRPMProvider =
-    AutoDisposeNotifierProvider<SteeringMotorTargetRPM, double?>.internal(
-  SteeringMotorTargetRPM.new,
-  name: r'steeringMotorTargetRPMProvider',
+/// Copied from [SteeringMotorWasTarget].
+@ProviderFor(SteeringMotorWasTarget)
+final steeringMotorWasTargetProvider =
+    AutoDisposeNotifierProvider<SteeringMotorWasTarget, int?>.internal(
+  SteeringMotorWasTarget.new,
+  name: r'steeringMotorWasTargetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$steeringMotorTargetRPMHash,
+      : _$steeringMotorWasTargetHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SteeringMotorTargetRPM = AutoDisposeNotifier<double?>;
+typedef _$SteeringMotorWasTarget = AutoDisposeNotifier<int?>;
 String _$steeringMotorActualRPMHash() =>
     r'd28dc8f5619531c4cee35a05ff99919fbfb6de7e';
 
@@ -159,5 +159,49 @@ final steeringMotorTargetRotationProvider =
 );
 
 typedef _$SteeringMotorTargetRotation = AutoDisposeNotifier<double?>;
+String _$steeringMotorStepsPerWasIncrementMinToCenterHash() =>
+    r'a1f4849d6caaacc84c516944ca07db181f0b641f';
+
+/// A provider for the motor steps per WAS increment between WAS min and center
+/// value.
+///
+/// Copied from [SteeringMotorStepsPerWasIncrementMinToCenter].
+@ProviderFor(SteeringMotorStepsPerWasIncrementMinToCenter)
+final steeringMotorStepsPerWasIncrementMinToCenterProvider =
+    AutoDisposeNotifierProvider<SteeringMotorStepsPerWasIncrementMinToCenter,
+        double?>.internal(
+  SteeringMotorStepsPerWasIncrementMinToCenter.new,
+  name: r'steeringMotorStepsPerWasIncrementMinToCenterProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$steeringMotorStepsPerWasIncrementMinToCenterHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SteeringMotorStepsPerWasIncrementMinToCenter
+    = AutoDisposeNotifier<double?>;
+String _$steeringMotorStepsPerWasIncrementCenterToMaxHash() =>
+    r'e933f5c3156df444f449bdb7731ca19e392e5806';
+
+/// A provider for the motor steps per WAS increment between WAS center and max
+/// value.
+///
+/// Copied from [SteeringMotorStepsPerWasIncrementCenterToMax].
+@ProviderFor(SteeringMotorStepsPerWasIncrementCenterToMax)
+final steeringMotorStepsPerWasIncrementCenterToMaxProvider =
+    AutoDisposeNotifierProvider<SteeringMotorStepsPerWasIncrementCenterToMax,
+        double?>.internal(
+  SteeringMotorStepsPerWasIncrementCenterToMax.new,
+  name: r'steeringMotorStepsPerWasIncrementCenterToMaxProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$steeringMotorStepsPerWasIncrementCenterToMaxHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SteeringMotorStepsPerWasIncrementCenterToMax
+    = AutoDisposeNotifier<double?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

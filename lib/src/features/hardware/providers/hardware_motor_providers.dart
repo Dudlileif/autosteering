@@ -7,15 +7,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hardware_motor_providers.g.dart';
 
-/// A provider for the target steering motor rpm when using guidance.
+/// A provider for the WAS target for the steering motor when using guidance.
 
 @riverpod
-class SteeringMotorTargetRPM extends _$SteeringMotorTargetRPM {
+class SteeringMotorWasTarget extends _$SteeringMotorWasTarget {
   @override
-  double? build() => null;
+  int? build() => null;
 
   /// Updates [state] to [value].
-  void update(double? value) => Future(() => state = value);
+  void update(int? value) => Future(() => state = value);
 }
 
 /// A provider for the actual current steering motor rpm when using guidance.
@@ -165,6 +165,53 @@ class SteeringMotorRotation extends _$SteeringMotorRotation {
 /// only used in calibration mode.
 @riverpod
 class SteeringMotorTargetRotation extends _$SteeringMotorTargetRotation {
+  Timer? _resetTimer;
+
+  @override
+  double? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 5000),
+        ref.invalidateSelf,
+      );
+    });
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
+
+
+/// A provider for the motor steps per WAS increment between WAS min and center
+/// value.
+@riverpod
+class SteeringMotorStepsPerWasIncrementMinToCenter
+    extends _$SteeringMotorStepsPerWasIncrementMinToCenter {
+  Timer? _resetTimer;
+
+  @override
+  double? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 5000),
+        ref.invalidateSelf,
+      );
+    });
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for the motor steps per WAS increment between WAS center and max
+/// value.
+@riverpod
+class SteeringMotorStepsPerWasIncrementCenterToMax
+    extends _$SteeringMotorStepsPerWasIncrementCenterToMax {
   Timer? _resetTimer;
 
   @override

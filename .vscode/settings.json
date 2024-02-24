@@ -63,4 +63,5 @@
     "cmake.configureOnOpen": false,
     "licenser.license": "GPLv3",
     "licenser.projectName": "Autosteering",
+    "licenser.disableAutoHeaderInsertion": false,
 }

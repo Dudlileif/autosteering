@@ -1,5 +1,6 @@
 import 'package:autosteering/src/features/vehicle/models/imu/imu_config.dart';
 import 'package:autosteering/src/features/vehicle/models/imu/imu_reading.dart';
+import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 
 export 'imu_config.dart';
@@ -16,24 +17,38 @@ class Imu {
   /// [config] describes how to use the [reading] from the sensor.
   Imu({
     ImuConfig? config,
-    ImuReading? reading,
+    List<ImuReading>? readings,
   })  : config = config ?? const ImuConfig(),
-        reading = reading ?? ImuReading(receiveTime: DateTime.now());
+        readings = readings ?? [ImuReading(receiveTime: DateTime.now())];
 
   /// The configuration for the IMU sensor.
   ImuConfig config;
 
   /// The latest reading from the hardware sensor.
-  ImuReading reading;
+  List<ImuReading> readings;
 
   /// Whether the bearing is set for the IMU.
   /// Should be set to true after a GNSS bearing is used to update the
   /// [config.zeroValues.bearingZero].
   bool bearingIsSet = false;
 
+  /// The latest reading from the hardware sensor, accounted for the
+  /// [ImuConfig.delayReadings] to match the GNSS fix time.
+  ///
+  /// Attempts to find the latest reading that arrived more than
+  /// [ImuConfig.delayReadings] milliseconds ago, otherwise the latest reading
+  /// is returned.
+  ImuReading get reading =>
+      readings.firstWhereOrNull(
+        (element) =>
+            DateTime.now().difference(element.receiveTime).inMilliseconds >
+            config.delayReadings,
+      ) ??
+      readings.first;
+
   /// The bearing reading accounted for [config.zeroValues.bearingZero].
   double? get bearing => switch (bearingIsSet) {
-        true => ((reading.yawFromStartup - config.zeroValues.bearingZero) *
+        true => ((reading.yaw - config.zeroValues.bearingZero) *
                 switch (config.invertYaw) {
                   true => -1,
                   false => 1,
@@ -67,6 +82,15 @@ class Imu {
       } *
       config.rollGain;
 
+  /// Adds the [newReading] to [readings] and removes old readings past the
+  /// length of 10.
+  void addReading(ImuReading newReading) {
+    readings.insert(0, newReading);
+    while (readings.length > 10) {
+      readings.removeLast();
+    }
+  }
+
   /// Sets the [config] zero values for pitch and roll to the current to
   /// [pitchZero] and [rollZero] if given.
   void setPitchAndRollZeroTo({num? pitchZero, num? rollZero}) =>
@@ -89,8 +113,5 @@ class Imu {
 
   /// Sets the [config] zero values for pitch and roll to the current [reading]
   /// values.
-  void setBearingZeroToCurrentReading() =>
-      setBearingZeroTo(reading.yawFromStartup);
-
-  
+  void setBearingZeroToCurrentReading() => setBearingZeroTo(reading.yaw);
 }

@@ -115,7 +115,6 @@ class SimulatorCore {
       (timer) => udpSendStream.add(heartbeatUDPMessage),
     );
 
-
     final logDirectoryPath = [
       (await getApplicationDocumentsDirectory()).path,
       '/Autosteering/logs',
@@ -482,8 +481,8 @@ class _SimulatorCoreState {
   /// The target steering angle when guidance is active.
   double? steeringAngleTarget;
 
-  /// The target RPM for the steering motor.
-  double? motorTargetRPM;
+  /// The target WAS reading value.
+  int? wasTarget;
 
   /// Whether the state changed in the last update.
   bool didChange = true;
@@ -629,7 +628,7 @@ class _SimulatorCoreState {
     }
     // Updates the IMU reading of the vehicle
     else if (message is ImuReading) {
-      vehicle?.imu.reading = message;
+      vehicle?.imu.addReading(message);
     }
 
     // Update the WAS config of the vehicle.
@@ -1089,24 +1088,19 @@ class _SimulatorCoreState {
           steeringChange = SimInputChange.increase;
         }
 
-        motorTargetRPM = 0.0;
+        wasTarget = vehicle!.was.reading.value;
         if (vehicle!.velocity.abs() > autoSteerThresholdVelocity
             // &&    steeringAngleTarget != vehicle!.steeringAngleInput
             ) {
-          motorTargetRPM = ((vehicle!.motorConfig.invertOutput ? -1 : 1) *
-                  vehicle!.nextSteeringAnglePid(steeringAngleTarget!) /
-                  (vehicle!.steeringAngleMax) *
-                  vehicle!.motorConfig.maxRPM)
-              .clamp(
-            -vehicle!.motorConfig.maxRPM.toDouble(),
-            vehicle!.motorConfig.maxRPM.toDouble(),
+          wasTarget = vehicle!.wasTargetFromSteeringAngle(
+            vehicle!.nextSteeringAnglePid(steeringAngleTarget!),
           );
         }
         networkSendStream?.add(
           const Utf8Encoder().convert(
             jsonEncode(
               {
-                'motor_rpm': motorTargetRPM,
+                'was_target': wasTarget,
                 'enable_motor': autoSteerEnabled,
               },
             ),
@@ -1123,13 +1117,13 @@ class _SimulatorCoreState {
             ),
           ),
         );
-        motorTargetRPM = null;
+        wasTarget = null;
       } else {
-        motorTargetRPM = null;
+        wasTarget = null;
       }
       mainThreadSendStream
         ..add((steeringAngleTarget: steeringAngleTarget))
-        ..add((motorTargetRPM: motorTargetRPM));
+        ..add((wasTarget: wasTarget));
     }
   }
 
@@ -1247,7 +1241,7 @@ class _SimulatorCoreState {
             ..config = vehicle!.imu.config.copyWith(
               zeroValues: vehicle!.imu.config.zeroValues.copyWith(
                 bearingZero:
-                    (vehicle!.imu.reading.yawFromStartup - bearing).wrap360(),
+                    (vehicle!.imu.reading.yaw - bearing).wrap360(),
               ),
             )
             ..bearingIsSet = true;
@@ -1334,7 +1328,7 @@ class _SimulatorCoreState {
           vehicle!.imu
             ..config = vehicle!.imu.config.copyWith(
               zeroValues: vehicle!.imu.config.zeroValues.copyWith(
-                bearingZero: (vehicle!.imu.reading.yawFromStartup -
+                bearingZero: (vehicle!.imu.reading.yaw -
                         directionCorrectedBearing)
                     .wrap360(),
               ),

@@ -30,6 +30,9 @@ class ImuConfig with _$ImuConfig {
   /// [pitchGain] and [rollGain] are multipliers for how much their respective
   /// readings should be amplifier/reduces. Defaults to 1, i.e. no
   /// amplification.
+  ///
+  /// [delayReadings] is how many milliseconds we should delay the readings
+  /// to match the GNSS fix time.
   const factory ImuConfig({
     /// Whether the vehicle should take into account pitch and roll when
     /// representing its position.
@@ -58,6 +61,10 @@ class ImuConfig with _$ImuConfig {
 
     /// A multiplier for how much the pitch reading should be amplified/reduced.
     @Default(1) double rollGain,
+
+    /// How many milliseconds we should delay the readings to match the GNSS fix
+    /// time.
+    @Default(30) double delayReadings,
   }) = _ImuConfig;
 
   /// Creates an [ImuConfig] from the [json] object.

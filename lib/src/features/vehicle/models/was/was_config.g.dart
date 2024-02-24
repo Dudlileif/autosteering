@@ -10,10 +10,10 @@ _$WasConfigImpl _$$WasConfigImplFromJson(Map<String, dynamic> json) =>
     _$WasConfigImpl(
       useWas: json['useWas'] as bool? ?? true,
       invertInput: json['invertInput'] as bool? ?? false,
-      bits: json['bits'] as int? ?? 15,
-      min: json['min'] as int? ?? 1000,
-      max: json['max'] as int? ?? 25000,
-      center: json['center'] as int? ?? 10000,
+      bits: json['bits'] as int? ?? 12,
+      min: json['min'] as int? ?? 100,
+      max: json['max'] as int? ?? 4000,
+      center: json['center'] as int? ?? 1500,
     );
 
 Map<String, dynamic> _$$WasConfigImplToJson(_$WasConfigImpl instance) =>

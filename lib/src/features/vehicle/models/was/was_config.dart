@@ -10,10 +10,10 @@ class WasConfig with _$WasConfig {
   const factory WasConfig({
     @Default(true) bool useWas,
     @Default(false) bool invertInput,
-    @Default(15) int bits,
-    @Default(1000) int min,
-    @Default(25000) int max,
-    @Default(10000) int center,
+    @Default(12) int bits,
+    @Default(100) int min,
+    @Default(4000) int max,
+    @Default(1500) int center,
   }) = _WasConfig;
 
   /// Creates a [WasConfig] from the [json] object.

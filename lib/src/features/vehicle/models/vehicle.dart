@@ -395,6 +395,16 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The distance between the wheel axles.
   double get wheelBase;
 
+  /// Returns the WAS reading target for the given steering [angle].
+  int wasTargetFromSteeringAngle(double angle) => switch (angle < 0) {
+        true => ((was.config.center - was.config.min) * angle.abs())
+            .round()
+            .clamp(was.config.min, was.config.center),
+        false => ((was.config.max - was.config.center) * angle.abs())
+            .round()
+            .clamp(was.config.center, was.config.max),
+      };
+
   /// Where the look ahead distance calculation should start.
   Geographic get lookAheadStartPosition;
 

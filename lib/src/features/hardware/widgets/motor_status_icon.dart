@@ -74,9 +74,14 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
       );
     }
 
-    final targetRPM = ref.watch(steeringMotorTargetRPMProvider);
-    if (targetRPM != null) {
-      textLines.add('Target RPM: ${targetRPM.toStringAsFixed(1)}');
+    final wasReading = ref
+        .watch(mainVehicleProvider.select((value) => value.was.reading.value));
+    textLines.add(
+      'WAS reading: $wasReading',
+    );
+    final wasTarget = ref.watch(steeringMotorWasTargetProvider);
+    if (wasTarget != null) {
+      textLines.add('WAS target: $wasTarget');
     }
 
     final actualRPM = ref.watch(steeringMotorActualRPMProvider);
@@ -102,6 +107,22 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
     final rotation = ref.watch(steeringMotorRotationProvider);
     if (rotation != null) {
       textLines.add('Rotation: $rotation');
+    }
+
+    final stepsMinCenter =
+        ref.watch(steeringMotorStepsPerWasIncrementMinToCenterProvider);
+
+    final stepsCenterMax =
+        ref.watch(steeringMotorStepsPerWasIncrementCenterToMaxProvider);
+
+    if (stepsMinCenter != null || stepsCenterMax != null) {
+      textLines.add('Steps / increment');
+    }
+    if (stepsMinCenter != null) {
+      textLines.add('Min-Center: $stepsMinCenter');
+    }
+    if (stepsCenterMax != null) {
+      textLines.add('Center-Max: $stepsCenterMax');
     }
 
     return textLines.join('\n');

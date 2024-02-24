@@ -212,6 +212,95 @@ class ImuConfigurator extends StatelessWidget {
                   secondary: child,
                 ),
               ),
+              Consumer(
+                builder: (context, ref, child) {
+                  var delayReadings = ref.read(
+                    mainVehicleProvider
+                        .select((value) => value.imu.config.delayReadings),
+                  );
+                  return StatefulBuilder(
+                    builder: (context, setState) => Column(
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Delay readings: $delayReadings ms',
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                final oldValue = delayReadings;
+                                ref.read(simInputProvider.notifier).send(
+                                      ref
+                                          .read(
+                                            mainVehicleProvider.select(
+                                              (value) => value.imu.config,
+                                            ),
+                                          )
+                                          .copyWith(
+                                            delayReadings:
+                                                const ImuConfig().delayReadings,
+                                          ),
+                                    );
+                                // Wait a short while before saving the
+                                // hopefully updated vehicle.
+                                Future.delayed(
+                                  const Duration(milliseconds: 100),
+                                  () {
+                                    final vehicle =
+                                        ref.watch(mainVehicleProvider);
+                                    ref.read(saveVehicleProvider(vehicle));
+                                    Logger.instance.i(
+                                      '''Updated vehicle IMU delay readings: $oldValue ms -> ${vehicle.imu.config.delayReadings} ms''',
+                                    );
+                                  },
+                                );
+                              },
+                              icon: const Icon(Icons.refresh),
+                            ),
+                          ],
+                        ),
+                        Slider(
+                          value: delayReadings,
+                          onChanged: (value) =>
+                              setState(() => delayReadings = value),
+                          onChangeEnd: (value) {
+                            final oldValue = ref.read(
+                              mainVehicleProvider.select(
+                                (value) => value.imu.config.delayReadings,
+                              ),
+                            );
+                            ref.read(simInputProvider.notifier).send(
+                                  ref
+                                      .read(
+                                        mainVehicleProvider.select(
+                                          (value) => value.imu.config,
+                                        ),
+                                      )
+                                      .copyWith(delayReadings: delayReadings),
+                                );
+                            // Wait a short while before saving the
+                            // hopefully updated vehicle.
+                            Future.delayed(
+                              const Duration(milliseconds: 100),
+                              () {
+                                final vehicle = ref.watch(mainVehicleProvider);
+                                ref.read(saveVehicleProvider(vehicle));
+                                Logger.instance.i(
+                                  '''Updated vehicle IMU delay readings: $oldValue ms -> ${vehicle.imu.config.delayReadings} ms''',
+                                );
+                              },
+                            );
+                          },
+                          max: 100,
+                          divisions: 20,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Consumer(
@@ -392,9 +481,7 @@ class ImuConfigurator extends StatelessWidget {
                             IconButton(
                               onPressed: () {
                                 final oldValue = rollGain;
-                                ref
-                                    .read(simInputProvider.notifier)
-                                    .send(
+                                ref.read(simInputProvider.notifier).send(
                                       ref
                                           .read(
                                             mainVehicleProvider.select(
@@ -568,13 +655,22 @@ class ImuConfigurator extends StatelessWidget {
                         ),
                         if (imuReading != null) ...[
                           Text(
-                            '''Yaw from startup: ${imuReading.yawFromStartup.toStringAsFixed(1)}º''',
+                            '''Yaw from startup: ${imuReading.yaw.toStringAsFixed(1)}º''',
                           ),
                           Text(
                             'Pitch: ${imuReading.pitch.toStringAsFixed(1)}º',
                           ),
                           Text(
                             'Roll: ${imuReading.roll.toStringAsFixed(1)}º',
+                          ),
+                          Text(
+                            '''Acceleration X: ${imuReading.accelerationX.toStringAsFixed(3)}''',
+                          ),
+                          Text(
+                            '''Acceleration Y: ${imuReading.accelerationY.toStringAsFixed(3)}''',
+                          ),
+                          Text(
+                            '''Acceleration Z: ${imuReading.accelerationZ.toStringAsFixed(3)}''',
                           ),
                           Consumer(
                             builder: (context, ref, child) {

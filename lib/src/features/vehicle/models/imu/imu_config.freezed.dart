@@ -48,6 +48,10 @@ mixin _$ImuConfig {
   /// A multiplier for how much the pitch reading should be amplified/reduced.
   double get rollGain => throw _privateConstructorUsedError;
 
+  /// How many milliseconds we should delay the readings to match the GNSS fix
+  /// time.
+  double get delayReadings => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ImuConfigCopyWith<ImuConfig> get copyWith =>
@@ -68,7 +72,8 @@ abstract class $ImuConfigCopyWith<$Res> {
       bool invertPitch,
       bool invertRoll,
       double pitchGain,
-      double rollGain});
+      double rollGain,
+      double delayReadings});
 
   $ImuZeroValuesCopyWith<$Res> get zeroValues;
 }
@@ -95,6 +100,7 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
     Object? invertRoll = null,
     Object? pitchGain = null,
     Object? rollGain = null,
+    Object? delayReadings = null,
   }) {
     return _then(_value.copyWith(
       usePitchAndRoll: null == usePitchAndRoll
@@ -133,6 +139,10 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
           ? _value.rollGain
           : rollGain // ignore: cast_nullable_to_non_nullable
               as double,
+      delayReadings: null == delayReadings
+          ? _value.delayReadings
+          : delayReadings // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 
@@ -162,7 +172,8 @@ abstract class _$$ImuConfigImplCopyWith<$Res>
       bool invertPitch,
       bool invertRoll,
       double pitchGain,
-      double rollGain});
+      double rollGain,
+      double delayReadings});
 
   @override
   $ImuZeroValuesCopyWith<$Res> get zeroValues;
@@ -188,6 +199,7 @@ class __$$ImuConfigImplCopyWithImpl<$Res>
     Object? invertRoll = null,
     Object? pitchGain = null,
     Object? rollGain = null,
+    Object? delayReadings = null,
   }) {
     return _then(_$ImuConfigImpl(
       usePitchAndRoll: null == usePitchAndRoll
@@ -226,6 +238,10 @@ class __$$ImuConfigImplCopyWithImpl<$Res>
           ? _value.rollGain
           : rollGain // ignore: cast_nullable_to_non_nullable
               as double,
+      delayReadings: null == delayReadings
+          ? _value.delayReadings
+          : delayReadings // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -242,7 +258,8 @@ class _$ImuConfigImpl implements _ImuConfig {
       this.invertPitch = false,
       this.invertRoll = false,
       this.pitchGain = 1,
-      this.rollGain = 1});
+      this.rollGain = 1,
+      this.delayReadings = 30});
 
   factory _$ImuConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$ImuConfigImplFromJson(json);
@@ -293,9 +310,15 @@ class _$ImuConfigImpl implements _ImuConfig {
   @JsonKey()
   final double rollGain;
 
+  /// How many milliseconds we should delay the readings to match the GNSS fix
+  /// time.
+  @override
+  @JsonKey()
+  final double delayReadings;
+
   @override
   String toString() {
-    return 'ImuConfig(usePitchAndRoll: $usePitchAndRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain)';
+    return 'ImuConfig(usePitchAndRoll: $usePitchAndRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain, delayReadings: $delayReadings)';
   }
 
   @override
@@ -319,7 +342,9 @@ class _$ImuConfigImpl implements _ImuConfig {
             (identical(other.pitchGain, pitchGain) ||
                 other.pitchGain == pitchGain) &&
             (identical(other.rollGain, rollGain) ||
-                other.rollGain == rollGain));
+                other.rollGain == rollGain) &&
+            (identical(other.delayReadings, delayReadings) ||
+                other.delayReadings == delayReadings));
   }
 
   @JsonKey(ignore: true)
@@ -334,7 +359,8 @@ class _$ImuConfigImpl implements _ImuConfig {
       invertPitch,
       invertRoll,
       pitchGain,
-      rollGain);
+      rollGain,
+      delayReadings);
 
   @JsonKey(ignore: true)
   @override
@@ -360,7 +386,8 @@ abstract class _ImuConfig implements ImuConfig {
       final bool invertPitch,
       final bool invertRoll,
       final double pitchGain,
-      final double rollGain}) = _$ImuConfigImpl;
+      final double rollGain,
+      final double delayReadings}) = _$ImuConfigImpl;
 
   factory _ImuConfig.fromJson(Map<String, dynamic> json) =
       _$ImuConfigImpl.fromJson;
@@ -402,6 +429,11 @@ abstract class _ImuConfig implements ImuConfig {
 
   /// A multiplier for how much the pitch reading should be amplified/reduced.
   double get rollGain;
+  @override
+
+  /// How many milliseconds we should delay the readings to match the GNSS fix
+  /// time.
+  double get delayReadings;
   @override
   @JsonKey(ignore: true)
   _$$ImuConfigImplCopyWith<_$ImuConfigImpl> get copyWith =>

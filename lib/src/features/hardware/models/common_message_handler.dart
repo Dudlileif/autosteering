@@ -70,11 +70,11 @@ class CommonMessageHandler {
             .read(vehicleSteeringAngleTargetProvider.notifier)
             .update(message.steeringAngleTarget);
       }
-    } else if (message is ({double? motorTargetRPM})) {
-      if (ref.exists(steeringMotorTargetRPMProvider)) {
+    } else if (message is ({int? wasTarget})) {
+      if (ref.exists(steeringMotorWasTargetProvider)) {
         ref
-            .read(steeringMotorTargetRPMProvider.notifier)
-            .update(message.motorTargetRPM);
+            .read(steeringMotorWasTargetProvider.notifier)
+            .update(message.wasTarget);
       }
     } else if (message is ({double? motorActualRPM})) {
       ref
@@ -125,6 +125,23 @@ class CommonMessageHandler {
             .read(steeringMotorTargetRotationProvider.notifier)
             .update(message.motorTargetRotation);
       }
+    } else if (message is ({double? stepsPerWasIncrementMinToCenter})) {
+      if (ref.exists(steeringMotorStepsPerWasIncrementMinToCenterProvider)) {
+        ref
+            .read(
+              steeringMotorStepsPerWasIncrementMinToCenterProvider.notifier,
+            )
+            .update(message.stepsPerWasIncrementMinToCenter);
+      }
+    } else if (message is ({double? stepsPerWasIncrementCenterToMax})) {
+      if (ref.exists(steeringMotorStepsPerWasIncrementCenterToMaxProvider)) {
+        ref
+            .read(
+              steeringMotorStepsPerWasIncrementCenterToMaxProvider.notifier,
+            )
+            .update(message.stepsPerWasIncrementCenterToMax);
+      }
+      
     } else if (message is LogEvent) {
       Logger.instance.log(
         message.level,

@@ -25,13 +25,22 @@ mixin _$ImuReading {
   DateTime get receiveTime => throw _privateConstructorUsedError;
 
   /// The IMU input yaw/bearing from startup.
-  num get yawFromStartup => throw _privateConstructorUsedError;
+  num get yaw => throw _privateConstructorUsedError;
 
   /// The IMU input pitch.
   num get pitch => throw _privateConstructorUsedError;
 
   /// The IMU input roll.
   num get roll => throw _privateConstructorUsedError;
+
+  /// The IMU input acceleration in the X-axis (lateral).
+  num get accelerationX => throw _privateConstructorUsedError;
+
+  /// The IMU input acceleration in the Y-axis (longitudinal).
+  num get accelerationY => throw _privateConstructorUsedError;
+
+  /// The IMU input acceleration in the Z-axis (vertical).
+  num get accelerationZ => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,9 +56,12 @@ abstract class $ImuReadingCopyWith<$Res> {
   @useResult
   $Res call(
       {@DateTimeSerializer() DateTime receiveTime,
-      num yawFromStartup,
+      num yaw,
       num pitch,
-      num roll});
+      num roll,
+      num accelerationX,
+      num accelerationY,
+      num accelerationZ});
 }
 
 /// @nodoc
@@ -66,18 +78,21 @@ class _$ImuReadingCopyWithImpl<$Res, $Val extends ImuReading>
   @override
   $Res call({
     Object? receiveTime = null,
-    Object? yawFromStartup = null,
+    Object? yaw = null,
     Object? pitch = null,
     Object? roll = null,
+    Object? accelerationX = null,
+    Object? accelerationY = null,
+    Object? accelerationZ = null,
   }) {
     return _then(_value.copyWith(
       receiveTime: null == receiveTime
           ? _value.receiveTime
           : receiveTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      yawFromStartup: null == yawFromStartup
-          ? _value.yawFromStartup
-          : yawFromStartup // ignore: cast_nullable_to_non_nullable
+      yaw: null == yaw
+          ? _value.yaw
+          : yaw // ignore: cast_nullable_to_non_nullable
               as num,
       pitch: null == pitch
           ? _value.pitch
@@ -86,6 +101,18 @@ class _$ImuReadingCopyWithImpl<$Res, $Val extends ImuReading>
       roll: null == roll
           ? _value.roll
           : roll // ignore: cast_nullable_to_non_nullable
+              as num,
+      accelerationX: null == accelerationX
+          ? _value.accelerationX
+          : accelerationX // ignore: cast_nullable_to_non_nullable
+              as num,
+      accelerationY: null == accelerationY
+          ? _value.accelerationY
+          : accelerationY // ignore: cast_nullable_to_non_nullable
+              as num,
+      accelerationZ: null == accelerationZ
+          ? _value.accelerationZ
+          : accelerationZ // ignore: cast_nullable_to_non_nullable
               as num,
     ) as $Val);
   }
@@ -101,9 +128,12 @@ abstract class _$$ImuReadingImplCopyWith<$Res>
   @useResult
   $Res call(
       {@DateTimeSerializer() DateTime receiveTime,
-      num yawFromStartup,
+      num yaw,
       num pitch,
-      num roll});
+      num roll,
+      num accelerationX,
+      num accelerationY,
+      num accelerationZ});
 }
 
 /// @nodoc
@@ -118,18 +148,21 @@ class __$$ImuReadingImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? receiveTime = null,
-    Object? yawFromStartup = null,
+    Object? yaw = null,
     Object? pitch = null,
     Object? roll = null,
+    Object? accelerationX = null,
+    Object? accelerationY = null,
+    Object? accelerationZ = null,
   }) {
     return _then(_$ImuReadingImpl(
       receiveTime: null == receiveTime
           ? _value.receiveTime
           : receiveTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      yawFromStartup: null == yawFromStartup
-          ? _value.yawFromStartup
-          : yawFromStartup // ignore: cast_nullable_to_non_nullable
+      yaw: null == yaw
+          ? _value.yaw
+          : yaw // ignore: cast_nullable_to_non_nullable
               as num,
       pitch: null == pitch
           ? _value.pitch
@@ -138,6 +171,18 @@ class __$$ImuReadingImplCopyWithImpl<$Res>
       roll: null == roll
           ? _value.roll
           : roll // ignore: cast_nullable_to_non_nullable
+              as num,
+      accelerationX: null == accelerationX
+          ? _value.accelerationX
+          : accelerationX // ignore: cast_nullable_to_non_nullable
+              as num,
+      accelerationY: null == accelerationY
+          ? _value.accelerationY
+          : accelerationY // ignore: cast_nullable_to_non_nullable
+              as num,
+      accelerationZ: null == accelerationZ
+          ? _value.accelerationZ
+          : accelerationZ // ignore: cast_nullable_to_non_nullable
               as num,
     ));
   }
@@ -148,9 +193,12 @@ class __$$ImuReadingImplCopyWithImpl<$Res>
 class _$ImuReadingImpl implements _ImuReading {
   const _$ImuReadingImpl(
       {@DateTimeSerializer() required this.receiveTime,
-      this.yawFromStartup = 0,
+      this.yaw = 0,
       this.pitch = 0,
-      this.roll = 0});
+      this.roll = 0,
+      this.accelerationX = 0,
+      this.accelerationY = 0,
+      this.accelerationZ = 0});
 
   factory _$ImuReadingImpl.fromJson(Map<String, dynamic> json) =>
       _$$ImuReadingImplFromJson(json);
@@ -163,7 +211,7 @@ class _$ImuReadingImpl implements _ImuReading {
   /// The IMU input yaw/bearing from startup.
   @override
   @JsonKey()
-  final num yawFromStartup;
+  final num yaw;
 
   /// The IMU input pitch.
   @override
@@ -175,9 +223,24 @@ class _$ImuReadingImpl implements _ImuReading {
   @JsonKey()
   final num roll;
 
+  /// The IMU input acceleration in the X-axis (lateral).
+  @override
+  @JsonKey()
+  final num accelerationX;
+
+  /// The IMU input acceleration in the Y-axis (longitudinal).
+  @override
+  @JsonKey()
+  final num accelerationY;
+
+  /// The IMU input acceleration in the Z-axis (vertical).
+  @override
+  @JsonKey()
+  final num accelerationZ;
+
   @override
   String toString() {
-    return 'ImuReading(receiveTime: $receiveTime, yawFromStartup: $yawFromStartup, pitch: $pitch, roll: $roll)';
+    return 'ImuReading(receiveTime: $receiveTime, yaw: $yaw, pitch: $pitch, roll: $roll, accelerationX: $accelerationX, accelerationY: $accelerationY, accelerationZ: $accelerationZ)';
   }
 
   @override
@@ -187,16 +250,21 @@ class _$ImuReadingImpl implements _ImuReading {
             other is _$ImuReadingImpl &&
             (identical(other.receiveTime, receiveTime) ||
                 other.receiveTime == receiveTime) &&
-            (identical(other.yawFromStartup, yawFromStartup) ||
-                other.yawFromStartup == yawFromStartup) &&
+            (identical(other.yaw, yaw) || other.yaw == yaw) &&
             (identical(other.pitch, pitch) || other.pitch == pitch) &&
-            (identical(other.roll, roll) || other.roll == roll));
+            (identical(other.roll, roll) || other.roll == roll) &&
+            (identical(other.accelerationX, accelerationX) ||
+                other.accelerationX == accelerationX) &&
+            (identical(other.accelerationY, accelerationY) ||
+                other.accelerationY == accelerationY) &&
+            (identical(other.accelerationZ, accelerationZ) ||
+                other.accelerationZ == accelerationZ));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, receiveTime, yawFromStartup, pitch, roll);
+  int get hashCode => Object.hash(runtimeType, receiveTime, yaw, pitch, roll,
+      accelerationX, accelerationY, accelerationZ);
 
   @JsonKey(ignore: true)
   @override
@@ -215,9 +283,12 @@ class _$ImuReadingImpl implements _ImuReading {
 abstract class _ImuReading implements ImuReading {
   const factory _ImuReading(
       {@DateTimeSerializer() required final DateTime receiveTime,
-      final num yawFromStartup,
+      final num yaw,
       final num pitch,
-      final num roll}) = _$ImuReadingImpl;
+      final num roll,
+      final num accelerationX,
+      final num accelerationY,
+      final num accelerationZ}) = _$ImuReadingImpl;
 
   factory _ImuReading.fromJson(Map<String, dynamic> json) =
       _$ImuReadingImpl.fromJson;
@@ -230,7 +301,7 @@ abstract class _ImuReading implements ImuReading {
   @override
 
   /// The IMU input yaw/bearing from startup.
-  num get yawFromStartup;
+  num get yaw;
   @override
 
   /// The IMU input pitch.
@@ -239,6 +310,18 @@ abstract class _ImuReading implements ImuReading {
 
   /// The IMU input roll.
   num get roll;
+  @override
+
+  /// The IMU input acceleration in the X-axis (lateral).
+  num get accelerationX;
+  @override
+
+  /// The IMU input acceleration in the Y-axis (longitudinal).
+  num get accelerationY;
+  @override
+
+  /// The IMU input acceleration in the Z-axis (vertical).
+  num get accelerationZ;
   @override
   @JsonKey(ignore: true)
   _$$ImuReadingImplCopyWith<_$ImuReadingImpl> get copyWith =>
