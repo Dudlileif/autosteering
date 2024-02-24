@@ -1,6 +1,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/simulator/widgets/log_replay_menu.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -108,6 +109,7 @@ class SimCoreMenu extends StatelessWidget {
               );
             },
           ),
+        const LogReplayMenu(),
       ],
     );
   }

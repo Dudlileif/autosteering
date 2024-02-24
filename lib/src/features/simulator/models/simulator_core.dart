@@ -9,6 +9,7 @@ import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -209,6 +210,9 @@ class SimulatorCore {
       );
     });
 
+    LogReplay? logReplay;
+    StreamSubscription<String>? replayListener;
+
     // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
       // Update the udp ip adress for the hardware.
@@ -243,7 +247,34 @@ class SimulatorCore {
           was: message.logWAS,
           combined: message.logCombined,
         );
-      } // Messages for the state.
+      } else if (message is LogReplay) {
+        logReplay = message;
+        replayListener = logReplay.replay.listen(
+          (record) => _replayListener(
+            record,
+            messageDecoder,
+            state,
+            updateMainThreadStream,
+          ),
+        )..pause();
+      } else if (message is ({bool replayPause})) {
+        replayListener?.pause();
+      } else if (message is ({bool replayResume})) {
+        replayListener?.resume();
+      } else if (message is ({bool replayCancel})) {
+        await replayListener?.cancel();
+      } else if (message is ({bool replayRestart})) {
+        await replayListener?.cancel();
+        replayListener = logReplay?.replay.listen(
+          (record) => _replayListener(
+            record,
+            messageDecoder,
+            state,
+            updateMainThreadStream,
+          ),
+        );
+      }
+      // Messages for the state.
       else {
         state.handleMessage(message);
       }
@@ -264,7 +295,7 @@ class SimulatorCore {
     Isolate.exit();
   }
 
-  static DateTime _networkListener(
+  static void _networkListener(
     Uint8List? data,
     MessageDecoder decoder,
     _SimulatorCoreState state,
@@ -286,7 +317,26 @@ class SimulatorCore {
         }
       }
     }
-    return DateTime.now();
+  }
+
+  static void _replayListener(
+    String record,
+    MessageDecoder decoder,
+    _SimulatorCoreState state,
+    StreamController<dynamic> updateMainThreadStream,
+  ) {
+    for (final message in decoder.parseString(record)) {
+      if (message is ImuReading ||
+          message is ({Geographic gnssPosition, DateTime time}) ||
+          message is WasReading) {
+        state.handleMessage(message);
+      } else if (message != null) {
+        updateMainThreadStream.add(message);
+        if (message is GnssPositionCommonSentence) {
+          state.handleMessage((gnssFixQuality: message.quality ?? 0));
+        }
+      }
+    }
   }
 
   /// Used in web version since multithreading isn't possible.
@@ -1240,8 +1290,7 @@ class _SimulatorCoreState {
           vehicle!.imu
             ..config = vehicle!.imu.config.copyWith(
               zeroValues: vehicle!.imu.config.zeroValues.copyWith(
-                bearingZero:
-                    (vehicle!.imu.reading.yaw - bearing).wrap360(),
+                bearingZero: (vehicle!.imu.reading.yaw - bearing).wrap360(),
               ),
             )
             ..bearingIsSet = true;
@@ -1328,9 +1377,9 @@ class _SimulatorCoreState {
           vehicle!.imu
             ..config = vehicle!.imu.config.copyWith(
               zeroValues: vehicle!.imu.config.zeroValues.copyWith(
-                bearingZero: (vehicle!.imu.reading.yaw -
-                        directionCorrectedBearing)
-                    .wrap360(),
+                bearingZero:
+                    (vehicle!.imu.reading.yaw - directionCorrectedBearing)
+                        .wrap360(),
               ),
             )
             ..bearingIsSet = true;
@@ -1382,8 +1431,10 @@ class _SimulatorCoreState {
       // Update by GNSS
       if (gnssUpdate != null && !allowManualSimInput) {
         vehicle!.position = gnssUpdate!.gnssPosition;
-        vehicle!.updateChildren();
         turningCircleCenter = vehicle?.turningRadiusCenter;
+        vehicle!.updateChildren();
+      } else if (!allowManualSimInput) {
+        vehicle!.updateChildren();
       }
       // Update by simulation
       else if (allowManualSimInput || allowSimInterpolation) {
@@ -1397,7 +1448,6 @@ class _SimulatorCoreState {
           gaugeBearing = (gaugeBearing + 180).wrap360();
         }
       }
-
       updateGauges();
       if (gnssUpdate != null && !allowManualSimInput) {
         vehicle!.bearing = gaugeBearing;

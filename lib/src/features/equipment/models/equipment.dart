@@ -362,8 +362,8 @@ class Equipment extends Hitchable with EquatableMixin {
         false => null
       };
 
-  /// Update the [bearing] and [velocity] of the equipment when using connected
-  /// to parent with a towbar.
+  /// Update the [bearing] and [velocity] of the equipment when connected to
+  /// parent with a towbar.
   void updateTowbar() {
     if (hitchParent != null && parentHitch == Hitch.rearTowbar) {
       final hitchAngle = signedBearingDifference(
@@ -376,7 +376,7 @@ class Equipment extends Hitchable with EquatableMixin {
           sin(hitchAngle);
 
       // Only change bearing if we're moving.
-      if (hitchParent!.velocity.abs() > 0) {
+      if (hitchParent!.velocity.abs() > 0 || true) {
         bearing = _bearing + bearingChange;
       }
       _velocity = hitchParent!.velocity * -cos(hitchAngle);
