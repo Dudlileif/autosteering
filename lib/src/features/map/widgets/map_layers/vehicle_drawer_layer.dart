@@ -24,7 +24,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
           if (vehicle is Harvester) ...[
             WheelPainter(
               innerPosition:
-                  vehicle.steeringAxlePosition.spherical.destinationPoint(
+                  vehicle.steeringAxlePosition.rhumb.destinationPoint(
                 distance:
                     vehicle.trackWidth / 2 - vehicle.steeringAxleWheelWidth / 2,
                 bearing: vehicle.bearing - 90,
@@ -40,7 +40,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
             ),
             WheelPainter(
               innerPosition:
-                  vehicle.steeringAxlePosition.spherical.destinationPoint(
+                  vehicle.steeringAxlePosition.rhumb.destinationPoint(
                 distance:
                     vehicle.trackWidth / 2 - vehicle.steeringAxleWheelWidth / 2,
                 bearing: vehicle.bearing + 90,
@@ -57,7 +57,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
             ),
           ],
           WheelPainter(
-            innerPosition: vehicle.solidAxlePosition.spherical.destinationPoint(
+            innerPosition: vehicle.solidAxlePosition.rhumb.destinationPoint(
               distance:
                   vehicle.trackWidth / 2 - vehicle.solidAxleWheelWidth / 2,
               bearing: vehicle.bearing - 90,
@@ -71,7 +71,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
             centerMapOnVehicle: centerMapOnVehicle,
           ),
           WheelPainter(
-            innerPosition: vehicle.solidAxlePosition.spherical.destinationPoint(
+            innerPosition: vehicle.solidAxlePosition.rhumb.destinationPoint(
               distance:
                   vehicle.trackWidth / 2 - vehicle.solidAxleWheelWidth / 2,
               bearing: vehicle.bearing + 90,
@@ -92,7 +92,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
             vehicle.numWheels,
             (index) => WheelPainter(
               innerPosition:
-                  vehicle.frontAxlePosition.spherical.destinationPoint(
+                      vehicle.frontAxlePosition.rhumb.destinationPoint(
                 distance: vehicle.trackWidth / 2 -
                     vehicle.wheelWidth / 2 +
                     index * (vehicle.wheelWidth + vehicle.wheelSpacing),
@@ -112,7 +112,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
             vehicle.numWheels,
             (index) => WheelPainter(
               innerPosition:
-                  vehicle.frontAxlePosition.spherical.destinationPoint(
+                      vehicle.frontAxlePosition.rhumb.destinationPoint(
                 distance: vehicle.trackWidth / 2 -
                     vehicle.wheelWidth / 2 +
                     index * (vehicle.wheelWidth + vehicle.wheelSpacing),
@@ -133,7 +133,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
             vehicle.numWheels,
             (index) => WheelPainter(
               innerPosition:
-                  vehicle.rearAxlePosition.spherical.destinationPoint(
+                      vehicle.rearAxlePosition.rhumb.destinationPoint(
                 distance: vehicle.trackWidth / 2 -
                     vehicle.wheelWidth / 2 +
                     index * (vehicle.wheelWidth + vehicle.wheelSpacing),
@@ -153,7 +153,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
             vehicle.numWheels,
             (index) => WheelPainter(
               innerPosition:
-                  vehicle.rearAxlePosition.spherical.destinationPoint(
+                      vehicle.rearAxlePosition.rhumb.destinationPoint(
                 distance: vehicle.trackWidth / 2 -
                     vehicle.wheelWidth / 2 +
                     index * (vehicle.wheelWidth + vehicle.wheelSpacing),
@@ -178,7 +178,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
         if (vehicle is Tractor) ...[
           WheelPainter(
             innerPosition:
-                vehicle.steeringAxlePosition.spherical.destinationPoint(
+                vehicle.steeringAxlePosition.rhumb.destinationPoint(
               distance:
                   vehicle.trackWidth / 2 - vehicle.steeringAxleWheelWidth / 2,
               bearing: vehicle.bearing - 90,
@@ -194,7 +194,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
           ),
           WheelPainter(
             innerPosition:
-                vehicle.steeringAxlePosition.spherical.destinationPoint(
+                vehicle.steeringAxlePosition.rhumb.destinationPoint(
               distance:
                   vehicle.trackWidth / 2 - vehicle.steeringAxleWheelWidth / 2,
               bearing: vehicle.bearing + 90,

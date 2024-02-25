@@ -31,17 +31,17 @@ class VirtualLedBarTestLayer extends ConsumerWidget {
       polylines: [
         Polyline(
           points: [
-            vehicle.position.spherical
+            vehicle.position.rhumb
                 .destinationPoint(distance: 100, bearing: vehicle.bearing)
-                .spherical
+                .rhumb
                 .destinationPoint(
                   distance: distance,
                   bearing: vehicle.bearing - 90,
                 )
                 .latLng,
-            vehicle.position.spherical
+            vehicle.position.rhumb
                 .destinationPoint(distance: 100, bearing: vehicle.bearing + 180)
-                .spherical
+                .rhumb
                 .destinationPoint(
                   distance: distance,
                   bearing: vehicle.bearing - 90,

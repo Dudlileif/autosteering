@@ -101,7 +101,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                   Polyline(
                     points: [
                       dubinsPath.start.position.latLng,
-                      dubinsPath.start.position.spherical
+                      dubinsPath.start.position.rhumb
                           .destinationPoint(
                             distance: 2,
                             bearing: dubinsPath.start.bearing,
@@ -114,7 +114,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                   Polyline(
                     points: [
                       dubinsPath.end.position.latLng,
-                      dubinsPath.end.position.spherical
+                      dubinsPath.end.position.rhumb
                           .destinationPoint(
                             distance: 2,
                             bearing: dubinsPath.end.bearing,
@@ -128,7 +128,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                     (e) => Polyline(
                       points: [
                         e.position.latLng,
-                        e.position.spherical
+                        e.position.rhumb
                             .destinationPoint(distance: 0.5, bearing: e.bearing)
                             .latLng,
                       ],

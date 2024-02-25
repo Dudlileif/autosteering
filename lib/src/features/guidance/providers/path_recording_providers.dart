@@ -78,7 +78,7 @@ class PathRecordingList extends _$PathRecordingList {
               (prevWayPoint, wayPoint) async {
             if (prevWayPoint != wayPoint) {
               if (points.isNotEmpty) {
-                final distance = points.last.position.spherical.distanceTo(
+                final distance = points.last.position.rhumb.distanceTo(
                   wayPoint.position,
                 );
                 if (distance > ref.read(pathRecordingMaxDistanceProvider)) {
@@ -88,12 +88,12 @@ class PathRecordingList extends _$PathRecordingList {
                     points.length >= 2) {
                   final prevBearing = points[points.length - 2]
                       .position
-                      .spherical
+                      .rhumb
                       .initialBearingTo(
                         points.last.position,
                       );
                   final bearing =
-                      points.last.position.spherical.initialBearingTo(
+                      points.last.position.rhumb.initialBearingTo(
                     wayPoint.position,
                   );
 

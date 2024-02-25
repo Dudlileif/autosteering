@@ -95,14 +95,14 @@ super.manufacturerColors,
 
   /// The position of the center of the rear axle.
   @override
-  Geographic get solidAxlePosition => position.spherical.destinationPoint(
+  Geographic get solidAxlePosition => position.rhumb.destinationPoint(
         distance: solidAxleDistance,
         bearing: (bearing - 180).wrap360(),
       );
 
   /// The position of the center of the front axle.
   @override
-  Geographic get steeringAxlePosition => position.spherical.destinationPoint(
+  Geographic get steeringAxlePosition => position.rhumb.destinationPoint(
         distance: wheelBase - solidAxleDistance,
         bearing: bearing.wrap360(),
       );
@@ -114,7 +114,7 @@ super.manufacturerColors,
   /// when the tractor is reversing.
   @override
   Geographic get stanleyAxlePosition => switch (isReversing) {
-        true => solidAxlePosition.spherical
+        true => solidAxlePosition.rhumb
             .destinationPoint(distance: wheelBase, bearing: bearing + 180),
         false => steeringAxlePosition,
       };

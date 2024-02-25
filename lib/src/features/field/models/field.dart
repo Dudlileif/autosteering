@@ -153,13 +153,13 @@ class Field with EquatableMixin {
           .intermediatePointTo(boundingBox!.max, fraction: 0.5);
 
       final diagonal =
-          boundingBox!.min.spherical.distanceTo(boundingBox!.max) / 2;
+          boundingBox!.min.rhumb.distanceTo(boundingBox!.max) / 2;
 
       return GeoBox.from([
-        center.spherical.destinationPoint(distance: diagonal, bearing: 0),
-        center.spherical.destinationPoint(distance: diagonal, bearing: 90),
-        center.spherical.destinationPoint(distance: diagonal, bearing: 180),
-        center.spherical.destinationPoint(distance: diagonal, bearing: 270),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 0),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 90),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 180),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 270),
       ]);
     }
     return null;

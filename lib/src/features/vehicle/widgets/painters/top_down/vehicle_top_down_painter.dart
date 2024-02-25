@@ -183,13 +183,13 @@ class MapVehicleTopDownPainter extends StatelessWidget {
 
     final axleLeftPosition = (vehicle as AxleSteeredVehicle)
         .steeringAxlePosition
-        .spherical
+        .rhumb
         .destinationPoint(
           distance: vehicle.width / 2,
           bearing: vehicle.bearing - 90,
         );
     final steeringAxleOffset =
-        axleLeftPosition.spherical.distanceTo(points.first) / vehicle.length;
+        axleLeftPosition.rhumb.distanceTo(points.first) / vehicle.length;
     final steeringAxleWidth = vehicle.trackWidth / vehicle.width;
 
     return Positioned(

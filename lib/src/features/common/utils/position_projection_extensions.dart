@@ -36,7 +36,7 @@ extension GeographicProjExt on Geographic {
       final ringIntersection = spherical.intersectionWith(
         bearing: 180,
         other: start,
-        otherBearing: start.spherical.initialBearingTo(end),
+        otherBearing: start.rhumb.initialBearingTo(end),
       );
 
       if (ringIntersection != null) {
@@ -47,7 +47,7 @@ extension GeographicProjExt on Geographic {
 
           // Is the intersection on the actual line segment?
           if (distanceAlongLine >= 0 &&
-              distanceAlongLine <= start.spherical.distanceTo(end)) {
+              distanceAlongLine <= start.rhumb.distanceTo(end)) {
             intersects++;
           }
         }

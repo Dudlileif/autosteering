@@ -522,7 +522,7 @@ final equipmentHoveredProvider =
 );
 
 typedef _$EquipmentHovered = Notifier<bool>;
-String _$equipmentPathsHash() => r'f25df6c5c5889a6935f71d3718192f366f0a6aae';
+String _$equipmentPathsHash() => r'14910cabdc1e960a1ec8f63569771006f879005e';
 
 abstract class _$EquipmentPaths extends BuildlessAutoDisposeNotifier<
     List<Map<int, List<SectionEdgePositions>?>>> {

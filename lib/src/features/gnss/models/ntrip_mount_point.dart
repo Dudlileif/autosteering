@@ -71,7 +71,7 @@ abstract class NtripMountPoint extends NtripSourcetableEntry {
 
   /// The distance to the [point] if the [position] is not null.
   double? distanceToPoint(Geographic point) =>
-      position?.spherical.distanceTo(point);
+      position?.rhumb.distanceTo(point);
 }
 
 /// An NTRIP server sourcetable entry for a mount point stream at the

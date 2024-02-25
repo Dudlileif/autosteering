@@ -97,7 +97,7 @@ sealed class PathTracking {
       return cumulativePathSegmentLengths.last +
           vehicle.pathTrackingPoint.spherical.alongTrackDistanceTo(
             start: path.last.position,
-            end: path.last.moveSpherical(distance: 100).position,
+            end: path.last.moveRhumb(distance: 100).position,
           );
     } else if (currentIndex >= path.length) {
       cumulativeIndex = path.length - 2;
@@ -134,15 +134,15 @@ sealed class PathTracking {
     while (index + 1 < path.length) {
       final point = path[index];
       final nextPoint = path[index + 1];
-      if (point.position.spherical.distanceTo(nextPoint.position) >
+      if (point.position.rhumb.distanceTo(nextPoint.position) >
           interpolationDistance) {
         path.insert(
           index + 1,
           point.copyWith(
-            position: point.position.spherical.destinationPoint(
+            position: point.position.rhumb.destinationPoint(
               distance: interpolationDistance,
               bearing:
-                  point.position.spherical.initialBearingTo(nextPoint.position),
+                  point.position.rhumb.initialBearingTo(nextPoint.position),
             ),
           ),
         );
@@ -151,15 +151,15 @@ sealed class PathTracking {
     }
 
     if (loopMode == PathTrackingLoopMode.straight) {
-      while (path.last.position.spherical.distanceTo(
+      while (path.last.position.rhumb.distanceTo(
             path.first.position,
           ) >
           interpolationDistance) {
         path.add(
           path.last.copyWith(
-            position: path.last.position.spherical.destinationPoint(
+            position: path.last.position.rhumb.destinationPoint(
               distance: interpolationDistance,
-              bearing: path.last.position.spherical
+              bearing: path.last.position.rhumb
                   .initialBearingTo(path.first.position),
             ),
           ),
@@ -185,7 +185,7 @@ sealed class PathTracking {
     for (var i = 1; i < path.length - 1; i++) {
       cumulativePathSegmentLengths.add(
         cumulativePathSegmentLengths[i - 1] +
-            path[i].distanceToSpherical(path[i - 1]),
+            path[i].distanceToRhumb(path[i - 1]),
       );
     }
   }
@@ -208,7 +208,7 @@ sealed class PathTracking {
   /// The next waypoint when driving forward.
   WayPoint get nextForwardWayPoint {
     if (loopMode == PathTrackingLoopMode.none && isCompleted) {
-      return (path.lastOrNull ?? wayPoints.last).moveSpherical(distance: 100);
+      return (path.lastOrNull ?? wayPoints.last).moveRhumb(distance: 100);
     }
     return path[nextForwardIndex % path.length];
   }
@@ -217,7 +217,7 @@ sealed class PathTracking {
   WayPoint get nextReversingWayPoint {
     if (loopMode == PathTrackingLoopMode.none && isCompleted) {
       return (path.firstOrNull ?? wayPoints.first)
-          .moveSpherical(distance: 100, angleFromBearing: 180);
+          .moveRhumb(distance: 100, angleFromBearing: 180);
     }
     return path[nextReversingIndex % path.length];
   }
@@ -249,13 +249,13 @@ sealed class PathTracking {
       return currentPoint.position;
     }
 
-    var bearing = currentPoint.position.spherical.initialBearingTo(nextPoint);
+    var bearing = currentPoint.position.rhumb.initialBearingTo(nextPoint);
 
     if (bearing.isNaN) {
       bearing = currentPoint.bearing;
     }
 
-    final intersect = currentPoint.position.spherical
+    final intersect = currentPoint.position.rhumb
         .destinationPoint(distance: distanceAlong, bearing: bearing);
     return intersect;
   }
@@ -271,10 +271,10 @@ sealed class PathTracking {
 
   /// The waypoint in [path] that is closest to the [vehicle].
   WayPoint closestWayPoint(Vehicle vehicle) => path.reduce(
-        (value, element) => element.position.spherical.distanceTo(
+        (value, element) => element.position.rhumb.distanceTo(
                   vehicle.pathTrackingPoint,
                 ) <
-                value.position.spherical.distanceTo(vehicle.pathTrackingPoint)
+                value.position.rhumb.distanceTo(vehicle.pathTrackingPoint)
             ? element
             : value,
       );
@@ -297,7 +297,7 @@ sealed class PathTracking {
       end: nextPoint.position,
     );
 
-    final segmentLength = currentPoint.distanceToSpherical(nextPoint);
+    final segmentLength = currentPoint.distanceToRhumb(nextPoint);
 
     if (progress > segmentLength) {
       cumulativeIndex = nextIndex(vehicle);

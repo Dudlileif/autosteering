@@ -204,8 +204,8 @@ class EquipmentPaths extends _$EquipmentPaths {
 
     if (state.isNotEmpty && prev != null) {
       final distance = [
-        prev.left.spherical.distanceTo(next.left),
-        prev.right.spherical.distanceTo(next.right),
+        prev.left.rhumb.distanceTo(next.left),
+        prev.right.rhumb.distanceTo(next.right),
       ].max;
 
       if (distance > 20) {
@@ -214,9 +214,9 @@ class EquipmentPaths extends _$EquipmentPaths {
         final secondPrev =
             state.last[section]![state.last[section]!.length - 2];
         final prevBearing =
-            secondPrev.left.spherical.initialBearingTo(prev.left);
+            secondPrev.left.rhumb.initialBearingTo(prev.left);
 
-        final nextBearing = prev.left.spherical.finalBearingTo(next.left);
+        final nextBearing = prev.left.rhumb.finalBearingTo(next.left);
 
         final bearingDiff = bearingDifference(prevBearing, nextBearing);
 

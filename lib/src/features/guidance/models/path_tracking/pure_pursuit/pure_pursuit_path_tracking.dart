@@ -44,7 +44,7 @@ final class PurePursuitPathTracking extends PathTracking {
   ]) {
     var insidePoint = nextWayPoint(vehicle);
 
-    var insideDistance = vehicle.lookAheadStartPosition.spherical.distanceTo(
+    var insideDistance = vehicle.lookAheadStartPosition.rhumb.distanceTo(
       insidePoint.position,
     );
 
@@ -53,9 +53,9 @@ final class PurePursuitPathTracking extends PathTracking {
     if (insideDistance >= (lookAheadDistance ?? vehicle.lookAheadDistance)) {
       return (
         inside: insidePoint.copyWith(
-          position: vehicle.lookAheadStartPosition.spherical.destinationPoint(
+          position: vehicle.lookAheadStartPosition.rhumb.destinationPoint(
             distance: lookAheadDistance ?? vehicle.lookAheadDistance,
-            bearing: vehicle.lookAheadStartPosition.spherical
+            bearing: vehicle.lookAheadStartPosition.rhumb
                 .initialBearingTo(insidePoint.position),
           ),
         ),
@@ -73,7 +73,7 @@ final class PurePursuitPathTracking extends PathTracking {
           };
       final point = path[index % path.length];
       final distance =
-          vehicle.lookAheadStartPosition.spherical.distanceTo(point.position);
+          vehicle.lookAheadStartPosition.rhumb.distanceTo(point.position);
       if (distance <= (lookAheadDistance ?? vehicle.lookAheadDistance)) {
         insidePoint = point;
         insideDistance = distance;
@@ -86,9 +86,9 @@ final class PurePursuitPathTracking extends PathTracking {
     if (loopMode == PathTrackingLoopMode.none) {
       if (vehicle.isReversing && outsidePoint == path.last) {
         return (
-          inside: path.first.moveSpherical(
+          inside: path.first.moveRhumb(
             distance: vehicle.lookAheadDistance -
-                vehicle.lookAheadStartPosition.spherical
+                vehicle.lookAheadStartPosition.rhumb
                     .distanceTo(path.first.position)
                     .clamp(0, vehicle.lookAheadDistance),
           ),
@@ -96,9 +96,9 @@ final class PurePursuitPathTracking extends PathTracking {
         );
       } else if (!vehicle.isReversing && outsidePoint == path.first) {
         return (
-          inside: path.last.moveSpherical(
+          inside: path.last.moveRhumb(
             distance: vehicle.lookAheadDistance -
-                vehicle.lookAheadStartPosition.spherical
+                vehicle.lookAheadStartPosition.rhumb
                     .distanceTo(path.last.position)
                     .clamp(0, vehicle.lookAheadDistance),
           ),
@@ -128,10 +128,11 @@ final class PurePursuitPathTracking extends PathTracking {
       end: points.outside!.position,
     );
 
-    final secantBearing = points.inside.position.spherical
+    final secantBearing =
+        points.inside.position.rhumb
         .initialBearingTo(points.outside!.position);
 
-    return vehicle.lookAheadStartPosition.spherical.destinationPoint(
+    return vehicle.lookAheadStartPosition.rhumb.destinationPoint(
       distance: crossDistance,
       bearing: secantBearing - 90,
     );
@@ -177,43 +178,44 @@ final class PurePursuitPathTracking extends PathTracking {
           pow(vehicleToLineDistance, 2),
     );
 
-    final secantBearing = points.inside.position.spherical
+    final secantBearing =
+        points.inside.position.rhumb
         .initialBearingTo(points.outside!.position);
 
     final vehicleToLineProjection =
-        points.inside.position.spherical.destinationPoint(
+        points.inside.position.rhumb.destinationPoint(
       distance: vehicleAlongDistance,
       bearing: secantBearing,
     );
 
     var vehicleLineProjectionToInsidePointBearing = vehicleToLineProjection
-        .spherical
+        .rhumb
         .initialBearingTo(points.inside.position);
     if (vehicleLineProjectionToInsidePointBearing.isNaN) {
       vehicleLineProjectionToInsidePointBearing = secantBearing;
     }
 
-    final pointA = vehicleToLineProjection.spherical.destinationPoint(
+    final pointA = vehicleToLineProjection.rhumb.destinationPoint(
       distance: projectionToCircleDistance,
       bearing: vehicleLineProjectionToInsidePointBearing,
     );
 
-    final pointB = vehicleToLineProjection.spherical.destinationPoint(
+    final pointB = vehicleToLineProjection.rhumb.destinationPoint(
       distance: projectionToCircleDistance,
       bearing: (vehicleLineProjectionToInsidePointBearing + 180).wrap360(),
     );
 
-    final distanceA = pointA.spherical.distanceTo(points.outside!.position);
-    final distanceB = pointB.spherical.distanceTo(points.outside!.position);
+    final distanceA = pointA.rhumb.distanceTo(points.outside!.position);
+    final distanceB = pointB.rhumb.distanceTo(points.outside!.position);
 
     final wayPointA = WayPoint(
       position: pointA,
-      bearing: points.inside.position.spherical.finalBearingTo(pointA),
+      bearing: points.inside.position.rhumb.finalBearingTo(pointA),
       velocity: points.inside.velocity,
     );
     final wayPointB = WayPoint(
       position: pointB,
-      bearing: points.inside.position.spherical.finalBearingTo(pointB),
+      bearing: points.inside.position.rhumb.finalBearingTo(pointB),
       velocity: points.inside.velocity,
     );
 
@@ -233,7 +235,8 @@ final class PurePursuitPathTracking extends PathTracking {
             .best
             .position;
 
-    final bearingToPoint = vehicle.lookAheadStartPosition.spherical
+    final bearingToPoint =
+        vehicle.lookAheadStartPosition.rhumb
         .initialBearingTo(lookAheadPoint);
 
     final angle = signedBearingDifference(

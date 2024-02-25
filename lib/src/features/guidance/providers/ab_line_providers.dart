@@ -38,8 +38,8 @@ Future<ABLine?> aBLineDebug(ABLineDebugRef ref) async {
 
   if (a != null && b != null) {
     final points = [
-      a.copyWith(bearing: a.initialBearingToSpherical(b)),
-      b.copyWith(bearing: a.finalBearingToSpherical(b)),
+      a.copyWith(bearing: a.initialBearingToRhumb(b)),
+      b.copyWith(bearing: a.finalBearingToRhumb(b)),
     ];
     final boundary = ref.watch(bufferedFieldProvider).when(
           data: (data) =>

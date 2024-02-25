@@ -59,7 +59,7 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
 
     if (widget.useRadiusInMeter) {
       final offset = map.getOffsetFromOrigin(widget.point.latLng);
-      final r = widget.point.spherical
+      final r = widget.point.rhumb
           .destinationPoint(distance: widget.radius, bearing: 180);
       final delta = offset - map.getOffsetFromOrigin(r.latLng);
       radiusToUse = delta.distance;

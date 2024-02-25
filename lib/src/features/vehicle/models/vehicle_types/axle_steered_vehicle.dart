@@ -127,15 +127,15 @@ sealed class AxleSteeredVehicle extends Vehicle {
   Geographic get steeringAxlePosition;
 
   @override
-  Geographic get topLeftPosition => solidAxlePosition.spherical
+  Geographic get topLeftPosition => solidAxlePosition.rhumb
       .destinationPoint(distance: solidAxleToFrontDistance, bearing: bearing)
-      .spherical
+      .rhumb
       .destinationPoint(distance: width / 2, bearing: bearing - 90);
 
   @override
   Geographic? get hitchFrontFixedPoint =>
       switch (solidAxleToFrontHitchDistance != null) {
-        true => solidAxlePosition.spherical.destinationPoint(
+        true => solidAxlePosition.rhumb.destinationPoint(
             distance: solidAxleToFrontHitchDistance!,
             bearing: bearing,
           ),
@@ -145,7 +145,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   @override
   Geographic? get hitchRearFixedPoint =>
       switch (solidAxleToRearHitchDistance != null) {
-        true => solidAxlePosition.spherical.destinationPoint(
+        true => solidAxlePosition.rhumb.destinationPoint(
             distance: solidAxleToRearHitchDistance!,
             bearing: bearing + 180,
           ),
@@ -155,7 +155,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   @override
   Geographic? get hitchRearTowbarPoint =>
       switch (solidAxleToRearTowbarDistance != null) {
-        true => solidAxlePosition.spherical.destinationPoint(
+        true => solidAxlePosition.rhumb.destinationPoint(
             distance: solidAxleToRearTowbarDistance!,
             bearing: bearing + 180,
           ),
@@ -271,7 +271,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
   Geographic? get turningRadiusCenter => currentTurningRadius != null
-      ? solidAxlePosition.spherical.destinationPoint(
+      ? solidAxlePosition.rhumb.destinationPoint(
           distance: currentTurningRadius!,
           bearing: switch (isTurningLeft) {
             true => bearing - 90,
@@ -301,7 +301,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     };
     // Projected solid axle position from the turning radius
     // center.
-    final solidAxlePosition = turningCircleCenter.spherical.destinationPoint(
+    final solidAxlePosition = turningCircleCenter.rhumb.destinationPoint(
       distance: currentTurningRadius!,
       bearing: angle.wrap360(),
     );
@@ -315,7 +315,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
     // The vehicle center position, which is offset from the solid
     // axle position.
-    final vehiclePosition = solidAxlePosition.spherical.destinationPoint(
+    final vehiclePosition = solidAxlePosition.rhumb.destinationPoint(
       distance: solidAxleDistance,
       bearing: switch (this) {
         Tractor() => projectedBearing,
@@ -339,7 +339,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     ).turningRadius;
 
     final turningRadiusCenter =
-        this.solidAxlePosition.spherical.destinationPoint(
+        this.solidAxlePosition.rhumb.destinationPoint(
               distance: currentTurningRadius,
               bearing: switch (isTurningLeft) {
                 true => bearing - 90,
@@ -366,7 +366,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
     // Projected solid axle position from the turning radius
     // center.
-    final solidAxlePosition = turningRadiusCenter.spherical.destinationPoint(
+    final solidAxlePosition = turningRadiusCenter.rhumb.destinationPoint(
       distance: currentTurningRadius,
       bearing: angle.wrap360(),
     );
@@ -394,7 +394,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     ).turningRadius;
 
     final turningRadiusCenter =
-        this.solidAxlePosition.spherical.destinationPoint(
+        this.solidAxlePosition.rhumb.destinationPoint(
               distance: currentTurningRadius,
               bearing: switch (isTurningLeft) {
                 true => bearing - 90,
@@ -421,7 +421,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
     // Projected solid axle position from the turning radius
     // center.
-    final solidAxlePosition = turningRadiusCenter.spherical.destinationPoint(
+    final solidAxlePosition = turningRadiusCenter.rhumb.destinationPoint(
       distance: currentTurningRadius,
       bearing: angle.wrap360(),
     );
@@ -433,7 +433,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     }
         .wrap360();
 
-    final stanleyAxlePosition = solidAxlePosition.spherical.destinationPoint(
+    final stanleyAxlePosition = solidAxlePosition.rhumb.destinationPoint(
       distance: wheelBase,
       bearing: switch (isReversing) {
         false => projectedBearing,
@@ -482,25 +482,25 @@ sealed class AxleSteeredVehicle extends Vehicle {
       true => steeringAxlePosition,
       false => solidAxlePosition,
     }
-        .spherical
+        .rhumb
         .destinationPoint(
           distance: trackWidth / 2 - wheelWidth / 2,
           bearing: axleToCenterAngle,
         );
 
-    final wheelInnerRear = wheelInnerCenter.spherical.destinationPoint(
+    final wheelInnerRear = wheelInnerCenter.rhumb.destinationPoint(
       distance: wheelDiameter / 2,
       bearing: innerCenterToInnerRearAngle,
     );
-    final wheelOuterRear = wheelInnerRear.spherical.destinationPoint(
+    final wheelOuterRear = wheelInnerRear.rhumb.destinationPoint(
       distance: wheelWidth,
       bearing: innerRearToOuterRearAngle,
     );
-    final wheelOuterFront = wheelOuterRear.spherical.destinationPoint(
+    final wheelOuterFront = wheelOuterRear.rhumb.destinationPoint(
       distance: wheelDiameter,
       bearing: outerRearToOuterFrontAngle,
     );
-    final wheelInnerFront = wheelOuterFront.spherical.destinationPoint(
+    final wheelInnerFront = wheelOuterFront.rhumb.destinationPoint(
       distance: wheelWidth,
       bearing: outerFrontToInnerFrontAngle,
     );
@@ -608,7 +608,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
           };
 
           points.add(
-            turningRadiusCenter!.spherical.destinationPoint(
+            turningRadiusCenter!.rhumb.destinationPoint(
               distance: currentTurningRadius!,
               bearing: angle.wrap360(),
             ),
@@ -617,7 +617,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       }
     } else {
       points.add(
-        solidAxlePosition.spherical.destinationPoint(
+        solidAxlePosition.rhumb.destinationPoint(
           distance: isReversing ? -30 : 5 + 30,
           bearing: bearing.wrap360(),
         ),
@@ -637,15 +637,15 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// The max extent/bounds points of the vehicle. The [bearing] is followed.
   List<Geographic> get points {
-    final frontRight = topLeftPosition.spherical.destinationPoint(
+    final frontRight = topLeftPosition.rhumb.destinationPoint(
       distance: width,
       bearing: bearing + 90,
     );
-    final rearRight = frontRight.spherical.destinationPoint(
+    final rearRight = frontRight.rhumb.destinationPoint(
       distance: length,
       bearing: bearing + 180,
     );
-    final rearLeft = topLeftPosition.spherical.destinationPoint(
+    final rearLeft = topLeftPosition.rhumb.destinationPoint(
       distance: length,
       bearing: bearing + 180,
     );

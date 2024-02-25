@@ -3,7 +3,7 @@ part of 'ab_tracking.dart';
 /// A class for creating and tracking straight lines by using the bearing
 /// from point A to point B and their positions to create parallel lines.
 ///
-/// The lines are based on [SphericalGreatCircle].
+/// The lines are based on [SphericalRhumbLine] and [SphericalGreatCircle].
 class ABLine extends ABTracking with EquatableMixin {
   /// Create an AB-line from the [start] point A and the [end] point B.
   ///
@@ -21,7 +21,7 @@ class ABLine extends ABTracking with EquatableMixin {
     super.snapToClosestLine,
     super.calculateLinesOnCreation,
   }) {
-    super.length = start.distanceToSpherical(end);
+    super.length = start.distanceToRhumb(end);
   }
 
   /// Creates an ABLine where the [lines] already has been calculated.
@@ -137,7 +137,7 @@ class ABLine extends ABTracking with EquatableMixin {
       end: currentEnd.position,
     );
 
-    return currentStart.position.spherical.destinationPoint(
+    return currentStart.position.rhumb.destinationPoint(
       distance: distanceAlong,
       bearing: currentInitialBearing,
     );
@@ -231,12 +231,12 @@ class ABLine extends ABTracking with EquatableMixin {
 
       final startPoint = switch (limitMode) {
         ABLimitMode.limitedTurnWithin =>
-          currentStart.moveSpherical(distance: turningRadius),
+          currentStart.moveRhumb(distance: turningRadius),
         _ => currentStart,
       };
 
       final endPoint = switch (limitMode) {
-        ABLimitMode.limitedTurnWithin => currentEnd.moveSpherical(
+        ABLimitMode.limitedTurnWithin => currentEnd.moveRhumb(
             distance: turningRadius,
             angleFromBearing: 180,
           ),
@@ -252,7 +252,7 @@ class ABLine extends ABTracking with EquatableMixin {
                 ),
                 end: switch (limitMode) {
                   ABLimitMode.limitedTurnWithin =>
-                    nextStart.moveSpherical(distance: turningRadius),
+                    nextStart.moveRhumb(distance: turningRadius),
                   _ => nextStart
                 },
                 turningRadius: turningRadius,
@@ -262,7 +262,7 @@ class ABLine extends ABTracking with EquatableMixin {
                 start: endPoint,
                 end: switch (limitMode) {
                   ABLimitMode.limitedTurnWithin => nextEnd
-                      .moveSpherical(
+                      .moveRhumb(
                         distance: turningRadius,
                         angleFromBearing: 180,
                       )
@@ -280,7 +280,7 @@ class ABLine extends ABTracking with EquatableMixin {
                 start: endPoint,
                 end: switch (limitMode) {
                   ABLimitMode.limitedTurnWithin => nextEnd
-                      .moveSpherical(
+                      .moveRhumb(
                         distance: turningRadius,
                         angleFromBearing: 180,
                       )
@@ -299,7 +299,7 @@ class ABLine extends ABTracking with EquatableMixin {
                   bearing: (startPoint.bearing + 180).wrap360(),
                 ),
                 end: switch (limitMode) {
-                  ABLimitMode.limitedTurnWithin => nextStart.moveSpherical(
+                  ABLimitMode.limitedTurnWithin => nextStart.moveRhumb(
                       distance: turningRadius,
                     ),
                   _ => nextStart
@@ -340,7 +340,7 @@ class ABLine extends ABTracking with EquatableMixin {
         endPoint: endPoint,
       );
 
-      final lineLengthBetweenTurns = startPoint.distanceToSpherical(endPoint);
+      final lineLengthBetweenTurns = startPoint.distanceToRhumb(endPoint);
 
       passedMiddle = progress >= lineLengthBetweenTurns / 2;
       if (passedMiddle) {

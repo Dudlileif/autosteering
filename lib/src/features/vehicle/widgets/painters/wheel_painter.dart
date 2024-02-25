@@ -55,7 +55,7 @@ class WheelPainter extends StatelessWidget {
 
     final bearing = (vehicleBearing + steeringAngle).wrap360();
 
-    final centerPosition = innerPosition.spherical.destinationPoint(
+    final centerPosition = innerPosition.rhumb.destinationPoint(
       distance: width / 2,
       bearing: bearing + switch (isRightWheel) { true => -1, false => 1 } * 90,
     );

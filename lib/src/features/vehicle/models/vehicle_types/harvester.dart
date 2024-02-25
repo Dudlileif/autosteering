@@ -95,14 +95,14 @@ final class Harvester extends AxleSteeredVehicle {
 
   /// The position of the center of the rear axle.
   @override
-  Geographic get solidAxlePosition => position.spherical.destinationPoint(
+  Geographic get solidAxlePosition => position.rhumb.destinationPoint(
         distance: solidAxleDistance,
         bearing: bearing.wrap360(),
       );
 
   /// The position of the center of the front axle.
   @override
-  Geographic get steeringAxlePosition => position.spherical.destinationPoint(
+  Geographic get steeringAxlePosition => position.rhumb.destinationPoint(
         distance: solidAxleDistance - wheelBase,
         bearing: bearing.wrap360(),
       );
@@ -115,7 +115,7 @@ final class Harvester extends AxleSteeredVehicle {
   @override
   Geographic get stanleyAxlePosition => switch (isReversing) {
         true => steeringAxlePosition,
-        false => solidAxlePosition.spherical
+        false => solidAxlePosition.rhumb
             .destinationPoint(distance: wheelBase, bearing: bearing),
       };
 

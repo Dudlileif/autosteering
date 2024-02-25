@@ -82,31 +82,31 @@ class RingBuffer {
       final point = ring.elementAt(i);
       final nextPoint = ring.elementAt((i + 1) % ring.length);
 
-      final prevBuffer = prevPoint.spherical.destinationPoint(
+      final prevBuffer = prevPoint.rhumb.destinationPoint(
         distance: distance,
-        bearing: prevPoint.spherical.initialBearingTo(point) + sign * 90,
+        bearing: prevPoint.rhumb.initialBearingTo(point) + sign * 90,
       );
 
-      final bufferCircleStart = point.spherical.destinationPoint(
+      final bufferCircleStart = point.rhumb.destinationPoint(
         distance: distance,
-        bearing: prevPoint.spherical.finalBearingTo(point) + sign * 90,
+        bearing: prevPoint.rhumb.finalBearingTo(point) + sign * 90,
       );
 
-      final bufferCircleEnd = point.spherical.destinationPoint(
+      final bufferCircleEnd = point.rhumb.destinationPoint(
         distance: distance,
-        bearing: point.spherical.initialBearingTo(nextPoint) + sign * 90,
+        bearing: point.rhumb.initialBearingTo(nextPoint) + sign * 90,
       );
 
-      final nextBuffer = nextPoint.spherical.destinationPoint(
+      final nextBuffer = nextPoint.rhumb.destinationPoint(
         distance: distance,
-        bearing: point.spherical.finalBearingTo(nextPoint) + sign * 90,
+        bearing: point.rhumb.finalBearingTo(nextPoint) + sign * 90,
       );
 
       final joinPoints = <Geographic>{};
 
       if (joinType != BufferJoin.bevel) {
         final circleSecantLength =
-            bufferCircleStart.spherical.distanceTo(bufferCircleEnd);
+            bufferCircleStart.rhumb.distanceTo(bufferCircleEnd);
 
         final numSmoothingPoints =
             (smoothingFactor * circleSecantLength / distance.abs()).floor();
@@ -117,17 +117,17 @@ class RingBuffer {
           if (joinType == BufferJoin.round) {
             final arcAngle = sign *
                 signedBearingDifference(
-                  point.spherical.initialBearingTo(bufferCircleStart),
-                  point.spherical.initialBearingTo(bufferCircleEnd),
+                  point.rhumb.initialBearingTo(bufferCircleStart),
+                  point.rhumb.initialBearingTo(bufferCircleEnd),
                 );
 
             final angleSection = arcAngle / numSmoothingPoints;
 
             for (var i = 1; i < numSmoothingPoints + 1; i++) {
               joinPoints.add(
-                point.spherical.destinationPoint(
+                point.rhumb.destinationPoint(
                   distance: distance,
-                  bearing: point.spherical.initialBearingTo(bufferCircleStart) +
+                  bearing: point.rhumb.initialBearingTo(bufferCircleStart) +
                       sign * i * angleSection +
                       switch (distance.isNegative) {
                         false => 0,
@@ -142,14 +142,14 @@ class RingBuffer {
           else if (joinType == BufferJoin.miter) {
             var intersection = bufferCircleStart.spherical.intersectionWith(
               bearing:
-                  point.spherical.finalBearingTo(bufferCircleStart) - sign * 90,
+                  point.rhumb.finalBearingTo(bufferCircleStart) - sign * 90,
               other: bufferCircleEnd,
               otherBearing:
-                  point.spherical.finalBearingTo(bufferCircleEnd) + sign * 90,
+                  point.rhumb.finalBearingTo(bufferCircleEnd) + sign * 90,
             );
 
             if (intersection != null) {
-              final movedDistance = point.spherical.distanceTo(intersection);
+              final movedDistance = point.rhumb.distanceTo(intersection);
 
               // Try to detect if the point is on the other side of the Earth.
               // If so, flip it back to the correct side.
@@ -219,9 +219,9 @@ class RingBuffer {
         final start2 = bufferedRing.elementAt(j + 1);
 
         final intersection = start1.spherical.intersectionWith(
-          bearing: start1.spherical.initialBearingTo(end1),
+          bearing: start1.rhumb.initialBearingTo(end1),
           other: start2,
-          otherBearing: start2.spherical.initialBearingTo(end2),
+          otherBearing: start2.rhumb.initialBearingTo(end2),
         );
 
         if (intersection != null) {
@@ -245,7 +245,7 @@ class RingBuffer {
 
           // Filter out intersections that are too close to the original ring
           if (originalRing.any(
-            (point) => point.spherical.distanceTo(intersection) < checkDistance,
+            (point) => point.rhumb.distanceTo(intersection) < checkDistance,
           )) {
             // When joint type is bevel we allow the intersection either way if
             // the buffered ring is inflated.
@@ -256,17 +256,19 @@ class RingBuffer {
             }
           }
 
-          final along1 = intersection.spherical
+          final along1 =
+              intersection.spherical
               .alongTrackDistanceTo(start: start1, end: end1);
 
-          final along2 = intersection.spherical
+          final along2 =
+              intersection.spherical
               .alongTrackDistanceTo(start: start2, end: end2);
 
           // If the intersection is between the points for both
           // the lines, i.e. on the actual line segments, not past them in
           // either direction, we add it to the list.
-          if (along1 < start1.spherical.distanceTo(end1) &&
-              along2 < start2.spherical.distanceTo(end2)) {
+          if (along1 < start1.rhumb.distanceTo(end1) &&
+              along2 < start2.rhumb.distanceTo(end2)) {
             intersectionList.add(
               (begin: startIndex, end: endIndex, intersection: intersection),
             );

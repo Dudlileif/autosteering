@@ -258,12 +258,12 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
   final use3DPerspective = ref.watch(mapUse3DPerspectiveProvider);
   final perspectiveAngle = ref.watch(map3DPerspectiveAngleProvider);
 
-  return vehicle.position.spherical
+  return vehicle.position.rhumb
       .destinationPoint(
         distance: offset.x,
         bearing: (vehicle.bearing + 90).wrap360(),
       )
-      .spherical
+      .rhumb
       .destinationPoint(
         distance: switch (use3DPerspective) {
           false => offset.y,

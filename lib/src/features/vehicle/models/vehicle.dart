@@ -285,7 +285,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// accounting for [pitch] and [roll].
   @override
   Geographic get position =>
-      correctedAntennaPosition.spherical.destinationPoint(
+      correctedAntennaPosition.rhumb.destinationPoint(
         distance: antennaLateralOffset,
         bearing: bearing - 90,
       );
@@ -298,12 +298,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Moves the input [position] to a position corrected for [pitch] and [roll]
   /// with [antennaPitchLongitudinalOffset] and [antennaRollLateralOffset].
   Geographic correctPositionForRollAndPitch(Geographic position) =>
-      position.spherical
+      position.rhumb
           .destinationPoint(
             distance: antennaRollLateralOffset,
             bearing: bearing - 90,
           )
-          .spherical
+          .rhumb
           .destinationPoint(
             distance: antennaPitchLongitudinalOffset,
             bearing: bearing,
@@ -316,19 +316,19 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Essentially we move the position opposite of the getter for [position],
   /// to end at the correct [antennaPosition].
   void setPositionSim(Geographic value) {
-    final unCentered = value.spherical.destinationPoint(
+    final unCentered = value.rhumb.destinationPoint(
       distance: antennaLateralOffset,
       bearing: bearing + 90,
     );
 
     antennaPosition = switch (imu.config.usePitchAndRoll) {
       false => unCentered,
-      true => unCentered.spherical
+      true => unCentered.rhumb
           .destinationPoint(
             distance: -antennaRollLateralOffset,
             bearing: bearing - 90,
           )
-          .spherical
+          .rhumb
           .destinationPoint(
             distance: -antennaPitchLongitudinalOffset,
             bearing: bearing,
@@ -378,11 +378,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The distance from the ground position to the antenna position.
   double get groundPositionToAntennaDistance =>
-      position.spherical.distanceTo(antennaPosition);
+      position.rhumb.distanceTo(antennaPosition);
 
   /// The bearing from the ground position to the antenna position.
   double get groundPositionToAntennaBearing =>
-      position.spherical.initialBearingTo(antennaPosition);
+      position.rhumb.initialBearingTo(antennaPosition);
 
   /// Sets the steering angle of the vehicle by the [was].reading.
   void setSteeringAngleByWasReading() {
@@ -519,7 +519,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Updates the [position] for the next [period] seconds when going straight.
   Geographic updatedPositionStraight(double period) =>
-      position.spherical.destinationPoint(
+      position.rhumb.destinationPoint(
         distance: velocity * period,
         bearing: bearing,
       );
@@ -552,10 +552,10 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       }
 
       // Straight
-      final newPoint = lookAheadStartPosition.spherical
+      final newPoint = lookAheadStartPosition.rhumb
           .destinationPoint(distance: velocity * period, bearing: bearing);
       final newBearing =
-          lookAheadStartPosition.spherical.finalBearingTo(newPoint);
+          lookAheadStartPosition.rhumb.finalBearingTo(newPoint);
       return (
         position: newPoint,
         bearing: newBearing.isFinite ? newBearing : bearing
@@ -584,7 +584,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         return predictedStanleyPositionTurning(period, steeringAngle);
       }
       // Straight
-      final newPoint = stanleyAxlePosition.spherical
+      final newPoint = stanleyAxlePosition.rhumb
           .destinationPoint(distance: velocity * period, bearing: bearing);
 
       return (position: newPoint, bearing: bearing);

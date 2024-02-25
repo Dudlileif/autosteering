@@ -143,7 +143,7 @@ final class ArticulatedTractor extends Vehicle {
   double get wheelBase => pivotToFrontAxle + pivotToRearAxle;
 
   /// The position of the vehicle articulation pivot point.
-  Geographic get pivotPosition => position.spherical.destinationPoint(
+  Geographic get pivotPosition => position.rhumb.destinationPoint(
         distance: pivotToAntennaDistance,
         bearing: (bearing - 180 + steeringAngle / 2).wrap360(),
       );
@@ -156,7 +156,7 @@ final class ArticulatedTractor extends Vehicle {
   double get frontAxleAngle => (bearing + steeringAngle / 2).wrap360();
 
   /// The position of the front axle center point.
-  Geographic get frontAxlePosition => pivotPosition.spherical.destinationPoint(
+  Geographic get frontAxlePosition => pivotPosition.rhumb.destinationPoint(
         distance: pivotToFrontAxle,
         bearing: frontAxleAngle,
       );
@@ -165,7 +165,7 @@ final class ArticulatedTractor extends Vehicle {
   double get rearAxleAngle => (bearing + 180 - steeringAngle / 2).wrap360();
 
   /// The position of the front axle center point.
-  Geographic get rearAxlePosition => pivotPosition.spherical.destinationPoint(
+  Geographic get rearAxlePosition => pivotPosition.rhumb.destinationPoint(
         distance: pivotToRearAxle,
         bearing: rearAxleAngle,
       );
@@ -173,7 +173,7 @@ final class ArticulatedTractor extends Vehicle {
   @override
   Geographic? get hitchFrontFixedPoint =>
       switch (frontAxleToHitchDistance != null) {
-        true => frontAxlePosition.spherical.destinationPoint(
+        true => frontAxlePosition.rhumb.destinationPoint(
             distance: frontAxleToHitchDistance!,
             bearing: frontAxleAngle,
           ),
@@ -183,7 +183,7 @@ final class ArticulatedTractor extends Vehicle {
   @override
   Geographic? get hitchRearFixedPoint =>
       switch (rearAxleToHitchDistance != null) {
-        true => rearAxlePosition.spherical.destinationPoint(
+        true => rearAxlePosition.rhumb.destinationPoint(
             distance: rearAxleToHitchDistance!,
             bearing: rearAxleAngle,
           ),
@@ -193,7 +193,7 @@ final class ArticulatedTractor extends Vehicle {
   @override
   Geographic? get hitchRearTowbarPoint =>
       switch (rearAxleToTowbarDistance != null) {
-        true => rearAxlePosition.spherical.destinationPoint(
+        true => rearAxlePosition.rhumb.destinationPoint(
             distance: rearAxleToTowbarDistance!,
             bearing: rearAxleAngle,
           ),
@@ -240,7 +240,7 @@ final class ArticulatedTractor extends Vehicle {
 
     // Projected vehicle front axle position from the turning radius
     // center.
-    final frontAxlePosition = turningCircleCenter.spherical.destinationPoint(
+    final frontAxlePosition = turningCircleCenter.rhumb.destinationPoint(
       distance: currentTurningRadius!,
       bearing: projectedFrontAxleAngle,
     );
@@ -254,7 +254,7 @@ final class ArticulatedTractor extends Vehicle {
 
     // The vehicle antenna position, projected from the front axle
     // position.
-    final vehiclePosition = frontAxlePosition.spherical.destinationPoint(
+    final vehiclePosition = frontAxlePosition.rhumb.destinationPoint(
       distance: pivotToFrontAxle - pivotToAntennaDistance,
       bearing: frontBodyBearing - 180 + steeringAngle / 2,
     );
@@ -273,7 +273,7 @@ final class ArticulatedTractor extends Vehicle {
             sin(degToRadian(steeringAngle.abs()));
 
     final turningRadiusCenter =
-        this.frontAxlePosition.spherical.destinationPoint(
+        this.frontAxlePosition.rhumb.destinationPoint(
               distance: currentTurningRadius,
               bearing: switch (isTurningLeft) {
                 true => frontAxleAngle - 90,
@@ -310,7 +310,7 @@ final class ArticulatedTractor extends Vehicle {
     };
     // Projected vehicle front axle position from the turning radius
     // center.
-    final frontAxlePosition = turningRadiusCenter.spherical.destinationPoint(
+    final frontAxlePosition = turningRadiusCenter.rhumb.destinationPoint(
       distance: currentTurningRadius,
       bearing: projectedFrontAxleAngle,
     );
@@ -324,7 +324,7 @@ final class ArticulatedTractor extends Vehicle {
 
     // The vehicle antenna position, projected from the front axle
     // position.
-    final pivotPosition = frontAxlePosition.spherical.destinationPoint(
+    final pivotPosition = frontAxlePosition.rhumb.destinationPoint(
       distance: pivotToFrontAxle,
       bearing: frontBodyBearing - 180 + steeringAngle / 2,
     );
@@ -343,7 +343,7 @@ final class ArticulatedTractor extends Vehicle {
             sin(degToRadian(steeringAngle.abs()));
 
     final turningRadiusCenter =
-        this.frontAxlePosition.spherical.destinationPoint(
+        this.frontAxlePosition.rhumb.destinationPoint(
               distance: currentTurningRadius,
               bearing: switch (isTurningLeft) {
                 true => frontAxleAngle - 90,
@@ -380,7 +380,7 @@ final class ArticulatedTractor extends Vehicle {
     };
     // Projected vehicle front axle position from the turning radius
     // center.
-    final frontAxlePosition = turningRadiusCenter.spherical.destinationPoint(
+    final frontAxlePosition = turningRadiusCenter.rhumb.destinationPoint(
       distance: currentTurningRadius,
       bearing: projectedFrontAxleAngle,
     );
@@ -394,7 +394,7 @@ final class ArticulatedTractor extends Vehicle {
 
     // The vehicle antenna position, projected from the front axle
     // position.
-    final pivotPosition = frontAxlePosition.spherical.destinationPoint(
+    final pivotPosition = frontAxlePosition.rhumb.destinationPoint(
       distance: pivotToFrontAxle,
       bearing: frontBodyBearing - 180 + steeringAngle / 2,
     );
@@ -408,7 +408,7 @@ final class ArticulatedTractor extends Vehicle {
         (frontBodyBearing + 180 - steeringAngle / 2).wrap360();
 
     // The position of the front axle center point.
-    final rearAxlePosition = pivotPosition.spherical.destinationPoint(
+    final rearAxlePosition = pivotPosition.rhumb.destinationPoint(
       distance: pivotToRearAxle,
       bearing: rearAxleAngle,
     );
@@ -501,7 +501,7 @@ final class ArticulatedTractor extends Vehicle {
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
   Geographic? get turningRadiusCenter => currentTurningRadius != null
-      ? frontAxlePosition.spherical.destinationPoint(
+      ? frontAxlePosition.rhumb.destinationPoint(
           distance: currentTurningRadius!,
           bearing: switch (isTurningLeft) {
             true => frontAxleAngle - 90,
@@ -512,18 +512,18 @@ final class ArticulatedTractor extends Vehicle {
       : null;
 
   @override
-  Geographic get topLeftPosition => frontAxlePosition.spherical
+  Geographic get topLeftPosition => frontAxlePosition.rhumb
       .destinationPoint(distance: frontAxleToFrontDistance, bearing: bearing)
-      .spherical
+      .rhumb
       .destinationPoint(distance: width / 2, bearing: bearing - 90);
 
   /// The furthest behind and left most position of the vehicle's rear body
   /// bounding box.
   ///
   /// Useful for drawing the vehicle on the map.
-  Geographic get rearBottomLeftPosition => rearAxlePosition.spherical
+  Geographic get rearBottomLeftPosition => rearAxlePosition.rhumb
       .destinationPoint(distance: rearAxleToEndDistance, bearing: bearing + 180)
-      .spherical
+      .rhumb
       .destinationPoint(distance: width / 2, bearing: bearing - 90);
 
   /// The left front wheel polygon.
@@ -568,26 +568,26 @@ final class ArticulatedTractor extends Vehicle {
       true => rearAxlePosition,
       false => frontAxlePosition,
     }
-        .spherical
+        .rhumb
         .destinationPoint(
           distance: trackWidth / 2 -
               (wheelWidth * numWheels + (numWheels - 1) * wheelSpacing) / 2,
           bearing: axleToCenterAngle,
         );
 
-    final wheelInnerRear = wheelInnerCenter.spherical.destinationPoint(
+    final wheelInnerRear = wheelInnerCenter.rhumb.destinationPoint(
       distance: wheelDiameter / 2,
       bearing: innerCenterToInnerRearAngle,
     );
-    final wheelOuterRear = wheelInnerRear.spherical.destinationPoint(
+    final wheelOuterRear = wheelInnerRear.rhumb.destinationPoint(
       distance: wheelWidth * numWheels + (numWheels - 1) * wheelSpacing,
       bearing: rearInnerToRearOuterAngle,
     );
-    final wheelOuterFront = wheelOuterRear.spherical.destinationPoint(
+    final wheelOuterFront = wheelOuterRear.rhumb.destinationPoint(
       distance: wheelDiameter,
       bearing: rearOuterToFrontOuterAngle,
     );
-    final wheelInnerFront = wheelOuterFront.spherical.destinationPoint(
+    final wheelInnerFront = wheelOuterFront.rhumb.destinationPoint(
       distance: wheelWidth * numWheels + (numWheels - 1) * wheelSpacing,
       bearing: frontOuterToFrontInnerAngle,
     );
@@ -676,7 +676,7 @@ final class ArticulatedTractor extends Vehicle {
           };
 
           points.add(
-            turningRadiusCenter!.spherical.destinationPoint(
+            turningRadiusCenter!.rhumb.destinationPoint(
               distance: currentTurningRadius!,
               bearing: angle.wrap360(),
             ),
@@ -685,7 +685,7 @@ final class ArticulatedTractor extends Vehicle {
       }
     } else {
       points.add(
-        position.spherical.destinationPoint(
+        position.rhumb.destinationPoint(
           distance: isReversing ? -30 : 5 + 30,
           bearing: bearing.wrap360(),
         ),
@@ -699,64 +699,64 @@ final class ArticulatedTractor extends Vehicle {
   @override
   List<map.Polygon> get polygons {
     final rearLeftCornerAngle = (rearAxleAngle + 90).wrap360();
-    final rearLeftCenter = rearAxlePosition.spherical.destinationPoint(
+    final rearLeftCenter = rearAxlePosition.rhumb.destinationPoint(
       distance: 1,
       bearing: rearLeftCornerAngle,
     );
     final rearLeftSide = [
-      rearLeftCenter.spherical.destinationPoint(
+      rearLeftCenter.rhumb.destinationPoint(
         distance: 1,
         bearing: (rearLeftCornerAngle - 90).wrap360(),
       ),
-      rearLeftCenter.spherical.destinationPoint(
+      rearLeftCenter.rhumb.destinationPoint(
         distance: 1,
         bearing: (rearLeftCornerAngle + 90).wrap360(),
       ),
     ];
 
     final rearRightCornerAngle = (rearAxleAngle - 90).wrap360();
-    final rearRightCenter = rearAxlePosition.spherical.destinationPoint(
+    final rearRightCenter = rearAxlePosition.rhumb.destinationPoint(
       distance: 1,
       bearing: rearRightCornerAngle,
     );
     final rearRightSide = [
-      rearRightCenter.spherical.destinationPoint(
+      rearRightCenter.rhumb.destinationPoint(
         distance: 1,
         bearing: (rearRightCornerAngle - 90).wrap360(),
       ),
-      rearRightCenter.spherical.destinationPoint(
+      rearRightCenter.rhumb.destinationPoint(
         distance: 1,
         bearing: (rearRightCornerAngle + 90).wrap360(),
       ),
     ];
 
     final frontLeftCornerAngle = (frontAxleAngle - 90).wrap360();
-    final frontLeftCenter = frontAxlePosition.spherical.destinationPoint(
+    final frontLeftCenter = frontAxlePosition.rhumb.destinationPoint(
       distance: 1,
       bearing: frontLeftCornerAngle,
     );
     final frontLeftSide = [
-      frontLeftCenter.spherical.destinationPoint(
+      frontLeftCenter.rhumb.destinationPoint(
         distance: 1,
         bearing: (frontLeftCornerAngle - 90).wrap360(),
       ),
-      frontLeftCenter.spherical.destinationPoint(
+      frontLeftCenter.rhumb.destinationPoint(
         distance: 1,
         bearing: (frontLeftCornerAngle + 90).wrap360(),
       ),
     ];
 
     final frontRightCornerAngle = (frontAxleAngle + 90).wrap360();
-    final frontRightCenter = frontAxlePosition.spherical.destinationPoint(
+    final frontRightCenter = frontAxlePosition.rhumb.destinationPoint(
       distance: 1,
       bearing: frontRightCornerAngle,
     );
     final frontRightSide = [
-      frontRightCenter.spherical.destinationPoint(
+      frontRightCenter.rhumb.destinationPoint(
         distance: 1,
         bearing: (frontRightCornerAngle - 90).wrap360(),
       ),
-      frontRightCenter.spherical.destinationPoint(
+      frontRightCenter.rhumb.destinationPoint(
         distance: 1,
         bearing: (frontRightCornerAngle + 90).wrap360(),
       ),

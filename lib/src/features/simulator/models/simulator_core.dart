@@ -1052,14 +1052,14 @@ class _SimulatorCoreState {
 
         case SimInputChange.increase:
           if (vehicle!.steeringAngleInput == 0) {
-            vehicle!.steeringAngleInput = 0.5;
+            vehicle!.steeringAngleInput = 0.01;
           }
           vehicle!.steeringAngleInput =
               (vehicle!.steeringAngleInput + period * steeringRate)
                   .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
         case SimInputChange.decrease:
           if (vehicle!.steeringAngleInput == 0) {
-            vehicle!.steeringAngleInput = -0.5;
+            vehicle!.steeringAngleInput = -0.01;
           }
           vehicle!.steeringAngleInput =
               (vehicle!.steeringAngleInput - period * steeringRate)
@@ -1068,11 +1068,15 @@ class _SimulatorCoreState {
         case SimInputChange.hold:
           receivingManualInput = false;
           if (autoCenterSteering && !autoSteerEnabled) {
-            // Centering rate deg/s
-            const centeringRate = 25;
+            // Centering rate deg/s, slow down to not overshoot the min steering
+            // angle in the opposite direction
+            final centeringRate = switch (vehicle!.steeringAngle.abs() < 0.5) {
+              false => 25,
+              true => 5,
+            };
 
-            vehicle!.steeringAngleInput =
-                switch (vehicle!.steeringAngle.abs() < 0.5) {
+            vehicle!.steeringAngleInput = switch (
+                vehicle!.steeringAngle.abs() < Vehicle.minSteeringAngle) {
               true => 0,
               false => vehicle!.steeringAngleInput -
                   period *
@@ -1083,9 +1087,9 @@ class _SimulatorCoreState {
           }
       }
 
-      // Filter out low angles as they make the simulation spazz out because the
-      // turning circles get very large.
-      if (vehicle!.steeringAngleInput.abs() < 0.5) {
+      // Filter out very low angles as they make the simulation spazz out
+      // because the  turning circles get very large.
+      if (vehicle!.steeringAngleInput.abs() < Vehicle.minSteeringAngle) {
         vehicle!.steeringAngleInput = 0;
       }
     }
@@ -1184,7 +1188,7 @@ class _SimulatorCoreState {
       // Distance
       if (prevVehicle != null) {
         final movedDistance =
-            vehicle!.position.spherical.distanceTo(prevVehicle!.position);
+            vehicle!.position.rhumb.distanceTo(prevVehicle!.position);
 
         // Filter out too large distances
         if (movedDistance < 5) {
@@ -1200,7 +1204,7 @@ class _SimulatorCoreState {
         if (prevVehicle != null && (vehicle!.velocity.abs()) > 0.1) {
           // Discard bearing changes over 10 degrees for one simulation step.
           if (bearingDifference(prevVehicle!.bearing, vehicle!.bearing) < 10) {
-            final bearing = prevVehicle!.position.spherical.finalBearingTo(
+            final bearing = prevVehicle!.position.rhumb.finalBearingTo(
               vehicle!.position,
             );
             if (!bearing.isNaN) {
@@ -1247,8 +1251,7 @@ class _SimulatorCoreState {
 
         var distances = prevGnssUpdates
             .map(
-              (e) =>
-                  e.gnssPosition.spherical.distanceTo(gnssUpdate!.gnssPosition),
+              (e) => e.gnssPosition.rhumb.distanceTo(gnssUpdate!.gnssPosition),
             )
             .toList();
 
@@ -1279,7 +1282,7 @@ class _SimulatorCoreState {
 
           final bearing = prevGnssUpdates[prevGnssUpdates.length - 2]
               .gnssPosition
-              .spherical
+              .rhumb
               .finalBearingTo(gnssUpdate!.gnssPosition);
 
           if (!bearing.isFinite) {
@@ -1317,8 +1320,8 @@ class _SimulatorCoreState {
             // positions.
             distances = prevGnssUpdates
                 .map(
-                  (e) => e.gnssPosition.spherical
-                      .distanceTo(gnssUpdate!.gnssPosition),
+                  (e) =>
+                      e.gnssPosition.rhumb.distanceTo(gnssUpdate!.gnssPosition),
                 )
                 .toList();
 
@@ -1345,7 +1348,7 @@ class _SimulatorCoreState {
             bearing = prevGnssUpdates
                 .elementAt(prevPositionIndex)
                 .gnssPosition
-                .spherical
+                .rhumb
                 .finalBearingTo(gnssUpdate!.gnssPosition);
           }
           if (bearing == null) {

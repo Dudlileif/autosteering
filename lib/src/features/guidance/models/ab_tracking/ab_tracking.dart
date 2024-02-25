@@ -142,13 +142,13 @@ sealed class ABTracking {
   ///
   /// Negative [offset] means the point is offset in the opposite direction.
   WayPoint _offsetStartRaw(int offset) =>
-      start.moveSpherical(distance: offset * width, angleFromBearing: 90);
+      start.moveRhumb(distance: offset * width, angleFromBearing: 90);
 
   /// Offsets the [end] point by [offset]*[width] meters to the side.
   ///
   /// Negative [offset] means the point is offset in the opposite direction.
   WayPoint _offsetEndRaw(int offset) =>
-      end.moveSpherical(distance: offset * width, angleFromBearing: 90);
+      end.moveRhumb(distance: offset * width, angleFromBearing: 90);
 
   /// Offsets the [start] point by [offset]*[width] meters to the side, the
   /// line will be clipped by the [boundary] if there is one.
@@ -198,7 +198,7 @@ sealed class ABTracking {
       final boundingBox =
           GeoBox.from(boundary!.exterior!.toGeographicPositions);
 
-      final diagonal = boundingBox.min.spherical.distanceTo(boundingBox.max);
+      final diagonal = boundingBox.min.rhumb.distanceTo(boundingBox.max);
 
       final offsetsToCheck = (diagonal / width).ceil();
 
@@ -245,15 +245,15 @@ sealed class ABTracking {
       return lines[offset]!;
     }
 
-    final extendedStart = baseLine.first.position.spherical.destinationPoint(
+    final extendedStart = baseLine.first.position.rhumb.destinationPoint(
       distance: extraStraightDistance ?? 100,
-      bearing: baseLine[1].finalBearingToSpherical(baseLine.first),
+      bearing: baseLine[1].finalBearingToRhumb(baseLine.first),
     );
 
-    final extendedEnd = baseLine.last.position.spherical.destinationPoint(
+    final extendedEnd = baseLine.last.position.rhumb.destinationPoint(
       distance: extraStraightDistance ?? 100,
       bearing:
-          baseLine[baseLine.length - 2].finalBearingToSpherical(baseLine.last),
+          baseLine[baseLine.length - 2].finalBearingToRhumb(baseLine.last),
     );
 
     final path = baseLine.map((e) => e.position).toList()
@@ -275,7 +275,8 @@ sealed class ABTracking {
           newCurve.add(
             WayPoint(
               position: element,
-              bearing: element.spherical
+              bearing:
+                  element.rhumb
                   .initialBearingTo(buffered.elementAt(index + 1)),
             ),
           );
@@ -285,7 +286,7 @@ sealed class ABTracking {
               position: element,
               bearing: buffered
                   .elementAt(index - 1)
-                  .spherical
+                  .rhumb
                   .finalBearingTo(element),
             ),
           );
@@ -298,8 +299,8 @@ sealed class ABTracking {
       for (var i = 1; i < newCurve.length - 1; i++) {
         final point = newCurve[i];
         final fromStartBearing =
-            newCurve.first.initialBearingToSpherical(point);
-        final fromEndBearing = newCurve.last.initialBearingToSpherical(point);
+            newCurve.first.initialBearingToRhumb(point);
+        final fromEndBearing = newCurve.last.initialBearingToRhumb(point);
 
         if (signedBearingDifference(newCurve.first.bearing, fromStartBearing)
                     .abs() >
@@ -368,14 +369,14 @@ sealed class ABTracking {
           while (index + 1 < newCurve.length) {
             final point = newCurve[index];
             final nextPoint = newCurve[index + 1];
-            if (point.position.spherical.distanceTo(nextPoint.position) >
+            if (point.position.rhumb.distanceTo(nextPoint.position) >
                 width / 2) {
               newCurve.insert(
                 index + 1,
                 point.copyWith(
-                  position: point.position.spherical.destinationPoint(
+                  position: point.position.rhumb.destinationPoint(
                     distance: width / 2,
-                    bearing: point.position.spherical
+                    bearing: point.position.rhumb
                         .initialBearingTo(nextPoint.position),
                   ),
                 ),
@@ -421,7 +422,7 @@ sealed class ABTracking {
         final boundaryIntersection = firstPointInside
             .copyWith(
               bearing:
-                  lastPointOutside.finalBearingToSpherical(firstPointInside),
+                  lastPointOutside.finalBearingToRhumb(firstPointInside),
             )
             .intersectionWith(
               boundaryRing,
@@ -435,7 +436,7 @@ sealed class ABTracking {
           );
 
           final intersectingLength =
-              lastPointOutside.distanceToSpherical(firstPointInside);
+              lastPointOutside.distanceToRhumb(firstPointInside);
 
           final pointOnLine = lastPointOutside.intermediatePointToSpherical(
             firstPointInside,
@@ -500,7 +501,7 @@ sealed class ABTracking {
         final boundaryIntersection = lastPointInside
             .copyWith(
               bearing:
-                  lastPointInside.initialBearingToSpherical(lastPointOutside),
+                  lastPointInside.initialBearingToRhumb(lastPointOutside),
             )
             .intersectionWith(
               boundaryRing,
@@ -513,7 +514,7 @@ sealed class ABTracking {
           );
 
           final intersectingLength =
-              lastPointInside.distanceToSpherical(lastPointOutside);
+              lastPointInside.distanceToRhumb(lastPointOutside);
 
           final pointOnLine = lastPointInside.intermediatePointToSpherical(
             lastPointOutside,
@@ -546,12 +547,12 @@ sealed class ABTracking {
     if (newCurve.length >= 2) {
       newCurve.forEachIndexed((index, element) {
         if (index == newCurve.length - 1) {
-          if (element.distanceToSpherical(newCurve.elementAt(index - 1)) <
+          if (element.distanceToRhumb(newCurve.elementAt(index - 1)) <
               0.1) {
             newCurve.removeAt(index - 1);
           }
         } else if (index > 0) {
-          if (element.distanceToSpherical(newCurve.elementAt(index - 1)) <
+          if (element.distanceToRhumb(newCurve.elementAt(index - 1)) <
               0.1) {
             newCurve.removeAt(index);
           }
@@ -562,11 +563,11 @@ sealed class ABTracking {
     // Ensure that the end points has the correct bearings.
     if (newCurve.length >= 2) {
       newCurve[0] = newCurve.first.copyWith(
-        bearing: newCurve.first.initialBearingToSpherical(newCurve[1]),
+        bearing: newCurve.first.initialBearingToRhumb(newCurve[1]),
       );
       newCurve[newCurve.length - 1] = newCurve.last.copyWith(
         bearing: newCurve[newCurve.length - 2]
-            .finalBearingToSpherical(newCurve.last),
+            .finalBearingToRhumb(newCurve.last),
       );
     }
 
@@ -645,9 +646,9 @@ sealed class ABTracking {
       true => currentInitialBearing,
       false => switch (alongDistance.isNegative) {
           true => currentPerpendicularIntersect(vehicle)
-              .spherical
+              .rhumb
               .initialBearingTo(currentStart.position),
-          false => currentStart.position.spherical.finalBearingTo(
+          false => currentStart.position.rhumb.finalBearingTo(
               currentPerpendicularIntersect(vehicle),
             ),
         }
@@ -863,16 +864,16 @@ sealed class ABTracking {
     var insidePoint = points.first;
 
     var insideDistance =
-        vehicle.lookAheadStartPosition.spherical.distanceTo(insidePoint);
+        vehicle.lookAheadStartPosition.rhumb.distanceTo(insidePoint);
 
     // If the closest point is outside look ahead circle we create an
     // intermediate point on the circle in the direction of the closest point.
     if (insideDistance >= (lookAheadDistance ?? vehicle.lookAheadDistance)) {
       return (
         inside: insidePoint =
-            vehicle.lookAheadStartPosition.spherical.destinationPoint(
+            vehicle.lookAheadStartPosition.rhumb.destinationPoint(
           distance: lookAheadDistance ?? vehicle.lookAheadDistance,
-          bearing: vehicle.lookAheadStartPosition.spherical
+          bearing: vehicle.lookAheadStartPosition.rhumb
               .initialBearingTo(insidePoint),
         ),
         outside: null,
@@ -883,7 +884,7 @@ sealed class ABTracking {
     for (var i = 1; i < points.length; i++) {
       final point = points[i];
       final distance =
-          vehicle.lookAheadStartPosition.spherical.distanceTo(point);
+          vehicle.lookAheadStartPosition.rhumb.distanceTo(point);
       if (distance <= (lookAheadDistance ?? vehicle.lookAheadDistance)) {
         insidePoint = point;
         insideDistance = distance;
@@ -915,9 +916,9 @@ sealed class ABTracking {
         .crossTrackDistanceTo(start: points.inside, end: points.outside!);
 
     final secantBearing =
-        points.inside.spherical.initialBearingTo(points.outside!);
+        points.inside.rhumb.initialBearingTo(points.outside!);
 
-    return vehicle.lookAheadStartPosition.spherical.destinationPoint(
+    return vehicle.lookAheadStartPosition.rhumb.destinationPoint(
       distance: crossDistance,
       bearing: secantBearing - 90,
     );
@@ -958,32 +959,32 @@ sealed class ABTracking {
     );
 
     final secantBearing =
-        points.inside.spherical.initialBearingTo(points.outside!);
+        points.inside.rhumb.initialBearingTo(points.outside!);
 
-    final vehicleToLineProjection = points.inside.spherical.destinationPoint(
+    final vehicleToLineProjection = points.inside.rhumb.destinationPoint(
       distance: vehicleAlongDistance,
       bearing: secantBearing,
     );
 
     var vehicleLineProjectionToInsidePointBearing =
-        vehicleToLineProjection.spherical.initialBearingTo(points.inside);
+        vehicleToLineProjection.rhumb.initialBearingTo(points.inside);
 
     if (vehicleLineProjectionToInsidePointBearing.isNaN) {
       vehicleLineProjectionToInsidePointBearing = secantBearing;
     }
 
-    final pointA = vehicleToLineProjection.spherical.destinationPoint(
+    final pointA = vehicleToLineProjection.rhumb.destinationPoint(
       distance: projectionToCircleDistance,
       bearing: vehicleLineProjectionToInsidePointBearing,
     );
 
-    final pointB = vehicleToLineProjection.spherical.destinationPoint(
+    final pointB = vehicleToLineProjection.rhumb.destinationPoint(
       distance: projectionToCircleDistance,
       bearing: (vehicleLineProjectionToInsidePointBearing + 180).wrap360(),
     );
 
-    final distanceA = pointA.spherical.distanceTo(points.outside!);
-    final distanceB = pointB.spherical.distanceTo(points.outside!);
+    final distanceA = pointA.rhumb.distanceTo(points.outside!);
+    final distanceB = pointB.rhumb.distanceTo(points.outside!);
 
     if (distanceA < distanceB) {
       return (best: pointA, worst: pointB);
@@ -997,7 +998,7 @@ sealed class ABTracking {
   /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
   double nextSteeringAngleLookAhead(Vehicle vehicle) {
     final bearingToPoint =
-        vehicle.lookAheadStartPosition.spherical.initialBearingTo(
+        vehicle.lookAheadStartPosition.rhumb.initialBearingTo(
       findLookAheadCirclePoints(vehicle).best,
     );
 
@@ -1025,7 +1026,7 @@ sealed class ABTracking {
 
     final headingError = signedBearingDifference(
       vehicle.bearing,
-      currentPerpendicularIntersect(vehicle).spherical.initialBearingTo(
+      currentPerpendicularIntersect(vehicle).rhumb.initialBearingTo(
             pointsAhead(vehicle).last.position,
           ),
     );

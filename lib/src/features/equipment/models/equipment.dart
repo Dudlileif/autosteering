@@ -331,7 +331,7 @@ class Equipment extends Hitchable with EquatableMixin {
   @override
   Geographic? get hitchFrontFixedPoint =>
       switch (hitchToChildFrontFixedHitchLength != null) {
-        true => position.spherical.destinationPoint(
+        true => position.rhumb.destinationPoint(
             distance: hitchToChildFrontFixedHitchLength!,
             bearing: bearing,
           ),
@@ -343,7 +343,7 @@ class Equipment extends Hitchable with EquatableMixin {
   @override
   Geographic? get hitchRearFixedPoint =>
       switch (hitchToChildRearFixedHitchLength != null) {
-        true => position.spherical.destinationPoint(
+        true => position.rhumb.destinationPoint(
             distance: hitchToChildRearFixedHitchLength!,
             bearing: bearing + 180,
           ),
@@ -355,7 +355,7 @@ class Equipment extends Hitchable with EquatableMixin {
   @override
   Geographic? get hitchRearTowbarPoint =>
       switch (hitchToChildRearTowbarHitchLength != null) {
-        true => position.spherical.destinationPoint(
+        true => position.rhumb.destinationPoint(
             distance: hitchToChildRearTowbarHitchLength!,
             bearing: bearing + 180,
           ),
@@ -367,8 +367,8 @@ class Equipment extends Hitchable with EquatableMixin {
   void updateTowbar() {
     if (hitchParent != null && parentHitch == Hitch.rearTowbar) {
       final hitchAngle = signedBearingDifference(
-        position.spherical.initialBearingTo(hitchParent!.position),
-        position.spherical.initialBearingTo(workingCenter),
+        position.rhumb.initialBearingTo(hitchParent!.position),
+        position.rhumb.initialBearingTo(workingCenter),
       ).toRadians();
 
       final bearingChange = hitchParent!.velocity /
@@ -392,7 +392,7 @@ class Equipment extends Hitchable with EquatableMixin {
   }
 
   /// The working area center of this equipment.
-  Geographic get workingCenter => position.spherical
+  Geographic get workingCenter => position.rhumb
       .destinationPoint(
         distance: drawbarLength + workingAreaLength / 2,
         bearing: switch (parentHitch) {
@@ -402,19 +402,19 @@ class Equipment extends Hitchable with EquatableMixin {
           null => bearing,
         },
       )
-      .spherical
+      .rhumb
       .destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
 
   /// The position of the end of the drawbar, i.e. furthest away from the
   /// parent, where the working area starts.
   Geographic get drawbarEnd => switch (parentHitch) {
-        Hitch.frontFixed => position.spherical
+        Hitch.frontFixed => position.rhumb
             .destinationPoint(distance: drawbarLength, bearing: bearing),
-        Hitch.rearFixed => position.spherical
+        Hitch.rearFixed => position.rhumb
             .destinationPoint(distance: drawbarLength, bearing: bearing + 180),
-        Hitch.rearTowbar => position.spherical
+        Hitch.rearTowbar => position.rhumb
             .destinationPoint(distance: drawbarLength, bearing: bearing + 180),
-        null => position.spherical
+        null => position.rhumb
             .destinationPoint(distance: drawbarLength, bearing: bearing),
       };
 
@@ -423,30 +423,30 @@ class Equipment extends Hitchable with EquatableMixin {
     // The starting point of this equipment, i.e. the center-front point
     // of the working area.
     final equipmentStart = switch (parentHitch) {
-      Hitch.frontFixed => drawbarEnd.spherical
+      Hitch.frontFixed => drawbarEnd.rhumb
           .destinationPoint(distance: workingAreaLength, bearing: bearing),
       _ => drawbarEnd
     }
-        .spherical
+        .rhumb
         .destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
 
     // The width of the preceding sections.
     final widthBefore = sections.getRange(0, section).map((e) => e.width).sum;
 
-    final sectionFrontLeft = equipmentStart.spherical.destinationPoint(
+    final sectionFrontLeft = equipmentStart.rhumb.destinationPoint(
       distance: width / 2 - widthBefore,
       bearing: bearing - 90,
     );
 
-    final sectionRearLeft = sectionFrontLeft.spherical
+    final sectionRearLeft = sectionFrontLeft.rhumb
         .destinationPoint(distance: workingAreaLength, bearing: bearing + 180);
 
-    final sectionRearRight = sectionRearLeft.spherical.destinationPoint(
+    final sectionRearRight = sectionRearLeft.rhumb.destinationPoint(
       distance: sections[section].width,
       bearing: bearing + 90,
     );
 
-    final sectionFrontRight = sectionRearRight.spherical
+    final sectionFrontRight = sectionRearRight.rhumb
         .destinationPoint(distance: workingAreaLength, bearing: bearing);
 
     return [
@@ -473,11 +473,11 @@ class Equipment extends Hitchable with EquatableMixin {
     // The starting point of this equipment, i.e. the center-front point
     // of the working area.
     final equipmentStart = switch (parentHitch) {
-      Hitch.frontFixed => drawbarEnd.spherical
+      Hitch.frontFixed => drawbarEnd.rhumb
           .destinationPoint(distance: workingAreaLength, bearing: bearing),
       _ => drawbarEnd
     }
-        .spherical
+        .rhumb
         .destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
 
     final section = sections[index];
@@ -486,20 +486,20 @@ class Equipment extends Hitchable with EquatableMixin {
     final widthBefore = sections.getRange(0, index).map((e) => e.width).sum +
         (section.width - section.workingWidth) / 2;
 
-    final sectionFrontLeft = equipmentStart.spherical.destinationPoint(
+    final sectionFrontLeft = equipmentStart.rhumb.destinationPoint(
       distance: width / 2 - widthBefore,
       bearing: bearing - 90,
     );
 
-    final sectionRearLeft = sectionFrontLeft.spherical
+    final sectionRearLeft = sectionFrontLeft.rhumb
         .destinationPoint(distance: workingAreaLength, bearing: bearing + 180);
 
-    final sectionRearRight = sectionRearLeft.spherical.destinationPoint(
+    final sectionRearRight = sectionRearLeft.rhumb.destinationPoint(
       distance: section.workingWidth,
       bearing: bearing + 90,
     );
 
-    final sectionFrontRight = sectionRearRight.spherical
+    final sectionFrontRight = sectionRearRight.rhumb
         .destinationPoint(distance: workingAreaLength, bearing: bearing);
 
     return [
@@ -545,7 +545,7 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The center point of the given [section].
   Geographic sectionCenter(int section) {
     final points = sectionPoints(section);
-    return points[0].spherical.midPointTo(points[2]);
+    return points[0].rhumb.midPointTo(points[2]);
   }
 
   /// The polygon for the given [section].
@@ -632,25 +632,25 @@ class Equipment extends Hitchable with EquatableMixin {
               color: Colors.grey.shade800,
               borderColor: Colors.black,
               points: [
-                position.spherical
+                position.rhumb
                     .destinationPoint(
                       distance: 0.05,
                       bearing: bearing - 90,
                     )
                     .latLng,
-                drawbarEnd.spherical
+                drawbarEnd.rhumb
                     .destinationPoint(
                       distance: 0.05,
                       bearing: bearing - 90,
                     )
                     .latLng,
-                drawbarEnd.spherical
+                drawbarEnd.rhumb
                     .destinationPoint(
                       distance: 0.05,
                       bearing: bearing + 90,
                     )
                     .latLng,
-                position.spherical
+                position.rhumb
                     .destinationPoint(
                       distance: 0.05,
                       bearing: bearing + 90,
@@ -667,25 +667,25 @@ class Equipment extends Hitchable with EquatableMixin {
               color: Colors.grey.shade800,
               borderColor: Colors.black,
               points: [
-                position.spherical
+                position.rhumb
                     .destinationPoint(
                       distance: 0.35,
                       bearing: bearing - 90,
                     )
                     .latLng,
-                drawbarEnd.spherical
+                drawbarEnd.rhumb
                     .destinationPoint(
                       distance: 0.35,
                       bearing: bearing - 90,
                     )
                     .latLng,
-                drawbarEnd.spherical
+                drawbarEnd.rhumb
                     .destinationPoint(
                       distance: 0.3,
                       bearing: bearing - 90,
                     )
                     .latLng,
-                position.spherical
+                position.rhumb
                     .destinationPoint(
                       distance: 0.3,
                       bearing: bearing - 90,
@@ -700,25 +700,25 @@ class Equipment extends Hitchable with EquatableMixin {
               color: Colors.grey.shade800,
               borderColor: Colors.black,
               points: [
-                position.spherical
+                position.rhumb
                     .destinationPoint(
                       distance: 0.35,
                       bearing: bearing + 90,
                     )
                     .latLng,
-                drawbarEnd.spherical
+                drawbarEnd.rhumb
                     .destinationPoint(
                       distance: 0.35,
                       bearing: bearing + 90,
                     )
                     .latLng,
-                drawbarEnd.spherical
+                drawbarEnd.rhumb
                     .destinationPoint(
                       distance: 0.3,
                       bearing: bearing + 90,
                     )
                     .latLng,
-                position.spherical
+                position.rhumb
                     .destinationPoint(
                       distance: 0.3,
                       bearing: bearing + 90,
@@ -734,35 +734,35 @@ class Equipment extends Hitchable with EquatableMixin {
     if (hitchToDecorationStartLength != null &&
         decorationLength != null &&
         decorationWidth != null) {
-      final decorationStart = position.spherical
+      final decorationStart = position.rhumb
           .destinationPoint(
             distance: hitchToDecorationStartLength!,
             bearing: bearing - 180,
           )
-          .spherical
+          .rhumb
           .destinationPoint(
             distance: decorationSidewaysOffset ?? 0,
             bearing: bearing + 90,
           );
-      final decorationEnd = decorationStart.spherical.destinationPoint(
+      final decorationEnd = decorationStart.rhumb.destinationPoint(
         distance: decorationLength!,
         bearing: bearing - 180,
       );
 
       final points = [
-        decorationStart.spherical.destinationPoint(
+        decorationStart.rhumb.destinationPoint(
           distance: decorationWidth! / 2,
           bearing: bearing + 90,
         ),
-        decorationEnd.spherical.destinationPoint(
+        decorationEnd.rhumb.destinationPoint(
           distance: decorationWidth! / 2,
           bearing: bearing + 90,
         ),
-        decorationEnd.spherical.destinationPoint(
+        decorationEnd.rhumb.destinationPoint(
           distance: decorationWidth! / 2,
           bearing: bearing - 90,
         ),
-        decorationStart.spherical.destinationPoint(
+        decorationStart.rhumb.destinationPoint(
           distance: decorationWidth! / 2,
           bearing: bearing - 90,
         ),

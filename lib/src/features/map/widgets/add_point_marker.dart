@@ -71,7 +71,7 @@ class _AddPointMarkerState extends State<AddPointMarker> {
 
     if (widget.useRadiusInMeters) {
       final offset = map.getOffsetFromOrigin(widget.point.latLng);
-      final r = widget.point.spherical
+      final r = widget.point.rhumb
           .destinationPoint(distance: widget.radius, bearing: 180);
       final delta = offset - map.getOffsetFromOrigin(r.latLng);
       radiusToUse = delta.distance;

@@ -27,7 +27,7 @@ class ABCurve extends ABTracking {
       0,
       (index, prevValue, element) => index + 1 < baseLine.length
           ? prevValue +
-              element.distanceToSpherical(baseLine.elementAt(index + 1))
+              element.distanceToRhumb(baseLine.elementAt(index + 1))
           : prevValue,
     );
     if (boundary == null) {
@@ -432,11 +432,11 @@ class ABCurve extends ABTracking {
         };
 
         if (limitMode == ABLimitMode.limitedTurnWithin) {
-          startPoint = startPoint.moveSpherical(
+          startPoint = startPoint.moveRhumb(
             distance: turningRadius,
             angleFromBearing: 180,
           );
-          endPoint = endPoint.moveSpherical(distance: turningRadius);
+          endPoint = endPoint.moveRhumb(distance: turningRadius);
         }
 
         final dubinsPath = DubinsPath(

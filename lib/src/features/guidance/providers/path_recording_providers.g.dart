@@ -86,7 +86,7 @@ final pathRecordingTriggerAngleProvider =
 );
 
 typedef _$PathRecordingTriggerAngle = Notifier<double>;
-String _$pathRecordingListHash() => r'8b963ec8e144ec262bc9ff7484714a3126db1657';
+String _$pathRecordingListHash() => r'35fd851912b27ee01835510a55ecfe9d2f9ff489';
 
 /// A list of the currently recording points.
 ///
