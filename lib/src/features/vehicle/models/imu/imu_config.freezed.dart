@@ -50,7 +50,7 @@ mixin _$ImuConfig {
 
   /// How many milliseconds we should delay the readings to match the GNSS fix
   /// time.
-  double get delayReadings => throw _privateConstructorUsedError;
+  int get delayReadings => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -73,7 +73,7 @@ abstract class $ImuConfigCopyWith<$Res> {
       bool invertRoll,
       double pitchGain,
       double rollGain,
-      double delayReadings});
+      int delayReadings});
 
   $ImuZeroValuesCopyWith<$Res> get zeroValues;
 }
@@ -142,7 +142,7 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
       delayReadings: null == delayReadings
           ? _value.delayReadings
           : delayReadings // ignore: cast_nullable_to_non_nullable
-              as double,
+              as int,
     ) as $Val);
   }
 
@@ -173,7 +173,7 @@ abstract class _$$ImuConfigImplCopyWith<$Res>
       bool invertRoll,
       double pitchGain,
       double rollGain,
-      double delayReadings});
+      int delayReadings});
 
   @override
   $ImuZeroValuesCopyWith<$Res> get zeroValues;
@@ -241,7 +241,7 @@ class __$$ImuConfigImplCopyWithImpl<$Res>
       delayReadings: null == delayReadings
           ? _value.delayReadings
           : delayReadings // ignore: cast_nullable_to_non_nullable
-              as double,
+              as int,
     ));
   }
 }
@@ -314,7 +314,7 @@ class _$ImuConfigImpl implements _ImuConfig {
   /// time.
   @override
   @JsonKey()
-  final double delayReadings;
+  final int delayReadings;
 
   @override
   String toString() {
@@ -387,7 +387,7 @@ abstract class _ImuConfig implements ImuConfig {
       final bool invertRoll,
       final double pitchGain,
       final double rollGain,
-      final double delayReadings}) = _$ImuConfigImpl;
+      final int delayReadings}) = _$ImuConfigImpl;
 
   factory _ImuConfig.fromJson(Map<String, dynamic> json) =
       _$ImuConfigImpl.fromJson;
@@ -433,7 +433,7 @@ abstract class _ImuConfig implements ImuConfig {
 
   /// How many milliseconds we should delay the readings to match the GNSS fix
   /// time.
-  double get delayReadings;
+  int get delayReadings;
   @override
   @JsonKey(ignore: true)
   _$$ImuConfigImplCopyWith<_$ImuConfigImpl> get copyWith =>

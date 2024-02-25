@@ -262,9 +262,9 @@ class ImuConfigurator extends StatelessWidget {
                           ],
                         ),
                         Slider(
-                          value: delayReadings,
+                          value: delayReadings.toDouble(),
                           onChanged: (value) =>
-                              setState(() => delayReadings = value),
+                              setState(() => delayReadings = value.round()),
                           onChangeEnd: (value) {
                             final oldValue = ref.read(
                               mainVehicleProvider.select(

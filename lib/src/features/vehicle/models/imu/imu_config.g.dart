@@ -19,7 +19,7 @@ _$ImuConfigImpl _$$ImuConfigImplFromJson(Map<String, dynamic> json) =>
       invertRoll: json['invertRoll'] as bool? ?? false,
       pitchGain: (json['pitchGain'] as num?)?.toDouble() ?? 1,
       rollGain: (json['rollGain'] as num?)?.toDouble() ?? 1,
-      delayReadings: (json['delayReadings'] as num?)?.toDouble() ?? 30,
+      delayReadings: json['delayReadings'] as int? ?? 30,
     );
 
 Map<String, dynamic> _$$ImuConfigImplToJson(_$ImuConfigImpl instance) =>
