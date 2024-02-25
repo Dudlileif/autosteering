@@ -63,6 +63,13 @@ class AllEquipments extends _$AllEquipments {
         );
       });
 
+  /// Clear all the painted areas for all the equipments.
+  void clearPaintedArea() => Future(() {
+        for (final equipment in state.values) {
+          ref.read(equipmentPathsProvider(equipment.uuid).notifier).clear();
+        }
+      });
+
   /// Handles the event of a tap on the map. If [point] is within one of the
   /// equipments' sections, then the section will be toggled.
   void handleMapOnTap(LatLng point) {
@@ -129,14 +136,12 @@ class EquipmentPaths extends _$EquipmentPaths {
 
             final points = equipment.sectionActivationStatus.mapIndexed(
               (section, active) {
-                
-
                 return active &&
                         (_prevSectionActivationStatus
                                 .elementAtOrNull(section) ??
                             false)
                     ? [
-                        state.last[section]?.last ??
+                        state.lastOrNull?[section]?.lastOrNull ??
                             equipment.sectionEdgePositions(section),
                       ]
                     : active
@@ -179,27 +184,32 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// Add the current positions to the state if we're deactivating a
   /// section, before we start a new set of paths.
   void _addPointsIfDeactivation(Equipment equipment) {
-    final prevActive = _prevSectionActivationStatus.fold(
-      0,
-      (previousValue, element) =>
-          element == true ? previousValue + 1 : previousValue,
-    );
-    final nextActive = equipment.sectionActivationStatus.fold(
-      0,
-      (previousValue, element) =>
-          element == true ? previousValue + 1 : previousValue,
-    );
-    if (nextActive < prevActive) {
-      state = state
-        ..last.updateAll(
-          (key, value) => value?..add(equipment.sectionEdgePositions(key)),
-        );
+    if (state.isNotEmpty) {
+      final prevActive = _prevSectionActivationStatus.fold(
+        0,
+        (previousValue, element) =>
+            element == true ? previousValue + 1 : previousValue,
+      );
+      final nextActive = equipment.sectionActivationStatus.fold(
+        0,
+        (previousValue, element) =>
+            element == true ? previousValue + 1 : previousValue,
+      );
+      if (nextActive < prevActive) {
+        state = state
+          ..last.updateAll(
+            (key, value) => value?..add(equipment.sectionEdgePositions(key)),
+          );
+      }
     }
   }
 
   /// Whether the [next] point for this [section] is necessary to keep the
   /// path up to date.
   bool shouldAddNext(SectionEdgePositions next, int section) {
+    if (state.isEmpty) {
+      return true;
+    }
     final prev = state.last[section]?.last;
 
     if (state.isNotEmpty && prev != null) {
@@ -213,8 +223,7 @@ class EquipmentPaths extends _$EquipmentPaths {
       } else if (distance > 1 && (state.last[section]?.length ?? 0) >= 2) {
         final secondPrev =
             state.last[section]![state.last[section]!.length - 2];
-        final prevBearing =
-            secondPrev.left.rhumb.initialBearingTo(prev.left);
+        final prevBearing = secondPrev.left.rhumb.initialBearingTo(prev.left);
 
         final nextBearing = prev.left.rhumb.finalBearingTo(next.left);
 
@@ -229,6 +238,9 @@ class EquipmentPaths extends _$EquipmentPaths {
     }
     return false;
   }
+
+  /// Clears all the painted areas for the equipment.
+  void clear() => Future(() => state = []);
 
   /// Always update as the state is complex and any change to it is usually
   /// different to the previous state.

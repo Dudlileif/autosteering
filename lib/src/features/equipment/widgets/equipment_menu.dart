@@ -58,11 +58,28 @@ class EquipmentMenu extends StatelessWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
             leadingIcon: const Padding(
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.clear),
             ),
             onPressed: ref.read(allEquipmentsProvider.notifier).clear,
+            child: child,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Clear painted area',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.clear),
+            ),
+            onPressed: () =>
+                ref.read(allEquipmentsProvider.notifier).clearPaintedArea(),
             child: child,
           ),
         ),
