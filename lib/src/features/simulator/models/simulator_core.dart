@@ -506,11 +506,25 @@ class _SimulatorCoreState {
   /// The minimum distance between GNSS updates for updating the bearing
   /// gauge.
   double get minBearingUpdateDistance => switch (gnssFixQuality) {
-        GnssFixQuality.fix => 1,
-        GnssFixQuality.differentialFix => 0.6,
-        GnssFixQuality.floatRTK => 0.5,
-        GnssFixQuality.ppsFix => 0.4,
-        GnssFixQuality.rtk => 0.1,
+        GnssFixQuality.fix => 5,
+        GnssFixQuality.differentialFix => 3,
+        GnssFixQuality.floatRTK => 2.5,
+        GnssFixQuality.ppsFix => 2,
+        GnssFixQuality.rtk => 0.5,
+        _ => double.infinity,
+      };
+
+  /// The upper threshold for the standard deviation of the bearings from the
+  /// [prevGnssUpdates] and the [gnssUpdate].
+  ///
+  /// If the deviation is lower that the threshold, the IMU bearing zero
+  /// value will be set to the average of the bearings.
+  double get bearingZeroDeviationMaxThreshold => switch (gnssFixQuality) {
+        GnssFixQuality.fix => 0.03,
+        GnssFixQuality.differentialFix => 0.02,
+        GnssFixQuality.floatRTK => .015,
+        GnssFixQuality.ppsFix => 0.01,
+        GnssFixQuality.rtk => 0.006,
         _ => double.infinity,
       };
 
@@ -1376,19 +1390,40 @@ class _SimulatorCoreState {
             false => bearing
           };
 
-          // Update IMU bearing zero to direction corrected bearing.
-          vehicle!.imu
-            ..config = vehicle!.imu.config.copyWith(
-              zeroValues: vehicle!.imu.config.zeroValues.copyWith(
-                bearingZero:
-                    (vehicle!.imu.reading.yaw - directionCorrectedBearing)
-                        .wrap360(),
+          final bearings = prevGnssUpdates.map(
+            (e) {
+              final bearing =
+                  e.gnssPosition.rhumb.finalBearingTo(gnssUpdate!.gnssPosition);
+
+              return switch (drivingDirectionSign.isNegative) {
+                true => (bearing + 180).wrap360(),
+                false => bearing
+              };
+            },
+          );
+
+          final bearingAvg = bearingAverage(bearings);
+          final bearingStdDev = bearingStandardDeviation(bearings);
+          // If the variance is very low, we can assume a straight line and
+          // set the IMU bearing zero value to the average bearing.
+          if (bearingStdDev < bearingZeroDeviationMaxThreshold) {
+            vehicle!.imu
+              ..config = vehicle!.imu.config.copyWith(
+                zeroValues: vehicle!.imu.config.zeroValues.copyWith(
+                  bearingZero:
+                      (vehicle!.imu.reading.yaw - bearingAvg).wrap360(),
+                ),
+              )
+              ..bearingIsSet = true;
+            mainThreadSendStream.add(
+              LogEvent(
+                Level.info,
+                '''Straight line detected, IMU bearing zero updated: ${(vehicle!.imu.reading.yaw - bearingAvg).wrap360()}°, measures avg: $bearingAvg°, std.dev: $bearingStdDev''',
               ),
-            )
-            ..bearingIsSet = true;
+            );
+          }
 
           gaugeBearing = directionCorrectedBearing;
-
           gaugeVelocity = drivingDirectionSign * velocityAvg;
         }
 
@@ -1412,7 +1447,11 @@ class _SimulatorCoreState {
         prevGnssUpdates.removeAt(0);
       }
     } else if (gnssUpdate == null && !allowManualSimInput) {
-      distance = 0;
+      gaugeBearing = vehicle!.bearing;
+      if (prevVehicle != null && vehicle != null) {
+        // distance = prevVehicle!.position.rhumb.distanceTo(vehicle!.position);
+        distance = 0;
+      }
     } else if (allowManualSimInput) {
       _simGaugeUpdate();
     }
@@ -1436,7 +1475,7 @@ class _SimulatorCoreState {
         vehicle!.position = gnssUpdate!.gnssPosition;
         turningCircleCenter = vehicle?.turningRadiusCenter;
         vehicle!.updateChildren();
-      } else if (!allowManualSimInput) {
+      } else if (!allowManualSimInput && !allowSimInterpolation) {
         vehicle!.updateChildren();
       }
       // Update by simulation

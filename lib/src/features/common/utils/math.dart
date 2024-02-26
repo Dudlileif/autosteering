@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 
 /// Find the [value] modulo 2π.
@@ -24,6 +25,45 @@ double signedBearingDifference(double bearing1, double bearing2) {
 
   return difference;
 }
+
+/// Finds the average angle betewwn all the [angles], which are assumed to
+/// be in radians.
+///
+/// Result is in range `-PI ... PI`.
+double circularAverage(Iterable<double> angles) {
+  final cosSum = angles.map(cos).sum;
+  final sinSum = angles.map(sin).sum;
+
+  final radAvg = atan2(sinSum, cosSum);
+  return radAvg;
+}
+
+/// Finds the average bearing between all the [bearings].
+double bearingAverage(Iterable<double> bearings) =>
+    circularAverage(bearings.map((e) => e.toRadians())).toDegrees().wrap360();
+
+/// Finds the circular standard deviation for the [angles], which are assumed
+/// to be in radians.
+///
+/// Result is in range `0...1`, where 0 means no spread and 1 means maximum
+/// spread.
+double circularStandardDeviation(Iterable<double> angles) {
+  final cosMean = angles.map(cos).average;
+  final sinMean = angles.map(sin).average;
+
+  final hypotenuse = [sqrt(pow(cosMean, 2) + pow(sinMean, 2)), 1].min;
+
+  final stdDev = [1.0, sqrt(-2 * log(hypotenuse))].min.abs();
+
+  return stdDev;
+}
+
+/// Finds the circular standard deviation for the [bearings].
+///
+/// Result is in range `0...1`, where 0 means no spread and 1 means maximum
+/// spread.
+double bearingStandardDeviation(Iterable<double> bearings) =>
+    circularStandardDeviation(bearings.map((e) => e.toRadians()));
 
 /// Provides the size [bytes] in a more readable format with binary suffix.
 ///

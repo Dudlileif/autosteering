@@ -9,8 +9,10 @@ class LogReplay {
   /// or created.
   factory LogReplay({required String log}) {
     DateTime? firstRecordTime;
-    final records =
-        log.split('\n').where((element) => element.isNotEmpty).map((raw) {
+    final records = log
+        .split('\n')
+        .where((element) => element.isNotEmpty && element.contains(':'))
+        .map((raw) {
       final record =
           LogReplayRecord(raw: raw, firstRecordTime: firstRecordTime);
       firstRecordTime ??= record.logTime;
