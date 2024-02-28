@@ -528,6 +528,13 @@ class _SimulatorCoreState {
         _ => double.infinity,
       };
 
+  /// The last time the IMU bearing was zeroed.
+  DateTime? bearingZeroTime;
+
+  /// Minimum number of seconds to wait before the next attempt at setting
+  /// a new IMU bearing zero.
+  int bearingZeroMinDuration = 10;
+
   /// The velocity of the current vehicle, as calculated from the [distance] and
   /// [period].
   double gaugeVelocity = 0;
@@ -1390,37 +1397,44 @@ class _SimulatorCoreState {
             false => bearing
           };
 
-          final bearings = prevGnssUpdates.map(
-            (e) {
-              final bearing =
-                  e.gnssPosition.rhumb.finalBearingTo(gnssUpdate!.gnssPosition);
+          if (bearingZeroTime == null ||
+              DateTime.now()
+                      .difference(bearingZeroTime ?? DateTime.now())
+                      .inSeconds >
+                  bearingZeroMinDuration) {
+            final bearings = prevGnssUpdates.map(
+              (e) {
+                final bearing = e.gnssPosition.rhumb
+                    .finalBearingTo(gnssUpdate!.gnssPosition);
 
-              return switch (drivingDirectionSign.isNegative) {
-                true => (bearing + 180).wrap360(),
-                false => bearing
-              };
-            },
-          );
-
-          final bearingAvg = bearingAverage(bearings);
-          final bearingStdDev = bearingStandardDeviation(bearings);
-          // If the variance is very low, we can assume a straight line and
-          // set the IMU bearing zero value to the average bearing.
-          if (bearingStdDev < bearingZeroDeviationMaxThreshold) {
-            vehicle!.imu
-              ..config = vehicle!.imu.config.copyWith(
-                zeroValues: vehicle!.imu.config.zeroValues.copyWith(
-                  bearingZero:
-                      (vehicle!.imu.reading.yaw - bearingAvg).wrap360(),
-                ),
-              )
-              ..bearingIsSet = true;
-            mainThreadSendStream.add(
-              LogEvent(
-                Level.info,
-                '''Straight line detected, IMU bearing zero updated: ${(vehicle!.imu.reading.yaw - bearingAvg).wrap360()}°, measures avg: $bearingAvg°, std.dev: $bearingStdDev''',
-              ),
+                return switch (drivingDirectionSign.isNegative) {
+                  true => (bearing + 180).wrap360(),
+                  false => bearing
+                };
+              },
             );
+
+            final bearingAvg = bearingAverage(bearings);
+            final bearingStdDev = bearingStandardDeviation(bearings);
+            // If the variance is very low, we can assume a straight line and
+            // set the IMU bearing zero value to the average bearing.
+            if (bearingStdDev < bearingZeroDeviationMaxThreshold) {
+              vehicle!.imu
+                ..config = vehicle!.imu.config.copyWith(
+                  zeroValues: vehicle!.imu.config.zeroValues.copyWith(
+                    bearingZero:
+                        (vehicle!.imu.reading.yaw - bearingAvg).wrap360(),
+                  ),
+                )
+                ..bearingIsSet = true;
+              mainThreadSendStream.add(
+                LogEvent(
+                  Level.info,
+                  '''Straight line detected, IMU bearing zero updated: ${(vehicle!.imu.reading.yaw - bearingAvg).wrap360()}°, measures avg: $bearingAvg°, std.dev: $bearingStdDev''',
+                ),
+              );
+              bearingZeroTime = DateTime.now();
+            }
           }
 
           gaugeBearing = directionCorrectedBearing;
@@ -1428,7 +1442,6 @@ class _SimulatorCoreState {
         }
 
         prevGnssUpdates.add(gnssUpdate!);
-        // gnssUpdate = null;
 
         // Remove the oldest updates if there are more than [gaugesAverageCount]
         // in the current list.
@@ -1439,7 +1452,6 @@ class _SimulatorCoreState {
         return;
       }
       prevGnssUpdates.add(gnssUpdate!);
-      // gnssUpdate = null;
 
       // Remove the oldest updates if there are more than [gaugesAverageCount]
       // in the current list.
