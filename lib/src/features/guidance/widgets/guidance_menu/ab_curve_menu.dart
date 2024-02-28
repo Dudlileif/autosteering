@@ -5,11 +5,11 @@ import 'package:autosteering/src/features/theme/utils/menu_button_text_extension
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A menu button with attached submenu for working with the path recording
-/// and editing feature.
+/// A menu button with attached submenu for working with the [ABCurve]
+/// guidance feature.
 class ABCurveMenu extends ConsumerWidget {
-  /// A menu button with attached submenu for working with the path recording
-  /// and editing feature.
+  /// A menu button with attached submenu for working with the [ABCurve]
+  /// guidance feature.
   const ABCurveMenu({super.key});
 
   @override
@@ -18,8 +18,10 @@ class ABCurveMenu extends ConsumerWidget {
       ..watch(activeABConfigProvider)
       ..watch(aBCurveDebugProvider);
 
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
-      text: 'AB-curve',
+      text: 'AB curve',
       menuChildren: [
         Consumer(
           builder: (context, ref, child) {
@@ -46,8 +48,7 @@ class ABCurveMenu extends ConsumerWidget {
                 }
               },
               closeOnActivate: false,
-              child:
-                  Text(
+              child: Text(
                 enabled ? 'Recording, tap to finish' : 'Record curve',
                 style: Theme.of(context).menuButtonWithChildrenText,
               ),
@@ -55,6 +56,14 @@ class ABCurveMenu extends ConsumerWidget {
           },
         ),
         const ABCommonMenu(),
+        Consumer(
+          child: Text('Recalc bounded lines', style: textStyle),
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            child: child,
+            onPressed: () => ref.invalidate(aBCurveDebugProvider),
+          ),
+        ),
       ],
     );
   }

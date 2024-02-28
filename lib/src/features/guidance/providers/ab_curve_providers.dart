@@ -102,6 +102,7 @@ Future<ABCurve?> aBCurveDebug(ABCurveDebugRef ref) async {
           'turn_offset_skips': turnOffsetMinSkips,
           'limit_mode': limitMode,
           'calculate_lines': true,
+          'type': 'AB Curve',
         }),
       );
 

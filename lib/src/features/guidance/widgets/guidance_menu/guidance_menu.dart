@@ -1,5 +1,6 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/guidance/widgets/guidance_menu/a_plus_line_menu.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/ab_curve_menu.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/ab_line_menu.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/path_recorder_menu.dart';
@@ -101,6 +102,7 @@ class GuidanceMenu extends StatelessWidget {
         ),
         const PathRecorderMenu(),
         const PathTrackingMenu(),
+        const APlusLineMenu(),
         const ABLineMenu(),
         const ABCurveMenu(),
         const VirtualLedBarMenu(),

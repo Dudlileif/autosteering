@@ -24,7 +24,7 @@ class ABLine extends ABTracking with EquatableMixin {
     super.length = start.distanceToRhumb(end);
   }
 
-  /// Creates an ABLine where the [lines] already has been calculated.
+  /// Creates an [ABLine] where the [lines] already has been calculated.
   ABLine.preCalculated({
     required super.baseLine,
     required super.width,

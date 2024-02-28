@@ -94,6 +94,7 @@ void updatePositionFromDevice(UpdatePositionFromDeviceRef ref) {
                   gnssPosition: Geographic(
                     lon: data.longitude,
                     lat: data.latitude,
+                    elev: data.altitude,
                   ),
                   time: data.timestamp
                 ),

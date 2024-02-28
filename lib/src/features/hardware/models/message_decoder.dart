@@ -506,6 +506,7 @@ class MessageDecoder {
               gnssPosition: Geographic(
                 lon: nmea.longitude!,
                 lat: nmea.latitude!,
+                elev: nmea.altitudeMSL,
               ),
               time: nmea.utc ?? DateTime.now(),
             ),

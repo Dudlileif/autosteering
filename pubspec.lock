@@ -1299,7 +1299,7 @@ packages:
     source: hosted
     version: "1.1.0"
   web:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: web
       sha256: "1d9158c616048c38f712a6646e317a3426da10e884447626167240d45209cbad"

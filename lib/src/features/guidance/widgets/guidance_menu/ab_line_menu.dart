@@ -6,11 +6,11 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A menu button with attached submenu for working with the path recording
-/// and editing feature.
+/// A menu button with attached submenu for working with the [ABLine]
+/// guidance feature.
 class ABLineMenu extends ConsumerWidget {
-  /// A menu button with attached submenu for working with the path recording
-  /// and editing feature.
+  /// A menu button with attached submenu for working with the [ABLine]
+  /// guidance feature.
   const ABLineMenu({super.key});
 
   @override
@@ -22,7 +22,7 @@ class ABLineMenu extends ConsumerWidget {
     final abLine = ref.watch(aBLineDebugProvider);
 
     return MenuButtonWithChildren(
-      text: 'AB-line',
+      text: 'AB line',
       menuChildren: [
         Consumer(
           builder: (context, ref, child) => ListTile(
@@ -104,6 +104,14 @@ class ABLineMenu extends ConsumerWidget {
           },
         ),
         const ABCommonMenu(),
+        Consumer(
+          child: Text('Recalc bounded lines', style: textStyle),
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            child: child,
+            onPressed: () => ref.invalidate(aBLineDebugProvider),
+          ),
+        ),
       ],
     );
   }

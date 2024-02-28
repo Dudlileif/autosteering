@@ -15,6 +15,7 @@ export 'ab_limit_mode.dart';
 
 part 'ab_curve.dart';
 part 'ab_line.dart';
+part 'a_plus_line.dart';
 
 //TODO (dudlileif): Fix crash when reaching the final line/curve offset
 
@@ -49,6 +50,8 @@ sealed class ABTracking {
   factory ABTracking.fromJson(Map<String, dynamic> json) {
     if (json['type'] == 'AB Curve') {
       return ABCurve.fromJson(json);
+    } else if (json['type'] == 'A+ Line') {
+      return APlusLine.fromJson(json);
     }
     return ABLine.fromJson(json);
   }
@@ -252,8 +255,7 @@ sealed class ABTracking {
 
     final extendedEnd = baseLine.last.position.rhumb.destinationPoint(
       distance: extraStraightDistance ?? 100,
-      bearing:
-          baseLine[baseLine.length - 2].finalBearingToRhumb(baseLine.last),
+      bearing: baseLine[baseLine.length - 2].finalBearingToRhumb(baseLine.last),
     );
 
     final path = baseLine.map((e) => e.position).toList()
@@ -276,30 +278,26 @@ sealed class ABTracking {
             WayPoint(
               position: element,
               bearing:
-                  element.rhumb
-                  .initialBearingTo(buffered.elementAt(index + 1)),
+                  element.rhumb.initialBearingTo(buffered.elementAt(index + 1)),
             ),
           );
         } else {
           newCurve.add(
             WayPoint(
               position: element,
-              bearing: buffered
-                  .elementAt(index - 1)
-                  .rhumb
-                  .finalBearingTo(element),
+              bearing:
+                  buffered.elementAt(index - 1).rhumb.finalBearingTo(element),
             ),
           );
         }
       });
     }
-    
+
     if (newCurve.length > 2) {
       final pointsToRemove = <WayPoint>[];
       for (var i = 1; i < newCurve.length - 1; i++) {
         final point = newCurve[i];
-        final fromStartBearing =
-            newCurve.first.initialBearingToRhumb(point);
+        final fromStartBearing = newCurve.first.initialBearingToRhumb(point);
         final fromEndBearing = newCurve.last.initialBearingToRhumb(point);
 
         if (signedBearingDifference(newCurve.first.bearing, fromStartBearing)
@@ -421,8 +419,7 @@ sealed class ABTracking {
 
         final boundaryIntersection = firstPointInside
             .copyWith(
-              bearing:
-                  lastPointOutside.finalBearingToRhumb(firstPointInside),
+              bearing: lastPointOutside.finalBearingToRhumb(firstPointInside),
             )
             .intersectionWith(
               boundaryRing,
@@ -500,8 +497,7 @@ sealed class ABTracking {
 
         final boundaryIntersection = lastPointInside
             .copyWith(
-              bearing:
-                  lastPointInside.initialBearingToRhumb(lastPointOutside),
+              bearing: lastPointInside.initialBearingToRhumb(lastPointOutside),
             )
             .intersectionWith(
               boundaryRing,
@@ -547,13 +543,11 @@ sealed class ABTracking {
     if (newCurve.length >= 2) {
       newCurve.forEachIndexed((index, element) {
         if (index == newCurve.length - 1) {
-          if (element.distanceToRhumb(newCurve.elementAt(index - 1)) <
-              0.1) {
+          if (element.distanceToRhumb(newCurve.elementAt(index - 1)) < 0.1) {
             newCurve.removeAt(index - 1);
           }
         } else if (index > 0) {
-          if (element.distanceToRhumb(newCurve.elementAt(index - 1)) <
-              0.1) {
+          if (element.distanceToRhumb(newCurve.elementAt(index - 1)) < 0.1) {
             newCurve.removeAt(index);
           }
         }
@@ -566,8 +560,8 @@ sealed class ABTracking {
         bearing: newCurve.first.initialBearingToRhumb(newCurve[1]),
       );
       newCurve[newCurve.length - 1] = newCurve.last.copyWith(
-        bearing: newCurve[newCurve.length - 2]
-            .finalBearingToRhumb(newCurve.last),
+        bearing:
+            newCurve[newCurve.length - 2].finalBearingToRhumb(newCurve.last),
       );
     }
 
@@ -883,8 +877,7 @@ sealed class ABTracking {
     Geographic? outsidePoint;
     for (var i = 1; i < points.length; i++) {
       final point = points[i];
-      final distance =
-          vehicle.lookAheadStartPosition.rhumb.distanceTo(point);
+      final distance = vehicle.lookAheadStartPosition.rhumb.distanceTo(point);
       if (distance <= (lookAheadDistance ?? vehicle.lookAheadDistance)) {
         insidePoint = point;
         insideDistance = distance;
@@ -915,8 +908,7 @@ sealed class ABTracking {
     final crossDistance = vehicle.lookAheadStartPosition.spherical
         .crossTrackDistanceTo(start: points.inside, end: points.outside!);
 
-    final secantBearing =
-        points.inside.rhumb.initialBearingTo(points.outside!);
+    final secantBearing = points.inside.rhumb.initialBearingTo(points.outside!);
 
     return vehicle.lookAheadStartPosition.rhumb.destinationPoint(
       distance: crossDistance,
@@ -958,8 +950,7 @@ sealed class ABTracking {
           pow(vehicleToLineDistance, 2),
     );
 
-    final secantBearing =
-        points.inside.rhumb.initialBearingTo(points.outside!);
+    final secantBearing = points.inside.rhumb.initialBearingTo(points.outside!);
 
     final vehicleToLineProjection = points.inside.rhumb.destinationPoint(
       distance: vehicleAlongDistance,
