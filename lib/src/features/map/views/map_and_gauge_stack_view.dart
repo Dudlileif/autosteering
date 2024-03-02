@@ -21,101 +21,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
 
     const map = MainMap();
 
-    return KeyboardListener(
-      autofocus: true,
-      onKeyEvent: (event) async => switch (event.logicalKey) {
-        LogicalKeyboardKey.shiftLeft => {
-            if (event is KeyDownEvent)
-              shiftModifier = true
-            else if (event is KeyUpEvent)
-              shiftModifier = false,
-          },
-        LogicalKeyboardKey.altLeft => {
-            if (event is KeyDownEvent)
-              altModifier = true
-            else if (event is KeyUpEvent)
-              altModifier = false,
-          },
-        LogicalKeyboardKey.minus => {
-            if (event is KeyUpEvent)
-              ref.read(zoomTimerControllerProvider.notifier).cancel()
-            else if (event is KeyDownEvent)
-              ref.read(zoomTimerControllerProvider.notifier).zoomOut(),
-          },
-        LogicalKeyboardKey.add || LogicalKeyboardKey.equal => {
-            if (event is KeyUpEvent)
-              ref.read(zoomTimerControllerProvider.notifier).cancel()
-            else if (event is KeyDownEvent)
-              ref.read(zoomTimerControllerProvider.notifier).zoomIn(),
-          },
-        LogicalKeyboardKey.enter => {
-            if (Device.isDesktop && altModifier)
-              if (event is KeyDownEvent)
-                windowManager
-                    .setFullScreen(!await windowManager.isFullScreen()),
-          },
-        LogicalKeyboardKey.f11 => {
-            if (Device.isDesktop)
-              if (event is KeyDownEvent)
-                windowManager
-                    .setFullScreen(!await windowManager.isFullScreen()),
-          },
-        LogicalKeyboardKey.space => {
-            if (event is KeyDownEvent)
-              ref.read(simInputProvider.notifier).send(
-                    switch (shiftModifier) {
-                      false => const (velocityChange: SimInputChange.reset),
-                      true => const (steeringChange: SimInputChange.reset)
-                    },
-                  ),
-          },
-        LogicalKeyboardKey.keyW || LogicalKeyboardKey.arrowUp => {
-            if (event is KeyDownEvent)
-              ref
-                  .read(simInputProvider.notifier)
-                  .send((velocityChange: SimInputChange.increase))
-            else if (event is KeyUpEvent)
-              ref
-                  .read(simInputProvider.notifier)
-                  .send((velocityChange: SimInputChange.hold)),
-          },
-        LogicalKeyboardKey.keyS || LogicalKeyboardKey.arrowDown => {
-            if (event is KeyDownEvent)
-              ref
-                  .read(simInputProvider.notifier)
-                  .send((velocityChange: SimInputChange.decrease))
-            else if (event is KeyUpEvent)
-              ref
-                  .read(simInputProvider.notifier)
-                  .send((velocityChange: SimInputChange.hold)),
-          },
-        LogicalKeyboardKey.keyA || LogicalKeyboardKey.arrowLeft => {
-            if (event is KeyDownEvent)
-              ref
-                  .read(simInputProvider.notifier)
-                  .send((steeringChange: SimInputChange.decrease))
-            else if (event is KeyUpEvent)
-              ref
-                  .read(simInputProvider.notifier)
-                  .send((steeringChange: SimInputChange.hold)),
-          },
-        LogicalKeyboardKey.keyD || LogicalKeyboardKey.arrowRight => {
-            if (event is KeyDownEvent)
-              ref
-                  .read(simInputProvider.notifier)
-                  .send((steeringChange: SimInputChange.increase))
-            else if (event is KeyUpEvent)
-              ref
-                  .read(simInputProvider.notifier)
-                  .send((steeringChange: SimInputChange.hold)),
-          },
-        _ => null
-      },
-      focusNode: FocusNode(
-        descendantsAreFocusable: false,
-        descendantsAreTraversable: false,
-      ),
-      child: Stack(
+    final stack = Stack(
         children: [
           switch (ref.watch(mapUse3DPerspectiveProvider)) {
             false => map,
@@ -213,7 +119,107 @@ class MapAndGaugeStackView extends ConsumerWidget {
             ],
           ),
         ],
-      ),
     );
+
+    return Device.isDesktop || Device.isWeb
+        ? KeyboardListener(
+            autofocus: true,
+            onKeyEvent: (event) async => switch (event.logicalKey) {
+              LogicalKeyboardKey.shiftLeft => {
+                  if (event is KeyDownEvent)
+                    shiftModifier = true
+                  else if (event is KeyUpEvent)
+                    shiftModifier = false,
+                },
+              LogicalKeyboardKey.altLeft => {
+                  if (event is KeyDownEvent)
+                    altModifier = true
+                  else if (event is KeyUpEvent)
+                    altModifier = false,
+                },
+              LogicalKeyboardKey.minus => {
+                  if (event is KeyUpEvent)
+                    ref.read(zoomTimerControllerProvider.notifier).cancel()
+                  else if (event is KeyDownEvent)
+                    ref.read(zoomTimerControllerProvider.notifier).zoomOut(),
+                },
+              LogicalKeyboardKey.add || LogicalKeyboardKey.equal => {
+                  if (event is KeyUpEvent)
+                    ref.read(zoomTimerControllerProvider.notifier).cancel()
+                  else if (event is KeyDownEvent)
+                    ref.read(zoomTimerControllerProvider.notifier).zoomIn(),
+                },
+              LogicalKeyboardKey.enter => {
+                  if (Device.isDesktop && altModifier)
+                    if (event is KeyDownEvent)
+                      windowManager
+                          .setFullScreen(!await windowManager.isFullScreen()),
+                },
+              LogicalKeyboardKey.f11 => {
+                  if (Device.isDesktop)
+                    if (event is KeyDownEvent)
+                      windowManager
+                          .setFullScreen(!await windowManager.isFullScreen()),
+                },
+              LogicalKeyboardKey.space => {
+                  if (event is KeyDownEvent)
+                    ref.read(simInputProvider.notifier).send(
+                          switch (shiftModifier) {
+                            false => const (
+                                velocityChange: SimInputChange.reset
+                              ),
+                            true => const (steeringChange: SimInputChange.reset)
+                          },
+                        ),
+                },
+              LogicalKeyboardKey.keyW || LogicalKeyboardKey.arrowUp => {
+                  if (event is KeyDownEvent)
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send((velocityChange: SimInputChange.increase))
+                  else if (event is KeyUpEvent)
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send((velocityChange: SimInputChange.hold)),
+                },
+              LogicalKeyboardKey.keyS || LogicalKeyboardKey.arrowDown => {
+                  if (event is KeyDownEvent)
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send((velocityChange: SimInputChange.decrease))
+                  else if (event is KeyUpEvent)
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send((velocityChange: SimInputChange.hold)),
+                },
+              LogicalKeyboardKey.keyA || LogicalKeyboardKey.arrowLeft => {
+                  if (event is KeyDownEvent)
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send((steeringChange: SimInputChange.decrease))
+                  else if (event is KeyUpEvent)
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send((steeringChange: SimInputChange.hold)),
+                },
+              LogicalKeyboardKey.keyD || LogicalKeyboardKey.arrowRight => {
+                  if (event is KeyDownEvent)
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send((steeringChange: SimInputChange.increase))
+                  else if (event is KeyUpEvent)
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send((steeringChange: SimInputChange.hold)),
+                },
+              _ => null
+            },
+            focusNode: FocusNode(
+              descendantsAreFocusable: false,
+              descendantsAreTraversable: false,
+      ),
+            child: stack,
+          )
+        : stack;
   }
 }
