@@ -279,6 +279,10 @@ class SimCoreDebugAllowLongBreaks extends _$SimCoreDebugAllowLongBreaks {
 Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
   final receivePort = ReceivePort('Recieve from sim port');
 
+  BackgroundIsolateBinaryMessenger.ensureInitialized(
+    ServicesBinding.rootIsolateToken!,
+  );
+
   final isolate = await Isolate.spawn(
     SimulatorCore.isolateWorker,
     receivePort.sendPort,
@@ -294,7 +298,8 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
 
   final simCoreReceiveStream = StreamQueue<dynamic>(receivePort);
 
-  final sendPort = await simCoreReceiveStream.next as SendPort;
+  final sendPort = (await simCoreReceiveStream.next as SendPort)
+    ..send(ServicesBinding.rootIsolateToken);
 
   ref.read(_simCoreIsolatePortProvider.notifier).update(sendPort);
 

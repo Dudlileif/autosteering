@@ -116,11 +116,7 @@ class SimulatorCore {
       (timer) => udpSendStream.add(heartbeatUDPMessage),
     );
 
-    final logDirectoryPath = [
-      (await getApplicationDocumentsDirectory()).path,
-      '/Autosteering/logs',
-    ].join();
-    final messageDecoder = MessageDecoder(logDirectoryPath: logDirectoryPath);
+    late final MessageDecoder messageDecoder;
 
     void handleUdpData(Datagram? datagram) {
       lastHardwareMessageTime = DateTime.now();
@@ -215,8 +211,17 @@ class SimulatorCore {
 
     // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
+      /// Ensure that the isolate messaging is ready.
+      if (message is RootIsolateToken) {
+        BackgroundIsolateBinaryMessenger.ensureInitialized(message);
+        final logDirectoryPath = [
+          (await getApplicationDocumentsDirectory()).path,
+          '/Autosteering/logs',
+        ].join();
+        messageDecoder = MessageDecoder(logDirectoryPath: logDirectoryPath);
+      }
       // Update the udp ip adress for the hardware.
-      if (message is ({
+      else if (message is ({
         String hardwareAddress,
         int hardwareUDPReceivePort,
         int hardwareUDPSendPort
