@@ -45,17 +45,14 @@ class MainVehicle extends _$MainVehicle {
   void reset() => ref.invalidateSelf();
 }
 
-/// A provider for whether the vehicle should steer automatically.
+/// A provider for the active [AutosteeringState] of the vehicle.
 @Riverpod(keepAlive: true)
-class AutoSteerEnabled extends _$AutoSteerEnabled {
+class ActiveAutosteeringState extends _$ActiveAutosteeringState {
   @override
-  bool build() => false;
+  AutosteeringState build() => AutosteeringState.disabled;
 
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current [state].
-  void toggle() => Future(() => state = !state);
+  /// Updates [state] to [value].
+  void update(AutosteeringState value) => Future(() => state = value);
 }
 
 /// A provider for saving [vehicle] to a file in the user file directory.

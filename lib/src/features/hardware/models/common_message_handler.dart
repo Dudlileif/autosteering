@@ -89,14 +89,18 @@ class CommonMessageHandler {
           );
     } else if (message is ({bool motorStalled})) {
       if (message.motorStalled) {
-        ref.read(simInputProvider.notifier).send((enableAutoSteer: false));
+        ref
+            .read(simInputProvider.notifier)
+            .send((enableAutoSteer: false, stalled: true));
         ref
             .read(steeringMotorStatusProvider.notifier)
             .update(MotorStatus.stalled);
       }
     } else if (message is ({bool motorNoCommand})) {
       if (message.motorNoCommand) {
-        ref.read(simInputProvider.notifier).send((enableAutoSteer: false));
+        ref
+            .read(simInputProvider.notifier)
+            .send((enableAutoSteer: false, noCommand: true));
         ref
             .read(steeringMotorStatusProvider.notifier)
             .update(MotorStatus.noCommand);
@@ -141,7 +145,6 @@ class CommonMessageHandler {
             )
             .update(message.stepsPerWasIncrementCenterToMax);
       }
-      
     } else if (message is LogEvent) {
       Logger.instance.log(
         message.level,

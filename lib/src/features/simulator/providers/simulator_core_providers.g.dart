@@ -43,7 +43,7 @@ final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
-String _$initializeSimCoreHash() => r'eda6d56bf9f82dec691ab6ac39b4e17d5cfcf101';
+String _$initializeSimCoreHash() => r'bc303acd6d5b1aec834cda3731dfb19a825d16b5';
 
 /// Sends initial parameters to  the sim core.
 ///
@@ -61,7 +61,7 @@ final _initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
 
 typedef _InitializeSimCoreRef = AutoDisposeProviderRef<void>;
 String _$commonSimCoreMessageHandlerHash() =>
-    r'bd864618f7cb1d377dc405b132ddd2b1c72e3dba';
+    r'bd18013072afeb938d1f5ea60f6343da59c51eef';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -128,7 +128,7 @@ class CommonSimCoreMessageHandlerFamily extends Family {
       num distance,
       PathTracking? pathTracking,
       ABTracking? abTracking,
-      bool autoSteerEnabled,
+      AutosteeringState autosteeringState,
       bool hardwareIsConnected
     }) message,
   ) {
@@ -188,7 +188,7 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
       num distance,
       PathTracking? pathTracking,
       ABTracking? abTracking,
-      bool autoSteerEnabled,
+      AutosteeringState autosteeringState,
       bool hardwareIsConnected
     }) message,
   ) : this._internal(
@@ -225,7 +225,7 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
     num distance,
     PathTracking? pathTracking,
     ABTracking? abTracking,
-    bool autoSteerEnabled,
+    AutosteeringState autosteeringState,
     bool hardwareIsConnected
   }) message;
 
@@ -256,7 +256,7 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
       num distance,
       PathTracking? pathTracking,
       ABTracking? abTracking,
-      bool autoSteerEnabled,
+      AutosteeringState autosteeringState,
       bool hardwareIsConnected
     }),
   ) get argument {
@@ -306,7 +306,7 @@ mixin CommonSimCoreMessageHandlerRef on AutoDisposeProviderRef<void> {
     num distance,
     PathTracking? pathTracking,
     ABTracking? abTracking,
-    bool autoSteerEnabled,
+    AutosteeringState autosteeringState,
     bool hardwareIsConnected
   }) get message;
 }
@@ -324,7 +324,7 @@ class _CommonSimCoreMessageHandlerProviderElement
     num distance,
     PathTracking? pathTracking,
     ABTracking? abTracking,
-    bool autoSteerEnabled,
+    AutosteeringState autosteeringState,
     bool hardwareIsConnected
   }) get message => (origin as CommonSimCoreMessageHandlerProvider).message;
 }
@@ -351,7 +351,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreIsolateStreamHash() =>
-    r'bab4e2218d888d714795685c37440ab9f80267f7';
+    r'1dd0be5add34e3f6aafb99adf11633261f04a740';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.

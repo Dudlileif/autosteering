@@ -14,7 +14,7 @@ class ABTrackingDebugLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-const pointTextStyle = TextStyle(color: Colors.white);
+    const pointTextStyle = TextStyle(color: Colors.white);
 
     ref
       ..watch(aBCurveDebugProvider)
@@ -34,7 +34,10 @@ const pointTextStyle = TextStyle(color: Colors.white);
 
     final pointB = abTracking?.end ?? ref.watch(aBPointBProvider);
 
-    final autoSteerEnabled = ref.watch(autoSteerEnabledProvider);
+    final autoSteerEnabled = ref.watch(
+      activeAutosteeringStateProvider
+          .select((value) => value != AutosteeringState.disabled),
+    );
 
     final vehicle = ref.watch(mainVehicleProvider);
 
@@ -109,7 +112,6 @@ const pointTextStyle = TextStyle(color: Colors.white);
         if (abTracking != null || pointA != null || pointB != null)
           CircleLayer(
             circles: [
-            
               if (abTracking != null) ...[
                 CircleMarker(
                   point: abTracking.currentStart.position.latLng,
@@ -201,7 +203,6 @@ const pointTextStyle = TextStyle(color: Colors.white);
           ),
         MarkerLayer(
           markers: [
-          
             if (abTracking != null) ...[
               Marker(
                 point: abTracking.start.position.latLng,
@@ -209,7 +210,6 @@ const pointTextStyle = TextStyle(color: Colors.white);
                   'A',
                   style: pointTextStyle,
                   strokeWidth: 4,
-
                 ),
                 rotate: true,
                 width: 50,
@@ -221,7 +221,6 @@ const pointTextStyle = TextStyle(color: Colors.white);
                   'B',
                   style: pointTextStyle,
                   strokeWidth: 4,
-
                 ),
                 rotate: true,
                 width: 50,
@@ -233,7 +232,6 @@ const pointTextStyle = TextStyle(color: Colors.white);
                   'A${abTracking.currentOffset}',
                   style: pointTextStyle,
                   strokeWidth: 4,
-
                 ),
                 rotate: true,
                 width: 50,
@@ -245,7 +243,6 @@ const pointTextStyle = TextStyle(color: Colors.white);
                   'B${abTracking.currentOffset}',
                   style: pointTextStyle,
                   strokeWidth: 4,
-
                 ),
                 rotate: true,
                 width: 50,
@@ -258,7 +255,6 @@ const pointTextStyle = TextStyle(color: Colors.white);
                     'A${abTracking.nextOffset}',
                     style: pointTextStyle,
                     strokeWidth: 4,
-
                   ),
                   rotate: true,
                   width: 50,

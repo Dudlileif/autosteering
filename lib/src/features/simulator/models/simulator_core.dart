@@ -12,7 +12,7 @@ import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:geobase/geobase.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:udp/udp.dart';
@@ -83,7 +83,7 @@ class SimulatorCore {
               distance: state.distance,
               pathTracking: state.pathTracking,
               abTracking: state.abTracking,
-              autoSteerEnabled: state.autoSteerEnabled,
+              autosteeringState: state.autosteeringState,
               hardwareIsConnected: hardwareIsConnected,
             ),
           );
@@ -356,7 +356,7 @@ class SimulatorCore {
         num distance,
         PathTracking? pathTracking,
         ABTracking? abTracking,
-        bool autoSteerEnabled,
+        AutosteeringState autosteeringState,
         bool hardwareIsConnected,
       })> webWorker(
     Stream<dynamic> vehicleEvents,
@@ -408,7 +408,7 @@ class SimulatorCore {
           num distance,
           PathTracking? pathTracking,
           ABTracking? abTracking,
-          bool autoSteerEnabled,
+          AutosteeringState autosteeringState,
           bool hardwareIsConnected,
         })>();
 
@@ -437,7 +437,7 @@ class SimulatorCore {
               distance: state.distance,
               pathTracking: state.pathTracking,
               abTracking: state.abTracking,
-              autoSteerEnabled: state.autoSteerEnabled,
+              autosteeringState: state.autosteeringState,
               hardwareIsConnected: hardwareIsConnected,
             ),
           );
@@ -551,8 +551,8 @@ class _SimulatorCoreState {
   /// The sign for which direction the vehicle is driving.
   int drivingDirectionSign = 1;
 
-  /// The velocity threshold for activating auto steering.
-  double autoSteerThresholdVelocity = 0.1;
+  /// The velocity threshold for activating auto steering, m/s.
+  double autoSteerThresholdVelocity = 0.05;
 
   /// The target steering angle when guidance is active.
   double? steeringAngleTarget;
@@ -572,7 +572,8 @@ class _SimulatorCoreState {
   /// A configuration for [abTracking] parameters.
   ABConfig? abConfig;
 
-  /// Whether driving without [autoSteerEnabled] should update path
+  /// Whether driving without
+  /// [autosteeringState] = [AutosteeringState.enabled] should update path
   /// tracking paths.
   bool allowManualTrackingUpdates = true;
 
@@ -604,7 +605,7 @@ class _SimulatorCoreState {
   bool enablePathTracking = false;
 
   /// Whehter the vehicle should automatically steer.
-  bool autoSteerEnabled = false;
+  AutosteeringState autosteeringState = AutosteeringState.disabled;
 
   /// Which mode the [pathTracking] should use to go from the last to the first
   /// waypoint.
@@ -793,11 +794,11 @@ class _SimulatorCoreState {
             .add(LogEvent(Level.warning, 'Attempting to activate Autosteer.'));
 
         if (abTracking != null || pathTracking != null) {
-          autoSteerEnabled = true;
+          autosteeringState = AutosteeringState.enabled;
           mainThreadSendStream
               .add(LogEvent(Level.warning, 'Autosteer enabled!'));
         } else {
-          autoSteerEnabled = false;
+          autosteeringState = AutosteeringState.disabled;
           mainThreadSendStream.add(
             LogEvent(
               Level.warning,
@@ -807,14 +808,22 @@ class _SimulatorCoreState {
         }
       }
       // Disable autosteer and motor
-      else if (autoSteerEnabled) {
-        autoSteerEnabled = false;
+      else if (autosteeringState != AutosteeringState.disabled) {
+        autosteeringState = AutosteeringState.disabled;
         mainThreadSendStream.add(
           LogEvent(
             Level.warning,
             'Autosteer disabled!',
           ),
         );
+      }
+    } else if (message is ({bool enableAutoSteer, bool noCommand})) {
+      if (message.noCommand && autosteeringState == AutosteeringState.enabled) {
+        autosteeringState = AutosteeringState.disabled;
+      }
+    } else if (message is ({bool enableAutoSteer, bool stalled})) {
+      if (message.stalled) {
+        autosteeringState = AutosteeringState.disabled;
       }
     }
     // Set the path tracking model.
@@ -1093,7 +1102,8 @@ class _SimulatorCoreState {
 
         case SimInputChange.hold:
           receivingManualInput = false;
-          if (autoCenterSteering && !autoSteerEnabled) {
+          if (autoCenterSteering &&
+              autosteeringState == AutosteeringState.disabled) {
             // Centering rate deg/s, slow down to not overshoot the min steering
             // angle in the opposite direction
             final centeringRate = switch (vehicle!.steeringAngle.abs() < 0.5) {
@@ -1130,14 +1140,14 @@ class _SimulatorCoreState {
     }
   }
 
-  /// Check and update the guidance, autosteering etc..
+  /// Check and update the guidance, autosteering etc...
   ///
   /// Checks and updates the [abTracking] and [pathTracking].
-  /// If [autoSteerEnabled] the steering will
   void checkGuidance() {
     if (vehicle != null) {
       abTracking?.checkAutoOffsetSnap(vehicle!);
-      if (!autoSteerEnabled && allowManualTrackingUpdates) {
+      if (autosteeringState == AutosteeringState.disabled &&
+          allowManualTrackingUpdates) {
         abTracking?.manualUpdate(vehicle!);
       }
 
@@ -1154,7 +1164,7 @@ class _SimulatorCoreState {
         }
       }
 
-      if (autoSteerEnabled &&
+      if (autosteeringState != AutosteeringState.disabled &&
           !receivingManualInput &&
           !motorCalibrationEnabled) {
         // Only allow steering if vehicle is moving to prevent jitter that
@@ -1168,6 +1178,7 @@ class _SimulatorCoreState {
           steeringChange = SimInputChange.increase;
         }
 
+        if (vehicle!.velocity.abs() > autoSteerThresholdVelocity) {
         wasTarget = vehicle!.was.reading.value;
         if (vehicle!.velocity.abs() > autoSteerThresholdVelocity
             // &&    steeringAngleTarget != vehicle!.steeringAngleInput
@@ -1186,6 +1197,11 @@ class _SimulatorCoreState {
             ),
           ),
         );
+          autosteeringState = AutosteeringState.enabled;
+        } else {
+          autosteeringState = AutosteeringState.standby;
+          wasTarget = null;
+        }
       } else if (motorCalibrationEnabled) {
         networkSendStream?.add(
           const Utf8Encoder().convert(

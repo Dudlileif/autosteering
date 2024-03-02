@@ -45,7 +45,7 @@ final steeringMotorActualRPMProvider =
 
 typedef _$SteeringMotorActualRPM = AutoDisposeNotifier<double?>;
 String _$steeringMotorStatusHash() =>
-    r'd5ee5fac472132bdfaef3b9d5e6652097bc026ad';
+    r'3f5d060c8911540c0b36aecf0f271c317ade9592';
 
 /// A provider for the steering motor is enabled when using guidance.
 ///

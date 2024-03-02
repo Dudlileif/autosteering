@@ -9,7 +9,7 @@ class PreconfiguredVehicles {
         length: 3.8,
         width: 2.360,
         wheelBase: 2.550,
-        solidAxleDistance: 1.275,
+        solidAxleDistance: 1.2,
         trackWidth: 1.8,
         minTurningRadius: 4.25,
         steeringAngleMax: 31,

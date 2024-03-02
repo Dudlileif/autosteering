@@ -15,18 +15,19 @@ class EnableAutosteeringButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        final enabled = ref.watch(autoSteerEnabledProvider);
+        final state = ref.watch(activeAutosteeringStateProvider);
 
         return FloatingActionButton(
           onPressed: () => ref
               .read(simInputProvider.notifier)
-              .send((enableAutoSteer: !enabled)),
-          backgroundColor: switch (enabled) {
-            true => Colors.red,
-            false => Colors.green,
+              .send((enableAutoSteer: state == AutosteeringState.disabled)),
+          backgroundColor: switch (state) {
+            AutosteeringState.disabled => Colors.green,
+            AutosteeringState.standby => Colors.blue,
+            AutosteeringState.enabled => Colors.red,
           },
           foregroundColor: Colors.white,
-          tooltip: switch (enabled) {
+          tooltip: switch (state != AutosteeringState.disabled) {
             false => 'Enable auto steering',
             true => 'Disable auto steering'
           },
@@ -35,7 +36,7 @@ class EnableAutosteeringButton extends StatelessWidget {
               Align(
                 heightFactor: 1.5,
                 child: Icon(
-                  switch (enabled) {
+                  switch (state != AutosteeringState.disabled) {
                     true => Icons.stop_circle,
                     false => Icons.play_circle
                   },

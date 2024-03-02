@@ -178,6 +178,7 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
                       size: widget.size,
                       color: switch (motorStatus) {
                         MotorStatus.running => Colors.green,
+                        MotorStatus.standby => Colors.blue, 
                         MotorStatus.stalled => Colors.orange,
                         MotorStatus.disabled => Colors.red,
                         MotorStatus.freeWheeling => Colors.blue,

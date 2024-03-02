@@ -501,24 +501,25 @@ final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
 );
 
 typedef _$MainVehicle = Notifier<Vehicle>;
-String _$autoSteerEnabledHash() => r'3825c9c26ad90ae171f028e130ee99ac03c94f61';
+String _$activeAutosteeringStateHash() =>
+    r'35c2fabbbb9a104f1c1794d94049ad4cd0e2b65f';
 
-/// A provider for whether the vehicle should steer automatically.
+/// A provider for the active [AutosteeringState] of the vehicle.
 ///
-/// Copied from [AutoSteerEnabled].
-@ProviderFor(AutoSteerEnabled)
-final autoSteerEnabledProvider =
-    NotifierProvider<AutoSteerEnabled, bool>.internal(
-  AutoSteerEnabled.new,
-  name: r'autoSteerEnabledProvider',
+/// Copied from [ActiveAutosteeringState].
+@ProviderFor(ActiveAutosteeringState)
+final activeAutosteeringStateProvider =
+    NotifierProvider<ActiveAutosteeringState, AutosteeringState>.internal(
+  ActiveAutosteeringState.new,
+  name: r'activeAutosteeringStateProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$autoSteerEnabledHash,
+      : _$activeAutosteeringStateHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AutoSteerEnabled = Notifier<bool>;
+typedef _$ActiveAutosteeringState = Notifier<AutosteeringState>;
 String _$gaugesAverageCountHash() =>
     r'8b36c1bc95239048650b55ea1f7da6920ea3ddc0';
 

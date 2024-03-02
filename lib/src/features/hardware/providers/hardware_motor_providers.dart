@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hardware_motor_providers.g.dart';
@@ -48,10 +49,18 @@ class SteeringMotorStatus extends _$SteeringMotorStatus {
   MotorStatus? build() {
     ref.listenSelf((previous, next) {
       if (previous != next) {
-        Logger.instance.log(
-          Level.warning,
-          'Motor status: $next',
-        );
+        if (ref.read(activeAutosteeringStateProvider) ==
+            AutosteeringState.standby) {
+          Logger.instance.log(
+            Level.warning,
+            'Motor status: standby',
+          );
+        } else {
+          Logger.instance.log(
+            Level.warning,
+            'Motor status: $next',
+          );
+        }
       }
 
       _resetTimer?.cancel();
@@ -182,7 +191,6 @@ class SteeringMotorTargetRotation extends _$SteeringMotorTargetRotation {
   /// Updates [state] to [value].
   void update(double? value) => Future(() => state = value);
 }
-
 
 /// A provider for the motor steps per WAS increment between WAS min and center
 /// value.

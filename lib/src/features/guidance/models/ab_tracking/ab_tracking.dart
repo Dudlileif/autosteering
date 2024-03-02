@@ -13,11 +13,14 @@ import 'package:geobase/geobase.dart';
 export 'ab_config.dart';
 export 'ab_limit_mode.dart';
 
+part 'a_plus_line.dart';
 part 'ab_curve.dart';
 part 'ab_line.dart';
-part 'a_plus_line.dart';
 
 //TODO (dudlileif): Fix crash when reaching the final line/curve offset
+
+//TODO (dudlileif): Improve line creation, sometimes wrong side of polygon
+// border
 
 /// A base class for common variables and methods for AB based guidance
 /// models.

@@ -12,6 +12,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'simulator_core_providers.g.dart';
@@ -187,9 +188,6 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
     ..send(ref.read(activeABConfigProvider))
     ..send((pathTracking: ref.read(displayPathTrackingProvider)))
     ..send((abTracking: ref.read(displayABTrackingProvider)))
-    ..send(
-      (enableAutoSteer: ref.read(autoSteerEnabledProvider)),
-    )
     ..send((sendMessagesToHardware: ref.read(sendMessagesToHardwareProvider)))
     ..send(
       (
@@ -213,7 +211,7 @@ void commonSimCoreMessageHandler(
     num distance,
     PathTracking? pathTracking,
     ABTracking? abTracking,
-    bool autoSteerEnabled,
+    AutosteeringState autosteeringState,
     bool hardwareIsConnected,
   }) message,
 ) {
@@ -225,8 +223,8 @@ void commonSimCoreMessageHandler(
   ref.read(displayPathTrackingProvider.notifier).update(message.pathTracking);
   ref.read(displayABTrackingProvider.notifier).update(message.abTracking);
   ref
-      .read(autoSteerEnabledProvider.notifier)
-      .update(value: message.autoSteerEnabled);
+      .read(activeAutosteeringStateProvider.notifier)
+      .update(message.autosteeringState);
   ref
       .read(hardwareNetworkAliveProvider.notifier)
       .update(value: message.hardwareIsConnected);
@@ -346,7 +344,7 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
       num distance,
       PathTracking? pathTracking,
       ABTracking? abTracking,
-      bool autoSteerEnabled,
+      AutosteeringState autosteeringState,
       bool hardwareIsConnected,
     })) {
       ref.read(commonSimCoreMessageHandlerProvider(message));
