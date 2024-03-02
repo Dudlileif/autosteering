@@ -397,11 +397,17 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Returns the WAS reading target for the given steering [angle].
   int wasTargetFromSteeringAngle(double angle) => switch (angle < 0) {
-        true => ((was.config.center - was.config.min) * angle.abs())
-            .round()
+        true => (was.config.center -
+                ((was.config.center - was.config.min) *
+                        angle.abs() /
+                        steeringAngleMax)
+                    .round())
             .clamp(was.config.min, was.config.center),
-        false => ((was.config.max - was.config.center) * angle.abs())
-            .round()
+        false => (was.config.center +
+                ((was.config.max - was.config.center) *
+                        angle.abs() /
+                        steeringAngleMax)
+                    .round())
             .clamp(was.config.center, was.config.max),
       };
 

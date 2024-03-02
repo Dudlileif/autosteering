@@ -1179,24 +1179,17 @@ class _SimulatorCoreState {
         }
 
         if (vehicle!.velocity.abs() > autoSteerThresholdVelocity) {
-        wasTarget = vehicle!.was.reading.value;
-        if (vehicle!.velocity.abs() > autoSteerThresholdVelocity
-            // &&    steeringAngleTarget != vehicle!.steeringAngleInput
-            ) {
-          wasTarget = vehicle!.wasTargetFromSteeringAngle(
-            vehicle!.nextSteeringAnglePid(steeringAngleTarget!),
-          );
-        }
-        networkSendStream?.add(
-          const Utf8Encoder().convert(
-            jsonEncode(
-              {
-                'was_target': wasTarget,
-                'enable_motor': autoSteerEnabled,
-              },
+          wasTarget = vehicle!.wasTargetFromSteeringAngle(steeringAngleTarget!);
+          networkSendStream?.add(
+            const Utf8Encoder().convert(
+              jsonEncode(
+                {
+                  'was_target': wasTarget,
+                  'enable_motor': true,
+                },
+              ),
             ),
-          ),
-        );
+          );
           autosteeringState = AutosteeringState.enabled;
         } else {
           autosteeringState = AutosteeringState.standby;
