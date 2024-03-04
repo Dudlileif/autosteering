@@ -285,7 +285,7 @@ final mapReadyProvider = NotifierProvider<MapReady, bool>.internal(
 );
 
 typedef _$MapReady = Notifier<bool>;
-String _$mainMapControllerHash() => r'0149004eceae437d7690f72f239fdc8dca47ec31';
+String _$mainMapControllerHash() => r'6e22ca151a754ce9445ee6f3dd6000be299ca272';
 
 /// The main [MapController] provider, which allows controlling the map from
 /// outside the widget code itself.

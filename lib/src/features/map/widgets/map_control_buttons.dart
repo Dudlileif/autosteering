@@ -150,7 +150,9 @@ class MapControlButtons extends StatelessWidget {
                 backgroundColor:
                     theme.colorScheme.primaryContainer.withOpacity(0.6),
                 onPressed: () =>
-                    ref.read(mainMapControllerProvider.notifier).zoomIn(0.25),
+                    ref
+                    .read(mainMapControllerProvider.notifier)
+                    .zoomInSnap(0.25),
                 child: const Icon(
                   Icons.zoom_in,
                   size: 50,
@@ -168,7 +170,9 @@ class MapControlButtons extends StatelessWidget {
                 backgroundColor:
                     theme.colorScheme.primaryContainer.withOpacity(0.6),
                 onPressed: () =>
-                    ref.read(mainMapControllerProvider.notifier).zoomOut(0.25),
+                    ref
+                    .read(mainMapControllerProvider.notifier)
+                    .zoomOutSnap(0.25),
                 child: const Icon(
                   Icons.zoom_out,
                   size: 50,

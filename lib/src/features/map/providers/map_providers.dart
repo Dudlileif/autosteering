@@ -39,6 +39,32 @@ class MainMapController extends _$MainMapController {
   void zoomOut(double value) => Future(
         () => state.move(state.camera.center, state.camera.zoom - value),
       );
+
+  /// Increase the zoom value of the [state] by [value], and snap the result to
+  /// the closest [value] step.
+  void zoomInSnap(double value) => Future(
+        () {
+          final newZoom = state.camera.zoom + value;
+          return state.move(
+            state.camera.center,
+            newZoom.truncateToDouble() +
+                ((newZoom - newZoom.truncate()) ~/ value) * value,
+          );
+        },
+      );
+
+  /// Decrease the zoom value of the [state] by [value], and snap the result to
+  /// the closest [value] step.
+  void zoomOutSnap(double value) => Future(
+        () {
+          final newZoom = state.camera.zoom - value;
+          return state.move(
+            state.camera.center,
+            newZoom.truncateToDouble() +
+                ((newZoom - newZoom.truncate()) ~/ value) * value,
+          );
+        },
+      );
 }
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
