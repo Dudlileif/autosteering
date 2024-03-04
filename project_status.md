@@ -47,6 +47,8 @@
 
 ## To be implemented
 
+- Implement tablet/phone UI
+
 - Improved performance,
   - ~~Immutable/copyWith vehicle/equipment implementation is too taxing~~ improved with mutable vehicle/equipments
   - ~~Look into `canvas.drawVertices` for drawing the worked equipment paths~~ worked paths are now drawn correctly with overlap

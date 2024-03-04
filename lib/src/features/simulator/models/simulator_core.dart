@@ -1159,14 +1159,21 @@ class _SimulatorCoreState {
     if (vehicle != null) {
       abTracking?.checkAutoOffsetSnap(vehicle!);
       if (autosteeringState == AutosteeringState.disabled &&
-          allowManualTrackingUpdates) {
-        abTracking?.manualUpdate(vehicle!);
+          allowManualTrackingUpdates &&
+          abTracking != null &&
+          !abTracking!.isCompleted) {
+        abTracking!.manualUpdate(vehicle!);
       }
 
       steeringAngleTarget = 0.0;
       if (abTracking != null) {
-        steeringAngleTarget =
-            abTracking!.nextSteeringAngle(vehicle!, mode: pathTrackingMode);
+        if (abTracking!.isCompleted) {
+          autosteeringState = AutosteeringState.disabled;
+        } else {
+          steeringAngleTarget =
+              abTracking!.nextSteeringAngle(vehicle!, mode: pathTrackingMode) ??
+                  0;
+        }
       } else if (pathTracking != null) {
         pathTracking!.tryChangeWayPoint(vehicle!);
 
@@ -1195,6 +1202,15 @@ class _SimulatorCoreState {
         } else {
           autosteeringState = AutosteeringState.standby;
           wasTarget = null;
+          networkSendStream?.add(
+            const Utf8Encoder().convert(
+              jsonEncode(
+                {
+                  'enable_motor': false,
+                },
+              ),
+            ),
+          );
         }
       } else if (motorCalibrationEnabled) {
         networkSendStream?.add(
@@ -1210,6 +1226,16 @@ class _SimulatorCoreState {
         wasTarget = null;
       } else {
         wasTarget = null;
+        networkSendStream?.add(
+          const Utf8Encoder().convert(
+            jsonEncode(
+              {
+                'enable_motor': false,
+              },
+            ),
+          ),
+        );
+        
       }
       mainThreadSendStream
         ..add((steeringAngleTarget: steeringAngleTarget))

@@ -13,7 +13,6 @@ part 'stanley_path_tracking/stanley_path_tracking.dart';
 
 /// An enumerator for which path tracking mode to use.
 enum PathTrackingMode {
-
   /// Use Pure Pursuit (look ahead) to control the steering.
   purePursuit,
 
@@ -68,7 +67,9 @@ sealed class PathTracking {
 
   /// The maximum distance between points in the path, points will be
   /// interpolated if the [wayPoints] are too far apart.
-  double interpolationDistance;
+  ///
+  /// If set to 0 or null, no interpolation will be applied.
+  double? interpolationDistance;
 
   /// Dictates what should happen between the last and the first points of
   /// [wayPoints]. This can add a straight line or Dubins path from last to
@@ -129,48 +130,52 @@ sealed class PathTracking {
     loopMode = newLoopMode ?? loopMode;
     path = List<WayPoint>.from(wayPoints);
 
-    var index = 0;
+    if (interpolationDistance != null && interpolationDistance! > 0) {
+      var index = 0;
 
-    while (index + 1 < path.length) {
-      final point = path[index];
-      final nextPoint = path[index + 1];
-      if (point.position.rhumb.distanceTo(nextPoint.position) >
-          interpolationDistance) {
-        path.insert(
-          index + 1,
-          point.copyWith(
-            position: point.position.rhumb.destinationPoint(
-              distance: interpolationDistance,
-              bearing:
-                  point.position.rhumb.initialBearingTo(nextPoint.position),
+      while (index + 1 < path.length) {
+        final point = path[index];
+        final nextPoint = path[index + 1];
+        if (point.position.rhumb.distanceTo(nextPoint.position) >
+            interpolationDistance!) {
+          path.insert(
+            index + 1,
+            point.copyWith(
+              position: point.position.rhumb.destinationPoint(
+                distance: interpolationDistance!,
+                bearing:
+                    point.position.rhumb.initialBearingTo(nextPoint.position),
+              ),
             ),
-          ),
-        );
+          );
+        }
+        index++;
       }
-      index++;
+
+      if (loopMode == PathTrackingLoopMode.straight) {
+        while (path.last.position.rhumb.distanceTo(
+              path.first.position,
+            ) >
+            (interpolationDistance ?? 4)) {
+          path.add(
+            path.last.copyWith(
+              position: path.last.position.rhumb.destinationPoint(
+                distance: interpolationDistance ?? 4,
+                bearing: path.last.position.rhumb
+                    .initialBearingTo(path.first.position),
+              ),
+            ),
+          );
+        }
+      }
     }
 
-    if (loopMode == PathTrackingLoopMode.straight) {
-      while (path.last.position.rhumb.distanceTo(
-            path.first.position,
-          ) >
-          interpolationDistance) {
-        path.add(
-          path.last.copyWith(
-            position: path.last.position.rhumb.destinationPoint(
-              distance: interpolationDistance,
-              bearing: path.last.position.rhumb
-                  .initialBearingTo(path.first.position),
-            ),
-          ),
-        );
-      }
-    } else if (loopMode == PathTrackingLoopMode.dubins) {
+    if (loopMode == PathTrackingLoopMode.dubins) {
       final dubinsPath = DubinsPath(
         start: path.last,
         end: path.first,
         turningRadius: 6,
-        stepSize: interpolationDistance / 3,
+        stepSize: (interpolationDistance ?? 4) / 3,
       ).bestDubinsPathPlan?.wayPoints;
 
       if (dubinsPath != null) {
@@ -313,9 +318,9 @@ sealed class PathTracking {
   double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode});
 }
 
-/// An extension to [Vehicle] for finding the right path tracking reference
+/// An extension on [Vehicle] for finding the right path tracking reference
 /// point.
-extension PathTrackingExtension on Vehicle {
+extension VehiclePathTrackingExtension on Vehicle {
   /// Finds the point position corresponding to the [pathTrackingMode].
   Geographic get pathTrackingPoint => switch (pathTrackingMode) {
         PathTrackingMode.purePursuit => lookAheadStartPosition,

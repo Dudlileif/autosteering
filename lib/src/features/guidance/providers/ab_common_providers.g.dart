@@ -120,7 +120,7 @@ final aBDebugNumPointsBehindProvider =
 );
 
 typedef _$ABDebugNumPointsBehind = Notifier<int>;
-String _$aBWidthHash() => r'47769e014f59ddf9602233b103ac75007e502a19';
+String _$aBWidthHash() => r'bd59cfec1cc976da5f751308939cb42623dd3f69';
 
 /// A provider for the width of an AB-line.
 ///
@@ -248,25 +248,6 @@ final displayABTrackingProvider =
 );
 
 typedef _$DisplayABTracking = Notifier<ABTracking?>;
-String _$displayABTrackingLinesHash() =>
-    r'84f7128b54aa99eb72494ee13284f6c61288e87c';
-
-/// A provider for the calculated AB lines/curves.
-///
-/// Copied from [DisplayABTrackingLines].
-@ProviderFor(DisplayABTrackingLines)
-final displayABTrackingLinesProvider = NotifierProvider<DisplayABTrackingLines,
-    Map<int, List<WayPoint>>?>.internal(
-  DisplayABTrackingLines.new,
-  name: r'displayABTrackingLinesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$displayABTrackingLinesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$DisplayABTrackingLines = Notifier<Map<int, List<WayPoint>>?>;
 String _$aBPointAHash() => r'e252191ee1e97e99fda0adb571430f78018385d5';
 
 /// A provider for the starting point A of an AB-line.
@@ -299,5 +280,25 @@ final aBPointBProvider = NotifierProvider<ABPointB, WayPoint?>.internal(
 );
 
 typedef _$ABPointB = Notifier<WayPoint?>;
+String _$aBTrackingShowAllLinesHash() =>
+    r'21c7c4b28493f8c307f9601213256d18b9596db7';
+
+/// A provider for whether all the calculated lines for the AB tracking should
+/// be shown.
+///
+/// Copied from [ABTrackingShowAllLines].
+@ProviderFor(ABTrackingShowAllLines)
+final aBTrackingShowAllLinesProvider =
+    NotifierProvider<ABTrackingShowAllLines, bool>.internal(
+  ABTrackingShowAllLines.new,
+  name: r'aBTrackingShowAllLinesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$aBTrackingShowAllLinesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ABTrackingShowAllLines = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

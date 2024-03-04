@@ -30,6 +30,18 @@ class ABCommonMenu extends StatelessWidget {
           ),
         ),
         Consumer(
+          child: Text('Show all lines', style: textStyle),
+          builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            value: ref.watch(aBTrackingShowAllLinesProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(aBTrackingShowAllLinesProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
+        Consumer(
           builder: (context, ref, child) {
             final limitMode = ref.watch(aBTrackingLimitModeProvider);
             return MenuButtonWithChildren(

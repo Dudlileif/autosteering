@@ -2,10 +2,10 @@ part of '../path_tracking.dart';
 
 /// A class for path tracking that utilizes the pure pursuit algorithm.
 ///
-/// The pure pursuit algorithm finds a point a certain distance ahead of it and
-/// attempts to chase it. This continually happens until the end of the path is
-/// reached, where it can loop back to the starting point in a couple different
-/// ways or stop tracking.
+/// The pure pursuit algorithm finds a point a certain distance ahead of the
+/// vehicle and attempts to chase it. This continually happens until the end of
+/// the path is reached, where it can loop back to the starting point in a
+/// couple different ways or stop tracking.
 final class PurePursuitPathTracking extends PathTracking {
   /// A class for path tracking that utilizes the pure pursuit algorithm.
   ///
@@ -20,17 +20,13 @@ final class PurePursuitPathTracking extends PathTracking {
   /// points in the path, points will be interpolated if the [wayPoints] are
   /// too far apart.
   ///
-  /// The [loopMode] dictates what the vehicle should do when it
-  /// finishes the path.
+  /// The [loopMode] dictates what the vehicle should do when it finishes the
+  /// path.
   PurePursuitPathTracking({
     required super.wayPoints,
     super.interpolationDistance,
     super.loopMode,
   });
-
-  /// The PID controller for controlling the steering angle in the PID steering
-  /// mode.
-  final pidController = PidController();
 
   /// Finds the points that we use to get the secant line that intersects
   /// the circle with radius [lookAheadDistance] from the [vehicle]'s
@@ -129,8 +125,7 @@ final class PurePursuitPathTracking extends PathTracking {
     );
 
     final secantBearing =
-        points.inside.position.rhumb
-        .initialBearingTo(points.outside!.position);
+        points.inside.position.rhumb.initialBearingTo(points.outside!.position);
 
     return vehicle.lookAheadStartPosition.rhumb.destinationPoint(
       distance: crossDistance,
@@ -179,8 +174,7 @@ final class PurePursuitPathTracking extends PathTracking {
     );
 
     final secantBearing =
-        points.inside.position.rhumb
-        .initialBearingTo(points.outside!.position);
+        points.inside.position.rhumb.initialBearingTo(points.outside!.position);
 
     final vehicleToLineProjection =
         points.inside.position.rhumb.destinationPoint(
@@ -188,9 +182,8 @@ final class PurePursuitPathTracking extends PathTracking {
       bearing: secantBearing,
     );
 
-    var vehicleLineProjectionToInsidePointBearing = vehicleToLineProjection
-        .rhumb
-        .initialBearingTo(points.inside.position);
+    var vehicleLineProjectionToInsidePointBearing =
+        vehicleToLineProjection.rhumb.initialBearingTo(points.inside.position);
     if (vehicleLineProjectionToInsidePointBearing.isNaN) {
       vehicleLineProjectionToInsidePointBearing = secantBearing;
     }
@@ -236,8 +229,7 @@ final class PurePursuitPathTracking extends PathTracking {
             .position;
 
     final bearingToPoint =
-        vehicle.lookAheadStartPosition.rhumb
-        .initialBearingTo(lookAheadPoint);
+        vehicle.lookAheadStartPosition.rhumb.initialBearingTo(lookAheadPoint);
 
     final angle = signedBearingDifference(
       vehicle.bearing,

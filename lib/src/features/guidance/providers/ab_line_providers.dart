@@ -25,7 +25,6 @@ Future<ABLine?> aBLineDebug(ABLineDebugRef ref) async {
           Logger.instance.i('ABLine deleted.');
         }
         ref.read(simInputProvider.notifier).send((abTracking: data));
-        ref.read(displayABTrackingLinesProvider.notifier).update(data?.lines);
       },
       error: (error, stackTrace) => Logger.instance
           .e('Failed to create ABLine.', error: error, stackTrace: stackTrace),
@@ -118,7 +117,6 @@ Future<APlusLine?> aPlusLineDebug(APlusLineDebugRef ref) async {
           Logger.instance.i('APlusLine deleted.');
         }
         ref.read(simInputProvider.notifier).send((abTracking: data));
-        ref.read(displayABTrackingLinesProvider.notifier).update(data?.lines);
       },
       error: (error, stackTrace) => Logger.instance
           .e('Failed to create ABLine.', error: error, stackTrace: stackTrace),

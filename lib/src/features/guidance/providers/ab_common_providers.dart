@@ -52,7 +52,7 @@ class ABDebugNumPointsBehind extends _$ABDebugNumPointsBehind {
 @Riverpod(keepAlive: true)
 class ABWidth extends _$ABWidth {
   @override
-  double build() => 12;
+  double build() => 15;
 
   /// Updates [state] to [value].
   void update(double value) => Future(() => state = value);
@@ -126,16 +126,6 @@ class DisplayABTracking extends _$DisplayABTracking {
   void update(ABTracking? value) => Future(() => state = value);
 }
 
-/// A provider for the calculated AB lines/curves.
-@Riverpod(keepAlive: true)
-class DisplayABTrackingLines extends _$DisplayABTrackingLines {
-  @override
-  Map<int, List<WayPoint>>? build() => null;
-
-  /// Updates [state] to [value].
-  void update(Map<int, List<WayPoint>>? value) => Future(() => state = value);
-}
-
 /// A provider for the starting point A of an AB-line.
 @Riverpod(keepAlive: true)
 class ABPointA extends _$ABPointA {
@@ -197,4 +187,15 @@ ABConfig activeABConfig(ActiveABConfigRef ref) {
     offsetOppositeTurn: ref.watch(aBOffsetOppositeTurnProvider),
     limitMode: ref.watch(aBTrackingLimitModeProvider),
   );
+}
+
+/// A provider for whether all the calculated lines for the AB tracking should
+/// be shown.
+@Riverpod(keepAlive: true)
+class ABTrackingShowAllLines extends _$ABTrackingShowAllLines {
+  @override
+  bool build() => false;
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
 }

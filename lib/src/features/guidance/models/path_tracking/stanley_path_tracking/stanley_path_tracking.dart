@@ -1,14 +1,14 @@
 part of '../path_tracking.dart';
 
-/// A class for path tracking that utilizes the Sanley controller algorithm.
+/// A class for path tracking that utilizes the Stanley controller algorithm.
 final class StanleyPathTracking extends PathTracking {
-  /// A class for path tracking that utilizes the Sanley controller algorithm.
+  /// A class for path tracking that utilizes the Stanley controller algorithm.
   ///
   /// The Stanley algorithm finds a point perpendicular to the
   /// [Vehicle.stanleyAxlePosition] (typically the steering axle) and measures
   /// the cross distance, and finds the difference in bearing between the
   /// point's curvature and the [Vehicle.bearing]. The resulting steering
-  /// angle is the sum of the bearing difference and the atan of the
+  /// angle is the sum of the bearing difference and the [atan] of the
   /// cross distance.
   ///
   /// This continually happens until the end of the
@@ -21,8 +21,8 @@ final class StanleyPathTracking extends PathTracking {
   /// points in the path, points will be interpolated if the [wayPoints] are
   /// too far apart.
   ///
-  /// The [loopMode] dictates what the vehicle should do when it
-  /// finishes the path.
+  /// The [loopMode] dictates what the vehicle should do when it finishes the
+  /// path.
   StanleyPathTracking({
     required super.wayPoints,
     super.interpolationDistance,

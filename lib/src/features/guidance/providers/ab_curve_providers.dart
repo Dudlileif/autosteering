@@ -61,7 +61,6 @@ Future<ABCurve?> aBCurveDebug(ABCurveDebugRef ref) async {
           Logger.instance.i('ABCurve deleted.');
         }
         ref.read(simInputProvider.notifier).send((abTracking: data));
-        ref.read(displayABTrackingLinesProvider.notifier).update(data?.lines);
       },
       error: (error, stackTrace) {},
       loading: () {},

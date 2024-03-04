@@ -28,8 +28,6 @@ class ABTrackingDebugLayer extends ConsumerWidget {
         ..read(aBLineDebugProvider);
     }
 
-    final abLines = ref.watch(displayABTrackingLinesProvider) ?? {};
-
     final pointA = abTracking?.start ?? ref.watch(aBPointAProvider);
 
     final pointB = abTracking?.end ?? ref.watch(aBPointBProvider);
@@ -43,6 +41,8 @@ class ABTrackingDebugLayer extends ConsumerWidget {
 
     final currentPerpendicularIntersect =
         abTracking?.currentPerpendicularIntersect(vehicle).latLng;
+
+    final showAllLines = ref.watch(aBTrackingShowAllLinesProvider);
 
     return Stack(
       children: [
@@ -72,9 +72,10 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                   ],
                   strokeWidth: 2,
                 ),
-              if (abTracking.limitMode != ABLimitMode.unlimited)
+              if (abTracking.limitMode != ABLimitMode.unlimited &&
+                  abTracking.nextLine != null)
                 Polyline(
-                  points: abTracking.nextLine
+                  points: abTracking.nextLine!
                       .map((e) => e.position.latLng)
                       .toList(),
                   color: Colors.blue,
@@ -101,12 +102,13 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                   ],
                   color: Colors.white,
                 ),
-              ...abLines.values.map(
-                (line) => Polyline(
-                  points: line.map((e) => e.position.latLng).toList(),
-                  color: Colors.grey,
+              if (showAllLines)
+                ...abTracking.lines.values.map(
+                  (line) => Polyline(
+                    points: line.map((e) => e.position.latLng).toList(),
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
             ],
           ),
         if (abTracking != null || pointA != null || pointB != null)
@@ -121,16 +123,18 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                   point: abTracking.currentEnd.position.latLng,
                   radius: 5,
                 ),
-                CircleMarker(
-                  point: abTracking.nextStart.position.latLng,
-                  radius: 5,
-                  color: Colors.blue,
-                ),
-                CircleMarker(
-                  point: abTracking.nextEnd.position.latLng,
-                  radius: 5,
-                  color: Colors.blue,
-                ),
+                if (abTracking.nextStart != null)
+                  CircleMarker(
+                    point: abTracking.nextStart!.position.latLng,
+                    radius: 5,
+                    color: Colors.blue,
+                  ),
+                if (abTracking.nextEnd != null)
+                  CircleMarker(
+                    point: abTracking.nextEnd!.position.latLng,
+                    radius: 5,
+                    color: Colors.blue,
+                  ),
                 if (autoSteerEnabled &&
                     vehicle.pathTrackingMode ==
                         PathTrackingMode.purePursuit) ...[
@@ -249,28 +253,30 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                 height: 50,
               ),
               if (abTracking.limitMode != ABLimitMode.unlimited) ...[
-                Marker(
-                  point: abTracking.nextStart.position.latLng,
-                  child: TextWithStroke(
-                    'A${abTracking.nextOffset}',
-                    style: pointTextStyle,
-                    strokeWidth: 4,
+                if (abTracking.nextStart != null)
+                  Marker(
+                    point: abTracking.nextStart!.position.latLng,
+                    child: TextWithStroke(
+                      'A${abTracking.nextOffset}',
+                      style: pointTextStyle,
+                      strokeWidth: 4,
+                    ),
+                    rotate: true,
+                    width: 50,
+                    height: 50,
                   ),
-                  rotate: true,
-                  width: 50,
-                  height: 50,
-                ),
-                Marker(
-                  point: abTracking.nextEnd.position.latLng,
-                  child: TextWithStroke(
-                    'B${abTracking.nextOffset}',
-                    style: pointTextStyle,
-                    strokeWidth: 4,
+                if (abTracking.nextEnd != null)
+                  Marker(
+                    point: abTracking.nextEnd!.position.latLng,
+                    child: TextWithStroke(
+                      'B${abTracking.nextOffset}',
+                      style: pointTextStyle,
+                      strokeWidth: 4,
+                    ),
+                    rotate: true,
+                    width: 50,
+                    height: 50,
                   ),
-                  rotate: true,
-                  width: 50,
-                  height: 50,
-                ),
               ],
             ] else if (pointA != null || pointB != null) ...[
               if (pointA != null)
