@@ -284,8 +284,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The projected ground position of the centered antenna of this vehicle
   /// accounting for [pitch] and [roll].
   @override
-  Geographic get position =>
-      correctedAntennaPosition.rhumb.destinationPoint(
+  Geographic get position => correctedAntennaPosition.rhumb.destinationPoint(
         distance: antennaLateralOffset,
         bearing: bearing - 90,
       );
@@ -530,16 +529,21 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         bearing: bearing,
       );
 
-  /// Calculates the next steering angle to reach [targetSteeringAngle] from
+  /// Calculates a motor velocity multiplier to reach [steeringAngleTarget] from
   /// [steeringAngleInput] by using the [pidController].
   ///
   /// [integralSize] is how many steps the integral should take into account.
-  double nextSteeringAnglePid(
-    double targetSteeringAngle, {
+  double simulatedMotorVelocityPid(
+    double steeringAngleTarget, {
     double integralSize = 1000,
   }) {
+    final normalizedTarget =
+        (steeringAngleTarget + steeringAngleMax) / (2 * steeringAngleMax);
+    final normalizedInput =
+        (steeringAngleInput + steeringAngleMax) / (2 * steeringAngleMax);
+
     return pidController.nextValue(
-      targetSteeringAngle - steeringAngleInput,
+      normalizedTarget - normalizedInput,
       pidParameters,
       integralSize: integralSize,
     );
@@ -560,8 +564,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       // Straight
       final newPoint = lookAheadStartPosition.rhumb
           .destinationPoint(distance: velocity * period, bearing: bearing);
-      final newBearing =
-          lookAheadStartPosition.rhumb.finalBearingTo(newPoint);
+      final newBearing = lookAheadStartPosition.rhumb.finalBearingTo(newPoint);
       return (
         position: newPoint,
         bearing: newBearing.isFinite ? newBearing : bearing

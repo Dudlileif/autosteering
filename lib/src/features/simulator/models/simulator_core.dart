@@ -1080,51 +1080,63 @@ class _SimulatorCoreState {
       // The steering rate of the vehicle, deg/s
       const steeringRate = 30;
 
-      switch (steeringChange) {
-        case SimInputChange.reset:
-          vehicle!.steeringAngleInput = 0;
-          steeringChange = SimInputChange.hold;
+      if (!receivingManualInput &&
+          steeringAngleTarget != null &&
+          autosteeringState == AutosteeringState.enabled) {
+        final pidVelocity =
+            vehicle!.simulatedMotorVelocityPid(steeringAngleTarget!);
+        vehicle!.steeringAngleInput = (vehicle!.steeringAngleInput +=
+                ((pidVelocity * steeringRate)
+                        .clamp(-steeringRate, steeringRate)) *
+                    period)
+            .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+      } else {
+        switch (steeringChange) {
+          case SimInputChange.reset:
+            vehicle!.steeringAngleInput = 0;
+            steeringChange = SimInputChange.hold;
 
-        case SimInputChange.increase:
-          if (vehicle!.steeringAngleInput == 0) {
-            vehicle!.steeringAngleInput = 0.01;
-          }
-          vehicle!.steeringAngleInput =
-              (vehicle!.steeringAngleInput + period * steeringRate)
-                  .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
-        case SimInputChange.decrease:
-          if (vehicle!.steeringAngleInput == 0) {
-            vehicle!.steeringAngleInput = -0.01;
-          }
-          vehicle!.steeringAngleInput =
-              (vehicle!.steeringAngleInput - period * steeringRate)
-                  .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+          case SimInputChange.increase:
+            if (vehicle!.steeringAngleInput == 0) {
+              vehicle!.steeringAngleInput = 0.01;
+            }
+            vehicle!.steeringAngleInput = (vehicle!.steeringAngleInput +
+                    period * steeringRate)
+                .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+          case SimInputChange.decrease:
+            if (vehicle!.steeringAngleInput == 0) {
+              vehicle!.steeringAngleInput = -0.01;
+            }
+            vehicle!.steeringAngleInput = (vehicle!.steeringAngleInput -
+                    period * steeringRate)
+                .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
 
-        case SimInputChange.hold:
-          receivingManualInput = false;
-          if (autoCenterSteering &&
-              autosteeringState == AutosteeringState.disabled) {
-            // Centering rate deg/s, slow down to not overshoot the min steering
-            // angle in the opposite direction
-            final centeringRate = switch (vehicle!.steeringAngle.abs() < 0.5) {
-              false => 25,
-              true => 5,
-            };
+          case SimInputChange.hold:
+            receivingManualInput = false;
+            if (autoCenterSteering &&
+                autosteeringState == AutosteeringState.disabled) {
+              // Centering rate deg/s, slow down to not overshoot the min steering
+              // angle in the opposite direction
+              final centeringRate =
+                  switch (vehicle!.steeringAngle.abs() < 0.5) {
+                false => 25,
+                true => 5,
+              };
 
-            vehicle!.steeringAngleInput = switch (
-                vehicle!.steeringAngle.abs() < Vehicle.minSteeringAngle) {
-              true => 0,
-              false => vehicle!.steeringAngleInput -
-                  period *
-                      centeringRate *
-                      vehicle!.steeringAngleInput.abs() /
-                      vehicle!.steeringAngleInput,
-            };
-          }
+              vehicle!.steeringAngleInput = switch (
+                  vehicle!.steeringAngle.abs() < Vehicle.minSteeringAngle) {
+                true => 0,
+                false => vehicle!.steeringAngleInput -
+                    period *
+                        centeringRate *
+                        vehicle!.steeringAngleInput.abs() /
+                        vehicle!.steeringAngleInput,
+              };
+            }
+        }
       }
-
       // Filter out very low angles as they make the simulation spazz out
-      // because the  turning circles get very large.
+      // because the turning circles get very large.
       if (vehicle!.steeringAngleInput.abs() < Vehicle.minSteeringAngle) {
         vehicle!.steeringAngleInput = 0;
       }
@@ -1167,17 +1179,6 @@ class _SimulatorCoreState {
       if (autosteeringState != AutosteeringState.disabled &&
           !receivingManualInput &&
           !motorCalibrationEnabled) {
-        // Only allow steering if vehicle is moving to prevent jitter that
-        // moves the vehicle when stationary.
-        if (steeringAngleTarget == vehicle!.steeringAngleInput ||
-            vehicle!.velocity == 0) {
-          steeringChange = SimInputChange.hold;
-        } else if (steeringAngleTarget! < vehicle!.steeringAngleInput) {
-          steeringChange = SimInputChange.decrease;
-        } else if (steeringAngleTarget! > vehicle!.steeringAngleInput) {
-          steeringChange = SimInputChange.increase;
-        }
-
         if (vehicle!.velocity.abs() > autoSteerThresholdVelocity) {
           wasTarget = vehicle!.wasTargetFromSteeringAngle(steeringAngleTarget!);
           networkSendStream?.add(

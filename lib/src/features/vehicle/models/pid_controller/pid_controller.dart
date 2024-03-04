@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
+import 'package:autosteering/src/features/vehicle/models/pid_controller/pid_parameters.dart';
 
-part 'pid_parameters.dart';
+export 'pid_parameters.dart';
 
 /// A controller for regulating how the output value should behave to acheive
 /// a stable state with little to no error.
@@ -34,21 +34,19 @@ class PidController {
     final timeDelta = now.difference(prevTime).inMicroseconds / 1e6; // Seconds
     prevTime = now;
 
-    var output = 0.0;
-
     // P, proportional gain applied to the error.
-    output = -gains.p * error;
+    var output = gains.p * error;
 
     // I, add the new error value to the integral/average.
     integral =
         ((integral * integralSize) + timeDelta * error) / (integralSize + 1);
 
-    output -= gains.i * integral;
+    output += gains.i * integral;
 
     // D, the change since the last loop.
     final derivative = (error - prevError) / timeDelta;
 
-    output -= gains.d * derivative;
+    output += gains.d * derivative;
 
     prevError = error;
 
