@@ -3,7 +3,6 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -204,18 +203,6 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                 if (pointB != null)
                   CircleMarker(point: pointB.position.latLng, radius: 5),
               ],
-              if (abTracking != null && showAllLines)
-                ...abTracking.lines.values
-                    .map(
-                      (line) => line.map(
-                        (point) => CircleMarker(
-                          point: point.position.latLng,
-                          color: Colors.grey,
-                          radius: 3,
-                        ),
-                      ),
-                    )
-                    .flattened,
             ],
           ),
         MarkerLayer(

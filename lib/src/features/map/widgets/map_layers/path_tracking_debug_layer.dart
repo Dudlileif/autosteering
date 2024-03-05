@@ -162,12 +162,17 @@ class PathTrackingDebugLayer extends ConsumerWidget {
               ),
               CircleLayer(
                 circles: [
-                  ...tracking.path.map(
-                    (point) => CircleMarker(
-                      point: point.position.latLng,
+                  if (tracking.path.length >= 2) ...[
+                    CircleMarker(
+                      point: tracking.path.first.position.latLng,
                       radius: 5,
                     ),
-                  ),
+                    CircleMarker(
+                      point: tracking.path.last.position.latLng,
+                      radius: 5,
+                      color: Colors.red,
+                    ),
+                  ],
                   if (tracking is PurePursuitPathTracking) ...[
                     CircleMarker(
                       point: vehicle.lookAheadStartPosition.latLng,
