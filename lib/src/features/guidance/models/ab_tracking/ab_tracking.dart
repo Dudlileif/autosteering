@@ -16,7 +16,7 @@ part 'a_plus_line.dart';
 part 'ab_curve.dart';
 part 'ab_line.dart';
 
-//TODO (dudlileif): Improve line creation, sometimes wrong side of polygon
+// TODO(dudlileif): Improve line creation, sometimes wrong side of polygon
 // border
 
 /// A base class for common variables and methods for AB-path based guidance

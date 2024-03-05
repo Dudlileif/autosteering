@@ -60,8 +60,8 @@ class SimulatorCore {
     var prevHardwareIsConnected = false;
 
     // A timer for periodically updating the simulation.
-    final simulationTimer = Timer.periodic(
-        const Duration(microseconds: _targetPeriodMicroSeconds), (timer) {
+    Timer.periodic(const Duration(microseconds: _targetPeriodMicroSeconds),
+        (timer) {
       if (state.vehicle != null) {
         state.update();
 
@@ -278,6 +278,10 @@ class SimulatorCore {
             updateMainThreadStream,
           ),
         );
+      }
+      // Shut down the isolate.
+      else if (message == null) {
+        break;
       }
       // Messages for the state.
       else {
@@ -1235,7 +1239,6 @@ class _SimulatorCoreState {
             ),
           ),
         );
-        
       }
       mainThreadSendStream
         ..add((steeringAngleTarget: steeringAngleTarget))
@@ -1512,53 +1515,56 @@ class _SimulatorCoreState {
 
   /// Update the simulation, i.e. simulate the next step.
   void update() {
-    checkGuidance();
+    didChange = false;
+    if (gnssUpdate != null || allowSimInterpolation || allowManualSimInput) {
+      checkGuidance();
 
-    if (allowManualSimInput) {
-      simUpdateVehicleVelocityAndSteering();
-    }
-    checkTurningCircle();
-    updateTime();
-
-    final oldGaugeVelocity = gaugeVelocity;
-
-    if (vehicle != null) {
-      // Update by GNSS
-      if (gnssUpdate != null && !allowManualSimInput) {
-        vehicle!.position = gnssUpdate!.gnssPosition;
-        turningCircleCenter = vehicle?.turningRadiusCenter;
-        vehicle!.updateChildren();
-      } else if (!allowManualSimInput && !allowSimInterpolation) {
-        vehicle!.updateChildren();
+      if (allowManualSimInput) {
+        simUpdateVehicleVelocityAndSteering();
       }
-      // Update by simulation
-      else if (allowManualSimInput || allowSimInterpolation) {
-        vehicle!.updatePositionAndBearing(
-          period,
-          turningCircleCenter,
-          // force: gaugeVelocity.abs() > 0,
-        );
-        // gnssUpdate = (gnssPosition: vehicle!.position, time: DateTime.now());
-        if (allowManualSimInput && gaugeVelocity.sign < 0) {
-          gaugeBearing = (gaugeBearing + 180).wrap360();
+      checkTurningCircle();
+      updateTime();
+
+      final oldGaugeVelocity = gaugeVelocity;
+
+      if (vehicle != null) {
+        // Update by GNSS
+        if (gnssUpdate != null && !allowManualSimInput) {
+          vehicle!.position = gnssUpdate!.gnssPosition;
+          turningCircleCenter = vehicle?.turningRadiusCenter;
+          vehicle!.updateChildren();
+        } else if (!allowManualSimInput && !allowSimInterpolation) {
+          vehicle!.updateChildren();
         }
+        // Update by simulation
+        else if (allowManualSimInput || allowSimInterpolation) {
+          vehicle!.updatePositionAndBearing(
+            period,
+            turningCircleCenter,
+            // force: gaugeVelocity.abs() > 0,
+          );
+          // gnssUpdate = (gnssPosition: vehicle!.position, time: DateTime.now());
+          if (allowManualSimInput && gaugeVelocity.sign < 0) {
+            gaugeBearing = (gaugeBearing + 180).wrap360();
+          }
+        }
+        updateGauges();
+        if (gnssUpdate != null && !allowManualSimInput) {
+          vehicle!.bearing = gaugeBearing;
+          vehicle!.velocity = gaugeVelocity;
+        }
+        gnssUpdate = null;
+        vehicle!.wheelsRolledDistance += distance *
+            switch (vehicle!.velocity < 0) {
+              true => -1,
+              false => 1,
+            };
       }
-      updateGauges();
-      if (gnssUpdate != null && !allowManualSimInput) {
-        vehicle!.bearing = gaugeBearing;
-        vehicle!.velocity = gaugeVelocity;
-      }
-      gnssUpdate = null;
-      vehicle!.wheelsRolledDistance += distance *
-          switch (vehicle!.velocity < 0) {
-            true => -1,
-            false => 1,
-          };
+      didChange = forceChange ||
+          prevVehicle != vehicle ||
+          oldGaugeVelocity != gaugeVelocity;
+      prevVehicle = vehicle?.copyWith();
+      forceChange = false;
     }
-    didChange = forceChange ||
-        prevVehicle != vehicle ||
-        oldGaugeVelocity != gaugeVelocity;
-    prevVehicle = vehicle?.copyWith();
-    forceChange = false;
   }
 }
