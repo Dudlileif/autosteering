@@ -105,7 +105,7 @@ final pathRecordingListProvider =
 
 typedef _$PathRecordingList = Notifier<List<WayPoint>>;
 String _$finishedPathRecordingListHash() =>
-    r'84206f6ede8bfa70999c723360dc764a1a30a26f';
+    r'3b7b02f7611d6e142141001e9c38cb7bfb8e9667';
 
 /// A list of path points for the last finished recording.
 ///

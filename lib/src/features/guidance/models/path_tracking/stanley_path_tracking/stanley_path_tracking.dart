@@ -27,6 +27,7 @@ final class StanleyPathTracking extends PathTracking {
     required super.wayPoints,
     super.interpolationDistance,
     super.loopMode,
+    super.name,
   });
 
   /// The next steering angle for the [vehicle] for following the [path].
@@ -61,4 +62,8 @@ final class StanleyPathTracking extends PathTracking {
       vehicle.steeringAngleMax,
     );
   }
+
+  @override
+  Map<String, dynamic> toJson() =>
+      super.toJson()..['mode'] = PathTrackingMode.stanley;
 }

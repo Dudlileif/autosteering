@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
-import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,7 +23,7 @@ Future<ABLine?> aBLineDebug(ABLineDebugRef ref) async {
         } else if (previous?.value != null && data == null) {
           Logger.instance.i('ABLine deleted.');
         }
-        ref.read(simInputProvider.notifier).send((abTracking: data));
+        ref.read(configuredABTrackingProvider.notifier).update(data);
       },
       error: (error, stackTrace) => Logger.instance
           .e('Failed to create ABLine.', error: error, stackTrace: stackTrace),
@@ -116,7 +115,7 @@ Future<APlusLine?> aPlusLineDebug(APlusLineDebugRef ref) async {
         } else if (previous?.value != null && data == null) {
           Logger.instance.i('APlusLine deleted.');
         }
-        ref.read(simInputProvider.notifier).send((abTracking: data));
+        ref.read(configuredABTrackingProvider.notifier).update(data);
       },
       error: (error, stackTrace) => Logger.instance
           .e('Failed to create ABLine.', error: error, stackTrace: stackTrace),

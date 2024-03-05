@@ -14,9 +14,13 @@ class ABCurveMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref
-      ..watch(activeABConfigProvider)
-      ..watch(aBCurveDebugProvider);
+    ref.watch(activeABConfigProvider);
+
+    final abCurve = ref.watch(aBCurveDebugProvider).when(
+          data: (data) => data,
+          error: (error, stackTrace) => null,
+          loading: () => null,
+        );
 
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
@@ -55,7 +59,9 @@ class ABCurveMenu extends ConsumerWidget {
             );
           },
         ),
-        const ABCommonMenu(),
+        ABCommonMenu(
+          abTracking: abCurve,
+        ),
         Consumer(
           child: Text('Recalc bounded lines', style: textStyle),
           builder: (context, ref, child) => MenuItemButton(

@@ -262,9 +262,7 @@ FutureOr<Equipment?> loadEquipmentFromFile(
   if (file.existsSync()) {
     final json = jsonDecode(await file.readAsString());
     if (json is Map) {
-      final vehicle = Equipment.fromJson(Map<String, dynamic>.from(json));
-
-      return vehicle;
+      return Equipment.fromJson(Map<String, dynamic>.from(json));
     }
   }
   return null;

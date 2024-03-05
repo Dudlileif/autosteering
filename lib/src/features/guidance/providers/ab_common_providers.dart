@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_io/io.dart';
 
 part 'ab_common_providers.g.dart';
 
@@ -116,7 +119,29 @@ class ABSnapToClosestLine extends _$ABSnapToClosestLine {
   void toggle() => Future(() => state = !state);
 }
 
-/// A provider for which limit mode the AB tracking should use.
+/// A provider for the currently configured [ABTracking].
+@Riverpod(keepAlive: true)
+class ConfiguredABTracking extends _$ConfiguredABTracking {
+  @override
+  ABTracking? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null || previous != null) {
+        Logger.instance.i('Path tracking set to ${next?.runtimeType}');
+        sendToSim();
+      }
+    });
+    return null;
+  }
+
+  /// Send the [state] to the simulator.
+  void sendToSim() =>
+      ref.read(simInputProvider.notifier).send((abTracking: state));
+
+  /// Updates [state] to [value].
+  void update(ABTracking? value) => Future(() => state = value);
+}
+
+/// A provider for the [ABTracking] to display.
 @Riverpod(keepAlive: true)
 class DisplayABTracking extends _$DisplayABTracking {
   @override
@@ -199,3 +224,55 @@ class ABTrackingShowAllLines extends _$ABTrackingShowAllLines {
   /// Updates [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 }
+
+/// A provider for loading an [ABTracking] from a file at [path], if it's
+/// valid.
+@riverpod
+FutureOr<ABTracking?> loadABTrackingFromFile(
+  LoadABTrackingFromFileRef ref,
+  String path,
+) async {
+  final file = File(path);
+  if (file.existsSync()) {
+    final json = jsonDecode(await file.readAsString());
+    if (json is Map) {
+      return ABTracking.fromJson(Map<String, dynamic>.from(json));
+    }
+  }
+  return null;
+}
+
+/// A provider for saving [tracking] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+@riverpod
+AsyncValue<void> saveABTracking(
+  SaveABTrackingRef ref,
+  ABTracking tracking, {
+  String? overrideName,
+  bool downloadIfWeb = false,
+}) =>
+    ref.watch(
+      saveJsonToFileDirectoryProvider(
+        object: tracking,
+        fileName: overrideName ??
+            tracking.name ??
+            '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
+        folder: 'guidance/ab_tracking',
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+
+/// A provider for reading and holding all the saved [ABTracking] in the
+/// user file directory.
+@Riverpod(keepAlive: true)
+AsyncValue<List<ABTracking>> savedABTrackings(SavedABTrackingsRef ref) => ref
+    .watch(
+      savedFilesProvider(
+        fromJson: ABTracking.fromJson,
+        folder: 'guidance/ab_tracking',
+      ),
+    )
+    .whenData(
+      (data) => data.cast(),
+    );

@@ -22,6 +22,7 @@ class APlusLine extends ABLine {
     super.limitMode,
     super.snapToClosestLine,
     super.calculateLinesOnCreation,
+    super.name,
   }) : super(
           baseLine: [
             start,
@@ -42,6 +43,7 @@ class APlusLine extends ABLine {
     Iterable<int>? finishedOffsets,
     Iterable<int>? offsetsInsideBoundary,
     super.calculateLinesOnCreation = false,
+    super.name,
   }) {
     this.lines.addAll(lines ?? {});
     this.finishedOffsets.addAll(finishedOffsets ?? []);
@@ -112,6 +114,7 @@ class APlusLine extends ABLine {
       finishedOffsets: finishedOffsets,
       offsetsInsideBoundary: offsetsInsideBoundary,
       calculateLinesOnCreation: json['calculate_lines'] as bool,
+      name: json['name'] as String?,
     );
   }
 

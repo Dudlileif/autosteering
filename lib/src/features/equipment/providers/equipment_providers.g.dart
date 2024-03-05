@@ -7,7 +7,7 @@ part of 'equipment_providers.dart';
 // **************************************************************************
 
 String _$loadEquipmentFromFileHash() =>
-    r'4e4006945c3bf754855225412d5dc7b2ce1f97b6';
+    r'0eca5f4345ab15c23df56b50539c226711f5fab2';
 
 /// Copied from Dart SDK
 class _SystemHash {

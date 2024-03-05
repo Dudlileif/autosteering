@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -9,7 +11,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ABCommonMenu extends StatelessWidget {
   /// A [Column] widget with common menu items for the different AB-tracking
   /// menus.
-  const ABCommonMenu({super.key});
+  const ABCommonMenu({this.abTracking, super.key});
+
+  /// The [ABTracking] for use with this menu.
+  final ABTracking? abTracking;
 
   @override
   Widget build(BuildContext context) {
@@ -194,8 +199,100 @@ class ABCommonMenu extends StatelessWidget {
             );
           },
         ),
-      
+        if (abTracking != null)
+          Consumer(
+            child: Text(
+              'Save tracking',
+              style: textStyle,
+            ),
+            builder: (context, ref, child) => ListTile(
+              title: child,
+              leading: const Icon(Icons.save),
+              onTap: () {
+                if (abTracking!.name != null) {
+                  ref.watch(
+                    saveABTrackingProvider(
+                      abTracking!,
+                      downloadIfWeb: true,
+                    ),
+                  );
+                } else {
+                  unawaited(
+                    showDialog<void>(
+                      context: context,
+                      builder: (context) {
+                        var name = '';
+                        return StatefulBuilder(
+                          builder: (context, setState) {
+                            return SimpleDialog(
+                              title: const Text('Name the AB tracking'),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: TextFormField(
+                                    decoration: const InputDecoration(
+                                      icon: Icon(Icons.label_outline),
+                                      labelText: 'Name',
+                                    ),
+                                    initialValue: name,
+                                    onChanged: (value) =>
+                                        setState(() => name = value),
+                                    onFieldSubmitted: (value) =>
+                                        setState(() => name = value),
+                                    keyboardType: TextInputType.text,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) => value != null &&
+                                            value.isNotEmpty &&
+                                            !value.startsWith(' ')
+                                        ? null
+                                        : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 8,
+                                    right: 8,
+                                    top: 8,
+                                  ),
+                                  child: Consumer(
+                                    child: const Text('Save tracking'),
+                                    builder: (context, ref, child) =>
+                                        FilledButton(
+                                      onPressed: () {
+                                        Future.delayed(
+                                            const Duration(milliseconds: 100),
+                                            () {
+                                          ref.read(
+                                            saveABTrackingProvider(
+                                              abTracking!
+                                                ..name = name.isNotEmpty
+                                                    ? name
+                                                    : null,
+                                            ),
+                                          );
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: child,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
       ],
     );
   }
 }
+
+
+

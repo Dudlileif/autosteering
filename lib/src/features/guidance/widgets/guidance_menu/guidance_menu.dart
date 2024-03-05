@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/a_plus_line_menu.dart';
@@ -9,9 +11,11 @@ import 'package:autosteering/src/features/guidance/widgets/guidance_menu/virtual
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:universal_io/io.dart';
 
 /// A menu with attached submenu for working with the guidance features.
 class GuidanceMenu extends StatelessWidget {
@@ -100,6 +104,9 @@ class GuidanceMenu extends StatelessWidget {
             },
           ),
         ),
+        if (Device.isNative) const _LoadPathTrackingMenu(),
+        if (Device.isNative) const _LoadABTrackingMenu(),
+        const _ImportGuidanceButton(),
         const PathRecorderMenu(),
         const PathTrackingMenu(),
         const APlusLineMenu(),
@@ -107,6 +114,187 @@ class GuidanceMenu extends StatelessWidget {
         const ABCurveMenu(),
         const VirtualLedBarMenu(),
       ],
+    );
+  }
+}
+
+/// A menu for loading a [PathTracking] from saved fields.
+class _LoadPathTrackingMenu extends ConsumerWidget {
+  /// A menu for loading a [PathTracking] from saved fields.
+  const _LoadPathTrackingMenu();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pathTrackings = ref.watch(savedPathTrackingsProvider).when(
+              data: (data) => data,
+              error: (error, stackTrace) => <PathTracking>[],
+              loading: () => <PathTracking>[],
+            )
+        // ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed))
+        ;
+
+    if (pathTrackings.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    return MenuButtonWithChildren(
+      text: 'Load path recording',
+      icon: Icons.history,
+      menuChildren: pathTrackings
+          .map(
+            (pathTracking) => MenuItemButton(
+              closeOnActivate: false,
+              onPressed: () {
+                ref.read(simInputProvider.notifier).send((abTracking: null));
+                ref.read(simInputProvider.notifier).send((pathTracking: null));
+                ref
+                    .read(debugPathTrackingProvider.notifier)
+                    .update(value: true);
+                ref
+                    .read(configuredPathTrackingProvider.notifier)
+                    .update(pathTracking);
+                ref
+                    .read(enablePathTrackingProvider.notifier)
+                    .update(value: true);
+              },
+              child: Text(pathTracking.name ?? 'No name', style: textStyle),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+/// A menu for loading a [PathTracking] from saved fields.
+class _LoadABTrackingMenu extends ConsumerWidget {
+  /// A menu for loading a [PathTracking] from saved fields.
+  const _LoadABTrackingMenu();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final abTrackings = ref.watch(savedABTrackingsProvider).when(
+              data: (data) => data,
+              error: (error, stackTrace) => <ABTracking>[],
+              loading: () => <ABTracking>[],
+            )
+        // ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed))
+        ;
+
+    if (abTrackings.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    return MenuButtonWithChildren(
+      text: 'Load AB tracking',
+      icon: Icons.history,
+      menuChildren: abTrackings
+          .map(
+            (abTracking) => MenuItemButton(
+              closeOnActivate: false,
+              onPressed: () {
+                ref.read(simInputProvider.notifier).send((abTracking: null));
+                ref.read(simInputProvider.notifier).send((pathTracking: null));
+                ref
+                    .read(aBTrackingDebugShowProvider.notifier)
+                    .update(value: true);
+                ref
+                    .read(configuredABTrackingProvider.notifier)
+                    .update(abTracking);
+              },
+              child: Column(
+                children: [
+                  Text(abTracking.name ?? 'No name', style: textStyle),
+                  Text('${abTracking.runtimeType}', style: textStyle),
+                ],
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+class _ImportGuidanceButton extends ConsumerWidget {
+  const _ImportGuidanceButton();
+
+  void decodeJson(Map<String, dynamic> json, WidgetRef ref) {
+    final mode = json['mode'] as String?;
+    final type = json['type'] as String?;
+    if (mode != null) {
+      if (mode.toLowerCase().contains('stanley') ||
+          mode.toLowerCase().contains('pursuit')) {
+        ref.read(simInputProvider.notifier).send((abTracking: null));
+        ref.read(simInputProvider.notifier).send((pathTracking: null));
+        ref.read(debugPathTrackingProvider.notifier).update(value: true);
+        ref.read(configuredPathTrackingProvider.notifier).update(
+              PathTracking.fromJson(
+                Map<String, dynamic>.from(json),
+              ),
+            );
+        ref.read(enablePathTrackingProvider.notifier).update(value: true);
+      } else if (type != null) {
+        if (type.toLowerCase().contains('ab') ||
+            type.toLowerCase().contains('a+')) {
+          ref.read(simInputProvider.notifier).send((abTracking: null));
+          ref.read(simInputProvider.notifier).send((pathTracking: null));
+          ref.read(aBTrackingDebugShowProvider.notifier).update(value: true);
+          ref.read(configuredABTrackingProvider.notifier).update(
+                ABTracking.fromJson(
+                  Map<String, dynamic>.from(json),
+                ),
+              );
+        }
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    return ListTile(
+      leading: const Icon(Icons.file_open),
+      title: Text(
+        'Import guidance',
+        style: textStyle,
+      ),
+      onTap: () async {
+        final result = await FilePicker.platform.pickFiles(
+          initialDirectory: Device.isNative
+              ? [
+                  ref.watch(fileDirectoryProvider).requireValue.path,
+                  '/guidance',
+                ].join()
+              : null,
+          dialogTitle: 'Open guidance json file',
+          allowedExtensions: ['json'],
+          type: FileType.custom,
+        );
+        if (result != null) {
+          if (Device.isWeb) {
+            final data = result.files.first.bytes;
+            if (data != null) {
+              final json = jsonDecode(String.fromCharCodes(data));
+
+              if (json is Map) {
+                decodeJson(Map<String, dynamic>.from(json), ref);
+              }
+            }
+          } else {
+            final path = result.paths.first;
+            if (path != null) {
+              final json = jsonDecode(File(path).readAsStringSync());
+              if (json is Map) {
+                decodeJson(Map<String, dynamic>.from(json), ref);
+              }
+            }
+          }
+        }
+      },
     );
   }
 }

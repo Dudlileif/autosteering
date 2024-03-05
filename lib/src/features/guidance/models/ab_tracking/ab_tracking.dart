@@ -34,6 +34,7 @@ sealed class ABTracking {
     this.limitMode = ABLimitMode.limitedTurnWithin,
     this.snapToClosestLine = false,
     bool calculateLinesOnCreation = true,
+    this.name,
   })  : start = baseLine.first,
         end = baseLine.last,
         _nextOffset = turnOffsetMinSkips + 1,
@@ -83,6 +84,9 @@ sealed class ABTracking {
 
   /// The boundary that the tracking lines are limited to, if there is one.
   late final Polygon? boundary;
+
+  /// Name or description of this.
+  String? name;
 
   /// How wide an AB-line should be, as in when to skip to the next line over.
   double width;
@@ -1490,6 +1494,7 @@ sealed class ABTracking {
 
   /// Creates a json compatible structure of the object.
   Map<String, dynamic> toJson() => {
+        'name': name,
         'base_line': baseLine.map((e) => e.toJson()).toList(),
         'boundary': boundary?.toText(),
         'width': width,

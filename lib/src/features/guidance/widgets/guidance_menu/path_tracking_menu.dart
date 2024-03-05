@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -7,13 +9,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button with attached submenu for working with the path tracking
 /// feature.
-class PathTrackingMenu extends StatelessWidget {
+class PathTrackingMenu extends ConsumerWidget {
   /// A menu button with attached submenu for working with the path tracking
   ///  feature.
   const PathTrackingMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pathTracking = ref.watch(configuredPathTrackingProvider);
+
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
@@ -81,7 +85,6 @@ class PathTrackingMenu extends StatelessWidget {
             },
           ),
         ),
-        
         ListTile(
           title: Consumer(
             builder: (context, ref, child) {
@@ -108,6 +111,96 @@ class PathTrackingMenu extends StatelessWidget {
             },
           ),
         ),
+        if (pathTracking != null)
+          Consumer(
+            child: Text(
+              'Save tracking',
+              style: textStyle,
+            ),
+            builder: (context, ref, child) => ListTile(
+              title: child,
+              leading: const Icon(Icons.save),
+              onTap: () {
+                if (pathTracking.name != null) {
+                  ref.watch(
+                    savePathTrackingProvider(
+                      pathTracking,
+                      downloadIfWeb: true,
+                    ),
+                  );
+                } else {
+                  unawaited(
+                    showDialog<void>(
+                      context: context,
+                      builder: (context) {
+                        var name = '';
+                        return StatefulBuilder(
+                          builder: (context, setState) {
+                            return SimpleDialog(
+                              title: const Text('Name the path tracking'),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: TextFormField(
+                                    decoration: const InputDecoration(
+                                      icon: Icon(Icons.label_outline),
+                                      labelText: 'Name',
+                                    ),
+                                    initialValue: name,
+                                    onChanged: (value) =>
+                                        setState(() => name = value),
+                                    onFieldSubmitted: (value) =>
+                                        setState(() => name = value),
+                                    keyboardType: TextInputType.text,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) => value != null &&
+                                            value.isNotEmpty &&
+                                            !value.startsWith(' ')
+                                        ? null
+                                        : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 8,
+                                    right: 8,
+                                    top: 8,
+                                  ),
+                                  child: Consumer(
+                                    child: const Text('Save tracking'),
+                                    builder: (context, ref, child) =>
+                                        FilledButton(
+                                      onPressed: () {
+                                        Future.delayed(
+                                            const Duration(milliseconds: 100),
+                                            () {
+                                          ref.read(
+                                            savePathTrackingProvider(
+                                              pathTracking
+                                                ..name = name.isNotEmpty
+                                                    ? name
+                                                    : null,
+                                            ),
+                                          );
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: child,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
       ],
     );
   }

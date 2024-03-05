@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_io/io.dart';
 
 part 'path_tracking_providers.g.dart';
 
@@ -40,9 +43,7 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
       return switch (ref.watch(
         mainVehicleProvider.select((vehicle) => vehicle.pathTrackingMode),
       )) {
-      
-        PathTrackingMode.purePursuit =>
-          PurePursuitPathTracking(
+        PathTrackingMode.purePursuit => PurePursuitPathTracking(
             wayPoints: wayPoints,
             interpolationDistance: ref.watch(pathInterpolationDistanceProvider),
             loopMode: ref.watch(pathTrackingLoopProvider),
@@ -60,6 +61,9 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
   /// Send the [state] to the simulator.
   void sendToSim() =>
       ref.read(simInputProvider.notifier).send((pathTracking: state));
+
+  /// Updates [state] to [value].
+  void update(PathTracking? value) => Future(() => state = value);
 }
 
 /// A provider for whether or not the vehicle should follow the
@@ -137,3 +141,55 @@ class DebugPathTracking extends _$DebugPathTracking {
   /// Invert the current state.
   void toggle() => Future(() => state != state);
 }
+
+/// A provider for loading an [PathTracking] from a file at [path], if it's
+/// valid.
+@riverpod
+FutureOr<PathTracking?> loadPathTrackingFromFile(
+  LoadPathTrackingFromFileRef ref,
+  String path,
+) async {
+  final file = File(path);
+  if (file.existsSync()) {
+    final json = jsonDecode(await file.readAsString());
+    if (json is Map) {
+      return PathTracking.fromJson(Map<String, dynamic>.from(json));
+    }
+  }
+  return null;
+}
+
+/// A provider for saving [tracking] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+@riverpod
+AsyncValue<void> savePathTracking(
+  SavePathTrackingRef ref,
+  PathTracking tracking, {
+  String? overrideName,
+  bool downloadIfWeb = false,
+}) =>
+    ref.watch(
+      saveJsonToFileDirectoryProvider(
+        object: tracking,
+        fileName:
+            overrideName ?? tracking.name ?? DateTime.now().toIso8601String(),
+        folder: 'guidance/path_tracking',
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+
+/// A provider for reading and holding all the saved [PathTracking] in the
+/// user file directory.
+@Riverpod(keepAlive: true)
+AsyncValue<List<PathTracking>> savedPathTrackings(SavedPathTrackingsRef ref) =>
+    ref
+        .watch(
+          savedFilesProvider(
+            fromJson: PathTracking.fromJson,
+            folder: 'guidance/path_tracking',
+          ),
+        )
+        .whenData(
+          (data) => data.cast(),
+        );

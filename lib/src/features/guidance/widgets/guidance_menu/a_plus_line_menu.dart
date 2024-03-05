@@ -16,8 +16,13 @@ class APlusLineMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref
-      ..watch(activeABConfigProvider)
-      ..watch(aPlusLineDebugProvider);
+      .watch(activeABConfigProvider);
+
+    final aPlusLine = ref.watch(aPlusLineDebugProvider).when(
+          data: (data) => data,
+          error: (error, stackTrace) => null,
+          loading: () => null,
+        );
 
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
@@ -75,7 +80,9 @@ class APlusLineMenu extends ConsumerWidget {
             );
           },
         ),
-        const ABCommonMenu(),
+        ABCommonMenu(
+          abTracking: aPlusLine,
+        ),
         Consumer(
           child: Text('Recalc bounded lines', style: textStyle),
           builder: (context, ref, child) => MenuItemButton(

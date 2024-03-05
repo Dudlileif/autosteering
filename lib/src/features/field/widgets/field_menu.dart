@@ -387,7 +387,7 @@ class FieldMenu extends ConsumerWidget {
 
 /// A menu for loading a [Field] from saved fields.
 class _LoadFieldMenu extends ConsumerWidget {
-  /// A menu for loading an [Field] from saved fields.
+  /// A menu for loading a [Field] from saved fields.
   const _LoadFieldMenu();
 
   @override

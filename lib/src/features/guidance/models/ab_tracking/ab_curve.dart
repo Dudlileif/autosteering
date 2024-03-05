@@ -17,6 +17,7 @@ class ABCurve extends ABTracking {
     super.limitMode,
     super.snapToClosestLine,
     super.calculateLinesOnCreation,
+    super.name,
   }) : assert(
           baseLine.length >= 2,
           'Base curve has to have at least two points',
@@ -35,6 +36,7 @@ class ABCurve extends ABTracking {
     Iterable<int>? finishedOffsets,
     Iterable<int>? offsetsInsideBoundary,
     super.calculateLinesOnCreation = false,
+    super.name,
   }) {
     this.lines.addAll(lines ?? {});
     this.finishedOffsets.addAll(finishedOffsets ?? []);
@@ -90,6 +92,7 @@ class ABCurve extends ABTracking {
       finishedOffsets: finishedOffsets,
       offsetsInsideBoundary: offsetsInsideBoundary,
       calculateLinesOnCreation: json['calculate_lines'] as bool,
+      name: json['name'] as String?,
     );
   }
 

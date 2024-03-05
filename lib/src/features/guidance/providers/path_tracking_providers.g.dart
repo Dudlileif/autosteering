@@ -26,6 +26,479 @@ final pathTrackingPerpendicularDistanceProvider =
 );
 
 typedef PathTrackingPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
+String _$loadPathTrackingFromFileHash() =>
+    r'8ff45da02088e80a797fec76b4a81acd4cb78ce5';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+/// A provider for loading an [PathTracking] from a file at [path], if it's
+/// valid.
+///
+/// Copied from [loadPathTrackingFromFile].
+@ProviderFor(loadPathTrackingFromFile)
+const loadPathTrackingFromFileProvider = LoadPathTrackingFromFileFamily();
+
+/// A provider for loading an [PathTracking] from a file at [path], if it's
+/// valid.
+///
+/// Copied from [loadPathTrackingFromFile].
+class LoadPathTrackingFromFileFamily extends Family {
+  /// A provider for loading an [PathTracking] from a file at [path], if it's
+  /// valid.
+  ///
+  /// Copied from [loadPathTrackingFromFile].
+  const LoadPathTrackingFromFileFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadPathTrackingFromFileProvider';
+
+  /// A provider for loading an [PathTracking] from a file at [path], if it's
+  /// valid.
+  ///
+  /// Copied from [loadPathTrackingFromFile].
+  LoadPathTrackingFromFileProvider call(
+    String path,
+  ) {
+    return LoadPathTrackingFromFileProvider(
+      path,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  LoadPathTrackingFromFileProvider getProviderOverride(
+    covariant LoadPathTrackingFromFileProvider provider,
+  ) {
+    return call(
+      provider.path,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<PathTracking?> Function(LoadPathTrackingFromFileRef ref)
+          create) {
+    return _$LoadPathTrackingFromFileFamilyOverride(this, create);
+  }
+}
+
+class _$LoadPathTrackingFromFileFamilyOverride implements FamilyOverride {
+  _$LoadPathTrackingFromFileFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<PathTracking?> Function(LoadPathTrackingFromFileRef ref)
+      create;
+
+  @override
+  final LoadPathTrackingFromFileFamily overriddenFamily;
+
+  @override
+  LoadPathTrackingFromFileProvider getProviderOverride(
+    covariant LoadPathTrackingFromFileProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for loading an [PathTracking] from a file at [path], if it's
+/// valid.
+///
+/// Copied from [loadPathTrackingFromFile].
+class LoadPathTrackingFromFileProvider
+    extends AutoDisposeFutureProvider<PathTracking?> {
+  /// A provider for loading an [PathTracking] from a file at [path], if it's
+  /// valid.
+  ///
+  /// Copied from [loadPathTrackingFromFile].
+  LoadPathTrackingFromFileProvider(
+    String path,
+  ) : this._internal(
+          (ref) => loadPathTrackingFromFile(
+            ref as LoadPathTrackingFromFileRef,
+            path,
+          ),
+          from: loadPathTrackingFromFileProvider,
+          name: r'loadPathTrackingFromFileProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$loadPathTrackingFromFileHash,
+          dependencies: LoadPathTrackingFromFileFamily._dependencies,
+          allTransitiveDependencies:
+              LoadPathTrackingFromFileFamily._allTransitiveDependencies,
+          path: path,
+        );
+
+  LoadPathTrackingFromFileProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.path,
+  }) : super.internal();
+
+  final String path;
+
+  @override
+  Override overrideWith(
+    FutureOr<PathTracking?> Function(LoadPathTrackingFromFileRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: LoadPathTrackingFromFileProvider._internal(
+        (ref) => create(ref as LoadPathTrackingFromFileRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        path: path,
+      ),
+    );
+  }
+
+  @override
+  (String,) get argument {
+    return (path,);
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<PathTracking?> createElement() {
+    return _LoadPathTrackingFromFileProviderElement(this);
+  }
+
+  LoadPathTrackingFromFileProvider _copyWith(
+    FutureOr<PathTracking?> Function(LoadPathTrackingFromFileRef ref) create,
+  ) {
+    return LoadPathTrackingFromFileProvider._internal(
+      (ref) => create(ref as LoadPathTrackingFromFileRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      path: path,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is LoadPathTrackingFromFileProvider && other.path == path;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, path.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin LoadPathTrackingFromFileRef
+    on AutoDisposeFutureProviderRef<PathTracking?> {
+  /// The parameter `path` of this provider.
+  String get path;
+}
+
+class _LoadPathTrackingFromFileProviderElement
+    extends AutoDisposeFutureProviderElement<PathTracking?>
+    with LoadPathTrackingFromFileRef {
+  _LoadPathTrackingFromFileProviderElement(super.provider);
+
+  @override
+  String get path => (origin as LoadPathTrackingFromFileProvider).path;
+}
+
+String _$savePathTrackingHash() => r'89d056f368c51e2f6dcbf527f234f9515f51e178';
+
+/// A provider for saving [tracking] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [savePathTracking].
+@ProviderFor(savePathTracking)
+const savePathTrackingProvider = SavePathTrackingFamily();
+
+/// A provider for saving [tracking] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [savePathTracking].
+class SavePathTrackingFamily extends Family {
+  /// A provider for saving [tracking] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [savePathTracking].
+  const SavePathTrackingFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'savePathTrackingProvider';
+
+  /// A provider for saving [tracking] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [savePathTracking].
+  SavePathTrackingProvider call(
+    PathTracking tracking, {
+    String? overrideName,
+    bool downloadIfWeb = false,
+  }) {
+    return SavePathTrackingProvider(
+      tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  SavePathTrackingProvider getProviderOverride(
+    covariant SavePathTrackingProvider provider,
+  ) {
+    return call(
+      provider.tracking,
+      overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      AsyncValue<void> Function(SavePathTrackingRef ref) create) {
+    return _$SavePathTrackingFamilyOverride(this, create);
+  }
+}
+
+class _$SavePathTrackingFamilyOverride implements FamilyOverride {
+  _$SavePathTrackingFamilyOverride(this.overriddenFamily, this.create);
+
+  final AsyncValue<void> Function(SavePathTrackingRef ref) create;
+
+  @override
+  final SavePathTrackingFamily overriddenFamily;
+
+  @override
+  SavePathTrackingProvider getProviderOverride(
+    covariant SavePathTrackingProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for saving [tracking] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [savePathTracking].
+class SavePathTrackingProvider extends AutoDisposeProvider<AsyncValue<void>> {
+  /// A provider for saving [tracking] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [savePathTracking].
+  SavePathTrackingProvider(
+    PathTracking tracking, {
+    String? overrideName,
+    bool downloadIfWeb = false,
+  }) : this._internal(
+          (ref) => savePathTracking(
+            ref as SavePathTrackingRef,
+            tracking,
+            overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
+          ),
+          from: savePathTrackingProvider,
+          name: r'savePathTrackingProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$savePathTrackingHash,
+          dependencies: SavePathTrackingFamily._dependencies,
+          allTransitiveDependencies:
+              SavePathTrackingFamily._allTransitiveDependencies,
+          tracking: tracking,
+          overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
+        );
+
+  SavePathTrackingProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tracking,
+    required this.overrideName,
+    required this.downloadIfWeb,
+  }) : super.internal();
+
+  final PathTracking tracking;
+  final String? overrideName;
+  final bool downloadIfWeb;
+
+  @override
+  Override overrideWith(
+    AsyncValue<void> Function(SavePathTrackingRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SavePathTrackingProvider._internal(
+        (ref) => create(ref as SavePathTrackingRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tracking: tracking,
+        overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+  }
+
+  @override
+  (
+    PathTracking, {
+    String? overrideName,
+    bool downloadIfWeb,
+  }) get argument {
+    return (
+      tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<AsyncValue<void>> createElement() {
+    return _SavePathTrackingProviderElement(this);
+  }
+
+  SavePathTrackingProvider _copyWith(
+    AsyncValue<void> Function(SavePathTrackingRef ref) create,
+  ) {
+    return SavePathTrackingProvider._internal(
+      (ref) => create(ref as SavePathTrackingRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      tracking: tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SavePathTrackingProvider &&
+        other.tracking == tracking &&
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, tracking.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin SavePathTrackingRef on AutoDisposeProviderRef<AsyncValue<void>> {
+  /// The parameter `tracking` of this provider.
+  PathTracking get tracking;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
+}
+
+class _SavePathTrackingProviderElement
+    extends AutoDisposeProviderElement<AsyncValue<void>>
+    with SavePathTrackingRef {
+  _SavePathTrackingProviderElement(super.provider);
+
+  @override
+  PathTracking get tracking => (origin as SavePathTrackingProvider).tracking;
+  @override
+  String? get overrideName => (origin as SavePathTrackingProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as SavePathTrackingProvider).downloadIfWeb;
+}
+
+String _$savedPathTrackingsHash() =>
+    r'9993c4f560067420f99ba7e882f61988e48ec078';
+
+/// A provider for reading and holding all the saved [PathTracking] in the
+/// user file directory.
+///
+/// Copied from [savedPathTrackings].
+@ProviderFor(savedPathTrackings)
+final savedPathTrackingsProvider =
+    Provider<AsyncValue<List<PathTracking>>>.internal(
+  savedPathTrackings,
+  name: r'savedPathTrackingsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$savedPathTrackingsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SavedPathTrackingsRef = ProviderRef<AsyncValue<List<PathTracking>>>;
 String _$pathInterpolationDistanceHash() =>
     r'3838e0d5947ecf47190196f1fa4998a29f429156';
 
@@ -46,7 +519,7 @@ final pathInterpolationDistanceProvider =
 
 typedef _$PathInterpolationDistance = Notifier<double>;
 String _$configuredPathTrackingHash() =>
-    r'8876f25e4563aa652268516ee9c5f05f10bb58b4';
+    r'cd7265b6ef43673caaa0aefe48274f064031f474';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.

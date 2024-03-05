@@ -20,6 +20,7 @@ class ABLine extends ABTracking {
     super.limitMode,
     super.snapToClosestLine,
     super.calculateLinesOnCreation,
+    super.name,
   }) : assert(
           baseLine.length == 2,
           'Base line should only have a start and an end point',
@@ -38,6 +39,7 @@ class ABLine extends ABTracking {
     Iterable<int>? finishedOffsets,
     Iterable<int>? offsetsInsideBoundary,
     super.calculateLinesOnCreation = false,
+    super.name,
   }) {
     this.lines.addAll(lines ?? {});
     this.finishedOffsets.addAll(finishedOffsets ?? []);
@@ -93,6 +95,7 @@ class ABLine extends ABTracking {
       finishedOffsets: finishedOffsets,
       offsetsInsideBoundary: offsetsInsideBoundary,
       calculateLinesOnCreation: json['calculate_lines'] as bool,
+      name: json['name'] as String?,
     );
   }
 

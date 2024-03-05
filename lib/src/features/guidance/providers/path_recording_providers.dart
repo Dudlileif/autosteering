@@ -86,14 +86,11 @@ class PathRecordingList extends _$PathRecordingList {
                 } else if (distance >
                         ref.read(pathRecordingTurnMinDistanceProvider) &&
                     points.length >= 2) {
-                  final prevBearing = points[points.length - 2]
-                      .position
-                      .rhumb
-                      .initialBearingTo(
-                        points.last.position,
-                      );
-                  final bearing =
-                      points.last.position.rhumb.initialBearingTo(
+                  final prevBearing =
+                      points[points.length - 2].position.rhumb.initialBearingTo(
+                            points.last.position,
+                          );
+                  final bearing = points.last.position.rhumb.initialBearingTo(
                     wayPoint.position,
                   );
 
@@ -158,9 +155,20 @@ class FinishedPathRecordingList extends _$FinishedPathRecordingList {
 
   /// Move the [point] to [index].
   void movePoint(int index, WayPoint point) => Future(
-        () => state = state
-          ?..insert(index, point)
-          ..removeAt(index + 1),
+        () {
+          var bearing = point.bearing;
+          if (state != null && state!.length > index + 1) {
+            bearing = point.initialBearingToRhumb(state![index + 1]);
+          } else if (state != null &&
+              state!.length > 1 &&
+              index == state!.length - 1) {
+            bearing = state![index - 1].finalBearingToRhumb(point);
+          }
+
+          return state = state
+            ?..insert(index, point.copyWith(bearing: bearing))
+            ..removeAt(index + 1);
+        },
       );
 
   /// Insert [point] at [index].

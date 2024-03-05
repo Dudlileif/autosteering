@@ -26,6 +26,7 @@ final class PurePursuitPathTracking extends PathTracking {
     required super.wayPoints,
     super.interpolationDistance,
     super.loopMode,
+    super.name,
   });
 
   /// Finds the points that we use to get the secant line that intersects
@@ -254,4 +255,8 @@ final class PurePursuitPathTracking extends PathTracking {
     tryChangeWayPoint(vehicle);
     return _nextSteeringAngleLookAhead(vehicle);
   }
+
+  @override
+  Map<String, dynamic> toJson() =>
+      super.toJson()..['mode'] = PathTrackingMode.purePursuit;
 }

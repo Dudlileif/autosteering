@@ -37,7 +37,14 @@ enum PathTrackingLoopMode {
   straight,
 
   /// Loop to the start point by using a Dubins path from the end point.
-  dubins,
+  dubins;
+
+  /// Converts the enumerator value to a json compatible string.
+  String toJson() => name;
+
+  /// Finds the corresponding [PathTrackingLoopMode] to the [json] string value.
+  static PathTrackingLoopMode fromJson(String json) =>
+      values.firstWhere((element) => element.name == json);
 }
 
 /// A general absctract class for path tracking.
@@ -58,9 +65,37 @@ sealed class PathTracking {
     required this.wayPoints,
     this.interpolationDistance = 4,
     this.loopMode = PathTrackingLoopMode.none,
+    this.name,
   }) {
     interPolateWayPoints();
   }
+
+  factory PathTracking.fromJson(Map<String, dynamic> json) {
+    final mode = PathTrackingMode.fromJson(json['mode'] as String);
+    final wayPoints = List<Map<String, dynamic>>.from(json['points'] as List)
+        .map(WayPoint.fromJson)
+        .toList();
+    final interpolationDistance = json['interpolation_distance'] as double;
+    final loopMode = PathTrackingLoopMode.fromJson(json['loop_mode'] as String);
+
+    return switch (mode) {
+      PathTrackingMode.purePursuit => PurePursuitPathTracking(
+          wayPoints: wayPoints,
+          interpolationDistance: interpolationDistance,
+          loopMode: loopMode,
+          name: json['name'] as String?,
+        ),
+      PathTrackingMode.stanley => StanleyPathTracking(
+          wayPoints: wayPoints,
+          interpolationDistance: interpolationDistance,
+          loopMode: loopMode,
+          name: json['name'] as String?,
+        ),
+    };
+  }
+
+  /// Name or description of this.
+  String? name;
 
   /// The list of waypoints to interpolate from.
   List<WayPoint> wayPoints;
@@ -316,6 +351,14 @@ sealed class PathTracking {
   /// [PathTrackingMode]s are supported by all path tracking systems. They will
   /// then default to the most usual supported one.
   double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode});
+
+  /// Converts the object to a json compatible structure.
+  Map<String, dynamic> toJson() => {
+        'points': wayPoints,
+        'loop_mode': loopMode,
+        'interpolation_distance': interpolationDistance,
+        'name': name,
+      };
 }
 
 /// An extension on [Vehicle] for finding the right path tracking reference

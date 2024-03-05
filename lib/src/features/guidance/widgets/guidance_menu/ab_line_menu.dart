@@ -17,17 +17,21 @@ class ABLineMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(activeABConfigProvider);
 
+    final abLine = ref.watch(aBLineDebugProvider).when(
+          data: (data) => data,
+          error: (error, stackTrace) => null,
+          loading: () => null,
+        );
+
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
-
-    final abLine = ref.watch(aBLineDebugProvider);
-
+    
     return MenuButtonWithChildren(
       text: 'AB line',
       menuChildren: [
         Consumer(
           builder: (context, ref, child) => ListTile(
             title: Text(
-              '''Bearing: ${abLine.when(data: (data) => data?.initialBearing.toStringAsFixed(1), error: (error, stackTrace) => '', loading: () => '')}°''',
+              '''Bearing: ${abLine != null ? '${abLine.initialBearing.toStringAsFixed(1)}°' : ''}''',
             ),
           ),
         ),
@@ -103,7 +107,7 @@ class ABLineMenu extends ConsumerWidget {
             );
           },
         ),
-        const ABCommonMenu(),
+        ABCommonMenu(abTracking: abLine),
         Consumer(
           child: Text('Recalc bounded lines', style: textStyle),
           builder: (context, ref, child) => MenuItemButton(
