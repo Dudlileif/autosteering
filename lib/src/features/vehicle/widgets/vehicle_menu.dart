@@ -84,11 +84,17 @@ class VehicleMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text(
-            'Autosteering parameters',
-            style: textStyle,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Autosteering Parameters',
+                style: textStyle,
+              ),
+            ],
           ),
           builder: (context, ref, child) => CheckboxListTile(
+            
             value: ref.watch(debugVehicleAutosteerParametersProvider),
             onChanged: (value) => value != null
                 ? ref

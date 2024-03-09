@@ -44,6 +44,96 @@ class SteeringHardwareConfigurator extends StatelessWidget {
                 style: theme.textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
+              // Threshold velocity
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    var threshold = ref.read(
+                      mainVehicleProvider.select(
+                        (vehicle) => vehicle.motorConfig.thresholdVelocity,
+                      ),
+                    );
+                    return StatefulBuilder(
+                      builder: (context, setState) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '''Threshold velocity: ${threshold.toStringAsFixed(2)} m/s''',
+                                  style: theme.textTheme.bodyLarge,
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    ref.read(simInputProvider.notifier).send(
+                                          ref
+                                              .read(
+                                                mainVehicleProvider.select(
+                                                  (value) => value.motorConfig,
+                                                ),
+                                              )
+                                              .copyWith(
+                                                thresholdVelocity: 0.05,
+                                              ),
+                                        );
+                                    // Wait a short while before saving the
+                                    // hopefully updated vehicle.
+                                    Future.delayed(
+                                        const Duration(milliseconds: 100), () {
+                                      final vehicle =
+                                          ref.watch(mainVehicleProvider);
+                                      ref.read(saveVehicleProvider(vehicle));
+                                      Logger.instance.i(
+                                        '''Updated vehicle motor config threshold velocity: $threshold -> ${vehicle.motorConfig.thresholdVelocity}''',
+                                      );
+                                    });
+                                  },
+                                  icon: const Icon(Icons.refresh),
+                                ),
+                              ],
+                            ),
+                            Slider(
+                              value: threshold,
+                              onChanged: (value) =>
+                                  setState(() => threshold = value),
+                              onChangeEnd: (value) {
+                                ref.read(simInputProvider.notifier).send(
+                                      ref
+                                          .read(
+                                            mainVehicleProvider.select(
+                                              (value) => value.motorConfig,
+                                            ),
+                                          )
+                                          .copyWith(
+                                            thresholdVelocity: value,
+                                          ),
+                                    );
+                                // Wait a short while before saving the hopefully
+                                // updated vehicle.
+                                Future.delayed(
+                                    const Duration(milliseconds: 100), () {
+                                  final vehicle =
+                                      ref.watch(mainVehicleProvider);
+                                  ref.read(saveVehicleProvider(vehicle));
+                                  Logger.instance.i(
+                                    '''Updated vehicle motor config threshold velocity: $threshold -> ${vehicle.motorConfig.thresholdVelocity}''',
+                                  );
+                                });
+                              },
+                              min: 0.01,
+                              max: 0.4,
+                              divisions: 39,
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
               // Motor max RPM
               Padding(
                 padding: const EdgeInsets.all(8),

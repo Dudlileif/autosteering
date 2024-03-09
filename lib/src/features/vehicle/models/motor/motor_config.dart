@@ -10,9 +10,12 @@ class MotorConfig with _$MotorConfig {
   ///
   /// [invertOutput] will invert the motor rotation direction if enabled.
   /// [maxRPM] is the maximum rotation speed of the motor.
+  /// [thresholdVelocity] is the minimum velocity in m/s of the vehicle to allow
+  /// autosteering.
   const factory MotorConfig({
     @Default(false) bool invertOutput,
     @Default(200) int maxRPM,
+    @Default(0.05) double thresholdVelocity,
   }) = _MotorConfig;
 
   /// Creates a [MotorConfig] object from the [json] object.

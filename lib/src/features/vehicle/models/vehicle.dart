@@ -30,7 +30,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     required this.trackWidth,
     this.manufacturerColors = ManufacturerColors.masseyFerguson,
     this.antennaLateralOffset = 0,
-    this.invertSteeringInput = false,
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
@@ -205,9 +204,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// A PID steering controller for use with autosteering.
   PidController pidController = PidController();
-
-  /// Whether the [steeringAngleInput] should be inverted.
-  bool invertSteeringInput;
 
   /// The Wheel Angle Sensor object representation of this vehicle.
   Was was;
@@ -431,14 +427,10 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Reqiure wheel angle above 0.01 deg.
   static const double minSteeringAngle = 0.01;
 
-  /// The [steeringAngleInput] accounted for [invertSteeringInput] and
-  /// [minSteeringAngle].
+  /// The [steeringAngleInput] accounted for [minSteeringAngle].
   double get steeringAngle =>
       switch (steeringAngleInput.abs() > minSteeringAngle) {
-        true => switch (invertSteeringInput) {
-            true => -steeringAngleInput,
-            false => steeringAngleInput,
-          },
+        true => steeringAngleInput,
         false => 0,
       };
 
@@ -617,7 +609,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         minTurningRadius,
         steeringAngleMax,
         trackWidth,
-        invertSteeringInput,
         velocity,
         bearing,
         steeringAngleInput,
@@ -635,7 +626,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
-    bool? invertSteeringInput,
     Was? was,
     Imu? imu,
     MotorConfig? motorConfig,
@@ -682,7 +672,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     map['imu_config'] = imu.config;
 
     map['steering'] = {
-      'invert_steering_input': invertSteeringInput,
       'min_turning_radius': minTurningRadius,
       'path_tracking_mode': pathTrackingMode,
       'steering_angle_max': steeringAngleMax,

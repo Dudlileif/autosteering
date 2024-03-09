@@ -21,7 +21,6 @@ final class Harvester extends AxleSteeredVehicle {
     super.solidAxleWheelDiameter,
     super.steeringAxleWheelWidth,
     super.solidAxleWheelWidth,
-    super.invertSteeringInput,
     super.imu,
     super.was,
     super.motorConfig,
@@ -73,7 +72,6 @@ final class Harvester extends AxleSteeredVehicle {
       solidAxleDistance: dimensions['solid_axle_distance'] as double,
       minTurningRadius: steering['min_turning_radius'] as double,
       steeringAngleMax: steering['steering_angle_max'] as double,
-      invertSteeringInput: steering['invert_steering_input'] as bool,
       ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
       ackermannPercentage: steering['ackermann_percentage'] as double? ?? 100,
       steeringAxleWheelDiameter:
@@ -152,7 +150,6 @@ final class Harvester extends AxleSteeredVehicle {
     double? solidAxleWheelDiameter,
     double? steeringAxleWheelWidth,
     double? solidAxleWheelWidth,
-    bool? invertSteeringInput,
     Imu? imu,
     Was? was,
     MotorConfig? motorConfig,
@@ -202,7 +199,6 @@ final class Harvester extends AxleSteeredVehicle {
         steeringAxleWheelWidth:
             steeringAxleWheelWidth ?? this.steeringAxleWheelWidth,
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
-        invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         imu: imu ?? this.imu,
         was: was ?? this.was,
         motorConfig: motorConfig ?? this.motorConfig,

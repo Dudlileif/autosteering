@@ -22,6 +22,7 @@ MotorConfig _$MotorConfigFromJson(Map<String, dynamic> json) {
 mixin _$MotorConfig {
   bool get invertOutput => throw _privateConstructorUsedError;
   int get maxRPM => throw _privateConstructorUsedError;
+  double get thresholdVelocity => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,7 @@ abstract class $MotorConfigCopyWith<$Res> {
           MotorConfig value, $Res Function(MotorConfig) then) =
       _$MotorConfigCopyWithImpl<$Res, MotorConfig>;
   @useResult
-  $Res call({bool invertOutput, int maxRPM});
+  $Res call({bool invertOutput, int maxRPM, double thresholdVelocity});
 }
 
 /// @nodoc
@@ -53,6 +54,7 @@ class _$MotorConfigCopyWithImpl<$Res, $Val extends MotorConfig>
   $Res call({
     Object? invertOutput = null,
     Object? maxRPM = null,
+    Object? thresholdVelocity = null,
   }) {
     return _then(_value.copyWith(
       invertOutput: null == invertOutput
@@ -63,6 +65,10 @@ class _$MotorConfigCopyWithImpl<$Res, $Val extends MotorConfig>
           ? _value.maxRPM
           : maxRPM // ignore: cast_nullable_to_non_nullable
               as int,
+      thresholdVelocity: null == thresholdVelocity
+          ? _value.thresholdVelocity
+          : thresholdVelocity // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -75,7 +81,7 @@ abstract class _$$MotorConfigImplCopyWith<$Res>
       __$$MotorConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool invertOutput, int maxRPM});
+  $Res call({bool invertOutput, int maxRPM, double thresholdVelocity});
 }
 
 /// @nodoc
@@ -91,6 +97,7 @@ class __$$MotorConfigImplCopyWithImpl<$Res>
   $Res call({
     Object? invertOutput = null,
     Object? maxRPM = null,
+    Object? thresholdVelocity = null,
   }) {
     return _then(_$MotorConfigImpl(
       invertOutput: null == invertOutput
@@ -101,6 +108,10 @@ class __$$MotorConfigImplCopyWithImpl<$Res>
           ? _value.maxRPM
           : maxRPM // ignore: cast_nullable_to_non_nullable
               as int,
+      thresholdVelocity: null == thresholdVelocity
+          ? _value.thresholdVelocity
+          : thresholdVelocity // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -108,7 +119,10 @@ class __$$MotorConfigImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$MotorConfigImpl implements _MotorConfig {
-  const _$MotorConfigImpl({this.invertOutput = false, this.maxRPM = 200});
+  const _$MotorConfigImpl(
+      {this.invertOutput = false,
+      this.maxRPM = 200,
+      this.thresholdVelocity = 0.05});
 
   factory _$MotorConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$MotorConfigImplFromJson(json);
@@ -119,10 +133,13 @@ class _$MotorConfigImpl implements _MotorConfig {
   @override
   @JsonKey()
   final int maxRPM;
+  @override
+  @JsonKey()
+  final double thresholdVelocity;
 
   @override
   String toString() {
-    return 'MotorConfig(invertOutput: $invertOutput, maxRPM: $maxRPM)';
+    return 'MotorConfig(invertOutput: $invertOutput, maxRPM: $maxRPM, thresholdVelocity: $thresholdVelocity)';
   }
 
   @override
@@ -132,12 +149,15 @@ class _$MotorConfigImpl implements _MotorConfig {
             other is _$MotorConfigImpl &&
             (identical(other.invertOutput, invertOutput) ||
                 other.invertOutput == invertOutput) &&
-            (identical(other.maxRPM, maxRPM) || other.maxRPM == maxRPM));
+            (identical(other.maxRPM, maxRPM) || other.maxRPM == maxRPM) &&
+            (identical(other.thresholdVelocity, thresholdVelocity) ||
+                other.thresholdVelocity == thresholdVelocity));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, invertOutput, maxRPM);
+  int get hashCode =>
+      Object.hash(runtimeType, invertOutput, maxRPM, thresholdVelocity);
 
   @JsonKey(ignore: true)
   @override
@@ -154,8 +174,10 @@ class _$MotorConfigImpl implements _MotorConfig {
 }
 
 abstract class _MotorConfig implements MotorConfig {
-  const factory _MotorConfig({final bool invertOutput, final int maxRPM}) =
-      _$MotorConfigImpl;
+  const factory _MotorConfig(
+      {final bool invertOutput,
+      final int maxRPM,
+      final double thresholdVelocity}) = _$MotorConfigImpl;
 
   factory _MotorConfig.fromJson(Map<String, dynamic> json) =
       _$MotorConfigImpl.fromJson;
@@ -164,6 +186,8 @@ abstract class _MotorConfig implements MotorConfig {
   bool get invertOutput;
   @override
   int get maxRPM;
+  @override
+  double get thresholdVelocity;
   @override
   @JsonKey(ignore: true)
   _$$MotorConfigImplCopyWith<_$MotorConfigImpl> get copyWith =>

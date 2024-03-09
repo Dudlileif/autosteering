@@ -555,9 +555,6 @@ class _SimulatorCoreState {
   /// The sign for which direction the vehicle is driving.
   int drivingDirectionSign = 1;
 
-  /// The velocity threshold for activating auto steering, m/s.
-  double autoSteerThresholdVelocity = 0.05;
-
   /// The target steering angle when guidance is active.
   double? steeringAngleTarget;
 
@@ -1190,7 +1187,7 @@ class _SimulatorCoreState {
       if (autosteeringState != AutosteeringState.disabled &&
           !receivingManualInput &&
           !motorCalibrationEnabled) {
-        if (vehicle!.velocity.abs() > autoSteerThresholdVelocity) {
+        if (vehicle!.velocity.abs() > vehicle!.motorConfig.thresholdVelocity) {
           wasTarget = vehicle!.wasTargetFromSteeringAngle(steeringAngleTarget!);
           networkSendStream?.add(
             const Utf8Encoder().convert(

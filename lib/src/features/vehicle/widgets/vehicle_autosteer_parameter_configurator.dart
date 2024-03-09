@@ -31,25 +31,26 @@ class VehicleAutosteerParameterConfigurator extends StatelessWidget {
             backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
             appBar: AppBar(
               primary: false,
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Autosteering configurator',
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                  Consumer(
-                    builder: (context, ref, child) {
-                      return CloseButton(
-                        onPressed: () => ref
-                            .read(
-                              debugVehicleAutosteerParametersProvider.notifier,
-                            )
-                            .update(value: false),
-                      );
-                    },
-                  ),
-                ],
+              title: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Steering parameters'),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return CloseButton(
+                          onPressed: () => ref
+                              .read(
+                                debugVehicleAutosteerParametersProvider
+                                    .notifier,
+                              )
+                              .update(value: false),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
             body: Column(
@@ -62,7 +63,7 @@ class VehicleAutosteerParameterConfigurator extends StatelessWidget {
                   tabs: _tabs,
                 ),
                 const Expanded(
-                  child: Padding(
+                  child: Padding(   
                     padding: EdgeInsets.only(top: 8),
                     child: TabBarView(
                       children: [
