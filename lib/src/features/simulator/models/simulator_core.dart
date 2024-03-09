@@ -1168,19 +1168,29 @@ class _SimulatorCoreState {
 
       steeringAngleTarget = 0.0;
       if (abTracking != null) {
-        if (abTracking!.isCompleted) {
+        if (abTracking!.isCompleted &&
+            autosteeringState != AutosteeringState.disabled) {
           autosteeringState = AutosteeringState.disabled;
+          mainThreadSendStream
+            ..add(LogEvent(Level.info, 'ABTracking finished.'))
+            ..add(LogEvent(Level.warning, 'Autosteer disabled!'));
         } else {
           steeringAngleTarget =
               abTracking!.nextSteeringAngle(vehicle!, mode: pathTrackingMode) ??
                   0;
         }
       } else if (pathTracking != null) {
-        pathTracking!.tryChangeWayPoint(vehicle!);
-
-        if (enablePathTracking) {
-          steeringAngleTarget =
-              pathTracking!.nextSteeringAngle(vehicle!);
+        if (pathTracking!.isCompleted &&
+            pathTrackingLoopMode == PathTrackingLoopMode.none &&
+            enablePathTracking) {
+          enablePathTracking = false;
+          autosteeringState = AutosteeringState.disabled;
+          mainThreadSendStream
+            ..add(LogEvent(Level.info, 'PathTracking finished.'))
+            ..add(LogEvent(Level.warning, 'Autosteer disabled!'));
+        } else {
+          pathTracking!.tryChangeWayPoint(vehicle!);
+          steeringAngleTarget = pathTracking!.nextSteeringAngle(vehicle!);
         }
       }
 
@@ -1240,6 +1250,14 @@ class _SimulatorCoreState {
       mainThreadSendStream
         ..add((steeringAngleTarget: steeringAngleTarget))
         ..add((wasTarget: wasTarget));
+    }
+    if (abTracking == null &&
+        pathTracking == null &&
+        autosteeringState != AutosteeringState.disabled) {
+      autosteeringState = AutosteeringState.disabled;
+      mainThreadSendStream
+        ..add(LogEvent(Level.info, 'No guidance available.'))
+        ..add(LogEvent(Level.warning, 'Autosteer disabled!'));
     }
   }
 
@@ -1538,9 +1556,7 @@ class _SimulatorCoreState {
           vehicle!.updatePositionAndBearing(
             period,
             turningCircleCenter,
-            // force: gaugeVelocity.abs() > 0,
           );
-          // gnssUpdate = (gnssPosition: vehicle!.position, time: DateTime.now());
           if (allowManualSimInput && gaugeVelocity.sign < 0) {
             gaugeBearing = (gaugeBearing + 180).wrap360();
           }
