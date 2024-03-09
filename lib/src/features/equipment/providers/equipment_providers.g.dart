@@ -486,7 +486,7 @@ final showEquipmentDebugProvider =
 );
 
 typedef _$ShowEquipmentDebug = Notifier<bool>;
-String _$allEquipmentsHash() => r'156daac36176802039b427d72faa0328b34ea968';
+String _$allEquipmentsHash() => r'032a9501fbef22d430589cd3162af47df7044a19';
 
 /// A provider that holds all of the equipments.
 ///

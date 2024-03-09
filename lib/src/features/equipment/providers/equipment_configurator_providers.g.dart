@@ -69,7 +69,7 @@ final equipmentConfiguratorPageControllerProvider = AutoDisposeNotifierProvider<
 typedef _$EquipmentConfiguratorPageController
     = AutoDisposeNotifier<Raw<PageController>>;
 String _$configuredEquipmentHash() =>
-    r'd6fcdb2c7a05e34cfc6c8202508159aa8b1f5ee1';
+    r'f36d79b5d34ad47c42f66855a688b2a8e8e68c47';
 
 /// A provider for the vehicle from the configurator.
 ///

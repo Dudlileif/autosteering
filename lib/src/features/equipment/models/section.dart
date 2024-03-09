@@ -101,8 +101,8 @@ class Section {
         workingWidth: workingWidth ?? this.workingWidth,
         active: active ?? this.active,
         automateActivation: automateActivation ?? this.automateActivation,
-        color: color,
-        workedPathColor: workedPathColor,
+        color: color ?? this.color,
+        workedPathColor: workedPathColor ?? this.workedPathColor,
       );
 
   /// Converts the object to a json compatible structure.

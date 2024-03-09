@@ -90,12 +90,7 @@ class EquipmentConfiguratorPageController
 @Riverpod(keepAlive: true)
 class ConfiguredEquipment extends _$ConfiguredEquipment {
   @override
-  Equipment build() {
-    ref.listenSelf((previous, next) {
-      ref.read(allEquipmentsProvider.notifier).update(next);
-    });
-    return Equipment(hitchType: HitchType.fixed);
-  }
+  Equipment build() => Equipment(hitchType: HitchType.fixed);
 
   /// Update the [state] to [equipment].
   void update(Equipment equipment) => Future(() => state = equipment);

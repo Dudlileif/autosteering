@@ -33,12 +33,23 @@ class AllEquipments extends _$AllEquipments {
   @override
   Map<String, Equipment> build() {
     ref.listenSelf((previous, next) {
+      final toRemove = <String>[];
       for (final equipment in next.values) {
+        if (equipment.hitchParent == null) {
+          toRemove.add(equipment.uuid);
+        }
         if (ref.exists(equipmentPathsProvider(equipment.uuid))) {
           ref
               .read(equipmentPathsProvider(equipment.uuid).notifier)
               .update(equipment);
         }
+      }
+      if (toRemove.isNotEmpty) {
+        for (final uuid in toRemove) {
+          state.remove(uuid);
+          ref.invalidate(equipmentPathsProvider(uuid));
+        }
+        state = Map.of(state);
       }
     });
 

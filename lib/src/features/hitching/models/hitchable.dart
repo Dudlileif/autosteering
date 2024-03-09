@@ -1,3 +1,4 @@
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:uuid/uuid.dart';
@@ -114,8 +115,30 @@ abstract class Hitchable {
     var childToAttach = child;
 
     final uuidAlreadyAttached = findChildRecursive(child.uuid);
-    if (uuidAlreadyAttached != null) {
-      childToAttach = child.copyWith(uuid: const Uuid().v4());
+    if (uuidAlreadyAttached != null &&
+        uuidAlreadyAttached is Equipment &&
+        childToAttach is Equipment) {
+      final newSections = childToAttach.sections;
+      for (final (index, section) in newSections.indexed) {
+        newSections[index] = section.copyWith(
+          active: uuidAlreadyAttached.sections
+              .firstWhereOrNull((element) => element.index == section.index)
+              ?.active,
+        );
+      }
+
+      childToAttach = uuidAlreadyAttached.copyWith(
+        decorationLength: childToAttach.decorationLength,
+        decorationSidewaysOffset: childToAttach.decorationSidewaysOffset,
+        decorationWidth: childToAttach.decorationWidth,
+        drawbarLength: childToAttach.drawbarLength,
+        sidewaysOffset: childToAttach.sidewaysOffset,
+        workingAreaLength: childToAttach.workingAreaLength,
+        lastUsed: childToAttach.lastUsed,
+        name: childToAttach.name,
+        hitchType: childToAttach.hitchType,
+        sections: newSections,
+      );
     }
 
     switch (position) {
@@ -141,8 +164,30 @@ abstract class Hitchable {
     var childToAttach = child;
 
     final uuidAlreadyAttached = findChildRecursive(child.uuid);
-    if (uuidAlreadyAttached != null) {
-      childToAttach = child.copyWith(uuid: const Uuid().v4());
+    if (uuidAlreadyAttached != null &&
+        childToAttach is Equipment &&
+        uuidAlreadyAttached is Equipment) {
+      final newSections = childToAttach.sections;
+      for (final (index, section) in newSections.indexed) {
+        newSections[index] = section.copyWith(
+          active: uuidAlreadyAttached.sections
+              .firstWhereOrNull((element) => element.index == section.index)
+              ?.active,
+        );
+      }
+
+      childToAttach = uuidAlreadyAttached.copyWith(
+        decorationLength: childToAttach.decorationLength,
+        decorationSidewaysOffset: childToAttach.decorationSidewaysOffset,
+        decorationWidth: childToAttach.decorationWidth,
+        drawbarLength: childToAttach.drawbarLength,
+        sidewaysOffset: childToAttach.sidewaysOffset,
+        workingAreaLength: childToAttach.workingAreaLength,
+        lastUsed: childToAttach.lastUsed,
+        name: childToAttach.name,
+        hitchType: childToAttach.hitchType,
+        sections: newSections,
+      );
     }
 
     if (uuid == parentUuid) {
@@ -252,7 +297,6 @@ abstract class Hitchable {
     hitchRearTowbarChild?.hitchParent = this;
     hitchRearTowbarChild?.updateChildren();
   }
-
 
   /// Create a new [Hitchable] based on this one, but with parameters/variables
   /// changed.
