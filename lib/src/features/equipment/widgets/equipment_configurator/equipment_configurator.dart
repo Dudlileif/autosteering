@@ -18,110 +18,132 @@ class EquipmentConfigurator extends StatelessWidget {
   const EquipmentConfigurator({super.key});
 
   @override
-  Widget build(BuildContext context) => SimpleDialog(
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget build(BuildContext context) => Dialog(
+        child: Column(
           children: [
-            Text('Configure equipment'),
-            _ApplyConfigurationToAttachedEquipmentButton(),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: _LoadButton(),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: _SaveButton(),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: CloseButton(),
-                ),
-              ],
-            ),
-          ],
-        ),
-        children: [
-          SizedBox(
-            height: 800,
-            width: 1200,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Consumer(
-                  builder: (context, ref, child) => NavigationRail(
-                    backgroundColor: Colors.transparent,
-                    labelType: NavigationRailLabelType.all,
-                    destinations: const [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.agriculture),
-                        label: Text('Type'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.expand),
-                        label: Text('Dimensions'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.view_column),
-                        label: Text('Sections'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.square_rounded),
-                        label: Text('Decoration'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.commit),
-                        label: Text('Hitches'),
-                      ),
-                    ],
-                    selectedIndex: ref.watch(
-                      equipmentConfiguratorIndexProvider,
-                    ),
-                    onDestinationSelected: ref
-                        .read(
-                          equipmentConfiguratorPageControllerProvider.notifier,
-                        )
-                        .animateToPage,
-                  ),
-                ),
-                const VerticalDivider(),
-                Expanded(
-                  child: Consumer(
-                    builder: (context, ref, child) => PageView(
-                      scrollDirection: Axis.vertical,
-                      controller: ref
-                          .watch(equipmentConfiguratorPageControllerProvider),
-                      children: const [
-                        EquipmentTypeSelectorPage(),
-                        EquipmentDimensionsPage(),
-                        EquipmentSectionsPage(),
-                        EquipmentDecorationPage(),
-                        EquipmentHitchesPage(),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text(
+                            'Configure equipment',
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(8),
+                          child: _ApplyConfigurationToAttachedEquipmentButton(),
+                        ),
+                        const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                              child: _ImportButton(),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                              child: _SaveButton(),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: CloseButton(),
+                  ),
+                ],
+              ),
             ),
-          ),
+            Expanded(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) => NavigationRail(
+                      backgroundColor: Colors.transparent,
+                      labelType: NavigationRailLabelType.all,
+                      destinations: const [
+                        NavigationRailDestination(
+                          icon: Icon(Icons.agriculture),
+                          label: Text('Type'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.expand),
+                          label: Text('Dimensions'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.view_column),
+                          label: Text('Sections'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.square_rounded),
+                          label: Text('Decoration'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.commit),
+                          label: Text('Hitches'),
+                        ),
+                      ],
+                      selectedIndex: ref.watch(
+                        equipmentConfiguratorIndexProvider,
+                      ),
+                      onDestinationSelected: ref
+                          .read(
+                            equipmentConfiguratorPageControllerProvider
+                                .notifier,
+                          )
+                          .animateToPage,
+                    ),
+                  ),
+                  const VerticalDivider(),
+                  Expanded(
+                    child: Consumer(
+                      builder: (context, ref, child) => PageView(
+                        scrollDirection: Axis.vertical,
+                        controller: ref
+                            .watch(equipmentConfiguratorPageControllerProvider),
+                        children: const [
+                          EquipmentTypeSelectorPage(),
+                          EquipmentDimensionsPage(),
+                          EquipmentSectionsPage(),
+                          EquipmentDecorationPage(),
+                          EquipmentHitchesPage(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
+        ),
       );
 }
 
 /// A button for loading an [Equipment] to the [configuredEquipmentProvider]
 /// from a file.
-class _LoadButton extends ConsumerWidget {
+class _ImportButton extends ConsumerWidget {
   /// A button for loading an [Equipment] to the [configuredEquipmentProvider]
   /// from a file.
-  const _LoadButton();
+  const _ImportButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FilledButton.icon(
       onPressed: () => ref.read(loadFileConfiguredEquipmentProvider),
       icon: const Icon(Icons.file_open),
-      label: const Text('Load'),
+      label: const Text('Import'),
     );
   }
 }

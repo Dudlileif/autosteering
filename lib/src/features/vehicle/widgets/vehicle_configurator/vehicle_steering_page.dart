@@ -12,20 +12,6 @@ class VehicleSteeringPage extends ConsumerWidget {
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
-      CheckboxListTile(
-        title: const Row(
-          children: [
-            Icon(Icons.swap_horiz),
-            Text('Invert steering input'),
-          ],
-        ),
-        value: vehicle.invertSteeringInput,
-        onChanged: (value) => value != null
-            ? ref
-                .read(configuredVehicleProvider.notifier)
-                .update(vehicle.copyWith(invertSteeringInput: value))
-            : null,
-      ),
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.looks),

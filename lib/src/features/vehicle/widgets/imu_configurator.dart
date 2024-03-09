@@ -16,7 +16,7 @@ class ImuConfigurator extends StatelessWidget {
     return Card(
       color: Colors.transparent,
       child: SizedBox(
-        width: 260,
+        width: 300,
         child: Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
           appBar: AppBar(
@@ -24,10 +24,7 @@ class ImuConfigurator extends StatelessWidget {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'IMU Configurator',
-                  style: theme.textTheme.bodyLarge,
-                ),
+                const Text('IMU Configurator'),
                 Consumer(
                   builder: (context, ref, child) => CloseButton(
                     onPressed: () => ref

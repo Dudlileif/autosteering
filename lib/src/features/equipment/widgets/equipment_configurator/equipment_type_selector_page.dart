@@ -78,8 +78,11 @@ class _EquipmentTypeSelector extends ConsumerWidget {
 
     final equipment = ref.watch(configuredEquipmentProvider);
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    return SizedBox(
+      height: 220,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
       children: [
         Padding(
           padding: const EdgeInsets.all(8),
@@ -160,6 +163,7 @@ class _EquipmentTypeSelector extends ConsumerWidget {
           ),
         ),
       ],
+      ),
     );
   }
 }

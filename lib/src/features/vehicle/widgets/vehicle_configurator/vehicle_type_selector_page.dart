@@ -112,135 +112,139 @@ class _VehicleTypeSelector extends ConsumerWidget {
 
     final vehicle = ref.watch(configuredVehicleProvider);
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            width: 200,
-            height: 200,
-            child: ListTile(
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    flex: 10,
-                    child: Text(
-                      'Tractor\n(or front axle steered)',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
+    return SizedBox(
+      height: 220,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: ListTile(
+                title: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 10,
+                      child: Text(
+                        'Tractor\n(or front axle steered)',
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 14,
-                    child: VehicleSidePainter(
-                      type: 'Tractor',
-                      colors: vehicle.manufacturerColors,
-                      child: const SizedBox.square(
-                        dimension: 140,
+                    Expanded(
+                      flex: 14,
+                      child: VehicleSidePainter(
+                        type: 'Tractor',
+                        colors: vehicle.manufacturerColors,
+                        child: const SizedBox.square(
+                          dimension: 140,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                selected: vehicle is Tractor,
+                selectedTileColor: theme.toggleButtonsTheme.splashColor,
+                onTap: () {
+                  ref.read(configuredVehicleProvider.notifier).update(
+                        PreconfiguredVehicles.tractor,
+                      );
+                  ref.invalidate(configuredVehicleNameTextControllerProvider);
+                },
               ),
-              selected: vehicle is Tractor,
-              selectedTileColor: theme.toggleButtonsTheme.splashColor,
-              onTap: () {
-                ref.read(configuredVehicleProvider.notifier).update(
-                      PreconfiguredVehicles.tractor,
-                    );
-                ref.invalidate(configuredVehicleNameTextControllerProvider);
-              },
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            width: 200,
-            height: 200,
-            child: ListTile(
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    flex: 10,
-                    child: Text(
-                      'Articulated tractor\n(or articulated steering)',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: ListTile(
+                title: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 10,
+                      child: Text(
+                        'Articulated tractor\n(or articulated steering)',
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  // TODO(dudlileif): make Articulated Tractor drawing
-                  const Expanded(
-                    flex: 18,
-                    child: SizedBox.shrink(),
-                  ),
-                ],
+                    // TODO(dudlileif): make Articulated Tractor drawing
+                    const Expanded(
+                      flex: 14,
+                      child: SizedBox.shrink(),
+                    ),
+                  ],
+                ),
+                selected: vehicle is ArticulatedTractor,
+                selectedTileColor: theme.toggleButtonsTheme.splashColor,
+                onTap: () {
+                  ref.read(configuredVehicleProvider.notifier).update(
+                        PreconfiguredVehicles.articulatedTractor,
+                      );
+                  ref.invalidate(configuredVehicleNameTextControllerProvider);
+                },
               ),
-              selected: vehicle is ArticulatedTractor,
-              selectedTileColor: theme.toggleButtonsTheme.splashColor,
-              onTap: () {
-                ref.read(configuredVehicleProvider.notifier).update(
-                      PreconfiguredVehicles.articulatedTractor,
-                    );
-                ref.invalidate(configuredVehicleNameTextControllerProvider);
-              },
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            width: 200,
-            height: 200,
-            child: ListTile(
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    flex: 10,
-                    child: Text(
-                      'Harvester\n(or rear axle steered)',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: ListTile(
+                title: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 10,
+                      child: Text(
+                        'Harvester\n(or rear axle steered)',
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  const Expanded(
-                    flex: 18,
-                    child: // TODO(dudlileif): make Harvester drawing
-                        Expanded(flex: 18, child: SizedBox.shrink()),
-                  ),
-                ],
+                    const Expanded(
+                      flex: 14,
+                      // TODO(dudlileif): make Harvester drawing
+                      child: SizedBox.shrink(),
+                    ),
+                  ],
+                ),
+                selected: vehicle is Harvester,
+                selectedTileColor: theme.toggleButtonsTheme.splashColor,
+                onTap: () {
+                  ref.read(configuredVehicleProvider.notifier).update(
+                        PreconfiguredVehicles.harvester,
+                      );
+                  ref.invalidate(configuredVehicleNameTextControllerProvider);
+                },
               ),
-              selected: vehicle is Harvester,
-              selectedTileColor: theme.toggleButtonsTheme.splashColor,
-              onTap: () {
-                ref.read(configuredVehicleProvider.notifier).update(
-                      PreconfiguredVehicles.harvester,
-                    );
-                ref.invalidate(configuredVehicleNameTextControllerProvider);
-              },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
