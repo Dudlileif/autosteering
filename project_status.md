@@ -16,7 +16,7 @@
 
 - Pure pursuit and Stanley autosteering modes
 
-- Basic AB lines and curves with autosteering, u-turn at the ends
+- Basic AB lines and curves with autosteering, basic u-turn at the ends
   - Can be clipped to field/boundary or unlimited
 
 - Basic equipment simulation
@@ -59,6 +59,8 @@
 - Improved equipment simulation
 
 - Improved equipment recording/coverage.
+
+- Proper headland implementation, u-turns following same outer path
 
 - Grids
 

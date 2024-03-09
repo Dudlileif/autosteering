@@ -1,6 +1,5 @@
 import 'package:autosteering/src/features/common/utils/position_projection_extensions.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
-import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -267,38 +266,6 @@ class PathTrackingDebugLayer extends ConsumerWidget {
               ),
             ]
           : const [],
-    );
-  }
-}
-
-/// A Widget for displaying the distance from the pure pursuit line to the
-/// vehicle.
-class PathTrackingDebugWidget extends ConsumerWidget {
-  /// A Widget for displaying the distance from the pure pursuit line to the
-  /// vehicle.
-  const PathTrackingDebugWidget({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Card(
-        color: theme.cardColor.withOpacity(0.5),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Consumer(
-            builder: (context, ref, child) {
-              return Text(
-                (-(ref.watch(pathTrackingPerpendicularDistanceProvider) ?? 0))
-                    .toStringAsFixed(3),
-                style: theme.menuButtonWithChildrenText,
-              );
-            },
-          ),
-        ),
-      ),
     );
   }
 }

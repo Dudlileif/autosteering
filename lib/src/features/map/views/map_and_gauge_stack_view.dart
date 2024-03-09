@@ -42,15 +42,61 @@ class MapAndGaugeStackView extends ConsumerWidget {
             child:
                 Align(alignment: Alignment.topCenter, child: VirtualLedBar()),
           ),
-              ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: 8 +
+                  2 *
+                      ref.watch(
+                        virtualLedBarConfigurationProvider
+                            .select((value) => value.ledSize),
+                      ),
             ),
+            child: SizedBox(
+              width: ref.watch(miniMapSizeProvider),
+              child: ColoredBox(
+                color: Colors.black12,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const BasicVehicleGauges(),
+                      const Divider(),
+                      if (ref.watch(
+                        displayABTrackingProvider
+                            .select((value) => value != null),
+                      )) ...[
+                        const ABTrackingControls(),
+                        const Divider(),
+                      ],
+                      if (ref.watch(simCoreAllowManualInputProvider)) ...[
+                        const SimVehicleSteeringSlider(),
+                        const Divider(),
+                      ],
+                      if (ref.watch(showMiniMapProvider)) const MiniMap(),
+                    ],
+                  ),
+                ),
+              ),
+              ),
           ),
+        ),
           const Align(
             alignment: Alignment.bottomRight,
             child: MapContributionWidget(),
           ),
           Align(
             alignment: Alignment.topRight,
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: 8 +
+                  2 *
+                      ref.watch(
+                        virtualLedBarConfigurationProvider
+                            .select((value) => value.ledSize),
+                      ),
+            ),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -67,6 +113,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
               ),
             ),
           ),
+        ),
           if (ref.watch(debugVehicleIMUProvider))
             const Align(
               alignment: Alignment.centerLeft,

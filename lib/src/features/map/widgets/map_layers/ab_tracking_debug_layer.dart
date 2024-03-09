@@ -1,7 +1,5 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
-import 'package:autosteering/src/features/simulator/simulator.dart';
-import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -49,7 +47,8 @@ class ABTrackingDebugLayer extends ConsumerWidget {
         if (abTracking != null)
           PolylineLayer(
             polylines: [
-              Polyline(
+              if (abTracking.boundary == null)
+                Polyline(
                 points:
                     abTracking.baseLine.map((e) => e.position.latLng).toList(),
               ),
@@ -155,15 +154,19 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                       radius: 5,
                       color: Colors.pink,
                     )
-                  else
+                  else if (abTracking.currentPathTracking
+                      is PurePursuitPathTracking)
                     CircleMarker(
-                      point: abTracking
+                      point: (abTracking.currentPathTracking!
+                              as PurePursuitPathTracking)
                           .findLookAheadCirclePoints(vehicle)
                           .best
+                          .position
                           .latLng,
                       radius: 5,
                       color: Colors.pink,
-                    ),
+                    ), 
+                
                 ],
                 if (currentPerpendicularIntersect != null)
                   CircleMarker(
@@ -208,7 +211,8 @@ class ABTrackingDebugLayer extends ConsumerWidget {
         MarkerLayer(
           markers: [
             if (abTracking != null) ...[
-              Marker(
+              if (abTracking.boundary == null) ...[
+                Marker(
                 point: abTracking.start.position.latLng,
                 child: const TextWithStroke(
                   'A',
@@ -229,7 +233,8 @@ class ABTrackingDebugLayer extends ConsumerWidget {
                 rotate: true,
                 width: 50,
                 height: 50,
-              ),
+                ),
+              ],
               Marker(
                 point: abTracking.currentStart.position.latLng,
                 child: TextWithStroke(
@@ -308,84 +313,5 @@ class ABTrackingDebugLayer extends ConsumerWidget {
         ),
       ],
     );
-  }
-}
-
-/// A widget for controlling the AB-line offset.
-class ABTrackingOffsetDebugControls extends ConsumerWidget {
-  /// A widget for controlling the AB-line offset.
-  const ABTrackingOffsetDebugControls({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(activeABConfigProvider);
-
-    final abTracking = ref.watch(displayABTrackingProvider);
-    if (abTracking != null) {
-      final theme = Theme.of(context);
-
-      return Align(
-        alignment: Alignment.topCenter,
-        child: Card(
-          color: Theme.of(context).cardColor.withOpacity(0.5),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Consumer(
-                  builder: (context, ref, child) => Text(
-                    '''${(-(ref.watch(abTrackingPerpendicularDistanceProvider) ?? 0)).toStringAsFixed(3)} m''',
-                    style: theme.menuButtonWithChildrenText,
-                  ),
-                ),
-                Text(
-                  'Offset: ${abTracking.currentOffset}',
-                  style: theme.menuButtonWithChildrenText,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Consumer(
-                      builder: (context, ref, child) => IconButton.filled(
-                        onPressed: () => ref
-                            .read(simInputProvider.notifier)
-                            .send((abMoveOffset: -1)),
-                        icon: const Icon(Icons.arrow_left),
-                      ),
-                    ),
-                    Consumer(
-                      builder: (context, ref, child) => FilterChip(
-                        label: const Text('AUTO'),
-                        selected: abTracking.snapToClosestLine,
-                        onSelected: (value) => ref
-                            .read(aBSnapToClosestLineProvider.notifier)
-                            .update(value: value),
-                      ),
-                    ),
-                    Consumer(
-                      builder: (context, ref, child) => IconButton.filled(
-                        onPressed: () => ref
-                            .read(simInputProvider.notifier)
-                            .send((abMoveOffset: 1)),
-                        icon: const Icon(Icons.arrow_right),
-                      ),
-                    ),
-                  ],
-                ),
-                Consumer(
-                  builder: (context, ref, child) => IconButton.filled(
-                    onPressed:
-                        ref.read(aBOffsetOppositeTurnProvider.notifier).toggle,
-                    icon: const Icon(Icons.compare_arrows),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-    return const SizedBox.shrink();
   }
 }

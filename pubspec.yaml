@@ -14,7 +14,6 @@ dependencies:
     collection: ^1.17.1
     connectivity_plus: ^5.0.2
     cupertino_icons: ^1.0.6
-    device_preview: ^1.1.0
     dio: ^5.4.1
     equatable: ^2.0.5
     fast_cached_network_image: ^1.2.8
@@ -26,6 +25,7 @@ dependencies:
     flutter_map: ^6.1.0
     flutter_riverpod: ^3.0.0-dev.3
     flutter_shaders: ^0.1.2
+    flutter_svg: ^2.0.10+1
     freezed_annotation: ^2.4.1
     # gamepads: ^0.1.1
     geobase: ^1.0.0
@@ -74,6 +74,7 @@ flutter:
     assets:
         - assets/
         - assets/egm/
+        - assets/icons/
         - assets/images/
         - assets/images/vehicle_types/side_view/
         - assets/images/vehicle_types/top_view/
