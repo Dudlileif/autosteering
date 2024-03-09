@@ -91,7 +91,9 @@ class FileCachedNetworkImageProvider
   }) async {
     try {
       if (cacheFile?.existsSync() ?? false) {
-        if ((await cacheFile!.length()) > 0) {
+        // Blank image is 355 bytes, if less the image was probably not
+        // received correctly.
+        if ((await cacheFile!.length()) > 350) {
           return decode(await ImmutableBuffer.fromFilePath(cacheFile!.path));
         }
       }

@@ -95,9 +95,17 @@ FutureOr<void> saveJsonToFileDirectory(
     final path =
         '${ref.watch(fileDirectoryProvider).requireValue.path}/$folder/$fileName.json';
     final file = File(path);
-    await file.create(recursive: true);
+    final exists = file.existsSync();
+    if (!exists) {
+      await file.create(recursive: true);
+    }
     await file.writeAsString(dataString);
-    Logger.instance.i('Created and wrote data to $path');
+    Logger.instance.i(
+      switch (exists) {
+        false => 'Created and wrote data to $path',
+        true => 'Wrote data to $path',
+      },
+    );
   }
 }
 
