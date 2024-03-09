@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/guidance/widgets/guidance_menu/path_recorder_menu.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,9 @@ class PathTrackingMenu extends ConsumerWidget {
 
     return MenuButtonWithChildren(
       text: 'Path tracking',
+      icon: Icons.route,
       menuChildren: [
+        const PathRecorderMenu(),
         Consumer(
           child: Text(
             'Enable',

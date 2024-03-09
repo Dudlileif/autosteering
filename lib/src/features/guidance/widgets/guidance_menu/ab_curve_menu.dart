@@ -4,6 +4,7 @@ import 'package:autosteering/src/features/guidance/widgets/guidance_menu/ab_comm
 import 'package:autosteering/src/features/theme/utils/menu_button_text_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// A menu button with attached submenu for working with the [ABCurve]
 /// guidance feature.
@@ -22,10 +23,21 @@ class ABCurveMenu extends ConsumerWidget {
           loading: () => null,
         );
 
-    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    final theme = Theme.of(context);
+    final textStyle = theme.menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       text: 'AB curve',
+      iconOverrideWidget: SizedBox.square(
+        dimension: 24,
+        child: SvgPicture.asset(
+          'assets/icons/ab_curve.svg',
+          colorFilter: ColorFilter.mode(
+            theme.iconTheme.color ?? Colors.white,
+            BlendMode.srcIn,
+          ),
+        ),
+      ),
       menuChildren: [
         Consumer(
           builder: (context, ref, child) {

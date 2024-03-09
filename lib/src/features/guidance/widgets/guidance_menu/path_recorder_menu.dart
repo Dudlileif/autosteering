@@ -17,7 +17,7 @@ class PathRecorderMenu extends ConsumerWidget {
 
     return MenuButtonWithChildren(
       text: 'Path recording',
-      icon: Icons.route,
+      icon: Icons.voicemail,
       menuChildren: [
         Consumer(
           builder: (context, ref, child) {
