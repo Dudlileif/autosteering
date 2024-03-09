@@ -30,11 +30,8 @@ final class StanleyPathTracking extends PathTracking {
     super.name,
   });
 
-  /// The next steering angle for the [vehicle] for following the [path].
-  ///
-  /// [mode] does nothing for this tracking type.
   @override
-  double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) {
+  double nextSteeringAngle(Vehicle vehicle) {
     tryChangeWayPoint(vehicle);
 
     final parameters = vehicle.stanleyParameters;

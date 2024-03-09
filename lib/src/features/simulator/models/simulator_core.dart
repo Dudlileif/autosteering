@@ -1183,7 +1183,7 @@ class _SimulatorCoreState {
 
         if (enablePathTracking) {
           steeringAngleTarget =
-              pathTracking!.nextSteeringAngle(vehicle!, mode: pathTrackingMode);
+              pathTracking!.nextSteeringAngle(vehicle!);
         }
       }
 

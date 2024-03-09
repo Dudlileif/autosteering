@@ -336,6 +336,17 @@ sealed class ABTracking {
       return lines[offset]!;
     }
 
+    // A single straight line
+    if (baseLine.length == 2 && boundary == null) {
+      final line = baseLine
+          .map(
+            (e) => e.moveRhumb(distance: offset * width, angleFromBearing: 90),
+          )
+          .toList();
+      lines[offset] = line;
+      return line;
+    }
+
     final extendedStart = baseLine.first.position.rhumb.destinationPoint(
       distance: extraStraightDistance ?? 100,
       bearing: baseLine[1].finalBearingToRhumb(baseLine.first),
@@ -435,7 +446,7 @@ sealed class ABTracking {
       if (newPath.length >= 2) {
         final intersects = <int>[];
         for (var i = 0; i < newPath.length; i++) {
-          if (newPath[i].intersectionWith(boundaryRing) != null) {
+          if (newPath[i].intersectionWithRhumb(boundaryRing) != null) {
             intersects.add(i);
           }
         }
@@ -509,7 +520,7 @@ sealed class ABTracking {
             .copyWith(
               bearing: lastPointOutside.finalBearingToRhumb(firstPointInside),
             )
-            .intersectionWith(
+            .intersectionWithRhumb(
               boundaryRing,
               oppositeOfBearing: true,
             );
@@ -587,7 +598,7 @@ sealed class ABTracking {
             .copyWith(
               bearing: lastPointInside.initialBearingToRhumb(lastPointOutside),
             )
-            .intersectionWith(
+            .intersectionWithRhumb(
               boundaryRing,
             );
         if (boundaryIntersection != null) {
@@ -1196,257 +1207,6 @@ sealed class ABTracking {
       ).firstOrNull ??
       currentStart;
 
-  /// Finds the points that we use to get the secant line that intersects
-  /// the circle with radius [lookAheadDistance] from the [vehicle]'s
-  /// starting point.
-  ///
-  /// If the closest point is outside the circle, only this point will be
-  /// returned.
-  ({Geographic inside, Geographic? outside}) findLookAheadLinePoints(
-    Vehicle vehicle, {
-    double? lookAheadDistance,
-  }) {
-    final pathTracking = currentPathTracking;
-    if (pathTracking is PurePursuitPathTracking) {
-      final points = pathTracking.findLookAheadLinePoints(
-        vehicle,
-        lookAheadDistance ?? vehicle.lookAheadDistance,
-      );
-      return (
-        inside: points.inside.position,
-        outside: points.outside?.position
-      );
-    }
-
-    final points = switch (vehicle.isReversing) {
-      true => pointsBehind(
-          vehicle,
-          stepSize: lookAheadDistance ?? vehicle.lookAheadDistance,
-        ),
-      false => pointsAhead(
-          vehicle,
-          stepSize: lookAheadDistance ?? vehicle.lookAheadDistance,
-        )
-    }
-        .map((e) => e.position)
-        .toList();
-
-    var insidePoint = points.first;
-
-    var insideDistance =
-        vehicle.lookAheadStartPosition.rhumb.distanceTo(insidePoint);
-
-    // If the closest point is outside look ahead circle we create an
-    // intermediate point on the circle in the direction of the closest point.
-    if (insideDistance >= (lookAheadDistance ?? vehicle.lookAheadDistance)) {
-      return (
-        inside: insidePoint =
-            vehicle.lookAheadStartPosition.rhumb.destinationPoint(
-          distance: lookAheadDistance ?? vehicle.lookAheadDistance,
-          bearing: vehicle.lookAheadStartPosition.rhumb
-              .initialBearingTo(insidePoint),
-        ),
-        outside: null,
-      );
-    }
-
-    Geographic? outsidePoint;
-    for (var i = 1; i < points.length; i++) {
-      final point = points[i];
-      final distance = vehicle.lookAheadStartPosition.rhumb.distanceTo(point);
-      if (distance <= (lookAheadDistance ?? vehicle.lookAheadDistance)) {
-        insidePoint = point;
-        insideDistance = distance;
-      } else {
-        outsidePoint = point;
-        break;
-      }
-    }
-
-    return (inside: insidePoint, outside: outsidePoint);
-  }
-
-  /// The point on the secant line that is the shortest distance from the
-  /// [vehicle]'s look ahead starting point.
-  Geographic? vehicleToLookAheadLineProjection(
-    Vehicle vehicle, {
-    double? lookAheadDistance,
-  }) {
-    final points = findLookAheadLinePoints(
-      vehicle,
-      lookAheadDistance: lookAheadDistance ?? vehicle.lookAheadDistance,
-    );
-
-    if (points.outside == null) {
-      return null;
-    }
-
-    final crossDistance = vehicle.lookAheadStartPosition.spherical
-        .crossTrackDistanceTo(start: points.inside, end: points.outside!);
-
-    final secantBearing = points.inside.rhumb.initialBearingTo(points.outside!);
-
-    return vehicle.lookAheadStartPosition.rhumb.destinationPoint(
-      distance: crossDistance,
-      bearing: secantBearing - 90,
-    );
-  }
-
-  /// Finds the intersection waypoints on the look ahead circle.
-  ///
-  /// A single waypoint is returned when there is no points in the look ahead
-  /// circle. This waypoint is pointing directly towards the next waypoint
-  /// outside the circle from the [vehicle]'s look ahead starting position.
-  ///
-  /// If the secant line exists and intersects the circle, the intersection
-  /// points are returned as the best and worst, sorted by their distance to
-  /// the next point outside the circle. The best point is what should be
-  /// used for path tracking.
-  ({Geographic best, Geographic? worst}) findLookAheadCirclePoints(
-    Vehicle vehicle, {
-    double? lookAheadDistance,
-  }) {
-    final pathTracking = currentPathTracking;
-    if (pathTracking is PurePursuitPathTracking) {
-      final points = pathTracking.findLookAheadCirclePoints(
-        vehicle,
-        lookAheadDistance ?? vehicle.lookAheadDistance,
-      );
-
-      return (best: points.best.position, worst: points.worst?.position);
-    }
-
-    final points = findLookAheadLinePoints(
-      vehicle,
-      lookAheadDistance: lookAheadDistance ?? vehicle.lookAheadDistance,
-    );
-
-    if (points.outside == null) {
-      return (best: points.inside, worst: null);
-    }
-
-    final vehicleAlongDistance = vehicle.lookAheadStartPosition.spherical
-        .alongTrackDistanceTo(start: points.inside, end: points.outside!);
-
-    final vehicleToLineDistance = vehicle.lookAheadStartPosition.spherical
-        .crossTrackDistanceTo(start: points.inside, end: points.outside!);
-
-    final projectionToCircleDistance = sqrt(
-      pow(lookAheadDistance ?? vehicle.lookAheadDistance, 2) -
-          pow(vehicleToLineDistance, 2),
-    );
-
-    final secantBearing = points.inside.rhumb.initialBearingTo(points.outside!);
-
-    final vehicleToLineProjection = points.inside.rhumb.destinationPoint(
-      distance: vehicleAlongDistance,
-      bearing: secantBearing,
-    );
-
-    var vehicleLineProjectionToInsidePointBearing =
-        vehicleToLineProjection.rhumb.initialBearingTo(points.inside);
-
-    if (vehicleLineProjectionToInsidePointBearing.isNaN) {
-      vehicleLineProjectionToInsidePointBearing = secantBearing;
-    }
-
-    final pointA = vehicleToLineProjection.rhumb.destinationPoint(
-      distance: projectionToCircleDistance,
-      bearing: vehicleLineProjectionToInsidePointBearing,
-    );
-
-    final pointB = vehicleToLineProjection.rhumb.destinationPoint(
-      distance: projectionToCircleDistance,
-      bearing: (vehicleLineProjectionToInsidePointBearing + 180).wrap360(),
-    );
-
-    final distanceA = pointA.rhumb.distanceTo(points.outside!);
-    final distanceB = pointB.rhumb.distanceTo(points.outside!);
-
-    if (distanceA < distanceB) {
-      return (best: pointA, worst: pointB);
-    }
-    return (best: pointB, worst: pointA);
-  }
-
-  /// Finds the next steering angle to reach the [currentOffset]'s line
-  /// for the for the [vehicle] with its look ahead distance.
-  ///
-  /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
-  double? nextSteeringAngleLookAhead(Vehicle vehicle) {
-    if (isCompleted) {
-      return null;
-    }
-    final pathTracking = currentPathTracking;
-    if (pathTracking is PurePursuitPathTracking) {
-      return pathTracking.nextSteeringAngle(
-        vehicle,
-        mode: PathTrackingMode.purePursuit,
-      );
-    }
-
-    final bearingToPoint =
-        vehicle.lookAheadStartPosition.rhumb.initialBearingTo(
-      findLookAheadCirclePoints(vehicle).best,
-    );
-
-    final angle = signedBearingDifference(
-      vehicle.bearing,
-      bearingToPoint,
-    );
-
-    final steeringAngle = atan(
-      2 *
-          vehicle.wheelBase *
-          sin(angle.toRadians()) /
-          vehicle.lookAheadDistance,
-    ).toDegrees();
-
-    return steeringAngle.clamp(
-      -vehicle.steeringAngleMax,
-      vehicle.steeringAngleMax,
-    );
-  }
-
-  /// The next steering angle for the [vehicle] using Stanley path tracking.
-  double? nextSteeringAngleStanley(Vehicle vehicle) {
-    if (isCompleted) {
-      return null;
-    }
-    final pathTracking = currentPathTracking;
-    if (pathTracking is StanleyPathTracking) {
-      return pathTracking.nextSteeringAngle(vehicle);
-    }
-    final parameters = vehicle.stanleyParameters;
-
-    final headingError = signedBearingDifference(
-      vehicle.bearing,
-      currentPerpendicularIntersect(vehicle).rhumb.initialBearingTo(
-            pointsAhead(vehicle).last.position,
-          ),
-    );
-
-    final sign = switch (vehicle.isReversing) {
-      true => -1,
-      false => 1,
-    };
-
-    final steeringAngle = sign * headingError +
-        atan(
-          parameters.crossDistanceGain *
-              -signedPerpendicularDistanceToCurrentLine(
-                vehicle,
-              ) /
-              (parameters.softeningGain +
-                  parameters.velocityGain * vehicle.velocity.abs()),
-        ).toDegrees();
-
-    return steeringAngle.clamp(
-      -vehicle.steeringAngleMax,
-      vehicle.steeringAngleMax,
-    );
-  }
-
   /// The next steering angle for chasing the line.
   ///
   /// The steering mode used is according to the [mode] if set, otherwise
@@ -1456,15 +1216,11 @@ sealed class ABTracking {
       return null;
     }
     updateCurrentPathTracking(vehicle);
-    currentPathTracking?.tryChangeWayPoint(vehicle);
     checkIfTurnShouldBeInserted(vehicle);
     if (activeTurn != null) {
-      return activeTurn!.nextSteeringAngle(vehicle, mode: mode);
+      return activeTurn!.nextSteeringAngle(vehicle);
     }
-    return switch (mode ?? vehicle.pathTrackingMode) {
-      PathTrackingMode.purePursuit => nextSteeringAngleLookAhead(vehicle),
-      PathTrackingMode.stanley => nextSteeringAngleStanley(vehicle),
-    };
+    return currentPathTracking?.nextSteeringAngle(vehicle);
   }
 
   /// Manually updates the tracking when not using auto steering.

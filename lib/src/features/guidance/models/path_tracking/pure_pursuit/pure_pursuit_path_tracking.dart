@@ -251,7 +251,7 @@ final class PurePursuitPathTracking extends PathTracking {
   }
 
   @override
-  double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode}) {
+  double nextSteeringAngle(Vehicle vehicle) {
     tryChangeWayPoint(vehicle);
     return _nextSteeringAngleLookAhead(vehicle);
   }

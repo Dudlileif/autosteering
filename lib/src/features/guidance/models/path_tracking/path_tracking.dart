@@ -345,12 +345,7 @@ sealed class PathTracking {
   }
 
   /// The next steering angle for the vehicle following the [path].
-  ///
-  /// The [mode] can be specified to use different steering modes for
-  /// the path tracking systems that support it, be aware that not all
-  /// [PathTrackingMode]s are supported by all path tracking systems. They will
-  /// then default to the most usual supported one.
-  double nextSteeringAngle(Vehicle vehicle, {PathTrackingMode? mode});
+  double nextSteeringAngle(Vehicle vehicle);
 
   /// Converts the object to a json compatible structure.
   Map<String, dynamic> toJson() => {

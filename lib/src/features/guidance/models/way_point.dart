@@ -50,7 +50,7 @@ class WayPoint extends Equatable {
   bool get isValid =>
       position.values.every((element) => element.isFinite) && bearing.isFinite;
 
-  /// Move the waypoint with a rhumb line by [distance] in the direction of 
+  /// Move the waypoint with a rhumb line by [distance] in the direction of
   /// [bearing] + [angleFromBearing].
   ///
   /// The updated bearing will be calculated at the new point as the
@@ -74,10 +74,34 @@ class WayPoint extends Equatable {
     );
   }
 
+  /// Move the waypoint with a spherical line by [distance] in the direction
+  /// of [bearing] + [angleFromBearing].
+  ///
+  /// The updated bearing will be calculated at the new point as the
+  /// bearing from old position to new minus the [angleFromBearing].
+  WayPoint moveSpherical({
+    required double distance,
+    double angleFromBearing = 0,
+  }) {
+    if (distance == 0) {
+      return this;
+    }
+    final newPos = position.spherical.destinationPoint(
+      distance: distance,
+      bearing: bearing + angleFromBearing,
+    );
+
+    return copyWith(
+      position: newPos,
+      bearing: position.spherical.finalBearingTo(newPos) -
+          angleFromBearing * distance.sign,
+    );
+  }
+
   /// Finds a way point on the line from this to [end]. The [distance] to
   /// the way point is from this, the start, in the direction towards the [end]
   /// point.
-  WayPoint alongLineByDistanceFromStart({
+  WayPoint alongLineByDistanceFromStartRhumb({
     required WayPoint end,
     required double distance,
   }) {
@@ -89,21 +113,48 @@ class WayPoint extends Equatable {
     return intermediatePointToSpherical(end, fraction: fraction);
   }
 
+  /// Finds a way point on the line from this to [end]. The [distance] to
+  /// the way point is from this, the start, in the direction towards the [end]
+  /// point.
+  WayPoint alongLineByDistanceFromStartSpherical({
+    required WayPoint end,
+    required double distance,
+  }) {
+    if (distance == 0) {
+      return this;
+    }
+    final fraction = distance / distanceToSpherical(end);
+
+    return intermediatePointToSpherical(end, fraction: fraction);
+  }
+
   /// Rotates the way point by [angle] degrees clockwise.
   WayPoint rotateByAngle(double angle) =>
       copyWith(bearing: (bearing + angle).wrap360());
 
-  /// The distance in meters to [other].
+  /// The rhumb distance in meters to [other].
   double distanceToRhumb(WayPoint other) =>
       position.rhumb.distanceTo(other.position);
 
-  /// The initial spherical bearing towards [other].
+  /// The spherical distance in meters to [other].
+  double distanceToSpherical(WayPoint other) =>
+      position.spherical.distanceTo(other.position);
+
+  /// The initial rhumb bearing towards [other].
   double initialBearingToRhumb(WayPoint other) =>
       position.rhumb.initialBearingTo(other.position);
 
-  /// The final spherical bearing towards [other].
+  /// The initial spherical bearing towards [other].
+  double initialBearingToSpherical(WayPoint other) =>
+      position.spherical.initialBearingTo(other.position);
+
+  /// The final rhumb bearing towards [other].
   double finalBearingToRhumb(WayPoint other) =>
       position.rhumb.finalBearingTo(other.position);
+
+  /// The final spherical bearing towards [other].
+  double finalBearingToSpherical(WayPoint other) =>
+      position.spherical.finalBearingTo(other.position);
 
   /// The distance this waypoint is along the line from [start] to [end].
   double alongTrackDistanceToSpherical({
@@ -133,6 +184,22 @@ class WayPoint extends Equatable {
 
     return WayPoint(
       position: newPos,
+      bearing: position.spherical.finalBearingTo(newPos),
+      velocity: velocity,
+    );
+  }
+
+  /// Finds a way point along the line from this to [other] at the [fraction]
+  /// of the length of the line.
+  WayPoint intermediatePointToRhumb(
+    WayPoint other, {
+    required double fraction,
+  }) {
+    final newPos = position.spherical
+        .intermediatePointTo(other.position, fraction: fraction);
+
+    return WayPoint(
+      position: newPos,
       bearing: position.rhumb.finalBearingTo(newPos),
       velocity: velocity,
     );
@@ -142,7 +209,7 @@ class WayPoint extends Equatable {
   ///
   /// If [oppositeOfBearing] is true, then [bearing] + 180 is used to look
   /// for intersections.
-  WayPoint? intersectionWith(
+  WayPoint? intersectionWithRhumb(
     Iterable<Geographic> ring, {
     bool oppositeOfBearing = false,
   }) {
@@ -199,6 +266,67 @@ class WayPoint extends Equatable {
     return null;
   }
 
+  /// Finds an intersection from this to [ring] with the [bearing] of this.
+  ///
+  /// If [oppositeOfBearing] is true, then [bearing] + 180 is used to look
+  /// for intersections.
+  WayPoint? intersectionWithSpherical(
+    Iterable<Geographic> ring, {
+    bool oppositeOfBearing = false,
+  }) {
+    final intersections = <Geographic>[];
+
+    for (var i = 0; i < ring.length; i++) {
+      final start = ring.elementAt(i);
+      final end = ring.elementAt((i + 1) % ring.length);
+
+      final bearingToStart = position.spherical.initialBearingTo(start);
+      final bearingToEnd = position.spherical.initialBearingTo(end);
+
+      // Skip lines that are to behind of this point or ahead if
+      // [oppositeOfBearing].
+      if ((bearingDifference(bearing, bearingToStart) > 90 &&
+              bearingDifference(bearing, bearingToEnd) > 90) &&
+          !oppositeOfBearing) continue;
+
+      final ringIntersection = position.spherical.intersectionWith(
+        bearing: oppositeOfBearing ? (bearing + 180).wrap360() : bearing,
+        other: start,
+        otherBearing: start.spherical.initialBearingTo(end),
+      );
+
+      if (ringIntersection != null) {
+        // Check that we're inside the boundary box.
+        final distanceAlongLine = ringIntersection.spherical
+            .alongTrackDistanceTo(start: start, end: end);
+
+        // Is the intersection on the actual line segment?
+        if (distanceAlongLine >= 0 &&
+            distanceAlongLine <= start.spherical.distanceTo(end)) {
+          if (bearingDifference(
+                oppositeOfBearing ? (bearing + 180).wrap360() : bearing,
+                position.spherical.initialBearingTo(ringIntersection),
+              ) <
+              1) {
+            intersections.add(ringIntersection);
+          }
+        }
+      }
+    }
+    if (intersections.isNotEmpty) {
+      intersections.sortByCompare<double>(
+        (element) => position.spherical.distanceTo(element),
+        (a, b) => a.compareTo(b),
+      );
+
+      return copyWith(
+        position: intersections.first,
+        bearing: position.spherical.finalBearingTo(intersections.first),
+      );
+    }
+    return null;
+  }
+
   /// Properties used to compare with [Equatable].
   @override
   List<Object> get props => [
@@ -237,7 +365,7 @@ class WayPointTween extends Tween<WayPoint> {
     };
 
     final bearing = switch (begin != null && position != null) {
-      true => begin!.position.rhumb.finalBearingTo(position!),
+      true => begin!.position.spherical.finalBearingTo(position!),
       false => null
     };
 
@@ -247,7 +375,10 @@ class WayPointTween extends Tween<WayPoint> {
     ).lerp(t);
 
     return WayPoint(
-      position: position ?? const Geographic(lon: 0, lat: 0),
+      position: position ??
+          begin?.position ??
+          end?.position ??
+          const Geographic(lon: 0, lat: 0),
       bearing: bearing ?? 0,
       velocity: velocity,
     );
