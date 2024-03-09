@@ -15,7 +15,8 @@ class VirtualLedBarTestLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!ref.watch(virtualLedBarTestingProvider)) {
+    if (!ref.watch(virtualLedBarTestingProvider) ||
+        !ref.watch(virtualLedBarEnabledProvider)) {
       return const SizedBox.shrink();
     }
     final distance = ref.watch(virtualLedBarPerpendicularDistanceProvider);

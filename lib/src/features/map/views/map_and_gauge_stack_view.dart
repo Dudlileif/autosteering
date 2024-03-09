@@ -32,23 +32,16 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 child: map,
               ),
           },
-          const Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: BasicVehicleGauges(),
-            ),
+        if (ref.watch(virtualLedBarEnabledProvider) &&
+            ref.watch(
+              virtualLedBarPerpendicularDistanceProvider
+                  .select((value) => value != null),
+            ))
+          const Padding(
+            padding: EdgeInsets.all(8),
+            child:
+                Align(alignment: Alignment.topCenter, child: VirtualLedBar()),
           ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (ref.watch(simCoreAllowManualInputProvider))
-                    const SimVehicleSteeringSlider(),
-                  if (ref.watch(showMiniMapProvider)) const MiniMap(),
-                ],
               ),
             ),
           ),
@@ -98,25 +91,8 @@ class MapAndGaugeStackView extends ConsumerWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.all(8),
-                child: VehicleAutosteerParameterConfigurator(),
-              ),
+              child: VehicleAutosteerParameterConfigurator(),
             ),
-          Column(
-            children: [
-              if (ref.watch(virtualLedBarEnabledProvider) &&
-                  ref.watch(
-                    virtualLedBarPerpendicularDistanceProvider
-                        .select((value) => value != null),
-                  ))
-                const Padding(
-              padding: EdgeInsets.all(8),
-              child: VirtualLedBar(),
-            ),
-              if (ref.watch(showABTrackingDebugLayerProvider))
-                const ABTrackingOffsetDebugControls(),
-              if (ref.watch(showPathTrackingDebugLayerProvider))
-                const PathTrackingDebugWidget(),
-            ],
           ),
         ],
     );

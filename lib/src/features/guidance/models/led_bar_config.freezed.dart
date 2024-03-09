@@ -20,28 +20,27 @@ LedBarConfig _$LedBarConfigFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$LedBarConfig {
+  /// The amount of green LEDs to the side of the center.
+  int get centerCount => throw _privateConstructorUsedError;
+
+  /// The amount of yellow LEDs to the left of the center, the i.e. between
+  /// the green and yellow leds.
+  int get intermediateCount => throw _privateConstructorUsedError;
+
   /// The amount of red LEDs furthest to the left.
-  int get leftEndCount => throw _privateConstructorUsedError;
+  int get endCount => throw _privateConstructorUsedError;
 
-  /// The amount of yellow LEDs to the left of the center.
-  int get leftIntermediateCount => throw _privateConstructorUsedError;
-
-  /// The amount of center green LEDs, odd number is prefered to have
-  /// one in actual center.
-  int get centerCount =>
-      throw _privateConstructorUsedError; // The amount of yellow LEDs to the right of the center.
-  int get rightIntermediateCount => throw _privateConstructorUsedError;
-
-  /// The amount of red LEDs furthest to the right.
-  int get rightEndCount => throw _privateConstructorUsedError;
+  /// Whether there is a singular center diode (not used on the virtual bar
+  /// because of the distance gauge).
+  bool get oddCenter => throw _privateConstructorUsedError;
 
   /// The increase in cross track distance that will activate the next
   /// led.
   double get distancePerLed => throw _privateConstructorUsedError;
 
-  /// If the [centerCount] is even, this will dictate whether the
-  /// two center-most LEDs will light up when the cross track distance
-  /// is smaller than [distancePerLed].
+  /// If [oddCenter] is false, this will dictate whether the two center-most
+  /// LEDs will light up when the cross track distance is smaller than
+  /// [distancePerLed].
   bool get evenCenterSimulateOdd => throw _privateConstructorUsedError;
 
   /// The color of the outermost end LEDs, usually red.
@@ -59,6 +58,12 @@ mixin _$LedBarConfig {
   /// The size of the individual LEDs in their largest state (lit).
   double get ledSize => throw _privateConstructorUsedError;
 
+  /// Width of the whole LED bar.
+  double get barWidth => throw _privateConstructorUsedError;
+
+  /// Whether the bar should be reversed/inverted.
+  bool get reverseBar => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $LedBarConfigCopyWith<LedBarConfig> get copyWith =>
@@ -72,17 +77,18 @@ abstract class $LedBarConfigCopyWith<$Res> {
       _$LedBarConfigCopyWithImpl<$Res, LedBarConfig>;
   @useResult
   $Res call(
-      {int leftEndCount,
-      int leftIntermediateCount,
-      int centerCount,
-      int rightIntermediateCount,
-      int rightEndCount,
+      {int centerCount,
+      int intermediateCount,
+      int endCount,
+      bool oddCenter,
       double distancePerLed,
       bool evenCenterSimulateOdd,
       int endColor,
       int intermediateColor,
       int centerColor,
-      double ledSize});
+      double ledSize,
+      double barWidth,
+      bool reverseBar});
 }
 
 /// @nodoc
@@ -98,39 +104,36 @@ class _$LedBarConfigCopyWithImpl<$Res, $Val extends LedBarConfig>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? leftEndCount = null,
-    Object? leftIntermediateCount = null,
     Object? centerCount = null,
-    Object? rightIntermediateCount = null,
-    Object? rightEndCount = null,
+    Object? intermediateCount = null,
+    Object? endCount = null,
+    Object? oddCenter = null,
     Object? distancePerLed = null,
     Object? evenCenterSimulateOdd = null,
     Object? endColor = null,
     Object? intermediateColor = null,
     Object? centerColor = null,
     Object? ledSize = null,
+    Object? barWidth = null,
+    Object? reverseBar = null,
   }) {
     return _then(_value.copyWith(
-      leftEndCount: null == leftEndCount
-          ? _value.leftEndCount
-          : leftEndCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      leftIntermediateCount: null == leftIntermediateCount
-          ? _value.leftIntermediateCount
-          : leftIntermediateCount // ignore: cast_nullable_to_non_nullable
-              as int,
       centerCount: null == centerCount
           ? _value.centerCount
           : centerCount // ignore: cast_nullable_to_non_nullable
               as int,
-      rightIntermediateCount: null == rightIntermediateCount
-          ? _value.rightIntermediateCount
-          : rightIntermediateCount // ignore: cast_nullable_to_non_nullable
+      intermediateCount: null == intermediateCount
+          ? _value.intermediateCount
+          : intermediateCount // ignore: cast_nullable_to_non_nullable
               as int,
-      rightEndCount: null == rightEndCount
-          ? _value.rightEndCount
-          : rightEndCount // ignore: cast_nullable_to_non_nullable
+      endCount: null == endCount
+          ? _value.endCount
+          : endCount // ignore: cast_nullable_to_non_nullable
               as int,
+      oddCenter: null == oddCenter
+          ? _value.oddCenter
+          : oddCenter // ignore: cast_nullable_to_non_nullable
+              as bool,
       distancePerLed: null == distancePerLed
           ? _value.distancePerLed
           : distancePerLed // ignore: cast_nullable_to_non_nullable
@@ -155,6 +158,14 @@ class _$LedBarConfigCopyWithImpl<$Res, $Val extends LedBarConfig>
           ? _value.ledSize
           : ledSize // ignore: cast_nullable_to_non_nullable
               as double,
+      barWidth: null == barWidth
+          ? _value.barWidth
+          : barWidth // ignore: cast_nullable_to_non_nullable
+              as double,
+      reverseBar: null == reverseBar
+          ? _value.reverseBar
+          : reverseBar // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -168,17 +179,18 @@ abstract class _$$LedBarConfigImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int leftEndCount,
-      int leftIntermediateCount,
-      int centerCount,
-      int rightIntermediateCount,
-      int rightEndCount,
+      {int centerCount,
+      int intermediateCount,
+      int endCount,
+      bool oddCenter,
       double distancePerLed,
       bool evenCenterSimulateOdd,
       int endColor,
       int intermediateColor,
       int centerColor,
-      double ledSize});
+      double ledSize,
+      double barWidth,
+      bool reverseBar});
 }
 
 /// @nodoc
@@ -192,39 +204,36 @@ class __$$LedBarConfigImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? leftEndCount = null,
-    Object? leftIntermediateCount = null,
     Object? centerCount = null,
-    Object? rightIntermediateCount = null,
-    Object? rightEndCount = null,
+    Object? intermediateCount = null,
+    Object? endCount = null,
+    Object? oddCenter = null,
     Object? distancePerLed = null,
     Object? evenCenterSimulateOdd = null,
     Object? endColor = null,
     Object? intermediateColor = null,
     Object? centerColor = null,
     Object? ledSize = null,
+    Object? barWidth = null,
+    Object? reverseBar = null,
   }) {
     return _then(_$LedBarConfigImpl(
-      leftEndCount: null == leftEndCount
-          ? _value.leftEndCount
-          : leftEndCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      leftIntermediateCount: null == leftIntermediateCount
-          ? _value.leftIntermediateCount
-          : leftIntermediateCount // ignore: cast_nullable_to_non_nullable
-              as int,
       centerCount: null == centerCount
           ? _value.centerCount
           : centerCount // ignore: cast_nullable_to_non_nullable
               as int,
-      rightIntermediateCount: null == rightIntermediateCount
-          ? _value.rightIntermediateCount
-          : rightIntermediateCount // ignore: cast_nullable_to_non_nullable
+      intermediateCount: null == intermediateCount
+          ? _value.intermediateCount
+          : intermediateCount // ignore: cast_nullable_to_non_nullable
               as int,
-      rightEndCount: null == rightEndCount
-          ? _value.rightEndCount
-          : rightEndCount // ignore: cast_nullable_to_non_nullable
+      endCount: null == endCount
+          ? _value.endCount
+          : endCount // ignore: cast_nullable_to_non_nullable
               as int,
+      oddCenter: null == oddCenter
+          ? _value.oddCenter
+          : oddCenter // ignore: cast_nullable_to_non_nullable
+              as bool,
       distancePerLed: null == distancePerLed
           ? _value.distancePerLed
           : distancePerLed // ignore: cast_nullable_to_non_nullable
@@ -249,6 +258,14 @@ class __$$LedBarConfigImplCopyWithImpl<$Res>
           ? _value.ledSize
           : ledSize // ignore: cast_nullable_to_non_nullable
               as double,
+      barWidth: null == barWidth
+          ? _value.barWidth
+          : barWidth // ignore: cast_nullable_to_non_nullable
+              as double,
+      reverseBar: null == reverseBar
+          ? _value.reverseBar
+          : reverseBar // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -257,46 +274,44 @@ class __$$LedBarConfigImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$LedBarConfigImpl extends _LedBarConfig {
   const _$LedBarConfigImpl(
-      {this.leftEndCount = 2,
-      this.leftIntermediateCount = 2,
-      this.centerCount = 3,
-      this.rightIntermediateCount = 2,
-      this.rightEndCount = 2,
+      {this.centerCount = 2,
+      this.intermediateCount = 2,
+      this.endCount = 2,
+      this.oddCenter = false,
       this.distancePerLed = 0.04,
       this.evenCenterSimulateOdd = false,
       this.endColor = 0xFFFF0000,
       this.intermediateColor = 0xFFFFEF3B,
       this.centerColor = 0xFF00FF00,
-      this.ledSize = 32})
+      this.ledSize = 32,
+      this.barWidth = 800,
+      this.reverseBar = false})
       : super._();
 
   factory _$LedBarConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedBarConfigImplFromJson(json);
 
-  /// The amount of red LEDs furthest to the left.
-  @override
-  @JsonKey()
-  final int leftEndCount;
-
-  /// The amount of yellow LEDs to the left of the center.
-  @override
-  @JsonKey()
-  final int leftIntermediateCount;
-
-  /// The amount of center green LEDs, odd number is prefered to have
-  /// one in actual center.
+  /// The amount of green LEDs to the side of the center.
   @override
   @JsonKey()
   final int centerCount;
-// The amount of yellow LEDs to the right of the center.
-  @override
-  @JsonKey()
-  final int rightIntermediateCount;
 
-  /// The amount of red LEDs furthest to the right.
+  /// The amount of yellow LEDs to the left of the center, the i.e. between
+  /// the green and yellow leds.
   @override
   @JsonKey()
-  final int rightEndCount;
+  final int intermediateCount;
+
+  /// The amount of red LEDs furthest to the left.
+  @override
+  @JsonKey()
+  final int endCount;
+
+  /// Whether there is a singular center diode (not used on the virtual bar
+  /// because of the distance gauge).
+  @override
+  @JsonKey()
+  final bool oddCenter;
 
   /// The increase in cross track distance that will activate the next
   /// led.
@@ -304,9 +319,9 @@ class _$LedBarConfigImpl extends _LedBarConfig {
   @JsonKey()
   final double distancePerLed;
 
-  /// If the [centerCount] is even, this will dictate whether the
-  /// two center-most LEDs will light up when the cross track distance
-  /// is smaller than [distancePerLed].
+  /// If [oddCenter] is false, this will dictate whether the two center-most
+  /// LEDs will light up when the cross track distance is smaller than
+  /// [distancePerLed].
   @override
   @JsonKey()
   final bool evenCenterSimulateOdd;
@@ -334,9 +349,19 @@ class _$LedBarConfigImpl extends _LedBarConfig {
   @JsonKey()
   final double ledSize;
 
+  /// Width of the whole LED bar.
+  @override
+  @JsonKey()
+  final double barWidth;
+
+  /// Whether the bar should be reversed/inverted.
+  @override
+  @JsonKey()
+  final bool reverseBar;
+
   @override
   String toString() {
-    return 'LedBarConfig(leftEndCount: $leftEndCount, leftIntermediateCount: $leftIntermediateCount, centerCount: $centerCount, rightIntermediateCount: $rightIntermediateCount, rightEndCount: $rightEndCount, distancePerLed: $distancePerLed, evenCenterSimulateOdd: $evenCenterSimulateOdd, endColor: $endColor, intermediateColor: $intermediateColor, centerColor: $centerColor, ledSize: $ledSize)';
+    return 'LedBarConfig(centerCount: $centerCount, intermediateCount: $intermediateCount, endCount: $endCount, oddCenter: $oddCenter, distancePerLed: $distancePerLed, evenCenterSimulateOdd: $evenCenterSimulateOdd, endColor: $endColor, intermediateColor: $intermediateColor, centerColor: $centerColor, ledSize: $ledSize, barWidth: $barWidth, reverseBar: $reverseBar)';
   }
 
   @override
@@ -344,16 +369,14 @@ class _$LedBarConfigImpl extends _LedBarConfig {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LedBarConfigImpl &&
-            (identical(other.leftEndCount, leftEndCount) ||
-                other.leftEndCount == leftEndCount) &&
-            (identical(other.leftIntermediateCount, leftIntermediateCount) ||
-                other.leftIntermediateCount == leftIntermediateCount) &&
             (identical(other.centerCount, centerCount) ||
                 other.centerCount == centerCount) &&
-            (identical(other.rightIntermediateCount, rightIntermediateCount) ||
-                other.rightIntermediateCount == rightIntermediateCount) &&
-            (identical(other.rightEndCount, rightEndCount) ||
-                other.rightEndCount == rightEndCount) &&
+            (identical(other.intermediateCount, intermediateCount) ||
+                other.intermediateCount == intermediateCount) &&
+            (identical(other.endCount, endCount) ||
+                other.endCount == endCount) &&
+            (identical(other.oddCenter, oddCenter) ||
+                other.oddCenter == oddCenter) &&
             (identical(other.distancePerLed, distancePerLed) ||
                 other.distancePerLed == distancePerLed) &&
             (identical(other.evenCenterSimulateOdd, evenCenterSimulateOdd) ||
@@ -364,24 +387,29 @@ class _$LedBarConfigImpl extends _LedBarConfig {
                 other.intermediateColor == intermediateColor) &&
             (identical(other.centerColor, centerColor) ||
                 other.centerColor == centerColor) &&
-            (identical(other.ledSize, ledSize) || other.ledSize == ledSize));
+            (identical(other.ledSize, ledSize) || other.ledSize == ledSize) &&
+            (identical(other.barWidth, barWidth) ||
+                other.barWidth == barWidth) &&
+            (identical(other.reverseBar, reverseBar) ||
+                other.reverseBar == reverseBar));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      leftEndCount,
-      leftIntermediateCount,
       centerCount,
-      rightIntermediateCount,
-      rightEndCount,
+      intermediateCount,
+      endCount,
+      oddCenter,
       distancePerLed,
       evenCenterSimulateOdd,
       endColor,
       intermediateColor,
       centerColor,
-      ledSize);
+      ledSize,
+      barWidth,
+      reverseBar);
 
   @JsonKey(ignore: true)
   @override
@@ -399,17 +427,18 @@ class _$LedBarConfigImpl extends _LedBarConfig {
 
 abstract class _LedBarConfig extends LedBarConfig {
   const factory _LedBarConfig(
-      {final int leftEndCount,
-      final int leftIntermediateCount,
-      final int centerCount,
-      final int rightIntermediateCount,
-      final int rightEndCount,
+      {final int centerCount,
+      final int intermediateCount,
+      final int endCount,
+      final bool oddCenter,
       final double distancePerLed,
       final bool evenCenterSimulateOdd,
       final int endColor,
       final int intermediateColor,
       final int centerColor,
-      final double ledSize}) = _$LedBarConfigImpl;
+      final double ledSize,
+      final double barWidth,
+      final bool reverseBar}) = _$LedBarConfigImpl;
   const _LedBarConfig._() : super._();
 
   factory _LedBarConfig.fromJson(Map<String, dynamic> json) =
@@ -417,23 +446,22 @@ abstract class _LedBarConfig extends LedBarConfig {
 
   @override
 
-  /// The amount of red LEDs furthest to the left.
-  int get leftEndCount;
-  @override
-
-  /// The amount of yellow LEDs to the left of the center.
-  int get leftIntermediateCount;
-  @override
-
-  /// The amount of center green LEDs, odd number is prefered to have
-  /// one in actual center.
+  /// The amount of green LEDs to the side of the center.
   int get centerCount;
-  @override // The amount of yellow LEDs to the right of the center.
-  int get rightIntermediateCount;
   @override
 
-  /// The amount of red LEDs furthest to the right.
-  int get rightEndCount;
+  /// The amount of yellow LEDs to the left of the center, the i.e. between
+  /// the green and yellow leds.
+  int get intermediateCount;
+  @override
+
+  /// The amount of red LEDs furthest to the left.
+  int get endCount;
+  @override
+
+  /// Whether there is a singular center diode (not used on the virtual bar
+  /// because of the distance gauge).
+  bool get oddCenter;
   @override
 
   /// The increase in cross track distance that will activate the next
@@ -441,9 +469,9 @@ abstract class _LedBarConfig extends LedBarConfig {
   double get distancePerLed;
   @override
 
-  /// If the [centerCount] is even, this will dictate whether the
-  /// two center-most LEDs will light up when the cross track distance
-  /// is smaller than [distancePerLed].
+  /// If [oddCenter] is false, this will dictate whether the two center-most
+  /// LEDs will light up when the cross track distance is smaller than
+  /// [distancePerLed].
   bool get evenCenterSimulateOdd;
   @override
 
@@ -464,6 +492,14 @@ abstract class _LedBarConfig extends LedBarConfig {
 
   /// The size of the individual LEDs in their largest state (lit).
   double get ledSize;
+  @override
+
+  /// Width of the whole LED bar.
+  double get barWidth;
+  @override
+
+  /// Whether the bar should be reversed/inverted.
+  bool get reverseBar;
   @override
   @JsonKey(ignore: true)
   _$$LedBarConfigImplCopyWith<_$LedBarConfigImpl> get copyWith =>
