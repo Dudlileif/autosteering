@@ -43,7 +43,7 @@ final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
-String _$initializeSimCoreHash() => r'bc303acd6d5b1aec834cda3731dfb19a825d16b5';
+String _$initializeSimCoreHash() => r'b74f76c83d8fe23ed73d84a7b81846f646f210c4';
 
 /// Sends initial parameters to  the sim core.
 ///
@@ -373,6 +373,25 @@ final simCoreIsolateStreamProvider =
 );
 
 typedef SimCoreIsolateStreamRef = AutoDisposeStreamProviderRef<Vehicle>;
+String _$simulatorUpdateFrequencyHash() =>
+    r'd33f3a9784212dae5ecc5fd62cea7c40d13ee8f2';
+
+/// A provider for the target simulation update frequency.
+///
+/// Copied from [SimulatorUpdateFrequency].
+@ProviderFor(SimulatorUpdateFrequency)
+final simulatorUpdateFrequencyProvider =
+    NotifierProvider<SimulatorUpdateFrequency, int>.internal(
+  SimulatorUpdateFrequency.new,
+  name: r'simulatorUpdateFrequencyProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simulatorUpdateFrequencyHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SimulatorUpdateFrequency = Notifier<int>;
 String _$simInputHash() => r'febc933bd84e5bd518cebd4caf8fe8ebf3506abb';
 
 /// A provider used to send vehicle input data to the simulation thread/worker.

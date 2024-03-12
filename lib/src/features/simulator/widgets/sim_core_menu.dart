@@ -109,6 +109,56 @@ class SimCoreMenu extends StatelessWidget {
               );
             },
           ),
+        Consumer(
+          builder: (context, ref, child) {
+            var targetHz = ref.read(simulatorUpdateFrequencyProvider);
+            const values = [5, 10, 20, 30, 60, 90, 100, 120];
+            var index = values.indexOf(targetHz);
+            if (index.isNegative) {
+              index = 4;
+            }
+            return StatefulBuilder(
+              builder: (context, setState) {
+                targetHz = values[index];
+                return ListTile(
+                  title: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Simulation frequency: $targetHz Hz',
+                          style: textStyle),
+                      Slider(
+                        value: index.toDouble(),
+                        onChanged: (value) =>
+                            setState(() => index = value.round()),
+                        onChangeEnd: (value) {
+                          final oldValue =
+                              ref.read(simulatorUpdateFrequencyProvider);
+                          ref
+                              .read(simulatorUpdateFrequencyProvider.notifier)
+                              .update(targetHz);
+                          // Wait a short while before saving the
+                          // hopefully updated vehicle.
+                          Future.delayed(
+                            const Duration(milliseconds: 100),
+                            () {
+                              final value =
+                                  ref.watch(simulatorUpdateFrequencyProvider);
+                              Logger.instance.w(
+                                '''Updated simulation update frequency: $oldValue Hz -> $value Hz''',
+                              );
+                            },
+                          );
+                        },
+                        max: values.length - 1,
+                        divisions: values.length - 1,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        ),
         const LogReplayMenu(),
       ],
     );

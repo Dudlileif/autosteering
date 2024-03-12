@@ -26,6 +26,30 @@ enum SimPlatform {
   web;
 }
 
+/// A provider for the target simulation update frequency.
+@Riverpod(keepAlive: true)
+class SimulatorUpdateFrequency extends _$SimulatorUpdateFrequency {
+  @override
+  int build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.simTargetUpdateHz, next);
+        ref.read(simInputProvider.notifier).send((simulationTargetHz: next));
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getInt(SettingsKey.simTargetUpdateHz) ??
+        60;
+  }
+
+  /// Updates [state] to [value].
+  void update(int value) => Future(() => state = value);
+}
+
 /// A provider used to send vehicle input data to the simulation thread/worker.
 ///
 /// It will automatically select the right type of thread/worker depending
@@ -179,6 +203,7 @@ void _initializeSimCore(_InitializeSimCoreRef ref) {
   ref.read(simInputProvider.notifier)
     ..send(ref.read(hardwareCommunicationConfigProvider))
     ..send(ref.read(mainVehicleProvider))
+    ..send((simulationTargetHz: ref.read(simulatorUpdateFrequencyProvider)))
     ..send((autoSlowDown: ref.read(simCoreVehicleAutoSlowDownProvider)))
     ..send(
       (autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider)),
@@ -276,7 +301,7 @@ class SimCoreDebugAllowLongBreaks extends _$SimCoreDebugAllowLongBreaks {
 @riverpod
 Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
   final receivePort = ReceivePort('Recieve from sim port');
-
+  
   BackgroundIsolateBinaryMessenger.ensureInitialized(
     ServicesBinding.rootIsolateToken!,
   );
@@ -287,10 +312,6 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
     debugName: 'Simulator Core',
   );
   isolate.addErrorListener(receivePort.sendPort);
-  // ..addOnExitListener(
-  //   receivePort.sendPort,
-  //   response: LogEvent(Level.warning, 'Isolate exited.'),
-  // );
 
   Logger.instance.i('Simulator Core isolate spawned and started.');
 

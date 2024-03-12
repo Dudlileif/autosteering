@@ -43,6 +43,7 @@ enum SettingsKey {
   simAllowInterpolation('sim.allow_interpolation'),
   simAutoCenterSteering('sim.auto_center_steering'),
   simAutoSlowDown('sim.auto_slow_down'),
+  simTargetUpdateHz('sim.target_update_hz'),
   themeColorScheme('theme.color_scheme'),
   themeColorSchemeCustom('theme.color_scheme_custom'),
   themeColorSchemeInheritFromVehicle('theme.color_sheme.inherit_from_vehicle'),

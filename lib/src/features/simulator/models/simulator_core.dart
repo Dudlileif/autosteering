@@ -23,7 +23,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 /// bearing, steering angle and velocity.
 class SimulatorCore {
   /// Targets 60 hz => 16666.66... micro seconds
-  static const _targetPeriodMicroSeconds = 16667;
+  static const _defaultTargetPeriodMicroSeconds = 16667;
 
   /// The time in seconds between attempts to resolve the hardware host/IP
   /// address.
@@ -59,9 +59,7 @@ class SimulatorCore {
 
     var prevHardwareIsConnected = false;
 
-    // A timer for periodically updating the simulation.
-    Timer.periodic(const Duration(microseconds: _targetPeriodMicroSeconds),
-        (timer) {
+    void simulationStep() {
       if (state.vehicle != null) {
         state.update();
 
@@ -89,7 +87,13 @@ class SimulatorCore {
           );
         }
       }
-    });
+    }
+
+    // A timer for periodically updating the simulation.
+    var simulationTimer = Timer.periodic(
+      const Duration(microseconds: _defaultTargetPeriodMicroSeconds),
+      (timer) => simulationStep(),
+    );
 
     Endpoint? serverEndPoint;
     Endpoint? endPoint;
@@ -278,6 +282,20 @@ class SimulatorCore {
             updateMainThreadStream,
           ),
         );
+      } else if (message is ({int simulationTargetHz})) {
+        if (message.simulationTargetHz > 0) {
+          simulationTimer.cancel();
+          simulationTimer = Timer.periodic(
+            Duration(microseconds: (1e6 / message.simulationTargetHz).round()),
+            (timer) => simulationStep(),
+          );
+          updateMainThreadStream.add(
+            LogEvent(
+              Level.warning,
+              'Simulation frequency: ${message.simulationTargetHz} Hz',
+            ),
+          );
+        }
       }
       // Shut down the isolate.
       else if (message == null) {
@@ -350,7 +368,7 @@ class SimulatorCore {
 
   /// Used in web version since multithreading isn't possible.
   ///
-  /// This takes in the stream [vehicleEvents] to get events/messages
+  /// This takes in the stream [incomingEvents] to get events/messages
   /// from the UI.
   static Stream<
       ({
@@ -363,7 +381,7 @@ class SimulatorCore {
         AutosteeringState autosteeringState,
         bool hardwareIsConnected,
       })> webWorker(
-    Stream<dynamic> vehicleEvents,
+    Stream<dynamic> incomingEvents,
     StreamController<dynamic> updateMainStream,
   ) {
     updateMainStream.add(LogEvent(Level.info, 'Simulator Core worker spawned'));
@@ -376,33 +394,6 @@ class SimulatorCore {
     DateTime? lastHardwareMessageTime;
 
     final messageDecoder = MessageDecoder();
-
-    // Handle the incoming messages.
-    vehicleEvents.listen((message) async {
-      if (message is ({String hardwareIPAdress, int hardwareWebSocketPort})) {
-        await socket?.sink.close();
-        final address = Uri.parse(
-          [
-            'ws://',
-            message.hardwareIPAdress,
-            ':',
-            message.hardwareWebSocketPort.toString(),
-            '/ws',
-          ].join(),
-        );
-        socket = WebSocketChannel.connect(address);
-        socket!.stream.listen(
-          (event) {
-            if (event is Uint8List) {
-              lastHardwareMessageTime = DateTime.now();
-              _networkListener(event, messageDecoder, state, updateMainStream);
-            }
-          },
-        );
-      } else {
-        state.handleMessage(message);
-      }
-    });
 
     final streamController = StreamController<
         ({
@@ -418,10 +409,7 @@ class SimulatorCore {
 
     var prevHardwareIsConnected = false;
 
-    // A stream event generator that periodically updates the simulation and
-    // sends the state.
-    Timer.periodic(const Duration(microseconds: _targetPeriodMicroSeconds),
-        (timer) {
+    void simulationStep() {
       state.update();
       if (streamController.hasListener) {
         // Assume that hardware is connected if less than 500 ms since
@@ -446,6 +434,48 @@ class SimulatorCore {
             ),
           );
         }
+      }
+    }
+
+    // A stream event generator that periodically updates the simulation and
+    // sends the state.
+    var simulationTimer = Timer.periodic(
+      const Duration(microseconds: _defaultTargetPeriodMicroSeconds),
+      (timer) => simulationStep(),
+    );
+
+    // Handle the incoming messages.
+    incomingEvents.listen((message) async {
+      if (message is ({String hardwareIPAdress, int hardwareWebSocketPort})) {
+        await socket?.sink.close();
+        final address = Uri.parse(
+          [
+            'ws://',
+            message.hardwareIPAdress,
+            ':',
+            message.hardwareWebSocketPort.toString(),
+            '/ws',
+          ].join(),
+        );
+        socket = WebSocketChannel.connect(address);
+        socket!.stream.listen(
+          (event) {
+            if (event is Uint8List) {
+              lastHardwareMessageTime = DateTime.now();
+              _networkListener(event, messageDecoder, state, updateMainStream);
+            }
+          },
+        );
+      } else if (message is ({int simulationTargetHz})) {
+        if (message.simulationTargetHz > 0) {
+          simulationTimer.cancel();
+          simulationTimer = Timer.periodic(
+            Duration(microseconds: (1e6 / message.simulationTargetHz).round()),
+            (timer) => simulationStep(),
+          );
+        }
+      } else {
+        state.handleMessage(message);
       }
     });
 
