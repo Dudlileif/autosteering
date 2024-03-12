@@ -468,7 +468,7 @@ final savedEquipmentsProvider = Provider<AsyncValue<List<Equipment>>>.internal(
 
 typedef SavedEquipmentsRef = ProviderRef<AsyncValue<List<Equipment>>>;
 String _$showEquipmentDebugHash() =>
-    r'a4130310d497a5d7a8b6cc65d8d843968f668d28';
+    r'571324c7aa5372fb21239a9417aec88e677cce73';
 
 /// Whether or not to show the equipment debugging features.
 ///
@@ -487,7 +487,7 @@ final showEquipmentDebugProvider =
 
 typedef _$ShowEquipmentDebug = Notifier<bool>;
 String _$equipmentRecordPositionFractionHash() =>
-    r'29a881269d492794a26faa1c0bd8d7d65cb009b4';
+    r'bb8fda078784d4229bde314e792ba25c0a50d1ed';
 
 /// A provider for how the [SectionEdgePositions] should be recorded, as the
 /// fraction parameter that goes in [Equipment.sectionEdgePositions].

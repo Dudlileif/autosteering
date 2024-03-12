@@ -450,10 +450,17 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   List<map.Polygon> get wheelPolygons;
 
   /// The angular velocity of the vehicle, if it is turning.
-  /// degrees/s, does not care about clockwise/counter-clockwise direction.
-  double? get angularVelocity => currentTurningRadius != null
-      ? (velocity / (2 * pi * currentTurningRadius!)) * 360
-      : null;
+  /// Unit is degrees/s.
+  double? get angularVelocity {
+    if (currentTurningRadius == null) {
+      return null;
+    }
+    var value = (velocity / (2 * pi * currentTurningRadius!)) * 360;
+    if (isTurningLeft) {
+      value *= -1;
+    }
+    return value;
+  }
 
   /// The projected trajectory for the moving vehicle.
   ///

@@ -4,7 +4,7 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hardware/widgets/hardware_logging_menu.dart';
 import 'package:autosteering/src/features/hardware/widgets/hardware_network_menu.dart';
 import 'package:autosteering/src/features/hardware/widgets/hardware_serial_menu.dart'
-    if (dart.library.html) 'hardware_serial_menu_web.dart';
+    if (dart.library.js_interop) 'hardware_serial_menu_web.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

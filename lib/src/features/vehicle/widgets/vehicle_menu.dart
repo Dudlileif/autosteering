@@ -33,7 +33,6 @@ class VehicleMenu extends StatelessWidget {
             builder: (context) => const VehicleConfigurator(),
           ),
         ),
-        if (Device.isNative)
         Consumer(
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -58,7 +57,6 @@ class VehicleMenu extends StatelessWidget {
             secondary: child,
           ),
         ),
-        if (Device.isNative)
         Consumer(
           child: Row(
             mainAxisSize: MainAxisSize.min,

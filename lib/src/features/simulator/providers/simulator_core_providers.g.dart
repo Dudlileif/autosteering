@@ -24,34 +24,15 @@ final sendMessagesToHardwareProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef SendMessagesToHardwareRef = AutoDisposeProviderRef<bool>;
-String _$simCoreVehicleDrivingHash() =>
-    r'1ac2c515e2313360dd397ff103568d578c8df611';
-
-/// A provider that watches the simulated vehicle and updates the map
-/// position when necessary.
-///
-/// Copied from [simCoreVehicleDriving].
-@ProviderFor(simCoreVehicleDriving)
-final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
-  simCoreVehicleDriving,
-  name: r'simCoreVehicleDrivingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreVehicleDrivingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
-String _$initializeSimCoreHash() => r'b74f76c83d8fe23ed73d84a7b81846f646f210c4';
+String _$initializeSimCoreHash() => r'3b71306453d9de2ec7f0974de98399c1a61141d0';
 
 /// Sends initial parameters to  the sim core.
 ///
-/// Copied from [_initializeSimCore].
-@ProviderFor(_initializeSimCore)
-final _initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
-  _initializeSimCore,
-  name: r'_initializeSimCoreProvider',
+/// Copied from [initializeSimCore].
+@ProviderFor(initializeSimCore)
+final initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
+  initializeSimCore,
+  name: r'initializeSimCoreProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$initializeSimCoreHash,
@@ -59,7 +40,7 @@ final _initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _InitializeSimCoreRef = AutoDisposeProviderRef<void>;
+typedef InitializeSimCoreRef = AutoDisposeProviderRef<void>;
 String _$commonSimCoreMessageHandlerHash() =>
     r'bd18013072afeb938d1f5ea60f6343da59c51eef';
 
@@ -329,50 +310,6 @@ class _CommonSimCoreMessageHandlerProviderElement
   }) get message => (origin as CommonSimCoreMessageHandlerProvider).message;
 }
 
-String _$simCoreWebStreamHash() => r'3286cb2b4f8a7df5917b3a5ab2caf3d64f3c70a6';
-
-/// A provider that creates a stream and watches the vehicle simulator on the
-/// web platform.
-///
-/// It will update the stream with vehicle updates from the simulator and also
-/// update the vehicle gauge providers.
-///
-/// Copied from [simCoreWebStream].
-@ProviderFor(simCoreWebStream)
-final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
-  simCoreWebStream,
-  name: r'simCoreWebStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreWebStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
-String _$simCoreIsolateStreamHash() =>
-    r'e009c506c854197c4cae43e4db14cdef9be8b699';
-
-/// A provider that creates a stream and watches the vehicle simulator on the
-/// native platforms.
-///
-/// It will update the stream with vehicle updates from the simulator and also
-/// update the vehicle gauge providers.
-///
-/// Copied from [simCoreIsolateStream].
-@ProviderFor(simCoreIsolateStream)
-final simCoreIsolateStreamProvider =
-    AutoDisposeStreamProvider<Vehicle>.internal(
-  simCoreIsolateStream,
-  name: r'simCoreIsolateStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreIsolateStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef SimCoreIsolateStreamRef = AutoDisposeStreamProviderRef<Vehicle>;
 String _$simulatorUpdateFrequencyHash() =>
     r'd33f3a9784212dae5ecc5fd62cea7c40d13ee8f2';
 
@@ -392,25 +329,6 @@ final simulatorUpdateFrequencyProvider =
 );
 
 typedef _$SimulatorUpdateFrequency = Notifier<int>;
-String _$simInputHash() => r'febc933bd84e5bd518cebd4caf8fe8ebf3506abb';
-
-/// A provider used to send vehicle input data to the simulation thread/worker.
-///
-/// It will automatically select the right type of thread/worker depending
-/// on the platform.
-///
-/// Copied from [SimInput].
-@ProviderFor(SimInput)
-final simInputProvider = NotifierProvider<SimInput, SimPlatform>.internal(
-  SimInput.new,
-  name: r'simInputProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$simInputHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SimInput = Notifier<SimPlatform>;
 String _$sendMessagesToHardwareIfNetworkHash() =>
     r'6d7cdb5fd546be2709271925379a3056e929aadf';
 
@@ -431,45 +349,6 @@ final sendMessagesToHardwareIfNetworkProvider =
 );
 
 typedef _$SendMessagesToHardwareIfNetwork = Notifier<bool>;
-String _$simCoreIsolatePortHash() =>
-    r'a1f214c5b2285183a8bffac6fb49c45d592b0d83';
-
-/// A provider for keeping the isolate [SendPort] for when working on a
-/// native platform. Vehicle inputs gets directed here from [SimInput].
-///
-/// Copied from [_SimCoreIsolatePort].
-@ProviderFor(_SimCoreIsolatePort)
-final _simCoreIsolatePortProvider =
-    NotifierProvider<_SimCoreIsolatePort, SendPort?>.internal(
-  _SimCoreIsolatePort.new,
-  name: r'_simCoreIsolatePortProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreIsolatePortHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SimCoreIsolatePort = Notifier<SendPort?>;
-String _$simCoreWebInputHash() => r'f4a93494026dd13f1138a894b7a23f84cf39c9de';
-
-/// A provider that creates a stream for sending vehicle inputs to the
-/// vehicle simulator when on the web platform.
-///
-/// Copied from [_SimCoreWebInput].
-@ProviderFor(_SimCoreWebInput)
-final _simCoreWebInputProvider =
-    NotifierProvider<_SimCoreWebInput, StreamController<dynamic>>.internal(
-  _SimCoreWebInput.new,
-  name: r'_simCoreWebInputProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreWebInputHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SimCoreWebInput = Notifier<StreamController<dynamic>>;
 String _$simCoreDebugAllowLongBreaksHash() =>
     r'f53980f91f616f7793d52dd2332281cab8661f26';
 
