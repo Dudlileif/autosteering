@@ -288,7 +288,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
     // How many degrees of the turning circle the current angular
     // velocity during the period amounts to. Relative to the current
     // position, is negative when reversing.
-    final turningCircleAngle = angularVelocity! * period;
+    var turningCircleAngle = angularVelocity! * period;
+    if (isTurningLeft) {
+      turningCircleAngle *= -1;
+    }
 
     // The angle from the turning circle center to the projected
     // position.
@@ -298,6 +301,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       // Turning right
       false => bearing - 90 + turningCircleAngle,
     };
+
     // Projected solid axle position from the turning radius
     // center.
     final solidAxlePosition = turningCircleCenter.rhumb.destinationPoint(
@@ -337,15 +341,14 @@ sealed class AxleSteeredVehicle extends Vehicle {
       steeringRatio: ackermannSteeringRatio,
     ).turningRadius;
 
-    final turningRadiusCenter =
-        this.solidAxlePosition.rhumb.destinationPoint(
-              distance: currentTurningRadius,
-              bearing: switch (isTurningLeft) {
-                true => bearing - 90,
-                false => bearing + 90
-              }
-                  .wrap360(),
-            );
+    final turningRadiusCenter = this.solidAxlePosition.rhumb.destinationPoint(
+          distance: currentTurningRadius,
+          bearing: switch (isTurningLeft) {
+            true => bearing - 90,
+            false => bearing + 90
+          }
+              .wrap360(),
+        );
 
     final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
 
@@ -392,15 +395,14 @@ sealed class AxleSteeredVehicle extends Vehicle {
       steeringRatio: ackermannSteeringRatio,
     ).turningRadius;
 
-    final turningRadiusCenter =
-        this.solidAxlePosition.rhumb.destinationPoint(
-              distance: currentTurningRadius,
-              bearing: switch (isTurningLeft) {
-                true => bearing - 90,
-                false => bearing + 90
-              }
-                  .wrap360(),
-            );
+    final turningRadiusCenter = this.solidAxlePosition.rhumb.destinationPoint(
+          distance: currentTurningRadius,
+          bearing: switch (isTurningLeft) {
+            true => bearing - 90,
+            false => bearing + 90
+          }
+              .wrap360(),
+        );
 
     final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
 

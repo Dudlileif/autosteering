@@ -95,6 +95,12 @@ abstract class Hitchable {
   /// Whether or not the hitchable is reversing.
   bool get isReversing => velocity < 0;
 
+  /// The current turning radius of this.
+  double? get currentTurningRadius;
+
+  /// The center point of which the [currentTurningRadius] revolves around.
+  Geographic? get turningRadiusCenter;
+
   /// Run the given [function] on this and all of its children recursively.
   ///
   /// Mainly used to update a Map of equipments in a provider.
@@ -151,7 +157,7 @@ abstract class Hitchable {
       case Hitch.rearTowbar:
         hitchRearTowbarChild = childToAttach..parentHitch = Hitch.rearTowbar;
     }
-    updateChildren();
+    updateChildren(0);
   }
 
   /// Attach the [child] to the parent [Hitchable] with uuid [parentUuid] at
@@ -289,13 +295,13 @@ abstract class Hitchable {
       );
 
   /// Update the children connected to this.
-  void updateChildren() {
+  void updateChildren(double period) {
     hitchFrontFixedChild?.hitchParent = this;
-    hitchFrontFixedChild?.updateChildren();
+    hitchFrontFixedChild?.updateChildren(period);
     hitchRearFixedChild?.hitchParent = this;
-    hitchRearFixedChild?.updateChildren();
+    hitchRearFixedChild?.updateChildren(period);
     hitchRearTowbarChild?.hitchParent = this;
-    hitchRearTowbarChild?.updateChildren();
+    hitchRearTowbarChild?.updateChildren(period);
   }
 
   /// Create a new [Hitchable] based on this one, but with parameters/variables

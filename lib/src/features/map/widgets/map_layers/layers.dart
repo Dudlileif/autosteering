@@ -2,7 +2,7 @@ export 'ab_tracking_debug_layer.dart';
 export 'country_layers.dart';
 export 'dubins_path_debug_layer.dart';
 export 'editable_path_layer.dart';
-export 'equipment_debug_layer.dart';
+export 'equipment_layers.dart';
 export 'equipment_worked_paths_layer.dart';
 export 'field_layer.dart';
 export 'finished_path_layer.dart';

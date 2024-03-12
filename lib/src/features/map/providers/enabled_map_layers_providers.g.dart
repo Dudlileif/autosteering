@@ -238,5 +238,24 @@ final showVehicleDrawingLayerProvider =
 );
 
 typedef _$ShowVehicleDrawingLayer = Notifier<bool>;
+String _$showEquipmentDrawingLayerHash() =>
+    r'804059de3db09315e1c90613ebff35fcfbe6ba05';
+
+/// Whether the equipment drawing layer should be shown.
+///
+/// Copied from [ShowEquipmentDrawingLayer].
+@ProviderFor(ShowEquipmentDrawingLayer)
+final showEquipmentDrawingLayerProvider =
+    NotifierProvider<ShowEquipmentDrawingLayer, bool>.internal(
+  ShowEquipmentDrawingLayer.new,
+  name: r'showEquipmentDrawingLayerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showEquipmentDrawingLayerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowEquipmentDrawingLayer = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

@@ -83,6 +83,8 @@ class ShowVehicleDrawingLayer extends _$ShowVehicleDrawingLayer {
   void toggle() => Future(() => state = !state);
 }
 
+
+
 /// Whether the debugging layer for the vehicle should be shown.
 @riverpod
 bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {
@@ -121,6 +123,19 @@ bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
 
   final enabled = (showField || showBufferedField) && fieldExists;
   return enabled;
+}
+
+/// Whether the equipment drawing layer should be shown.
+@Riverpod(keepAlive: true)
+class ShowEquipmentDrawingLayer extends _$ShowEquipmentDrawingLayer {
+  @override
+  bool build() => true;
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
 }
 
 /// Whether the debugging layer for the equipment should be shown.

@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/vehicle/models/models.dart';
+import 'package:autosteering/src/features/vehicle/models/vehicle.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
@@ -194,6 +196,75 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The bearing of the equipment, used to specifically set the [bearing].
   double _bearing = 0;
 
+  /// The previous position of the [workingCenter], only used in
+  /// [updateTowbar].
+  late Geographic _prevWorkingCenter = workingCenter;
+
+  /// The previous [bearing] of this, only used in [updateTowbar].
+  double _prevBearing = 0;
+
+  /// The previous hitch angle, only used in [updateTowbar].
+  double _prevHitchAngle = 0;
+
+  /// The turning radius of this, only used in [updateTowbar].
+  double? _turningRadius;
+
+  /// The turning radius center of this, only used in [updateTowbar].
+  Geographic? _turningRadiusCenter;
+
+  @override
+  double? get currentTurningRadius {
+    if (hitchType == HitchType.fixed && hitchParent != null) {
+      if (hitchParent!.currentTurningRadius != null) {
+        final hitchToParentTurningCircleBase =
+            switch (hitchParent.runtimeType) {
+          Tractor ||
+          Harvester =>
+            (hitchParent! as AxleSteeredVehicle).solidAxleToRearTowbarDistance,
+          ArticulatedTractor =>
+            (hitchParent! as ArticulatedTractor).rearAxleToTowbarDistance,
+          Equipment =>
+            (hitchParent! as Equipment).hitchToChildRearTowbarHitchLength! -
+                (hitchParent! as Equipment).drawbarLength,
+          _ => null,
+        };
+        if (hitchToParentTurningCircleBase != null) {
+          return sqrt(
+            pow(hitchParent!.currentTurningRadius!, 2) +
+                pow(hitchToParentTurningCircleBase, 2),
+          );
+        }
+      }
+    }
+
+    return _turningRadius;
+  }
+
+  @override
+  Geographic? get turningRadiusCenter {
+    if (hitchType == HitchType.fixed &&
+        hitchParent != null &&
+        currentTurningRadius != null) {
+      var leftOrRightModifier = 1;
+      if (hitchParent!.turningRadiusCenter != null &&
+          signedBearingDifference(
+                hitchParent!.position.rhumb.initialBearingTo(
+                  (hitchParent!).turningRadiusCenter!,
+                ),
+                hitchParent!.bearing,
+              ) >
+              0) {
+        leftOrRightModifier *= -1;
+      }
+
+      return workingCenter.rhumb.destinationPoint(
+        distance: currentTurningRadius!,
+        bearing: bearing + 90 * leftOrRightModifier,
+      );
+    }
+    return _turningRadiusCenter;
+  }
+
   /// The position of the hitch point of the equipment, will use the parent's
   /// hitch point if connected.
   ///
@@ -364,31 +435,121 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// Update the [bearing] and [velocity] of the equipment when connected to
   /// parent with a towbar.
-  void updateTowbar() {
+  ///
+  /// Depends on the parent having a turning circle and radius, so it will not
+  /// work without a steering angle on the main vehicle (i.e. WAS is required
+  /// on physical vehicle).
+  void updateTowbar(double period) {
     if (hitchParent != null && parentHitch == Hitch.rearTowbar) {
-      final hitchAngle = signedBearingDifference(
-        position.rhumb.initialBearingTo(hitchParent!.position),
-        position.rhumb.initialBearingTo(workingCenter),
-      ).toRadians();
-
-      final bearingChange = hitchParent!.velocity /
-          (drawbarLength + workingAreaLength / 2) *
-          sin(hitchAngle);
+      var hitchAngle = _prevHitchAngle;
+      final prevBearing = bearing;
 
       // Only change bearing if we're moving.
-      if (hitchParent!.velocity.abs() > 0 || true) {
-        bearing = _bearing + bearingChange;
+      if (hitchParent!.velocity.abs() > 0) {
+        final movedDistance =
+            _prevWorkingCenter.rhumb.distanceTo(workingCenter);
+
+        final bearingChange = signedBearingDifference(
+          _prevBearing,
+          workingCenter.rhumb.initialBearingTo(position),
+        );
+
+        var turningRadius = bearingChange.abs() > 0
+            // Circle chord to radius
+            ? (movedDistance / (2 * sin(bearingChange.toRadians() / 2)))
+                .clamp(-500.0, 500.0)
+            : null;
+        if (turningRadius != null) {
+          if (turningRadius.abs() >= 500) {
+            turningRadius = null;
+          } else if (isReversing) {
+            turningRadius *= -1;
+          }
+        }
+        _turningRadius = turningRadius?.abs();
+
+        _turningRadiusCenter = turningRadius != null
+            ? workingCenter.rhumb.destinationPoint(
+                distance: turningRadius,
+                bearing: bearing + 90,
+              )
+            : null;
+
+        final hitchToParentTurningCircleBase =
+            switch (hitchParent.runtimeType) {
+          Tractor ||
+          Harvester =>
+            (hitchParent! as AxleSteeredVehicle).solidAxleToRearTowbarDistance,
+          ArticulatedTractor =>
+            (hitchParent! as ArticulatedTractor).rearAxleToTowbarDistance,
+          Equipment =>
+            (hitchParent! as Equipment).hitchToChildRearTowbarHitchLength! -
+                (hitchParent! as Equipment).drawbarLength,
+          _ => null,
+        };
+
+        if (hitchToParentTurningCircleBase != null) {
+          // https://www.landtechnik-online.eu/landtechnik/article/view/2010-65-3-178-181/2010-65-3-178-181-en-pdf
+          final a = hitchParent!.velocity /
+              (drawbarLength + hitchToParentTurningCircleBase);
+
+          final y1 = hitchParent!.currentTurningRadius != null
+              ? atan(
+                  hitchToParentTurningCircleBase /
+                      hitchParent!.currentTurningRadius!,
+                )
+              : 0.0;
+
+          var y2 = hitchParent!.currentTurningRadius != null
+              ? asin(
+                  (drawbarLength /
+                          sqrt(
+                            pow(hitchToParentTurningCircleBase, 2) +
+                                pow(
+                                  hitchParent!.currentTurningRadius!,
+                                  2,
+                                ),
+                          ))
+                      .clamp(-1, 1),
+                )
+              : 0.0;
+          if (y2.isNaN) {
+            y2 = 0;
+          }
+
+          var targetStaticAngle = (y1 + y2).toDegrees();
+          if (hitchParent!.turningRadiusCenter != null &&
+              signedBearingDifference(
+                    hitchParent!.position.rhumb.initialBearingTo(
+                      (hitchParent!).turningRadiusCenter!,
+                    ),
+                    hitchParent!.bearing,
+                  ) <
+                  0) {
+            targetStaticAngle *= -1;
+          }
+          hitchAngle = (_prevHitchAngle +
+                  (targetStaticAngle - _prevHitchAngle) * a * period * 2)
+              .clamp(-90, 90);
+
+          bearing = (position.rhumb.initialBearingTo(hitchParent!.position) +
+                  hitchAngle)
+              .wrap360();
+        }
       }
-      _velocity = hitchParent!.velocity * -cos(hitchAngle);
+      _velocity = hitchParent!.velocity * cos(hitchAngle.abs().toRadians());
+      _prevHitchAngle = hitchAngle;
+      _prevWorkingCenter = workingCenter;
+      _prevBearing = prevBearing;
     }
   }
 
   /// Update the children connected to this. Also checks and updates this
   /// equipment if it's connected to parent with a towbar.
   @override
-  void updateChildren() {
-    updateTowbar();
-    super.updateChildren();
+  void updateChildren(double period) {
+    updateTowbar(period);
+    super.updateChildren(period);
   }
 
   /// The working area center of this equipment.

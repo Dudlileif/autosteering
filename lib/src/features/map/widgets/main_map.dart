@@ -88,11 +88,13 @@ class MainMap extends ConsumerWidget {
         const EquipmentWorkedPathsLayer(),
         if (ref.watch(showVehicleDrawingLayerProvider))
           const VehicleDrawerLayer(),
+        if (ref.watch(showEquipmentDrawingLayerProvider))
+          const EquipmentDrawerLayer(),
         if (ref.watch(showRecordingPathLayerProvider))
           const RecordingPathLayer(),
         if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),
         if (ref.watch(showEquipmentDebugLayerProvider))
-          const EquipmentDebugLayer(),
+        const EquipmentDebugLayer(),
         if (ref.watch(showPathTrackingDebugLayerProvider))
           const PathTrackingDebugLayer(),
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),

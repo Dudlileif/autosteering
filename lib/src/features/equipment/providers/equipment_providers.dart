@@ -18,13 +18,25 @@ part 'equipment_providers.g.dart';
 @Riverpod(keepAlive: true)
 class ShowEquipmentDebug extends _$ShowEquipmentDebug {
   @override
-  bool build() => true;
+  bool build() => false;
 
   /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 
   /// Invert the current [state].
   void toggle() => Future(() => state = !state);
+}
+
+/// A provider for how the [SectionEdgePositions] should be recorded, as the
+/// fraction parameter that goes in [Equipment.sectionEdgePositions].
+@Riverpod(keepAlive: true)
+class EquipmentRecordPositionFraction
+    extends _$EquipmentRecordPositionFraction {
+  @override
+  double build() => 0.5;
+
+  /// Updates [state] to [value];
+  void update(double value) => Future(() => state = value.clamp(0, 1));
 }
 
 /// A provider that holds all of the equipments.
@@ -138,6 +150,8 @@ class EquipmentPaths extends _$EquipmentPaths {
   void update(Equipment equipment) => Future(() {
         // Activation/deactivation
         if (equipment.sections.isNotEmpty) {
+          final recordFraction =
+              ref.watch(equipmentRecordPositionFractionProvider);
           if (!equipment.sectionActivationStatus
                   .equals(_prevSectionActivationStatus) ||
               state.isEmpty) {
@@ -153,10 +167,18 @@ class EquipmentPaths extends _$EquipmentPaths {
                             false)
                     ? [
                         state.lastOrNull?[section]?.lastOrNull ??
-                            equipment.sectionEdgePositions(section),
+                            equipment.sectionEdgePositions(
+                              section,
+                              fraction: recordFraction,
+                            ),
                       ]
                     : active
-                        ? [equipment.sectionEdgePositions(section)]
+                        ? [
+                            equipment.sectionEdgePositions(
+                              section,
+                              fraction: recordFraction,
+                            ),
+                          ]
                         : null;
               },
             );
@@ -174,7 +196,10 @@ class EquipmentPaths extends _$EquipmentPaths {
           else {
             final positions = List.generate(
               _prevSectionActivationStatus.length,
-              (section) => equipment.sectionEdgePositions(section),
+              (section) => equipment.sectionEdgePositions(
+                section,
+                fraction: recordFraction,
+              ),
             );
             final addNext = positions
                 .mapIndexed(
@@ -206,10 +231,17 @@ class EquipmentPaths extends _$EquipmentPaths {
         (previousValue, element) =>
             element == true ? previousValue + 1 : previousValue,
       );
+      final recordFraction = ref.watch(equipmentRecordPositionFractionProvider);
       if (nextActive < prevActive) {
         state = state
           ..last.updateAll(
-            (key, value) => value?..add(equipment.sectionEdgePositions(key)),
+            (key, value) => value
+              ?..add(
+                equipment.sectionEdgePositions(
+                  key,
+                  fraction: recordFraction,
+                ),
+              ),
           );
       }
     }

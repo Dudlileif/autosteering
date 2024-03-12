@@ -215,8 +215,10 @@ final class ArticulatedTractor extends Vehicle {
     // velocity
     // during the period amounts to. Relative to the current position,
     // is negative when reversing.
-    final turningCircleAngle = angularVelocity! * period;
-
+    var turningCircleAngle = angularVelocity! * period;
+    if (isTurningLeft) {
+      turningCircleAngle *= -1;
+    }
     // The current angle from the turning radius center to the
     // front axle center.
     final turningCenterToFrontAxleAngle = switch (isTurningLeft) {

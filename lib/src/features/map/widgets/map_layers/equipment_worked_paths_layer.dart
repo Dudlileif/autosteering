@@ -31,6 +31,8 @@ class _EquipmentWorkedPathsLayerState
       ),
     );
 
+    final recordFraction = ref.watch(equipmentRecordPositionFractionProvider);
+
     final children = <Widget>[];
     for (final equipment in equipments) {
       final workedLines = ref.watch(equipmentPathsProvider(equipment.uuid));
@@ -61,13 +63,14 @@ class _EquipmentWorkedPathsLayerState
                       .toList();
 
                   if (activationIndex == workedLines.length - 1) {
-                    final points = equipment.sectionEdgePositions(section);
-                    final offset1 =
-                        camera
+                    final points = equipment.sectionEdgePositions(
+                      section,
+                      fraction: recordFraction,
+                    );
+                    final offset1 = camera
                         .latLngToScreenPoint(points.left.latLng)
                         .toOffset();
-                    final offset2 =
-                        camera
+                    final offset2 = camera
                         .latLngToScreenPoint(points.right.latLng)
                         .toOffset();
                     offsets.addAll([

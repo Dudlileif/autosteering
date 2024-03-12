@@ -1531,7 +1531,10 @@ class _SimulatorCoreState {
   /// Update the simulation, i.e. simulate the next step.
   void update() {
     didChange = false;
-    if (gnssUpdate != null || allowSimInterpolation || allowManualSimInput) {
+    if (gnssUpdate != null ||
+        allowSimInterpolation ||
+        allowManualSimInput ||
+        forceChange) {
       checkGuidance();
 
       if (allowManualSimInput) {
@@ -1547,9 +1550,9 @@ class _SimulatorCoreState {
         if (gnssUpdate != null && !allowManualSimInput) {
           vehicle!.position = gnssUpdate!.gnssPosition;
           turningCircleCenter = vehicle?.turningRadiusCenter;
-          vehicle!.updateChildren();
+          vehicle!.updateChildren(period);
         } else if (!allowManualSimInput && !allowSimInterpolation) {
-          vehicle!.updateChildren();
+          vehicle!.updateChildren(period);
         }
         // Update by simulation
         else if (allowManualSimInput || allowSimInterpolation) {

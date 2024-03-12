@@ -1,6 +1,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -39,10 +40,26 @@ class EquipmentMenu extends StatelessWidget {
         const _DetachMenu(),
         Consumer(
           child: Text(
-            'Show',
+            'Draw equipment',
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            value: ref.watch(showEquipmentDrawingLayerProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(showEquipmentDrawingLayerProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Debug equipment',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            secondary: const Icon(Icons.bug_report),
             title: child,
             value: ref.watch(showEquipmentDebugProvider),
             onChanged: (value) => value != null
@@ -82,6 +99,25 @@ class EquipmentMenu extends StatelessWidget {
                 ref.read(allEquipmentsProvider.notifier).clearPaintedArea(),
             child: child,
           ),
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final fraction = ref.watch(equipmentRecordPositionFractionProvider);
+            return ListTile(
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Recording position: ${fraction.toStringAsFixed(2)}'),
+                  Slider(
+                    value: fraction,
+                    onChanged: ref
+                        .read(equipmentRecordPositionFractionProvider.notifier)
+                        .update,
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ],
     );

@@ -449,12 +449,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Polygons for drawing the wheels of the vehicle.
   List<map.Polygon> get wheelPolygons;
 
-  /// The turning radius corresponding to the current [steeringAngle].
-  double? get currentTurningRadius;
-
-  /// The center point of which the [currentTurningRadius] revolves around.
-  Geographic? get turningRadiusCenter;
-
   /// The angular velocity of the vehicle, if it is turning.
   /// degrees/s, does not care about clockwise/counter-clockwise direction.
   double? get angularVelocity => currentTurningRadius != null
@@ -502,7 +496,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       } else if (velocity.abs() > 0 || force) {
         setPositionSim(updatedPositionStraight(period));
       }
-      updateChildren();
+      updateChildren(period);
     }
   }
 
@@ -614,6 +608,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         steeringAngleInput,
         length,
         width,
+        was.config,
+        imu.config,
+        motorConfig,
       ];
 
   /// Returns a new [Vehicle] based on this one, but with
