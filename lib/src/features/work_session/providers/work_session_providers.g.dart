@@ -212,7 +212,7 @@ class _LoadWorkSessionFromFileProviderElement
   String get path => (origin as LoadWorkSessionFromFileProvider).path;
 }
 
-String _$saveWorkSessionHash() => r'e6470ceec5e11dd136ef4eebff08ffe89bd2e785';
+String _$saveWorkSessionHash() => r'ccfd037715590471ace99225a92b095997be49e3';
 
 /// A provider for saving [workSession] to a file in the user file directory.
 ///
@@ -280,7 +280,7 @@ class SaveWorkSessionFamily extends Family {
 
   /// Enables overriding the behavior of this provider, no matter the parameters.
   Override overrideWith(
-      AsyncValue<void> Function(SaveWorkSessionRef ref) create) {
+      FutureOr<void> Function(SaveWorkSessionRef ref) create) {
     return _$SaveWorkSessionFamilyOverride(this, create);
   }
 }
@@ -288,7 +288,7 @@ class SaveWorkSessionFamily extends Family {
 class _$SaveWorkSessionFamilyOverride implements FamilyOverride {
   _$SaveWorkSessionFamilyOverride(this.overriddenFamily, this.create);
 
-  final AsyncValue<void> Function(SaveWorkSessionRef ref) create;
+  final FutureOr<void> Function(SaveWorkSessionRef ref) create;
 
   @override
   final SaveWorkSessionFamily overriddenFamily;
@@ -306,7 +306,7 @@ class _$SaveWorkSessionFamilyOverride implements FamilyOverride {
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveWorkSession].
-class SaveWorkSessionProvider extends AutoDisposeProvider<AsyncValue<void>> {
+class SaveWorkSessionProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for saving [workSession] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
@@ -355,7 +355,7 @@ class SaveWorkSessionProvider extends AutoDisposeProvider<AsyncValue<void>> {
 
   @override
   Override overrideWith(
-    AsyncValue<void> Function(SaveWorkSessionRef ref) create,
+    FutureOr<void> Function(SaveWorkSessionRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -387,12 +387,12 @@ class SaveWorkSessionProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 
   @override
-  AutoDisposeProviderElement<AsyncValue<void>> createElement() {
+  AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveWorkSessionProviderElement(this);
   }
 
   SaveWorkSessionProvider _copyWith(
-    AsyncValue<void> Function(SaveWorkSessionRef ref) create,
+    FutureOr<void> Function(SaveWorkSessionRef ref) create,
   ) {
     return SaveWorkSessionProvider._internal(
       (ref) => create(ref as SaveWorkSessionRef),
@@ -426,7 +426,7 @@ class SaveWorkSessionProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 }
 
-mixin SaveWorkSessionRef on AutoDisposeProviderRef<AsyncValue<void>> {
+mixin SaveWorkSessionRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `workSession` of this provider.
   WorkSession get workSession;
 
@@ -438,8 +438,7 @@ mixin SaveWorkSessionRef on AutoDisposeProviderRef<AsyncValue<void>> {
 }
 
 class _SaveWorkSessionProviderElement
-    extends AutoDisposeProviderElement<AsyncValue<void>>
-    with SaveWorkSessionRef {
+    extends AutoDisposeFutureProviderElement<void> with SaveWorkSessionRef {
   _SaveWorkSessionProviderElement(super.provider);
 
   @override
@@ -449,6 +448,245 @@ class _SaveWorkSessionProviderElement
   String? get overrideName => (origin as SaveWorkSessionProvider).overrideName;
   @override
   bool get downloadIfWeb => (origin as SaveWorkSessionProvider).downloadIfWeb;
+}
+
+String _$exportWorkSessionHash() => r'0675aa408c72ecbb02628d1e249fa4ab69764a97';
+
+/// A provider for exporting [workSession] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportWorkSession].
+@ProviderFor(exportWorkSession)
+const exportWorkSessionProvider = ExportWorkSessionFamily();
+
+/// A provider for exporting [workSession] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportWorkSession].
+class ExportWorkSessionFamily extends Family {
+  /// A provider for exporting [workSession] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportWorkSession].
+  const ExportWorkSessionFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportWorkSessionProvider';
+
+  /// A provider for exporting [workSession] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportWorkSession].
+  ExportWorkSessionProvider call(
+    WorkSession workSession, {
+    String? overrideName,
+    bool downloadIfWeb = false,
+  }) {
+    return ExportWorkSessionProvider(
+      workSession,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportWorkSessionProvider getProviderOverride(
+    covariant ExportWorkSessionProvider provider,
+  ) {
+    return call(
+      provider.workSession,
+      overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(ExportWorkSessionRef ref) create) {
+    return _$ExportWorkSessionFamilyOverride(this, create);
+  }
+}
+
+class _$ExportWorkSessionFamilyOverride implements FamilyOverride {
+  _$ExportWorkSessionFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportWorkSessionRef ref) create;
+
+  @override
+  final ExportWorkSessionFamily overriddenFamily;
+
+  @override
+  ExportWorkSessionProvider getProviderOverride(
+    covariant ExportWorkSessionProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for exporting [workSession] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportWorkSession].
+class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for exporting [workSession] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportWorkSession].
+  ExportWorkSessionProvider(
+    WorkSession workSession, {
+    String? overrideName,
+    bool downloadIfWeb = false,
+  }) : this._internal(
+          (ref) => exportWorkSession(
+            ref as ExportWorkSessionRef,
+            workSession,
+            overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
+          ),
+          from: exportWorkSessionProvider,
+          name: r'exportWorkSessionProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportWorkSessionHash,
+          dependencies: ExportWorkSessionFamily._dependencies,
+          allTransitiveDependencies:
+              ExportWorkSessionFamily._allTransitiveDependencies,
+          workSession: workSession,
+          overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
+        );
+
+  ExportWorkSessionProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.workSession,
+    required this.overrideName,
+    required this.downloadIfWeb,
+  }) : super.internal();
+
+  final WorkSession workSession;
+  final String? overrideName;
+  final bool downloadIfWeb;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportWorkSessionRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportWorkSessionProvider._internal(
+        (ref) => create(ref as ExportWorkSessionRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        workSession: workSession,
+        overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+  }
+
+  @override
+  (
+    WorkSession, {
+    String? overrideName,
+    bool downloadIfWeb,
+  }) get argument {
+    return (
+      workSession,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportWorkSessionProviderElement(this);
+  }
+
+  ExportWorkSessionProvider _copyWith(
+    FutureOr<void> Function(ExportWorkSessionRef ref) create,
+  ) {
+    return ExportWorkSessionProvider._internal(
+      (ref) => create(ref as ExportWorkSessionRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      workSession: workSession,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportWorkSessionProvider &&
+        other.workSession == workSession &&
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, workSession.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportWorkSessionRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `workSession` of this provider.
+  WorkSession get workSession;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
+}
+
+class _ExportWorkSessionProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ExportWorkSessionRef {
+  _ExportWorkSessionProviderElement(super.provider);
+
+  @override
+  WorkSession get workSession =>
+      (origin as ExportWorkSessionProvider).workSession;
+  @override
+  String? get overrideName =>
+      (origin as ExportWorkSessionProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as ExportWorkSessionProvider).downloadIfWeb;
 }
 
 String _$savedWorkSessionsHash() => r'a9e5618f15053022734353dc757a685ccf718c82';
@@ -470,6 +708,245 @@ final savedWorkSessionsProvider =
 );
 
 typedef SavedWorkSessionsRef = ProviderRef<AsyncValue<List<WorkSession>>>;
+String _$deleteWorkSessionHash() => r'83e7333e3d8066201801b2c9f83ea6573e56a0cd';
+
+/// A provider for deleting [workSession] from the user file system.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteWorkSession].
+@ProviderFor(deleteWorkSession)
+const deleteWorkSessionProvider = DeleteWorkSessionFamily();
+
+/// A provider for deleting [workSession] from the user file system.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteWorkSession].
+class DeleteWorkSessionFamily extends Family {
+  /// A provider for deleting [workSession] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteWorkSession].
+  const DeleteWorkSessionFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteWorkSessionProvider';
+
+  /// A provider for deleting [workSession] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteWorkSession].
+  DeleteWorkSessionProvider call(
+    WorkSession workSession, {
+    String? overrideName,
+  }) {
+    return DeleteWorkSessionProvider(
+      workSession,
+      overrideName: overrideName,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  DeleteWorkSessionProvider getProviderOverride(
+    covariant DeleteWorkSessionProvider provider,
+  ) {
+    return call(
+      provider.workSession,
+      overrideName: provider.overrideName,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(DeleteWorkSessionRef ref) create) {
+    return _$DeleteWorkSessionFamilyOverride(this, create);
+  }
+}
+
+class _$DeleteWorkSessionFamilyOverride implements FamilyOverride {
+  _$DeleteWorkSessionFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(DeleteWorkSessionRef ref) create;
+
+  @override
+  final DeleteWorkSessionFamily overriddenFamily;
+
+  @override
+  DeleteWorkSessionProvider getProviderOverride(
+    covariant DeleteWorkSessionProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for deleting [workSession] from the user file system.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteWorkSession].
+class DeleteWorkSessionProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for deleting [workSession] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteWorkSession].
+  DeleteWorkSessionProvider(
+    WorkSession workSession, {
+    String? overrideName,
+  }) : this._internal(
+          (ref) => deleteWorkSession(
+            ref as DeleteWorkSessionRef,
+            workSession,
+            overrideName: overrideName,
+          ),
+          from: deleteWorkSessionProvider,
+          name: r'deleteWorkSessionProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$deleteWorkSessionHash,
+          dependencies: DeleteWorkSessionFamily._dependencies,
+          allTransitiveDependencies:
+              DeleteWorkSessionFamily._allTransitiveDependencies,
+          workSession: workSession,
+          overrideName: overrideName,
+        );
+
+  DeleteWorkSessionProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.workSession,
+    required this.overrideName,
+  }) : super.internal();
+
+  final WorkSession workSession;
+  final String? overrideName;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(DeleteWorkSessionRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DeleteWorkSessionProvider._internal(
+        (ref) => create(ref as DeleteWorkSessionRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        workSession: workSession,
+        overrideName: overrideName,
+      ),
+    );
+  }
+
+  @override
+  (
+    WorkSession, {
+    String? overrideName,
+  }) get argument {
+    return (
+      workSession,
+      overrideName: overrideName,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _DeleteWorkSessionProviderElement(this);
+  }
+
+  DeleteWorkSessionProvider _copyWith(
+    FutureOr<void> Function(DeleteWorkSessionRef ref) create,
+  ) {
+    return DeleteWorkSessionProvider._internal(
+      (ref) => create(ref as DeleteWorkSessionRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      workSession: workSession,
+      overrideName: overrideName,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeleteWorkSessionProvider &&
+        other.workSession == workSession &&
+        other.overrideName == overrideName;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, workSession.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin DeleteWorkSessionRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `workSession` of this provider.
+  WorkSession get workSession;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+}
+
+class _DeleteWorkSessionProviderElement
+    extends AutoDisposeFutureProviderElement<void> with DeleteWorkSessionRef {
+  _DeleteWorkSessionProviderElement(super.provider);
+
+  @override
+  WorkSession get workSession =>
+      (origin as DeleteWorkSessionProvider).workSession;
+  @override
+  String? get overrideName =>
+      (origin as DeleteWorkSessionProvider).overrideName;
+}
+
+String _$importWorkSessionHash() => r'd89d64b1d45947cde23bad001ae3f7c9d4a0cd22';
+
+/// A provider for importing a work session from a file and applying it
+/// to the [ActiveWorkSession] provider.
+///
+/// Copied from [importWorkSession].
+@ProviderFor(importWorkSession)
+final importWorkSessionProvider =
+    AutoDisposeProvider<AsyncValue<WorkSession?>>.internal(
+  importWorkSession,
+  name: r'importWorkSessionProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$importWorkSessionHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ImportWorkSessionRef = AutoDisposeProviderRef<AsyncValue<WorkSession?>>;
 String _$activeWorkSessionHash() => r'86029e0a8803b9456114e7a8c66c1c5b9fbfce98';
 
 /// A provider for holding the active [WorkSession].

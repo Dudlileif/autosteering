@@ -957,7 +957,7 @@ final importVehicleProvider =
 );
 
 typedef ImportVehicleRef = AutoDisposeProviderRef<AsyncValue<Vehicle?>>;
-String _$mainVehicleHash() => r'8ab5e7dab81991354c7ca6a42423d7be9dfec907';
+String _$mainVehicleHash() => r'dd2c1e60707dd90caeef5e4ac7460333506bf47a';
 
 /// The main provider for the vehicle state.
 ///

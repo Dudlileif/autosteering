@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -41,13 +42,13 @@ FutureOr<WorkSession?> loadWorkSessionFromFile(
 ///
 /// Override the file name with [overrideName].
 @riverpod
-AsyncValue<void> saveWorkSession(
+FutureOr<void> saveWorkSession(
   SaveWorkSessionRef ref,
   WorkSession workSession, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) =>
-    ref.watch(
+}) async =>
+    await ref.watch(
       saveJsonToFileDirectoryProvider(
         object: workSession,
         fileName: overrideName ??
@@ -55,7 +56,27 @@ AsyncValue<void> saveWorkSession(
             DateTime.now().toIso8601String(),
         folder: 'work_sessions',
         downloadIfWeb: downloadIfWeb,
-      ),
+      ).future,
+    );
+
+/// A provider for exporting [workSession] to a file.
+///
+/// Override the file name with [overrideName].
+@riverpod
+FutureOr<void> exportWorkSession(
+  ExportWorkSessionRef ref,
+  WorkSession workSession, {
+  String? overrideName,
+  bool downloadIfWeb = false,
+}) async =>
+    await ref.watch(
+      exportJsonToFileDirectoryProvider(
+        object: workSession,
+        fileName: overrideName ??
+            workSession.title ??
+            DateTime.now().toIso8601String(),
+        folder: 'work_sessions',
+      ).future,
     );
 
 /// A provider for reading and holding all the saved [WorkSession]s in the
@@ -71,3 +92,63 @@ AsyncValue<List<WorkSession>> savedWorkSessions(SavedWorkSessionsRef ref) => ref
     .whenData(
       (data) => data.cast(),
     );
+
+
+/// A provider for deleting [workSession] from the user file system.
+///
+/// Override the file name with [overrideName].
+@riverpod
+FutureOr<void> deleteWorkSession(
+  DeleteWorkSessionRef ref,
+  WorkSession workSession, {
+  String? overrideName,
+}) async =>
+    await ref.watch(
+      deleteJsonFromFileDirectoryProvider(
+        fileName: overrideName ??
+            workSession.title ??
+            DateTime.now().toIso8601String(),
+        folder: 'work_sessions',
+      ).future,
+    );
+
+/// A provider for importing a work session from a file and applying it
+/// to the [ActiveWorkSession] provider.
+@riverpod
+AsyncValue<WorkSession?> importWorkSession(
+  ImportWorkSessionRef ref,
+) {
+  FilePicker.platform.pickFiles(
+    allowedExtensions: ['json'],
+    type: FileType.custom,
+    dialogTitle: 'Choose work session file',
+  ).then((pickedFiles) {
+    if (Device.isWeb) {
+      final data = pickedFiles?.files.first.bytes;
+      if (data != null) {
+        final json = jsonDecode(String.fromCharCodes(data));
+        if (json is Map) {
+          final workSession =
+              WorkSession.fromJson(Map<String, dynamic>.from(json));
+          ref.read(activeWorkSessionProvider.notifier).update(workSession);
+          return AsyncData(workSession);
+        }
+      }
+    } else {
+      final filePath = pickedFiles?.paths.first;
+      if (filePath != null) {
+        return ref.watch(loadWorkSessionFromFileProvider(filePath)).whenData(
+          (data) {
+            if (data != null) {
+              ref.read(activeWorkSessionProvider.notifier).update(data);
+              return data;
+            }
+            return null;
+          },
+        );
+      }
+    }
+    return const AsyncData(null);
+  });
+  return const AsyncLoading();
+}
