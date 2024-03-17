@@ -52,41 +52,48 @@ class EquipmentConfigurator extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Consumer(
-                    builder: (context, ref, child) => NavigationRail(
-                      backgroundColor: Colors.transparent,
-                      labelType: NavigationRailLabelType.all,
-                      destinations: const [
-                        NavigationRailDestination(
-                          icon: Icon(Icons.agriculture),
-                          label: Text('Type'),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: SingleChildScrollView(
+                      child: IntrinsicHeight(
+                        child: Consumer(
+                          builder: (context, ref, child) => NavigationRail(
+                            backgroundColor: Colors.transparent,
+                            labelType: NavigationRailLabelType.all,
+                            destinations: const [
+                              NavigationRailDestination(
+                                icon: Icon(Icons.handyman),
+                                label: Text('Type'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.expand),
+                                label: Text('Dimensions'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.view_column),
+                                label: Text('Sections'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.square_rounded),
+                                label: Text('Decoration'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.commit),
+                                label: Text('Hitches'),
+                              ),
+                            ],
+                            selectedIndex: ref.watch(
+                              equipmentConfiguratorIndexProvider,
+                            ),
+                            onDestinationSelected: ref
+                                .read(
+                                  equipmentConfiguratorPageControllerProvider
+                                      .notifier,
+                                )
+                                .animateToPage,
+                          ),
                         ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.expand),
-                          label: Text('Dimensions'),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.view_column),
-                          label: Text('Sections'),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.square_rounded),
-                          label: Text('Decoration'),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.commit),
-                          label: Text('Hitches'),
-                        ),
-                      ],
-                      selectedIndex: ref.watch(
-                        equipmentConfiguratorIndexProvider,
                       ),
-                      onDestinationSelected: ref
-                          .read(
-                            equipmentConfiguratorPageControllerProvider
-                                .notifier,
-                          )
-                          .animateToPage,
                     ),
                   ),
                   const VerticalDivider(),

@@ -167,21 +167,23 @@ class VehicleHitchesPage extends ConsumerWidget {
       },
     ];
 
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: VehicleConfiguratorPreviousButton(),
-          ),
-          ...children.map(
-            (widget) => Padding(
-              padding: const EdgeInsets.all(8),
-              child: SizedBox(width: 400, child: widget),
+    return SingleChildScrollView(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: VehicleConfiguratorPreviousButton(),
             ),
-          ),
-        ],
+            ...children.map(
+              (widget) => Padding(
+                padding: const EdgeInsets.all(8),
+                child: SizedBox(width: 400, child: widget),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

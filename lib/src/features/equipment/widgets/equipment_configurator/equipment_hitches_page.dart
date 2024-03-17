@@ -74,8 +74,7 @@ class EquipmentHitchesPage extends ConsumerWidget {
       ),
     ];
 
-    return Align(
-      alignment: Alignment.topCenter,
+    return SingleChildScrollView(
       child: Column(
         children: [
           const Padding(

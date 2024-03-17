@@ -11,8 +11,7 @@ class EquipmentTypeSelectorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
+    return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -33,8 +32,9 @@ class EquipmentTypeSelectorPage extends StatelessWidget {
                         icon: Icon(Icons.label_outline),
                         labelText: 'Name',
                       ),
-                      controller: ref
-                          .watch(configuredEquipmentNameTextControllerProvider),
+                      controller: ref.watch(
+                        configuredEquipmentNameTextControllerProvider,
+                      ),
                       keyboardType: TextInputType.text,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) => value != null &&
@@ -80,7 +80,9 @@ class _EquipmentTypeSelector extends ConsumerWidget {
 
     return SizedBox(
       height: 220,
-      child: ListView(
+      child: Material(
+        type: MaterialType.transparency,
+        child: ListView(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
       children: [
@@ -108,6 +110,7 @@ class _EquipmentTypeSelector extends ConsumerWidget {
                   ),
                   const Expanded(
                     flex: 18,
+                        // TODO(dudlileif): Make three point hitch icon
                     child: Icon(Icons.workspaces, size: 100),
                   ),
                 ],
@@ -147,6 +150,7 @@ class _EquipmentTypeSelector extends ConsumerWidget {
                   ),
                   const Expanded(
                     flex: 18,
+                        // TODO(dudlileif): Make towbar hitch icon
                     child: Icon(Icons.commit, size: 100),
                   ),
                 ],
@@ -163,6 +167,7 @@ class _EquipmentTypeSelector extends ConsumerWidget {
           ),
         ),
       ],
+        ),
       ),
     );
   }

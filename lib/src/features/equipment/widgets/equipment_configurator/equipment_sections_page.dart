@@ -59,7 +59,6 @@ class EquipmentSectionsPage extends ConsumerWidget {
                         ),
                       );
                 },
-                
               ),
             ),
           ),
@@ -169,6 +168,7 @@ class EquipmentSectionsPage extends ConsumerWidget {
             children: equipment.sections
                 .map(
                   (section) => DropdownMenu(
+
                     label: Text('Section ${section.index + 1} button color'),
                     leadingIcon: Icon(
                       Icons.color_lens,
@@ -182,13 +182,16 @@ class EquipmentSectionsPage extends ConsumerWidget {
                           );
                     },
                     dropdownMenuEntries: [
-                      const DropdownMenuEntry(
+                      DropdownMenuEntry(
                         value: null,
                         label: 'Default',
-                        leadingIcon: Icon(
+                        leadingIcon: const Icon(
                           Icons.color_lens,
                           color: Colors.green,
                         ),
+                        trailingIcon: section.color == null
+                            ? const Icon(Icons.check)
+                            : null,
                       ),
                       ...Colors.primaries.mapIndexed(
                         (index, color) => DropdownMenuEntry(
@@ -196,6 +199,9 @@ class EquipmentSectionsPage extends ConsumerWidget {
                           label: PrimaryColorNamesExtension
                               .primaryColorNames[index],
                           leadingIcon: Icon(Icons.color_lens, color: color),
+                          trailingIcon: section.color == color
+                              ? const Icon(Icons.check)
+                              : null,
                         ),
                       ),
                     ],
@@ -203,7 +209,6 @@ class EquipmentSectionsPage extends ConsumerWidget {
                 )
                 .toList(),
           ),
-        
           SliverPadding(
             padding: const EdgeInsets.all(8),
             sliver: SliverToBoxAdapter(
@@ -242,6 +247,9 @@ class EquipmentSectionsPage extends ConsumerWidget {
                           Icons.color_lens,
                           color: theme.primaryColor,
                         ),
+                        trailingIcon: section.workedPathColor == null
+                            ? const Icon(Icons.check)
+                            : null,
                       ),
                       ...Colors.primaries.mapIndexed(
                         (index, color) => DropdownMenuEntry(
@@ -249,6 +257,9 @@ class EquipmentSectionsPage extends ConsumerWidget {
                           label: PrimaryColorNamesExtension
                               .primaryColorNames[index],
                           leadingIcon: Icon(Icons.color_lens, color: color),
+                          trailingIcon: section.workedPathColor == color
+                              ? const Icon(Icons.check)
+                              : null,
                         ),
                       ),
                     ],

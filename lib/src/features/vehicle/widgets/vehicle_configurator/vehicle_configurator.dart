@@ -53,44 +53,52 @@ class VehicleConfigurator extends ConsumerWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Consumer(
-                  builder: (context, ref, child) => NavigationRail(
-                    backgroundColor: Colors.transparent,
-                    labelType: NavigationRailLabelType.all,
-                    destinations: const [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.agriculture),
-                        label: Text('Type'),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: SingleChildScrollView(
+                    child: IntrinsicHeight(
+                      child: Consumer(
+                        builder: (context, ref, child) => NavigationRail(
+                          backgroundColor: Colors.transparent,
+                          labelType: NavigationRailLabelType.all,
+                          destinations: const [
+                            NavigationRailDestination(
+                              icon: Icon(Icons.agriculture),
+                              label: Text('Type'),
+                            ),
+                            NavigationRailDestination(
+                              icon: Icon(Icons.expand),
+                              label: Text('Dimensions'),
+                            ),
+                            NavigationRailDestination(
+                              icon: Icon(Icons.settings_input_antenna),
+                              label: Text('Antenna'),
+                            ),
+                            NavigationRailDestination(
+                              icon: Icon(Icons.circle_outlined),
+                              label: Text('Wheels'),
+                            ),
+                            NavigationRailDestination(
+                              icon: Icon(Icons.electric_meter),
+                              label: Text('Steering'),
+                            ),
+                            NavigationRailDestination(
+                              icon: Icon(Icons.commit),
+                              label: Text('Hitches'),
+                            ),
+                          ],
+                          selectedIndex: ref.watch(
+                            vehicleConfiguratorIndexProvider,
+                          ),
+                          onDestinationSelected: ref
+                              .read(
+                                vehicleConfiguratorPageControllerProvider
+                                    .notifier,
+                              )
+                              .animateToPage,
+                        ),
                       ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.expand),
-                        label: Text('Dimensions'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.settings_input_antenna),
-                        label: Text('Antenna'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.circle_outlined),
-                        label: Text('Wheels'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.electric_meter),
-                        label: Text('Steering'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.commit),
-                        label: Text('Hitches'),
-                      ),
-                    ],
-                    selectedIndex: ref.watch(
-                      vehicleConfiguratorIndexProvider,
                     ),
-                    onDestinationSelected: ref
-                        .read(
-                          vehicleConfiguratorPageControllerProvider.notifier,
-                        )
-                        .animateToPage,
                   ),
                 ),
                 const VerticalDivider(),

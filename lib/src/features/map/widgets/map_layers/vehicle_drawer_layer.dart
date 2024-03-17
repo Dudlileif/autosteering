@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -7,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
+import 'package:latlong2/latlong.dart';
 
 /// A layer for drawing the image/model of the vehicle on the map.
 class VehicleDrawerLayer extends ConsumerWidget {
@@ -223,6 +222,90 @@ class VehicleDrawerLayer extends ConsumerWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+/// A dynamic vehicle painter for drawing a top-down view of a [Vehicle] in
+/// the correct position and rotation on the [FlutterMap].
+///
+/// The method of rotating if copied from [RotatedOverlayImage] from
+/// [FlutterMap], except that [MapCamera.latLngToScreenPoint] is used to get
+/// the bounds points.
+class MapVehicleTopDownPainter extends StatelessWidget {
+  /// A dynamic vehicle painter for drawing a top-down view of a [Vehicle] in
+  /// the correct position and rotation on the [FlutterMap].
+  const MapVehicleTopDownPainter({
+    required this.vehicle,
+    super.key,
+  });
+
+  /// The vehicle to draw.
+  final Vehicle vehicle;
+
+  @override
+  Widget build(BuildContext context) {
+    final camera = MapCamera.of(context);
+
+    if (vehicle is! Tractor) {
+      return const SizedBox.shrink();
+    }
+
+    final points = (vehicle as AxleSteeredVehicle).points;
+
+    final pxTopLeft = camera.latLngToScreenPoint(points.first.latLng);
+    final pxTopRight = camera.latLngToScreenPoint(points[1].latLng);
+    final pxBottomRight = camera.latLngToScreenPoint(points[2].latLng);
+    final pxBottomLeft = camera.latLngToScreenPoint(points[3].latLng);
+
+    /// update/enlarge bounds so the new corner points fit within
+    final bounds = Bounds<double>(pxTopLeft, pxBottomRight)
+        .extend(pxTopRight)
+        .extend(pxBottomLeft);
+
+    final vectorX = (pxTopRight - pxTopLeft) / bounds.size.x;
+    final vectorY = (pxBottomLeft - pxTopLeft) / bounds.size.y;
+    final offset = pxTopLeft.subtract(bounds.topLeft);
+
+    final a = vectorX.x;
+    final b = vectorX.y;
+    final c = vectorY.x;
+    final d = vectorY.y;
+    final tx = offset.x;
+    final ty = offset.y;
+
+    final axleLeftPosition = (vehicle as AxleSteeredVehicle)
+        .steeringAxlePosition
+        .rhumb
+        .destinationPoint(
+          distance: vehicle.width / 2,
+          bearing: vehicle.bearing - 90,
+        );
+    final steeringAxleOffset =
+        axleLeftPosition.rhumb.distanceTo(points.first) / vehicle.length;
+    final steeringAxleWidth = vehicle.trackWidth / vehicle.width;
+
+    return Positioned(
+      left: bounds.topLeft.x,
+      top: bounds.topLeft.y,
+      width: bounds.size.x,
+      height: bounds.size.y,
+      child: Transform(
+        transform: Matrix4(a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1),
+        filterQuality: FilterQuality.low,
+        child: VehicleTopDownPainter(
+          type: switch (vehicle.runtimeType) {
+            Tractor => 'Tractor',
+            Harvester => 'Harvester',
+            ArticulatedTractor => 'ArticulatedTractor',
+            _ => 'Tractor',
+          },
+          colors: vehicle.manufacturerColors,
+          stretch: true,
+          steeringAxleOffset: steeringAxleOffset,
+          steeringAxleWidth: steeringAxleWidth,
+        ),
+      ),
     );
   }
 }
