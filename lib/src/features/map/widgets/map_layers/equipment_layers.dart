@@ -18,17 +18,13 @@ class EquipmentDrawerLayer extends ConsumerWidget {
       ),
     );
 
-    return MouseRegion(
-      cursor: ref.watch(equipmentHoveredProvider)
-          ? SystemMouseCursors.click
-          : MouseCursor.defer,
-      child: PolygonLayer(
+    return PolygonLayer(
         polygons: equipments
             .map((e) => e.mapPolygons)
             .whereNotNull()
             .flattened
             .toList(),
-      ),
+      
     );
   }
 }

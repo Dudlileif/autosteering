@@ -125,7 +125,8 @@ class SimCoreMenu extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text('Simulation frequency: $targetHz Hz',
-                          style: textStyle),
+                        style: textStyle,
+                      ),
                       Slider(
                         value: index.toDouble(),
                         onChanged: (value) =>

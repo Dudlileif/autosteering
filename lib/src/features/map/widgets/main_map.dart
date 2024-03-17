@@ -1,4 +1,3 @@
-import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
@@ -23,7 +22,6 @@ class MainMap extends ConsumerWidget {
       mapController: ref.watch(mainMapControllerProvider),
       options: MapOptions(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        // Initial zoom
         initialZoom: ref.watch(mapZoomProvider),
         minZoom: 4,
         maxZoom: 22,
@@ -63,18 +61,7 @@ class MainMap extends ConsumerWidget {
               mainVehicleProvider.select((value) => value.bearing),
             )
         },
-
         onMapReady: ref.read(mapReadyProvider.notifier).ready,
-        onTap: (tapPosition, point) {
-          ref
-              .read(allEquipmentsProvider.notifier)
-              .handleMapOnTap(point);
-        },
-        onPointerHover: (event, point) {
-          ref
-              .read(allEquipmentsProvider.notifier)
-              .handleMapOnPointerHover(event, point);
-        },
       ),
 
       // Only the last layer can be user interactive due to using Stack

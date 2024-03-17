@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/map/providers/ui_providers.dart';
@@ -116,6 +117,13 @@ class MapAndGaugeStackView extends ConsumerWidget {
                   ],
                 ),
               ),
+            ),
+          ),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: EquipmentSectionButtons(),
             ),
           ),
           if (ref.watch(debugVehicleIMUProvider))

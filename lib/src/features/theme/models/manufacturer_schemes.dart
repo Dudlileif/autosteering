@@ -195,7 +195,7 @@ class ManufacturerColors {
   static const valtra = ManufacturerColors(
     name: 'Valtra',
     primary: Color.fromRGBO(172, 29, 47, 1),
-    secondary: Colors.white,
+    secondary: Color.fromRGBO(172, 29, 47, 1),
     cabFrame: Color.fromRGBO(172, 29, 47, 1),
     frame: Color.fromRGBO(100, 100, 100, 1),
     rims: Colors.white,
