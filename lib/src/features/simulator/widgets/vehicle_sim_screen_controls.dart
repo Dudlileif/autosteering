@@ -1,3 +1,4 @@
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -55,26 +56,42 @@ class SimVehicleVelocityControls extends StatelessWidget {
             ),
           ),
         ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Card(
-              color: theme.cardColor.withOpacity(0.5),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: ColoredBox(
+            color: Colors.black12,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
               child: Consumer(
                 builder: (context, ref, child) {
                   final velocity = ref.watch(
                     mainVehicleProvider.select((vehicle) => vehicle.velocity),
                   );
-
+          
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text('Velocity'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: TextWithStroke(
+                          'Velocity',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontFamily: 'Noto Sans Mono',
+                                  ),
+                          strokeWidth: 3.5,
+                        ),
                       ),
-                      Text('${velocity.toStringAsFixed(1)} m/s'),
+                      TextWithStroke(
+                        '${velocity.toStringAsFixed(1)} m/s',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: Colors.white,
+                                  fontFamily: 'Noto Sans Mono',
+                                ),
+                        strokeWidth: 3.5,
+                      ),
                       RotatedBox(
                         quarterTurns: 3,
                         child: SizedBox(
@@ -82,22 +99,29 @@ class SimVehicleVelocityControls extends StatelessWidget {
                           width: 200,
                           child: SliderTheme(
                             data: theme.sliderTheme.copyWith(
-                              showValueIndicator: ShowValueIndicator.always,
+                              trackHeight: 16,
+                              activeTrackColor:
+                                  theme.sliderTheme.inactiveTrackColor,
+                              thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 12,
+                              ),
                             ),
                             child: Slider(
                               value: velocity,
-                              onChangeStart: (value) =>
-                                  ref.watch(simCoreVehicleAutoSlowDownProvider)
-                                      ? ref
-                                          .read(simInputProvider.notifier)
-                                          .send((autoSlowDown: false))
-                                      : null,
-                              onChangeEnd: (value) =>
-                                  ref.watch(simCoreVehicleAutoSlowDownProvider)
-                                      ? ref
-                                          .read(simInputProvider.notifier)
-                                          .send((autoSlowDown: true))
-                                      : null,
+                              onChangeStart: (value) => ref.watch(
+                                simCoreVehicleAutoSlowDownProvider,
+                              )
+                                  ? ref
+                                      .read(simInputProvider.notifier)
+                                      .send((autoSlowDown: false))
+                                  : null,
+                              onChangeEnd: (value) => ref.watch(
+                                simCoreVehicleAutoSlowDownProvider,
+                              )
+                                  ? ref
+                                      .read(simInputProvider.notifier)
+                                      .send((autoSlowDown: true))
+                                  : null,
                               onChanged: (value) => ref
                                   .read(simInputProvider.notifier)
                                   .send((velocity: value)),
@@ -112,7 +136,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
                 },
               ),
             ),
-          ],
+          ),
         ),
       ],
     );
@@ -122,7 +146,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
 /// Basic on screen controls for the simulated vehicle.
 ///
 /// Contains controls for the steering angle.
-class SimVehicleSteeringSlider extends StatelessWidget {
+class SimVehicleSteeringSlider extends ConsumerWidget {
   /// Basic on screen controls for the simulated vehicle.
   ///
   /// Contains controls for the steering angle.
@@ -131,61 +155,65 @@ class SimVehicleSteeringSlider extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Theme.of(context).cardColor.withOpacity(0.5),
-      child: Consumer(
-        builder: (context, ref, child) {
-          final steeringAngle = ref.watch(
-            mainVehicleProvider.select((vehicle) => vehicle.steeringAngle),
-          );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final steeringAngle = ref.watch(
+      mainVehicleProvider.select((vehicle) => vehicle.steeringAngle),
+    );
 
-          final steeringAngleMax = ref.watch(
-            mainVehicleProvider.select(
-              (vehicle) => vehicle.steeringAngleMax,
-            ),
-          );
-
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '''Steering Angle: ${steeringAngle.toStringAsFixed(1)}°''',
-              ),
-              SizedBox(
-                height: 50,
-                width: 200,
-                child: Slider(
-                  value: steeringAngle,
-                  onChangeStart: (value) => ref.watch(
-                    simCoreVehicleAutoCenterSteeringProvider,
-                  )
-                      ? ref
-                          .read(
-                          simInputProvider.notifier,
-                        )
-                          .send((autoCenterSteering: false))
-                      : null,
-                  onChangeEnd: (value) => ref.watch(
-                    simCoreVehicleAutoCenterSteeringProvider,
-                  )
-                      ? ref
-                          .read(
-                          simInputProvider.notifier,
-                        )
-                          .send((autoCenterSteering: true))
-                      : null,
-                  onChanged: (value) => ref
-                      .read(simInputProvider.notifier)
-                      .send((steeringAngle: value)),
-                  min: -steeringAngleMax,
-                  max: steeringAngleMax,
-                ),
-              ),
-            ],
-          );
-        },
+    final steeringAngleMax = ref.watch(
+      mainVehicleProvider.select(
+        (vehicle) => vehicle.steeringAngleMax,
       ),
+    );
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextWithStroke(
+          '''Steering:${steeringAngle.toStringAsFixed(1).padLeft(5)}°''',
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium
+              ?.copyWith(color: Colors.white, fontFamily: 'Noto Sans Mono'),
+          strokeWidth: 3.5,
+        ),
+        SizedBox(
+          height: 50,
+          child: SliderTheme(
+            data: theme.sliderTheme.copyWith(
+              trackHeight: 16,
+              activeTrackColor: theme.sliderTheme.inactiveTrackColor,
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
+            ),
+            child: Slider(
+              value: steeringAngle.clamp(-steeringAngleMax, steeringAngleMax),
+              onChangeStart: (value) => ref.watch(
+                simCoreVehicleAutoCenterSteeringProvider,
+              )
+                  ? ref
+                      .read(
+                      simInputProvider.notifier,
+                    )
+                      .send((autoCenterSteering: false))
+                  : null,
+              onChangeEnd: (value) => ref.watch(
+                simCoreVehicleAutoCenterSteeringProvider,
+              )
+                  ? ref
+                      .read(
+                      simInputProvider.notifier,
+                    )
+                      .send((autoCenterSteering: true))
+                  : null,
+              onChanged: (value) => ref
+                  .read(simInputProvider.notifier)
+                  .send((steeringAngle: value)),
+              min: -steeringAngleMax,
+              max: steeringAngleMax,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
