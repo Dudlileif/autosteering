@@ -135,30 +135,77 @@ class _LoadVehicleMenu extends ConsumerWidget {
       icon: Icons.history,
       menuChildren: vehicles
           .map(
-            (vehicle) => MenuItemButton(
-              closeOnActivate: false,
-              child: Text(vehicle.name ?? vehicle.uuid, style: textStyle),
-              onPressed: () {
-                final position = ref.watch(
-                  mainVehicleProvider.select((value) => value.position),
-                );
-                final bearing = ref.watch(
-                  mainVehicleProvider.select((value) => value.bearing),
-                );
-                vehicle
-                  ..position = position
-                  ..bearing = bearing
-                  ..lastUsed = DateTime.now();
+            (vehicle) => ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 200),
+              child: ListTile(
+                title: Text(vehicle.name ?? vehicle.uuid, style: textStyle),
+                onTap: () {
+                  final position = ref.watch(
+                    mainVehicleProvider.select((value) => value.position),
+                  );
+                  final bearing = ref.watch(
+                    mainVehicleProvider.select((value) => value.bearing),
+                  );
+                  vehicle
+                    ..position = position
+                    ..bearing = bearing
+                    ..lastUsed = DateTime.now();
 
-                ref.read(mainVehicleProvider.notifier).update(vehicle);
+                  ref.read(mainVehicleProvider.notifier).update(vehicle);
 
-                ref.read(simInputProvider.notifier).send(vehicle);
+                  ref.read(simInputProvider.notifier).send(vehicle);
 
-                ref.read(saveVehicleProvider(vehicle));
+                  ref.read(saveVehicleProvider(vehicle));
 
-                ref.read(configuredVehicleProvider.notifier).update(vehicle);
-                ref.invalidate(configuredVehicleNameTextControllerProvider);
-              },
+                  ref.read(configuredVehicleProvider.notifier).update(vehicle);
+                  ref.invalidate(configuredVehicleNameTextControllerProvider);
+                },
+                trailing: Device.isNative
+                    ? IconButton(
+                        onPressed: () async {
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (context) => SimpleDialog(
+                              title: Text(
+                                'Delete ${vehicle.name ?? vehicle.uuid}?',
+                              ),
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SimpleDialogOption(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    Consumer(
+                                      builder: (context, ref, child) =>
+                                          SimpleDialogOption(
+                                        onPressed: () async {
+                                          await ref
+                                              .watch(
+                                                deleteVehicleProvider(
+                                                  vehicle,
+                                                ).future,
+                                              )
+                                              .then(
+                                                (value) => Navigator.of(context)
+                                                    .pop(true),
+                                              );
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.delete),
+                      )
+                    : null,
+              ),
             ),
           )
           .toList(),
