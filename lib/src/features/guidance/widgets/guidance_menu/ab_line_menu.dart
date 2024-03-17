@@ -75,7 +75,7 @@ class ABLineMenu extends ConsumerWidget {
                       ),
                     );
                 ref
-                    .read(aBTrackingDebugShowProvider.notifier)
+                    .read(showABTrackingProvider.notifier)
                     .update(value: true);
               },
               child: child,
@@ -111,7 +111,7 @@ class ABLineMenu extends ConsumerWidget {
                       ),
                     );
                 ref
-                    .read(aBTrackingDebugShowProvider.notifier)
+                    .read(showABTrackingProvider.notifier)
                     .update(value: true);
               },
               child: child,

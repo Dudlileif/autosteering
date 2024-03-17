@@ -22,7 +22,7 @@ final aBCurveDebugProvider = FutureProvider<ABCurve?>.internal(
 );
 
 typedef ABCurveDebugRef = FutureProviderRef<ABCurve?>;
-String _$aBCurvePointsHash() => r'85bcb5755ae5e6ded4c2fa09c84de694aafd6014';
+String _$aBCurvePointsHash() => r'f783f125a4f62ab54bc4cae5dd8235c7ffbf6c54';
 
 /// A provider for the curve points for the AB-curve.
 ///

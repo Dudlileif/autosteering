@@ -40,7 +40,7 @@ class ABCurvePoints extends _$ABCurvePoints {
         ..invalidate(finishedPathRecordingListProvider);
 
       ref.read(showFinishedPathProvider.notifier).update(value: false);
-      ref.read(aBTrackingDebugShowProvider.notifier).update(value: true);
+      ref.read(showABTrackingProvider.notifier).update(value: true);
     }
   }
 }

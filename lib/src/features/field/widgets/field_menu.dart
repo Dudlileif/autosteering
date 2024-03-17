@@ -30,7 +30,7 @@ class FieldMenu extends ConsumerWidget {
         children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
       ),
       menuChildren: [
-        if (activeField != null)
+        if (activeField != null) ...[
           MenuItemButton(
             closeOnActivate: false,
             leadingIcon: const Padding(
@@ -40,55 +40,12 @@ class FieldMenu extends ConsumerWidget {
             onPressed: () => ref.invalidate(activeFieldProvider),
             child: Text('Close', style: textStyle),
           ),
+          const _ExportButton(),
+        ],
         if (activeField == null) ...[
           const _LoadFieldMenu(),
+          const _ImportButton(),
           const _CreateFieldButton(),
-          Consumer(
-            child: Text(
-              'Import field',
-              style: textStyle,
-            ),
-            builder: (context, ref, child) => ListTile(
-              leading: const Icon(Icons.file_open),
-              title: child,
-              onTap: () async {
-                final result = await FilePicker.platform.pickFiles(
-                  initialDirectory: Device.isNative
-                      ? [
-                          ref.watch(fileDirectoryProvider).requireValue.path,
-                          '/fields',
-                        ].join()
-                      : null,
-                  dialogTitle: 'Open field json file',
-                  allowedExtensions: ['json'],
-                  type: FileType.custom,
-                );
-                if (result != null) {
-                  if (Device.isWeb) {
-                    final data = result.files.first.bytes;
-                    if (data != null) {
-                      final json = jsonDecode(String.fromCharCodes(data));
-                      if (json is Map) {
-                        ref.read(activeFieldProvider.notifier).update(
-                              Field.fromJson(Map<String, dynamic>.from(json)),
-                            );
-                      }
-                    }
-                  } else {
-                    final path = result.paths.first;
-                    if (path != null) {
-                      final json = jsonDecode(File(path).readAsStringSync());
-                      if (json is Map) {
-                        ref.read(activeFieldProvider.notifier).update(
-                              Field.fromJson(Map<String, dynamic>.from(json)),
-                            );
-                      }
-                    }
-                  }
-                }
-              },
-            ),
-          ),
         ],
         if (activeField != null) ...[
           Consumer(
@@ -334,10 +291,13 @@ class FieldMenu extends ConsumerWidget {
             builder: (context, ref, child) {
               final field = ref.watch(activeFieldProvider);
 
-              return ListTile(
-                title: child,
-                leading: const Icon(Icons.save),
-                onTap: field != null
+              return MenuItemButton(
+                leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.save),
+                ),
+                closeOnActivate: false,
+                onPressed: field != null
                     ? () => ref.watch(
                           saveFieldProvider(
                             field..lastUsed = DateTime.now(),
@@ -345,6 +305,7 @@ class FieldMenu extends ConsumerWidget {
                           ),
                         )
                     : null,
+                child: child,
               );
             },
           ),
@@ -361,10 +322,13 @@ class FieldMenu extends ConsumerWidget {
                       loading: () => null,
                     );
 
-                return ListTile(
-                  title: child,
-                  leading: const Icon(Icons.save),
-                  onTap: field != null
+                return MenuItemButton(
+                  leadingIcon: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Icon(Icons.save),
+                  ),
+                  closeOnActivate: false,
+                  onPressed: field != null
                       ? () => ref.watch(
                             saveFieldProvider(
                               field.copyWith(
@@ -376,6 +340,7 @@ class FieldMenu extends ConsumerWidget {
                             ),
                           )
                       : null,
+                  child: child,
                 );
               },
             ),
@@ -409,19 +374,148 @@ class _LoadFieldMenu extends ConsumerWidget {
       icon: Icons.history,
       menuChildren: fields
           .map(
-            (field) => MenuItemButton(
-              closeOnActivate: false,
-              onPressed: () {
+            (field) => ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 200),
+              child: ListTile(
+                onTap: () {
                 field.lastUsed = DateTime.now();
 
                 ref.read(activeFieldProvider.notifier).update(field);
 
                 ref.read(saveFieldProvider(field));
               },
-              child: Text(field.name, style: textStyle),
+                trailing: Device.isNative
+                    ? IconButton(
+                        onPressed: () async {
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (context) => SimpleDialog(
+                              title: Text(
+                                'Delete ${field.name}?',
+                              ),
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SimpleDialogOption(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    Consumer(
+                                      builder: (context, ref, child) =>
+                                          SimpleDialogOption(
+                                        onPressed: () async {
+                                          await ref
+                                              .watch(
+                                                deleteFieldProvider(
+                                                  field,
+                                                ).future,
+                                              )
+                                              .then(
+                                                (value) => Navigator.of(context)
+                                                    .pop(true),
+                                              );
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.delete),
+                      )
+                    : null,
+                title: Text(field.name, style: textStyle),
+              ),
             ),
           )
           .toList(),
+    );
+  }
+}
+
+class _ImportButton extends ConsumerWidget {
+  const _ImportButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    return MenuItemButton(
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.file_open),
+      ),
+      closeOnActivate: false,
+      onPressed: () async {
+        final result = await FilePicker.platform.pickFiles(
+          initialDirectory: Device.isNative
+              ? [
+                  ref.watch(fileDirectoryProvider).requireValue.path,
+                  '/fields',
+                ].join()
+              : null,
+          dialogTitle: 'Open field json file',
+          allowedExtensions: ['json'],
+          type: FileType.custom,
+        );
+        if (result != null) {
+          if (Device.isWeb) {
+            final data = result.files.first.bytes;
+            if (data != null) {
+              final json = jsonDecode(String.fromCharCodes(data));
+              if (json is Map) {
+                ref.read(activeFieldProvider.notifier).update(
+                      Field.fromJson(Map<String, dynamic>.from(json)),
+                    );
+              }
+            }
+          } else {
+            final path = result.paths.first;
+            if (path != null) {
+              final json = jsonDecode(File(path).readAsStringSync());
+              if (json is Map) {
+                ref.read(activeFieldProvider.notifier).update(
+                      Field.fromJson(Map<String, dynamic>.from(json)),
+                    );
+              }
+            }
+          }
+        }
+      },
+      child: Text('Import', style: textStyle),
+    );
+  }
+}
+
+class _ExportButton extends ConsumerWidget {
+  const _ExportButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    return MenuItemButton(
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.save_alt),
+      ),
+      closeOnActivate: false,
+      onPressed: ref.watch(
+        activeFieldProvider.select(
+          (value) => value != null && value.name.isNotEmpty,
+        ),
+      )
+          ? () => ref.watch(
+                exportFieldProvider(
+                  ref.watch(activeFieldProvider)!,
+                ),
+              )
+          : null,
+      child: Text('Export', style: textStyle),
     );
   }
 }

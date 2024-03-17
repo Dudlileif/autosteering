@@ -4,14 +4,15 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
 part 'ab_common_providers.g.dart';
 
-/// A provider for whether the AB-tracking debugging features should be shown.
+/// A provider for whether the AB-tracking should be shown.
 @Riverpod(keepAlive: true)
-class ABTrackingDebugShow extends _$ABTrackingDebugShow {
+class ShowABTracking extends _$ShowABTracking {
   @override
   bool build() => false;
 
@@ -246,13 +247,13 @@ FutureOr<ABTracking?> loadABTrackingFromFile(
 ///
 /// Override the file name with [overrideName].
 @riverpod
-AsyncValue<void> saveABTracking(
+FutureOr<void> saveABTracking(
   SaveABTrackingRef ref,
   ABTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) =>
-    ref.watch(
+}) async =>
+    await ref.watch(
       saveJsonToFileDirectoryProvider(
         object: tracking,
         fileName: overrideName ??
@@ -260,7 +261,28 @@ AsyncValue<void> saveABTracking(
             '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
         folder: 'guidance/ab_tracking',
         downloadIfWeb: downloadIfWeb,
-      ),
+      ).future,
+    );
+
+/// A provider for exporting [tracking] to a file.
+///
+/// Override the file name with [overrideName].
+@riverpod
+FutureOr<void> exportABTracking(
+  ExportABTrackingRef ref,
+  ABTracking tracking, {
+  String? overrideName,
+  bool downloadIfWeb = true,
+}) async =>
+    await ref.watch(
+      exportJsonToFileDirectoryProvider(
+        object: tracking,
+        fileName: overrideName ??
+            tracking.name ??
+            '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
+        folder: 'guidance/ab_tracking',
+        downloadIfWeb: downloadIfWeb,
+      ).future,
     );
 
 /// A provider for reading and holding all the saved [ABTracking] in the
@@ -276,3 +298,66 @@ AsyncValue<List<ABTracking>> savedABTrackings(SavedABTrackingsRef ref) => ref
     .whenData(
       (data) => data.cast(),
     );
+
+
+/// A provider for deleting [tracking] from the user file systemm.
+///
+/// Override the file name with [overrideName].
+@riverpod
+FutureOr<void> deleteABTracking(
+  DeleteABTrackingRef ref,
+  ABTracking tracking, {
+  String? overrideName,
+  bool downloadIfWeb = true,
+}) async =>
+    await ref.watch(
+      deleteJsonFromFileDirectoryProvider(
+        fileName: overrideName ??
+            tracking.name ??
+            '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
+        folder: 'guidance/ab_tracking',
+      ).future,
+    );
+
+/// A provider for importing an [ABTracking] from a file and applying it to
+/// the [ConfiguredABTracking] provider.
+@riverpod
+AsyncValue<ABTracking?> importABTracking(
+  ImportABTrackingRef ref,
+) {
+  FilePicker.platform.pickFiles(
+    allowedExtensions: ['json'],
+    type: FileType.custom,
+    dialogTitle: 'Choose AB tracking file',
+  ).then((pickedFiles) {
+    if (Device.isWeb) {
+      final data = pickedFiles?.files.first.bytes;
+      if (data != null) {
+        final json = jsonDecode(String.fromCharCodes(data));
+        if (json is Map) {
+          final pathTracking =
+              ABTracking.fromJson(Map<String, dynamic>.from(json));
+          ref.read(configuredABTrackingProvider.notifier).update(pathTracking);
+          ref.read(showABTrackingProvider.notifier).update(value: true);
+          return AsyncData(pathTracking);
+        }
+      }
+    } else {
+      final filePath = pickedFiles?.paths.first;
+      if (filePath != null) {
+        return ref.watch(loadABTrackingFromFileProvider(filePath)).whenData(
+          (data) {
+            if (data != null) {
+              ref.read(configuredABTrackingProvider.notifier).update(data);
+              ref.read(showABTrackingProvider.notifier).update(value: true);
+              return data;
+            }
+            return null;
+          },
+        );
+      }
+    }
+    return const AsyncData(null);
+  });
+  return const AsyncLoading();
+}

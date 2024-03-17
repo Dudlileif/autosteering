@@ -262,19 +262,38 @@ class FieldBufferGetRawPoints extends _$FieldBufferGetRawPoints {
 ///
 /// Override the file name with [overrideName].
 @riverpod
-AsyncValue<void> saveField(
+Future<void> saveField(
   SaveFieldRef ref,
   Field field, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) =>
+}) async =>
     ref.watch(
       saveJsonToFileDirectoryProvider(
         object: field,
         fileName: overrideName ?? field.name,
         folder: 'fields',
         downloadIfWeb: downloadIfWeb,
-      ),
+      ).future,
+    );
+
+/// A provider for exporting [field] to a file.
+///
+/// Override the file name with [overrideName].
+@riverpod
+Future<void> exportField(
+  ExportFieldRef ref,
+  Field field, {
+  String? overrideName,
+  bool downloadIfWeb = true,
+}) async =>
+    await ref.watch(
+      exportJsonToFileDirectoryProvider(
+        object: field,
+        fileName: overrideName ?? field.name,
+        folder: 'fields',
+        downloadIfWeb: downloadIfWeb,
+      ).future,
     );
 
 /// A provider for reading and holding all the saved [Field]s in the
@@ -283,3 +302,20 @@ AsyncValue<void> saveField(
 AsyncValue<List<Field>> savedFields(SavedFieldsRef ref) => ref
     .watch(savedFilesProvider(fromJson: Field.fromJson, folder: 'fields'))
     .whenData((data) => data.cast());
+
+
+/// A provider for deleting [field] from the user file system.
+///
+/// Override the file name with [overrideName].
+@riverpod
+FutureOr<void> deleteField(
+  DeleteFieldRef ref,
+  Field field, {
+  String? overrideName,
+}) async =>
+    ref.watch(
+      deleteJsonFromFileDirectoryProvider(
+        fileName: overrideName ?? field.name,
+        folder: 'fields',
+      ).future,
+    );

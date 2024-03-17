@@ -51,10 +51,10 @@ class PathTrackingMenu extends ConsumerWidget {
           builder: (context, ref, child) {
             return CheckboxListTile(
               secondary: child,
-              value: ref.watch(debugPathTrackingProvider),
+              value: ref.watch(showPathTrackingProvider),
               onChanged: (value) => value != null
                   ? ref
-                      .read(debugPathTrackingProvider.notifier)
+                      .read(showPathTrackingProvider.notifier)
                       .update(value: value)
                   : null,
             );

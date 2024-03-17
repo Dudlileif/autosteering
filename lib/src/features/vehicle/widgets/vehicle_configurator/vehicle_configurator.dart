@@ -31,36 +31,19 @@ class VehicleConfigurator extends ConsumerWidget {
                 Expanded(
                   child: Wrap(
                     alignment: WrapAlignment.spaceBetween,
+                    spacing: 8,
+                    runSpacing: 8,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          'Configure vehicle',
-                          style: Theme.of(context).textTheme.displaySmall,
-                        ),
+                      Text(
+                        'Configure vehicle',
+                        style: Theme.of(context).textTheme.headlineLarge,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: _ApplyConfigurationToMainVehicleButton(),
-                      ),
-                      const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: _ImportButton(),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: _SaveButton(),
-                          ),
-                        ],
-                      ),
+                      const _ApplyConfigurationToMainVehicleButton(),
                     ],
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.only(left: 8),
                   child: CloseButton(),
                 ),
               ],
@@ -132,52 +115,6 @@ class VehicleConfigurator extends ConsumerWidget {
           
         ],
       ),
-    );
-  }
-}
-
-/// A button for importing an [Vehicle] to the [configuredVehicleProvider]
-/// from a file.
-class _ImportButton extends ConsumerWidget {
-  /// A button for importing an [Vehicle] to the [configuredVehicleProvider]
-  /// from a file.
-
-  const _ImportButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FilledButton.icon(
-      onPressed: () => ref.read(loadFileConfiguredVehicleProvider),
-      icon: const Icon(Icons.file_open),
-      label: const Text('Import'),
-    );
-  }
-}
-
-/// A button for saving the [Vehicle] in [configuredVehicleProvider] to
-/// a file.
-class _SaveButton extends ConsumerWidget {
-  /// A button for saving the [Vehicle] in [configuredVehicleProvider] to
-  /// a file.
-  const _SaveButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FilledButton.icon(
-      onPressed: ref.watch(
-        configuredVehicleProvider.select(
-          (value) => value.name != null && (value.name ?? '').isNotEmpty,
-        ),
-      )
-          ? () => ref.watch(
-                saveVehicleProvider(
-                  ref.watch(configuredVehicleProvider),
-                  downloadIfWeb: true,
-                ),
-              )
-          : null,
-      icon: const Icon(Icons.save),
-      label: const Text('Save'),
     );
   }
 }

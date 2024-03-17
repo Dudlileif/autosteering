@@ -696,6 +696,272 @@ class _SaveJsonToFileDirectoryProviderElement
       (origin as SaveJsonToFileDirectoryProvider).downloadIfWeb;
 }
 
+String _$exportJsonToFileDirectoryHash() =>
+    r'2079acce8336ab86fb9d4eb71342b6fc316d5d8c';
+
+/// A provider for saving [object] to [fileName].json to a file in the [folder]
+/// in the file drectory.
+///
+/// Caution: Expects [object] to have a .toJson() method implemented.
+///
+/// Copied from [exportJsonToFileDirectory].
+@ProviderFor(exportJsonToFileDirectory)
+const exportJsonToFileDirectoryProvider = ExportJsonToFileDirectoryFamily();
+
+/// A provider for saving [object] to [fileName].json to a file in the [folder]
+/// in the file drectory.
+///
+/// Caution: Expects [object] to have a .toJson() method implemented.
+///
+/// Copied from [exportJsonToFileDirectory].
+class ExportJsonToFileDirectoryFamily extends Family {
+  /// A provider for saving [object] to [fileName].json to a file in the [folder]
+  /// in the file drectory.
+  ///
+  /// Caution: Expects [object] to have a .toJson() method implemented.
+  ///
+  /// Copied from [exportJsonToFileDirectory].
+  const ExportJsonToFileDirectoryFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportJsonToFileDirectoryProvider';
+
+  /// A provider for saving [object] to [fileName].json to a file in the [folder]
+  /// in the file drectory.
+  ///
+  /// Caution: Expects [object] to have a .toJson() method implemented.
+  ///
+  /// Copied from [exportJsonToFileDirectory].
+  ExportJsonToFileDirectoryProvider call({
+    required dynamic object,
+    required String fileName,
+    String? folder,
+    bool downloadIfWeb = true,
+  }) {
+    return ExportJsonToFileDirectoryProvider(
+      object: object,
+      fileName: fileName,
+      folder: folder,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportJsonToFileDirectoryProvider getProviderOverride(
+    covariant ExportJsonToFileDirectoryProvider provider,
+  ) {
+    return call(
+      object: provider.object,
+      fileName: provider.fileName,
+      folder: provider.folder,
+      downloadIfWeb: provider.downloadIfWeb,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(ExportJsonToFileDirectoryRef ref) create) {
+    return _$ExportJsonToFileDirectoryFamilyOverride(this, create);
+  }
+}
+
+class _$ExportJsonToFileDirectoryFamilyOverride implements FamilyOverride {
+  _$ExportJsonToFileDirectoryFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportJsonToFileDirectoryRef ref) create;
+
+  @override
+  final ExportJsonToFileDirectoryFamily overriddenFamily;
+
+  @override
+  ExportJsonToFileDirectoryProvider getProviderOverride(
+    covariant ExportJsonToFileDirectoryProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for saving [object] to [fileName].json to a file in the [folder]
+/// in the file drectory.
+///
+/// Caution: Expects [object] to have a .toJson() method implemented.
+///
+/// Copied from [exportJsonToFileDirectory].
+class ExportJsonToFileDirectoryProvider
+    extends AutoDisposeFutureProvider<void> {
+  /// A provider for saving [object] to [fileName].json to a file in the [folder]
+  /// in the file drectory.
+  ///
+  /// Caution: Expects [object] to have a .toJson() method implemented.
+  ///
+  /// Copied from [exportJsonToFileDirectory].
+  ExportJsonToFileDirectoryProvider({
+    required dynamic object,
+    required String fileName,
+    String? folder,
+    bool downloadIfWeb = true,
+  }) : this._internal(
+          (ref) => exportJsonToFileDirectory(
+            ref as ExportJsonToFileDirectoryRef,
+            object: object,
+            fileName: fileName,
+            folder: folder,
+            downloadIfWeb: downloadIfWeb,
+          ),
+          from: exportJsonToFileDirectoryProvider,
+          name: r'exportJsonToFileDirectoryProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportJsonToFileDirectoryHash,
+          dependencies: ExportJsonToFileDirectoryFamily._dependencies,
+          allTransitiveDependencies:
+              ExportJsonToFileDirectoryFamily._allTransitiveDependencies,
+          object: object,
+          fileName: fileName,
+          folder: folder,
+          downloadIfWeb: downloadIfWeb,
+        );
+
+  ExportJsonToFileDirectoryProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.object,
+    required this.fileName,
+    required this.folder,
+    required this.downloadIfWeb,
+  }) : super.internal();
+
+  final dynamic object;
+  final String fileName;
+  final String? folder;
+  final bool downloadIfWeb;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportJsonToFileDirectoryRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportJsonToFileDirectoryProvider._internal(
+        (ref) => create(ref as ExportJsonToFileDirectoryRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        object: object,
+        fileName: fileName,
+        folder: folder,
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+  }
+
+  @override
+  ({
+    dynamic object,
+    String fileName,
+    String? folder,
+    bool downloadIfWeb,
+  }) get argument {
+    return (
+      object: object,
+      fileName: fileName,
+      folder: folder,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportJsonToFileDirectoryProviderElement(this);
+  }
+
+  ExportJsonToFileDirectoryProvider _copyWith(
+    FutureOr<void> Function(ExportJsonToFileDirectoryRef ref) create,
+  ) {
+    return ExportJsonToFileDirectoryProvider._internal(
+      (ref) => create(ref as ExportJsonToFileDirectoryRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      object: object,
+      fileName: fileName,
+      folder: folder,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportJsonToFileDirectoryProvider &&
+        other.object == object &&
+        other.fileName == fileName &&
+        other.folder == folder &&
+        other.downloadIfWeb == downloadIfWeb;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, object.hashCode);
+    hash = _SystemHash.combine(hash, fileName.hashCode);
+    hash = _SystemHash.combine(hash, folder.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportJsonToFileDirectoryRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `object` of this provider.
+  dynamic get object;
+
+  /// The parameter `fileName` of this provider.
+  String get fileName;
+
+  /// The parameter `folder` of this provider.
+  String? get folder;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
+}
+
+class _ExportJsonToFileDirectoryProviderElement
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportJsonToFileDirectoryRef {
+  _ExportJsonToFileDirectoryProviderElement(super.provider);
+
+  @override
+  dynamic get object => (origin as ExportJsonToFileDirectoryProvider).object;
+  @override
+  String get fileName => (origin as ExportJsonToFileDirectoryProvider).fileName;
+  @override
+  String? get folder => (origin as ExportJsonToFileDirectoryProvider).folder;
+  @override
+  bool get downloadIfWeb =>
+      (origin as ExportJsonToFileDirectoryProvider).downloadIfWeb;
+}
+
 String _$savedFilesHash() => r'ed8d314141f69b478fc607bcad51cb63977ab752';
 
 /// A provider for reading and holding all the saved equipment setups in the
@@ -907,6 +1173,217 @@ class _SavedFilesProviderElement extends FutureProviderElement<List<dynamic>>
       (origin as SavedFilesProvider).fromJson;
   @override
   String get folder => (origin as SavedFilesProvider).folder;
+}
+
+String _$deleteJsonFromFileDirectoryHash() =>
+    r'546b298f9d5a0d5b63918fa3cfeacd797a46a922';
+
+/// A provider for deleting the [fileName] in [folder] if it exists.
+///
+/// Copied from [deleteJsonFromFileDirectory].
+@ProviderFor(deleteJsonFromFileDirectory)
+const deleteJsonFromFileDirectoryProvider = DeleteJsonFromFileDirectoryFamily();
+
+/// A provider for deleting the [fileName] in [folder] if it exists.
+///
+/// Copied from [deleteJsonFromFileDirectory].
+class DeleteJsonFromFileDirectoryFamily extends Family {
+  /// A provider for deleting the [fileName] in [folder] if it exists.
+  ///
+  /// Copied from [deleteJsonFromFileDirectory].
+  const DeleteJsonFromFileDirectoryFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteJsonFromFileDirectoryProvider';
+
+  /// A provider for deleting the [fileName] in [folder] if it exists.
+  ///
+  /// Copied from [deleteJsonFromFileDirectory].
+  DeleteJsonFromFileDirectoryProvider call({
+    required String fileName,
+    required String folder,
+  }) {
+    return DeleteJsonFromFileDirectoryProvider(
+      fileName: fileName,
+      folder: folder,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  DeleteJsonFromFileDirectoryProvider getProviderOverride(
+    covariant DeleteJsonFromFileDirectoryProvider provider,
+  ) {
+    return call(
+      fileName: provider.fileName,
+      folder: provider.folder,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(DeleteJsonFromFileDirectoryRef ref) create) {
+    return _$DeleteJsonFromFileDirectoryFamilyOverride(this, create);
+  }
+}
+
+class _$DeleteJsonFromFileDirectoryFamilyOverride implements FamilyOverride {
+  _$DeleteJsonFromFileDirectoryFamilyOverride(
+      this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(DeleteJsonFromFileDirectoryRef ref) create;
+
+  @override
+  final DeleteJsonFromFileDirectoryFamily overriddenFamily;
+
+  @override
+  DeleteJsonFromFileDirectoryProvider getProviderOverride(
+    covariant DeleteJsonFromFileDirectoryProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for deleting the [fileName] in [folder] if it exists.
+///
+/// Copied from [deleteJsonFromFileDirectory].
+class DeleteJsonFromFileDirectoryProvider
+    extends AutoDisposeFutureProvider<void> {
+  /// A provider for deleting the [fileName] in [folder] if it exists.
+  ///
+  /// Copied from [deleteJsonFromFileDirectory].
+  DeleteJsonFromFileDirectoryProvider({
+    required String fileName,
+    required String folder,
+  }) : this._internal(
+          (ref) => deleteJsonFromFileDirectory(
+            ref as DeleteJsonFromFileDirectoryRef,
+            fileName: fileName,
+            folder: folder,
+          ),
+          from: deleteJsonFromFileDirectoryProvider,
+          name: r'deleteJsonFromFileDirectoryProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$deleteJsonFromFileDirectoryHash,
+          dependencies: DeleteJsonFromFileDirectoryFamily._dependencies,
+          allTransitiveDependencies:
+              DeleteJsonFromFileDirectoryFamily._allTransitiveDependencies,
+          fileName: fileName,
+          folder: folder,
+        );
+
+  DeleteJsonFromFileDirectoryProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.fileName,
+    required this.folder,
+  }) : super.internal();
+
+  final String fileName;
+  final String folder;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(DeleteJsonFromFileDirectoryRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DeleteJsonFromFileDirectoryProvider._internal(
+        (ref) => create(ref as DeleteJsonFromFileDirectoryRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        fileName: fileName,
+        folder: folder,
+      ),
+    );
+  }
+
+  @override
+  ({
+    String fileName,
+    String folder,
+  }) get argument {
+    return (
+      fileName: fileName,
+      folder: folder,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _DeleteJsonFromFileDirectoryProviderElement(this);
+  }
+
+  DeleteJsonFromFileDirectoryProvider _copyWith(
+    FutureOr<void> Function(DeleteJsonFromFileDirectoryRef ref) create,
+  ) {
+    return DeleteJsonFromFileDirectoryProvider._internal(
+      (ref) => create(ref as DeleteJsonFromFileDirectoryRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      fileName: fileName,
+      folder: folder,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeleteJsonFromFileDirectoryProvider &&
+        other.fileName == fileName &&
+        other.folder == folder;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, fileName.hashCode);
+    hash = _SystemHash.combine(hash, folder.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin DeleteJsonFromFileDirectoryRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `fileName` of this provider.
+  String get fileName;
+
+  /// The parameter `folder` of this provider.
+  String get folder;
+}
+
+class _DeleteJsonFromFileDirectoryProviderElement
+    extends AutoDisposeFutureProviderElement<void>
+    with DeleteJsonFromFileDirectoryRef {
+  _DeleteJsonFromFileDirectoryProviderElement(super.provider);
+
+  @override
+  String get fileName =>
+      (origin as DeleteJsonFromFileDirectoryProvider).fileName;
+  @override
+  String get folder => (origin as DeleteJsonFromFileDirectoryProvider).folder;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

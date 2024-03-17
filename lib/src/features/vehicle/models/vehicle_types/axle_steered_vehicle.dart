@@ -9,7 +9,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The steering axle is based on Ackermann geometry.
   AxleSteeredVehicle({
     required this.wheelBase,
-    required this.solidAxleDistance,
+    required this.antennaToSolidAxleDistance,
     required super.antennaHeight,
     required super.minTurningRadius,
     required super.trackWidth,
@@ -63,7 +63,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   ///
   /// Expected positive for front wheel steered and negative for rear wheel
   /// steered.
-  double solidAxleDistance;
+  double antennaToSolidAxleDistance;
 
   double _steeringAngleMaxRaw;
 
@@ -319,7 +319,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     // The vehicle center position, which is offset from the solid
     // axle position.
     final vehiclePosition = solidAxlePosition.rhumb.destinationPoint(
-      distance: solidAxleDistance,
+      distance: antennaToSolidAxleDistance,
       bearing: switch (this) {
         Tractor() => projectedBearing,
         Harvester() => projectedBearing + 180,
@@ -633,7 +633,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   List<Object> get props => super.props
     ..addAll([
       wheelBase,
-      solidAxleDistance,
+      antennaToSolidAxleDistance,
     ]);
 
   /// The max extent/bounds points of the vehicle. The [bearing] is followed.
@@ -680,7 +680,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? steeringAngleMax,
     double? trackWidth,
     double? wheelBase,
-    double? solidAxleDistance,
+    double? antennaToSolidAxleDistance,
     double? ackermannSteeringRatio,
     double? steeringAxleWheelDiameter,
     double? solidAxleWheelDiameter,
@@ -717,11 +717,17 @@ sealed class AxleSteeredVehicle extends Vehicle {
   Map<String, dynamic> toJson() {
     final map = super.toJson();
 
+    map['antenna'] = Map<String, dynamic>.from(map['antenna'] as Map)
+      ..update(
+        'solid_axle_distance',
+        (value) => antennaToSolidAxleDistance,
+        ifAbsent: () => antennaToSolidAxleDistance,
+      );
+
     map['dimensions'] = Map<String, dynamic>.from(map['dimensions'] as Map)
       ..addAll(
         {
           'wheel_base': wheelBase,
-          'solid_axle_distance': solidAxleDistance,
           'wheels': {
             'steering_axle_wheel_diameter': steeringAxleWheelDiameter,
             'solid_axle_wheel_diameter': solidAxleWheelDiameter,

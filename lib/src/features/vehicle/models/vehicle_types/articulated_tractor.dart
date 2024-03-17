@@ -8,7 +8,7 @@ final class ArticulatedTractor extends Vehicle {
   /// An articulated tractor with two bodies with solid axles that are joined
   /// at a pivot point.
   ArticulatedTractor({
-    required this.pivotToAntennaDistance,
+    required this.antennaToPivotDistance,
     required this.pivotToFrontAxle,
     required this.pivotToRearAxle,
     required super.antennaHeight,
@@ -72,10 +72,10 @@ final class ArticulatedTractor extends Vehicle {
       lastUsed: DateTime.tryParse(info['last_used'] as String),
       antennaHeight: antenna['height'] as double,
       antennaLateralOffset: antenna['lateral_offset'] as double,
+      antennaToPivotDistance: antenna['pivot_distance'] as double,
       width: dimensions['width'] as double,
       length: dimensions['length'] as double,
       trackWidth: dimensions['track_width'] as double,
-      pivotToAntennaDistance: dimensions['pivot_to_antenna_distance'] as double,
       pivotToFrontAxle: dimensions['pivot_to_front_axle'] as double,
       pivotToRearAxle: dimensions['pivot_to_rear_axle'] as double,
       minTurningRadius: steering['min_turning_radius'] as double,
@@ -98,7 +98,7 @@ final class ArticulatedTractor extends Vehicle {
 
   /// The distance from the vehicle articulation pivot point to the antenna
   /// [position].
-  double pivotToAntennaDistance;
+  double antennaToPivotDistance;
 
   /// The distance from the vehicle articulation pivot point to the front
   /// axle center position.
@@ -142,7 +142,7 @@ final class ArticulatedTractor extends Vehicle {
 
   /// The position of the vehicle articulation pivot point.
   Geographic get pivotPosition => position.rhumb.destinationPoint(
-        distance: pivotToAntennaDistance,
+        distance: antennaToPivotDistance,
         bearing: (bearing - 180 + steeringAngle / 2).wrap360(),
       );
 
@@ -255,7 +255,7 @@ final class ArticulatedTractor extends Vehicle {
     // The vehicle antenna position, projected from the front axle
     // position.
     final vehiclePosition = frontAxlePosition.rhumb.destinationPoint(
-      distance: pivotToFrontAxle - pivotToAntennaDistance,
+      distance: pivotToFrontAxle - antennaToPivotDistance,
       bearing: frontBodyBearing - 180 + steeringAngle / 2,
     );
 
@@ -788,7 +788,7 @@ final class ArticulatedTractor extends Vehicle {
   /// parameters/variables altered.
   @override
   ArticulatedTractor copyWith({
-    double? pivotToAntennaDistance,
+    double? antennaToPivotDistance,
     double? pivotToFrontAxle,
     double? pivotToRearAxle,
     double? frontAxleToHitchDistance,
@@ -839,8 +839,8 @@ final class ArticulatedTractor extends Vehicle {
         wheelWidth: wheelWidth ?? this.wheelWidth,
         wheelSpacing: wheelSpacing ?? this.wheelSpacing,
         numWheels: numWheels ?? this.numWheels,
-        pivotToAntennaDistance:
-            pivotToAntennaDistance ?? this.pivotToAntennaDistance,
+        antennaToPivotDistance:
+            antennaToPivotDistance ?? this.antennaToPivotDistance,
         pivotToFrontAxle: pivotToFrontAxle ?? this.pivotToFrontAxle,
         pivotToRearAxle: pivotToRearAxle ?? this.pivotToRearAxle,
         frontAxleToHitchDistance:
@@ -877,12 +877,18 @@ final class ArticulatedTractor extends Vehicle {
   Map<String, dynamic> toJson() {
     final map = super.toJson();
 
+    map['antenna'] = Map<String, dynamic>.from(map['antenna'] as Map)
+      ..update(
+        'pivot_distance',
+        (value) => antennaToPivotDistance,
+        ifAbsent: () => antennaToPivotDistance,
+      );
+
     map['info'] = Map<String, dynamic>.from(map['info'] as Map)
       ..addAll({'vehicle_type': 'Articulated tractor'});
 
     map['dimensions'] = Map<String, dynamic>.from(map['dimensions'] as Map)
       ..addAll({
-        'pivot_to_antenna_distance': pivotToAntennaDistance,
         'pivot_to_front_axle': pivotToFrontAxle,
         'pivot_to_rear_axle': pivotToRearAxle,
         'wheels': {

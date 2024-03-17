@@ -26,10 +26,10 @@ class ABCommonMenu extends StatelessWidget {
           child: Text('Show', style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             title: child,
-            value: ref.watch(aBTrackingDebugShowProvider),
+            value: ref.watch(showABTrackingProvider),
             onChanged: (value) => value != null
                 ? ref
-                    .read(aBTrackingDebugShowProvider.notifier)
+                    .read(showABTrackingProvider.notifier)
                     .update(value: value)
                 : null,
           ),

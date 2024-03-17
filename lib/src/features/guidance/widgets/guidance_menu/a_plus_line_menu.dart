@@ -84,7 +84,7 @@ class APlusLineMenu extends ConsumerWidget {
                       ),
                     );
                 ref
-                    .read(aBTrackingDebugShowProvider.notifier)
+                    .read(showABTrackingProvider.notifier)
                     .update(value: true);
               },
               child: child,

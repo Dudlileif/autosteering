@@ -23,7 +23,7 @@ final bufferedFieldProvider = FutureProvider<Field?>.internal(
 );
 
 typedef BufferedFieldRef = FutureProviderRef<Field?>;
-String _$saveFieldHash() => r'd87493445562559fe2948bf09fbaebf19b9cfe72';
+String _$saveFieldHash() => r'1597ca27ab3b1d04585ac7ef64c02cebe733cc1b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -111,7 +111,7 @@ class SaveFieldFamily extends Family {
   }
 
   /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(AsyncValue<void> Function(SaveFieldRef ref) create) {
+  Override overrideWith(FutureOr<void> Function(SaveFieldRef ref) create) {
     return _$SaveFieldFamilyOverride(this, create);
   }
 }
@@ -119,7 +119,7 @@ class SaveFieldFamily extends Family {
 class _$SaveFieldFamilyOverride implements FamilyOverride {
   _$SaveFieldFamilyOverride(this.overriddenFamily, this.create);
 
-  final AsyncValue<void> Function(SaveFieldRef ref) create;
+  final FutureOr<void> Function(SaveFieldRef ref) create;
 
   @override
   final SaveFieldFamily overriddenFamily;
@@ -137,7 +137,7 @@ class _$SaveFieldFamilyOverride implements FamilyOverride {
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveField].
-class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
+class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for saving [field] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
@@ -185,7 +185,7 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
 
   @override
   Override overrideWith(
-    AsyncValue<void> Function(SaveFieldRef ref) create,
+    FutureOr<void> Function(SaveFieldRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -217,12 +217,12 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 
   @override
-  AutoDisposeProviderElement<AsyncValue<void>> createElement() {
+  AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveFieldProviderElement(this);
   }
 
   SaveFieldProvider _copyWith(
-    AsyncValue<void> Function(SaveFieldRef ref) create,
+    FutureOr<void> Function(SaveFieldRef ref) create,
   ) {
     return SaveFieldProvider._internal(
       (ref) => create(ref as SaveFieldRef),
@@ -256,7 +256,7 @@ class SaveFieldProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 }
 
-mixin SaveFieldRef on AutoDisposeProviderRef<AsyncValue<void>> {
+mixin SaveFieldRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `field` of this provider.
   Field get field;
 
@@ -267,8 +267,8 @@ mixin SaveFieldRef on AutoDisposeProviderRef<AsyncValue<void>> {
   bool get downloadIfWeb;
 }
 
-class _SaveFieldProviderElement
-    extends AutoDisposeProviderElement<AsyncValue<void>> with SaveFieldRef {
+class _SaveFieldProviderElement extends AutoDisposeFutureProviderElement<void>
+    with SaveFieldRef {
   _SaveFieldProviderElement(super.provider);
 
   @override
@@ -277,6 +277,242 @@ class _SaveFieldProviderElement
   String? get overrideName => (origin as SaveFieldProvider).overrideName;
   @override
   bool get downloadIfWeb => (origin as SaveFieldProvider).downloadIfWeb;
+}
+
+String _$exportFieldHash() => r'b707b1328302d7bc5842645493ab7c5c1f5e3464';
+
+/// A provider for exporting [field] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportField].
+@ProviderFor(exportField)
+const exportFieldProvider = ExportFieldFamily();
+
+/// A provider for exporting [field] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportField].
+class ExportFieldFamily extends Family {
+  /// A provider for exporting [field] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportField].
+  const ExportFieldFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportFieldProvider';
+
+  /// A provider for exporting [field] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportField].
+  ExportFieldProvider call(
+    Field field, {
+    String? overrideName,
+    bool downloadIfWeb = true,
+  }) {
+    return ExportFieldProvider(
+      field,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportFieldProvider getProviderOverride(
+    covariant ExportFieldProvider provider,
+  ) {
+    return call(
+      provider.field,
+      overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(FutureOr<void> Function(ExportFieldRef ref) create) {
+    return _$ExportFieldFamilyOverride(this, create);
+  }
+}
+
+class _$ExportFieldFamilyOverride implements FamilyOverride {
+  _$ExportFieldFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportFieldRef ref) create;
+
+  @override
+  final ExportFieldFamily overriddenFamily;
+
+  @override
+  ExportFieldProvider getProviderOverride(
+    covariant ExportFieldProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for exporting [field] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportField].
+class ExportFieldProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for exporting [field] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportField].
+  ExportFieldProvider(
+    Field field, {
+    String? overrideName,
+    bool downloadIfWeb = true,
+  }) : this._internal(
+          (ref) => exportField(
+            ref as ExportFieldRef,
+            field,
+            overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
+          ),
+          from: exportFieldProvider,
+          name: r'exportFieldProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportFieldHash,
+          dependencies: ExportFieldFamily._dependencies,
+          allTransitiveDependencies:
+              ExportFieldFamily._allTransitiveDependencies,
+          field: field,
+          overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
+        );
+
+  ExportFieldProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.field,
+    required this.overrideName,
+    required this.downloadIfWeb,
+  }) : super.internal();
+
+  final Field field;
+  final String? overrideName;
+  final bool downloadIfWeb;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportFieldRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportFieldProvider._internal(
+        (ref) => create(ref as ExportFieldRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        field: field,
+        overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+  }
+
+  @override
+  (
+    Field, {
+    String? overrideName,
+    bool downloadIfWeb,
+  }) get argument {
+    return (
+      field,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportFieldProviderElement(this);
+  }
+
+  ExportFieldProvider _copyWith(
+    FutureOr<void> Function(ExportFieldRef ref) create,
+  ) {
+    return ExportFieldProvider._internal(
+      (ref) => create(ref as ExportFieldRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      field: field,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportFieldProvider &&
+        other.field == field &&
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, field.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportFieldRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `field` of this provider.
+  Field get field;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
+}
+
+class _ExportFieldProviderElement extends AutoDisposeFutureProviderElement<void>
+    with ExportFieldRef {
+  _ExportFieldProviderElement(super.provider);
+
+  @override
+  Field get field => (origin as ExportFieldProvider).field;
+  @override
+  String? get overrideName => (origin as ExportFieldProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as ExportFieldProvider).downloadIfWeb;
 }
 
 String _$savedFieldsHash() => r'e00c8b585fa3074ce2c60744e8a8b05c79da1a54';
@@ -296,6 +532,223 @@ final savedFieldsProvider = Provider<AsyncValue<List<Field>>>.internal(
 );
 
 typedef SavedFieldsRef = ProviderRef<AsyncValue<List<Field>>>;
+String _$deleteFieldHash() => r'72213ab0d9d868bd948d453674cd94510ea39aa5';
+
+/// A provider for deleting [field] from the user file system.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteField].
+@ProviderFor(deleteField)
+const deleteFieldProvider = DeleteFieldFamily();
+
+/// A provider for deleting [field] from the user file system.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteField].
+class DeleteFieldFamily extends Family {
+  /// A provider for deleting [field] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteField].
+  const DeleteFieldFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteFieldProvider';
+
+  /// A provider for deleting [field] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteField].
+  DeleteFieldProvider call(
+    Field field, {
+    String? overrideName,
+  }) {
+    return DeleteFieldProvider(
+      field,
+      overrideName: overrideName,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  DeleteFieldProvider getProviderOverride(
+    covariant DeleteFieldProvider provider,
+  ) {
+    return call(
+      provider.field,
+      overrideName: provider.overrideName,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(FutureOr<void> Function(DeleteFieldRef ref) create) {
+    return _$DeleteFieldFamilyOverride(this, create);
+  }
+}
+
+class _$DeleteFieldFamilyOverride implements FamilyOverride {
+  _$DeleteFieldFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(DeleteFieldRef ref) create;
+
+  @override
+  final DeleteFieldFamily overriddenFamily;
+
+  @override
+  DeleteFieldProvider getProviderOverride(
+    covariant DeleteFieldProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for deleting [field] from the user file system.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteField].
+class DeleteFieldProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for deleting [field] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteField].
+  DeleteFieldProvider(
+    Field field, {
+    String? overrideName,
+  }) : this._internal(
+          (ref) => deleteField(
+            ref as DeleteFieldRef,
+            field,
+            overrideName: overrideName,
+          ),
+          from: deleteFieldProvider,
+          name: r'deleteFieldProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$deleteFieldHash,
+          dependencies: DeleteFieldFamily._dependencies,
+          allTransitiveDependencies:
+              DeleteFieldFamily._allTransitiveDependencies,
+          field: field,
+          overrideName: overrideName,
+        );
+
+  DeleteFieldProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.field,
+    required this.overrideName,
+  }) : super.internal();
+
+  final Field field;
+  final String? overrideName;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(DeleteFieldRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DeleteFieldProvider._internal(
+        (ref) => create(ref as DeleteFieldRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        field: field,
+        overrideName: overrideName,
+      ),
+    );
+  }
+
+  @override
+  (
+    Field, {
+    String? overrideName,
+  }) get argument {
+    return (
+      field,
+      overrideName: overrideName,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _DeleteFieldProviderElement(this);
+  }
+
+  DeleteFieldProvider _copyWith(
+    FutureOr<void> Function(DeleteFieldRef ref) create,
+  ) {
+    return DeleteFieldProvider._internal(
+      (ref) => create(ref as DeleteFieldRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      field: field,
+      overrideName: overrideName,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeleteFieldProvider &&
+        other.field == field &&
+        other.overrideName == overrideName;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, field.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin DeleteFieldRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `field` of this provider.
+  Field get field;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+}
+
+class _DeleteFieldProviderElement extends AutoDisposeFutureProviderElement<void>
+    with DeleteFieldRef {
+  _DeleteFieldProviderElement(super.provider);
+
+  @override
+  Field get field => (origin as DeleteFieldProvider).field;
+  @override
+  String? get overrideName => (origin as DeleteFieldProvider).overrideName;
+}
+
 String _$showFieldHash() => r'ebab742cb524d06aa00b5ac6dfa2ee9419256ec8';
 
 /// A provider for whether the active field should be shown.

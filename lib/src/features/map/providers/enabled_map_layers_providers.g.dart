@@ -132,7 +132,7 @@ final showDubinsPathDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowDubinsPathDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showPathTrackingDebugLayerHash() =>
-    r'5811925eceaf6159659ddb008ec16389c0ce0ad3';
+    r'834b18812c734c3e13183f78e8c5d78ada20c936';
 
 /// Whether the debugging layer for the pure pursuit should be shown.
 ///
@@ -186,7 +186,7 @@ final showEquipmentDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowEquipmentDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showABTrackingDebugLayerHash() =>
-    r'40e995c7ee5afcc267148301e93755f2228f2085';
+    r'6393cf929c22d180dcb8c753e76a6602b47d2614';
 
 /// Whether the debugging layer for AB-trackng should be shown.
 ///

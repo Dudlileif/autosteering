@@ -5,6 +5,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -14,8 +15,15 @@ part 'vehicle_providers.g.dart';
 @Riverpod(keepAlive: true)
 class MainVehicle extends _$MainVehicle {
   @override
-  Vehicle build() => ref.read(lastUsedVehicleProvider).requireValue
-    ..position = ref.read(homePositionProvider).gbPosition;
+  Vehicle build() {
+    final vehicle = ref.read(lastUsedVehicleProvider).requireValue
+      ..position = ref.read(homePositionProvider).gbPosition
+      ..lastUsed = DateTime.now();
+
+    ref.read(saveVehicleProvider(vehicle));
+
+    return vehicle;
+  }
 
   /// Update the [state] to [vehicle].
   void update(Vehicle vehicle) =>
@@ -59,19 +67,38 @@ class ActiveAutosteeringState extends _$ActiveAutosteeringState {
 ///
 /// Override the file name with [overrideName].
 @riverpod
-AsyncValue<void> saveVehicle(
+FutureOr<void> saveVehicle(
   SaveVehicleRef ref,
   Vehicle vehicle, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) =>
+}) async =>
     ref.watch(
       saveJsonToFileDirectoryProvider(
         object: vehicle,
         fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
         folder: 'vehicles',
         downloadIfWeb: downloadIfWeb,
-      ),
+      ).future,
+    );
+
+/// A provider for saving [vehicle] to a file.
+///
+/// Override the file name with [overrideName].
+@riverpod
+FutureOr<void> exportVehicle(
+  ExportVehicleRef ref,
+  Vehicle vehicle, {
+  String? overrideName,
+  bool downloadIfWeb = true,
+}) async =>
+    ref.watch(
+      exportJsonToFileDirectoryProvider(
+        object: vehicle,
+        fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
+        folder: 'vehicles',
+        downloadIfWeb: downloadIfWeb,
+      ).future,
     );
 
 /// A provider for reading and holding all the saved [Vehicle]s in the
@@ -85,6 +112,22 @@ AsyncValue<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) => ref
       ),
     )
     .whenData((data) => data.cast());
+
+/// A provider for deleting [vehicle] from the user file system.
+///
+/// Override the file name with [overrideName].
+@riverpod
+FutureOr<void> deleteVehicle(
+  DeleteVehicleRef ref,
+  Vehicle vehicle, {
+  String? overrideName,
+}) async =>
+    ref.watch(
+      deleteJsonFromFileDirectoryProvider(
+        fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
+        folder: 'vehicles',
+      ).future,
+    );
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 @riverpod
@@ -248,4 +291,46 @@ class VehicleSteeringAngleTarget extends _$VehicleSteeringAngleTarget {
 
   /// Updates [state] to [value].
   void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for importing a vehicle configuration from a file and applying it
+/// to the [ConfiguredVehicle] provider.
+@riverpod
+AsyncValue<Vehicle?> importVehicle(
+  ImportVehicleRef ref,
+) {
+  FilePicker.platform.pickFiles(
+    allowedExtensions: ['json'],
+    type: FileType.custom,
+    dialogTitle: 'Choose vehicle file',
+  ).then((pickedFiles) {
+    if (Device.isWeb) {
+      final data = pickedFiles?.files.first.bytes;
+      if (data != null) {
+        final json = jsonDecode(String.fromCharCodes(data));
+        if (json is Map) {
+          final vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json));
+          ref.read(configuredVehicleProvider.notifier).update(vehicle);
+          ref.invalidate(configuredVehicleNameTextControllerProvider);
+          return AsyncData(vehicle);
+        }
+      }
+    } else {
+      final filePath = pickedFiles?.paths.first;
+      if (filePath != null) {
+        return ref.watch(loadVehicleFromFileProvider(filePath)).whenData(
+          (data) {
+            if (data != null) {
+              ref.read(configuredVehicleProvider.notifier).update(data);
+              ref.invalidate(configuredVehicleNameTextControllerProvider);
+              return data;
+            }
+            return null;
+          },
+        );
+      }
+    }
+    return const AsyncData(null);
+  });
+  return const AsyncLoading();
 }

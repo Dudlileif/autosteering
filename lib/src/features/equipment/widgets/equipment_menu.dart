@@ -23,6 +23,7 @@ class EquipmentMenu extends StatelessWidget {
       menuChildren: [
         const _LoadEquipmentSetupMenu(),
         const _LoadEquipmentMenu(),
+        const _ImportExportMenu(),
         MenuItemButton(
           leadingIcon: const Padding(
             padding: EdgeInsets.only(left: 8),
@@ -238,23 +239,150 @@ class _LoadEquipmentMenu extends ConsumerWidget {
       icon: Icons.history,
       menuChildren: equipments
           .map(
-            (equipment) => MenuItemButton(
-              onPressed: () {
-                equipment.lastUsed = DateTime.now();
+            (equipment) => ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 200),
+              child: ListTile(
+                onTap: () {
+                  equipment.lastUsed = DateTime.now();
 
-                ref
-                    .read(configuredEquipmentProvider.notifier)
-                    .update(equipment);
+                  ref
+                      .read(configuredEquipmentProvider.notifier)
+                      .update(equipment);
 
-                ref
-                  ..read(saveEquipmentProvider(equipment))
-                  ..invalidate(configuredEquipmentNameTextControllerProvider);
-              },
-              closeOnActivate: false,
-              child: Text(equipment.name ?? equipment.uuid, style: textStyle),
+                  ref
+                    ..read(saveEquipmentProvider(equipment))
+                    ..invalidate(configuredEquipmentNameTextControllerProvider);
+                },
+                title: Text(equipment.name ?? equipment.uuid, style: textStyle),
+                trailing: Device.isNative
+                    ? IconButton(
+                        onPressed: () async {
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (context) => SimpleDialog(
+                              title: Text(
+                                'Delete ${equipment.name ?? equipment.uuid}?',
+                              ),
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SimpleDialogOption(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    Consumer(
+                                      builder: (context, ref, child) =>
+                                          SimpleDialogOption(
+                                        onPressed: () async {
+                                          await ref
+                                              .watch(
+                                                deleteEquipmentProvider(
+                                                  equipment,
+                                                ).future,
+                                              )
+                                              .then(
+                                                (value) => Navigator.of(context)
+                                                    .pop(true),
+                                              );
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.delete),
+                      )
+                    : null,
+              ),
             ),
           )
           .toList(),
+    );
+  }
+}
+
+class _ImportExportMenu extends ConsumerWidget {
+  const _ImportExportMenu();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    return MenuButtonWithChildren(
+      icon: Icons.import_export,
+      text: 'Import/Export',
+      menuChildren: [
+        Consumer(
+          builder: (context, ref, child) {
+            return MenuItemButton(
+              closeOnActivate: false,
+              onPressed: () => ref.read(importEquipmentProvider),
+              leadingIcon: const Icon(Icons.file_open),
+              child: Text('Import', style: textStyle),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            return MenuItemButton(
+              closeOnActivate: false,
+              onPressed: ref.watch(
+                configuredEquipmentProvider.select(
+                  (value) =>
+                      value.name != null && (value.name ?? '').isNotEmpty,
+                ),
+              )
+                  ? () => ref.watch(
+                        exportEquipmentProvider(
+                          ref.watch(configuredEquipmentProvider),
+                        ),
+                      )
+                  : null,
+              leadingIcon: const Icon(Icons.save_alt),
+              child: Text('Export', style: textStyle),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            return MenuItemButton(
+              closeOnActivate: false,
+              onPressed: () => ref.read(importEquipmentSetupProvider),
+              leadingIcon: const Icon(Icons.file_open),
+              child: Text('Import setup', style: textStyle),
+            );
+          },
+        ),
+        if (ref.watch(
+          configuredEquipmentSetupProvider.select((value) => value != null),
+        ))
+          Consumer(
+            builder: (context, ref, child) {
+              return MenuItemButton(
+                closeOnActivate: false,
+                onPressed: ref.watch(
+                  configuredEquipmentSetupProvider.select(
+                    (value) => value != null && value.name.isNotEmpty,
+                  ),
+                )
+                    ? () => ref.watch(
+                          exportEquipmentSetupProvider(
+                            ref.watch(configuredEquipmentSetupProvider)!,
+                          ),
+                        )
+                    : null,
+                leadingIcon: const Icon(Icons.save_alt),
+                child: Text('Export setup', style: textStyle),
+              );
+            },
+          ),
+      ],
     );
   }
 }
@@ -283,17 +411,64 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
       icon: Icons.history,
       menuChildren: setups
           .map(
-            (setup) => MenuItemButton(
-              closeOnActivate: false,
-              onPressed: () {
-                setup.lastUsed = DateTime.now();
+            (setup) => ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 200),
+              child: ListTile(
+                onTap: () {
+                  setup.lastUsed = DateTime.now();
 
-                ref.read(saveEquipmentSetupProvider(setup));
-                ref
-                    .read(configuredEquipmentSetupProvider.notifier)
-                    .update(setup);
-              },
-              child: Text(setup.name, style: textStyle),
+                  ref.read(saveEquipmentSetupProvider(setup));
+                  ref
+                      .read(configuredEquipmentSetupProvider.notifier)
+                      .update(setup);
+                },
+                title: Text(setup.name, style: textStyle),
+                trailing: Device.isNative
+                    ? IconButton(
+                        onPressed: () async {
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (context) => SimpleDialog(
+                              title: Text(
+                                'Delete ${setup.name}?',
+                              ),
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SimpleDialogOption(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    Consumer(
+                                      builder: (context, ref, child) =>
+                                          SimpleDialogOption(
+                                        onPressed: () async {
+                                          await ref
+                                              .watch(
+                                                deleteEquipmentSetupProvider(
+                                                  setup,
+                                                ).future,
+                                              )
+                                              .then(
+                                                (value) => Navigator.of(context)
+                                                    .pop(true),
+                                              );
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.delete),
+                      )
+                    : null,
+              ),
             ),
           )
           .toList(),

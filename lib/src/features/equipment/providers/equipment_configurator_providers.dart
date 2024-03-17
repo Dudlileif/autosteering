@@ -1,9 +1,5 @@
-import 'dart:convert';
-
-import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -119,53 +115,4 @@ class ConfiguredEquipmentNameTextController
 
     return controller;
   }
-}
-
-/// A provider for loading a vehicle configuration from the user file directory
-/// and applying it to the [ConfiguredEquipment] provider.
-@riverpod
-AsyncValue<Equipment?> loadFileConfiguredEquipment(
-  LoadFileConfiguredEquipmentRef ref,
-) {
-  FilePicker.platform.pickFiles(
-    allowedExtensions: ['json'],
-    type: FileType.custom,
-    dialogTitle: 'Choose equipment file',
-    initialDirectory: Device.isNative
-        ? [
-            ref.watch(fileDirectoryProvider).requireValue.path,
-            '/equipment',
-          ].join()
-        : null,
-  ).then((pickedFiles) {
-    if (Device.isWeb) {
-      final data = pickedFiles?.files.first.bytes;
-      if (data != null) {
-        final json = jsonDecode(String.fromCharCodes(data));
-        if (json is Map) {
-          final equipment = Equipment.fromJson(Map<String, dynamic>.from(json));
-          ref.read(configuredEquipmentProvider.notifier).update(equipment);
-          ref.invalidate(configuredEquipmentNameTextControllerProvider);
-          return AsyncData(equipment);
-        }
-      }
-    } else {
-      final filePath = pickedFiles?.paths.first;
-      if (filePath != null) {
-        return ref.watch(loadEquipmentFromFileProvider(filePath)).whenData(
-          (data) {
-            if (data != null) {
-              ref.read(configuredEquipmentProvider.notifier).update(data);
-              ref.invalidate(configuredEquipmentNameTextControllerProvider);
-              return data;
-            }
-            return null;
-          },
-        );
-      }
-
-      return const AsyncData(null);
-    }
-  });
-  return const AsyncLoading();
 }

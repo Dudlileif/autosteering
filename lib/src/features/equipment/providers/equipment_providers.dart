@@ -3,12 +3,10 @@ import 'dart:convert';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
-import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/gestures.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:geobase/geobase.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -93,49 +91,7 @@ class AllEquipments extends _$AllEquipments {
         }
       });
 
-  /// Handles the event of a tap on the map. If [point] is within one of the
-  /// equipments' sections, then the section will be toggled.
-  void handleMapOnTap(LatLng point) {
-    for (final equipment in state.values) {
-      equipment.sectionPolygons.forEachIndexed((index, section) {
-        if (section.contains(point.gbPosition)) {
-          ref.read(simInputProvider.notifier).send(
-            (
-              uuid: equipment.uuid,
-              activeSections:
-                  (equipment..toggleSection(index)).sectionActivationStatus
-            ),
-          );
-        }
-      });
-    }
-  }
 
-  /// Handles the event of a pointer hovering on the map. If [point] is within
-  /// one of the equipments' sections, the [equipmentHoveredProvider] is
-  /// set to true, otherwise false.
-  void handleMapOnPointerHover(PointerHoverEvent event, LatLng point) {
-    for (final equipment in state.values) {
-      for (final section in equipment.sectionPolygons) {
-        if (section.contains(point.gbPosition)) {
-          return ref
-              .read(equipmentHoveredProvider.notifier)
-              .update(value: true);
-        }
-      }
-    }
-    ref.read(equipmentHoveredProvider.notifier).update(value: false);
-  }
-}
-
-/// Whether or not a cursor is hovering over an equipment section.
-@Riverpod(keepAlive: true)
-class EquipmentHovered extends _$EquipmentHovered {
-  @override
-  bool build() => false;
-
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
 }
 
 /// A provider for tracking the worked paths for the given equipment [uuid].
@@ -315,19 +271,38 @@ FutureOr<Equipment?> loadEquipmentFromFile(
 ///
 /// Override the file name with [overrideName].
 @riverpod
-AsyncValue<void> saveEquipment(
+Future<void> saveEquipment(
   SaveEquipmentRef ref,
   Equipment equipment, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) =>
+}) async =>
     ref.watch(
       saveJsonToFileDirectoryProvider(
         object: equipment,
         fileName: overrideName ?? equipment.name ?? equipment.uuid,
         folder: 'equipment',
         downloadIfWeb: downloadIfWeb,
-      ),
+      ).future,
+    );
+
+/// A provider for exporting [equipment] to a file.
+///
+/// Override the file name with [overrideName].
+@riverpod
+Future<void> exportEquipment(
+  ExportEquipmentRef ref,
+  Equipment equipment, {
+  String? overrideName,
+  bool downloadIfWeb = true,
+}) async =>
+    ref.watch(
+      exportJsonToFileDirectoryProvider(
+        object: equipment,
+        fileName: overrideName ?? equipment.name ?? equipment.uuid,
+        folder: 'equipment',
+        downloadIfWeb: downloadIfWeb,
+      ).future,
     );
 
 /// A provider for reading and holding all the saved [Equipment] in the
@@ -343,3 +318,69 @@ AsyncValue<List<Equipment>> savedEquipments(SavedEquipmentsRef ref) => ref
     .whenData(
       (data) => data.cast(),
     );
+
+
+/// A provider for deleting [equipment] from the user file system.
+///
+/// Override the file name with [overrideName].
+@riverpod
+Future<void> deleteEquipment(
+  DeleteEquipmentRef ref,
+  Equipment equipment, {
+  String? overrideName,
+}) async =>
+    ref.watch(
+      deleteJsonFromFileDirectoryProvider(
+        fileName: overrideName ?? equipment.name ?? equipment.uuid,
+        folder: 'equipment',
+      ).future,
+    );
+
+/// A provider for importing a equipment configuration from a file and applying
+/// it to the [ConfiguredEquipment] provider.
+@riverpod
+AsyncValue<Equipment?> importEquipment(
+  ImportEquipmentRef ref,
+) {
+  FilePicker.platform.pickFiles(
+    allowedExtensions: ['json'],
+    type: FileType.custom,
+    dialogTitle: 'Choose equipment file',
+    initialDirectory: Device.isNative
+        ? [
+            ref.watch(fileDirectoryProvider).requireValue.path,
+            '/equipment',
+          ].join()
+        : null,
+  ).then((pickedFiles) {
+    if (Device.isWeb) {
+      final data = pickedFiles?.files.first.bytes;
+      if (data != null) {
+        final json = jsonDecode(String.fromCharCodes(data));
+        if (json is Map) {
+          final equipment = Equipment.fromJson(Map<String, dynamic>.from(json));
+          ref.read(configuredEquipmentProvider.notifier).update(equipment);
+          ref.invalidate(configuredEquipmentNameTextControllerProvider);
+          return AsyncData(equipment);
+        }
+      }
+    } else {
+      final filePath = pickedFiles?.paths.first;
+      if (filePath != null) {
+        return ref.watch(loadEquipmentFromFileProvider(filePath)).whenData(
+          (data) {
+            if (data != null) {
+              ref.read(configuredEquipmentProvider.notifier).update(data);
+              ref.invalidate(configuredEquipmentNameTextControllerProvider);
+              return data;
+            }
+            return null;
+          },
+        );
+      }
+
+      return const AsyncData(null);
+    }
+  });
+  return const AsyncLoading();
+}

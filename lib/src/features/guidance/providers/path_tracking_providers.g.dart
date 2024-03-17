@@ -241,7 +241,7 @@ class _LoadPathTrackingFromFileProviderElement
   String get path => (origin as LoadPathTrackingFromFileProvider).path;
 }
 
-String _$savePathTrackingHash() => r'89d056f368c51e2f6dcbf527f234f9515f51e178';
+String _$savePathTrackingHash() => r'26b1d1c135d54f119ae27fca98ba9916c9fe7f03';
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -309,7 +309,7 @@ class SavePathTrackingFamily extends Family {
 
   /// Enables overriding the behavior of this provider, no matter the parameters.
   Override overrideWith(
-      AsyncValue<void> Function(SavePathTrackingRef ref) create) {
+      FutureOr<void> Function(SavePathTrackingRef ref) create) {
     return _$SavePathTrackingFamilyOverride(this, create);
   }
 }
@@ -317,7 +317,7 @@ class SavePathTrackingFamily extends Family {
 class _$SavePathTrackingFamilyOverride implements FamilyOverride {
   _$SavePathTrackingFamilyOverride(this.overriddenFamily, this.create);
 
-  final AsyncValue<void> Function(SavePathTrackingRef ref) create;
+  final FutureOr<void> Function(SavePathTrackingRef ref) create;
 
   @override
   final SavePathTrackingFamily overriddenFamily;
@@ -335,7 +335,7 @@ class _$SavePathTrackingFamilyOverride implements FamilyOverride {
 /// Override the file name with [overrideName].
 ///
 /// Copied from [savePathTracking].
-class SavePathTrackingProvider extends AutoDisposeProvider<AsyncValue<void>> {
+class SavePathTrackingProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
@@ -384,7 +384,7 @@ class SavePathTrackingProvider extends AutoDisposeProvider<AsyncValue<void>> {
 
   @override
   Override overrideWith(
-    AsyncValue<void> Function(SavePathTrackingRef ref) create,
+    FutureOr<void> Function(SavePathTrackingRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -416,12 +416,12 @@ class SavePathTrackingProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 
   @override
-  AutoDisposeProviderElement<AsyncValue<void>> createElement() {
+  AutoDisposeFutureProviderElement<void> createElement() {
     return _SavePathTrackingProviderElement(this);
   }
 
   SavePathTrackingProvider _copyWith(
-    AsyncValue<void> Function(SavePathTrackingRef ref) create,
+    FutureOr<void> Function(SavePathTrackingRef ref) create,
   ) {
     return SavePathTrackingProvider._internal(
       (ref) => create(ref as SavePathTrackingRef),
@@ -455,7 +455,7 @@ class SavePathTrackingProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 }
 
-mixin SavePathTrackingRef on AutoDisposeProviderRef<AsyncValue<void>> {
+mixin SavePathTrackingRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `tracking` of this provider.
   PathTracking get tracking;
 
@@ -467,8 +467,7 @@ mixin SavePathTrackingRef on AutoDisposeProviderRef<AsyncValue<void>> {
 }
 
 class _SavePathTrackingProviderElement
-    extends AutoDisposeProviderElement<AsyncValue<void>>
-    with SavePathTrackingRef {
+    extends AutoDisposeFutureProviderElement<void> with SavePathTrackingRef {
   _SavePathTrackingProviderElement(super.provider);
 
   @override
@@ -477,6 +476,246 @@ class _SavePathTrackingProviderElement
   String? get overrideName => (origin as SavePathTrackingProvider).overrideName;
   @override
   bool get downloadIfWeb => (origin as SavePathTrackingProvider).downloadIfWeb;
+}
+
+String _$exportPathTrackingHash() =>
+    r'7e5e84fa9ce850e02779f4ac7bc99d871455b017';
+
+/// A provider for saving [tracking] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportPathTracking].
+@ProviderFor(exportPathTracking)
+const exportPathTrackingProvider = ExportPathTrackingFamily();
+
+/// A provider for saving [tracking] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportPathTracking].
+class ExportPathTrackingFamily extends Family {
+  /// A provider for saving [tracking] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportPathTracking].
+  const ExportPathTrackingFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportPathTrackingProvider';
+
+  /// A provider for saving [tracking] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportPathTracking].
+  ExportPathTrackingProvider call(
+    PathTracking tracking, {
+    String? overrideName,
+    bool downloadIfWeb = false,
+  }) {
+    return ExportPathTrackingProvider(
+      tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportPathTrackingProvider getProviderOverride(
+    covariant ExportPathTrackingProvider provider,
+  ) {
+    return call(
+      provider.tracking,
+      overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(ExportPathTrackingRef ref) create) {
+    return _$ExportPathTrackingFamilyOverride(this, create);
+  }
+}
+
+class _$ExportPathTrackingFamilyOverride implements FamilyOverride {
+  _$ExportPathTrackingFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportPathTrackingRef ref) create;
+
+  @override
+  final ExportPathTrackingFamily overriddenFamily;
+
+  @override
+  ExportPathTrackingProvider getProviderOverride(
+    covariant ExportPathTrackingProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for saving [tracking] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportPathTracking].
+class ExportPathTrackingProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for saving [tracking] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportPathTracking].
+  ExportPathTrackingProvider(
+    PathTracking tracking, {
+    String? overrideName,
+    bool downloadIfWeb = false,
+  }) : this._internal(
+          (ref) => exportPathTracking(
+            ref as ExportPathTrackingRef,
+            tracking,
+            overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
+          ),
+          from: exportPathTrackingProvider,
+          name: r'exportPathTrackingProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportPathTrackingHash,
+          dependencies: ExportPathTrackingFamily._dependencies,
+          allTransitiveDependencies:
+              ExportPathTrackingFamily._allTransitiveDependencies,
+          tracking: tracking,
+          overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
+        );
+
+  ExportPathTrackingProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tracking,
+    required this.overrideName,
+    required this.downloadIfWeb,
+  }) : super.internal();
+
+  final PathTracking tracking;
+  final String? overrideName;
+  final bool downloadIfWeb;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportPathTrackingRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportPathTrackingProvider._internal(
+        (ref) => create(ref as ExportPathTrackingRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tracking: tracking,
+        overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+  }
+
+  @override
+  (
+    PathTracking, {
+    String? overrideName,
+    bool downloadIfWeb,
+  }) get argument {
+    return (
+      tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportPathTrackingProviderElement(this);
+  }
+
+  ExportPathTrackingProvider _copyWith(
+    FutureOr<void> Function(ExportPathTrackingRef ref) create,
+  ) {
+    return ExportPathTrackingProvider._internal(
+      (ref) => create(ref as ExportPathTrackingRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      tracking: tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportPathTrackingProvider &&
+        other.tracking == tracking &&
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, tracking.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportPathTrackingRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `tracking` of this provider.
+  PathTracking get tracking;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
+}
+
+class _ExportPathTrackingProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ExportPathTrackingRef {
+  _ExportPathTrackingProviderElement(super.provider);
+
+  @override
+  PathTracking get tracking => (origin as ExportPathTrackingProvider).tracking;
+  @override
+  String? get overrideName =>
+      (origin as ExportPathTrackingProvider).overrideName;
+  @override
+  bool get downloadIfWeb =>
+      (origin as ExportPathTrackingProvider).downloadIfWeb;
 }
 
 String _$savedPathTrackingsHash() =>
@@ -499,6 +738,267 @@ final savedPathTrackingsProvider =
 );
 
 typedef SavedPathTrackingsRef = ProviderRef<AsyncValue<List<PathTracking>>>;
+String _$deletePathTrackingHash() =>
+    r'1df82e0b05cbe20dbd51320edb60dbefefbf191b';
+
+/// A provider for deleting [tracking] from the user file systemm.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deletePathTracking].
+@ProviderFor(deletePathTracking)
+const deletePathTrackingProvider = DeletePathTrackingFamily();
+
+/// A provider for deleting [tracking] from the user file systemm.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deletePathTracking].
+class DeletePathTrackingFamily extends Family {
+  /// A provider for deleting [tracking] from the user file systemm.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deletePathTracking].
+  const DeletePathTrackingFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deletePathTrackingProvider';
+
+  /// A provider for deleting [tracking] from the user file systemm.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deletePathTracking].
+  DeletePathTrackingProvider call(
+    PathTracking tracking, {
+    String? overrideName,
+    bool downloadIfWeb = true,
+  }) {
+    return DeletePathTrackingProvider(
+      tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  DeletePathTrackingProvider getProviderOverride(
+    covariant DeletePathTrackingProvider provider,
+  ) {
+    return call(
+      provider.tracking,
+      overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(DeletePathTrackingRef ref) create) {
+    return _$DeletePathTrackingFamilyOverride(this, create);
+  }
+}
+
+class _$DeletePathTrackingFamilyOverride implements FamilyOverride {
+  _$DeletePathTrackingFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(DeletePathTrackingRef ref) create;
+
+  @override
+  final DeletePathTrackingFamily overriddenFamily;
+
+  @override
+  DeletePathTrackingProvider getProviderOverride(
+    covariant DeletePathTrackingProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for deleting [tracking] from the user file systemm.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deletePathTracking].
+class DeletePathTrackingProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for deleting [tracking] from the user file systemm.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deletePathTracking].
+  DeletePathTrackingProvider(
+    PathTracking tracking, {
+    String? overrideName,
+    bool downloadIfWeb = true,
+  }) : this._internal(
+          (ref) => deletePathTracking(
+            ref as DeletePathTrackingRef,
+            tracking,
+            overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
+          ),
+          from: deletePathTrackingProvider,
+          name: r'deletePathTrackingProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$deletePathTrackingHash,
+          dependencies: DeletePathTrackingFamily._dependencies,
+          allTransitiveDependencies:
+              DeletePathTrackingFamily._allTransitiveDependencies,
+          tracking: tracking,
+          overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
+        );
+
+  DeletePathTrackingProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tracking,
+    required this.overrideName,
+    required this.downloadIfWeb,
+  }) : super.internal();
+
+  final PathTracking tracking;
+  final String? overrideName;
+  final bool downloadIfWeb;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(DeletePathTrackingRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DeletePathTrackingProvider._internal(
+        (ref) => create(ref as DeletePathTrackingRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tracking: tracking,
+        overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+  }
+
+  @override
+  (
+    PathTracking, {
+    String? overrideName,
+    bool downloadIfWeb,
+  }) get argument {
+    return (
+      tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _DeletePathTrackingProviderElement(this);
+  }
+
+  DeletePathTrackingProvider _copyWith(
+    FutureOr<void> Function(DeletePathTrackingRef ref) create,
+  ) {
+    return DeletePathTrackingProvider._internal(
+      (ref) => create(ref as DeletePathTrackingRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      tracking: tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeletePathTrackingProvider &&
+        other.tracking == tracking &&
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, tracking.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin DeletePathTrackingRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `tracking` of this provider.
+  PathTracking get tracking;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
+}
+
+class _DeletePathTrackingProviderElement
+    extends AutoDisposeFutureProviderElement<void> with DeletePathTrackingRef {
+  _DeletePathTrackingProviderElement(super.provider);
+
+  @override
+  PathTracking get tracking => (origin as DeletePathTrackingProvider).tracking;
+  @override
+  String? get overrideName =>
+      (origin as DeletePathTrackingProvider).overrideName;
+  @override
+  bool get downloadIfWeb =>
+      (origin as DeletePathTrackingProvider).downloadIfWeb;
+}
+
+String _$importPathTrackingHash() =>
+    r'87199dcdb80e3fb502be65d845af8e715028b694';
+
+/// A provider for importing a [PathTracking] from a file and applying it to
+/// the [ConfiguredPathTracking] provider.
+///
+/// Copied from [importPathTracking].
+@ProviderFor(importPathTracking)
+final importPathTrackingProvider =
+    AutoDisposeProvider<AsyncValue<PathTracking?>>.internal(
+  importPathTracking,
+  name: r'importPathTrackingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$importPathTrackingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ImportPathTrackingRef
+    = AutoDisposeProviderRef<AsyncValue<PathTracking?>>;
 String _$pathInterpolationDistanceHash() =>
     r'3838e0d5947ecf47190196f1fa4998a29f429156';
 
@@ -597,24 +1097,23 @@ final displayPathTrackingProvider =
 );
 
 typedef _$DisplayPathTracking = Notifier<PathTracking?>;
-String _$debugPathTrackingHash() => r'db41c00fa0d4a921e7251aea9fce8d341463b4c9';
+String _$showPathTrackingHash() => r'8ccdab6e8b22ded94a4e712d4f787b1c49731251';
 
-/// A provider for whether or not the path tracking debugging features should
-/// show.
+/// A provider for whether or not the path tracking should be shown.
 ///
-/// Copied from [DebugPathTracking].
-@ProviderFor(DebugPathTracking)
-final debugPathTrackingProvider =
-    NotifierProvider<DebugPathTracking, bool>.internal(
-  DebugPathTracking.new,
-  name: r'debugPathTrackingProvider',
+/// Copied from [ShowPathTracking].
+@ProviderFor(ShowPathTracking)
+final showPathTrackingProvider =
+    NotifierProvider<ShowPathTracking, bool>.internal(
+  ShowPathTracking.new,
+  name: r'showPathTrackingProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$debugPathTrackingHash,
+      : _$showPathTrackingHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugPathTracking = Notifier<bool>;
+typedef _$ShowPathTracking = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

@@ -6,27 +6,6 @@ part of 'equipment_configurator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loadFileConfiguredEquipmentHash() =>
-    r'2c50b664e21f4cce3943c07b540c4934dc834834';
-
-/// A provider for loading a vehicle configuration from the user file directory
-/// and applying it to the [ConfiguredEquipment] provider.
-///
-/// Copied from [loadFileConfiguredEquipment].
-@ProviderFor(loadFileConfiguredEquipment)
-final loadFileConfiguredEquipmentProvider =
-    AutoDisposeProvider<AsyncValue<Equipment?>>.internal(
-  loadFileConfiguredEquipment,
-  name: r'loadFileConfiguredEquipmentProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$loadFileConfiguredEquipmentHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef LoadFileConfiguredEquipmentRef
-    = AutoDisposeProviderRef<AsyncValue<Equipment?>>;
 String _$equipmentConfiguratorIndexHash() =>
     r'9cbbea135c7f306ffcbe0bfc379b5e39826de238';
 

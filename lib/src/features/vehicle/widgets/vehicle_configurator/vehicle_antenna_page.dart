@@ -70,10 +70,10 @@ class VehicleAntennaPage extends ConsumerWidget {
                 configuredVehicleProvider.select(
                   (value) {
                     if (value is Harvester) {
-                      return (-value.solidAxleDistance).toString();
+                      return (-value.antennaToSolidAxleDistance).toString();
                     }
                     return (value as AxleSteeredVehicle)
-                        .solidAxleDistance
+                        .antennaToSolidAxleDistance
                         .toString();
                   },
                 ),
@@ -84,7 +84,7 @@ class VehicleAntennaPage extends ConsumerWidget {
                 if (distance != null) {
                   ref.read(configuredVehicleProvider.notifier).update(
                         vehicle.copyWith(
-                          solidAxleDistance:
+                          antennaToSolidAxleDistance:
                               (vehicle is Harvester) ? -distance : distance,
                         ),
                       );
@@ -105,7 +105,7 @@ class VehicleAntennaPage extends ConsumerWidget {
               initialValue: ref.read(
                 configuredVehicleProvider.select(
                   (value) => (value as ArticulatedTractor)
-                      .pivotToAntennaDistance
+                      .antennaToPivotDistance
                       .toString(),
                 ),
               ),
@@ -113,7 +113,7 @@ class VehicleAntennaPage extends ConsumerWidget {
                 final distance = double.tryParse(value.replaceAll(',', '.'));
 
                 ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle.copyWith(pivotToAntennaDistance: distance),
+                      vehicle.copyWith(antennaToPivotDistance: distance),
                     );
               },
             ),
@@ -121,25 +121,27 @@ class VehicleAntennaPage extends ConsumerWidget {
       },
     ];
 
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: VehicleConfiguratorPreviousButton(),
-          ),
-          ...children.map(
-            (widget) => Padding(
-              padding: const EdgeInsets.all(8),
-              child: SizedBox(width: 400, child: widget),
+    return SingleChildScrollView(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: VehicleConfiguratorPreviousButton(),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: VehicleConfiguratorNextButton(),
-          ),
-        ],
+            ...children.map(
+              (widget) => Padding(
+                padding: const EdgeInsets.all(8),
+                child: SizedBox(width: 400, child: widget),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: VehicleConfiguratorNextButton(),
+            ),
+          ],
+        ),
       ),
     );
   }

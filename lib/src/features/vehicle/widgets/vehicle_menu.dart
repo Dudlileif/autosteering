@@ -19,6 +19,7 @@ class VehicleMenu extends StatelessWidget {
       icon: Icons.agriculture,
       menuChildren: [
         const _LoadVehicleMenu(),
+        const _ImportExportMenu(),
         MenuItemButton(
           leadingIcon: const Padding(
             padding: EdgeInsets.only(left: 8),
@@ -65,7 +66,7 @@ class VehicleMenu extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 8),
                 child: Text(
-                  'Steering Configurator',
+                  'WAS & Motor Configurator',
                   style: textStyle,
                 ),  
               ),
@@ -85,9 +86,13 @@ class VehicleMenu extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'Autosteering Parameters',
-                style: textStyle,
+              const Icon(Icons.abc),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(
+                  'Autosteering Parameters',
+                  style: textStyle,
+                ),
               ),
             ],
           ),
@@ -157,6 +162,53 @@ class _LoadVehicleMenu extends ConsumerWidget {
             ),
           )
           .toList(),
+    );
+  }
+}
+
+class _ImportExportMenu extends StatelessWidget {
+  const _ImportExportMenu();
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    return MenuButtonWithChildren(
+      icon: Icons.import_export,
+      text: 'Import/Export',
+      menuChildren: [
+        Consumer(
+          builder: (context, ref, child) {
+            return MenuItemButton(
+              closeOnActivate: false,
+              onPressed: () => ref.read(importVehicleProvider),
+              leadingIcon: const Icon(Icons.file_open),
+              child: Text('Import', style: textStyle),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            return MenuItemButton(
+              closeOnActivate: false,
+              onPressed: ref.watch(
+                configuredVehicleProvider.select(
+                  (value) =>
+                      value.name != null && (value.name ?? '').isNotEmpty,
+                ),
+              )
+                  ? () => ref.watch(
+                        exportVehicleProvider(
+                          ref.watch(configuredVehicleProvider),
+                        ),
+                      )
+                  : null,
+              leadingIcon: const Icon(Icons.save_alt),
+              child: Text('Export', style: textStyle),
+            );
+          },
+        ),
+      ],
     );
   }
 }

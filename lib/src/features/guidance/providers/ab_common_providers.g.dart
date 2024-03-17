@@ -255,7 +255,7 @@ class _LoadABTrackingFromFileProviderElement
   String get path => (origin as LoadABTrackingFromFileProvider).path;
 }
 
-String _$saveABTrackingHash() => r'55f6314b4b4a7c3d59221f24ce6e142cf01565fb';
+String _$saveABTrackingHash() => r'ff83a3d349702c13606bacfe20f8d43adeaa7eb7';
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -322,8 +322,7 @@ class SaveABTrackingFamily extends Family {
   }
 
   /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      AsyncValue<void> Function(SaveABTrackingRef ref) create) {
+  Override overrideWith(FutureOr<void> Function(SaveABTrackingRef ref) create) {
     return _$SaveABTrackingFamilyOverride(this, create);
   }
 }
@@ -331,7 +330,7 @@ class SaveABTrackingFamily extends Family {
 class _$SaveABTrackingFamilyOverride implements FamilyOverride {
   _$SaveABTrackingFamilyOverride(this.overriddenFamily, this.create);
 
-  final AsyncValue<void> Function(SaveABTrackingRef ref) create;
+  final FutureOr<void> Function(SaveABTrackingRef ref) create;
 
   @override
   final SaveABTrackingFamily overriddenFamily;
@@ -349,7 +348,7 @@ class _$SaveABTrackingFamilyOverride implements FamilyOverride {
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveABTracking].
-class SaveABTrackingProvider extends AutoDisposeProvider<AsyncValue<void>> {
+class SaveABTrackingProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
@@ -398,7 +397,7 @@ class SaveABTrackingProvider extends AutoDisposeProvider<AsyncValue<void>> {
 
   @override
   Override overrideWith(
-    AsyncValue<void> Function(SaveABTrackingRef ref) create,
+    FutureOr<void> Function(SaveABTrackingRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -430,12 +429,12 @@ class SaveABTrackingProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 
   @override
-  AutoDisposeProviderElement<AsyncValue<void>> createElement() {
+  AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveABTrackingProviderElement(this);
   }
 
   SaveABTrackingProvider _copyWith(
-    AsyncValue<void> Function(SaveABTrackingRef ref) create,
+    FutureOr<void> Function(SaveABTrackingRef ref) create,
   ) {
     return SaveABTrackingProvider._internal(
       (ref) => create(ref as SaveABTrackingRef),
@@ -469,7 +468,7 @@ class SaveABTrackingProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 }
 
-mixin SaveABTrackingRef on AutoDisposeProviderRef<AsyncValue<void>> {
+mixin SaveABTrackingRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `tracking` of this provider.
   ABTracking get tracking;
 
@@ -481,8 +480,7 @@ mixin SaveABTrackingRef on AutoDisposeProviderRef<AsyncValue<void>> {
 }
 
 class _SaveABTrackingProviderElement
-    extends AutoDisposeProviderElement<AsyncValue<void>>
-    with SaveABTrackingRef {
+    extends AutoDisposeFutureProviderElement<void> with SaveABTrackingRef {
   _SaveABTrackingProviderElement(super.provider);
 
   @override
@@ -491,6 +489,243 @@ class _SaveABTrackingProviderElement
   String? get overrideName => (origin as SaveABTrackingProvider).overrideName;
   @override
   bool get downloadIfWeb => (origin as SaveABTrackingProvider).downloadIfWeb;
+}
+
+String _$exportABTrackingHash() => r'233695d00d8c64e058d9daef28aa09bb6cd1a683';
+
+/// A provider for exporting [tracking] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportABTracking].
+@ProviderFor(exportABTracking)
+const exportABTrackingProvider = ExportABTrackingFamily();
+
+/// A provider for exporting [tracking] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportABTracking].
+class ExportABTrackingFamily extends Family {
+  /// A provider for exporting [tracking] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportABTracking].
+  const ExportABTrackingFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportABTrackingProvider';
+
+  /// A provider for exporting [tracking] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportABTracking].
+  ExportABTrackingProvider call(
+    ABTracking tracking, {
+    String? overrideName,
+    bool downloadIfWeb = true,
+  }) {
+    return ExportABTrackingProvider(
+      tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportABTrackingProvider getProviderOverride(
+    covariant ExportABTrackingProvider provider,
+  ) {
+    return call(
+      provider.tracking,
+      overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(ExportABTrackingRef ref) create) {
+    return _$ExportABTrackingFamilyOverride(this, create);
+  }
+}
+
+class _$ExportABTrackingFamilyOverride implements FamilyOverride {
+  _$ExportABTrackingFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportABTrackingRef ref) create;
+
+  @override
+  final ExportABTrackingFamily overriddenFamily;
+
+  @override
+  ExportABTrackingProvider getProviderOverride(
+    covariant ExportABTrackingProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for exporting [tracking] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportABTracking].
+class ExportABTrackingProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for exporting [tracking] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportABTracking].
+  ExportABTrackingProvider(
+    ABTracking tracking, {
+    String? overrideName,
+    bool downloadIfWeb = true,
+  }) : this._internal(
+          (ref) => exportABTracking(
+            ref as ExportABTrackingRef,
+            tracking,
+            overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
+          ),
+          from: exportABTrackingProvider,
+          name: r'exportABTrackingProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportABTrackingHash,
+          dependencies: ExportABTrackingFamily._dependencies,
+          allTransitiveDependencies:
+              ExportABTrackingFamily._allTransitiveDependencies,
+          tracking: tracking,
+          overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
+        );
+
+  ExportABTrackingProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tracking,
+    required this.overrideName,
+    required this.downloadIfWeb,
+  }) : super.internal();
+
+  final ABTracking tracking;
+  final String? overrideName;
+  final bool downloadIfWeb;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportABTrackingRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportABTrackingProvider._internal(
+        (ref) => create(ref as ExportABTrackingRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tracking: tracking,
+        overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+  }
+
+  @override
+  (
+    ABTracking, {
+    String? overrideName,
+    bool downloadIfWeb,
+  }) get argument {
+    return (
+      tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportABTrackingProviderElement(this);
+  }
+
+  ExportABTrackingProvider _copyWith(
+    FutureOr<void> Function(ExportABTrackingRef ref) create,
+  ) {
+    return ExportABTrackingProvider._internal(
+      (ref) => create(ref as ExportABTrackingRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      tracking: tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportABTrackingProvider &&
+        other.tracking == tracking &&
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, tracking.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportABTrackingRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `tracking` of this provider.
+  ABTracking get tracking;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
+}
+
+class _ExportABTrackingProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ExportABTrackingRef {
+  _ExportABTrackingProviderElement(super.provider);
+
+  @override
+  ABTracking get tracking => (origin as ExportABTrackingProvider).tracking;
+  @override
+  String? get overrideName => (origin as ExportABTrackingProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as ExportABTrackingProvider).downloadIfWeb;
 }
 
 String _$savedABTrackingsHash() => r'e7d2d37a72477e0243b704e193b90049d3643d50';
@@ -512,25 +747,279 @@ final savedABTrackingsProvider =
 );
 
 typedef SavedABTrackingsRef = ProviderRef<AsyncValue<List<ABTracking>>>;
-String _$aBTrackingDebugShowHash() =>
-    r'1fcc86d7408faea577768ca750987f0e55862ad0';
+String _$deleteABTrackingHash() => r'e2692dd4e93ad4703f4026246d53fc4fd1f2da5d';
 
-/// A provider for whether the AB-tracking debugging features should be shown.
+/// A provider for deleting [tracking] from the user file systemm.
 ///
-/// Copied from [ABTrackingDebugShow].
-@ProviderFor(ABTrackingDebugShow)
-final aBTrackingDebugShowProvider =
-    NotifierProvider<ABTrackingDebugShow, bool>.internal(
-  ABTrackingDebugShow.new,
-  name: r'aBTrackingDebugShowProvider',
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteABTracking].
+@ProviderFor(deleteABTracking)
+const deleteABTrackingProvider = DeleteABTrackingFamily();
+
+/// A provider for deleting [tracking] from the user file systemm.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteABTracking].
+class DeleteABTrackingFamily extends Family {
+  /// A provider for deleting [tracking] from the user file systemm.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteABTracking].
+  const DeleteABTrackingFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteABTrackingProvider';
+
+  /// A provider for deleting [tracking] from the user file systemm.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteABTracking].
+  DeleteABTrackingProvider call(
+    ABTracking tracking, {
+    String? overrideName,
+    bool downloadIfWeb = true,
+  }) {
+    return DeleteABTrackingProvider(
+      tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  DeleteABTrackingProvider getProviderOverride(
+    covariant DeleteABTrackingProvider provider,
+  ) {
+    return call(
+      provider.tracking,
+      overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(DeleteABTrackingRef ref) create) {
+    return _$DeleteABTrackingFamilyOverride(this, create);
+  }
+}
+
+class _$DeleteABTrackingFamilyOverride implements FamilyOverride {
+  _$DeleteABTrackingFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(DeleteABTrackingRef ref) create;
+
+  @override
+  final DeleteABTrackingFamily overriddenFamily;
+
+  @override
+  DeleteABTrackingProvider getProviderOverride(
+    covariant DeleteABTrackingProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for deleting [tracking] from the user file systemm.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteABTracking].
+class DeleteABTrackingProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for deleting [tracking] from the user file systemm.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteABTracking].
+  DeleteABTrackingProvider(
+    ABTracking tracking, {
+    String? overrideName,
+    bool downloadIfWeb = true,
+  }) : this._internal(
+          (ref) => deleteABTracking(
+            ref as DeleteABTrackingRef,
+            tracking,
+            overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
+          ),
+          from: deleteABTrackingProvider,
+          name: r'deleteABTrackingProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$deleteABTrackingHash,
+          dependencies: DeleteABTrackingFamily._dependencies,
+          allTransitiveDependencies:
+              DeleteABTrackingFamily._allTransitiveDependencies,
+          tracking: tracking,
+          overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
+        );
+
+  DeleteABTrackingProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tracking,
+    required this.overrideName,
+    required this.downloadIfWeb,
+  }) : super.internal();
+
+  final ABTracking tracking;
+  final String? overrideName;
+  final bool downloadIfWeb;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(DeleteABTrackingRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DeleteABTrackingProvider._internal(
+        (ref) => create(ref as DeleteABTrackingRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tracking: tracking,
+        overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+  }
+
+  @override
+  (
+    ABTracking, {
+    String? overrideName,
+    bool downloadIfWeb,
+  }) get argument {
+    return (
+      tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _DeleteABTrackingProviderElement(this);
+  }
+
+  DeleteABTrackingProvider _copyWith(
+    FutureOr<void> Function(DeleteABTrackingRef ref) create,
+  ) {
+    return DeleteABTrackingProvider._internal(
+      (ref) => create(ref as DeleteABTrackingRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      tracking: tracking,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeleteABTrackingProvider &&
+        other.tracking == tracking &&
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, tracking.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin DeleteABTrackingRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `tracking` of this provider.
+  ABTracking get tracking;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
+}
+
+class _DeleteABTrackingProviderElement
+    extends AutoDisposeFutureProviderElement<void> with DeleteABTrackingRef {
+  _DeleteABTrackingProviderElement(super.provider);
+
+  @override
+  ABTracking get tracking => (origin as DeleteABTrackingProvider).tracking;
+  @override
+  String? get overrideName => (origin as DeleteABTrackingProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as DeleteABTrackingProvider).downloadIfWeb;
+}
+
+String _$importABTrackingHash() => r'3ab8a1b78e54ffe8bc49beb7cceb01260ae15221';
+
+/// A provider for importing an [ABTracking] from a file and applying it to
+/// the [ConfiguredABTracking] provider.
+///
+/// Copied from [importABTracking].
+@ProviderFor(importABTracking)
+final importABTrackingProvider =
+    AutoDisposeProvider<AsyncValue<ABTracking?>>.internal(
+  importABTracking,
+  name: r'importABTrackingProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$aBTrackingDebugShowHash,
+      : _$importABTrackingHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ABTrackingDebugShow = Notifier<bool>;
+typedef ImportABTrackingRef = AutoDisposeProviderRef<AsyncValue<ABTracking?>>;
+String _$showABTrackingHash() => r'5e6ea964bd4e20100846358a099ec7f4272755d5';
+
+/// A provider for whether the AB-tracking should be shown.
+///
+/// Copied from [ShowABTracking].
+@ProviderFor(ShowABTracking)
+final showABTrackingProvider = NotifierProvider<ShowABTracking, bool>.internal(
+  ShowABTracking.new,
+  name: r'showABTrackingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showABTrackingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowABTracking = Notifier<bool>;
 String _$aBDebugStepSizeHash() => r'9758a5466afb606e1e296ec4d9f2ee6b298d33fb';
 
 /// A provider for the step size of an AB-line.

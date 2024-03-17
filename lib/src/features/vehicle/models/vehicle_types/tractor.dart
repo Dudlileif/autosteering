@@ -5,7 +5,7 @@ final class Tractor extends AxleSteeredVehicle {
   /// A conventional tractor with front wheel steering and a solid rear axle.
   Tractor({
     required super.wheelBase,
-    required super.solidAxleDistance,
+    required super.antennaToSolidAxleDistance,
     required super.antennaHeight,
     required super.minTurningRadius,
     required super.steeringAngleMax,
@@ -65,11 +65,11 @@ super.manufacturerColors,
       lastUsed: DateTime.tryParse(info['last_used'] as String),
       antennaHeight: antenna['height'] as double,
       antennaLateralOffset: antenna['lateral_offset'] as double,
+      antennaToSolidAxleDistance: antenna['solid_axle_distance'] as double,
       width: dimensions['width'] as double,
       length: dimensions['length'] as double,
       wheelBase: dimensions['wheel_base'] as double,
       trackWidth: dimensions['track_width'] as double,
-      solidAxleDistance: dimensions['solid_axle_distance'] as double,
       minTurningRadius: steering['min_turning_radius'] as double,
       steeringAngleMax: steering['steering_angle_max'] as double,
       ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
@@ -94,14 +94,14 @@ super.manufacturerColors,
   /// The position of the center of the rear axle.
   @override
   Geographic get solidAxlePosition => position.rhumb.destinationPoint(
-        distance: solidAxleDistance,
+        distance: antennaToSolidAxleDistance,
         bearing: (bearing - 180).wrap360(),
       );
 
   /// The position of the center of the front axle.
   @override
   Geographic get steeringAxlePosition => position.rhumb.destinationPoint(
-        distance: wheelBase - solidAxleDistance,
+        distance: wheelBase - antennaToSolidAxleDistance,
         bearing: bearing.wrap360(),
       );
 
@@ -137,7 +137,7 @@ super.manufacturerColors,
     double? steeringAngleMax,
     double? trackWidth,
     double? wheelBase,
-    double? solidAxleDistance,
+    double? antennaToSolidAxleDistance,
     double? solidAxleToFrontHitchDistance,
     double? solidAxleToRearHitchDistance,
     double? solidAxleToRearTowbarDistance,
@@ -179,7 +179,8 @@ super.manufacturerColors,
         steeringAngleMax: steeringAngleMax ?? _steeringAngleMaxRaw,
         trackWidth: trackWidth ?? this.trackWidth,
         wheelBase: wheelBase ?? this.wheelBase,
-        solidAxleDistance: solidAxleDistance ?? this.solidAxleDistance,
+        antennaToSolidAxleDistance:
+            antennaToSolidAxleDistance ?? this.antennaToSolidAxleDistance,
         solidAxleToFrontHitchDistance:
             solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
         solidAxleToRearHitchDistance:

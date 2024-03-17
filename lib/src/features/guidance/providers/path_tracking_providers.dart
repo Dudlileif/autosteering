@@ -4,6 +4,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -128,10 +129,9 @@ double? pathTrackingPerpendicularDistance(
         .watch(displayPathTrackingProvider)
         ?.perpendicularDistance(ref.watch(mainVehicleProvider));
 
-/// A provider for whether or not the path tracking debugging features should
-/// show.
+/// A provider for whether or not the path tracking should be shown.
 @Riverpod(keepAlive: true)
-class DebugPathTracking extends _$DebugPathTracking {
+class ShowPathTracking extends _$ShowPathTracking {
   @override
   bool build() => false;
 
@@ -163,20 +163,40 @@ FutureOr<PathTracking?> loadPathTrackingFromFile(
 ///
 /// Override the file name with [overrideName].
 @riverpod
-AsyncValue<void> savePathTracking(
+FutureOr<void> savePathTracking(
   SavePathTrackingRef ref,
   PathTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) =>
-    ref.watch(
+}) async =>
+    await ref.watch(
       saveJsonToFileDirectoryProvider(
         object: tracking,
         fileName:
             overrideName ?? tracking.name ?? DateTime.now().toIso8601String(),
         folder: 'guidance/path_tracking',
         downloadIfWeb: downloadIfWeb,
-      ),
+      ).future,
+    );
+
+/// A provider for saving [tracking] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
+@riverpod
+FutureOr<void> exportPathTracking(
+  ExportPathTrackingRef ref,
+  PathTracking tracking, {
+  String? overrideName,
+  bool downloadIfWeb = false,
+}) async =>
+    await ref.watch(
+      exportJsonToFileDirectoryProvider(
+        object: tracking,
+        fileName:
+            overrideName ?? tracking.name ?? DateTime.now().toIso8601String(),
+        folder: 'guidance/path_tracking',
+        downloadIfWeb: downloadIfWeb,
+      ).future,
     );
 
 /// A provider for reading and holding all the saved [PathTracking] in the
@@ -193,3 +213,69 @@ AsyncValue<List<PathTracking>> savedPathTrackings(SavedPathTrackingsRef ref) =>
         .whenData(
           (data) => data.cast(),
         );
+
+/// A provider for deleting [tracking] from the user file systemm.
+///
+/// Override the file name with [overrideName].
+@riverpod
+FutureOr<void> deletePathTracking(
+  DeletePathTrackingRef ref,
+  PathTracking tracking, {
+  String? overrideName,
+  bool downloadIfWeb = true,
+}) async =>
+    await ref.watch(
+      deleteJsonFromFileDirectoryProvider(
+        fileName: overrideName ??
+            tracking.name ??
+            '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
+        folder: 'guidance/path_tracking',
+      ).future,
+    );
+
+/// A provider for importing a [PathTracking] from a file and applying it to
+/// the [ConfiguredPathTracking] provider.
+@riverpod
+AsyncValue<PathTracking?> importPathTracking(
+  ImportPathTrackingRef ref,
+) {
+  FilePicker.platform.pickFiles(
+    allowedExtensions: ['json'],
+    type: FileType.custom,
+    dialogTitle: 'Choose path tracking file',
+  ).then((pickedFiles) {
+    if (Device.isWeb) {
+      final data = pickedFiles?.files.first.bytes;
+      if (data != null) {
+        final json = jsonDecode(String.fromCharCodes(data));
+        if (json is Map) {
+          final pathTracking =
+              PathTracking.fromJson(Map<String, dynamic>.from(json));
+          ref
+              .read(configuredPathTrackingProvider.notifier)
+              .update(pathTracking);
+          ref.read(showPathTrackingProvider.notifier).update(value: true);
+
+          return AsyncData(pathTracking);
+        }
+      }
+    } else {
+      final filePath = pickedFiles?.paths.first;
+      if (filePath != null) {
+        return ref.watch(loadPathTrackingFromFileProvider(filePath)).whenData(
+          (data) {
+            if (data != null) {
+              ref.read(configuredPathTrackingProvider.notifier).update(data);
+              ref.read(showPathTrackingProvider.notifier).update(value: true);
+
+              return data;
+            }
+            return null;
+          },
+        );
+      }
+    }
+    return const AsyncData(null);
+  });
+  return const AsyncLoading();
+}

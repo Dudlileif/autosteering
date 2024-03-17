@@ -30,36 +30,19 @@ class EquipmentConfigurator extends StatelessWidget {
                   Expanded(
                     child: Wrap(
                       alignment: WrapAlignment.spaceBetween,
+                      spacing: 8,
+                      runSpacing: 8,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            'Configure equipment',
-                            style: Theme.of(context).textTheme.displaySmall,
-                          ),
+                        Text(
+                          'Configure equipment',
+                          style: Theme.of(context).textTheme.headlineLarge,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: _ApplyConfigurationToAttachedEquipmentButton(),
-                        ),
-                        const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(8),
-                              child: _ImportButton(),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8),
-                              child: _SaveButton(),
-                            ),
-                          ],
-                        ),
+                        const _ApplyConfigurationToAttachedEquipmentButton(),
                       ],
                     ),
                   ),
                   const Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.only(left: 8),
                     child: CloseButton(),
                   ),
                 ],
@@ -129,51 +112,6 @@ class EquipmentConfigurator extends StatelessWidget {
         ],
         ),
       );
-}
-
-/// A button for loading an [Equipment] to the [configuredEquipmentProvider]
-/// from a file.
-class _ImportButton extends ConsumerWidget {
-  /// A button for loading an [Equipment] to the [configuredEquipmentProvider]
-  /// from a file.
-  const _ImportButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FilledButton.icon(
-      onPressed: () => ref.read(loadFileConfiguredEquipmentProvider),
-      icon: const Icon(Icons.file_open),
-      label: const Text('Import'),
-    );
-  }
-}
-
-/// A button for saving the [Equipment] int [configuredEquipmentProvider] to
-/// a file.
-class _SaveButton extends ConsumerWidget {
-  /// A button for saving the [Equipment] int [configuredEquipmentProvider] to
-  /// a file.
-  const _SaveButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FilledButton.icon(
-      onPressed: ref.watch(
-        configuredEquipmentProvider.select(
-          (value) => value.name != null && (value.name ?? '').isNotEmpty,
-        ),
-      )
-          ? () => ref.watch(
-                saveEquipmentProvider(
-                  ref.watch(configuredEquipmentProvider),
-                  downloadIfWeb: true,
-                ),
-              )
-          : null,
-      icon: const Icon(Icons.save),
-      label: const Text('Save'),
-    );
-  }
 }
 
 /// A button for going to the next page of the vehicle configurator.

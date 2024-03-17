@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/a_plus_line_menu.dart';
@@ -10,49 +8,22 @@ import 'package:autosteering/src/features/guidance/widgets/guidance_menu/virtual
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:universal_io/io.dart';
 
 /// A menu with attached submenu for working with the guidance features.
-class GuidanceMenu extends StatelessWidget {
+class GuidanceMenu extends ConsumerWidget {
   /// A menu with attached submenu for working with the guidance features.
   const GuidanceMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Guidance',
       icon: Icons.navigation,
       menuChildren: [
-        Consumer(
-          builder: (context, ref, child) {
-            if (ref.watch(displayABTrackingProvider) != null ||
-                ref.watch(displayPathTrackingProvider) != null) {
-              return MenuItemButton(
-                leadingIcon: const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Icon(Icons.clear),
-                ),
-                onPressed: () {
-                  ref.read(simInputProvider.notifier).send((abTracking: null));
-                  ref
-                      .read(simInputProvider.notifier)
-                      .send((pathTracking: null));
-                },
-                closeOnActivate: false,
-                child: Text(
-                  'Close active',
-                  style: textStyle,
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
         ListTile(
           title: Text(
             'Tracking mode',
@@ -64,7 +35,6 @@ class GuidanceMenu extends StatelessWidget {
                 mainVehicleProvider
                     .select((vehicle) => vehicle.pathTrackingMode),
               );
-
               return ToggleButtons(
                 onPressed: (index) {
                   final oldValue = ref.read(
@@ -94,7 +64,8 @@ class GuidanceMenu extends StatelessWidget {
                       (mode) => Padding(
                         padding: const EdgeInsets.all(4),
                         child: Text(
-                          mode.name.capitalize,
+                          mode.name.capitalize
+                              .replaceAll('Pursuit', ' Pursuit'),
                         ),
                       ),
                     )
@@ -103,9 +74,32 @@ class GuidanceMenu extends StatelessWidget {
             },
           ),
         ),
-        if (Device.isNative) const _LoadPathTrackingMenu(),
-        if (Device.isNative) const _LoadABTrackingMenu(),
-        const _ImportGuidanceButton(),
+        if (ref.watch(displayABTrackingProvider) != null ||
+            ref.watch(displayPathTrackingProvider) != null)
+          MenuItemButton(
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.clear),
+            ),
+            onPressed: () {
+              ref.read(simInputProvider.notifier).send((abTracking: null));
+              ref.read(simInputProvider.notifier).send((pathTracking: null));
+            },
+            closeOnActivate: false,
+            child: Text(
+              'Close active',
+              style: textStyle,
+            ),
+          ),
+        if (ref.watch(displayABTrackingProvider) == null &&
+            ref.watch(displayPathTrackingProvider) == null) ...[
+          if (Device.isNative) const _LoadPathTrackingMenu(),
+          if (Device.isNative) const _LoadABTrackingMenu(),
+          const _ImportMenu(),
+        ],
+        if (ref.watch(displayABTrackingProvider) != null ||
+            ref.watch(displayPathTrackingProvider) != null)
+          const _ExportButton(),
         const PathTrackingMenu(),
         const APlusLineMenu(),
         const ABLineMenu(),
@@ -142,22 +136,71 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
       icon: Icons.history,
       menuChildren: pathTrackings
           .map(
-            (pathTracking) => MenuItemButton(
-              closeOnActivate: false,
-              onPressed: () {
-                ref.read(simInputProvider.notifier).send((abTracking: null));
-                ref.read(simInputProvider.notifier).send((pathTracking: null));
-                ref
-                    .read(debugPathTrackingProvider.notifier)
-                    .update(value: true);
-                ref
-                    .read(configuredPathTrackingProvider.notifier)
-                    .update(pathTracking);
-                ref
-                    .read(enablePathTrackingProvider.notifier)
-                    .update(value: true);
-              },
-              child: Text(pathTracking.name ?? 'No name', style: textStyle),
+            (pathTracking) => ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 200),
+              child: ListTile(
+                onTap: () {
+                  ref.read(simInputProvider.notifier).send((abTracking: null));
+                  ref
+                      .read(simInputProvider.notifier)
+                      .send((pathTracking: null));
+                  ref
+                      .read(showPathTrackingProvider.notifier)
+                      .update(value: true);
+                  ref
+                      .read(configuredPathTrackingProvider.notifier)
+                      .update(pathTracking);
+                  ref
+                      .read(enablePathTrackingProvider.notifier)
+                      .update(value: true);
+                },
+                trailing: Device.isNative
+                    ? IconButton(
+                        onPressed: () async {
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (context) => SimpleDialog(
+                              title: Text(
+                                'Delete ${pathTracking.name ?? ''}?',
+                              ),
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SimpleDialogOption(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    Consumer(
+                                      builder: (context, ref, child) =>
+                                          SimpleDialogOption(
+                                        onPressed: () async {
+                                          await ref
+                                              .watch(
+                                                deletePathTrackingProvider(
+                                                  pathTracking,
+                                                ).future,
+                                              )
+                                              .then(
+                                                (value) => Navigator.of(context)
+                                                    .pop(true),
+                                              );
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.delete),
+                      )
+                    : null,
+                title: Text(pathTracking.name ?? 'No name', style: textStyle),
+              ),
             ),
           )
           .toList(),
@@ -191,23 +234,71 @@ class _LoadABTrackingMenu extends ConsumerWidget {
       icon: Icons.history,
       menuChildren: abTrackings
           .map(
-            (abTracking) => MenuItemButton(
-              closeOnActivate: false,
-              onPressed: () {
-                ref.read(simInputProvider.notifier).send((abTracking: null));
-                ref.read(simInputProvider.notifier).send((pathTracking: null));
-                ref
-                    .read(aBTrackingDebugShowProvider.notifier)
-                    .update(value: true);
-                ref
-                    .read(configuredABTrackingProvider.notifier)
-                    .update(abTracking);
-              },
-              child: Column(
-                children: [
-                  Text(abTracking.name ?? 'No name', style: textStyle),
-                  Text('${abTracking.runtimeType}', style: textStyle),
-                ],
+            (abTracking) => ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 200),
+              child: ListTile(
+                onTap: () {
+                  ref.read(simInputProvider.notifier).send((abTracking: null));
+                  ref
+                      .read(simInputProvider.notifier)
+                      .send((pathTracking: null));
+                  ref.read(showABTrackingProvider.notifier).update(value: true);
+                  ref
+                      .read(configuredABTrackingProvider.notifier)
+                      .update(abTracking);
+                },
+                trailing: Device.isNative
+                    ? IconButton(
+                        onPressed: () async {
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (context) => SimpleDialog(
+                              title: Text('Delete ${abTracking.name ?? ''}?'),
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SimpleDialogOption(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    Consumer(
+                                      builder: (context, ref, child) =>
+                                          SimpleDialogOption(
+                                        onPressed: () async {
+                                          await ref
+                                              .watch(
+                                                deleteABTrackingProvider(
+                                                  abTracking,
+                                                ).future,
+                                              )
+                                              .then(
+                                                (value) => Navigator.of(context)
+                                                    .pop(true),
+                                              );
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.delete),
+                      )
+                    : null,
+                title: Text(abTracking.name ?? 'No name', style: textStyle),
+                subtitle: Text(
+                  switch (abTracking.runtimeType) {
+                    APlusLine => 'A+ line',
+                    ABLine => 'AB line',
+                    ABCurve => 'AB curve',
+                    _ => 'Unknown',
+                  },
+                ),
               ),
             ),
           )
@@ -216,83 +307,57 @@ class _LoadABTrackingMenu extends ConsumerWidget {
   }
 }
 
-class _ImportGuidanceButton extends ConsumerWidget {
-  const _ImportGuidanceButton();
-
-  void decodeJson(Map<String, dynamic> json, WidgetRef ref) {
-    final mode = json['mode'] as String?;
-    final type = json['type'] as String?;
-    if (mode != null) {
-      if (mode.toLowerCase().contains('stanley') ||
-          mode.toLowerCase().contains('pursuit')) {
-        ref.read(simInputProvider.notifier).send((abTracking: null));
-        ref.read(simInputProvider.notifier).send((pathTracking: null));
-        ref.read(debugPathTrackingProvider.notifier).update(value: true);
-        ref.read(configuredPathTrackingProvider.notifier).update(
-              PathTracking.fromJson(
-                Map<String, dynamic>.from(json),
-              ),
-            );
-        ref.read(enablePathTrackingProvider.notifier).update(value: true);
-      } else if (type != null) {
-        if (type.toLowerCase().contains('ab') ||
-            type.toLowerCase().contains('a+')) {
-          ref.read(simInputProvider.notifier).send((abTracking: null));
-          ref.read(simInputProvider.notifier).send((pathTracking: null));
-          ref.read(aBTrackingDebugShowProvider.notifier).update(value: true);
-          ref.read(configuredABTrackingProvider.notifier).update(
-                ABTracking.fromJson(
-                  Map<String, dynamic>.from(json),
-                ),
-              );
-        }
-      }
-    }
-  }
+class _ImportMenu extends ConsumerWidget {
+  const _ImportMenu();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
-    return ListTile(
-      leading: const Icon(Icons.file_open),
-      title: Text(
-        'Import guidance',
-        style: textStyle,
-      ),
-      onTap: () async {
-        final result = await FilePicker.platform.pickFiles(
-          initialDirectory: Device.isNative
-              ? [
-                  ref.watch(fileDirectoryProvider).requireValue.path,
-                  '/guidance',
-                ].join()
-              : null,
-          dialogTitle: 'Open guidance json file',
-          allowedExtensions: ['json'],
-          type: FileType.custom,
-        );
-        if (result != null) {
-          if (Device.isWeb) {
-            final data = result.files.first.bytes;
-            if (data != null) {
-              final json = jsonDecode(String.fromCharCodes(data));
+    return MenuButtonWithChildren(
+      icon: Icons.file_open,
+      text: 'Import',
+      menuChildren: [
+        MenuItemButton(
+          onPressed: () async => await ref.watch(importABTrackingProvider),
+          closeOnActivate: false,
+          child: Text('AB-tracking', style: textStyle),
+        ),
+        MenuItemButton(
+          onPressed: () async => await ref.watch(importPathTrackingProvider),
+          closeOnActivate: false,
+          child: Text('Path tracking', style: textStyle),
+        ),
+      ],
+    );
+  }
+}
 
-              if (json is Map) {
-                decodeJson(Map<String, dynamic>.from(json), ref);
-              }
-            }
-          } else {
-            final path = result.paths.first;
-            if (path != null) {
-              final json = jsonDecode(File(path).readAsStringSync());
-              if (json is Map) {
-                decodeJson(Map<String, dynamic>.from(json), ref);
-              }
-            }
-          }
-        }
-      },
+class _ExportButton extends ConsumerWidget {
+  const _ExportButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    final abTracking = ref.watch(displayABTrackingProvider);
+    final pathTracking = ref.watch(displayPathTrackingProvider);
+
+    return MenuItemButton(
+      closeOnActivate: false,
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.save_alt),
+      ),
+      onPressed: abTracking != null
+          ? () async => await ref.watch(
+                exportABTrackingProvider(abTracking).future,
+              )
+          : pathTracking != null
+              ? () async => await ref
+                  .watch(exportPathTrackingProvider(pathTracking).future)
+              : null,
+      child: Text('Export', style: textStyle),
     );
   }
 }
