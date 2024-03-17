@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/map/providers/ui_providers.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_autosteer_parameter_configurator.dart';
@@ -21,7 +24,8 @@ class MapAndGaugeStackView extends ConsumerWidget {
 
     const map = MainMap();
 
-    final stack = Stack(
+    final stack = LayoutBuilder(
+      builder: (context, constraints) => Stack(
         children: [
           switch (ref.watch(mapUse3DPerspectiveProvider)) {
             false => map,
@@ -32,116 +36,266 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 child: map,
               ),
           },
-        if (ref.watch(virtualLedBarEnabledProvider) &&
-            ref.watch(
-              virtualLedBarPerpendicularDistanceProvider
-                  .select((value) => value != null),
-            ))
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child:
-                Align(alignment: Alignment.topCenter, child: VirtualLedBar()),
-          ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: 8 +
-                  2 *
-                      ref.watch(
-                        virtualLedBarConfigurationProvider
-                            .select((value) => value.ledSize),
-                      ),
+          if (ref.watch(virtualLedBarEnabledProvider) &&
+              ref.watch(
+                virtualLedBarPerpendicularDistanceProvider
+                    .select((value) => value != null),
+              ))
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child:
+                  Align(alignment: Alignment.topCenter, child: VirtualLedBar()),
             ),
-            child: SizedBox(
-              width: ref.watch(miniMapSizeProvider),
-              child: ColoredBox(
-                color: Colors.black12,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const BasicVehicleGauges(),
-                      const Divider(),
-                      if (ref.watch(
-                        displayABTrackingProvider
-                            .select((value) => value != null),
-                      )) ...[
-                        const ABTrackingControls(),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: 8 +
+                    2 *
+                        ref.watch(
+                          virtualLedBarConfigurationProvider
+                              .select((value) => value.ledSize),
+                        ),
+              ),
+              child: SizedBox(
+                width: ref.watch(miniMapSizeProvider),
+                child: ColoredBox(
+                  color: Colors.black12,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const BasicVehicleGauges(),
                         const Divider(),
+                        if (ref.watch(
+                          displayABTrackingProvider
+                              .select((value) => value != null),
+                        )) ...[
+                          const ABTrackingControls(),
+                          const Divider(),
+                        ],
+                        if (ref.watch(simCoreAllowManualInputProvider)) ...[
+                          const SimVehicleSteeringSlider(),
+                          const Divider(),
+                        ],
+                        if (ref.watch(showMiniMapProvider)) const MiniMap(),
                       ],
-                      if (ref.watch(simCoreAllowManualInputProvider)) ...[
-                        const SimVehicleSteeringSlider(),
-                        const Divider(),
-                      ],
-                      if (ref.watch(showMiniMapProvider)) const MiniMap(),
-                    ],
+                    ),
                   ),
                 ),
               ),
-              ),
+            ),
           ),
-        ),
           const Align(
             alignment: Alignment.bottomRight,
             child: MapContributionWidget(),
           ),
           Align(
             alignment: Alignment.topRight,
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: 8 +
-                  2 *
-                      ref.watch(
-                        virtualLedBarConfigurationProvider
-                            .select((value) => value.ledSize),
-                      ),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const MapControlButtons(),
-                  const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: EnableAutosteeringButton(),
-                  ),
-                  if (ref.watch(simCoreAllowManualInputProvider))
-                    const SimVehicleVelocityControls(),
-                ],
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: 8 +
+                    2 *
+                        ref.watch(
+                          virtualLedBarConfigurationProvider
+                              .select((value) => value.ledSize),
+                        ),
               ),
-            ),
-          ),
-        ),
-          if (ref.watch(debugVehicleIMUProvider))
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: SizedBox(height: 700, child: ImuConfigurator()),
-              ),
-            ),
-          if (ref.watch(debugVehicleWASProvider))
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: SizedBox(
-                  height: 700,
-                  child: SteeringHardwareConfigurator(),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const MapControlButtons(),
+                    const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: EnableAutosteeringButton(),
+                    ),
+                    if (ref.watch(simCoreAllowManualInputProvider))
+                      const SimVehicleVelocityControls(),
+                  ],
                 ),
               ),
             ),
-          if (ref.watch(debugVehicleAutosteerParametersProvider))
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.all(8),
-              child: VehicleAutosteerParameterConfigurator(),
-            ),
           ),
+          if (ref.watch(debugVehicleIMUProvider))
+            Consumer(
+              builder: (context, ref, child) {
+                var offset = ref.read(imuConfiguratorUiOffsetProvider);
+                return StatefulBuilder(
+                  builder: (context, setState) => Positioned(
+                    left: offset.dx.clamp(
+                      0,
+                      constraints.maxWidth - 380,
+                    ),
+                    top: offset.dy.clamp(0, constraints.maxHeight - 350),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(
+                        height: min(
+                          700,
+                          constraints.maxHeight -
+                              offset.dy.clamp(0, constraints.maxHeight - 350),
+                        ),
+                        child: LongPressDraggable(
+                          onDragUpdate: (update) => setState(
+                            () => offset = Offset(
+                              offset.dx + update.delta.dx,
+                              offset.dy + update.delta.dy,
+                            ),
+                          ),
+                          onDragEnd: (details) => ref
+                              .read(
+                                imuConfiguratorUiOffsetProvider.notifier,
+                              )
+                              .update(
+                                Offset(
+                                  offset.dx.clamp(
+                                    0,
+                                    constraints.maxWidth - 380,
+                                  ),
+                                  offset.dy
+                                      .clamp(0, constraints.maxHeight - 350),
+                                ),
+                              ),
+                          childWhenDragging: const SizedBox.shrink(),
+                          feedback: const Opacity(
+                            opacity: 0.7,
+                            child: SizedBox(
+                              height: 700,
+                              child: ImuConfigurator(),
+                            ),
+                          ),
+                          child: const ImuConfigurator(),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          if (ref.watch(debugVehicleWASProvider))
+            Consumer(
+              builder: (context, ref, child) {
+                var offset =
+                    ref.read(steeringHardwareConfiguratorUiOffsetProvider);
+                return StatefulBuilder(
+                  builder: (context, setState) => Positioned(
+                    left: offset.dx.clamp(
+                      0,
+                      constraints.maxWidth - 380,
+                    ),
+                    top: offset.dy.clamp(0, constraints.maxHeight - 350),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(
+                        height: min(
+                          700,
+                          constraints.maxHeight -
+                              offset.dy.clamp(0, constraints.maxHeight - 350),
+                        ),
+                        child: LongPressDraggable(
+                          onDragUpdate: (update) => setState(
+                            () => offset = Offset(
+                              offset.dx + update.delta.dx,
+                              offset.dy + update.delta.dy,
+                            ),
+                          ),
+                          onDragEnd: (details) => ref
+                              .read(
+                                steeringHardwareConfiguratorUiOffsetProvider
+                                    .notifier,
+                              )
+                              .update(
+                                Offset(
+                                  offset.dx.clamp(
+                                    0,
+                                    constraints.maxWidth - 380,
+                                  ),
+                                  offset.dy
+                                      .clamp(0, constraints.maxHeight - 350),
+                                ),
+                              ),
+                          childWhenDragging: const SizedBox.shrink(),
+                          feedback: const Opacity(
+                            opacity: 0.7,
+                            child: SizedBox(
+                              height: 700,
+                              child: SteeringHardwareConfigurator(),
+                            ),
+                          ),
+                          child: const SteeringHardwareConfigurator(),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          if (ref.watch(debugVehicleAutosteerParametersProvider))
+            Consumer(
+              builder: (context, ref, child) {
+                var offset = ref.read(autosteeringConfiguratorUiOffsetProvider);
+                return StatefulBuilder(
+                  builder: (context, setState) => Positioned(
+                    left: offset.dx.clamp(
+                      0,
+                      constraints.maxWidth - 380,
+                    ),
+                    top: offset.dy.clamp(0, constraints.maxHeight - 340),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(
+                        height: min(
+                          325,
+                          constraints.maxHeight -
+                              offset.dy.clamp(0, constraints.maxHeight - 340),
+                        ),
+                        child: LongPressDraggable(
+                          onDragUpdate: (update) {
+                            setState(
+                              () => offset = Offset(
+                                offset.dx + update.delta.dx,
+                                offset.dy + update.delta.dy,
+                              ),
+                            );
+                          },
+                          onDragEnd: (details) => ref
+                              .read(
+                                autosteeringConfiguratorUiOffsetProvider
+                                    .notifier,
+                              )
+                              .update(
+                                Offset(
+                                  offset.dx.clamp(
+                                    0,
+                                    constraints.maxWidth - 380,
+                                  ),
+                                  offset.dy
+                                      .clamp(0, constraints.maxHeight - 340),
+                                ),
+                              ),
+                          childWhenDragging: const SizedBox.shrink(),
+                          feedback: const Opacity(
+                            opacity: 0.7,
+                            child: SizedBox(
+                              height: 325,
+                              child: VehicleAutosteerParameterConfigurator(),
+                            ),
+                          ),
+                          child: const SizedBox(
+                            height: 325,
+                            child: VehicleAutosteerParameterConfigurator(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
         ],
+      ),
     );
 
     return Device.isDesktop || Device.isWeb
@@ -240,7 +394,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
             focusNode: FocusNode(
               descendantsAreFocusable: false,
               descendantsAreTraversable: false,
-      ),
+            ),
             child: stack,
           )
         : stack;

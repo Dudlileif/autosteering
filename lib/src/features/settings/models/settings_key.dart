@@ -48,6 +48,11 @@ enum SettingsKey {
   themeColorSchemeCustom('theme.color_scheme_custom'),
   themeColorSchemeInheritFromVehicle('theme.color_sheme.inherit_from_vehicle'),
   themeMode('theme.mode'),
+  uiImuConfiguratorOffset('ui.imu_configurator_offset'),
+  uiSteeringHardwareConfiguratorOffset(
+    'ui.steering_hardware_configurator_offset',
+  ),
+  uiAutosteeringConfiguratorOffset('ui.autosteering_configurator_offset'),
   virtualLedBarConfig('virtual_led_bar.config'),
   virtualLedBarEnabled('virtual_led_bar.enabled');
 

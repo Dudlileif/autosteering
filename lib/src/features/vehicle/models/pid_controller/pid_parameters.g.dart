@@ -9,7 +9,7 @@ part of 'pid_parameters.dart';
 _$PidParametersImpl _$$PidParametersImplFromJson(Map<String, dynamic> json) =>
     _$PidParametersImpl(
       p: (json['p'] as num?)?.toDouble() ?? 20,
-      i: (json['i'] as num?)?.toDouble() ?? 0.13,
+      i: (json['i'] as num?)?.toDouble() ?? 0.130,
       d: (json['d'] as num?)?.toDouble() ?? 0.063,
     );
 

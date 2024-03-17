@@ -24,7 +24,7 @@ final sendMessagesToHardwareProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef SendMessagesToHardwareRef = AutoDisposeProviderRef<bool>;
-String _$initializeSimCoreHash() => r'3b71306453d9de2ec7f0974de98399c1a61141d0';
+String _$initializeSimCoreHash() => r'1e8d9724c0f4960984958766a3c29cb25c30691f';
 
 /// Sends initial parameters to  the sim core.
 ///

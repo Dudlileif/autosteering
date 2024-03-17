@@ -49,7 +49,9 @@ typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
 String _$simCoreIsolateStreamHash() =>
     r'5ffe8cc4ca7532de5a44eb35c6869b2c72304992';
 
-/// See also [simCoreIsolateStream].
+/// A dummy provider for the web version.
+///
+/// Copied from [simCoreIsolateStream].
 @ProviderFor(simCoreIsolateStream)
 final simCoreIsolateStreamProvider = AutoDisposeProvider<void>.internal(
   simCoreIsolateStream,
@@ -64,10 +66,7 @@ final simCoreIsolateStreamProvider = AutoDisposeProvider<void>.internal(
 typedef SimCoreIsolateStreamRef = AutoDisposeProviderRef<void>;
 String _$simInputHash() => r'4d390ed2088f9822ccd8b5506a1fe72782489f0e';
 
-/// A provider used to send vehicle input data to the simulation thread/worker.
-///
-/// It will automatically select the right type of thread/worker depending
-/// on the platform.
+/// A provider for sending messages to the [SimulatorCore].
 ///
 /// Copied from [SimInput].
 @ProviderFor(SimInput)

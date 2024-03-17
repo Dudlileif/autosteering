@@ -3,6 +3,7 @@ export 'device.dart';
 export 'file_cached_network_image_provider.dart';
 export 'logger.dart';
 export 'math.dart';
+export 'offset_json_extension.dart';
 export 'polygon_and_polyline_copy_with_extensions.dart';
 export 'polygon_buffer_extension.dart';
 export 'position_projection_extensions.dart';

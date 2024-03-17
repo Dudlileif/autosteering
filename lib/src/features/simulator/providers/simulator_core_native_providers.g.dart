@@ -50,7 +50,9 @@ final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
 typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
 String _$simInputHash() => r'dfc8c3fc330abaece77b1bf54227fab9a59ac2d9';
 
-/// See also [SimInput].
+/// A provider for sending messages to the [SimulatorCore].
+///
+/// Copied from [SimInput].
 @ProviderFor(SimInput)
 final simInputProvider = NotifierProvider<SimInput, void>.internal(
   SimInput.new,

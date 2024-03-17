@@ -24,7 +24,6 @@ class VehicleAutosteerParameterConfigurator extends StatelessWidget {
       color: Colors.transparent,
       child: SizedBox(
         width: 300,
-        height: 325,
         child: DefaultTabController(
           length: 3,
           child: Scaffold(

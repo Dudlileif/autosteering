@@ -124,7 +124,7 @@ class __$$PidParametersImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$PidParametersImpl implements _PidParameters {
-  const _$PidParametersImpl({this.p = 20, this.i = 0.13, this.d = 0.063});
+  const _$PidParametersImpl({this.p = 20, this.i = 0.130, this.d = 0.063});
 
   factory _$PidParametersImpl.fromJson(Map<String, dynamic> json) =>
       _$$PidParametersImplFromJson(json);
