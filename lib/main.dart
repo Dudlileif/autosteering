@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:autosteering/src/app/autosteering.dart';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,4 +59,23 @@ Future<void> main() async {
       child: Autosteering(),
     ),
   );
+
+  LicenseRegistry.addLicense(() async* {
+    yield const LicenseEntryWithLineBreaks(['autosteering'], '''
+Copyright (C) 2024 Gaute Hagen
+
+Autosteering is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Autosteering is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+''');
+  });
 }
