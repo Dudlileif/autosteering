@@ -7,7 +7,6 @@ enum SettingsKey {
   hardwareNetworkSendMessages('hardware.network.send_messages'),
   hardwareUDPReceivePort('hardware.network.udp.receive_port'),
   hardwareUDPSendPort('hardware.network.udp.send_port'),
-  hardwareWebSocketPort('hardware.network.web.socket_port'),
   hardwareSerialBaudRate('hardware.serial.baud_rate'),
   hardwareSerialPort('hardware.serial.port'),
   logNumFiles('log.num_files'),

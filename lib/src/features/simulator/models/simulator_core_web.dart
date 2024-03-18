@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
@@ -7,7 +6,6 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/models/simulator_core_state.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// A class for simulating how vehicles should move given their position,
 /// bearing, steering angle and velocity.
@@ -34,8 +32,6 @@ class SimulatorCore {
 
     // The state of the simulation.
     final state = SimulatorCoreState(updateMainStream);
-
-    WebSocketChannel? socket;
 
     DateTime? lastHardwareMessageTime;
 
@@ -97,32 +93,7 @@ class SimulatorCore {
 
     // Handle the incoming messages.
     incomingEvents.listen((message) async {
-      if (message is ({String hardwareIPAdress, int hardwareWebSocketPort})) {
-        await socket?.sink.close();
-        final address = Uri.parse(
-          [
-            'ws://',
-            message.hardwareIPAdress,
-            ':',
-            message.hardwareWebSocketPort.toString(),
-            '/ws',
-          ].join(),
-        );
-        socket = WebSocketChannel.connect(address);
-        socket!.stream.listen(
-          (event) {
-            if (event is Uint8List) {
-              lastHardwareMessageTime = DateTime.now();
-              SimulatorCoreBase.networkListener(
-                event,
-                messageDecoder,
-                state,
-                updateMainStream,
-              );
-            }
-          },
-        );
-      } else if (message is LogReplay) {
+      if (message is LogReplay) {
         logReplay = message;
         replayListener = logReplay?.replay.listen(
           (record) => SimulatorCoreBase.replayListener(

@@ -74,29 +74,6 @@ typedef HardwareCommunicationConfigRef = ProviderRef<
       int hardwareUDPReceivePort,
       int hardwareUDPSendPort
     })>;
-String _$hardwareWebCommunicationConfigHash() =>
-    r'47df5b5aa2fddae18a9ab1376370094762546f54';
-
-/// A provider for the combined state of the [HardwareAddress],
-/// [HardwareWebSocketPort].
-///
-/// The updated state is automatically sent to the
-///
-/// Copied from [hardwareWebCommunicationConfig].
-@ProviderFor(hardwareWebCommunicationConfig)
-final hardwareWebCommunicationConfigProvider =
-    Provider<({String hardwareAddress, int hardwareWebSocketPort})>.internal(
-  hardwareWebCommunicationConfig,
-  name: r'hardwareWebCommunicationConfigProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareWebCommunicationConfigHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef HardwareWebCommunicationConfigRef
-    = ProviderRef<({String hardwareAddress, int hardwareWebSocketPort})>;
 String _$currentConnectionHash() => r'e780fb086d27c63045c0df36c7ad0a10ab0a0425';
 
 /// A provider for the current connection of the device.
@@ -208,26 +185,6 @@ final hardwareUDPSendPortProvider =
 );
 
 typedef _$HardwareUDPSendPort = Notifier<int>;
-String _$hardwareWebSocketPortHash() =>
-    r'afb7bbd829445135aabd30dbc368f7649dbffb61';
-
-/// A provider for the UDP send port for the device to send messages to
-/// the hardware in [HardwareAddress].
-///
-/// Copied from [HardwareWebSocketPort].
-@ProviderFor(HardwareWebSocketPort)
-final hardwareWebSocketPortProvider =
-    NotifierProvider<HardwareWebSocketPort, int>.internal(
-  HardwareWebSocketPort.new,
-  name: r'hardwareWebSocketPortProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareWebSocketPortHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$HardwareWebSocketPort = Notifier<int>;
 String _$tcpServerHash() => r'2d075ffd4a3fb8fb20b0d34ba4a1ce07e6107e32';
 
 /// A provider for a TCP server for sending/receiving data via TCP.

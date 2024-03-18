@@ -1,5 +1,5 @@
 name: autosteering
-description: A new Flutter project.
+description: Prototype program for automatically steering a tractor in a field.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -45,7 +45,6 @@ dependencies:
     # usb_serial: ^0.5.1
     uuid: ^4.3.3
     wakelock_plus: ^1.1.4
-    web_socket_channel: ^2.4.4
     window_manager: ^0.3.8
     xml: ^6.5.0
 

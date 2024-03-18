@@ -27,9 +27,7 @@ void _combinedSerial(_CombinedSerialRef ref) =>
 void combinedCommunication(CombinedCommunicationRef ref) {
   if (Device.isNative) {
     ref.watch(_combinedNativeNetworkProvider);
-  } else if (Device.isWeb) {
-    ref.watch(hardwareWebCommunicationConfigProvider);
-  }
+  } 
   if (Device.supportsSerial) {
     ref.watch(_combinedSerialProvider);
   }

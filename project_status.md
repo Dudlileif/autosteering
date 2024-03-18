@@ -33,7 +33,7 @@
 - Saving/loading of vehicles, equipment
 
 - IMU, WAS and GNSS comms with hardware
-  - USB/Serial or network UDP, WebSocket possible for http hosted site
+  - USB/Serial or network UDP
   - WAS and IMU configurator
 
 - Autosteering comms with hardware
@@ -58,7 +58,9 @@
 
 - Improved equipment simulation
 
-- Improved equipment recording/coverage.
+- Improved equipment recording/coverage
+
+- Automatic section control
 
 - Proper headland implementation, u-turns following same outer path
 
@@ -72,7 +74,7 @@
 
 - Improved safety measures
 
-- Import/export to AgOpenGps and ISOXML, maybe other formats
+- Import/export with AgOpenGps and ISOXML, maybe other formats
 
 - Custom hotkeys, also from hardware
 

@@ -156,33 +156,6 @@ $ip''',
               ),
             ),
           ),
-        if (Device.isWeb)
-          Consumer(
-            builder: (context, ref, child) => ListTile(
-              leading: const Icon(Icons.send),
-              title: TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Socket port',
-                ),
-                keyboardType: TextInputType.number,
-                maxLength: 5,
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  final port = value != null ? int.tryParse(value) : null;
-
-                  return port != null && port >= 1 && port <= 65535
-                      ? 'Valid Port'
-                      : 'Invalid Port';
-                },
-                initialValue:
-                    ref.watch(hardwareWebSocketPortProvider).toString(),
-                onChanged: ref
-                    .read(hardwareWebSocketPortProvider.notifier)
-                    .updateFromString,
-              ),
-            ),
-          ),
       ],
     );
   }

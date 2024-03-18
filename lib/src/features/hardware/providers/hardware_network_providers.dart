@@ -167,58 +167,6 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   );
 }
 
-/// A provider for the UDP send port for the device to send messages to
-/// the hardware in [HardwareAddress].
-@Riverpod(keepAlive: true)
-class HardwareWebSocketPort extends _$HardwareWebSocketPort {
-  @override
-  int build() {
-    ref.listenSelf((previous, next) {
-      if (previous != null) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.hardwareWebSocketPort, next);
-      }
-    });
-
-    return ref
-            .read(settingsProvider.notifier)
-            .getInt(SettingsKey.hardwareWebSocketPort) ??
-        80;
-  }
-
-  /// Update the [state] to [value].
-  void update(int value) => Future(() => state = value);
-
-  /// Update the [state] to [value] if it's a valid integer.
-  void updateFromString(String value) => Future(() {
-        final port = int.tryParse(value);
-        if (port != null) {
-          if (port >= 1 && port <= 65535) {
-            state = port;
-          }
-        }
-      });
-}
-
-/// A provider for the combined state of the [HardwareAddress],
-/// [HardwareWebSocketPort].
-///
-/// The updated state is automatically sent to the
-@Riverpod(keepAlive: true)
-({String hardwareAddress, int hardwareWebSocketPort})
-    hardwareWebCommunicationConfig(HardwareWebCommunicationConfigRef ref) {
-  ref.listenSelf((previous, next) {
-    if (next != previous) {
-      ref.read(simInputProvider.notifier).send(next);
-    }
-  });
-
-  return (
-    hardwareAddress: ref.watch(hardwareAddressProvider),
-    hardwareWebSocketPort: ref.watch(hardwareWebSocketPortProvider),
-  );
-}
 
 /// A provider for a TCP server for sending/receiving data via TCP.
 @Riverpod(keepAlive: true)
