@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 part of '../vehicle.dart';
 
 /// A conventional tractor with front wheel steering and a solid rear axle.
@@ -42,7 +59,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.name,
     super.uuid,
     super.lastUsed,
-super.manufacturerColors,
+    super.manufacturerColors,
   });
 
   /// Creates a [Tractor] from the [json] object.
@@ -125,7 +142,6 @@ super.manufacturerColors,
   @override
   double get rightSteeringWheelAngle => ackermannSteering.rightAngle;
 
-
   /// Returns a new [Tractor] based on this one, but with
   /// parameters/variables altered.
   @override
@@ -149,7 +165,7 @@ super.manufacturerColors,
     double? solidAxleWheelWidth,
     Imu? imu,
     Was? was,
-    MotorConfig? motorConfig,    
+    MotorConfig? motorConfig,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -169,7 +185,6 @@ super.manufacturerColors,
     String? name,
     String? uuid,
     ManufacturerColors? manufacturerColors,
-
   }) =>
       Tractor(
         antennaPosition: antennaPosition ?? this.antennaPosition,
@@ -213,7 +228,6 @@ super.manufacturerColors,
         length: length ?? this.length,
         width: width ?? this.width,
         wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
-
         hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,

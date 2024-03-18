@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:flutter/material.dart';
@@ -83,90 +100,92 @@ class _EquipmentTypeSelector extends ConsumerWidget {
       child: Material(
         type: MaterialType.transparency,
         child: ListView(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            width: 200,
-            height: 200,
-            child: ListTile(
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    flex: 10,
-                    child: Text(
-                      'Three point hitch\n(fixed hitch)',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                width: 200,
+                height: 200,
+                child: ListTile(
+                  title: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        flex: 10,
+                        child: Text(
+                          'Three point hitch\n(fixed hitch)',
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const Expanded(
-                    flex: 18,
+                      const Expanded(
+                        flex: 18,
                         // TODO(dudlileif): Make three point hitch icon
-                    child: Icon(Icons.workspaces, size: 100),
-                  ),
-                ],
-              ),
-              selected: equipment.hitchType == HitchType.fixed,
-              selectedTileColor: theme.toggleButtonsTheme.splashColor,
-              onTap: () {
-                ref.read(configuredEquipmentProvider.notifier).update(
-                      Equipment(hitchType: HitchType.fixed),
-                    );
-                ref.invalidate(configuredEquipmentNameTextControllerProvider);
-              },
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            width: 200,
-            height: 200,
-            child: ListTile(
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    flex: 10,
-                    child: Text(
-                      'Towbar hitch',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
+                        child: Icon(Icons.workspaces, size: 100),
                       ),
-                    ),
+                    ],
                   ),
-                  const Expanded(
-                    flex: 18,
-                        // TODO(dudlileif): Make towbar hitch icon
-                    child: Icon(Icons.commit, size: 100),
-                  ),
-                ],
+                  selected: equipment.hitchType == HitchType.fixed,
+                  selectedTileColor: theme.toggleButtonsTheme.splashColor,
+                  onTap: () {
+                    ref.read(configuredEquipmentProvider.notifier).update(
+                          Equipment(hitchType: HitchType.fixed),
+                        );
+                    ref.invalidate(
+                        configuredEquipmentNameTextControllerProvider);
+                  },
+                ),
               ),
-              selected: equipment.hitchType == HitchType.towbar,
-              selectedTileColor: theme.toggleButtonsTheme.splashColor,
-              onTap: () {
-                ref.read(configuredEquipmentProvider.notifier).update(
-                      Equipment(hitchType: HitchType.towbar),
-                    );
-                ref.invalidate(configuredEquipmentNameTextControllerProvider);
-              },
             ),
-          ),
-        ),
-      ],
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                width: 200,
+                height: 200,
+                child: ListTile(
+                  title: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        flex: 10,
+                        child: Text(
+                          'Towbar hitch',
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                      const Expanded(
+                        flex: 18,
+                        // TODO(dudlileif): Make towbar hitch icon
+                        child: Icon(Icons.commit, size: 100),
+                      ),
+                    ],
+                  ),
+                  selected: equipment.hitchType == HitchType.towbar,
+                  selectedTileColor: theme.toggleButtonsTheme.splashColor,
+                  onTap: () {
+                    ref.read(configuredEquipmentProvider.notifier).update(
+                          Equipment(hitchType: HitchType.towbar),
+                        );
+                    ref.invalidate(
+                        configuredEquipmentNameTextControllerProvider);
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 part of '../vehicle.dart';
 
 /// An articulated tractor with two bodies with solid axles that are joined
@@ -12,6 +29,7 @@ final class ArticulatedTractor extends Vehicle {
     required this.pivotToFrontAxle,
     required this.pivotToRearAxle,
     required super.antennaHeight,
+
     /// The minimum turning radius of the front axle.
     required super.minTurningRadius,
     required super.steeringAngleMax,
@@ -272,15 +290,14 @@ final class ArticulatedTractor extends Vehicle {
                 pivotToRearAxle) /
             sin(degToRadian(steeringAngle.abs()));
 
-    final turningRadiusCenter =
-        this.frontAxlePosition.rhumb.destinationPoint(
-              distance: currentTurningRadius,
-              bearing: switch (isTurningLeft) {
-                true => frontAxleAngle - 90,
-                false => frontAxleAngle + 90,
-              }
-                  .wrap360(),
-            );
+    final turningRadiusCenter = this.frontAxlePosition.rhumb.destinationPoint(
+          distance: currentTurningRadius,
+          bearing: switch (isTurningLeft) {
+            true => frontAxleAngle - 90,
+            false => frontAxleAngle + 90,
+          }
+              .wrap360(),
+        );
 
     final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
 
@@ -342,15 +359,14 @@ final class ArticulatedTractor extends Vehicle {
                 pivotToRearAxle) /
             sin(degToRadian(steeringAngle.abs()));
 
-    final turningRadiusCenter =
-        this.frontAxlePosition.rhumb.destinationPoint(
-              distance: currentTurningRadius,
-              bearing: switch (isTurningLeft) {
-                true => frontAxleAngle - 90,
-                false => frontAxleAngle + 90,
-              }
-                  .wrap360(),
-            );
+    final turningRadiusCenter = this.frontAxlePosition.rhumb.destinationPoint(
+          distance: currentTurningRadius,
+          bearing: switch (isTurningLeft) {
+            true => frontAxleAngle - 90,
+            false => frontAxleAngle + 90,
+          }
+              .wrap360(),
+        );
 
     final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
 
@@ -826,7 +842,6 @@ final class ArticulatedTractor extends Vehicle {
     String? name,
     String? uuid,
     ManufacturerColors? manufacturerColors,
-
   }) =>
       ArticulatedTractor(
         antennaPosition: antennaPosition ?? this.antennaPosition,

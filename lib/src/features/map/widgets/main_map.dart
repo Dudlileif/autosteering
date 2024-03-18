@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
@@ -27,7 +44,7 @@ class MainMap extends ConsumerWidget {
         maxZoom: 22,
         interactionOptions: InteractionOptions(
           flags: ref.watch(centerMapOnVehicleProvider)
-            ? InteractiveFlag.pinchZoom | InteractiveFlag.doubleTapZoom
+              ? InteractiveFlag.pinchZoom | InteractiveFlag.doubleTapZoom
               : InteractiveFlag.all,
         ),
         onMapEvent: (event) {
@@ -81,7 +98,7 @@ class MainMap extends ConsumerWidget {
           const RecordingPathLayer(),
         if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),
         if (ref.watch(showEquipmentDebugLayerProvider))
-        const EquipmentDebugLayer(),
+          const EquipmentDebugLayer(),
         if (ref.watch(showPathTrackingLayerProvider)) const PathTrackingLayer(),
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showDubinsPathDebugLayerProvider))

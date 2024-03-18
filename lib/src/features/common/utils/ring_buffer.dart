@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:math';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -256,12 +273,10 @@ class RingBuffer {
             }
           }
 
-          final along1 =
-              intersection.spherical
+          final along1 = intersection.spherical
               .alongTrackDistanceTo(start: start1, end: end1);
 
-          final along2 =
-              intersection.spherical
+          final along2 = intersection.spherical
               .alongTrackDistanceTo(start: start2, end: end2);
 
           // If the intersection is between the points for both

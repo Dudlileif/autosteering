@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -14,8 +31,7 @@ class ABTrackingLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     const pointTextStyle = TextStyle(color: Colors.white);
 
-    ref
-      .watch(configuredABTrackingProvider);
+    ref.watch(configuredABTrackingProvider);
 
     final abTracking = ref.watch(displayABTrackingProvider);
 
@@ -42,9 +58,10 @@ class ABTrackingLayer extends ConsumerWidget {
             polylines: [
               if (abTracking.boundary == null)
                 Polyline(
-                points:
-                    abTracking.baseLine.map((e) => e.position.latLng).toList(),
-              ),
+                  points: abTracking.baseLine
+                      .map((e) => e.position.latLng)
+                      .toList(),
+                ),
               Polyline(
                 points: abTracking.currentLine
                     .map((e) => e.position.latLng)
@@ -158,8 +175,7 @@ class ABTrackingLayer extends ConsumerWidget {
                           .latLng,
                       radius: 5,
                       color: Colors.pink,
-                    ), 
-                
+                    ),
                 ],
                 if (currentPerpendicularIntersect != null)
                   CircleMarker(
@@ -206,26 +222,26 @@ class ABTrackingLayer extends ConsumerWidget {
             if (abTracking != null) ...[
               if (abTracking.boundary == null) ...[
                 Marker(
-                point: abTracking.start.position.latLng,
-                child: const TextWithStroke(
-                  'A',
-                  style: pointTextStyle,
-                  strokeWidth: 4,
+                  point: abTracking.start.position.latLng,
+                  child: const TextWithStroke(
+                    'A',
+                    style: pointTextStyle,
+                    strokeWidth: 4,
+                  ),
+                  rotate: true,
+                  width: 50,
+                  height: 50,
                 ),
-                rotate: true,
-                width: 50,
-                height: 50,
-              ),
-              Marker(
-                point: abTracking.end.position.latLng,
-                child: const TextWithStroke(
-                  'B',
-                  style: pointTextStyle,
-                  strokeWidth: 4,
-                ),
-                rotate: true,
-                width: 50,
-                height: 50,
+                Marker(
+                  point: abTracking.end.position.latLng,
+                  child: const TextWithStroke(
+                    'B',
+                    style: pointTextStyle,
+                    strokeWidth: 4,
+                  ),
+                  rotate: true,
+                  width: 50,
+                  height: 50,
                 ),
               ],
               Marker(

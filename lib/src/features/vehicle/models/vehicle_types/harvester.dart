@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 part of '../vehicle.dart';
 
 /// A harvester with rear wheel steering and a solid front axle.
@@ -127,8 +144,6 @@ final class Harvester extends AxleSteeredVehicle {
   @override
   double get rightSteeringWheelAngle => -ackermannSteering.rightAngle;
 
-
-
   /// Returns a new [Harvester] based on this one, but with
   /// parameters/variables altered.
   @override
@@ -172,7 +187,6 @@ final class Harvester extends AxleSteeredVehicle {
     String? name,
     String? uuid,
     ManufacturerColors? manufacturerColors,
-
   }) =>
       Harvester(
         antennaPosition: antennaPosition ?? this.antennaPosition,
@@ -209,15 +223,13 @@ final class Harvester extends AxleSteeredVehicle {
             purePursuitParameters ?? this.purePursuitParameters,
         stanleyParameters: stanleyParameters ?? this.stanleyParameters,
         velocity: velocity ?? this.velocity,
-        bearing:
-            bearing ?? _bearing,
+        bearing: bearing ?? _bearing,
         pitch: pitch ?? _pitch,
         roll: roll ?? _roll,
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,
         wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
-
         hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,

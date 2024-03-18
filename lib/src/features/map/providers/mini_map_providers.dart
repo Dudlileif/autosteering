@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
@@ -121,10 +138,9 @@ class MiniMapLockToField extends _$MiniMapLockToField {
           ..rotate(0)
           ..fitCamera(
             CameraFit.bounds(
-              bounds: 
-            LatLngBounds.fromPoints(
-              bbox.corners2D.map((point) => point.latLng).toList(),
-            ),
+              bounds: LatLngBounds.fromPoints(
+                bbox.corners2D.map((point) => point.latLng).toList(),
+              ),
               padding: const EdgeInsets.all(4),
             ),
           )
@@ -132,10 +148,9 @@ class MiniMapLockToField extends _$MiniMapLockToField {
       } else {
         mapController.fitCamera(
           CameraFit.bounds(
-            bounds: 
-          LatLngBounds.fromPoints(
-            field.mapBoundingBox((point) => point.latLng).toList(),
-          ),
+            bounds: LatLngBounds.fromPoints(
+              field.mapBoundingBox((point) => point.latLng).toList(),
+            ),
             padding: const EdgeInsets.all(4),
           ),
         );
@@ -157,13 +172,13 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
   bool build() {
     ref.listenSelf((previous, next) {
       if (ref.read(miniMapReadyProvider)) {
-      if (next) {
-        ref.read(miniMapControllerProvider).rotate(0);
-      } else {
-        ref.read(miniMapControllerProvider).rotate(
-              ref.read(mainVehicleProvider.select((value) => -value.bearing)),
-            );
-      }
+        if (next) {
+          ref.read(miniMapControllerProvider).rotate(0);
+        } else {
+          ref.read(miniMapControllerProvider).rotate(
+                ref.read(mainVehicleProvider.select((value) => -value.bearing)),
+              );
+        }
       }
       if (previous != null && previous != next) {
         ref
