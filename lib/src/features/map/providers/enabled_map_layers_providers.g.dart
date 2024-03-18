@@ -131,42 +131,41 @@ final showDubinsPathDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowDubinsPathDebugLayerRef = AutoDisposeProviderRef<bool>;
-String _$showPathTrackingDebugLayerHash() =>
-    r'834b18812c734c3e13183f78e8c5d78ada20c936';
+String _$showPathTrackingLayerHash() =>
+    r'7ba806a3d334bf97dda6be74f54e2b3810b72ef0';
 
-/// Whether the debugging layer for the pure pursuit should be shown.
+/// Whether the layer for the path tracking should be shown.
 ///
-/// Copied from [showPathTrackingDebugLayer].
-@ProviderFor(showPathTrackingDebugLayer)
-final showPathTrackingDebugLayerProvider = AutoDisposeProvider<bool>.internal(
-  showPathTrackingDebugLayer,
-  name: r'showPathTrackingDebugLayerProvider',
+/// Copied from [showPathTrackingLayer].
+@ProviderFor(showPathTrackingLayer)
+final showPathTrackingLayerProvider = AutoDisposeProvider<bool>.internal(
+  showPathTrackingLayer,
+  name: r'showPathTrackingLayerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$showPathTrackingDebugLayerHash,
+      : _$showPathTrackingLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ShowPathTrackingDebugLayerRef = AutoDisposeProviderRef<bool>;
-String _$showFieldDebugLayerHash() =>
-    r'48fc5d1f7fcab85d8e3a411ee58b4991c8b3bbbe';
+typedef ShowPathTrackingLayerRef = AutoDisposeProviderRef<bool>;
+String _$showFieldLayerHash() => r'5e6c0581c1726e019f5be95bc1800a01937c66d4';
 
-/// Whether the debugging layer for the test field should be shown.
+/// Whether the layer for field should be shown.
 ///
-/// Copied from [showFieldDebugLayer].
-@ProviderFor(showFieldDebugLayer)
-final showFieldDebugLayerProvider = AutoDisposeProvider<bool>.internal(
-  showFieldDebugLayer,
-  name: r'showFieldDebugLayerProvider',
+/// Copied from [showFieldLayer].
+@ProviderFor(showFieldLayer)
+final showFieldLayerProvider = AutoDisposeProvider<bool>.internal(
+  showFieldLayer,
+  name: r'showFieldLayerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$showFieldDebugLayerHash,
+      : _$showFieldLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ShowFieldDebugLayerRef = AutoDisposeProviderRef<bool>;
+typedef ShowFieldLayerRef = AutoDisposeProviderRef<bool>;
 String _$showEquipmentDebugLayerHash() =>
     r'b8a001de87bdbfba763dd2bd7e6c3f128188e39d';
 
@@ -185,24 +184,24 @@ final showEquipmentDebugLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowEquipmentDebugLayerRef = AutoDisposeProviderRef<bool>;
-String _$showABTrackingDebugLayerHash() =>
-    r'6393cf929c22d180dcb8c753e76a6602b47d2614';
+String _$showABTrackingLayerHash() =>
+    r'4dc71619fcc3907a9e4de8e7696c1e93fa00e5ca';
 
-/// Whether the debugging layer for AB-trackng should be shown.
+/// Whether the layer for AB-tracking should be shown.
 ///
-/// Copied from [showABTrackingDebugLayer].
-@ProviderFor(showABTrackingDebugLayer)
-final showABTrackingDebugLayerProvider = AutoDisposeProvider<bool>.internal(
-  showABTrackingDebugLayer,
-  name: r'showABTrackingDebugLayerProvider',
+/// Copied from [showABTrackingLayer].
+@ProviderFor(showABTrackingLayer)
+final showABTrackingLayerProvider = AutoDisposeProvider<bool>.internal(
+  showABTrackingLayer,
+  name: r'showABTrackingLayerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$showABTrackingDebugLayerHash,
+      : _$showABTrackingLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ShowABTrackingDebugLayerRef = AutoDisposeProviderRef<bool>;
+typedef ShowABTrackingLayerRef = AutoDisposeProviderRef<bool>;
 String _$showOSMLayerHash() => r'279974104f0b019cf6a41ab2ce3c20ef7ec5a580';
 
 /// Whether the OpenStreetMap layer should be shown.

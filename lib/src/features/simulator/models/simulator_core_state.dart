@@ -550,6 +550,18 @@ class SimulatorCoreState {
             );
         }
       }
+    } 
+    // Reset AB tracking finished offsets (lines).
+    else if (message is ({bool abTrackingClearFinishedOffsets})) {
+      if (abTracking != null && message.abTrackingClearFinishedOffsets) {
+        abTracking!.finishedOffsets.clear();
+        mainThreadSendStream.add(
+          LogEvent(
+            Level.info,
+            'Cleared ABTracking finished offsets.',
+          ),
+        );
+      }
     }
     // Update whether manual driving should update path tracking.
     else if (message is ({bool allowManualTrackingUpdates})) {

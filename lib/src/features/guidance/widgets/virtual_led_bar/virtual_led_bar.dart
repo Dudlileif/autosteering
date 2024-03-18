@@ -179,8 +179,12 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
                 child: Center(
                   child: Consumer(
                     builder: (context, ref, child) {
-                      final distance = (config.reverseBar ? 1 : -1) *
+                      var distance = (config.reverseBar ? 1 : -1) *
                           (perpendicularDistance ?? 0);
+                      if (!distance.isFinite) {
+                        distance = 0;
+                      }
+
                       var number = (distance.abs() * 100)
                           .truncate()
                           .clamp(-99, 99)

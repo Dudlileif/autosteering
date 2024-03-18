@@ -70,7 +70,7 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showOSMLayerProvider)) const OSMLayer(),
         if (ref.watch(showCountryLayersProvider)) const CountryLayers(),
         if (ref.watch(showSentinelLayersProvider)) const SentinelLayers(),
-        if (ref.watch(showFieldDebugLayerProvider)) const FieldLayer(),
+        if (ref.watch(showFieldLayerProvider)) const FieldLayer(),
         if (ref.watch(showFinishedPathLayerProvider)) const FinishedPathLayer(),
         const EquipmentWorkedPathsLayer(),
         if (ref.watch(showVehicleDrawingLayerProvider))
@@ -82,13 +82,11 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showVehicleDebugLayerProvider)) const VehicleDebugLayer(),
         if (ref.watch(showEquipmentDebugLayerProvider))
         const EquipmentDebugLayer(),
-        if (ref.watch(showPathTrackingDebugLayerProvider))
-          const PathTrackingDebugLayer(),
+        if (ref.watch(showPathTrackingLayerProvider)) const PathTrackingLayer(),
         if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showDubinsPathDebugLayerProvider))
           const DubinsPathDebugLayer(),
-        if (ref.watch(showABTrackingDebugLayerProvider))
-          const ABTrackingDebugLayer(),
+        if (ref.watch(showABTrackingLayerProvider)) const ABTrackingLayer(),
         if (ref.watch(virtualLedBarTestingProvider))
           const VirtualLedBarTestLayer(),
       ],

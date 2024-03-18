@@ -6,40 +6,39 @@ part of 'ab_line_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$aBLineDebugHash() => r'0772eb664667dd0d39432a54abc9e471dabb2038';
+String _$aBLineHash() => r'365aa0d0ea1388c5f9aa3b333c7262b0532415db';
 
-/// A provider for the AB-line object to debug.
+/// A provider for the AB-line.
 ///
-/// Copied from [aBLineDebug].
-@ProviderFor(aBLineDebug)
-final aBLineDebugProvider = FutureProvider<ABLine?>.internal(
-  aBLineDebug,
-  name: r'aBLineDebugProvider',
+/// Copied from [aBLine].
+@ProviderFor(aBLine)
+final aBLineProvider = FutureProvider<ABLine?>.internal(
+  aBLine,
+  name: r'aBLineProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$aBLineDebugHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$aBLineHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ABLineDebugRef = FutureProviderRef<ABLine?>;
-String _$aPlusLineDebugHash() => r'9e93f7be35aa7e40e9660edc924f68f44cb2b42e';
+typedef ABLineRef = FutureProviderRef<ABLine?>;
+String _$aPlusLineHash() => r'f0b296c3da1c91bcd9c4d4177c1cde7ea70275c7';
 
-/// A provider for the A+-line object to debug.
+/// A provider for the A+-line.
 ///
-/// Copied from [aPlusLineDebug].
-@ProviderFor(aPlusLineDebug)
-final aPlusLineDebugProvider = FutureProvider<APlusLine?>.internal(
-  aPlusLineDebug,
-  name: r'aPlusLineDebugProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aPlusLineDebugHash,
+/// Copied from [aPlusLine].
+@ProviderFor(aPlusLine)
+final aPlusLineProvider = FutureProvider<APlusLine?>.internal(
+  aPlusLine,
+  name: r'aPlusLineProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$aPlusLineHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef APlusLineDebugRef = FutureProviderRef<APlusLine?>;
-String _$aPlusLineBearingHash() => r'65a9622136a732ab2987d83681fbca9a8e5fa545';
+typedef APlusLineRef = FutureProviderRef<APlusLine?>;
+String _$aPlusLineBearingHash() => r'59b6ab1e4921ed1dacf2103e6613059183d6ebae';
 
 /// A provider for the A+-line bearing.
 ///

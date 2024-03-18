@@ -195,7 +195,7 @@ FutureOr<List<dynamic>> savedFiles(
   }
 
   // Remake the list if there are any file changes in the folder.
-  dir.watch(recursive: true).listen((event) {
+  dir.watch().listen((event) {
     ref.invalidateSelf();
   });
 

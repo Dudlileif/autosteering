@@ -5,26 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A combination layer for debugging the AB-line feature.
-class ABTrackingDebugLayer extends ConsumerWidget {
-  /// A combination layer for debugging the AB-line feature.
-  const ABTrackingDebugLayer({super.key});
+/// A combination layer for the [ABTracking] feature.
+class ABTrackingLayer extends ConsumerWidget {
+  /// A combination layer for the [ABTracking] feature.
+  const ABTrackingLayer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const pointTextStyle = TextStyle(color: Colors.white);
 
     ref
-      ..watch(aBCurveDebugProvider)
-      ..watch(aBLineDebugProvider);
+      .watch(configuredABTrackingProvider);
 
     final abTracking = ref.watch(displayABTrackingProvider);
-
-    if (abTracking == null) {
-      ref
-        ..read(aBCurveDebugProvider)
-        ..read(aBLineDebugProvider);
-    }
 
     final pointA = abTracking?.start ?? ref.watch(aBPointAProvider);
 

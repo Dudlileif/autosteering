@@ -8,9 +8,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ab_line_providers.g.dart';
 
-/// A provider for the AB-line object to debug.
+/// A provider for the AB-line.
 @Riverpod(keepAlive: true)
-Future<ABLine?> aBLineDebug(ABLineDebugRef ref) async {
+Future<ABLine?> aBLine(ABLineRef ref) async {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {
@@ -92,17 +92,15 @@ Future<ABLine?> aBLineDebug(ABLineDebugRef ref) async {
 @Riverpod(keepAlive: true)
 class APlusLineBearing extends _$APlusLineBearing {
   @override
-  double? build() {
-    return 0;
-  }
+  double? build() => null;
 
   /// Updates [state] to [value].
   void update(double? value) => Future(() => state = value);
 }
 
-/// A provider for the A+-line object to debug.
+/// A provider for the A+-line.
 @Riverpod(keepAlive: true)
-Future<APlusLine?> aPlusLineDebug(APlusLineDebugRef ref) async {
+Future<APlusLine?> aPlusLine(APlusLineRef ref) async {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {

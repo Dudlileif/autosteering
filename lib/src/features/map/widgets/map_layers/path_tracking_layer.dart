@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A combination layer for debugging the path tracking functionality.
-class PathTrackingDebugLayer extends ConsumerWidget {
-  /// A combination layer for debugging the path tracking functionality.
-  const PathTrackingDebugLayer({super.key});
+/// A combination layer for the [PathTracking] functionality.
+class PathTrackingLayer extends ConsumerWidget {
+  /// A combination layer for the [PathTracking] functionality.
+  const PathTrackingLayer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

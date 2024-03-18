@@ -327,7 +327,9 @@ sealed class PathTracking {
       cumulativeIndex = closestIndex(vehicle);
 
   /// Try to advance to the next waypoint in the list.
-  void tryChangeWayPoint(Vehicle vehicle) {
+  ///
+  /// Will continue recursively until we are behind the next point.
+  bool tryChangeWayPoint(Vehicle vehicle) {
     final nextPoint = nextWayPoint(vehicle);
 
     final currentPoint = currentWayPoint(vehicle);
@@ -341,7 +343,9 @@ sealed class PathTracking {
 
     if (progress > segmentLength) {
       cumulativeIndex = nextIndex(vehicle);
+      return tryChangeWayPoint(vehicle);
     }
+    return false;
   }
 
   /// The next steering angle for the vehicle following the [path].

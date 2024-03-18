@@ -1003,6 +1003,25 @@ final importABTrackingProvider =
 );
 
 typedef ImportABTrackingRef = AutoDisposeProviderRef<AsyncValue<ABTracking?>>;
+String _$currentABTrackingTypeHash() =>
+    r'6802edd8d8bf0a49686c0f342ef11b30b92d915d';
+
+/// A provider for the current AB tracking type.
+///
+/// Copied from [CurrentABTrackingType].
+@ProviderFor(CurrentABTrackingType)
+final currentABTrackingTypeProvider =
+    NotifierProvider<CurrentABTrackingType, ABTrackingType>.internal(
+  CurrentABTrackingType.new,
+  name: r'currentABTrackingTypeProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentABTrackingTypeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CurrentABTrackingType = Notifier<ABTrackingType>;
 String _$showABTrackingHash() => r'5e6ea964bd4e20100846358a099ec7f4272755d5';
 
 /// A provider for whether the AB-tracking should be shown.
@@ -1207,6 +1226,25 @@ final configuredABTrackingProvider =
 );
 
 typedef _$ConfiguredABTracking = Notifier<ABTracking?>;
+String _$configuredMenuABTrackingHash() =>
+    r'89d3fcb6938bb21fce1ddcc4665e3eec34a7d257';
+
+/// A provider for the currently configured [ABTracking].
+///
+/// Copied from [ConfiguredMenuABTracking].
+@ProviderFor(ConfiguredMenuABTracking)
+final configuredMenuABTrackingProvider =
+    NotifierProvider<ConfiguredMenuABTracking, ABTracking?>.internal(
+  ConfiguredMenuABTracking.new,
+  name: r'configuredMenuABTrackingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$configuredMenuABTrackingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ConfiguredMenuABTracking = Notifier<ABTracking?>;
 String _$displayABTrackingHash() => r'360974096215fab89c89a88002ea487b3721f80d';
 
 /// A provider for the [ABTracking] to display.

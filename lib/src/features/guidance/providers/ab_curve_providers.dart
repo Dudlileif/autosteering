@@ -45,9 +45,9 @@ class ABCurvePoints extends _$ABCurvePoints {
   }
 }
 
-/// A provider for the AB-curve object to debug.
+/// A provider for the AB-curve.
 @Riverpod(keepAlive: true)
-Future<ABCurve?> aBCurveDebug(ABCurveDebugRef ref) async {
+Future<ABCurve?> aBCurve(ABCurveRef ref) async {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {

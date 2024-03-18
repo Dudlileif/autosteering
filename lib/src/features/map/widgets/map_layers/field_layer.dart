@@ -16,7 +16,7 @@ class FieldLayer extends ConsumerWidget {
     final field = ref.watch(activeFieldProvider);
 
     if (field != null) {
-      final enabled = ref.watch(showFieldDebugLayerProvider);
+      final enabled = ref.watch(showFieldLayerProvider);
       if (enabled) {
         final bufferedField = ref.watch(bufferedFieldProvider).when(
               data: (data) => data,

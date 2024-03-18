@@ -10,6 +10,18 @@ import 'package:universal_io/io.dart';
 
 part 'ab_common_providers.g.dart';
 
+/// A provider for the current AB tracking type.
+@Riverpod(keepAlive: true)
+class CurrentABTrackingType extends _$CurrentABTrackingType {
+  @override
+  ABTrackingType build() {
+    return ABTrackingType.abLine;
+  }
+
+  /// Updates [state] to [value].
+  void update(ABTrackingType value) => Future(() => state = value);
+}
+
 /// A provider for whether the AB-tracking should be shown.
 @Riverpod(keepAlive: true)
 class ShowABTracking extends _$ShowABTracking {
@@ -132,6 +144,37 @@ class ConfiguredABTracking extends _$ConfiguredABTracking {
       }
     });
     return null;
+  }
+
+  /// Send the [state] to the simulator.
+  void sendToSim() =>
+      ref.read(simInputProvider.notifier).send((abTracking: state));
+
+  /// Updates [state] to [value].
+  void update(ABTracking? value) => Future(() => state = value);
+}
+
+/// A provider for the currently configured [ABTracking].
+@Riverpod(keepAlive: true)
+class ConfiguredMenuABTracking extends _$ConfiguredMenuABTracking {
+  @override
+  ABTracking? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null || previous != null) {
+        Logger.instance.i('Path tracking set to ${next?.runtimeType}');
+        sendToSim();
+      }
+    });
+    return switch (ref.watch(currentABTrackingTypeProvider)) {
+      ABTrackingType.aPlusLine => ref.watch(aPlusLineProvider),
+      ABTrackingType.abLine => ref.watch(aBLineProvider),
+      ABTrackingType.abCurve => ref.watch(aBCurveProvider),
+    }
+        .when(
+      data: (data) => data,
+      error: (error, stackTracke) => null,
+      loading: () => null,
+    );
   }
 
   /// Send the [state] to the simulator.
@@ -298,7 +341,6 @@ AsyncValue<List<ABTracking>> savedABTrackings(SavedABTrackingsRef ref) => ref
     .whenData(
       (data) => data.cast(),
     );
-
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///

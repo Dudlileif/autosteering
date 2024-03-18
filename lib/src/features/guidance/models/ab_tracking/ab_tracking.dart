@@ -16,6 +16,18 @@ part 'a_plus_line.dart';
 part 'ab_curve.dart';
 part 'ab_line.dart';
 
+/// An enumerator for the different types of AB tracking.
+enum ABTrackingType {
+  /// A+ line
+  aPlusLine,
+
+  /// AB line
+  abLine,
+
+  /// AB curve
+  abCurve;
+}
+
 // TODO(dudlileif): Improve line creation, sometimes wrong side of polygon
 // border
 

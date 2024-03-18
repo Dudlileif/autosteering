@@ -109,14 +109,14 @@ bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {
 bool showDubinsPathDebugLayer(ShowDubinsPathDebugLayerRef ref) =>
     ref.watch(enableDubinsPathDebugProvider);
 
-/// Whether the debugging layer for the pure pursuit should be shown.
+/// Whether the layer for the path tracking should be shown.
 @riverpod
-bool showPathTrackingDebugLayer(ShowPathTrackingDebugLayerRef ref) =>
+bool showPathTrackingLayer(ShowPathTrackingLayerRef ref) =>
     ref.watch(showPathTrackingProvider);
 
-/// Whether the debugging layer for the test field should be shown.
+/// Whether the layer for field should be shown.
 @riverpod
-bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
+bool showFieldLayer(ShowFieldLayerRef ref) {
   final showField = ref.watch(showFieldProvider);
   final showBufferedField = ref.watch(showBufferedFieldProvider);
   final fieldExists = ref.watch(activeFieldProvider) != null;
@@ -143,7 +143,7 @@ class ShowEquipmentDrawingLayer extends _$ShowEquipmentDrawingLayer {
 bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) =>
     ref.watch(showEquipmentDebugProvider);
 
-/// Whether the debugging layer for AB-trackng should be shown.
+/// Whether the layer for AB-tracking should be shown.
 @riverpod
-bool showABTrackingDebugLayer(ShowABTrackingDebugLayerRef ref) =>
+bool showABTrackingLayer(ShowABTrackingLayerRef ref) =>
     ref.watch(showABTrackingProvider);
