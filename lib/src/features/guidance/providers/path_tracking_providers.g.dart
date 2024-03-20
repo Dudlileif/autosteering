@@ -1018,8 +1018,27 @@ final pathInterpolationDistanceProvider =
 );
 
 typedef _$PathInterpolationDistance = Notifier<double>;
+String _$pathTrackingPointsHash() =>
+    r'225ee956c9e62f4ceaef54b35b9440a9da0a130d';
+
+/// A provider for holding the [WayPoint]s for the [ConfiguredPathTracking].
+///
+/// Copied from [PathTrackingPoints].
+@ProviderFor(PathTrackingPoints)
+final pathTrackingPointsProvider =
+    NotifierProvider<PathTrackingPoints, List<WayPoint>?>.internal(
+  PathTrackingPoints.new,
+  name: r'pathTrackingPointsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pathTrackingPointsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$PathTrackingPoints = Notifier<List<WayPoint>?>;
 String _$configuredPathTrackingHash() =>
-    r'cd7265b6ef43673caaa0aefe48274f064031f474';
+    r'fc8c7c6cb59d39c425ecc6f25f4a7dc1080c7915';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.

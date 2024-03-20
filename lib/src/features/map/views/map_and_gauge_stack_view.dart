@@ -319,6 +319,62 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 );
               },
             ),
+          if (ref.watch(showPathRecordingMenuProvider))
+            Consumer(
+              builder: (context, ref, child) {
+                var offset = ref.read(pathRecordingMenuUiOffsetProvider);
+                return StatefulBuilder(
+                  builder: (context, setState) => Positioned(
+                    left: offset.dx.clamp(
+                      0,
+                      constraints.maxWidth - 380,
+                    ),
+                    top: offset.dy.clamp(0, constraints.maxHeight - 350),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(
+                        height: min(
+                          700,
+                          constraints.maxHeight -
+                              offset.dy.clamp(0, constraints.maxHeight - 350),
+                        ),
+                        child: LongPressDraggable(
+                          onDragUpdate: (update) => setState(
+                            () => offset = Offset(
+                              offset.dx + update.delta.dx,
+                              offset.dy + update.delta.dy,
+                            ),
+                          ),
+                          onDragEnd: (details) => ref
+                              .read(
+                                pathRecordingMenuUiOffsetProvider.notifier,
+                              )
+                              .update(
+                                Offset(
+                                  offset.dx.clamp(
+                                    0,
+                                    constraints.maxWidth - 380,
+                                  ),
+                                  offset.dy
+                                      .clamp(0, constraints.maxHeight - 350),
+                                ),
+                              ),
+                          childWhenDragging: const SizedBox.shrink(),
+                          feedback: const Opacity(
+                            opacity: 0.7,
+                            child: SizedBox(
+                              height: 700,
+                              child: PathRecordingMenu(),
+                            ),
+                          ),
+                          child: const PathRecordingMenu(),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );

@@ -24,27 +24,36 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A combination layer for the currently recording points and the
 /// lines between.
-class RecordingPathLayer extends ConsumerWidget {
+class PathRecordingLayer extends ConsumerWidget {
   /// A combination layer for the currently recording points and the
   /// lines between.
-  const RecordingPathLayer({super.key});
+  const PathRecordingLayer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final points = ref.watch(pathRecordingListProvider);
-    final vehiclePosition =
-        ref.watch(mainVehicleProvider.select((vehicle) => vehicle.position));
-
+    final settings = ref.watch(activePathRecordingSettingsProvider);
+    var vehicleWayPoint =
+        ref.watch(mainVehicleProvider.select((vehicle) => vehicle.wayPoint));
+    if (settings.longitudinalOffset.abs() > 0) {
+      vehicleWayPoint =
+          vehicleWayPoint.moveRhumb(distance: settings.longitudinalOffset);
+    }
+    if (settings.lateralOffset.abs() > 0) {
+      vehicleWayPoint = vehicleWayPoint.moveRhumb(
+        distance: settings.lateralOffset,
+        angleFromBearing: 90,
+      );
+    }
     return Stack(
-      children: points.isNotEmpty
-          ? [
+      children: [
               PolylineLayer(
                 polylineCulling: true,
                 polylines: [
                   Polyline(
                     points: [
                       ...points.map((point) => point.position.latLng),
-                      vehiclePosition.latLng,
+                      vehicleWayPoint.position.latLng,
                     ],
                   ),
                 ],
@@ -58,10 +67,14 @@ class RecordingPathLayer extends ConsumerWidget {
                         radius: 5,
                       ),
                     ),
+            CircleMarker(
+              point: vehicleWayPoint.position.latLng,
+              radius: 5,
+              color: Colors.blue,
+            ),
                 ],
               ),
-            ]
-          : const [],
+      ],
     );
   }
 }

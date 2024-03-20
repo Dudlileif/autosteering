@@ -44,6 +44,16 @@ class PathInterpolationDistance extends _$PathInterpolationDistance {
   void update(double value) => Future(() => state = value);
 }
 
+/// A provider for holding the [WayPoint]s for the [ConfiguredPathTracking].
+@Riverpod(keepAlive: true)
+class PathTrackingPoints extends _$PathTrackingPoints {
+  @override
+  List<WayPoint>? build() => null;
+
+  /// Updates [state] to [value].
+  void update(List<WayPoint>? value) => Future(() => state = value);
+}
+
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.
 @Riverpod(keepAlive: true)
@@ -56,7 +66,7 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
       }
     });
 
-    final wayPoints = ref.watch(finishedPathRecordingListProvider);
+    final wayPoints = ref.watch(pathTrackingPointsProvider);
     if (wayPoints != null) {
       return switch (ref.watch(
         mainVehicleProvider.select((vehicle) => vehicle.pathTrackingMode),

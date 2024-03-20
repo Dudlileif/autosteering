@@ -40,7 +40,7 @@ class ABCurvePoints extends _$ABCurvePoints {
   }
 
   /// Updates [state] to [points].
-  void update(List<WayPoint> points) => Future(() => state = points);
+  void update(List<WayPoint>? points) => Future(() => state = points);
 
   /// Updates [state] from [FinishedPathRecordingList] if possible.
   Future<void> updateFromRecording() async {

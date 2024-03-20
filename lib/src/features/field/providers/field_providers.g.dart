@@ -974,5 +974,42 @@ final fieldBufferGetRawPointsProvider =
 );
 
 typedef _$FieldBufferGetRawPoints = Notifier<bool>;
+String _$fieldExteriorRingHash() => r'fa5543b11982dc3d28fcd1fed939870033c3c355';
+
+/// A provider for the recorded exterior ring of a field.
+///
+/// Copied from [FieldExteriorRing].
+@ProviderFor(FieldExteriorRing)
+final fieldExteriorRingProvider =
+    NotifierProvider<FieldExteriorRing, List<Geographic>?>.internal(
+  FieldExteriorRing.new,
+  name: r'fieldExteriorRingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fieldExteriorRingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$FieldExteriorRing = Notifier<List<Geographic>?>;
+String _$fieldInteriorRingsHash() =>
+    r'13581cf5bef826acd9724008715e0047ee9c9b62';
+
+/// A provider for the recorded interior rings of a field.
+///
+/// Copied from [FieldInteriorRings].
+@ProviderFor(FieldInteriorRings)
+final fieldInteriorRingsProvider =
+    NotifierProvider<FieldInteriorRings, List<List<Geographic>>?>.internal(
+  FieldInteriorRings.new,
+  name: r'fieldInteriorRingsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fieldInteriorRingsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$FieldInteriorRings = Notifier<List<List<Geographic>>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

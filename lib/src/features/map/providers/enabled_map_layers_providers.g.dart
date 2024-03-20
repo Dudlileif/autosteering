@@ -59,24 +59,24 @@ final showFinishedPathLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowFinishedPathLayerRef = AutoDisposeProviderRef<bool>;
-String _$showRecordingPathLayerHash() =>
-    r'a03194c1186cdfbba9943f6c4fb6658f91b37806';
+String _$showPathRecordingLayerHash() =>
+    r'fe8dbb6b176c8a1da9831d2cc731b53a2aead36d';
 
 /// Whether the currently recording path should be shown.
 ///
-/// Copied from [showRecordingPathLayer].
-@ProviderFor(showRecordingPathLayer)
-final showRecordingPathLayerProvider = AutoDisposeProvider<bool>.internal(
-  showRecordingPathLayer,
-  name: r'showRecordingPathLayerProvider',
+/// Copied from [showPathRecordingLayer].
+@ProviderFor(showPathRecordingLayer)
+final showPathRecordingLayerProvider = AutoDisposeProvider<bool>.internal(
+  showPathRecordingLayer,
+  name: r'showPathRecordingLayerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$showRecordingPathLayerHash,
+      : _$showPathRecordingLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ShowRecordingPathLayerRef = AutoDisposeProviderRef<bool>;
+typedef ShowPathRecordingLayerRef = AutoDisposeProviderRef<bool>;
 String _$showEditablePathLayerHash() =>
     r'18c4ca86fc37494746fef72752d7e348e8d5dcdc';
 

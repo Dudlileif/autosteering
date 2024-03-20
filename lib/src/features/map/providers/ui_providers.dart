@@ -76,6 +76,33 @@ class ImuConfiguratorUiOffset extends _$ImuConfiguratorUiOffset {
   void update(Offset value) => Future(() => state = value);
 }
 
+
+/// A provider for the UI [Offset] for the path recording configurator.
+@Riverpod(keepAlive: true)
+class PathRecordingMenuUiOffset extends _$PathRecordingMenuUiOffset {
+  @override
+  Offset build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && next != previous) {
+        ref.read(settingsProvider.notifier).update(
+              SettingsKey.uiPathRecordingMenuOffset,
+              next.toJson(),
+            );
+      }
+    });
+
+    final setting = ref
+        .read(settingsProvider.notifier)
+        .getMap(SettingsKey.uiPathRecordingMenuOffset);
+    return setting != null
+        ? OffsetJsonExtension.fromJson(Map<String, dynamic>.from(setting))
+        : Offset.zero;
+  }
+
+  /// Updates [state] to [value].
+  void update(Offset value) => Future(() => state = value);
+}
+
 /// A provider for the UI [Offset] for the steering hardware configurator.
 @Riverpod(keepAlive: true)
 class SteeringHardwareConfiguratorUiOffset

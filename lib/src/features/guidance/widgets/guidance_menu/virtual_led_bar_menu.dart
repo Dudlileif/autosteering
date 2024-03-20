@@ -127,7 +127,7 @@ class VirtualLedBarMenu extends ConsumerWidget {
                         .update(config.copyWith(ledSize: value)),
                     min: 10,
                     max: 40,
-                    divisions: 29,
+                    divisions: 30,
                   ),
                 ],
               ),

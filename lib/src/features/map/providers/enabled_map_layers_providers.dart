@@ -74,7 +74,7 @@ bool showFinishedPathLayer(ShowFinishedPathLayerRef ref) {
 
 /// Whether the currently recording path should be shown.
 @riverpod
-bool showRecordingPathLayer(ShowRecordingPathLayerRef ref) =>
+bool showPathRecordingLayer(ShowPathRecordingLayerRef ref) =>
     ref.watch(enablePathRecorderProvider);
 
 /// Whether the editable recorded path should be shown.

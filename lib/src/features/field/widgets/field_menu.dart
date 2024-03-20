@@ -15,19 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
-import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geobase/geobase.dart';
 import 'package:universal_io/io.dart';
 
 /// A menu with attached submenu for interacting with the field feature.
@@ -546,109 +543,6 @@ class _CreateFieldButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
-    final recording = ref.watch(enablePathRecorderProvider);
-
-    if (recording) {
-      return MenuItemButton(
-        leadingIcon: const Padding(
-          padding: EdgeInsets.only(left: 8),
-          child: SizedBox.square(
-            dimension: 24,
-            child: CircularProgressIndicator(),
-          ),
-        ),
-        closeOnActivate: false,
-        onPressed: () {
-          ref.read(enablePathRecorderProvider.notifier).update(value: false);
-
-          unawaited(
-            showDialog<void>(
-              context: context,
-              builder: (context) {
-                var name = '';
-                return StatefulBuilder(
-                  builder: (context, setState) {
-                    return SimpleDialog(
-                      title: const Text('Name the field'),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.label_outline),
-                              labelText: 'Name',
-                            ),
-                            initialValue: name,
-                            onChanged: (value) => setState(() => name = value),
-                            onFieldSubmitted: (value) =>
-                                setState(() => name = value),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) => value != null &&
-                                    value.isNotEmpty &&
-                                    !value.startsWith(' ')
-                                ? null
-                                : '''No name entered! Please enter a name so that the field can be saved!''',
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 8,
-                            right: 8,
-                            top: 8,
-                          ),
-                          child: Consumer(
-                            child: const Text('Save field'),
-                            builder: (context, ref, child) => FilledButton(
-                              onPressed: () {
-                                Future.delayed(
-                                    const Duration(milliseconds: 100), () {
-                                  final points = ref
-                                      .read(finishedPathRecordingListProvider)!;
-
-                                  final field = Field(
-                                    name: name,
-                                    polygon: Polygon([
-                                      PositionSeries.view(
-                                        points
-                                            .map(
-                                              (e) => e.position.values,
-                                            )
-                                            .flattened
-                                            .toList(),
-                                      ),
-                                    ]),
-                                    boundingBox: GeoBox.from(
-                                      points.map((e) => e.position),
-                                    ),
-                                  );
-                                  ref.read(saveFieldProvider(field));
-                                  ref
-                                      .read(activeFieldProvider.notifier)
-                                      .update(field);
-                                });
-                                Navigator.of(context).pop();
-                              },
-                              child: child,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-          );
-        },
-        child: Text(
-          'Recording, tap to finish',
-          style: textStyle,
-        ),
-      );
-    }
-
     return MenuItemButton(
       leadingIcon: const Padding(
         padding: EdgeInsets.only(left: 8),
@@ -659,6 +553,10 @@ class _CreateFieldButton extends ConsumerWidget {
       closeOnActivate: false,
       onPressed: () {
         ref.read(enablePathRecorderProvider.notifier).update(value: true);
+        ref
+            .read(activePathRecordingTargetProvider.notifier)
+            .update(PathRecordingTarget.field);
+        ref.read(showPathRecordingMenuProvider.notifier).update(value: true);
       },
       child: Text(
         'Create field from recording',

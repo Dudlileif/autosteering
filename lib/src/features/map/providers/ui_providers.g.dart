@@ -44,6 +44,25 @@ final imuConfiguratorUiOffsetProvider =
 );
 
 typedef _$ImuConfiguratorUiOffset = Notifier<Offset>;
+String _$pathRecordingMenuUiOffsetHash() =>
+    r'061d9f8090b72372091d78a7606c4b9dbb8c7c4e';
+
+/// A provider for the UI [Offset] for the path recording configurator.
+///
+/// Copied from [PathRecordingMenuUiOffset].
+@ProviderFor(PathRecordingMenuUiOffset)
+final pathRecordingMenuUiOffsetProvider =
+    NotifierProvider<PathRecordingMenuUiOffset, Offset>.internal(
+  PathRecordingMenuUiOffset.new,
+  name: r'pathRecordingMenuUiOffsetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pathRecordingMenuUiOffsetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$PathRecordingMenuUiOffset = Notifier<Offset>;
 String _$steeringHardwareConfiguratorUiOffsetHash() =>
     r'42aebfb64368c40244b126207b2ec6acee96f707';
 

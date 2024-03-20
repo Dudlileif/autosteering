@@ -729,21 +729,14 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The polygon for the given [section].
   Polygon sectionPolygon(int section) => Polygon(
         [
-          PositionSeries.view(
-            sectionPoints(section).map((e) => e.values).flattened.toList(),
-          ),
+          PositionSeries.from(sectionPoints(section)),
         ],
       );
 
   /// The working polygon for the given [section].
   Polygon sectionWorkingPolygon(int section) => Polygon(
         [
-          PositionSeries.view(
-            sectionCornerPoints(section)
-                .map((e) => e.values)
-                .flattened
-                .toList(),
-          ),
+          PositionSeries.from(sectionCornerPoints(section)),
         ],
       );
 

@@ -19,7 +19,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
@@ -37,13 +36,13 @@ extension PolygonBufferExtension on Polygon {
     BufferJoin joinType = BufferJoin.round,
     bool getRawPoints = false,
   }) =>
-      PositionSeries.view(
+      PositionSeries.from(
         RingBuffer.bufferCircular(
           ring: ring.toGeographicPositions,
           distance: distance,
           joinType: joinType,
           getRawPoints: getRawPoints,
-        ).map((point) => point.values).flattened.toList(),
+        ),
       );
 
   /// The buffered [PositionSeries] for a polygon's holes that has been inset or

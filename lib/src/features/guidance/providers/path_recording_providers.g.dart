@@ -6,10 +6,47 @@ part of 'path_recording_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$automaticPathRecordingHash() =>
+    r'4d6f776be461ed049e0135f666894fdad94b9b17';
+
+/// A provider for watching to keep the automatic path recording going.
+///
+/// Copied from [automaticPathRecording].
+@ProviderFor(automaticPathRecording)
+final automaticPathRecordingProvider = AutoDisposeFutureProvider<void>.internal(
+  automaticPathRecording,
+  name: r'automaticPathRecordingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$automaticPathRecordingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AutomaticPathRecordingRef = AutoDisposeFutureProviderRef<void>;
+String _$showPathRecordingMenuHash() =>
+    r'09d5b8da1fc22827b75808bcb249c8c576b50a68';
+
+/// Whether the path recording menu should be shown.
+///
+/// Copied from [ShowPathRecordingMenu].
+@ProviderFor(ShowPathRecordingMenu)
+final showPathRecordingMenuProvider =
+    NotifierProvider<ShowPathRecordingMenu, bool>.internal(
+  ShowPathRecordingMenu.new,
+  name: r'showPathRecordingMenuProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showPathRecordingMenuHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowPathRecordingMenu = Notifier<bool>;
 String _$enablePathRecorderHash() =>
     r'6fedacb5e80d10808ae682a6f69169af3e3e1323';
 
-/// Whether the recorder is enabled.
+/// Whether the path recorder is enabled.
 ///
 /// Copied from [EnablePathRecorder].
 @ProviderFor(EnablePathRecorder)
@@ -25,68 +62,65 @@ final enablePathRecorderProvider =
 );
 
 typedef _$EnablePathRecorder = Notifier<bool>;
-String _$pathRecordingTurnMinDistanceHash() =>
-    r'2fc96e554d84755bb3ae7b330d45071ed07f132f';
+String _$enableAutomaticPathRecorderHash() =>
+    r'd9289d46018a08429bc90e7497c5ed0973d2cb4d';
 
-/// A provider for the minimum distance between recorded points, i.e. when
-/// to add new points when going turning.
+/// Whether the automatic path recorder is enabled.
 ///
-/// Copied from [PathRecordingTurnMinDistance].
-@ProviderFor(PathRecordingTurnMinDistance)
-final pathRecordingTurnMinDistanceProvider =
-    NotifierProvider<PathRecordingTurnMinDistance, double>.internal(
-  PathRecordingTurnMinDistance.new,
-  name: r'pathRecordingTurnMinDistanceProvider',
+/// Copied from [EnableAutomaticPathRecorder].
+@ProviderFor(EnableAutomaticPathRecorder)
+final enableAutomaticPathRecorderProvider =
+    NotifierProvider<EnableAutomaticPathRecorder, bool>.internal(
+  EnableAutomaticPathRecorder.new,
+  name: r'enableAutomaticPathRecorderProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$pathRecordingTurnMinDistanceHash,
+      : _$enableAutomaticPathRecorderHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$PathRecordingTurnMinDistance = Notifier<double>;
-String _$pathRecordingMaxDistanceHash() =>
-    r'dc29fe85645b38941363eb0a6043fd2d36975194';
+typedef _$EnableAutomaticPathRecorder = Notifier<bool>;
+String _$activePathRecordingSettingsHash() =>
+    r'a48ada6924856a5d2aa54b1663755114f1904f15';
 
-/// A provider for the maximum distance between recorded points, i.e. when
-/// to add new points when going straight.
+/// A provider for the [PathRecordingSettings] which configures how paths
+/// should be recorded.
 ///
-/// Copied from [PathRecordingMaxDistance].
-@ProviderFor(PathRecordingMaxDistance)
-final pathRecordingMaxDistanceProvider =
-    NotifierProvider<PathRecordingMaxDistance, double>.internal(
-  PathRecordingMaxDistance.new,
-  name: r'pathRecordingMaxDistanceProvider',
+/// Copied from [ActivePathRecordingSettings].
+@ProviderFor(ActivePathRecordingSettings)
+final activePathRecordingSettingsProvider = NotifierProvider<
+    ActivePathRecordingSettings, PathRecordingSettings>.internal(
+  ActivePathRecordingSettings.new,
+  name: r'activePathRecordingSettingsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$pathRecordingMaxDistanceHash,
+      : _$activePathRecordingSettingsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$PathRecordingMaxDistance = Notifier<double>;
-String _$pathRecordingTriggerAngleHash() =>
-    r'563ff93aaf6a3bf722e59f59611e0951d2ff3970';
+typedef _$ActivePathRecordingSettings = Notifier<PathRecordingSettings>;
+String _$activePathRecordingTargetHash() =>
+    r'fe77111b8f0263c125936437870e8c0b88266f0e';
 
-/// A provider for the maximum angle between recorded points, i.e. when to
-/// add new points in turns if after [PathRecordingTurnMinDistance] has been
-/// passed.
+/// Whether the path recording menu should be shown.
 ///
-/// Copied from [PathRecordingTriggerAngle].
-@ProviderFor(PathRecordingTriggerAngle)
-final pathRecordingTriggerAngleProvider =
-    NotifierProvider<PathRecordingTriggerAngle, double>.internal(
-  PathRecordingTriggerAngle.new,
-  name: r'pathRecordingTriggerAngleProvider',
+/// Copied from [ActivePathRecordingTarget].
+@ProviderFor(ActivePathRecordingTarget)
+final activePathRecordingTargetProvider =
+    NotifierProvider<ActivePathRecordingTarget, PathRecordingTarget>.internal(
+  ActivePathRecordingTarget.new,
+  name: r'activePathRecordingTargetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$pathRecordingTriggerAngleHash,
+      : _$activePathRecordingTargetHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$PathRecordingTriggerAngle = Notifier<double>;
-String _$pathRecordingListHash() => r'35fd851912b27ee01835510a55ecfe9d2f9ff489';
+typedef _$ActivePathRecordingTarget = Notifier<PathRecordingTarget>;
+String _$pathRecordingListHash() => r'6a7af289d7b11238cc250b37bfa18d773ca2e8f1';
 
 /// A list of the currently recording points.
 ///
@@ -105,7 +139,7 @@ final pathRecordingListProvider =
 
 typedef _$PathRecordingList = Notifier<List<WayPoint>>;
 String _$finishedPathRecordingListHash() =>
-    r'3b7b02f7611d6e142141001e9c38cb7bfb8e9667';
+    r'47250939a05d05e337d966a77bf68987e94d3522';
 
 /// A list of path points for the last finished recording.
 ///

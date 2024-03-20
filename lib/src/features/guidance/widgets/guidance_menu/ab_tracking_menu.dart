@@ -172,36 +172,26 @@ class ABTrackingMenu extends ConsumerWidget {
           )
         else if (abTrackingType == ABTrackingType.abCurve)
           Consumer(
-            builder: (context, ref, child) {
-              final enabled = ref.watch(enablePathRecorderProvider);
-              return MenuItemButton(
-                leadingIcon: Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: enabled
-                      ? const SizedBox.square(
-                          dimension: 24,
-                          child: CircularProgressIndicator(),
-                        )
-                      : const Icon(Icons.voicemail),
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.voicemail),
                 ),
                 onPressed: () {
                   ref
                       .read(enablePathRecorderProvider.notifier)
-                      .update(value: !enabled);
-
-                  if (enabled == true) {
-                    ref
-                        .read(aBCurvePointsProvider.notifier)
-                        .updateFromRecording();
-                  }
+                    .update(value: true);
+                ref
+                    .read(activePathRecordingTargetProvider.notifier)
+                    .update(PathRecordingTarget.abCurve);
+                ref
+                    .read(showPathRecordingMenuProvider.notifier)
+                    .update(value: true);
                 },
-                closeOnActivate: false,
-                child: Text(
-                  enabled ? 'Recording, tap to finish' : 'Record curve',
-                  style: Theme.of(context).menuButtonWithChildrenText,
-                ),
-              );
-            },
+              child:
+                  Text('Record curve', style: theme.menuButtonWithChildrenText),
+            ),
           ),
         _ABCommonMenu(
           abTracking: abTracking,

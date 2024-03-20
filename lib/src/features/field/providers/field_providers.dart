@@ -19,6 +19,7 @@ import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -273,6 +274,46 @@ class FieldBufferGetRawPoints extends _$FieldBufferGetRawPoints {
 
   /// Invert the current state.
   void toggle() => Future(() => state = !state);
+}
+
+/// A provider for the recorded exterior ring of a field.
+@Riverpod(keepAlive: true)
+class FieldExteriorRing extends _$FieldExteriorRing {
+  @override
+  List<Geographic>? build() => null;
+
+  /// Updates [state] to [value].
+  void update(List<Geographic>? value) => Future(() => state = value);
+}
+
+/// A provider for the recorded interior rings of a field.
+@Riverpod(keepAlive: true)
+class FieldInteriorRings extends _$FieldInteriorRings {
+  @override
+  List<List<Geographic>>? build() => null;
+
+  /// Updates [state] to [value].
+  void update(List<List<Geographic>>? value) => Future(() => state = value);
+
+  /// Adds an interior [ring] to the [state], will be skipped if it already
+  /// is in list of rings.
+  void addRing(List<Geographic>? ring) => Future(() {
+        if (ring != null) {
+          if (state == null) {
+            state = [ring];
+          } else if (state != null) {
+            var exists = false;
+            for (final other in state!) {
+              if (const DeepCollectionEquality().equals(ring, other)) {
+                exists = true;
+              }
+            }
+            if (!exists) {
+              state = [...?state, ring];
+            }
+          }
+        }
+      });
 }
 
 /// A provider for saving [field] to a file in the user file directory.
