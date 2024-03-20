@@ -267,12 +267,14 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       ..read(showFinishedPathProvider.notifier)
                           .update(value: false),
                     PathRecordingTarget.field =>
-                      ref.read(fieldExteriorRingProvider.notifier).update(
+                      ref
+                      ..read(fieldExteriorRingProvider.notifier).update(
                             ref
                                 .read(finishedPathRecordingListProvider)
                                 ?.map((e) => e.position)
                                 .toList(),
-                          ),
+                      )
+                      ..invalidate(finishedPathRecordingListProvider),
                     PathRecordingTarget.pathTracking => ref
                       ..read(pathTrackingPointsProvider.notifier)
                           .update(ref.read(finishedPathRecordingListProvider))
@@ -286,7 +288,8 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       ..read(enablePathRecorderProvider.notifier)
                           .update(value: false)
                       ..read(showFinishedPathProvider.notifier)
-                          .update(value: false),
+                          .update(value: false)
+                      ..invalidate(finishedPathRecordingListProvider),
                   },
                   child: Text(
                     switch (target) {
@@ -307,12 +310,14 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       child: Icon(Icons.add),
                     ),
                     onPressed: () =>
-                        ref.read(fieldInteriorRingsProvider.notifier).addRing(
+                        ref
+                      ..read(fieldInteriorRingsProvider.notifier).addRing(
                               ref
                                   .read(finishedPathRecordingListProvider)
                                   ?.map((e) => e.position)
                                   .toList(),
-                            ),
+                      )
+                      ..invalidate(finishedPathRecordingListProvider),
                     child:
                         Text('Add field interior boundary', style: textStyle),
                   ),

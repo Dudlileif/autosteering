@@ -134,9 +134,17 @@ bool showPathTrackingLayer(ShowPathTrackingLayerRef ref) =>
 bool showFieldLayer(ShowFieldLayerRef ref) {
   final showField = ref.watch(showFieldProvider);
   final showBufferedField = ref.watch(showBufferedFieldProvider);
-  final fieldExists = ref.watch(activeFieldProvider) != null;
+  final fieldExists =
+      ref.watch(activeFieldProvider.select((value) => value != null));
 
-  final enabled = (showField || showBufferedField) && fieldExists;
+  final showRecordedRings = ref.watch(showPathRecordingMenuProvider) &&
+      ref.watch(
+        activePathRecordingTargetProvider
+            .select((value) => value == PathRecordingTarget.field),
+      );
+
+  final enabled =
+      ((showField || showBufferedField) && fieldExists) || showRecordedRings;
   return enabled;
 }
 

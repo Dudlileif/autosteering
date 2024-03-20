@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class FieldLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final field = ref.watch(activeFieldProvider);
 
+    final darkModeEnabled = Theme.of(context).brightness == Brightness.dark;
     if (field != null) {
       final enabled = ref.watch(showFieldLayerProvider);
       if (enabled) {
@@ -55,7 +57,6 @@ class FieldLayer extends ConsumerWidget {
 
         final showBorderPoints = ref.watch(showFieldBorderPointsProvider);
 
-        final darkModeEnabled = Theme.of(context).brightness == Brightness.dark;
 
         return Stack(
           children: [
@@ -119,6 +120,40 @@ class FieldLayer extends ConsumerWidget {
           ],
         );
       }
+    }
+    final recordingExteriorRing = ref.watch(fieldExteriorRingProvider);
+    final recordingInteriorRings = ref.watch(fieldInteriorRingsProvider);
+    if (ref.watch(showPathRecordingMenuProvider) &&
+        ref.watch(
+          activePathRecordingTargetProvider
+              .select((value) => value == PathRecordingTarget.field),
+        ) &&
+        (recordingInteriorRings != null || recordingExteriorRing != null)) {
+      return Stack(
+        children: [
+          PolygonLayer(
+            polygonCulling: true,
+            polygons: [
+              if (recordingExteriorRing != null)
+                Polygon(
+                  points: recordingExteriorRing
+                      .map((point) => point.latLng)
+                      .toList(),
+                  borderStrokeWidth: 1,
+                  borderColor: darkModeEnabled ? Colors.white : Colors.black,
+                ),
+              if (recordingInteriorRings != null)
+                ...recordingInteriorRings.map(
+                  (ring) => Polygon(
+                    points: ring.map((point) => point.latLng).toList(),
+                    borderStrokeWidth: 1,
+                    borderColor: darkModeEnabled ? Colors.white : Colors.black,
+                  ),
+                ),
+            ],
+          ),
+        ],
+      );
     }
     return const SizedBox.shrink();
   }
