@@ -181,65 +181,62 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       growable: false,
     );
 
-    return SizedBox(
-      width: config.barWidth,
-      child: Column(
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: config.barWidth,
+        maxHeight: config.ledSize + 22,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ...leftEndLeds,
-              ...leftIntermediateLeds,
-              ...leftCenterLeds,
-              SizedBox(
-                width: 90,
-                child: Center(
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      var distance = (config.reverseBar ? 1 : -1) *
-                          (perpendicularDistance ?? 0);
-                      if (!distance.isFinite) {
-                        distance = 0;
-                      }
+          ...leftEndLeds,
+          ...leftIntermediateLeds,
+          ...leftCenterLeds,
+          SizedBox(
+            width: 80,
+            child: Center(
+              child: Consumer(
+                builder: (context, ref, child) {
+                  var distance = (config.reverseBar ? 1 : -1) *
+                      (perpendicularDistance ?? 0);
+                  if (!distance.isFinite) {
+                    distance = 0;
+                  }
 
-                      var number = (distance.abs() * 100)
-                          .truncate()
-                          .clamp(-99, 99)
-                          .toString();
-                      if (distance.abs() >= 1) {
-                        number = distance.abs().clamp(0, 99).toStringAsFixed(1);
-                      }
-                      if (distance.abs() >= 10) {
-                        number =
-                            '''${distance.abs().clamp(0, 99).toStringAsFixed(0)}.''';
-                      }
-                      if (distance.abs() >= 0.01) {
-                        number =
-                            distance.isNegative ? '⊲ $number ' : ' $number ⊳';
-                      }
-                      return TextWithStroke(
-                        number,
-                        style:
-                            Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                  color: Color(
-                                    config.colorFromDistance(
-                                      perpendicularDistance ?? 0,
-                                    ),
-                                  ),
-                                  fontFamily: 'Noto Sans Mono',
-                                  fontWeight: FontWeight.bold,
-                                ),
-                        strokeWidth: 4,
-                      );
-                    },
-                  ),
-                ),
+                  var number = (distance.abs() * 100)
+                      .truncate()
+                      .clamp(-99, 99)
+                      .toString();
+                  if (distance.abs() >= 1) {
+                    number = distance.abs().clamp(0, 99).toStringAsFixed(1);
+                  }
+                  if (distance.abs() >= 10) {
+                    number =
+                        '''${distance.abs().clamp(0, 99).toStringAsFixed(0)}.''';
+                  }
+                  if (distance.abs() >= 0.01) {
+                    number = distance.isNegative ? '⊲ $number ' : ' $number ⊳';
+                  }
+                  return TextWithStroke(
+                    number,
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                          color: Color(
+                            config.colorFromDistance(
+                              perpendicularDistance ?? 0,
+                            ),
+                          ),
+                          fontFamily: 'Noto Sans Mono',
+                          fontWeight: FontWeight.bold,
+                        ),
+                    strokeWidth: 4,
+                  );
+                },
               ),
-              ...rightCenterLeds,
-              ...rightIntermediateLeds,
-              ...rightEndLeds,
-            ],
+            ),
           ),
+          ...rightCenterLeds,
+          ...rightIntermediateLeds,
+          ...rightEndLeds,
         ],
       ),
     );

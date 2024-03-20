@@ -96,7 +96,7 @@ class LedBarConfig with _$LedBarConfig {
     @Default(0xFF00FF00) int centerColor,
 
     /// The size of the individual LEDs in their largest state (lit).
-    @Default(32) double ledSize,
+    @Default(20) double ledSize,
 
     /// Width of the whole LED bar.
     @Default(800) double barWidth,
