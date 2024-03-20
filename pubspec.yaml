@@ -12,12 +12,12 @@ environment:
 dependencies:
     async: ^2.11.0
     collection: ^1.17.1
-    connectivity_plus: ^5.0.2
+    connectivity_plus: ^6.0.1
     cupertino_icons: ^1.0.6
     dio: ^5.4.1
     equatable: ^2.0.5
     fast_cached_network_image: ^1.2.8
-    file_picker: ^6.2.0
+    file_picker: ^8.0.0+1
     flex_color_scheme: ^7.3.1
     flutter:
         sdk: flutter

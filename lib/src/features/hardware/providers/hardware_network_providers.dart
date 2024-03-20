@@ -260,13 +260,14 @@ ${String.fromCharCodes(event)}
 
 /// A provider for the current connection of the device.
 @Riverpod(keepAlive: true)
-Stream<ConnectivityResult> currentConnection(CurrentConnectionRef ref) {
+Stream<List<ConnectivityResult>> currentConnection(CurrentConnectionRef ref) {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {
         if (data != previous?.value) {
           if (previous != next) {
-            Logger.instance.i('Device connection: ${data.name}');
+            Logger.instance
+                .i('Device connections: ${data.map((e) => e.name).toList()}');
           }
         }
       },
@@ -295,14 +296,16 @@ bool networkAvailable(NetworkAvailableRef ref) {
   });
 
   return ref.watch(currentConnectionProvider).when(
-        data: (data) => switch (data) {
+        data: (data) => data.any(
+          (element) => switch (element) {
           ConnectivityResult.ethernet ||
           ConnectivityResult.wifi ||
           ConnectivityResult.mobile ||
           ConnectivityResult.vpn =>
             true,
           _ => false,
-        },
+          },
+        ),
         error: (error, stackTrace) {
           Logger.instance.e(
             'Failed to find current connection type.',

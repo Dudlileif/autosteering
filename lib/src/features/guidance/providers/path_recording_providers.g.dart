@@ -25,7 +25,7 @@ final automaticPathRecordingProvider = AutoDisposeFutureProvider<void>.internal(
 
 typedef AutomaticPathRecordingRef = AutoDisposeFutureProviderRef<void>;
 String _$showPathRecordingMenuHash() =>
-    r'09d5b8da1fc22827b75808bcb249c8c576b50a68';
+    r'f44d9258f1058b5c12fab82b33c7a2832bf549a9';
 
 /// Whether the path recording menu should be shown.
 ///
@@ -120,7 +120,7 @@ final activePathRecordingTargetProvider =
 );
 
 typedef _$ActivePathRecordingTarget = Notifier<PathRecordingTarget>;
-String _$pathRecordingListHash() => r'6a7af289d7b11238cc250b37bfa18d773ca2e8f1';
+String _$pathRecordingListHash() => r'df9f9af6fa8e3a554a985bb5c6eada577019814e';
 
 /// A list of the currently recording points.
 ///

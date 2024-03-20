@@ -74,13 +74,14 @@ typedef HardwareCommunicationConfigRef = ProviderRef<
       int hardwareUDPReceivePort,
       int hardwareUDPSendPort
     })>;
-String _$currentConnectionHash() => r'e780fb086d27c63045c0df36c7ad0a10ab0a0425';
+String _$currentConnectionHash() => r'83fb0a2276430d90860e6f4e231047407d2e87e7';
 
 /// A provider for the current connection of the device.
 ///
 /// Copied from [currentConnection].
 @ProviderFor(currentConnection)
-final currentConnectionProvider = StreamProvider<ConnectivityResult>.internal(
+final currentConnectionProvider =
+    StreamProvider<List<ConnectivityResult>>.internal(
   currentConnection,
   name: r'currentConnectionProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -90,8 +91,8 @@ final currentConnectionProvider = StreamProvider<ConnectivityResult>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef CurrentConnectionRef = StreamProviderRef<ConnectivityResult>;
-String _$networkAvailableHash() => r'efd28f567476da1835b14284f781709ced58fcfe';
+typedef CurrentConnectionRef = StreamProviderRef<List<ConnectivityResult>>;
+String _$networkAvailableHash() => r'ec9225b73339ca99f95d63da9efb9da9d8875c99';
 
 /// A provider for whether a network connection can be made.
 ///

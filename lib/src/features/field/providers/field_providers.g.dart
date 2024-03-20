@@ -993,7 +993,7 @@ final fieldExteriorRingProvider =
 
 typedef _$FieldExteriorRing = Notifier<List<Geographic>?>;
 String _$fieldInteriorRingsHash() =>
-    r'13581cf5bef826acd9724008715e0047ee9c9b62';
+    r'f14e02bd6765947a51d6866fd90d8f1a33ba785a';
 
 /// A provider for the recorded interior rings of a field.
 ///
