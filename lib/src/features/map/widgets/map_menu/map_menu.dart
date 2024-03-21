@@ -119,8 +119,7 @@ class _CopernicusIDButton extends ConsumerWidget {
         builder: (context) {
           var id = '';
           return StatefulBuilder(
-            builder: (context, setState) {
-              return SimpleDialog(
+            builder: (context, setState) => SimpleDialog(
                 title: const Text('Enter Copernicus ID'),
                 children: [
                   Padding(
@@ -159,8 +158,7 @@ class _CopernicusIDButton extends ConsumerWidget {
                     ),
                   ),
                 ],
-              );
-            },
+            ),
           );
         },
       ),

@@ -413,8 +413,7 @@ class _SaveABTrackingButton extends ConsumerWidget {
               builder: (context) {
                 var name = '';
                 return StatefulBuilder(
-                  builder: (context, setState) {
-                    return SimpleDialog(
+                  builder: (context, setState) => SimpleDialog(
                       title: const Text('Name the AB tracking'),
                       children: [
                         Padding(
@@ -464,8 +463,7 @@ class _SaveABTrackingButton extends ConsumerWidget {
                           ),
                         ),
                       ],
-                    );
-                  },
+                  ),
                 );
               },
             ),
@@ -509,8 +507,7 @@ class _SavePathTrackingButton extends ConsumerWidget {
               builder: (context) {
                 var name = '';
                 return StatefulBuilder(
-                  builder: (context, setState) {
-                    return SimpleDialog(
+                  builder: (context, setState) => SimpleDialog(
                       title: const Text('Name the path tracking'),
                       children: [
                         Padding(
@@ -560,8 +557,7 @@ class _SavePathTrackingButton extends ConsumerWidget {
                           ),
                         ),
                       ],
-                    );
-                  },
+                  ),
                 );
               },
             ),

@@ -21,6 +21,7 @@ import 'dart:math';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/simulator/providers/providers.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geobase/geobase.dart';
@@ -94,6 +95,12 @@ class HomePosition extends _$HomePosition {
         ref
             .read(settingsProvider.notifier)
             .update(SettingsKey.mapHomePosition, next);
+        ref.read(simInputProvider.notifier).send((velocity: 0));
+        ref.read(simInputProvider.notifier).send((steeringAngle: 0));
+
+        ref.read(simInputProvider.notifier).send(
+          (position: next.gbPosition),
+        );
       }
     });
 

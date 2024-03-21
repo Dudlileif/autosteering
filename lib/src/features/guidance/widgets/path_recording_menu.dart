@@ -550,8 +550,7 @@ class _CreateFieldButton extends ConsumerWidget {
             builder: (context) {
               var name = '';
               return StatefulBuilder(
-                builder: (context, setState) {
-                  return SimpleDialog(
+                builder: (context, setState) => SimpleDialog(
                     title: const Text('Name the field'),
                     children: [
                       Padding(
@@ -637,8 +636,7 @@ class _CreateFieldButton extends ConsumerWidget {
                         ),
                       ),
                     ],
-                  );
-                },
+                ),
               );
             },
           ),

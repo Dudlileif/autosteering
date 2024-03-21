@@ -27,16 +27,15 @@ import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/v
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A [SimpleDialog] for configuring a vehicle, with ability to apply to the
+/// A [Dialog] for configuring a vehicle, with ability to apply to the
 /// current one, save to file or load from file.
 class VehicleConfigurator extends ConsumerWidget {
-  /// A [SimpleDialog] for configuring a vehicle, with ability to apply to the
+  /// A [Dialog] for configuring a vehicle, with ability to apply to the
   /// current one, save to file or load from file.
   const VehicleConfigurator({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Dialog(
+  Widget build(BuildContext context, WidgetRef ref) => Dialog(
       child: Column(
         children: [
           Padding(
@@ -139,8 +138,7 @@ class VehicleConfigurator extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
+      );
 }
 
 /// A button for going to the next page of the vehicle configurator.

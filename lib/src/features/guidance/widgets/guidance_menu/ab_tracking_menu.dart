@@ -238,8 +238,7 @@ class _APlusLineBearingDialogState
         ref.read(aBPointAProvider)?.bearing ??
         ref.read(
           mainVehicleProvider.select((value) => value.bearing),
-        ) ??
-        0;
+        );
   }
 
   @override
@@ -248,14 +247,8 @@ class _APlusLineBearingDialogState
     final textStyle = theme.menuButtonWithChildrenText;
 
     return SimpleDialog(
+      title: const Text('A+ line bearing'),
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            'A+ line bearing',
-            style: theme.textTheme.headlineSmall,
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.all(8),
           child: Consumer(
@@ -297,15 +290,16 @@ class _APlusLineBearingDialogState
                   style: textStyle,
                 ),
               ),
-              if (bearing != null)
                 Consumer(
                   builder: (context, ref, child) => SimpleDialogOption(
-                    onPressed: () {
+                  onPressed: bearing != null
+                      ? () {
                       ref
                           .read(aPlusLineBearingProvider.notifier)
                           .update(bearing);
                       Navigator.of(context).pop();
-                    },
+                        }
+                      : null,
                     child: Row(
                       children: [
                         const Padding(

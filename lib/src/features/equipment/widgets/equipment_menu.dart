@@ -170,8 +170,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
               builder: (context) {
                 var name = '';
                 return StatefulBuilder(
-                  builder: (context, setState) {
-                    return SimpleDialog(
+                  builder: (context, setState) => SimpleDialog(
                       title: const Text('Name the setup'),
                       children: [
                         Padding(
@@ -219,8 +218,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
                           ),
                         ),
                       ],
-                    );
-                  },
+                  ),
                 );
               },
             ),

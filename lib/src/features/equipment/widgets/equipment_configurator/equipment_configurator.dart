@@ -27,10 +27,10 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A [SimpleDialog] for configuring an equipment, with ability to apply to the
+/// A [Dialog] for configuring an equipment, with ability to apply to the
 /// one in the attached hierarchy, save to file or load from file.
 class EquipmentConfigurator extends StatelessWidget {
-  /// A [SimpleDialog] for configuring an equipment, with ability to apply to
+  /// A [Dialog] for configuring an equipment, with ability to apply to
   /// the equipment in the attached hierarchy, save to file or load from file.
   const EquipmentConfigurator({super.key});
 

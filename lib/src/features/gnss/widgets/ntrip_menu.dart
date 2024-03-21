@@ -191,18 +191,11 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
     return SimpleDialog(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              Text(
+      title: Text(
                 'NTRIP caster sourcetable',
                 style: theme.textTheme.headlineSmall,
               ),
-            ],
-          ),
-        ),
+      children: [
         Padding(
           padding: const EdgeInsets.all(8),
           child: Consumer(
