@@ -283,7 +283,7 @@ class _$LedBarConfigImpl extends _LedBarConfig {
       this.endColor = 0xFFFF0000,
       this.intermediateColor = 0xFFFFEF3B,
       this.centerColor = 0xFF00FF00,
-      this.ledSize = 32,
+      this.ledSize = 20,
       this.barWidth = 800,
       this.reverseBar = false})
       : super._();

@@ -17,7 +17,7 @@ _$LedBarConfigImpl _$$LedBarConfigImplFromJson(Map<String, dynamic> json) =>
       endColor: json['endColor'] as int? ?? 0xFFFF0000,
       intermediateColor: json['intermediateColor'] as int? ?? 0xFFFFEF3B,
       centerColor: json['centerColor'] as int? ?? 0xFF00FF00,
-      ledSize: (json['ledSize'] as num?)?.toDouble() ?? 32,
+      ledSize: (json['ledSize'] as num?)?.toDouble() ?? 20,
       barWidth: (json['barWidth'] as num?)?.toDouble() ?? 800,
       reverseBar: json['reverseBar'] as bool? ?? false,
     );

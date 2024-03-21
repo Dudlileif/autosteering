@@ -149,7 +149,7 @@ final showPathTrackingLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowPathTrackingLayerRef = AutoDisposeProviderRef<bool>;
-String _$showFieldLayerHash() => r'5e6c0581c1726e019f5be95bc1800a01937c66d4';
+String _$showFieldLayerHash() => r'483fd33e6e1f7e6c010a1d85da300700cd37d956';
 
 /// Whether the layer for field should be shown.
 ///
@@ -256,5 +256,22 @@ final showEquipmentDrawingLayerProvider =
 );
 
 typedef _$ShowEquipmentDrawingLayer = Notifier<bool>;
+String _$showGridLayerHash() => r'248afb4b6bf3438ffe5e7c7e864a55f117419231';
+
+/// Whether the map should show grid lines.
+///
+/// Copied from [ShowGridLayer].
+@ProviderFor(ShowGridLayer)
+final showGridLayerProvider = NotifierProvider<ShowGridLayer, bool>.internal(
+  ShowGridLayer.new,
+  name: r'showGridLayerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showGridLayerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowGridLayer = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

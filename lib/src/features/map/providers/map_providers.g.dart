@@ -304,7 +304,7 @@ final mainMapControllerProvider =
 );
 
 typedef _$MainMapController = Notifier<MapController>;
-String _$homePositionHash() => r'565fba2f6435effb444ac537767fbdbd1e5abc65';
+String _$homePositionHash() => r'208cddd00f1988c5fea003d3860393b5559b24a2';
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
 ///

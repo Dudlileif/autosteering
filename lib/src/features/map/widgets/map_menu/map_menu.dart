@@ -19,6 +19,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/country_layer_selector.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/delete_cache_menu.dart';
+import 'package:autosteering/src/features/map/widgets/map_menu/grid_layer_button.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/home_position_menu.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/map_perspective_menu.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/mini_map_menu.dart';
@@ -42,10 +43,8 @@ class MapMenu extends StatelessWidget {
       menuChildren: [
         MiniMapMenu(),
         HomePositionMenu(),
-        Align(
-          alignment: Alignment.centerRight,
-          child: OSMLayerButton(),
-        ),
+        GridLayerButton(),
+        OSMLayerButton(),
         CountryLayerSelector(),
         SentinelLayerSelector(),
         MapOffsetMenu(),

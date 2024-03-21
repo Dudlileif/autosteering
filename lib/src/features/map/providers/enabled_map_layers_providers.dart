@@ -170,3 +170,29 @@ bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) =>
 @riverpod
 bool showABTrackingLayer(ShowABTrackingLayerRef ref) =>
     ref.watch(showABTrackingProvider);
+
+
+/// Whether the map should show grid lines.
+@Riverpod(keepAlive: true)
+class ShowGridLayer extends _$ShowGridLayer {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapLayersShowGrid, next);
+      }
+    });
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.mapLayersShowGrid) ??
+        true;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}

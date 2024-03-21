@@ -172,10 +172,10 @@ class Field with EquatableMixin {
       final diagonal = boundingBox!.min.rhumb.distanceTo(boundingBox!.max) / 2;
 
       return GeoBox.from([
-        center.rhumb.destinationPoint(distance: diagonal, bearing: 0),
-        center.rhumb.destinationPoint(distance: diagonal, bearing: 90),
-        center.rhumb.destinationPoint(distance: diagonal, bearing: 180),
-        center.rhumb.destinationPoint(distance: diagonal, bearing: 270),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 45),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 135),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 225),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 315),
       ]);
     }
     return null;

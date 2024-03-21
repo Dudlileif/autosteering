@@ -489,3 +489,6 @@ class MapAllowDownload extends _$MapAllowDownload {
   /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
+
+
+

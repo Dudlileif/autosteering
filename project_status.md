@@ -64,8 +64,6 @@
 
 - Proper headland implementation, u-turns following same outer path
 
-- Grids
-
 - Improve autosteering, look at more algorithms
 
 - Debugging graphs/logs

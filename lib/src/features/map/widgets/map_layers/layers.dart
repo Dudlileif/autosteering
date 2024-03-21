@@ -23,6 +23,7 @@ export 'equipment_layers.dart';
 export 'equipment_worked_paths_layer.dart';
 export 'field_layer.dart';
 export 'finished_path_layer.dart';
+export 'grid_layer.dart';
 export 'osm_layer.dart';
 export 'path_recording_layer.dart';
 export 'path_tracking_layer.dart';
