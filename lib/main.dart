@@ -37,12 +37,18 @@ Future<void> main() async {
   }
 
   if (Device.isMobile) {
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    await SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top],
+    );
     await SystemChrome.setSystemUIChangeCallback(
         (systemOverlaysAreVisible) async {
       if (systemOverlaysAreVisible) {
         Timer(const Duration(milliseconds: 1500), () async {
-          await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+          await SystemChrome.setEnabledSystemUIMode(
+            SystemUiMode.manual,
+            overlays: [SystemUiOverlay.top],
+          );
         });
       }
     });

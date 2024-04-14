@@ -38,7 +38,7 @@
 
 - Autosteering comms with hardware
 
-- NTRIP client for sending RTCM to GNSS hardware.
+- NTRIP client for forwarding RTCM to GNSS hardware.
 
 - Basic logging
 
@@ -69,6 +69,8 @@
 - Debugging graphs/logs
 
 - Audio alerts
+
+- Hardware configuration
 
 - Improved safety measures
 
