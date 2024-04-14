@@ -93,7 +93,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
                         child: TextWithStroke(
                           'Velocity',
                           style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                              theme.textTheme.titleMedium?.copyWith(
                                     color: Colors.white,
                                     fontFamily: 'Noto Sans Mono',
                                   ),
@@ -103,7 +103,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
                       TextWithStroke(
                         '${velocity.toStringAsFixed(1)} m/s',
                         style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                            theme.textTheme.titleMedium?.copyWith(
                                   color: Colors.white,
                                   fontFamily: 'Noto Sans Mono',
                                 ),
@@ -173,9 +173,13 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final steeringAngle = ref.watch(
-      mainVehicleProvider.select((vehicle) => vehicle.steeringAngle),
-    );
+    final showOverrideToggle = ref.watch(showOverrideSteeringProvider);
+    final overrideEnabled = ref.watch(overrideSteeringProvider);
+    final steeringAngle = overrideEnabled
+        ? ref.watch(overrideSteeringAngleProvider)
+        : ref.watch(
+            mainVehicleProvider.select((vehicle) => vehicle.steeringAngle),
+          );
 
     final steeringAngleMax = ref.watch(
       mainVehicleProvider.select(
@@ -186,9 +190,22 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        if (showOverrideToggle)
+          CheckboxListTile(
+            title: Text(
+              'Motor target override',
+              style: theme.textTheme.titleMedium,
+            ),
+            value: overrideEnabled,
+            onChanged: (value) => value != null
+                ? ref
+                    .read(overrideSteeringProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
         TextWithStroke(
           '''Steering:${steeringAngle.toStringAsFixed(1).padLeft(5)}°''',
-          style: Theme.of(context)
+          style: theme
               .textTheme
               .titleMedium
               ?.copyWith(color: Colors.white, fontFamily: 'Noto Sans Mono'),
@@ -222,9 +239,13 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
                     )
                       .send((autoCenterSteering: true))
                   : null,
-              onChanged: (value) => ref
-                  .read(simInputProvider.notifier)
-                  .send((steeringAngle: value)),
+              onChanged: (value) => overrideEnabled
+                  ? ref
+                      .read(overrideSteeringAngleProvider.notifier)
+                      .update(value)
+                  : ref.read(simInputProvider.notifier).send(
+                      (steeringAngle: value),
+                    ),
               min: -steeringAngleMax,
               max: steeringAngleMax,
             ),

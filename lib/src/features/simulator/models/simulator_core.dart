@@ -21,7 +21,6 @@ import 'dart:typed_data';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/models/simulator_core_state.dart';
-import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
 
 export 'simulator_core_none.dart'

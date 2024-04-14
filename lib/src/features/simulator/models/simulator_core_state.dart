@@ -23,6 +23,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -86,12 +87,12 @@ class SimulatorCoreState {
   /// The upper threshold for the standard deviation of the bearings from the
   /// [prevGnssUpdates] and the [gnssUpdate].
   ///
-  /// If the deviation is lower that the threshold, the IMU bearing zero
+  /// If the deviation is lower than the threshold, the IMU bearing zero
   /// value will be set to the average of the bearings.
   double get bearingZeroDeviationMaxThreshold => switch (gnssFixQuality) {
         GnssFixQuality.fix => 0.03,
         GnssFixQuality.differentialFix => 0.02,
-        GnssFixQuality.floatRTK => .015,
+        GnssFixQuality.floatRTK => 0.01,
         GnssFixQuality.ppsFix => 0.01,
         GnssFixQuality.rtk => 0.006,
         _ => double.infinity,
@@ -226,12 +227,14 @@ class SimulatorCoreState {
             message.hitchRearFixedChild ?? vehicle?.hitchRearFixedChild,
         hitchRearTowbarChild:
             message.hitchRearTowbarChild ?? vehicle?.hitchRearTowbarChild,
+        manualSimulationMode: allowManualSimInput,
       );
       pathTrackingMode = message.pathTrackingMode;
     }
     // Update whether the simulation should accept manual controls.
     else if (message is ({bool allowManualSimInput})) {
       allowManualSimInput = message.allowManualSimInput;
+      vehicle = vehicle?.copyWith(manualSimulationMode: allowManualSimInput);
     }
     // Update whether the simulation should interpolate between the GNSS
     // updates.
@@ -274,8 +277,8 @@ class SimulatorCoreState {
       vehicle?.was.config = message;
     }
     // Update the motor config of the vehicle.
-    else if (message is MotorConfig) {
-      vehicle?.motorConfig = message;
+    else if (message is SteeringHardwareConfig) {
+      vehicle?.steeringHardwareConfig = message;
     }
 
     // Update bearing
@@ -406,10 +409,6 @@ class SimulatorCoreState {
         pathTracking?.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
       }
     }
-    // Update pid parameters.
-    else if (message is PidParameters) {
-      vehicle?.pidParameters = message;
-    }
     // Update pure pursuit parameters.
     else if (message is PurePursuitParameters) {
       vehicle?.purePursuitParameters = message;
@@ -449,20 +448,6 @@ class SimulatorCoreState {
       // Find the current index as the closest point since the path has updated.
       if (pathTracking != null && vehicle != null) {
         pathTracking!.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
-      }
-    }
-    // Set new look ahead distance.
-    else if (message is ({num lookAheadDistance})) {
-      if (vehicle != null) {
-        vehicle!.purePursuitParameters = vehicle!.purePursuitParameters
-            .copyWith(lookAheadDistance: message.lookAheadDistance.toDouble());
-      }
-    }
-    // Set the look ahead distance velocity gain.
-    else if (message is ({double lookAheadVelocityGain})) {
-      if (vehicle != null) {
-        vehicle!.purePursuitParameters = vehicle!.purePursuitParameters
-            .copyWith(lookAheadVelocityGain: message.lookAheadVelocityGain);
       }
     }
     // Change the pure pursuit loop mode, i.e. if/how to go from the last to
@@ -591,6 +576,32 @@ class SimulatorCoreState {
     // Enable/disable motor calibration.
     else if (message is ({bool enableMotorCalibration})) {
       motorCalibrationEnabled = message.enableMotorCalibration;
+    }
+    // Send a steering angle override target to the motor.
+    else if (message is ({double? steeringAngleOverride})) {
+      if (message.steeringAngleOverride != null && vehicle != null) {
+        networkSendStream?.add(
+          const Utf8Encoder().convert(
+            jsonEncode(
+              {
+                'was_target': vehicle!
+                    .wasTargetFromSteeringAngle(message.steeringAngleOverride!),
+                'enable_motor': true,
+              },
+            ),
+          ),
+        );
+      } else {
+        networkSendStream?.add(
+          const Utf8Encoder().convert(
+            jsonEncode(
+              {
+                'enable_motor': false,
+              },
+            ),
+          ),
+        );
+      }
     }
     // Unknown message, log it to figure out what it is.
     else {
@@ -769,7 +780,7 @@ class SimulatorCoreState {
       if (autosteeringState != AutosteeringState.disabled &&
           !receivingManualInput &&
           !motorCalibrationEnabled) {
-        if (vehicle!.velocity.abs() > vehicle!.motorConfig.thresholdVelocity) {
+        if (vehicle!.velocity.abs() > vehicle!.autosteeringThresholdVelocity) {
           wasTarget = vehicle!.wasTargetFromSteeringAngle(steeringAngleTarget!);
           networkSendStream?.add(
             const Utf8Encoder().convert(

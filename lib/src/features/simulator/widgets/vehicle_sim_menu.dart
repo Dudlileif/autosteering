@@ -42,7 +42,7 @@ class VehicleSimMenu extends StatelessWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(
-            secondary: child,
+            title: child,
             value: ref.watch(simCoreVehicleAutoCenterSteeringProvider),
             onChanged: (value) => value != null
                 ? ref
@@ -57,7 +57,7 @@ class VehicleSimMenu extends StatelessWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(
-            secondary: child,
+            title: child,
             value: ref.watch(simCoreVehicleAutoSlowDownProvider),
             onChanged: (value) => value != null
                 ? ref
