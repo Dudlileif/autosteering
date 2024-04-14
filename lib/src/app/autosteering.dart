@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/scaffold/widgets/main_scaffold.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
@@ -54,7 +56,7 @@ class _AutosteeringState extends ConsumerState<Autosteering> {
     if (loading) {
       // Add an artificial delay on web to allow the program to start up.
       if (Device.isWeb) {
-        Future.delayed(
+        Timer(
           const Duration(milliseconds: 500),
           () => setState(
             () => loading = ref.watch(lastUsedVehicleProvider) is! AsyncData,

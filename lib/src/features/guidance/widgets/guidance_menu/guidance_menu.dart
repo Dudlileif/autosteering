@@ -65,7 +65,7 @@ class GuidanceMenu extends ConsumerWidget {
 
                   // Wait a short while before saving the hopefully
                   // updated vehicle.
-                  Future.delayed(const Duration(milliseconds: 250), () {
+                  Timer(const Duration(milliseconds: 250), () {
                     final vehicle = ref.read(mainVehicleProvider);
                     ref.read(saveVehicleProvider(vehicle));
                     Logger.instance.i(
@@ -447,7 +447,7 @@ class _SaveABTrackingButton extends ConsumerWidget {
                             child: const Text('Save tracking'),
                             builder: (context, ref, child) => FilledButton(
                               onPressed: () {
-                                Future.delayed(
+                              Timer(
                                     const Duration(milliseconds: 100), () {
                                   ref.read(
                                     saveABTrackingProvider(
@@ -541,7 +541,7 @@ class _SavePathTrackingButton extends ConsumerWidget {
                             child: const Text('Save tracking'),
                             builder: (context, ref, child) => FilledButton(
                               onPressed: () {
-                                Future.delayed(
+                              Timer(
                                     const Duration(milliseconds: 100), () {
                                   ref.read(
                                     savePathTrackingProvider(

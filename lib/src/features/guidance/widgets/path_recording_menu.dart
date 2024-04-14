@@ -583,7 +583,7 @@ class _CreateFieldButton extends ConsumerWidget {
                           child: const Text('Save field'),
                           builder: (context, ref, child) => FilledButton(
                             onPressed: () {
-                              Future.delayed(
+                            Timer(
                                   const Duration(
                                     milliseconds: 100,
                                   ), () {

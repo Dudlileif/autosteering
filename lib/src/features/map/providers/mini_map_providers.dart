@@ -107,7 +107,7 @@ class MiniMapLockToField extends _$MiniMapLockToField {
       ..listen(
         miniMapSizeProvider,
         (previous, next) =>
-            Future.delayed(const Duration(milliseconds: 100), updateBounds),
+            Timer(const Duration(milliseconds: 100), updateBounds),
       )
       ..listenSelf((previous, next) {
         if (next) {

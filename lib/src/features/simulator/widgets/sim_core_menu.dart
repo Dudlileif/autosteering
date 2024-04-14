@@ -157,7 +157,7 @@ class SimCoreMenu extends StatelessWidget {
                               .update(targetHz);
                           // Wait a short while before saving the
                           // hopefully updated vehicle.
-                          Future.delayed(
+                          Timer(
                             const Duration(milliseconds: 100),
                             () {
                               final value =
