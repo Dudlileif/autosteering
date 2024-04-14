@@ -22,7 +22,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'virtual_led_bar_providers.g.dart';
 
 /// A provider for whether the virtual led bar should be enabled/shown.
-@Riverpod(keepAlive: true)
+@riverpod
 class VirtualLedBarEnabled extends _$VirtualLedBarEnabled {
   @override
   bool build() {
@@ -48,7 +48,7 @@ class VirtualLedBarEnabled extends _$VirtualLedBarEnabled {
 }
 
 /// A provider for storing the configuration for the virtual led bar.
-@Riverpod(keepAlive: true)
+@riverpod
 class VirtualLedBarConfiguration extends _$VirtualLedBarConfiguration {
   @override
   LedBarConfig build() {
@@ -79,7 +79,7 @@ class VirtualLedBarConfiguration extends _$VirtualLedBarConfiguration {
 
 /// A provider for whether we're testing the virtual LED bar with
 /// [VirtualLedBarTestingDistance].
-@Riverpod(keepAlive: true)
+@riverpod
 class VirtualLedBarTesting extends _$VirtualLedBarTesting {
   @override
   bool build() {

@@ -25,7 +25,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'path_recording_providers.g.dart';
 
 /// Whether the path recording menu should be shown.
-@Riverpod(keepAlive: true)
+@riverpod
 class ShowPathRecordingMenu extends _$ShowPathRecordingMenu {
   @override
   bool build() => false;

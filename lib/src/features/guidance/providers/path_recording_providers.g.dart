@@ -25,14 +25,14 @@ final automaticPathRecordingProvider = AutoDisposeFutureProvider<void>.internal(
 
 typedef AutomaticPathRecordingRef = AutoDisposeFutureProviderRef<void>;
 String _$showPathRecordingMenuHash() =>
-    r'f44d9258f1058b5c12fab82b33c7a2832bf549a9';
+    r'8945b9d595d1413c9decaa11e548adcc0d2acf9f';
 
 /// Whether the path recording menu should be shown.
 ///
 /// Copied from [ShowPathRecordingMenu].
 @ProviderFor(ShowPathRecordingMenu)
 final showPathRecordingMenuProvider =
-    NotifierProvider<ShowPathRecordingMenu, bool>.internal(
+    AutoDisposeNotifierProvider<ShowPathRecordingMenu, bool>.internal(
   ShowPathRecordingMenu.new,
   name: r'showPathRecordingMenuProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -42,7 +42,7 @@ final showPathRecordingMenuProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowPathRecordingMenu = Notifier<bool>;
+typedef _$ShowPathRecordingMenu = AutoDisposeNotifier<bool>;
 String _$enablePathRecorderHash() =>
     r'6fedacb5e80d10808ae682a6f69169af3e3e1323';
 

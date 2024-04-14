@@ -15,11 +15,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-export 'ab_common_providers.dart';
-export 'ab_curve_providers.dart';
-export 'ab_line_providers.dart';
-export 'autosteering_parameter_providers.dart';
-export 'dubins_path_debug_providers.dart';
-export 'path_recording_providers.dart';
-export 'path_tracking_providers.dart';
-export 'virtual_led_bar_providers.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'autosteering_parameter_providers.g.dart';
+
+/// Whether to show the autosteering parameter configurator.
+@riverpod
+class ShowAutosteeringParameterConfig
+    extends _$ShowAutosteeringParameterConfig {
+  @override
+  bool build() => false;
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}

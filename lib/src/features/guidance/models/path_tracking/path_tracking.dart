@@ -20,12 +20,12 @@ import 'dart:math';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:equatable/equatable.dart';
 import 'package:geobase/geobase.dart';
 
-part 'pure_pursuit/pure_pursuit_parameters.dart';
+export 'pure_pursuit/pure_pursuit_parameters.dart';
+export 'stanley_path_tracking/stanley_parameters.dart';
+
 part 'pure_pursuit/pure_pursuit_path_tracking.dart';
-part 'stanley_path_tracking/stanley_parameters.dart';
 part 'stanley_path_tracking/stanley_path_tracking.dart';
 
 /// An enumerator for which path tracking mode to use.

@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 export 'ab_tracking_controls.dart';
+export 'autosteering_parameter_configurator.dart';
 export 'dubins_path_debug_menu.dart';
 export 'enable_autosteering_button.dart';
 export 'guidance_menu/guidance_menu.dart';
