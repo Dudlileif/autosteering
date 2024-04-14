@@ -57,7 +57,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
         (value) => value.values.where((element) => element.hitchParent != null),
       ),
     );
-
+    final darkTheme = Theme.of(context).brightness == Brightness.dark;
     return CircleLayer(
       circles: [
         ...equipments
@@ -70,7 +70,9 @@ class EquipmentDebugLayer extends ConsumerWidget {
               (equipment) => CircleMarker(
                 point: equipment.turningRadiusCenter!.latLng,
                 radius: equipment.currentTurningRadius!,
-                color: Colors.black.withOpacity(0.1),
+                color: darkTheme
+                    ? Colors.white.withOpacity(0.1)
+                    : Colors.black.withOpacity(0.1),
                 useRadiusInMeter: true,
               ),
             ),

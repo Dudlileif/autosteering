@@ -202,13 +202,14 @@ final showABTrackingLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowABTrackingLayerRef = AutoDisposeProviderRef<bool>;
-String _$showOSMLayerHash() => r'279974104f0b019cf6a41ab2ce3c20ef7ec5a580';
+String _$showOSMLayerHash() => r'69fa6c23cf1ffb4f8258a52571a0acfe940cb316';
 
 /// Whether the OpenStreetMap layer should be shown.
 ///
 /// Copied from [ShowOSMLayer].
 @ProviderFor(ShowOSMLayer)
-final showOSMLayerProvider = NotifierProvider<ShowOSMLayer, bool>.internal(
+final showOSMLayerProvider =
+    AutoDisposeNotifierProvider<ShowOSMLayer, bool>.internal(
   ShowOSMLayer.new,
   name: r'showOSMLayerProvider',
   debugGetCreateSourceHash:
@@ -217,16 +218,16 @@ final showOSMLayerProvider = NotifierProvider<ShowOSMLayer, bool>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowOSMLayer = Notifier<bool>;
+typedef _$ShowOSMLayer = AutoDisposeNotifier<bool>;
 String _$showVehicleDrawingLayerHash() =>
-    r'9921159602e933029f559425e6055bdd9019a559';
+    r'6b104dd0b7fb90e35b60673363d93416ac4c8cee';
 
 /// Whether the vehicle image drawing layer should be shown.
 ///
 /// Copied from [ShowVehicleDrawingLayer].
 @ProviderFor(ShowVehicleDrawingLayer)
 final showVehicleDrawingLayerProvider =
-    NotifierProvider<ShowVehicleDrawingLayer, bool>.internal(
+    AutoDisposeNotifierProvider<ShowVehicleDrawingLayer, bool>.internal(
   ShowVehicleDrawingLayer.new,
   name: r'showVehicleDrawingLayerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -236,16 +237,16 @@ final showVehicleDrawingLayerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowVehicleDrawingLayer = Notifier<bool>;
+typedef _$ShowVehicleDrawingLayer = AutoDisposeNotifier<bool>;
 String _$showEquipmentDrawingLayerHash() =>
-    r'804059de3db09315e1c90613ebff35fcfbe6ba05';
+    r'69f5b2ebe80a727cdee1e0c75443cb8f7ddd6184';
 
 /// Whether the equipment drawing layer should be shown.
 ///
 /// Copied from [ShowEquipmentDrawingLayer].
 @ProviderFor(ShowEquipmentDrawingLayer)
 final showEquipmentDrawingLayerProvider =
-    NotifierProvider<ShowEquipmentDrawingLayer, bool>.internal(
+    AutoDisposeNotifierProvider<ShowEquipmentDrawingLayer, bool>.internal(
   ShowEquipmentDrawingLayer.new,
   name: r'showEquipmentDrawingLayerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -255,14 +256,15 @@ final showEquipmentDrawingLayerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowEquipmentDrawingLayer = Notifier<bool>;
-String _$showGridLayerHash() => r'248afb4b6bf3438ffe5e7c7e864a55f117419231';
+typedef _$ShowEquipmentDrawingLayer = AutoDisposeNotifier<bool>;
+String _$showGridLayerHash() => r'5446b343924291b9c086887956e98fe44f385ef6';
 
 /// Whether the map should show grid lines.
 ///
 /// Copied from [ShowGridLayer].
 @ProviderFor(ShowGridLayer)
-final showGridLayerProvider = NotifierProvider<ShowGridLayer, bool>.internal(
+final showGridLayerProvider =
+    AutoDisposeNotifierProvider<ShowGridLayer, bool>.internal(
   ShowGridLayer.new,
   name: r'showGridLayerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -272,6 +274,6 @@ final showGridLayerProvider = NotifierProvider<ShowGridLayer, bool>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowGridLayer = Notifier<bool>;
+typedef _$ShowGridLayer = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

@@ -46,6 +46,8 @@ enum SettingsKey {
   mapLayersSentinelOpacities('map.layers.sentinel.opacities'),
   mapLayersShowGrid('map.layers.show_grid'),
   mapLayersShowOpenStreetMap('map.layers.show_openstreetmap'),
+  mapSentinelMaxCloudCoveragePercent('map.sentinel_max_cloud_coverage_percent'),
+  mapShowGridSizeIndicator('map.show_grid_size_indicator'),
   miniMapShow('mini_map.show'),
   miniMapAlwaysPointNorth('mini_map.always_point_north'),
   miniMapLockToField('mini_map.lock_to_field'),

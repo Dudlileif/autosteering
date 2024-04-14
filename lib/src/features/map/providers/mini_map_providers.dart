@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
@@ -26,7 +28,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'mini_map_providers.g.dart';
 
 /// Whether the mini map should be shown.
-@Riverpod(keepAlive: true)
+@riverpod
 class ShowMiniMap extends _$ShowMiniMap {
   @override
   bool build() {
@@ -71,7 +73,7 @@ class ShowMiniMap extends _$ShowMiniMap {
 }
 
 /// Whether the map is ready to be shown or not.
-@Riverpod(keepAlive: true)
+@riverpod
 class MiniMapReady extends _$MiniMapReady {
   @override
   bool build() => false;
@@ -82,7 +84,7 @@ class MiniMapReady extends _$MiniMapReady {
 
 /// The mini map [MapController] provider, which allows controlling the
 /// map from outside the widget code itself.
-@Riverpod(keepAlive: true)
+@riverpod
 class MiniMapController extends _$MiniMapController {
   @override
   MapController build() => MapController();
@@ -99,7 +101,7 @@ class MiniMapController extends _$MiniMapController {
 }
 
 /// Whether the mini map always should point to the north and not rotate.
-@Riverpod(keepAlive: true)
+@riverpod
 class MiniMapLockToField extends _$MiniMapLockToField {
   @override
   bool build() {
@@ -200,7 +202,7 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
 }
 
 /// Whether the mini map always should point to the north and not rotate.
-@Riverpod(keepAlive: true)
+@riverpod
 class MiniMapSize extends _$MiniMapSize {
   @override
   double build() {

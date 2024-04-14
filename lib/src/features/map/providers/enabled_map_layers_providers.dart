@@ -26,7 +26,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'enabled_map_layers_providers.g.dart';
 
 /// Whether the OpenStreetMap layer should be shown.
-@Riverpod(keepAlive: true)
+@riverpod
 class ShowOSMLayer extends _$ShowOSMLayer {
   @override
   bool build() {
@@ -88,7 +88,7 @@ bool showEditablePathLayer(ShowEditablePathLayerRef ref) {
 }
 
 /// Whether the vehicle image drawing layer should be shown.
-@Riverpod(keepAlive: true)
+@riverpod
 class ShowVehicleDrawingLayer extends _$ShowVehicleDrawingLayer {
   @override
   bool build() => true;
@@ -149,7 +149,7 @@ bool showFieldLayer(ShowFieldLayerRef ref) {
 }
 
 /// Whether the equipment drawing layer should be shown.
-@Riverpod(keepAlive: true)
+@riverpod
 class ShowEquipmentDrawingLayer extends _$ShowEquipmentDrawingLayer {
   @override
   bool build() => true;
@@ -171,9 +171,8 @@ bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) =>
 bool showABTrackingLayer(ShowABTrackingLayerRef ref) =>
     ref.watch(showABTrackingProvider);
 
-
 /// Whether the map should show grid lines.
-@Riverpod(keepAlive: true)
+@riverpod
 class ShowGridLayer extends _$ShowGridLayer {
   @override
   bool build() {
@@ -182,6 +181,9 @@ class ShowGridLayer extends _$ShowGridLayer {
         ref
             .read(settingsProvider.notifier)
             .update(SettingsKey.mapLayersShowGrid, next);
+      }
+      if (!next) {
+        ref.invalidate(mapGridSizeProvider);
       }
     });
     return ref

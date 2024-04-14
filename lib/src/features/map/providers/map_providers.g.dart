@@ -6,13 +6,13 @@ part of 'map_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mapOffsetHash() => r'264c09201daa5721ac983436017a37f5f28e23f3';
+String _$mapOffsetHash() => r'065f4f13c8f16851f30a6569e3f67b696562c08b';
 
 /// How much the map center should be offset from the vehicle.
 ///
 /// Copied from [mapOffset].
 @ProviderFor(mapOffset)
-final mapOffsetProvider = Provider<MapCenterOffset>.internal(
+final mapOffsetProvider = AutoDisposeProvider<MapCenterOffset>.internal(
   mapOffset,
   name: r'mapOffsetProvider',
   debugGetCreateSourceHash:
@@ -21,16 +21,16 @@ final mapOffsetProvider = Provider<MapCenterOffset>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef MapOffsetRef = ProviderRef<MapCenterOffset>;
+typedef MapOffsetRef = AutoDisposeProviderRef<MapCenterOffset>;
 String _$offsetVehiclePositionHash() =>
-    r'911dfafd409fd20940cc2fe619e3f1bd58979054';
+    r'5370c29107a2d94fdc4bb936aa078140af2bcb94';
 
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.
 ///
 /// Copied from [offsetVehiclePosition].
 @ProviderFor(offsetVehiclePosition)
-final offsetVehiclePositionProvider = Provider<LatLng>.internal(
+final offsetVehiclePositionProvider = AutoDisposeProvider<LatLng>.internal(
   offsetVehiclePosition,
   name: r'offsetVehiclePositionProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -40,7 +40,7 @@ final offsetVehiclePositionProvider = Provider<LatLng>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef OffsetVehiclePositionRef = ProviderRef<LatLng>;
+typedef OffsetVehiclePositionRef = AutoDisposeProviderRef<LatLng>;
 String _$mapCacheDateHash() => r'0b10a2822bb4319c72710f2de30016f2b501372c';
 
 /// Copied from Dart SDK
@@ -269,13 +269,13 @@ final mapCacheDirectoriesProvider =
 );
 
 typedef MapCacheDirectoriesRef = AutoDisposeFutureProviderRef<List<String>>;
-String _$mapReadyHash() => r'2931061d7ad71c99e4d4b04386d2adc722b6e029';
+String _$mapReadyHash() => r'36f729a428a7b1c5015737d8834d2c0b15df71ab';
 
 /// Whether the map is ready to be shown or not.
 ///
 /// Copied from [MapReady].
 @ProviderFor(MapReady)
-final mapReadyProvider = NotifierProvider<MapReady, bool>.internal(
+final mapReadyProvider = AutoDisposeNotifierProvider<MapReady, bool>.internal(
   MapReady.new,
   name: r'mapReadyProvider',
   debugGetCreateSourceHash:
@@ -284,8 +284,8 @@ final mapReadyProvider = NotifierProvider<MapReady, bool>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$MapReady = Notifier<bool>;
-String _$mainMapControllerHash() => r'6e22ca151a754ce9445ee6f3dd6000be299ca272';
+typedef _$MapReady = AutoDisposeNotifier<bool>;
+String _$mainMapControllerHash() => r'd86c68d7c52e5619b02fb085cedf0d871848bdb8';
 
 /// The main [MapController] provider, which allows controlling the map from
 /// outside the widget code itself.
@@ -293,7 +293,7 @@ String _$mainMapControllerHash() => r'6e22ca151a754ce9445ee6f3dd6000be299ca272';
 /// Copied from [MainMapController].
 @ProviderFor(MainMapController)
 final mainMapControllerProvider =
-    NotifierProvider<MainMapController, MapController>.internal(
+    AutoDisposeNotifierProvider<MainMapController, MapController>.internal(
   MainMapController.new,
   name: r'mainMapControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -303,14 +303,15 @@ final mainMapControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$MainMapController = Notifier<MapController>;
-String _$homePositionHash() => r'208cddd00f1988c5fea003d3860393b5559b24a2';
+typedef _$MainMapController = AutoDisposeNotifier<MapController>;
+String _$homePositionHash() => r'61275c8560df6ef3194e8e49a75efaa06b1599de';
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
 ///
 /// Copied from [HomePosition].
 @ProviderFor(HomePosition)
-final homePositionProvider = NotifierProvider<HomePosition, LatLng>.internal(
+final homePositionProvider =
+    AutoDisposeNotifierProvider<HomePosition, LatLng>.internal(
   HomePosition.new,
   name: r'homePositionProvider',
   debugGetCreateSourceHash:
@@ -319,16 +320,16 @@ final homePositionProvider = NotifierProvider<HomePosition, LatLng>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$HomePosition = Notifier<LatLng>;
+typedef _$HomePosition = AutoDisposeNotifier<LatLng>;
 String _$centerMapOnVehicleHash() =>
-    r'5c10ad958872eb9b93e804da6336a1ed5b3f0969';
+    r'2544348c225c1f2032f2bf779899fe45cbe70e9a';
 
 /// Whether the map should center on the vehicle or if it could be moved freely.
 ///
 /// Copied from [CenterMapOnVehicle].
 @ProviderFor(CenterMapOnVehicle)
 final centerMapOnVehicleProvider =
-    NotifierProvider<CenterMapOnVehicle, bool>.internal(
+    AutoDisposeNotifierProvider<CenterMapOnVehicle, bool>.internal(
   CenterMapOnVehicle.new,
   name: r'centerMapOnVehicleProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -338,7 +339,7 @@ final centerMapOnVehicleProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$CenterMapOnVehicle = Notifier<bool>;
+typedef _$CenterMapOnVehicle = AutoDisposeNotifier<bool>;
 String _$zoomTimerControllerHash() =>
     r'd9243c1dd58f6f89846247a2c1ad48684a5bf5eb';
 
@@ -360,7 +361,7 @@ final zoomTimerControllerProvider =
 );
 
 typedef _$ZoomTimerController = AutoDisposeNotifier<Timer?>;
-String _$mapOffset2DHash() => r'e7ba7e93982dfcb53ac2bdae646d5c93f36713e3';
+String _$mapOffset2DHash() => r'8bc38501e2863cdbd511010cd440bc5b74757238';
 
 /// How much the map center should be offset from the vehicle when using
 /// 2D view.
@@ -368,7 +369,7 @@ String _$mapOffset2DHash() => r'e7ba7e93982dfcb53ac2bdae646d5c93f36713e3';
 /// Copied from [MapOffset2D].
 @ProviderFor(MapOffset2D)
 final mapOffset2DProvider =
-    NotifierProvider<MapOffset2D, MapCenterOffset>.internal(
+    AutoDisposeNotifierProvider<MapOffset2D, MapCenterOffset>.internal(
   MapOffset2D.new,
   name: r'mapOffset2DProvider',
   debugGetCreateSourceHash:
@@ -377,8 +378,8 @@ final mapOffset2DProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$MapOffset2D = Notifier<MapCenterOffset>;
-String _$mapOffset3DHash() => r'6a86104bd72a60b53e1733f5c6999bb975c38cd9';
+typedef _$MapOffset2D = AutoDisposeNotifier<MapCenterOffset>;
+String _$mapOffset3DHash() => r'e638fbb2cbd604ddfc7a10bea4b2efcfaac1ef9e';
 
 /// How much the map center should be offset from the vehicle when using
 /// 3D view.
@@ -386,7 +387,7 @@ String _$mapOffset3DHash() => r'6a86104bd72a60b53e1733f5c6999bb975c38cd9';
 /// Copied from [MapOffset3D].
 @ProviderFor(MapOffset3D)
 final mapOffset3DProvider =
-    NotifierProvider<MapOffset3D, MapCenterOffset>.internal(
+    AutoDisposeNotifierProvider<MapOffset3D, MapCenterOffset>.internal(
   MapOffset3D.new,
   name: r'mapOffset3DProvider',
   debugGetCreateSourceHash:
@@ -395,15 +396,15 @@ final mapOffset3DProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$MapOffset3D = Notifier<MapCenterOffset>;
-String _$alwaysPointNorthHash() => r'3c0833b6f831c68a304e12ee171f753f71afd35e';
+typedef _$MapOffset3D = AutoDisposeNotifier<MapCenterOffset>;
+String _$alwaysPointNorthHash() => r'2d456621396d42dd6b437c355fb25ff009c51eec';
 
 /// Whether the map always should point to the north and not rotate.
 ///
 /// Copied from [AlwaysPointNorth].
 @ProviderFor(AlwaysPointNorth)
 final alwaysPointNorthProvider =
-    NotifierProvider<AlwaysPointNorth, bool>.internal(
+    AutoDisposeNotifierProvider<AlwaysPointNorth, bool>.internal(
   AlwaysPointNorth.new,
   name: r'alwaysPointNorthProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -413,9 +414,9 @@ final alwaysPointNorthProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$AlwaysPointNorth = Notifier<bool>;
+typedef _$AlwaysPointNorth = AutoDisposeNotifier<bool>;
 String _$mapUse3DPerspectiveHash() =>
-    r'f66d81d9c1e7b801d9e776fdc14b8ecb906757d3';
+    r'1f3cb69eeef0c67fa3efcd06c268738d732b6de3';
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
@@ -423,7 +424,7 @@ String _$mapUse3DPerspectiveHash() =>
 /// Copied from [MapUse3DPerspective].
 @ProviderFor(MapUse3DPerspective)
 final mapUse3DPerspectiveProvider =
-    NotifierProvider<MapUse3DPerspective, bool>.internal(
+    AutoDisposeNotifierProvider<MapUse3DPerspective, bool>.internal(
   MapUse3DPerspective.new,
   name: r'mapUse3DPerspectiveProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -433,9 +434,9 @@ final mapUse3DPerspectiveProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$MapUse3DPerspective = Notifier<bool>;
+typedef _$MapUse3DPerspective = AutoDisposeNotifier<bool>;
 String _$map3DPerspectiveAngleHash() =>
-    r'6074a76785fbe4b8a74b0d0a97a30d74e76ae350';
+    r'c798b25a9e8cdbd44c11ef6b04f555a0a43d200c';
 
 /// The angle that the 3D perspective should be seen from, as in radians
 /// from the orthogonal view.
@@ -443,7 +444,7 @@ String _$map3DPerspectiveAngleHash() =>
 /// Copied from [Map3DPerspectiveAngle].
 @ProviderFor(Map3DPerspectiveAngle)
 final map3DPerspectiveAngleProvider =
-    NotifierProvider<Map3DPerspectiveAngle, double>.internal(
+    AutoDisposeNotifierProvider<Map3DPerspectiveAngle, double>.internal(
   Map3DPerspectiveAngle.new,
   name: r'map3DPerspectiveAngleProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -453,14 +454,14 @@ final map3DPerspectiveAngleProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$Map3DPerspectiveAngle = Notifier<double>;
-String _$mapZoomHash() => r'5fc8d7397026ab36f2c9549587d7648e38d2bc45';
+typedef _$Map3DPerspectiveAngle = AutoDisposeNotifier<double>;
+String _$mapZoomHash() => r'341411f8b3402f47a9008c6758f3ced5cdc1cdaa';
 
 /// The zoom value that the map should use when being created.
 ///
 /// Copied from [MapZoom].
 @ProviderFor(MapZoom)
-final mapZoomProvider = NotifierProvider<MapZoom, double>.internal(
+final mapZoomProvider = AutoDisposeNotifierProvider<MapZoom, double>.internal(
   MapZoom.new,
   name: r'mapZoomProvider',
   debugGetCreateSourceHash:
@@ -469,15 +470,15 @@ final mapZoomProvider = NotifierProvider<MapZoom, double>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$MapZoom = Notifier<double>;
-String _$mapAllowDownloadHash() => r'7c11393246dcc8e12c809f33c655bb676157b6a9';
+typedef _$MapZoom = AutoDisposeNotifier<double>;
+String _$mapAllowDownloadHash() => r'4544d9f79d96035a17077394da45c17ba7e25c32';
 
 /// Whether the map should be allowed to download tiles over the internet.
 ///
 /// Copied from [MapAllowDownload].
 @ProviderFor(MapAllowDownload)
 final mapAllowDownloadProvider =
-    NotifierProvider<MapAllowDownload, bool>.internal(
+    AutoDisposeNotifierProvider<MapAllowDownload, bool>.internal(
   MapAllowDownload.new,
   name: r'mapAllowDownloadProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -487,6 +488,42 @@ final mapAllowDownloadProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$MapAllowDownload = Notifier<bool>;
+typedef _$MapAllowDownload = AutoDisposeNotifier<bool>;
+String _$mapGridSizeHash() => r'724dc6e828b687e501539db9f96fdf664cc54683';
+
+/// The size of the currently displayed map grid.
+///
+/// Copied from [MapGridSize].
+@ProviderFor(MapGridSize)
+final mapGridSizeProvider =
+    AutoDisposeNotifierProvider<MapGridSize, double?>.internal(
+  MapGridSize.new,
+  name: r'mapGridSizeProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$mapGridSizeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MapGridSize = AutoDisposeNotifier<double?>;
+String _$showGridSizeIndicatorHash() =>
+    r'809364e9ca0b95d276f02c80069b5753a96b7c81';
+
+/// Whether the grid size indicator should be shown.
+///
+/// Copied from [ShowGridSizeIndicator].
+@ProviderFor(ShowGridSizeIndicator)
+final showGridSizeIndicatorProvider =
+    AutoDisposeNotifierProvider<ShowGridSizeIndicator, bool>.internal(
+  ShowGridSizeIndicator.new,
+  name: r'showGridSizeIndicatorProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showGridSizeIndicatorHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowGridSizeIndicator = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

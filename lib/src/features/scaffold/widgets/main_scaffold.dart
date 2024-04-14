@@ -26,6 +26,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The main scaffold widget surrounding the main content of the application.
 class MainScaffold extends StatelessWidget {
@@ -49,6 +50,34 @@ class MainScaffold extends StatelessWidget {
           ],
         ),
         actions: [
+          // Grid size indicator
+          Consumer(
+            builder: (context, ref, child) {
+              if (ref.watch(showGridLayerProvider)) {
+                if (ref.watch(showGridSizeIndicatorProvider)) {
+                  final size = ref.watch(mapGridSizeProvider);
+                  if (size != null) {
+                    final text = switch (size >= 1000) {
+                      true => '${(size / 1000).round()} km',
+                      false => '${size.round()} m'
+                    };
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          text,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const Icon(Icons.grid_3x3),
+                      ],
+                    );
+                  }
+                }
+              }
+              return const SizedBox.shrink();
+            },
+          ),
           if (Device.isNative)
             const Padding(
               padding: EdgeInsets.all(8),

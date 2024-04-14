@@ -39,20 +39,21 @@ class GridLayer extends ConsumerWidget {
         ) ??
         ref.watch(homePositionProvider).gbPosition;
 
-    final verticalLines = Grid.verticalLines(origo, camera);
-    final horizontalLines = Grid.horizontalLines(origo, camera);
+    final vertical = Grid.verticalLines(origo, camera);
+    final horizontal = Grid.horizontalLines(origo, camera);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    ref.read(mapGridSizeProvider.notifier).update(vertical.size);
     return PolylineLayer(
       polylineCulling: true,
       polylines: [
-        ...verticalLines.map(
+        ...vertical.lines.map(
           (line) => Polyline(
             points: line,
             color: isDarkMode ? Colors.white : Colors.black,
             strokeWidth: 0.3,
           ),
         ),
-        ...horizontalLines.map(
+        ...horizontal.lines.map(
           (line) => Polyline(
             points: line,
             color: isDarkMode ? Colors.white : Colors.black,
@@ -94,7 +95,10 @@ class Grid {
   /// Finds and returns the vertical (north-south) lines which intersects the
   /// [camera]'s [MapCamera.visibleBounds]. The [origo] is the starting point of
   /// the line that all the others are offset from.
-  static List<List<LatLng>> verticalLines(Geographic origo, MapCamera camera) {
+  static ({List<List<LatLng>> lines, double size}) verticalLines(
+    Geographic origo,
+    MapCamera camera,
+  ) {
     final geoBox = GeoBox(
       west: camera.visibleBounds.west,
       south: camera.visibleBounds.south,
@@ -132,13 +136,13 @@ class Grid {
       offset += spacing;
     }
 
-    return lines;
+    return (lines: lines, size: spacing);
   }
 
   /// Finds and returns the horizontal (east-west) lines which intersects the
   /// [camera]'s [MapCamera.visibleBounds]. The [origo] is the starting point of
   /// the line that all the others are offset from.
-  static List<List<LatLng>> horizontalLines(
+  static ({List<List<LatLng>> lines, double size}) horizontalLines(
     Geographic origo,
     MapCamera camera,
   ) {
@@ -179,6 +183,6 @@ class Grid {
       offset += spacing;
     }
 
-    return lines;
+    return (lines: lines, size: spacing);
   }
 }

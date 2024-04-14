@@ -32,7 +32,7 @@ import 'package:universal_io/io.dart';
 part 'map_providers.g.dart';
 
 /// Whether the map is ready to be shown or not.
-@Riverpod(keepAlive: true)
+@riverpod
 class MapReady extends _$MapReady {
   @override
   bool build() => false;
@@ -43,7 +43,7 @@ class MapReady extends _$MapReady {
 
 /// The main [MapController] provider, which allows controlling the map from
 /// outside the widget code itself.
-@Riverpod(keepAlive: true)
+@riverpod
 class MainMapController extends _$MainMapController {
   @override
   MapController build() => MapController();
@@ -86,7 +86,7 @@ class MainMapController extends _$MainMapController {
 }
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
-@Riverpod(keepAlive: true)
+@riverpod
 class HomePosition extends _$HomePosition {
   @override
   LatLng build() {
@@ -114,7 +114,7 @@ class HomePosition extends _$HomePosition {
       );
     }
 
-    return const LatLng(0, 0);
+    return const LatLng(63.58, 10.70);
   }
 
   /// Update the [state] to [position].
@@ -122,7 +122,7 @@ class HomePosition extends _$HomePosition {
 }
 
 /// Whether the map should center on the vehicle or if it could be moved freely.
-@Riverpod(keepAlive: true)
+@riverpod
 class CenterMapOnVehicle extends _$CenterMapOnVehicle {
   @override
   bool build() {
@@ -199,7 +199,7 @@ class ZoomTimerController extends _$ZoomTimerController {
 }
 
 /// How much the map center should be offset from the vehicle.
-@Riverpod(keepAlive: true)
+@riverpod
 MapCenterOffset mapOffset(MapOffsetRef ref) {
   return switch (ref.watch(mapUse3DPerspectiveProvider)) {
     true => ref.watch(mapOffset3DProvider),
@@ -209,7 +209,7 @@ MapCenterOffset mapOffset(MapOffsetRef ref) {
 
 /// How much the map center should be offset from the vehicle when using
 /// 2D view.
-@Riverpod(keepAlive: true)
+@riverpod
 class MapOffset2D extends _$MapOffset2D {
   Timer? _saveToSettingsTimer;
 
@@ -252,7 +252,7 @@ class MapOffset2D extends _$MapOffset2D {
 
 /// How much the map center should be offset from the vehicle when using
 /// 3D view.
-@Riverpod(keepAlive: true)
+@riverpod
 class MapOffset3D extends _$MapOffset3D {
   Timer? _saveToSettingsTimer;
 
@@ -295,7 +295,7 @@ class MapOffset3D extends _$MapOffset3D {
 
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.
-@Riverpod(keepAlive: true)
+@riverpod
 LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
   final offset = ref.watch(mapOffsetProvider);
   if (offset == const MapCenterOffset()) {
@@ -325,7 +325,7 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
 }
 
 /// Whether the map always should point to the north and not rotate.
-@Riverpod(keepAlive: true)
+@riverpod
 class AlwaysPointNorth extends _$AlwaysPointNorth {
   @override
   bool build() {
@@ -360,7 +360,7 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
-@Riverpod(keepAlive: true)
+@riverpod
 class MapUse3DPerspective extends _$MapUse3DPerspective {
   @override
   bool build() {
@@ -387,7 +387,7 @@ class MapUse3DPerspective extends _$MapUse3DPerspective {
 
 /// The angle that the 3D perspective should be seen from, as in radians
 /// from the orthogonal view.
-@Riverpod(keepAlive: true)
+@riverpod
 class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
   Timer? _saveToSettingsTimer;
 
@@ -417,7 +417,7 @@ class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
 }
 
 /// The zoom value that the map should use when being created.
-@Riverpod(keepAlive: true)
+@riverpod
 class MapZoom extends _$MapZoom {
   Timer? _saveToSettingsTimer;
 
@@ -466,7 +466,7 @@ FutureOr<List<String>> mapCacheDirectories(MapCacheDirectoriesRef ref) async =>
     ).findSubfoldersWithTargetFile();
 
 /// Whether the map should be allowed to download tiles over the internet.
-@Riverpod(keepAlive: true)
+@riverpod
 class MapAllowDownload extends _$MapAllowDownload {
   @override
   bool build() {
@@ -490,5 +490,35 @@ class MapAllowDownload extends _$MapAllowDownload {
   void toggle() => Future(() => state = !state);
 }
 
+/// The size of the currently displayed map grid.
+@riverpod
+class MapGridSize extends _$MapGridSize {
+  @override
+  double? build() => null;
 
+  /// Update the [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
 
+/// Whether the grid size indicator should be shown.
+@riverpod
+class ShowGridSizeIndicator extends _$ShowGridSizeIndicator {
+  @override
+  bool build() {
+
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapShowGridSizeIndicator, next);
+      }
+    });
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.mapShowGridSizeIndicator) ??
+        true;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
