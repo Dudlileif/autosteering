@@ -546,7 +546,7 @@ class Equipment extends Hitchable with EquatableMixin {
             targetStaticAngle *= -1;
           }
           hitchAngle = (_prevHitchAngle +
-                  (targetStaticAngle - _prevHitchAngle) * a * period * 2)
+                  (targetStaticAngle - _prevHitchAngle) * a * period)
               .clamp(-90, 90);
 
           bearing = (position.rhumb.initialBearingTo(hitchParent!.position) +
@@ -773,9 +773,12 @@ class Equipment extends Hitchable with EquatableMixin {
     return sectionWorkingPolygon(index).mapPolygon(
       borderStrokeWidth: 2,
       isFilled: section.active,
-      borderColor: switch (section.active) {
+      borderColor: switch (section.workingWidth > 0) {
+        true => switch (section.active) {
         true => section.color?.brighten(30) ?? Colors.greenAccent,
         false => Colors.grey,
+          },
+        false => Colors.transparent,
       },
       color: switch (section.active) {
         true => (section.color ?? Colors.green).withOpacity(0.8),
@@ -795,7 +798,68 @@ class Equipment extends Hitchable with EquatableMixin {
           .whereNotNull();
 
   /// A list of the polygon(s) for the drawbar(s).
-  List<map.Polygon> get drawbarMapPolygons => switch (hitchType) {
+  List<map.Polygon> get drawbarMapPolygons => [
+        if (sections.isNotEmpty) ...[
+          map.Polygon(
+            borderStrokeWidth: 3,
+            isFilled: true,
+            color: Colors.grey.shade800,
+            borderColor: Colors.black,
+            points: [
+              drawbarEnd.rhumb
+                  .destinationPoint(distance: 0.1, bearing: bearing)
+                  .rhumb
+                  .destinationPoint(
+                    distance: 0.05,
+                    bearing: bearing - 90,
+                  )
+                  .latLng,
+              sectionEdgePositions(0, fraction: 1)
+                  .left
+                  .rhumb
+                  .destinationPoint(distance: 0.1, bearing: bearing)
+                  .latLng,
+              sectionEdgePositions(0, fraction: 1).left.latLng,
+              drawbarEnd.rhumb
+                  .destinationPoint(
+                    distance: 0.05,
+                    bearing: bearing - 90,
+                  )
+                  .latLng,
+            ],
+          ),
+          map.Polygon(
+            borderStrokeWidth: 3,
+            isFilled: true,
+            color: Colors.grey.shade800,
+            borderColor: Colors.black,
+            points: [
+              drawbarEnd.rhumb
+                  .destinationPoint(distance: 0.1, bearing: bearing)
+                  .rhumb
+                  .destinationPoint(
+                    distance: 0.05,
+                    bearing: bearing + 90,
+                  )
+                  .latLng,
+              sectionEdgePositions(sections.length - 1, fraction: 1)
+                  .right
+                  .rhumb
+                  .destinationPoint(distance: 0.1, bearing: bearing)
+                  .latLng,
+              sectionEdgePositions(sections.length - 1, fraction: 1)
+                  .right
+                  .latLng,
+              drawbarEnd.rhumb
+                  .destinationPoint(
+                    distance: 0.05,
+                    bearing: bearing + 90,
+                  )
+                  .latLng,
+            ],
+          ),
+        ],
+        ...switch (hitchType) {
         HitchType.towbar => [
             map.Polygon(
               borderStrokeWidth: 3,
@@ -898,7 +962,8 @@ class Equipment extends Hitchable with EquatableMixin {
               ],
             ),
           ]
-      };
+        },
+      ];
 
   /// A polygon drawing the decoration of the equipment.
   map.Polygon? get decorationPolygon {
@@ -951,16 +1016,11 @@ class Equipment extends Hitchable with EquatableMixin {
   }
 
   /// A list of all the polygons for the equipment, i.e. [drawbarMapPolygons]
-  /// and all the [sectionMapPolygon]s.
+  /// and all the [sectionWorkingMapPolygon]s.
   List<map.Polygon> get mapPolygons {
     return [
       ...drawbarMapPolygons,
       if (decorationPolygon != null) decorationPolygon!,
-      // ...List.generate(
-      //   sections.length,
-      //   sectionMapPolygon,
-      //   growable: false,
-      // ),
       ...List.generate(
         sections.length,
         sectionWorkingMapPolygon,
