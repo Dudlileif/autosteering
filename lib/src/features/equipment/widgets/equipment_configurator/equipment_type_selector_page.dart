@@ -139,7 +139,8 @@ class _EquipmentTypeSelector extends ConsumerWidget {
                           Equipment(hitchType: HitchType.fixed),
                         );
                     ref.invalidate(
-                        configuredEquipmentNameTextControllerProvider);
+                      configuredEquipmentNameTextControllerProvider,
+                    );
                   },
                 ),
               ),
@@ -180,7 +181,8 @@ class _EquipmentTypeSelector extends ConsumerWidget {
                           Equipment(hitchType: HitchType.towbar),
                         );
                     ref.invalidate(
-                        configuredEquipmentNameTextControllerProvider);
+                      configuredEquipmentNameTextControllerProvider,
+                    );
                   },
                 ),
               ),

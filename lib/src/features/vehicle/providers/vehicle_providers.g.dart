@@ -938,15 +938,14 @@ final lastUsedVehicleProvider = Provider<AsyncValue<Vehicle>>.internal(
 );
 
 typedef LastUsedVehicleRef = ProviderRef<AsyncValue<Vehicle>>;
-String _$importVehicleHash() => r'a9d446787ba251c44a41458cc2331fca8c5b664b';
+String _$importVehicleHash() => r'93b6905187b08e803e3e821fe14e16469fc9b4ff';
 
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.
 ///
 /// Copied from [importVehicle].
 @ProviderFor(importVehicle)
-final importVehicleProvider =
-    AutoDisposeProvider<AsyncValue<Vehicle?>>.internal(
+final importVehicleProvider = AutoDisposeFutureProvider<Vehicle?>.internal(
   importVehicle,
   name: r'importVehicleProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -956,7 +955,7 @@ final importVehicleProvider =
   allTransitiveDependencies: null,
 );
 
-typedef ImportVehicleRef = AutoDisposeProviderRef<AsyncValue<Vehicle?>>;
+typedef ImportVehicleRef = AutoDisposeFutureProviderRef<Vehicle?>;
 String _$mainVehicleHash() => r'dd2c1e60707dd90caeef5e4ac7460333506bf47a';
 
 /// The main provider for the vehicle state.
@@ -1012,80 +1011,6 @@ final gaugesAverageCountProvider =
 );
 
 typedef _$GaugesAverageCount = Notifier<int>;
-String _$imuCurrentFrequencyHash() =>
-    r'37d83d64c27e1793cca6b546e9777fa0157c86bc';
-
-/// A provider for the frequency of the IMU updates.
-///
-/// Copied from [ImuCurrentFrequency].
-@ProviderFor(ImuCurrentFrequency)
-final imuCurrentFrequencyProvider =
-    AutoDisposeNotifierProvider<ImuCurrentFrequency, double?>.internal(
-  ImuCurrentFrequency.new,
-  name: r'imuCurrentFrequencyProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$imuCurrentFrequencyHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ImuCurrentFrequency = AutoDisposeNotifier<double?>;
-String _$imuCurrentReadingHash() => r'52018dd12927d1890edb4af3670eee380615e279';
-
-/// A provider for the current raw [ImuReading] from the hardware.
-///
-/// Copied from [ImuCurrentReading].
-@ProviderFor(ImuCurrentReading)
-final imuCurrentReadingProvider =
-    AutoDisposeNotifierProvider<ImuCurrentReading, ImuReading?>.internal(
-  ImuCurrentReading.new,
-  name: r'imuCurrentReadingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$imuCurrentReadingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ImuCurrentReading = AutoDisposeNotifier<ImuReading?>;
-String _$wasCurrentFrequencyHash() =>
-    r'c5c45a14fc33f405dc840d21ddeb43c7971cea4d';
-
-/// A provider for the frequency of the WAS updates.
-///
-/// Copied from [WasCurrentFrequency].
-@ProviderFor(WasCurrentFrequency)
-final wasCurrentFrequencyProvider =
-    AutoDisposeNotifierProvider<WasCurrentFrequency, double?>.internal(
-  WasCurrentFrequency.new,
-  name: r'wasCurrentFrequencyProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$wasCurrentFrequencyHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$WasCurrentFrequency = AutoDisposeNotifier<double?>;
-String _$wasCurrentReadingHash() => r'9307def230e7852695d3854e367308e81b21249d';
-
-/// A provider for the current raw [WasReading] from the hardware.
-///
-/// Copied from [WasCurrentReading].
-@ProviderFor(WasCurrentReading)
-final wasCurrentReadingProvider =
-    AutoDisposeNotifierProvider<WasCurrentReading, WasReading?>.internal(
-  WasCurrentReading.new,
-  name: r'wasCurrentReadingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$wasCurrentReadingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$WasCurrentReading = AutoDisposeNotifier<WasReading?>;
 String _$vehicleSteeringAngleTargetHash() =>
     r'7d5f2ffb6c1757fe4633b37829f487579cf704e0';
 
@@ -1105,5 +1030,62 @@ final vehicleSteeringAngleTargetProvider =
 );
 
 typedef _$VehicleSteeringAngleTarget = AutoDisposeNotifier<double?>;
+String _$showOverrideSteeringHash() =>
+    r'589da280c5feee0b9e1f741c7a3e00bc2db71966';
+
+/// A provider for whether widgets for overriding the steering should be shown.
+///
+/// Copied from [ShowOverrideSteering].
+@ProviderFor(ShowOverrideSteering)
+final showOverrideSteeringProvider =
+    AutoDisposeNotifierProvider<ShowOverrideSteering, bool>.internal(
+  ShowOverrideSteering.new,
+  name: r'showOverrideSteeringProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showOverrideSteeringHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowOverrideSteering = AutoDisposeNotifier<bool>;
+String _$overrideSteeringHash() => r'4ced2e608447af433913fbfccd271058deb470d2';
+
+/// Whether the steering should be overridden. Usually used to test the
+/// steering motor and WAS together.
+///
+/// Copied from [OverrideSteering].
+@ProviderFor(OverrideSteering)
+final overrideSteeringProvider =
+    AutoDisposeNotifierProvider<OverrideSteering, bool>.internal(
+  OverrideSteering.new,
+  name: r'overrideSteeringProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$overrideSteeringHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$OverrideSteering = AutoDisposeNotifier<bool>;
+String _$overrideSteeringAngleHash() =>
+    r'1b900da2b35f4f4a099e4ffd84786acd7ab8ed5b';
+
+/// A provider for the steering angle to override with.
+///
+/// Copied from [OverrideSteeringAngle].
+@ProviderFor(OverrideSteeringAngle)
+final overrideSteeringAngleProvider =
+    AutoDisposeNotifierProvider<OverrideSteeringAngle, double>.internal(
+  OverrideSteeringAngle.new,
+  name: r'overrideSteeringAngleProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$overrideSteeringAngleHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$OverrideSteeringAngle = AutoDisposeNotifier<double>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

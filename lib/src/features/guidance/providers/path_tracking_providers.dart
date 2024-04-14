@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -263,46 +264,37 @@ FutureOr<void> deletePathTracking(
 /// A provider for importing a [PathTracking] from a file and applying it to
 /// the [ConfiguredPathTracking] provider.
 @riverpod
-AsyncValue<PathTracking?> importPathTracking(
+FutureOr<PathTracking?> importPathTracking(
   ImportPathTrackingRef ref,
-) {
-  FilePicker.platform.pickFiles(
+) async {
+  ref.keepAlive();
+  Timer(const Duration(seconds: 5), ref.invalidateSelf);
+  final pickedFiles = await FilePicker.platform.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
     dialogTitle: 'Choose path tracking file',
-  ).then((pickedFiles) {
-    if (Device.isWeb) {
-      final data = pickedFiles?.files.first.bytes;
-      if (data != null) {
-        final json = jsonDecode(String.fromCharCodes(data));
-        if (json is Map) {
-          final pathTracking =
-              PathTracking.fromJson(Map<String, dynamic>.from(json));
-          ref
-              .read(configuredPathTrackingProvider.notifier)
-              .update(pathTracking);
-          ref.read(showPathTrackingProvider.notifier).update(value: true);
+  );
 
-          return AsyncData(pathTracking);
-        }
-      }
-    } else {
-      final filePath = pickedFiles?.paths.first;
-      if (filePath != null) {
-        return ref.watch(loadPathTrackingFromFileProvider(filePath)).whenData(
-          (data) {
-            if (data != null) {
-              ref.read(configuredPathTrackingProvider.notifier).update(data);
-              ref.read(showPathTrackingProvider.notifier).update(value: true);
-
-              return data;
-            }
-            return null;
-          },
-        );
+  PathTracking? pathTracking;
+  if (Device.isWeb) {
+    final data = pickedFiles?.files.first.bytes;
+    if (data != null) {
+      final json = jsonDecode(String.fromCharCodes(data));
+      if (json is Map) {
+        pathTracking = PathTracking.fromJson(Map<String, dynamic>.from(json));
+        
       }
     }
-    return const AsyncData(null);
-  });
-  return const AsyncLoading();
+  } else {
+    final filePath = pickedFiles?.paths.first;
+    if (filePath != null) {
+      pathTracking =
+          await ref.watch(loadPathTrackingFromFileProvider(filePath).future);
+    }
+  }
+  if (pathTracking != null) {
+    ref.read(configuredPathTrackingProvider.notifier).update(pathTracking);
+    ref.read(showPathTrackingProvider.notifier).update(value: true);
+  }
+  return pathTracking;
 }

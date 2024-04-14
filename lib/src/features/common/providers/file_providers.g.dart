@@ -964,20 +964,20 @@ class _ExportJsonToFileDirectoryProviderElement
 
 String _$savedFilesHash() => r'29257e61ea32a5d9ba85c93e1ee7b44dc9258b86';
 
-/// A provider for reading and holding all the saved equipment setups in the
-/// user file directory.
+/// A provider for reading and holding all the saved objects of
+/// the given type in the in the user file directory.
 ///
 /// Copied from [savedFiles].
 @ProviderFor(savedFiles)
 const savedFilesProvider = SavedFilesFamily();
 
-/// A provider for reading and holding all the saved equipment setups in the
-/// user file directory.
+/// A provider for reading and holding all the saved objects of
+/// the given type in the in the user file directory.
 ///
 /// Copied from [savedFiles].
 class SavedFilesFamily extends Family {
-  /// A provider for reading and holding all the saved equipment setups in the
-  /// user file directory.
+  /// A provider for reading and holding all the saved objects of
+  /// the given type in the in the user file directory.
   ///
   /// Copied from [savedFiles].
   const SavedFilesFamily();
@@ -996,8 +996,8 @@ class SavedFilesFamily extends Family {
   @override
   String? get name => r'savedFilesProvider';
 
-  /// A provider for reading and holding all the saved equipment setups in the
-  /// user file directory.
+  /// A provider for reading and holding all the saved objects of
+  /// the given type in the in the user file directory.
   ///
   /// Copied from [savedFiles].
   SavedFilesProvider call({
@@ -1044,13 +1044,13 @@ class _$SavedFilesFamilyOverride implements FamilyOverride {
   }
 }
 
-/// A provider for reading and holding all the saved equipment setups in the
-/// user file directory.
+/// A provider for reading and holding all the saved objects of
+/// the given type in the in the user file directory.
 ///
 /// Copied from [savedFiles].
 class SavedFilesProvider extends FutureProvider<List<dynamic>> {
-  /// A provider for reading and holding all the saved equipment setups in the
-  /// user file directory.
+  /// A provider for reading and holding all the saved objects of
+  /// the given type in the in the user file directory.
   ///
   /// Copied from [savedFiles].
   SavedFilesProvider({

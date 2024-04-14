@@ -125,12 +125,29 @@ class EquipmentMenu extends StatelessWidget {
               title: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Recording position: ${fraction.toStringAsFixed(2)}'),
-                  Slider(
-                    value: fraction,
-                    onChanged: ref
+                  Text(
+                    'Recording position',
+                    style: textStyle,
+                  ),
+                  ToggleButtons(
+                    isSelected: [fraction == 1, fraction == 0.5, fraction == 0],
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Front'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Center'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Rear'),
+                      ),
+                    ],
+                    onPressed: (index) => ref
                         .read(equipmentRecordPositionFractionProvider.notifier)
-                        .update,
+                        .update((-index + 2) / 2),
                   ),
                 ],
               ),

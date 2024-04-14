@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -131,40 +132,47 @@ FutureOr<void> deleteWorkSession(
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
 @riverpod
-AsyncValue<WorkSession?> importWorkSession(
+FutureOr<WorkSession?> importWorkSession(
   ImportWorkSessionRef ref,
-) {
-  FilePicker.platform.pickFiles(
+) async {
+  ref.keepAlive();
+  Timer(const Duration(seconds: 5), ref.invalidateSelf);
+  final pickedFiles = await FilePicker.platform.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
     dialogTitle: 'Choose work session file',
-  ).then((pickedFiles) {
-    if (Device.isWeb) {
-      final data = pickedFiles?.files.first.bytes;
-      if (data != null) {
-        final json = jsonDecode(String.fromCharCodes(data));
-        if (json is Map) {
-          final workSession =
-              WorkSession.fromJson(Map<String, dynamic>.from(json));
-          ref.read(activeWorkSessionProvider.notifier).update(workSession);
-          return AsyncData(workSession);
-        }
+  );
+
+  WorkSession? workSession;
+  if (Device.isWeb) {
+    final data = pickedFiles?.files.first.bytes;
+    if (data != null) {
+      final json = jsonDecode(String.fromCharCodes(data));
+      if (json is Map) {
+        workSession = WorkSession.fromJson(Map<String, dynamic>.from(json));
       }
+      Logger.instance.w(
+        'Failed to import work session, data is not a valid json map',
+      );
     } else {
-      final filePath = pickedFiles?.paths.first;
-      if (filePath != null) {
-        return ref.watch(loadWorkSessionFromFileProvider(filePath)).whenData(
-          (data) {
-            if (data != null) {
-              ref.read(activeWorkSessionProvider.notifier).update(data);
-              return data;
-            }
-            return null;
-          },
-        );
-      }
+      Logger.instance.w(
+        'Failed to import equipment setup, data is not null',
+      );
     }
-    return const AsyncData(null);
-  });
-  return const AsyncLoading();
+  } else {
+    final filePath = pickedFiles?.paths.first;
+    if (filePath != null) {
+      workSession =
+          await ref.watch(loadWorkSessionFromFileProvider(filePath).future);
+    } else {
+      Logger.instance.w('Failed to import work session: $filePath.');
+    }
+  }
+  if (workSession != null) {
+    Logger.instance.i(
+      'Imported work session: ${workSession.title}.',
+    );
+    ref.read(activeWorkSessionProvider.notifier).update(workSession);
+  }
+  return workSession;
 }

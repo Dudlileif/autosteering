@@ -984,7 +984,7 @@ class _DeleteABTrackingProviderElement
   bool get downloadIfWeb => (origin as DeleteABTrackingProvider).downloadIfWeb;
 }
 
-String _$importABTrackingHash() => r'3ab8a1b78e54ffe8bc49beb7cceb01260ae15221';
+String _$importABTrackingHash() => r'0c709c771e8847bd4ccce2cdbcfdd1cf9241ab0c';
 
 /// A provider for importing an [ABTracking] from a file and applying it to
 /// the [ConfiguredABTracking] provider.
@@ -992,7 +992,7 @@ String _$importABTrackingHash() => r'3ab8a1b78e54ffe8bc49beb7cceb01260ae15221';
 /// Copied from [importABTracking].
 @ProviderFor(importABTracking)
 final importABTrackingProvider =
-    AutoDisposeProvider<AsyncValue<ABTracking?>>.internal(
+    AutoDisposeFutureProvider<ABTracking?>.internal(
   importABTracking,
   name: r'importABTrackingProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -1002,7 +1002,7 @@ final importABTrackingProvider =
   allTransitiveDependencies: null,
 );
 
-typedef ImportABTrackingRef = AutoDisposeProviderRef<AsyncValue<ABTracking?>>;
+typedef ImportABTrackingRef = AutoDisposeFutureProviderRef<ABTracking?>;
 String _$currentABTrackingTypeHash() =>
     r'6802edd8d8bf0a49686c0f342ef11b30b92d915d';
 

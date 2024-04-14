@@ -979,7 +979,7 @@ class _DeletePathTrackingProviderElement
 }
 
 String _$importPathTrackingHash() =>
-    r'87199dcdb80e3fb502be65d845af8e715028b694';
+    r'cb435d37531bdacf5ddf1758001278f192881127';
 
 /// A provider for importing a [PathTracking] from a file and applying it to
 /// the [ConfiguredPathTracking] provider.
@@ -987,7 +987,7 @@ String _$importPathTrackingHash() =>
 /// Copied from [importPathTracking].
 @ProviderFor(importPathTracking)
 final importPathTrackingProvider =
-    AutoDisposeProvider<AsyncValue<PathTracking?>>.internal(
+    AutoDisposeFutureProvider<PathTracking?>.internal(
   importPathTracking,
   name: r'importPathTrackingProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -997,8 +997,7 @@ final importPathTrackingProvider =
   allTransitiveDependencies: null,
 );
 
-typedef ImportPathTrackingRef
-    = AutoDisposeProviderRef<AsyncValue<PathTracking?>>;
+typedef ImportPathTrackingRef = AutoDisposeFutureProviderRef<PathTracking?>;
 String _$pathInterpolationDistanceHash() =>
     r'3838e0d5947ecf47190196f1fa4998a29f429156';
 

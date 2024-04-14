@@ -928,7 +928,7 @@ class _DeleteWorkSessionProviderElement
       (origin as DeleteWorkSessionProvider).overrideName;
 }
 
-String _$importWorkSessionHash() => r'd89d64b1d45947cde23bad001ae3f7c9d4a0cd22';
+String _$importWorkSessionHash() => r'c4656668106ca28b887b10dd00f7107656d08383';
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
@@ -936,7 +936,7 @@ String _$importWorkSessionHash() => r'd89d64b1d45947cde23bad001ae3f7c9d4a0cd22';
 /// Copied from [importWorkSession].
 @ProviderFor(importWorkSession)
 final importWorkSessionProvider =
-    AutoDisposeProvider<AsyncValue<WorkSession?>>.internal(
+    AutoDisposeFutureProvider<WorkSession?>.internal(
   importWorkSession,
   name: r'importWorkSessionProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -946,7 +946,7 @@ final importWorkSessionProvider =
   allTransitiveDependencies: null,
 );
 
-typedef ImportWorkSessionRef = AutoDisposeProviderRef<AsyncValue<WorkSession?>>;
+typedef ImportWorkSessionRef = AutoDisposeFutureProviderRef<WorkSession?>;
 String _$activeWorkSessionHash() => r'86029e0a8803b9456114e7a8c66c1c5b9fbfce98';
 
 /// A provider for holding the active [WorkSession].

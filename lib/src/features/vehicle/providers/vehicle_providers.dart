@@ -21,6 +21,7 @@ import 'dart:convert';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -227,41 +228,140 @@ class VehicleSteeringAngleTarget extends _$VehicleSteeringAngleTarget {
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.
 @riverpod
-AsyncValue<Vehicle?> importVehicle(
+FutureOr<Vehicle?> importVehicle(
   ImportVehicleRef ref,
-) {
-  FilePicker.platform.pickFiles(
+) async {
+  ref.keepAlive();
+  Timer(
+    const Duration(seconds: 5),
+    ref.invalidateSelf,
+  );
+  final pickedFiles = await FilePicker.platform.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
     dialogTitle: 'Choose vehicle file',
-  ).then((pickedFiles) {
-    if (Device.isWeb) {
-      final data = pickedFiles?.files.first.bytes;
-      if (data != null) {
-        final json = jsonDecode(String.fromCharCodes(data));
-        if (json is Map) {
-          final vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json));
-          ref.read(configuredVehicleProvider.notifier).update(vehicle);
-          ref.invalidate(configuredVehicleNameTextControllerProvider);
-          return AsyncData(vehicle);
-        }
-      }
-    } else {
-      final filePath = pickedFiles?.paths.first;
-      if (filePath != null) {
-        return ref.watch(loadVehicleFromFileProvider(filePath)).whenData(
-          (data) {
-            if (data != null) {
-              ref.read(configuredVehicleProvider.notifier).update(data);
-              ref.invalidate(configuredVehicleNameTextControllerProvider);
-              return data;
-            }
-            return null;
-          },
+  );
+
+  Vehicle? vehicle;
+  if (Device.isWeb) {
+    final data = pickedFiles?.files.first.bytes;
+    if (data != null) {
+      final json = jsonDecode(String.fromCharCodes(data));
+      if (json is Map) {
+        vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json));
+      } else {
+        Logger.instance.w(
+          'Failed to import vehicle, data is not a valid json map.',
         );
       }
+    } else {
+      Logger.instance.w(
+        'Failed to import vehicle, data is null.',
+      );
     }
-    return const AsyncData(null);
-  });
-  return const AsyncLoading();
+  } else {
+    final filePath = pickedFiles?.paths.first;
+    if (filePath != null) {
+      vehicle = await ref.watch(loadVehicleFromFileProvider(filePath).future);
+    } else {
+      Logger.instance.w('Failed to import vehicle: $filePath.');
+    }
+  }
+  if (vehicle != null) {
+    Logger.instance.i('Imported vehicle: ${vehicle.name ?? vehicle.uuid}.');
+    final position = ref.watch(
+      mainVehicleProvider.select((value) => value.position),
+    );
+    final bearing = ref.watch(
+      mainVehicleProvider.select((value) => value.bearing),
+    );
+    vehicle
+      ..position = position
+      ..bearing = bearing
+      ..lastUsed = DateTime.now();
+
+    ref.read(configuredVehicleProvider.notifier).update(vehicle);
+    ref.invalidate(configuredVehicleNameTextControllerProvider);
+    ref.read(simInputProvider.notifier).send(vehicle);
+    await ref.watch(saveVehicleProvider(vehicle).future);
+  }
+
+  return vehicle;
+}
+
+/// A provider for whether widgets for overriding the steering should be shown.
+@riverpod
+class ShowOverrideSteering extends _$ShowOverrideSteering {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous && !next) {
+        ref.invalidate(overrideSteeringProvider);
+      }
+    });
+    return false;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}
+
+/// Whether the steering should be overridden. Usually used to test the
+/// steering motor and WAS together.
+@riverpod
+class OverrideSteering extends _$OverrideSteering {
+  Timer? _timer;
+  @override
+  bool build() {
+    ref
+      ..listenSelf((previous, next) {
+        if (previous != null && !previous && next) {
+          _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+            ref.read(simInputProvider.notifier).send(
+              (steeringAngleOverride: ref.read(overrideSteeringAngleProvider)),
+            );
+          });
+          Logger.instance.i('Steering override enabled.');
+        } else if (previous != null && previous && !next && _timer != null) {
+          _timer?.cancel();
+          _timer = null;
+          ref
+              .read(simInputProvider.notifier)
+              .send((steeringAngleOverride: null));
+          Logger.instance.i('Steering override disabled.');
+        }
+      })
+      ..onDispose(() {
+        if (_timer != null) {
+          _timer?.cancel();
+          _timer = null;
+          ref
+              .read(simInputProvider.notifier)
+              .send((steeringAngleOverride: null));
+          Logger.instance.i('Steering override disabled.');
+        }
+      });
+    return false;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}
+
+/// A provider for the steering angle to override with.
+@riverpod
+class OverrideSteeringAngle extends _$OverrideSteeringAngle {
+  @override
+  double build() {
+    return ref.read(mainVehicleProvider.select((value) => value.steeringAngle));
+  }
+
+  /// Update the [state] to [value].
+  void update(double value) => Future(() => state = value);
 }

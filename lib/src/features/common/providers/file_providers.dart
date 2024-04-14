@@ -187,8 +187,8 @@ FutureOr<void> exportJsonToFileDirectory(
   }
 }
 
-/// A provider for reading and holding all the saved equipment setups in the
-/// user file directory.
+/// A provider for reading and holding all the saved objects of
+/// the given type in the in the user file directory.
 @Riverpod(keepAlive: true)
 FutureOr<List<dynamic>> savedFiles(
   SavedFilesRef ref, {

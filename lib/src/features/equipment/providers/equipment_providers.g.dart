@@ -921,15 +921,14 @@ class _DeleteEquipmentProviderElement
   String? get overrideName => (origin as DeleteEquipmentProvider).overrideName;
 }
 
-String _$importEquipmentHash() => r'f0c35c5a659c3a2990d769c4eb911917567b7921';
+String _$importEquipmentHash() => r'51f59b50d155ad37bcc0f46b5fde7b3d2aa6ecf7';
 
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.
 ///
 /// Copied from [importEquipment].
 @ProviderFor(importEquipment)
-final importEquipmentProvider =
-    AutoDisposeProvider<AsyncValue<Equipment?>>.internal(
+final importEquipmentProvider = AutoDisposeFutureProvider<Equipment?>.internal(
   importEquipment,
   name: r'importEquipmentProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -939,16 +938,16 @@ final importEquipmentProvider =
   allTransitiveDependencies: null,
 );
 
-typedef ImportEquipmentRef = AutoDisposeProviderRef<AsyncValue<Equipment?>>;
+typedef ImportEquipmentRef = AutoDisposeFutureProviderRef<Equipment?>;
 String _$showEquipmentDebugHash() =>
-    r'571324c7aa5372fb21239a9417aec88e677cce73';
+    r'1e3a6744e92da54c0a72fd64c65b5a2e0644052b';
 
 /// Whether or not to show the equipment debugging features.
 ///
 /// Copied from [ShowEquipmentDebug].
 @ProviderFor(ShowEquipmentDebug)
 final showEquipmentDebugProvider =
-    NotifierProvider<ShowEquipmentDebug, bool>.internal(
+    AutoDisposeNotifierProvider<ShowEquipmentDebug, bool>.internal(
   ShowEquipmentDebug.new,
   name: r'showEquipmentDebugProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -958,7 +957,7 @@ final showEquipmentDebugProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowEquipmentDebug = Notifier<bool>;
+typedef _$ShowEquipmentDebug = AutoDisposeNotifier<bool>;
 String _$equipmentRecordPositionFractionHash() =>
     r'bb8fda078784d4229bde314e792ba25c0a50d1ed';
 

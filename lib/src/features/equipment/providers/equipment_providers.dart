@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -30,7 +31,7 @@ import 'package:universal_io/io.dart';
 part 'equipment_providers.g.dart';
 
 /// Whether or not to show the equipment debugging features.
-@Riverpod(keepAlive: true)
+@riverpod
 class ShowEquipmentDebug extends _$ShowEquipmentDebug {
   @override
   bool build() => false;
@@ -353,48 +354,54 @@ Future<void> deleteEquipment(
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.
 @riverpod
-AsyncValue<Equipment?> importEquipment(
+FutureOr<Equipment?> importEquipment(
   ImportEquipmentRef ref,
-) {
-  FilePicker.platform.pickFiles(
+) async {
+  ref.keepAlive();
+  Timer(
+    const Duration(seconds: 5),
+    ref.invalidateSelf,
+  );
+  final pickedFiles = await FilePicker.platform.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
     dialogTitle: 'Choose equipment file',
-    initialDirectory: Device.isNative
-        ? [
-            ref.watch(fileDirectoryProvider).requireValue.path,
-            '/equipment',
-          ].join()
-        : null,
-  ).then((pickedFiles) {
-    if (Device.isWeb) {
-      final data = pickedFiles?.files.first.bytes;
-      if (data != null) {
-        final json = jsonDecode(String.fromCharCodes(data));
-        if (json is Map) {
-          final equipment = Equipment.fromJson(Map<String, dynamic>.from(json));
-          ref.read(configuredEquipmentProvider.notifier).update(equipment);
-          ref.invalidate(configuredEquipmentNameTextControllerProvider);
-          return AsyncData(equipment);
-        }
-      }
-    } else {
-      final filePath = pickedFiles?.paths.first;
-      if (filePath != null) {
-        return ref.watch(loadEquipmentFromFileProvider(filePath)).whenData(
-          (data) {
-            if (data != null) {
-              ref.read(configuredEquipmentProvider.notifier).update(data);
-              ref.invalidate(configuredEquipmentNameTextControllerProvider);
-              return data;
-            }
-            return null;
-          },
-        );
-      }
+  );
 
-      return const AsyncData(null);
+  Equipment? equipment;
+  if (Device.isWeb) {
+    final data = pickedFiles?.files.first.bytes;
+    if (data != null) {
+      final json = jsonDecode(String.fromCharCodes(data));
+      if (json is Map) {
+        equipment = Equipment.fromJson(Map<String, dynamic>.from(json));
+      }
+      Logger.instance.w(
+        'Failed to import equipment, data is not a valid json map.',
+      );
+    } else {
+      Logger.instance.w(
+        'Failed to import equipment, data is null.',
+      );
     }
-  });
-  return const AsyncLoading();
+  } else {
+    final filePath = pickedFiles?.paths.first;
+    if (filePath != null) {
+      equipment =
+          await ref.watch(loadEquipmentFromFileProvider(filePath).future);
+    } else {
+      Logger.instance.w('Failed to import equipment: $filePath.');
+    }
+  }
+  if (equipment != null) {
+    Logger.instance.i(
+      'Imported equipment: ${equipment.name ?? equipment.uuid}.',
+    );
+    equipment.lastUsed = DateTime.now();
+    ref.read(configuredEquipmentProvider.notifier).update(equipment);
+    ref.invalidate(configuredEquipmentNameTextControllerProvider);
+    await ref.watch(saveEquipmentProvider(equipment).future);
+  }
+
+  return equipment;
 }

@@ -967,7 +967,7 @@ class _LoadEquipmentSetupFromFileProviderElement
 }
 
 String _$importEquipmentSetupHash() =>
-    r'c436592a6fb3069d38bd2196153812d84a537fbe';
+    r'624f64e0d76c4a2eaaff5b4d27619092967ce41b';
 
 /// A provider for importing a equipment setup configuration from the user file
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
@@ -975,7 +975,7 @@ String _$importEquipmentSetupHash() =>
 /// Copied from [importEquipmentSetup].
 @ProviderFor(importEquipmentSetup)
 final importEquipmentSetupProvider =
-    AutoDisposeProvider<AsyncValue<EquipmentSetup?>>.internal(
+    AutoDisposeFutureProvider<EquipmentSetup?>.internal(
   importEquipmentSetup,
   name: r'importEquipmentSetupProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -985,8 +985,7 @@ final importEquipmentSetupProvider =
   allTransitiveDependencies: null,
 );
 
-typedef ImportEquipmentSetupRef
-    = AutoDisposeProviderRef<AsyncValue<EquipmentSetup?>>;
+typedef ImportEquipmentSetupRef = AutoDisposeFutureProviderRef<EquipmentSetup?>;
 String _$configuredEquipmentSetupHash() =>
     r'71c216b7b74326207c15483b43159727e9ee7743';
 

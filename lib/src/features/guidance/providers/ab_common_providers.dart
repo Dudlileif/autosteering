@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -381,42 +382,36 @@ FutureOr<void> deleteABTracking(
 /// A provider for importing an [ABTracking] from a file and applying it to
 /// the [ConfiguredABTracking] provider.
 @riverpod
-AsyncValue<ABTracking?> importABTracking(
+FutureOr<ABTracking?> importABTracking(
   ImportABTrackingRef ref,
-) {
-  FilePicker.platform.pickFiles(
+) async {
+  ref.keepAlive();
+  Timer(const Duration(seconds: 5), ref.invalidateSelf);
+
+  final pickedFiles = await FilePicker.platform.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
     dialogTitle: 'Choose AB tracking file',
-  ).then((pickedFiles) {
-    if (Device.isWeb) {
-      final data = pickedFiles?.files.first.bytes;
-      if (data != null) {
-        final json = jsonDecode(String.fromCharCodes(data));
-        if (json is Map) {
-          final pathTracking =
-              ABTracking.fromJson(Map<String, dynamic>.from(json));
-          ref.read(configuredABTrackingProvider.notifier).update(pathTracking);
-          ref.read(showABTrackingProvider.notifier).update(value: true);
-          return AsyncData(pathTracking);
-        }
-      }
-    } else {
-      final filePath = pickedFiles?.paths.first;
-      if (filePath != null) {
-        return ref.watch(loadABTrackingFromFileProvider(filePath)).whenData(
-          (data) {
-            if (data != null) {
-              ref.read(configuredABTrackingProvider.notifier).update(data);
-              ref.read(showABTrackingProvider.notifier).update(value: true);
-              return data;
-            }
-            return null;
-          },
-        );
+  );
+  ABTracking? abTracking;
+  if (Device.isWeb) {
+    final data = pickedFiles?.files.first.bytes;
+    if (data != null) {
+      final json = jsonDecode(String.fromCharCodes(data));
+      if (json is Map) {
+        abTracking = ABTracking.fromJson(Map<String, dynamic>.from(json));
       }
     }
-    return const AsyncData(null);
-  });
-  return const AsyncLoading();
+  } else {
+    final filePath = pickedFiles?.paths.first;
+    if (filePath != null) {
+      abTracking =
+          await ref.watch(loadABTrackingFromFileProvider(filePath).future);
+    }
+  }
+  if (abTracking != null) {
+    ref.read(configuredABTrackingProvider.notifier).update(abTracking);
+    ref.read(showABTrackingProvider.notifier).update(value: true);
+  }
+  return abTracking;
 }
