@@ -24,7 +24,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'ui_providers.g.dart';
 
 /// A provider for the UI [Offset] for the autosteering configurator.
-@Riverpod(keepAlive: true)
+@riverpod
 class AutosteeringConfiguratorUiOffset
     extends _$AutosteeringConfiguratorUiOffset {
   @override
@@ -51,7 +51,7 @@ class AutosteeringConfiguratorUiOffset
 }
 
 /// A provider for the UI [Offset] for the IMU configurator.
-@Riverpod(keepAlive: true)
+@riverpod
 class ImuConfiguratorUiOffset extends _$ImuConfiguratorUiOffset {
   @override
   Offset build() {
@@ -78,7 +78,7 @@ class ImuConfiguratorUiOffset extends _$ImuConfiguratorUiOffset {
 
 
 /// A provider for the UI [Offset] for the path recording configurator.
-@Riverpod(keepAlive: true)
+@riverpod
 class PathRecordingMenuUiOffset extends _$PathRecordingMenuUiOffset {
   @override
   Offset build() {
@@ -104,7 +104,7 @@ class PathRecordingMenuUiOffset extends _$PathRecordingMenuUiOffset {
 }
 
 /// A provider for the UI [Offset] for the steering hardware configurator.
-@Riverpod(keepAlive: true)
+@riverpod
 class SteeringHardwareConfiguratorUiOffset
     extends _$SteeringHardwareConfiguratorUiOffset {
   @override

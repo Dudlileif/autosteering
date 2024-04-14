@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';

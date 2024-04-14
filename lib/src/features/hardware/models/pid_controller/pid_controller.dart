@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:autosteering/src/features/vehicle/models/pid_controller/pid_parameters.dart';
+import 'package:autosteering/src/features/hardware/models/pid_controller/pid_parameters.dart';
 
 export 'pid_parameters.dart';
 

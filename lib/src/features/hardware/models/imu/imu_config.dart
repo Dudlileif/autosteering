@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'imu_config.freezed.dart';

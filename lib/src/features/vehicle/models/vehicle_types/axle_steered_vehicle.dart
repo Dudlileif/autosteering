@@ -44,8 +44,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.pathTrackingMode,
     super.imu,
     super.was,
-    super.motorConfig,
-    super.pidParameters,
+    super.autosteeringThresholdVelocity,
+    super.steeringHardwareConfig,
     super.purePursuitParameters,
     super.stanleyParameters,
     super.antennaLateralOffset,
@@ -65,6 +65,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.uuid,
     super.lastUsed,
     super.manufacturerColors,
+    super.manualSimulationMode,
   }) : _steeringAngleMaxRaw = steeringAngleMax;
 
   /// The distance between the axles.
@@ -236,10 +237,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// corresponding Ackermann angle as the steering input angle.
   @override
   void setSteeringAngleByWasReading() {
-    final innerWheelAngle = switch (was.readingNormalizedInRange < 0) {
-      true => (was.readingNormalizedInRange * _steeringAngleMaxRaw)
+    final innerWheelAngle = switch (wasReadingNormalizedInRange < 0) {
+      true => (wasReadingNormalizedInRange * _steeringAngleMaxRaw)
           .clamp(-_steeringAngleMaxRaw, 0.0),
-      false => (was.readingNormalizedInRange * _steeringAngleMaxRaw)
+      false => (wasReadingNormalizedInRange * _steeringAngleMaxRaw)
           .clamp(0.0, _steeringAngleMaxRaw)
     };
 
@@ -708,9 +709,9 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? solidAxleToRearTowbarDistance,
     Imu? imu,
     Was? was,
-    MotorConfig? motorConfig,
+    double? autosteeringThresholdVelocity,
+    SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
-    PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     double? velocity,
@@ -728,6 +729,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     String? name,
     String? uuid,
     ManufacturerColors? manufacturerColors,
+    bool? manualSimulationMode,
   });
 
   @override

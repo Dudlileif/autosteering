@@ -6,6 +6,42 @@ part of 'hardware_motor_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$getSteeringHardwareConfigHash() =>
+    r'eb13c44ba561f28f0b8a0f68e23438200d44675a';
+
+/// A provider for getting the motor configuration from the hardware.
+///
+/// Copied from [getSteeringHardwareConfig].
+@ProviderFor(getSteeringHardwareConfig)
+final getSteeringHardwareConfigProvider = FutureProvider<void>.internal(
+  getSteeringHardwareConfig,
+  name: r'getSteeringHardwareConfigProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getSteeringHardwareConfigHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetSteeringHardwareConfigRef = FutureProviderRef<void>;
+String _$sendSteeringHardwareConfigHash() =>
+    r'dd8dc0dce988ea17839a598cb7013c845946ef99';
+
+/// A provider for updating the motor configuration on the hardware
+///
+/// Copied from [sendSteeringHardwareConfig].
+@ProviderFor(sendSteeringHardwareConfig)
+final sendSteeringHardwareConfigProvider = FutureProvider<void>.internal(
+  sendSteeringHardwareConfig,
+  name: r'sendSteeringHardwareConfigProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$sendSteeringHardwareConfigHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SendSteeringHardwareConfigRef = FutureProviderRef<void>;
 String _$steeringMotorWasTargetHash() =>
     r'8c4800171e50833b3f3208064bf689fa6920a60d';
 

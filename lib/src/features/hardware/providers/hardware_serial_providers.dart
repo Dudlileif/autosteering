@@ -22,7 +22,6 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
-import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

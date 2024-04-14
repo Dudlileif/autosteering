@@ -7,14 +7,14 @@ part of 'ui_providers.dart';
 // **************************************************************************
 
 String _$autosteeringConfiguratorUiOffsetHash() =>
-    r'42ebed817507a33e0ee670e28b114e36436d3886';
+    r'b87755416b77ae111351f7816d191d2da8eed619';
 
 /// A provider for the UI [Offset] for the autosteering configurator.
 ///
 /// Copied from [AutosteeringConfiguratorUiOffset].
 @ProviderFor(AutosteeringConfiguratorUiOffset)
-final autosteeringConfiguratorUiOffsetProvider =
-    NotifierProvider<AutosteeringConfiguratorUiOffset, Offset>.internal(
+final autosteeringConfiguratorUiOffsetProvider = AutoDisposeNotifierProvider<
+    AutosteeringConfiguratorUiOffset, Offset>.internal(
   AutosteeringConfiguratorUiOffset.new,
   name: r'autosteeringConfiguratorUiOffsetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -24,16 +24,16 @@ final autosteeringConfiguratorUiOffsetProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$AutosteeringConfiguratorUiOffset = Notifier<Offset>;
+typedef _$AutosteeringConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 String _$imuConfiguratorUiOffsetHash() =>
-    r'144df83ac96c4d1f834c1c92249854ece2643f85';
+    r'b261649bb94f91631ea1e90337fbeac0084df6b7';
 
 /// A provider for the UI [Offset] for the IMU configurator.
 ///
 /// Copied from [ImuConfiguratorUiOffset].
 @ProviderFor(ImuConfiguratorUiOffset)
 final imuConfiguratorUiOffsetProvider =
-    NotifierProvider<ImuConfiguratorUiOffset, Offset>.internal(
+    AutoDisposeNotifierProvider<ImuConfiguratorUiOffset, Offset>.internal(
   ImuConfiguratorUiOffset.new,
   name: r'imuConfiguratorUiOffsetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -43,16 +43,16 @@ final imuConfiguratorUiOffsetProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ImuConfiguratorUiOffset = Notifier<Offset>;
+typedef _$ImuConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 String _$pathRecordingMenuUiOffsetHash() =>
-    r'061d9f8090b72372091d78a7606c4b9dbb8c7c4e';
+    r'ad60265c570f46b72b79a2f6d18c5a7bdb055bc5';
 
 /// A provider for the UI [Offset] for the path recording configurator.
 ///
 /// Copied from [PathRecordingMenuUiOffset].
 @ProviderFor(PathRecordingMenuUiOffset)
 final pathRecordingMenuUiOffsetProvider =
-    NotifierProvider<PathRecordingMenuUiOffset, Offset>.internal(
+    AutoDisposeNotifierProvider<PathRecordingMenuUiOffset, Offset>.internal(
   PathRecordingMenuUiOffset.new,
   name: r'pathRecordingMenuUiOffsetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -62,16 +62,17 @@ final pathRecordingMenuUiOffsetProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$PathRecordingMenuUiOffset = Notifier<Offset>;
+typedef _$PathRecordingMenuUiOffset = AutoDisposeNotifier<Offset>;
 String _$steeringHardwareConfiguratorUiOffsetHash() =>
-    r'42aebfb64368c40244b126207b2ec6acee96f707';
+    r'904e729ac666fc703313edd6b14432c756d64fc5';
 
 /// A provider for the UI [Offset] for the steering hardware configurator.
 ///
 /// Copied from [SteeringHardwareConfiguratorUiOffset].
 @ProviderFor(SteeringHardwareConfiguratorUiOffset)
 final steeringHardwareConfiguratorUiOffsetProvider =
-    NotifierProvider<SteeringHardwareConfiguratorUiOffset, Offset>.internal(
+    AutoDisposeNotifierProvider<SteeringHardwareConfiguratorUiOffset,
+        Offset>.internal(
   SteeringHardwareConfiguratorUiOffset.new,
   name: r'steeringHardwareConfiguratorUiOffsetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -81,6 +82,6 @@ final steeringHardwareConfiguratorUiOffsetProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$SteeringHardwareConfiguratorUiOffset = Notifier<Offset>;
+typedef _$SteeringHardwareConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:autosteering/src/features/vehicle/models/imu/imu_config.dart';
-import 'package:autosteering/src/features/vehicle/models/imu/imu_reading.dart';
+import 'package:autosteering/src/features/hardware/models/imu/imu_config.dart';
+import 'package:autosteering/src/features/hardware/models/imu/imu_reading.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 

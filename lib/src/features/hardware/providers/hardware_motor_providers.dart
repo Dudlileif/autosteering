@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hardware_motor_providers.g.dart';
@@ -253,4 +254,83 @@ class SteeringMotorStepsPerWasIncrementCenterToMax
 
   /// Updates [state] to [value].
   void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for getting the motor configuration from the hardware.
+@Riverpod(keepAlive: true)
+FutureOr<void> getSteeringHardwareConfig(
+  GetSteeringHardwareConfigRef ref,
+) async {
+  try {
+    final url =
+        'http://${ref.watch(hardwareAddressProvider)}/motor_config.json';
+    Logger.instance.i('Requesting motor config from hardware: $url');
+    final response = await Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 5),
+      ),
+    ).get<Map<String, dynamic>>(url);
+    if (response.data != null && response.statusCode == 200) {
+      final steeringHardwareConfig =
+          SteeringHardwareConfig.fromJson(response.data!);
+      Logger.instance
+          .i('Retrieved motor config from hardware: $steeringHardwareConfig');
+      ref.read(simInputProvider.notifier).send(steeringHardwareConfig);
+      Timer(const Duration(milliseconds: 100), () {
+        final vehicle = ref.read(mainVehicleProvider);
+        ref.read(saveVehicleProvider(vehicle));
+        Logger.instance.i(
+          '''Updated vehicle motor config: ${vehicle.steeringHardwareConfig}''',
+        );
+      });
+    } else {
+      Logger.instance.w(
+        'Did not recieve valid motor config response: $response',
+      );
+    }
+  } catch (error, stackTrace) {
+    Logger.instance.e(
+      'Failed to get motor config from hardware.',
+      error: error,
+      stackTrace: stackTrace,
+    );
+  }
+  ref.invalidateSelf();
+}
+
+/// A provider for updating the motor configuration on the hardware
+@Riverpod(keepAlive: true)
+FutureOr<void> sendSteeringHardwareConfig(
+  SendSteeringHardwareConfigRef ref,
+) async {
+  try {
+    Logger.instance.i(
+      'Sending motor config to: http://${ref.watch(hardwareAddressProvider)}/update_motor_config',
+    );
+    final steeringHardwareConfig = ref.read(
+      mainVehicleProvider.select((value) => value.steeringHardwareConfig),
+    );
+
+    final response = await Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 5),
+      ),
+    ).get<String>(
+      '''http://${ref.watch(hardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader}''',
+    );
+    if (response.statusCode == 200) {
+      Logger.instance.i('Successfully sent motor config to hardware.');
+    } else {
+      Logger.instance.e('Failed to send motor config to hardware: $response');
+    }
+  } catch (error, stackTrace) {
+    Logger.instance.e(
+      'Failed to send motor config to hardware.',
+      error: error,
+      stackTrace: stackTrace,
+    );
+  }
+  ref.invalidateSelf();
 }

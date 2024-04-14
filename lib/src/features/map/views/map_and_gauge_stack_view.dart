@@ -20,11 +20,10 @@ import 'dart:math';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/map/map.dart';
-import 'package:autosteering/src/features/map/providers/ui_providers.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:autosteering/src/features/vehicle/widgets/vehicle_autosteer_parameter_configurator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -92,7 +91,8 @@ class MapAndGaugeStackView extends ConsumerWidget {
                           const ABTrackingControls(),
                           const Divider(),
                         ],
-                        if (ref.watch(simCoreAllowManualInputProvider)) ...[
+                        if (ref.watch(simCoreAllowManualInputProvider) ||
+                            ref.watch(showOverrideSteeringProvider)) ...[
                           const SimVehicleSteeringSlider(),
                           const Divider(),
                         ],
@@ -143,7 +143,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
               child: EquipmentSectionButtons(),
             ),
           ),
-          if (ref.watch(debugVehicleIMUProvider))
+          if (ref.watch(showIMUConfigProvider))
             Consumer(
               builder: (context, ref, child) {
                 var offset = ref.read(imuConfiguratorUiOffsetProvider);
@@ -199,7 +199,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 );
               },
             ),
-          if (ref.watch(debugVehicleWASProvider))
+          if (ref.watch(showSteeringHardwareConfigProvider))
             Consumer(
               builder: (context, ref, child) {
                 var offset =
@@ -257,7 +257,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 );
               },
             ),
-          if (ref.watch(debugVehicleAutosteerParametersProvider))
+          if (ref.watch(showAutosteeringParameterConfigProvider))
             Consumer(
               builder: (context, ref, child) {
                 var offset = ref.read(autosteeringConfiguratorUiOffsetProvider);
@@ -267,14 +267,14 @@ class MapAndGaugeStackView extends ConsumerWidget {
                       0,
                       constraints.maxWidth - 380,
                     ),
-                    top: offset.dy.clamp(0, constraints.maxHeight - 340),
+                    top: offset.dy.clamp(0, constraints.maxHeight - 390),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: SizedBox(
                         height: min(
-                          325,
+                          375,
                           constraints.maxHeight -
-                              offset.dy.clamp(0, constraints.maxHeight - 340),
+                              offset.dy.clamp(0, constraints.maxHeight - 390),
                         ),
                         child: LongPressDraggable(
                           onDragUpdate: (update) {
@@ -297,20 +297,20 @@ class MapAndGaugeStackView extends ConsumerWidget {
                                     constraints.maxWidth - 380,
                                   ),
                                   offset.dy
-                                      .clamp(0, constraints.maxHeight - 340),
+                                      .clamp(0, constraints.maxHeight - 390),
                                 ),
                               ),
                           childWhenDragging: const SizedBox.shrink(),
                           feedback: const Opacity(
                             opacity: 0.7,
                             child: SizedBox(
-                              height: 325,
-                              child: VehicleAutosteerParameterConfigurator(),
+                              height: 375,
+                              child: AutosteeringParameterConfigurator(),
                             ),
                           ),
                           child: const SizedBox(
-                            height: 325,
-                            child: VehicleAutosteerParameterConfigurator(),
+                            height: 375,
+                            child: AutosteeringParameterConfigurator(),
                           ),
                         ),
                       ),

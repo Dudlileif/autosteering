@@ -28,9 +28,6 @@ class WasConfig with _$WasConfig {
     @Default(true) bool useWas,
     @Default(false) bool invertInput,
     @Default(12) int bits,
-    @Default(100) int min,
-    @Default(4000) int max,
-    @Default(1500) int center,
   }) = _WasConfig;
 
   /// Creates a [WasConfig] from the [json] object.

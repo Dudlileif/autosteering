@@ -16,6 +16,8 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -66,10 +68,10 @@ class VehicleMenu extends StatelessWidget {
             ],
           ),
           builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(debugVehicleIMUProvider),
+            value: ref.watch(showIMUConfigProvider),
             onChanged: (value) => value != null
                 ? ref
-                    .read(debugVehicleIMUProvider.notifier)
+                    .read(showIMUConfigProvider.notifier)
                     .update(value: value)
                 : null,
             secondary: child,
@@ -90,10 +92,12 @@ class VehicleMenu extends StatelessWidget {
             ],
           ),
           builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(debugVehicleWASProvider),
+            value: ref.watch(showSteeringHardwareConfigProvider),
             onChanged: (value) => value != null
                 ? ref
-                    .read(debugVehicleWASProvider.notifier)
+                    .read(
+                      showSteeringHardwareConfigProvider.notifier,
+                    )
                     .update(value: value)
                 : null,
             secondary: child,
@@ -114,16 +118,33 @@ class VehicleMenu extends StatelessWidget {
             ],
           ),
           builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(debugVehicleAutosteerParametersProvider),
+            value: ref.watch(showAutosteeringParameterConfigProvider),
             onChanged: (value) => value != null
                 ? ref
-                    .read(debugVehicleAutosteerParametersProvider.notifier)
+                    .read(
+                      showAutosteeringParameterConfigProvider.notifier,
+                    )
                     .update(value: value)
                 : null,
             secondary: child,
           ),
         ),
         const VehicleDebugMenu(),
+        Consumer(
+          builder: (context, ref, child) => CheckboxListTile(
+            title: Text(
+              'Show motor target override',
+              style: textStyle,
+            ),
+            secondary: const Icon(Icons.warning_rounded),
+            value: ref.watch(showOverrideSteeringProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(showOverrideSteeringProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
       ],
     );
   }

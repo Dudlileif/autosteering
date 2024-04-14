@@ -16,5 +16,9 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 export 'common_message_handler.dart';
+export 'imu/imu.dart';
 export 'message_decoder.dart';
 export 'motor_status.dart';
+export 'pid_controller/pid_controller.dart';
+export 'steering_hardware_config/steering_hardware_config.dart';
+export 'was/was.dart';

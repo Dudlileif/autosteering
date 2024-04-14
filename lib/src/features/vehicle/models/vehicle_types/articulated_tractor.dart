@@ -47,10 +47,10 @@ final class ArticulatedTractor extends Vehicle {
     super.pathTrackingMode,
     super.imu,
     super.was,
-    super.motorConfig,
-    super.pidParameters,
+    super.autosteeringThresholdVelocity,
+    super.steeringHardwareConfig,
     super.purePursuitParameters =
-        const PurePursuitParameters(lookAheadDistance: 1),
+        const PurePursuitParameters(lookAheadMinDistance: 1),
     super.stanleyParameters,
     super.antennaPosition,
     super.velocity,
@@ -68,6 +68,7 @@ final class ArticulatedTractor extends Vehicle {
     super.uuid,
     super.lastUsed,
     super.manufacturerColors,
+    super.manualSimulationMode,
   });
 
   /// Creates an [ArticulatedTractor] from the [json] object.
@@ -822,9 +823,9 @@ final class ArticulatedTractor extends Vehicle {
     int? numWheels,
     Imu? imu,
     Was? was,
-    MotorConfig? motorConfig,
+    double? autosteeringThresholdVelocity,
+    SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
-    PidParameters? pidParameters,
     StanleyParameters? stanleyParameters,
     PurePursuitParameters? purePursuitParameters,
     double? velocity,
@@ -842,6 +843,7 @@ final class ArticulatedTractor extends Vehicle {
     String? name,
     String? uuid,
     ManufacturerColors? manufacturerColors,
+    bool? manualSimulationMode,
   }) =>
       ArticulatedTractor(
         antennaPosition: antennaPosition ?? this.antennaPosition,
@@ -866,9 +868,11 @@ final class ArticulatedTractor extends Vehicle {
             rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
         imu: imu ?? this.imu,
         was: was ?? this.was,
-        motorConfig: motorConfig ?? this.motorConfig,
+        autosteeringThresholdVelocity:
+            autosteeringThresholdVelocity ?? this.autosteeringThresholdVelocity,
+        steeringHardwareConfig:
+            steeringHardwareConfig ?? this.steeringHardwareConfig,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
-        pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:
             purePursuitParameters ?? this.purePursuitParameters,
         stanleyParameters: stanleyParameters ?? this.stanleyParameters,
@@ -886,6 +890,7 @@ final class ArticulatedTractor extends Vehicle {
         name: name ?? this.name,
         uuid: uuid ?? this.uuid,
         manufacturerColors: manufacturerColors ?? this.manufacturerColors,
+        manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
       )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override

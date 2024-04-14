@@ -40,9 +40,9 @@ final class Harvester extends AxleSteeredVehicle {
     super.solidAxleWheelWidth,
     super.imu,
     super.was,
-    super.motorConfig,
+    super.autosteeringThresholdVelocity,
+    super.steeringHardwareConfig,
     super.pathTrackingMode,
-    super.pidParameters,
     super.purePursuitParameters,
     super.stanleyParameters,
     super.velocity,
@@ -60,6 +60,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.uuid,
     super.lastUsed,
     super.manufacturerColors,
+    super.manualSimulationMode,
   });
 
   /// Creates a [Harvester] from the [json] object.
@@ -167,9 +168,9 @@ final class Harvester extends AxleSteeredVehicle {
     double? solidAxleWheelWidth,
     Imu? imu,
     Was? was,
-    MotorConfig? motorConfig,
+    double? autosteeringThresholdVelocity,
+    SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
-    PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     double? velocity,
@@ -187,6 +188,8 @@ final class Harvester extends AxleSteeredVehicle {
     String? name,
     String? uuid,
     ManufacturerColors? manufacturerColors,
+    bool? manualSimulationMode,
+
   }) =>
       Harvester(
         antennaPosition: antennaPosition ?? this.antennaPosition,
@@ -216,9 +219,11 @@ final class Harvester extends AxleSteeredVehicle {
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
         imu: imu ?? this.imu,
         was: was ?? this.was,
-        motorConfig: motorConfig ?? this.motorConfig,
+        autosteeringThresholdVelocity:
+            autosteeringThresholdVelocity ?? this.autosteeringThresholdVelocity,
+        steeringHardwareConfig:
+            steeringHardwareConfig ?? this.steeringHardwareConfig,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
-        pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:
             purePursuitParameters ?? this.purePursuitParameters,
         stanleyParameters: stanleyParameters ?? this.stanleyParameters,
@@ -236,6 +241,7 @@ final class Harvester extends AxleSteeredVehicle {
         name: name ?? this.name,
         uuid: uuid ?? this.uuid,
         manufacturerColors: manufacturerColors ?? this.manufacturerColors,
+        manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
       )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override

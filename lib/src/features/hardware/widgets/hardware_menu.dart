@@ -44,6 +44,32 @@ class HardwareMenu extends ConsumerWidget {
         if (Device.isNative) const NtripMenu(),
         if (Device.supportsSerial) const HardwareSerialMenu(),
         if (Device.isNative) const HardwareLoggingMenu(),
+        if (Device.isNative)
+          MenuItemButton(
+            closeOnActivate: false,
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.download),
+            ),
+            child: Text(
+              'Get hardware config',
+              style: textStyle,
+            ),
+            onPressed: () => ref.read(getSteeringHardwareConfigProvider),
+          ),
+        if (Device.isNative)
+          MenuItemButton(
+            closeOnActivate: false,
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.upload),
+            ),
+            child: Text(
+              'Send hardware config',
+              style: textStyle,
+            ),
+            onPressed: () => ref.read(sendSteeringHardwareConfigProvider),
+          ),
         Consumer(
           child: Text(
             'Calibrate motor',

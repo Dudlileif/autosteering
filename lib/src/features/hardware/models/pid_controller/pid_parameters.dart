@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:autosteering/src/features/vehicle/models/pid_controller/pid_controller.dart';
+import 'package:autosteering/src/features/hardware/models/pid_controller/pid_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'pid_parameters.freezed.dart';

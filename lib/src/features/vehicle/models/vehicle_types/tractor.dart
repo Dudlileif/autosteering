@@ -41,8 +41,8 @@ final class Tractor extends AxleSteeredVehicle {
     super.pathTrackingMode,
     super.imu,
     super.was,
-    super.motorConfig,
-    super.pidParameters,
+    super.autosteeringThresholdVelocity,
+    super.steeringHardwareConfig,
     super.purePursuitParameters,
     super.stanleyParameters,
     super.velocity,
@@ -60,6 +60,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.uuid,
     super.lastUsed,
     super.manufacturerColors,
+    super.manualSimulationMode,
   });
 
   /// Creates a [Tractor] from the [json] object.
@@ -165,7 +166,8 @@ final class Tractor extends AxleSteeredVehicle {
     double? solidAxleWheelWidth,
     Imu? imu,
     Was? was,
-    MotorConfig? motorConfig,
+    double? autosteeringThresholdVelocity,
+    SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
@@ -185,6 +187,8 @@ final class Tractor extends AxleSteeredVehicle {
     String? name,
     String? uuid,
     ManufacturerColors? manufacturerColors,
+    bool? manualSimulationMode,
+
   }) =>
       Tractor(
         antennaPosition: antennaPosition ?? this.antennaPosition,
@@ -214,9 +218,11 @@ final class Tractor extends AxleSteeredVehicle {
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
         imu: imu ?? this.imu,
         was: was ?? this.was,
-        motorConfig: motorConfig ?? this.motorConfig,
+        autosteeringThresholdVelocity:
+            autosteeringThresholdVelocity ?? this.autosteeringThresholdVelocity,
+        steeringHardwareConfig:
+            steeringHardwareConfig ?? this.steeringHardwareConfig,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
-        pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:
             purePursuitParameters ?? this.purePursuitParameters,
         stanleyParameters: stanleyParameters ?? this.stanleyParameters,
@@ -234,6 +240,7 @@ final class Tractor extends AxleSteeredVehicle {
         name: name ?? this.name,
         uuid: uuid ?? this.uuid,
         manufacturerColors: manufacturerColors ?? this.manufacturerColors,
+        manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
       )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override

@@ -15,8 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:autosteering/src/features/simulator/providers/providers.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,19 +41,19 @@ class ImuConfigurator extends StatelessWidget {
           backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
           appBar: AppBar(
             primary: false,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('IMU Configurator'),
-                Consumer(
+            title: const Text('IMU Configurator'),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Consumer(
                   builder: (context, ref, child) => CloseButton(
                     onPressed: () => ref
-                        .read(debugVehicleIMUProvider.notifier)
+                        .read(showIMUConfigProvider.notifier)
                         .update(value: false),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           body: ListView(
             children: [
@@ -76,7 +79,7 @@ class ImuConfigurator extends StatelessWidget {
                           );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
-                      Future.delayed(const Duration(milliseconds: 100), () {
+                      Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
@@ -111,7 +114,7 @@ class ImuConfigurator extends StatelessWidget {
                           );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
-                      Future.delayed(const Duration(milliseconds: 100), () {
+                      Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
@@ -146,7 +149,7 @@ class ImuConfigurator extends StatelessWidget {
                           );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
-                      Future.delayed(const Duration(milliseconds: 100), () {
+                      Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
@@ -180,7 +183,7 @@ class ImuConfigurator extends StatelessWidget {
                           );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
-                      Future.delayed(const Duration(milliseconds: 100), () {
+                      Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
@@ -214,7 +217,7 @@ class ImuConfigurator extends StatelessWidget {
                           );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
-                      Future.delayed(const Duration(milliseconds: 100), () {
+                      Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
@@ -259,7 +262,7 @@ class ImuConfigurator extends StatelessWidget {
                                     );
                                 // Wait a short while before saving the
                                 // hopefully updated vehicle.
-                                Future.delayed(
+                                Timer(
                                   const Duration(milliseconds: 100),
                                   () {
                                     final vehicle =
@@ -296,7 +299,7 @@ class ImuConfigurator extends StatelessWidget {
                                 );
                             // Wait a short while before saving the
                             // hopefully updated vehicle.
-                            Future.delayed(
+                            Timer(
                               const Duration(milliseconds: 100),
                               () {
                                 final vehicle = ref.watch(mainVehicleProvider);
@@ -420,7 +423,7 @@ class ImuConfigurator extends StatelessWidget {
                                     );
                                 // Wait a short while before saving the
                                 // hopefully updated vehicle.
-                                Future.delayed(
+                                Timer(
                                   const Duration(milliseconds: 100),
                                   () {
                                     final vehicle =
@@ -457,7 +460,7 @@ class ImuConfigurator extends StatelessWidget {
                                 );
                             // Wait a short while before saving the
                             // hopefully updated vehicle.
-                            Future.delayed(
+                            Timer(
                               const Duration(milliseconds: 100),
                               () {
                                 final vehicle = ref.watch(mainVehicleProvider);
@@ -506,7 +509,7 @@ class ImuConfigurator extends StatelessWidget {
                                     );
                                 // Wait a short while before saving the
                                 // hopefully updated vehicle.
-                                Future.delayed(
+                                Timer(
                                   const Duration(milliseconds: 100),
                                   () {
                                     final vehicle =
@@ -545,7 +548,7 @@ class ImuConfigurator extends StatelessWidget {
                                 );
                             // Wait a short while before saving the hopefully
                             // updated vehicle.
-                            Future.delayed(
+                            Timer(
                               const Duration(milliseconds: 100),
                               () {
                                 final vehicle = ref.watch(mainVehicleProvider);
@@ -581,7 +584,7 @@ class ImuConfigurator extends StatelessWidget {
                         .send((setZeroIMUPitchAndRoll: true));
                     // Wait a short while before saving the hopefully
                     // updated vehicle.
-                    Future.delayed(
+                    Timer(
                       const Duration(milliseconds: 100),
                       () {
                         final vehicle = ref.watch(mainVehicleProvider);
@@ -611,7 +614,7 @@ class ImuConfigurator extends StatelessWidget {
                         .send((setZeroIMUBearingToNextGNSSBearing: true));
                     // Wait a short while before saving the hopefully
                     // updated vehicle.
-                    Future.delayed(
+                    Timer(
                       const Duration(milliseconds: 1000),
                       () {
                         final vehicle = ref.watch(mainVehicleProvider);
@@ -641,7 +644,7 @@ class ImuConfigurator extends StatelessWidget {
                         .send((setZeroIMUBearingToNorth: true));
                     // Wait a short while before saving the hopefully
                     // updated vehicle.
-                    Future.delayed(
+                    Timer(
                       const Duration(milliseconds: 1000),
                       () {
                         final vehicle = ref.watch(mainVehicleProvider);

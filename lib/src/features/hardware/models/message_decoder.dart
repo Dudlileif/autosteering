@@ -21,7 +21,7 @@ import 'dart:typed_data';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
-import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:nmea/nmea.dart';
