@@ -181,6 +181,25 @@ class Field with EquatableMixin {
     return null;
   }
 
+  /// A bounding box for the field that is sized large enough to keep the field
+  /// inside while rotating the field in place.
+  GeoBox? get rotationCenteredSquaredByDiagonalBoundingBox {
+    if (boundingBox != null) {
+      final center = boundingBox!.min.spherical
+          .intermediatePointTo(boundingBox!.max, fraction: 0.5);
+
+      final diagonal = boundingBox!.min.rhumb.distanceTo(boundingBox!.max) / 2;
+
+      return GeoBox.from([
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 0),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 90),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 180),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 270),
+      ]);
+    }
+    return null;
+  }
+
   /// Returns a new [Field] based on the this one, but with
   /// parameters/variables altered.
   Field copyWith({

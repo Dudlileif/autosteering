@@ -125,6 +125,7 @@ class _MiniMapView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(miniMapLockToFieldProvider);
     final mapController = ref.watch(miniMapControllerProvider);
 
     ref.listen(

@@ -15,17 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:convert';
-
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:universal_io/io.dart';
 
 /// A menu with attached submenu for interacting with the field feature.
 class FieldMenu extends ConsumerWidget {
@@ -465,42 +461,7 @@ class _ImportButton extends ConsumerWidget {
         child: Icon(Icons.file_open),
       ),
       closeOnActivate: false,
-      onPressed: () async {
-        final result = await FilePicker.platform.pickFiles(
-          initialDirectory: Device.isNative
-              ? [
-                  ref.watch(fileDirectoryProvider).requireValue.path,
-                  '/fields',
-                ].join()
-              : null,
-          dialogTitle: 'Open field json file',
-          allowedExtensions: ['json'],
-          type: FileType.custom,
-        );
-        if (result != null) {
-          if (Device.isWeb) {
-            final data = result.files.first.bytes;
-            if (data != null) {
-              final json = jsonDecode(String.fromCharCodes(data));
-              if (json is Map) {
-                ref.read(activeFieldProvider.notifier).update(
-                      Field.fromJson(Map<String, dynamic>.from(json)),
-                    );
-              }
-            }
-          } else {
-            final path = result.paths.first;
-            if (path != null) {
-              final json = jsonDecode(File(path).readAsStringSync());
-              if (json is Map) {
-                ref.read(activeFieldProvider.notifier).update(
-                      Field.fromJson(Map<String, dynamic>.from(json)),
-                    );
-              }
-            }
-          }
-        }
-      },
+      onPressed: () => ref.read(importFieldProvider),
       child: Text('Import', style: textStyle),
     );
   }
