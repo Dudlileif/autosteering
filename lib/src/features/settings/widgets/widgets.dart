@@ -15,6 +15,4 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-export 'models/models.dart';
-export 'providers/providers.dart';
-export 'widgets/widgets.dart';
+export 'settings_menu.dart';

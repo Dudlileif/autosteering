@@ -22,8 +22,7 @@ import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/map/map.dart';
-import 'package:autosteering/src/features/simulator/simulator.dart';
-import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,15 +38,14 @@ class MainScaffold extends StatelessWidget {
       appBar: AppBar(
         title: MenuBar(
           children: [
+            const SettingsMenu(),
             const MapMenu(),
             const FieldMenu(),
             const GuidanceMenu(),
             const VehicleMenu(),
             const EquipmentMenu(),
             if (Device.isNative) const HardwareMenu(),
-            const SimCoreMenu(),
-            const ThemeMenu(),
-          ],
+],
         ),
         actions: [
           // Grid size indicator

@@ -27,12 +27,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu button with attached submenu for configuring the simulator.
-class SimCoreMenu extends StatelessWidget {
+class SimCoreMenu extends ConsumerWidget {
   /// A menu button with attached submenu for configuring the simulator.
   const SimCoreMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final manualSimulationMode = ref.watch(simCoreAllowManualInputProvider);
+
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
@@ -41,7 +43,7 @@ class SimCoreMenu extends StatelessWidget {
       menuChildren: [
         Consumer(
           child: Text(
-            'Allow manual sim controls',
+            'Manual simulation mode',
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(
@@ -55,7 +57,8 @@ class SimCoreMenu extends StatelessWidget {
                 : null,
           ),
         ),
-        Consumer(
+        if (!manualSimulationMode)
+          Consumer(
           child: Text(
             'Allow sim interpolation',
             style: textStyle,
@@ -72,7 +75,7 @@ class SimCoreMenu extends StatelessWidget {
                 : null,
           ),
         ),
-        const VehicleSimMenu(),
+        if (manualSimulationMode) const VehicleSimMenu(),
         Consumer(
           child: Text(
             'Reset position',
