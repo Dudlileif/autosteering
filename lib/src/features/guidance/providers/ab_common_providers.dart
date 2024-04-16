@@ -181,14 +181,7 @@ class ConfiguredABTracking extends _$ConfiguredABTracking {
 @Riverpod(keepAlive: true)
 class ConfiguredMenuABTracking extends _$ConfiguredMenuABTracking {
   @override
-  ABTracking? build() {
-    ref.listenSelf((previous, next) {
-      if (next != null || previous != null) {
-        Logger.instance.i('Path tracking set to ${next?.runtimeType}');
-        sendToSim();
-      }
-    });
-    return switch (ref.watch(currentABTrackingTypeProvider)) {
+  ABTracking? build() => switch (ref.watch(currentABTrackingTypeProvider)) {
       ABTrackingType.aPlusLine => ref.watch(aPlusLineProvider),
       ABTrackingType.abLine => ref.watch(aBLineProvider),
       ABTrackingType.abCurve => ref.watch(aBCurveProvider),

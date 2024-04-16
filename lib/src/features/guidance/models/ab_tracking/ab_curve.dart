@@ -38,7 +38,7 @@ class ABCurve extends ABTracking {
   }) : assert(
           baseLine.length >= 2,
           'Base curve has to have at least two points',
-        );
+        ),super(type:ABTrackingType.abCurve);
 
   /// Creates an ABCurve
   ABCurve.preCalculated({
@@ -54,7 +54,7 @@ class ABCurve extends ABTracking {
     Iterable<int>? offsetsInsideBoundary,
     super.calculateLinesOnCreation = false,
     super.name,
-  }) {
+  }):super(type:ABTrackingType.abCurve) {
     this.lines.addAll(lines ?? {});
     this.finishedOffsets.addAll(finishedOffsets ?? []);
     if (boundary != null && offsetsInsideBoundary != null) {

@@ -39,7 +39,7 @@ class ABTrackingControls extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextWithStroke(
-            'Line: ${abTracking.currentOffset}',
+            'Line: ${abTracking.currentOffset ?? '-'}',
             style: theme.textTheme.titleLarge?.copyWith(color: Colors.white),
             strokeWidth: 3.5,
           ),
@@ -54,6 +54,8 @@ class ABTrackingControls extends ConsumerWidget {
                   ),
                   strokeWidth: 3.5,
                 ),
+                checkmarkColor: Colors.white,
+                selectedColor: theme.primaryColor,
                 selected: abTracking.snapToClosestLine,
                 onSelected: (value) => ref
                     .read(aBSnapToClosestLineProvider.notifier)

@@ -23,7 +23,6 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 
 export 'ab_config.dart';
@@ -56,6 +55,7 @@ sealed class ABTracking {
   ABTracking({
     required this.baseLine,
     required this.width,
+    required this.type,
     this.boundary,
     String? boundaryString,
     this.turningRadius = 10,
@@ -66,17 +66,16 @@ sealed class ABTracking {
     this.name,
   })  : start = baseLine.first,
         end = baseLine.last,
-        _nextOffset = turnOffsetMinSkips + 1,
         isCCW = isCurveCounterclockwise(baseLine.map((e) => e.position)),
         baseLinePathTracking = PurePursuitPathTracking(wayPoints: baseLine) {
     if (boundary == null && boundaryString != null) {
       boundary = Polygon.parse(boundaryString);
     }
-    if (boundary == null) {
-      currentPathTracking = PurePursuitPathTracking(wayPoints: currentLine);
+    if (boundary == null && currentOffset != null) {
+      currentPathTracking = PurePursuitPathTracking(wayPoints: currentLine!);
       if (nextOffset != null && nextLine != null) {
         nextPathTracking = PurePursuitPathTracking(wayPoints: nextLine!);
-        lines[0] = currentLine;
+        lines[0] = currentLine!;
         lines[nextOffset!] = offsetLine(nextOffset!);
       }
     }
@@ -101,6 +100,9 @@ sealed class ABTracking {
     }
     return ABLine.fromJson(json);
   }
+
+  /// Which subtype of [ABTracking] this is.
+  final ABTrackingType type;
 
   /// The line from A [start] to B [end].
   final List<WayPoint> baseLine;
@@ -134,7 +136,7 @@ sealed class ABTracking {
   bool snapToClosestLine = false;
 
   /// Private value for [currentOffset].
-  int _currentOffset = 0;
+  int? _currentOffset;
 
   /// The number of [width] offsets that we should move the line.
   ///
@@ -142,16 +144,13 @@ sealed class ABTracking {
   /// to the original recording direction.
   /// A negative number means that the line is move to the left relative to
   /// the original recording direction.
-  int get currentOffset => _currentOffset;
+  int? get currentOffset => _currentOffset;
 
   /// The turning radius to use for the [upcomingTurn] and [activeTurn].
   double turningRadius;
 
   /// Whether the [baseLine] is counter clock wise.
   bool isCCW;
-
-  /// Whether the all the paths have been run through and completed.
-  bool isCompleted = false;
 
   /// The path tracking for the [baseLine].
   PathTracking baseLinePathTracking;
@@ -182,8 +181,12 @@ sealed class ABTracking {
   /// Offset lines that have been completed.
   final finishedOffsets = SplayTreeSet<int>();
 
+  /// Whether the all the paths have been run through and completed.
+  bool get isCompleted => const DeepCollectionEquality.unordered()
+      .equals(offsetsInsideBoundary, finishedOffsets);
+
   /// Private variable for [nextOffset].
-  int? _nextOffset = 0;
+  int? _nextOffset;
 
   /// The next offset to use for the line.
   int? get nextOffset => _nextOffset;
@@ -239,20 +242,23 @@ sealed class ABTracking {
       offsetLine(offset).lastOrNull ?? _offsetEndRaw(offset);
 
   /// The start point for the line with [currentOffset].
-  WayPoint get currentStart => pathAlongAToB
-      ? currentLine.firstOrNull ?? currentEnd
-      : currentLine.lastOrNull ?? offsetStart(currentOffset);
+  WayPoint? get currentStart => currentOffset != null
+      ? pathAlongAToB
+          ? currentLine?.firstOrNull ?? currentEnd
+          : currentLine?.lastOrNull ?? offsetStart(currentOffset!)
+      : null;
 
   /// The end point for the line with [currentOffset].
-  WayPoint get currentEnd => pathAlongAToB
-      ? currentLine.lastOrNull ?? offsetEnd(currentOffset)
-      : currentLine.firstOrNull ?? currentStart;
+  WayPoint? get currentEnd => pathAlongAToB
+      ? currentLine?.lastOrNull ??
+          (currentOffset != null ? offsetEnd(currentOffset!) : null)
+      : currentLine?.firstOrNull ?? currentStart;
 
   /// The bearing of the current line at the [currentStart].
-  double get currentInitialBearing => currentStart.bearing;
+  double? get currentInitialBearing => currentStart?.bearing;
 
   /// The bearing of the current line at the [currentEnd].
-  double get currentFinalBearing => currentEnd.bearing;
+  double? get currentFinalBearing => currentEnd?.bearing;
 
   /// The offset [start] for the [nextOffset].
   WayPoint? get nextStart =>
@@ -262,12 +268,14 @@ sealed class ABTracking {
   WayPoint? get nextEnd => nextOffset != null ? offsetEnd(nextOffset!) : null;
 
   /// The line for the [currentOffset].
-  List<WayPoint> get currentLine => !pathAlongAToB
-      ? offsetLine(currentOffset)
-          .reversed
-          .map((e) => e.copyWith(bearing: (e.bearing + 180).wrap360()))
-          .toList()
-      : offsetLine(currentOffset);
+  List<WayPoint>? get currentLine => currentOffset != null
+      ? !pathAlongAToB
+          ? offsetLine(currentOffset!)
+              .reversed
+              .map((e) => e.copyWith(bearing: (e.bearing + 180).wrap360()))
+              .toList()
+          : offsetLine(currentOffset!)
+      : null;
 
   /// The line for the [nextOffset].
   List<WayPoint>? get nextLine => nextOffset != null
@@ -279,8 +287,10 @@ sealed class ABTracking {
           : offsetLine(nextOffset!)
       : null;
 
-  set currentOffset(int newOffset) {
-    if (currentOffset != newOffset) {
+  set currentOffset(int? newOffset) {
+    if (newOffset == null) {
+      _currentOffset = null;
+    } else if (currentOffset != newOffset) {
       if ((boundary != null &&
               offsetsInsideBoundary != null &&
               (offsetsInsideBoundary?.contains(newOffset) ?? false)) ||
@@ -303,6 +313,13 @@ sealed class ABTracking {
         nextPathTracking?.interPolateWayPoints(newWayPoints: nextLine);
       }
     }
+  }
+
+  /// Clears the finished offsets and sets the [currentOffset] to the first of
+  /// the inside boundary lines or 0.
+  void clearFinishedOffsets() {
+    finishedOffsets.clear();
+    _currentOffset = offsetsInsideBoundary?.first ?? 0;
   }
 
   /// Calculates all the lines/offsets within the [boundary], if there is one.
@@ -340,13 +357,16 @@ sealed class ABTracking {
         }
       }
 
-      nextOffset = offsetsInsideBoundary!.reduce(
-        (previousValue, element) => sqrt(pow(currentOffset - element, 2)) <
-                    sqrt(pow(currentOffset - previousValue, 2)) &&
-                element != currentOffset
-            ? element
-            : previousValue,
-      );
+      nextOffset = currentOffset != null
+          ? offsetsInsideBoundary!.reduce(
+              (previousValue, element) =>
+                  sqrt(pow(currentOffset! - element, 2)) <
+                              sqrt(pow(currentOffset! - previousValue, 2)) &&
+                          element != currentOffset
+                      ? element
+                      : previousValue,
+            )
+          : null;
     }
     if (nextOffset != null && nextLine != null) {
       nextPathTracking = PurePursuitPathTracking(wayPoints: nextLine!);
@@ -769,9 +789,11 @@ sealed class ABTracking {
       baseLinePathTracking.perpendicularDistance(vehicle);
 
   /// The perpendicular distance from [vehicle] to the line of [offset] offsets.
-  double perpendicularDistanceToOffsetLine(int offset, Vehicle vehicle) =>
-      signedPerpendicularDistanceToCurrentLine(vehicle) +
-      (offset - currentOffset) * width;
+  double? perpendicularDistanceToOffsetLine(int offset, Vehicle vehicle) =>
+      currentOffset != null
+          ? signedPerpendicularDistanceToCurrentLine(vehicle) +
+              (offset - currentOffset!) * width
+          : null;
 
   /// How many [width] offsets from the original line we need to get the
   /// closest line.
@@ -820,19 +842,21 @@ sealed class ABTracking {
   /// If [offset] is negative the [currentOffset] will move to the left
   /// relative to the [vehicle]'s bearing.
   void moveOffset(Vehicle vehicle, {int offset = 1}) {
-    final newOffset = currentOffset + offset * compareToBearing(vehicle);
-    if (offsetsInsideBoundary != null &&
-        nextOffset != null &&
-        !offsetsInsideBoundary!.contains(newOffset)) {
-      return;
+    if (currentOffset != null) {
+      final newOffset = currentOffset! + offset * compareToBearing(vehicle);
+      if (offsetsInsideBoundary != null &&
+          nextOffset != null &&
+          !offsetsInsideBoundary!.contains(newOffset)) {
+        return;
+      }
+      if (snapToClosestLine) {
+        snapToClosestLine = false;
+        awaitToReengageSnap = true;
+      }
+      currentOffset = newOffset;
+      activeTurn = null;
+      currentPathTracking?.setIndexToClosestPoint(vehicle);
     }
-    if (snapToClosestLine) {
-      snapToClosestLine = false;
-      awaitToReengageSnap = true;
-    }
-    currentOffset = newOffset;
-    activeTurn = null;
-    currentPathTracking?.setIndexToClosestPoint(vehicle);
   }
 
   /// Moves the [currentOffset] in the right direction relative to the
@@ -845,20 +869,25 @@ sealed class ABTracking {
   void moveOffsetLeft(Vehicle vehicle, {int offset = 1}) =>
       moveOffset(vehicle, offset: -offset);
 
+  /// Sets the [currentOffset] to the closest line.
+  void setCurrentOffsetToClosest(Vehicle vehicle) {
+    final closest = numOffsetsToClosestLine(vehicle);
+    if (closest != currentOffset) {
+      if (boundary != null && offsetsInsideBoundary != null) {
+        if (offsetsInsideBoundary!.contains(closest)) {
+          currentOffset = closest;
+        }
+      } else if (boundary == null) {
+        currentOffset = closest;
+      }
+    }
+  }
+
   /// Check the automatic offset snap and update the [currentOffset] to the
   /// one closes to [vehicle].
   void checkAutoOffsetSnap(Vehicle vehicle) {
     if (snapToClosestLine && activeTurn == null) {
-      final closest = numOffsetsToClosestLine(vehicle);
-      if (closest != currentOffset) {
-        if (boundary != null && offsetsInsideBoundary != null) {
-          if (offsetsInsideBoundary!.contains(closest)) {
-            currentOffset = closest;
-          }
-        } else if (boundary == null) {
-          currentOffset = closest;
-        }
-      }
+      setCurrentOffsetToClosest(vehicle);
     }
 
     checkIfShouldReengageSnap(vehicle);
@@ -874,9 +903,9 @@ sealed class ABTracking {
     final oldNext = nextOffset;
 
     if (offsetsInsideBoundary != null) {
-      if (setEquals(offsetsInsideBoundary, finishedOffsets)) {
+      if (isCompleted) {
         nextOffset = null;
-        isCompleted = true;
+        currentOffset = null;
         return;
       }
       final difference = offsetsInsideBoundary!.difference(finishedOffsets);
@@ -887,80 +916,88 @@ sealed class ABTracking {
     final turnOffsetIncrease = turnOffsetMinSkips + 1;
 
     final bearingAlongAToB = !compareToBearing(vehicle).isNegative;
+    if (currentOffset != null) {
+      if ((bearingAlongAToB && !offsetOppositeTurn) ||
+          (!bearingAlongAToB && offsetOppositeTurn)) {
+        nextOffset = currentOffset! + turnOffsetIncrease;
 
-    if ((bearingAlongAToB && !offsetOppositeTurn) ||
-        (!bearingAlongAToB && offsetOppositeTurn)) {
-      nextOffset = currentOffset + turnOffsetIncrease;
-
-      while ((finishedOffsets.contains(nextOffset) ||
-              nextOffset == currentOffset) &&
-          nextOffset != null) {
-        final newOffset = nextOffset! - 1;
-        if (offsetsInsideBoundary != null &&
-            newOffset < offsetsInsideBoundary!.min) {
-          final difference = offsetsInsideBoundary!.difference(finishedOffsets);
-          if (difference.length >= 2) {
-            nextOffset = difference.firstWhereOrNull(
-                  (element) =>
-                      element != currentOffset &&
-                      element - turnOffsetIncrease > currentOffset,
-                ) ??
-                difference.last;
-          } else {
-            nextOffset = null;
+        while ((finishedOffsets.contains(nextOffset) ||
+                nextOffset == currentOffset) &&
+            nextOffset != null) {
+          final newOffset = nextOffset! - 1;
+          if (offsetsInsideBoundary != null &&
+              newOffset < offsetsInsideBoundary!.min) {
+            final difference =
+                offsetsInsideBoundary!.difference(finishedOffsets);
+            if (difference.length >= 2) {
+              nextOffset = difference.firstWhereOrNull(
+                    (element) =>
+                        element != currentOffset &&
+                        element - turnOffsetIncrease > currentOffset!,
+                  ) ??
+                  difference.last;
+            } else {
+              nextOffset = null;
+            }
+            break;
           }
-          break;
+          nextOffset = newOffset;
         }
-        nextOffset = newOffset;
-      }
-    } else {
-      nextOffset = currentOffset - turnOffsetIncrease;
+      } else {
+        nextOffset = currentOffset! - turnOffsetIncrease;
 
-      while ((finishedOffsets.contains(nextOffset) ||
-              nextOffset == currentOffset) &&
-          nextOffset != null) {
-        final newOffset = nextOffset! + 1;
-        if (offsetsInsideBoundary != null &&
-            newOffset > offsetsInsideBoundary!.max) {
-          final difference = offsetsInsideBoundary!.difference(finishedOffsets);
-          if (difference.length >= 2) {
-            nextOffset = difference.lastWhereOrNull(
-                  (element) =>
-                      element != currentOffset &&
-                      element - turnOffsetIncrease < currentOffset,
-                ) ??
-                difference.first;
-          } else {
-            nextOffset = null;
+        while ((finishedOffsets.contains(nextOffset) ||
+                nextOffset == currentOffset) &&
+            nextOffset != null) {
+          final newOffset = nextOffset! + 1;
+          if (offsetsInsideBoundary != null &&
+              newOffset > offsetsInsideBoundary!.max) {
+            final difference =
+                offsetsInsideBoundary!.difference(finishedOffsets);
+            if (difference.length >= 2) {
+              nextOffset = difference.lastWhereOrNull(
+                    (element) =>
+                        element != currentOffset &&
+                        element - turnOffsetIncrease < currentOffset!,
+                  ) ??
+                  difference.first;
+            } else {
+              nextOffset = null;
+            }
+            break;
           }
-          break;
+          nextOffset = newOffset;
         }
-        nextOffset = newOffset;
       }
-    }
 
-    if (nextOffset == currentOffset) {
-      nextOffset = nextOffset! + turnOffsetIncrease;
-    }
+      if (nextOffset == currentOffset) {
+        nextOffset = nextOffset! + turnOffsetIncrease;
+      }
 
-    if (offsetsInsideBoundary != null &&
-        nextOffset != null &&
-        !offsetsInsideBoundary!.contains(nextOffset)) {
-      offsetOppositeTurn = !offsetOppositeTurn;
-      return;
-    }
-    if (nextOffset != null &&
-        ((nextOffset! - currentOffset).abs() == 1 && turnOffsetIncrease > 2)) {
-      offsetOppositeTurn = !offsetOppositeTurn;
-    }
+      if (offsetsInsideBoundary != null &&
+          nextOffset != null &&
+          !offsetsInsideBoundary!.contains(nextOffset)) {
+        offsetOppositeTurn = !offsetOppositeTurn;
+        return;
+      }
+      if (nextOffset != null &&
+          ((nextOffset! - currentOffset!).abs() == 1 &&
+              turnOffsetIncrease > 2)) {
+        offsetOppositeTurn = !offsetOppositeTurn;
+      }
 
-    if (oldNext != nextOffset) {
-      updateCurrentPathTracking(vehicle, force: true);
+      if (oldNext != nextOffset) {
+        updateCurrentPathTracking(vehicle, force: true);
+      }
     }
   }
 
-  /// The current [PathTracking] of the [currentLine] for the [Vehicle].
+  /// Updates the current [PathTracking] of the [currentLine] for the [Vehicle].
   void updateCurrentPathTracking(Vehicle vehicle, {bool force = false}) {
+    if (isCompleted) {
+      currentPathTracking = null;
+      return;
+    }
     final pathTrackingIsCorrectMode = switch (vehicle.pathTrackingMode) {
       PathTrackingMode.stanley => currentPathTracking is StanleyPathTracking,
       PathTrackingMode.purePursuit =>
@@ -969,18 +1006,21 @@ sealed class ABTracking {
 
     // Return if we're already in the right mode.
     if (force || !pathTrackingIsCorrectMode) {
-      currentPathTracking = switch (vehicle.pathTrackingMode) {
-        PathTrackingMode.stanley => StanleyPathTracking(wayPoints: currentLine),
-        PathTrackingMode.purePursuit =>
-          PurePursuitPathTracking(wayPoints: currentLine),
+      if (currentLine != null) {
+        currentPathTracking = switch (vehicle.pathTrackingMode) {
+          PathTrackingMode.stanley =>
+            StanleyPathTracking(wayPoints: currentLine!),
+          PathTrackingMode.purePursuit =>
+            PurePursuitPathTracking(wayPoints: currentLine!),
+        }
+          ..setIndexToClosestPoint(vehicle);
+        baseLinePathTracking = switch (vehicle.pathTrackingMode) {
+          PathTrackingMode.stanley => StanleyPathTracking(wayPoints: baseLine),
+          PathTrackingMode.purePursuit =>
+            PurePursuitPathTracking(wayPoints: baseLine),
+        }
+          ..setIndexToClosestPoint(vehicle);
       }
-        ..setIndexToClosestPoint(vehicle);
-      baseLinePathTracking = switch (vehicle.pathTrackingMode) {
-        PathTrackingMode.stanley => StanleyPathTracking(wayPoints: baseLine),
-        PathTrackingMode.purePursuit =>
-          PurePursuitPathTracking(wayPoints: baseLine),
-      }
-        ..setIndexToClosestPoint(vehicle);
     }
     if (activeTurn == null) {
       if (boundary != null &&
@@ -1009,22 +1049,27 @@ sealed class ABTracking {
   void checkIfTurnShouldBeInserted(Vehicle vehicle) {
     updatePathAlongAToB(vehicle);
     if (limitMode != ABLimitMode.unlimited) {
-      if (setEquals(offsetsInsideBoundary, finishedOffsets)) {
-        isCompleted = true;
-        return;
-      } else if (activeTurn != null && (activeTurn?.isCompleted ?? false)) {
-        finishedOffsets.add(currentOffset);
-        currentOffset = nextOffset ?? currentOffset;
-        passedMiddle = false;
-        activeTurn = null;
-      } else if (activeTurn != null) {
-        upcomingTurn = null;
-        passedMiddle = false;
+      if (isCompleted) {
+        currentPathTracking = null;
         return;
       } else if (currentPathTracking?.isCompleted ?? false) {
-        finishedOffsets.add(currentOffset);
+        if (currentOffset != null) {
+          finishedOffsets.add(currentOffset!);
+        }
       }
-
+      if (activeTurn != null) {
+        if (currentOffset != null) {
+          finishedOffsets.add(currentOffset!);
+        }
+        upcomingTurn = null;
+        passedMiddle = false;
+        currentOffset = null;
+        if (activeTurn!.isCompleted) {
+          currentOffset = nextOffset ?? currentOffset;
+          activeTurn = null;
+        }
+        return;
+      }
       updateNextOffset(vehicle);
 
       if (currentPathTracking != null &&
@@ -1213,7 +1258,7 @@ sealed class ABTracking {
   /// The next point on the [currentOffset]'s line in the [vehicle]'s bearing
   /// direction from the [vehicle]'s path tracking point with
   /// [lookAheadDistance] step size.
-  WayPoint nextForwardPoint(
+  WayPoint? nextForwardPoint(
     Vehicle vehicle, {
     double? lookAheadDistance,
   }) =>
@@ -1226,7 +1271,7 @@ sealed class ABTracking {
   /// The next point on the [currentOffset]'s line in the opposite
   /// direction to the [vehicle]'s bearing from the [vehicle]'s path tracking
   /// point with [lookAheadDistance] step size.
-  WayPoint nextReversingPoint(
+  WayPoint? nextReversingPoint(
     Vehicle vehicle, {
     double? lookAheadDistance,
   }) =>
@@ -1258,6 +1303,7 @@ sealed class ABTracking {
   /// auto steering.
   void manualUpdate(Vehicle vehicle) {
     if (isCompleted) {
+      currentPathTracking = null;
       return;
     }
     currentPathTracking?.tryChangeWayPoint(vehicle);

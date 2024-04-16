@@ -51,22 +51,45 @@ class ABTrackingLayer extends ConsumerWidget {
 
     final showAllLines = ref.watch(aBTrackingShowAllLinesProvider);
 
+    final darkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Stack(
       children: [
         if (abTracking != null)
           PolylineLayer(
             polylines: [
+              if (showAllLines)
+                ...abTracking.lines
+                    .map(
+                      (index, line) => MapEntry(
+                        index,
+                        Polyline(
+                          points: line.map((e) => e.position.latLng).toList(),
+                          color: switch (
+                              abTracking.finishedOffsets.contains(index)) {
+                            true => Colors.red,
+                            false => switch (darkMode) {
+                                false => Colors.grey.shade600,
+                                true => Colors.grey.shade400,
+                              }
+                          },
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    )
+                    .values,
               if (abTracking.boundary == null)
                 Polyline(
                   points: abTracking.baseLine
                       .map((e) => e.position.latLng)
                       .toList(),
                 ),
+              if (abTracking.currentLine != null)
               Polyline(
-                points: abTracking.currentLine
+                  points: abTracking.currentLine!
                     .map((e) => e.position.latLng)
                     .toList(),
-                strokeWidth: 2,
+                  strokeWidth: 3,
               ),
               if (abTracking.limitMode == ABLimitMode.unlimited &&
                   abTracking is ABLine)
@@ -88,6 +111,7 @@ class ABTrackingLayer extends ConsumerWidget {
                       .map((e) => e.position.latLng)
                       .toList(),
                   color: Colors.blue,
+                  strokeWidth: 3,
                 ),
               if (abTracking.upcomingTurn != null)
                 Polyline(
@@ -95,13 +119,14 @@ class ABTrackingLayer extends ConsumerWidget {
                       .map((e) => e.position.latLng)
                       .toList(),
                   color: Colors.blue,
+                  strokeWidth: 2,
                 ),
               if (abTracking.activeTurn != null)
                 Polyline(
                   points: abTracking.activeTurn!.path
                       .map((e) => e.position.latLng)
                       .toList(),
-                  color: Colors.green,
+                  strokeWidth: 3,
                 ),
               if (currentPerpendicularIntersect != null)
                 Polyline(
@@ -111,25 +136,20 @@ class ABTrackingLayer extends ConsumerWidget {
                   ],
                   color: Colors.white,
                 ),
-              if (showAllLines)
-                ...abTracking.lines.values.map(
-                  (line) => Polyline(
-                    points: line.map((e) => e.position.latLng).toList(),
-                    color: Colors.grey,
-                  ),
-                ),
             ],
           ),
         if (abTracking != null || pointA != null || pointB != null)
           CircleLayer(
             circles: [
               if (abTracking != null) ...[
+                if (abTracking.currentStart != null)
                 CircleMarker(
-                  point: abTracking.currentStart.position.latLng,
+                    point: abTracking.currentStart!.position.latLng,
                   radius: 5,
                 ),
+                if (abTracking.currentEnd != null)
                 CircleMarker(
-                  point: abTracking.currentEnd.position.latLng,
+                    point: abTracking.currentEnd!.position.latLng,
                   radius: 5,
                 ),
                 if (abTracking.nextStart != null)
@@ -244,8 +264,9 @@ class ABTrackingLayer extends ConsumerWidget {
                   height: 50,
                 ),
               ],
+              if (abTracking.currentStart != null)
               Marker(
-                point: abTracking.currentStart.position.latLng,
+                  point: abTracking.currentStart!.position.latLng,
                 child: TextWithStroke(
                   'A${abTracking.currentOffset}',
                   style: pointTextStyle,
@@ -255,8 +276,9 @@ class ABTrackingLayer extends ConsumerWidget {
                 width: 50,
                 height: 50,
               ),
+              if (abTracking.currentEnd != null)
               Marker(
-                point: abTracking.currentEnd.position.latLng,
+                  point: abTracking.currentEnd!.position.latLng,
                 child: TextWithStroke(
                   'B${abTracking.currentOffset}',
                   style: pointTextStyle,

@@ -42,7 +42,9 @@ class GridLayer extends ConsumerWidget {
     final vertical = Grid.verticalLines(origo, camera);
     final horizontal = Grid.horizontalLines(origo, camera);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    if (ref.watch(showGridSizeIndicatorProvider)) {
     ref.read(mapGridSizeProvider.notifier).update(vertical.size);
+    }
     return PolylineLayer(
       polylineCulling: true,
       polylines: [

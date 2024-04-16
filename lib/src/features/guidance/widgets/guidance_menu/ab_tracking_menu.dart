@@ -211,7 +211,8 @@ class ABTrackingMenu extends ConsumerWidget {
             onPressed: () => ref
               ..invalidate(aPlusLineProvider)
               ..invalidate(aBLineProvider)
-              ..invalidate(aBCurveProvider),
+              ..invalidate(aBCurveProvider)
+              ..invalidate(configuredABTrackingProvider),
           ),
         ),
       ],
@@ -290,30 +291,30 @@ class _APlusLineBearingDialogState
                   style: textStyle,
                 ),
               ),
-                Consumer(
-                  builder: (context, ref, child) => SimpleDialogOption(
+              Consumer(
+                builder: (context, ref, child) => SimpleDialogOption(
                   onPressed: bearing != null
                       ? () {
-                      ref
-                          .read(aPlusLineBearingProvider.notifier)
-                          .update(bearing);
-                      Navigator.of(context).pop();
+                          ref
+                              .read(aPlusLineBearingProvider.notifier)
+                              .update(bearing);
+                          Navigator.of(context).pop();
                         }
                       : null,
-                    child: Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 8),
-                          child: Icon(Icons.check),
-                        ),
-                        Text(
-                          'Use ${bearing?.toStringAsFixed(2)}°',
-                          style: textStyle,
-                        ),
-                      ],
-                    ),
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Icon(Icons.check),
+                      ),
+                      Text(
+                        'Use ${bearing?.toStringAsFixed(2)}°',
+                        style: textStyle,
+                      ),
+                    ],
                   ),
                 ),
+              ),
             ],
           ),
         ),

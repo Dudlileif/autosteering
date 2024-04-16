@@ -393,6 +393,9 @@ class SimulatorCoreState {
     // Set the path tracking model.
     else if (message is ({PathTracking? pathTracking})) {
       pathTracking = message.pathTracking;
+      if (message.pathTracking != null) {
+        abTracking = null;
+      }
     }
     // Update whether to automatically slow down.
     else if (message is ({bool autoSlowDown})) {
@@ -524,6 +527,16 @@ class SimulatorCoreState {
     // Update the AB-line to follow
     else if (message is ({ABTracking? abTracking})) {
       abTracking = message.abTracking?..applyConfig(abConfig);
+      if (message.abTracking != null) {
+        pathTracking = null;
+      }
+      if (vehicle != null &&
+          !const SetEquality<int>().equals(
+            abTracking?.finishedOffsets,
+            abTracking?.offsetsInsideBoundary,
+          )) {
+        abTracking?.setCurrentOffsetToClosest(vehicle!);
+      }
     }
     // Update if the AB-tracking to the new config
     else if (message is ABConfig) {
@@ -556,7 +569,7 @@ class SimulatorCoreState {
     // Reset AB tracking finished offsets (lines).
     else if (message is ({bool abTrackingClearFinishedOffsets})) {
       if (abTracking != null && message.abTrackingClearFinishedOffsets) {
-        abTracking!.finishedOffsets.clear();
+        abTracking!.clearFinishedOffsets();
         mainThreadSendStream.add(
           LogEvent(
             Level.info,
@@ -744,9 +757,12 @@ class SimulatorCoreState {
       abTracking?.checkAutoOffsetSnap(vehicle!);
       if (autosteeringState == AutosteeringState.disabled &&
           allowManualTrackingUpdates &&
-          abTracking != null &&
-          !abTracking!.isCompleted) {
-        abTracking!.manualUpdate(vehicle!);
+          abTracking != null) {
+        if (abTracking!.isCompleted) {
+          abTracking!.currentPathTracking = null;
+        } else {
+          abTracking!.manualUpdate(vehicle!);
+        }
       }
 
       steeringAngleTarget = 0.0;
@@ -754,6 +770,7 @@ class SimulatorCoreState {
         if (abTracking!.isCompleted &&
             autosteeringState != AutosteeringState.disabled) {
           autosteeringState = AutosteeringState.disabled;
+          abTracking!.currentPathTracking = null;
           mainThreadSendStream
             ..add(LogEvent(Level.info, 'ABTracking finished.'))
             ..add(LogEvent(Level.warning, 'Autosteer disabled!'));

@@ -25,7 +25,7 @@ part of 'ab_tracking.dart';
 /// This class is a slightly altered version of the [ABLine] class, but only
 /// uses the starting [WayPoint], and then calculates the endpoint 1 km ahead
 /// in the bearing of the [start] point.
-class APlusLine extends ABLine {
+class APlusLine extends ABTracking {
   /// A class for creating and tracking straight lines by using the bearing
   /// from the [start] point to create a base line and then create parallel
   /// lines.
@@ -45,6 +45,7 @@ class APlusLine extends ABLine {
             start,
             start.moveRhumb(distance: 1000),
           ],
+          type: ABTrackingType.aPlusLine,
         );
 
   /// Creates an [APlusLine] where the [lines] already has been calculated.
@@ -61,7 +62,7 @@ class APlusLine extends ABLine {
     Iterable<int>? offsetsInsideBoundary,
     super.calculateLinesOnCreation = false,
     super.name,
-  }) {
+  }) : super(type: ABTrackingType.aPlusLine) {
     this.lines.addAll(lines ?? {});
     this.finishedOffsets.addAll(finishedOffsets ?? []);
     if (boundary != null && offsetsInsideBoundary != null) {

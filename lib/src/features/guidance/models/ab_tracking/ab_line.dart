@@ -41,7 +41,8 @@ class ABLine extends ABTracking {
   }) : assert(
           baseLine.length == 2,
           'Base line should only have a start and an end point',
-        );
+        ),
+        super(type: ABTrackingType.abLine);
 
   /// Creates an [ABLine] where the [lines] already has been calculated.
   ABLine.preCalculated({
@@ -57,7 +58,7 @@ class ABLine extends ABTracking {
     Iterable<int>? offsetsInsideBoundary,
     super.calculateLinesOnCreation = false,
     super.name,
-  }) {
+  }) : super(type: ABTrackingType.abLine) {
     this.lines.addAll(lines ?? {});
     this.finishedOffsets.addAll(finishedOffsets ?? []);
     if (boundary != null && offsetsInsideBoundary != null) {

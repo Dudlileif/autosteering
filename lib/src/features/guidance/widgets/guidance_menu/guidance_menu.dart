@@ -101,6 +101,7 @@ class GuidanceMenu extends ConsumerWidget {
             onPressed: () {
               ref.read(simInputProvider.notifier).send((abTracking: null));
               ref.read(simInputProvider.notifier).send((pathTracking: null));
+              ref.invalidate(configuredABTrackingProvider);
             },
             closeOnActivate: false,
             child: Text(
@@ -122,8 +123,14 @@ class GuidanceMenu extends ConsumerWidget {
             ref.watch(displayPathTrackingProvider) != null) ...[
           const _ExportButton(),
         ],
-        const ABTrackingMenu(),
-        const PathTrackingMenu(),
+        if (ref.watch(
+          displayPathTrackingProvider.select((value) => value == null),
+        ))
+          const ABTrackingMenu(),
+        if (ref.watch(
+          displayABTrackingProvider.select((value) => value == null),
+        ))
+          const PathTrackingMenu(),
         const VirtualLedBarMenu(),
       ],
     );
@@ -414,55 +421,53 @@ class _SaveABTrackingButton extends ConsumerWidget {
                 var name = '';
                 return StatefulBuilder(
                   builder: (context, setState) => SimpleDialog(
-                      title: const Text('Name the AB tracking'),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.label_outline),
-                              labelText: 'Name',
-                            ),
-                            initialValue: name,
-                            onChanged: (value) => setState(() => name = value),
-                            onFieldSubmitted: (value) =>
-                                setState(() => name = value),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) => value != null &&
-                                    value.isNotEmpty &&
-                                    !value.startsWith(' ')
-                                ? null
-                                : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                    title: const Text('Name the AB tracking'),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.label_outline),
+                            labelText: 'Name',
+                          ),
+                          initialValue: name,
+                          onChanged: (value) => setState(() => name = value),
+                          onFieldSubmitted: (value) =>
+                              setState(() => name = value),
+                          keyboardType: TextInputType.text,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) => value != null &&
+                                  value.isNotEmpty &&
+                                  !value.startsWith(' ')
+                              ? null
+                              : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 8,
+                          right: 8,
+                          top: 8,
+                        ),
+                        child: Consumer(
+                          child: const Text('Save tracking'),
+                          builder: (context, ref, child) => FilledButton(
+                            onPressed: () {
+                              Timer(const Duration(milliseconds: 100), () {
+                                ref.read(
+                                  saveABTrackingProvider(
+                                    abTracking
+                                      ..name = name.isNotEmpty ? name : null,
+                                  ),
+                                );
+                              });
+                              Navigator.of(context).pop();
+                            },
+                            child: child,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 8,
-                            right: 8,
-                            top: 8,
-                          ),
-                          child: Consumer(
-                            child: const Text('Save tracking'),
-                            builder: (context, ref, child) => FilledButton(
-                              onPressed: () {
-                              Timer(
-                                    const Duration(milliseconds: 100), () {
-                                  ref.read(
-                                    saveABTrackingProvider(
-                                      abTracking
-                                        ..name = name.isNotEmpty ? name : null,
-                                    ),
-                                  );
-                                });
-                                Navigator.of(context).pop();
-                              },
-                              child: child,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
+                    ],
                   ),
                 );
               },
@@ -470,7 +475,7 @@ class _SaveABTrackingButton extends ConsumerWidget {
           );
         }
       },
-      child: Text('Save tracking', style: textStyle),
+      child: Text('Save AB tracking', style: textStyle),
     );
   }
 }
@@ -508,55 +513,53 @@ class _SavePathTrackingButton extends ConsumerWidget {
                 var name = '';
                 return StatefulBuilder(
                   builder: (context, setState) => SimpleDialog(
-                      title: const Text('Name the path tracking'),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.label_outline),
-                              labelText: 'Name',
-                            ),
-                            initialValue: name,
-                            onChanged: (value) => setState(() => name = value),
-                            onFieldSubmitted: (value) =>
-                                setState(() => name = value),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) => value != null &&
-                                    value.isNotEmpty &&
-                                    !value.startsWith(' ')
-                                ? null
-                                : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                    title: const Text('Name the path tracking'),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.label_outline),
+                            labelText: 'Name',
+                          ),
+                          initialValue: name,
+                          onChanged: (value) => setState(() => name = value),
+                          onFieldSubmitted: (value) =>
+                              setState(() => name = value),
+                          keyboardType: TextInputType.text,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) => value != null &&
+                                  value.isNotEmpty &&
+                                  !value.startsWith(' ')
+                              ? null
+                              : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 8,
+                          right: 8,
+                          top: 8,
+                        ),
+                        child: Consumer(
+                          child: const Text('Save tracking'),
+                          builder: (context, ref, child) => FilledButton(
+                            onPressed: () {
+                              Timer(const Duration(milliseconds: 100), () {
+                                ref.read(
+                                  savePathTrackingProvider(
+                                    pathTracking
+                                      ..name = name.isNotEmpty ? name : null,
+                                  ),
+                                );
+                              });
+                              Navigator.of(context).pop();
+                            },
+                            child: child,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 8,
-                            right: 8,
-                            top: 8,
-                          ),
-                          child: Consumer(
-                            child: const Text('Save tracking'),
-                            builder: (context, ref, child) => FilledButton(
-                              onPressed: () {
-                              Timer(
-                                    const Duration(milliseconds: 100), () {
-                                  ref.read(
-                                    savePathTrackingProvider(
-                                      pathTracking
-                                        ..name = name.isNotEmpty ? name : null,
-                                    ),
-                                  );
-                                });
-                                Navigator.of(context).pop();
-                              },
-                              child: child,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
+                    ],
                   ),
                 );
               },
@@ -564,7 +567,7 @@ class _SavePathTrackingButton extends ConsumerWidget {
           );
         }
       },
-      child: Text('Save tracking', style: textStyle),
+      child: Text('Save path tracking', style: textStyle),
     );
   }
 }
