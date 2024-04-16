@@ -60,7 +60,7 @@ final miniMapControllerProvider =
 
 typedef _$MiniMapController = AutoDisposeNotifier<MapController>;
 String _$miniMapLockToFieldHash() =>
-    r'38d146eda229129b75acf3e78a9adf710e155176';
+    r'f17f3bdf15c4d5cea18e3bafbc9a3b634b33c73d';
 
 /// Whether the mini map always should point to the north and not rotate.
 ///

@@ -229,7 +229,7 @@ class SimulatorCore {
         BackgroundIsolateBinaryMessenger.ensureInitialized(message);
         final logDirectoryPath = [
           (await getApplicationDocumentsDirectory()).path,
-          '/Autosteering/logs',
+          '/Autosteering/logs/hardware',
         ].join();
         messageDecoder = MessageDecoder(logDirectoryPath: logDirectoryPath);
       }

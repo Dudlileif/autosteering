@@ -212,7 +212,7 @@ class _LoadWorkSessionFromFileProviderElement
   String get path => (origin as LoadWorkSessionFromFileProvider).path;
 }
 
-String _$saveWorkSessionHash() => r'07dfb6705045c48786feced3a78e5069704b6dc5';
+String _$saveWorkSessionHash() => r'ccfd037715590471ace99225a92b095997be49e3';
 
 /// A provider for saving [workSession] to a file in the user file directory.
 ///

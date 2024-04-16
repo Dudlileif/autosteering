@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 /// A settings menu for map, sim core and theme settings.
@@ -36,8 +37,29 @@ class SettingsMenu extends StatelessWidget {
         MapMenu(),
         SimCoreMenu(),
         ThemeMenu(),
+        _ExportLogsButton(),
         _LicenseButton(),
       ],
+    );
+  }
+}
+
+class _ExportLogsButton extends ConsumerWidget {
+  const _ExportLogsButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MenuItemButton(
+      onPressed: () => ref.read(exportLogsProvider),
+      closeOnActivate: false,
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Symbols.export_notes),
+      ),
+      child: Text(
+        'Export logs',
+        style: Theme.of(context).menuButtonWithChildrenText,
+      ),
     );
   }
 }
