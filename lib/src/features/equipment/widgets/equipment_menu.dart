@@ -173,7 +173,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
       ),
       builder: (context, ref, child) {
         if (ref.watch(
-          mainVehicleProvider.select((value) => value.numAttachedChildren > 1),
+          mainVehicleProvider.select((value) => value.numAttachedChildren > 0),
         )) {
           return MenuItemButton(
             closeOnActivate: false,

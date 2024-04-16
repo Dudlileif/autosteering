@@ -220,13 +220,15 @@ class NtripAlive extends _$NtripAlive {
           _resetTimer?.cancel();
           _resetTimer = Timer(
             const Duration(seconds: 5),
-            ref.invalidateSelf,
+            () {
+              Logger.instance.i('NTRIP client disconnected, timed out.');
+              ref.invalidateSelf();
+            },
           );
-        } else {
-          Logger.instance.i('NTRIP client disconnected, timed out.');
         }
       })
       ..onDispose(() {
+        _resetTimer?.cancel();
         ref.invalidate(ntripClientProvider);
       });
 
@@ -242,7 +244,7 @@ class NtripAlive extends _$NtripAlive {
 /// The received NTRIP messages will be split into parts and sent to the
 /// connected [HardwareSerial] if connected or the [TcpServer].
 @Riverpod(keepAlive: true)
-Future<NtripClient?> ntripClient(NtripClientRef ref) async {
+FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
   if (!ref.watch(ntripEnabledProvider)) {
     return null;
   }
@@ -323,7 +325,7 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
 /// A provider for the NTRIP caster sourcetable for the currently selected
 /// NTRIP caster server.
 @riverpod
-Future<Iterable<NtripMountPoint>?> ntripSourcetable(
+FutureOr<Iterable<NtripMountPoint>?> ntripSourcetable(
   NtripSourcetableRef ref,
 ) async {
   ref.onDispose(() {
@@ -376,7 +378,7 @@ Connection: close\r
 /// A provider for sorting the [ntripSourcetable] by their distance to
 /// [MainVehicle].
 @riverpod
-Future<Map<NtripMountPointStream, double?>?> ntripMountPointsSorted(
+FutureOr<Map<NtripMountPointStream, double?>?> ntripMountPointsSorted(
   NtripMountPointsSortedRef ref,
 ) async {
   final sourcetable = await ref.watch(ntripSourcetableProvider.future);

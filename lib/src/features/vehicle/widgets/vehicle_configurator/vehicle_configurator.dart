@@ -52,7 +52,7 @@ class VehicleConfigurator extends ConsumerWidget {
                     children: [
                       Text(
                         'Configure vehicle',
-                        style: Theme.of(context).textTheme.headlineLarge,
+                          style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const _ApplyConfigurationToMainVehicleButton(),
                     ],

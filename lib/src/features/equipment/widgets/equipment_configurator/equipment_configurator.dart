@@ -52,7 +52,7 @@ class EquipmentConfigurator extends StatelessWidget {
                       children: [
                         Text(
                           'Configure equipment',
-                          style: Theme.of(context).textTheme.headlineLarge,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         const _ApplyConfigurationToAttachedEquipmentButton(),
                       ],

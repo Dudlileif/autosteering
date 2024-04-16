@@ -69,10 +69,10 @@ class SteeringHardwareConfigurator extends StatelessWidget {
             body: Column(
               children: [
                 TabBar(
-                  labelStyle: theme.textTheme.titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w700),
-                  unselectedLabelStyle: theme.textTheme.titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w400),
+                  labelStyle: theme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w900),
+                  unselectedLabelStyle: theme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w300),
                   tabs: _tabs,
                 ),
                 const Expanded(

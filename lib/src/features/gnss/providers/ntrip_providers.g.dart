@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'fb1f5188c5288059dd54b523634bbae30c41f0c5';
+String _$ntripClientHash() => r'b27230e8ca50288da84bd9327c89b804b39b6d79';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -25,7 +25,7 @@ final ntripClientProvider = FutureProvider<NtripClient?>.internal(
 );
 
 typedef NtripClientRef = FutureProviderRef<NtripClient?>;
-String _$ntripSourcetableHash() => r'fa9a00117d9c0f8e8e43667188a328bf24f2d48a';
+String _$ntripSourcetableHash() => r'2042b381721d57ec175460e8eb05df227d39047a';
 
 /// A provider for the NTRIP caster sourcetable for the currently selected
 /// NTRIP caster server.
@@ -46,7 +46,7 @@ final ntripSourcetableProvider =
 typedef NtripSourcetableRef
     = AutoDisposeFutureProviderRef<Iterable<NtripMountPoint>?>;
 String _$ntripMountPointsSortedHash() =>
-    r'd4e32a9ba2aa3c179491e7eadc439a40e36daeec';
+    r'a06451e3dd9c72a2374b1093d253923e002a556d';
 
 /// A provider for sorting the [ntripSourcetable] by their distance to
 /// [MainVehicle].
@@ -186,7 +186,7 @@ final ntripDataUsageSessionProvider =
 );
 
 typedef _$NtripDataUsageSession = Notifier<int?>;
-String _$ntripAliveHash() => r'fad8e69c98d8e69f11e968a167cbb19cee075722';
+String _$ntripAliveHash() => r'a073b2419fdf2a96027eeee50c84ad2610a3fe4b';
 
 /// A provider for telling whether the [ntripClient] is receiving data.
 ///

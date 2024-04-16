@@ -259,40 +259,37 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
         ),
         Padding(
           padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SimpleDialogOption(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'Close',
-                  style: textStyle,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Wrap(
+              runSpacing: 8,
+              spacing: 8,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.cancel),
+                  label: const Text('Cancel'),
                 ),
-              ),
-              if (selectedMountPoint != null)
-                Consumer(
-                  builder: (context, ref, child) => SimpleDialogOption(
-                    onPressed: () {
-                      ref
-                          .read(activeNtripMountPointProvider.notifier)
-                          .update(selectedMountPoint);
-                      Navigator.of(context).pop();
-                    },
-                    child: Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 8),
-                          child: Icon(Icons.check),
-                        ),
-                        Text(
-                          'Use $selectedMountPoint',
-                          style: textStyle,
-                        ),
-                      ],
+                if (selectedMountPoint != null)
+                  Consumer(
+                    builder: (context, ref, child) => FilledButton.icon(
+                      onPressed: () {
+                        ref
+                            .read(activeNtripMountPointProvider.notifier)
+                            .update(selectedMountPoint);
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.check),
+                      label: Text(
+                        'Use $selectedMountPoint',
+            
+                      ),
+                        
+                      
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
