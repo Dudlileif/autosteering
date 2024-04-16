@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -34,7 +35,18 @@ class ABTrackingMenu extends ConsumerWidget {
     final theme = Theme.of(context);
 
     final abTrackingType = ref.watch(currentABTrackingTypeProvider);
-    final abTracking = ref.watch(configuredMenuABTrackingProvider);
+
+    final workSessionGuidanceActive = ref.watch(
+          activeWorkSessionProvider.select((value) => value != null),
+        ) &&
+        ref.watch(
+          configuredABTrackingProvider.select((value) => value != null),
+        );
+
+    final abTracking = switch (workSessionGuidanceActive) {
+      true => ref.watch(configuredABTrackingProvider),
+      false => ref.watch(configuredMenuABTrackingProvider)
+    };
 
     return MenuButtonWithChildren(
       iconOverrideWidget: SizedBox.square(
@@ -49,7 +61,8 @@ class ABTrackingMenu extends ConsumerWidget {
       ),
       text: 'AB tracking',
       menuChildren: [
-        Padding(
+        if (!workSessionGuidanceActive)
+          Padding(
           padding: const EdgeInsets.all(8),
           child: ToggleButtons(
             onPressed: (index) => ref
@@ -74,8 +87,9 @@ class ABTrackingMenu extends ConsumerWidget {
             ],
           ),
         ),
-        if (abTrackingType == ABTrackingType.aPlusLine ||
-            abTrackingType == ABTrackingType.abLine)
+        if (!workSessionGuidanceActive &&
+            (abTrackingType == ABTrackingType.aPlusLine ||
+                abTrackingType == ABTrackingType.abLine))
           Consumer(
             child: Text(
               'Set A',
@@ -155,7 +169,9 @@ class ABTrackingMenu extends ConsumerWidget {
                 title: Text(
                   '''Bearing: ${bearing != null ? '${bearing.toStringAsFixed(2)}°' : ''}''',
                 ),
-                onTap: () => showDialog<void>(
+                onTap: workSessionGuidanceActive
+                    ? null
+                    : () => showDialog<void>(
                   context: context,
                   builder: (context) => const _APlusLineBearingDialog(),
                 ),
@@ -177,10 +193,10 @@ class ABTrackingMenu extends ConsumerWidget {
               leadingIcon: const Padding(
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.voicemail),
-                ),
-                onPressed: () {
-                  ref
-                      .read(enablePathRecorderProvider.notifier)
+              ),
+              onPressed: () {
+                ref
+                    .read(enablePathRecorderProvider.notifier)
                     .update(value: true);
                 ref
                     .read(activePathRecordingTargetProvider.notifier)
@@ -188,7 +204,7 @@ class ABTrackingMenu extends ConsumerWidget {
                 ref
                     .read(showPathRecordingMenuProvider.notifier)
                     .update(value: true);
-                },
+              },
               child:
                   Text('Record curve', style: theme.menuButtonWithChildrenText),
             ),

@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -39,7 +40,7 @@ class MainScaffold extends StatelessWidget {
         title: MenuBar(
           children: [
             const SettingsMenu(),
-            const MapMenu(),
+            const WorkSessionMenu(),
             const FieldMenu(),
             const GuidanceMenu(),
             const VehicleMenu(),

@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -68,6 +69,9 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
           ref
             ..invalidate(configuredABTrackingProvider)
             ..invalidate(displayABTrackingProvider);
+          ref.read(activeWorkSessionProvider.notifier).update(
+                ref.read(activeWorkSessionProvider)?..pathTracking = next,
+              );
         }
         sendToSim();
       }

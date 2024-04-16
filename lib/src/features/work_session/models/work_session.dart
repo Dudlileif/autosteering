@@ -30,7 +30,7 @@ class WorkSession {
     this.vehicle,
     this.equipmentSetup,
     this.abTracking,
-    this.pathRecording,
+    this.pathTracking,
     this.title,
     this.note,
     this.start,
@@ -60,10 +60,10 @@ class WorkSession {
           )
         : null;
 
-    final pathRecording = json['path_recording'] != null
-        ? List<Map<String, dynamic>>.from(json['path_recording'] as List)
-            .map(WayPoint.fromJson)
-            .toList()
+    final pathTracking = json['path_tracking'] != null
+        ? PathTracking.fromJson(
+            Map<String, dynamic>.from(json['path_tracking'] as Map),
+          )
         : null;
 
     final info = Map<String, dynamic>.from(json['info'] as Map);
@@ -80,22 +80,29 @@ class WorkSession {
         time['end'] != null ? DateTime.tryParse(time['end'] as String) : null;
 
     final workedPaths = json['worked_paths'] != null
-        ? (json['worked_paths'] as List)
+        ? Map<String, List<dynamic>>.from(
+            json['worked_paths'] as Map,
+          )
             .map(
-              (e) => Map<int, List<dynamic>>.from(e as Map).map(
-                (key, value) => MapEntry(
-                  key,
-                  value
-                      .map(
-                        (pos) => SectionEdgePositions.fromJson(
-                          Map<String, dynamic>.from(pos as Map),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-            )
-            .toList()
+            (uuid, activations) => MapEntry(
+              uuid,
+              List<Map<String, dynamic>>.from(activations)
+                  .map(
+                    (activation) =>
+                        Map<String, List<dynamic>?>.from(activation as Map).map(
+                      (section, path) => MapEntry(
+                        int.parse(section),
+                        path != null
+                            ? List<Map<String, dynamic>>.from(path)
+                                .map(SectionEdgePositions.fromJson)
+                                .toList()
+                            : null,
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          )
         : null;
 
     return WorkSession(
@@ -103,7 +110,7 @@ class WorkSession {
       vehicle: vehicle,
       equipmentSetup: equipmentSetup,
       abTracking: abTracking,
-      pathRecording: pathRecording,
+      pathTracking: pathTracking,
       title: title,
       note: note,
       start: start,
@@ -121,8 +128,11 @@ class WorkSession {
   /// The [EquipmentSetup] (chain) used for this session.
   EquipmentSetup? equipmentSetup;
 
-  /// The [PathTracking] used in this work session.
+  /// The [ABTracking] used in this work session.
   ABTracking? abTracking;
+
+  /// The [ABTracking] used in this work session.
+  PathTracking? pathTracking;
 
   /// The recorded path used in this work session.
   List<WayPoint>? pathRecording;
@@ -145,35 +155,9 @@ class WorkSession {
   Duration? get workDuration =>
       start != null ? (end ?? DateTime.now()).difference(start!) : null;
 
-  /// A list of worked lines for the equipment used.
-  ///
-  /// A list of the line maps with lines for the different sections.
-  ///
-  ///```
-  /// [
-  ///   {
-  ///     1: [
-  ///           [lon, lat]
-  ///           [lon, lat]
-  ///        ],
-  ///     2: [
-  ///           [lon, lat]
-  ///           [lon, lat]
-  ///        ]
-  ///   },
-  ///   {
-  ///     1: [
-  ///           [lon, lat]
-  ///           [lon, lat]
-  ///        ],
-  ///     4: [
-  ///           [lon, lat]
-  ///           [lon, lat]
-  ///        ]
-  ///   },...
-  /// ]
-  ///```
-  List<Map<int, List<SectionEdgePositions>?>>? workedPaths;
+  /// A map with lists of the worked paths for the equipment used in the
+  /// session.
+  Map<String, List<Map<int, List<SectionEdgePositions>?>>>? workedPaths;
 
   /// Creates a json compatible structure of the object.
   Map<String, dynamic> toJson() {
@@ -197,10 +181,23 @@ class WorkSession {
 
     map['ab_tracking'] = abTracking;
 
-    map['path_recording'] = pathRecording;
+    map['path_tracking'] = pathTracking;
 
-    map['worked_paths'] = workedPaths;
-
+    map['worked_paths'] = workedPaths?.map(
+      (uuid, paths) => MapEntry(
+        uuid,
+        paths
+            .map(
+              (activation) => activation.map(
+                (section, positions) => MapEntry(
+                  '$section',
+                  positions?.map((e) => e.toJson()).toList(),
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    );
     return map;
   }
 }

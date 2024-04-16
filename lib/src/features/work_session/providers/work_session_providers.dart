@@ -19,6 +19,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/field/field.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -27,15 +32,56 @@ import 'package:universal_io/io.dart';
 part 'work_session_providers.g.dart';
 
 /// A provider for holding the active [WorkSession].
-@riverpod
+@Riverpod(keepAlive: true)
 class ActiveWorkSession extends _$ActiveWorkSession {
+  Timer? _autoSaveTimer;
+
   @override
   WorkSession? build() {
+    ref
+      ..listenSelf((previous, next) {
+        if (previous == null && next != null && _autoSaveTimer == null) {
+          _autoSaveTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+            if (state != null) {
+              ref.read(saveWorkSessionProvider(state!));
+            }
+          });
+        } else if (next == null) {
+          _autoSaveTimer?.cancel();
+          _autoSaveTimer = null;
+        }
+      })
+      ..onDispose(() {
+        _autoSaveTimer?.cancel();
+        _autoSaveTimer = null;
+      });
     return null;
   }
 
   /// Updates [state] to [value].
-  void update(WorkSession value) => Future(() => state = value);
+  void update(WorkSession? value) => Future(() => state = value);
+
+  /// Updates the [WorkSession.abTracking].
+  void updateABTracking(ABTracking? tracking) =>
+      Future(() => state = state?..abTracking = tracking);
+
+  /// Updates the [WorkSession.workedPaths].
+  void updateEquipmentPaths(
+    String equipmentUuid,
+    List<Map<int, List<SectionEdgePositions>?>> paths,
+  ) =>
+      Future(() {
+        if (state?.workedPaths != null) {
+          state = state
+            ?..workedPaths?.update(
+              equipmentUuid,
+              (value) => paths,
+              ifAbsent: () => paths,
+            );
+        } else {
+          state = state?..workedPaths = {equipmentUuid: paths};
+        }
+      });
 }
 
 /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
@@ -48,9 +94,9 @@ FutureOr<WorkSession?> loadWorkSessionFromFile(
   if (file.existsSync()) {
     final json = jsonDecode(await file.readAsString());
     if (json is Map) {
-      final vehicle = WorkSession.fromJson(Map<String, dynamic>.from(json));
+      final workSession = WorkSession.fromJson(Map<String, dynamic>.from(json));
 
-      return vehicle;
+      return workSession;
     }
   }
   return null;
@@ -65,17 +111,15 @@ FutureOr<void> saveWorkSession(
   WorkSession workSession, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async =>
-    await ref.watch(
-      saveJsonToFileDirectoryProvider(
-        object: workSession,
-        fileName: overrideName ??
-            workSession.title ??
-            DateTime.now().toIso8601String(),
-        folder: 'work_sessions',
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => await ref.watch(
+    saveJsonToFileDirectoryProvider(
+      object: workSession,
+      fileName:
+          overrideName ?? workSession.title ?? DateTime.now().toIso8601String(),
+      folder: 'work_sessions',
+      downloadIfWeb: downloadIfWeb,
+    ).future,
+  );
 
 /// A provider for exporting [workSession] to a file.
 ///
@@ -172,7 +216,34 @@ FutureOr<WorkSession?> importWorkSession(
     Logger.instance.i(
       'Imported work session: ${workSession.title}.',
     );
-    ref.read(activeWorkSessionProvider.notifier).update(workSession);
+    ref
+      ..read(activeWorkSessionProvider.notifier).update(workSession)
+      ..read(activeFieldProvider.notifier).update(workSession.field)
+      ..read(configuredABTrackingProvider.notifier)
+          .update(workSession.abTracking)
+      ..read(configuredPathTrackingProvider.notifier)
+          .update(workSession.pathTracking)
+      ..read(configuredEquipmentSetupProvider.notifier)
+          .update(workSession.equipmentSetup);
+    if (workSession.equipmentSetup != null) {
+      ref.read(simInputProvider.notifier).send(
+        (
+          equipmentSetup: workSession.equipmentSetup,
+          parentUuid:
+              ref.watch(mainVehicleProvider.select((value) => value.uuid))
+        ),
+      );
+    }
+    if (workSession.abTracking != null) {
+      ref
+          .read(currentABTrackingTypeProvider.notifier)
+          .update(workSession.abTracking!.type);
+    }
+    if (workSession.workedPaths != null) {
+      workSession.workedPaths!.forEach((equipmentUuid, paths) {
+        ref.read(equipmentPathsProvider(equipmentUuid).notifier).set(paths);
+      });
+    }
   }
   return workSession;
 }

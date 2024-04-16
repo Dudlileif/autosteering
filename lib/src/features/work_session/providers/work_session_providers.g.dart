@@ -7,7 +7,7 @@ part of 'work_session_providers.dart';
 // **************************************************************************
 
 String _$loadWorkSessionFromFileHash() =>
-    r'4ca9e5c31cb9721efaef0bc1439b38bdeb7ca7aa';
+    r'f1a4fd80e89096e15452476226b3a745286c5aae';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -212,7 +212,7 @@ class _LoadWorkSessionFromFileProviderElement
   String get path => (origin as LoadWorkSessionFromFileProvider).path;
 }
 
-String _$saveWorkSessionHash() => r'ccfd037715590471ace99225a92b095997be49e3';
+String _$saveWorkSessionHash() => r'07dfb6705045c48786feced3a78e5069704b6dc5';
 
 /// A provider for saving [workSession] to a file in the user file directory.
 ///
@@ -927,7 +927,7 @@ class _DeleteWorkSessionProviderElement
       (origin as DeleteWorkSessionProvider).overrideName;
 }
 
-String _$importWorkSessionHash() => r'c4656668106ca28b887b10dd00f7107656d08383';
+String _$importWorkSessionHash() => r'e392a0302e2f823eca486303eda76bd4ff08c6ba';
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
@@ -946,14 +946,14 @@ final importWorkSessionProvider =
 );
 
 typedef ImportWorkSessionRef = AutoDisposeFutureProviderRef<WorkSession?>;
-String _$activeWorkSessionHash() => r'86029e0a8803b9456114e7a8c66c1c5b9fbfce98';
+String _$activeWorkSessionHash() => r'fe0d8202669c19c1f7d57d17dc1995d2173e1f84';
 
 /// A provider for holding the active [WorkSession].
 ///
 /// Copied from [ActiveWorkSession].
 @ProviderFor(ActiveWorkSession)
 final activeWorkSessionProvider =
-    AutoDisposeNotifierProvider<ActiveWorkSession, WorkSession?>.internal(
+    NotifierProvider<ActiveWorkSession, WorkSession?>.internal(
   ActiveWorkSession.new,
   name: r'activeWorkSessionProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -963,6 +963,6 @@ final activeWorkSessionProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ActiveWorkSession = AutoDisposeNotifier<WorkSession?>;
+typedef _$ActiveWorkSession = Notifier<WorkSession?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

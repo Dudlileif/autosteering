@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:geobase/geobase.dart';
@@ -111,12 +112,19 @@ class AllEquipments extends _$AllEquipments {
 }
 
 /// A provider for tracking the worked paths for the given equipment [uuid].
-@riverpod
+@Riverpod(keepAlive: true)
 class EquipmentPaths extends _$EquipmentPaths {
   var _prevSectionActivationStatus = <bool>[];
 
   @override
-  List<Map<int, List<SectionEdgePositions>?>> build(String uuid) => [];
+  List<Map<int, List<SectionEdgePositions>?>> build(String uuid) {
+    ref.listenSelf((previous, next) {
+      ref
+          .read(activeWorkSessionProvider.notifier)
+          .updateEquipmentPaths(uuid, next);
+    });
+    return [];
+  }
 
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
@@ -257,6 +265,10 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// Clears all the painted areas for the equipment.
   void clear() => Future(() => state = []);
 
+  /// Sets the [state] to [value].
+  void set(List<Map<int, List<SectionEdgePositions>?>> value) =>
+      Future(() => state = value);
+  
   /// Always update as the state is complex and any change to it is usually
   /// different to the previous state.
   @override

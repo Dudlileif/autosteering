@@ -22,6 +22,8 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -162,6 +164,9 @@ class ConfiguredABTracking extends _$ConfiguredABTracking {
           ref
             ..invalidate(configuredPathTrackingProvider)
             ..invalidate(displayPathTrackingProvider);
+          ref
+              .read(activeWorkSessionProvider.notifier)
+              .update(ref.read(activeWorkSessionProvider)?..abTracking = next);
         }
         sendToSim();
       }
@@ -191,7 +196,6 @@ class ConfiguredMenuABTracking extends _$ConfiguredMenuABTracking {
       error: (error, stackTracke) => null,
       loading: () => null,
     );
-  }
 
   /// Send the [state] to the simulator.
   void sendToSim() =>
@@ -205,7 +209,17 @@ class ConfiguredMenuABTracking extends _$ConfiguredMenuABTracking {
 @Riverpod(keepAlive: true)
 class DisplayABTracking extends _$DisplayABTracking {
   @override
-  ABTracking? build() => null;
+  ABTracking? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null &&
+          previous != null &&
+          !const DeepCollectionEquality.unordered()
+              .equals(next.finishedOffsets, previous.finishedOffsets)) {
+          ref.read(activeWorkSessionProvider.notifier).updateABTracking(next);
+      }
+    });
+    return null;
+  }
 
   /// Updates [state] to [value].
   void update(ABTracking? value) => Future(() => state = value);

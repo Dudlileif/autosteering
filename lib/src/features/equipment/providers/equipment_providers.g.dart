@@ -921,7 +921,7 @@ class _DeleteEquipmentProviderElement
   String? get overrideName => (origin as DeleteEquipmentProvider).overrideName;
 }
 
-String _$importEquipmentHash() => r'51f59b50d155ad37bcc0f46b5fde7b3d2aa6ecf7';
+String _$importEquipmentHash() => r'deae076514248068df58501f42845166ca44f089';
 
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.
@@ -996,10 +996,10 @@ final allEquipmentsProvider =
 );
 
 typedef _$AllEquipments = Notifier<Map<String, Equipment>>;
-String _$equipmentPathsHash() => r'6512b7ad7626ef94c714a7cbf4eab6dc908ffba9';
+String _$equipmentPathsHash() => r'e7d3bd127483b2c8712678b03aea1823333e7802';
 
-abstract class _$EquipmentPaths extends BuildlessAutoDisposeNotifier<
-    List<Map<int, List<SectionEdgePositions>?>>> {
+abstract class _$EquipmentPaths
+    extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {
   late final String uuid;
 
   List<Map<int, List<SectionEdgePositions>?>> build(
@@ -1082,8 +1082,8 @@ class _$EquipmentPathsFamilyOverride implements FamilyOverride {
 /// A provider for tracking the worked paths for the given equipment [uuid].
 ///
 /// Copied from [EquipmentPaths].
-class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
-    EquipmentPaths, List<Map<int, List<SectionEdgePositions>?>>> {
+class EquipmentPathsProvider extends NotifierProviderImpl<EquipmentPaths,
+    List<Map<int, List<SectionEdgePositions>?>>> {
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
   /// Copied from [EquipmentPaths].
@@ -1146,7 +1146,7 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
   }
 
   @override
-  AutoDisposeNotifierProviderElement<EquipmentPaths,
+  NotifierProviderElement<EquipmentPaths,
       List<Map<int, List<SectionEdgePositions>?>>> createElement() {
     return _EquipmentPathsProviderElement(this);
   }
@@ -1179,13 +1179,13 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
   }
 }
 
-mixin EquipmentPathsRef on AutoDisposeNotifierProviderRef<
-    List<Map<int, List<SectionEdgePositions>?>>> {
+mixin EquipmentPathsRef
+    on NotifierProviderRef<List<Map<int, List<SectionEdgePositions>?>>> {
   /// The parameter `uuid` of this provider.
   String get uuid;
 }
 
-class _EquipmentPathsProviderElement extends AutoDisposeNotifierProviderElement<
+class _EquipmentPathsProviderElement extends NotifierProviderElement<
     EquipmentPaths,
     List<Map<int, List<SectionEdgePositions>?>>> with EquipmentPathsRef {
   _EquipmentPathsProviderElement(super.provider);
