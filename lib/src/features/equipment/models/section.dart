@@ -128,7 +128,7 @@ class Section {
     map['index'] = index;
     map['width'] = width;
     map['working_width'] = workingWidth;
-    map['active'] = active;
+    // map['active'] = active;
     map['automate_activation'] = automateActivation;
     map['color'] = color?.value.toRadixString(16);
     map['worked_path_color'] = workedPathColor?.value.toRadixString(16);
