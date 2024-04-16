@@ -515,14 +515,14 @@ class _ExportFieldProviderElement extends AutoDisposeFutureProviderElement<void>
   bool get downloadIfWeb => (origin as ExportFieldProvider).downloadIfWeb;
 }
 
-String _$savedFieldsHash() => r'e00c8b585fa3074ce2c60744e8a8b05c79da1a54';
+String _$savedFieldsHash() => r'd5bdf7348f531b5ac9ec532e5062d4ea036f6e9b';
 
 /// A provider for reading and holding all the saved [Field]s in the
 /// user file directory.
 ///
 /// Copied from [savedFields].
 @ProviderFor(savedFields)
-final savedFieldsProvider = Provider<AsyncValue<List<Field>>>.internal(
+final savedFieldsProvider = FutureProvider<List<Field>>.internal(
   savedFields,
   name: r'savedFieldsProvider',
   debugGetCreateSourceHash:
@@ -531,7 +531,7 @@ final savedFieldsProvider = Provider<AsyncValue<List<Field>>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef SavedFieldsRef = ProviderRef<AsyncValue<List<Field>>>;
+typedef SavedFieldsRef = FutureProviderRef<List<Field>>;
 String _$deleteFieldHash() => r'72213ab0d9d868bd948d453674cd94510ea39aa5';
 
 /// A provider for deleting [field] from the user file system.
@@ -749,6 +749,205 @@ class _DeleteFieldProviderElement extends AutoDisposeFutureProviderElement<void>
   String? get overrideName => (origin as DeleteFieldProvider).overrideName;
 }
 
+String _$loadFieldFromFileHash() => r'89ef3bee59c1261e6a6630377900f5c94dab209d';
+
+/// A provider for loading a [Field] from a file at [path], if it's valid.
+///
+/// Copied from [loadFieldFromFile].
+@ProviderFor(loadFieldFromFile)
+const loadFieldFromFileProvider = LoadFieldFromFileFamily();
+
+/// A provider for loading a [Field] from a file at [path], if it's valid.
+///
+/// Copied from [loadFieldFromFile].
+class LoadFieldFromFileFamily extends Family {
+  /// A provider for loading a [Field] from a file at [path], if it's valid.
+  ///
+  /// Copied from [loadFieldFromFile].
+  const LoadFieldFromFileFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadFieldFromFileProvider';
+
+  /// A provider for loading a [Field] from a file at [path], if it's valid.
+  ///
+  /// Copied from [loadFieldFromFile].
+  LoadFieldFromFileProvider call(
+    String path,
+  ) {
+    return LoadFieldFromFileProvider(
+      path,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  LoadFieldFromFileProvider getProviderOverride(
+    covariant LoadFieldFromFileProvider provider,
+  ) {
+    return call(
+      provider.path,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<Field?> Function(LoadFieldFromFileRef ref) create) {
+    return _$LoadFieldFromFileFamilyOverride(this, create);
+  }
+}
+
+class _$LoadFieldFromFileFamilyOverride implements FamilyOverride {
+  _$LoadFieldFromFileFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<Field?> Function(LoadFieldFromFileRef ref) create;
+
+  @override
+  final LoadFieldFromFileFamily overriddenFamily;
+
+  @override
+  LoadFieldFromFileProvider getProviderOverride(
+    covariant LoadFieldFromFileProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for loading a [Field] from a file at [path], if it's valid.
+///
+/// Copied from [loadFieldFromFile].
+class LoadFieldFromFileProvider extends AutoDisposeFutureProvider<Field?> {
+  /// A provider for loading a [Field] from a file at [path], if it's valid.
+  ///
+  /// Copied from [loadFieldFromFile].
+  LoadFieldFromFileProvider(
+    String path,
+  ) : this._internal(
+          (ref) => loadFieldFromFile(
+            ref as LoadFieldFromFileRef,
+            path,
+          ),
+          from: loadFieldFromFileProvider,
+          name: r'loadFieldFromFileProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$loadFieldFromFileHash,
+          dependencies: LoadFieldFromFileFamily._dependencies,
+          allTransitiveDependencies:
+              LoadFieldFromFileFamily._allTransitiveDependencies,
+          path: path,
+        );
+
+  LoadFieldFromFileProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.path,
+  }) : super.internal();
+
+  final String path;
+
+  @override
+  Override overrideWith(
+    FutureOr<Field?> Function(LoadFieldFromFileRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: LoadFieldFromFileProvider._internal(
+        (ref) => create(ref as LoadFieldFromFileRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        path: path,
+      ),
+    );
+  }
+
+  @override
+  (String,) get argument {
+    return (path,);
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Field?> createElement() {
+    return _LoadFieldFromFileProviderElement(this);
+  }
+
+  LoadFieldFromFileProvider _copyWith(
+    FutureOr<Field?> Function(LoadFieldFromFileRef ref) create,
+  ) {
+    return LoadFieldFromFileProvider._internal(
+      (ref) => create(ref as LoadFieldFromFileRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      path: path,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is LoadFieldFromFileProvider && other.path == path;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, path.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin LoadFieldFromFileRef on AutoDisposeFutureProviderRef<Field?> {
+  /// The parameter `path` of this provider.
+  String get path;
+}
+
+class _LoadFieldFromFileProviderElement
+    extends AutoDisposeFutureProviderElement<Field?> with LoadFieldFromFileRef {
+  _LoadFieldFromFileProviderElement(super.provider);
+
+  @override
+  String get path => (origin as LoadFieldFromFileProvider).path;
+}
+
+String _$importFieldHash() => r'0366b9119c12ff59b7c7ecf8e784cb4d53613cb5';
+
+/// A provider for importing a field from a file and applying
+/// [ActiveField] provider.
+///
+/// Copied from [importField].
+@ProviderFor(importField)
+final importFieldProvider = AutoDisposeFutureProvider<Field?>.internal(
+  importField,
+  name: r'importFieldProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$importFieldHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ImportFieldRef = AutoDisposeFutureProviderRef<Field?>;
 String _$showFieldHash() => r'ebab742cb524d06aa00b5ac6dfa2ee9419256ec8';
 
 /// A provider for whether the active field should be shown.
@@ -765,7 +964,7 @@ final showFieldProvider = NotifierProvider<ShowField, bool>.internal(
 );
 
 typedef _$ShowField = Notifier<bool>;
-String _$activeFieldHash() => r'cfafb2d250b006032865db2e2e719c9c6fc7cad2';
+String _$activeFieldHash() => r'a5ec078ec4ee31582ba1588f0107879bd46d6773';
 
 /// A provider for the active field.
 ///

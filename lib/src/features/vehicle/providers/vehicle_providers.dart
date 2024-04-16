@@ -122,14 +122,14 @@ FutureOr<void> exportVehicle(
 /// A provider for reading and holding all the saved [Vehicle]s in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-AsyncValue<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) => ref
+FutureOr<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) async => await ref
     .watch(
       savedFilesProvider(
         fromJson: Vehicle.fromJson,
         folder: 'vehicles',
-      ),
+      ).future,
     )
-    .whenData((data) => data.cast());
+    .then((data) => data.cast());
 
 /// A provider for deleting [vehicle] from the user file system.
 ///
@@ -212,8 +212,6 @@ class GaugesAverageCount extends _$GaugesAverageCount {
   /// Update the [state] to [value].
   void update(int value) => Future(() => state = value);
 }
-
-
 
 /// A provider for the target steering angle when using guidance.
 @riverpod

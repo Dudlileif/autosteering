@@ -353,11 +353,16 @@ class WayPoint extends Equatable {
       ];
 
   /// Converts the object to a json compatible structure.
-  Map<String, dynamic> toJson() => {
-        'position': position.toString(),
-        'bearing': bearing,
-        'velocity': velocity,
-      };
+  Map<String, dynamic> toJson() {
+    final map = {
+      'position': position.toString(),
+      'bearing': bearing,
+    };
+    if (velocity.abs() > 0) {
+      map['velocity'] = velocity;
+    }
+    return map;
+  }
 }
 
 /// A class for tweening two [WayPoint].

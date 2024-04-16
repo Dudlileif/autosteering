@@ -100,16 +100,15 @@ FutureOr<void> exportWorkSession(
 /// A provider for reading and holding all the saved [WorkSession]s in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-AsyncValue<List<WorkSession>> savedWorkSessions(SavedWorkSessionsRef ref) => ref
-    .watch(
-      savedFilesProvider(
-        fromJson: WorkSession.fromJson,
-        folder: 'work_sessions',
-      ),
-    )
-    .whenData(
-      (data) => data.cast(),
-    );
+FutureOr<List<WorkSession>> savedWorkSessions(SavedWorkSessionsRef ref) async =>
+    await ref
+        .watch(
+          savedFilesProvider(
+            fromJson: WorkSession.fromJson,
+            folder: 'work_sessions',
+          ).future,
+        )
+        .then((data) => data.cast());
 
 /// A provider for deleting [workSession] from the user file system.
 ///
@@ -150,10 +149,11 @@ FutureOr<WorkSession?> importWorkSession(
       final json = jsonDecode(String.fromCharCodes(data));
       if (json is Map) {
         workSession = WorkSession.fromJson(Map<String, dynamic>.from(json));
+      } else {
+        Logger.instance.w(
+          'Failed to import work session, data is not a valid json map',
+        );
       }
-      Logger.instance.w(
-        'Failed to import work session, data is not a valid json map',
-      );
     } else {
       Logger.instance.w(
         'Failed to import equipment setup, data is not null',

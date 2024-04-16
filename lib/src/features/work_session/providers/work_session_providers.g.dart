@@ -689,15 +689,14 @@ class _ExportWorkSessionProviderElement
   bool get downloadIfWeb => (origin as ExportWorkSessionProvider).downloadIfWeb;
 }
 
-String _$savedWorkSessionsHash() => r'a9e5618f15053022734353dc757a685ccf718c82';
+String _$savedWorkSessionsHash() => r'ee89c9bbfa53b74784de9137a6afd5eefe4b45ec';
 
 /// A provider for reading and holding all the saved [WorkSession]s in the
 /// user file directory.
 ///
 /// Copied from [savedWorkSessions].
 @ProviderFor(savedWorkSessions)
-final savedWorkSessionsProvider =
-    Provider<AsyncValue<List<WorkSession>>>.internal(
+final savedWorkSessionsProvider = FutureProvider<List<WorkSession>>.internal(
   savedWorkSessions,
   name: r'savedWorkSessionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -707,7 +706,7 @@ final savedWorkSessionsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef SavedWorkSessionsRef = ProviderRef<AsyncValue<List<WorkSession>>>;
+typedef SavedWorkSessionsRef = FutureProviderRef<List<WorkSession>>;
 String _$deleteWorkSessionHash() => r'83e7333e3d8066201801b2c9f83ea6573e56a0cd';
 
 /// A provider for deleting [workSession] from the user file system.

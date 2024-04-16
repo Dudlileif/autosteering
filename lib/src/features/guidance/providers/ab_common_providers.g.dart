@@ -728,15 +728,14 @@ class _ExportABTrackingProviderElement
   bool get downloadIfWeb => (origin as ExportABTrackingProvider).downloadIfWeb;
 }
 
-String _$savedABTrackingsHash() => r'e7d2d37a72477e0243b704e193b90049d3643d50';
+String _$savedABTrackingsHash() => r'344fce88179ee4b2f7899f58055e87b69dfde3b0';
 
 /// A provider for reading and holding all the saved [ABTracking] in the
 /// user file directory.
 ///
 /// Copied from [savedABTrackings].
 @ProviderFor(savedABTrackings)
-final savedABTrackingsProvider =
-    Provider<AsyncValue<List<ABTracking>>>.internal(
+final savedABTrackingsProvider = FutureProvider<List<ABTracking>>.internal(
   savedABTrackings,
   name: r'savedABTrackingsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -746,7 +745,7 @@ final savedABTrackingsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef SavedABTrackingsRef = ProviderRef<AsyncValue<List<ABTracking>>>;
+typedef SavedABTrackingsRef = FutureProviderRef<List<ABTracking>>;
 String _$deleteABTrackingHash() => r'e2692dd4e93ad4703f4026246d53fc4fd1f2da5d';
 
 /// A provider for deleting [tracking] from the user file systemm.
@@ -1022,7 +1021,7 @@ final currentABTrackingTypeProvider =
 );
 
 typedef _$CurrentABTrackingType = Notifier<ABTrackingType>;
-String _$showABTrackingHash() => r'5e6ea964bd4e20100846358a099ec7f4272755d5';
+String _$showABTrackingHash() => r'9025fd2e2aef2696692f439fd53d1b512ae84958';
 
 /// A provider for whether the AB-tracking should be shown.
 ///
@@ -1208,7 +1207,7 @@ final aBSnapToClosestLineProvider =
 
 typedef _$ABSnapToClosestLine = Notifier<bool>;
 String _$configuredABTrackingHash() =>
-    r'2ccc778fc6b9dbe518d7f74ee2fe10d77ff6a747';
+    r'f2dff15a17710b34a74afd35011dd114cbfa76fc';
 
 /// A provider for the currently configured [ABTracking].
 ///
@@ -1227,7 +1226,7 @@ final configuredABTrackingProvider =
 
 typedef _$ConfiguredABTracking = Notifier<ABTracking?>;
 String _$configuredMenuABTrackingHash() =>
-    r'89d3fcb6938bb21fce1ddcc4665e3eec34a7d257';
+    r'1df02bc18c087fde5c4eb0b5c3fffd3c6d957b8e';
 
 /// A provider for the currently configured [ABTracking].
 ///
@@ -1245,7 +1244,7 @@ final configuredMenuABTrackingProvider =
 );
 
 typedef _$ConfiguredMenuABTracking = Notifier<ABTracking?>;
-String _$displayABTrackingHash() => r'360974096215fab89c89a88002ea487b3721f80d';
+String _$displayABTrackingHash() => r'd526adb12f19db055bfe834bf125db5962c576fb';
 
 /// A provider for the [ABTracking] to display.
 ///
@@ -1296,7 +1295,7 @@ final aBPointBProvider = NotifierProvider<ABPointB, WayPoint?>.internal(
 
 typedef _$ABPointB = Notifier<WayPoint?>;
 String _$aBTrackingShowAllLinesHash() =>
-    r'21c7c4b28493f8c307f9601213256d18b9596db7';
+    r'00e1cfb03e0eb198ed297d2fbcdeaa29876a7561';
 
 /// A provider for whether all the calculated lines for the AB tracking should
 /// be shown.

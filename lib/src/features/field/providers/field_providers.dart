@@ -15,14 +15,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_io/io.dart';
 
 part 'field_providers.g.dart';
 
@@ -56,7 +59,7 @@ class ActiveField extends _$ActiveField {
   }
 
   /// Update the [state] to [field].
-  void update(Field field) => Future(() => state = field);
+  void update(Field? field) => Future(() => state = field);
 }
 
 /// A provider for whether the active field's border's points should be shown.
@@ -357,9 +360,11 @@ Future<void> exportField(
 /// A provider for reading and holding all the saved [Field]s in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-AsyncValue<List<Field>> savedFields(SavedFieldsRef ref) => ref
-    .watch(savedFilesProvider(fromJson: Field.fromJson, folder: 'fields'))
-    .whenData((data) => data.cast());
+FutureOr<List<Field>> savedFields(SavedFieldsRef ref) async => await ref
+    .watch(
+      savedFilesProvider(fromJson: Field.fromJson, folder: 'fields').future,
+    )
+    .then((data) => data.cast());
 
 /// A provider for deleting [field] from the user file system.
 ///
@@ -376,3 +381,75 @@ FutureOr<void> deleteField(
         folder: 'fields',
       ).future,
     );
+
+/// A provider for loading a [Field] from a file at [path], if it's valid.
+@riverpod
+FutureOr<Field?> loadFieldFromFile(
+  LoadFieldFromFileRef ref,
+  String path,
+) async {
+  final file = File(path);
+  if (file.existsSync()) {
+    final json = jsonDecode(await file.readAsString());
+    if (json is Map) {
+      final field = Field.fromJson(Map<String, dynamic>.from(json));
+
+      return field;
+    }
+  }
+  return null;
+}
+
+/// A provider for importing a field from a file and applying
+/// [ActiveField] provider.
+@riverpod
+FutureOr<Field?> importField(
+  ImportFieldRef ref,
+) async {
+  ref.keepAlive();
+  Timer(
+    const Duration(seconds: 5),
+    ref.invalidateSelf,
+  );
+  final pickedFiles = await FilePicker.platform.pickFiles(
+    allowedExtensions: ['json'],
+    type: FileType.custom,
+    dialogTitle: 'Choose field file',
+  );
+
+  Field? field;
+  if (Device.isWeb) {
+    final data = pickedFiles?.files.first.bytes;
+    if (data != null) {
+      final json = jsonDecode(String.fromCharCodes(data));
+      if (json is Map) {
+        field = Field.fromJson(Map<String, dynamic>.from(json));
+      } else {
+        Logger.instance.w(
+          'Failed to import field, data is not a valid json map.',
+        );
+      }
+    } else {
+      Logger.instance.w(
+        'Failed to import field, data is null.',
+      );
+    }
+  } else {
+    final filePath = pickedFiles?.paths.first;
+    if (filePath != null) {
+      field = await ref.watch(loadFieldFromFileProvider(filePath).future);
+    } else {
+      Logger.instance.w('Failed to import field: $filePath.');
+    }
+  }
+  if (field != null) {
+    Logger.instance.i(
+      'Imported field: ${field.name}.',
+    );
+    field.lastUsed = DateTime.now();
+    ref.read(activeFieldProvider.notifier).update(field);
+    await ref.watch(saveFieldProvider(field).future);
+  }
+
+  return field;
+}

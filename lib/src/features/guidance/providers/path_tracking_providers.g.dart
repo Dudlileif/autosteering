@@ -719,15 +719,14 @@ class _ExportPathTrackingProviderElement
 }
 
 String _$savedPathTrackingsHash() =>
-    r'9993c4f560067420f99ba7e882f61988e48ec078';
+    r'33bdc3da0be34077a6d0af5f33320caa5c175741';
 
 /// A provider for reading and holding all the saved [PathTracking] in the
 /// user file directory.
 ///
 /// Copied from [savedPathTrackings].
 @ProviderFor(savedPathTrackings)
-final savedPathTrackingsProvider =
-    Provider<AsyncValue<List<PathTracking>>>.internal(
+final savedPathTrackingsProvider = FutureProvider<List<PathTracking>>.internal(
   savedPathTrackings,
   name: r'savedPathTrackingsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -737,7 +736,7 @@ final savedPathTrackingsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef SavedPathTrackingsRef = ProviderRef<AsyncValue<List<PathTracking>>>;
+typedef SavedPathTrackingsRef = FutureProviderRef<List<PathTracking>>;
 String _$deletePathTrackingHash() =>
     r'1df82e0b05cbe20dbd51320edb60dbefefbf191b';
 
@@ -1037,7 +1036,7 @@ final pathTrackingPointsProvider =
 
 typedef _$PathTrackingPoints = Notifier<List<WayPoint>?>;
 String _$configuredPathTrackingHash() =>
-    r'fc8c7c6cb59d39c425ecc6f25f4a7dc1080c7915';
+    r'b0e59d5c5977d6416c035d8f10e724df09056876';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.
@@ -1057,7 +1056,7 @@ final configuredPathTrackingProvider =
 
 typedef _$ConfiguredPathTracking = Notifier<PathTracking?>;
 String _$enablePathTrackingHash() =>
-    r'f2c5ebe62db42bb904e0c728de685fc8f2ff8250';
+    r'3fd0d3a5101e9fd83ac3d1ca0b8f64c270330119';
 
 /// A provider for whether or not the vehicle should follow the
 /// [ConfiguredPathTracking] tracking model.
@@ -1115,7 +1114,7 @@ final displayPathTrackingProvider =
 );
 
 typedef _$DisplayPathTracking = Notifier<PathTracking?>;
-String _$showPathTrackingHash() => r'8ccdab6e8b22ded94a4e712d4f787b1c49731251';
+String _$showPathTrackingHash() => r'4aaabec2c84ce508eef43de33976367de2f6079f';
 
 /// A provider for whether or not the path tracking should be shown.
 ///

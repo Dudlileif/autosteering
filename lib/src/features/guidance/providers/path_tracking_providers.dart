@@ -64,6 +64,12 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
     ref.listenSelf((previous, next) {
       if (next != null || previous != null) {
         Logger.instance.i('Path tracking set to ${next?.runtimeType}');
+        if (next != null) {
+          ref
+            ..invalidate(configuredABTrackingProvider)
+            ..invalidate(displayABTrackingProvider);
+        }
+        sendToSim();
       }
     });
 
@@ -103,9 +109,6 @@ class EnablePathTracking extends _$EnablePathTracking {
   bool build() {
     ref.listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send((enablePathTracking: next));
-      if (next) {
-        ref.read(configuredPathTrackingProvider.notifier).sendToSim();
-      }
     });
     return false;
   }
@@ -161,7 +164,7 @@ double? pathTrackingPerpendicularDistance(
 @Riverpod(keepAlive: true)
 class ShowPathTracking extends _$ShowPathTracking {
   @override
-  bool build() => false;
+  bool build() => true;
 
   /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
@@ -230,17 +233,17 @@ FutureOr<void> exportPathTracking(
 /// A provider for reading and holding all the saved [PathTracking] in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-AsyncValue<List<PathTracking>> savedPathTrackings(SavedPathTrackingsRef ref) =>
-    ref
+FutureOr<List<PathTracking>> savedPathTrackings(
+  SavedPathTrackingsRef ref,
+) async =>
+    await ref
         .watch(
           savedFilesProvider(
             fromJson: PathTracking.fromJson,
             folder: 'guidance/path_tracking',
-          ),
+          ).future,
         )
-        .whenData(
-          (data) => data.cast(),
-        );
+        .then((data) => data.cast());
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///
@@ -282,7 +285,6 @@ FutureOr<PathTracking?> importPathTracking(
       final json = jsonDecode(String.fromCharCodes(data));
       if (json is Map) {
         pathTracking = PathTracking.fromJson(Map<String, dynamic>.from(json));
-        
       }
     }
   } else {

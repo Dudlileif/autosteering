@@ -685,14 +685,14 @@ class _ExportEquipmentProviderElement
   bool get downloadIfWeb => (origin as ExportEquipmentProvider).downloadIfWeb;
 }
 
-String _$savedEquipmentsHash() => r'07c737a4e45444ae43c789a36be7caf450add31d';
+String _$savedEquipmentsHash() => r'dede76af366e21da6460816b23f88b3b8c6d31f9';
 
 /// A provider for reading and holding all the saved [Equipment] in the
 /// user file directory.
 ///
 /// Copied from [savedEquipments].
 @ProviderFor(savedEquipments)
-final savedEquipmentsProvider = Provider<AsyncValue<List<Equipment>>>.internal(
+final savedEquipmentsProvider = FutureProvider<List<Equipment>>.internal(
   savedEquipments,
   name: r'savedEquipmentsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -702,7 +702,7 @@ final savedEquipmentsProvider = Provider<AsyncValue<List<Equipment>>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef SavedEquipmentsRef = ProviderRef<AsyncValue<List<Equipment>>>;
+typedef SavedEquipmentsRef = FutureProviderRef<List<Equipment>>;
 String _$deleteEquipmentHash() => r'340f650d0a0e5f680a1cb62eb3ff94faadd5e20a';
 
 /// A provider for deleting [equipment] from the user file system.

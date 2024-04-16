@@ -324,16 +324,15 @@ Future<void> exportEquipment(
 /// A provider for reading and holding all the saved [Equipment] in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-AsyncValue<List<Equipment>> savedEquipments(SavedEquipmentsRef ref) => ref
-    .watch(
-      savedFilesProvider(
-        fromJson: Equipment.fromJson,
-        folder: 'equipment',
-      ),
-    )
-    .whenData(
-      (data) => data.cast(),
-    );
+FutureOr<List<Equipment>> savedEquipments(SavedEquipmentsRef ref) async =>
+    await ref
+        .watch(
+          savedFilesProvider(
+            fromJson: Equipment.fromJson,
+            folder: 'equipment',
+          ).future,
+        )
+        .then((data) => data.cast());
 
 /// A provider for deleting [equipment] from the user file system.
 ///
@@ -375,10 +374,11 @@ FutureOr<Equipment?> importEquipment(
       final json = jsonDecode(String.fromCharCodes(data));
       if (json is Map) {
         equipment = Equipment.fromJson(Map<String, dynamic>.from(json));
+      } else {
+        Logger.instance.w(
+          'Failed to import equipment, data is not a valid json map.',
+        );
       }
-      Logger.instance.w(
-        'Failed to import equipment, data is not a valid json map.',
-      );
     } else {
       Logger.instance.w(
         'Failed to import equipment, data is null.',

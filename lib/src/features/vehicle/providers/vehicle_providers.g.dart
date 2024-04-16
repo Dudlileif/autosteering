@@ -499,14 +499,14 @@ class _ExportVehicleProviderElement
   bool get downloadIfWeb => (origin as ExportVehicleProvider).downloadIfWeb;
 }
 
-String _$savedVehiclesHash() => r'2fd0ed9dde2e0b21456e5153b95a2b4232c61d17';
+String _$savedVehiclesHash() => r'3ff81606b7f593c2244418ebd77e709960c450b0';
 
 /// A provider for reading and holding all the saved [Vehicle]s in the
 /// user file directory.
 ///
 /// Copied from [savedVehicles].
 @ProviderFor(savedVehicles)
-final savedVehiclesProvider = Provider<AsyncValue<List<Vehicle>>>.internal(
+final savedVehiclesProvider = FutureProvider<List<Vehicle>>.internal(
   savedVehicles,
   name: r'savedVehiclesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -516,7 +516,7 @@ final savedVehiclesProvider = Provider<AsyncValue<List<Vehicle>>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef SavedVehiclesRef = ProviderRef<AsyncValue<List<Vehicle>>>;
+typedef SavedVehiclesRef = FutureProviderRef<List<Vehicle>>;
 String _$deleteVehicleHash() => r'82eb292792c91d1d0690d546469839b4004f50b4';
 
 /// A provider for deleting [vehicle] from the user file system.

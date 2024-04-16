@@ -44,7 +44,7 @@ class CurrentABTrackingType extends _$CurrentABTrackingType {
 @Riverpod(keepAlive: true)
 class ShowABTracking extends _$ShowABTracking {
   @override
-  bool build() => false;
+  bool build() => true;
 
   /// Updates [state] to [value].
   void update({required bool value}) => Future(() => state = value);
@@ -158,6 +158,11 @@ class ConfiguredABTracking extends _$ConfiguredABTracking {
     ref.listenSelf((previous, next) {
       if (next != null || previous != null) {
         Logger.instance.i('Path tracking set to ${next?.runtimeType}');
+        if (next != null) {
+          ref
+            ..invalidate(configuredPathTrackingProvider)
+            ..invalidate(displayPathTrackingProvider);
+        }
         sendToSim();
       }
     });
@@ -281,7 +286,7 @@ ABConfig activeABConfig(ActiveABConfigRef ref) {
 @Riverpod(keepAlive: true)
 class ABTrackingShowAllLines extends _$ABTrackingShowAllLines {
   @override
-  bool build() => false;
+  bool build() => true;
 
   /// Updates [state] to [value].
   void update({required bool value}) => Future(() => state = value);
@@ -349,16 +354,15 @@ FutureOr<void> exportABTracking(
 /// A provider for reading and holding all the saved [ABTracking] in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-AsyncValue<List<ABTracking>> savedABTrackings(SavedABTrackingsRef ref) => ref
-    .watch(
-      savedFilesProvider(
-        fromJson: ABTracking.fromJson,
-        folder: 'guidance/ab_tracking',
-      ),
-    )
-    .whenData(
-      (data) => data.cast(),
-    );
+FutureOr<List<ABTracking>> savedABTrackings(SavedABTrackingsRef ref) async =>
+    await ref
+        .watch(
+          savedFilesProvider(
+            fromJson: ABTracking.fromJson,
+            folder: 'guidance/ab_tracking',
+          ).future,
+        )
+        .then((data) => data.cast());
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///
