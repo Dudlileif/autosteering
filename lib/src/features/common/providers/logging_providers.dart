@@ -17,6 +17,7 @@
 
 import 'dart:async';
 
+import 'package:archive/archive_io.dart';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
@@ -77,7 +78,7 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
                 FileSystemEntityType.file,
           )
           .toList();
-      
+
       if (files.length > ref.watch(numLogFilesProvider)) {
         files.sortByCompare((file) => file.path, (a, b) => b.compareTo(a));
         final removed = <String>[];
@@ -223,36 +224,67 @@ FutureOr<void> exportLogs(ExportLogsRef ref) async {
             if (!dir.existsSync()) {
               dir.createSync(recursive: true);
             }
-            for (final file in files) {
-              final splits = file.path.split(Platform.pathSeparator);
-              final isHardwareLog = ['combined', 'gnss', 'imu', 'was']
-                  .contains(splits.elementAt(splits.length - 2));
-              if (isHardwareLog) {
-                final hardwareLogDir = Directory(
-                  [
-                    exportDirPath,
-                    'hardware',
-                    splits.elementAt(splits.length - 2),
-                  ].join('/'),
+            if (Platform.isAndroid) {
+              final archive = Archive();
+              for (final file in files) {
+                final splits = file.path.split(Platform.pathSeparator);
+                final isHardwareLog = ['combined', 'gnss', 'imu', 'was']
+                    .contains(splits.elementAt(splits.length - 2));
+                archive.addFile(
+                  ArchiveFile.stream(
+                    [
+                      if (isHardwareLog) ...[
+                        'hardware',
+                        splits.elementAt(splits.length - 2),
+                      ],
+                      splits.last,
+                    ].join('/'),
+                    (await file.stat()).size,
+                    InputFileStream(file.path),
+                  ),
                 );
-                if (!hardwareLogDir.existsSync()) {
-                  hardwareLogDir.createSync(recursive: true);
-                }
               }
-
-              await File(file.path).copy(
-                [
+              final file = File([exportDirPath, 'logs.zip'].join('/'));
+              final bytes = ZipEncoder().encode(archive);
+              if (bytes != null) {
+                await file.writeAsBytes(bytes);
+                Logger.instance.i(
+                  'Exported ${files.length} log files to $exportFolder/logs.zip.',
+                );
+              } else {
+                Logger.instance
+                    .w('Failed to export logs to zip, no bytes encoded.');
+              }
+            } else {
+              for (final file in files) {
+                final splits = file.path.split(Platform.pathSeparator);
+                final isHardwareLog = ['combined', 'gnss', 'imu', 'was']
+                    .contains(splits.elementAt(splits.length - 2));
+                if (isHardwareLog) {
+                  final hardwareLogDir = Directory(
+                    [
+                      exportDirPath,
+                      'hardware',
+                      splits.elementAt(splits.length - 2),
+                    ].join('/'),
+                  );
+                  if (!hardwareLogDir.existsSync()) {
+                    hardwareLogDir.createSync(recursive: true);
+                  }
+                }
+                final exportFilePath = [
                   exportDirPath,
                   if (isHardwareLog) ...[
                     'hardware',
                     splits.elementAt(splits.length - 2),
                   ],
                   splits.last,
-                ].join('/'),
-              );
+                ].join('/');
+                await File(file.path).copy(exportFilePath);
+              }
+              Logger.instance
+                  .i('Exported ${files.length} log files to $exportFolder.');
             }
-            Logger.instance
-                .i('Exported ${files.length} log files to $exportFolder.');
           }
         } else {
           Logger.instance.i('No log directory found: ${logsDir.path}.');

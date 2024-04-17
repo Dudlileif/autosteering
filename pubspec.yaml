@@ -10,6 +10,7 @@ environment:
     sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
+    archive: ^3.4.10
     async: ^2.11.0
     collection: ^1.17.1
     connectivity_plus: ^6.0.2
