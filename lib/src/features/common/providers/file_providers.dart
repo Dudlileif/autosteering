@@ -110,6 +110,7 @@ FutureOr<void> saveJsonToFileDirectory(
       ..style.display = 'none'
       ..click();
   } else {
+    try {
     final path =
         '${ref.watch(fileDirectoryProvider).requireValue.path}/$folder/$fileName.json';
     final file = File(path);
@@ -124,6 +125,13 @@ FutureOr<void> saveJsonToFileDirectory(
         true => 'Wrote data to $path',
       },
     );
+    } catch (error, stackTrace) {
+      Logger.instance.w(
+        'Failed to import save json.',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
   }
 }
 
@@ -152,6 +160,7 @@ FutureOr<void> exportJsonToFileDirectory(
       ..style.display = 'none'
       ..click();
   } else {
+    try {
     final exportFolder = await FilePicker.platform
         .getDirectoryPath(dialogTitle: 'Select export folder');
     if (exportFolder != null) {
@@ -183,6 +192,13 @@ FutureOr<void> exportJsonToFileDirectory(
       );
     } else {
       Logger.instance.i('No export folder selected.');
+      }
+    } catch (error, stackTrace) {
+      Logger.instance.w(
+        'Failed to export json.',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }
@@ -224,15 +240,17 @@ FutureOr<List<dynamic>> savedFiles(
       for (final fileEntity in fileEntities) {
         if (fileEntity is File) {
           final file = File.fromUri(fileEntity.uri);
-
-          final decoded = jsonDecode(await file.readAsString());
-
-          if (decoded is Map) {
-            final json = Map<String, dynamic>.from(decoded);
-
+          try {
+            final decoded = jsonDecode(await file.readAsString());
+            final json = Map<String, dynamic>.from(decoded as Map);
             final item = fromJson(json);
-
             savedItems.add(item);
+          } catch (error, stackTrace) {
+            Logger.instance.w(
+              'Failed to parse: ${file.path}',
+              error: error,
+              stackTrace: stackTrace,
+            );
           }
         }
       }

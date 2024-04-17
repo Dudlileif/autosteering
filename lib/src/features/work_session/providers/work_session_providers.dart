@@ -143,11 +143,15 @@ FutureOr<WorkSession?> loadWorkSessionFromFile(
 ) async {
   final file = File(path);
   if (file.existsSync()) {
-    final json = jsonDecode(await file.readAsString());
-    if (json is Map) {
-      final workSession = WorkSession.fromJson(Map<String, dynamic>.from(json));
-
-      return workSession;
+    try {
+      final json = jsonDecode(await file.readAsString());
+      return WorkSession.fromJson(Map<String, dynamic>.from(json as Map));
+    } catch (error, stackTrace) {
+      Logger.instance.w(
+        'Failed loading work session from: $path',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
   return null;
@@ -243,17 +247,20 @@ FutureOr<WorkSession?> importWorkSession(
   if (Device.isWeb) {
     final data = pickedFiles?.files.first.bytes;
     if (data != null) {
-      final json = jsonDecode(String.fromCharCodes(data));
-      if (json is Map) {
-        workSession = WorkSession.fromJson(Map<String, dynamic>.from(json));
-      } else {
+      try {
+        final json = jsonDecode(String.fromCharCodes(data));
+        workSession =
+            WorkSession.fromJson(Map<String, dynamic>.from(json as Map));
+      } catch (error, stackTrace) {
         Logger.instance.w(
-          'Failed to import work session, data is not a valid json map',
+          'Failed to import work session.',
+          error: error,
+          stackTrace: stackTrace,
         );
       }
     } else {
       Logger.instance.w(
-        'Failed to import equipment setup, data is not null',
+        'Failed to import work session, data is null.',
       );
     }
   } else {

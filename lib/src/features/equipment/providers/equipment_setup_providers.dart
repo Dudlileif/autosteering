@@ -115,9 +115,15 @@ FutureOr<EquipmentSetup?> loadEquipmentSetupFromFile(
 ) async {
   final file = File(path);
   if (file.existsSync()) {
-    final json = jsonDecode(await file.readAsString());
-    if (json is Map) {
-      return EquipmentSetup.fromJson(Map<String, dynamic>.from(json));
+    try {
+      final json = jsonDecode(await file.readAsString());
+      return EquipmentSetup.fromJson(Map<String, dynamic>.from(json as Map));
+    } catch (error, stackTrace) {
+      Logger.instance.w(
+        'Failed loading equipment setup from: $path',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
   return null;
@@ -144,13 +150,15 @@ FutureOr<EquipmentSetup?> importEquipmentSetup(
   if (Device.isWeb) {
     final data = pickedFiles?.files.first.bytes;
     if (data != null) {
-      final json = jsonDecode(String.fromCharCodes(data));
-      if (json is Map) {
+      try {
+        final json = jsonDecode(String.fromCharCodes(data));
         equipmentSetup =
-            EquipmentSetup.fromJson(Map<String, dynamic>.from(json));
-      } else {
+            EquipmentSetup.fromJson(Map<String, dynamic>.from(json as Map));
+      } catch (error, stackTrace) {
         Logger.instance.w(
-          'Failed to import equipment setup, data is not a valid json map.',
+          'Failed to import equipment setup.',
+          error: error,
+          stackTrace: stackTrace,
         );
       }
     } else {

@@ -390,11 +390,15 @@ FutureOr<Field?> loadFieldFromFile(
 ) async {
   final file = File(path);
   if (file.existsSync()) {
-    final json = jsonDecode(await file.readAsString());
-    if (json is Map) {
-      final field = Field.fromJson(Map<String, dynamic>.from(json));
-
-      return field;
+    try {
+      final json = jsonDecode(await file.readAsString());
+      return Field.fromJson(Map<String, dynamic>.from(json as Map));
+    } catch (error, stackTrace) {
+      Logger.instance.w(
+        'Failed to load field from: $path.',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
   return null;
@@ -421,12 +425,14 @@ FutureOr<Field?> importField(
   if (Device.isWeb) {
     final data = pickedFiles?.files.first.bytes;
     if (data != null) {
-      final json = jsonDecode(String.fromCharCodes(data));
-      if (json is Map) {
-        field = Field.fromJson(Map<String, dynamic>.from(json));
-      } else {
+      try {
+        final json = jsonDecode(String.fromCharCodes(data));
+        field = Field.fromJson(Map<String, dynamic>.from(json as Map));
+      } catch (error, stackTrace) {
         Logger.instance.w(
-          'Failed to import field, data is not a valid json map.',
+          'Failed to import field.',
+          error: error,
+          stackTrace: stackTrace,
         );
       }
     } else {

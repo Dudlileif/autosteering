@@ -155,11 +155,15 @@ FutureOr<Vehicle?> loadVehicleFromFile(
 ) async {
   final file = File(path);
   if (file.existsSync()) {
-    final json = jsonDecode(await file.readAsString());
-    if (json is Map) {
-      final vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json));
-
-      return vehicle;
+    try {
+      final json = jsonDecode(await file.readAsString());
+      return Vehicle.fromJson(Map<String, dynamic>.from(json as Map));
+    } catch (error, stackTrace) {
+      Logger.instance.w(
+        'Failed to load vehicle from: $path.',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
   return null;
@@ -244,12 +248,14 @@ FutureOr<Vehicle?> importVehicle(
   if (Device.isWeb) {
     final data = pickedFiles?.files.first.bytes;
     if (data != null) {
-      final json = jsonDecode(String.fromCharCodes(data));
-      if (json is Map) {
-        vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json));
-      } else {
+      try {
+        final json = jsonDecode(String.fromCharCodes(data));
+        vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json as Map));
+      } catch (error, stackTrace) {
         Logger.instance.w(
-          'Failed to import vehicle, data is not a valid json map.',
+          'Failed to vehicle.',
+          error: error,
+          stackTrace: stackTrace,
         );
       }
     } else {

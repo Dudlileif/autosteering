@@ -184,15 +184,15 @@ class ConfiguredABTracking extends _$ConfiguredABTracking {
 class ConfiguredMenuABTracking extends _$ConfiguredMenuABTracking {
   @override
   ABTracking? build() => switch (ref.watch(currentABTrackingTypeProvider)) {
-      ABTrackingType.aPlusLine => ref.watch(aPlusLineProvider),
-      ABTrackingType.abLine => ref.watch(aBLineProvider),
-      ABTrackingType.abCurve => ref.watch(aBCurveProvider),
-    }
-        .when(
-      data: (data) => data,
-      error: (error, stackTracke) => null,
-      loading: () => null,
-    );
+        ABTrackingType.aPlusLine => ref.watch(aPlusLineProvider),
+        ABTrackingType.abLine => ref.watch(aBLineProvider),
+        ABTrackingType.abCurve => ref.watch(aBCurveProvider),
+      }
+          .when(
+        data: (data) => data,
+        error: (error, stackTracke) => null,
+        loading: () => null,
+      );
 
   /// Send the [state] to the simulator.
   void sendToSim() =>
@@ -209,7 +209,7 @@ class DisplayABTracking extends _$DisplayABTracking {
   ABTracking? build() {
     ref.listenSelf((previous, next) {
       if (next != null) {
-          ref.read(activeWorkSessionProvider.notifier).updateABTracking(next);
+        ref.read(activeWorkSessionProvider.notifier).updateABTracking(next);
       }
     });
     return null;
@@ -302,9 +302,15 @@ FutureOr<ABTracking?> loadABTrackingFromFile(
 ) async {
   final file = File(path);
   if (file.existsSync()) {
-    final json = jsonDecode(await file.readAsString());
-    if (json is Map) {
-      return ABTracking.fromJson(Map<String, dynamic>.from(json));
+    try {
+      final json = jsonDecode(await file.readAsString());
+      return ABTracking.fromJson(Map<String, dynamic>.from(json as Map));
+    } catch (error, stackTrace) {
+      Logger.instance.w(
+        'Failed to load AB tracking from: $path.',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
   return null;
@@ -402,19 +408,33 @@ FutureOr<ABTracking?> importABTracking(
   if (Device.isWeb) {
     final data = pickedFiles?.files.first.bytes;
     if (data != null) {
-      final json = jsonDecode(String.fromCharCodes(data));
-      if (json is Map) {
-        abTracking = ABTracking.fromJson(Map<String, dynamic>.from(json));
+      try {
+        final json = jsonDecode(String.fromCharCodes(data));
+
+        abTracking =
+            ABTracking.fromJson(Map<String, dynamic>.from(json as Map));
+      } catch (error, stackTrace) {
+        Logger.instance.w(
+          'Failed to import AB tracking.',
+          error: error,
+          stackTrace: stackTrace,
+        );
       }
+    } else {
+      Logger.instance.w('Failed to import AB tracking, data is null.');
     }
   } else {
     final filePath = pickedFiles?.paths.first;
     if (filePath != null) {
       abTracking =
           await ref.watch(loadABTrackingFromFileProvider(filePath).future);
+    } else {
+      Logger.instance.w('Failed to import AB tracking: $filePath');
     }
   }
   if (abTracking != null) {
+    Logger.instance
+        .i('Imported AB tracking: ${abTracking.name ?? abTracking.uuid}');
     ref.read(configuredABTrackingProvider.notifier).update(abTracking);
     ref.read(showABTrackingProvider.notifier).update(value: true);
   }

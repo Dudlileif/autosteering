@@ -204,9 +204,15 @@ FutureOr<PathTracking?> loadPathTrackingFromFile(
 ) async {
   final file = File(path);
   if (file.existsSync()) {
-    final json = jsonDecode(await file.readAsString());
-    if (json is Map) {
-      return PathTracking.fromJson(Map<String, dynamic>.from(json));
+    try {
+      final json = jsonDecode(await file.readAsString());
+      return PathTracking.fromJson(Map<String, dynamic>.from(json as Map));
+    } catch (error, stackTrace) {
+      Logger.instance.w(
+        'Failed to load Path tracking: $path.',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
   return null;
@@ -304,19 +310,33 @@ FutureOr<PathTracking?> importPathTracking(
   if (Device.isWeb) {
     final data = pickedFiles?.files.first.bytes;
     if (data != null) {
-      final json = jsonDecode(String.fromCharCodes(data));
-      if (json is Map) {
-        pathTracking = PathTracking.fromJson(Map<String, dynamic>.from(json));
+      try {
+        final json = jsonDecode(String.fromCharCodes(data));
+
+        pathTracking =
+            PathTracking.fromJson(Map<String, dynamic>.from(json as Map));
+      } catch (error, stackTrace) {
+        Logger.instance.w(
+          'Failed to import Path tracking.',
+          error: error,
+          stackTrace: stackTrace,
+        );
       }
+    } else {
+      Logger.instance.w('Failed to import Path tracking, data is null.');
     }
   } else {
     final filePath = pickedFiles?.paths.first;
     if (filePath != null) {
       pathTracking =
           await ref.watch(loadPathTrackingFromFileProvider(filePath).future);
+    } else {
+      Logger.instance.w('Failed to import Path tracking: $filePath');
     }
   }
   if (pathTracking != null) {
+    Logger.instance
+        .i('Imported Path tracking: ${pathTracking.name ?? pathTracking.uuid}');
     ref.read(configuredPathTrackingProvider.notifier).update(pathTracking);
     ref.read(showPathTrackingProvider.notifier).update(value: true);
   }
