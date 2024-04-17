@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
+import 'package:uuid/uuid.dart';
 
 export 'ab_config.dart';
 export 'ab_limit_mode.dart';
@@ -35,13 +36,18 @@ part 'ab_line.dart';
 /// An enumerator for the different types of AB tracking.
 enum ABTrackingType {
   /// A+ line
-  aPlusLine,
+  aPlusLine('A+ Line'),
 
   /// AB line
-  abLine,
+  abLine('AB Line'),
 
   /// AB curve
-  abCurve;
+  abCurve('AB Curve');
+
+  const ABTrackingType(this.name);
+
+  /// The ui friendly name of this.
+  final String name;
 }
 
 // TODO(dudlileif): Improve line creation, sometimes wrong side of polygon
@@ -64,7 +70,9 @@ sealed class ABTracking {
     this.snapToClosestLine = false,
     bool calculateLinesOnCreation = true,
     this.name,
-  })  : start = baseLine.first,
+    String? uuid,
+  })  : uuid = uuid ?? const Uuid().v4(),
+        start = baseLine.first,
         end = baseLine.last,
         isCCW = isCurveCounterclockwise(baseLine.map((e) => e.position)),
         baseLinePathTracking = PurePursuitPathTracking(wayPoints: baseLine) {
@@ -93,13 +101,16 @@ sealed class ABTracking {
   /// Creates the corresponding [ABCurve], [ABLine] or [APlusLine] from the
   /// [json] object.
   factory ABTracking.fromJson(Map<String, dynamic> json) {
-    if (json['type'] == 'AB Curve') {
+    if (json['type'] == ABTrackingType.abCurve.name) {
       return ABCurve.fromJson(json);
-    } else if (json['type'] == 'A+ Line') {
+    } else if (json['type'] == ABTrackingType.aPlusLine.name) {
       return APlusLine.fromJson(json);
     }
     return ABLine.fromJson(json);
   }
+
+  /// The unique identifier for this.
+  final String uuid;
 
   /// Which subtype of [ABTracking] this is.
   final ABTrackingType type;
@@ -1325,6 +1336,8 @@ sealed class ABTracking {
 
   /// Creates a json compatible structure of the object.
   Map<String, dynamic> toJson() => {
+        'uuid': uuid,
+        'type': type.name,
         'name': name,
         'base_line': baseLine.map((e) => e.toJson()).toList(),
         'boundary': boundary?.toText(),
@@ -1337,7 +1350,7 @@ sealed class ABTracking {
         'lines': {
           'offsets': lines.keys.toList(),
           'paths': lines.values
-              .map((curve) => curve.map((e) => e.toJson()).toList())
+              .map((line) => line.map((e) => e.toJson()).toList())
               .toList(),
         },
         'calculate_lines': boundary != null && lines.isEmpty,

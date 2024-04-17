@@ -29,14 +29,15 @@ class WorkSession {
     this.field,
     this.vehicle,
     this.equipmentSetup,
-    this.abTracking,
-    this.pathTracking,
+    List<ABTracking>? abTracking,
+    List<PathTracking>? pathTracking,
     this.title,
     this.note,
     this.start,
     this.end,
     this.workedPaths,
-  });
+  })  : abTracking = abTracking ?? [],
+        pathTracking = pathTracking ?? [];
 
   /// Creates a work session object from the [json] object.
   factory WorkSession.fromJson(Map<String, dynamic> json) {
@@ -55,16 +56,16 @@ class WorkSession {
         : null;
 
     final abTracking = json['ab_tracking'] != null
-        ? ABTracking.fromJson(
-            Map<String, dynamic>.from(json['ab_tracking'] as Map),
-          )
-        : null;
+        ? List<Map<String, dynamic>>.from(json['ab_tracking'] as List)
+            .map(ABTracking.fromJson)
+            .toList()
+        : <ABTracking>[];
 
     final pathTracking = json['path_tracking'] != null
-        ? PathTracking.fromJson(
-            Map<String, dynamic>.from(json['path_tracking'] as Map),
-          )
-        : null;
+        ? List<Map<String, dynamic>>.from(json['path_tracking'] as List)
+            .map(PathTracking.fromJson)
+            .toList()
+        : <PathTracking>[];
 
     final info = Map<String, dynamic>.from(json['info'] as Map);
 
@@ -128,11 +129,11 @@ class WorkSession {
   /// The [EquipmentSetup] (chain) used for this session.
   EquipmentSetup? equipmentSetup;
 
-  /// The [ABTracking] used in this work session.
-  ABTracking? abTracking;
+  /// The [ABTracking]s used in this work session.
+  List<ABTracking> abTracking = [];
 
-  /// The [ABTracking] used in this work session.
-  PathTracking? pathTracking;
+  /// The [PathTracking]s used in this work session.
+  List<PathTracking> pathTracking = [];
 
   /// The recorded path used in this work session.
   List<WayPoint>? pathRecording;

@@ -171,7 +171,7 @@ class ABTrackingLayer extends ConsumerWidget {
                     point: vehicle.lookAheadStartPosition.latLng,
                     radius: vehicle.lookAheadDistance,
                     useRadiusInMeter: true,
-                    color: Colors.pink.withOpacity(0.1),
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
                   ),
                   if (abTracking.activeTurn != null &&
                       abTracking.activeTurn is PurePursuitPathTracking)

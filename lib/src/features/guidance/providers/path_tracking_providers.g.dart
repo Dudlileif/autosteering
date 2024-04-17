@@ -1036,7 +1036,7 @@ final pathTrackingPointsProvider =
 
 typedef _$PathTrackingPoints = Notifier<List<WayPoint>?>;
 String _$configuredPathTrackingHash() =>
-    r'b0e59d5c5977d6416c035d8f10e724df09056876';
+    r'f9ab9877136ad8d8e45fd3a56f2e934d23d07371';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.
@@ -1132,5 +1132,23 @@ final showPathTrackingProvider =
 );
 
 typedef _$ShowPathTracking = Notifier<bool>;
+String _$debugPathTrackingHash() => r'db41c00fa0d4a921e7251aea9fce8d341463b4c9';
+
+/// Whether the path tracking debug features should show.
+///
+/// Copied from [DebugPathTracking].
+@ProviderFor(DebugPathTracking)
+final debugPathTrackingProvider =
+    NotifierProvider<DebugPathTracking, bool>.internal(
+  DebugPathTracking.new,
+  name: r'debugPathTrackingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugPathTrackingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugPathTracking = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

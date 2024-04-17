@@ -35,6 +35,7 @@ class ABCurve extends ABTracking {
     super.snapToClosestLine,
     super.calculateLinesOnCreation,
     super.name,
+    super.uuid,
   }) : assert(
           baseLine.length >= 2,
           'Base curve has to have at least two points',
@@ -54,6 +55,7 @@ class ABCurve extends ABTracking {
     Iterable<int>? offsetsInsideBoundary,
     super.calculateLinesOnCreation = false,
     super.name,
+    super.uuid,
   }):super(type:ABTrackingType.abCurve) {
     this.lines.addAll(lines ?? {});
     this.finishedOffsets.addAll(finishedOffsets ?? []);
@@ -112,8 +114,4 @@ class ABCurve extends ABTracking {
       name: json['name'] as String?,
     );
   }
-
-  /// Creates a json compatible structure of the object.
-  @override
-  Map<String, dynamic> toJson() => super.toJson()..['type'] = 'AB Curve';
 }

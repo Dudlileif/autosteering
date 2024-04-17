@@ -29,6 +29,7 @@ class PathTrackingLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(configuredPathTrackingProvider);
     final tracking = ref.watch(displayPathTrackingProvider);
     final vehicle = ref.watch(mainVehicleProvider);
     final lookAheadDistance = vehicle.lookAheadDistance;
@@ -51,7 +52,8 @@ class PathTrackingLayer extends ConsumerWidget {
                     ],
                     color: Colors.white,
                   ),
-                  if (tracking is PurePursuitPathTracking) ...[
+                  if (tracking is PurePursuitPathTracking &&
+                      ref.watch(debugPathTrackingProvider)) ...[
                     Polyline(
                       color: Colors.black,
                       points: [
@@ -194,7 +196,7 @@ class PathTrackingLayer extends ConsumerWidget {
                       point: vehicle.lookAheadStartPosition.latLng,
                       radius: lookAheadDistance,
                       useRadiusInMeter: true,
-                      color: Colors.pink.withOpacity(0.2),
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
                     ),
                     if (tracking.lookAheadVehicleToLineProjection(
                           vehicle,
@@ -203,16 +205,19 @@ class PathTrackingLayer extends ConsumerWidget {
                         null)
                       CircleMarker(
                         point: tracking
-                            .lookAheadVehicleToLineProjection(
+                            .findLookAheadCirclePoints(
                               vehicle,
                               lookAheadDistance,
-                            )!
+                            )
+                            .best
+                            .position
                             .latLng,
                         radius: 5,
-                        color: Colors.black,
+                        color: Colors.pink,
                       ),
-                    CircleMarker(
-                      point: tracking
+                    if (ref.watch(debugPathTrackingProvider)) ...[
+                      CircleMarker(
+                        point: tracking
                           .findLookAheadLinePoints(
                             vehicle,
                             lookAheadDistance,
@@ -242,18 +247,7 @@ class PathTrackingLayer extends ConsumerWidget {
                         radius: 3,
                         color: Colors.white,
                       ),
-                    CircleMarker(
-                      point: tracking
-                          .findLookAheadCirclePoints(
-                            vehicle,
-                            lookAheadDistance,
-                          )
-                          .best
-                          .position
-                          .latLng,
-                      radius: 5,
-                      color: Colors.pink,
-                    ),
+                    
                     if (tracking
                             .findLookAheadCirclePoints(
                               vehicle,
@@ -272,12 +266,14 @@ class PathTrackingLayer extends ConsumerWidget {
                             .latLng,
                         radius: 5,
                         color: Colors.blue,
-                      ),
+                        ),
+                    ],
+                    
                   ],
                   CircleMarker(
                     point: tracking.perpendicularIntersect(vehicle).latLng,
                     radius: 5,
-                    color: Colors.grey,
+                    color: Colors.red,
                   ),
                 ],
               ),

@@ -45,6 +45,7 @@ final class StanleyPathTracking extends PathTracking {
     super.interpolationDistance,
     super.loopMode,
     super.name,
+    super.uuid,
   });
 
   @override

@@ -1207,7 +1207,7 @@ final aBSnapToClosestLineProvider =
 
 typedef _$ABSnapToClosestLine = Notifier<bool>;
 String _$configuredABTrackingHash() =>
-    r'f2dff15a17710b34a74afd35011dd114cbfa76fc';
+    r'721cb82ab8e73539c8ebae597b83cfb22e5d60c5';
 
 /// A provider for the currently configured [ABTracking].
 ///

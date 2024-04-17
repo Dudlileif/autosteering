@@ -507,9 +507,7 @@ class _CreateFieldButton extends ConsumerWidget {
     return MenuItemButton(
       leadingIcon: const Padding(
         padding: EdgeInsets.only(left: 8),
-        child: Stack(
-          children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
-        ),
+        child: Icon(Icons.voicemail),
       ),
       closeOnActivate: false,
       onPressed: () {

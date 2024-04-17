@@ -69,9 +69,7 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
           ref
             ..invalidate(configuredABTrackingProvider)
             ..invalidate(displayABTrackingProvider);
-          ref.read(activeWorkSessionProvider.notifier).update(
-                ref.read(activeWorkSessionProvider)?..pathTracking = next,
-              );
+          ref.read(activeWorkSessionProvider.notifier).updatePathTracking(next);
         }
         sendToSim();
       }
@@ -79,18 +77,18 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
 
     final wayPoints = ref.watch(pathTrackingPointsProvider);
     if (wayPoints != null) {
-      return switch (ref.watch(
+      return switch (ref.read(
         mainVehicleProvider.select((vehicle) => vehicle.pathTrackingMode),
       )) {
         PathTrackingMode.purePursuit => PurePursuitPathTracking(
             wayPoints: wayPoints,
-            interpolationDistance: ref.watch(pathInterpolationDistanceProvider),
-            loopMode: ref.watch(pathTrackingLoopProvider),
+            interpolationDistance: ref.read(pathInterpolationDistanceProvider),
+            loopMode: ref.read(pathTrackingLoopProvider),
           ),
         PathTrackingMode.stanley => StanleyPathTracking(
             wayPoints: wayPoints,
-            interpolationDistance: ref.watch(pathInterpolationDistanceProvider),
-            loopMode: ref.watch(pathTrackingLoopProvider),
+            interpolationDistance: ref.read(pathInterpolationDistanceProvider),
+            loopMode: ref.read(pathTrackingLoopProvider),
           )
       };
     }
@@ -145,7 +143,14 @@ class PathTrackingLoop extends _$PathTrackingLoop {
 @Riverpod(keepAlive: true)
 class DisplayPathTracking extends _$DisplayPathTracking {
   @override
-  PathTracking? build() => null;
+  PathTracking? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null) {
+        ref.read(activeWorkSessionProvider.notifier).updatePathTracking(next);
+      }
+    });
+    return null;
+  }
 
   /// Update the [state] to [pathTracking].
   void update(PathTracking? pathTracking) => Future(() => state = pathTracking);
@@ -174,6 +179,19 @@ class ShowPathTracking extends _$ShowPathTracking {
   void update({required bool value}) => Future(() => state = value);
 
   /// Invert the current state.
+  void toggle() => Future(() => state != state);
+}
+
+/// Whether the path tracking debug features should show.
+@Riverpod(keepAlive: true)
+class DebugPathTracking extends _$DebugPathTracking {
+  @override
+  bool build() => false;
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
   void toggle() => Future(() => state != state);
 }
 

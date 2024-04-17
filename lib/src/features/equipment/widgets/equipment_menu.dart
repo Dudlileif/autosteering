@@ -104,7 +104,7 @@ class EquipmentMenu extends StatelessWidget {
         ),
         Consumer(
           child: Text(
-            'Clear painted area',
+            'Clear worked area',
             style: textStyle,
           ),
           builder: (context, ref, child) => MenuItemButton(

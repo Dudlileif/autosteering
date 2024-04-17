@@ -61,9 +61,51 @@ class ActiveWorkSession extends _$ActiveWorkSession {
   /// Updates [state] to [value].
   void update(WorkSession? value) => Future(() => state = value);
 
+  /// Updates the [WorkSession.title] of the [state].
+  void updateTitle(String? title) =>
+      Future(() => state = state?..title = title);
+
+  /// Updates the [WorkSession.note] of the [state].
+  void updateNote(String? note) => Future(() => state = state?..note = note);
+
+  /// Removes the [ABTracking] with [uuid] from [WorkSession.abTracking].
+  void removeABTracking(String uuid) => Future(
+        () => state = state
+          ?..abTracking = (state?.abTracking
+                ?..removeWhere((element) => element.uuid == uuid)) ??
+              [],
+      );
+
+  /// Removes the [PathTracking] with [uuid] from [WorkSession.pathTracking].
+  void removePathTracking(String uuid) => Future(
+        () {
+          final newState = state
+            ?..pathTracking.removeWhere((element) => element.uuid == uuid);
+          return state = newState;
+        },
+      );
+
   /// Updates the [WorkSession.abTracking].
-  void updateABTracking(ABTracking? tracking) =>
-      Future(() => state = state?..abTracking = tracking);
+  void updateABTracking(ABTracking tracking) => Future(() {
+        final index = state?.abTracking
+            .indexWhere((element) => element.uuid == tracking.uuid);
+        if (index != null && index >= 0) {
+          return state = state
+            ?..abTracking.replaceRange(index, index + 1, [tracking]);
+        }
+        return state = state?..abTracking.add(tracking);
+      });
+
+  /// Updates the [WorkSession.pathTracking].
+  void updatePathTracking(PathTracking tracking) => Future(() {
+        final index = state?.pathTracking
+            .indexWhere((element) => element.uuid == tracking.uuid);
+        if (index != null && index >= 0) {
+          return state = state
+            ?..pathTracking.replaceRange(index, index + 1, [tracking]);
+        }
+        return state = state?..pathTracking.add(tracking);
+      });
 
   /// Updates the [WorkSession.workedPaths].
   void updateEquipmentPaths(
@@ -82,6 +124,15 @@ class ActiveWorkSession extends _$ActiveWorkSession {
           state = state?..workedPaths = {equipmentUuid: paths};
         }
       });
+
+  // Always update as the state is complex and any change to it is usually
+  /// different to the previous state.
+  @override
+  bool updateShouldNotify(
+    WorkSession? previous,
+    WorkSession? next,
+  ) =>
+      true;
 }
 
 /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
@@ -111,15 +162,17 @@ FutureOr<void> saveWorkSession(
   WorkSession workSession, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async => await ref.watch(
-    saveJsonToFileDirectoryProvider(
-      object: workSession,
-      fileName:
-          overrideName ?? workSession.title ?? DateTime.now().toIso8601String(),
-      folder: 'work_sessions',
-      downloadIfWeb: downloadIfWeb,
-    ).future,
-  );
+}) async =>
+    await ref.watch(
+      saveJsonToFileDirectoryProvider(
+        object: workSession,
+        fileName: overrideName ??
+            workSession.title ??
+            DateTime.now().toIso8601String(),
+        folder: 'work_sessions',
+        downloadIfWeb: downloadIfWeb,
+      ).future,
+    );
 
 /// A provider for exporting [workSession] to a file.
 ///
@@ -219,10 +272,6 @@ FutureOr<WorkSession?> importWorkSession(
     ref
       ..read(activeWorkSessionProvider.notifier).update(workSession)
       ..read(activeFieldProvider.notifier).update(workSession.field)
-      ..read(configuredABTrackingProvider.notifier)
-          .update(workSession.abTracking)
-      ..read(configuredPathTrackingProvider.notifier)
-          .update(workSession.pathTracking)
       ..read(configuredEquipmentSetupProvider.notifier)
           .update(workSession.equipmentSetup);
     if (workSession.equipmentSetup != null) {
@@ -233,11 +282,6 @@ FutureOr<WorkSession?> importWorkSession(
               ref.watch(mainVehicleProvider.select((value) => value.uuid))
         ),
       );
-    }
-    if (workSession.abTracking != null) {
-      ref
-          .read(currentABTrackingTypeProvider.notifier)
-          .update(workSession.abTracking!.type);
     }
     if (workSession.workedPaths != null) {
       workSession.workedPaths!.forEach((equipmentUuid, paths) {

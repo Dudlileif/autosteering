@@ -23,7 +23,6 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
-import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -120,7 +119,7 @@ class ABTurnOffsetMinSkips extends _$ABTurnOffsetMinSkips {
 @Riverpod(keepAlive: true)
 class ABTrackingLimitMode extends _$ABTrackingLimitMode {
   @override
-  ABLimitMode build() => ABLimitMode.limitedTurnOutside;
+  ABLimitMode build() => ABLimitMode.unlimited;
 
   /// Updates [state] to [value].
   void update(ABLimitMode value) => Future(() => state = value);
@@ -163,10 +162,8 @@ class ConfiguredABTracking extends _$ConfiguredABTracking {
         if (next != null) {
           ref
             ..invalidate(configuredPathTrackingProvider)
-            ..invalidate(displayPathTrackingProvider);
-          ref
-              .read(activeWorkSessionProvider.notifier)
-              .update(ref.read(activeWorkSessionProvider)?..abTracking = next);
+            ..invalidate(displayPathTrackingProvider)
+            ..read(activeWorkSessionProvider.notifier).updateABTracking(next);
         }
         sendToSim();
       }
@@ -211,10 +208,7 @@ class DisplayABTracking extends _$DisplayABTracking {
   @override
   ABTracking? build() {
     ref.listenSelf((previous, next) {
-      if (next != null &&
-          previous != null &&
-          !const DeepCollectionEquality.unordered()
-              .equals(next.finishedOffsets, previous.finishedOffsets)) {
+      if (next != null) {
           ref.read(activeWorkSessionProvider.notifier).updateABTracking(next);
       }
     });

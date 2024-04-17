@@ -99,9 +99,12 @@ class GuidanceMenu extends ConsumerWidget {
               child: Icon(Icons.clear),
             ),
             onPressed: () {
-              ref.read(simInputProvider.notifier).send((abTracking: null));
-              ref.read(simInputProvider.notifier).send((pathTracking: null));
-              ref.invalidate(configuredABTrackingProvider);
+              ref
+                ..read(simInputProvider.notifier).send((abTracking: null))
+                ..read(simInputProvider.notifier).send((pathTracking: null))
+                ..invalidate(configuredABTrackingProvider)
+                ..invalidate(configuredPathTrackingProvider)
+                ..invalidate(pathTrackingPointsProvider);
             },
             closeOnActivate: false,
             child: Text(
@@ -318,14 +321,7 @@ class _LoadABTrackingMenu extends ConsumerWidget {
                       )
                     : null,
                 title: Text(abTracking.name ?? 'No name', style: textStyle),
-                subtitle: Text(
-                  switch (abTracking.runtimeType) {
-                    APlusLine => 'A+ line',
-                    ABLine => 'AB line',
-                    ABCurve => 'AB curve',
-                    _ => 'Unknown',
-                  },
-                ),
+                subtitle: Text(abTracking.type.name),
               ),
             ),
           )

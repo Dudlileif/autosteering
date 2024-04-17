@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
+import 'package:uuid/uuid.dart';
 
 export 'pure_pursuit/pure_pursuit_parameters.dart';
 export 'stanley_path_tracking/stanley_parameters.dart';
@@ -83,7 +84,8 @@ sealed class PathTracking {
     this.interpolationDistance = 4,
     this.loopMode = PathTrackingLoopMode.none,
     this.name,
-  }) {
+    String? uuid,
+  }) : uuid = uuid ?? const Uuid().v4() {
     interPolateWayPoints();
   }
 
@@ -101,16 +103,20 @@ sealed class PathTracking {
           interpolationDistance: interpolationDistance,
           loopMode: loopMode,
           name: json['name'] as String?,
+          uuid: json['uuid'] as String?,
         ),
       PathTrackingMode.stanley => StanleyPathTracking(
           wayPoints: wayPoints,
           interpolationDistance: interpolationDistance,
           loopMode: loopMode,
           name: json['name'] as String?,
+          uuid: json['uuid'] as String?,
         ),
     };
   }
 
+/// The unique identifier for this.
+  final String uuid;
   /// Name or description of this.
   String? name;
 
@@ -374,6 +380,7 @@ sealed class PathTracking {
         'loop_mode': loopMode,
         'interpolation_distance': interpolationDistance,
         'name': name,
+        'uuid': uuid,
       };
 }
 

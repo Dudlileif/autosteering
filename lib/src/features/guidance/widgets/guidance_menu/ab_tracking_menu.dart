@@ -71,20 +71,14 @@ class ABTrackingMenu extends ConsumerWidget {
             isSelected: ABTrackingType.values
                 .map((type) => type == abTrackingType)
                 .toList(),
-            children: const [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('A+ line'),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('AB line'),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('AB curve'),
-              ),
-            ],
+              children: ABTrackingType.values
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(e.name),
+                    ),
+                  )
+                  .toList(),
           ),
         ),
         if (!workSessionGuidanceActive &&

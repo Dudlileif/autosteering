@@ -40,6 +40,7 @@ class APlusLine extends ABTracking {
     super.snapToClosestLine,
     super.calculateLinesOnCreation,
     super.name,
+    super.uuid,
   }) : super(
           baseLine: [
             start,
@@ -62,6 +63,7 @@ class APlusLine extends ABTracking {
     Iterable<int>? offsetsInsideBoundary,
     super.calculateLinesOnCreation = false,
     super.name,
+    super.uuid,
   }) : super(type: ABTrackingType.aPlusLine) {
     this.lines.addAll(lines ?? {});
     this.finishedOffsets.addAll(finishedOffsets ?? []);
@@ -136,7 +138,4 @@ class APlusLine extends ABTracking {
     );
   }
 
-  /// Creates a json compatible structure of the object.
-  @override
-  Map<String, dynamic> toJson() => super.toJson()..['type'] = 'A+ Line';
 }

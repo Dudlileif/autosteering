@@ -978,7 +978,7 @@ final equipmentRecordPositionFractionProvider =
 );
 
 typedef _$EquipmentRecordPositionFraction = Notifier<double>;
-String _$allEquipmentsHash() => r'65b3d956c66655df7ef07a853d60a09c4ab4b6c2';
+String _$allEquipmentsHash() => r'921764dc5d2f76c6d6e63838370e50e1a4884e07';
 
 /// A provider that holds all of the equipments.
 ///
@@ -997,7 +997,7 @@ final allEquipmentsProvider =
 
 typedef _$AllEquipments = Notifier<Map<String, Equipment>>;
 String _$equipmentWorkedAreaHash() =>
-    r'6d49c8af50551325dcb921727a00a8d114a1a90e';
+    r'64fa5bf5976884164bb0c37ed91afc0be24c9ebe';
 
 /// A provider for keeping the worked area for each equipment.
 ///
@@ -1015,7 +1015,7 @@ final equipmentWorkedAreaProvider =
 );
 
 typedef _$EquipmentWorkedArea = Notifier<Map<String, double>>;
-String _$equipmentPathsHash() => r'5f24c4f4ff586c00dd721985589fe75d129c91ec';
+String _$equipmentPathsHash() => r'f8489b1f4c5821f7ec18bdeca3c3a856ef94e739';
 
 abstract class _$EquipmentPaths
     extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {

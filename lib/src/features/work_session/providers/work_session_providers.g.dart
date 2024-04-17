@@ -927,7 +927,7 @@ class _DeleteWorkSessionProviderElement
       (origin as DeleteWorkSessionProvider).overrideName;
 }
 
-String _$importWorkSessionHash() => r'e392a0302e2f823eca486303eda76bd4ff08c6ba';
+String _$importWorkSessionHash() => r'fb4b9ae88bdb436a24738b97811bce42920424cb';
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
@@ -946,7 +946,7 @@ final importWorkSessionProvider =
 );
 
 typedef ImportWorkSessionRef = AutoDisposeFutureProviderRef<WorkSession?>;
-String _$activeWorkSessionHash() => r'fe0d8202669c19c1f7d57d17dc1995d2173e1f84';
+String _$activeWorkSessionHash() => r'117e929941db2e2b41a358ef7d289215312d49c0';
 
 /// A provider for holding the active [WorkSession].
 ///
