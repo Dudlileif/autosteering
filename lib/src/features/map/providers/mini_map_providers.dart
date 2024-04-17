@@ -133,9 +133,7 @@ class MiniMapLockToField extends _$MiniMapLockToField {
     final field = ref.watch(activeFieldProvider);
     if (field != null) {
       final mapController = ref.watch(miniMapControllerProvider);
-      final bbox = ref.watch(miniMapAlwaysPointNorthProvider)
-          ? field.squaredByDiagonalBoundingBox
-          : field.rotationCenteredSquaredByDiagonalBoundingBox;
+      final bbox = field.rotationCenteredSquaredByDiagonalBoundingBox;
       if (bbox != null) {
         final rotation = mapController.camera.rotation;
         mapController

@@ -82,6 +82,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const EquipmentWorkedAreaGauge(),
                         const BasicVehicleGauges(),
                         const Divider(),
                         if (ref.watch(

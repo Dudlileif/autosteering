@@ -34,6 +34,7 @@ class BasicVehicleGauges extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+      
         Consumer(
           builder: (context, ref, child) => ListTile(
             leading: const Icon(
@@ -46,7 +47,8 @@ class BasicVehicleGauges extends StatelessWidget {
               ..invalidate(debugTravelledPathListProvider),
             title: TextWithStroke(
               '''${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1)} m''',
-              style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: Colors.white, fontFamily: 'Noto Sans Mono'),
               strokeWidth: 3.5,
             ),
             subtitle: TextWithStroke(

@@ -978,7 +978,7 @@ final equipmentRecordPositionFractionProvider =
 );
 
 typedef _$EquipmentRecordPositionFraction = Notifier<double>;
-String _$allEquipmentsHash() => r'5aa3495beb4d61db59289a3c12e4b6c110d6249d';
+String _$allEquipmentsHash() => r'65b3d956c66655df7ef07a853d60a09c4ab4b6c2';
 
 /// A provider that holds all of the equipments.
 ///
@@ -996,7 +996,26 @@ final allEquipmentsProvider =
 );
 
 typedef _$AllEquipments = Notifier<Map<String, Equipment>>;
-String _$equipmentPathsHash() => r'e7d3bd127483b2c8712678b03aea1823333e7802';
+String _$equipmentWorkedAreaHash() =>
+    r'6d49c8af50551325dcb921727a00a8d114a1a90e';
+
+/// A provider for keeping the worked area for each equipment.
+///
+/// Copied from [EquipmentWorkedArea].
+@ProviderFor(EquipmentWorkedArea)
+final equipmentWorkedAreaProvider =
+    NotifierProvider<EquipmentWorkedArea, Map<String, double>>.internal(
+  EquipmentWorkedArea.new,
+  name: r'equipmentWorkedAreaProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$equipmentWorkedAreaHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$EquipmentWorkedArea = Notifier<Map<String, double>>;
+String _$equipmentPathsHash() => r'5f24c4f4ff586c00dd721985589fe75d129c91ec';
 
 abstract class _$EquipmentPaths
     extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {

@@ -720,6 +720,16 @@ class Equipment extends Hitchable with EquatableMixin {
     );
   }
 
+  /// A map of all the section indexes and their [SectionEdgePositions] if they
+  /// are active, or null if they're not.
+  Map<int, SectionEdgePositions?> activeEdgePositions({double fraction = 0}) =>
+      {
+        for (final element in sections)
+          element.index: element.active
+              ? sectionEdgePositions(element.index, fraction: fraction)
+              : null,
+      };
+
   /// The center point of the given [section].
   Geographic sectionCenter(int section) {
     final points = sectionPoints(section);
@@ -775,8 +785,8 @@ class Equipment extends Hitchable with EquatableMixin {
       isFilled: section.active,
       borderColor: switch (section.workingWidth > 0) {
         true => switch (section.active) {
-        true => section.color?.brighten(30) ?? Colors.greenAccent,
-        false => Colors.grey,
+            true => section.color?.brighten(30) ?? Colors.greenAccent,
+            false => Colors.grey,
           },
         false => Colors.transparent,
       },
@@ -860,108 +870,108 @@ class Equipment extends Hitchable with EquatableMixin {
           ),
         ],
         ...switch (hitchType) {
-        HitchType.towbar => [
-            map.Polygon(
-              borderStrokeWidth: 3,
-              isFilled: true,
-              color: Colors.grey.shade800,
-              borderColor: Colors.black,
-              points: [
-                position.rhumb
-                    .destinationPoint(
-                      distance: 0.05,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-                drawbarEnd.rhumb
-                    .destinationPoint(
-                      distance: 0.05,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-                drawbarEnd.rhumb
-                    .destinationPoint(
-                      distance: 0.05,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-                position.rhumb
-                    .destinationPoint(
-                      distance: 0.05,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-              ],
-            ),
-          ],
-        HitchType.fixed => [
-            // Left hitch bar
-            map.Polygon(
-              borderStrokeWidth: 3,
-              isFilled: true,
-              color: Colors.grey.shade800,
-              borderColor: Colors.black,
-              points: [
-                position.rhumb
-                    .destinationPoint(
-                      distance: 0.35,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-                drawbarEnd.rhumb
-                    .destinationPoint(
-                      distance: 0.35,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-                drawbarEnd.rhumb
-                    .destinationPoint(
-                      distance: 0.3,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-                position.rhumb
-                    .destinationPoint(
-                      distance: 0.3,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-              ],
-            ),
-            // Right hitch bar
-            map.Polygon(
-              borderStrokeWidth: 3,
-              isFilled: true,
-              color: Colors.grey.shade800,
-              borderColor: Colors.black,
-              points: [
-                position.rhumb
-                    .destinationPoint(
-                      distance: 0.35,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-                drawbarEnd.rhumb
-                    .destinationPoint(
-                      distance: 0.35,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-                drawbarEnd.rhumb
-                    .destinationPoint(
-                      distance: 0.3,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-                position.rhumb
-                    .destinationPoint(
-                      distance: 0.3,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-              ],
-            ),
-          ]
+          HitchType.towbar => [
+              map.Polygon(
+                borderStrokeWidth: 3,
+                isFilled: true,
+                color: Colors.grey.shade800,
+                borderColor: Colors.black,
+                points: [
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.05,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.05,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.05,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.05,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                ],
+              ),
+            ],
+          HitchType.fixed => [
+              // Left hitch bar
+              map.Polygon(
+                borderStrokeWidth: 3,
+                isFilled: true,
+                color: Colors.grey.shade800,
+                borderColor: Colors.black,
+                points: [
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.35,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.35,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.3,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.3,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                ],
+              ),
+              // Right hitch bar
+              map.Polygon(
+                borderStrokeWidth: 3,
+                isFilled: true,
+                color: Colors.grey.shade800,
+                borderColor: Colors.black,
+                points: [
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.35,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.35,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.3,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.3,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                ],
+              ),
+            ]
         },
       ];
 

@@ -108,13 +108,57 @@ class AllEquipments extends _$AllEquipments {
         for (final equipment in state.values) {
           ref.read(equipmentPathsProvider(equipment.uuid).notifier).clear();
         }
+        ref.read(equipmentWorkedAreaProvider.notifier).clear();
       });
+}
+
+/// A provider for keeping the worked area for each equipment.
+@Riverpod(keepAlive: true)
+class EquipmentWorkedArea extends _$EquipmentWorkedArea {
+  @override
+  Map<String, double> build() {
+    return {};
+  }
+
+  /// Increments the value of the [state] with key [uuid] by [increment].
+  void increment(String uuid, double increment) => Future(
+        () => state = state
+          ..update(
+            uuid,
+            (prev) => prev + increment,
+            ifAbsent: () => increment,
+          ),
+      );
+
+  /// Updates the value of the [state] with key [uuid] to [value].
+  void updateValue(String uuid, double value) => Future(
+        () =>
+            state = state..update(uuid, (prev) => value, ifAbsent: () => value),
+      );
+
+  /// Sets the [state] to [value].
+  void set(Map<String, double> value) => Future(() => state = value);
+
+  /// Clears the [state].
+  void clear() => Future(() => state = {});
+
+  /// Always update as the state is complex and any change to it is usually
+  /// different to the previous state.
+  @override
+  bool updateShouldNotify(
+    Map<String, double> previous,
+    Map<String, double> next,
+  ) =>
+      true;
 }
 
 /// A provider for tracking the worked paths for the given equipment [uuid].
 @Riverpod(keepAlive: true)
 class EquipmentPaths extends _$EquipmentPaths {
   var _prevSectionActivationStatus = <bool>[];
+  Map<int, SectionEdgePositions?> _lastActivePositions = {};
+
+  double _coveredArea = 0;
 
   @override
   List<Map<int, List<SectionEdgePositions>?>> build(String uuid) {
@@ -132,6 +176,8 @@ class EquipmentPaths extends _$EquipmentPaths {
         if (equipment.sections.isNotEmpty) {
           final recordFraction =
               ref.watch(equipmentRecordPositionFractionProvider);
+          final positions =
+              equipment.activeEdgePositions(fraction: recordFraction);
           if (!equipment.sectionActivationStatus
                   .equals(_prevSectionActivationStatus) ||
               state.isEmpty) {
@@ -140,27 +186,19 @@ class EquipmentPaths extends _$EquipmentPaths {
             _addPointsIfDeactivation(equipment);
 
             final points = equipment.sectionActivationStatus.mapIndexed(
-              (section, active) {
-                return active &&
-                        (_prevSectionActivationStatus
-                                .elementAtOrNull(section) ??
-                            false)
-                    ? [
-                        state.lastOrNull?[section]?.lastOrNull ??
-                            equipment.sectionEdgePositions(
-                              section,
-                              fraction: recordFraction,
-                            ),
-                      ]
-                    : active
-                        ? [
-                            equipment.sectionEdgePositions(
-                              section,
-                              fraction: recordFraction,
-                            ),
-                          ]
-                        : null;
-              },
+              (section, active) => active &&
+                      (_prevSectionActivationStatus.elementAtOrNull(section) ??
+                          false)
+                  ? [
+                      state.lastOrNull?[section]?.lastOrNull ??
+                          equipment.sectionEdgePositions(
+                            section,
+                            fraction: recordFraction,
+                          ),
+                    ]
+                  : positions[section] != null
+                      ? [positions[section]!]
+                      : null,
             );
 
             final sectionLines =
@@ -174,26 +212,47 @@ class EquipmentPaths extends _$EquipmentPaths {
 
           // Continuation
           else {
-            final positions = List.generate(
-              _prevSectionActivationStatus.length,
-              (section) => equipment.sectionEdgePositions(
-                section,
-                fraction: recordFraction,
-              ),
-            );
             final addNext = positions
-                .mapIndexed(
-                  (section, position) => shouldAddNext(position, section),
+                .map(
+                  (section, position) => MapEntry(
+                    section,
+                    position != null && shouldAddNext(position, section),
+                  ),
                 )
+                .values
                 .reduce((value, element) => value || element);
 
             if (addNext) {
               state = state
                 ..last.updateAll(
-                  (key, value) => value?..add(positions[key]),
+                  (section, value) {
+                    if (positions[section] != null) {
+                      return value?..add(positions[section]!);
+                    }
+                    return null;
+                  },
                 );
             }
           }
+          // Update covered working area
+          if (_lastActivePositions.values.any((element) => element != null)) {
+            _lastActivePositions.forEach((section, prevPos) {
+              if (prevPos != null && positions[section] != null) {
+                _coveredArea += Polygon.from([
+                  [
+                    prevPos.left,
+                    prevPos.right,
+                    positions[section]!.right,
+                    positions[section]!.left,
+                  ]
+                ]).area;
+              }
+            });
+            ref
+                .read(equipmentWorkedAreaProvider.notifier)
+                .updateValue(uuid, _coveredArea);
+          }
+          _lastActivePositions = positions;
         }
       });
 
@@ -263,12 +322,44 @@ class EquipmentPaths extends _$EquipmentPaths {
   }
 
   /// Clears all the painted areas for the equipment.
-  void clear() => Future(() => state = []);
+  void clear() => Future(() {
+        _coveredArea = 0;
+        ref.read(equipmentWorkedAreaProvider.notifier).updateValue(uuid, 0);
+        return state = [];
+      });
 
   /// Sets the [state] to [value].
-  void set(List<Map<int, List<SectionEdgePositions>?>> value) =>
-      Future(() => state = value);
-  
+  void set(List<Map<int, List<SectionEdgePositions>?>> value) => Future(() {
+        _coveredArea = 0;
+        for (final activation in value) {
+          activation.forEach((section, path) {
+            if (path != null && path.length >= 2) {
+              SectionEdgePositions? prevPos;
+              _coveredArea += path.fold(0, (previousValue, pos) {
+                var increment = 0.0;
+                if (prevPos != null) {
+                  increment = Polygon.from([
+                    [
+                      prevPos!.left,
+                      prevPos!.right,
+                      pos.right,
+                      pos.left,
+                    ]
+                  ]).area;
+                }
+                prevPos = pos;
+                return previousValue + increment;
+              });
+            }
+          });
+        }
+
+        ref
+            .read(equipmentWorkedAreaProvider.notifier)
+            .updateValue(uuid, _coveredArea);
+        return state = value;
+      });
+
   /// Always update as the state is complex and any change to it is usually
   /// different to the previous state.
   @override

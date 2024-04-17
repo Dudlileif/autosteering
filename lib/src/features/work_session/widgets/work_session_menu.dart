@@ -61,10 +61,10 @@ class WorkSessionMenu extends ConsumerWidget {
                 ..invalidate(activeWorkSessionProvider)
                 ..read(activeFieldProvider.notifier).update(null)
                 ..read(configuredABTrackingProvider.notifier).update(null)
+                ..read(allEquipmentsProvider.notifier).clearPaintedArea()
                 ..invalidate(aBPointAProvider)
                 ..invalidate(aBPointBProvider)
                 ..invalidate(aBCurvePointsProvider)
-                ..invalidate(equipmentPathsProvider)
                 ..read(configuredPathTrackingProvider.notifier).update(null);
             },
             child: Text('Close', style: textStyle),
