@@ -39,11 +39,31 @@ class HomePositionMenu extends StatelessWidget {
             builder: (context, ref, child) {
               final position = ref.watch(homePositionProvider);
 
-              return SelectableText(
-                '''
-Lat: ${position.latitude.toStringAsFixed(9).padLeft(14)}°
-Lon: ${position.longitude.toStringAsFixed(9).padLeft(14)}°''',
-                style: textStyle?.copyWith(fontFamily: 'Monospace'),
+              return SelectableText.rich(
+                TextSpan(
+                  text: 'Lat:',
+                  style: textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                  children: [
+                    TextSpan(
+                      text:
+                          '''${position.latitude.toStringAsFixed(9).padLeft(14)}°''',
+                      style: textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                    ),
+                    TextSpan(
+                      text: '\nLon:',
+                      style: textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                      children: [
+                        TextSpan(
+                          text:
+                              '''${position.longitude.toStringAsFixed(9).padLeft(14)}°''',
+                          style: textStyle?.copyWith(
+                            fontFamily: 'Noto Sans Mono',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               );
             },
           ),

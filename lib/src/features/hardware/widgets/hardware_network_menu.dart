@@ -24,13 +24,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu for changing network settings to connect to the hardware.
-class HardwareNetworkMenu extends ConsumerWidget {
+class HardwareNetworkMenu extends StatelessWidget {
   /// A menu for changing network settings to connect to the hardware.
   const HardwareNetworkMenu({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textStyle = theme.menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Network',
       icon: Icons.settings_ethernet,
@@ -101,75 +102,124 @@ $ip''',
             ],
           ),
           title: Consumer(
-            builder: (context, ref, child) => TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Hardware Address',
-              ),
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) => value != null &&
-                      (ref.watch(validInternetAddressProvider(value)).value ??
-                          false)
-                  ? 'Valid IP found'
-                  : 'No IP found',
-              initialValue: ref.watch(hardwareAddressProvider),
-              onChanged: ref.read(hardwareAddressProvider.notifier).update,
-            ),
+            builder: (context, ref, child) {
+              final controller = TextEditingController(
+                text: ref.read(hardwareAddressProvider),
+              );
+              return TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Hardware Address',
+                  error: SizedBox(
+                    height: 16,
+                    child: Column(
+                      children: [
+                        ListenableBuilder(
+                          listenable: controller,
+                          builder: (context, child) => Consumer(
+                            builder: (context, ref, child) => ref
+                                .watch(
+                                  validInternetAddressProvider(controller.text),
+                                )
+                                .when(
+                                  data: (data) => data
+                                      ? Text(
+                                          'Valid IP found',
+                                          style: theme.textTheme.bodySmall
+                                              ?.copyWith(
+                                            color: Colors.green.shade600,
+                                          ),
+                                        )
+                                      : Text(
+                                          'No valid IP found',
+                                          style: theme.textTheme.bodySmall
+                                              ?.copyWith(
+                                            color: theme.colorScheme.error,
+                                          ),
+                                        ),
+                                  error: (error, stackTrace) => Text(
+                                    'No valid IP found',
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.error,
+                                    ),
+                                  ),
+                                  loading: LinearProgressIndicator.new,
+                                ),
+                          ),
+                        ),
+                        const Expanded(child: SizedBox.shrink()),
+                      ],
+                    ),
+                  ),
+                ),
+                controller: controller,
+                onChanged: ref.read(hardwareAddressProvider.notifier).update,
+              );
+            },
           ),
         ),
         if (Device.isNative)
           Consumer(
-            builder: (context, ref, child) => ListTile(
-              leading: const Icon(Icons.call_received),
-              title: TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Receive port',
-                  labelStyle: textStyle,
-                  floatingLabelStyle: textStyle,
-                ),
-                keyboardType: TextInputType.number,
-                maxLength: 5,
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  final port = value != null ? int.tryParse(value) : null;
+            builder: (context, ref, child) {
+              final controller = TextEditingController(
+                text: ref.read(hardwareUDPReceivePortProvider).toString(),
+              );
+              return ListTile(
+                leading: const Icon(Icons.call_received),
+                title: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Receive port',
+                    labelStyle: textStyle,
+                    floatingLabelStyle: textStyle,
+                  ),
+                  keyboardType: TextInputType.number,
+                  maxLength: 5,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    final port = value != null ? int.tryParse(value) : null;
 
-                  return port != null && port >= 1000 && port <= 65535
-                      ? 'Valid Port'
-                      : 'Invalid Port';
-                },
-                initialValue:
-                    ref.watch(hardwareUDPReceivePortProvider).toString(),
-                onChanged: ref
-                    .read(hardwareUDPReceivePortProvider.notifier)
-                    .updateFromString,
-              ),
-            ),
+                    return port != null && port >= 1000 && port <= 65535
+                        ? 'Valid Port'
+                        : 'Invalid Port';
+                  },
+                  controller: controller,
+                  onChanged: ref
+                      .read(hardwareUDPReceivePortProvider.notifier)
+                      .updateFromString,
+                ),
+              );
+            },
           ),
         if (Device.isNative)
           Consumer(
-            builder: (context, ref, child) => ListTile(
-              leading: const Icon(Icons.send),
-              title: TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Send port',
-                ),
-                keyboardType: TextInputType.number,
-                maxLength: 5,
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  final port = value != null ? int.tryParse(value) : null;
+            builder: (context, ref, child) {
+              final controller = TextEditingController(
+                text: ref.read(hardwareUDPSendPortProvider).toString(),
+              );
+              return ListTile(
+                leading: const Icon(Icons.send),
+                title: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Send port',
+                  ),
+                  keyboardType: TextInputType.number,
+                  maxLength: 5,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    final port = value != null ? int.tryParse(value) : null;
 
-                  return port != null && port >= 1000 && port <= 65535
-                      ? 'Valid Port'
-                      : 'Invalid Port';
-                },
-                initialValue: ref.watch(hardwareUDPSendPortProvider).toString(),
-                onChanged: ref
-                    .read(hardwareUDPSendPortProvider.notifier)
-                    .updateFromString,
-              ),
-            ),
+                    return port != null && port >= 1000 && port <= 65535
+                        ? 'Valid Port'
+                        : 'Invalid Port';
+                  },
+                  controller: controller,
+                  onChanged: ref
+                      .read(hardwareUDPSendPortProvider.notifier)
+                      .updateFromString,
+                ),
+              );
+            },
           ),
       ],
     );

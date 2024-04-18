@@ -27,7 +27,7 @@ final pathTrackingPerpendicularDistanceProvider =
 
 typedef PathTrackingPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
 String _$loadPathTrackingFromFileHash() =>
-    r'8ff45da02088e80a797fec76b4a81acd4cb78ce5';
+    r'be456a58dd91cd51413f56ed289d82119233662e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -978,7 +978,7 @@ class _DeletePathTrackingProviderElement
 }
 
 String _$importPathTrackingHash() =>
-    r'cb435d37531bdacf5ddf1758001278f192881127';
+    r'a8be30fa6266eaa6e043d994d1e158353dc1385f';
 
 /// A provider for importing a [PathTracking] from a file and applying it to
 /// the [ConfiguredPathTracking] provider.
@@ -1036,7 +1036,7 @@ final pathTrackingPointsProvider =
 
 typedef _$PathTrackingPoints = Notifier<List<WayPoint>?>;
 String _$configuredPathTrackingHash() =>
-    r'f9ab9877136ad8d8e45fd3a56f2e934d23d07371';
+    r'67f9e8adefe4b2ff7cc49ae6c2db29251d89d587';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.
@@ -1095,7 +1095,7 @@ final pathTrackingLoopProvider =
 
 typedef _$PathTrackingLoop = Notifier<PathTrackingLoopMode>;
 String _$displayPathTrackingHash() =>
-    r'440a5082ac278976f00104bd84d764d94b43f785';
+    r'e7975c05e94f5a05718849e81357757707c67352';
 
 /// A provider for the activated [ConfiguredPathTracking] model, typically
 /// recieved and updated from the simulator.

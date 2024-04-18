@@ -119,9 +119,9 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
       }
     }
 
-    final age = nmea?.timeSinceLastDGPSUpdate;
+    final age = nmea?.ageOfDifferentialData;
     if (age != null) {
-      textLines.add('Age: ${age.toStringAsFixed(1)} s');
+      textLines.add('Diff age: ${age.toStringAsFixed(1)} s');
     }
     textLines.add(
       '${ref.watch(gnssCurrentFrequencyProvider)?.toStringAsFixed(1)} Hz',

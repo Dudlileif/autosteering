@@ -432,7 +432,7 @@ class _DirectoryDeleteProviderElement
 }
 
 String _$saveJsonToFileDirectoryHash() =>
-    r'f4787147bf67151da720df31581f3bb98e3708f3';
+    r'82d5048a19929d130269b8ed2899a80850a9caf9';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -697,7 +697,7 @@ class _SaveJsonToFileDirectoryProviderElement
 }
 
 String _$exportJsonToFileDirectoryHash() =>
-    r'2079acce8336ab86fb9d4eb71342b6fc316d5d8c';
+    r'ba9065f8e3b86a283b70e7cfc459c530dc0c4392';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -962,7 +962,7 @@ class _ExportJsonToFileDirectoryProviderElement
       (origin as ExportJsonToFileDirectoryProvider).downloadIfWeb;
 }
 
-String _$savedFilesHash() => r'29257e61ea32a5d9ba85c93e1ee7b44dc9258b86';
+String _$savedFilesHash() => r'778875525d9d2aa1e377bd52cbbd1278f91b702a';
 
 /// A provider for reading and holding all the saved objects of
 /// the given type in the in the user file directory.

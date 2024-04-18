@@ -53,6 +53,7 @@ enum SettingsKey {
   miniMapLockToField('mini_map.lock_to_field'),
   miniMapSize('mini_map.size'),
   ntripEnabled('ntrip.enabled'),
+  ntripGGASendingInterval('ntrip.gga_sending_interval'),
   ntripHost('ntrip.host'),
   ntripPort('ntrip.port'),
   ntripMountPoint('ntrip.mount_point'),

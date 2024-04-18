@@ -44,7 +44,7 @@ final activeABConfigProvider = Provider<ABConfig>.internal(
 
 typedef ActiveABConfigRef = ProviderRef<ABConfig>;
 String _$loadABTrackingFromFileHash() =>
-    r'1dca363cb2e3b838d175abbdc279f0f04af7ee01';
+    r'5c5a10841d8aa7cf0bf00cba2b71839bec099e04';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -983,7 +983,7 @@ class _DeleteABTrackingProviderElement
   bool get downloadIfWeb => (origin as DeleteABTrackingProvider).downloadIfWeb;
 }
 
-String _$importABTrackingHash() => r'0c709c771e8847bd4ccce2cdbcfdd1cf9241ab0c';
+String _$importABTrackingHash() => r'b24f24d89432558ed32c8968160926bd9844660e';
 
 /// A provider for importing an [ABTracking] from a file and applying it to
 /// the [ConfiguredABTracking] provider.
@@ -1150,7 +1150,7 @@ final aBTurnOffsetMinSkipsProvider =
 
 typedef _$ABTurnOffsetMinSkips = Notifier<int>;
 String _$aBTrackingLimitModeHash() =>
-    r'55d1f4397f68b4921c1985c25dcb3b86fdbd704e';
+    r'4b9a4b894392288254646d6d52104e80a5663da6';
 
 /// A provider for which limit mode the AB tracking should use.
 ///
@@ -1244,7 +1244,7 @@ final configuredMenuABTrackingProvider =
 );
 
 typedef _$ConfiguredMenuABTracking = Notifier<ABTracking?>;
-String _$displayABTrackingHash() => r'd526adb12f19db055bfe834bf125db5962c576fb';
+String _$displayABTrackingHash() => r'c87af4669ab69a5d1d63dbfe52b435458b6de676';
 
 /// A provider for the [ABTracking] to display.
 ///

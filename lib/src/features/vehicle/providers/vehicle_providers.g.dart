@@ -735,7 +735,7 @@ class _DeleteVehicleProviderElement
 }
 
 String _$loadVehicleFromFileHash() =>
-    r'c0fbeb362d82690b35e0b1a891ff6a8cf62848ba';
+    r'4a7b24c90bd4d07300e5f09c4ffa7cc4794ed325';
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 ///
@@ -938,7 +938,7 @@ final lastUsedVehicleProvider = Provider<AsyncValue<Vehicle>>.internal(
 );
 
 typedef LastUsedVehicleRef = ProviderRef<AsyncValue<Vehicle>>;
-String _$importVehicleHash() => r'93b6905187b08e803e3e821fe14e16469fc9b4ff';
+String _$importVehicleHash() => r'7da6fd5a2c5f77153d4f172be904f7bb36a7f4d7';
 
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.

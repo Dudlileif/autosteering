@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'b27230e8ca50288da84bd9327c89b804b39b6d79';
+String _$ntripClientHash() => r'62174ecf6356fb8e64c22ee6f4bcbb6af73ff0ca';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -167,6 +167,25 @@ final ntripPasswordProvider = NotifierProvider<NtripPassword, String?>.internal(
 );
 
 typedef _$NtripPassword = Notifier<String?>;
+String _$ntripGGASendingIntervalHash() =>
+    r'54b576c1b12b982c65a8178d52ebd633f43322f6';
+
+/// A provider for the period between sending [GGASentence]s to the caster.
+///
+/// Copied from [NtripGGASendingInterval].
+@ProviderFor(NtripGGASendingInterval)
+final ntripGGASendingIntervalProvider =
+    NotifierProvider<NtripGGASendingInterval, int?>.internal(
+  NtripGGASendingInterval.new,
+  name: r'ntripGGASendingIntervalProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ntripGGASendingIntervalHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NtripGGASendingInterval = Notifier<int?>;
 String _$ntripDataUsageSessionHash() =>
     r'fa7c2e5b463dff14668b2ba57d943472d7f80767';
 

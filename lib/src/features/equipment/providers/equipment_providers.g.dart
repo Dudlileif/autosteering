@@ -7,7 +7,7 @@ part of 'equipment_providers.dart';
 // **************************************************************************
 
 String _$loadEquipmentFromFileHash() =>
-    r'0eca5f4345ab15c23df56b50539c226711f5fab2';
+    r'54247c67cc79e90f8773473e3d870d1c79c013c1';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -921,7 +921,7 @@ class _DeleteEquipmentProviderElement
   String? get overrideName => (origin as DeleteEquipmentProvider).overrideName;
 }
 
-String _$importEquipmentHash() => r'deae076514248068df58501f42845166ca44f089';
+String _$importEquipmentHash() => r'e69319653bba183e429a3bed04cef9909b4823d0';
 
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.

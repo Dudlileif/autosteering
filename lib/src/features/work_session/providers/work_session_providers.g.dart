@@ -7,7 +7,7 @@ part of 'work_session_providers.dart';
 // **************************************************************************
 
 String _$loadWorkSessionFromFileHash() =>
-    r'f1a4fd80e89096e15452476226b3a745286c5aae';
+    r'661396b82d26e208b5a2c91f1d6bc9a89c4e34a0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -927,7 +927,7 @@ class _DeleteWorkSessionProviderElement
       (origin as DeleteWorkSessionProvider).overrideName;
 }
 
-String _$importWorkSessionHash() => r'fb4b9ae88bdb436a24738b97811bce42920424cb';
+String _$importWorkSessionHash() => r'8766dad3adf959f1ca01d2d555c8826a531fbc6a';
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
@@ -946,7 +946,7 @@ final importWorkSessionProvider =
 );
 
 typedef ImportWorkSessionRef = AutoDisposeFutureProviderRef<WorkSession?>;
-String _$activeWorkSessionHash() => r'117e929941db2e2b41a358ef7d289215312d49c0';
+String _$activeWorkSessionHash() => r'7993b860293c4a8f92ba120d0891fc2f30643a04';
 
 /// A provider for holding the active [WorkSession].
 ///

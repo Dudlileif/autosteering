@@ -120,27 +120,31 @@ class Settings extends _$Settings {
 
   /// Get the value of type [bool] for the setting [key], if it exists.
   bool? getBool(SettingsKey key) =>
-      state.containsKey(key.name) ? state[key.name] as bool : null;
+      state.containsKey(key.name) ? state[key.name] as bool? : null;
 
   /// Get the value of type [double] for the setting [key], if it exists.
   double? getDouble(SettingsKey key) =>
-      state.containsKey(key.name) ? (state[key.name] as num).toDouble() : null;
+      state.containsKey(key.name)
+      ? (state[key.name] as num?)?.toDouble()
+      : null;
 
   /// Get the value of type [int] for the setting [key], if it exists.
   int? getInt(SettingsKey key) =>
-      state.containsKey(key.name) ? state[key.name] as int : null;
+      state.containsKey(key.name) ? state[key.name] as int? : null;
 
   /// Get the value of type [String] for the setting [key], if it exists.
   String? getString(SettingsKey key) =>
-      state.containsKey(key.name) ? state[key.name] as String : null;
+      state.containsKey(key.name) ? state[key.name] as String? : null;
 
   /// Get the value of type [Map] for the setting [key], if it exists.
-  Map<String, Object?>? getMap(SettingsKey key) => state.containsKey(key.name)
+  Map<String, Object?>? getMap(SettingsKey key) =>
+      state.containsKey(key.name) && state[key.name] is Map
       ? Map<String, Object?>.from(state[key.name] as Map)
       : null;
 
   /// Get the value of type [List] for the setting [key], if it exists.
-  List<dynamic>? getList(SettingsKey key) => state.containsKey(key.name)
+  List<dynamic>? getList(SettingsKey key) =>
+      state.containsKey(key.name) && state[key.name] is List
       ? List<dynamic>.from(state[key.name] as List)
       : null;
 

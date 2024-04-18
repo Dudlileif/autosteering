@@ -749,7 +749,7 @@ class _DeleteFieldProviderElement extends AutoDisposeFutureProviderElement<void>
   String? get overrideName => (origin as DeleteFieldProvider).overrideName;
 }
 
-String _$loadFieldFromFileHash() => r'89ef3bee59c1261e6a6630377900f5c94dab209d';
+String _$loadFieldFromFileHash() => r'ceb37971f4a6be7bf87d8c3ed017e061e0bc7001';
 
 /// A provider for loading a [Field] from a file at [path], if it's valid.
 ///
@@ -931,7 +931,7 @@ class _LoadFieldFromFileProviderElement
   String get path => (origin as LoadFieldFromFileProvider).path;
 }
 
-String _$importFieldHash() => r'0366b9119c12ff59b7c7ecf8e784cb4d53613cb5';
+String _$importFieldHash() => r'82c7a0079ee2ffe616a5a7f0231460cddcb5cfa2';
 
 /// A provider for importing a field from a file and applying
 /// [ActiveField] provider.

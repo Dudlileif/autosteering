@@ -37,22 +37,31 @@ class DegreeConverter {
   ///
   /// decimal -> (D)DDMM.MMMMM
   ///
-  /// If [decimalDegrees] < 100 and there should be a leading zero
-  /// (i.e. for longitude) set [addLeadingZeroIfMissing] to true to enusre
-  /// DDDMM.MMMMM format.
+  /// To add leading zeros, [numBeforeDecimal] can be specified to set the
+  /// minimum wanted length before the decimal point.
   static String degreeMinutesFromDecimalDegree(
     double decimalDegrees, {
-    bool addLeadingZeroIfMissing = false,
+    int numBeforeDecimal = 1,
+    int numDecimals = 5,
   }) {
     final degree = decimalDegrees.wrap360().truncate();
     final minutes = (decimalDegrees - degree) * 60;
-    final degreeString = [
-      switch (addLeadingZeroIfMissing && degree < 100) {
-        true => '0',
-        false => '',
-      },
-      '$degree',
-    ].join();
-    return '$degreeString.${minutes.toStringAsFixed(5)}';
+    var degreeString = '$degree';
+    if (degreeString.length < numBeforeDecimal) {
+      degreeString = degreeString.replaceRange(
+        0,
+        0,
+        List.generate(3 - degreeString.length, (index) => '0').join(),
+      );
+    }
+    var minuteString = '${minutes.truncate()}';
+    if (minuteString.length < 2) {
+      minuteString = '0$minuteString';
+    }
+    minuteString = minuteString +
+        minutes
+            .toStringAsFixed(numDecimals)
+            .substring(minutes.toStringAsFixed(numDecimals).indexOf('.'));
+    return '$degreeString$minuteString';
   }
 }

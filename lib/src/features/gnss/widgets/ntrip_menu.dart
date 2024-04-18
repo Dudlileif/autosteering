@@ -56,7 +56,7 @@ class NtripMenu extends ConsumerWidget {
               decoration: const InputDecoration(
                 labelText: 'Host address',
               ),
-              initialValue: ref.watch(ntripHostProvider),
+              initialValue: ref.read(ntripHostProvider),
               onChanged: ref.read(ntripHostProvider.notifier).update,
             ),
           ),
@@ -81,7 +81,7 @@ class NtripMenu extends ConsumerWidget {
                     ? 'Valid Port'
                     : 'Invalid Port';
               },
-              initialValue: ref.watch(ntripPortProvider).toString(),
+              initialValue: ref.read(ntripPortProvider).toString(),
               onChanged: ref.read(ntripPortProvider.notifier).updateFromString,
             ),
           ),
@@ -93,7 +93,7 @@ class NtripMenu extends ConsumerWidget {
               decoration: const InputDecoration(
                 labelText: 'Username',
               ),
-              initialValue: ref.watch(ntripUsernameProvider),
+              initialValue: ref.read(ntripUsernameProvider),
               onChanged: ref.read(ntripUsernameProvider.notifier).update,
             ),
           ),
@@ -106,7 +106,7 @@ class NtripMenu extends ConsumerWidget {
                 labelText: 'Password',
               ),
               obscureText: true,
-              initialValue: ref.watch(ntripPasswordProvider),
+              initialValue: ref.read(ntripPasswordProvider),
               onChanged: ref.read(ntripPasswordProvider.notifier).update,
             ),
           ),
@@ -119,7 +119,7 @@ class NtripMenu extends ConsumerWidget {
                 labelText: 'Mount point / base station',
               ),
               textCapitalization: TextCapitalization.characters,
-              initialValue: ref.watch(activeNtripMountPointProvider),
+              initialValue: ref.read(activeNtripMountPointProvider),
               onChanged:
                   ref.read(activeNtripMountPointProvider.notifier).update,
             ),
@@ -136,6 +136,37 @@ class NtripMenu extends ConsumerWidget {
           ),
         ),
         Consumer(
+          builder: (context, ref, child) => ListTile(
+            leading: const Icon(Icons.timer_outlined),
+            title: Builder(
+              builder: (context) {
+                final controller = TextEditingController(
+                  text: ref.read(ntripGGASendingIntervalProvider)?.toString(),
+                );
+                return TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'GGA sending interval (s)',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        controller.clear();
+                        ref
+                            .read(ntripGGASendingIntervalProvider.notifier)
+                            .update(null);
+                      },
+                      icon: const Icon(Icons.clear),
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                  controller: controller,
+                  onChanged: (value) => ref
+                      .read(ntripGGASendingIntervalProvider.notifier)
+                      .update(int.tryParse(value)),
+                );
+              },
+            ),
+          ),
+        ),
+        Consumer(
           builder: (context, ref, child) {
             final dataUsage = ref.watch(ntripDataUsageSessionProvider);
             if (dataUsage == null) {
@@ -144,9 +175,17 @@ class NtripMenu extends ConsumerWidget {
 
             return ListTile(
               leading: const Icon(Icons.data_usage),
-              title: Text(
-                '''Data usage (session): ${fileEntitySize(dataUsage, decimals: 3)}''',
-                style: textStyle,
+              title: RichText(
+                text: TextSpan(
+                  text: 'Data usage (session): ',
+                  style: textStyle,
+                  children: [
+                    TextSpan(
+                      text: fileEntitySize(dataUsage),
+                      style: textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -163,9 +202,18 @@ class NtripMenu extends ConsumerWidget {
 
               return ListTile(
                 leading: const Icon(Icons.data_usage),
-                title: Text(
-                  '''Data usage (month): ${fileEntitySize(dataUsage, decimals: 3)}''',
-                  style: textStyle,
+                title: RichText(
+                  text: TextSpan(
+                    text: 'Data usage (month): ',
+                    style: textStyle,
+                    children: [
+                      TextSpan(
+                        text: fileEntitySize(dataUsage),
+                        style:
+                            textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -192,9 +240,9 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
     final textStyle = theme.menuButtonWithChildrenText;
     return SimpleDialog(
       title: Text(
-                'NTRIP caster sourcetable',
-                style: theme.textTheme.headlineSmall,
-              ),
+        'NTRIP caster sourcetable',
+        style: theme.textTheme.headlineSmall,
+      ),
       children: [
         Padding(
           padding: const EdgeInsets.all(8),
@@ -282,10 +330,7 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
                       icon: const Icon(Icons.check),
                       label: Text(
                         'Use $selectedMountPoint',
-            
                       ),
-                        
-                      
                     ),
                   ),
               ],

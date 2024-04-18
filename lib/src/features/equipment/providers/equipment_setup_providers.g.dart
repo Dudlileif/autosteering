@@ -770,7 +770,7 @@ class _DeleteEquipmentSetupProviderElement
 }
 
 String _$loadEquipmentSetupFromFileHash() =>
-    r'737dc0b5a4f08a098639000f23f660d5116fca7a';
+    r'd95a6c80af96e1fb13e7513d5edcee46eb72d303';
 
 /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
 /// valid.
@@ -967,7 +967,7 @@ class _LoadEquipmentSetupFromFileProviderElement
 }
 
 String _$importEquipmentSetupHash() =>
-    r'4dc39f06c8921d4327a0defab8c21b2a0496f5e6';
+    r'a46b4773d058fdc9e18e31eb1cad907da7c8f8c7';
 
 /// A provider for importing a equipment setup configuration from the user file
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.

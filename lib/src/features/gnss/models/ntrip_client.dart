@@ -18,6 +18,7 @@
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:universal_io/io.dart';
 
 /// A client for receiving NTRIP messages from an NTRIP caster.
@@ -30,6 +31,7 @@ class NtripClient {
     required this.password,
     required this.port,
     required this.mountPoint,
+    this.ggaSendingInterval,
   });
 
   /// Attempts to create an [NtripClient], but will only succeed if
@@ -42,6 +44,7 @@ class NtripClient {
     String password = '',
     int port = 2101,
     Socket? connectedSocket,
+    int? ggaSendingInterval,
   }) async {
     final auth = const Base64Encoder().convert('$username:$password'.codeUnits);
     final message = '''
@@ -63,6 +66,7 @@ Connection: close\r
         password: password,
         mountPoint: mountPoint,
         socket: socket,
+        ggaSendingInterval: ggaSendingInterval,
       );
     } catch (error) {
       Logger.instance.e(
@@ -91,4 +95,7 @@ Connection: close\r
 
   /// The socket communicating with the NTRIP caster service.
   final Socket socket;
+
+  /// The time in seconds between [GGASentence]s should be sent to the caster.
+  final int? ggaSendingInterval;
 }
