@@ -6,27 +6,6 @@ part of 'equipment_configurator_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loadFileConfiguredEquipmentHash() =>
-    r'2c50b664e21f4cce3943c07b540c4934dc834834';
-
-/// A provider for loading a vehicle configuration from the user file directory
-/// and applying it to the [ConfiguredEquipment] provider.
-///
-/// Copied from [loadFileConfiguredEquipment].
-@ProviderFor(loadFileConfiguredEquipment)
-final loadFileConfiguredEquipmentProvider =
-    AutoDisposeProvider<AsyncValue<Equipment?>>.internal(
-  loadFileConfiguredEquipment,
-  name: r'loadFileConfiguredEquipmentProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$loadFileConfiguredEquipmentHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef LoadFileConfiguredEquipmentRef
-    = AutoDisposeProviderRef<AsyncValue<Equipment?>>;
 String _$equipmentConfiguratorIndexHash() =>
     r'9cbbea135c7f306ffcbe0bfc379b5e39826de238';
 
@@ -69,7 +48,7 @@ final equipmentConfiguratorPageControllerProvider = AutoDisposeNotifierProvider<
 typedef _$EquipmentConfiguratorPageController
     = AutoDisposeNotifier<Raw<PageController>>;
 String _$configuredEquipmentHash() =>
-    r'd6fcdb2c7a05e34cfc6c8202508159aa8b1f5ee1';
+    r'f36d79b5d34ad47c42f66855a688b2a8e8e68c47';
 
 /// A provider for the vehicle from the configurator.
 ///

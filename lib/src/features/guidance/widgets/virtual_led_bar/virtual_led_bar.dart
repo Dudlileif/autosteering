@@ -1,17 +1,37 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:async';
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/providers/virtual_led_bar_providers.dart';
 import 'package:autosteering/src/features/guidance/widgets/virtual_led_bar/virtual_led.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A virtuial LED bar for showing the user how far off track they are.
+///
+/// If the shown number has a `.` in it, it means the distance is in meters,
+/// otherwise it is in centimeters.
 class VirtualLedBar extends ConsumerStatefulWidget {
   /// A virtuial LED bar for showing the user how far off track they are.
   ///
   /// [showEvenIfNoTrackingAvailable] can be used to always show the
-  /// virtual led bar.
-
+  /// virtual led bar, typically used to test the bar.
   const VirtualLedBar({
     super.key,
     this.showEvenIfNoTrackingAvailable = false,
@@ -92,7 +112,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
         initAnimationMap ?? config.activeForDistance(perpendicularDistance);
 
     final leftEndLeds = List.generate(
-      config.leftEndCount,
+      config.endCount,
       (index) => VirtualLed(
         color: Color(config.endColor),
         active: activeMap[index] ?? false,
@@ -104,7 +124,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
     var cumulativeIndex = leftEndLeds.length;
 
     final leftIntermediateLeds = List.generate(
-      config.leftIntermediateCount,
+      config.intermediateCount,
       (index) => VirtualLed(
         color: Color(config.intermediateColor),
         active: activeMap[cumulativeIndex + index] ?? false,
@@ -115,7 +135,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
 
     cumulativeIndex += leftIntermediateLeds.length;
 
-    final centerLeds = List.generate(
+    final leftCenterLeds = List.generate(
       config.centerCount,
       (index) => VirtualLed(
         color: Color(config.centerColor),
@@ -125,10 +145,22 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       growable: false,
     );
 
-    cumulativeIndex += centerLeds.length;
+    cumulativeIndex += leftCenterLeds.length;
+
+    final rightCenterLeds = List.generate(
+      config.centerCount,
+      (index) => VirtualLed(
+        color: Color(config.centerColor),
+        active: activeMap[cumulativeIndex + index] ?? false,
+        size: config.ledSize,
+      ),
+      growable: false,
+    );
+
+    cumulativeIndex += rightCenterLeds.length;
 
     final rightIntermediateLeds = List.generate(
-      config.rightIntermediateCount,
+      config.intermediateCount,
       (index) => VirtualLed(
         color: Color(config.intermediateColor),
         active: activeMap[cumulativeIndex + index] ?? false,
@@ -140,7 +172,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
     cumulativeIndex += rightIntermediateLeds.length;
 
     final rightEndLeds = List.generate(
-      config.rightEndCount,
+      config.endCount,
       (index) => VirtualLed(
         color: Color(config.endColor),
         active: activeMap[cumulativeIndex + index] ?? false,
@@ -149,14 +181,60 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       growable: false,
     );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: config.barWidth,
+        maxHeight: config.ledSize + 22,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ...leftEndLeds,
           ...leftIntermediateLeds,
-          ...centerLeds,
+          ...leftCenterLeds,
+          SizedBox(
+            width: 80,
+            child: Center(
+              child: Consumer(
+                builder: (context, ref, child) {
+                  var distance = (config.reverseBar ? 1 : -1) *
+                      (perpendicularDistance ?? 0);
+                  if (!distance.isFinite) {
+                    distance = 0;
+                  }
+
+                  var number = (distance.abs() * 100)
+                      .truncate()
+                      .clamp(-99, 99)
+                      .toString();
+                  if (distance.abs() >= 1) {
+                    number = distance.abs().clamp(0, 99).toStringAsFixed(1);
+                  }
+                  if (distance.abs() >= 10) {
+                    number =
+                        '''${distance.abs().clamp(0, 99).toStringAsFixed(0)}.''';
+                  }
+                  if (distance.abs() >= 0.01) {
+                    number = distance.isNegative ? '⊲ $number ' : ' $number ⊳';
+                  }
+                  return TextWithStroke(
+                    number,
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                          color: Color(
+                            config.colorFromDistance(
+                              perpendicularDistance ?? 0,
+                            ),
+                          ),
+                          fontFamily: 'Noto Sans Mono',
+                          fontWeight: FontWeight.bold,
+                        ),
+                    strokeWidth: 4,
+                  );
+                },
+              ),
+            ),
+          ),
+          ...rightCenterLeds,
           ...rightIntermediateLeds,
           ...rightEndLeds,
         ],

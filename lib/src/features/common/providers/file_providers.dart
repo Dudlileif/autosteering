@@ -1,6 +1,24 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_html/html.dart' as html;
@@ -92,17 +110,101 @@ FutureOr<void> saveJsonToFileDirectory(
       ..style.display = 'none'
       ..click();
   } else {
+    try {
     final path =
         '${ref.watch(fileDirectoryProvider).requireValue.path}/$folder/$fileName.json';
     final file = File(path);
-    await file.create(recursive: true);
+    final exists = file.existsSync();
+    if (!exists) {
+      await file.create(recursive: true);
+    }
     await file.writeAsString(dataString);
-    Logger.instance.i('Created and wrote data to $path');
+    Logger.instance.i(
+      switch (exists) {
+        false => 'Created and wrote data to $path',
+        true => 'Wrote data to $path',
+      },
+    );
+    } catch (error, stackTrace) {
+      Logger.instance.w(
+        'Failed to import save json.',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
   }
 }
 
-/// A provider for reading and holding all the saved equipment setups in the
-/// user file directory.
+/// A provider for saving [object] to [fileName].json to a file in the [folder]
+/// in the file drectory.
+///
+/// Caution: Expects [object] to have a .toJson() method implemented.
+@riverpod
+FutureOr<void> exportJsonToFileDirectory(
+  ExportJsonToFileDirectoryRef ref, {
+  required dynamic object,
+  required String fileName,
+  String? folder,
+  bool downloadIfWeb = true,
+}) async {
+  final dataString = const JsonEncoder.withIndent('    ').convert(object);
+
+  if (Device.isWeb && downloadIfWeb) {
+    html.AnchorElement()
+      ..href = '${Uri.dataFromString(
+        dataString,
+        mimeType: 'text/plain',
+        encoding: utf8,
+      )}'
+      ..download = '$fileName.json'
+      ..style.display = 'none'
+      ..click();
+  } else {
+    try {
+    final exportFolder = await FilePicker.platform
+        .getDirectoryPath(dialogTitle: 'Select export folder');
+    if (exportFolder != null) {
+      var path = '';
+      if (exportFolder.endsWith('autosteering_export')) {
+        path = folder != null
+            ? '$exportFolder/$folder/$fileName.json'
+            : '$exportFolder/$fileName.json';
+      } else if (exportFolder.contains('autosteering_export')) {
+        path = folder != null
+            ? '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$folder/$fileName.json'
+            : '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$fileName.json';
+      } else {
+        path = folder != null
+            ? '$exportFolder/autosteering_export/$folder/$fileName.json'
+            : '$exportFolder/autosteering_export/$fileName.json';
+      }
+      final file = File(path);
+      final exists = file.existsSync();
+      if (!exists) {
+        await file.create(recursive: true);
+      }
+      await file.writeAsString(dataString);
+      Logger.instance.i(
+        switch (exists) {
+          false => 'Created and wrote data to $path',
+          true => 'Wrote data to $path',
+        },
+      );
+    } else {
+      Logger.instance.i('No export folder selected.');
+      }
+    } catch (error, stackTrace) {
+      Logger.instance.w(
+        'Failed to export json.',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+}
+
+/// A provider for reading and holding all the saved objects of
+/// the given type in the in the user file directory.
 @Riverpod(keepAlive: true)
 FutureOr<List<dynamic>> savedFiles(
   SavedFilesRef ref, {
@@ -126,7 +228,7 @@ FutureOr<List<dynamic>> savedFiles(
   }
 
   // Remake the list if there are any file changes in the folder.
-  dir.watch(recursive: true).listen((event) {
+  dir.watch().listen((event) {
     ref.invalidateSelf();
   });
 
@@ -138,15 +240,17 @@ FutureOr<List<dynamic>> savedFiles(
       for (final fileEntity in fileEntities) {
         if (fileEntity is File) {
           final file = File.fromUri(fileEntity.uri);
-
-          final decoded = jsonDecode(await file.readAsString());
-
-          if (decoded is Map) {
-            final json = Map<String, dynamic>.from(decoded);
-
+          try {
+            final decoded = jsonDecode(await file.readAsString());
+            final json = Map<String, dynamic>.from(decoded as Map);
             final item = fromJson(json);
-
             savedItems.add(item);
+          } catch (error, stackTrace) {
+            Logger.instance.w(
+              'Failed to parse: ${file.path}',
+              error: error,
+              stackTrace: stackTrace,
+            );
           }
         }
       }
@@ -155,4 +259,31 @@ FutureOr<List<dynamic>> savedFiles(
   Logger.instance
       .i('Directory found with ${savedItems.length} items: $dirPath');
   return savedItems;
+}
+
+/// A provider for deleting the [fileName] in [folder] if it exists.
+@riverpod
+FutureOr<void> deleteJsonFromFileDirectory(
+  DeleteJsonFromFileDirectoryRef ref, {
+  required String fileName,
+  required String folder,
+}) async {
+  if (Device.isNative) {
+    final path =
+        '${ref.watch(fileDirectoryProvider).requireValue.path}/$folder/$fileName.json';
+    final file = File(path);
+    var exists = file.existsSync();
+    if (exists) {
+      await file.delete(recursive: true);
+      exists = file.existsSync();
+      Logger.instance.i(
+        switch (exists) {
+          false => 'Deleted file: $path',
+          true => 'Failed to delete file: $path',
+        },
+      );
+    } else {
+      Logger.instance.i('File already deleted/does not exist: $path');
+    }
+  }
 }

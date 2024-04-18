@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 part of '../vehicle.dart';
 
 /// A harvester with rear wheel steering and a solid front axle.
@@ -5,12 +22,12 @@ final class Harvester extends AxleSteeredVehicle {
   /// A harvester with rear wheel steering and a solid front axle.
   Harvester({
     required super.wheelBase,
-    required super.solidAxleDistance,
+    required super.antennaToSolidAxleDistance,
     required super.antennaHeight,
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
-    super.position,
+    super.antennaPosition,
     super.antennaLateralOffset,
     super.solidAxleToFrontHitchDistance = 2,
     super.solidAxleToRearHitchDistance,
@@ -21,12 +38,11 @@ final class Harvester extends AxleSteeredVehicle {
     super.solidAxleWheelDiameter,
     super.steeringAxleWheelWidth,
     super.solidAxleWheelWidth,
-    super.invertSteeringInput,
     super.imu,
     super.was,
-    super.motorConfig,
+    super.autosteeringThresholdVelocity,
+    super.steeringHardwareConfig,
     super.pathTrackingMode,
-    super.pidParameters,
     super.purePursuitParameters,
     super.stanleyParameters,
     super.velocity,
@@ -36,12 +52,15 @@ final class Harvester extends AxleSteeredVehicle {
     super.steeringAngleInput,
     super.length = 4,
     super.width = 2.5,
+    super.wheelsRolledDistance,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
     super.uuid,
     super.lastUsed,
+    super.manufacturerColors,
+    super.manualSimulationMode,
   });
 
   /// Creates a [Harvester] from the [json] object.
@@ -64,14 +83,13 @@ final class Harvester extends AxleSteeredVehicle {
       lastUsed: DateTime.tryParse(info['last_used'] as String),
       antennaHeight: antenna['height'] as double,
       antennaLateralOffset: antenna['lateral_offset'] as double,
+      antennaToSolidAxleDistance: antenna['solid_axle_distance'] as double,
       width: dimensions['width'] as double,
       length: dimensions['length'] as double,
       wheelBase: dimensions['wheel_base'] as double,
       trackWidth: dimensions['track_width'] as double,
-      solidAxleDistance: dimensions['solid_axle_distance'] as double,
       minTurningRadius: steering['min_turning_radius'] as double,
       steeringAngleMax: steering['steering_angle_max'] as double,
-      invertSteeringInput: steering['invert_steering_input'] as bool,
       ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
       ackermannPercentage: steering['ackermann_percentage'] as double? ?? 100,
       steeringAxleWheelDiameter:
@@ -93,27 +111,27 @@ final class Harvester extends AxleSteeredVehicle {
 
   /// The position of the center of the rear axle.
   @override
-  Geographic get solidAxlePosition => position.spherical.destinationPoint(
-        distance: solidAxleDistance,
+  Geographic get solidAxlePosition => position.rhumb.destinationPoint(
+        distance: antennaToSolidAxleDistance,
         bearing: bearing.wrap360(),
       );
 
   /// The position of the center of the front axle.
   @override
-  Geographic get steeringAxlePosition => position.spherical.destinationPoint(
-        distance: solidAxleDistance - wheelBase,
+  Geographic get steeringAxlePosition => position.rhumb.destinationPoint(
+        distance: antennaToSolidAxleDistance - wheelBase,
         bearing: bearing.wrap360(),
       );
 
   /// The position of the Stanley axle in the the vehicle direction. Used when
   /// calculating the Stanley pursuit values.
   ///
-  /// The mirror position of the steering axle position from the is used
+  /// The mirror position of the steering axle around the solidx axle is used
   /// when the harvester is driving forward.
   @override
   Geographic get stanleyAxlePosition => switch (isReversing) {
         true => steeringAxlePosition,
-        false => solidAxlePosition.spherical
+        false => solidAxlePosition.rhumb
             .destinationPoint(distance: wheelBase, bearing: bearing),
       };
 
@@ -131,14 +149,14 @@ final class Harvester extends AxleSteeredVehicle {
   /// parameters/variables altered.
   @override
   Harvester copyWith({
-    Geographic? position,
+    Geographic? antennaPosition,
     double? antennaHeight,
     double? antennaLateralOffset,
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
     double? wheelBase,
-    double? solidAxleDistance,
+    double? antennaToSolidAxleDistance,
     double? solidAxleToFrontHitchDistance,
     double? solidAxleToRearTowbarDistance,
     double? solidAxleToRearHitchDistance,
@@ -148,12 +166,11 @@ final class Harvester extends AxleSteeredVehicle {
     double? solidAxleWheelDiameter,
     double? steeringAxleWheelWidth,
     double? solidAxleWheelWidth,
-    bool? invertSteeringInput,
     Imu? imu,
     Was? was,
-    MotorConfig? motorConfig,
+    double? autosteeringThresholdVelocity,
+    SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
-    PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     double? velocity,
@@ -163,22 +180,27 @@ final class Harvester extends AxleSteeredVehicle {
     double? steeringAngleInput,
     double? length,
     double? width,
+    double? wheelsRolledDistance,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    ManufacturerColors? manufacturerColors,
+    bool? manualSimulationMode,
+
   }) =>
       Harvester(
-        position: position ?? this.position,
+        antennaPosition: antennaPosition ?? this.antennaPosition,
         antennaHeight: antennaHeight ?? this.antennaHeight,
         antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,
         steeringAngleMax: steeringAngleMax ?? _steeringAngleMaxRaw,
         trackWidth: trackWidth ?? this.trackWidth,
         wheelBase: wheelBase ?? this.wheelBase,
-        solidAxleDistance: solidAxleDistance ?? this.solidAxleDistance,
+        antennaToSolidAxleDistance:
+            antennaToSolidAxleDistance ?? this.antennaToSolidAxleDistance,
         solidAxleToFrontHitchDistance:
             solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
         solidAxleToRearHitchDistance:
@@ -195,29 +217,32 @@ final class Harvester extends AxleSteeredVehicle {
         steeringAxleWheelWidth:
             steeringAxleWheelWidth ?? this.steeringAxleWheelWidth,
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
-        invertSteeringInput: invertSteeringInput ?? this.invertSteeringInput,
         imu: imu ?? this.imu,
         was: was ?? this.was,
-        motorConfig: motorConfig ?? this.motorConfig,
+        autosteeringThresholdVelocity:
+            autosteeringThresholdVelocity ?? this.autosteeringThresholdVelocity,
+        steeringHardwareConfig:
+            steeringHardwareConfig ?? this.steeringHardwareConfig,
         pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
-        pidParameters: pidParameters ?? this.pidParameters,
         purePursuitParameters:
             purePursuitParameters ?? this.purePursuitParameters,
         stanleyParameters: stanleyParameters ?? this.stanleyParameters,
         velocity: velocity ?? this.velocity,
-        bearing:
-            bearing ?? _bearing,
+        bearing: bearing ?? _bearing,
         pitch: pitch ?? _pitch,
         roll: roll ?? _roll,
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,
+        wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
         hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
         uuid: uuid ?? this.uuid,
-      );
+        manufacturerColors: manufacturerColors ?? this.manufacturerColors,
+        manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
+      )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override
   Map<String, dynamic> toJson() {

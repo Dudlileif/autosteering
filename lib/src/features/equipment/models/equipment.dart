@@ -1,11 +1,32 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:collection';
 import 'dart:math';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/vehicle/models/models.dart';
+import 'package:autosteering/src/features/vehicle/models/vehicle.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
@@ -16,9 +37,6 @@ class Equipment extends Hitchable with EquatableMixin {
   ///
   /// The required [hitchType] specifies how this equipment connects to a
   /// parent.
-  ///
-  /// The number of [sections] must correspond with the length of
-  /// [sectionWidths].
   ///
   /// The [workingAreaLength] refers to the length of the working area, and the
   /// [drawbarLength] how long the drawbar(s) is/are. The working area starts
@@ -40,8 +58,6 @@ class Equipment extends Hitchable with EquatableMixin {
     super.hitchRearTowbarChild,
     super.name,
     super.uuid,
-    this.sections = 1,
-    this.sectionWidths = const [4.5],
     this.workingAreaLength = 2,
     this.drawbarLength = 1,
     this.sidewaysOffset = 0,
@@ -52,14 +68,11 @@ class Equipment extends Hitchable with EquatableMixin {
     this.decorationSidewaysOffset,
     this.decorationLength,
     this.decorationWidth,
+    List<Section>? sections,
     DateTime? lastUsed,
     double bearing = 0,
     Geographic position = const Geographic(lat: 0, lon: 0),
-  })  : assert(
-          sectionWidths.length == sections,
-          'The number of section widths must match the number of sections.',
-        ),
-        activeSections = List.generate(sections, (index) => false),
+  })  : sections = sections ?? [],
         _position = position,
         _bearing = hitchParent?.bearing ?? bearing,
         lastUsed = lastUsed ?? DateTime.now();
@@ -68,11 +81,19 @@ class Equipment extends Hitchable with EquatableMixin {
   factory Equipment.fromJson(Map<String, dynamic> json) {
     final info = Map<String, dynamic>.from(json['info'] as Map);
     final dimensions = Map<String, dynamic>.from(json['dimensions'] as Map);
-    final sections = Map<String, dynamic>.from(json['sections'] as Map);
     final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
 
     final decoration = dimensions['decoration'] != null
         ? Map<String, dynamic>.from(dimensions['decoration'] as Map)
+        : null;
+
+    final sections = json['sections'] != null
+        ? (json['sections'] as List)
+            .map(
+              (section) =>
+                  Section.fromJson(Map<String, dynamic>.from(section as Map)),
+            )
+            .toList()
         : null;
 
     final equipment = Equipment(
@@ -84,8 +105,7 @@ class Equipment extends Hitchable with EquatableMixin {
       drawbarLength: dimensions['drawbar_length'] as double,
       sidewaysOffset: dimensions['sideways_offset'] as double,
       workingAreaLength: dimensions['working_area_length'] as double,
-      sections: sections['sections'] as int,
-      sectionWidths: List<double>.from(sections['widths'] as List),
+      sections: sections,
       hitchToChildFrontFixedHitchLength:
           hitches['hitch_to_child_front_fixed_hitch_length'] as double?,
       hitchToChildRearFixedHitchLength:
@@ -142,14 +162,8 @@ class Equipment extends Hitchable with EquatableMixin {
   /// Which type of hitch point this equipment has.
   HitchType hitchType;
 
-  /// The number of sections the equipment working area is made of.
-  int sections;
-
-  /// The width of each of the sections.
-  List<double> sectionWidths;
-
-  /// A list for showing which segements are activated.
-  List<bool> activeSections;
+  /// The working sections of this equipment
+  List<Section> sections;
 
   /// The length of the working area of the equipment. This length starts
   /// at the [drawbarEnd] and ends at the end of the equipment.
@@ -199,6 +213,75 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The bearing of the equipment, used to specifically set the [bearing].
   double _bearing = 0;
 
+  /// The previous position of the [workingCenter], only used in
+  /// [updateTowbar].
+  late Geographic _prevWorkingCenter = workingCenter;
+
+  /// The previous [bearing] of this, only used in [updateTowbar].
+  double _prevBearing = 0;
+
+  /// The previous hitch angle, only used in [updateTowbar].
+  double _prevHitchAngle = 0;
+
+  /// The turning radius of this, only used in [updateTowbar].
+  double? _turningRadius;
+
+  /// The turning radius center of this, only used in [updateTowbar].
+  Geographic? _turningRadiusCenter;
+
+  @override
+  double? get currentTurningRadius {
+    if (hitchType == HitchType.fixed && hitchParent != null) {
+      if (hitchParent!.currentTurningRadius != null) {
+        final hitchToParentTurningCircleBase =
+            switch (hitchParent.runtimeType) {
+          Tractor ||
+          Harvester =>
+            (hitchParent! as AxleSteeredVehicle).solidAxleToRearTowbarDistance,
+          ArticulatedTractor =>
+            (hitchParent! as ArticulatedTractor).rearAxleToTowbarDistance,
+          Equipment =>
+            (hitchParent! as Equipment).hitchToChildRearTowbarHitchLength! -
+                (hitchParent! as Equipment).drawbarLength,
+          _ => null,
+        };
+        if (hitchToParentTurningCircleBase != null) {
+          return sqrt(
+            pow(hitchParent!.currentTurningRadius!, 2) +
+                pow(hitchToParentTurningCircleBase, 2),
+          );
+        }
+      }
+    }
+
+    return _turningRadius;
+  }
+
+  @override
+  Geographic? get turningRadiusCenter {
+    if (hitchType == HitchType.fixed &&
+        hitchParent != null &&
+        currentTurningRadius != null) {
+      var leftOrRightModifier = 1;
+      if (hitchParent!.turningRadiusCenter != null &&
+          signedBearingDifference(
+                hitchParent!.position.rhumb.initialBearingTo(
+                  (hitchParent!).turningRadiusCenter!,
+                ),
+                hitchParent!.bearing,
+              ) >
+              0) {
+        leftOrRightModifier *= -1;
+      }
+
+      return workingCenter.rhumb.destinationPoint(
+        distance: currentTurningRadius!,
+        bearing: bearing + 90 * leftOrRightModifier,
+      );
+    }
+    return _turningRadiusCenter;
+  }
+
   /// The position of the hitch point of the equipment, will use the parent's
   /// hitch point if connected.
   ///
@@ -243,50 +326,82 @@ class Equipment extends Hitchable with EquatableMixin {
   @override
   set bearing(double value) => _bearing = value;
 
-  /// The total width of the equipment. Found by summing the [sectionWidths].
-  double get width => sectionWidths.sum;
+  /// The total width of the equipment. Found by summing the [Section.width]
+  /// for all the [sections].
+  double get width => sections.fold(
+        0,
+        (previousValue, element) => previousValue + element.width,
+      );
 
   /// Activate the given [section].
-  void activateSection(int section) => activeSections[section] = true;
+  void activateSection(int section) => sections[section].active = true;
 
   /// Deactivate the given [section].
-  void deActivateSection(int section) => activeSections[section] = false;
+  void deActivateSection(int section) => sections[section].active = false;
 
   /// Toggle the given [section].
   void toggleSection(int section) =>
-      activeSections[section] = !activeSections[section];
+      sections[section].active = !sections[section].active;
 
   /// Activate the given [sections].
   void activateSections(List<int> sectionsToActivate) {
     for (final section in sectionsToActivate) {
-      activeSections[section] = true;
+      sections[section].active = true;
     }
   }
 
   /// Deactivate the given [sections].
   void deactivateSections(List<int> sectionsToDeactivate) {
     for (final section in sectionsToDeactivate) {
-      activeSections[section] = false;
+      sections[section].active = false;
     }
   }
 
   /// Toggle the given [sections].
   void toggleSections(List<int> sectionsToToggle) {
     for (final section in sectionsToToggle) {
-      activeSections[section] = !activeSections[section];
+      sections[section].active = !sections[section].active;
     }
   }
 
   /// Activate all of the [sections].
-  void activateAll() =>
-      activeSections = List.generate(sections, (index) => true);
+  void activateAll() {
+    for (final element in sections) {
+      element.active = true;
+    }
+  }
 
   /// Deactivate all of the [sections].
-  void deactivateAll() =>
-      activeSections = List.generate(sections, (index) => false);
+  void deactivateAll() {
+    for (final element in sections) {
+      element.active = false;
+    }
+  }
 
   /// Toggle all of the [sections].
-  void toggleAll() => activeSections = activeSections.map((e) => !e).toList();
+  void toggleAll() {
+    for (final element in sections) {
+      element.active = !element.active;
+    }
+  }
+
+  /// Enable automatic activation of the [sections].
+  void enableSectionAutomation() {
+    for (final element in sections) {
+      element.automateActivation = true;
+    }
+  }
+
+  /// Disable automatic activation of the [sections].
+  void disableSectionAutomation() {
+    for (final element in sections) {
+      element.automateActivation = false;
+    }
+  }
+
+  /// A list of the current activation status for the [sections].
+  List<bool> get sectionActivationStatus =>
+      sections.map((e) => e.active).toList();
 
   /// The hitch connection position where this equipment is attached to the
   /// [hitchParent], if it's connected.
@@ -304,7 +419,7 @@ class Equipment extends Hitchable with EquatableMixin {
   @override
   Geographic? get hitchFrontFixedPoint =>
       switch (hitchToChildFrontFixedHitchLength != null) {
-        true => position.spherical.destinationPoint(
+        true => position.rhumb.destinationPoint(
             distance: hitchToChildFrontFixedHitchLength!,
             bearing: bearing,
           ),
@@ -316,7 +431,7 @@ class Equipment extends Hitchable with EquatableMixin {
   @override
   Geographic? get hitchRearFixedPoint =>
       switch (hitchToChildRearFixedHitchLength != null) {
-        true => position.spherical.destinationPoint(
+        true => position.rhumb.destinationPoint(
             distance: hitchToChildRearFixedHitchLength!,
             bearing: bearing + 180,
           ),
@@ -328,44 +443,134 @@ class Equipment extends Hitchable with EquatableMixin {
   @override
   Geographic? get hitchRearTowbarPoint =>
       switch (hitchToChildRearTowbarHitchLength != null) {
-        true => position.spherical.destinationPoint(
+        true => position.rhumb.destinationPoint(
             distance: hitchToChildRearTowbarHitchLength!,
             bearing: bearing + 180,
           ),
         false => null
       };
 
-  /// Update the [bearing] and [velocity] of the equipment when using connected
-  /// to parent with a towbar.
-  void updateTowbar() {
+  /// Update the [bearing] and [velocity] of the equipment when connected to
+  /// parent with a towbar.
+  ///
+  /// Depends on the parent having a turning circle and radius, so it will not
+  /// work without a steering angle on the main vehicle (i.e. WAS is required
+  /// on physical vehicle).
+  void updateTowbar(double period) {
     if (hitchParent != null && parentHitch == Hitch.rearTowbar) {
-      final hitchAngle = signedBearingDifference(
-        position.spherical.initialBearingTo(hitchParent!.position),
-        position.spherical.initialBearingTo(workingCenter),
-      ).toRadians();
-
-      final bearingChange = hitchParent!.velocity /
-          (drawbarLength + workingAreaLength / 2) *
-          sin(hitchAngle);
+      var hitchAngle = _prevHitchAngle;
+      final prevBearing = bearing;
 
       // Only change bearing if we're moving.
       if (hitchParent!.velocity.abs() > 0) {
-        bearing = _bearing + bearingChange;
+        final movedDistance =
+            _prevWorkingCenter.rhumb.distanceTo(workingCenter);
+
+        final bearingChange = signedBearingDifference(
+          _prevBearing,
+          workingCenter.rhumb.initialBearingTo(position),
+        );
+
+        var turningRadius = bearingChange.abs() > 0
+            // Circle chord to radius
+            ? (movedDistance / (2 * sin(bearingChange.toRadians() / 2)))
+                .clamp(-500.0, 500.0)
+            : null;
+        if (turningRadius != null) {
+          if (turningRadius.abs() >= 500) {
+            turningRadius = null;
+          } else if (isReversing) {
+            turningRadius *= -1;
+          }
+        }
+        _turningRadius = turningRadius?.abs();
+
+        _turningRadiusCenter = turningRadius != null
+            ? workingCenter.rhumb.destinationPoint(
+                distance: turningRadius,
+                bearing: bearing + 90,
+              )
+            : null;
+
+        final hitchToParentTurningCircleBase =
+            switch (hitchParent.runtimeType) {
+          Tractor ||
+          Harvester =>
+            (hitchParent! as AxleSteeredVehicle).solidAxleToRearTowbarDistance,
+          ArticulatedTractor =>
+            (hitchParent! as ArticulatedTractor).rearAxleToTowbarDistance,
+          Equipment =>
+            (hitchParent! as Equipment).hitchToChildRearTowbarHitchLength! -
+                (hitchParent! as Equipment).drawbarLength,
+          _ => null,
+        };
+
+        if (hitchToParentTurningCircleBase != null) {
+          // https://www.landtechnik-online.eu/landtechnik/article/view/2010-65-3-178-181/2010-65-3-178-181-en-pdf
+          final a = hitchParent!.velocity /
+              (drawbarLength + hitchToParentTurningCircleBase);
+
+          final y1 = hitchParent!.currentTurningRadius != null
+              ? atan(
+                  hitchToParentTurningCircleBase /
+                      hitchParent!.currentTurningRadius!,
+                )
+              : 0.0;
+
+          var y2 = hitchParent!.currentTurningRadius != null
+              ? asin(
+                  (drawbarLength /
+                          sqrt(
+                            pow(hitchToParentTurningCircleBase, 2) +
+                                pow(
+                                  hitchParent!.currentTurningRadius!,
+                                  2,
+                                ),
+                          ))
+                      .clamp(-1, 1),
+                )
+              : 0.0;
+          if (y2.isNaN) {
+            y2 = 0;
+          }
+
+          var targetStaticAngle = (y1 + y2).toDegrees();
+          if (hitchParent!.turningRadiusCenter != null &&
+              signedBearingDifference(
+                    hitchParent!.position.rhumb.initialBearingTo(
+                      (hitchParent!).turningRadiusCenter!,
+                    ),
+                    hitchParent!.bearing,
+                  ) <
+                  0) {
+            targetStaticAngle *= -1;
+          }
+          hitchAngle = (_prevHitchAngle +
+                  (targetStaticAngle - _prevHitchAngle) * a * period)
+              .clamp(-90, 90);
+
+          bearing = (position.rhumb.initialBearingTo(hitchParent!.position) +
+                  hitchAngle)
+              .wrap360();
+        }
       }
-      _velocity = hitchParent!.velocity * -cos(hitchAngle);
+      _velocity = hitchParent!.velocity * cos(hitchAngle.abs().toRadians());
+      _prevHitchAngle = hitchAngle;
+      _prevWorkingCenter = workingCenter;
+      _prevBearing = prevBearing;
     }
   }
 
   /// Update the children connected to this. Also checks and updates this
   /// equipment if it's connected to parent with a towbar.
   @override
-  void updateChildren() {
-    updateTowbar();
-    super.updateChildren();
+  void updateChildren(double period) {
+    updateTowbar(period);
+    super.updateChildren(period);
   }
 
   /// The working area center of this equipment.
-  Geographic get workingCenter => position.spherical
+  Geographic get workingCenter => position.rhumb
       .destinationPoint(
         distance: drawbarLength + workingAreaLength / 2,
         bearing: switch (parentHitch) {
@@ -375,19 +580,19 @@ class Equipment extends Hitchable with EquatableMixin {
           null => bearing,
         },
       )
-      .spherical
+      .rhumb
       .destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
 
   /// The position of the end of the drawbar, i.e. furthest away from the
   /// parent, where the working area starts.
   Geographic get drawbarEnd => switch (parentHitch) {
-        Hitch.frontFixed => position.spherical
+        Hitch.frontFixed => position.rhumb
             .destinationPoint(distance: drawbarLength, bearing: bearing),
-        Hitch.rearFixed => position.spherical
+        Hitch.rearFixed => position.rhumb
             .destinationPoint(distance: drawbarLength, bearing: bearing + 180),
-        Hitch.rearTowbar => position.spherical
+        Hitch.rearTowbar => position.rhumb
             .destinationPoint(distance: drawbarLength, bearing: bearing + 180),
-        null => position.spherical
+        null => position.rhumb
             .destinationPoint(distance: drawbarLength, bearing: bearing),
       };
 
@@ -396,30 +601,30 @@ class Equipment extends Hitchable with EquatableMixin {
     // The starting point of this equipment, i.e. the center-front point
     // of the working area.
     final equipmentStart = switch (parentHitch) {
-      Hitch.frontFixed => drawbarEnd.spherical
+      Hitch.frontFixed => drawbarEnd.rhumb
           .destinationPoint(distance: workingAreaLength, bearing: bearing),
       _ => drawbarEnd
     }
-        .spherical
+        .rhumb
         .destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
 
     // The width of the preceding sections.
-    final widthBefore = sectionWidths.getRange(0, section).sum;
+    final widthBefore = sections.getRange(0, section).map((e) => e.width).sum;
 
-    final sectionFrontLeft = equipmentStart.spherical.destinationPoint(
+    final sectionFrontLeft = equipmentStart.rhumb.destinationPoint(
       distance: width / 2 - widthBefore,
       bearing: bearing - 90,
     );
 
-    final sectionRearLeft = sectionFrontLeft.spherical
+    final sectionRearLeft = sectionFrontLeft.rhumb
         .destinationPoint(distance: workingAreaLength, bearing: bearing + 180);
 
-    final sectionRearRight = sectionRearLeft.spherical.destinationPoint(
-      distance: sectionWidths[section],
+    final sectionRearRight = sectionRearLeft.rhumb.destinationPoint(
+      distance: sections[section].width,
       bearing: bearing + 90,
     );
 
-    final sectionFrontRight = sectionRearRight.spherical
+    final sectionFrontRight = sectionRearRight.rhumb
         .destinationPoint(distance: workingAreaLength, bearing: bearing);
 
     return [
@@ -430,38 +635,163 @@ class Equipment extends Hitchable with EquatableMixin {
     ];
   }
 
+  /// The corner points for the working area for the section with index [index].
+  ///
+  /// The order of the points is
+  ///
+  /// ```
+  /// [
+  ///   front left,
+  ///   rear left,
+  ///   rear right,
+  ///   front right,
+  /// ]
+  /// ```
+  List<Geographic> sectionCornerPoints(int index) {
+    // The starting point of this equipment, i.e. the center-front point
+    // of the working area.
+    final equipmentStart = switch (parentHitch) {
+      Hitch.frontFixed => drawbarEnd.rhumb
+          .destinationPoint(distance: workingAreaLength, bearing: bearing),
+      _ => drawbarEnd
+    }
+        .rhumb
+        .destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
+
+    final section = sections[index];
+
+    // The width of the preceding sections.
+    final widthBefore = sections.getRange(0, index).map((e) => e.width).sum +
+        (section.width - section.workingWidth) / 2;
+
+    final sectionFrontLeft = equipmentStart.rhumb.destinationPoint(
+      distance: width / 2 - widthBefore,
+      bearing: bearing - 90,
+    );
+
+    final sectionRearLeft = sectionFrontLeft.rhumb
+        .destinationPoint(distance: workingAreaLength, bearing: bearing + 180);
+
+    final sectionRearRight = sectionRearLeft.rhumb.destinationPoint(
+      distance: section.workingWidth,
+      bearing: bearing + 90,
+    );
+
+    final sectionFrontRight = sectionRearRight.rhumb
+        .destinationPoint(distance: workingAreaLength, bearing: bearing);
+
+    return [
+      sectionFrontLeft,
+      sectionRearLeft,
+      sectionRearRight,
+      sectionFrontRight,
+    ];
+  }
+
+  /// Finds the drawing/recording edge positions for the section with index
+  /// [index].
+  ///
+  /// [fraction] is used to get the intermediate positions between the rear and
+  /// the front of the section. 0 means the rear and 1 means the front
+  /// Defaults to the rear, 0.
+  ///
+  /// ```
+  ///  1    ---------
+  ///       |       |
+  ///       |       |
+  /// 0.5   o-------o
+  ///       |       |
+  ///       |       |
+  ///  0    ---------
+  /// ```
+  SectionEdgePositions sectionEdgePositions(
+    int index, {
+    double fraction = 0,
+  }) {
+    final points = sectionCornerPoints(index);
+
+    return SectionEdgePositions(
+      left: points[1]
+          .spherical
+          .intermediatePointTo(points[0], fraction: fraction),
+      right: points[2]
+          .spherical
+          .intermediatePointTo(points[3], fraction: fraction),
+    );
+  }
+
+  /// A map of all the section indexes and their [SectionEdgePositions] if they
+  /// are active, or null if they're not.
+  Map<int, SectionEdgePositions?> activeEdgePositions({double fraction = 0}) =>
+      {
+        for (final element in sections)
+          element.index: element.active
+              ? sectionEdgePositions(element.index, fraction: fraction)
+              : null,
+      };
+
   /// The center point of the given [section].
   Geographic sectionCenter(int section) {
     final points = sectionPoints(section);
-    return points[0].spherical.midPointTo(points[2]);
+    return points[0].rhumb.midPointTo(points[2]);
   }
 
   /// The polygon for the given [section].
   Polygon sectionPolygon(int section) => Polygon(
         [
-          PositionSeries.view(
-            sectionPoints(section).map((e) => e.values).flattened.toList(),
-          ),
+          PositionSeries.from(sectionPoints(section)),
+        ],
+      );
+
+  /// The working polygon for the given [section].
+  Polygon sectionWorkingPolygon(int section) => Polygon(
+        [
+          PositionSeries.from(sectionCornerPoints(section)),
         ],
       );
 
   /// An iterable of all the sections' polygons.
   Iterable<Polygon> get sectionPolygons =>
-      Iterable.generate(sections, sectionPolygon).whereNotNull();
+      Iterable.generate(sections.length, sectionPolygon).whereNotNull();
 
-  /// The map polygon for the given [section].
-  map.Polygon sectionMapPolygon(int section) {
-    final active = activeSections[section];
+  /// An iterable of all the sections' working polygons.
+  Iterable<Polygon> get sectionWorkingPolygons =>
+      Iterable.generate(sections.length, sectionWorkingPolygon).whereNotNull();
 
-    return sectionPolygon(section).mapPolygon(
+  /// The map polygon for the [Section] with the given [index].
+  map.Polygon sectionMapPolygon(int index) {
+    final section = sections[index];
+
+    return sectionPolygon(index).mapPolygon(
       borderStrokeWidth: 2,
-      isFilled: active,
-      borderColor: switch (active) {
-        true => Colors.greenAccent,
+      isFilled: section.active,
+      borderColor: switch (section.active) {
+        true => section.color?.brighten(30) ?? Colors.greenAccent,
         false => Colors.grey,
       },
-      color: switch (active) {
-        true => Colors.green.withOpacity(0.8),
+      color: switch (section.active) {
+        true => (section.color ?? Colors.green).withOpacity(0.8),
+        false => Colors.grey.withOpacity(0.4),
+      },
+    );
+  }
+
+  /// The map polygon for the [Section]'s work area with the given [index].
+  map.Polygon sectionWorkingMapPolygon(int index) {
+    final section = sections[index];
+
+    return sectionWorkingPolygon(index).mapPolygon(
+      borderStrokeWidth: 2,
+      isFilled: section.active,
+      borderColor: switch (section.workingWidth > 0) {
+        true => switch (section.active) {
+            true => section.color?.brighten(30) ?? Colors.greenAccent,
+            false => Colors.grey,
+          },
+        false => Colors.transparent,
+      },
+      color: switch (section.active) {
+        true => (section.color ?? Colors.green).withOpacity(0.8),
         false => Colors.grey.withOpacity(0.4),
       },
     );
@@ -469,149 +799,216 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// An iterable of all the sections' polygons.
   Iterable<map.Polygon> get sectionMapPolygons =>
-      List.generate(sections, sectionMapPolygon, growable: false)
+      List.generate(sections.length, sectionMapPolygon, growable: false)
+          .whereNotNull();
+
+  /// An iterable of all the sections' working polygons.
+  Iterable<map.Polygon> get sectionWorkingMapPolygons =>
+      List.generate(sections.length, sectionWorkingMapPolygon, growable: false)
           .whereNotNull();
 
   /// A list of the polygon(s) for the drawbar(s).
-  List<map.Polygon> get drawbarMapPolygons => switch (hitchType) {
-        HitchType.towbar => [
-            map.Polygon(
-              borderStrokeWidth: 3,
-              isFilled: true,
-              color: Colors.grey.shade800,
-              borderColor: Colors.black,
-              points: [
-                position.spherical
-                    .destinationPoint(
-                      distance: 0.05,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-                drawbarEnd.spherical
-                    .destinationPoint(
-                      distance: 0.05,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-                drawbarEnd.spherical
-                    .destinationPoint(
-                      distance: 0.05,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-                position.spherical
-                    .destinationPoint(
-                      distance: 0.05,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-              ],
-            ),
-          ],
-        HitchType.fixed => [
-            // Left hitch bar
-            map.Polygon(
-              borderStrokeWidth: 3,
-              isFilled: true,
-              color: Colors.grey.shade800,
-              borderColor: Colors.black,
-              points: [
-                position.spherical
-                    .destinationPoint(
-                      distance: 0.35,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-                drawbarEnd.spherical
-                    .destinationPoint(
-                      distance: 0.35,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-                drawbarEnd.spherical
-                    .destinationPoint(
-                      distance: 0.3,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-                position.spherical
-                    .destinationPoint(
-                      distance: 0.3,
-                      bearing: bearing - 90,
-                    )
-                    .latLng,
-              ],
-            ),
-            // Right hitch bar
-            map.Polygon(
-              borderStrokeWidth: 3,
-              isFilled: true,
-              color: Colors.grey.shade800,
-              borderColor: Colors.black,
-              points: [
-                position.spherical
-                    .destinationPoint(
-                      distance: 0.35,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-                drawbarEnd.spherical
-                    .destinationPoint(
-                      distance: 0.35,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-                drawbarEnd.spherical
-                    .destinationPoint(
-                      distance: 0.3,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-                position.spherical
-                    .destinationPoint(
-                      distance: 0.3,
-                      bearing: bearing + 90,
-                    )
-                    .latLng,
-              ],
-            ),
-          ]
-      };
+  List<map.Polygon> get drawbarMapPolygons => [
+        if (sections.isNotEmpty) ...[
+          map.Polygon(
+            borderStrokeWidth: 3,
+            isFilled: true,
+            color: Colors.grey.shade800,
+            borderColor: Colors.black,
+            points: [
+              drawbarEnd.rhumb
+                  .destinationPoint(distance: 0.1, bearing: bearing)
+                  .rhumb
+                  .destinationPoint(
+                    distance: 0.05,
+                    bearing: bearing - 90,
+                  )
+                  .latLng,
+              sectionEdgePositions(0, fraction: 1)
+                  .left
+                  .rhumb
+                  .destinationPoint(distance: 0.1, bearing: bearing)
+                  .latLng,
+              sectionEdgePositions(0, fraction: 1).left.latLng,
+              drawbarEnd.rhumb
+                  .destinationPoint(
+                    distance: 0.05,
+                    bearing: bearing - 90,
+                  )
+                  .latLng,
+            ],
+          ),
+          map.Polygon(
+            borderStrokeWidth: 3,
+            isFilled: true,
+            color: Colors.grey.shade800,
+            borderColor: Colors.black,
+            points: [
+              drawbarEnd.rhumb
+                  .destinationPoint(distance: 0.1, bearing: bearing)
+                  .rhumb
+                  .destinationPoint(
+                    distance: 0.05,
+                    bearing: bearing + 90,
+                  )
+                  .latLng,
+              sectionEdgePositions(sections.length - 1, fraction: 1)
+                  .right
+                  .rhumb
+                  .destinationPoint(distance: 0.1, bearing: bearing)
+                  .latLng,
+              sectionEdgePositions(sections.length - 1, fraction: 1)
+                  .right
+                  .latLng,
+              drawbarEnd.rhumb
+                  .destinationPoint(
+                    distance: 0.05,
+                    bearing: bearing + 90,
+                  )
+                  .latLng,
+            ],
+          ),
+        ],
+        ...switch (hitchType) {
+          HitchType.towbar => [
+              map.Polygon(
+                borderStrokeWidth: 3,
+                isFilled: true,
+                color: Colors.grey.shade800,
+                borderColor: Colors.black,
+                points: [
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.05,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.05,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.05,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.05,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                ],
+              ),
+            ],
+          HitchType.fixed => [
+              // Left hitch bar
+              map.Polygon(
+                borderStrokeWidth: 3,
+                isFilled: true,
+                color: Colors.grey.shade800,
+                borderColor: Colors.black,
+                points: [
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.35,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.35,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.3,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.3,
+                        bearing: bearing - 90,
+                      )
+                      .latLng,
+                ],
+              ),
+              // Right hitch bar
+              map.Polygon(
+                borderStrokeWidth: 3,
+                isFilled: true,
+                color: Colors.grey.shade800,
+                borderColor: Colors.black,
+                points: [
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.35,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.35,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                  drawbarEnd.rhumb
+                      .destinationPoint(
+                        distance: 0.3,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                  position.rhumb
+                      .destinationPoint(
+                        distance: 0.3,
+                        bearing: bearing + 90,
+                      )
+                      .latLng,
+                ],
+              ),
+            ]
+        },
+      ];
 
   /// A polygon drawing the decoration of the equipment.
   map.Polygon? get decorationPolygon {
     if (hitchToDecorationStartLength != null &&
         decorationLength != null &&
         decorationWidth != null) {
-      final decorationStart = position.spherical
+      final decorationStart = position.rhumb
           .destinationPoint(
             distance: hitchToDecorationStartLength!,
             bearing: bearing - 180,
           )
-          .spherical
+          .rhumb
           .destinationPoint(
             distance: decorationSidewaysOffset ?? 0,
             bearing: bearing + 90,
           );
-      final decorationEnd = decorationStart.spherical.destinationPoint(
+      final decorationEnd = decorationStart.rhumb.destinationPoint(
         distance: decorationLength!,
         bearing: bearing - 180,
       );
 
       final points = [
-        decorationStart.spherical.destinationPoint(
+        decorationStart.rhumb.destinationPoint(
           distance: decorationWidth! / 2,
           bearing: bearing + 90,
         ),
-        decorationEnd.spherical.destinationPoint(
+        decorationEnd.rhumb.destinationPoint(
           distance: decorationWidth! / 2,
           bearing: bearing + 90,
         ),
-        decorationEnd.spherical.destinationPoint(
+        decorationEnd.rhumb.destinationPoint(
           distance: decorationWidth! / 2,
           bearing: bearing - 90,
         ),
-        decorationStart.spherical.destinationPoint(
+        decorationStart.rhumb.destinationPoint(
           distance: decorationWidth! / 2,
           bearing: bearing - 90,
         ),
@@ -629,13 +1026,16 @@ class Equipment extends Hitchable with EquatableMixin {
   }
 
   /// A list of all the polygons for the equipment, i.e. [drawbarMapPolygons]
-  /// and all the [sectionMapPolygon]s.
+  /// and all the [sectionWorkingMapPolygon]s.
   List<map.Polygon> get mapPolygons {
     return [
       ...drawbarMapPolygons,
       if (decorationPolygon != null) decorationPolygon!,
-      ...List.generate(sections, sectionMapPolygon, growable: false)
-          .whereNotNull(),
+      ...List.generate(
+        sections.length,
+        sectionWorkingMapPolygon,
+        growable: false,
+      ).whereNotNull(),
     ];
   }
 
@@ -645,7 +1045,6 @@ class Equipment extends Hitchable with EquatableMixin {
         uuid,
         hitchType,
         sections,
-        sectionWidths,
         workingAreaLength,
         drawbarLength,
         position,
@@ -667,8 +1066,7 @@ class Equipment extends Hitchable with EquatableMixin {
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
-    int? sections,
-    List<double>? sectionWidths,
+    List<Section>? sections,
     double? workingAreaLength,
     double? drawbarLength,
     double? sidewaysOffset,
@@ -691,7 +1089,6 @@ class Equipment extends Hitchable with EquatableMixin {
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         sections: sections ?? this.sections,
-        sectionWidths: sectionWidths ?? this.sectionWidths,
         workingAreaLength: workingAreaLength ?? this.workingAreaLength,
         drawbarLength: drawbarLength ?? this.drawbarLength,
         sidewaysOffset: sidewaysOffset ?? this.sidewaysOffset,
@@ -745,10 +1142,7 @@ class Equipment extends Hitchable with EquatableMixin {
       'decoration': decoration,
     };
 
-    map['sections'] = {
-      'sections': sections,
-      'widths': sectionWidths,
-    };
+    map['sections'] = sections;
 
     map['hitches'] = {
       'hitch_to_child_front_fixed_hitch_length':

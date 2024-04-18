@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +29,7 @@ class ThemeMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Theme',
       icon: Icons.palette,
@@ -64,30 +82,59 @@ class ThemeMenu extends StatelessWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final colorTheme = ref.watch(manufacturerProvider);
+            final inheritFromVehicle =
+                ref.watch(colorSchemeInheritFromVehicleProvider);
 
-            return MenuButtonWithChildren(
-              text: 'Color theme',
-              iconOverrideWidget: Icon(
-                Icons.palette,
-                color: colorTheme.primary,
+            final listTile = CheckboxListTile(
+              title: Text(
+                'Inherit colors from vehicle',
+                style: textStyle,
               ),
-              menuChildren: ManufacturerColor.values
-                  .map(
-                    (scheme) => ListTile(
-                      leading: Icon(
-                        Icons.palette,
-                        color: scheme.primary,
-                      ),
-                      title: Text(scheme.name),
-                      selected: colorTheme == scheme,
-                      onTap: () => ref
-                          .read(manufacturerProvider.notifier)
-                          .update(scheme),
-                    ),
-                  )
-                  .toList(),
+              value: inheritFromVehicle,
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(colorSchemeInheritFromVehicleProvider.notifier)
+                      .update(value: value)
+                  : null,
             );
+
+            if (!inheritFromVehicle) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  listTile,
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final colorTheme = ref.watch(manufacturerProvider);
+
+                      return MenuButtonWithChildren(
+                        text: 'Color theme',
+                        iconOverrideWidget: Icon(
+                          Icons.palette,
+                          color: colorTheme.primary,
+                        ),
+                        menuChildren: ManufacturerColors.values
+                            .map(
+                              (scheme) => ListTile(
+                                leading: Icon(
+                                  Icons.palette,
+                                  color: scheme.primary,
+                                ),
+                                title: Text(scheme.name),
+                                selected: colorTheme == scheme,
+                                onTap: () => ref
+                                    .read(manufacturerProvider.notifier)
+                                    .update(scheme),
+                              ),
+                            )
+                            .toList(),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
+            return listTile;
           },
         ),
       ],

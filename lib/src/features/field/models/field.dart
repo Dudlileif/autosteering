@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
@@ -152,14 +169,32 @@ class Field with EquatableMixin {
       final center = boundingBox!.min.spherical
           .intermediatePointTo(boundingBox!.max, fraction: 0.5);
 
-      final diagonal =
-          boundingBox!.min.spherical.distanceTo(boundingBox!.max) / 2;
+      final diagonal = boundingBox!.min.rhumb.distanceTo(boundingBox!.max) / 2;
 
       return GeoBox.from([
-        center.spherical.destinationPoint(distance: diagonal, bearing: 0),
-        center.spherical.destinationPoint(distance: diagonal, bearing: 90),
-        center.spherical.destinationPoint(distance: diagonal, bearing: 180),
-        center.spherical.destinationPoint(distance: diagonal, bearing: 270),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 45),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 135),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 225),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 315),
+      ]);
+    }
+    return null;
+  }
+
+  /// A bounding box for the field that is sized large enough to keep the field
+  /// inside while rotating the field in place.
+  GeoBox? get rotationCenteredSquaredByDiagonalBoundingBox {
+    if (boundingBox != null) {
+      final center = boundingBox!.min.spherical
+          .intermediatePointTo(boundingBox!.max, fraction: 0.5);
+
+      final diagonal = boundingBox!.min.rhumb.distanceTo(boundingBox!.max) / 2;
+
+      return GeoBox.from([
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 0),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 90),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 180),
+        center.rhumb.destinationPoint(distance: diagonal, bearing: 270),
       ]);
     }
     return null;

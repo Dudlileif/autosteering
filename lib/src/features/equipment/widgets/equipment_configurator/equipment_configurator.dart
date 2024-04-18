@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_decoration_page.dart';
@@ -10,148 +27,115 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A [SimpleDialog] for configuring an equipment, with ability to apply to the
+/// A [Dialog] for configuring an equipment, with ability to apply to the
 /// one in the attached hierarchy, save to file or load from file.
 class EquipmentConfigurator extends StatelessWidget {
-  /// A [SimpleDialog] for configuring an equipment, with ability to apply to
+  /// A [Dialog] for configuring an equipment, with ability to apply to
   /// the equipment in the attached hierarchy, save to file or load from file.
   const EquipmentConfigurator({super.key});
 
   @override
-  Widget build(BuildContext context) => SimpleDialog(
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget build(BuildContext context) => Dialog(
+        child: Column(
           children: [
-            Text('Configure equipment'),
-            _ApplyConfigurationToAttachedEquipmentButton(),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: _LoadButton(),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: _SaveButton(),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: CloseButton(),
-                ),
-              ],
-            ),
-          ],
-        ),
-        children: [
-          SizedBox(
-            height: 800,
-            width: 1200,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Consumer(
-                  builder: (context, ref, child) => NavigationRail(
-                    backgroundColor: Colors.transparent,
-                    labelType: NavigationRailLabelType.all,
-                    destinations: const [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.agriculture),
-                        label: Text('Type'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.expand),
-                        label: Text('Dimensions'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.view_column),
-                        label: Text('Sections'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.square_rounded),
-                        label: Text('Decoration'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.commit),
-                        label: Text('Hitches'),
-                      ),
-                    ],
-                    selectedIndex: ref.watch(
-                      equipmentConfiguratorIndexProvider,
-                    ),
-                    onDestinationSelected: ref
-                        .read(
-                          equipmentConfiguratorPageControllerProvider.notifier,
-                        )
-                        .animateToPage,
-                  ),
-                ),
-                const VerticalDivider(),
-                Expanded(
-                  child: Consumer(
-                    builder: (context, ref, child) => PageView(
-                      scrollDirection: Axis.vertical,
-                      controller: ref
-                          .watch(equipmentConfiguratorPageControllerProvider),
-                      children: const [
-                        EquipmentTypeSelectorPage(),
-                        EquipmentDimensionsPage(),
-                        EquipmentSectionsPage(),
-                        EquipmentDecorationPage(),
-                        EquipmentHitchesPage(),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        Text(
+                          'Configure equipment',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const _ApplyConfigurationToAttachedEquipmentButton(),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: CloseButton(),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      );
-}
-
-/// A button for loading an [Equipment] to the [configuredEquipmentProvider]
-/// from a file.
-class _LoadButton extends ConsumerWidget {
-  /// A button for loading an [Equipment] to the [configuredEquipmentProvider]
-  /// from a file.
-  const _LoadButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FilledButton.icon(
-      onPressed: () => ref.read(loadFileConfiguredEquipmentProvider),
-      icon: const Icon(Icons.file_open),
-      label: const Text('Load'),
-    );
-  }
-}
-
-/// A button for saving the [Equipment] int [configuredEquipmentProvider] to
-/// a file.
-class _SaveButton extends ConsumerWidget {
-  /// A button for saving the [Equipment] int [configuredEquipmentProvider] to
-  /// a file.
-  const _SaveButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FilledButton.icon(
-      onPressed: ref.watch(
-        configuredEquipmentProvider.select(
-          (value) => value.name != null && (value.name ?? '').isNotEmpty,
+            Expanded(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: SingleChildScrollView(
+                      child: IntrinsicHeight(
+                        child: Consumer(
+                          builder: (context, ref, child) => NavigationRail(
+                            backgroundColor: Colors.transparent,
+                            labelType: NavigationRailLabelType.all,
+                            destinations: const [
+                              NavigationRailDestination(
+                                icon: Icon(Icons.handyman),
+                                label: Text('Type'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.expand),
+                                label: Text('Dimensions'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.view_column),
+                                label: Text('Sections'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.square_rounded),
+                                label: Text('Decoration'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.commit),
+                                label: Text('Hitches'),
+                              ),
+                            ],
+                            selectedIndex: ref.watch(
+                              equipmentConfiguratorIndexProvider,
+                            ),
+                            onDestinationSelected: ref
+                                .read(
+                                  equipmentConfiguratorPageControllerProvider
+                                      .notifier,
+                                )
+                                .animateToPage,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const VerticalDivider(),
+                  Expanded(
+                    child: Consumer(
+                      builder: (context, ref, child) => PageView(
+                        scrollDirection: Axis.vertical,
+                        controller: ref
+                            .watch(equipmentConfiguratorPageControllerProvider),
+                        children: const [
+                          EquipmentTypeSelectorPage(),
+                          EquipmentDimensionsPage(),
+                          EquipmentSectionsPage(),
+                          EquipmentDecorationPage(),
+                          EquipmentHitchesPage(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      )
-          ? () => ref.watch(
-                saveEquipmentProvider(
-                  ref.watch(configuredEquipmentProvider),
-                  downloadIfWeb: true,
-                ),
-              )
-          : null,
-      icon: const Icon(Icons.save),
-      label: const Text('Save'),
-    );
-  }
+      );
 }
 
 /// A button for going to the next page of the vehicle configurator.

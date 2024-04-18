@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:math';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -91,25 +108,25 @@ class DubinsPath {
     angleStepSize = 360 * stepSize / (2 * pi * turningRadius);
 
     /// The center position of the left starting circle.
-    startLeftCircleCenter = start.position.spherical.destinationPoint(
+    startLeftCircleCenter = start.position.rhumb.destinationPoint(
       distance: turningRadius,
       bearing: (start.bearing - 90).wrap360(),
     );
 
     /// The center position of the right starting circle.
-    startRightCircleCenter = start.position.spherical.destinationPoint(
+    startRightCircleCenter = start.position.rhumb.destinationPoint(
       distance: turningRadius,
       bearing: (start.bearing + 90).wrap360(),
     );
 
     /// The center position of the left end circle.
-    endLeftCircleCenter = end.position.spherical.destinationPoint(
+    endLeftCircleCenter = end.position.rhumb.destinationPoint(
       distance: turningRadius,
       bearing: (end.bearing - 90).wrap360(),
     );
 
     /// The center position of the right end circle.
-    endRightCircleCenter = end.position.spherical.destinationPoint(
+    endRightCircleCenter = end.position.rhumb.destinationPoint(
       distance: turningRadius,
       bearing: (end.bearing + 90).wrap360(),
     );
@@ -207,11 +224,11 @@ class DubinsPath {
 
     // The bearing from the starting to the ending circle.
     final startToEndCircleBearing =
-        startingCircle.spherical.initialBearingTo(endingCircle);
+        startingCircle.rhumb.initialBearingTo(endingCircle);
 
     // The distance from the starting to the ending circle.
     final startToEndCircleDistance =
-        startingCircle.spherical.distanceTo(endingCircle);
+        startingCircle.rhumb.distanceTo(endingCircle);
 
     // Invalidate paths that can't physically exist.
     if (pathType == DubinsPathType.lsr || pathType == DubinsPathType.rsl) {
@@ -250,7 +267,7 @@ class DubinsPath {
     };
 
     // The starting point of the tangent.
-    final tangentStart = startingCircle.spherical.destinationPoint(
+    final tangentStart = startingCircle.rhumb.destinationPoint(
       distance: turningRadius,
       bearing: theta,
     );
@@ -277,65 +294,64 @@ class DubinsPath {
       // end circle if the distance is long enough, so we use the bearing of
       // this point from the end circle to get the tangent point with correct
       // radius.
-      final tangentEndBearingPoint = tangentStart.spherical.destinationPoint(
+      final tangentEndBearingPoint = tangentStart.rhumb.destinationPoint(
         distance: startToEndCircleDistance,
         bearing: startToEndCircleBearing,
       );
 
       // The bearing from the end circle to the end tangent.
       final endCircleToTangentEndBearing =
-          endingCircle.spherical.initialBearingTo(tangentEndBearingPoint);
+          endingCircle.rhumb.initialBearingTo(tangentEndBearingPoint);
 
       // The end tangent point calculated from the end circle center.
-      tangentEnd = endingCircle.spherical.destinationPoint(
+      tangentEnd = endingCircle.rhumb.destinationPoint(
         distance: turningRadius,
         bearing: endCircleToTangentEndBearing,
       );
 
       // The bearing from the start to end tangent points.
-      tangentStartBearing = tangentStart.spherical.initialBearingTo(tangentEnd);
+      tangentStartBearing = tangentStart.rhumb.initialBearingTo(tangentEnd);
 
-      middleLength = tangentStart.spherical.distanceTo(tangentEnd);
+      middleLength = tangentStart.rhumb.distanceTo(tangentEnd);
     } else if (pathType == DubinsPathType.lsr ||
         pathType == DubinsPathType.rsl) {
       // The starting circle is offset by one diameter to get the
       // diagonal tangent.
-      final offsetStartingCircle = startingCircle.spherical.destinationPoint(
+      final offsetStartingCircle = startingCircle.rhumb.destinationPoint(
         distance: 2 * turningRadius,
         bearing: theta,
       );
 
       // The bearing from the offset starting circle to the ending circle.
       tangentStartBearing =
-          offsetStartingCircle.spherical.initialBearingTo(endingCircle);
+          offsetStartingCircle.rhumb.initialBearingTo(endingCircle);
 
       // The bearing is the same since the tangent is straight.
       tangentEndBearing = tangentStartBearing;
 
       // The assumed tangent length.
-      final tangentLength =
-          offsetStartingCircle.spherical.distanceTo(endingCircle);
+      final tangentLength = offsetStartingCircle.rhumb.distanceTo(endingCircle);
 
       // The end tangent point, but it might have a radius mismatch from the
       // end circle if the distance is long enough, so we use the bearing of
       // this point from the end circle to get the tangent point with correct
       // radius.
-      final tangentEndBearingPoint = tangentStart.spherical.destinationPoint(
+      final tangentEndBearingPoint = tangentStart.rhumb.destinationPoint(
         distance: tangentLength,
         bearing: tangentStartBearing,
       );
 
       // The bearing from the end circle to the end tangent.
       final endCircleToTangentEndBearing =
-          endingCircle.spherical.initialBearingTo(tangentEndBearingPoint);
+          endingCircle.rhumb.initialBearingTo(tangentEndBearingPoint);
 
       // The end tangent point calculated from the end circle center.
-      tangentEnd = endingCircle.spherical.destinationPoint(
+      tangentEnd = endingCircle.rhumb.destinationPoint(
         distance: turningRadius,
         bearing: endCircleToTangentEndBearing,
       );
 
-      middleLength = tangentStart.spherical.distanceTo(tangentEnd);
+      middleLength = tangentStart.rhumb.distanceTo(tangentEnd);
     } else if (pathType == DubinsPathType.lrl ||
         pathType == DubinsPathType.rlr) {
       // Change the sign of angle/bearing modifiers if we're turning left.
@@ -347,19 +363,19 @@ class DubinsPath {
       // Turn by 90 degrees since the vehicle drives orthogonal to the radius.
       tangentStartBearing = theta - middleTurnSign * 90;
 
-      middleCircleCenter = startingCircle.spherical.destinationPoint(
+      middleCircleCenter = startingCircle.rhumb.destinationPoint(
         distance: 2 * turningRadius,
         bearing: theta,
       );
 
       // The angle/bearing from the middle circle to the ending circle.
       final middleToEndBearing =
-          middleCircleCenter.spherical.initialBearingTo(endingCircle);
+          middleCircleCenter.rhumb.initialBearingTo(endingCircle);
 
       // Turn by 90 degrees since the vehicle drives orthogonal to the radius.
       tangentEndBearing = middleToEndBearing + middleTurnSign * 90;
 
-      tangentEnd = middleCircleCenter.spherical.destinationPoint(
+      tangentEnd = middleCircleCenter.rhumb.destinationPoint(
         distance: turningRadius,
         bearing: middleToEndBearing,
       );
@@ -368,10 +384,10 @@ class DubinsPath {
       final middleTurnAngle = mod2pi(
         middleTurnSign *
             degToRadian(
-              middleCircleCenter.spherical.initialBearingTo(
+              middleCircleCenter.rhumb.initialBearingTo(
                     tangentEnd,
                   ) -
-                  middleCircleCenter.spherical.initialBearingTo(
+                  middleCircleCenter.rhumb.initialBearingTo(
                     tangentStart,
                   ),
             ),
@@ -389,10 +405,10 @@ class DubinsPath {
     final startTurnAngle = mod2pi(
       startTurnSign *
           degToRadian(
-            startingCircle.spherical.initialBearingTo(
+            startingCircle.rhumb.initialBearingTo(
                   tangentStart,
                 ) -
-                startingCircle.spherical.initialBearingTo(start.position),
+                startingCircle.rhumb.initialBearingTo(start.position),
           ),
     );
 
@@ -406,8 +422,8 @@ class DubinsPath {
     final endTurnAngle = mod2pi(
       endTurnSign *
           degToRadian(
-            endingCircle.spherical.initialBearingTo(end.position) -
-                endingCircle.spherical.initialBearingTo(tangentEnd),
+            endingCircle.rhumb.initialBearingTo(end.position) -
+                endingCircle.rhumb.initialBearingTo(tangentEnd),
           ),
     );
     // The length of the first section.
@@ -485,7 +501,7 @@ class DubinsPath {
     }
     // Calculate next point when turning.
     if (circleCenter != null) {
-      final angle = circleCenter.spherical.initialBearingTo(origin.position);
+      final angle = circleCenter.rhumb.initialBearingTo(origin.position);
 
       // Make the step negative if we're turning left, positive otherwise.
       final sign = switch (section) {
@@ -497,7 +513,7 @@ class DubinsPath {
       // revolve around the [circleCenter].
       angleStep = sign * angleStepSize;
 
-      nextPoint = circleCenter.spherical.destinationPoint(
+      nextPoint = circleCenter.rhumb.destinationPoint(
         distance: turningRadius,
         bearing: angle + angleStep,
       );
@@ -506,7 +522,7 @@ class DubinsPath {
     }
     // Calculate next point when going straight.
     else {
-      nextPoint = origin.position.spherical.destinationPoint(
+      nextPoint = origin.position.rhumb.destinationPoint(
         distance: stepSize,
         bearing: origin.bearing,
       );
@@ -514,7 +530,7 @@ class DubinsPath {
       bearing = pathData(pathType)!
           .tangentStart
           .position
-          .spherical
+          .rhumb
           .finalBearingTo(nextPoint);
     }
 

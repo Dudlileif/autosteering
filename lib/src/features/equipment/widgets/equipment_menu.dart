@@ -1,6 +1,24 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -22,6 +40,7 @@ class EquipmentMenu extends StatelessWidget {
       menuChildren: [
         const _LoadEquipmentSetupMenu(),
         const _LoadEquipmentMenu(),
+        const _ImportExportMenu(),
         MenuItemButton(
           leadingIcon: const Padding(
             padding: EdgeInsets.only(left: 8),
@@ -39,10 +58,26 @@ class EquipmentMenu extends StatelessWidget {
         const _DetachMenu(),
         Consumer(
           child: Text(
-            'Show',
+            'Draw equipment',
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            value: ref.watch(showEquipmentDrawingLayerProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(showEquipmentDrawingLayerProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Debug equipment',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            secondary: const Icon(Icons.bug_report),
             title: child,
             value: ref.watch(showEquipmentDebugProvider),
             onChanged: (value) => value != null
@@ -58,6 +93,7 @@ class EquipmentMenu extends StatelessWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
             leadingIcon: const Padding(
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.clear),
@@ -65,6 +101,58 @@ class EquipmentMenu extends StatelessWidget {
             onPressed: ref.read(allEquipmentsProvider.notifier).clear,
             child: child,
           ),
+        ),
+        Consumer(
+          child: Text(
+            'Clear worked area',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.clear),
+            ),
+            onPressed: () =>
+                ref.read(allEquipmentsProvider.notifier).clearPaintedArea(),
+            child: child,
+          ),
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final fraction = ref.watch(equipmentRecordPositionFractionProvider);
+            return ListTile(
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Recording position',
+                    style: textStyle,
+                  ),
+                  ToggleButtons(
+                    isSelected: [fraction == 1, fraction == 0.5, fraction == 0],
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Front'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Center'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Rear'),
+                      ),
+                    ],
+                    onPressed: (index) => ref
+                        .read(equipmentRecordPositionFractionProvider.notifier)
+                        .update((-index + 2) / 2),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ],
     );
@@ -85,7 +173,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
       ),
       builder: (context, ref, child) {
         if (ref.watch(
-          mainVehicleProvider.select((value) => value.numAttachedChildren > 1),
+          mainVehicleProvider.select((value) => value.numAttachedChildren > 0),
         )) {
           return MenuItemButton(
             closeOnActivate: false,
@@ -99,8 +187,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
               builder: (context) {
                 var name = '';
                 return StatefulBuilder(
-                  builder: (context, setState) {
-                    return SimpleDialog(
+                  builder: (context, setState) => SimpleDialog(
                       title: const Text('Name the setup'),
                       children: [
                         Padding(
@@ -148,8 +235,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
                           ),
                         ),
                       ],
-                    );
-                  },
+                  ),
                 );
               },
             ),
@@ -185,23 +271,150 @@ class _LoadEquipmentMenu extends ConsumerWidget {
       icon: Icons.history,
       menuChildren: equipments
           .map(
-            (equipment) => MenuItemButton(
-              onPressed: () {
-                equipment.lastUsed = DateTime.now();
+            (equipment) => ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 200),
+              child: ListTile(
+                onTap: () {
+                  equipment.lastUsed = DateTime.now();
 
-                ref
-                    .read(configuredEquipmentProvider.notifier)
-                    .update(equipment);
+                  ref
+                      .read(configuredEquipmentProvider.notifier)
+                      .update(equipment);
 
-                ref
-                  ..read(saveEquipmentProvider(equipment))
-                  ..invalidate(configuredEquipmentNameTextControllerProvider);
-              },
-              closeOnActivate: false,
-              child: Text(equipment.name ?? equipment.uuid, style: textStyle),
+                  ref
+                    ..read(saveEquipmentProvider(equipment))
+                    ..invalidate(configuredEquipmentNameTextControllerProvider);
+                },
+                title: Text(equipment.name ?? equipment.uuid, style: textStyle),
+                trailing: Device.isNative
+                    ? IconButton(
+                        onPressed: () async {
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (context) => SimpleDialog(
+                              title: Text(
+                                'Delete ${equipment.name ?? equipment.uuid}?',
+                              ),
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SimpleDialogOption(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    Consumer(
+                                      builder: (context, ref, child) =>
+                                          SimpleDialogOption(
+                                        onPressed: () async {
+                                          await ref
+                                              .watch(
+                                                deleteEquipmentProvider(
+                                                  equipment,
+                                                ).future,
+                                              )
+                                              .then(
+                                                (value) => Navigator.of(context)
+                                                    .pop(true),
+                                              );
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.delete),
+                      )
+                    : null,
+              ),
             ),
           )
           .toList(),
+    );
+  }
+}
+
+class _ImportExportMenu extends ConsumerWidget {
+  const _ImportExportMenu();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    return MenuButtonWithChildren(
+      icon: Icons.import_export,
+      text: 'Import/Export',
+      menuChildren: [
+        Consumer(
+          builder: (context, ref, child) {
+            return MenuItemButton(
+              closeOnActivate: false,
+              onPressed: () => ref.read(importEquipmentProvider),
+              leadingIcon: const Icon(Icons.file_open),
+              child: Text('Import', style: textStyle),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            return MenuItemButton(
+              closeOnActivate: false,
+              onPressed: ref.watch(
+                configuredEquipmentProvider.select(
+                  (value) =>
+                      value.name != null && (value.name ?? '').isNotEmpty,
+                ),
+              )
+                  ? () => ref.watch(
+                        exportEquipmentProvider(
+                          ref.watch(configuredEquipmentProvider),
+                        ),
+                      )
+                  : null,
+              leadingIcon: const Icon(Icons.save_alt),
+              child: Text('Export', style: textStyle),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            return MenuItemButton(
+              closeOnActivate: false,
+              onPressed: () => ref.read(importEquipmentSetupProvider),
+              leadingIcon: const Icon(Icons.file_open),
+              child: Text('Import setup', style: textStyle),
+            );
+          },
+        ),
+        if (ref.watch(
+          configuredEquipmentSetupProvider.select((value) => value != null),
+        ))
+          Consumer(
+            builder: (context, ref, child) {
+              return MenuItemButton(
+                closeOnActivate: false,
+                onPressed: ref.watch(
+                  configuredEquipmentSetupProvider.select(
+                    (value) => value != null && value.name.isNotEmpty,
+                  ),
+                )
+                    ? () => ref.watch(
+                          exportEquipmentSetupProvider(
+                            ref.watch(configuredEquipmentSetupProvider)!,
+                          ),
+                        )
+                    : null,
+                leadingIcon: const Icon(Icons.save_alt),
+                child: Text('Export setup', style: textStyle),
+              );
+            },
+          ),
+      ],
     );
   }
 }
@@ -230,17 +443,64 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
       icon: Icons.history,
       menuChildren: setups
           .map(
-            (setup) => MenuItemButton(
-              closeOnActivate: false,
-              onPressed: () {
-                setup.lastUsed = DateTime.now();
+            (setup) => ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 200),
+              child: ListTile(
+                onTap: () {
+                  setup.lastUsed = DateTime.now();
 
-                ref.read(saveEquipmentSetupProvider(setup));
-                ref
-                    .read(configuredEquipmentSetupProvider.notifier)
-                    .update(setup);
-              },
-              child: Text(setup.name, style: textStyle),
+                  ref.read(saveEquipmentSetupProvider(setup));
+                  ref
+                      .read(configuredEquipmentSetupProvider.notifier)
+                      .update(setup);
+                },
+                title: Text(setup.name, style: textStyle),
+                trailing: Device.isNative
+                    ? IconButton(
+                        onPressed: () async {
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (context) => SimpleDialog(
+                              title: Text(
+                                'Delete ${setup.name}?',
+                              ),
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SimpleDialogOption(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    Consumer(
+                                      builder: (context, ref, child) =>
+                                          SimpleDialogOption(
+                                        onPressed: () async {
+                                          await ref
+                                              .watch(
+                                                deleteEquipmentSetupProvider(
+                                                  setup,
+                                                ).future,
+                                              )
+                                              .then(
+                                                (value) => Navigator.of(context)
+                                                    .pop(true),
+                                              );
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.delete),
+                      )
+                    : null,
+              ),
             ),
           )
           .toList(),
@@ -534,6 +794,7 @@ class _RecursiveDetachMenu extends ConsumerWidget {
 
     if (parent.hitchChildren.isEmpty && parent is! Vehicle) {
       return MenuItemButton(
+        closeOnActivate: false,
         child: Text(text, style: textStyle),
         onPressed: () =>
             ref.read(simInputProvider.notifier).send((detachUuid: parent.uuid)),

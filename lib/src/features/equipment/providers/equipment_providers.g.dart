@@ -7,7 +7,7 @@ part of 'equipment_providers.dart';
 // **************************************************************************
 
 String _$loadEquipmentFromFileHash() =>
-    r'4e4006945c3bf754855225412d5dc7b2ce1f97b6';
+    r'54247c67cc79e90f8773473e3d870d1c79c013c1';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -212,7 +212,7 @@ class _LoadEquipmentFromFileProviderElement
   String get path => (origin as LoadEquipmentFromFileProvider).path;
 }
 
-String _$saveEquipmentHash() => r'334b2e5eea0212d284f05afd1df4da4904c6fe80';
+String _$saveEquipmentHash() => r'40bec08cc39b6d284c749f8de135dbdb159f291c';
 
 /// A provider for saving [equipment] to a file in the user file directory.
 ///
@@ -279,8 +279,7 @@ class SaveEquipmentFamily extends Family {
   }
 
   /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      AsyncValue<void> Function(SaveEquipmentRef ref) create) {
+  Override overrideWith(FutureOr<void> Function(SaveEquipmentRef ref) create) {
     return _$SaveEquipmentFamilyOverride(this, create);
   }
 }
@@ -288,7 +287,7 @@ class SaveEquipmentFamily extends Family {
 class _$SaveEquipmentFamilyOverride implements FamilyOverride {
   _$SaveEquipmentFamilyOverride(this.overriddenFamily, this.create);
 
-  final AsyncValue<void> Function(SaveEquipmentRef ref) create;
+  final FutureOr<void> Function(SaveEquipmentRef ref) create;
 
   @override
   final SaveEquipmentFamily overriddenFamily;
@@ -306,7 +305,7 @@ class _$SaveEquipmentFamilyOverride implements FamilyOverride {
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveEquipment].
-class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
+class SaveEquipmentProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for saving [equipment] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
@@ -355,7 +354,7 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
 
   @override
   Override overrideWith(
-    AsyncValue<void> Function(SaveEquipmentRef ref) create,
+    FutureOr<void> Function(SaveEquipmentRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -387,12 +386,12 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 
   @override
-  AutoDisposeProviderElement<AsyncValue<void>> createElement() {
+  AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveEquipmentProviderElement(this);
   }
 
   SaveEquipmentProvider _copyWith(
-    AsyncValue<void> Function(SaveEquipmentRef ref) create,
+    FutureOr<void> Function(SaveEquipmentRef ref) create,
   ) {
     return SaveEquipmentProvider._internal(
       (ref) => create(ref as SaveEquipmentRef),
@@ -426,7 +425,7 @@ class SaveEquipmentProvider extends AutoDisposeProvider<AsyncValue<void>> {
   }
 }
 
-mixin SaveEquipmentRef on AutoDisposeProviderRef<AsyncValue<void>> {
+mixin SaveEquipmentRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `equipment` of this provider.
   Equipment get equipment;
 
@@ -438,7 +437,7 @@ mixin SaveEquipmentRef on AutoDisposeProviderRef<AsyncValue<void>> {
 }
 
 class _SaveEquipmentProviderElement
-    extends AutoDisposeProviderElement<AsyncValue<void>> with SaveEquipmentRef {
+    extends AutoDisposeFutureProviderElement<void> with SaveEquipmentRef {
   _SaveEquipmentProviderElement(super.provider);
 
   @override
@@ -449,14 +448,251 @@ class _SaveEquipmentProviderElement
   bool get downloadIfWeb => (origin as SaveEquipmentProvider).downloadIfWeb;
 }
 
-String _$savedEquipmentsHash() => r'07c737a4e45444ae43c789a36be7caf450add31d';
+String _$exportEquipmentHash() => r'f91267effec957ccf5eeeba9d8a55ccca4a7f4a9';
+
+/// A provider for exporting [equipment] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportEquipment].
+@ProviderFor(exportEquipment)
+const exportEquipmentProvider = ExportEquipmentFamily();
+
+/// A provider for exporting [equipment] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportEquipment].
+class ExportEquipmentFamily extends Family {
+  /// A provider for exporting [equipment] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportEquipment].
+  const ExportEquipmentFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportEquipmentProvider';
+
+  /// A provider for exporting [equipment] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportEquipment].
+  ExportEquipmentProvider call(
+    Equipment equipment, {
+    String? overrideName,
+    bool downloadIfWeb = true,
+  }) {
+    return ExportEquipmentProvider(
+      equipment,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportEquipmentProvider getProviderOverride(
+    covariant ExportEquipmentProvider provider,
+  ) {
+    return call(
+      provider.equipment,
+      overrideName: provider.overrideName,
+      downloadIfWeb: provider.downloadIfWeb,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(ExportEquipmentRef ref) create) {
+    return _$ExportEquipmentFamilyOverride(this, create);
+  }
+}
+
+class _$ExportEquipmentFamilyOverride implements FamilyOverride {
+  _$ExportEquipmentFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportEquipmentRef ref) create;
+
+  @override
+  final ExportEquipmentFamily overriddenFamily;
+
+  @override
+  ExportEquipmentProvider getProviderOverride(
+    covariant ExportEquipmentProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for exporting [equipment] to a file.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [exportEquipment].
+class ExportEquipmentProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for exporting [equipment] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [exportEquipment].
+  ExportEquipmentProvider(
+    Equipment equipment, {
+    String? overrideName,
+    bool downloadIfWeb = true,
+  }) : this._internal(
+          (ref) => exportEquipment(
+            ref as ExportEquipmentRef,
+            equipment,
+            overrideName: overrideName,
+            downloadIfWeb: downloadIfWeb,
+          ),
+          from: exportEquipmentProvider,
+          name: r'exportEquipmentProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportEquipmentHash,
+          dependencies: ExportEquipmentFamily._dependencies,
+          allTransitiveDependencies:
+              ExportEquipmentFamily._allTransitiveDependencies,
+          equipment: equipment,
+          overrideName: overrideName,
+          downloadIfWeb: downloadIfWeb,
+        );
+
+  ExportEquipmentProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.equipment,
+    required this.overrideName,
+    required this.downloadIfWeb,
+  }) : super.internal();
+
+  final Equipment equipment;
+  final String? overrideName;
+  final bool downloadIfWeb;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportEquipmentRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportEquipmentProvider._internal(
+        (ref) => create(ref as ExportEquipmentRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        equipment: equipment,
+        overrideName: overrideName,
+        downloadIfWeb: downloadIfWeb,
+      ),
+    );
+  }
+
+  @override
+  (
+    Equipment, {
+    String? overrideName,
+    bool downloadIfWeb,
+  }) get argument {
+    return (
+      equipment,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportEquipmentProviderElement(this);
+  }
+
+  ExportEquipmentProvider _copyWith(
+    FutureOr<void> Function(ExportEquipmentRef ref) create,
+  ) {
+    return ExportEquipmentProvider._internal(
+      (ref) => create(ref as ExportEquipmentRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      equipment: equipment,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportEquipmentProvider &&
+        other.equipment == equipment &&
+        other.overrideName == overrideName &&
+        other.downloadIfWeb == downloadIfWeb;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, equipment.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportEquipmentRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `equipment` of this provider.
+  Equipment get equipment;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+
+  /// The parameter `downloadIfWeb` of this provider.
+  bool get downloadIfWeb;
+}
+
+class _ExportEquipmentProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ExportEquipmentRef {
+  _ExportEquipmentProviderElement(super.provider);
+
+  @override
+  Equipment get equipment => (origin as ExportEquipmentProvider).equipment;
+  @override
+  String? get overrideName => (origin as ExportEquipmentProvider).overrideName;
+  @override
+  bool get downloadIfWeb => (origin as ExportEquipmentProvider).downloadIfWeb;
+}
+
+String _$savedEquipmentsHash() => r'dede76af366e21da6460816b23f88b3b8c6d31f9';
 
 /// A provider for reading and holding all the saved [Equipment] in the
 /// user file directory.
 ///
 /// Copied from [savedEquipments].
 @ProviderFor(savedEquipments)
-final savedEquipmentsProvider = Provider<AsyncValue<List<Equipment>>>.internal(
+final savedEquipmentsProvider = FutureProvider<List<Equipment>>.internal(
   savedEquipments,
   name: r'savedEquipmentsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -466,16 +702,252 @@ final savedEquipmentsProvider = Provider<AsyncValue<List<Equipment>>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef SavedEquipmentsRef = ProviderRef<AsyncValue<List<Equipment>>>;
+typedef SavedEquipmentsRef = FutureProviderRef<List<Equipment>>;
+String _$deleteEquipmentHash() => r'340f650d0a0e5f680a1cb62eb3ff94faadd5e20a';
+
+/// A provider for deleting [equipment] from the user file system.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteEquipment].
+@ProviderFor(deleteEquipment)
+const deleteEquipmentProvider = DeleteEquipmentFamily();
+
+/// A provider for deleting [equipment] from the user file system.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteEquipment].
+class DeleteEquipmentFamily extends Family {
+  /// A provider for deleting [equipment] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteEquipment].
+  const DeleteEquipmentFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteEquipmentProvider';
+
+  /// A provider for deleting [equipment] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteEquipment].
+  DeleteEquipmentProvider call(
+    Equipment equipment, {
+    String? overrideName,
+  }) {
+    return DeleteEquipmentProvider(
+      equipment,
+      overrideName: overrideName,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  DeleteEquipmentProvider getProviderOverride(
+    covariant DeleteEquipmentProvider provider,
+  ) {
+    return call(
+      provider.equipment,
+      overrideName: provider.overrideName,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(DeleteEquipmentRef ref) create) {
+    return _$DeleteEquipmentFamilyOverride(this, create);
+  }
+}
+
+class _$DeleteEquipmentFamilyOverride implements FamilyOverride {
+  _$DeleteEquipmentFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(DeleteEquipmentRef ref) create;
+
+  @override
+  final DeleteEquipmentFamily overriddenFamily;
+
+  @override
+  DeleteEquipmentProvider getProviderOverride(
+    covariant DeleteEquipmentProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for deleting [equipment] from the user file system.
+///
+/// Override the file name with [overrideName].
+///
+/// Copied from [deleteEquipment].
+class DeleteEquipmentProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for deleting [equipment] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  ///
+  /// Copied from [deleteEquipment].
+  DeleteEquipmentProvider(
+    Equipment equipment, {
+    String? overrideName,
+  }) : this._internal(
+          (ref) => deleteEquipment(
+            ref as DeleteEquipmentRef,
+            equipment,
+            overrideName: overrideName,
+          ),
+          from: deleteEquipmentProvider,
+          name: r'deleteEquipmentProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$deleteEquipmentHash,
+          dependencies: DeleteEquipmentFamily._dependencies,
+          allTransitiveDependencies:
+              DeleteEquipmentFamily._allTransitiveDependencies,
+          equipment: equipment,
+          overrideName: overrideName,
+        );
+
+  DeleteEquipmentProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.equipment,
+    required this.overrideName,
+  }) : super.internal();
+
+  final Equipment equipment;
+  final String? overrideName;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(DeleteEquipmentRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DeleteEquipmentProvider._internal(
+        (ref) => create(ref as DeleteEquipmentRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        equipment: equipment,
+        overrideName: overrideName,
+      ),
+    );
+  }
+
+  @override
+  (
+    Equipment, {
+    String? overrideName,
+  }) get argument {
+    return (
+      equipment,
+      overrideName: overrideName,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _DeleteEquipmentProviderElement(this);
+  }
+
+  DeleteEquipmentProvider _copyWith(
+    FutureOr<void> Function(DeleteEquipmentRef ref) create,
+  ) {
+    return DeleteEquipmentProvider._internal(
+      (ref) => create(ref as DeleteEquipmentRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      equipment: equipment,
+      overrideName: overrideName,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeleteEquipmentProvider &&
+        other.equipment == equipment &&
+        other.overrideName == overrideName;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, equipment.hashCode);
+    hash = _SystemHash.combine(hash, overrideName.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin DeleteEquipmentRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `equipment` of this provider.
+  Equipment get equipment;
+
+  /// The parameter `overrideName` of this provider.
+  String? get overrideName;
+}
+
+class _DeleteEquipmentProviderElement
+    extends AutoDisposeFutureProviderElement<void> with DeleteEquipmentRef {
+  _DeleteEquipmentProviderElement(super.provider);
+
+  @override
+  Equipment get equipment => (origin as DeleteEquipmentProvider).equipment;
+  @override
+  String? get overrideName => (origin as DeleteEquipmentProvider).overrideName;
+}
+
+String _$importEquipmentHash() => r'e69319653bba183e429a3bed04cef9909b4823d0';
+
+/// A provider for importing a equipment configuration from a file and applying
+/// it to the [ConfiguredEquipment] provider.
+///
+/// Copied from [importEquipment].
+@ProviderFor(importEquipment)
+final importEquipmentProvider = AutoDisposeFutureProvider<Equipment?>.internal(
+  importEquipment,
+  name: r'importEquipmentProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$importEquipmentHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ImportEquipmentRef = AutoDisposeFutureProviderRef<Equipment?>;
 String _$showEquipmentDebugHash() =>
-    r'a4130310d497a5d7a8b6cc65d8d843968f668d28';
+    r'1e3a6744e92da54c0a72fd64c65b5a2e0644052b';
 
 /// Whether or not to show the equipment debugging features.
 ///
 /// Copied from [ShowEquipmentDebug].
 @ProviderFor(ShowEquipmentDebug)
 final showEquipmentDebugProvider =
-    NotifierProvider<ShowEquipmentDebug, bool>.internal(
+    AutoDisposeNotifierProvider<ShowEquipmentDebug, bool>.internal(
   ShowEquipmentDebug.new,
   name: r'showEquipmentDebugProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -485,8 +957,28 @@ final showEquipmentDebugProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowEquipmentDebug = Notifier<bool>;
-String _$allEquipmentsHash() => r'16fb9c297e1f743fdab66c424c606039a393b8d8';
+typedef _$ShowEquipmentDebug = AutoDisposeNotifier<bool>;
+String _$equipmentRecordPositionFractionHash() =>
+    r'bb8fda078784d4229bde314e792ba25c0a50d1ed';
+
+/// A provider for how the [SectionEdgePositions] should be recorded, as the
+/// fraction parameter that goes in [Equipment.sectionEdgePositions].
+///
+/// Copied from [EquipmentRecordPositionFraction].
+@ProviderFor(EquipmentRecordPositionFraction)
+final equipmentRecordPositionFractionProvider =
+    NotifierProvider<EquipmentRecordPositionFraction, double>.internal(
+  EquipmentRecordPositionFraction.new,
+  name: r'equipmentRecordPositionFractionProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$equipmentRecordPositionFractionHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$EquipmentRecordPositionFraction = Notifier<double>;
+String _$allEquipmentsHash() => r'921764dc5d2f76c6d6e63838370e50e1a4884e07';
 
 /// A provider that holds all of the equipments.
 ///
@@ -504,31 +996,32 @@ final allEquipmentsProvider =
 );
 
 typedef _$AllEquipments = Notifier<Map<String, Equipment>>;
-String _$equipmentHoveredHash() => r'cbf31e925f9878e4ac78df491aad05d3bdb45961';
+String _$equipmentWorkedAreaHash() =>
+    r'64fa5bf5976884164bb0c37ed91afc0be24c9ebe';
 
-/// Whether or not a cursor is hovering over an equipment section.
+/// A provider for keeping the worked area for each equipment.
 ///
-/// Copied from [EquipmentHovered].
-@ProviderFor(EquipmentHovered)
-final equipmentHoveredProvider =
-    NotifierProvider<EquipmentHovered, bool>.internal(
-  EquipmentHovered.new,
-  name: r'equipmentHoveredProvider',
+/// Copied from [EquipmentWorkedArea].
+@ProviderFor(EquipmentWorkedArea)
+final equipmentWorkedAreaProvider =
+    NotifierProvider<EquipmentWorkedArea, Map<String, double>>.internal(
+  EquipmentWorkedArea.new,
+  name: r'equipmentWorkedAreaProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$equipmentHoveredHash,
+      : _$equipmentWorkedAreaHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$EquipmentHovered = Notifier<bool>;
-String _$equipmentPathsHash() => r'3d786a2d2f9552aca6de0849562eec0e9d07b5ac';
+typedef _$EquipmentWorkedArea = Notifier<Map<String, double>>;
+String _$equipmentPathsHash() => r'f8489b1f4c5821f7ec18bdeca3c3a856ef94e739';
 
 abstract class _$EquipmentPaths
-    extends BuildlessAutoDisposeNotifier<List<Map<int, List<Geographic>?>>> {
+    extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {
   late final String uuid;
 
-  List<Map<int, List<Geographic>?>> build(
+  List<Map<int, List<SectionEdgePositions>?>> build(
     String uuid,
   );
 }
@@ -608,8 +1101,8 @@ class _$EquipmentPathsFamilyOverride implements FamilyOverride {
 /// A provider for tracking the worked paths for the given equipment [uuid].
 ///
 /// Copied from [EquipmentPaths].
-class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
-    EquipmentPaths, List<Map<int, List<Geographic>?>>> {
+class EquipmentPathsProvider extends NotifierProviderImpl<EquipmentPaths,
+    List<Map<int, List<SectionEdgePositions>?>>> {
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
   /// Copied from [EquipmentPaths].
@@ -642,7 +1135,7 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
   final String uuid;
 
   @override
-  List<Map<int, List<Geographic>?>> runNotifierBuild(
+  List<Map<int, List<SectionEdgePositions>?>> runNotifierBuild(
     covariant EquipmentPaths notifier,
   ) {
     return notifier.build(
@@ -672,8 +1165,8 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
   }
 
   @override
-  AutoDisposeNotifierProviderElement<EquipmentPaths,
-      List<Map<int, List<Geographic>?>>> createElement() {
+  NotifierProviderElement<EquipmentPaths,
+      List<Map<int, List<SectionEdgePositions>?>>> createElement() {
     return _EquipmentPathsProviderElement(this);
   }
 
@@ -706,13 +1199,14 @@ class EquipmentPathsProvider extends AutoDisposeNotifierProviderImpl<
 }
 
 mixin EquipmentPathsRef
-    on AutoDisposeNotifierProviderRef<List<Map<int, List<Geographic>?>>> {
+    on NotifierProviderRef<List<Map<int, List<SectionEdgePositions>?>>> {
   /// The parameter `uuid` of this provider.
   String get uuid;
 }
 
-class _EquipmentPathsProviderElement extends AutoDisposeNotifierProviderElement<
-    EquipmentPaths, List<Map<int, List<Geographic>?>>> with EquipmentPathsRef {
+class _EquipmentPathsProviderElement extends NotifierProviderElement<
+    EquipmentPaths,
+    List<Map<int, List<SectionEdgePositions>?>>> with EquipmentPathsRef {
   _EquipmentPathsProviderElement(super.provider);
 
   @override

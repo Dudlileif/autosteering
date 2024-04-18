@@ -43,7 +43,7 @@ final _combinedSerialProvider = AutoDisposeProvider<void>.internal(
 
 typedef _CombinedSerialRef = AutoDisposeProviderRef<void>;
 String _$combinedCommunicationHash() =>
-    r'f6ce77d9e09ccdefcc66af725ce9983d77bf6c94';
+    r'9c08adfaf6b83d1262f49bc346095fd7016781f9';
 
 /// A provider for combining all the network and hardware communication
 /// providers that need to be watched.

@@ -1,32 +1,49 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// A button for enabling/disabling auto steering.
 class EnableAutosteeringButton extends StatelessWidget {
   /// A button for enabling/disabling auto steering.
 
-  const EnableAutosteeringButton({
-    super.key,
-  });
+  const EnableAutosteeringButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        final enabled = ref.watch(autoSteerEnabledProvider);
+        final state = ref.watch(activeAutosteeringStateProvider);
 
         return FloatingActionButton(
           onPressed: () => ref
               .read(simInputProvider.notifier)
-              .send((enableAutoSteer: !enabled)),
-          backgroundColor: switch (enabled) {
-            true => Colors.red,
-            false => Colors.green,
+              .send((enableAutoSteer: state == AutosteeringState.disabled)),
+          backgroundColor: switch (state) {
+            AutosteeringState.disabled => Colors.grey.shade700,
+            AutosteeringState.standby => Colors.blue,
+            AutosteeringState.enabled => Colors.green,
           },
           foregroundColor: Colors.white,
-          tooltip: switch (enabled) {
+          tooltip: switch (state != AutosteeringState.disabled) {
             false => 'Enable auto steering',
             true => 'Disable auto steering'
           },
@@ -34,21 +51,26 @@ class EnableAutosteeringButton extends StatelessWidget {
             children: [
               Align(
                 heightFactor: 1.5,
-                child: Icon(
-                  switch (enabled) {
-                    true => Icons.stop_circle,
-                    false => Icons.play_circle
-                  },
-                  size: 32,
+                child: SvgPicture.asset(
+                  'assets/icons/autosteering_base.svg',
+                  colorFilter:
+                      const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  height: 30,
+                  width: 30,
                 ),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  'AUTO',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  switch (state) {
+                    AutosteeringState.disabled => 'OFF',
+                    AutosteeringState.standby => 'STBY',
+                    AutosteeringState.enabled => 'AUTO',
+                  },
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
+                        fontFamily: 'Noto Sans Mono',
                       ),
                 ),
               ),

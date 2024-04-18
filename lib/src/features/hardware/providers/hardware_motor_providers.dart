@@ -1,21 +1,40 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:async';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hardware_motor_providers.g.dart';
 
-/// A provider for the target steering motor rpm when using guidance.
+/// A provider for the WAS target for the steering motor when using guidance.
 
 @riverpod
-class SteeringMotorTargetRPM extends _$SteeringMotorTargetRPM {
+class SteeringMotorWasTarget extends _$SteeringMotorWasTarget {
   @override
-  double? build() => null;
+  int? build() => null;
 
   /// Updates [state] to [value].
-  void update(double? value) => Future(() => state = value);
+  void update(int? value) => Future(() => state = value);
 }
 
 /// A provider for the actual current steering motor rpm when using guidance.
@@ -48,10 +67,18 @@ class SteeringMotorStatus extends _$SteeringMotorStatus {
   MotorStatus? build() {
     ref.listenSelf((previous, next) {
       if (previous != next) {
-        Logger.instance.log(
-          Level.warning,
-          'Motor status: $next',
-        );
+        if (ref.read(activeAutosteeringStateProvider) ==
+            AutosteeringState.standby) {
+          Logger.instance.log(
+            Level.warning,
+            'Motor status: standby',
+          );
+        } else {
+          Logger.instance.log(
+            Level.warning,
+            'Motor status: $next',
+          );
+        }
       }
 
       _resetTimer?.cancel();
@@ -181,4 +208,129 @@ class SteeringMotorTargetRotation extends _$SteeringMotorTargetRotation {
 
   /// Updates [state] to [value].
   void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for the motor steps per WAS increment between WAS min and center
+/// value.
+@riverpod
+class SteeringMotorStepsPerWasIncrementMinToCenter
+    extends _$SteeringMotorStepsPerWasIncrementMinToCenter {
+  Timer? _resetTimer;
+
+  @override
+  double? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 5000),
+        ref.invalidateSelf,
+      );
+    });
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for the motor steps per WAS increment between WAS center and max
+/// value.
+@riverpod
+class SteeringMotorStepsPerWasIncrementCenterToMax
+    extends _$SteeringMotorStepsPerWasIncrementCenterToMax {
+  Timer? _resetTimer;
+
+  @override
+  double? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 5000),
+        ref.invalidateSelf,
+      );
+    });
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for getting the motor configuration from the hardware.
+@Riverpod(keepAlive: true)
+FutureOr<void> getSteeringHardwareConfig(
+  GetSteeringHardwareConfigRef ref,
+) async {
+  try {
+    final url =
+        'http://${ref.watch(hardwareAddressProvider)}/motor_config.json';
+    Logger.instance.i('Requesting motor config from hardware: $url');
+    final response = await Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 5),
+      ),
+    ).get<Map<String, dynamic>>(url);
+    if (response.data != null && response.statusCode == 200) {
+      final steeringHardwareConfig =
+          SteeringHardwareConfig.fromJson(response.data!);
+      Logger.instance
+          .i('Retrieved motor config from hardware: $steeringHardwareConfig');
+      ref.read(simInputProvider.notifier).send(steeringHardwareConfig);
+      Timer(const Duration(milliseconds: 100), () {
+        final vehicle = ref.read(mainVehicleProvider);
+        ref.read(saveVehicleProvider(vehicle));
+        Logger.instance.i(
+          '''Updated vehicle motor config: ${vehicle.steeringHardwareConfig}''',
+        );
+      });
+    } else {
+      Logger.instance.w(
+        'Did not recieve valid motor config response: $response',
+      );
+    }
+  } catch (error, stackTrace) {
+    Logger.instance.e(
+      'Failed to get motor config from hardware.',
+      error: error,
+      stackTrace: stackTrace,
+    );
+  }
+  ref.invalidateSelf();
+}
+
+/// A provider for updating the motor configuration on the hardware
+@Riverpod(keepAlive: true)
+FutureOr<void> sendSteeringHardwareConfig(
+  SendSteeringHardwareConfigRef ref,
+) async {
+  try {
+    Logger.instance.i(
+      'Sending motor config to: http://${ref.watch(hardwareAddressProvider)}/update_motor_config',
+    );
+    final steeringHardwareConfig = ref.read(
+      mainVehicleProvider.select((value) => value.steeringHardwareConfig),
+    );
+
+    final response = await Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 5),
+      ),
+    ).get<String>(
+      '''http://${ref.watch(hardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader}''',
+    );
+    if (response.statusCode == 200) {
+      Logger.instance.i('Successfully sent motor config to hardware.');
+    } else {
+      Logger.instance.e('Failed to send motor config to hardware: $response');
+    }
+  } catch (error, stackTrace) {
+    Logger.instance.e(
+      'Failed to send motor config to hardware.',
+      error: error,
+      stackTrace: stackTrace,
+    );
+  }
+  ref.invalidateSelf();
 }

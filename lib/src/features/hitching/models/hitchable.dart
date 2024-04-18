@@ -1,3 +1,21 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:uuid/uuid.dart';
@@ -94,6 +112,12 @@ abstract class Hitchable {
   /// Whether or not the hitchable is reversing.
   bool get isReversing => velocity < 0;
 
+  /// The current turning radius of this.
+  double? get currentTurningRadius;
+
+  /// The center point of which the [currentTurningRadius] revolves around.
+  Geographic? get turningRadiusCenter;
+
   /// Run the given [function] on this and all of its children recursively.
   ///
   /// Mainly used to update a Map of equipments in a provider.
@@ -114,8 +138,30 @@ abstract class Hitchable {
     var childToAttach = child;
 
     final uuidAlreadyAttached = findChildRecursive(child.uuid);
-    if (uuidAlreadyAttached != null) {
-      childToAttach = child.copyWith(uuid: const Uuid().v4());
+    if (uuidAlreadyAttached != null &&
+        uuidAlreadyAttached is Equipment &&
+        childToAttach is Equipment) {
+      final newSections = childToAttach.sections;
+      for (final (index, section) in newSections.indexed) {
+        newSections[index] = section.copyWith(
+          active: uuidAlreadyAttached.sections
+              .firstWhereOrNull((element) => element.index == section.index)
+              ?.active,
+        );
+      }
+
+      childToAttach = uuidAlreadyAttached.copyWith(
+        decorationLength: childToAttach.decorationLength,
+        decorationSidewaysOffset: childToAttach.decorationSidewaysOffset,
+        decorationWidth: childToAttach.decorationWidth,
+        drawbarLength: childToAttach.drawbarLength,
+        sidewaysOffset: childToAttach.sidewaysOffset,
+        workingAreaLength: childToAttach.workingAreaLength,
+        lastUsed: childToAttach.lastUsed,
+        name: childToAttach.name,
+        hitchType: childToAttach.hitchType,
+        sections: newSections,
+      );
     }
 
     switch (position) {
@@ -128,7 +174,7 @@ abstract class Hitchable {
       case Hitch.rearTowbar:
         hitchRearTowbarChild = childToAttach..parentHitch = Hitch.rearTowbar;
     }
-    updateChildren();
+    updateChildren(0);
   }
 
   /// Attach the [child] to the parent [Hitchable] with uuid [parentUuid] at
@@ -141,8 +187,30 @@ abstract class Hitchable {
     var childToAttach = child;
 
     final uuidAlreadyAttached = findChildRecursive(child.uuid);
-    if (uuidAlreadyAttached != null) {
-      childToAttach = child.copyWith(uuid: const Uuid().v4());
+    if (uuidAlreadyAttached != null &&
+        childToAttach is Equipment &&
+        uuidAlreadyAttached is Equipment) {
+      final newSections = childToAttach.sections;
+      for (final (index, section) in newSections.indexed) {
+        newSections[index] = section.copyWith(
+          active: uuidAlreadyAttached.sections
+              .firstWhereOrNull((element) => element.index == section.index)
+              ?.active,
+        );
+      }
+
+      childToAttach = uuidAlreadyAttached.copyWith(
+        decorationLength: childToAttach.decorationLength,
+        decorationSidewaysOffset: childToAttach.decorationSidewaysOffset,
+        decorationWidth: childToAttach.decorationWidth,
+        drawbarLength: childToAttach.drawbarLength,
+        sidewaysOffset: childToAttach.sidewaysOffset,
+        workingAreaLength: childToAttach.workingAreaLength,
+        lastUsed: childToAttach.lastUsed,
+        name: childToAttach.name,
+        hitchType: childToAttach.hitchType,
+        sections: newSections,
+      );
     }
 
     if (uuid == parentUuid) {
@@ -244,15 +312,14 @@ abstract class Hitchable {
       );
 
   /// Update the children connected to this.
-  void updateChildren() {
+  void updateChildren(double period) {
     hitchFrontFixedChild?.hitchParent = this;
-    hitchFrontFixedChild?.updateChildren();
+    hitchFrontFixedChild?.updateChildren(period);
     hitchRearFixedChild?.hitchParent = this;
-    hitchRearFixedChild?.updateChildren();
+    hitchRearFixedChild?.updateChildren(period);
     hitchRearTowbarChild?.hitchParent = this;
-    hitchRearTowbarChild?.updateChildren();
+    hitchRearTowbarChild?.updateChildren(period);
   }
-
 
   /// Create a new [Hitchable] based on this one, but with parameters/variables
   /// changed.

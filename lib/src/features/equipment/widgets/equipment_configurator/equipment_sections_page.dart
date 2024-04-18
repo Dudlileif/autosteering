@@ -1,4 +1,22 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/theme/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,20 +28,31 @@ class EquipmentSectionsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final equipment = ref.watch(configuredEquipmentProvider);
 
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: EquipmentConfiguratorPreviousButton(),
+    return CustomScrollView(
+      slivers: [
+        const SliverPadding(
+          padding: EdgeInsets.all(16),
+          sliver: SliverToBoxAdapter(
+            child: Center(child: EquipmentConfiguratorPreviousButton()),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.all(8),
+          sliver: SliverToBoxAdapter(
+            child: Text(
+              'Number of sections',
+              style: theme.textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Center(
             child: SizedBox(
-              width: 400,
+              width: 200,
               child: TextFormField(
                 decoration: const InputDecoration(
                   icon: Icon(Icons.numbers),
@@ -32,75 +61,236 @@ class EquipmentSectionsPage extends ConsumerWidget {
                 keyboardType: TextInputType.number,
                 initialValue: ref.read(
                   configuredEquipmentProvider
-                      .select((value) => value.sections.toString()),
+                      .select((value) => value.sections.length.toString()),
                 ),
                 onChanged: (value) {
-                  final sections = int.tryParse(value.replaceAll(',', '.'));
+                  final sections =
+                      int.tryParse(value.replaceAll(',', '.')) ?? 1;
 
                   ref.read(configuredEquipmentProvider.notifier).update(
                         equipment.copyWith(
-                          sections: sections?.abs() ?? 1,
-                          sectionWidths:
-                              List.generate(sections?.abs() ?? 1, (index) => 3),
+                          sections: List.generate(
+                            sections,
+                            (index) => Section(index: index),
+                          ),
                         ),
                       );
                 },
               ),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: SizedBox(
-                width: 400,
-                child: GridView.extent(
-                  maxCrossAxisExtent: 130,
-                  childAspectRatio: 1.8,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  children: equipment.sectionWidths
-                      .mapIndexed(
-                        (section, width) => TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Section ${section + 1} width',
-                            suffixText: 'm',
-                          ),
-                          keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true,
-                          ),
-                          initialValue:
-                              equipment.sectionWidths[section].toString(),
-                          onChanged: (value) {
-                            final newWidth =
-                                double.tryParse(value.replaceAll(',', '.'));
-
-                            ref
-                                .read(configuredEquipmentProvider.notifier)
-                                .update(
-                                  equipment.copyWith(
-                                    sectionWidths: equipment.sectionWidths
-                                      ..replaceRange(
-                                        section,
-                                        section + 1,
-                                        [newWidth ?? width],
-                                      ),
-                                  ),
-                                );
-                          },
-                        ),
-                      )
-                      .toList(),
-                ),
+        ),
+        if (equipment.sections.isNotEmpty) ...[
+          SliverPadding(
+            padding: const EdgeInsets.all(8),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Section widths',
+                style: theme.textTheme.titleLarge,
+                textAlign: TextAlign.center,
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: EquipmentConfiguratorNextButton(),
+          SliverGrid.extent(
+            maxCrossAxisExtent: 130,
+            childAspectRatio: 1.8,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            children: equipment.sections
+                .map(
+                  (section) => TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Section ${section.index + 1} width',
+                      suffixText: 'm',
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    initialValue: section.width.toString(),
+                    onChanged: (value) {
+                      final newWidth =
+                          double.tryParse(value.replaceAll(',', '.'));
+
+                      if (newWidth != null) {
+                        section.width = newWidth;
+                        ref
+                            .read(
+                              configuredEquipmentProvider.notifier,
+                            )
+                            .update(equipment.copyWith());
+                      }
+                    },
+                  ),
+                )
+                .toList(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(8),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Section working widths',
+                style: theme.textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          SliverGrid.extent(
+            maxCrossAxisExtent: 130,
+            childAspectRatio: 1.8,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            children: equipment.sections
+                .map(
+                  (section) => TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Section ${section.index + 1} width',
+                      suffixText: 'm',
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    initialValue: section.workingWidth.toString(),
+                    onChanged: (value) {
+                      final newWidth =
+                          double.tryParse(value.replaceAll(',', '.'));
+
+                      if (newWidth != null) {
+                        section.workingWidth = newWidth;
+                        ref
+                            .read(
+                              configuredEquipmentProvider.notifier,
+                            )
+                            .update(equipment.copyWith());
+                      }
+                    },
+                  ),
+                )
+                .toList(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(8),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Button colors',
+                style: theme.textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          SliverGrid.extent(
+            maxCrossAxisExtent: 300,
+            childAspectRatio: 4.5,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            children: equipment.sections
+                .map(
+                  (section) => DropdownMenu(
+                    label: Text('Section ${section.index + 1} button color'),
+                    leadingIcon: Icon(
+                      Icons.color_lens,
+                      color: section.color ?? Colors.green,
+                    ),
+                    initialSelection: section.color,
+                    onSelected: (color) {
+                      section.color = color;
+                      ref.read(configuredEquipmentProvider.notifier).update(
+                            equipment.copyWith(),
+                          );
+                    },
+                    dropdownMenuEntries: [
+                      DropdownMenuEntry(
+                        value: null,
+                        label: 'Default',
+                        leadingIcon: const Icon(
+                          Icons.color_lens,
+                          color: Colors.green,
+                        ),
+                        trailingIcon: section.color == null
+                            ? const Icon(Icons.check)
+                            : null,
+                      ),
+                      ...Colors.primaries.mapIndexed(
+                        (index, color) => DropdownMenuEntry(
+                          value: color,
+                          label: PrimaryColorNamesExtension
+                              .primaryColorNames[index],
+                          leadingIcon: Icon(Icons.color_lens, color: color),
+                          trailingIcon: section.color == color
+                              ? const Icon(Icons.check)
+                              : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                .toList(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(8),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Worked path colors',
+                style: theme.textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          SliverGrid.extent(
+            maxCrossAxisExtent: 300,
+            childAspectRatio: 4.5,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            children: equipment.sections
+                .map(
+                  (section) => DropdownMenu(
+                    label: Text('Section ${section.index + 1} path color'),
+                    leadingIcon: Icon(
+                      Icons.color_lens,
+                      color: section.workedPathColor ?? theme.primaryColor,
+                    ),
+                    initialSelection: section.workedPathColor,
+                    onSelected: (color) {
+                      section.workedPathColor = color;
+                      ref.read(configuredEquipmentProvider.notifier).update(
+                            equipment.copyWith(),
+                          );
+                    },
+                    dropdownMenuEntries: [
+                      DropdownMenuEntry(
+                        value: null,
+                        label: 'Default',
+                        leadingIcon: Icon(
+                          Icons.color_lens,
+                          color: theme.primaryColor,
+                        ),
+                        trailingIcon: section.workedPathColor == null
+                            ? const Icon(Icons.check)
+                            : null,
+                      ),
+                      ...Colors.primaries.mapIndexed(
+                        (index, color) => DropdownMenuEntry(
+                          value: color,
+                          label: PrimaryColorNamesExtension
+                              .primaryColorNames[index],
+                          leadingIcon: Icon(Icons.color_lens, color: color),
+                          trailingIcon: section.workedPathColor == color
+                              ? const Icon(Icons.check)
+                              : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                .toList(),
           ),
         ],
-      ),
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(child: EquipmentConfiguratorNextButton()),
+          ),
+        ),
+      ],
     );
   }
 }

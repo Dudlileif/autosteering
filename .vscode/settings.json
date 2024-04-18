@@ -60,5 +60,8 @@
         "xtree": "cpp",
         "xutility": "cpp"
     },
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "licenser.license": "GPLv3",
+    "licenser.projectName": "Autosteering",
+    "licenser.disableAutoHeaderInsertion": false,
 }

@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:collection';
 import 'dart:convert';
 
@@ -103,27 +120,31 @@ class Settings extends _$Settings {
 
   /// Get the value of type [bool] for the setting [key], if it exists.
   bool? getBool(SettingsKey key) =>
-      state.containsKey(key.name) ? state[key.name] as bool : null;
+      state.containsKey(key.name) ? state[key.name] as bool? : null;
 
   /// Get the value of type [double] for the setting [key], if it exists.
   double? getDouble(SettingsKey key) =>
-      state.containsKey(key.name) ? (state[key.name] as num).toDouble() : null;
+      state.containsKey(key.name)
+      ? (state[key.name] as num?)?.toDouble()
+      : null;
 
   /// Get the value of type [int] for the setting [key], if it exists.
   int? getInt(SettingsKey key) =>
-      state.containsKey(key.name) ? state[key.name] as int : null;
+      state.containsKey(key.name) ? state[key.name] as int? : null;
 
   /// Get the value of type [String] for the setting [key], if it exists.
   String? getString(SettingsKey key) =>
-      state.containsKey(key.name) ? state[key.name] as String : null;
+      state.containsKey(key.name) ? state[key.name] as String? : null;
 
   /// Get the value of type [Map] for the setting [key], if it exists.
-  Map<String, Object?>? getMap(SettingsKey key) => state.containsKey(key.name)
+  Map<String, Object?>? getMap(SettingsKey key) =>
+      state.containsKey(key.name) && state[key.name] is Map
       ? Map<String, Object?>.from(state[key.name] as Map)
       : null;
 
   /// Get the value of type [List] for the setting [key], if it exists.
-  List<dynamic>? getList(SettingsKey key) => state.containsKey(key.name)
+  List<dynamic>? getList(SettingsKey key) =>
+      state.containsKey(key.name) && state[key.name] is List
       ? List<dynamic>.from(state[key.name] as List)
       : null;
 

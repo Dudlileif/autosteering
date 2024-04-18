@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -23,7 +40,7 @@ class ABCurvePoints extends _$ABCurvePoints {
   }
 
   /// Updates [state] to [points].
-  void update(List<WayPoint> points) => Future(() => state = points);
+  void update(List<WayPoint>? points) => Future(() => state = points);
 
   /// Updates [state] from [FinishedPathRecordingList] if possible.
   Future<void> updateFromRecording() async {
@@ -40,14 +57,14 @@ class ABCurvePoints extends _$ABCurvePoints {
         ..invalidate(finishedPathRecordingListProvider);
 
       ref.read(showFinishedPathProvider.notifier).update(value: false);
-      ref.read(aBTrackingDebugShowProvider.notifier).update(value: true);
+      ref.read(showABTrackingProvider.notifier).update(value: true);
     }
   }
 }
 
-/// A provider for the AB-curve object to debug.
+/// A provider for the AB-curve.
 @Riverpod(keepAlive: true)
-Future<ABCurve?> aBCurveDebug(ABCurveDebugRef ref) async {
+Future<ABCurve?> aBCurve(ABCurveRef ref) async {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {
@@ -60,8 +77,7 @@ Future<ABCurve?> aBCurveDebug(ABCurveDebugRef ref) async {
         } else if (previous?.value != null && data == null) {
           Logger.instance.i('ABCurve deleted.');
         }
-        ref.read(simInputProvider.notifier).send((abTracking: data));
-        ref.read(displayABTrackingLinesProvider.notifier).update(data?.lines);
+        ref.read(configuredABTrackingProvider.notifier).update(data);
       },
       error: (error, stackTrace) {},
       loading: () {},
@@ -102,6 +118,7 @@ Future<ABCurve?> aBCurveDebug(ABCurveDebugRef ref) async {
           'turn_offset_skips': turnOffsetMinSkips,
           'limit_mode': limitMode,
           'calculate_lines': true,
+          'type': 'AB Curve',
         }),
       );
 

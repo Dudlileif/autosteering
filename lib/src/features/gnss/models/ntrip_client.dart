@@ -1,18 +1,37 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:universal_io/io.dart';
 
 /// A client for receiving NTRIP messages from an NTRIP caster.
 class NtripClient {
   /// A client for receiving NTRIP messages from an NTRIP caster.
-  NtripClient._({
+  const NtripClient._({
     required this.host,
     required this.socket,
     required this.username,
     required this.password,
     required this.port,
     required this.mountPoint,
+    this.ggaSendingInterval,
   });
 
   /// Attempts to create an [NtripClient], but will only succeed if
@@ -25,6 +44,7 @@ class NtripClient {
     String password = '',
     int port = 2101,
     Socket? connectedSocket,
+    int? ggaSendingInterval,
   }) async {
     final auth = const Base64Encoder().convert('$username:$password'.codeUnits);
     final message = '''
@@ -33,6 +53,7 @@ User-Agent: NTRIP NTRIPClient/0.1\r
 Authorization: Basic $auth\r
 Accept: */*\r
 Connection: close\r
+\r
       ''';
     try {
       final socket = (connectedSocket ?? await Socket.connect(host, port))
@@ -45,6 +66,7 @@ Connection: close\r
         password: password,
         mountPoint: mountPoint,
         socket: socket,
+        ggaSendingInterval: ggaSendingInterval,
       );
     } catch (error) {
       Logger.instance.e(
@@ -73,4 +95,7 @@ Connection: close\r
 
   /// The socket communicating with the NTRIP caster service.
   final Socket socket;
+
+  /// The time in seconds between [GGASentence]s should be sent to the caster.
+  final int? ggaSendingInterval;
 }

@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -5,7 +22,9 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
+import 'package:nmea/nmea.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -94,7 +113,7 @@ class NtripPort extends _$NtripPort {
 
 /// A provider for the NTRIP caster mounting point.
 @Riverpod(keepAlive: true)
-class NtripMountPoint extends _$NtripMountPoint {
+class ActiveNtripMountPoint extends _$ActiveNtripMountPoint {
   @override
   String? build() {
     ref.listenSelf((previous, next) {
@@ -161,6 +180,28 @@ class NtripPassword extends _$NtripPassword {
   void update(String? value) => Future(() => state = value);
 }
 
+/// A provider for the period between sending [GGASentence]s to the caster.
+@Riverpod(keepAlive: true)
+class NtripGGASendingInterval extends _$NtripGGASendingInterval {
+  @override
+  int? build() {
+    ref.listenSelf((previous, next) {
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.ntripGGASendingInterval, next);
+      }
+    });
+
+    return ref
+        .read(settingsProvider.notifier)
+        .getInt(SettingsKey.ntripGGASendingInterval);
+  }
+
+  /// Updates [state] to [value].
+  void update(int? value) => Future(() => state = value);
+}
+
 /// A provider for the NTRIP data usage in bytes for this session.
 @Riverpod(keepAlive: true)
 class NtripDataUsageSession extends _$NtripDataUsageSession {
@@ -170,7 +211,6 @@ class NtripDataUsageSession extends _$NtripDataUsageSession {
   }
 
   /// Updates [state] to [value].
-
   void update(int? value) => Future(() => state = value);
 
   /// Updates [state] by [value].
@@ -202,13 +242,15 @@ class NtripAlive extends _$NtripAlive {
           _resetTimer?.cancel();
           _resetTimer = Timer(
             const Duration(seconds: 5),
-            () => ref.invalidateSelf(),
+            () {
+              Logger.instance.i('NTRIP client disconnected, timed out.');
+              ref.invalidateSelf();
+            },
           );
-        } else {
-          Logger.instance.i('NTRIP client disconnected.');
         }
       })
       ..onDispose(() {
+        _resetTimer?.cancel();
         ref.invalidate(ntripClientProvider);
       });
 
@@ -224,46 +266,124 @@ class NtripAlive extends _$NtripAlive {
 /// The received NTRIP messages will be split into parts and sent to the
 /// connected [HardwareSerial] if connected or the [TcpServer].
 @Riverpod(keepAlive: true)
-Future<NtripClient?> ntripClient(NtripClientRef ref) async {
+FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
+  Timer? ggaSendingTimer;
+
   if (!ref.watch(ntripEnabledProvider)) {
     return null;
+  }
+
+  GGASentence? createGGASentence() {
+    final position = ref.read(
+      mainVehicleProvider.select((value) => value.position),
+    );
+    final currentSentence = ref.read(gnssCurrentSentenceProvider);
+    GGASentence? ggaSentence;
+
+    if (currentSentence is GGASentence) {
+      if (currentSentence.source == 'GP') {
+        ggaSentence = currentSentence;
+      }
+    }
+    return ggaSentence ??
+        GGASentence.create(
+          latitude: position.lat,
+          longitude: position.lon,
+          numSatellites: currentSentence?.numSatellites,
+          altitudeMSL: currentSentence?.altitudeMSL,
+          quality: currentSentence?.fixQuality,
+          hdop: currentSentence?.hdop ?? 99.99,
+          ageOfDifferentialData: currentSentence?.ageOfDifferentialData,
+          time: currentSentence?.utc,
+          geodialSeparation: currentSentence?.geoidSeparation,
+          source: currentSentence is TalkerSentence
+              ? (currentSentence! as TalkerSentence).source
+              : null,
+        );
   }
 
   ref
     ..onDispose(() {
       Logger.instance.i('NTRIP client disconnected.');
+      ggaSendingTimer?.cancel();
     })
     ..listenSelf((previous, next) {
       next.when(
-        data: (data) {
-          if (data != null) {
+        data: (client) {
+          if (client != null) {
             Logger.instance.i(
-              '''NTRIP client connecting to ${data.host}:${data.port} asking for station ${data.mountPoint}.''',
+              '''NTRIP client connecting to ${client.host}:${client.port} asking for station ${client.mountPoint}.''',
             );
-            data.socket.listen((event) {
+
+            bool sendGGA() {
+              final ggaSentence = createGGASentence();
+              if (ggaSentence != null) {
+                final data = ggaSentence.raw.codeUnits;
+                client.socket.add(data);
+                ref
+                    .read(ntripDataUsageSessionProvider.notifier)
+                    .updateBy(data.length);
+                return true;
+              } else {
+                Logger.instance.w('Failed to create GGA sentence.');
+
+                return false;
+              }
+            }
+
+            if (client.ggaSendingInterval != null &&
+                client.ggaSendingInterval! >= 1 &&
+                ggaSendingTimer == null) {
+              if (sendGGA()) {
+                Logger.instance.i('Sent GGA sentence to the NTRIP caster');
+              }
+            }
+
+            client.socket.listen((event) {
               ref.read(ntripAliveProvider.notifier).update(value: true);
+
+              ref
+                  .read(ntripDataUsageSessionProvider.notifier)
+                  .updateBy(event.lengthInBytes);
 
               if (ref.read(hardwareSerialProvider) != null) {
                 ref.read(hardwareSerialProvider.notifier).write(event);
               } else {
                 ref.read(tcpServerProvider.notifier).send(event);
               }
-
               if (event.length == 12) {
                 //If message is 'ICY 200 OK', we have a confirmed connection.
-                if (String.fromCharCodes(event) == 'ICY 200 OK\r\n') {
+                if (String.fromCharCodes(event).contains('ICY 200 OK')) {
                   Logger.instance.i('NTRIP client connection confirmed.');
                 }
               }
-
-              ref
-                  .read(ntripDataUsageSessionProvider.notifier)
-                  .updateBy(event.lengthInBytes);
-
+              final dataString = String.fromCharCodes(event);
+              if (dataString.contains('SOURCETABLE 200 OK') ||
+                  dataString.contains('ENDSOURCETABLE')) {
+                ref.read(ntripEnabledProvider.notifier).update(value: false);
+                Logger.instance.i(
+                  '''NTRIP mount point was not found, but a caster sourcetable was.''',
+                );
+                ref
+                  ..invalidate(ntripSourcetableProvider)
+                  ..invalidateSelf();
+              }
+              if (client.ggaSendingInterval != null &&
+                  client.ggaSendingInterval! >= 1 &&
+                  ggaSendingTimer == null) {
+                Logger.instance.i(
+                  '''Starting to send NMEA GGA messages every: ${client.ggaSendingInterval} seconds.''',
+                );
+                ggaSendingTimer = Timer.periodic(
+                  Duration(seconds: client.ggaSendingInterval!),
+                  (timer) => sendGGA(),
+                );
+              }
             });
             ref.onDispose(() {
-              data.socket.destroy();
+              client.socket.destroy();
               Logger.instance.i('NTRIP client closed.');
+              ggaSendingTimer?.cancel();
             });
           }
         },
@@ -280,7 +400,8 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
   final port = ref.watch(ntripPortProvider);
   final username = ref.watch(ntripUsernameProvider);
   final password = ref.watch(ntripPasswordProvider) ?? '';
-  final mountPoint = ref.watch(ntripMountPointProvider);
+  final mountPoint = ref.watch(activeNtripMountPointProvider);
+  final ggaSendingInterval = ref.watch(ntripGGASendingIntervalProvider);
 
   if (host != null && username != null && mountPoint != null) {
     return NtripClient.create(
@@ -289,6 +410,90 @@ Future<NtripClient?> ntripClient(NtripClientRef ref) async {
       password: password,
       mountPoint: mountPoint,
       username: username,
+      ggaSendingInterval: ggaSendingInterval,
+    );
+  }
+  return null;
+}
+
+/// A provider for the NTRIP caster sourcetable for the currently selected
+/// NTRIP caster server.
+@riverpod
+FutureOr<Iterable<NtripMountPoint>?> ntripSourcetable(
+  NtripSourcetableRef ref,
+) async {
+  ref.onDispose(() {
+    Logger.instance.i('NTRIP caster sourcetable cleared.');
+  });
+
+  final host = ref.read(ntripHostProvider);
+  final port = ref.read(ntripPortProvider);
+  final username = ref.read(ntripUsernameProvider);
+  final password = ref.read(ntripPasswordProvider);
+  if (host != null) {
+    try {
+      final auth =
+          const Base64Encoder().convert('$username:$password'.codeUnits);
+      final message = '''
+GET / HTTP/1.1\r
+User-Agent: NTRIP NTRIPClient/0.1\r
+Accept: */*\r
+Authorization: Basic $auth\r
+Connection: close\r
+\r
+''';
+
+      Logger.instance
+          .i('Attempting to get NTRIP sourcetable from: $host:$port.');
+
+      final socket = await Socket.connect(host, port);
+      socket.add(message.codeUnits);
+
+      final lines =
+          (await socket.toList()).map(String.fromCharCodes).join().split('\n');
+
+      Logger.instance.i('NTRIP sourcetable found with ${lines.length} lines.');
+
+      final table = lines.map(NtripSourcetableEntry.fromString);
+
+      return table.whereType<NtripMountPoint>();
+    } catch (error, stackTrace) {
+      Logger.instance.i(
+        '''Failed getting the sourcetable for NTRIP caster server: $host:$port.''',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  return null;
+}
+
+/// A provider for sorting the [ntripSourcetable] by their distance to
+/// [MainVehicle].
+@riverpod
+FutureOr<Map<NtripMountPointStream, double?>?> ntripMountPointsSorted(
+  NtripMountPointsSortedRef ref,
+) async {
+  final sourcetable = await ref.watch(ntripSourcetableProvider.future);
+
+  final position =
+      ref.read(mainVehicleProvider.select((value) => value.position));
+  final sorted = sourcetable?.whereType<NtripMountPointStream>().toList()
+    ?..sortByCompare(
+      (element) => element.distanceToPoint(position) ?? double.infinity,
+      (a, b) => a.compareTo(b),
+    );
+
+  if (sorted != null) {
+    final closestDistance = sorted.first.distanceToPoint(position);
+    Logger.instance.i(
+      '''NTRIP sourcetable sorted with ${sorted.length} entries, where ${sorted.first.name}, ${sorted.first.country} - ${closestDistance != null ? '${(closestDistance / 1000).toStringAsFixed(1)} km' : 'unknown position'} was closest.''',
+    );
+
+    return Map.fromIterables(
+      sorted,
+      sorted.map((e) => e.distanceToPoint(position)),
     );
   }
   return null;

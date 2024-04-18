@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -5,7 +22,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'virtual_led_bar_providers.g.dart';
 
 /// A provider for whether the virtual led bar should be enabled/shown.
-@Riverpod(keepAlive: true)
+@riverpod
 class VirtualLedBarEnabled extends _$VirtualLedBarEnabled {
   @override
   bool build() {
@@ -31,7 +48,7 @@ class VirtualLedBarEnabled extends _$VirtualLedBarEnabled {
 }
 
 /// A provider for storing the configuration for the virtual led bar.
-@Riverpod(keepAlive: true)
+@riverpod
 class VirtualLedBarConfiguration extends _$VirtualLedBarConfiguration {
   @override
   LedBarConfig build() {
@@ -62,7 +79,7 @@ class VirtualLedBarConfiguration extends _$VirtualLedBarConfiguration {
 
 /// A provider for whether we're testing the virtual LED bar with
 /// [VirtualLedBarTestingDistance].
-@Riverpod(keepAlive: true)
+@riverpod
 class VirtualLedBarTesting extends _$VirtualLedBarTesting {
   @override
   bool build() {

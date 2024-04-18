@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
@@ -70,11 +87,11 @@ class CommonMessageHandler {
             .read(vehicleSteeringAngleTargetProvider.notifier)
             .update(message.steeringAngleTarget);
       }
-    } else if (message is ({double? motorTargetRPM})) {
-      if (ref.exists(steeringMotorTargetRPMProvider)) {
+    } else if (message is ({int? wasTarget})) {
+      if (ref.exists(steeringMotorWasTargetProvider)) {
         ref
-            .read(steeringMotorTargetRPMProvider.notifier)
-            .update(message.motorTargetRPM);
+            .read(steeringMotorWasTargetProvider.notifier)
+            .update(message.wasTarget);
       }
     } else if (message is ({double? motorActualRPM})) {
       ref
@@ -89,14 +106,18 @@ class CommonMessageHandler {
           );
     } else if (message is ({bool motorStalled})) {
       if (message.motorStalled) {
-        ref.read(simInputProvider.notifier).send((enableAutoSteer: false));
+        ref
+            .read(simInputProvider.notifier)
+            .send((enableAutoSteer: false, stalled: true));
         ref
             .read(steeringMotorStatusProvider.notifier)
             .update(MotorStatus.stalled);
       }
     } else if (message is ({bool motorNoCommand})) {
       if (message.motorNoCommand) {
-        ref.read(simInputProvider.notifier).send((enableAutoSteer: false));
+        ref
+            .read(simInputProvider.notifier)
+            .send((enableAutoSteer: false, noCommand: true));
         ref
             .read(steeringMotorStatusProvider.notifier)
             .update(MotorStatus.noCommand);
@@ -124,6 +145,22 @@ class CommonMessageHandler {
         ref
             .read(steeringMotorTargetRotationProvider.notifier)
             .update(message.motorTargetRotation);
+      }
+    } else if (message is ({double? stepsPerWasIncrementMinToCenter})) {
+      if (ref.exists(steeringMotorStepsPerWasIncrementMinToCenterProvider)) {
+        ref
+            .read(
+              steeringMotorStepsPerWasIncrementMinToCenterProvider.notifier,
+            )
+            .update(message.stepsPerWasIncrementMinToCenter);
+      }
+    } else if (message is ({double? stepsPerWasIncrementCenterToMax})) {
+      if (ref.exists(steeringMotorStepsPerWasIncrementCenterToMaxProvider)) {
+        ref
+            .read(
+              steeringMotorStepsPerWasIncrementCenterToMaxProvider.notifier,
+            )
+            .update(message.stepsPerWasIncrementCenterToMax);
       }
     } else if (message is LogEvent) {
       Logger.instance.log(

@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -52,24 +69,18 @@ class VirtualLedBarMenu extends ConsumerWidget {
           ),
         _LedCountSelector(
           text: 'Intermediate LEDs',
-          count: config.leftIntermediateCount,
+          count: config.intermediateCount,
           onChanged: (value) =>
               ref.read(virtualLedBarConfigurationProvider.notifier).update(
-                    config.copyWith(
-                      leftIntermediateCount: value,
-                      rightIntermediateCount: value,
-                    ),
+                    config.copyWith(intermediateCount: value),
                   ),
         ),
         _LedCountSelector(
           text: 'End LEDs',
-          count: config.leftEndCount,
+          count: config.endCount,
           onChanged: (value) =>
               ref.read(virtualLedBarConfigurationProvider.notifier).update(
-                    config.copyWith(
-                      leftEndCount: value,
-                      rightEndCount: value,
-                    ),
+                    config.copyWith(endCount: value),
                   ),
         ),
         Builder(
@@ -105,7 +116,7 @@ class VirtualLedBarMenu extends ConsumerWidget {
               builder: (context, setState) => Column(
                 children: [
                   Text(
-                    'Size: ${size.round()}',
+                    'LED Size: ${size.round()}',
                     style: textStyle,
                   ),
                   Slider(
@@ -116,12 +127,48 @@ class VirtualLedBarMenu extends ConsumerWidget {
                         .update(config.copyWith(ledSize: value)),
                     min: 10,
                     max: 40,
-                    divisions: 29,
+                    divisions: 30,
                   ),
                 ],
               ),
             );
           },
+        ),
+        Builder(
+          builder: (context) {
+            var width = config.barWidth;
+            return StatefulBuilder(
+              builder: (context, setState) => Column(
+                children: [
+                  Text(
+                    'Bar width: ${width.round()}',
+                    style: textStyle,
+                  ),
+                  Slider(
+                    value: width,
+                    onChanged: (value) => setState(() => width = value),
+                    onChangeEnd: (value) => ref
+                        .read(virtualLedBarConfigurationProvider.notifier)
+                        .update(config.copyWith(barWidth: value)),
+                    min: 200,
+                    max: 1200,
+                    divisions: 10,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) => CheckboxListTile(
+            value: config.reverseBar,
+            onChanged: (value) => value != null
+                ? ref
+                    .read(virtualLedBarConfigurationProvider.notifier)
+                    .update(config.copyWith(reverseBar: value))
+                : null,
+            secondary: Text('Reverse bar', style: textStyle),
+          ),
         ),
         Consumer(
           builder: (context, ref, child) => CheckboxListTile(
@@ -137,8 +184,8 @@ class VirtualLedBarMenu extends ConsumerWidget {
         Consumer(
           builder: (context, ref, child) {
             if (ref.watch(virtualLedBarTestingProvider)) {
-              final min = -config.rightOfCenterCount * config.distancePerLed;
-              final max = config.leftOfCenterCount * config.distancePerLed;
+              final min = -config.oneSideCount * config.distancePerLed;
+              final max = config.oneSideCount * config.distancePerLed;
 
               final distance =
                   -(ref.watch(virtualLedBarTestingDistanceProvider) ?? 0)

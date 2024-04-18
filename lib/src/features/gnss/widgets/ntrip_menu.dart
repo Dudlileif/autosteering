@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -39,7 +56,7 @@ class NtripMenu extends ConsumerWidget {
               decoration: const InputDecoration(
                 labelText: 'Host address',
               ),
-              initialValue: ref.watch(ntripHostProvider),
+              initialValue: ref.read(ntripHostProvider),
               onChanged: ref.read(ntripHostProvider.notifier).update,
             ),
           ),
@@ -64,7 +81,7 @@ class NtripMenu extends ConsumerWidget {
                     ? 'Valid Port'
                     : 'Invalid Port';
               },
-              initialValue: ref.watch(ntripPortProvider).toString(),
+              initialValue: ref.read(ntripPortProvider).toString(),
               onChanged: ref.read(ntripPortProvider.notifier).updateFromString,
             ),
           ),
@@ -76,7 +93,7 @@ class NtripMenu extends ConsumerWidget {
               decoration: const InputDecoration(
                 labelText: 'Username',
               ),
-              initialValue: ref.watch(ntripUsernameProvider),
+              initialValue: ref.read(ntripUsernameProvider),
               onChanged: ref.read(ntripUsernameProvider.notifier).update,
             ),
           ),
@@ -89,7 +106,7 @@ class NtripMenu extends ConsumerWidget {
                 labelText: 'Password',
               ),
               obscureText: true,
-              initialValue: ref.watch(ntripPasswordProvider),
+              initialValue: ref.read(ntripPasswordProvider),
               onChanged: ref.read(ntripPasswordProvider.notifier).update,
             ),
           ),
@@ -101,8 +118,51 @@ class NtripMenu extends ConsumerWidget {
               decoration: const InputDecoration(
                 labelText: 'Mount point / base station',
               ),
-              initialValue: ref.watch(ntripMountPointProvider),
-              onChanged: ref.read(ntripMountPointProvider.notifier).update,
+              textCapitalization: TextCapitalization.characters,
+              initialValue: ref.read(activeNtripMountPointProvider),
+              onChanged:
+                  ref.read(activeNtripMountPointProvider.notifier).update,
+            ),
+          ),
+        ),
+        Consumer(
+          builder: (context, ref, child) => ListTile(
+            leading: const Icon(Icons.table_rows),
+            onTap: () => showDialog<String?>(
+              context: context,
+              builder: (context) => const _NtripSourcetableDialog(),
+            ),
+            title: Text('Find closest base station', style: textStyle),
+          ),
+        ),
+        Consumer(
+          builder: (context, ref, child) => ListTile(
+            leading: const Icon(Icons.timer_outlined),
+            title: Builder(
+              builder: (context) {
+                final controller = TextEditingController(
+                  text: ref.read(ntripGGASendingIntervalProvider)?.toString(),
+                );
+                return TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'GGA sending interval (s)',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        controller.clear();
+                        ref
+                            .read(ntripGGASendingIntervalProvider.notifier)
+                            .update(null);
+                      },
+                      icon: const Icon(Icons.clear),
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                  controller: controller,
+                  onChanged: (value) => ref
+                      .read(ntripGGASendingIntervalProvider.notifier)
+                      .update(int.tryParse(value)),
+                );
+              },
             ),
           ),
         ),
@@ -115,9 +175,17 @@ class NtripMenu extends ConsumerWidget {
 
             return ListTile(
               leading: const Icon(Icons.data_usage),
-              title: Text(
-                '''Data usage (session): ${fileEntitySize(dataUsage, decimals: 3)}''',
-                style: textStyle,
+              title: RichText(
+                text: TextSpan(
+                  text: 'Data usage (session): ',
+                  style: textStyle,
+                  children: [
+                    TextSpan(
+                      text: fileEntitySize(dataUsage),
+                      style: textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -134,13 +202,141 @@ class NtripMenu extends ConsumerWidget {
 
               return ListTile(
                 leading: const Icon(Icons.data_usage),
-                title: Text(
-                  '''Data usage (month): ${fileEntitySize(dataUsage, decimals: 3)}''',
-                  style: textStyle,
+                title: RichText(
+                  text: TextSpan(
+                    text: 'Data usage (month): ',
+                    style: textStyle,
+                    children: [
+                      TextSpan(
+                        text: fileEntitySize(dataUsage),
+                        style:
+                            textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
           ),
+      ],
+    );
+  }
+}
+
+class _NtripSourcetableDialog extends StatefulWidget {
+  const _NtripSourcetableDialog();
+
+  @override
+  State<_NtripSourcetableDialog> createState() =>
+      _NtripSourcetableDialogState();
+}
+
+class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
+  String? selectedMountPoint;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textStyle = theme.menuButtonWithChildrenText;
+    return SimpleDialog(
+      title: Text(
+        'NTRIP caster sourcetable',
+        style: theme.textTheme.headlineSmall,
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Consumer(
+            builder: (context, ref, child) => ref
+                .watch(ntripMountPointsSortedProvider)
+                .when(
+                  data: (data) {
+                    if (data != null && data.isNotEmpty) {
+                      final entries = data.entries.take(10);
+
+                      return MenuItemButton(
+                        closeOnActivate: false,
+                        child: DropdownMenu(
+                          initialSelection: entries.first,
+                          onSelected: (value) => setState(
+                            () => selectedMountPoint = value?.key.name,
+                          ),
+                          dropdownMenuEntries: entries.map(
+                            (station) {
+                              final label = <String>[];
+                              final name = station.key.name ?? 'No name';
+                              label.add(name);
+                              final identifier = station.key.identifier;
+                              if (identifier != null) {
+                                label.add(identifier);
+                              }
+                              final country = station.key.country;
+                              if (country != null && country != identifier) {
+                                label.add(country);
+                              }
+                              final distance = station.value != null
+                                  ? '''${(station.value! / 1000).toStringAsFixed(1)} km'''
+                                  : null;
+                              if (distance != null) {
+                                label.add(distance);
+                              }
+
+                              return DropdownMenuEntry<
+                                  MapEntry<NtripMountPointStream, double?>>(
+                                value: station,
+                                label: label.join(', '),
+                              );
+                            },
+                          ).toList(),
+                        ),
+                      );
+                    }
+                    return Text(
+                      'No sourcetable found at the host.',
+                      style: textStyle,
+                    );
+                  },
+                  error: (error, stackTrace) => ErrorWidget(error),
+                  loading: () => const Column(
+                    children: [
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Wrap(
+              runSpacing: 8,
+              spacing: 8,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.cancel),
+                  label: const Text('Cancel'),
+                ),
+                if (selectedMountPoint != null)
+                  Consumer(
+                    builder: (context, ref, child) => FilledButton.icon(
+                      onPressed: () {
+                        ref
+                            .read(activeNtripMountPointProvider.notifier)
+                            .update(selectedMountPoint);
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.check),
+                      label: Text(
+                        'Use $selectedMountPoint',
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

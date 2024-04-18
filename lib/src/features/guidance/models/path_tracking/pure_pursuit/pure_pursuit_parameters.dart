@@ -1,58 +1,57 @@
-part of '../path_tracking.dart';
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
+import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'pure_pursuit_parameters.freezed.dart';
+part 'pure_pursuit_parameters.g.dart';
 
 /// A class for encompassing the coefficients for [PurePursuitPathTracking].
-class PurePursuitParameters extends Equatable {
+///
+/// [lookAheadMinDistance] is hthe minimum for the look ahead distance.
+///
+/// [lookAheadSeconds] is how many seconds the vehicle's velocity should be
+/// multiplied with to get the look ahead distance. If the distance is shorter
+/// than [lookAheadMinDistance], it will be set to that.
+@freezed
+class PurePursuitParameters with _$PurePursuitParameters {
   /// A class for encompassing the coefficients for [PurePursuitPathTracking].
   ///
-  /// [lookAheadDistance] is how far ahead the vehicle should look for a
-  /// point to chase.
+  /// [lookAheadMinDistance] is the minimum value for the look ahead distance,
+  /// having this set increases the stability at low speeds.
   ///
-  /// [lookAheadVelocityGain] is the coefficient for how much the vehicle's
-  /// velocity should add to the [lookAheadDistance].
-  const PurePursuitParameters({
-    this.lookAheadDistance = 0.75,
-    this.lookAheadVelocityGain = 0.5,
-  });
+  /// [lookAheadSeconds] is how many seconds ahead we should multiply the
+  /// vehicle's velocity with to get the look ahead distance.
+  /// If the distance is shorter that [lookAheadMinDistance] it will be
+  /// increased to that.
+  const factory PurePursuitParameters({
+    /// The minimum value for the look ahead distance,
+    /// having this set increases the stability at low speeds.
+    @Default(0.75) double lookAheadMinDistance,
 
-  /// A factory constructor that takes an input map of the form:
-  ///
-  /// ```
-  /// {
-  ///   'look_ahead_distance': 0.75,
-  ///   'look_ahead_velocity_gain': 0.5,
-  /// }
-  /// ```
-  factory PurePursuitParameters.fromJson(Map<String, dynamic> json) =>
-      PurePursuitParameters(
-        lookAheadDistance: json['look_ahead_distance'] as double,
-        lookAheadVelocityGain: json['look_ahead_velocity_gain'] as double,
-      );
+    /// How many seconds ahead we should multiply the
+    /// vehicle's velocity with to get the look ahead distance.
+    /// If the distance is shorter that [lookAheadMinDistance] it will be
+    /// set to that.
+    @Default(1) double lookAheadSeconds,
+  }) = _PurePursuitParameters;
 
-  /// How far ahead the vehicle should look for a point to chase.
-  final double lookAheadDistance;
-
-  /// Proportional gain coefficient for how much the velocity should add to the
-  /// [lookAheadDistance].
-  final double lookAheadVelocityGain;
-
-  /// Returns a new [PurePursuitParameters] from this with altered parameters.
-  PurePursuitParameters copyWith({
-    double? lookAheadDistance,
-    double? lookAheadVelocityGain,
-  }) =>
-      PurePursuitParameters(
-        lookAheadDistance: lookAheadDistance ?? this.lookAheadDistance,
-        lookAheadVelocityGain:
-            lookAheadVelocityGain ?? this.lookAheadVelocityGain,
-      );
-
-  /// A list of objects to check for equatability.
-  @override
-  List<Object?> get props => [lookAheadDistance, lookAheadVelocityGain];
-
-  /// A json compatible serialization of this class.
-  Map<String, dynamic> toJson() => {
-        'look_ahead_distance': lookAheadDistance,
-        'look_ahead_velocity_gain': lookAheadVelocityGain,
-      };
+  /// Creates a [PurePursuitParameters] from the [json] object.
+  factory PurePursuitParameters.fromJson(Map<String, Object?> json) =>
+      _$PurePursuitParametersFromJson(json);
 }

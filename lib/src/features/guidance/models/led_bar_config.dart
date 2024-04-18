@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 // ignore_for_file: unused_element
 
 import 'dart:collection';
@@ -12,22 +29,19 @@ part 'led_bar_config.g.dart';
 class LedBarConfig with _$LedBarConfig {
   /// A configuration class for configuring the virtual LED bar.
   ///
-  /// [leftEndCount] is the amount of left most LEDs, usually red.
-  /// [leftIntermediateCount] is the amount of left intermediate LEDs, usually
-  /// yellow.
-  /// [centerCount] is the amount of center LEDs, usually green.
-  /// [rightIntermediateCount] is the amount of right intermediate LEDs, usually
-  /// yellow.
-  /// [rightEndCount] is the amount of right most LEDs, usually red.
+  /// [centerCount] is the amount of center LEDs on one side, usually green.
+  /// [intermediateCount] is the amount of intermediate LEDs on one side,
+  /// usually yellow.
+  /// [endCount] is the amount of the outer-most LEDs on one side, usually red.
   ///
   /// [distancePerLed] is how far the cross track distance has to increase
   /// to light up the next LED.
   ///
-  /// [centerCount] should be odd to have one LED in the exact center.
+  /// [oddCenter] can be set to have one LED in the exact center.
   /// Otherwise [evenCenterSimulateOdd] can be set to true to use the two
   /// center-most lights as a replacement for the one in center.
   ///
-  /// The colors are in format `0xAARRGGBB`, and can be changed from the
+  /// The colors are in hex format `0xAARRGGBB`, and can be changed from the
   /// default end-red, intermediate-yellow and center-green.
   ///
   /// [endColor] is the color of the LEDs on the ends of the bar, defaults
@@ -40,30 +54,33 @@ class LedBarConfig with _$LedBarConfig {
   /// defualts to green.
   ///
   /// [ledSize] is the size of the individual LEDs in their largest state (lit).
+  ///
+  /// [barWidth] is the total width of the LED bar.
+  ///
+  /// [reverseBar] will reverse the bar so that the LEDs will light up opposite
+  /// of the defualt configuration.
   const factory LedBarConfig({
+    /// The amount of green LEDs to the side of the center.
+    @Default(2) int centerCount,
+
+    /// The amount of yellow LEDs to the left of the center, the i.e. between
+    /// the green and yellow leds.
+    @Default(2) int intermediateCount,
+
     /// The amount of red LEDs furthest to the left.
-    @Default(2) int leftEndCount,
+    @Default(2) int endCount,
 
-    /// The amount of yellow LEDs to the left of the center.
-    @Default(2) int leftIntermediateCount,
-
-    /// The amount of center green LEDs, odd number is prefered to have
-    /// one in actual center.
-    @Default(3) int centerCount,
-
-    // The amount of yellow LEDs to the right of the center.
-    @Default(2) int rightIntermediateCount,
-
-    /// The amount of red LEDs furthest to the right.
-    @Default(2) int rightEndCount,
+    /// Whether there is a singular center diode (not used on the virtual bar
+    /// because of the distance gauge).
+    @Default(false) bool oddCenter,
 
     /// The increase in cross track distance that will activate the next
     /// led.
     @Default(0.04) double distancePerLed,
 
-    /// If the [centerCount] is even, this will dictate whether the
-    /// two center-most LEDs will light up when the cross track distance
-    /// is smaller than [distancePerLed].
+    /// If [oddCenter] is false, this will dictate whether the two center-most
+    /// LEDs will light up when the cross track distance is smaller than
+    /// [distancePerLed].
     @Default(false) bool evenCenterSimulateOdd,
 
     /// The color of the outermost end LEDs, usually red.
@@ -79,7 +96,13 @@ class LedBarConfig with _$LedBarConfig {
     @Default(0xFF00FF00) int centerColor,
 
     /// The size of the individual LEDs in their largest state (lit).
-    @Default(32) double ledSize,
+    @Default(20) double ledSize,
+
+    /// Width of the whole LED bar.
+    @Default(800) double barWidth,
+
+    /// Whether the bar should be reversed/inverted.
+    @Default(false) bool reverseBar,
   }) = _LedBarConfig;
 
   const LedBarConfig._();
@@ -90,31 +113,13 @@ class LedBarConfig with _$LedBarConfig {
 
   /// The total amount of led lights.
   int get totalCount =>
-      leftEndCount +
-      leftIntermediateCount +
-      centerCount +
-      rightIntermediateCount +
-      rightEndCount;
+      2 * endCount +
+      2 * intermediateCount +
+      2 * centerCount +
+      (oddCenter ? 1 : 0);
 
   /// The amount of LEDs left of the center.
-  int get leftOfCenterCount =>
-      leftEndCount +
-      leftIntermediateCount +
-      switch (centerCount.isEven && !evenCenterSimulateOdd) {
-        true => centerCount / 2,
-        false => ((centerCount - 1) / 2).floor(),
-      }
-          .toInt();
-
-  /// The amount of LEDs right of the center.
-  int get rightOfCenterCount =>
-      rightEndCount +
-      rightIntermediateCount +
-      switch (centerCount.isEven && !evenCenterSimulateOdd) {
-        true => centerCount / 2,
-        false => ((centerCount - 1) / 2).floor(),
-      }
-          .toInt();
+  int get oneSideCount => endCount + intermediateCount + centerCount;
 
   /// Returns a map of which leds should be active for the given perpendicular
   /// [distance].
@@ -124,28 +129,52 @@ class LedBarConfig with _$LedBarConfig {
   Map<int, bool> activeForDistance(double distance) {
     final map = SplayTreeMap<int, bool>();
 
-    final ledsLeftOfCenter = leftOfCenterCount;
-    final ledsRightOfCenter = rightOfCenterCount;
+    final sideCount = oneSideCount;
 
-    if (centerCount.isOdd) {
-      map[ledsLeftOfCenter] = true;
+    if (oddCenter) {
+      map[sideCount] = true;
     }
     // If we have even number of green lights, enable the two center ones
     // if specified.
-    else if (evenCenterSimulateOdd && centerCount > 1) {
-      map[ledsLeftOfCenter] = true;
-      map[ledsLeftOfCenter + 1] = true; 
+    else if (evenCenterSimulateOdd && centerCount >= 1) {
+      map[sideCount - 1] = true;
+      map[sideCount] = true;
     }
 
-    for (var i = 1; i <= ledsLeftOfCenter; i++) {
-      map[ledsLeftOfCenter - i] = distancePerLed * i <= distance;
+    final directionCorrectedDistance = reverseBar ? -distance : distance;
+
+    for (var i = 1; i <= sideCount; i++) {
+      if (map[sideCount - i] == null) {
+        var j = i;
+        if (evenCenterSimulateOdd && centerCount >= 1) {
+          j--;
+        }
+        map[sideCount - i] = distancePerLed * j <= directionCorrectedDistance;
+      }
     }
 
     final rightStart = map.length - 1;
-    for (var i = 1; i <= ledsRightOfCenter; i++) {
-      map[rightStart + i] = distancePerLed * i <= -distance;
+    for (var i = 1; i <= sideCount; i++) {
+      if (map[sideCount + i] == null) {
+        map[rightStart + i] = distancePerLed * i <= -directionCorrectedDistance;
+      }
     }
 
     return map;
+  }
+
+  /// Returns the color corresponding to the outermost lit LED for this
+  /// cross track [distance].
+  int colorFromDistance(double distance) {
+    var ledCount = distance.abs() ~/ distancePerLed;
+    if (evenCenterSimulateOdd && centerCount >= 1) {
+      ledCount++;
+    }
+    if (ledCount <= centerCount) {
+      return centerColor;
+    } else if (ledCount <= centerCount + intermediateCount) {
+      return intermediateColor;
+    }
+    return endColor;
   }
 }

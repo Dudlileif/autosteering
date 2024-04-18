@@ -1,7 +1,25 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/country_layer_selector.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/delete_cache_menu.dart';
+import 'package:autosteering/src/features/map/widgets/map_menu/grid_layer_button.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/home_position_menu.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/map_perspective_menu.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/mini_map_menu.dart';
@@ -24,10 +42,8 @@ class MapMenu extends StatelessWidget {
       menuChildren: [
         MiniMapMenu(),
         HomePositionMenu(),
-        Align(
-          alignment: Alignment.centerRight,
-          child: OSMLayerButton(),
-        ),
+        GridLayerButton(),
+        OSMLayerButton(),
         CountryLayerSelector(),
         SentinelLayerSelector(),
         MapOffsetMenu(),
@@ -100,48 +116,46 @@ class _CopernicusIDButton extends ConsumerWidget {
         builder: (context) {
           var id = '';
           return StatefulBuilder(
-            builder: (context, setState) {
-              return SimpleDialog(
-                title: const Text('Enter Copernicus ID'),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        icon: Icon(Icons.label_outline),
-                        labelText: 'Copernicus ID',
-                      ),
-                      initialValue: id,
-                      onChanged: (value) => setState(() => id = value),
-                      onFieldSubmitted: (value) => setState(() => id = value),
-                      keyboardType: TextInputType.text,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (value) =>
-                          value != null && Uuid.isValidUUID(fromString: value)
-                              ? null
-                              : '''The entered ID must be a valid UUID.''',
+            builder: (context, setState) => SimpleDialog(
+              title: const Text('Enter Copernicus ID'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.label_outline),
+                      labelText: 'Copernicus ID',
+                    ),
+                    initialValue: id,
+                    onChanged: (value) => setState(() => id = value),
+                    onFieldSubmitted: (value) => setState(() => id = value),
+                    keyboardType: TextInputType.text,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) =>
+                        value != null && Uuid.isValidUUID(fromString: value)
+                            ? null
+                            : '''The entered ID must be a valid UUID.''',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                  child: Consumer(
+                    child: const Text('Save ID'),
+                    builder: (context, ref, child) => FilledButton(
+                      onPressed: () {
+                        ref
+                            .read(
+                              copernicusInstanceIdProvider.notifier,
+                            )
+                            .update(id);
+                        Navigator.of(context).pop();
+                      },
+                      child: child,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                    child: Consumer(
-                      child: const Text('Save ID'),
-                      builder: (context, ref, child) => FilledButton(
-                        onPressed: () {
-                          ref
-                              .read(
-                                copernicusInstanceIdProvider.notifier,
-                              )
-                              .update(id);
-                          Navigator.of(context).pop();
-                        },
-                        child: child,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
+                ),
+              ],
+            ),
           );
         },
       ),

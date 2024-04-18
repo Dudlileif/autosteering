@@ -45,7 +45,7 @@ final rawDevicePositionStreamProvider =
 
 typedef RawDevicePositionStreamRef = AutoDisposeStreamProviderRef<Position>;
 String _$updatePositionFromDeviceHash() =>
-    r'de530db2013952ca203a557a20c20efaa4eebf11';
+    r'e95cba4d58c7281ab513b62b8a3fde35351993c4';
 
 /// A provider that sends device position updates to the simulation core
 /// if [DevicePositionAsVehiclePosition] and [devicePositionPermission] allow

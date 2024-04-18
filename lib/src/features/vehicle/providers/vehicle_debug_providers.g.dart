@@ -7,14 +7,14 @@ part of 'vehicle_debug_providers.dart';
 // **************************************************************************
 
 String _$debugVehiclePolygonsHash() =>
-    r'5cc07678616b6616a45ef6e130642b8e912acac5';
+    r'acc0b0707ae4e0313df97a61646cdc4c3857f9e7';
 
 /// Whether to show vehicle debug polygons.
 ///
 /// Copied from [DebugVehiclePolygons].
 @ProviderFor(DebugVehiclePolygons)
 final debugVehiclePolygonsProvider =
-    NotifierProvider<DebugVehiclePolygons, bool>.internal(
+    AutoDisposeNotifierProvider<DebugVehiclePolygons, bool>.internal(
   DebugVehiclePolygons.new,
   name: r'debugVehiclePolygonsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -24,14 +24,15 @@ final debugVehiclePolygonsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugVehiclePolygons = Notifier<bool>;
-String _$debugSteeringHash() => r'c5ada2ad5ee082dc18321fb8ebfa78e9ad9c2a71';
+typedef _$DebugVehiclePolygons = AutoDisposeNotifier<bool>;
+String _$debugSteeringHash() => r'c43016a660d8a6da669f935675e5c6d1e75195b6';
 
 /// Whether to show vehicle steering debug features.
 ///
 /// Copied from [DebugSteering].
 @ProviderFor(DebugSteering)
-final debugSteeringProvider = NotifierProvider<DebugSteering, bool>.internal(
+final debugSteeringProvider =
+    AutoDisposeNotifierProvider<DebugSteering, bool>.internal(
   DebugSteering.new,
   name: r'debugSteeringProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -41,15 +42,15 @@ final debugSteeringProvider = NotifierProvider<DebugSteering, bool>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugSteering = Notifier<bool>;
-String _$debugTrajectoryHash() => r'6c7e2444394bba5a8e3186695f547453f4ad614c';
+typedef _$DebugSteering = AutoDisposeNotifier<bool>;
+String _$debugTrajectoryHash() => r'e971cfaeecaae8c78fe5ca43c6ce98e161097d92';
 
 /// Whether to show vehicle trajectory debug features.
 ///
 /// Copied from [DebugTrajectory].
 @ProviderFor(DebugTrajectory)
 final debugTrajectoryProvider =
-    NotifierProvider<DebugTrajectory, bool>.internal(
+    AutoDisposeNotifierProvider<DebugTrajectory, bool>.internal(
   DebugTrajectory.new,
   name: r'debugTrajectoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -59,16 +60,16 @@ final debugTrajectoryProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugTrajectory = Notifier<bool>;
+typedef _$DebugTrajectory = AutoDisposeNotifier<bool>;
 String _$debugTravelledPathHash() =>
-    r'bb96ce559ab9a9ece21a9649a620cdc0f029afb7';
+    r'85d5a85c6a361e9d59a2fd6b2e65a5e10afbdd2d';
 
 /// Whether to show vehicle travelled path debug.
 ///
 /// Copied from [DebugTravelledPath].
 @ProviderFor(DebugTravelledPath)
 final debugTravelledPathProvider =
-    NotifierProvider<DebugTravelledPath, bool>.internal(
+    AutoDisposeNotifierProvider<DebugTravelledPath, bool>.internal(
   DebugTravelledPath.new,
   name: r'debugTravelledPathProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -78,7 +79,7 @@ final debugTravelledPathProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugTravelledPath = Notifier<bool>;
+typedef _$DebugTravelledPath = AutoDisposeNotifier<bool>;
 String _$debugTravelledPathSizeHash() =>
     r'd3ad16cdc8e478f038dde44511c1442a27dcf02f';
 
@@ -118,14 +119,14 @@ final debugTravelledPathListProvider =
 
 typedef _$DebugTravelledPathList = AutoDisposeNotifier<List<LatLng>>;
 String _$debugVehicleHitchesHash() =>
-    r'3750b049d3c928c7fb92c45455ee680c7f8b7a94';
+    r'293313a9a159879d25fe0542230531ffecd74196';
 
 /// Whether to show vehicle hitches debug.
 ///
 /// Copied from [DebugVehicleHitches].
 @ProviderFor(DebugVehicleHitches)
 final debugVehicleHitchesProvider =
-    NotifierProvider<DebugVehicleHitches, bool>.internal(
+    AutoDisposeNotifierProvider<DebugVehicleHitches, bool>.internal(
   DebugVehicleHitches.new,
   name: r'debugVehicleHitchesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -135,16 +136,16 @@ final debugVehicleHitchesProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugVehicleHitches = Notifier<bool>;
+typedef _$DebugVehicleHitches = AutoDisposeNotifier<bool>;
 String _$debugVehicleAntennaPositionHash() =>
-    r'01e2df818d2995610c08b0a90b5030a616fbe179';
+    r'1f59d840f6a00a2874bf3264454da1fa4250e709';
 
 /// Whether to show vehicle antenna position debug.
 ///
 /// Copied from [DebugVehicleAntennaPosition].
 @ProviderFor(DebugVehicleAntennaPosition)
 final debugVehicleAntennaPositionProvider =
-    NotifierProvider<DebugVehicleAntennaPosition, bool>.internal(
+    AutoDisposeNotifierProvider<DebugVehicleAntennaPosition, bool>.internal(
   DebugVehicleAntennaPosition.new,
   name: r'debugVehicleAntennaPositionProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -154,61 +155,6 @@ final debugVehicleAntennaPositionProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugVehicleAntennaPosition = Notifier<bool>;
-String _$debugVehicleIMUHash() => r'e95486e3ec7bd909ebdf31deffdf10729e077fa3';
-
-/// Whether to show vehicle IMU.
-///
-/// Copied from [DebugVehicleIMU].
-@ProviderFor(DebugVehicleIMU)
-final debugVehicleIMUProvider =
-    NotifierProvider<DebugVehicleIMU, bool>.internal(
-  DebugVehicleIMU.new,
-  name: r'debugVehicleIMUProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugVehicleIMUHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$DebugVehicleIMU = Notifier<bool>;
-String _$debugVehicleWASHash() => r'7d402a5f483f9a4089cccf9cfd3fd1baa3a3a8a1';
-
-/// Whether to show vehicle WAS.
-///
-/// Copied from [DebugVehicleWAS].
-@ProviderFor(DebugVehicleWAS)
-final debugVehicleWASProvider =
-    NotifierProvider<DebugVehicleWAS, bool>.internal(
-  DebugVehicleWAS.new,
-  name: r'debugVehicleWASProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugVehicleWASHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$DebugVehicleWAS = Notifier<bool>;
-String _$debugVehicleAutosteerParametersHash() =>
-    r'9a7ced139e78bfa75cf5d975973420c15a9748a7';
-
-/// Whether to show vehicle autosteer parameters debug.
-///
-/// Copied from [DebugVehicleAutosteerParameters].
-@ProviderFor(DebugVehicleAutosteerParameters)
-final debugVehicleAutosteerParametersProvider =
-    NotifierProvider<DebugVehicleAutosteerParameters, bool>.internal(
-  DebugVehicleAutosteerParameters.new,
-  name: r'debugVehicleAutosteerParametersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugVehicleAutosteerParametersHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$DebugVehicleAutosteerParameters = Notifier<bool>;
+typedef _$DebugVehicleAntennaPosition = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

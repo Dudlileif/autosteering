@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'eb3716c27f5d715a11ce0a2e74e38c4f1c40378d';
+String _$ntripClientHash() => r'62174ecf6356fb8e64c22ee6f4bcbb6af73ff0ca';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -25,6 +25,47 @@ final ntripClientProvider = FutureProvider<NtripClient?>.internal(
 );
 
 typedef NtripClientRef = FutureProviderRef<NtripClient?>;
+String _$ntripSourcetableHash() => r'2042b381721d57ec175460e8eb05df227d39047a';
+
+/// A provider for the NTRIP caster sourcetable for the currently selected
+/// NTRIP caster server.
+///
+/// Copied from [ntripSourcetable].
+@ProviderFor(ntripSourcetable)
+final ntripSourcetableProvider =
+    AutoDisposeFutureProvider<Iterable<NtripMountPoint>?>.internal(
+  ntripSourcetable,
+  name: r'ntripSourcetableProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ntripSourcetableHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef NtripSourcetableRef
+    = AutoDisposeFutureProviderRef<Iterable<NtripMountPoint>?>;
+String _$ntripMountPointsSortedHash() =>
+    r'a06451e3dd9c72a2374b1093d253923e002a556d';
+
+/// A provider for sorting the [ntripSourcetable] by their distance to
+/// [MainVehicle].
+///
+/// Copied from [ntripMountPointsSorted].
+@ProviderFor(ntripMountPointsSorted)
+final ntripMountPointsSortedProvider =
+    AutoDisposeFutureProvider<Map<NtripMountPointStream, double?>?>.internal(
+  ntripMountPointsSorted,
+  name: r'ntripMountPointsSortedProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ntripMountPointsSortedHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef NtripMountPointsSortedRef
+    = AutoDisposeFutureProviderRef<Map<NtripMountPointStream, double?>?>;
 String _$ntripEnabledHash() => r'b4af9922a2c6f028ece8fd3808d7457b513ab338';
 
 /// A provider for whether the [ntripClient] provider should run.
@@ -73,24 +114,25 @@ final ntripPortProvider = NotifierProvider<NtripPort, int>.internal(
 );
 
 typedef _$NtripPort = Notifier<int>;
-String _$ntripMountPointHash() => r'21afca97ff1c7b6246967d5be1b782e611257df1';
+String _$activeNtripMountPointHash() =>
+    r'65bf23c96b44822bf81b72b1fec6098620c9784d';
 
 /// A provider for the NTRIP caster mounting point.
 ///
-/// Copied from [NtripMountPoint].
-@ProviderFor(NtripMountPoint)
-final ntripMountPointProvider =
-    NotifierProvider<NtripMountPoint, String?>.internal(
-  NtripMountPoint.new,
-  name: r'ntripMountPointProvider',
+/// Copied from [ActiveNtripMountPoint].
+@ProviderFor(ActiveNtripMountPoint)
+final activeNtripMountPointProvider =
+    NotifierProvider<ActiveNtripMountPoint, String?>.internal(
+  ActiveNtripMountPoint.new,
+  name: r'activeNtripMountPointProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$ntripMountPointHash,
+      : _$activeNtripMountPointHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$NtripMountPoint = Notifier<String?>;
+typedef _$ActiveNtripMountPoint = Notifier<String?>;
 String _$ntripUsernameHash() => r'fe9d2c5ffcd474715779a50328285bb22fd73580';
 
 /// A provider for the NTRIP caster username (email).
@@ -125,6 +167,25 @@ final ntripPasswordProvider = NotifierProvider<NtripPassword, String?>.internal(
 );
 
 typedef _$NtripPassword = Notifier<String?>;
+String _$ntripGGASendingIntervalHash() =>
+    r'54b576c1b12b982c65a8178d52ebd633f43322f6';
+
+/// A provider for the period between sending [GGASentence]s to the caster.
+///
+/// Copied from [NtripGGASendingInterval].
+@ProviderFor(NtripGGASendingInterval)
+final ntripGGASendingIntervalProvider =
+    NotifierProvider<NtripGGASendingInterval, int?>.internal(
+  NtripGGASendingInterval.new,
+  name: r'ntripGGASendingIntervalProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ntripGGASendingIntervalHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NtripGGASendingInterval = Notifier<int?>;
 String _$ntripDataUsageSessionHash() =>
     r'fa7c2e5b463dff14668b2ba57d943472d7f80767';
 
@@ -144,7 +205,7 @@ final ntripDataUsageSessionProvider =
 );
 
 typedef _$NtripDataUsageSession = Notifier<int?>;
-String _$ntripAliveHash() => r'49b669a2a8a8f00a00d88a92fb8745b0c118e9da';
+String _$ntripAliveHash() => r'a073b2419fdf2a96027eeee50c84ad2610a3fe4b';
 
 /// A provider for telling whether the [ntripClient] is receiving data.
 ///

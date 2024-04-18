@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:math';
 
 import 'package:autosteering/src/features/map/map.dart';
@@ -149,8 +166,9 @@ class MapControlButtons extends StatelessWidget {
                 tooltip: 'Zoom in',
                 backgroundColor:
                     theme.colorScheme.primaryContainer.withOpacity(0.6),
-                onPressed: () =>
-                    ref.read(mainMapControllerProvider.notifier).zoomIn(0.25),
+                onPressed: () => ref
+                    .read(mainMapControllerProvider.notifier)
+                    .zoomInSnap(0.25),
                 child: const Icon(
                   Icons.zoom_in,
                   size: 50,
@@ -167,8 +185,9 @@ class MapControlButtons extends StatelessWidget {
                 tooltip: 'Zoom out',
                 backgroundColor:
                     theme.colorScheme.primaryContainer.withOpacity(0.6),
-                onPressed: () =>
-                    ref.read(mainMapControllerProvider.notifier).zoomOut(0.25),
+                onPressed: () => ref
+                    .read(mainMapControllerProvider.notifier)
+                    .zoomOutSnap(0.25),
                 child: const Icon(
                   Icons.zoom_out,
                   size: 50,

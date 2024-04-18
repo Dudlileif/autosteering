@@ -6,7 +6,7 @@ part of 'theme_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appThemeHash() => r'4bbcd940502f65d559e4a33c912fcc7cfd7c0d3c';
+String _$appThemeHash() => r'57647cd7e5ced15857e8619bdc2b361aa1ac37c6';
 
 /// A provider for the app's theme.
 ///
@@ -43,14 +43,14 @@ final activeThemeModeProvider =
 );
 
 typedef _$ActiveThemeMode = AutoDisposeNotifier<ThemeMode>;
-String _$manufacturerHash() => r'e8abc4e7e65b32958b89ee02a0c5d799fbb159f6';
+String _$manufacturerHash() => r'13fa2dbcabf1b262c973bccd5610e13fa05bf34d';
 
 /// A provider that contains theme color state.
 ///
 /// Copied from [Manufacturer].
 @ProviderFor(Manufacturer)
 final manufacturerProvider =
-    AutoDisposeNotifierProvider<Manufacturer, ManufacturerColor>.internal(
+    AutoDisposeNotifierProvider<Manufacturer, ManufacturerColors>.internal(
   Manufacturer.new,
   name: r'manufacturerProvider',
   debugGetCreateSourceHash:
@@ -59,6 +59,26 @@ final manufacturerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$Manufacturer = AutoDisposeNotifier<ManufacturerColor>;
+typedef _$Manufacturer = AutoDisposeNotifier<ManufacturerColors>;
+String _$colorSchemeInheritFromVehicleHash() =>
+    r'3057e13434fa9738e1cecd5a61c17f3ab4da1a31';
+
+/// A provider for whether the [appTheme] should use [ManufacturerColors]
+/// inherited from the active vehicle or from a selected one.
+///
+/// Copied from [ColorSchemeInheritFromVehicle].
+@ProviderFor(ColorSchemeInheritFromVehicle)
+final colorSchemeInheritFromVehicleProvider =
+    AutoDisposeNotifierProvider<ColorSchemeInheritFromVehicle, bool>.internal(
+  ColorSchemeInheritFromVehicle.new,
+  name: r'colorSchemeInheritFromVehicleProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$colorSchemeInheritFromVehicleHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ColorSchemeInheritFromVehicle = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

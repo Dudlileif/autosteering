@@ -1,3 +1,22 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
@@ -9,7 +28,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'mini_map_providers.g.dart';
 
 /// Whether the mini map should be shown.
-@Riverpod(keepAlive: true)
+@riverpod
 class ShowMiniMap extends _$ShowMiniMap {
   @override
   bool build() {
@@ -54,7 +73,7 @@ class ShowMiniMap extends _$ShowMiniMap {
 }
 
 /// Whether the map is ready to be shown or not.
-@Riverpod(keepAlive: true)
+@riverpod
 class MiniMapReady extends _$MiniMapReady {
   @override
   bool build() => false;
@@ -65,7 +84,7 @@ class MiniMapReady extends _$MiniMapReady {
 
 /// The mini map [MapController] provider, which allows controlling the
 /// map from outside the widget code itself.
-@Riverpod(keepAlive: true)
+@riverpod
 class MiniMapController extends _$MiniMapController {
   @override
   MapController build() => MapController();
@@ -82,7 +101,7 @@ class MiniMapController extends _$MiniMapController {
 }
 
 /// Whether the mini map always should point to the north and not rotate.
-@Riverpod(keepAlive: true)
+@riverpod
 class MiniMapLockToField extends _$MiniMapLockToField {
   @override
   bool build() {
@@ -90,7 +109,7 @@ class MiniMapLockToField extends _$MiniMapLockToField {
       ..listen(
         miniMapSizeProvider,
         (previous, next) =>
-            Future.delayed(const Duration(milliseconds: 100), updateBounds),
+            Timer(const Duration(milliseconds: 100), updateBounds),
       )
       ..listenSelf((previous, next) {
         if (next) {
@@ -114,17 +133,16 @@ class MiniMapLockToField extends _$MiniMapLockToField {
     final field = ref.watch(activeFieldProvider);
     if (field != null) {
       final mapController = ref.watch(miniMapControllerProvider);
-      final bbox = field.squaredByDiagonalBoundingBox;
+      final bbox = field.rotationCenteredSquaredByDiagonalBoundingBox;
       if (bbox != null) {
         final rotation = mapController.camera.rotation;
         mapController
           ..rotate(0)
           ..fitCamera(
             CameraFit.bounds(
-              bounds: 
-            LatLngBounds.fromPoints(
-              bbox.corners2D.map((point) => point.latLng).toList(),
-            ),
+              bounds: LatLngBounds.fromPoints(
+                bbox.corners2D.map((point) => point.latLng).toList(),
+              ),
               padding: const EdgeInsets.all(4),
             ),
           )
@@ -132,10 +150,9 @@ class MiniMapLockToField extends _$MiniMapLockToField {
       } else {
         mapController.fitCamera(
           CameraFit.bounds(
-            bounds: 
-          LatLngBounds.fromPoints(
-            field.mapBoundingBox((point) => point.latLng).toList(),
-          ),
+            bounds: LatLngBounds.fromPoints(
+              field.mapBoundingBox((point) => point.latLng).toList(),
+            ),
             padding: const EdgeInsets.all(4),
           ),
         );
@@ -157,13 +174,13 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
   bool build() {
     ref.listenSelf((previous, next) {
       if (ref.read(miniMapReadyProvider)) {
-      if (next) {
-        ref.read(miniMapControllerProvider).rotate(0);
-      } else {
-        ref.read(miniMapControllerProvider).rotate(
-              ref.read(mainVehicleProvider.select((value) => -value.bearing)),
-            );
-      }
+        if (next) {
+          ref.read(miniMapControllerProvider).rotate(0);
+        } else {
+          ref.read(miniMapControllerProvider).rotate(
+                ref.read(mainVehicleProvider.select((value) => -value.bearing)),
+              );
+        }
       }
       if (previous != null && previous != next) {
         ref
@@ -185,7 +202,7 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
 }
 
 /// Whether the mini map always should point to the north and not rotate.
-@Riverpod(keepAlive: true)
+@riverpod
 class MiniMapSize extends _$MiniMapSize {
   @override
   double build() {

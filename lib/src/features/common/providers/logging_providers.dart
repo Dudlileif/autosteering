@@ -1,8 +1,27 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:async';
 
+import 'package:archive/archive_io.dart';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:logger/logger.dart' as implementation;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -51,7 +70,15 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
   if (dirPath != null) {
     final logsDir = Directory([dirPath, 'logs'].join('/'));
     if (logsDir.existsSync()) {
-      final files = logsDir.listSync();
+      final files = logsDir
+          .listSync()
+          .where(
+            (element) =>
+                FileSystemEntity.typeSync(element.path) ==
+                FileSystemEntityType.file,
+          )
+          .toList();
+
       if (files.length > ref.watch(numLogFilesProvider)) {
         files.sortByCompare((file) => file.path, (a, b) => b.compareTo(a));
         final removed = <String>[];
@@ -60,6 +87,32 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
           await files[i].delete();
         }
         Logger.instance.i('Deleted old log files: $removed');
+      }
+    }
+
+    for (final hardware in ['combined', 'imu', 'gnss', 'was']) {
+      final hardwareLogsDir =
+          Directory([dirPath, 'logs', 'hardware', hardware].join('/'));
+      if (hardwareLogsDir.existsSync()) {
+        final files = hardwareLogsDir
+            .listSync()
+            .where(
+              (element) =>
+                  FileSystemEntity.typeSync(element.path) ==
+                  FileSystemEntityType.file,
+            )
+            .toList();
+
+        if (files.length > ref.watch(numLogFilesProvider)) {
+          files.sortByCompare((file) => file.path, (a, b) => b.compareTo(a));
+          final removed = <String>[];
+          for (var i = ref.watch(numLogFilesProvider); i < files.length; i++) {
+            removed.add(files[i].path);
+            await files[i].delete();
+          }
+          Logger.instance
+              .i('Deleted old hardware $hardware log files: $removed');
+        }
       }
     }
 
@@ -134,4 +187,113 @@ Logger logging(LoggingRef ref) {
       ),
       output: FileOutput(file: file!),
     );
+}
+
+/// A provider for exporting all log files.
+@riverpod
+FutureOr<void> exportLogs(ExportLogsRef ref) async {
+  ref.keepAlive();
+  try {
+    if (Device.isNative) {
+      final exportFolder = await FilePicker.platform
+          .getDirectoryPath(dialogTitle: 'Select export folder');
+      if (exportFolder != null) {
+        final dirPath = ref.watch(fileDirectoryProvider).requireValue.path;
+
+        final logsDir = Directory([dirPath, 'logs'].join('/'));
+        if (logsDir.existsSync()) {
+          final files = logsDir
+              .listSync(recursive: true)
+              .where(
+                (element) =>
+                    FileSystemEntity.typeSync(element.path) ==
+                    FileSystemEntityType.file,
+              )
+              .toList();
+          if (files.isNotEmpty) {
+            var exportDirPath = '';
+            if (exportFolder.endsWith('autosteering_export')) {
+              exportDirPath = '$exportFolder/logs';
+            } else if (exportFolder.contains('autosteering_export')) {
+              exportDirPath =
+                  '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/logs';
+            } else {
+              exportDirPath = '$exportFolder/autosteering_export/logs';
+            }
+            final dir = Directory(exportDirPath);
+            if (!dir.existsSync()) {
+              dir.createSync(recursive: true);
+            }
+            if (Platform.isAndroid) {
+              final archive = Archive();
+              for (final file in files) {
+                final splits = file.path.split(Platform.pathSeparator);
+                final isHardwareLog = ['combined', 'gnss', 'imu', 'was']
+                    .contains(splits.elementAt(splits.length - 2));
+                archive.addFile(
+                  ArchiveFile.stream(
+                    [
+                      if (isHardwareLog) ...[
+                        'hardware',
+                        splits.elementAt(splits.length - 2),
+                      ],
+                      splits.last,
+                    ].join('/'),
+                    (await file.stat()).size,
+                    InputFileStream(file.path),
+                  ),
+                );
+              }
+              final file = File([exportDirPath, 'logs.zip'].join('/'));
+              final bytes = ZipEncoder().encode(archive);
+              if (bytes != null) {
+                await file.writeAsBytes(bytes);
+                Logger.instance.i(
+                  'Exported ${files.length} log files to $exportFolder/logs.zip.',
+                );
+              } else {
+                Logger.instance
+                    .w('Failed to export logs to zip, no bytes encoded.');
+              }
+            } else {
+              for (final file in files) {
+                final splits = file.path.split(Platform.pathSeparator);
+                final isHardwareLog = ['combined', 'gnss', 'imu', 'was']
+                    .contains(splits.elementAt(splits.length - 2));
+                if (isHardwareLog) {
+                  final hardwareLogDir = Directory(
+                    [
+                      exportDirPath,
+                      'hardware',
+                      splits.elementAt(splits.length - 2),
+                    ].join('/'),
+                  );
+                  if (!hardwareLogDir.existsSync()) {
+                    hardwareLogDir.createSync(recursive: true);
+                  }
+                }
+                final exportFilePath = [
+                  exportDirPath,
+                  if (isHardwareLog) ...[
+                    'hardware',
+                    splits.elementAt(splits.length - 2),
+                  ],
+                  splits.last,
+                ].join('/');
+                await File(file.path).copy(exportFilePath);
+              }
+              Logger.instance
+                  .i('Exported ${files.length} log files to $exportFolder.');
+            }
+          }
+        } else {
+          Logger.instance.i('No log directory found: ${logsDir.path}.');
+        }
+      }
+    }
+  } catch (error, stackTrace) {
+    Logger.instance
+        .e('Failed to export logs.', error: error, stackTrace: stackTrace);
+  }
+  ref.invalidateSelf();
 }

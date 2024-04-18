@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,17 +85,27 @@ class VehicleAntennaPage extends ConsumerWidget {
                   const TextInputType.numberWithOptions(decimal: true),
               initialValue: ref.read(
                 configuredVehicleProvider.select(
-                  (value) => (value as AxleSteeredVehicle)
-                      .solidAxleDistance
-                      .toString(),
+                  (value) {
+                    if (value is Harvester) {
+                      return (-value.antennaToSolidAxleDistance).toString();
+                    }
+                    return (value as AxleSteeredVehicle)
+                        .antennaToSolidAxleDistance
+                        .toString();
+                  },
                 ),
               ),
               onChanged: (value) {
                 final distance = double.tryParse(value.replaceAll(',', '.'));
 
-                ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle.copyWith(solidAxleDistance: distance?.abs()),
-                    );
+                if (distance != null) {
+                  ref.read(configuredVehicleProvider.notifier).update(
+                        vehicle.copyWith(
+                          antennaToSolidAxleDistance:
+                              (vehicle is Harvester) ? -distance : distance,
+                        ),
+                      );
+                }
               },
             ),
           ],
@@ -95,7 +122,7 @@ class VehicleAntennaPage extends ConsumerWidget {
               initialValue: ref.read(
                 configuredVehicleProvider.select(
                   (value) => (value as ArticulatedTractor)
-                      .pivotToAntennaDistance
+                      .antennaToPivotDistance
                       .toString(),
                 ),
               ),
@@ -103,7 +130,7 @@ class VehicleAntennaPage extends ConsumerWidget {
                 final distance = double.tryParse(value.replaceAll(',', '.'));
 
                 ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle.copyWith(pivotToAntennaDistance: distance),
+                      vehicle.copyWith(antennaToPivotDistance: distance),
                     );
               },
             ),
@@ -111,25 +138,27 @@ class VehicleAntennaPage extends ConsumerWidget {
       },
     ];
 
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: VehicleConfiguratorPreviousButton(),
-          ),
-          ...children.map(
-            (widget) => Padding(
-              padding: const EdgeInsets.all(8),
-              child: SizedBox(width: 400, child: widget),
+    return SingleChildScrollView(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: VehicleConfiguratorPreviousButton(),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: VehicleConfiguratorNextButton(),
-          ),
-        ],
+            ...children.map(
+              (widget) => Padding(
+                padding: const EdgeInsets.all(8),
+                child: SizedBox(width: 400, child: widget),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: VehicleConfiguratorNextButton(),
+            ),
+          ],
+        ),
       ),
     );
   }

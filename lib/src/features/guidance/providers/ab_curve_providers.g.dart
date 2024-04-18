@@ -6,23 +6,23 @@ part of 'ab_curve_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$aBCurveDebugHash() => r'2e28e20e2d6516e15dbae5d2ff67539631116dfc';
+String _$aBCurveHash() => r'ca317833b0cf971a81eeb840a8959afe406321a9';
 
-/// A provider for the AB-curve object to debug.
+/// A provider for the AB-curve.
 ///
-/// Copied from [aBCurveDebug].
-@ProviderFor(aBCurveDebug)
-final aBCurveDebugProvider = FutureProvider<ABCurve?>.internal(
-  aBCurveDebug,
-  name: r'aBCurveDebugProvider',
+/// Copied from [aBCurve].
+@ProviderFor(aBCurve)
+final aBCurveProvider = FutureProvider<ABCurve?>.internal(
+  aBCurve,
+  name: r'aBCurveProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$aBCurveDebugHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$aBCurveHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ABCurveDebugRef = FutureProviderRef<ABCurve?>;
-String _$aBCurvePointsHash() => r'85bcb5755ae5e6ded4c2fa09c84de694aafd6014';
+typedef ABCurveRef = FutureProviderRef<ABCurve?>;
+String _$aBCurvePointsHash() => r'310abb48c3eda109934102073936b71772c9bd95';
 
 /// A provider for the curve points for the AB-curve.
 ///

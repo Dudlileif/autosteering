@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -13,7 +30,7 @@ part 'country_providers.g.dart';
 /// has defined custom map layers.
 ///
 /// Can check the current location by querying the OSM servers.
-@Riverpod(keepAlive: true)
+@riverpod
 class CurrentCountry extends _$CurrentCountry {
   @override
   Country? build() {
@@ -46,7 +63,12 @@ class CurrentCountry extends _$CurrentCountry {
   Future<void> update() async => Future(() async {
         if (ref.watch(mapReadyProvider)) {
           if (state == null) {
-            final dio = Dio();
+            final dio = Dio(
+              BaseOptions(
+                connectTimeout: const Duration(seconds: 5),
+                receiveTimeout: const Duration(seconds: 5),
+              ),
+            );
             final position = ref.watch(
               mainMapControllerProvider
                   .select((controller) => controller.camera.center),
@@ -83,7 +105,7 @@ class CurrentCountry extends _$CurrentCountry {
 
 /// A provider that contains all the custom layers available for the
 /// [CurrentCountry].
-@Riverpod(keepAlive: true)
+@riverpod
 class AvailableCountryLayers extends _$AvailableCountryLayers {
   @override
   List<TileLayerData> build() {
@@ -137,7 +159,7 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
 }
 
 /// A set of the current selction of custom layers for the [CurrentCountry].
-@Riverpod(keepAlive: true)
+@riverpod
 class EnabledCountryLayers extends _$EnabledCountryLayers {
   @override
   Set<TileLayerData> build() {
@@ -221,7 +243,7 @@ List<TileLayerData> sortedCountryLayers(SortedCountryLayersRef ref) {
 
 /// A map of the available country layers and their opacities, which can be
 /// specified.
-@Riverpod(keepAlive: true)
+@riverpod
 class CountryLayerOpacities extends _$CountryLayerOpacities {
   Timer? _saveToSettingsTimer;
 

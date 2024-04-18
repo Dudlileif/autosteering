@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/utils/position_projection_extensions.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:latlong2/latlong.dart';
@@ -6,7 +23,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'vehicle_debug_providers.g.dart';
 
 /// Whether to show vehicle debug polygons.
-@Riverpod(keepAlive: true)
+@riverpod
 class DebugVehiclePolygons extends _$DebugVehiclePolygons {
   @override
   bool build() => false;
@@ -19,7 +36,7 @@ class DebugVehiclePolygons extends _$DebugVehiclePolygons {
 }
 
 /// Whether to show vehicle steering debug features.
-@Riverpod(keepAlive: true)
+@riverpod
 class DebugSteering extends _$DebugSteering {
   @override
   bool build() => false;
@@ -32,7 +49,7 @@ class DebugSteering extends _$DebugSteering {
 }
 
 /// Whether to show vehicle trajectory debug features.
-@Riverpod(keepAlive: true)
+@riverpod
 class DebugTrajectory extends _$DebugTrajectory {
   @override
   bool build() => false;
@@ -45,7 +62,7 @@ class DebugTrajectory extends _$DebugTrajectory {
 }
 
 /// Whether to show vehicle travelled path debug.
-@Riverpod(keepAlive: true)
+@riverpod
 class DebugTravelledPath extends _$DebugTravelledPath {
   @override
   bool build() => false;
@@ -93,7 +110,7 @@ class DebugTravelledPathList extends _$DebugTravelledPathList {
 }
 
 /// Whether to show vehicle hitches debug.
-@Riverpod(keepAlive: true)
+@riverpod
 class DebugVehicleHitches extends _$DebugVehicleHitches {
   @override
   bool build() => false;
@@ -106,49 +123,8 @@ class DebugVehicleHitches extends _$DebugVehicleHitches {
 }
 
 /// Whether to show vehicle antenna position debug.
-@Riverpod(keepAlive: true)
+@riverpod
 class DebugVehicleAntennaPosition extends _$DebugVehicleAntennaPosition {
-  @override
-  bool build() => false;
-
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current [state].
-  void toggle() => Future(() => state = !state);
-}
-
-/// Whether to show vehicle IMU.
-@Riverpod(keepAlive: true)
-class DebugVehicleIMU extends _$DebugVehicleIMU {
-  @override
-  bool build() => false;
-
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current [state].
-  void toggle() => Future(() => state = !state);
-}
-
-/// Whether to show vehicle WAS.
-@Riverpod(keepAlive: true)
-class DebugVehicleWAS extends _$DebugVehicleWAS {
-  @override
-  bool build() => false;
-
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current [state].
-  void toggle() => Future(() => state = !state);
-}
-
-
-/// Whether to show vehicle autosteer parameters debug.
-@Riverpod(keepAlive: true)
-class DebugVehicleAutosteerParameters
-    extends _$DebugVehicleAutosteerParameters {
   @override
   bool build() => false;
 

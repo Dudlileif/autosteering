@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 
 /// A class with preconfigured vehicles to get some useful starting points
@@ -6,10 +23,10 @@ class PreconfiguredVehicles {
   /// MF 5713S -ish
   static Tractor get tractor => Tractor(
         antennaHeight: 2.822,
-        length: 4.358,
+        length: 3.8,
         width: 2.360,
         wheelBase: 2.550,
-        solidAxleDistance: 1.275,
+        antennaToSolidAxleDistance: 1.2,
         trackWidth: 1.8,
         minTurningRadius: 4.25,
         steeringAngleMax: 31,
@@ -20,7 +37,7 @@ class PreconfiguredVehicles {
         antennaHeight: 3.8,
         length: 7.5,
         width: 3,
-        pivotToAntennaDistance: 1,
+        antennaToPivotDistance: 1,
         pivotToFrontAxle: 1.6,
         pivotToRearAxle: 1.8,
         trackWidth: 2.75,
@@ -36,7 +53,7 @@ class PreconfiguredVehicles {
         length: 9,
         width: 3.3,
         wheelBase: 3.7,
-        solidAxleDistance: 1.275,
+        antennaToSolidAxleDistance: -1.275,
         trackWidth: 2.2,
         solidAxleWheelWidth: 0.65,
         steeringAxleWheelWidth: 0.46,

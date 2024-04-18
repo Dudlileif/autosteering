@@ -1,5 +1,23 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +33,9 @@ class FieldLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final field = ref.watch(activeFieldProvider);
 
+    final darkModeEnabled = Theme.of(context).brightness == Brightness.dark;
     if (field != null) {
-      final enabled = ref.watch(showFieldDebugLayerProvider);
+      final enabled = ref.watch(showFieldLayerProvider);
       if (enabled) {
         final bufferedField = ref.watch(bufferedFieldProvider).when(
               data: (data) => data,
@@ -38,23 +57,28 @@ class FieldLayer extends ConsumerWidget {
 
         final showBorderPoints = ref.watch(showFieldBorderPointsProvider);
 
+
         return Stack(
           children: [
             PolygonLayer(
               polygonCulling: true,
               polygons: [
-                if (showField) field.mapPolygon,
+                if (showField)
+                  field.mapPolygon.copyWith(
+                    borderColor: darkModeEnabled ? Colors.white : Colors.black,
+                    borderStrokeWidth: 2,
+                  ),
                 if (showBufferedField)
                   bufferedField.mapPolygon.copyWith(
-                    color: Colors.red.withOpacity(0.25),
                     borderColor: Colors.red,
+                    borderStrokeWidth: 2,
                   ),
                 if (showFieldBoundingBox)
                   Polygon(
                     points:
                         field.mapBoundingBox((point) => point.latLng).toList(),
                     borderStrokeWidth: 1,
-                    borderColor: Colors.yellow,
+                    borderColor: darkModeEnabled ? Colors.white : Colors.black,
                   ),
                 if (showBufferedFieldBoundingBox)
                   Polygon(
@@ -96,6 +120,40 @@ class FieldLayer extends ConsumerWidget {
           ],
         );
       }
+    }
+    final recordingExteriorRing = ref.watch(fieldExteriorRingProvider);
+    final recordingInteriorRings = ref.watch(fieldInteriorRingsProvider);
+    if (ref.watch(showPathRecordingMenuProvider) &&
+        ref.watch(
+          activePathRecordingTargetProvider
+              .select((value) => value == PathRecordingTarget.field),
+        ) &&
+        (recordingInteriorRings != null || recordingExteriorRing != null)) {
+      return Stack(
+        children: [
+          PolygonLayer(
+            polygonCulling: true,
+            polygons: [
+              if (recordingExteriorRing != null)
+                Polygon(
+                  points: recordingExteriorRing
+                      .map((point) => point.latLng)
+                      .toList(),
+                  borderStrokeWidth: 1,
+                  borderColor: darkModeEnabled ? Colors.white : Colors.black,
+                ),
+              if (recordingInteriorRings != null)
+                ...recordingInteriorRings.map(
+                  (ring) => Polygon(
+                    points: ring.map((point) => point.latLng).toList(),
+                    borderStrokeWidth: 1,
+                    borderColor: darkModeEnabled ? Colors.white : Colors.black,
+                  ),
+                ),
+            ],
+          ),
+        ],
+      );
     }
     return const SizedBox.shrink();
   }

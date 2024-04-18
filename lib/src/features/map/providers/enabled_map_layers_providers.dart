@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
@@ -9,7 +26,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'enabled_map_layers_providers.g.dart';
 
 /// Whether the OpenStreetMap layer should be shown.
-@Riverpod(keepAlive: true)
+@riverpod
 class ShowOSMLayer extends _$ShowOSMLayer {
   @override
   bool build() {
@@ -57,7 +74,7 @@ bool showFinishedPathLayer(ShowFinishedPathLayerRef ref) {
 
 /// Whether the currently recording path should be shown.
 @riverpod
-bool showRecordingPathLayer(ShowRecordingPathLayerRef ref) =>
+bool showPathRecordingLayer(ShowPathRecordingLayerRef ref) =>
     ref.watch(enablePathRecorderProvider);
 
 /// Whether the editable recorded path should be shown.
@@ -71,7 +88,7 @@ bool showEditablePathLayer(ShowEditablePathLayerRef ref) {
 }
 
 /// Whether the vehicle image drawing layer should be shown.
-@Riverpod(keepAlive: true)
+@riverpod
 class ShowVehicleDrawingLayer extends _$ShowVehicleDrawingLayer {
   @override
   bool build() => true;
@@ -107,20 +124,41 @@ bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {
 bool showDubinsPathDebugLayer(ShowDubinsPathDebugLayerRef ref) =>
     ref.watch(enableDubinsPathDebugProvider);
 
-/// Whether the debugging layer for the pure pursuit should be shown.
+/// Whether the layer for the path tracking should be shown.
 @riverpod
-bool showPathTrackingDebugLayer(ShowPathTrackingDebugLayerRef ref) =>
-    ref.watch(debugPathTrackingProvider);
+bool showPathTrackingLayer(ShowPathTrackingLayerRef ref) =>
+    ref.watch(showPathTrackingProvider);
 
-/// Whether the debugging layer for the test field should be shown.
+/// Whether the layer for field should be shown.
 @riverpod
-bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
+bool showFieldLayer(ShowFieldLayerRef ref) {
   final showField = ref.watch(showFieldProvider);
   final showBufferedField = ref.watch(showBufferedFieldProvider);
-  final fieldExists = ref.watch(activeFieldProvider) != null;
+  final fieldExists =
+      ref.watch(activeFieldProvider.select((value) => value != null));
 
-  final enabled = (showField || showBufferedField) && fieldExists;
+  final showRecordedRings = ref.watch(showPathRecordingMenuProvider) &&
+      ref.watch(
+        activePathRecordingTargetProvider
+            .select((value) => value == PathRecordingTarget.field),
+      );
+
+  final enabled =
+      ((showField || showBufferedField) && fieldExists) || showRecordedRings;
   return enabled;
+}
+
+/// Whether the equipment drawing layer should be shown.
+@riverpod
+class ShowEquipmentDrawingLayer extends _$ShowEquipmentDrawingLayer {
+  @override
+  bool build() => true;
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
 }
 
 /// Whether the debugging layer for the equipment should be shown.
@@ -128,7 +166,35 @@ bool showFieldDebugLayer(ShowFieldDebugLayerRef ref) {
 bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) =>
     ref.watch(showEquipmentDebugProvider);
 
-/// Whether the debugging layer for AB-trackng should be shown.
+/// Whether the layer for AB-tracking should be shown.
 @riverpod
-bool showABTrackingDebugLayer(ShowABTrackingDebugLayerRef ref) =>
-    ref.watch(aBTrackingDebugShowProvider);
+bool showABTrackingLayer(ShowABTrackingLayerRef ref) =>
+    ref.watch(showABTrackingProvider);
+
+/// Whether the map should show grid lines.
+@riverpod
+class ShowGridLayer extends _$ShowGridLayer {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapLayersShowGrid, next);
+      }
+      if (!next) {
+        ref.invalidate(mapGridSizeProvider);
+      }
+    });
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.mapLayersShowGrid) ??
+        true;
+  }
+
+  /// Update the [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Invert the current [state].
+  void toggle() => Future(() => state = !state);
+}

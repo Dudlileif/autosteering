@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -167,59 +184,6 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   );
 }
 
-/// A provider for the UDP send port for the device to send messages to
-/// the hardware in [HardwareAddress].
-@Riverpod(keepAlive: true)
-class HardwareWebSocketPort extends _$HardwareWebSocketPort {
-  @override
-  int build() {
-    ref.listenSelf((previous, next) {
-      if (previous != null) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.hardwareWebSocketPort, next);
-      }
-    });
-
-    return ref
-            .read(settingsProvider.notifier)
-            .getInt(SettingsKey.hardwareWebSocketPort) ??
-        80;
-  }
-
-  /// Update the [state] to [value].
-  void update(int value) => Future(() => state = value);
-
-  /// Update the [state] to [value] if it's a valid integer.
-  void updateFromString(String value) => Future(() {
-        final port = int.tryParse(value);
-        if (port != null) {
-          if (port >= 1 && port <= 65535) {
-            state = port;
-          }
-        }
-      });
-}
-
-/// A provider for the combined state of the [HardwareAddress],
-/// [HardwareWebSocketPort].
-///
-/// The updated state is automatically sent to the
-@Riverpod(keepAlive: true)
-({String hardwareAddress, int hardwareWebSocketPort})
-    hardwareWebCommunicationConfig(HardwareWebCommunicationConfigRef ref) {
-  ref.listenSelf((previous, next) {
-    if (next != previous) {
-      ref.read(simInputProvider.notifier).send(next);
-    }
-  });
-
-  return (
-    hardwareAddress: ref.watch(hardwareAddressProvider),
-    hardwareWebSocketPort: ref.watch(hardwareWebSocketPortProvider),
-  );
-}
-
 /// A provider for a TCP server for sending/receiving data via TCP.
 @Riverpod(keepAlive: true)
 class TcpServer extends _$TcpServer {
@@ -296,13 +260,14 @@ ${String.fromCharCodes(event)}
 
 /// A provider for the current connection of the device.
 @Riverpod(keepAlive: true)
-Stream<ConnectivityResult> currentConnection(CurrentConnectionRef ref) {
+Stream<List<ConnectivityResult>> currentConnection(CurrentConnectionRef ref) {
   ref.listenSelf((previous, next) {
     next.when(
       data: (data) {
         if (data != previous?.value) {
           if (previous != next) {
-            Logger.instance.i('Device connection: ${data.name}');
+            Logger.instance
+                .i('Device connections: ${data.map((e) => e.name).toList()}');
           }
         }
       },
@@ -331,14 +296,16 @@ bool networkAvailable(NetworkAvailableRef ref) {
   });
 
   return ref.watch(currentConnectionProvider).when(
-        data: (data) => switch (data) {
+        data: (data) => data.any(
+          (element) => switch (element) {
           ConnectivityResult.ethernet ||
           ConnectivityResult.wifi ||
           ConnectivityResult.mobile ||
           ConnectivityResult.vpn =>
             true,
           _ => false,
-        },
+          },
+        ),
         error: (error, stackTrace) {
           Logger.instance.e(
             'Failed to find current connection type.',

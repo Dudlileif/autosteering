@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 /// A collection of NMEA sentences for receiving GNSS position data.
 ///
 /// See the [u-blox F9P HPG 1.32 Interface Description](https://content.u-blox.com/sites/default/files/documents/u-blox-F9-HPG-1.32_InterfaceDescription_UBX-22008968.pdf), chapter 2
@@ -190,7 +207,7 @@ mixin GnssPositionCommonSentence on NmeaSentence {
   double? get verticalVelocity => null;
 
   /// The time in seconds since the last differential update.
-  double? get timeSinceLastDGPSUpdate;
+  double? get ageOfDifferentialData;
 
   /// The time delta from the message was created to it was received by this
   /// device.
@@ -201,6 +218,9 @@ mixin GnssPositionCommonSentence on NmeaSentence {
 
   /// The interpreted GNSS fix quality of this sentence.
   GnssFixQuality? get fixQuality;
+
+  /// The ID of the differential reference station.
+  String? get differentialStationID => null;
 }
 
 /// An NMEA message for GPS position data.
@@ -220,15 +240,68 @@ class GGASentence extends TalkerSentence with GnssPositionCommonSentence {
   /// Quality: 1,
   /// Num sats: 12,
   /// HDOP: 0.83,
-  /// Altitude geoid: 91.7,
+  /// Altitude geoid, MSL: 91.7,
   /// Altitude unit: M,
   /// Geodial separation: 39.5,
   /// Altitude unit: M,
-  /// Age of differential data: ,    *** Empty, we don't care about this one ***
+  /// Age of differential data: ,
+  /// Differential base station ID: ,
   /// Checksum: *72
   GGASentence({required super.raw}) {
     super.deviceReceiveTime = DateTime.now();
   }
+
+  /// Creates a [GGASentence] from the given parameters.
+  factory GGASentence.create({
+    required double latitude,
+    required double longitude,
+    String? source,
+    DateTime? time,
+    GnssFixQuality? quality,
+    int? numSatellites,
+    double? hdop,
+    double? altitudeMSL,
+    String altitudeUnit = 'M',
+    double? geodialSeparation,
+    double? ageOfDifferentialData,
+  }) {
+    var raw = [
+      '${source ?? 'GP'}GGA',
+      (time ?? DateTime.now())
+          .toUtc()
+          .toIso8601String()
+          .split('T')
+          .last
+          .replaceAll(':', '')
+          .substring(0, 9),
+      DegreeConverter.degreeMinutesFromDecimalDegree(
+        latitude.abs(),
+        numBeforeDecimal: 2,
+      ),
+      if (latitude >= 0) 'N' else 'S',
+      DegreeConverter.degreeMinutesFromDecimalDegree(
+        longitude.abs(),
+        numBeforeDecimal: 3,
+      ),
+      if (longitude >= 0) 'E' else 'W',
+      (quality ?? GnssFixQuality.manualInput).nmeaGGAQuality,
+      numSatellites ?? 0,
+      (hdop ?? 99.99).toStringAsFixed(2),
+      (altitudeMSL ?? 100).toStringAsFixed(1),
+      altitudeUnit,
+      (geodialSeparation ?? 100).toStringAsFixed(1),
+      altitudeUnit,
+      if (ageOfDifferentialData != null) ageOfDifferentialData else '',
+      0,
+    ].join(',');
+
+    final checkSum = NmeaUtils.xorChecksum(raw);
+
+    raw = '\$$raw*$checkSum';
+
+    return GGASentence(raw: raw);
+  }
+
   @override
   int? get quality => _intFromField(6);
 
@@ -237,7 +310,7 @@ class GGASentence extends TalkerSentence with GnssPositionCommonSentence {
 
   /// The time in seconds since the last differential update.
   @override
-  double? get timeSinceLastDGPSUpdate => _doubleFromField(13);
+  double? get ageOfDifferentialData => _doubleFromField(13);
 
   @override
   GnssFixQuality? get fixQuality => GnssFixQuality.values
@@ -261,9 +334,10 @@ class GNSSentence extends TalkerSentence with GnssPositionCommonSentence {
   /// Pos mode: RRNRNN, (GPS, GLONASS, Galileio, BeiDou, unknown, unknown)
   /// Num sats: 12,
   /// HDOP: 0.83,
-  /// Altitude geoid: 91.7,
+  /// Altitude geoid, MSL: 91.7,
   /// Geodial separation: 39.5,
-  /// Age of differential data: ,    *** Empty, we don't care about this one ***
+  /// Age of differential data: ,
+  /// Differential base station ID: ,
   /// Nav status: A,
   /// Checksum: *72
   GNSSentence({required super.raw}) {
@@ -278,7 +352,7 @@ class GNSSentence extends TalkerSentence with GnssPositionCommonSentence {
 
   /// The time in seconds since the last differential update.
   @override
-  double? get timeSinceLastDGPSUpdate => _doubleFromField(11);
+  double? get ageOfDifferentialData => _doubleFromField(11);
 
   /// The navigational status indicator, V means invalid, A means valid.
   String? get navStatus => fields.elementAtOrNull(13);
@@ -399,7 +473,7 @@ class PANDASentence extends TalkerSentence with GnssPositionCommonSentence {
   int? get quality => _intFromField(6);
 
   @override
-  double? get timeSinceLastDGPSUpdate => _doubleFromField(10);
+  double? get ageOfDifferentialData => _doubleFromField(10);
 
   /// The GNSS calculated velocity in knots.
   double? get speedKnots => _doubleFromField(11);
@@ -469,7 +543,7 @@ class PUBXSentence extends ProprietarySentence
   double? get verticalVelocity => _doubleFromField(13);
 
   @override
-  double? get timeSinceLastDGPSUpdate => _doubleFromField(14);
+  double? get ageOfDifferentialData => _doubleFromField(14);
 
   @override
   double? get hdop => _doubleFromField(15);

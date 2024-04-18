@@ -1,10 +1,29 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:collection';
 import 'dart:math';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -27,38 +46,39 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     required this.minTurningRadius,
     required this.steeringAngleMax,
     required this.trackWidth,
+    this.manufacturerColors = ManufacturerColors.masseyFerguson,
     this.antennaLateralOffset = 0,
-    this.invertSteeringInput = false,
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
+    this.wheelsRolledDistance = 0,
+    this.antennaPosition = const Geographic(lon: 0, lat: 0),
+    this.pathTrackingMode = PathTrackingMode.purePursuit,
+    this.autosteeringThresholdVelocity = 0.05,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
     super.name,
     super.uuid,
-    this.pathTrackingMode = PathTrackingMode.purePursuit,
     Imu? imu,
     Was? was,
-    MotorConfig? motorConfig,
-    PidParameters? pidParameters,
+    SteeringHardwareConfig? steeringHardwareConfig,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     DateTime? lastUsed,
-    Geographic position = const Geographic(lon: 0, lat: 0),
     double bearing = 0,
     double pitch = 0,
     double roll = 0,
     double velocity = 0,
+    this.manualSimulationMode = false,
   })  : _bearing = bearing,
         _pitch = pitch,
         _roll = roll,
         _velocity = velocity,
-        antennaPosition = position,
         imu = imu ?? Imu(),
         was = was ?? Was(),
-        motorConfig = motorConfig ?? const MotorConfig(),
-        pidParameters = pidParameters ?? const PidParameters(),
+        steeringHardwareConfig =
+            steeringHardwareConfig ?? const SteeringHardwareConfig(),
         stanleyParameters = stanleyParameters ?? const StanleyParameters(),
         purePursuitParameters =
             purePursuitParameters ?? const PurePursuitParameters(),
@@ -131,17 +151,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
             ),
           )
         : Was();
-    final motorConfig = steering.containsKey('motor_config')
-        ? MotorConfig.fromJson(
-            Map<String, dynamic>.from(steering['motor_config'] as Map),
+    final steeringHardwareConfig = steering.containsKey('hardware_config')
+        ? SteeringHardwareConfig.fromJson(
+            Map<String, dynamic>.from(steering['hardware_config'] as Map),
           )
-        : const MotorConfig();
-
-    final pidParameters = steering.containsKey('pid_parameters')
-        ? PidParameters.fromJson(
-            Map<String, dynamic>.from(steering['pid_parameters'] as Map),
-          )
-        : null;
+        : const SteeringHardwareConfig();
 
     final purePursuitParameters =
         steering.containsKey('pure_pursuit_parameters')
@@ -158,18 +172,29 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
           )
         : null;
 
+    final manufacturerColors = json.containsKey('manufacturer_colors')
+        ? ManufacturerColors.fromJson(
+            Map<String, dynamic>.from(json['manufacturer_colors'] as Map),
+          )
+        : null;
+
     return vehicle.copyWith(
       imu: imu,
       was: was,
-      motorConfig: motorConfig,
-      pidParameters: pidParameters,
+      autosteeringThresholdVelocity:
+          steering['autosteering_threshold_velocity'] as double?,
+      steeringHardwareConfig: steeringHardwareConfig,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
+      manufacturerColors: manufacturerColors,
     );
   }
 
   /// The last time this vehicle was used.
   DateTime lastUsed;
+
+  /// The manufacturer color scheme of the vehicle.
+  ManufacturerColors manufacturerColors;
 
   /// The height of the antenna above the ground, in meters.
   double antennaHeight;
@@ -194,18 +219,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// A PID steering controller for use with autosteering.
   PidController pidController = PidController();
 
-  /// Whether the [steeringAngleInput] should be inverted.
-  bool invertSteeringInput;
-
   /// The Wheel Angle Sensor object representation of this vehicle.
   Was was;
 
   /// The configuration for the steering wheel motor of the vehicle.
-  MotorConfig motorConfig;
-
-  /// The PID parameters for controlling the steering of this vehicle
-  /// when using a PID controller mode.
-  PidParameters pidParameters;
+  SteeringHardwareConfig steeringHardwareConfig;
 
   /// Parameters for the [lookAheadDistance] when using a pure pursuit/look
   /// ahead steering mode.
@@ -218,13 +236,16 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Which steering mode the path tracking should use.
   PathTrackingMode pathTrackingMode;
 
+  /// The minimum required velocity to engage autosteering.
+  double autosteeringThresholdVelocity;
+
   /// The velocity of the vehicle as set from the outside.
   double _velocity;
 
-  /// The length of the vehicle, in meters.
+  /// The length of the vehicle excluding wheels, in meters.
   double length;
 
-  /// The width of the vehicle, in meters.
+  /// The width of the vehicle excluding wheels, in meters.
   double width;
 
   /// The pitch of the vehicle as degrees of inclination around the x-axis
@@ -238,11 +259,24 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Bearing as set from the outside.
   double _bearing = 0;
 
+  /// Whether manual simulation mode is used.
+  bool manualSimulationMode = false;
+
   /// The IMU (inertial measurement unit) for this vehicle.
   Imu imu;
 
   /// Antenna position of the vehicle.
   Geographic antennaPosition;
+
+  /// The distance the wheels has rolled since the start.
+  ///
+  /// Reversing will subtract from this value.
+  /// Used to draw rolling wheels.
+  double wheelsRolledDistance;
+
+  /// The PID parameters for controlling the steering of this vehicle
+  /// when using a PID controller mode.
+  PidParameters get pidParameters => steeringHardwareConfig.pidParameters;
 
   /// The lateral offset of the the antenna's true ground position to the
   /// mounted position.
@@ -253,18 +287,23 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   double get antennaPitchLongitudinalOffset =>
       tan(pitch.toRadians()) * antennaHeight;
 
+  /// The corrected position of the antenna after accounting for the [pitch]
+  /// and [roll], if enabled by the [imu] config setting
+  /// [ImuConfig.usePitchAndRoll].
+  /// Otherwise the [antennaPosition] is returned.
+  Geographic get correctedAntennaPosition =>
+      switch (imu.config.usePitchAndRoll) {
+        false => antennaPosition,
+        true => correctPositionForRollAndPitch(antennaPosition)
+      };
+
   /// The projected ground position of the centered antenna of this vehicle
   /// accounting for [pitch] and [roll].
   @override
-  Geographic get position => switch (imu.config.usePitchAndRoll) {
-        false => antennaPosition,
-        true => correctPositionForRollAndPitch(antennaPosition),
-      }
-          .spherical
-          .destinationPoint(
-            distance: antennaLateralOffset,
-            bearing: bearing + 90,
-          );
+  Geographic get position => correctedAntennaPosition.rhumb.destinationPoint(
+        distance: antennaLateralOffset,
+        bearing: bearing - 90,
+      );
 
   /// Updates the [antennaPosition] of the vehicle, as the ground [position] is
   /// derived from it.
@@ -274,12 +313,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Moves the input [position] to a position corrected for [pitch] and [roll]
   /// with [antennaPitchLongitudinalOffset] and [antennaRollLateralOffset].
   Geographic correctPositionForRollAndPitch(Geographic position) =>
-      position.spherical
+      position.rhumb
           .destinationPoint(
             distance: antennaRollLateralOffset,
             bearing: bearing - 90,
           )
-          .spherical
+          .rhumb
           .destinationPoint(
             distance: antennaPitchLongitudinalOffset,
             bearing: bearing,
@@ -292,19 +331,19 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Essentially we move the position opposite of the getter for [position],
   /// to end at the correct [antennaPosition].
   void setPositionSim(Geographic value) {
-    final unCentered = value.spherical.destinationPoint(
+    final unCentered = value.rhumb.destinationPoint(
       distance: antennaLateralOffset,
-      bearing: bearing - 90,
+      bearing: bearing + 90,
     );
 
     antennaPosition = switch (imu.config.usePitchAndRoll) {
       false => unCentered,
-      true => unCentered.spherical
+      true => unCentered.rhumb
           .destinationPoint(
             distance: -antennaRollLateralOffset,
             bearing: bearing - 90,
           )
-          .spherical
+          .rhumb
           .destinationPoint(
             distance: -antennaPitchLongitudinalOffset,
             bearing: bearing,
@@ -323,9 +362,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The bearing of the vehicle, in degrees.
   @override
-  double get bearing => switch (imu.config.useYaw) {
-        true => imu.bearing ?? 0,
-        false => _bearing
+  double get bearing => switch (manualSimulationMode) {
+        true => _bearing,
+        false => switch (imu.config.useYaw) {
+            true => imu.bearing ?? 0,
+            false => _bearing
+          }
       };
 
   /// The raw outside set bearing of the vehicle, typically from
@@ -354,22 +396,93 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The distance from the ground position to the antenna position.
   double get groundPositionToAntennaDistance =>
-      position.spherical.distanceTo(antennaPosition);
+      position.rhumb.distanceTo(antennaPosition);
 
   /// The bearing from the ground position to the antenna position.
   double get groundPositionToAntennaBearing =>
-      position.spherical.initialBearingTo(antennaPosition);
+      position.rhumb.initialBearingTo(antennaPosition);
+
+  /// Normalizes the discrete [WasReading] into a range from -1 to 1, where
+  /// each part -1 -> 0 and 0 -> 1 are individually normalized depending on
+  /// [SteeringHardwareConfig.wasMin], [SteeringHardwareConfig.wasCenter] and
+  /// [SteeringHardwareConfig.wasMax].
+  double get wasReadingNormalizedInRange {
+    final normalized =
+        switch (was.reading.value < steeringHardwareConfig.wasCenter) {
+      true => (was.reading.value - steeringHardwareConfig.wasCenter) /
+          (steeringHardwareConfig.wasCenter - steeringHardwareConfig.wasMin),
+      false => (was.reading.value - steeringHardwareConfig.wasCenter) /
+          (steeringHardwareConfig.wasMax - steeringHardwareConfig.wasCenter)
+    };
+    return switch (was.config.invertInput) {
+      true => -normalized,
+      false => normalized
+    };
+  }
 
   /// Sets the steering angle of the vehicle by the [was].reading.
   void setSteeringAngleByWasReading() {
     if (was.config.useWas) {
-      steeringAngleInput = (was.readingNormalizedInRange * steeringAngleMax)
+      steeringAngleInput = (wasReadingNormalizedInRange * steeringAngleMax)
           .clamp(-steeringAngleMax, steeringAngleMax);
     }
   }
 
   /// The distance between the wheel axles.
   double get wheelBase;
+
+  /// Returns the WAS reading target for the given steering [angle].
+  int wasTargetFromSteeringAngle(double angle) {
+    if (angle < 0) {
+      if (was.config.invertInput) {
+        return (steeringHardwareConfig.wasCenter +
+                ((steeringHardwareConfig.wasMax -
+                            steeringHardwareConfig.wasCenter) *
+                        angle.abs() /
+                        steeringAngleMax)
+                    .round())
+            .clamp(
+          steeringHardwareConfig.wasCenter,
+          steeringHardwareConfig.wasMax,
+        );
+      } else {
+        return (steeringHardwareConfig.wasCenter -
+                ((steeringHardwareConfig.wasCenter -
+                            steeringHardwareConfig.wasMin) *
+                        angle.abs() /
+                        steeringAngleMax)
+                    .round())
+            .clamp(
+          steeringHardwareConfig.wasMin,
+          steeringHardwareConfig.wasCenter,
+        );
+      }
+    } else {
+      if (was.config.invertInput) {
+        return (steeringHardwareConfig.wasCenter -
+                ((steeringHardwareConfig.wasCenter -
+                            steeringHardwareConfig.wasMin) *
+                        angle.abs() /
+                        steeringAngleMax)
+                    .round())
+            .clamp(
+          steeringHardwareConfig.wasMin,
+          steeringHardwareConfig.wasCenter,
+        );
+      } else {
+        return (steeringHardwareConfig.wasCenter +
+                ((steeringHardwareConfig.wasMax -
+                            steeringHardwareConfig.wasCenter) *
+                        angle.abs() /
+                        steeringAngleMax)
+                    .round())
+            .clamp(
+          steeringHardwareConfig.wasCenter,
+          steeringHardwareConfig.wasMax,
+        );
+      }
+    }
+  }
 
   /// Where the look ahead distance calculation should start.
   Geographic get lookAheadStartPosition;
@@ -378,8 +491,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   ///
   /// The distance is altered according to [purePursuitParameters].
   double get lookAheadDistance =>
-      purePursuitParameters.lookAheadDistance +
-      velocity.abs() * purePursuitParameters.lookAheadVelocityGain;
+      (velocity.abs() * purePursuitParameters.lookAheadSeconds)
+          .clamp(purePursuitParameters.lookAheadMinDistance, double.infinity);
 
   /// A [WayPoint] for the vehicle in it's current state, i.e. position, bearing
   /// and velocity.
@@ -392,14 +505,10 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Reqiure wheel angle above 0.01 deg.
   static const double minSteeringAngle = 0.01;
 
-  /// The [steeringAngleInput] accounted for [invertSteeringInput] and
-  /// [minSteeringAngle].
+  /// The [steeringAngleInput] accounted for [minSteeringAngle].
   double get steeringAngle =>
       switch (steeringAngleInput.abs() > minSteeringAngle) {
-        true => switch (invertSteeringInput) {
-            true => -steeringAngleInput,
-            false => steeringAngleInput,
-          },
+        true => steeringAngleInput,
         false => 0,
       };
 
@@ -418,17 +527,18 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Polygons for drawing the wheels of the vehicle.
   List<map.Polygon> get wheelPolygons;
 
-  /// The turning radius corresponding to the current [steeringAngle].
-  double? get currentTurningRadius;
-
-  /// The center point of which the [currentTurningRadius] revolves around.
-  Geographic? get turningRadiusCenter;
-
   /// The angular velocity of the vehicle, if it is turning.
-  /// degrees/s, does not care about clockwise/counter-clockwise direction.
-  double? get angularVelocity => currentTurningRadius != null
-      ? (velocity / (2 * pi * currentTurningRadius!)) * 360
-      : null;
+  /// Unit is degrees/s.
+  double? get angularVelocity {
+    if (currentTurningRadius == null) {
+      return null;
+    }
+    var value = (velocity / (2 * pi * currentTurningRadius!)) * 360;
+    if (isTurningLeft) {
+      value *= -1;
+    }
+    return value;
+  }
 
   /// The projected trajectory for the moving vehicle.
   ///
@@ -443,6 +553,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Whether the vehicle is turning to the left,
   /// otherwise assumed turning to the right.
   bool get isTurningLeft => steeringAngle < 0;
+
+  /// The furthest ahead and left most position of the vehicle's bounding box.
+  ///
+  /// Useful for drawing the vehicle on the map.
+  Geographic get topLeftPosition;
 
   /// Polygons for visualizing the extent of the vehicle.
   List<map.Polygon> get polygons;
@@ -466,7 +581,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       } else if (velocity.abs() > 0 || force) {
         setPositionSim(updatedPositionStraight(period));
       }
-      updateChildren();
+      updateChildren(period);
     }
   }
 
@@ -480,21 +595,26 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// Updates the [position] for the next [period] seconds when going straight.
   Geographic updatedPositionStraight(double period) =>
-      position.spherical.destinationPoint(
+      position.rhumb.destinationPoint(
         distance: velocity * period,
         bearing: bearing,
       );
 
-  /// Calculates the next steering angle to reach [targetSteeringAngle] from
+  /// Calculates a motor velocity multiplier to reach [steeringAngleTarget] from
   /// [steeringAngleInput] by using the [pidController].
   ///
   /// [integralSize] is how many steps the integral should take into account.
-  double nextSteeringAnglePid(
-    double targetSteeringAngle, {
+  double simulatedMotorVelocityPid(
+    double steeringAngleTarget, {
     double integralSize = 1000,
   }) {
+    final normalizedTarget =
+        (steeringAngleTarget + steeringAngleMax) / (2 * steeringAngleMax);
+    final normalizedInput =
+        (steeringAngleInput + steeringAngleMax) / (2 * steeringAngleMax);
+
     return pidController.nextValue(
-      targetSteeringAngle - steeringAngleInput,
+      normalizedTarget - normalizedInput,
       pidParameters,
       integralSize: integralSize,
     );
@@ -513,10 +633,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       }
 
       // Straight
-      final newPoint = lookAheadStartPosition.spherical
+      final newPoint = lookAheadStartPosition.rhumb
           .destinationPoint(distance: velocity * period, bearing: bearing);
-      final newBearing =
-          lookAheadStartPosition.spherical.finalBearingTo(newPoint);
+      final newBearing = lookAheadStartPosition.rhumb.finalBearingTo(newPoint);
       return (
         position: newPoint,
         bearing: newBearing.isFinite ? newBearing : bearing
@@ -545,7 +664,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         return predictedStanleyPositionTurning(period, steeringAngle);
       }
       // Straight
-      final newPoint = stanleyAxlePosition.spherical
+      final newPoint = stanleyAxlePosition.rhumb
           .destinationPoint(distance: velocity * period, bearing: bearing);
 
       return (position: newPoint, bearing: bearing);
@@ -569,30 +688,31 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
         minTurningRadius,
         steeringAngleMax,
         trackWidth,
-        invertSteeringInput,
         velocity,
         bearing,
         steeringAngleInput,
         length,
         width,
+        was.config,
+        imu.config,
+        steeringHardwareConfig,
       ];
 
   /// Returns a new [Vehicle] based on this one, but with
   /// parameters/variables altered.
   @override
   Vehicle copyWith({
-    Geographic? position,
+    Geographic? antennaPosition,
     double? antennaHeight,
     double? antennaLateralOffset,
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
-    bool? invertSteeringInput,
     Was? was,
     Imu? imu,
-    MotorConfig? motorConfig,
+    double? autosteeringThresholdVelocity,
+    SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
-    PidParameters? pidParameters,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     double? velocity,
@@ -602,12 +722,15 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleInput,
     double? length,
     double? width,
+    double? wheelsRolledDistance,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    ManufacturerColors? manufacturerColors,
+    bool? manualSimulationMode,
   });
 
   /// Converts the object to a json compatible structure.
@@ -632,16 +755,20 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     map['imu_config'] = imu.config;
 
     map['steering'] = {
-      'invert_steering_input': invertSteeringInput,
       'min_turning_radius': minTurningRadius,
       'path_tracking_mode': pathTrackingMode,
       'steering_angle_max': steeringAngleMax,
-      'motor_config': motorConfig,
+      'autosteering_threshold_velocity': autosteeringThresholdVelocity,
+      'hardware_config': steeringHardwareConfig,
       'was_config': was.config,
-      'pid_parameters': pidParameters,
       'pure_pursuit_parameters': purePursuitParameters,
       'stanley_parameters': stanleyParameters,
     };
+
+    map['manufacturer_colors'] = ManufacturerColors.values
+            .any((element) => element.name == manufacturerColors.name)
+        ? {'name': manufacturerColors.name}
+        : manufacturerColors;
 
     return map;
   }

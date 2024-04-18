@@ -1,17 +1,27 @@
-import 'dart:async';
-import 'dart:convert';
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
-import 'package:collection/collection.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geobase/geobase.dart';
-import 'package:universal_io/io.dart';
 
 /// A menu with attached submenu for interacting with the field feature.
 class FieldMenu extends ConsumerWidget {
@@ -30,7 +40,7 @@ class FieldMenu extends ConsumerWidget {
         children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
       ),
       menuChildren: [
-        if (activeField != null)
+        if (activeField != null) ...[
           MenuItemButton(
             closeOnActivate: false,
             leadingIcon: const Padding(
@@ -40,55 +50,12 @@ class FieldMenu extends ConsumerWidget {
             onPressed: () => ref.invalidate(activeFieldProvider),
             child: Text('Close', style: textStyle),
           ),
+          const _ExportButton(),
+        ],
         if (activeField == null) ...[
           const _LoadFieldMenu(),
+          const _ImportButton(),
           const _CreateFieldButton(),
-          Consumer(
-            child: Text(
-              'Import field',
-              style: textStyle,
-            ),
-            builder: (context, ref, child) => ListTile(
-              leading: const Icon(Icons.file_open),
-              title: child,
-              onTap: () async {
-                final result = await FilePicker.platform.pickFiles(
-                  initialDirectory: Device.isNative
-                      ? [
-                          ref.watch(fileDirectoryProvider).requireValue.path,
-                          '/fields',
-                        ].join()
-                      : null,
-                  dialogTitle: 'Open field json file',
-                  allowedExtensions: ['json'],
-                  type: FileType.custom,
-                );
-                if (result != null) {
-                  if (Device.isWeb) {
-                    final data = result.files.first.bytes;
-                    if (data != null) {
-                      final json = jsonDecode(String.fromCharCodes(data));
-                      if (json is Map) {
-                        ref.read(activeFieldProvider.notifier).update(
-                              Field.fromJson(Map<String, dynamic>.from(json)),
-                            );
-                      }
-                    }
-                  } else {
-                    final path = result.paths.first;
-                    if (path != null) {
-                      final json = jsonDecode(File(path).readAsStringSync());
-                      if (json is Map) {
-                        ref.read(activeFieldProvider.notifier).update(
-                              Field.fromJson(Map<String, dynamic>.from(json)),
-                            );
-                      }
-                    }
-                  }
-                }
-              },
-            ),
-          ),
         ],
         if (activeField != null) ...[
           Consumer(
@@ -334,10 +301,13 @@ class FieldMenu extends ConsumerWidget {
             builder: (context, ref, child) {
               final field = ref.watch(activeFieldProvider);
 
-              return ListTile(
-                title: child,
-                leading: const Icon(Icons.save),
-                onTap: field != null
+              return MenuItemButton(
+                leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.save),
+                ),
+                closeOnActivate: false,
+                onPressed: field != null
                     ? () => ref.watch(
                           saveFieldProvider(
                             field..lastUsed = DateTime.now(),
@@ -345,6 +315,7 @@ class FieldMenu extends ConsumerWidget {
                           ),
                         )
                     : null,
+                child: child,
               );
             },
           ),
@@ -361,10 +332,13 @@ class FieldMenu extends ConsumerWidget {
                       loading: () => null,
                     );
 
-                return ListTile(
-                  title: child,
-                  leading: const Icon(Icons.save),
-                  onTap: field != null
+                return MenuItemButton(
+                  leadingIcon: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Icon(Icons.save),
+                  ),
+                  closeOnActivate: false,
+                  onPressed: field != null
                       ? () => ref.watch(
                             saveFieldProvider(
                               field.copyWith(
@@ -376,6 +350,7 @@ class FieldMenu extends ConsumerWidget {
                             ),
                           )
                       : null,
+                  child: child,
                 );
               },
             ),
@@ -387,7 +362,7 @@ class FieldMenu extends ConsumerWidget {
 
 /// A menu for loading a [Field] from saved fields.
 class _LoadFieldMenu extends ConsumerWidget {
-  /// A menu for loading an [Field] from saved fields.
+  /// A menu for loading a [Field] from saved fields.
   const _LoadFieldMenu();
 
   @override
@@ -409,19 +384,113 @@ class _LoadFieldMenu extends ConsumerWidget {
       icon: Icons.history,
       menuChildren: fields
           .map(
-            (field) => MenuItemButton(
-              closeOnActivate: false,
-              onPressed: () {
-                field.lastUsed = DateTime.now();
+            (field) => ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 200),
+              child: ListTile(
+                onTap: () {
+                  field.lastUsed = DateTime.now();
 
-                ref.read(activeFieldProvider.notifier).update(field);
+                  ref.read(activeFieldProvider.notifier).update(field);
 
-                ref.read(saveFieldProvider(field));
-              },
-              child: Text(field.name, style: textStyle),
+                  ref.read(saveFieldProvider(field));
+                },
+                trailing: Device.isNative
+                    ? IconButton(
+                        onPressed: () async {
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (context) => SimpleDialog(
+                              title: Text(
+                                'Delete ${field.name}?',
+                              ),
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SimpleDialogOption(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    Consumer(
+                                      builder: (context, ref, child) =>
+                                          SimpleDialogOption(
+                                        onPressed: () async {
+                                          await ref
+                                              .watch(
+                                                deleteFieldProvider(
+                                                  field,
+                                                ).future,
+                                              )
+                                              .then(
+                                                (value) => Navigator.of(context)
+                                                    .pop(true),
+                                              );
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.delete),
+                      )
+                    : null,
+                title: Text(field.name, style: textStyle),
+              ),
             ),
           )
           .toList(),
+    );
+  }
+}
+
+class _ImportButton extends ConsumerWidget {
+  const _ImportButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    return MenuItemButton(
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.file_open),
+      ),
+      closeOnActivate: false,
+      onPressed: () => ref.read(importFieldProvider),
+      child: Text('Import', style: textStyle),
+    );
+  }
+}
+
+class _ExportButton extends ConsumerWidget {
+  const _ExportButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    return MenuItemButton(
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.save_alt),
+      ),
+      closeOnActivate: false,
+      onPressed: ref.watch(
+        activeFieldProvider.select(
+          (value) => value != null && value.name.isNotEmpty,
+        ),
+      )
+          ? () => ref.watch(
+                exportFieldProvider(
+                  ref.watch(activeFieldProvider)!,
+                ),
+              )
+          : null,
+      child: Text('Export', style: textStyle),
     );
   }
 }
@@ -435,122 +504,23 @@ class _CreateFieldButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
-    final recording = ref.watch(enablePathRecorderProvider);
-
-    if (recording) {
-      return MenuItemButton(
-        leadingIcon: const Padding(
-          padding: EdgeInsets.only(left: 8),
-          child: SizedBox.square(
-            dimension: 24,
-            child: CircularProgressIndicator(),
-          ),
-        ),
-        onPressed: () {
-          ref.read(enablePathRecorderProvider.notifier).update(value: false);
-
-          unawaited(
-            showDialog<void>(
-              context: context,
-              builder: (context) {
-                var name = '';
-                return StatefulBuilder(
-                  builder: (context, setState) {
-                    return SimpleDialog(
-                      title: const Text('Name the field'),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.label_outline),
-                              labelText: 'Name',
-                            ),
-                            initialValue: name,
-                            onChanged: (value) => setState(() => name = value),
-                            onFieldSubmitted: (value) =>
-                                setState(() => name = value),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) => value != null &&
-                                    value.isNotEmpty &&
-                                    !value.startsWith(' ')
-                                ? null
-                                : '''No name entered! Please enter a name so that the field can be saved!''',
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 8,
-                            right: 8,
-                            top: 8,
-                          ),
-                          child: Consumer(
-                            child: const Text('Save field'),
-                            builder: (context, ref, child) => FilledButton(
-                              onPressed: () {
-                                Future.delayed(
-                                    const Duration(milliseconds: 100), () {
-                                  final points = ref
-                                      .read(finishedPathRecordingListProvider)!;
-
-                                  final field = Field(
-                                    name: name,
-                                    polygon: Polygon([
-                                      PositionSeries.view(
-                                        points
-                                            .map(
-                                              (e) => e.position.values,
-                                            )
-                                            .flattened
-                                            .toList(),
-                                      ),
-                                    ]),
-                                    boundingBox: GeoBox.from(
-                                      points.map((e) => e.position),
-                                    ),
-                                  );
-                                  ref.read(saveFieldProvider(field));
-                                  ref
-                                      .read(activeFieldProvider.notifier)
-                                      .update(field);
-                                });
-                                Navigator.of(context).pop();
-                              },
-                              child: child,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-          );
-        },
-        child: Text(
-          'Recording, tap to finish',
-          style: textStyle,
-        ),
-      );
-    }
-
     return MenuItemButton(
       leadingIcon: const Padding(
         padding: EdgeInsets.only(left: 8),
-        child: Stack(
-          children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
-        ),
+        child: Icon(Icons.voicemail),
       ),
+      closeOnActivate: false,
+      onPressed: () {
+        ref.read(enablePathRecorderProvider.notifier).update(value: true);
+        ref
+            .read(activePathRecordingTargetProvider.notifier)
+            .update(PathRecordingTarget.field);
+        ref.read(showPathRecordingMenuProvider.notifier).update(value: true);
+      },
       child: Text(
         'Create field from recording',
         style: textStyle,
       ),
-      onPressed: () {
-        ref.read(enablePathRecorderProvider.notifier).update(value: true);
-      },
     );
   }
 }

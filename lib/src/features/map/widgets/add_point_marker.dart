@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -71,7 +88,7 @@ class _AddPointMarkerState extends State<AddPointMarker> {
 
     if (widget.useRadiusInMeters) {
       final offset = map.getOffsetFromOrigin(widget.point.latLng);
-      final r = widget.point.spherical
+      final r = widget.point.rhumb
           .destinationPoint(distance: widget.radius, bearing: 180);
       final delta = offset - map.getOffsetFromOrigin(r.latLng);
       radiusToUse = delta.distance;

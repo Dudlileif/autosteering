@@ -6,7 +6,7 @@ part of 'logging_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loggingFileHash() => r'ed46d8c91fabcf7c7d1bfcbd8a4e3b70be91377b';
+String _$loggingFileHash() => r'6e3d9b53091b590f3166c29b9ad662329102b37d';
 
 /// A provider for creating a logging file for the session.
 ///
@@ -39,6 +39,22 @@ final loggingProvider = Provider<Logger>.internal(
 );
 
 typedef LoggingRef = ProviderRef<Logger>;
+String _$exportLogsHash() => r'a75b5b50675852db1fe6e5d0e5ec9c0ae972efbb';
+
+/// A provider for exporting all log files.
+///
+/// Copied from [exportLogs].
+@ProviderFor(exportLogs)
+final exportLogsProvider = AutoDisposeFutureProvider<void>.internal(
+  exportLogs,
+  name: r'exportLogsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$exportLogsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ExportLogsRef = AutoDisposeFutureProviderRef<void>;
 String _$numLogFilesHash() => r'c895a18c677dcbad03cd88f3cf65040b6c060843';
 
 /// A provider for the number of log files to keep in the logs directory.

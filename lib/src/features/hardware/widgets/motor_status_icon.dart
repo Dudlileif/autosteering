@@ -1,3 +1,20 @@
+// Copyright (C) 2024 Gaute Hagen
+//
+// This file is part of Autosteering.
+//
+// Autosteering is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Autosteering is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:math';
 
 import 'package:autosteering/src/features/hardware/hardware.dart';
@@ -74,9 +91,14 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
       );
     }
 
-    final targetRPM = ref.watch(steeringMotorTargetRPMProvider);
-    if (targetRPM != null) {
-      textLines.add('Target RPM: ${targetRPM.toStringAsFixed(1)}');
+    final wasReading = ref
+        .watch(mainVehicleProvider.select((value) => value.was.reading.value));
+    textLines.add(
+      'WAS reading: $wasReading',
+    );
+    final wasTarget = ref.watch(steeringMotorWasTargetProvider);
+    if (wasTarget != null) {
+      textLines.add('WAS target: $wasTarget');
     }
 
     final actualRPM = ref.watch(steeringMotorActualRPMProvider);
@@ -102,6 +124,22 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
     final rotation = ref.watch(steeringMotorRotationProvider);
     if (rotation != null) {
       textLines.add('Rotation: $rotation');
+    }
+
+    final stepsMinCenter =
+        ref.watch(steeringMotorStepsPerWasIncrementMinToCenterProvider);
+
+    final stepsCenterMax =
+        ref.watch(steeringMotorStepsPerWasIncrementCenterToMaxProvider);
+
+    if (stepsMinCenter != null || stepsCenterMax != null) {
+      textLines.add('Steps / increment');
+    }
+    if (stepsMinCenter != null) {
+      textLines.add('Min-Center: $stepsMinCenter');
+    }
+    if (stepsCenterMax != null) {
+      textLines.add('Center-Max: $stepsCenterMax');
     }
 
     return textLines.join('\n');
@@ -157,6 +195,7 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
                       size: widget.size,
                       color: switch (motorStatus) {
                         MotorStatus.running => Colors.green,
+                        MotorStatus.standby => Colors.blue,
                         MotorStatus.stalled => Colors.orange,
                         MotorStatus.disabled => Colors.red,
                         MotorStatus.freeWheeling => Colors.blue,

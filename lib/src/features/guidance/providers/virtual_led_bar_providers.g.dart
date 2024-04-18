@@ -27,14 +27,14 @@ final virtualLedBarPerpendicularDistanceProvider =
 
 typedef VirtualLedBarPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
 String _$virtualLedBarEnabledHash() =>
-    r'eaeacb3fefae9a4672f25d8a62c01ab1b5858668';
+    r'348428ccc475bfc1835c795a0ee98be6cfaca0d9';
 
 /// A provider for whether the virtual led bar should be enabled/shown.
 ///
 /// Copied from [VirtualLedBarEnabled].
 @ProviderFor(VirtualLedBarEnabled)
 final virtualLedBarEnabledProvider =
-    NotifierProvider<VirtualLedBarEnabled, bool>.internal(
+    AutoDisposeNotifierProvider<VirtualLedBarEnabled, bool>.internal(
   VirtualLedBarEnabled.new,
   name: r'virtualLedBarEnabledProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -44,16 +44,16 @@ final virtualLedBarEnabledProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$VirtualLedBarEnabled = Notifier<bool>;
+typedef _$VirtualLedBarEnabled = AutoDisposeNotifier<bool>;
 String _$virtualLedBarConfigurationHash() =>
-    r'd7f206ae26286c9665eb999e194dce98729a7e8e';
+    r'782d374aec8ed618f396ccb9dd33741dd252ef72';
 
 /// A provider for storing the configuration for the virtual led bar.
 ///
 /// Copied from [VirtualLedBarConfiguration].
 @ProviderFor(VirtualLedBarConfiguration)
-final virtualLedBarConfigurationProvider =
-    NotifierProvider<VirtualLedBarConfiguration, LedBarConfig>.internal(
+final virtualLedBarConfigurationProvider = AutoDisposeNotifierProvider<
+    VirtualLedBarConfiguration, LedBarConfig>.internal(
   VirtualLedBarConfiguration.new,
   name: r'virtualLedBarConfigurationProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -63,9 +63,9 @@ final virtualLedBarConfigurationProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$VirtualLedBarConfiguration = Notifier<LedBarConfig>;
+typedef _$VirtualLedBarConfiguration = AutoDisposeNotifier<LedBarConfig>;
 String _$virtualLedBarTestingHash() =>
-    r'e46b67efe6fcce8633d15f6fa1a61e2603d705d1';
+    r'f69cdf35b95757c8bd6b2818359b004c292b6193';
 
 /// A provider for whether we're testing the virtual LED bar with
 /// [VirtualLedBarTestingDistance].
@@ -73,7 +73,7 @@ String _$virtualLedBarTestingHash() =>
 /// Copied from [VirtualLedBarTesting].
 @ProviderFor(VirtualLedBarTesting)
 final virtualLedBarTestingProvider =
-    NotifierProvider<VirtualLedBarTesting, bool>.internal(
+    AutoDisposeNotifierProvider<VirtualLedBarTesting, bool>.internal(
   VirtualLedBarTesting.new,
   name: r'virtualLedBarTestingProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -83,7 +83,7 @@ final virtualLedBarTestingProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$VirtualLedBarTesting = Notifier<bool>;
+typedef _$VirtualLedBarTesting = AutoDisposeNotifier<bool>;
 String _$virtualLedBarTestingDistanceHash() =>
     r'f7b3cc291f25d74f03ac10d5aeacaac2dd9e6b4b';
 
