@@ -35,6 +35,7 @@ part 'work_session_providers.g.dart';
 @Riverpod(keepAlive: true)
 class ActiveWorkSession extends _$ActiveWorkSession {
   Timer? _autoSaveTimer;
+  bool _workedPathsFirstUpdate = true;
 
   @override
   WorkSession? build() {
@@ -120,10 +121,37 @@ class ActiveWorkSession extends _$ActiveWorkSession {
               (value) => paths,
               ifAbsent: () => paths,
             );
+          if (state?.start == null &&
+              paths.any(
+                (activation) => activation.entries.any(
+                  (section) =>
+                      section.value != null && section.value!.isNotEmpty,
+                ),
+              )) {
+            state = state?..start = DateTime.now();
+          }
+          if (!_workedPathsFirstUpdate &&
+              paths.any(
+                (activation) => activation.entries.any(
+                  (section) =>
+                      section.value != null && section.value!.isNotEmpty,
+                ),
+              )) {
+            state = state?..end = DateTime.now();
+          }
+          _workedPathsFirstUpdate = false;
         } else {
           state = state?..workedPaths = {equipmentUuid: paths};
         }
       });
+
+  /// Updates the [WorkSession.start] time to [time].
+  void updateStartTime(DateTime? time) =>
+      Future(() => state = state?..start = time);
+
+  /// Updates the [WorkSession.end] time to [time].
+  void updateEndTime(DateTime? time) =>
+      Future(() => state = state?..end = time);
 
   // Always update as the state is complex and any change to it is usually
   /// different to the previous state.

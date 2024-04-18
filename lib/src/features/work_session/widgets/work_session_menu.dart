@@ -26,6 +26,7 @@ import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 /// A menu for creating, loading and handling work sessions.
 class WorkSessionMenu extends ConsumerWidget {
@@ -34,7 +35,8 @@ class WorkSessionMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    final theme = Theme.of(context);
+    final textStyle = theme.menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Work session',
       icon: Icons.work,
@@ -48,26 +50,10 @@ class WorkSessionMenu extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.clear),
             ),
-            onPressed: () {
-              final workSession = ref.watch(activeWorkSessionProvider);
-              if (workSession != null) {
-                ref.read(
-                  saveWorkSessionProvider(workSession),
-                );
-              }
-              Logger.instance.i(
-                'Closed work session.',
-              );
-              ref
-                ..invalidate(activeWorkSessionProvider)
-                ..read(activeFieldProvider.notifier).update(null)
-                ..read(configuredABTrackingProvider.notifier).update(null)
-                ..read(allEquipmentsProvider.notifier).clearPaintedArea()
-                ..invalidate(aBPointAProvider)
-                ..invalidate(aBPointBProvider)
-                ..invalidate(aBCurvePointsProvider)
-                ..read(configuredPathTrackingProvider.notifier).update(null);
-            },
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => const _CloseDialog(),
+            ),
             child: Text('Close', style: textStyle),
           ),
           const _ExportButton(),
@@ -117,6 +103,216 @@ class WorkSessionMenu extends ConsumerWidget {
         ],
       ],
     );
+  }
+}
+
+class _CloseDialog extends ConsumerWidget {
+  const _CloseDialog();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final workSession = ref.watch(activeWorkSessionProvider);
+    if (workSession != null) {
+      return SimpleDialog(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Close ${workSession.title}'),
+            const CloseButton(),
+          ],
+        ),
+        children: [
+          Row(
+            children: [
+              Column(
+                children: [
+                  Text(
+                    'Start',
+                    style: theme.textTheme.titleLarge,
+                  ),
+                  SelectableText(
+                    workSession.start != null
+                        ? '''${DateFormat(DateFormat.YEAR_MONTH_DAY).format(workSession.start!)} ${DateFormat(DateFormat.HOUR24_MINUTE).format(workSession.start!)}'''
+                        : '-',
+                    style: theme.menuButtonWithChildrenText,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        showDatePicker(
+                          context: context,
+                          firstDate: workSession.start ??
+                              DateTime.now().subtract(
+                                const Duration(days: 7),
+                              ),
+                          lastDate: DateTime.now(),
+                        ).then(
+                          (time) => time != null
+                              ? ref
+                                  .read(
+                                    activeWorkSessionProvider.notifier,
+                                  )
+                                  .updateStartTime(time)
+                              : null,
+                        );
+                      },
+                      icon: const Icon(Icons.calendar_today),
+                      label: const Text('Set date'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        final date = workSession.start ?? DateTime.now();
+                        showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        ).then(
+                          (time) => time != null
+                              ? ref
+                                  .read(
+                                    activeWorkSessionProvider.notifier,
+                                  )
+                                  .updateStartTime(
+                                    DateTime(
+                                      date.year,
+                                      date.month,
+                                      date.day,
+                                      time.hour,
+                                      time.minute,
+                                    ),
+                                  )
+                              : null,
+                        );
+                      },
+                      icon: const Icon(Icons.schedule),
+                      label: const Text('Set time of day'),
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    'End',
+                    style: theme.textTheme.titleLarge,
+                  ),
+                  SelectableText(
+                    workSession.end != null
+                        ? '''${DateFormat(DateFormat.YEAR_MONTH_DAY).format(workSession.end!)} ${DateFormat(DateFormat.HOUR24_MINUTE).format(workSession.end!)}'''
+                        : '-',
+                    style: theme.menuButtonWithChildrenText,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        showDatePicker(
+                          context: context,
+                          firstDate: workSession.start ??
+                              DateTime.now().subtract(
+                                const Duration(days: 7),
+                              ),
+                          lastDate: DateTime.now(),
+                        ).then(
+                          (time) => time != null
+                              ? ref
+                                  .read(
+                                    activeWorkSessionProvider.notifier,
+                                  )
+                                  .updateEndTime(time)
+                              : null,
+                        );
+                      },
+                      icon: const Icon(Icons.calendar_today),
+                      label: const Text('Set date'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        final date = workSession.end ?? DateTime.now();
+                        showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        ).then(
+                          (time) => time != null
+                              ? ref
+                                  .read(
+                                    activeWorkSessionProvider.notifier,
+                                  )
+                                  .updateEndTime(
+                                    DateTime(
+                                      date.year,
+                                      date.month,
+                                      date.day,
+                                      time.hour,
+                                      time.minute,
+                                    ),
+                                  )
+                              : null,
+                        );
+                      },
+                      icon: const Icon(Icons.schedule),
+                      label: const Text('Set time of day'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: Navigator.of(context).pop,
+                    icon: const Icon(Icons.clear),
+                    label: const Text('Cancel'),
+                  ),
+                  FilledButton.icon(
+                    onPressed: () {
+                      ref.read(
+                        saveWorkSessionProvider(workSession),
+                      );
+                      Logger.instance.i(
+                        'Closed work session.',
+                      );
+                      ref
+                        ..invalidate(activeWorkSessionProvider)
+                        ..read(activeFieldProvider.notifier).update(null)
+                        ..read(
+                          configuredABTrackingProvider.notifier,
+                        ).update(null)
+                        ..read(allEquipmentsProvider.notifier)
+                            .clearPaintedArea()
+                        ..invalidate(aBPointAProvider)
+                        ..invalidate(aBPointBProvider)
+                        ..invalidate(aBCurvePointsProvider)
+                        ..read(
+                          configuredPathTrackingProvider.notifier,
+                        ).update(null);
+                    },
+                    icon: const Icon(Icons.check),
+                    label: const Text('Confirm'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    Navigator.of(context).maybePop();
+    return const SizedBox.shrink();
   }
 }
 
@@ -325,7 +521,6 @@ class _CreateWorkSessionDialogState
                   FilledButton.icon(
                     onPressed: () {
                       workSession
-                        ..start = DateTime.now()
                         ..vehicle = ref.watch(mainVehicleProvider)
                         ..equipmentSetup ??= ref
                             .watch(mainVehicleProvider)
