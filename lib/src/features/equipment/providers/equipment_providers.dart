@@ -111,7 +111,6 @@ class AllEquipments extends _$AllEquipments {
         ref.read(equipmentWorkedAreaProvider.notifier).clear();
         ref.read(activeWorkSessionProvider.notifier).updateStartTime(null);
         ref.read(activeWorkSessionProvider.notifier).updateEndTime(null);
-
       });
 }
 
@@ -178,7 +177,7 @@ class EquipmentPaths extends _$EquipmentPaths {
         // Activation/deactivation
         if (equipment.sections.isNotEmpty) {
           final recordFraction =
-              ref.watch(equipmentRecordPositionFractionProvider);
+              ref.read(equipmentRecordPositionFractionProvider);
           final positions =
               equipment.activeEdgePositions(fraction: recordFraction);
           if (!equipment.sectionActivationStatus
@@ -273,7 +272,7 @@ class EquipmentPaths extends _$EquipmentPaths {
         (previousValue, element) =>
             element == true ? previousValue + 1 : previousValue,
       );
-      final recordFraction = ref.watch(equipmentRecordPositionFractionProvider);
+      final recordFraction = ref.read(equipmentRecordPositionFractionProvider);
       if (nextActive < prevActive) {
         state = state
           ..last.updateAll(
