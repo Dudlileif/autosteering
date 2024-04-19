@@ -123,23 +123,24 @@ class _CloseDialog extends ConsumerWidget {
           ],
         ),
         children: [
-          Row(
-            children: [
-              Column(
-                children: [
-                  Text(
-                    'Start',
-                    style: theme.textTheme.titleLarge,
-                  ),
-                  SelectableText(
-                    workSession.start != null
-                        ? '''${DateFormat(DateFormat.YEAR_MONTH_DAY).format(workSession.start!)} ${DateFormat(DateFormat.HOUR24_MINUTE).format(workSession.start!)}'''
-                        : '-',
-                    style: theme.menuButtonWithChildrenText,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: ElevatedButton.icon(
+          Center(
+            child: Wrap(
+              runSpacing: 8,
+              spacing: 8,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Start',
+                      style: theme.textTheme.titleLarge,
+                    ),
+                    SelectableText(
+                      workSession.start != null
+                          ? '''${DateFormat(DateFormat.YEAR_MONTH_DAY).format(workSession.start!)} ${DateFormat(DateFormat.HOUR24_MINUTE).format(workSession.start!)}'''
+                          : '-',
+                      style: theme.menuButtonWithChildrenText,
+                    ),
+                    ElevatedButton.icon(
                       onPressed: () {
                         showDatePicker(
                           context: context,
@@ -161,10 +162,7 @@ class _CloseDialog extends ConsumerWidget {
                       icon: const Icon(Icons.calendar_today),
                       label: const Text('Set date'),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: ElevatedButton.icon(
+                    ElevatedButton.icon(
                       onPressed: () {
                         final date = workSession.start ?? DateTime.now();
                         showTimePicker(
@@ -191,24 +189,21 @@ class _CloseDialog extends ConsumerWidget {
                       icon: const Icon(Icons.schedule),
                       label: const Text('Set time of day'),
                     ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    'End',
-                    style: theme.textTheme.titleLarge,
-                  ),
-                  SelectableText(
-                    workSession.end != null
-                        ? '''${DateFormat(DateFormat.YEAR_MONTH_DAY).format(workSession.end!)} ${DateFormat(DateFormat.HOUR24_MINUTE).format(workSession.end!)}'''
-                        : '-',
-                    style: theme.menuButtonWithChildrenText,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: ElevatedButton.icon(
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      'End',
+                      style: theme.textTheme.titleLarge,
+                    ),
+                    SelectableText(
+                      workSession.end != null
+                          ? '''${DateFormat(DateFormat.YEAR_MONTH_DAY).format(workSession.end!)} ${DateFormat(DateFormat.HOUR24_MINUTE).format(workSession.end!)}'''
+                          : '-',
+                      style: theme.menuButtonWithChildrenText,
+                    ),
+                    ElevatedButton.icon(
                       onPressed: () {
                         showDatePicker(
                           context: context,
@@ -230,10 +225,7 @@ class _CloseDialog extends ConsumerWidget {
                       icon: const Icon(Icons.calendar_today),
                       label: const Text('Set date'),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: ElevatedButton.icon(
+                    ElevatedButton.icon(
                       onPressed: () {
                         final date = workSession.end ?? DateTime.now();
                         showTimePicker(
@@ -260,10 +252,10 @@ class _CloseDialog extends ConsumerWidget {
                       icon: const Icon(Icons.schedule),
                       label: const Text('Set time of day'),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -426,80 +418,77 @@ class _CreateWorkSessionDialogState
         ],
       ),
       children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: SingleChildScrollView(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      decoration: const InputDecoration(
-                        label: Text('Title'),
-                      ),
-                      onChanged: (value) =>
-                          setState(() => workSession.title = value),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: SingleChildScrollView(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    decoration: const InputDecoration(
+                      label: Text('Title'),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: DropdownMenu<Field>(
-                        leadingIcon: const Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(Icons.texture),
-                            Icon(Icons.square_outlined),
-                          ],
-                        ),
-                        hintText: 'Field',
-                        onSelected: (value) =>
-                            setState(() => workSession.field = value),
-                        dropdownMenuEntries:
-                            (ref.watch(savedFieldsProvider).when(
-                                      data: (data) => data,
-                                      error: (error, stackTrace) => <Field>[],
-                                      loading: () => <Field>[],
-                                    )..sort(
-                                    (a, b) => b.lastUsed.compareTo(a.lastUsed),
-                                  ))
-                                .map(
-                                  (field) => DropdownMenuEntry(
-                                    value: field,
-                                    label: field.name,
-                                  ),
-                                )
-                                .toList(),
+                    onChanged: (value) =>
+                        setState(() => workSession.title = value),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: DropdownMenu<Field>(
+                      leadingIcon: const Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Icon(Icons.texture),
+                          Icon(Icons.square_outlined),
+                        ],
                       ),
+                      hintText: 'Field',
+                      onSelected: (value) =>
+                          setState(() => workSession.field = value),
+                      dropdownMenuEntries: (ref.watch(savedFieldsProvider).when(
+                                data: (data) => data,
+                                error: (error, stackTrace) => <Field>[],
+                                loading: () => <Field>[],
+                              )..sort(
+                              (a, b) => b.lastUsed.compareTo(a.lastUsed),
+                            ))
+                          .map(
+                            (field) => DropdownMenuEntry(
+                              value: field,
+                              label: field.name,
+                            ),
+                          )
+                          .toList(),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: DropdownMenu<EquipmentSetup>(
-                        leadingIcon: const Icon(Icons.handyman),
-                        hintText: 'Equipment setup',
-                        onSelected: (value) => setState(
-                          () => workSession.equipmentSetup = value,
-                        ),
-                        dropdownMenuEntries:
-                            (ref.watch(savedEquipmentSetupsProvider).when(
-                                      data: (data) => data,
-                                      error: (error, stackTrace) =>
-                                          <EquipmentSetup>[],
-                                      loading: () => <EquipmentSetup>[],
-                                    )..sort(
-                                    (a, b) => b.lastUsed.compareTo(a.lastUsed),
-                                  ))
-                                .map(
-                                  (equipmentSetup) => DropdownMenuEntry(
-                                    value: equipmentSetup,
-                                    label: equipmentSetup.name,
-                                  ),
-                                )
-                                .toList(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: DropdownMenu<EquipmentSetup>(
+                      leadingIcon: const Icon(Icons.handyman),
+                      hintText: 'Equipment setup',
+                      onSelected: (value) => setState(
+                        () => workSession.equipmentSetup = value,
                       ),
+                      dropdownMenuEntries:
+                          (ref.watch(savedEquipmentSetupsProvider).when(
+                                    data: (data) => data,
+                                    error: (error, stackTrace) =>
+                                        <EquipmentSetup>[],
+                                    loading: () => <EquipmentSetup>[],
+                                  )..sort(
+                                  (a, b) => b.lastUsed.compareTo(a.lastUsed),
+                                ))
+                              .map(
+                                (equipmentSetup) => DropdownMenuEntry(
+                                  value: equipmentSetup,
+                                  label: equipmentSetup.name,
+                                ),
+                              )
+                              .toList(),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

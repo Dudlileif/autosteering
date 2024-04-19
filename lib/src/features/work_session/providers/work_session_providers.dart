@@ -35,7 +35,7 @@ part 'work_session_providers.g.dart';
 @Riverpod(keepAlive: true)
 class ActiveWorkSession extends _$ActiveWorkSession {
   Timer? _autoSaveTimer;
-  bool _workedPathsFirstUpdate = true;
+  DateTime? _firstPathUpdate;
 
   @override
   WorkSession? build() {
@@ -54,6 +54,7 @@ class ActiveWorkSession extends _$ActiveWorkSession {
       })
       ..onDispose(() {
         _autoSaveTimer?.cancel();
+        _firstPathUpdate = null;
         _autoSaveTimer = null;
       });
     return null;
@@ -130,16 +131,24 @@ class ActiveWorkSession extends _$ActiveWorkSession {
               )) {
             state = state?..start = DateTime.now();
           }
-          if (!_workedPathsFirstUpdate &&
-              paths.any(
-                (activation) => activation.entries.any(
-                  (section) =>
-                      section.value != null && section.value!.isNotEmpty,
-                ),
-              )) {
-            state = state?..end = DateTime.now();
+          if (_firstPathUpdate != null) {
+            if (DateTime.now().difference(_firstPathUpdate!) >
+                    const Duration(seconds: 1) &&
+                paths.any(
+                  (activation) => activation.entries.any(
+                    (section) =>
+                        section.value != null && section.value!.isNotEmpty,
+                  ),
+                )) {
+              state = state?..end = DateTime.now();
+            }
+          } else if (paths.any(
+            (activation) => activation.entries.any(
+              (section) => section.value != null && section.value!.isNotEmpty,
+            ),
+          )) {
+            _firstPathUpdate = DateTime.now();
           }
-          _workedPathsFirstUpdate = false;
         } else {
           state = state?..workedPaths = {equipmentUuid: paths};
         }

@@ -110,6 +110,8 @@ class AllEquipments extends _$AllEquipments {
         }
         ref.read(equipmentWorkedAreaProvider.notifier).clear();
         ref.read(activeWorkSessionProvider.notifier).updateStartTime(null);
+        ref.read(activeWorkSessionProvider.notifier).updateEndTime(null);
+
       });
 }
 
