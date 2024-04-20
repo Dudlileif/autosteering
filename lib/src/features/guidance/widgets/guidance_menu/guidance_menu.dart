@@ -446,7 +446,6 @@ class _SaveABTrackingButton extends ConsumerWidget {
                           top: 8,
                         ),
                         child: Consumer(
-                          child: const Text('Save tracking'),
                           builder: (context, ref, child) => FilledButton(
                             onPressed: () {
                               Timer(const Duration(milliseconds: 100), () {
@@ -459,7 +458,7 @@ class _SaveABTrackingButton extends ConsumerWidget {
                               });
                               Navigator.of(context).pop();
                             },
-                            child: child,
+                            child: const Text('Save tracking'),
                           ),
                         ),
                       ),
@@ -538,7 +537,6 @@ class _SavePathTrackingButton extends ConsumerWidget {
                           top: 8,
                         ),
                         child: Consumer(
-                          child: const Text('Save tracking'),
                           builder: (context, ref, child) => FilledButton(
                             onPressed: () {
                               Timer(const Duration(milliseconds: 100), () {
@@ -551,7 +549,7 @@ class _SavePathTrackingButton extends ConsumerWidget {
                               });
                               Navigator.of(context).pop();
                             },
-                            child: child,
+                            child: const Text('Save tracking'),
                           ),
                         ),
                       ),

@@ -580,7 +580,6 @@ class _CreateFieldButton extends ConsumerWidget {
                           top: 8,
                         ),
                         child: Consumer(
-                          child: const Text('Save field'),
                           builder: (context, ref, child) => FilledButton(
                             onPressed: () {
                             Timer(
@@ -631,7 +630,7 @@ class _CreateFieldButton extends ConsumerWidget {
                               });
                               Navigator.of(context).pop();
                             },
-                            child: child,
+                            child: const Text('Save field'),
                           ),
                         ),
                       ),

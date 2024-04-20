@@ -140,7 +140,6 @@ class _CopernicusIDButton extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
                   child: Consumer(
-                    child: const Text('Save ID'),
                     builder: (context, ref, child) => FilledButton(
                       onPressed: () {
                         ref
@@ -150,7 +149,7 @@ class _CopernicusIDButton extends ConsumerWidget {
                             .update(id);
                         Navigator.of(context).pop();
                       },
-                      child: child,
+                      child: const Text('Save ID'),
                     ),
                   ),
                 ),

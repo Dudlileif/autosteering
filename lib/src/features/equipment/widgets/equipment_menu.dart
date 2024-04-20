@@ -188,7 +188,6 @@ class _SaveEquipmentSetup extends StatelessWidget {
                 var name = '';
                 return StatefulBuilder(
                   builder: (context, setState) => SimpleDialog(
-                      title: const Text('Name the setup'),
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8),
@@ -215,7 +214,6 @@ class _SaveEquipmentSetup extends StatelessWidget {
                           padding:
                               const EdgeInsets.only(left: 8, right: 8, top: 8),
                           child: Consumer(
-                            child: child,
                             builder: (context, ref, child) => FilledButton(
                               onPressed: () {
                                 ref.read(
@@ -230,7 +228,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
                                 );
                                 Navigator.of(context).pop();
                               },
-                              child: child,
+                            child: const Text('Name the setup'),
                             ),
                           ),
                         ),
