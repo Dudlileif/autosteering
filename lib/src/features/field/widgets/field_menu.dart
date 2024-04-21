@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geobase/geobase.dart';
 
 /// A menu with attached submenu for interacting with the field feature.
 class FieldMenu extends ConsumerWidget {
@@ -50,6 +51,32 @@ class FieldMenu extends ConsumerWidget {
             onPressed: () => ref.invalidate(activeFieldProvider),
             child: Text('Close', style: textStyle),
           ),
+          Consumer(
+            child: Text(
+              'Save field',
+              style: textStyle,
+            ),
+            builder: (context, ref, child) {
+              final field = ref.watch(activeFieldProvider);
+
+              return MenuItemButton(
+                leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.save),
+                ),
+                closeOnActivate: false,
+                onPressed: field != null
+                    ? () => ref.watch(
+                          saveFieldProvider(
+                            field..lastUsed = DateTime.now(),
+                            downloadIfWeb: true,
+                          ),
+                        )
+                    : null,
+                child: child,
+              );
+            },
+          ),
           const _ExportButton(),
         ],
         if (activeField == null) ...[
@@ -58,13 +85,18 @@ class FieldMenu extends ConsumerWidget {
           const _CreateFieldButton(),
         ],
         if (activeField != null) ...[
+        
           Consumer(
             child: Text(
               'Show field',
               style: textStyle,
             ),
             builder: (context, ref, child) => CheckboxListTile(
-              secondary: child,
+              secondary: switch (ref.watch(showFieldProvider)) {
+                true => const Icon(Icons.visibility),
+                false => const Icon(Icons.visibility_off),
+              },
+              title: child,
               value: ref.watch(showFieldProvider),
               onChanged: (value) => value != null
                   ? ref.read(showFieldProvider.notifier).update(value: value)
@@ -79,7 +111,11 @@ class FieldMenu extends ConsumerWidget {
                 style: textStyle,
               ),
               builder: (context, ref, child) => CheckboxListTile(
-                secondary: child,
+                secondary: switch (ref.watch(showFieldBorderPointsProvider)) {
+                  true => const Icon(Icons.visibility),
+                  false => const Icon(Icons.visibility_off),
+                },
+                title: child,
                 value: ref.watch(showFieldBorderPointsProvider),
                 onChanged: (value) => value != null
                     ? ref
@@ -95,7 +131,11 @@ class FieldMenu extends ConsumerWidget {
                 style: textStyle,
               ),
               builder: (context, ref, child) => CheckboxListTile(
-                secondary: child,
+                secondary: switch (ref.watch(showFieldBoundingBoxProvider)) {
+                  true => const Icon(Icons.visibility),
+                  false => const Icon(Icons.visibility_off),
+                },
+                title: child,
                 value: ref.watch(showFieldBoundingBoxProvider),
                 onChanged: (value) => value != null
                     ? ref
@@ -126,7 +166,11 @@ class FieldMenu extends ConsumerWidget {
                 style: textStyle,
               ),
               builder: (context, ref, child) => CheckboxListTile(
-                secondary: child,
+                secondary: switch (ref.watch(showBufferedFieldProvider)) {
+                  true => const Icon(Icons.visibility),
+                  false => const Icon(Icons.visibility_off),
+                },
+                title: child,
                 value: ref.watch(showBufferedFieldProvider),
                 onChanged: (value) => value != null
                     ? ref
@@ -142,7 +186,12 @@ class FieldMenu extends ConsumerWidget {
                   style: textStyle,
                 ),
                 builder: (context, ref, child) => CheckboxListTile(
-                  secondary: child,
+                  secondary: switch (
+                      ref.watch(showBufferedFieldBoundingBoxProvider)) {
+                    true => const Icon(Icons.visibility),
+                    false => const Icon(Icons.visibility_off),
+                  },
+                  title: child,
                   value: ref.watch(showBufferedFieldBoundingBoxProvider),
                   onChanged: (value) => value != null
                       ? ref
@@ -172,9 +221,9 @@ class FieldMenu extends ConsumerWidget {
                                 fieldExteriorBufferDistanceProvider.notifier,
                               )
                               .update,
-                          min: -10,
-                          max: 10,
-                          divisions: 20,
+                          min: -20,
+                          max: 20,
+                          divisions: 80,
                         ),
                       ],
                     ),
@@ -293,33 +342,8 @@ class FieldMenu extends ConsumerWidget {
               ),
             ],
           ],
-          Consumer(
-            child: Text(
-              'Save field',
-              style: textStyle,
-            ),
-            builder: (context, ref, child) {
-              final field = ref.watch(activeFieldProvider);
-
-              return MenuItemButton(
-                leadingIcon: const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Icon(Icons.save),
-                ),
-                closeOnActivate: false,
-                onPressed: field != null
-                    ? () => ref.watch(
-                          saveFieldProvider(
-                            field..lastUsed = DateTime.now(),
-                            downloadIfWeb: true,
-                          ),
-                        )
-                    : null,
-                child: child,
-              );
-            },
-          ),
-          if (ref.watch(showBufferedFieldProvider))
+        
+          if (ref.watch(fieldBufferEnabledProvider))
             Consumer(
               child: Text(
                 'Save buffered field',
@@ -349,6 +373,57 @@ class FieldMenu extends ConsumerWidget {
                               downloadIfWeb: true,
                             ),
                           )
+                      : null,
+                  child: child,
+                );
+              },
+            ),
+          if (ref.watch(fieldBufferEnabledProvider))
+            Consumer(
+              child: Text(
+                'Create path tracking from buffered field exterior',
+                style: textStyle,
+              ),
+              builder: (context, ref, child) {
+                final wayPoints = ref.watch(bufferedFieldProvider).when(
+                      data: (data) {
+                        final points = <WayPoint>[];
+                        final positions =
+                            data?.polygon.exterior?.toGeographicPositions;
+                        if (positions != null && positions.length >= 2) {
+                          for (var i = 0; i < positions.length; i++) {
+                            final point = positions.elementAt(i);
+                            final nextPoint =
+                                positions.elementAt((i + 1) % positions.length);
+                            points.add(
+                              WayPoint(
+                                position: point,
+                                bearing:
+                                    point.rhumb.initialBearingTo(nextPoint),
+                              ),
+                            );
+                          }
+                          return points;
+                        }
+
+                        return null;
+                      },
+                      error: (error, stackTrace) => null,
+                      loading: () => null,
+                    );
+
+                return MenuItemButton(
+                  leadingIcon: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Icon(Icons.route),
+                  ),
+                  closeOnActivate: false,
+                  onPressed: wayPoints != null
+                      ? () {
+                          ref
+                              .read(pathTrackingPointsProvider.notifier)
+                              .update(wayPoints);
+                        }
                       : null,
                   child: child,
                 );

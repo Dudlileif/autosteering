@@ -919,9 +919,7 @@ class _PathTrackingMenu extends ConsumerWidget {
                 ),
                 subtitle: Builder(
                   builder: (context) {
-                    final length = tracking.cumulativePathSegmentLengths.reduce(
-                      (previousValue, element) => previousValue + element,
-                    );
+                    final length = tracking.cumulativePathSegmentLengths.last;
                     return Text(
                       '${length.toStringAsFixed(1)} m',
                     );

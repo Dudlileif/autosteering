@@ -40,7 +40,7 @@ final webLocalStorageProvider = Provider<Storage>.internal(
 );
 
 typedef WebLocalStorageRef = ProviderRef<Storage>;
-String _$settingsHash() => r'9854ab732cfc8758af67f5456e9f7ff6cce13be0';
+String _$settingsHash() => r'76f60aeeb5c6709f9dd9610562118c93753fcdde';
 
 /// A provider for the settings map for the application.
 ///
