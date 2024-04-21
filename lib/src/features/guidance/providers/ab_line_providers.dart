@@ -139,7 +139,8 @@ Future<APlusLine?> aPlusLine(APlusLineRef ref) async {
     );
   });
 
-  final bearing = ref.watch(aPlusLineBearingProvider)??ref.read(mainVehicleProvider.select((value)=>value.bearing));
+  final bearing = ref.watch(aPlusLineBearingProvider) ??
+      ref.read(mainVehicleProvider.select((value) => value.bearing));
   final start = ref.watch(aBPointAProvider)?.copyWith(bearing: bearing);
 
   if (start != null) {

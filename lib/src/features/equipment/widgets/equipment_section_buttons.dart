@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
@@ -259,8 +260,11 @@ class EquipmentSectionButtons extends ConsumerWidget {
 
 class _CrossPainter extends CustomPainter {
   const _CrossPainter({
-    this.fillColor = Colors.red,
+    // ignore: unused_element
+    this.fillColor = Colors.red, 
+    // ignore: unused_element
     this.strokeColor = Colors.black,
+    // ignore: unused_element
     this.strokeWidth = 10,
   });
 
@@ -296,8 +300,11 @@ class _CrossPainter extends CustomPainter {
 
 class _CheckmarkPainter extends CustomPainter {
   const _CheckmarkPainter({
+    // ignore: unused_element
     this.fillColor = Colors.green,
+    // ignore: unused_element
     this.strokeColor = Colors.black,
+    // ignore: unused_element
     this.strokeWidth = 10,
   });
 

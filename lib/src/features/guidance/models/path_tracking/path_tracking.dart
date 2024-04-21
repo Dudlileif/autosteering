@@ -388,8 +388,6 @@ sealed class PathTracking {
     final nextPoint = nextWayPoint(vehicle);
 
     final currentPoint = currentWayPoint(vehicle);
-    print(vehiclePointingInPathDirection(vehicle));
-
     final progress = vehicle.pathTrackingPoint.spherical.alongTrackDistanceTo(
       start: currentPoint.position,
       end: nextPoint.position,

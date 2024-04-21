@@ -151,6 +151,7 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
   _EquipentWorkedPathsPainter({
     required this.points,
     this.color = Colors.green,
+    // ignore: unused_element
     this.opacity = 0.4,
     this.sectionColors,
   });
