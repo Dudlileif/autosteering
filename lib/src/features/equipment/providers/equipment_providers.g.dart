@@ -959,7 +959,7 @@ final showEquipmentDebugProvider =
 
 typedef _$ShowEquipmentDebug = AutoDisposeNotifier<bool>;
 String _$equipmentRecordPositionFractionHash() =>
-    r'bb8fda078784d4229bde314e792ba25c0a50d1ed';
+    r'141d41b58a05019f861cf68c7d4aaf0038849c5d';
 
 /// A provider for how the [SectionEdgePositions] should be recorded, as the
 /// fraction parameter that goes in [Equipment.sectionEdgePositions].
@@ -967,7 +967,7 @@ String _$equipmentRecordPositionFractionHash() =>
 /// Copied from [EquipmentRecordPositionFraction].
 @ProviderFor(EquipmentRecordPositionFraction)
 final equipmentRecordPositionFractionProvider =
-    NotifierProvider<EquipmentRecordPositionFraction, double>.internal(
+    NotifierProvider<EquipmentRecordPositionFraction, double?>.internal(
   EquipmentRecordPositionFraction.new,
   name: r'equipmentRecordPositionFractionProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -977,8 +977,8 @@ final equipmentRecordPositionFractionProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$EquipmentRecordPositionFraction = Notifier<double>;
-String _$allEquipmentsHash() => r'921764dc5d2f76c6d6e63838370e50e1a4884e07';
+typedef _$EquipmentRecordPositionFraction = Notifier<double?>;
+String _$allEquipmentsHash() => r'68433ed44da5d975f1761df5e05474ebdd0c05a7';
 
 /// A provider that holds all of the equipments.
 ///
@@ -1015,7 +1015,7 @@ final equipmentWorkedAreaProvider =
 );
 
 typedef _$EquipmentWorkedArea = Notifier<Map<String, double>>;
-String _$equipmentPathsHash() => r'f8489b1f4c5821f7ec18bdeca3c3a856ef94e739';
+String _$equipmentPathsHash() => r'0b1e8760049eeb8181b4b98f6ccf33bcd58bbae2';
 
 abstract class _$EquipmentPaths
     extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {

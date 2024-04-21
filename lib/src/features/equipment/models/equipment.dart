@@ -61,6 +61,7 @@ class Equipment extends Hitchable with EquatableMixin {
     this.workingAreaLength = 2,
     this.drawbarLength = 1,
     this.sidewaysOffset = 0,
+    this.recordingPositionFraction = 1,
     this.hitchToChildFrontFixedHitchLength,
     this.hitchToChildRearFixedHitchLength,
     this.hitchToChildRearTowbarHitchLength,
@@ -73,6 +74,7 @@ class Equipment extends Hitchable with EquatableMixin {
     double bearing = 0,
     Geographic position = const Geographic(lat: 0, lon: 0),
   })  : sections = sections ?? [],
+        
         _position = position,
         _bearing = hitchParent?.bearing ?? bearing,
         lastUsed = lastUsed ?? DateTime.now();
@@ -105,6 +107,8 @@ class Equipment extends Hitchable with EquatableMixin {
       drawbarLength: dimensions['drawbar_length'] as double,
       sidewaysOffset: dimensions['sideways_offset'] as double,
       workingAreaLength: dimensions['working_area_length'] as double,
+      recordingPositionFraction:
+          (dimensions['recording_position_fraction'] as double?) ?? 1,
       sections: sections,
       hitchToChildFrontFixedHitchLength:
           hitches['hitch_to_child_front_fixed_hitch_length'] as double?,
@@ -178,6 +182,21 @@ class Equipment extends Hitchable with EquatableMixin {
   ///
   /// Positive value means to the right of the forward direction.
   double sidewaysOffset = 0;
+
+  /// The fraction  used to get the intermediate positions between the rear and
+  /// the front of the work area. 0 means the rear and 1 means the front
+  /// Defaults to the front, 1.
+  ///
+  /// ```
+  ///  1    ---------
+  ///       |       |
+  ///       |       |
+  /// 0.5   o-------o
+  ///       |       |
+  ///       |       |
+  ///  0    ---------
+  /// ```
+  double recordingPositionFraction = 1;
 
   /// The length from the hitch point to the child fixed hitch at the front,
   /// if there is one.
@@ -691,38 +710,28 @@ class Equipment extends Hitchable with EquatableMixin {
   /// Finds the drawing/recording edge positions for the section with index
   /// [index].
   ///
-  /// [fraction] is used to get the intermediate positions between the rear and
-  /// the front of the section. 0 means the rear and 1 means the front
-  /// Defaults to the rear, 0.
-  ///
-  /// ```
-  ///  1    ---------
-  ///       |       |
-  ///       |       |
-  /// 0.5   o-------o
-  ///       |       |
-  ///       |       |
-  ///  0    ---------
-  /// ```
+  /// [fraction] can be set to override the [recordingPositionFraction].
   SectionEdgePositions sectionEdgePositions(
     int index, {
-    double fraction = 0,
+    double? fraction,
   }) {
     final points = sectionCornerPoints(index);
 
     return SectionEdgePositions(
-      left: points[1]
-          .spherical
-          .intermediatePointTo(points[0], fraction: fraction),
-      right: points[2]
-          .spherical
-          .intermediatePointTo(points[3], fraction: fraction),
+      left: points[1].spherical.intermediatePointTo(
+            points[0],
+            fraction: fraction ?? recordingPositionFraction,
+          ),
+      right: points[2].spherical.intermediatePointTo(
+            points[3],
+            fraction: fraction ?? recordingPositionFraction,
+          ),
     );
   }
 
   /// A map of all the section indexes and their [SectionEdgePositions] if they
   /// are active, or null if they're not.
-  Map<int, SectionEdgePositions?> activeEdgePositions({double fraction = 0}) =>
+  Map<int, SectionEdgePositions?> activeEdgePositions({double? fraction}) =>
       {
         for (final element in sections)
           element.index: element.active
@@ -1070,6 +1079,7 @@ class Equipment extends Hitchable with EquatableMixin {
     double? workingAreaLength,
     double? drawbarLength,
     double? sidewaysOffset,
+    double? recordingPositionFraction,
     double? bearing,
     Geographic? position,
     double? hitchToChildFrontFixedHitchLength,
@@ -1092,6 +1102,8 @@ class Equipment extends Hitchable with EquatableMixin {
         workingAreaLength: workingAreaLength ?? this.workingAreaLength,
         drawbarLength: drawbarLength ?? this.drawbarLength,
         sidewaysOffset: sidewaysOffset ?? this.sidewaysOffset,
+        recordingPositionFraction:
+            recordingPositionFraction ?? this.recordingPositionFraction,
         position: position ?? this.position,
         bearing: bearing ?? this.bearing,
         hitchToChildFrontFixedHitchLength: hitchToChildFrontFixedHitchLength ??
@@ -1139,6 +1151,7 @@ class Equipment extends Hitchable with EquatableMixin {
       'sideways_offset': sidewaysOffset,
       'width': width,
       'working_area_length': workingAreaLength,
+      'recording_position_fraction': recordingPositionFraction,
       'decoration': decoration,
     };
 

@@ -130,8 +130,17 @@ class EquipmentMenu extends StatelessWidget {
                     style: textStyle,
                   ),
                   ToggleButtons(
-                    isSelected: [fraction == 1, fraction == 0.5, fraction == 0],
+                    isSelected: [
+                      fraction == null,
+                      fraction == 1,
+                      fraction == 0.5,
+                      fraction == 0,
+                    ],
                     children: const [
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Default'),
+                      ),
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: Text('Front'),
@@ -147,7 +156,15 @@ class EquipmentMenu extends StatelessWidget {
                     ],
                     onPressed: (index) => ref
                         .read(equipmentRecordPositionFractionProvider.notifier)
-                        .update((-index + 2) / 2),
+                        .update(
+                          switch (index) {
+                            0 => null,
+                            1 => 1,
+                            2 => 0.5,
+                            3 => 0,
+                            _ => null,
+                          },
+                        ),
                   ),
                 ],
               ),

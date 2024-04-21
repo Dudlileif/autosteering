@@ -50,10 +50,10 @@ class ShowEquipmentDebug extends _$ShowEquipmentDebug {
 class EquipmentRecordPositionFraction
     extends _$EquipmentRecordPositionFraction {
   @override
-  double build() => 0.5;
+  double ?build() => null;
 
   /// Updates [state] to [value];
-  void update(double value) => Future(() => state = value.clamp(0, 1));
+  void update(double? value) => Future(() => state = value?.clamp(0, 1));
 }
 
 /// A provider that holds all of the equipments.

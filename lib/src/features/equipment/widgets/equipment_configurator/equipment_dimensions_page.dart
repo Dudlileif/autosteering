@@ -69,6 +69,32 @@ class EquipmentDimensionsPage extends ConsumerWidget {
       ),
       TextFormField(
         decoration: const InputDecoration(
+          icon: Icon(Icons.expand),
+          labelText: 'Recording position from working area start',
+          suffixText: 'm',
+        ),
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        initialValue: ref.read(
+          configuredEquipmentProvider.select(
+            (value) => ((1 - value.recordingPositionFraction) *
+                    value.workingAreaLength)
+                .toString(),
+          ),
+        ),
+        onChanged: (value) {
+          final length = double.tryParse(value.replaceAll(',', '.'))
+              ?.clamp(0.0, equipment.workingAreaLength);
+
+          final fraction = equipment.workingAreaLength > 0
+              ? 1 - ((length ?? 0) / equipment.workingAreaLength)
+              : 1.0;
+          ref
+              .read(configuredEquipmentProvider.notifier)
+              .update(equipment.copyWith(recordingPositionFraction: fraction));
+        },
+      ),
+      TextFormField(
+        decoration: const InputDecoration(
           icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
           labelText: 'Sideways offset (-left / +right)',
           suffixText: 'm',
