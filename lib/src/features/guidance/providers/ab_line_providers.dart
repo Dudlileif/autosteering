@@ -20,6 +20,7 @@ import 'dart:convert';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -138,7 +139,7 @@ Future<APlusLine?> aPlusLine(APlusLineRef ref) async {
     );
   });
 
-  final bearing = ref.watch(aPlusLineBearingProvider);
+  final bearing = ref.watch(aPlusLineBearingProvider)??ref.read(mainVehicleProvider.select((value)=>value.bearing));
   final start = ref.watch(aBPointAProvider)?.copyWith(bearing: bearing);
 
   if (start != null) {

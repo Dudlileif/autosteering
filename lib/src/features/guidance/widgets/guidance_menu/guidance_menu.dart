@@ -180,9 +180,6 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
                   ref
                       .read(configuredPathTrackingProvider.notifier)
                       .update(pathTracking);
-                  ref
-                      .read(enablePathTrackingProvider.notifier)
-                      .update(value: true);
                 },
                 trailing: Device.isNative
                     ? IconButton(

@@ -280,8 +280,6 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                           .update(ref.read(finishedPathRecordingListProvider))
                       ..read(showPathTrackingProvider.notifier)
                           .update(value: true)
-                      ..read(enablePathTrackingProvider.notifier)
-                          .update(value: true)
                       ..read(
                         showPathRecordingMenuProvider.notifier,
                       ).update(value: false)

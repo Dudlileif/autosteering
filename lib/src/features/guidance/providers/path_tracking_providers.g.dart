@@ -1055,27 +1055,7 @@ final configuredPathTrackingProvider =
 );
 
 typedef _$ConfiguredPathTracking = Notifier<PathTracking?>;
-String _$enablePathTrackingHash() =>
-    r'3fd0d3a5101e9fd83ac3d1ca0b8f64c270330119';
-
-/// A provider for whether or not the vehicle should follow the
-/// [ConfiguredPathTracking] tracking model.
-///
-/// Copied from [EnablePathTracking].
-@ProviderFor(EnablePathTracking)
-final enablePathTrackingProvider =
-    NotifierProvider<EnablePathTracking, bool>.internal(
-  EnablePathTracking.new,
-  name: r'enablePathTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$enablePathTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$EnablePathTracking = Notifier<bool>;
-String _$pathTrackingLoopHash() => r'efd0e7b54cdcbf6422837e294c0ae85d57b6d62b';
+String _$pathTrackingLoopHash() => r'51f6c0dd235e7e6abe6aa472772905295ebe9c94';
 
 /// A provider for which looping mode the [ConfiguredPathTracking] should
 /// follow.

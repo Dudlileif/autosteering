@@ -56,7 +56,10 @@ final class StanleyPathTracking extends PathTracking {
 
     final headingError = signedBearingDifference(
       vehicle.bearing,
-      currentWayPoint(vehicle).bearing,
+      switch (vehiclePointingInPathDirection(vehicle)) {
+        true => currentWayPoint(vehicle).bearing,
+        false => (currentWayPoint(vehicle).bearing + 180).wrap360()
+      },
     );
 
     final sign = switch (vehicle.isReversing) {

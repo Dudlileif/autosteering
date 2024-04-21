@@ -22,7 +22,7 @@ final aBLineProvider = FutureProvider<ABLine?>.internal(
 );
 
 typedef ABLineRef = FutureProviderRef<ABLine?>;
-String _$aPlusLineHash() => r'f0b296c3da1c91bcd9c4d4177c1cde7ea70275c7';
+String _$aPlusLineHash() => r'5ed60cbf68a93721a694a49f14bd4b639979f3d7';
 
 /// A provider for the A+-line.
 ///

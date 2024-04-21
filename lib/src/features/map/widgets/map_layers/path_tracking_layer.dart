@@ -15,9 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:autosteering/src/features/common/utils/position_projection_extensions.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,7 +35,8 @@ class PathTrackingLayer extends ConsumerWidget {
     final tracking = ref.watch(displayPathTrackingProvider);
     final vehicle = ref.watch(mainVehicleProvider);
     final lookAheadDistance = vehicle.lookAheadDistance;
-
+    final debug = ref.watch(debugPathTrackingProvider);
+    final theme = Theme.of(context);
     return Stack(
       children: tracking != null
           ? [
@@ -53,7 +56,7 @@ class PathTrackingLayer extends ConsumerWidget {
                     color: Colors.white,
                   ),
                   if (tracking is PurePursuitPathTracking &&
-                      ref.watch(debugPathTrackingProvider)) ...[
+                      debug) ...[
                     Polyline(
                       color: Colors.black,
                       points: [
@@ -215,60 +218,58 @@ class PathTrackingLayer extends ConsumerWidget {
                         radius: 5,
                         color: Colors.pink,
                       ),
-                    if (ref.watch(debugPathTrackingProvider)) ...[
-                      CircleMarker(
-                        point: tracking
-                          .findLookAheadLinePoints(
-                            vehicle,
-                            lookAheadDistance,
-                          )
-                          .inside
-                          .position
-                          .latLng,
-                      radius: 3,
-                      color: Colors.white,
-                    ),
-                    if (tracking
-                            .findLookAheadLinePoints(
-                              vehicle,
-                              lookAheadDistance,
-                            )
-                            .outside !=
-                        null)
+                    if (debug) ...[
                       CircleMarker(
                         point: tracking
                             .findLookAheadLinePoints(
                               vehicle,
                               lookAheadDistance,
                             )
-                            .outside!
+                            .inside
                             .position
                             .latLng,
                         radius: 3,
                         color: Colors.white,
                       ),
-                    
-                    if (tracking
-                            .findLookAheadCirclePoints(
-                              vehicle,
-                              lookAheadDistance,
-                            )
-                            .worst !=
-                        null)
-                      CircleMarker(
-                        point: tracking
-                            .findLookAheadCirclePoints(
-                              vehicle,
-                              lookAheadDistance,
-                            )
-                            .worst!
-                            .position
-                            .latLng,
-                        radius: 5,
-                        color: Colors.blue,
+                      if (tracking
+                              .findLookAheadLinePoints(
+                                vehicle,
+                                lookAheadDistance,
+                              )
+                              .outside !=
+                          null)
+                        CircleMarker(
+                          point: tracking
+                              .findLookAheadLinePoints(
+                                vehicle,
+                                lookAheadDistance,
+                              )
+                              .outside!
+                              .position
+                              .latLng,
+                          radius: 3,
+                          color: Colors.white,
+                        ),
+                      if (tracking
+                              .findLookAheadCirclePoints(
+                                vehicle,
+                                lookAheadDistance,
+                              )
+                              .worst !=
+                          null)
+                        CircleMarker(
+                          point: tracking
+                              .findLookAheadCirclePoints(
+                                vehicle,
+                                lookAheadDistance,
+                              )
+                              .worst!
+                              .position
+                              .latLng,
+                          radius: 5,
+                          color: Colors.blue,
                         ),
                     ],
-                    
                   ],
                   CircleMarker(
                     point: tracking.perpendicularIntersect(vehicle).latLng,
@@ -277,6 +278,23 @@ class PathTrackingLayer extends ConsumerWidget {
                   ),
                 ],
               ),
+              if (debug)
+                MarkerLayer(
+                  markers: tracking.path
+                      .mapIndexed(
+                        (index, e) => Marker(
+                          rotate: true,
+                          point: e.position.latLng,
+                          child: TextWithStroke(
+                            '$index',
+                            strokeWidth: 3,
+                            style: theme.menuButtonWithChildrenText
+                                ?.copyWith(color: Colors.white),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
             ]
           : const [],
     );

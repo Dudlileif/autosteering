@@ -115,8 +115,9 @@ sealed class PathTracking {
     };
   }
 
-/// The unique identifier for this.
+  /// The unique identifier for this.
   final String uuid;
+
   /// Name or description of this.
   String? name;
 
@@ -171,7 +172,7 @@ sealed class PathTracking {
   /// Whether the path is completed.
   bool get isCompleted => cumulativeIndex.abs() >= path.length - 1;
 
-  /// Updates [wayPoints] to [newWayPoints] and interpolats the result in
+  /// Updates [wayPoints] to [newWayPoints] and interpolates the result to
   /// [path].
   ///
   /// The maximum distances between the points are [newInterpolationDistance]
@@ -182,15 +183,33 @@ sealed class PathTracking {
     List<WayPoint>? newWayPoints,
     double? newInterpolationDistance,
     PathTrackingLoopMode? newLoopMode,
+    double? minDistance,
   }) {
     wayPoints = newWayPoints ?? wayPoints;
     interpolationDistance = newInterpolationDistance ?? interpolationDistance;
     loopMode = newLoopMode ?? loopMode;
-    path = List<WayPoint>.from(wayPoints);
 
+    path = [];
+
+    for (var i = 0; i < wayPoints.length; i++) {
+      final point = wayPoints[i];
+      if (i > 0) {
+        final prevPoint = path.last;
+        if (prevPoint.position.rhumb.distanceTo(point.position) <
+            (minDistance ?? 0.5)) {
+          continue;
+        }
+        path.add(
+          point.copyWith(
+            bearing: prevPoint.position.rhumb.finalBearingTo(point.position),
+          ),
+        );
+      } else {
+        path.add(point);
+      }
+    }
     if (interpolationDistance != null && interpolationDistance! > 0) {
       var index = 0;
-
       while (index + 1 < path.length) {
         final point = path[index];
         final nextPoint = path[index + 1];
@@ -254,48 +273,61 @@ sealed class PathTracking {
   }
 
   /// The index of the next waypoint when driving forward.
-  int get nextForwardIndex => cumulativeIndex + 1;
+  int nextForwardIndex(Vehicle vehicle) =>
+      switch (vehiclePointingInPathDirection(vehicle)) {
+        true => cumulativeIndex + 1,
+        false => cumulativeIndex - 1
+      };
 
   /// The index of the next (previous) waypoint when driving in reverse.
-  int get nextReversingIndex => cumulativeIndex - 1;
+  int nextReversingIndex(Vehicle vehicle) =>
+      switch (vehiclePointingInPathDirection(vehicle)) {
+        true => cumulativeIndex - 1,
+        false => cumulativeIndex + 1
+      };
 
   /// The current waypoint.
   WayPoint currentWayPoint(Vehicle vehicle) {
     if (loopMode == PathTrackingLoopMode.none && isCompleted) {
       return closestWayPoint(vehicle);
     }
-
     return path[currentIndex];
   }
 
+  /// Whether the [vehicle] is pointing in the recorded forward direction of
+  /// the path from [currentWayPoint].
+  bool vehiclePointingInPathDirection(Vehicle vehicle) =>
+      bearingDifference(currentWayPoint(vehicle).bearing, vehicle.bearing) <=
+      90;
+
   /// The next waypoint when driving forward.
-  WayPoint get nextForwardWayPoint {
+  WayPoint nextForwardWayPoint(Vehicle vehicle) {
     if (loopMode == PathTrackingLoopMode.none && isCompleted) {
       return (path.lastOrNull ?? wayPoints.last).moveRhumb(distance: 100);
     }
-    return path[nextForwardIndex % path.length];
+    return path[nextForwardIndex(vehicle) % path.length];
   }
 
   /// The next waypoint when driving in reverse.
-  WayPoint get nextReversingWayPoint {
+  WayPoint nextReversingWayPoint(Vehicle vehicle) {
     if (loopMode == PathTrackingLoopMode.none && isCompleted) {
       return (path.firstOrNull ?? wayPoints.first)
           .moveRhumb(distance: 100, angleFromBearing: 180);
     }
-    return path[nextReversingIndex % path.length];
+    return path[nextReversingIndex(vehicle) % path.length];
   }
 
   /// The next waypoint index with vehicle driving direction taken into
   /// consideration.
   int nextIndex(Vehicle vehicle) => switch (vehicle.isReversing) {
-        true => nextReversingIndex,
-        false => nextForwardIndex,
+        true => nextReversingIndex(vehicle),
+        false => nextForwardIndex(vehicle),
       };
 
   /// The next waypoint with vehicle driving direction taken into consideration.
   WayPoint nextWayPoint(Vehicle vehicle) => switch (vehicle.isReversing) {
-        true => nextReversingWayPoint,
-        false => nextForwardWayPoint,
+        true => nextReversingWayPoint(vehicle),
+        false => nextForwardWayPoint(vehicle),
       };
 
   /// The intersection point that is projected from the vehicle onto the
@@ -329,7 +361,7 @@ sealed class PathTracking {
   double perpendicularDistance(Vehicle vehicle) =>
       vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
         start: currentWayPoint(vehicle).position,
-        end: nextForwardWayPoint.position,
+        end: nextForwardWayPoint(vehicle).position,
       );
 
   /// The waypoint in [path] that is closest to the [vehicle].
@@ -356,6 +388,7 @@ sealed class PathTracking {
     final nextPoint = nextWayPoint(vehicle);
 
     final currentPoint = currentWayPoint(vehicle);
+    print(vehiclePointingInPathDirection(vehicle));
 
     final progress = vehicle.pathTrackingPoint.spherical.alongTrackDistanceTo(
       start: currentPoint.position,

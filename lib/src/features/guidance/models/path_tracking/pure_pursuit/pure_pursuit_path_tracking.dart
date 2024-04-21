@@ -80,11 +80,19 @@ final class PurePursuitPathTracking extends PathTracking {
 
     WayPoint? outsidePoint;
 
+    final vehiclePointingAlongPath = vehiclePointingInPathDirection(vehicle);
+
     for (var i = 1; i < path.length; i++) {
       final index = nextIndex(vehicle) +
-          switch (vehicle.isReversing) {
-            true => -i,
-            false => i,
+          switch (vehiclePointingAlongPath) {
+            true => switch (vehicle.isReversing) {
+                true => -i,
+                false => i,
+              },
+            false => switch (vehicle.isReversing) {
+                true => i,
+                false => -i,
+              }
           };
       final point = path[index % path.length];
       final distance =

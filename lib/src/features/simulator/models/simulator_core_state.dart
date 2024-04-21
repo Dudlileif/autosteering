@@ -163,15 +163,12 @@ class SimulatorCoreState {
   /// given.
   bool autoCenterSteering = false;
 
-  /// Whether the vehicle should use the [pathTracking] model to steer.
-  bool enablePathTracking = false;
-
   /// Whehter the vehicle should automatically steer.
   AutosteeringState autosteeringState = AutosteeringState.disabled;
 
   /// Which mode the [pathTracking] should use to go from the last to the first
   /// waypoint.
-  PathTrackingLoopMode pathTrackingLoopMode = PathTrackingLoopMode.none;
+  PathTrackingLoopMode pathTrackingLoopMode = PathTrackingLoopMode.straight;
 
   /// Which steering mode the [pathTracking] should use.
   PathTrackingMode pathTrackingMode = PathTrackingMode.purePursuit;
@@ -201,11 +198,6 @@ class SimulatorCoreState {
   }
 
   /// Change state parameters/values according to the incomming [message].
-  ///
-  /// This can be [Vehicle], [PathTrackingMode] or records for the vehicle's
-  /// position, velocity(Delta), steeringAngle(Delta), [pathTracking],
-  /// [autoSlowDown], [autoCenterSteering], [enablePathTracking] or
-  /// [pathTrackingLoopMode].
   void handleMessage(dynamic message) {
     // Force update to reflect changes in case we haven't moved.
     forceChange = true;
@@ -404,13 +396,6 @@ class SimulatorCoreState {
     // Update whether to automatically center the steering.
     else if (message is ({bool autoCenterSteering})) {
       autoCenterSteering = message.autoCenterSteering;
-    }
-    // Enable/disable path tracking.
-    else if (message is ({bool enablePathTracking})) {
-      enablePathTracking = message.enablePathTracking;
-      if (vehicle != null && pathTracking != null) {
-        pathTracking?.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
-      }
     }
     // Update pure pursuit parameters.
     else if (message is PurePursuitParameters) {
@@ -757,11 +742,16 @@ class SimulatorCoreState {
       abTracking?.checkAutoOffsetSnap(vehicle!);
       if (autosteeringState == AutosteeringState.disabled &&
           allowManualTrackingUpdates &&
-          abTracking != null) {
-        if (abTracking!.isCompleted) {
-          abTracking!.currentPathTracking = null;
-        } else {
-          abTracking!.manualUpdate(vehicle!);
+          vehicle!.velocity.abs() > 0) {
+        if (abTracking != null) {
+          if (abTracking!.isCompleted) {
+            abTracking!.currentPathTracking = null;
+          } else {
+            abTracking!.manualUpdate(vehicle!);
+          }
+        }
+        if (pathTracking != null) {
+          pathTracking!.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
         }
       }
 
@@ -782,8 +772,7 @@ class SimulatorCoreState {
       } else if (pathTracking != null) {
         if (pathTracking!.isCompleted &&
             pathTrackingLoopMode == PathTrackingLoopMode.none &&
-            enablePathTracking) {
-          enablePathTracking = false;
+            autosteeringState != AutosteeringState.disabled) {
           autosteeringState = AutosteeringState.disabled;
           mainThreadSendStream
             ..add(LogEvent(Level.info, 'PathTracking finished.'))

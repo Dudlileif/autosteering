@@ -103,25 +103,6 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
   void update(PathTracking? value) => Future(() => state = value);
 }
 
-/// A provider for whether or not the vehicle should follow the
-/// [ConfiguredPathTracking] tracking model.
-@Riverpod(keepAlive: true)
-class EnablePathTracking extends _$EnablePathTracking {
-  @override
-  bool build() {
-    ref.listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send((enablePathTracking: next));
-    });
-    return false;
-  }
-
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current state.
-  void toggle() => Future(() => state != state);
-}
-
 /// A provider for which looping mode the [ConfiguredPathTracking] should
 /// follow.
 @Riverpod(keepAlive: true)
@@ -131,7 +112,7 @@ class PathTrackingLoop extends _$PathTrackingLoop {
     ref.listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send((pathTrackingLoopMode: next));
     });
-    return PathTrackingLoopMode.none;
+    return PathTrackingLoopMode.straight;
   }
 
   /// Update the [state] to [value].

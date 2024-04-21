@@ -157,17 +157,26 @@ class ABTrackingMenu extends ConsumerWidget {
           Consumer(
             builder: (context, ref, child) {
               final bearing = abTracking?.initialBearing ??
-                  ref.watch(aPlusLineBearingProvider);
+                  ref.watch(aPlusLineBearingProvider) ??
+                  ref.watch(
+                    mainVehicleProvider.select((value) => value.bearing),
+                  );
 
-              return ListTile(
-                title: Text(
-                  '''Bearing: ${bearing != null ? '${bearing.toStringAsFixed(2)}°' : ''}''',
-                ),
-                onTap: workSessionGuidanceActive
+              return MenuItemButton(
+                closeOnActivate: false,
+                onPressed: workSessionGuidanceActive
                     ? null
                     : () => showDialog<void>(
                   context: context,
                   builder: (context) => const _APlusLineBearingDialog(),
+                ),
+                trailingIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () => ref.invalidate(aPlusLineBearingProvider),
+                ),
+                child: Text(
+                  '''Bearing: ${bearing != null ? '${bearing.toStringAsFixed(2)}°' : ''}''',
+                  style: theme.menuButtonWithChildrenText,
                 ),
               );
             },
@@ -177,6 +186,7 @@ class ABTrackingMenu extends ConsumerWidget {
             builder: (context, ref, child) => ListTile(
               title: Text(
                 '''Bearing: ${abTracking != null ? '${abTracking.initialBearing.toStringAsFixed(1)}°' : ''}''',
+                style: theme.menuButtonWithChildrenText,
               ),
             ),
           )
@@ -352,6 +362,10 @@ class _ABCommonMenu extends ConsumerWidget {
         Consumer(
           child: Text('Show', style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
+            secondary: switch (ref.watch(showABTrackingProvider)) {
+              true => const Icon(Icons.visibility),
+              false => const Icon(Icons.visibility_off),
+            },
             title: child,
             value: ref.watch(showABTrackingProvider),
             onChanged: (value) => value != null
@@ -362,6 +376,10 @@ class _ABCommonMenu extends ConsumerWidget {
         Consumer(
           child: Text('Show all lines', style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
+            secondary: switch (ref.watch(aBTrackingShowAllLinesProvider)) {
+              true => const Icon(Icons.visibility),
+              false => const Icon(Icons.visibility_off),
+            },
             title: child,
             value: ref.watch(aBTrackingShowAllLinesProvider),
             onChanged: (value) => value != null

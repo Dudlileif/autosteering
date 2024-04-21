@@ -56,29 +56,16 @@ class PathTrackingMenu extends ConsumerWidget {
         ),
         Consumer(
           child: Text(
-            'Enable',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) {
-            return CheckboxListTile(
-              secondary: child,
-              value: ref.watch(enablePathTrackingProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(enablePathTrackingProvider.notifier)
-                      .update(value: value)
-                  : null,
-            );
-          },
-        ),
-        Consumer(
-          child: Text(
             'Show',
             style: textStyle,
           ),
           builder: (context, ref, child) {
             return CheckboxListTile(
-              secondary: child,
+              secondary: switch (ref.watch(showPathTrackingProvider)) {
+                true => const Icon(Icons.visibility),
+                false => const Icon(Icons.visibility_off),
+              },
+              title: child,
               value: ref.watch(showPathTrackingProvider),
               onChanged: (value) => value != null
                   ? ref
@@ -140,6 +127,18 @@ class PathTrackingMenu extends ConsumerWidget {
                 ],
               );
             },
+          ),
+        ),
+        Consumer(
+          builder: (context, ref, child) => CheckboxListTile(
+            secondary: const Icon(Icons.bug_report),
+            title: const Text('Debug'),
+            value: ref.watch(debugPathTrackingProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugPathTrackingProvider.notifier)
+                    .update(value: value)
+                : null,
           ),
         ),
       ],
