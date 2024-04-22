@@ -36,15 +36,16 @@ class HardwareNetworkMenu extends StatelessWidget {
       text: 'Network',
       icon: Icons.settings_ethernet,
       menuChildren: [
-        if (Device.isNative)
+        if (Device.isNative) ...[
           Consumer(
             builder: (context, ref, child) {
               final ip = ref.watch(deviceIPAdressWlanProvider).when(
-                    data: (data) => data ?? 'No connection',
-                    error: (error, stackTrace) => 'Error',
-                    loading: () => 'loading',
+                    data: (data) => data,
+                    error: (error, stackTrace) => null,
+                    loading: () => null,
                   );
-              return ListTile(
+              return ip != null
+                  ? ListTile(
                 leading: const Icon(Icons.wifi),
                 title: Text(
                   '''
@@ -52,18 +53,39 @@ This device wlan:
 $ip''',
                   style: textStyle,
                 ),
-              );
+                    )
+                  : const SizedBox.shrink();
             },
           ),
-        if (Device.isNative)
+          Consumer(
+            builder: (context, ref, child) {
+              final ip = ref.watch(deviceIPAdressAPProvider).when(
+                    data: (data) => data,
+                    error: (error, stackTrace) => null,
+                    loading: () => null,
+                  );
+              return ip != null
+                  ? ListTile(
+                      leading: const Icon(Icons.router),
+                      title: Text(
+                        '''
+This device AP host:
+$ip''',
+                        style: textStyle,
+                      ),
+                    )
+                  : const SizedBox.shrink();
+            },
+          ),
           Consumer(
             builder: (context, ref, child) {
               final ip = ref.watch(deviceIPAdressEthernetProvider).when(
-                    data: (data) => data ?? 'No connection',
-                    error: (error, stackTrace) => 'Error',
-                    loading: () => 'loading',
+                    data: (data) => data,
+                    error: (error, stackTrace) => null,
+                    loading: () => null,
                   );
-              return ListTile(
+              return ip != null
+                  ? ListTile(
                 leading: const Icon(Icons.cable),
                 title: Text(
                   '''
@@ -71,9 +93,11 @@ This device ethernet:
 $ip''',
                   style: textStyle,
                 ),
-              );
+                    )
+                  : const SizedBox.shrink();
             },
           ),
+        ],
         Consumer(
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(sendMessagesToHardwareIfNetworkProvider),

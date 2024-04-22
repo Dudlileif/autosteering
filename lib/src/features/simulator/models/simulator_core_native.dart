@@ -130,7 +130,6 @@ class SimulatorCore {
     );
 
     late final MessageDecoder messageDecoder;
-
     void handleUdpData(Datagram? datagram) {
       lastHardwareMessageTime = DateTime.now();
       SimulatorCoreBase.networkListener(
@@ -139,13 +138,43 @@ class SimulatorCore {
         state,
         updateMainThreadStream,
       );
+
+      if (datagram?.data != null) {
+        final string = String.fromCharCodes(datagram!.data);
+        if (string.startsWith('Steering hardware') &&
+            datagram.address != serverEndPoint?.address) {
+          updateMainThreadStream.add((hardwareAddress: datagram.address));
+        }
+      }
+    }
+
+    Future<void> setupReceiveUdp(int receivePort) async {
+      endPoint = Endpoint.any(port: Port(receivePort));
+      udp?.close();
+
+      updateMainThreadStream.add(
+        LogEvent(
+          Level.info,
+          'Closed current UDP receive instance and sockets.',
+        ),
+      );
+      if (endPoint != null) {
+        udp = await UDP.bind(endPoint!);
+      }
+      updateMainThreadStream.add(
+        LogEvent(
+          Level.info,
+          '''Set up local UDP receive endpoint on IP: ${udp?.local.address}, port: ${udp?.local.port?.value}''',
+        ),
+      );
+
+      udp?.asStream().listen(handleUdpData);
     }
 
     Timer? addressLookupRetryTimer;
 
-    Future<void> setupUdp({
+    Future<void> setupSendUdp({
       required String host,
-      required int receivePort,
       required int sendPort,
     }) async {
       try {
@@ -158,32 +187,17 @@ class SimulatorCore {
             hardwareAddress,
             port: Port(sendPort),
           );
-
-          endPoint = Endpoint.any(port: Port(receivePort));
-
-          udp?.close();
-          updateMainThreadStream.add(
+          updateMainThreadStream
+            ..add(
             LogEvent(
               Level.info,
-              'Closed current UDP instance and sockets.',
+                'Closed current UDP send instance and sockets.',
             ),
-          );
-          if (endPoint != null) {
-            udp = await UDP.bind(endPoint!);
-          }
-          updateMainThreadStream.add(
+            )
+            ..add(
             LogEvent(
               Level.info,
-              '''Set up local UDP endpoint on IP: ${udp?.local.address}, port: ${udp?.local.port?.value}''',
-            ),
-          );
-
-          udp?.asStream().listen(handleUdpData);
-
-          updateMainThreadStream.add(
-            LogEvent(
-              Level.info,
-              '''Listening to server UDP endpoint IP: ${serverEndPoint?.address}, port: ${serverEndPoint?.port?.value}''',
+                '''Hardware UDP endpoint IP: ${serverEndPoint?.address}, port: ${serverEndPoint?.port?.value}''',
             ),
           );
 
@@ -201,9 +215,8 @@ class SimulatorCore {
         addressLookupRetryTimer?.cancel();
         addressLookupRetryTimer =
             Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-          await setupUdp(
+          await setupSendUdp(
             host: host,
-            receivePort: receivePort,
             sendPort: sendPort,
           );
         });
@@ -212,9 +225,8 @@ class SimulatorCore {
 
     addressLookupRetryTimer =
         Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-      await setupUdp(
+      await setupSendUdp(
         host: 'autosteering.local',
-        receivePort: 3333,
         sendPort: 6666,
       );
     });
@@ -242,14 +254,16 @@ class SimulatorCore {
         udpHeartbeatTimer.cancel();
         addressLookupRetryTimer?.cancel();
 
+        if (udp?.local.port?.value != message.hardwareUDPReceivePort) {
+          await setupReceiveUdp(message.hardwareUDPReceivePort);
+        }
+
         // Start retrying every 5 seconds in case the hardware gets connected
         // to the network.
-
         addressLookupRetryTimer =
             Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-          await setupUdp(
+          await setupSendUdp(
             host: message.hardwareAddress,
-            receivePort: message.hardwareUDPReceivePort,
             sendPort: message.hardwareUDPSendPort,
           );
         });

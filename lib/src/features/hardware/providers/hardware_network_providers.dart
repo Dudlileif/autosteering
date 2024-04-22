@@ -38,7 +38,7 @@ class HardwareNetworkAlive extends _$HardwareNetworkAlive {
   void update({required bool value}) => Future(() => state = value);
 }
 
-/// A provider for the wireless IP adress of the device.
+/// A provider for the wireless IP address of the device.
 @riverpod
 FutureOr<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) =>
     NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {
@@ -54,7 +54,23 @@ FutureOr<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) =>
       return null;
     });
 
-/// A provider for the wireless IP adress of the device.
+/// A provider for the access point host IP address of the device.
+@riverpod
+FutureOr<String?> deviceIPAdressAP(DeviceIPAdressAPRef ref) =>
+    NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {
+      if (interfaces.isNotEmpty) {
+        return interfaces
+            .firstWhereOrNull(
+              (element) => element.name.toLowerCase().contains('ap'),
+            )
+            ?.addresses
+            .first
+            .address;
+      }
+      return null;
+    });
+
+/// A provider for the ethernet IP address of the device.
 @riverpod
 FutureOr<String?> deviceIPAdressEthernet(
   DeviceIPAdressEthernetRef ref,
@@ -187,74 +203,59 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
 /// A provider for a TCP server for sending/receiving data via TCP.
 @Riverpod(keepAlive: true)
 class TcpServer extends _$TcpServer {
-  Socket? _lastActiveSocket;
-  Timer? _ntripRequestTimer;
+  Socket? _socket;
   @override
-  Future<ServerSocket> build() async {
-    ref.listenSelf((previous, next) {
-      next.when(
-        data: (data) {
-          data.listen((socket) {
-            _lastActiveSocket?.close();
-            _lastActiveSocket?.destroy();
-            _lastActiveSocket = socket
-              ..listen(
-                (event) {
-                  Logger.instance.i(
-                    '''
-Received from ${socket.remoteAddress}, port ${socket.remotePort}:
-${String.fromCharCodes(event)}
-''',
-                  );
-                },
-                onDone: () {
-                  socket
-                    ..close()
-                    ..destroy();
-                  _lastActiveSocket = null;
-                },
-                onError: (error, stackTrace) {
-                  socket
-                    ..close()
-                    ..destroy();
-                  _lastActiveSocket = null;
-                },
+  FutureOr<Socket?> build() async {
+    ref
+      ..listenSelf((previous, next) {
+        next.when(
+          data: (data) {
+            if (data != null) {
+              Logger.instance.i(
+                '''TCP client socket connected to server at ${data.remoteAddress}:${data.remotePort}''',
               );
-          });
-        },
-        error: (error, stackTrace) => Logger.instance.e(
-          'Failed to create ServerSocket.',
-          error: error,
-          stackTrace: stackTrace,
-        ),
-        loading: () {},
-      );
-    });
+            }
+            _socket = data;
+            _socket?.listen(
+              (event) {},
+              onError: (Object? error, StackTrace? stackTrace) {
+                Logger.instance.e(
+                  'TCP client socket error',
+                  error: error,
+                  stackTrace: stackTrace,
+                );
+                ref.invalidateSelf();
+              },
+              onDone: () {
+                Logger.instance.i('TCP client socket closed.');
+                ref.invalidateSelf();
+              },
+            );
+          },
+          error: (error, stackTrace) => Logger.instance.e(
+            'Failed to create TCP client socket.',
+            error: error,
+            stackTrace: stackTrace,
+          ),
+          loading: () {},
+        );
+      })
+      ..onDispose(() async {
+        await _socket?.close();
+      });
 
-    return ServerSocket.bind('0.0.0.0', 9999, shared: true);
+    return Socket.connect(
+      ref.watch(hardwareAddressProvider),
+      9999,
+      timeout: const Duration(seconds: 1),
+    );
   }
 
-  /// Sends [data] to the [_lastActiveSocket] if it's connected.
+  /// Sends [data] to the [_socket] if it's connected.
   ///
   /// It will send a message to the hardware to create a new connection.
   void send(Uint8List data) {
-    // Send notification to hardware to use this device as Ntrip server.
-    // We use a timer to avoid unnecessary spamming, as it would create
-    // a bunch of sockets on the hardware attempting to connect.
-    if (_lastActiveSocket == null &&
-        _ntripRequestTimer == null &&
-        ref.watch(hardwareNetworkAliveProvider)) {
-      ref.read(simInputProvider.notifier).send(
-        (
-          useAsNtripServer:
-              Uint8List.fromList('Use me as Ntrip server!'.codeUnits)
-        ),
-      );
-      Logger.instance.i('Sent request to become NTRIP server.');
-      _ntripRequestTimer =
-          Timer(const Duration(seconds: 1), () => _ntripRequestTimer = null);
-    }
-    Future(() => _lastActiveSocket?.add(data));
+    Future(() => _socket?.add(data));
   }
 }
 
@@ -268,6 +269,10 @@ Stream<List<ConnectivityResult>> currentConnection(CurrentConnectionRef ref) {
           if (previous != next) {
             Logger.instance
                 .i('Device connections: ${data.map((e) => e.name).toList()}');
+            ref
+              ..invalidate(deviceIPAdressWlanProvider)
+              ..invalidate(deviceIPAdressAPProvider)
+              ..invalidate(deviceIPAdressEthernetProvider);
           }
         }
       },
@@ -284,9 +289,8 @@ Stream<List<ConnectivityResult>> currentConnection(CurrentConnectionRef ref) {
 
 /// A provider for whether a network connection can be made.
 ///
-// TODO(dudlileif): VPN and mobile may not work though, have to test as the
-// device can be connected to mobile with vpn while being a WiFi access point.
-// Also bluetooth may be an option at some point.
+/// If using VPN while being an access point, communication with hardware
+/// is not possible.
 @Riverpod(keepAlive: true)
 bool networkAvailable(NetworkAvailableRef ref) {
   ref.listenSelf((previous, next) {
@@ -298,12 +302,11 @@ bool networkAvailable(NetworkAvailableRef ref) {
   return ref.watch(currentConnectionProvider).when(
         data: (data) => data.any(
           (element) => switch (element) {
-          ConnectivityResult.ethernet ||
-          ConnectivityResult.wifi ||
-          ConnectivityResult.mobile ||
-          ConnectivityResult.vpn =>
-            true,
-          _ => false,
+            ConnectivityResult.ethernet ||
+            ConnectivityResult.wifi ||
+            ConnectivityResult.mobile =>
+              true,
+            _ => false,
           },
         ),
         error: (error, stackTrace) {

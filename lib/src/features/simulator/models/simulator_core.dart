@@ -58,7 +58,6 @@ class SimulatorCoreBase {
   ) {
     if (data != null) {
       final messages = decoder.decode(data);
-
       for (final message in messages) {
         if (message is ImuReading ||
             message is ({Geographic gnssPosition, DateTime time}) ||

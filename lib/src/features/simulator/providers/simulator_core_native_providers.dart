@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:async/async.dart';
@@ -29,6 +30,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_io/io.dart';
 
 part 'simulator_core_native_providers.g.dart';
 
@@ -143,17 +145,20 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
       yield message.vehicle;
     } else if (CommonMessageHandler.handleHardwareMessage(ref, message)) {
     } else if (message == 'Heartbeat') {
+    } else if (message is ({InternetAddress hardwareAddress})) {
+      ref
+          .read(hardwareAddressProvider.notifier)
+          .update(message.hardwareAddress.address);
+      Logger.instance.i('Hardware detected at: ${message.hardwareAddress}');
     } else if (message is List) {
       if (message.any((element) => element is Exception)) {
-        Logger.instance.log(
-          Level.error,
+        Logger.instance.e(
           'Simulator Core hit error, restarting...: $message',
         );
         ref.invalidateSelf();
       }
     } else {
-      Logger.instance.log(
-        Level.warning,
+      Logger.instance.w(
         'Received unknown message from Simulator Core: $message',
       );
     }

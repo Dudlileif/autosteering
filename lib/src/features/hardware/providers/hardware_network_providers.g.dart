@@ -9,7 +9,7 @@ part of 'hardware_network_providers.dart';
 String _$deviceIPAdressWlanHash() =>
     r'f83be2448781de1c928f2c96940a5098ffad153e';
 
-/// A provider for the wireless IP adress of the device.
+/// A provider for the wireless IP address of the device.
 ///
 /// Copied from [deviceIPAdressWlan].
 @ProviderFor(deviceIPAdressWlan)
@@ -24,10 +24,27 @@ final deviceIPAdressWlanProvider = AutoDisposeFutureProvider<String?>.internal(
 );
 
 typedef DeviceIPAdressWlanRef = AutoDisposeFutureProviderRef<String?>;
+String _$deviceIPAdressAPHash() => r'38178052a4a97611dc6fc4e8b2ecfb1d5b5b91bb';
+
+/// A provider for the access point host IP address of the device.
+///
+/// Copied from [deviceIPAdressAP].
+@ProviderFor(deviceIPAdressAP)
+final deviceIPAdressAPProvider = AutoDisposeFutureProvider<String?>.internal(
+  deviceIPAdressAP,
+  name: r'deviceIPAdressAPProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deviceIPAdressAPHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DeviceIPAdressAPRef = AutoDisposeFutureProviderRef<String?>;
 String _$deviceIPAdressEthernetHash() =>
     r'c97b95b9563fec16579d200be6b447507c4c80af';
 
-/// A provider for the wireless IP adress of the device.
+/// A provider for the ethernet IP address of the device.
 ///
 /// Copied from [deviceIPAdressEthernet].
 @ProviderFor(deviceIPAdressEthernet)
@@ -186,14 +203,13 @@ final hardwareUDPSendPortProvider =
 );
 
 typedef _$HardwareUDPSendPort = Notifier<int>;
-String _$tcpServerHash() => r'2d075ffd4a3fb8fb20b0d34ba4a1ce07e6107e32';
+String _$tcpServerHash() => r'a705cb8e8f1bac00be4156e488dcb060ea2faa12';
 
 /// A provider for a TCP server for sending/receiving data via TCP.
 ///
 /// Copied from [TcpServer].
 @ProviderFor(TcpServer)
-final tcpServerProvider =
-    AsyncNotifierProvider<TcpServer, ServerSocket>.internal(
+final tcpServerProvider = AsyncNotifierProvider<TcpServer, Socket?>.internal(
   TcpServer.new,
   name: r'tcpServerProvider',
   debugGetCreateSourceHash:
@@ -202,6 +218,6 @@ final tcpServerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$TcpServer = AsyncNotifier<ServerSocket>;
+typedef _$TcpServer = AsyncNotifier<Socket?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
