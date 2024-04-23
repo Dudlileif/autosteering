@@ -180,12 +180,14 @@ Logger logging(LoggingRef ref) {
 
   return Logger.instance
     ..fileLogger = implementation.Logger(
+      filter: ProductionFilter(),
       printer: HybridPrinter(
         SimplePrinter(printTime: true, colors: false),
         error: elevatedPrinter,
         fatal: elevatedPrinter,
       ),
       output: FileOutput(file: file!),
+      level: Level.all,
     );
 }
 

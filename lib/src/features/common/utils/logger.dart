@@ -36,7 +36,8 @@ class Logger {
   /// The time when the logger was first initialized.
   final DateTime initializeTime;
 
-  final implementation.Logger _consoleLogger = implementation.Logger();
+  final implementation.Logger _consoleLogger =
+      implementation.Logger(filter: ProductionFilter(), level: Level.all);
 
   /// The actual [implementation.Logger] to call for doing the logging.
   implementation.Logger? _fileLogger;
@@ -155,6 +156,8 @@ class Logger {
               implementation.Logger(
                 printer: SimplePrinter(colors: false, printTime: true),
                 output: memoryOutput,
+                filter: ProductionFilter(),
+                level: Level.all,
               ))
           .log(
         level,
