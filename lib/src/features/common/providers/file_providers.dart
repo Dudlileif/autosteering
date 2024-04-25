@@ -99,16 +99,18 @@ FutureOr<void> saveJsonToFileDirectory(
 }) async {
   final dataString = const JsonEncoder.withIndent('    ').convert(object);
 
-  if (Device.isWeb && downloadIfWeb) {
-    html.AnchorElement()
-      ..href = '${Uri.dataFromString(
-        dataString,
-        mimeType: 'text/plain',
-        encoding: utf8,
-      )}'
-      ..download = '$fileName.json'
-      ..style.display = 'none'
-      ..click();
+  if (Device.isWeb) {
+    if (downloadIfWeb) {
+      html.AnchorElement()
+        ..href = '${Uri.dataFromString(
+          dataString,
+          mimeType: 'text/plain',
+          encoding: utf8,
+        )}'
+        ..download = '$fileName.json'
+        ..style.display = 'none'
+        ..click();
+    }
   } else {
     try {
     final path =
@@ -149,49 +151,51 @@ FutureOr<void> exportJsonToFileDirectory(
 }) async {
   final dataString = const JsonEncoder.withIndent('    ').convert(object);
 
-  if (Device.isWeb && downloadIfWeb) {
-    html.AnchorElement()
-      ..href = '${Uri.dataFromString(
-        dataString,
-        mimeType: 'text/plain',
-        encoding: utf8,
-      )}'
-      ..download = '$fileName.json'
-      ..style.display = 'none'
-      ..click();
+  if (Device.isWeb) {
+    if (downloadIfWeb) {
+      html.AnchorElement()
+        ..href = '${Uri.dataFromString(
+          dataString,
+          mimeType: 'text/plain',
+          encoding: utf8,
+        )}'
+        ..download = '$fileName.json'
+        ..style.display = 'none'
+        ..click();
+    }
   } else {
     try {
-    final exportFolder = await FilePicker.platform
-        .getDirectoryPath(dialogTitle: 'Select export folder');
-    if (exportFolder != null) {
-      var path = '';
-      if (exportFolder.endsWith('autosteering_export')) {
-        path = folder != null
-            ? '$exportFolder/$folder/$fileName.json'
-            : '$exportFolder/$fileName.json';
-      } else if (exportFolder.contains('autosteering_export')) {
-        path = folder != null
-            ? '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$folder/$fileName.json'
-            : '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$fileName.json';
+      final exportFolder = await FilePicker.platform
+          .getDirectoryPath(dialogTitle: 'Select export folder');
+      if (exportFolder != null) {
+        var path = '';
+        if (exportFolder.endsWith('autosteering_export')) {
+          path = folder != null
+              ? '$exportFolder/$folder/$fileName.json'
+              : '$exportFolder/$fileName.json';
+        } else if (exportFolder.contains('autosteering_export')) {
+          path = folder != null
+              ? '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$folder/$fileName.json'
+              : '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$fileName.json';
+        } else {
+          path = folder != null
+              ? '$exportFolder/autosteering_export/$folder/$fileName.json'
+              : '$exportFolder/autosteering_export/$fileName.json';
+        }
+        final file = File(path);
+        final exists = file.existsSync();
+        if (!exists) {
+          await file.create(recursive: true);
+        }
+        await file.writeAsString(dataString);
+        Logger.instance.i(
+          switch (exists) {
+            false => 'Created and wrote data to $path',
+            true => 'Wrote data to $path',
+          },
+        );
       } else {
-        path = folder != null
-            ? '$exportFolder/autosteering_export/$folder/$fileName.json'
-            : '$exportFolder/autosteering_export/$fileName.json';
-      }
-      final file = File(path);
-      final exists = file.existsSync();
-      if (!exists) {
-        await file.create(recursive: true);
-      }
-      await file.writeAsString(dataString);
-      Logger.instance.i(
-        switch (exists) {
-          false => 'Created and wrote data to $path',
-          true => 'Wrote data to $path',
-        },
-      );
-    } else {
-      Logger.instance.i('No export folder selected.');
+        Logger.instance.i('No export folder selected.');
       }
     } catch (error, stackTrace) {
       Logger.instance.w(
