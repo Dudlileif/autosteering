@@ -176,6 +176,7 @@ class _LoadVehicleMenu extends ConsumerWidget {
               constraints: const BoxConstraints(minWidth: 200),
               child: ListTile(
                 title: Text(vehicle.name ?? vehicle.uuid, style: textStyle),
+                subtitle: Text(vehicle.runtimeType.toString()),
                 onTap: () {
                   final position = ref.watch(
                     mainVehicleProvider.select((value) => value.position),

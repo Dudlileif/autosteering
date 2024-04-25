@@ -515,6 +515,9 @@ class _LoadFieldMenu extends ConsumerWidget {
                       )
                     : null,
                 title: Text(field.name, style: textStyle),
+                subtitle: Text(
+                  '''${(field.areaWithoutHoles / 1e4).toStringAsFixed(2)} ha''',
+                ),
               ),
             ),
           )

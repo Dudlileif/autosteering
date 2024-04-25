@@ -46,7 +46,7 @@ class BasicVehicleGauges extends StatelessWidget {
               ..invalidate(gaugeTravelledDistanceProvider)
               ..invalidate(debugTravelledPathListProvider),
             title: TextWithStroke(
-              '''${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1)} m''',
+              '''${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1).padLeft(5)} m''',
               style: theme.textTheme.titleMedium
                   ?.copyWith(color: Colors.white, fontFamily: 'Noto Sans Mono'),
               strokeWidth: 3.5,
@@ -66,8 +66,9 @@ class BasicVehicleGauges extends StatelessWidget {
           ),
           title: Consumer(
             builder: (context, ref, child) => TextWithStroke(
-              '''${(ref.watch(gaugeVelocityProvider) * 3.6).toStringAsFixed(1)} km/h''',
-              style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+              '''${(ref.watch(gaugeVelocityProvider) * 3.6).toStringAsFixed(1).padLeft(4)} km/h''',
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: Colors.white, fontFamily: 'Noto Sans Mono'),
               strokeWidth: 3.5,
             ),
           ),
@@ -80,8 +81,9 @@ class BasicVehicleGauges extends StatelessWidget {
           ),
           title: Consumer(
             builder: (context, ref, child) => TextWithStroke(
-              '''${ref.watch(gaugeBearingProvider).toStringAsFixed(1)}º''',
-              style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+              '''${ref.watch(gaugeBearingProvider).toStringAsFixed(1).padLeft(5)}º''',
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: Colors.white, fontFamily: 'Noto Sans Mono'),
               strokeWidth: 3.5,
             ),
           ),

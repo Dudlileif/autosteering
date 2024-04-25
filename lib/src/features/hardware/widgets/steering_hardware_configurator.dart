@@ -944,9 +944,7 @@ class _WasPage extends ConsumerWidget {
             Timer(
               const Duration(milliseconds: 100),
               () {
-                ref.read(
-                  sendSteeringHardwareConfigProvider,
-                );
+                ref.read(sendSteeringHardwareConfigProvider);
                 final vehicle = ref.watch(mainVehicleProvider);
                 ref.read(
                   saveVehicleProvider(vehicle),
@@ -990,9 +988,7 @@ class _WasPage extends ConsumerWidget {
               Timer(
                 const Duration(milliseconds: 100),
                 () {
-                  ref.read(
-                    sendSteeringHardwareConfigProvider,
-                  );
+                  ref.read(sendSteeringHardwareConfigProvider);
                   final vehicle = ref.watch(mainVehicleProvider);
                   ref.read(
                     saveVehicleProvider(vehicle),
@@ -1047,9 +1043,7 @@ class _WasPage extends ConsumerWidget {
             Timer(
               const Duration(milliseconds: 100),
               () {
-                ref.read(
-                  sendSteeringHardwareConfigProvider,
-                );
+                ref.read(sendSteeringHardwareConfigProvider);
                 final vehicle = ref.watch(mainVehicleProvider);
                 ref.read(
                   saveVehicleProvider(vehicle),
@@ -1093,9 +1087,7 @@ class _WasPage extends ConsumerWidget {
               Timer(
                 const Duration(milliseconds: 100),
                 () {
-                  ref.read(
-                    sendSteeringHardwareConfigProvider,
-                  );
+                  ref.read(sendSteeringHardwareConfigProvider);
                   final vehicle = ref.watch(mainVehicleProvider);
                   ref.read(
                     saveVehicleProvider(vehicle),
@@ -1149,9 +1141,7 @@ class _WasPage extends ConsumerWidget {
             Timer(
               const Duration(milliseconds: 100),
               () {
-                ref.read(
-                  sendSteeringHardwareConfigProvider,
-                );
+                ref.read(sendSteeringHardwareConfigProvider);
                 final vehicle = ref.watch(mainVehicleProvider);
                 ref.read(
                   saveVehicleProvider(vehicle),
@@ -1195,9 +1185,7 @@ class _WasPage extends ConsumerWidget {
               Timer(
                 const Duration(milliseconds: 100),
                 () {
-                  ref.read(
-                    sendSteeringHardwareConfigProvider,
-                  );
+                  ref.read(sendSteeringHardwareConfigProvider);
                   final vehicle = ref.watch(mainVehicleProvider);
                   ref.read(
                     saveVehicleProvider(vehicle),
