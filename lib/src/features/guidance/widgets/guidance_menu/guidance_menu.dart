@@ -25,7 +25,6 @@ import 'package:autosteering/src/features/guidance/widgets/guidance_menu/virtual
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -48,12 +47,12 @@ class GuidanceMenu extends ConsumerWidget {
           ),
           trailing: Consumer(
             builder: (context, ref, child) {
-              final pursuitMode = ref.watch(
+              final trackingMode = ref.watch(
                 mainVehicleProvider
                     .select((vehicle) => vehicle.pathTrackingMode),
               );
-              return ToggleButtons(
-                onPressed: (index) {
+              return SegmentedButton<PathTrackingMode>(
+                onSelectionChanged: (values) {
                   final oldValue = ref.read(
                     mainVehicleProvider
                         .select((value) => value.pathTrackingMode),
@@ -61,7 +60,7 @@ class GuidanceMenu extends ConsumerWidget {
 
                   ref
                       .read(simInputProvider.notifier)
-                      .send(PathTrackingMode.values[index]);
+                      .send(values.first);
 
                   // Wait a short while before saving the hopefully
                   // updated vehicle.
@@ -73,20 +72,17 @@ class GuidanceMenu extends ConsumerWidget {
                     );
                   });
                 },
-                isSelected: PathTrackingMode.values
-                    .map((mode) => mode == pursuitMode)
-                    .toList(),
-                children: PathTrackingMode.values
-                    .map(
-                      (mode) => Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Text(
-                          mode.name.capitalize
-                              .replaceAll('Pursuit', ' Pursuit'),
-                        ),
-                      ),
-                    )
-                    .toList(),
+                selected: {trackingMode},
+                segments: const [
+                  ButtonSegment(
+                    value: PathTrackingMode.purePursuit,
+                    label: Text('Pure pursuit'),
+                  ),
+                  ButtonSegment(
+                    value: PathTrackingMode.stanley,
+                    label: Text('Stanley'),
+                  ),
+                ],
               );
             },
           ),

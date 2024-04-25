@@ -98,27 +98,25 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: ListTile(
-                  title: Text('Mode', style: theme.menuButtonWithChildrenText),
-                  trailing: ToggleButtons(
-                    onPressed: (index) => setState(() {
-                      _recordingMode = _RecordingMode.values[index];
+                  title: SegmentedButton<_RecordingMode>(
+                    onSelectionChanged: (values) => setState(() {
+                      _recordingMode = values.first;
                       ref
                           .read(enableAutomaticPathRecorderProvider.notifier)
                           .update(value: false);
                     }),
-                    isSelected: _RecordingMode.values
-                        .map((e) => e == _recordingMode)
-                        .toList(),
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text('Automatic'),
+                    selected: {_recordingMode},
+                    segments: const [
+                      ButtonSegment(
+                        value: _RecordingMode.automatic,
+                        label: Text('Automatic'),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text('Manual'),
+                      ButtonSegment(
+                        value: _RecordingMode.manual,
+                        label: Text('Manual'),
                       ),
                     ],
+
                   ),
                 ),
               ),

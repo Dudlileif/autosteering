@@ -76,26 +76,24 @@ class PathTrackingMenu extends ConsumerWidget {
           },
         ),
         ListTile(
-          title: Text(
+          leading: Text(
             'Loop',
             style: textStyle,
           ),
-          trailing: Consumer(
+          title: Consumer(
             builder: (context, ref, child) {
               final loopMode = ref.watch(pathTrackingLoopProvider);
 
-              return ToggleButtons(
-                isSelected: PathTrackingLoopMode.values
-                    .map((mode) => mode == loopMode)
-                    .toList(),
-                onPressed: (index) => ref
+              return SegmentedButton<PathTrackingLoopMode>(
+                selected: {loopMode},
+                onSelectionChanged: (values) => ref
                     .read(pathTrackingLoopProvider.notifier)
-                    .update(PathTrackingLoopMode.values[index]),
-                children: PathTrackingLoopMode.values
+                    .update(values.first),
+                segments: PathTrackingLoopMode.values
                     .map(
-                      (mode) => Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Text(mode.name.capitalize),
+                      (mode) => ButtonSegment(
+                        value: mode,
+                        label: Text(mode.name.capitalize),
                       ),
                     )
                     .toList(),

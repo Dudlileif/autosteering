@@ -213,16 +213,18 @@ Number of wheels,
 i.e. does your vehicle have twin 
 or triple wheels'''),
                 const VerticalDivider(),
-                ToggleButtons(
-                  isSelected: [
-                    vehicle.numWheels == 1,
-                    vehicle.numWheels == 2,
-                    vehicle.numWheels == 3,
-                  ],
-                  children: List.generate(3, (index) => Text('${index + 1}')),
-                  onPressed: (index) => ref
+                SegmentedButton<int>(
+                  selected: {vehicle.numWheels},
+                  segments: List.generate(
+                    3,
+                    (index) => ButtonSegment(
+                      value: index + 1,
+                      label: Text('${index + 1}'),
+                    ),
+                  ).toList(),
+                  onSelectionChanged: (values) => ref
                       .read(configuredVehicleProvider.notifier)
-                      .update(vehicle.copyWith(numWheels: index + 1)),
+                      .update(vehicle.copyWith(numWheels: values.first)),
                 ),
               ],
             ),

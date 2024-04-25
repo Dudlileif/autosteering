@@ -63,24 +63,18 @@ class ABTrackingMenu extends ConsumerWidget {
       menuChildren: [
         if (!workSessionGuidanceActive)
           Padding(
-          padding: const EdgeInsets.all(8),
-          child: ToggleButtons(
-            onPressed: (index) => ref
-                .read(currentABTrackingTypeProvider.notifier)
-                .update(ABTrackingType.values[index]),
-            isSelected: ABTrackingType.values
-                .map((type) => type == abTrackingType)
-                .toList(),
-              children: ABTrackingType.values
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(e.name),
-                    ),
-                  )
+            padding: const EdgeInsets.all(8),
+            child: SegmentedButton<ABTrackingType>(
+              onSelectionChanged: (values) => ref
+                  .read(currentABTrackingTypeProvider.notifier)
+                  .update(values.first),
+              selected: {abTrackingType},
+              segments: ABTrackingType.values
+                  .map((type) =>
+                      ButtonSegment(value: type, label: Text(type.name)),)
                   .toList(),
+            ),
           ),
-        ),
         if (!workSessionGuidanceActive &&
             (abTrackingType == ABTrackingType.aPlusLine ||
                 abTrackingType == ABTrackingType.abLine))
@@ -167,9 +161,9 @@ class ABTrackingMenu extends ConsumerWidget {
                 onPressed: workSessionGuidanceActive
                     ? null
                     : () => showDialog<void>(
-                  context: context,
-                  builder: (context) => const _APlusLineBearingDialog(),
-                ),
+                          context: context,
+                          builder: (context) => const _APlusLineBearingDialog(),
+                        ),
                 trailingIcon: IconButton(
                   icon: const Icon(Icons.clear),
                   onPressed: () => ref.invalidate(aPlusLineBearingProvider),
@@ -433,48 +427,64 @@ class _ABCommonMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            var width = ref.watch(aBWidthProvider);
-            return StatefulBuilder(
-              builder: (context, setState) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Width: ${width.toStringAsFixed(2)} m',
-                      style: textStyle,
-                    ),
-                    Slider.adaptive(
-                      value: width,
-                      onChanged: (value) => setState(() => width = value),
-                      onChangeEnd: ref.read(aBWidthProvider.notifier).update,
-                      min: 0.5,
-                      max: 20,
-                      divisions: 390,
-                    ),
-                  ],
-                );
-              },
+            final controller = TextEditingController(
+              text: ref.read(aBWidthProvider).toString(),
+            );
+            controller.addListener(() {
+              final value = double.tryParse(controller.text);
+              if (value != null && value >= 0) {
+                ref.read(aBWidthProvider.notifier).update(value);
+              }
+            });
+            return ListTile(
+              title: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Spacing/width',
+                  suffixText: 'm',
+                ),
+                keyboardType: TextInputType.number,
+                controller: controller,
+              ),
+              trailing: IconButton(
+                onPressed: () {
+                  ref.invalidate(aBWidthProvider);
+                  controller.text = ref.read(aBWidthProvider).toString();
+                },
+                icon: const Icon(Icons.handyman),
+                tooltip: 'Set to equipment width',
+              ),
             );
           },
         ),
         Consumer(
           builder: (context, ref, child) {
-            final radius = ref.watch(aBTurningRadiusProvider);
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Turning radius: $radius m',
-                  style: textStyle,
+            final controller = TextEditingController(
+              text: ref.read(aBTurningRadiusProvider).toString(),
+            );
+            controller.addListener(() {
+              final value = double.tryParse(controller.text);
+              if (value != null && value >= 0) {
+                ref.read(aBTurningRadiusProvider.notifier).update(value);
+              }
+            });
+            return ListTile(
+              title: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Turning radius',
+                  suffixText: 'm',
                 ),
-                Slider.adaptive(
-                  value: radius,
-                  onChanged: ref.read(aBTurningRadiusProvider.notifier).update,
-                  min: 4,
-                  max: 20,
-                  divisions: 16,
-                ),
-              ],
+                keyboardType: TextInputType.number,
+                controller: controller,
+              ),
+              trailing: IconButton(
+                onPressed: () {
+                  ref.invalidate(aBTurningRadiusProvider);
+                  controller.text =
+                      ref.read(aBTurningRadiusProvider).toString();
+                },
+                icon: const Icon(Icons.agriculture),
+                tooltip: 'Set to 1.25 x vehicle turning radius',
+              ),
             );
           },
         ),

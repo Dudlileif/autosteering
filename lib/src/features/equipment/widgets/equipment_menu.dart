@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -129,42 +130,29 @@ class EquipmentMenu extends StatelessWidget {
                     'Recording position',
                     style: textStyle,
                   ),
-                  ToggleButtons(
-                    isSelected: [
-                      fraction == null,
-                      fraction == 1,
-                      fraction == 0.5,
-                      fraction == 0,
-                    ],
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text('Default'),
+                  SegmentedButton<double?>(
+                    selected: {fraction},
+                    segments: const [
+                      ButtonSegment(
+                        value: null,
+                        label: Text('Default'),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text('Front'),
+                      ButtonSegment(
+                        value: 1,
+                        label: Text('Front'),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text('Center'),
+                      ButtonSegment(
+                        value: 0.5,
+                        label: Text('Center'),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text('Rear'),
+                      ButtonSegment(
+                        value: 0,
+                        label: Text('Rear'),
                       ),
                     ],
-                    onPressed: (index) => ref
+                    onSelectionChanged: (values) => ref
                         .read(equipmentRecordPositionFractionProvider.notifier)
-                        .update(
-                          switch (index) {
-                            0 => null,
-                            1 => 1,
-                            2 => 0.5,
-                            3 => 0,
-                            _ => null,
-                          },
-                        ),
+                        .update(values.first),
                   ),
                 ],
               ),
@@ -205,51 +193,50 @@ class _SaveEquipmentSetup extends StatelessWidget {
                 var name = '';
                 return StatefulBuilder(
                   builder: (context, setState) => SimpleDialog(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.label_outline),
-                              labelText: 'Name',
-                            ),
-                            initialValue: name,
-                            onChanged: (value) => setState(() => name = value),
-                            onFieldSubmitted: (value) =>
-                                setState(() => name = value),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) => value != null &&
-                                    value.isNotEmpty &&
-                                    !value.startsWith(' ')
-                                ? null
-                                : '''No name entered! Please enter a name so that the setup can be saved!''',
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.label_outline),
+                            labelText: 'Name',
                           ),
+                          initialValue: name,
+                          onChanged: (value) => setState(() => name = value),
+                          onFieldSubmitted: (value) =>
+                              setState(() => name = value),
+                          keyboardType: TextInputType.text,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) => value != null &&
+                                  value.isNotEmpty &&
+                                  !value.startsWith(' ')
+                              ? null
+                              : '''No name entered! Please enter a name so that the setup can be saved!''',
                         ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(left: 8, right: 8, top: 8),
-                          child: Consumer(
-                            builder: (context, ref, child) => FilledButton(
-                              onPressed: () {
-                                ref.read(
-                                  saveEquipmentSetupProvider(
-                                    ref.read(
-                                      mainVehicleProvider.select(
-                                        (value) => value.equipmentSetup(name),
-                                      ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 8, right: 8, top: 8),
+                        child: Consumer(
+                          builder: (context, ref, child) => FilledButton(
+                            onPressed: () {
+                              ref.read(
+                                saveEquipmentSetupProvider(
+                                  ref.read(
+                                    mainVehicleProvider.select(
+                                      (value) => value.equipmentSetup(name),
                                     ),
-                                    downloadIfWeb: true,
                                   ),
-                                );
-                                Navigator.of(context).pop();
-                              },
+                                  downloadIfWeb: true,
+                                ),
+                              );
+                              Navigator.of(context).pop();
+                            },
                             child: const Text('Name the setup'),
-                            ),
                           ),
                         ),
-                      ],
+                      ),
+                    ],
                   ),
                 );
               },
@@ -287,7 +274,7 @@ class _LoadEquipmentMenu extends ConsumerWidget {
       menuChildren: equipments
           .map(
             (equipment) => ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 200),
+              constraints: const BoxConstraints(minWidth: 300),
               child: ListTile(
                 onTap: () {
                   equipment.lastUsed = DateTime.now();
@@ -301,6 +288,9 @@ class _LoadEquipmentMenu extends ConsumerWidget {
                     ..invalidate(configuredEquipmentNameTextControllerProvider);
                 },
                 title: Text(equipment.name ?? equipment.uuid, style: textStyle),
+                subtitle: Text(
+                  '''${equipment.hitchType.name.capitalize} | ${equipment.width} m${equipment.sections.length > 1 ? ' | ${equipment.sections.length} sections' : ''}''',
+                ),
                 trailing: Device.isNative
                     ? IconButton(
                         onPressed: () async {
