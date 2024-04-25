@@ -9,7 +9,7 @@ part of 'was_reading.dart';
 _$WasReadingImpl _$$WasReadingImplFromJson(Map<String, dynamic> json) =>
     _$WasReadingImpl(
       receiveTime: DateTime.parse(json['receiveTime'] as String),
-      value: json['value'] as int? ?? 0,
+      value: (json['value'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$WasReadingImplToJson(_$WasReadingImpl instance) =>

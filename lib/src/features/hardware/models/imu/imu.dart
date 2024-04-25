@@ -41,7 +41,7 @@ class Imu {
   /// The configuration for the IMU sensor.
   ImuConfig config;
 
-  /// The latest reading from the hardware sensor.
+  /// The latest readings from the hardware sensor.
   List<ImuReading> readings;
 
   /// Whether the bearing is set for the IMU.
@@ -128,7 +128,6 @@ class Imu {
   void setPitchAndRollZeroToCurrentReading() =>
       setPitchAndRollZeroTo(pitchZero: reading.pitch, rollZero: reading.roll);
 
-  /// Sets the [config] zero values for pitch and roll to the current [reading]
-  /// values.
+  /// Sets the [config] zero value for bearing the current [reading] yaw value.
   void setBearingZeroToCurrentReading() => setBearingZeroTo(reading.yaw);
 }

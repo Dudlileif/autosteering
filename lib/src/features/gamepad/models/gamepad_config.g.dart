@@ -8,7 +8,7 @@ part of 'gamepad_config.dart';
 
 _$GamepadConfigImpl _$$GamepadConfigImplFromJson(Map<String, dynamic> json) =>
     _$GamepadConfigImpl(
-      analogMaxValue: json['analogMaxValue'] as int? ?? 65535,
+      analogMaxValue: (json['analogMaxValue'] as num?)?.toInt() ?? 65535,
       analogDeadZoneMax:
           (json['analogDeadZoneMax'] as Map<String, dynamic>?)?.map(
                 (k, e) => MapEntry($enumDecode(_$GamepadAnalogInputEnumMap, k),

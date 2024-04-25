@@ -91,7 +91,7 @@ typedef HardwareCommunicationConfigRef = ProviderRef<
       int hardwareUDPReceivePort,
       int hardwareUDPSendPort
     })>;
-String _$currentConnectionHash() => r'83fb0a2276430d90860e6f4e231047407d2e87e7';
+String _$currentConnectionHash() => r'1b84c22e8dbac870f08d39874ff7c59d437f6e3b';
 
 /// A provider for the current connection of the device.
 ///
@@ -109,10 +109,12 @@ final currentConnectionProvider =
 );
 
 typedef CurrentConnectionRef = StreamProviderRef<List<ConnectivityResult>>;
-String _$networkAvailableHash() => r'ec9225b73339ca99f95d63da9efb9da9d8875c99';
+String _$networkAvailableHash() => r'b4a4e0fbd04dc84266ecad3af680debe4959ec1f';
 
 /// A provider for whether a network connection can be made.
 ///
+/// If using VPN while being an access point, communication with hardware
+/// is not possible.
 ///
 /// Copied from [networkAvailable].
 @ProviderFor(networkAvailable)

@@ -10,7 +10,7 @@ _$WasConfigImpl _$$WasConfigImplFromJson(Map<String, dynamic> json) =>
     _$WasConfigImpl(
       useWas: json['useWas'] as bool? ?? true,
       invertInput: json['invertInput'] as bool? ?? false,
-      bits: json['bits'] as int? ?? 12,
+      bits: (json['bits'] as num?)?.toInt() ?? 12,
     );
 
 Map<String, dynamic> _$$WasConfigImplToJson(_$WasConfigImpl instance) =>
