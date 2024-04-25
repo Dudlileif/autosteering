@@ -842,6 +842,7 @@ final class ArticulatedTractor extends Vehicle {
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    DateTime? lastUsed,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
   }) =>
@@ -889,6 +890,7 @@ final class ArticulatedTractor extends Vehicle {
         hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
         name: name ?? this.name,
         uuid: uuid ?? this.uuid,
+        lastUsed: lastUsed ?? this.lastUsed,
         manufacturerColors: manufacturerColors ?? this.manufacturerColors,
         manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
       )..wheelsRolledDistance = wheelsRolledDistance ?? 0;

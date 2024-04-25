@@ -729,6 +729,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    DateTime? lastUsed,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
   });

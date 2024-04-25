@@ -728,6 +728,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    DateTime? lastUsed,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
   });
