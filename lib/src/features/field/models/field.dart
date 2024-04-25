@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
 
@@ -233,4 +234,22 @@ class Field with EquatableMixin {
     map['polygon'] = polygon.toText();
     return map;
   }
+}
+
+/// An enumerator for which type of field buffer distance should be used when
+/// creating a buffered version of a [Field].
+enum FieldBufferDistanceType {
+  /// The entered distance as is.
+  distance(Icons.straighten, 'Distance in m'),
+
+  /// A multiple of widths of the current equipment.
+  equipmentWidths(Icons.handyman, 'Multiple of equipment widths');
+
+  const FieldBufferDistanceType(this.icon, this.tooltip);
+
+  /// The icon associated with this.
+  final IconData icon;
+
+  /// The tooltip for this.
+  final String tooltip;
 }

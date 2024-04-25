@@ -15,10 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:async/async.dart';
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:collection/collection.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -85,7 +88,6 @@ class FieldMenu extends ConsumerWidget {
           const _CreateFieldButton(),
         ],
         if (activeField != null) ...[
-        
           Consumer(
             child: Text(
               'Show field',
@@ -202,30 +204,84 @@ class FieldMenu extends ConsumerWidget {
               ),
               Consumer(
                 builder: (context, ref, child) {
-                  var distance = ref.watch(fieldExteriorBufferDistanceProvider);
-
-                  return StatefulBuilder(
-                    builder: (context, setState) => Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '''Exterior buffer distance: ${distance.toStringAsFixed(1)} m''',
-                          style: textStyle,
-                        ),
-                        Slider(
-                          value: distance,
-                          onChanged: (value) =>
-                              setState(() => distance = value),
-                          onChangeEnd: ref
+                  final distanceType =
+                      ref.watch(activeFieldBufferDistanceTypeProvider);
+                  final equipmentWidth = ref.read(
+                    allEquipmentsProvider.select(
+                      (value) => value.values
+                          .firstWhereOrNull((element) => element.width > 0)
+                          ?.width,
+                    ),
+                  );
+                  final controller = TextEditingController(
+                    text: equipmentWidth != null &&
+                            distanceType ==
+                                FieldBufferDistanceType.equipmentWidths
+                        ? (ref.read(fieldExteriorBufferDistanceProvider) /
+                                equipmentWidth)
+                            .toStringAsFixed(2)
+                        : ref
+                            .read(fieldExteriorBufferDistanceProvider)
+                            .toString(),
+                  );
+                  final startProcess =
+                      RestartableTimer(const Duration(seconds: 1), () {
+                    final value = double.tryParse(controller.text);
+                    {
+                      if (value != null) {
+                        if (distanceType ==
+                                FieldBufferDistanceType.equipmentWidths &&
+                            equipmentWidth != null) {
+                          ref
                               .read(
                                 fieldExteriorBufferDistanceProvider.notifier,
                               )
-                              .update,
-                          min: -20,
-                          max: 20,
-                          divisions: 80,
+                              .update(value * equipmentWidth);
+                        } else {
+                          ref
+                              .read(
+                                fieldExteriorBufferDistanceProvider.notifier,
+                              )
+                              .update(value);
+                        }
+                      }
+                    }
+                  })
+                        ..cancel();
+                  controller.addListener(startProcess.reset);
+
+                  return ListTile(
+                    title: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Border buffer distance',
+                        suffix: ListenableBuilder(
+                          listenable: controller,
+                          builder: (context, child) => Text(
+                            equipmentWidth != null &&
+                                    distanceType ==
+                                        FieldBufferDistanceType.equipmentWidths
+                                ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
+                                : 'm',
+                          ),
                         ),
-                      ],
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: controller,
+                    ),
+                    trailing: SegmentedButton<FieldBufferDistanceType>(
+                      selected: {distanceType},
+                      onSelectionChanged: (values) => ref
+                          .read(activeFieldBufferDistanceTypeProvider.notifier)
+                          .update(values.first),
+                      segments: FieldBufferDistanceType.values
+                          .map(
+                            (type) => ButtonSegment(
+                              value: type,
+                              icon: Icon(type.icon),
+                              tooltip: type.tooltip,
+                            ),
+                          )
+                          .toList(),
                     ),
                   );
                 },
@@ -234,31 +290,70 @@ class FieldMenu extends ConsumerWidget {
                   false)
                 Consumer(
                   builder: (context, ref, child) {
-                    var distance =
-                        ref.watch(fieldInteriorBufferDistanceProvider);
-
-                    return StatefulBuilder(
-                      builder: (context, setState) => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '''Interior buffer distance: ${distance.toStringAsFixed(1)} m''',
-                            style: textStyle,
-                          ),
-                          Slider(
-                            value: distance,
-                            onChanged: (value) =>
-                                setState(() => distance = value),
-                            onChangeEnd: ref
+                    final distanceType =
+                        ref.watch(activeFieldBufferDistanceTypeProvider);
+                    final equipmentWidth = ref.read(
+                      allEquipmentsProvider.select(
+                        (value) => value.values
+                            .firstWhereOrNull((element) => element.width > 0)
+                            ?.width,
+                      ),
+                    );
+                    final controller = TextEditingController(
+                      text: equipmentWidth != null &&
+                              distanceType ==
+                                  FieldBufferDistanceType.equipmentWidths
+                          ? (ref.read(fieldInteriorBufferDistanceProvider) /
+                                  equipmentWidth)
+                              .toStringAsFixed(2)
+                          : ref
+                              .read(fieldInteriorBufferDistanceProvider)
+                              .toString(),
+                    );
+                    final startProcess =
+                        RestartableTimer(const Duration(seconds: 1), () {
+                      final value = double.tryParse(controller.text);
+                      {
+                        if (value != null) {
+                          if (distanceType ==
+                                  FieldBufferDistanceType.equipmentWidths &&
+                              equipmentWidth != null) {
+                            ref
                                 .read(
                                   fieldInteriorBufferDistanceProvider.notifier,
                                 )
-                                .update,
-                            min: -10,
-                            max: 10,
-                            divisions: 40,
+                                .update(value * equipmentWidth);
+                          } else {
+                            ref
+                                .read(
+                                  fieldInteriorBufferDistanceProvider.notifier,
+                                )
+                                .update(value);
+                          }
+                        }
+                      }
+                    })
+                          ..cancel();
+                    controller.addListener(startProcess.reset);
+
+                    return ListTile(
+                      title: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Interior border (holes) buffer distance',
+                          suffix: ListenableBuilder(
+                            listenable: controller,
+                            builder: (context, child) => Text(
+                              equipmentWidth != null &&
+                                      distanceType ==
+                                          FieldBufferDistanceType
+                                              .equipmentWidths
+                                  ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
+                                  : 'm',
+                            ),
                           ),
-                        ],
+                        ),
+                        keyboardType: TextInputType.number,
+                        controller: controller,
                       ),
                     );
                   },
@@ -342,7 +437,6 @@ class FieldMenu extends ConsumerWidget {
               ),
             ],
           ],
-        
           if (ref.watch(fieldBufferEnabledProvider))
             Consumer(
               child: Text(

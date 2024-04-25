@@ -19,6 +19,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
@@ -52,6 +53,7 @@ class ActiveField extends _$ActiveField {
       ..listenSelf((previous, next) {
         if (next != null) {
           Logger.instance.i('Loaded active field: ${next.name}.');
+          ref.read(fieldBufferEnabledProvider.notifier).update(value: false);
         }
       });
 
@@ -135,33 +137,61 @@ class FieldBufferEnabled extends _$FieldBufferEnabled {
   void toggle() => Future(() => state = !state);
 }
 
-/// A provider for the distance that the test [Field.polygon] exterior should
+/// A provider for which type of field buffer distance should be used.
+@Riverpod(keepAlive: true)
+class ActiveFieldBufferDistanceType extends _$ActiveFieldBufferDistanceType {
+  @override
+  FieldBufferDistanceType build() => FieldBufferDistanceType.equipmentWidths;
+
+  /// Update the [state] to [value].
+  void update(FieldBufferDistanceType value) => Future(() => state = value);
+}
+
+/// A provider for the distance that the [Field.polygon] exterior should
 /// be buffered.
 @Riverpod(keepAlive: true)
 class FieldExteriorBufferDistance extends _$FieldExteriorBufferDistance {
   @override
-  double build() => -5;
+  double build() =>
+      -0.5 *
+      (ref.read(
+            allEquipmentsProvider.select(
+              (value) => value.values
+                  .firstWhereOrNull((element) => element.width > 0)
+                  ?.width,
+            ),
+          ) ??
+          10);
 
   /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
 
-/// A provider for the distance that the test [Field.polygon] interior should
+/// A provider for the distance that the [Field.polygon] interior should
 /// be buffered.
 @Riverpod(keepAlive: true)
 class FieldInteriorBufferDistance extends _$FieldInteriorBufferDistance {
   @override
-  double build() => 5;
+  double build() =>
+      0.5 *
+      (ref.read(
+            allEquipmentsProvider.select(
+              (value) => value.values
+                  .firstWhereOrNull((element) => element.width > 0)
+                  ?.width,
+            ),
+          ) ??
+          10);
 
   /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
 
-/// A provider for whether the buffered test field should be shown.
+/// A provider for whether the buffered field should be shown.
 @Riverpod(keepAlive: true)
 class ShowBufferedField extends _$ShowBufferedField {
   @override
-  bool build() => false;
+  bool build() => true;
 
   /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
@@ -266,7 +296,7 @@ class ShowBufferedFieldBoundingBox extends _$ShowBufferedFieldBoundingBox {
   void toggle() => Future(() => state = !state);
 }
 
-/// A provider for whether bounding box of the test field should be shown.
+/// A provider for whether bounding box of the field should be shown.
 @Riverpod(keepAlive: true)
 class FieldBufferGetRawPoints extends _$FieldBufferGetRawPoints {
   @override

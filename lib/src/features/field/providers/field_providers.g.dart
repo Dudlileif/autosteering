@@ -964,7 +964,7 @@ final showFieldProvider = NotifierProvider<ShowField, bool>.internal(
 );
 
 typedef _$ShowField = Notifier<bool>;
-String _$activeFieldHash() => r'a5ec078ec4ee31582ba1588f0107879bd46d6773';
+String _$activeFieldHash() => r'3320673a4f8bcf6d0c1283468e841250d59225c9';
 
 /// A provider for the active field.
 ///
@@ -1077,10 +1077,29 @@ final fieldBufferEnabledProvider =
 );
 
 typedef _$FieldBufferEnabled = Notifier<bool>;
-String _$fieldExteriorBufferDistanceHash() =>
-    r'105f35fd275a4aed8b16bb80cdad26a65ce629bb';
+String _$activeFieldBufferDistanceTypeHash() =>
+    r'7bf041a894a1e891c19465ab9dbfe6f732975280';
 
-/// A provider for the distance that the test [Field.polygon] exterior should
+/// A provider for which type of field buffer distance should be used.
+///
+/// Copied from [ActiveFieldBufferDistanceType].
+@ProviderFor(ActiveFieldBufferDistanceType)
+final activeFieldBufferDistanceTypeProvider = NotifierProvider<
+    ActiveFieldBufferDistanceType, FieldBufferDistanceType>.internal(
+  ActiveFieldBufferDistanceType.new,
+  name: r'activeFieldBufferDistanceTypeProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$activeFieldBufferDistanceTypeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ActiveFieldBufferDistanceType = Notifier<FieldBufferDistanceType>;
+String _$fieldExteriorBufferDistanceHash() =>
+    r'4693f24b08d8dd156481241f95cecbe3b0dfbeb3';
+
+/// A provider for the distance that the [Field.polygon] exterior should
 /// be buffered.
 ///
 /// Copied from [FieldExteriorBufferDistance].
@@ -1098,9 +1117,9 @@ final fieldExteriorBufferDistanceProvider =
 
 typedef _$FieldExteriorBufferDistance = Notifier<double>;
 String _$fieldInteriorBufferDistanceHash() =>
-    r'e32da69d4e33be67288838bfb61c1a21dc3cf6c8';
+    r'78534523499709892325c399ff3f435a25455f4e';
 
-/// A provider for the distance that the test [Field.polygon] interior should
+/// A provider for the distance that the [Field.polygon] interior should
 /// be buffered.
 ///
 /// Copied from [FieldInteriorBufferDistance].
@@ -1117,9 +1136,9 @@ final fieldInteriorBufferDistanceProvider =
 );
 
 typedef _$FieldInteriorBufferDistance = Notifier<double>;
-String _$showBufferedFieldHash() => r'cf5a7873736143e204602485c35222ce2788739d';
+String _$showBufferedFieldHash() => r'8557480be302964bd7b38ea41bbd394f51362e80';
 
-/// A provider for whether the buffered test field should be shown.
+/// A provider for whether the buffered field should be shown.
 ///
 /// Copied from [ShowBufferedField].
 @ProviderFor(ShowBufferedField)
@@ -1157,7 +1176,7 @@ typedef _$ShowBufferedFieldBoundingBox = Notifier<bool>;
 String _$fieldBufferGetRawPointsHash() =>
     r'a4474508c937cec9e5a205b8aab69445bdb419af';
 
-/// A provider for whether bounding box of the test field should be shown.
+/// A provider for whether bounding box of the field should be shown.
 ///
 /// Copied from [FieldBufferGetRawPoints].
 @ProviderFor(FieldBufferGetRawPoints)
