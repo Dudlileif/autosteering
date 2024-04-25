@@ -22,16 +22,12 @@ import 'package:equatable/equatable.dart';
 class ABConfig extends Equatable {
   /// A configuration class for setting parameters of an [ABTracking] object.
   const ABConfig({
-    required this.width,
     required this.turningRadius,
     required this.turnOffsetMinSkips,
     required this.snapToClosestLine,
     required this.offsetOppositeTurn,
     required this.limitMode,
   });
-
-  /// The width between the lines/curves.
-  final double width;
 
   /// How many offsets we should skip to the next line.
   final int turnOffsetMinSkips;
@@ -50,7 +46,6 @@ class ABConfig extends Equatable {
 
   @override
   List<Object?> get props => [
-        width,
         turningRadius,
         turnOffsetMinSkips,
         snapToClosestLine,

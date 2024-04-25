@@ -55,6 +55,15 @@ class ABTrackingLayer extends ConsumerWidget {
 
     return Stack(
       children: [
+        if (abTracking?.boundary != null)
+          PolygonLayer(
+            polygons: [
+              abTracking!.boundary!.mapPolygon(
+                borderStrokeWidth: 2,
+                borderColor : Colors.red,
+              ),
+            ],
+          ),
         if (abTracking != null)
           PolylineLayer(
             polylines: [

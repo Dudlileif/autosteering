@@ -736,7 +736,6 @@ sealed class ABTracking {
         activeTurn = null;
         upcomingTurn = null;
       }
-      width = config.width;
       turningRadius = config.turningRadius;
       turnOffsetMinSkips = config.turnOffsetMinSkips;
       limitMode = config.limitMode;
@@ -797,7 +796,9 @@ sealed class ABTracking {
   ///
   /// The distance is negative if the point is to the left of the base line.
   double perpendicularDistanceToBaseLine(Vehicle vehicle) =>
-      baseLinePathTracking.perpendicularDistance(vehicle);
+      baseLinePathTracking.vehiclePointingInPathDirection(vehicle)
+          ? baseLinePathTracking.perpendicularDistance(vehicle)
+          : -baseLinePathTracking.perpendicularDistance(vehicle);
 
   /// The perpendicular distance from [vehicle] to the line of [offset] offsets.
   double? perpendicularDistanceToOffsetLine(int offset, Vehicle vehicle) =>

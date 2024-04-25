@@ -1096,7 +1096,7 @@ final aBDebugNumPointsBehindProvider =
 );
 
 typedef _$ABDebugNumPointsBehind = Notifier<int>;
-String _$aBWidthHash() => r'bd59cfec1cc976da5f751308939cb42623dd3f69';
+String _$aBWidthHash() => r'd1d517533a8474b5f3494636ff74a7cf1dca6115';
 
 /// A provider for the width of an AB-line.
 ///

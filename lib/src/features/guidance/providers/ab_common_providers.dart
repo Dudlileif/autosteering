@@ -19,10 +19,12 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/providers/equipment_providers.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -87,7 +89,15 @@ class ABDebugNumPointsBehind extends _$ABDebugNumPointsBehind {
 @Riverpod(keepAlive: true)
 class ABWidth extends _$ABWidth {
   @override
-  double build() => 15;
+  double build() =>
+      ref.read(
+        allEquipmentsProvider.select(
+          (value) => value.values
+              .firstWhereOrNull((element) => element.width > 0)
+              ?.width,
+        ),
+      ) ??
+      15;
 
   /// Updates [state] to [value].
   void update(double value) => Future(() => state = value);
@@ -273,7 +283,6 @@ ABConfig activeABConfig(ActiveABConfigRef ref) {
   });
 
   return ABConfig(
-    width: ref.watch(aBWidthProvider),
     turningRadius: ref.watch(aBTurningRadiusProvider),
     turnOffsetMinSkips: ref.watch(aBTurnOffsetMinSkipsProvider),
     snapToClosestLine: ref.watch(aBSnapToClosestLineProvider),
