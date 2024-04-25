@@ -70,6 +70,10 @@ class SimulatorCoreState {
   /// The current GNSS update position and time.
   ({Geographic gnssPosition, DateTime time})? gnssUpdate;
 
+  /// The GNSS update position and time that was used for updating gauges
+  /// (distance).
+  ({Geographic gnssPosition, DateTime time})? prevDistanceCalcGnssUpdate;
+
   /// The quality of the last GNSS fix.
   GnssFixQuality gnssFixQuality = GnssFixQuality.notAvailable;
 
@@ -907,7 +911,6 @@ class SimulatorCoreState {
     // Update based on the last GNSS updates, if we've received one this tick.
     if (gnssUpdate != null) {
       if (gnssUpdate != null && prevGnssUpdates.lastOrNull != null
-          // &&          !allowManualSimInput
           ) {
         // Correct for roll and pitch if IMU bearing is set.
         if (vehicle!.imu.bearingIsSet && vehicle!.imu.config.usePitchAndRoll) {
@@ -924,7 +927,17 @@ class SimulatorCoreState {
             )
             .toList();
 
-        distance = distances.last;
+        final distanceToLastGaugePoint = prevDistanceCalcGnssUpdate != null
+            ? gnssUpdate!.gnssPosition.rhumb
+                .distanceTo(prevDistanceCalcGnssUpdate!.gnssPosition)
+            : 0.0;
+        if (distanceToLastGaugePoint > minBearingUpdateDistance / 5) {
+          distance = distanceToLastGaugePoint;
+          prevDistanceCalcGnssUpdate = gnssUpdate;
+        } else {
+          distance = 0;
+        }
+        prevDistanceCalcGnssUpdate ??= gnssUpdate;
 
         var velocities = prevGnssUpdates.mapIndexed(
           (index, element) =>
@@ -1109,7 +1122,6 @@ class SimulatorCoreState {
     } else if (gnssUpdate == null && !allowManualSimInput) {
       gaugeBearing = vehicle!.bearing;
       if (prevVehicle != null && vehicle != null) {
-        // distance = prevVehicle!.position.rhumb.distanceTo(vehicle!.position);
         distance = 0;
       }
     } else if (allowManualSimInput) {

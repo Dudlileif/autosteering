@@ -7,7 +7,7 @@ part of 'simulator_core_native_providers.dart';
 // **************************************************************************
 
 String _$simCoreIsolateStreamHash() =>
-    r'e009c506c854197c4cae43e4db14cdef9be8b699';
+    r'c944fc34067ee9e6922e657f5eecb504ce3a97ca';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.
