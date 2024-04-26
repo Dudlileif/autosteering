@@ -37,6 +37,8 @@ class WheelPainter extends StatelessWidget {
     this.isRightWheel = false,
     this.centerMapOnVehicle = true,
     this.vehicleIsArticulated = false,
+    this.numWheels = 1,
+    this.wheelSpacing = 0.05,
     super.key,
   });
 
@@ -68,6 +70,13 @@ class WheelPainter extends StatelessWidget {
   /// Whether the vehicle is steered by an articulated joint.
   final bool vehicleIsArticulated;
 
+  /// The number of parallel wheels to draw, i.e. if the vehicle has twin or
+  /// triple wheels.
+  final int numWheels;
+
+  /// The distance between two wheels when [numWheels]>1.
+  final double wheelSpacing;
+
   @override
   Widget build(BuildContext context) {
     final camera = MapCamera.of(context);
@@ -84,7 +93,9 @@ class WheelPainter extends StatelessWidget {
             .distance /
         (width / 2);
 
-    final scaledWidth = meterScale * width;
+    final scaledTyreWidth = meterScale * width;
+    final scaledWidth = numWheels * scaledTyreWidth +
+        (numWheels - 1) * meterScale * wheelSpacing;
     final scaledHeight = meterScale * diameter;
 
     final innerPositionPoint = camera.latLngToScreenPoint(innerPosition.latLng);
@@ -103,23 +114,23 @@ class WheelPainter extends StatelessWidget {
         angle = camera.rotationRad + bearing.toRadians();
       }
     }
-
     return Positioned(
       width: scaledWidth,
       height: scaledHeight,
-      left: innerPositionPoint.x - scaledWidth / 2,
+      left: innerPositionPoint.x - scaledTyreWidth / 2,
       top: innerPositionPoint.y - scaledHeight / 2,
-      child: Transform.rotate(
-        angle: angle,
-        child: CustomPaint(
-          painter: _WheelPainterImplementation(
-            width: scaledWidth,
-            height: scaledHeight,
-            ribs: (diameter * 5 * pi).round(),
-            rotation: rotation,
-            isRightWheel: isRightWheel,
-            ribColor: Colors.grey.shade800,
-          ),
+      child: CustomPaint(
+        painter: _WheelPainterImplementation(
+          angle: angle,
+          width: scaledWidth,
+          tyreWidth: scaledTyreWidth,
+          height: scaledHeight,
+          ribs: (diameter * 5 * pi).round(),
+          rotation: rotation,
+          isRightWheel: isRightWheel,
+          ribColor: Colors.grey.shade800,
+          wheelSpacing: meterScale * wheelSpacing,
+          numWheels: numWheels,
         ),
       ),
     );
@@ -131,16 +142,26 @@ class _WheelPainterImplementation extends CustomPainter {
   /// A dynamic wheel painter both in size and movement.
   _WheelPainterImplementation({
     required this.width,
+    required this.tyreWidth,
     required this.height,
+    this.angle = 0,
     this.rotation = 0,
     this.ribs = 10,
     this.isRightWheel = false,
+    this.numWheels = 1,
+    this.wheelSpacing = 1,
     this.baseColor = Colors.black,
     this.ribColor = const Color.fromRGBO(66, 66, 66, 1),
   });
 
-  /// The width of the tyre in meters.
+  /// Steering angle in radians.
+  final double angle;
+
+  /// The total width of the painter.
   final double width;
+
+  /// The width of the tyre in meters.
+  final double tyreWidth;
 
   /// The diameter of the tyre in meters.
   final double height;
@@ -155,37 +176,53 @@ class _WheelPainterImplementation extends CustomPainter {
   /// direction. Otherwise it's assumed to be the left wheel.
   final bool isRightWheel;
 
+  /// The number of parallel wheels to draw.
+  final int numWheels;
+
+  /// The spacing in pixels between the wheels.
+  final double wheelSpacing;
+
   final Color baseColor;
 
   final Color ribColor;
 
-  @override
-  void paint(Canvas canvas, Size size) {
+  Offset? firstInnerPosition;
+
+  void paintWheel(Canvas canvas, Size size, [int index = 0]) {
     final basePaint = Paint()..color = baseColor;
 
     final ribPaint = Paint()
       ..color = ribColor
-      ..strokeWidth = width / 5;
+      ..strokeWidth = tyreWidth / 5;
 
     final innerCenterPosition = Offset(
-      width / 2,
+      tyreWidth / 2 - index * (wheelSpacing + tyreWidth),
       height / 2,
     );
 
+    firstInnerPosition ??= innerCenterPosition;
+
+    canvas
+      ..translate(firstInnerPosition!.dx, firstInnerPosition!.dy)
+      ..rotate(angle)
+      ..translate(-firstInnerPosition!.dx, -firstInnerPosition!.dy);
+
     final outerCenterPosition = Offset(
-      switch (isRightWheel) { true => 3, false => -1 } * width / 2,
+      switch (isRightWheel) { true => 3, false => -1 } * tyreWidth / 2 -
+          index * (wheelSpacing + tyreWidth),
       height / 2,
     );
 
     final centerPosition = Offset(
-      switch (isRightWheel) { true => width, false => 0 },
+      switch (isRightWheel) { true => tyreWidth, false => 0 } -
+          index * (wheelSpacing + tyreWidth),
       height / 2,
     );
 
     // Draw base wheel
     final baseRect = Rect.fromCenter(
       center: centerPosition,
-      width: width,
+      width: tyreWidth,
       height: height,
     );
 
@@ -193,7 +230,7 @@ class _WheelPainterImplementation extends CustomPainter {
       ..drawRRect(
         RRect.fromRectAndRadius(
           baseRect,
-          Radius.circular(width * 0.4),
+          Radius.circular(tyreWidth * 0.4),
         ),
         basePaint,
       )
@@ -204,15 +241,16 @@ class _WheelPainterImplementation extends CustomPainter {
     // Clip the long track of ribs to the base wheel.
     final clipRect = Rect.fromCenter(
       center: Offset(
-        switch (isRightWheel) { true => width, false => 0 },
+        switch (isRightWheel) { true => tyreWidth, false => 0 } -
+            index * (wheelSpacing + tyreWidth),
         rotation * height * pi + height / 2,
       ),
-      width: width * 1.1,
+      width: tyreWidth * 1.1,
       height: height * 1.03,
     );
 
     canvas.clipRRect(
-      RRect.fromRectAndRadius(clipRect, Radius.circular(width * 0.4)),
+      RRect.fromRectAndRadius(clipRect, Radius.circular(tyreWidth * 0.4)),
     );
 
     // Draw long track of ribs, only the ones in the clipped area will
@@ -239,6 +277,22 @@ class _WheelPainterImplementation extends CustomPainter {
           (outerCenterPosition + edge).translate(0, -0.5 * height * pi / ribs),
           ribPaint,
         );
+    }
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (var i = 0; i < numWheels; i++) {
+      canvas.save();
+      paintWheel(
+        canvas,
+        size,
+        switch (isRightWheel) {
+          true => -i,
+          false => i,
+        },
+      );
+      canvas.restore();
     }
   }
 

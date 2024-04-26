@@ -206,61 +206,61 @@ class VehicleWheelsPage extends ConsumerWidget {
                     .update(vehicle.copyWith(wheelDiameter: diameter));
               },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('''
+          
+          ],
+      },
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          const Text('''
 Number of wheels,
 i.e. does your vehicle have twin 
 or triple wheels'''),
-                const VerticalDivider(),
-                SegmentedButton<int>(
-                  style: theme.segmentedButtonTheme.style?.copyWith(
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  showSelectedIcon: false,
-                  selected: {vehicle.numWheels},
-                  segments: List.generate(
-                    3,
-                    (index) => ButtonSegment(
-                      value: index + 1,
-                      label: Text('${index + 1}'),
-                    ),
-                  ).toList(),
-                  onSelectionChanged: (values) => ref
-                      .read(configuredVehicleProvider.notifier)
-                      .update(vehicle.copyWith(numWheels: values.first)),
-                ),
-              ],
+          const VerticalDivider(),
+          SegmentedButton<int>(
+            style: theme.segmentedButtonTheme.style?.copyWith(
+              visualDensity: VisualDensity.compact,
             ),
-            if (vehicle.numWheels > 1)
-              TextFormField(
-                decoration: const InputDecoration(
-                  icon: RotatedBox(
-                    quarterTurns: 1,
-                    child: Icon(Icons.expand),
-                  ),
-                  labelText: 'Wheel spacing',
-                  suffixText: 'm',
-                ),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                initialValue: ref.read(
-                  configuredVehicleProvider.select(
-                    (value) =>
-                        (value as ArticulatedTractor).wheelSpacing.toString(),
-                  ),
-                ),
-                onChanged: (value) {
-                  final width = double.tryParse(value.replaceAll(',', '.'));
-
-                  ref
-                      .read(configuredVehicleProvider.notifier)
-                      .update(vehicle.copyWith(wheelSpacing: width));
-                },
+            showSelectedIcon: false,
+            selected: {vehicle.numWheels},
+            segments: List.generate(
+              3,
+              (index) => ButtonSegment(
+                value: index + 1,
+                label: Text('${index + 1}'),
               ),
-          ],
-      },
+            ).toList(),
+            onSelectionChanged: (values) => ref
+                .read(configuredVehicleProvider.notifier)
+                .update(vehicle.copyWith(numWheels: values.first)),
+          ),
+        ],
+      ),
+      if (vehicle.numWheels > 1)
+        TextFormField(
+          decoration: const InputDecoration(
+            icon: RotatedBox(
+              quarterTurns: 1,
+              child: Icon(Icons.expand),
+            ),
+            labelText: 'Wheel spacing',
+            suffixText: 'm',
+          ),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          initialValue: ref.read(
+            configuredVehicleProvider.select(
+              (value) => value.wheelSpacing.toString(),
+            ),
+          ),
+          onChanged: (value) {
+            final width = double.tryParse(value.replaceAll(',', '.'));
+
+            ref
+                .read(configuredVehicleProvider.notifier)
+                .update(vehicle.copyWith(wheelSpacing: width));
+          },
+        ),
     ];
 
     return SingleChildScrollView(

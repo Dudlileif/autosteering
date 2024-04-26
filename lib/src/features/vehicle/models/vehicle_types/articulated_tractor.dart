@@ -39,8 +39,8 @@ final class ArticulatedTractor extends Vehicle {
     this.rearAxleToTowbarDistance = 1.6,
     this.wheelDiameter = 1.8,
     this.wheelWidth = 1.3,
-    this.wheelSpacing = 0.15,
-    this.numWheels = 2,
+    super.wheelSpacing,
+    super.numWheels,
     this.frontAxleToFrontDistance = 1.5,
     this.rearAxleToEndDistance = 1,
     super.antennaLateralOffset,
@@ -99,10 +99,10 @@ final class ArticulatedTractor extends Vehicle {
       pivotToRearAxle: dimensions['pivot_to_rear_axle'] as double,
       minTurningRadius: steering['min_turning_radius'] as double,
       steeringAngleMax: steering['steering_angle_max'] as double,
-      numWheels: wheels['num_wheels'] as int,
+      numWheels: wheels['num_wheels'] as int?,
       wheelDiameter: wheels['wheel_diameter'] as double,
       wheelWidth: wheels['wheel_width'] as double,
-      wheelSpacing: wheels['wheel_spacing'] as double,
+      wheelSpacing: wheels['wheel_spacing'] as double?,
       pathTrackingMode: steering.containsKey('path_tracking_mode')
           ? PathTrackingMode.fromJson(steering['path_tracking_mode'] as String)
           : PathTrackingMode.purePursuit,
@@ -141,12 +141,6 @@ final class ArticulatedTractor extends Vehicle {
 
   /// The width of the wheels.
   double wheelWidth;
-
-  /// The distance between the twin/triple etc. wheels.
-  double wheelSpacing;
-
-  /// The number of wheels, i.e. twin/triples etc...
-  int numWheels;
 
   /// The distance from the [frontAxlePosition] to the frontmost part of the
   /// vehicle, typically the bonnet or the frame.
