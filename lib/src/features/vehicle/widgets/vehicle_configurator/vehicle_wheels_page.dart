@@ -26,6 +26,7 @@ class VehicleWheelsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
@@ -214,6 +215,10 @@ i.e. does your vehicle have twin
 or triple wheels'''),
                 const VerticalDivider(),
                 SegmentedButton<int>(
+                  style: theme.segmentedButtonTheme.style?.copyWith(
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  showSelectedIcon: false,
                   selected: {vehicle.numWheels},
                   segments: List.generate(
                     3,

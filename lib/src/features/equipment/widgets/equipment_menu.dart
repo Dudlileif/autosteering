@@ -33,7 +33,8 @@ class EquipmentMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    final theme = Theme.of(context);
+    final textStyle = theme.menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       text: 'Equipment',
@@ -131,6 +132,10 @@ class EquipmentMenu extends StatelessWidget {
                     style: textStyle,
                   ),
                   SegmentedButton<double?>(
+                    style: theme.segmentedButtonTheme.style?.copyWith(
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    showSelectedIcon: false,
                     selected: {fraction},
                     segments: const [
                       ButtonSegment(
