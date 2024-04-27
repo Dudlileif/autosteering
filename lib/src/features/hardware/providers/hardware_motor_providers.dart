@@ -299,7 +299,45 @@ FutureOr<void> getSteeringHardwareConfig(
   ref.invalidateSelf();
 }
 
-/// A provider for updating the motor configuration on the hardware
+/// A provider for updating the motor configuration on the hardware with the
+/// parameters corresponding to [keyContainer].
+@Riverpod(keepAlive: true)
+FutureOr<void> updateSteeringHardwareConfig(
+  UpdateSteeringHardwareConfigRef ref,
+  SteeringHardwareConfigKeysContainer keyContainer,
+) async {
+  try {
+    final steeringHardwareConfig = ref.read(
+      mainVehicleProvider.select((value) => value.steeringHardwareConfig),
+    );
+    final url =
+        '''http://${ref.watch(hardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader(keyContainer.keys)}''';
+    Logger.instance.i('Updating motor config with: $url');
+
+    final response = await Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 5),
+      ),
+    ).get<String>(url);
+    if (response.statusCode == 200) {
+      Logger.instance.i(
+        '''Successfully updated motor config on hardware for parameters: ${keyContainer.keys}.''',
+      );
+    } else {
+      Logger.instance.e('Failed to update motor config on hardware: $response');
+    }
+  } catch (error, stackTrace) {
+    Logger.instance.e(
+      'Failed to update motor config on hardware.',
+      error: error,
+      stackTrace: stackTrace,
+    );
+  }
+  ref.invalidateSelf();
+}
+
+/// A provider for sending the whole motor configuration to the hardware.
 @Riverpod(keepAlive: true)
 FutureOr<void> sendSteeringHardwareConfig(
   SendSteeringHardwareConfigRef ref,

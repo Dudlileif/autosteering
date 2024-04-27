@@ -24,10 +24,224 @@ final getSteeringHardwareConfigProvider = FutureProvider<void>.internal(
 );
 
 typedef GetSteeringHardwareConfigRef = FutureProviderRef<void>;
+String _$updateSteeringHardwareConfigHash() =>
+    r'0808a958ae3472fd4fa0bc0d4e9261356ed7f337';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+/// A provider for updating the motor configuration on the hardware with the
+/// parameters corresponding to [keyContainer].
+///
+/// Copied from [updateSteeringHardwareConfig].
+@ProviderFor(updateSteeringHardwareConfig)
+const updateSteeringHardwareConfigProvider =
+    UpdateSteeringHardwareConfigFamily();
+
+/// A provider for updating the motor configuration on the hardware with the
+/// parameters corresponding to [keyContainer].
+///
+/// Copied from [updateSteeringHardwareConfig].
+class UpdateSteeringHardwareConfigFamily extends Family {
+  /// A provider for updating the motor configuration on the hardware with the
+  /// parameters corresponding to [keyContainer].
+  ///
+  /// Copied from [updateSteeringHardwareConfig].
+  const UpdateSteeringHardwareConfigFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'updateSteeringHardwareConfigProvider';
+
+  /// A provider for updating the motor configuration on the hardware with the
+  /// parameters corresponding to [keyContainer].
+  ///
+  /// Copied from [updateSteeringHardwareConfig].
+  UpdateSteeringHardwareConfigProvider call(
+    SteeringHardwareConfigKeysContainer keyContainer,
+  ) {
+    return UpdateSteeringHardwareConfigProvider(
+      keyContainer,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  UpdateSteeringHardwareConfigProvider getProviderOverride(
+    covariant UpdateSteeringHardwareConfigProvider provider,
+  ) {
+    return call(
+      provider.keyContainer,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(UpdateSteeringHardwareConfigRef ref) create) {
+    return _$UpdateSteeringHardwareConfigFamilyOverride(this, create);
+  }
+}
+
+class _$UpdateSteeringHardwareConfigFamilyOverride implements FamilyOverride {
+  _$UpdateSteeringHardwareConfigFamilyOverride(
+      this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(UpdateSteeringHardwareConfigRef ref) create;
+
+  @override
+  final UpdateSteeringHardwareConfigFamily overriddenFamily;
+
+  @override
+  UpdateSteeringHardwareConfigProvider getProviderOverride(
+    covariant UpdateSteeringHardwareConfigProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for updating the motor configuration on the hardware with the
+/// parameters corresponding to [keyContainer].
+///
+/// Copied from [updateSteeringHardwareConfig].
+class UpdateSteeringHardwareConfigProvider extends FutureProvider<void> {
+  /// A provider for updating the motor configuration on the hardware with the
+  /// parameters corresponding to [keyContainer].
+  ///
+  /// Copied from [updateSteeringHardwareConfig].
+  UpdateSteeringHardwareConfigProvider(
+    SteeringHardwareConfigKeysContainer keyContainer,
+  ) : this._internal(
+          (ref) => updateSteeringHardwareConfig(
+            ref as UpdateSteeringHardwareConfigRef,
+            keyContainer,
+          ),
+          from: updateSteeringHardwareConfigProvider,
+          name: r'updateSteeringHardwareConfigProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$updateSteeringHardwareConfigHash,
+          dependencies: UpdateSteeringHardwareConfigFamily._dependencies,
+          allTransitiveDependencies:
+              UpdateSteeringHardwareConfigFamily._allTransitiveDependencies,
+          keyContainer: keyContainer,
+        );
+
+  UpdateSteeringHardwareConfigProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.keyContainer,
+  }) : super.internal();
+
+  final SteeringHardwareConfigKeysContainer keyContainer;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(UpdateSteeringHardwareConfigRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: UpdateSteeringHardwareConfigProvider._internal(
+        (ref) => create(ref as UpdateSteeringHardwareConfigRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        keyContainer: keyContainer,
+      ),
+    );
+  }
+
+  @override
+  (SteeringHardwareConfigKeysContainer,) get argument {
+    return (keyContainer,);
+  }
+
+  @override
+  FutureProviderElement<void> createElement() {
+    return _UpdateSteeringHardwareConfigProviderElement(this);
+  }
+
+  UpdateSteeringHardwareConfigProvider _copyWith(
+    FutureOr<void> Function(UpdateSteeringHardwareConfigRef ref) create,
+  ) {
+    return UpdateSteeringHardwareConfigProvider._internal(
+      (ref) => create(ref as UpdateSteeringHardwareConfigRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      keyContainer: keyContainer,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is UpdateSteeringHardwareConfigProvider &&
+        other.keyContainer == keyContainer;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, keyContainer.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin UpdateSteeringHardwareConfigRef on FutureProviderRef<void> {
+  /// The parameter `keyContainer` of this provider.
+  SteeringHardwareConfigKeysContainer get keyContainer;
+}
+
+class _UpdateSteeringHardwareConfigProviderElement
+    extends FutureProviderElement<void> with UpdateSteeringHardwareConfigRef {
+  _UpdateSteeringHardwareConfigProviderElement(super.provider);
+
+  @override
+  SteeringHardwareConfigKeysContainer get keyContainer =>
+      (origin as UpdateSteeringHardwareConfigProvider).keyContainer;
+}
+
 String _$sendSteeringHardwareConfigHash() =>
     r'dd8dc0dce988ea17839a598cb7013c845946ef99';
 
-/// A provider for updating the motor configuration on the hardware
+/// A provider for sending the whole motor configuration to the hardware.
 ///
 /// Copied from [sendSteeringHardwareConfig].
 @ProviderFor(sendSteeringHardwareConfig)

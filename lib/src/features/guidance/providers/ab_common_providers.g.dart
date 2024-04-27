@@ -26,7 +26,7 @@ final abTrackingPerpendicularDistanceProvider =
 );
 
 typedef AbTrackingPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
-String _$activeABConfigHash() => r'01913754703105bf7b2eb131e99cbebe0cd06b8d';
+String _$activeABConfigHash() => r'959ce5eccf18a300b8a44bd4762fcd0216c69cbf';
 
 /// A provider for the currently active AB configuration.
 ///

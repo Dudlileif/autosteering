@@ -21,174 +21,175 @@ SteeringHardwareConfig _$SteeringHardwareConfigFromJson(
 
 /// @nodoc
 mixin _$SteeringHardwareConfig {
-  /// Whehter the motor rotation direction should be inverted.
-  @JsonKey(name: 'invertDirection')
+  /// Whether the motor rotation direction should be inverted.
+  @JsonKey(name: SteeringHardwareConfigKey.invertDirection)
   bool get invertDirection => throw _privateConstructorUsedError;
 
   /// The number of micro steps to divide one fullstep into.
-  @JsonKey(name: 'MICRO_STEPS')
+  @JsonKey(name: SteeringHardwareConfigKey.microSteps)
   int get microSteps => throw _privateConstructorUsedError;
 
   /// The number of fullsteps for one rotation of the motor.
-  @JsonKey(name: 'STEPS_PER_ROT')
+  @JsonKey(name: SteeringHardwareConfigKey.stepsPerRotation)
   int get stepsPerRotation => throw _privateConstructorUsedError;
 
   /// The rated RMS current of the motor.
-  @JsonKey(name: 'RMS_CURRENT')
+  @JsonKey(name: SteeringHardwareConfigKey.rmsCurrent)
   int get rmsCurrent => throw _privateConstructorUsedError;
 
   /// A multiplier for how much current should be applied when holding
   /// position, set to 0 to allow freewheeling.
-  @JsonKey(name: 'hold_multiplier')
+  @JsonKey(name: SteeringHardwareConfigKey.holdMultiplier)
   double get holdMultiplier => throw _privateConstructorUsedError;
 
   /// Which mode the motor should be in when holding.
-  @JsonKey(name: 'freewheel')
+  @JsonKey(name: SteeringHardwareConfigKey.freeWheel)
   MotorHoldingMode get freeWheel => throw _privateConstructorUsedError;
 
   /// Maximum acceleration in RPM/s^2.
-  @JsonKey(name: 'AMAX_RPM_S_2')
+  @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
   double get maxAcceleration => throw _privateConstructorUsedError;
 
   /// Maximum RPM
-  @JsonKey(name: 'VMAX_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.maxRPM)
   double get maxRPM => throw _privateConstructorUsedError;
 
   /// Stopping velocity, should be higher than [vStart].
-  @JsonKey(name: 'VSTOP')
+  @JsonKey(name: SteeringHardwareConfigKey.vStop)
   int get vStop => throw _privateConstructorUsedError;
 
   /// Starting velocity, should be lower than [vStop].
-  @JsonKey(name: 'VSTART')
+  @JsonKey(name: SteeringHardwareConfigKey.vStart)
   int get vStart => throw _privateConstructorUsedError;
 
   /// Off time and driver enable.
-  @JsonKey(name: 'TOFF')
+  @JsonKey(name: SteeringHardwareConfigKey.tOff)
   int get tOff => throw _privateConstructorUsedError;
 
   /// Threshold for detecting a stall.
-  @JsonKey(name: 'SGT')
+  @JsonKey(name: SteeringHardwareConfigKey.stallguardThreshold)
   int get stallguardThreshold => throw _privateConstructorUsedError;
 
   /// Whether stall detection should filter over four fullsteps.
-  @JsonKey(name: 'sfilt')
+  @JsonKey(name: SteeringHardwareConfigKey.stallguardFiltering)
   bool get stallguardFiltering => throw _privateConstructorUsedError;
 
   /// Whether the motor should stop when detecting a stall.
-  @JsonKey(name: 'sg_stop')
+  @JsonKey(name: SteeringHardwareConfigKey.stallguardStop)
   bool get stallguardStop => throw _privateConstructorUsedError;
 
   /// When stall reading falls below `32*semin`, the motor current is
   /// increased.
-  @JsonKey(name: 'semin')
+  @JsonKey(name: SteeringHardwareConfigKey.semin)
   int get semin => throw _privateConstructorUsedError;
 
   /// When stall reading is equal to or above `32*semax`, the motor current is
   /// decreased to save energy.
-  @JsonKey(name: 'semax')
+  @JsonKey(name: SteeringHardwareConfigKey.semax)
   int get semax => throw _privateConstructorUsedError;
 
   /// Lower velocity RPM threshold to enable CoolStep and StallGuard.
-  @JsonKey(name: 'TCOOLTHRS_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)
   double get coolstepThresholdRPM => throw _privateConstructorUsedError;
 
   /// Uppper velocity RPM threshold for StealthChop.
-  @JsonKey(name: 'TPWMTHRS_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.stealthChopThresholdRPM)
   double get stealthChopThresholdRPM => throw _privateConstructorUsedError;
 
   /// Which stepper chopper mode is used.
-  @JsonKey(name: 'chm')
+  @JsonKey(name: SteeringHardwareConfigKey.chopperMode)
   ChopperMode get chopperMode => throw _privateConstructorUsedError;
 
   /// Lower velocity RPM threshold for switching to a different chopper mode
   /// at high velocities.
-  @JsonKey(name: 'THIGH_RPM')
+  @JsonKey(
+      name: SteeringHardwareConfigKey.highVelocityChopperModeChangeThresholdRPM)
   double get highVelocityChopperModeChangeThresholdRPM =>
       throw _privateConstructorUsedError;
 
   /// Lower velocity RPM threhsold for enabling DcStep.
-  @JsonKey(name: 'VDCMIN_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.dcStepThresholdRPM)
   double get dcStepThresholdRPM => throw _privateConstructorUsedError;
 
   /// Whether fullstepping should be enabled above
   /// [highVelocityChopperModeChangeThresholdRPM].
-  @JsonKey(name: 'vhighfs')
+  @JsonKey(name: SteeringHardwareConfigKey.fullstepAtHighVelocities)
   bool get fullstepAtHighVelocities => throw _privateConstructorUsedError;
 
   /// Whether chopper mode switch to
   /// [ChopperMode.constantTimeOffWithFastDecay] should be done above
   /// [highVelocityChopperModeChangeThresholdRPM].
-  @JsonKey(name: 'vhighchm')
+  @JsonKey(name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)
   bool get setConstantChopperAtHighVelocities =>
       throw _privateConstructorUsedError;
 
   /// Reference pulse width for DcStep load measurement.
-  @JsonKey(name: 'DC_TIME')
+  @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)
   int get dcStepLoadMeasurementPulseWidth => throw _privateConstructorUsedError;
 
   /// Stall detection threshold for DcStep mode.
-  @JsonKey(name: 'DC_SG')
+  @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)
   int get dcStepStallguardSensitivity => throw _privateConstructorUsedError;
 
   /// Hysteresis start value.
-  @JsonKey(name: 'HSTRT')
-  int get hystersisStart => throw _privateConstructorUsedError;
+  @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart)
+  int get hysteresisStart => throw _privateConstructorUsedError;
 
   /// Hysteresis end value.
-  @JsonKey(name: 'HEND')
-  int get hystersisEnd => throw _privateConstructorUsedError;
+  @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd)
+  int get hysteresisEnd => throw _privateConstructorUsedError;
 
   /// Number of clock cycles until motor powers down after standstill and
   /// [powerDownTime] has expired.
-  @JsonKey(name: 'IHOLDDELAY')
+  @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay)
   int get currentHoldDelay => throw _privateConstructorUsedError;
 
   /// Comparator blank time, number of clock cycles.
-  @JsonKey(name: 'TBL')
+  @JsonKey(name: SteeringHardwareConfigKey.blankTime)
   ComparatorBlankTime get blankTime => throw _privateConstructorUsedError;
 
   /// Power down delay time after standstill.
-  @JsonKey(name: 'TPOWERDOWN')
+  @JsonKey(name: SteeringHardwareConfigKey.powerDownTime)
   int get powerDownTime => throw _privateConstructorUsedError;
 
   /// Wait time before powering up after having reached 0 veolcity.
-  @JsonKey(name: 'TZEROWAIT')
+  @JsonKey(name: SteeringHardwareConfigKey.zeroWaitTime)
   int get zeroWaitTime => throw _privateConstructorUsedError;
 
   /// Whether StealthChop should enable below [stealthChopThresholdRPM].
-  @JsonKey(name: 'en_pwm_mode')
+  @JsonKey(name: SteeringHardwareConfigKey.enableStealthChop)
   bool get enableStealthChop => throw _privateConstructorUsedError;
 
   /// Whether PWM amplitude scaling is automatic.
-  @JsonKey(name: 'pwm_autoscale')
+  @JsonKey(name: SteeringHardwareConfigKey.automaticCurrentControl)
   bool get automaticCurrentControl => throw _privateConstructorUsedError;
 
   /// Whether automatic tuning of PWM_GRAD is enabled.
-  @JsonKey(name: 'pwm_autograd')
+  @JsonKey(name: SteeringHardwareConfigKey.automaticPWMTuning)
   bool get automaticPWMTuning => throw _privateConstructorUsedError;
 
   /// Proportional gain coefficient for steering.
-  @JsonKey(name: 'pid_P')
+  @JsonKey(name: SteeringHardwareConfigKey.pidP)
   double get pidP => throw _privateConstructorUsedError;
 
   /// Integral gain coefficient for steering.
-  @JsonKey(name: 'pid_I')
+  @JsonKey(name: SteeringHardwareConfigKey.pidI)
   double get pidI => throw _privateConstructorUsedError;
 
   /// Derivative gain coefficient for steering.
-  @JsonKey(name: 'pid_D')
+  @JsonKey(name: SteeringHardwareConfigKey.pidD)
   double get pidD => throw _privateConstructorUsedError;
 
   /// Minimum reading value for WAS.
-  @JsonKey(name: 'was_min')
+  @JsonKey(name: SteeringHardwareConfigKey.wasMin)
   int get wasMin => throw _privateConstructorUsedError;
 
   /// Center reading value for WAS.
-  @JsonKey(name: 'was_center')
+  @JsonKey(name: SteeringHardwareConfigKey.wasCenter)
   int get wasCenter => throw _privateConstructorUsedError;
 
   /// Maximum reading value for WAS.
-  @JsonKey(name: 'was_max')
+  @JsonKey(name: SteeringHardwareConfigKey.wasMax)
   int get wasMax => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -204,47 +205,72 @@ abstract class $SteeringHardwareConfigCopyWith<$Res> {
       _$SteeringHardwareConfigCopyWithImpl<$Res, SteeringHardwareConfig>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'invertDirection') bool invertDirection,
-      @JsonKey(name: 'MICRO_STEPS') int microSteps,
-      @JsonKey(name: 'STEPS_PER_ROT') int stepsPerRotation,
-      @JsonKey(name: 'RMS_CURRENT') int rmsCurrent,
-      @JsonKey(name: 'hold_multiplier') double holdMultiplier,
-      @JsonKey(name: 'freewheel') MotorHoldingMode freeWheel,
-      @JsonKey(name: 'AMAX_RPM_S_2') double maxAcceleration,
-      @JsonKey(name: 'VMAX_RPM') double maxRPM,
-      @JsonKey(name: 'VSTOP') int vStop,
-      @JsonKey(name: 'VSTART') int vStart,
-      @JsonKey(name: 'TOFF') int tOff,
-      @JsonKey(name: 'SGT') int stallguardThreshold,
-      @JsonKey(name: 'sfilt') bool stallguardFiltering,
-      @JsonKey(name: 'sg_stop') bool stallguardStop,
-      @JsonKey(name: 'semin') int semin,
-      @JsonKey(name: 'semax') int semax,
-      @JsonKey(name: 'TCOOLTHRS_RPM') double coolstepThresholdRPM,
-      @JsonKey(name: 'TPWMTHRS_RPM') double stealthChopThresholdRPM,
-      @JsonKey(name: 'chm') ChopperMode chopperMode,
-      @JsonKey(name: 'THIGH_RPM')
+      {@JsonKey(name: SteeringHardwareConfigKey.invertDirection)
+      bool invertDirection,
+      @JsonKey(name: SteeringHardwareConfigKey.microSteps) int microSteps,
+      @JsonKey(name: SteeringHardwareConfigKey.stepsPerRotation)
+      int stepsPerRotation,
+      @JsonKey(name: SteeringHardwareConfigKey.rmsCurrent) int rmsCurrent,
+      @JsonKey(name: SteeringHardwareConfigKey.holdMultiplier)
+      double holdMultiplier,
+      @JsonKey(name: SteeringHardwareConfigKey.freeWheel)
+      MotorHoldingMode freeWheel,
+      @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
+      double maxAcceleration,
+      @JsonKey(name: SteeringHardwareConfigKey.maxRPM) double maxRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.vStop) int vStop,
+      @JsonKey(name: SteeringHardwareConfigKey.vStart) int vStart,
+      @JsonKey(name: SteeringHardwareConfigKey.tOff) int tOff,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardThreshold)
+      int stallguardThreshold,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardFiltering)
+      bool stallguardFiltering,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardStop)
+      bool stallguardStop,
+      @JsonKey(name: SteeringHardwareConfigKey.semin) int semin,
+      @JsonKey(name: SteeringHardwareConfigKey.semax) int semax,
+      @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)
+      double coolstepThresholdRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.stealthChopThresholdRPM)
+      double stealthChopThresholdRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.chopperMode)
+      ChopperMode chopperMode,
+      @JsonKey(
+          name: SteeringHardwareConfigKey
+              .highVelocityChopperModeChangeThresholdRPM)
       double highVelocityChopperModeChangeThresholdRPM,
-      @JsonKey(name: 'VDCMIN_RPM') double dcStepThresholdRPM,
-      @JsonKey(name: 'vhighfs') bool fullstepAtHighVelocities,
-      @JsonKey(name: 'vhighchm') bool setConstantChopperAtHighVelocities,
-      @JsonKey(name: 'DC_TIME') int dcStepLoadMeasurementPulseWidth,
-      @JsonKey(name: 'DC_SG') int dcStepStallguardSensitivity,
-      @JsonKey(name: 'HSTRT') int hystersisStart,
-      @JsonKey(name: 'HEND') int hystersisEnd,
-      @JsonKey(name: 'IHOLDDELAY') int currentHoldDelay,
-      @JsonKey(name: 'TBL') ComparatorBlankTime blankTime,
-      @JsonKey(name: 'TPOWERDOWN') int powerDownTime,
-      @JsonKey(name: 'TZEROWAIT') int zeroWaitTime,
-      @JsonKey(name: 'en_pwm_mode') bool enableStealthChop,
-      @JsonKey(name: 'pwm_autoscale') bool automaticCurrentControl,
-      @JsonKey(name: 'pwm_autograd') bool automaticPWMTuning,
-      @JsonKey(name: 'pid_P') double pidP,
-      @JsonKey(name: 'pid_I') double pidI,
-      @JsonKey(name: 'pid_D') double pidD,
-      @JsonKey(name: 'was_min') int wasMin,
-      @JsonKey(name: 'was_center') int wasCenter,
-      @JsonKey(name: 'was_max') int wasMax});
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepThresholdRPM)
+      double dcStepThresholdRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.fullstepAtHighVelocities)
+      bool fullstepAtHighVelocities,
+      @JsonKey(
+          name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)
+      bool setConstantChopperAtHighVelocities,
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)
+      int dcStepLoadMeasurementPulseWidth,
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)
+      int dcStepStallguardSensitivity,
+      @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart)
+      int hysteresisStart,
+      @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd) int hysteresisEnd,
+      @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay)
+      int currentHoldDelay,
+      @JsonKey(name: SteeringHardwareConfigKey.blankTime)
+      ComparatorBlankTime blankTime,
+      @JsonKey(name: SteeringHardwareConfigKey.powerDownTime) int powerDownTime,
+      @JsonKey(name: SteeringHardwareConfigKey.zeroWaitTime) int zeroWaitTime,
+      @JsonKey(name: SteeringHardwareConfigKey.enableStealthChop)
+      bool enableStealthChop,
+      @JsonKey(name: SteeringHardwareConfigKey.automaticCurrentControl)
+      bool automaticCurrentControl,
+      @JsonKey(name: SteeringHardwareConfigKey.automaticPWMTuning)
+      bool automaticPWMTuning,
+      @JsonKey(name: SteeringHardwareConfigKey.pidP) double pidP,
+      @JsonKey(name: SteeringHardwareConfigKey.pidI) double pidI,
+      @JsonKey(name: SteeringHardwareConfigKey.pidD) double pidD,
+      @JsonKey(name: SteeringHardwareConfigKey.wasMin) int wasMin,
+      @JsonKey(name: SteeringHardwareConfigKey.wasCenter) int wasCenter,
+      @JsonKey(name: SteeringHardwareConfigKey.wasMax) int wasMax});
 }
 
 /// @nodoc
@@ -286,8 +312,8 @@ class _$SteeringHardwareConfigCopyWithImpl<$Res,
     Object? setConstantChopperAtHighVelocities = null,
     Object? dcStepLoadMeasurementPulseWidth = null,
     Object? dcStepStallguardSensitivity = null,
-    Object? hystersisStart = null,
-    Object? hystersisEnd = null,
+    Object? hysteresisStart = null,
+    Object? hysteresisEnd = null,
     Object? currentHoldDelay = null,
     Object? blankTime = null,
     Object? powerDownTime = null,
@@ -405,13 +431,13 @@ class _$SteeringHardwareConfigCopyWithImpl<$Res,
           ? _value.dcStepStallguardSensitivity
           : dcStepStallguardSensitivity // ignore: cast_nullable_to_non_nullable
               as int,
-      hystersisStart: null == hystersisStart
-          ? _value.hystersisStart
-          : hystersisStart // ignore: cast_nullable_to_non_nullable
+      hysteresisStart: null == hysteresisStart
+          ? _value.hysteresisStart
+          : hysteresisStart // ignore: cast_nullable_to_non_nullable
               as int,
-      hystersisEnd: null == hystersisEnd
-          ? _value.hystersisEnd
-          : hystersisEnd // ignore: cast_nullable_to_non_nullable
+      hysteresisEnd: null == hysteresisEnd
+          ? _value.hysteresisEnd
+          : hysteresisEnd // ignore: cast_nullable_to_non_nullable
               as int,
       currentHoldDelay: null == currentHoldDelay
           ? _value.currentHoldDelay
@@ -479,47 +505,72 @@ abstract class _$$SteeringHardwareConfigImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'invertDirection') bool invertDirection,
-      @JsonKey(name: 'MICRO_STEPS') int microSteps,
-      @JsonKey(name: 'STEPS_PER_ROT') int stepsPerRotation,
-      @JsonKey(name: 'RMS_CURRENT') int rmsCurrent,
-      @JsonKey(name: 'hold_multiplier') double holdMultiplier,
-      @JsonKey(name: 'freewheel') MotorHoldingMode freeWheel,
-      @JsonKey(name: 'AMAX_RPM_S_2') double maxAcceleration,
-      @JsonKey(name: 'VMAX_RPM') double maxRPM,
-      @JsonKey(name: 'VSTOP') int vStop,
-      @JsonKey(name: 'VSTART') int vStart,
-      @JsonKey(name: 'TOFF') int tOff,
-      @JsonKey(name: 'SGT') int stallguardThreshold,
-      @JsonKey(name: 'sfilt') bool stallguardFiltering,
-      @JsonKey(name: 'sg_stop') bool stallguardStop,
-      @JsonKey(name: 'semin') int semin,
-      @JsonKey(name: 'semax') int semax,
-      @JsonKey(name: 'TCOOLTHRS_RPM') double coolstepThresholdRPM,
-      @JsonKey(name: 'TPWMTHRS_RPM') double stealthChopThresholdRPM,
-      @JsonKey(name: 'chm') ChopperMode chopperMode,
-      @JsonKey(name: 'THIGH_RPM')
+      {@JsonKey(name: SteeringHardwareConfigKey.invertDirection)
+      bool invertDirection,
+      @JsonKey(name: SteeringHardwareConfigKey.microSteps) int microSteps,
+      @JsonKey(name: SteeringHardwareConfigKey.stepsPerRotation)
+      int stepsPerRotation,
+      @JsonKey(name: SteeringHardwareConfigKey.rmsCurrent) int rmsCurrent,
+      @JsonKey(name: SteeringHardwareConfigKey.holdMultiplier)
+      double holdMultiplier,
+      @JsonKey(name: SteeringHardwareConfigKey.freeWheel)
+      MotorHoldingMode freeWheel,
+      @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
+      double maxAcceleration,
+      @JsonKey(name: SteeringHardwareConfigKey.maxRPM) double maxRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.vStop) int vStop,
+      @JsonKey(name: SteeringHardwareConfigKey.vStart) int vStart,
+      @JsonKey(name: SteeringHardwareConfigKey.tOff) int tOff,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardThreshold)
+      int stallguardThreshold,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardFiltering)
+      bool stallguardFiltering,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardStop)
+      bool stallguardStop,
+      @JsonKey(name: SteeringHardwareConfigKey.semin) int semin,
+      @JsonKey(name: SteeringHardwareConfigKey.semax) int semax,
+      @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)
+      double coolstepThresholdRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.stealthChopThresholdRPM)
+      double stealthChopThresholdRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.chopperMode)
+      ChopperMode chopperMode,
+      @JsonKey(
+          name: SteeringHardwareConfigKey
+              .highVelocityChopperModeChangeThresholdRPM)
       double highVelocityChopperModeChangeThresholdRPM,
-      @JsonKey(name: 'VDCMIN_RPM') double dcStepThresholdRPM,
-      @JsonKey(name: 'vhighfs') bool fullstepAtHighVelocities,
-      @JsonKey(name: 'vhighchm') bool setConstantChopperAtHighVelocities,
-      @JsonKey(name: 'DC_TIME') int dcStepLoadMeasurementPulseWidth,
-      @JsonKey(name: 'DC_SG') int dcStepStallguardSensitivity,
-      @JsonKey(name: 'HSTRT') int hystersisStart,
-      @JsonKey(name: 'HEND') int hystersisEnd,
-      @JsonKey(name: 'IHOLDDELAY') int currentHoldDelay,
-      @JsonKey(name: 'TBL') ComparatorBlankTime blankTime,
-      @JsonKey(name: 'TPOWERDOWN') int powerDownTime,
-      @JsonKey(name: 'TZEROWAIT') int zeroWaitTime,
-      @JsonKey(name: 'en_pwm_mode') bool enableStealthChop,
-      @JsonKey(name: 'pwm_autoscale') bool automaticCurrentControl,
-      @JsonKey(name: 'pwm_autograd') bool automaticPWMTuning,
-      @JsonKey(name: 'pid_P') double pidP,
-      @JsonKey(name: 'pid_I') double pidI,
-      @JsonKey(name: 'pid_D') double pidD,
-      @JsonKey(name: 'was_min') int wasMin,
-      @JsonKey(name: 'was_center') int wasCenter,
-      @JsonKey(name: 'was_max') int wasMax});
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepThresholdRPM)
+      double dcStepThresholdRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.fullstepAtHighVelocities)
+      bool fullstepAtHighVelocities,
+      @JsonKey(
+          name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)
+      bool setConstantChopperAtHighVelocities,
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)
+      int dcStepLoadMeasurementPulseWidth,
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)
+      int dcStepStallguardSensitivity,
+      @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart)
+      int hysteresisStart,
+      @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd) int hysteresisEnd,
+      @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay)
+      int currentHoldDelay,
+      @JsonKey(name: SteeringHardwareConfigKey.blankTime)
+      ComparatorBlankTime blankTime,
+      @JsonKey(name: SteeringHardwareConfigKey.powerDownTime) int powerDownTime,
+      @JsonKey(name: SteeringHardwareConfigKey.zeroWaitTime) int zeroWaitTime,
+      @JsonKey(name: SteeringHardwareConfigKey.enableStealthChop)
+      bool enableStealthChop,
+      @JsonKey(name: SteeringHardwareConfigKey.automaticCurrentControl)
+      bool automaticCurrentControl,
+      @JsonKey(name: SteeringHardwareConfigKey.automaticPWMTuning)
+      bool automaticPWMTuning,
+      @JsonKey(name: SteeringHardwareConfigKey.pidP) double pidP,
+      @JsonKey(name: SteeringHardwareConfigKey.pidI) double pidI,
+      @JsonKey(name: SteeringHardwareConfigKey.pidD) double pidD,
+      @JsonKey(name: SteeringHardwareConfigKey.wasMin) int wasMin,
+      @JsonKey(name: SteeringHardwareConfigKey.wasCenter) int wasCenter,
+      @JsonKey(name: SteeringHardwareConfigKey.wasMax) int wasMax});
 }
 
 /// @nodoc
@@ -560,8 +611,8 @@ class __$$SteeringHardwareConfigImplCopyWithImpl<$Res>
     Object? setConstantChopperAtHighVelocities = null,
     Object? dcStepLoadMeasurementPulseWidth = null,
     Object? dcStepStallguardSensitivity = null,
-    Object? hystersisStart = null,
-    Object? hystersisEnd = null,
+    Object? hysteresisStart = null,
+    Object? hysteresisEnd = null,
     Object? currentHoldDelay = null,
     Object? blankTime = null,
     Object? powerDownTime = null,
@@ -679,13 +730,13 @@ class __$$SteeringHardwareConfigImplCopyWithImpl<$Res>
           ? _value.dcStepStallguardSensitivity
           : dcStepStallguardSensitivity // ignore: cast_nullable_to_non_nullable
               as int,
-      hystersisStart: null == hystersisStart
-          ? _value.hystersisStart
-          : hystersisStart // ignore: cast_nullable_to_non_nullable
+      hysteresisStart: null == hysteresisStart
+          ? _value.hysteresisStart
+          : hysteresisStart // ignore: cast_nullable_to_non_nullable
               as int,
-      hystersisEnd: null == hystersisEnd
-          ? _value.hystersisEnd
-          : hystersisEnd // ignore: cast_nullable_to_non_nullable
+      hysteresisEnd: null == hysteresisEnd
+          ? _value.hysteresisEnd
+          : hysteresisEnd // ignore: cast_nullable_to_non_nullable
               as int,
       currentHoldDelay: null == currentHoldDelay
           ? _value.currentHoldDelay
@@ -747,48 +798,65 @@ class __$$SteeringHardwareConfigImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
   const _$SteeringHardwareConfigImpl(
-      {@JsonKey(name: 'invertDirection') this.invertDirection = false,
-      @JsonKey(name: 'MICRO_STEPS') this.microSteps = 256,
-      @JsonKey(name: 'STEPS_PER_ROT') this.stepsPerRotation = 200,
-      @JsonKey(name: 'RMS_CURRENT') this.rmsCurrent = 1000,
-      @JsonKey(name: 'hold_multiplier') this.holdMultiplier = 0,
-      @JsonKey(name: 'freewheel') this.freeWheel = MotorHoldingMode.freewheel,
-      @JsonKey(name: 'AMAX_RPM_S_2') this.maxAcceleration = 100,
-      @JsonKey(name: 'VMAX_RPM') this.maxRPM = 200,
-      @JsonKey(name: 'VSTOP') this.vStop = 10,
-      @JsonKey(name: 'VSTART') this.vStart = 0,
-      @JsonKey(name: 'TOFF') this.tOff = 5,
-      @JsonKey(name: 'SGT') this.stallguardThreshold = 32,
-      @JsonKey(name: 'sfilt') this.stallguardFiltering = false,
-      @JsonKey(name: 'sg_stop') this.stallguardStop = true,
-      @JsonKey(name: 'semin') this.semin = 5,
-      @JsonKey(name: 'semax') this.semax = 2,
-      @JsonKey(name: 'TCOOLTHRS_RPM') this.coolstepThresholdRPM = 10,
-      @JsonKey(name: 'TPWMTHRS_RPM') this.stealthChopThresholdRPM = 40,
-      @JsonKey(name: 'chm') this.chopperMode = ChopperMode.spreadCycle,
-      @JsonKey(name: 'THIGH_RPM')
+      {@JsonKey(name: SteeringHardwareConfigKey.invertDirection)
+      this.invertDirection = false,
+      @JsonKey(name: SteeringHardwareConfigKey.microSteps)
+      this.microSteps = 256,
+      @JsonKey(name: SteeringHardwareConfigKey.stepsPerRotation)
+      this.stepsPerRotation = 200,
+      @JsonKey(name: SteeringHardwareConfigKey.rmsCurrent)
+      this.rmsCurrent = 1000,
+      @JsonKey(name: SteeringHardwareConfigKey.holdMultiplier)
+      this.holdMultiplier = 0,
+      @JsonKey(name: SteeringHardwareConfigKey.freeWheel)
+      this.freeWheel = MotorHoldingMode.freewheel,
+      @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
+      this.maxAcceleration = 100,
+      @JsonKey(name: SteeringHardwareConfigKey.maxRPM) this.maxRPM = 200,
+      @JsonKey(name: SteeringHardwareConfigKey.vStop) this.vStop = 10,
+      @JsonKey(name: SteeringHardwareConfigKey.vStart) this.vStart = 0,
+      @JsonKey(name: SteeringHardwareConfigKey.tOff) this.tOff = 5,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardThreshold)
+      this.stallguardThreshold = 32,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardFiltering)
+      this.stallguardFiltering = false,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardStop)
+      this.stallguardStop = true,
+      @JsonKey(name: SteeringHardwareConfigKey.semin) this.semin = 5,
+      @JsonKey(name: SteeringHardwareConfigKey.semax) this.semax = 2,
+      @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)
+      this.coolstepThresholdRPM = 10,
+      @JsonKey(name: SteeringHardwareConfigKey.stealthChopThresholdRPM)
+      this.stealthChopThresholdRPM = 40,
+      @JsonKey(name: SteeringHardwareConfigKey.chopperMode)
+      this.chopperMode = ChopperMode.spreadCycle,
+      @JsonKey(name: SteeringHardwareConfigKey.highVelocityChopperModeChangeThresholdRPM)
       this.highVelocityChopperModeChangeThresholdRPM = 150,
-      @JsonKey(name: 'VDCMIN_RPM') this.dcStepThresholdRPM = 150,
-      @JsonKey(name: 'vhighfs') this.fullstepAtHighVelocities = false,
-      @JsonKey(name: 'vhighchm')
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepThresholdRPM)
+      this.dcStepThresholdRPM = 150,
+      @JsonKey(name: SteeringHardwareConfigKey.fullstepAtHighVelocities)
+      this.fullstepAtHighVelocities = false,
+      @JsonKey(name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)
       this.setConstantChopperAtHighVelocities = false,
-      @JsonKey(name: 'DC_TIME') this.dcStepLoadMeasurementPulseWidth = 64,
-      @JsonKey(name: 'DC_SG') this.dcStepStallguardSensitivity = 5,
-      @JsonKey(name: 'HSTRT') this.hystersisStart = 4,
-      @JsonKey(name: 'HEND') this.hystersisEnd = 1,
-      @JsonKey(name: 'IHOLDDELAY') this.currentHoldDelay = 1,
-      @JsonKey(name: 'TBL') this.blankTime = ComparatorBlankTime.clk24,
-      @JsonKey(name: 'TPOWERDOWN') this.powerDownTime = 1,
-      @JsonKey(name: 'TZEROWAIT') this.zeroWaitTime = 1,
-      @JsonKey(name: 'en_pwm_mode') this.enableStealthChop = false,
-      @JsonKey(name: 'pwm_autoscale') this.automaticCurrentControl = false,
-      @JsonKey(name: 'pwm_autograd') this.automaticPWMTuning = false,
-      @JsonKey(name: 'pid_P') this.pidP = 20,
-      @JsonKey(name: 'pid_I') this.pidI = 0.13,
-      @JsonKey(name: 'pid_D') this.pidD = 0.06,
-      @JsonKey(name: 'was_min') this.wasMin = 250,
-      @JsonKey(name: 'was_center') this.wasCenter = 2000,
-      @JsonKey(name: 'was_max') this.wasMax = 3750})
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)
+      this.dcStepLoadMeasurementPulseWidth = 64,
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)
+      this.dcStepStallguardSensitivity = 5,
+      @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart) this.hysteresisStart = 4,
+      @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd) this.hysteresisEnd = 1,
+      @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay) this.currentHoldDelay = 1,
+      @JsonKey(name: SteeringHardwareConfigKey.blankTime) this.blankTime = ComparatorBlankTime.clk24,
+      @JsonKey(name: SteeringHardwareConfigKey.powerDownTime) this.powerDownTime = 1,
+      @JsonKey(name: SteeringHardwareConfigKey.zeroWaitTime) this.zeroWaitTime = 1,
+      @JsonKey(name: SteeringHardwareConfigKey.enableStealthChop) this.enableStealthChop = false,
+      @JsonKey(name: SteeringHardwareConfigKey.automaticCurrentControl) this.automaticCurrentControl = false,
+      @JsonKey(name: SteeringHardwareConfigKey.automaticPWMTuning) this.automaticPWMTuning = false,
+      @JsonKey(name: SteeringHardwareConfigKey.pidP) this.pidP = 20,
+      @JsonKey(name: SteeringHardwareConfigKey.pidI) this.pidI = 0.13,
+      @JsonKey(name: SteeringHardwareConfigKey.pidD) this.pidD = 0.06,
+      @JsonKey(name: SteeringHardwareConfigKey.wasMin) this.wasMin = 250,
+      @JsonKey(name: SteeringHardwareConfigKey.wasCenter) this.wasCenter = 2000,
+      @JsonKey(name: SteeringHardwareConfigKey.wasMax) this.wasMax = 3750})
       : assert(
             microSteps == 1 ||
                 microSteps == 2 ||
@@ -831,10 +899,10 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
             dcStepStallguardSensitivity >= 0 &&
                 dcStepStallguardSensitivity <= 255,
             'dcStepStallguardSensitivity should be in range 0 to 255.'),
-        assert(hystersisStart >= 0 && hystersisStart <= 7,
-            'hystersisStart should be in range 0 to 7.'),
-        assert(hystersisEnd >= 0 && hystersisEnd <= 15,
-            'hystersisEnd should be in range 0 to 15.'),
+        assert(hysteresisStart >= 0 && hysteresisStart <= 7,
+            'hysteresisStart should be in range 0 to 7.'),
+        assert(hysteresisEnd >= 0 && hysteresisEnd <= 15,
+            'hysteresisEnd should be in range 0 to 15.'),
         assert(currentHoldDelay >= 0 && currentHoldDelay <= 15,
             'currentHoldDelay should be in range 0 to 15.'),
         assert(powerDownTime >= 0 && powerDownTime <= 255,
@@ -854,217 +922,218 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
   factory _$SteeringHardwareConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$SteeringHardwareConfigImplFromJson(json);
 
-  /// Whehter the motor rotation direction should be inverted.
+  /// Whether the motor rotation direction should be inverted.
   @override
-  @JsonKey(name: 'invertDirection')
+  @JsonKey(name: SteeringHardwareConfigKey.invertDirection)
   final bool invertDirection;
 
   /// The number of micro steps to divide one fullstep into.
   @override
-  @JsonKey(name: 'MICRO_STEPS')
+  @JsonKey(name: SteeringHardwareConfigKey.microSteps)
   final int microSteps;
 
   /// The number of fullsteps for one rotation of the motor.
   @override
-  @JsonKey(name: 'STEPS_PER_ROT')
+  @JsonKey(name: SteeringHardwareConfigKey.stepsPerRotation)
   final int stepsPerRotation;
 
   /// The rated RMS current of the motor.
   @override
-  @JsonKey(name: 'RMS_CURRENT')
+  @JsonKey(name: SteeringHardwareConfigKey.rmsCurrent)
   final int rmsCurrent;
 
   /// A multiplier for how much current should be applied when holding
   /// position, set to 0 to allow freewheeling.
   @override
-  @JsonKey(name: 'hold_multiplier')
+  @JsonKey(name: SteeringHardwareConfigKey.holdMultiplier)
   final double holdMultiplier;
 
   /// Which mode the motor should be in when holding.
   @override
-  @JsonKey(name: 'freewheel')
+  @JsonKey(name: SteeringHardwareConfigKey.freeWheel)
   final MotorHoldingMode freeWheel;
 
   /// Maximum acceleration in RPM/s^2.
   @override
-  @JsonKey(name: 'AMAX_RPM_S_2')
+  @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
   final double maxAcceleration;
 
   /// Maximum RPM
   @override
-  @JsonKey(name: 'VMAX_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.maxRPM)
   final double maxRPM;
 
   /// Stopping velocity, should be higher than [vStart].
   @override
-  @JsonKey(name: 'VSTOP')
+  @JsonKey(name: SteeringHardwareConfigKey.vStop)
   final int vStop;
 
   /// Starting velocity, should be lower than [vStop].
   @override
-  @JsonKey(name: 'VSTART')
+  @JsonKey(name: SteeringHardwareConfigKey.vStart)
   final int vStart;
 
   /// Off time and driver enable.
   @override
-  @JsonKey(name: 'TOFF')
+  @JsonKey(name: SteeringHardwareConfigKey.tOff)
   final int tOff;
 
   /// Threshold for detecting a stall.
   @override
-  @JsonKey(name: 'SGT')
+  @JsonKey(name: SteeringHardwareConfigKey.stallguardThreshold)
   final int stallguardThreshold;
 
   /// Whether stall detection should filter over four fullsteps.
   @override
-  @JsonKey(name: 'sfilt')
+  @JsonKey(name: SteeringHardwareConfigKey.stallguardFiltering)
   final bool stallguardFiltering;
 
   /// Whether the motor should stop when detecting a stall.
   @override
-  @JsonKey(name: 'sg_stop')
+  @JsonKey(name: SteeringHardwareConfigKey.stallguardStop)
   final bool stallguardStop;
 
   /// When stall reading falls below `32*semin`, the motor current is
   /// increased.
   @override
-  @JsonKey(name: 'semin')
+  @JsonKey(name: SteeringHardwareConfigKey.semin)
   final int semin;
 
   /// When stall reading is equal to or above `32*semax`, the motor current is
   /// decreased to save energy.
   @override
-  @JsonKey(name: 'semax')
+  @JsonKey(name: SteeringHardwareConfigKey.semax)
   final int semax;
 
   /// Lower velocity RPM threshold to enable CoolStep and StallGuard.
   @override
-  @JsonKey(name: 'TCOOLTHRS_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)
   final double coolstepThresholdRPM;
 
   /// Uppper velocity RPM threshold for StealthChop.
   @override
-  @JsonKey(name: 'TPWMTHRS_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.stealthChopThresholdRPM)
   final double stealthChopThresholdRPM;
 
   /// Which stepper chopper mode is used.
   @override
-  @JsonKey(name: 'chm')
+  @JsonKey(name: SteeringHardwareConfigKey.chopperMode)
   final ChopperMode chopperMode;
 
   /// Lower velocity RPM threshold for switching to a different chopper mode
   /// at high velocities.
   @override
-  @JsonKey(name: 'THIGH_RPM')
+  @JsonKey(
+      name: SteeringHardwareConfigKey.highVelocityChopperModeChangeThresholdRPM)
   final double highVelocityChopperModeChangeThresholdRPM;
 
   /// Lower velocity RPM threhsold for enabling DcStep.
   @override
-  @JsonKey(name: 'VDCMIN_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.dcStepThresholdRPM)
   final double dcStepThresholdRPM;
 
   /// Whether fullstepping should be enabled above
   /// [highVelocityChopperModeChangeThresholdRPM].
   @override
-  @JsonKey(name: 'vhighfs')
+  @JsonKey(name: SteeringHardwareConfigKey.fullstepAtHighVelocities)
   final bool fullstepAtHighVelocities;
 
   /// Whether chopper mode switch to
   /// [ChopperMode.constantTimeOffWithFastDecay] should be done above
   /// [highVelocityChopperModeChangeThresholdRPM].
   @override
-  @JsonKey(name: 'vhighchm')
+  @JsonKey(name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)
   final bool setConstantChopperAtHighVelocities;
 
   /// Reference pulse width for DcStep load measurement.
   @override
-  @JsonKey(name: 'DC_TIME')
+  @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)
   final int dcStepLoadMeasurementPulseWidth;
 
   /// Stall detection threshold for DcStep mode.
   @override
-  @JsonKey(name: 'DC_SG')
+  @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)
   final int dcStepStallguardSensitivity;
 
   /// Hysteresis start value.
   @override
-  @JsonKey(name: 'HSTRT')
-  final int hystersisStart;
+  @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart)
+  final int hysteresisStart;
 
   /// Hysteresis end value.
   @override
-  @JsonKey(name: 'HEND')
-  final int hystersisEnd;
+  @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd)
+  final int hysteresisEnd;
 
   /// Number of clock cycles until motor powers down after standstill and
   /// [powerDownTime] has expired.
   @override
-  @JsonKey(name: 'IHOLDDELAY')
+  @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay)
   final int currentHoldDelay;
 
   /// Comparator blank time, number of clock cycles.
   @override
-  @JsonKey(name: 'TBL')
+  @JsonKey(name: SteeringHardwareConfigKey.blankTime)
   final ComparatorBlankTime blankTime;
 
   /// Power down delay time after standstill.
   @override
-  @JsonKey(name: 'TPOWERDOWN')
+  @JsonKey(name: SteeringHardwareConfigKey.powerDownTime)
   final int powerDownTime;
 
   /// Wait time before powering up after having reached 0 veolcity.
   @override
-  @JsonKey(name: 'TZEROWAIT')
+  @JsonKey(name: SteeringHardwareConfigKey.zeroWaitTime)
   final int zeroWaitTime;
 
   /// Whether StealthChop should enable below [stealthChopThresholdRPM].
   @override
-  @JsonKey(name: 'en_pwm_mode')
+  @JsonKey(name: SteeringHardwareConfigKey.enableStealthChop)
   final bool enableStealthChop;
 
   /// Whether PWM amplitude scaling is automatic.
   @override
-  @JsonKey(name: 'pwm_autoscale')
+  @JsonKey(name: SteeringHardwareConfigKey.automaticCurrentControl)
   final bool automaticCurrentControl;
 
   /// Whether automatic tuning of PWM_GRAD is enabled.
   @override
-  @JsonKey(name: 'pwm_autograd')
+  @JsonKey(name: SteeringHardwareConfigKey.automaticPWMTuning)
   final bool automaticPWMTuning;
 
   /// Proportional gain coefficient for steering.
   @override
-  @JsonKey(name: 'pid_P')
+  @JsonKey(name: SteeringHardwareConfigKey.pidP)
   final double pidP;
 
   /// Integral gain coefficient for steering.
   @override
-  @JsonKey(name: 'pid_I')
+  @JsonKey(name: SteeringHardwareConfigKey.pidI)
   final double pidI;
 
   /// Derivative gain coefficient for steering.
   @override
-  @JsonKey(name: 'pid_D')
+  @JsonKey(name: SteeringHardwareConfigKey.pidD)
   final double pidD;
 
   /// Minimum reading value for WAS.
   @override
-  @JsonKey(name: 'was_min')
+  @JsonKey(name: SteeringHardwareConfigKey.wasMin)
   final int wasMin;
 
   /// Center reading value for WAS.
   @override
-  @JsonKey(name: 'was_center')
+  @JsonKey(name: SteeringHardwareConfigKey.wasCenter)
   final int wasCenter;
 
   /// Maximum reading value for WAS.
   @override
-  @JsonKey(name: 'was_max')
+  @JsonKey(name: SteeringHardwareConfigKey.wasMax)
   final int wasMax;
 
   @override
   String toString() {
-    return 'SteeringHardwareConfig(invertDirection: $invertDirection, microSteps: $microSteps, stepsPerRotation: $stepsPerRotation, rmsCurrent: $rmsCurrent, holdMultiplier: $holdMultiplier, freeWheel: $freeWheel, maxAcceleration: $maxAcceleration, maxRPM: $maxRPM, vStop: $vStop, vStart: $vStart, tOff: $tOff, stallguardThreshold: $stallguardThreshold, stallguardFiltering: $stallguardFiltering, stallguardStop: $stallguardStop, semin: $semin, semax: $semax, coolstepThresholdRPM: $coolstepThresholdRPM, stealthChopThresholdRPM: $stealthChopThresholdRPM, chopperMode: $chopperMode, highVelocityChopperModeChangeThresholdRPM: $highVelocityChopperModeChangeThresholdRPM, dcStepThresholdRPM: $dcStepThresholdRPM, fullstepAtHighVelocities: $fullstepAtHighVelocities, setConstantChopperAtHighVelocities: $setConstantChopperAtHighVelocities, dcStepLoadMeasurementPulseWidth: $dcStepLoadMeasurementPulseWidth, dcStepStallguardSensitivity: $dcStepStallguardSensitivity, hystersisStart: $hystersisStart, hystersisEnd: $hystersisEnd, currentHoldDelay: $currentHoldDelay, blankTime: $blankTime, powerDownTime: $powerDownTime, zeroWaitTime: $zeroWaitTime, enableStealthChop: $enableStealthChop, automaticCurrentControl: $automaticCurrentControl, automaticPWMTuning: $automaticPWMTuning, pidP: $pidP, pidI: $pidI, pidD: $pidD, wasMin: $wasMin, wasCenter: $wasCenter, wasMax: $wasMax)';
+    return 'SteeringHardwareConfig(invertDirection: $invertDirection, microSteps: $microSteps, stepsPerRotation: $stepsPerRotation, rmsCurrent: $rmsCurrent, holdMultiplier: $holdMultiplier, freeWheel: $freeWheel, maxAcceleration: $maxAcceleration, maxRPM: $maxRPM, vStop: $vStop, vStart: $vStart, tOff: $tOff, stallguardThreshold: $stallguardThreshold, stallguardFiltering: $stallguardFiltering, stallguardStop: $stallguardStop, semin: $semin, semax: $semax, coolstepThresholdRPM: $coolstepThresholdRPM, stealthChopThresholdRPM: $stealthChopThresholdRPM, chopperMode: $chopperMode, highVelocityChopperModeChangeThresholdRPM: $highVelocityChopperModeChangeThresholdRPM, dcStepThresholdRPM: $dcStepThresholdRPM, fullstepAtHighVelocities: $fullstepAtHighVelocities, setConstantChopperAtHighVelocities: $setConstantChopperAtHighVelocities, dcStepLoadMeasurementPulseWidth: $dcStepLoadMeasurementPulseWidth, dcStepStallguardSensitivity: $dcStepStallguardSensitivity, hysteresisStart: $hysteresisStart, hysteresisEnd: $hysteresisEnd, currentHoldDelay: $currentHoldDelay, blankTime: $blankTime, powerDownTime: $powerDownTime, zeroWaitTime: $zeroWaitTime, enableStealthChop: $enableStealthChop, automaticCurrentControl: $automaticCurrentControl, automaticPWMTuning: $automaticPWMTuning, pidP: $pidP, pidI: $pidI, pidD: $pidD, wasMin: $wasMin, wasCenter: $wasCenter, wasMax: $wasMax)';
   }
 
   @override
@@ -1120,10 +1189,10 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
             (identical(other.dcStepStallguardSensitivity, dcStepStallguardSensitivity) ||
                 other.dcStepStallguardSensitivity ==
                     dcStepStallguardSensitivity) &&
-            (identical(other.hystersisStart, hystersisStart) ||
-                other.hystersisStart == hystersisStart) &&
-            (identical(other.hystersisEnd, hystersisEnd) ||
-                other.hystersisEnd == hystersisEnd) &&
+            (identical(other.hysteresisStart, hysteresisStart) ||
+                other.hysteresisStart == hysteresisStart) &&
+            (identical(other.hysteresisEnd, hysteresisEnd) ||
+                other.hysteresisEnd == hysteresisEnd) &&
             (identical(other.currentHoldDelay, currentHoldDelay) ||
                 other.currentHoldDelay == currentHoldDelay) &&
             (identical(other.blankTime, blankTime) ||
@@ -1173,8 +1242,8 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
         setConstantChopperAtHighVelocities,
         dcStepLoadMeasurementPulseWidth,
         dcStepStallguardSensitivity,
-        hystersisStart,
-        hystersisEnd,
+        hysteresisStart,
+        hysteresisEnd,
         currentHoldDelay,
         blankTime,
         powerDownTime,
@@ -1207,47 +1276,75 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
 
 abstract class _SteeringHardwareConfig extends SteeringHardwareConfig {
   const factory _SteeringHardwareConfig(
-      {@JsonKey(name: 'invertDirection') final bool invertDirection,
-      @JsonKey(name: 'MICRO_STEPS') final int microSteps,
-      @JsonKey(name: 'STEPS_PER_ROT') final int stepsPerRotation,
-      @JsonKey(name: 'RMS_CURRENT') final int rmsCurrent,
-      @JsonKey(name: 'hold_multiplier') final double holdMultiplier,
-      @JsonKey(name: 'freewheel') final MotorHoldingMode freeWheel,
-      @JsonKey(name: 'AMAX_RPM_S_2') final double maxAcceleration,
-      @JsonKey(name: 'VMAX_RPM') final double maxRPM,
-      @JsonKey(name: 'VSTOP') final int vStop,
-      @JsonKey(name: 'VSTART') final int vStart,
-      @JsonKey(name: 'TOFF') final int tOff,
-      @JsonKey(name: 'SGT') final int stallguardThreshold,
-      @JsonKey(name: 'sfilt') final bool stallguardFiltering,
-      @JsonKey(name: 'sg_stop') final bool stallguardStop,
-      @JsonKey(name: 'semin') final int semin,
-      @JsonKey(name: 'semax') final int semax,
-      @JsonKey(name: 'TCOOLTHRS_RPM') final double coolstepThresholdRPM,
-      @JsonKey(name: 'TPWMTHRS_RPM') final double stealthChopThresholdRPM,
-      @JsonKey(name: 'chm') final ChopperMode chopperMode,
-      @JsonKey(name: 'THIGH_RPM')
+      {@JsonKey(name: SteeringHardwareConfigKey.invertDirection)
+      final bool invertDirection,
+      @JsonKey(name: SteeringHardwareConfigKey.microSteps) final int microSteps,
+      @JsonKey(name: SteeringHardwareConfigKey.stepsPerRotation)
+      final int stepsPerRotation,
+      @JsonKey(name: SteeringHardwareConfigKey.rmsCurrent) final int rmsCurrent,
+      @JsonKey(name: SteeringHardwareConfigKey.holdMultiplier)
+      final double holdMultiplier,
+      @JsonKey(name: SteeringHardwareConfigKey.freeWheel)
+      final MotorHoldingMode freeWheel,
+      @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
+      final double maxAcceleration,
+      @JsonKey(name: SteeringHardwareConfigKey.maxRPM) final double maxRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.vStop) final int vStop,
+      @JsonKey(name: SteeringHardwareConfigKey.vStart) final int vStart,
+      @JsonKey(name: SteeringHardwareConfigKey.tOff) final int tOff,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardThreshold)
+      final int stallguardThreshold,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardFiltering)
+      final bool stallguardFiltering,
+      @JsonKey(name: SteeringHardwareConfigKey.stallguardStop)
+      final bool stallguardStop,
+      @JsonKey(name: SteeringHardwareConfigKey.semin) final int semin,
+      @JsonKey(name: SteeringHardwareConfigKey.semax) final int semax,
+      @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)
+      final double coolstepThresholdRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.stealthChopThresholdRPM)
+      final double stealthChopThresholdRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.chopperMode)
+      final ChopperMode chopperMode,
+      @JsonKey(
+          name: SteeringHardwareConfigKey
+              .highVelocityChopperModeChangeThresholdRPM)
       final double highVelocityChopperModeChangeThresholdRPM,
-      @JsonKey(name: 'VDCMIN_RPM') final double dcStepThresholdRPM,
-      @JsonKey(name: 'vhighfs') final bool fullstepAtHighVelocities,
-      @JsonKey(name: 'vhighchm') final bool setConstantChopperAtHighVelocities,
-      @JsonKey(name: 'DC_TIME') final int dcStepLoadMeasurementPulseWidth,
-      @JsonKey(name: 'DC_SG') final int dcStepStallguardSensitivity,
-      @JsonKey(name: 'HSTRT') final int hystersisStart,
-      @JsonKey(name: 'HEND') final int hystersisEnd,
-      @JsonKey(name: 'IHOLDDELAY') final int currentHoldDelay,
-      @JsonKey(name: 'TBL') final ComparatorBlankTime blankTime,
-      @JsonKey(name: 'TPOWERDOWN') final int powerDownTime,
-      @JsonKey(name: 'TZEROWAIT') final int zeroWaitTime,
-      @JsonKey(name: 'en_pwm_mode') final bool enableStealthChop,
-      @JsonKey(name: 'pwm_autoscale') final bool automaticCurrentControl,
-      @JsonKey(name: 'pwm_autograd') final bool automaticPWMTuning,
-      @JsonKey(name: 'pid_P') final double pidP,
-      @JsonKey(name: 'pid_I') final double pidI,
-      @JsonKey(name: 'pid_D') final double pidD,
-      @JsonKey(name: 'was_min') final int wasMin,
-      @JsonKey(name: 'was_center') final int wasCenter,
-      @JsonKey(name: 'was_max')
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepThresholdRPM)
+      final double dcStepThresholdRPM,
+      @JsonKey(name: SteeringHardwareConfigKey.fullstepAtHighVelocities)
+      final bool fullstepAtHighVelocities,
+      @JsonKey(
+          name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)
+      final bool setConstantChopperAtHighVelocities,
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)
+      final int dcStepLoadMeasurementPulseWidth,
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)
+      final int dcStepStallguardSensitivity,
+      @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart)
+      final int hysteresisStart,
+      @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd)
+      final int hysteresisEnd,
+      @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay)
+      final int currentHoldDelay,
+      @JsonKey(name: SteeringHardwareConfigKey.blankTime)
+      final ComparatorBlankTime blankTime,
+      @JsonKey(name: SteeringHardwareConfigKey.powerDownTime)
+      final int powerDownTime,
+      @JsonKey(name: SteeringHardwareConfigKey.zeroWaitTime)
+      final int zeroWaitTime,
+      @JsonKey(name: SteeringHardwareConfigKey.enableStealthChop)
+      final bool enableStealthChop,
+      @JsonKey(name: SteeringHardwareConfigKey.automaticCurrentControl)
+      final bool automaticCurrentControl,
+      @JsonKey(name: SteeringHardwareConfigKey.automaticPWMTuning)
+      final bool automaticPWMTuning,
+      @JsonKey(name: SteeringHardwareConfigKey.pidP) final double pidP,
+      @JsonKey(name: SteeringHardwareConfigKey.pidI) final double pidI,
+      @JsonKey(name: SteeringHardwareConfigKey.pidD) final double pidD,
+      @JsonKey(name: SteeringHardwareConfigKey.wasMin) final int wasMin,
+      @JsonKey(name: SteeringHardwareConfigKey.wasCenter) final int wasCenter,
+      @JsonKey(name: SteeringHardwareConfigKey.wasMax)
       final int wasMax}) = _$SteeringHardwareConfigImpl;
   const _SteeringHardwareConfig._() : super._();
 
@@ -1256,211 +1353,212 @@ abstract class _SteeringHardwareConfig extends SteeringHardwareConfig {
 
   @override
 
-  /// Whehter the motor rotation direction should be inverted.
-  @JsonKey(name: 'invertDirection')
+  /// Whether the motor rotation direction should be inverted.
+  @JsonKey(name: SteeringHardwareConfigKey.invertDirection)
   bool get invertDirection;
   @override
 
   /// The number of micro steps to divide one fullstep into.
-  @JsonKey(name: 'MICRO_STEPS')
+  @JsonKey(name: SteeringHardwareConfigKey.microSteps)
   int get microSteps;
   @override
 
   /// The number of fullsteps for one rotation of the motor.
-  @JsonKey(name: 'STEPS_PER_ROT')
+  @JsonKey(name: SteeringHardwareConfigKey.stepsPerRotation)
   int get stepsPerRotation;
   @override
 
   /// The rated RMS current of the motor.
-  @JsonKey(name: 'RMS_CURRENT')
+  @JsonKey(name: SteeringHardwareConfigKey.rmsCurrent)
   int get rmsCurrent;
   @override
 
   /// A multiplier for how much current should be applied when holding
   /// position, set to 0 to allow freewheeling.
-  @JsonKey(name: 'hold_multiplier')
+  @JsonKey(name: SteeringHardwareConfigKey.holdMultiplier)
   double get holdMultiplier;
   @override
 
   /// Which mode the motor should be in when holding.
-  @JsonKey(name: 'freewheel')
+  @JsonKey(name: SteeringHardwareConfigKey.freeWheel)
   MotorHoldingMode get freeWheel;
   @override
 
   /// Maximum acceleration in RPM/s^2.
-  @JsonKey(name: 'AMAX_RPM_S_2')
+  @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
   double get maxAcceleration;
   @override
 
   /// Maximum RPM
-  @JsonKey(name: 'VMAX_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.maxRPM)
   double get maxRPM;
   @override
 
   /// Stopping velocity, should be higher than [vStart].
-  @JsonKey(name: 'VSTOP')
+  @JsonKey(name: SteeringHardwareConfigKey.vStop)
   int get vStop;
   @override
 
   /// Starting velocity, should be lower than [vStop].
-  @JsonKey(name: 'VSTART')
+  @JsonKey(name: SteeringHardwareConfigKey.vStart)
   int get vStart;
   @override
 
   /// Off time and driver enable.
-  @JsonKey(name: 'TOFF')
+  @JsonKey(name: SteeringHardwareConfigKey.tOff)
   int get tOff;
   @override
 
   /// Threshold for detecting a stall.
-  @JsonKey(name: 'SGT')
+  @JsonKey(name: SteeringHardwareConfigKey.stallguardThreshold)
   int get stallguardThreshold;
   @override
 
   /// Whether stall detection should filter over four fullsteps.
-  @JsonKey(name: 'sfilt')
+  @JsonKey(name: SteeringHardwareConfigKey.stallguardFiltering)
   bool get stallguardFiltering;
   @override
 
   /// Whether the motor should stop when detecting a stall.
-  @JsonKey(name: 'sg_stop')
+  @JsonKey(name: SteeringHardwareConfigKey.stallguardStop)
   bool get stallguardStop;
   @override
 
   /// When stall reading falls below `32*semin`, the motor current is
   /// increased.
-  @JsonKey(name: 'semin')
+  @JsonKey(name: SteeringHardwareConfigKey.semin)
   int get semin;
   @override
 
   /// When stall reading is equal to or above `32*semax`, the motor current is
   /// decreased to save energy.
-  @JsonKey(name: 'semax')
+  @JsonKey(name: SteeringHardwareConfigKey.semax)
   int get semax;
   @override
 
   /// Lower velocity RPM threshold to enable CoolStep and StallGuard.
-  @JsonKey(name: 'TCOOLTHRS_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)
   double get coolstepThresholdRPM;
   @override
 
   /// Uppper velocity RPM threshold for StealthChop.
-  @JsonKey(name: 'TPWMTHRS_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.stealthChopThresholdRPM)
   double get stealthChopThresholdRPM;
   @override
 
   /// Which stepper chopper mode is used.
-  @JsonKey(name: 'chm')
+  @JsonKey(name: SteeringHardwareConfigKey.chopperMode)
   ChopperMode get chopperMode;
   @override
 
   /// Lower velocity RPM threshold for switching to a different chopper mode
   /// at high velocities.
-  @JsonKey(name: 'THIGH_RPM')
+  @JsonKey(
+      name: SteeringHardwareConfigKey.highVelocityChopperModeChangeThresholdRPM)
   double get highVelocityChopperModeChangeThresholdRPM;
   @override
 
   /// Lower velocity RPM threhsold for enabling DcStep.
-  @JsonKey(name: 'VDCMIN_RPM')
+  @JsonKey(name: SteeringHardwareConfigKey.dcStepThresholdRPM)
   double get dcStepThresholdRPM;
   @override
 
   /// Whether fullstepping should be enabled above
   /// [highVelocityChopperModeChangeThresholdRPM].
-  @JsonKey(name: 'vhighfs')
+  @JsonKey(name: SteeringHardwareConfigKey.fullstepAtHighVelocities)
   bool get fullstepAtHighVelocities;
   @override
 
   /// Whether chopper mode switch to
   /// [ChopperMode.constantTimeOffWithFastDecay] should be done above
   /// [highVelocityChopperModeChangeThresholdRPM].
-  @JsonKey(name: 'vhighchm')
+  @JsonKey(name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)
   bool get setConstantChopperAtHighVelocities;
   @override
 
   /// Reference pulse width for DcStep load measurement.
-  @JsonKey(name: 'DC_TIME')
+  @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)
   int get dcStepLoadMeasurementPulseWidth;
   @override
 
   /// Stall detection threshold for DcStep mode.
-  @JsonKey(name: 'DC_SG')
+  @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)
   int get dcStepStallguardSensitivity;
   @override
 
   /// Hysteresis start value.
-  @JsonKey(name: 'HSTRT')
-  int get hystersisStart;
+  @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart)
+  int get hysteresisStart;
   @override
 
   /// Hysteresis end value.
-  @JsonKey(name: 'HEND')
-  int get hystersisEnd;
+  @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd)
+  int get hysteresisEnd;
   @override
 
   /// Number of clock cycles until motor powers down after standstill and
   /// [powerDownTime] has expired.
-  @JsonKey(name: 'IHOLDDELAY')
+  @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay)
   int get currentHoldDelay;
   @override
 
   /// Comparator blank time, number of clock cycles.
-  @JsonKey(name: 'TBL')
+  @JsonKey(name: SteeringHardwareConfigKey.blankTime)
   ComparatorBlankTime get blankTime;
   @override
 
   /// Power down delay time after standstill.
-  @JsonKey(name: 'TPOWERDOWN')
+  @JsonKey(name: SteeringHardwareConfigKey.powerDownTime)
   int get powerDownTime;
   @override
 
   /// Wait time before powering up after having reached 0 veolcity.
-  @JsonKey(name: 'TZEROWAIT')
+  @JsonKey(name: SteeringHardwareConfigKey.zeroWaitTime)
   int get zeroWaitTime;
   @override
 
   /// Whether StealthChop should enable below [stealthChopThresholdRPM].
-  @JsonKey(name: 'en_pwm_mode')
+  @JsonKey(name: SteeringHardwareConfigKey.enableStealthChop)
   bool get enableStealthChop;
   @override
 
   /// Whether PWM amplitude scaling is automatic.
-  @JsonKey(name: 'pwm_autoscale')
+  @JsonKey(name: SteeringHardwareConfigKey.automaticCurrentControl)
   bool get automaticCurrentControl;
   @override
 
   /// Whether automatic tuning of PWM_GRAD is enabled.
-  @JsonKey(name: 'pwm_autograd')
+  @JsonKey(name: SteeringHardwareConfigKey.automaticPWMTuning)
   bool get automaticPWMTuning;
   @override
 
   /// Proportional gain coefficient for steering.
-  @JsonKey(name: 'pid_P')
+  @JsonKey(name: SteeringHardwareConfigKey.pidP)
   double get pidP;
   @override
 
   /// Integral gain coefficient for steering.
-  @JsonKey(name: 'pid_I')
+  @JsonKey(name: SteeringHardwareConfigKey.pidI)
   double get pidI;
   @override
 
   /// Derivative gain coefficient for steering.
-  @JsonKey(name: 'pid_D')
+  @JsonKey(name: SteeringHardwareConfigKey.pidD)
   double get pidD;
   @override
 
   /// Minimum reading value for WAS.
-  @JsonKey(name: 'was_min')
+  @JsonKey(name: SteeringHardwareConfigKey.wasMin)
   int get wasMin;
   @override
 
   /// Center reading value for WAS.
-  @JsonKey(name: 'was_center')
+  @JsonKey(name: SteeringHardwareConfigKey.wasCenter)
   int get wasCenter;
   @override
 
   /// Maximum reading value for WAS.
-  @JsonKey(name: 'was_max')
+  @JsonKey(name: SteeringHardwareConfigKey.wasMax)
   int get wasMax;
   @override
   @JsonKey(ignore: true)

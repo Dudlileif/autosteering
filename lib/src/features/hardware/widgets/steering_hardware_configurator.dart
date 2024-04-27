@@ -57,8 +57,7 @@ class SteeringHardwareConfigurator extends StatelessWidget {
                     builder: (context, ref, child) => CloseButton(
                       onPressed: () => ref
                           .read(
-                            showSteeringHardwareConfigProvider
-                                .notifier,
+                            showSteeringHardwareConfigProvider.notifier,
                           )
                           .update(value: false),
                     ),
@@ -230,7 +229,13 @@ class _MotorPage extends ConsumerWidget {
                 // Wait a short while before saving the hopefully
                 // updated vehicle.
                 Timer(const Duration(milliseconds: 100), () {
-                  ref.read(sendSteeringHardwareConfigProvider);
+                  ref.read(
+                    updateSteeringHardwareConfigProvider(
+                      const SteeringHardwareConfigKeysContainer(
+                        {SteeringHardwareConfigKey.invertDirection},
+                      ),
+                    ),
+                  );
                   final vehicle = ref.watch(mainVehicleProvider);
                   ref.read(saveVehicleProvider(vehicle));
                   Logger.instance.i(
@@ -311,7 +316,13 @@ class _MotorPage extends ConsumerWidget {
               // Wait a short while before saving the
               // hopefully updated vehicle.
               Timer(const Duration(milliseconds: 100), () {
-                ref.read(sendSteeringHardwareConfigProvider);
+                ref.read(
+                  updateSteeringHardwareConfigProvider(
+                    const SteeringHardwareConfigKeysContainer(
+                      {SteeringHardwareConfigKey.maxRPM},
+                    ),
+                  ),
+                );
                 final vehicle = ref.watch(mainVehicleProvider);
                 ref.read(saveVehicleProvider(vehicle));
                 Logger.instance.i(
@@ -355,7 +366,13 @@ class _MotorPage extends ConsumerWidget {
               // Wait a short while before saving the
               // hopefully updated vehicle.
               Timer(const Duration(milliseconds: 100), () {
-                ref.read(sendSteeringHardwareConfigProvider);
+                ref.read(
+                  updateSteeringHardwareConfigProvider(
+                    const SteeringHardwareConfigKeysContainer(
+                      {SteeringHardwareConfigKey.maxAcceleration},
+                    ),
+                  ),
+                );
                 final vehicle = ref.watch(mainVehicleProvider);
                 ref.read(saveVehicleProvider(vehicle));
                 Logger.instance.i(
@@ -394,7 +411,13 @@ class _MotorPage extends ConsumerWidget {
             // Wait a short while before saving the
             // hopefully updated vehicle.
             Timer(const Duration(milliseconds: 100), () {
-              ref.read(sendSteeringHardwareConfigProvider);
+              ref.read(
+                updateSteeringHardwareConfigProvider(
+                  const SteeringHardwareConfigKeysContainer(
+                    {SteeringHardwareConfigKey.microSteps},
+                  ),
+                ),
+              );
               final vehicle = ref.watch(mainVehicleProvider);
               ref.read(saveVehicleProvider(vehicle));
               Logger.instance.i(
@@ -433,7 +456,13 @@ class _MotorPage extends ConsumerWidget {
             // Wait a short while before saving the
             // hopefully updated vehicle.
             Timer(const Duration(milliseconds: 100), () {
-              ref.read(sendSteeringHardwareConfigProvider);
+              ref.read(
+                updateSteeringHardwareConfigProvider(
+                  const SteeringHardwareConfigKeysContainer(
+                    {SteeringHardwareConfigKey.stepsPerRotation},
+                  ),
+                ),
+              );
               final vehicle = ref.watch(mainVehicleProvider);
               ref.read(saveVehicleProvider(vehicle));
               Logger.instance.i(
@@ -470,7 +499,13 @@ class _MotorPage extends ConsumerWidget {
             // Wait a short while before saving the
             // hopefully updated vehicle.
             Timer(const Duration(milliseconds: 100), () {
-              ref.read(sendSteeringHardwareConfigProvider);
+              ref.read(
+                updateSteeringHardwareConfigProvider(
+                  const SteeringHardwareConfigKeysContainer(
+                    {SteeringHardwareConfigKey.rmsCurrent},
+                  ),
+                ),
+              );
               final vehicle = ref.watch(mainVehicleProvider);
               ref.read(saveVehicleProvider(vehicle));
               Logger.instance.i(
@@ -510,7 +545,13 @@ class _MotorPage extends ConsumerWidget {
             // Wait a short while before saving the
             // hopefully updated vehicle.
             Timer(const Duration(milliseconds: 100), () {
-              ref.read(sendSteeringHardwareConfigProvider);
+              ref.read(
+                updateSteeringHardwareConfigProvider(
+                  const SteeringHardwareConfigKeysContainer(
+                    {SteeringHardwareConfigKey.stallguardThreshold},
+                  ),
+                ),
+              );
               final vehicle = ref.watch(mainVehicleProvider);
               ref.read(saveVehicleProvider(vehicle));
               Logger.instance.i(
@@ -554,7 +595,13 @@ class _MotorPage extends ConsumerWidget {
             // Wait a short while before saving the
             // hopefully updated vehicle.
             Timer(const Duration(milliseconds: 100), () {
-              ref.read(sendSteeringHardwareConfigProvider);
+              ref.read(
+                updateSteeringHardwareConfigProvider(
+                  const SteeringHardwareConfigKeysContainer(
+                    {SteeringHardwareConfigKey.stealthChopThresholdRPM},
+                  ),
+                ),
+              );
               final vehicle = ref.watch(mainVehicleProvider);
               ref.read(saveVehicleProvider(vehicle));
               Logger.instance.i(
@@ -599,7 +646,14 @@ class _MotorPage extends ConsumerWidget {
             // Wait a short while before saving the
             // hopefully updated vehicle.
             Timer(const Duration(milliseconds: 100), () {
-              ref.read(sendSteeringHardwareConfigProvider);
+              ref.read(
+                updateSteeringHardwareConfigProvider(
+                  const SteeringHardwareConfigKeysContainer({
+                    SteeringHardwareConfigKey
+                        .highVelocityChopperModeChangeThresholdRPM,
+                  }),
+                ),
+              );
               final vehicle = ref.watch(mainVehicleProvider);
               ref.read(saveVehicleProvider(vehicle));
               Logger.instance.i(
@@ -642,7 +696,13 @@ class _MotorPage extends ConsumerWidget {
             // Wait a short while before saving the
             // hopefully updated vehicle.
             Timer(const Duration(milliseconds: 100), () {
-              ref.read(sendSteeringHardwareConfigProvider);
+              ref.read(
+                updateSteeringHardwareConfigProvider(
+                  const SteeringHardwareConfigKeysContainer(
+                    {SteeringHardwareConfigKey.coolstepThresholdRPM},
+                  ),
+                ),
+              );
               final vehicle = ref.watch(mainVehicleProvider);
               ref.read(saveVehicleProvider(vehicle));
               Logger.instance.i(
@@ -685,7 +745,13 @@ class _MotorPage extends ConsumerWidget {
             // Wait a short while before saving the
             // hopefully updated vehicle.
             Timer(const Duration(milliseconds: 100), () {
-              ref.read(sendSteeringHardwareConfigProvider);
+              ref.read(
+                updateSteeringHardwareConfigProvider(
+                  const SteeringHardwareConfigKeysContainer(
+                    {SteeringHardwareConfigKey.dcStepThresholdRPM},
+                  ),
+                ),
+              );
               final vehicle = ref.watch(mainVehicleProvider);
               ref.read(saveVehicleProvider(vehicle));
               Logger.instance.i(
@@ -944,7 +1010,13 @@ class _WasPage extends ConsumerWidget {
             Timer(
               const Duration(milliseconds: 100),
               () {
-                ref.read(sendSteeringHardwareConfigProvider);
+                ref.read(
+                  updateSteeringHardwareConfigProvider(
+                    const SteeringHardwareConfigKeysContainer(
+                      {SteeringHardwareConfigKey.wasMin},
+                    ),
+                  ),
+                );
                 final vehicle = ref.watch(mainVehicleProvider);
                 ref.read(
                   saveVehicleProvider(vehicle),
@@ -988,7 +1060,13 @@ class _WasPage extends ConsumerWidget {
               Timer(
                 const Duration(milliseconds: 100),
                 () {
-                  ref.read(sendSteeringHardwareConfigProvider);
+                  ref.read(
+                    updateSteeringHardwareConfigProvider(
+                      const SteeringHardwareConfigKeysContainer(
+                        {SteeringHardwareConfigKey.wasMin},
+                      ),
+                    ),
+                  );
                   final vehicle = ref.watch(mainVehicleProvider);
                   ref.read(
                     saveVehicleProvider(vehicle),
@@ -1043,7 +1121,13 @@ class _WasPage extends ConsumerWidget {
             Timer(
               const Duration(milliseconds: 100),
               () {
-                ref.read(sendSteeringHardwareConfigProvider);
+                ref.read(
+                  updateSteeringHardwareConfigProvider(
+                    const SteeringHardwareConfigKeysContainer(
+                      {SteeringHardwareConfigKey.wasCenter},
+                    ),
+                  ),
+                );
                 final vehicle = ref.watch(mainVehicleProvider);
                 ref.read(
                   saveVehicleProvider(vehicle),
@@ -1087,7 +1171,13 @@ class _WasPage extends ConsumerWidget {
               Timer(
                 const Duration(milliseconds: 100),
                 () {
-                  ref.read(sendSteeringHardwareConfigProvider);
+                  ref.read(
+                    updateSteeringHardwareConfigProvider(
+                      const SteeringHardwareConfigKeysContainer(
+                        {SteeringHardwareConfigKey.wasCenter},
+                      ),
+                    ),
+                  );
                   final vehicle = ref.watch(mainVehicleProvider);
                   ref.read(
                     saveVehicleProvider(vehicle),
@@ -1141,7 +1231,13 @@ class _WasPage extends ConsumerWidget {
             Timer(
               const Duration(milliseconds: 100),
               () {
-                ref.read(sendSteeringHardwareConfigProvider);
+                ref.read(
+                  updateSteeringHardwareConfigProvider(
+                    const SteeringHardwareConfigKeysContainer(
+                      {SteeringHardwareConfigKey.wasMax},
+                    ),
+                  ),
+                );
                 final vehicle = ref.watch(mainVehicleProvider);
                 ref.read(
                   saveVehicleProvider(vehicle),
@@ -1185,7 +1281,13 @@ class _WasPage extends ConsumerWidget {
               Timer(
                 const Duration(milliseconds: 100),
                 () {
-                  ref.read(sendSteeringHardwareConfigProvider);
+                  ref.read(
+                    updateSteeringHardwareConfigProvider(
+                      const SteeringHardwareConfigKeysContainer(
+                        {SteeringHardwareConfigKey.wasMax},
+                      ),
+                    ),
+                  );
                   final vehicle = ref.watch(mainVehicleProvider);
                   ref.read(
                     saveVehicleProvider(vehicle),
