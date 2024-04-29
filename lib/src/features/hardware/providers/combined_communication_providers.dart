@@ -48,12 +48,16 @@ void combinedCommunication(CombinedCommunicationRef ref) {
   if (Device.supportsSerial) {
     ref.watch(_combinedSerialProvider);
   }
-  ref.watch(sendMessagesToHardwareProvider);
+  ref
+    ..watch(sendMessagesToHardwareProvider)
+    ..watch(sendRemoteControlLedStateProvider);
 }
 
 /// A provider for whether any hardware is connected and communicating with
 /// us.
 @riverpod
-bool hardwareAlive(HardwareAliveRef ref) =>
-    ref.watch(hardwareSerialAliveProvider) ||
-    ref.watch(steeringHardwareNetworkAliveProvider);
+bool hardwareAlive(HardwareAliveRef ref) {
+  ref.watch(remoteControlHardwareNetworkAliveProvider);
+  return ref.watch(hardwareSerialAliveProvider) ||
+      ref.watch(steeringHardwareNetworkAliveProvider);
+}

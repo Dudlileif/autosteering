@@ -407,6 +407,13 @@ class SimulatorCore {
             ),
           );
         }
+      } else if (message is ({List<int> remoteControlLedState})) {
+        remoteControlHardwareUdpSendStream.add(
+          Uint8List.fromList(
+            jsonEncode({'remote_states': message.remoteControlLedState})
+                .codeUnits,
+          ),
+        );
       }
       // Shut down the isolate.
       else if (message == null) {

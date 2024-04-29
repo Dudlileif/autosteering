@@ -6,6 +6,25 @@ part of 'remote_control_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$sendRemoteControlLedStateHash() =>
+    r'71474b5c2a596f3ca465c4424b7710196d5d14c0';
+
+/// A provider for sending the current state of the features corresponding of
+/// the mapped [RemoteControlButtonActions] to the remote controller.
+///
+/// Copied from [sendRemoteControlLedState].
+@ProviderFor(sendRemoteControlLedState)
+final sendRemoteControlLedStateProvider = AutoDisposeProvider<void>.internal(
+  sendRemoteControlLedState,
+  name: r'sendRemoteControlLedStateProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$sendRemoteControlLedStateHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SendRemoteControlLedStateRef = AutoDisposeProviderRef<void>;
 String _$remoteControlButtonActionsHash() =>
     r'b6b93263e29e05ccd98d940111c631990abb7998';
 
