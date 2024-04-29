@@ -49,7 +49,7 @@ class HardwareNetworkMenu extends StatelessWidget {
                 leading: const Icon(Icons.wifi),
                 title: Text(
                   '''
-This device wlan:
+This device WLAN:
 $ip''',
                   style: textStyle,
                 ),
@@ -89,7 +89,7 @@ $ip''',
                 leading: const Icon(Icons.cable),
                 title: Text(
                   '''
-This device ethernet:
+This device Ethernet:
 $ip''',
                   style: textStyle,
                 ),
@@ -118,7 +118,7 @@ $ip''',
             children: [
               Consumer(
                 builder: (context, ref, child) =>
-                    ref.watch(hardwareNetworkAliveProvider)
+                    ref.watch(steeringHardwareNetworkAliveProvider)
                         ? const Icon(Icons.check, color: Colors.green)
                         : const Icon(Icons.clear, color: Colors.red),
               ),
@@ -128,11 +128,11 @@ $ip''',
           title: Consumer(
             builder: (context, ref, child) {
               final controller = TextEditingController(
-                text: ref.read(hardwareAddressProvider),
+                text: ref.read(steeringHardwareAddressProvider),
               );
               return TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Hardware Address',
+                  labelText: 'Steering Hardware Address',
                   error: SizedBox(
                     height: 16,
                     child: Column(
@@ -176,7 +176,78 @@ $ip''',
                   ),
                 ),
                 controller: controller,
-                onChanged: ref.read(hardwareAddressProvider.notifier).update,
+                onChanged:
+                    ref.read(steeringHardwareAddressProvider.notifier).update,
+              );
+            },
+          ),
+        ),
+        ListTile(
+          leading: Column(
+            children: [
+              Consumer(
+                builder: (context, ref, child) =>
+                    ref.watch(remoteControlHardwareNetworkAliveProvider)
+                        ? const Icon(Icons.check, color: Colors.green)
+                        : const Icon(Icons.clear, color: Colors.red),
+              ),
+              const Icon(Icons.settings_remote),
+            ],
+          ),
+          title: Consumer(
+            builder: (context, ref, child) {
+              final controller = TextEditingController(
+                text: ref.read(remoteControlHardwareAddressProvider),
+              );
+              return TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Remote Control Hardware Address',
+                  error: SizedBox(
+                    height: 16,
+                    child: Column(
+                      children: [
+                        ListenableBuilder(
+                          listenable: controller,
+                          builder: (context, child) => Consumer(
+                            builder: (context, ref, child) => ref
+                                .watch(
+                                  validInternetAddressProvider(controller.text),
+                                )
+                                .when(
+                                  data: (data) => data
+                                      ? Text(
+                                          'Valid IP found',
+                                          style: theme.textTheme.bodySmall
+                                              ?.copyWith(
+                                            color: Colors.green.shade600,
+                                          ),
+                                        )
+                                      : Text(
+                                          'No valid IP found',
+                                          style: theme.textTheme.bodySmall
+                                              ?.copyWith(
+                                            color: theme.colorScheme.error,
+                                          ),
+                                        ),
+                                  error: (error, stackTrace) => Text(
+                                    'No valid IP found',
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.error,
+                                    ),
+                                  ),
+                                  loading: LinearProgressIndicator.new,
+                                ),
+                          ),
+                        ),
+                        const Expanded(child: SizedBox.shrink()),
+                      ],
+                    ),
+                  ),
+                ),
+                controller: controller,
+                onChanged: ref
+                    .read(remoteControlHardwareAddressProvider.notifier)
+                    .update,
               );
             },
           ),

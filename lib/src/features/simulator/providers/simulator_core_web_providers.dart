@@ -67,10 +67,9 @@ Stream<Vehicle?> simCoreWebStream(
   SimCoreWebStreamRef ref,
 ) {
   ref.onDispose(() => Logger.instance.i('Simulator Core shut down.'));
+  final commonMessageHandler = CommonMessageHandler(ref);
   final updateMainStreamController = StreamController<dynamic>()
-    ..stream.listen((event) {
-      CommonMessageHandler.handleHardwareMessage(ref, event);
-    });
+    ..stream.listen(commonMessageHandler.attemptToHandleMessage);
 
   final stream = SimulatorCore.webWorker(
     ref.watch(_simCoreWebInputProvider.notifier).stream(),

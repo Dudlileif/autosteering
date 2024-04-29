@@ -7,7 +7,7 @@ part of 'hardware_network_providers.dart';
 // **************************************************************************
 
 String _$deviceIPAdressWlanHash() =>
-    r'f83be2448781de1c928f2c96940a5098ffad153e';
+    r'5de5e289b585ba5b746f1962a8a77f024a9627ca';
 
 /// A provider for the wireless IP address of the device.
 ///
@@ -24,7 +24,7 @@ final deviceIPAdressWlanProvider = AutoDisposeFutureProvider<String?>.internal(
 );
 
 typedef DeviceIPAdressWlanRef = AutoDisposeFutureProviderRef<String?>;
-String _$deviceIPAdressAPHash() => r'38178052a4a97611dc6fc4e8b2ecfb1d5b5b91bb';
+String _$deviceIPAdressAPHash() => r'e61c5924afabc3bfc9f0ff93a3c01996e8beed55';
 
 /// A provider for the access point host IP address of the device.
 ///
@@ -42,7 +42,7 @@ final deviceIPAdressAPProvider = AutoDisposeFutureProvider<String?>.internal(
 
 typedef DeviceIPAdressAPRef = AutoDisposeFutureProviderRef<String?>;
 String _$deviceIPAdressEthernetHash() =>
-    r'c97b95b9563fec16579d200be6b447507c4c80af';
+    r'd50284aa3ec6f28ccf0854397fac4b87a8cd1ff9';
 
 /// A provider for the ethernet IP address of the device.
 ///
@@ -61,9 +61,9 @@ final deviceIPAdressEthernetProvider =
 
 typedef DeviceIPAdressEthernetRef = AutoDisposeFutureProviderRef<String?>;
 String _$hardwareCommunicationConfigHash() =>
-    r'ec0633874ead1587e91a4e4dc46c2b6040b34908';
+    r'3633f1b1258bcc18ff12ebf4d4469b438aa22931';
 
-/// A provider for the combined state of the [HardwareAddress],
+/// A provider for the combined state of the [SteeringHardwareAddress],
 /// [HardwareUDPReceivePort] and [HardwareUDPSendPort].
 ///
 /// The updated state is automatically sent to the
@@ -72,7 +72,8 @@ String _$hardwareCommunicationConfigHash() =>
 @ProviderFor(hardwareCommunicationConfig)
 final hardwareCommunicationConfigProvider = Provider<
     ({
-      String hardwareAddress,
+      String steeringHardwareAddress,
+      String remoteControlHardwareAddress,
       int hardwareUDPReceivePort,
       int hardwareUDPSendPort
     })>.internal(
@@ -87,7 +88,8 @@ final hardwareCommunicationConfigProvider = Provider<
 
 typedef HardwareCommunicationConfigRef = ProviderRef<
     ({
-      String hardwareAddress,
+      String steeringHardwareAddress,
+      String remoteControlHardwareAddress,
       int hardwareUDPReceivePort,
       int hardwareUDPSendPort
     })>;
@@ -129,43 +131,85 @@ final networkAvailableProvider = Provider<bool>.internal(
 );
 
 typedef NetworkAvailableRef = ProviderRef<bool>;
-String _$hardwareNetworkAliveHash() =>
-    r'34d239e447fc1d306a7aedb2179959c9d78560d8';
+String _$steeringHardwareNetworkAliveHash() =>
+    r'349e2d89fd44c884ef2492747c7feec18ab76530';
 
-/// A provider for whether there is a connection with the hardware.
+/// A provider for whether there is a connection with the steering hardware.
 ///
-/// Copied from [HardwareNetworkAlive].
-@ProviderFor(HardwareNetworkAlive)
-final hardwareNetworkAliveProvider =
-    NotifierProvider<HardwareNetworkAlive, bool>.internal(
-  HardwareNetworkAlive.new,
-  name: r'hardwareNetworkAliveProvider',
+/// Copied from [SteeringHardwareNetworkAlive].
+@ProviderFor(SteeringHardwareNetworkAlive)
+final steeringHardwareNetworkAliveProvider =
+    NotifierProvider<SteeringHardwareNetworkAlive, bool>.internal(
+  SteeringHardwareNetworkAlive.new,
+  name: r'steeringHardwareNetworkAliveProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$hardwareNetworkAliveHash,
+      : _$steeringHardwareNetworkAliveHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$HardwareNetworkAlive = Notifier<bool>;
-String _$hardwareAddressHash() => r'9b1f5003b3de55c4044c9ab861156175cccd572c';
+typedef _$SteeringHardwareNetworkAlive = Notifier<bool>;
+String _$remoteControlHardwareNetworkAliveHash() =>
+    r'609957ce4523257f5267104473652f29a7f1735c';
 
-/// A provider for the IP adress of the hardware we want to communicate with.
+/// A provider for whether there is a connection with the remote control
+/// hardware.
 ///
-/// Copied from [HardwareAddress].
-@ProviderFor(HardwareAddress)
-final hardwareAddressProvider =
-    NotifierProvider<HardwareAddress, String>.internal(
-  HardwareAddress.new,
-  name: r'hardwareAddressProvider',
+/// Copied from [RemoteControlHardwareNetworkAlive].
+@ProviderFor(RemoteControlHardwareNetworkAlive)
+final remoteControlHardwareNetworkAliveProvider =
+    NotifierProvider<RemoteControlHardwareNetworkAlive, bool>.internal(
+  RemoteControlHardwareNetworkAlive.new,
+  name: r'remoteControlHardwareNetworkAliveProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$hardwareAddressHash,
+      : _$remoteControlHardwareNetworkAliveHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$HardwareAddress = Notifier<String>;
+typedef _$RemoteControlHardwareNetworkAlive = Notifier<bool>;
+String _$steeringHardwareAddressHash() =>
+    r'4508da53c714f433e85ea2d8b7672aca61824b32';
+
+/// A provider for the IP adress of the steering hardware we want to communicate
+/// with.
+///
+/// Copied from [SteeringHardwareAddress].
+@ProviderFor(SteeringHardwareAddress)
+final steeringHardwareAddressProvider =
+    NotifierProvider<SteeringHardwareAddress, String>.internal(
+  SteeringHardwareAddress.new,
+  name: r'steeringHardwareAddressProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$steeringHardwareAddressHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SteeringHardwareAddress = Notifier<String>;
+String _$remoteControlHardwareAddressHash() =>
+    r'22e54b981c0170742b9370f31b6bc07b4f7452b0';
+
+/// A provider for the IP adress of the remote control hardware we want to
+/// communicate with.
+///
+/// Copied from [RemoteControlHardwareAddress].
+@ProviderFor(RemoteControlHardwareAddress)
+final remoteControlHardwareAddressProvider =
+    NotifierProvider<RemoteControlHardwareAddress, String>.internal(
+  RemoteControlHardwareAddress.new,
+  name: r'remoteControlHardwareAddressProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$remoteControlHardwareAddressHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$RemoteControlHardwareAddress = Notifier<String>;
 String _$hardwareUDPReceivePortHash() =>
     r'91dbd7461ad74145dfdb3e30087d93af782aac83';
 
@@ -189,7 +233,7 @@ String _$hardwareUDPSendPortHash() =>
     r'8fb2c394511108ca165925cab8e4d31e8abda11c';
 
 /// A provider for the UDP send port for the device to send messages to
-/// the hardware in [HardwareAddress].
+/// the hardware in [SteeringHardwareAddress].
 ///
 /// Copied from [HardwareUDPSendPort].
 @ProviderFor(HardwareUDPSendPort)
@@ -205,7 +249,7 @@ final hardwareUDPSendPortProvider =
 );
 
 typedef _$HardwareUDPSendPort = Notifier<int>;
-String _$tcpServerHash() => r'a705cb8e8f1bac00be4156e488dcb060ea2faa12';
+String _$tcpServerHash() => r'd6dbfb973642beb24197ba21b9dba07ed1e434af';
 
 /// A provider for a TCP server for sending/receiving data via TCP.
 ///

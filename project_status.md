@@ -45,6 +45,8 @@
 - Custom vehicle painter, dynamically changes color
   to fit the theme/manufacturer, basic rotating tyres
 
+- Basic remote control support over UDP.
+
 ## To be implemented
 
 - Implement tablet/phone UI
@@ -82,7 +84,7 @@
 
 - Import/export with AgOpenGps and ISOXML, maybe other formats
 
-- Hotkeys, remote control (buttons/switches)
+- Hotkeys
 
 ## Further ideas
 

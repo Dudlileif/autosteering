@@ -15,11 +15,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-export 'common_message_handler.dart';
-export 'imu/imu.dart';
-export 'message_decoder.dart';
-export 'motor_status.dart';
-export 'pid_controller/pid_controller.dart';
-export 'remote_control/remote_control_button_actions.dart';
-export 'steering_hardware_config/steering_hardware_config.dart';
-export 'was/was.dart';
+/// An enumerator for remote control button actions.
+enum RemoteControlButtonAction {
+  /// Toggle the equipment sections.
+  toggleEquipmentSections('Toggle equipment sections'),
+
+  /// Toggle autosteering.
+  toggleAutosteering('Toggle autosteering'),
+
+  /// Toggle AB tracking snap to closest line.
+  toggleABSnap('Toggle AB-line snap to closest line');
+
+  const RemoteControlButtonAction(this.description);
+
+  /// A short description of this.
+  final String description;
+}

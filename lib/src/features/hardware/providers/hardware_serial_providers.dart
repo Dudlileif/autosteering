@@ -124,6 +124,8 @@ Stream<String?> hardwareSerialStream(HardwareSerialStreamRef ref) {
 
   final serial = ref.watch(hardwareSerialProvider);
 
+  final commonMessageHandler = CommonMessageHandler(ref);
+
   final decoder = MessageDecoder();
 
   if (serial != null) {
@@ -140,7 +142,7 @@ Stream<String?> hardwareSerialStream(HardwareSerialStreamRef ref) {
               message is ({Geographic gnssPosition, DateTime time}) ||
               message is WasReading) {
             ref.read(simInputProvider.notifier).send(message);
-          } else if (CommonMessageHandler.handleHardwareMessage(ref, message)) {
+          } else if (commonMessageHandler.attemptToHandleMessage(message)) {
           } else {
             Logger.instance.log(
               Level.warning,

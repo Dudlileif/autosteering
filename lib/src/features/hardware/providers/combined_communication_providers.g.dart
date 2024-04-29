@@ -61,7 +61,7 @@ final combinedCommunicationProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef CombinedCommunicationRef = AutoDisposeProviderRef<void>;
-String _$hardwareAliveHash() => r'158f328c1db19e884059d53dec8cce39bb60c838';
+String _$hardwareAliveHash() => r'279b33f9ef9ddf49967abb12ba9e06dc01d7ca58';
 
 /// A provider for whether any hardware is connected and communicating with
 /// us.

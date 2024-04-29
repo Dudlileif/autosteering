@@ -483,6 +483,11 @@ class MessageDecoder {
           if (data['motor_target'] is double) {
             messages.add((motorTargetRotation: data['motor_target'] as double));
           }
+          if (data['button_states'] is List) {
+            messages.add(
+              (buttonStates: List<bool>.from(data['button_states'] as List)),
+            );
+          }
         } catch (e) {
           messages.add(
             LogEvent(

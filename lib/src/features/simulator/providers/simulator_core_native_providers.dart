@@ -127,6 +127,8 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
     Logger.instance.w('Simulator Core shut down.');
   });
 
+  final commonMessageHandler = CommonMessageHandler(ref);
+
   while (true) {
     final message = await simCoreReceiveStream.next;
     restartTimer?.reset();
@@ -139,17 +141,29 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
       PathTracking? pathTracking,
       ABTracking? abTracking,
       AutosteeringState autosteeringState,
-      bool hardwareIsConnected,
     })) {
       ref.read(commonSimCoreMessageHandlerProvider(message));
       yield message.vehicle;
-    } else if (CommonMessageHandler.handleHardwareMessage(ref, message)) {
+    } else if (commonMessageHandler.attemptToHandleMessage(message)) {
     } else if (message == 'Heartbeat') {
-    } else if (message is ({InternetAddress hardwareAddress})) {
+    } else if (message is ({InternetAddress steeringHardwareAddress})) {
       ref
-          .read(hardwareAddressProvider.notifier)
-          .update(message.hardwareAddress.address);
-      Logger.instance.i('Hardware detected at: ${message.hardwareAddress}');
+          .read(steeringHardwareAddressProvider.notifier)
+          .update(message.steeringHardwareAddress.address);
+      Logger.instance.i(
+        'Steering hardware detected at: ${message.steeringHardwareAddress}',
+      );
+    } else if (message is ({InternetAddress remoteControlHardwareAddress})) {
+      ref
+          .read(remoteControlHardwareAddressProvider.notifier)
+          .update(message.remoteControlHardwareAddress.address);
+      Logger.instance.i(
+        '''Remote control hardware detected at: ${message.remoteControlHardwareAddress}''',
+      );
+    } else if (message is ({bool remoteControlHeartbeat})) {
+      ref
+          .read(remoteControlHardwareNetworkAliveProvider.notifier)
+          .update(value: message.remoteControlHeartbeat);
     } else if (message is List) {
       if (message.any((element) => element is Exception)) {
         Logger.instance.e(

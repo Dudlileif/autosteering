@@ -7,7 +7,7 @@ part of 'hardware_motor_providers.dart';
 // **************************************************************************
 
 String _$getSteeringHardwareConfigHash() =>
-    r'eb13c44ba561f28f0b8a0f68e23438200d44675a';
+    r'ad554fce6a8b6e94dfc027a1775e13e7e8cbcbf4';
 
 /// A provider for getting the motor configuration from the hardware.
 ///
@@ -25,7 +25,7 @@ final getSteeringHardwareConfigProvider = FutureProvider<void>.internal(
 
 typedef GetSteeringHardwareConfigRef = FutureProviderRef<void>;
 String _$updateSteeringHardwareConfigHash() =>
-    r'0808a958ae3472fd4fa0bc0d4e9261356ed7f337';
+    r'79ecfde68933d8503a95c09204a13e17e127a07b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -239,7 +239,7 @@ class _UpdateSteeringHardwareConfigProviderElement
 }
 
 String _$sendSteeringHardwareConfigHash() =>
-    r'dd8dc0dce988ea17839a598cb7013c845946ef99';
+    r'ccb57be1a1b3f7e52d91705e954410584a14f483';
 
 /// A provider for sending the whole motor configuration to the hardware.
 ///

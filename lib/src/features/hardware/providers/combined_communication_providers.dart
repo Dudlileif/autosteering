@@ -56,4 +56,4 @@ void combinedCommunication(CombinedCommunicationRef ref) {
 @riverpod
 bool hardwareAlive(HardwareAliveRef ref) =>
     ref.watch(hardwareSerialAliveProvider) ||
-    ref.watch(hardwareNetworkAliveProvider);
+    ref.watch(steeringHardwareNetworkAliveProvider);
