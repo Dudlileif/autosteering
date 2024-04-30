@@ -17,6 +17,7 @@
 
 import 'dart:ui';
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:geobase/geobase.dart';
 
@@ -60,12 +61,7 @@ class Section {
     final workingWidth = json['working_width'] as double?;
     final active = json['active'] as bool?;
     final automateActivation = json['automate_activation'] as bool?;
-    final color = json['color'] != null
-        ? Color(int.parse(json['color'] as String, radix: 16))
-        : null;
-    final workedPathColor = json['worked_path_color'] != null
-        ? Color(int.parse(json['worked_path_color'] as String, radix: 16))
-        : null;
+    
 
     return Section(
       index: index ?? 0,
@@ -73,8 +69,10 @@ class Section {
       workingWidth: workingWidth ?? 3,
       active: active ?? false,
       automateActivation: automateActivation ?? false,
-      color: color,
-      workedPathColor: workedPathColor,
+      color: const ColorSerializerNullable()
+          .fromJson((json['color'] as String?) ?? ''),
+      workedPathColor: const ColorSerializerNullable()
+          .fromJson((json['worked_path_color'] as String?) ?? ''),
     );
   }
 
@@ -130,8 +128,9 @@ class Section {
     map['working_width'] = workingWidth;
     // map['active'] = active;
     map['automate_activation'] = automateActivation;
-    map['color'] = color?.value.toRadixString(16);
-    map['worked_path_color'] = workedPathColor?.value.toRadixString(16);
+    map['color'] = const ColorSerializerNullable().toJson(color);
+    map['worked_path_color'] =
+        const ColorSerializerNullable().toJson(workedPathColor);
 
     return map;
   }

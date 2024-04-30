@@ -14,10 +14,16 @@ _$LedBarConfigImpl _$$LedBarConfigImplFromJson(Map<String, dynamic> json) =>
       oddCenter: json['oddCenter'] as bool? ?? false,
       distancePerLed: (json['distancePerLed'] as num?)?.toDouble() ?? 0.04,
       evenCenterSimulateOdd: json['evenCenterSimulateOdd'] as bool? ?? false,
-      endColor: (json['endColor'] as num?)?.toInt() ?? 0xFFFF0000,
-      intermediateColor:
-          (json['intermediateColor'] as num?)?.toInt() ?? 0xFFFFEF3B,
-      centerColor: (json['centerColor'] as num?)?.toInt() ?? 0xFF00FF00,
+      endColor: json['endColor'] == null
+          ? Colors.red
+          : const ColorSerializer().fromJson(json['endColor'] as String),
+      intermediateColor: json['intermediateColor'] == null
+          ? Colors.yellow
+          : const ColorSerializer()
+              .fromJson(json['intermediateColor'] as String),
+      centerColor: json['centerColor'] == null
+          ? Colors.green
+          : const ColorSerializer().fromJson(json['centerColor'] as String),
       ledSize: (json['ledSize'] as num?)?.toDouble() ?? 20,
       barWidth: (json['barWidth'] as num?)?.toDouble() ?? 800,
       reverseBar: json['reverseBar'] as bool? ?? false,
@@ -31,9 +37,10 @@ Map<String, dynamic> _$$LedBarConfigImplToJson(_$LedBarConfigImpl instance) =>
       'oddCenter': instance.oddCenter,
       'distancePerLed': instance.distancePerLed,
       'evenCenterSimulateOdd': instance.evenCenterSimulateOdd,
-      'endColor': instance.endColor,
-      'intermediateColor': instance.intermediateColor,
-      'centerColor': instance.centerColor,
+      'endColor': const ColorSerializer().toJson(instance.endColor),
+      'intermediateColor':
+          const ColorSerializer().toJson(instance.intermediateColor),
+      'centerColor': const ColorSerializer().toJson(instance.centerColor),
       'ledSize': instance.ledSize,
       'barWidth': instance.barWidth,
       'reverseBar': instance.reverseBar,

@@ -116,7 +116,17 @@ String _$networkAvailableHash() => r'b4a4e0fbd04dc84266ecad3af680debe4959ec1f';
 /// A provider for whether a network connection can be made.
 ///
 /// If using VPN while being an access point, communication with hardware
-/// is not possible.
+/// is only possible if the subnet of the access point is disallowed throught
+/// the VPN.
+/// For WireGuard the allowed IPs to put in the client can be calculated
+/// here:
+/// https://www.procustodibus.com/blog/2021/03/wireguard-allowedips-calculator/.
+/// If the access point host has IP 192.168.38.49, then input
+/// Allowed IPs: 0.0.0.0/0,::/0
+/// Disallowed IPs: 192.168.38.0/24
+/// Copy the resulting Allowed IPs to the WireGuard client.
+/// On Android the subnet might change every time the device reboots, so more
+/// subnets should be added to Disallowed IPs.
 ///
 /// Copied from [networkAvailable].
 @ProviderFor(networkAvailable)

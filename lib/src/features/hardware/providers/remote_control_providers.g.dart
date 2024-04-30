@@ -7,7 +7,7 @@ part of 'remote_control_providers.dart';
 // **************************************************************************
 
 String _$sendRemoteControlLedStateHash() =>
-    r'71474b5c2a596f3ca465c4424b7710196d5d14c0';
+    r'b5c8f6359c4d17fda4b86b622382ac724b6551fc';
 
 /// A provider for sending the current state of the features corresponding of
 /// the mapped [RemoteControlButtonActions] to the remote controller.
