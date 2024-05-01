@@ -45,6 +45,8 @@
 - Custom vehicle painter, dynamically changes color
   to fit the theme/manufacturer, basic rotating tyres
 
+- Basic remote control support over UDP.
+
 ## To be implemented
 
 - Implement tablet/phone UI
@@ -62,6 +64,8 @@
 
 - Automatic section control
 
+- Countour/adaptive curve mode
+
 - Proper headland implementation, u-turns following same outer path
 
 - Improve autosteering, look at more algorithms
@@ -72,15 +76,15 @@
 
 - Hardware configuration
 
+- Localization
+
+- Improve work session saving of worked area, maybe timelog a la ISOXML
+
 - Improved safety measures
 
 - Import/export with AgOpenGps and ISOXML, maybe other formats
 
-- Custom hotkeys, also from hardware
-
-- Implement BL(E) communication with ESP32 etc...
-
-- Custom equipment painter
+- Hotkeys
 
 ## Further ideas
 

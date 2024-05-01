@@ -132,7 +132,6 @@ void commonSimCoreMessageHandler(
     PathTracking? pathTracking,
     ABTracking? abTracking,
     AutosteeringState autosteeringState,
-    bool hardwareIsConnected,
   }) message,
 ) {
   ref.read(gaugeVelocityProvider.notifier).update(message.velocity.toDouble());
@@ -145,9 +144,6 @@ void commonSimCoreMessageHandler(
   ref
       .read(activeAutosteeringStateProvider.notifier)
       .update(message.autosteeringState);
-  ref
-      .read(hardwareNetworkAliveProvider.notifier)
-      .update(value: message.hardwareIsConnected);
 }
 
 /// A provider for whether long breaks in the program (i.e. when using

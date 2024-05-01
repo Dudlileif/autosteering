@@ -41,7 +41,6 @@ class SimulatorCore {
         PathTracking? pathTracking,
         ABTracking? abTracking,
         AutosteeringState autosteeringState,
-        bool hardwareIsConnected,
       })> webWorker(
     Stream<dynamic> incomingEvents,
     StreamController<dynamic> updateMainStream,

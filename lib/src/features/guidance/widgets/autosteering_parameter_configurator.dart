@@ -102,7 +102,7 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
 class _PidParametersConfigurator extends ConsumerWidget {
   const _PidParametersConfigurator();
 
-  void onChangeEnd(double value, WidgetRef ref) {
+  void onChangeEnd(double value, String key, WidgetRef ref) {
     // Wait a short while before saving the hopefully
     // updated vehicle.
     Timer(const Duration(milliseconds: 100), () {
@@ -111,7 +111,11 @@ class _PidParametersConfigurator extends ConsumerWidget {
       Logger.instance.i(
         '''Updated vehicle PID parameters: ${vehicle.pidParameters}''',
       );
-      ref.read(sendSteeringHardwareConfigProvider);
+      ref.read(
+        updateSteeringHardwareConfigProvider(
+          SteeringHardwareConfigKeysContainer({key}),
+        ),
+      );
     });
   }
 
@@ -157,7 +161,8 @@ class _PidParametersConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
-                  onChangeEnd: (value) => onChangeEnd(value, ref),
+                  onChangeEnd: (value) =>
+                      onChangeEnd(value, SteeringHardwareConfigKey.pidP, ref),
                 ),
               ],
             );
@@ -199,7 +204,8 @@ class _PidParametersConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
-                  onChangeEnd: (value) => onChangeEnd(value, ref),
+                  onChangeEnd: (value) =>
+                      onChangeEnd(value, SteeringHardwareConfigKey.pidI, ref),
                 ),
               ],
             );
@@ -241,7 +247,8 @@ class _PidParametersConfigurator extends ConsumerWidget {
                           ),
                         );
                   },
-                  onChangeEnd: (value) => onChangeEnd(value, ref),
+                  onChangeEnd: (value) =>
+                      onChangeEnd(value, SteeringHardwareConfigKey.pidD, ref),
                 ),
               ],
             );

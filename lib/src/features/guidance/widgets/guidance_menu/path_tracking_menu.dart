@@ -31,7 +31,8 @@ class PathTrackingMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    final theme = Theme.of(context);
+    final textStyle = theme.menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       text: 'Path tracking',
@@ -85,6 +86,10 @@ class PathTrackingMenu extends ConsumerWidget {
               final loopMode = ref.watch(pathTrackingLoopProvider);
 
               return SegmentedButton<PathTrackingLoopMode>(
+                style: theme.segmentedButtonTheme.style?.copyWith(
+                  visualDensity: VisualDensity.compact,
+                ),
+                showSelectedIcon: false,
                 selected: {loopMode},
                 onSelectionChanged: (values) => ref
                     .read(pathTrackingLoopProvider.notifier)

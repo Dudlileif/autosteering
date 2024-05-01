@@ -37,6 +37,8 @@ final class Tractor extends AxleSteeredVehicle {
     super.solidAxleWheelDiameter,
     super.steeringAxleWheelWidth,
     super.solidAxleWheelWidth,
+    super.numWheels,
+    super.wheelSpacing,
     super.antennaPosition,
     super.pathTrackingMode,
     super.imu,
@@ -88,6 +90,7 @@ final class Tractor extends AxleSteeredVehicle {
       length: dimensions['length'] as double,
       wheelBase: dimensions['wheel_base'] as double,
       trackWidth: dimensions['track_width'] as double,
+      
       minTurningRadius: steering['min_turning_radius'] as double,
       steeringAngleMax: steering['steering_angle_max'] as double,
       ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
@@ -97,6 +100,8 @@ final class Tractor extends AxleSteeredVehicle {
       solidAxleWheelDiameter: wheels['solid_axle_wheel_diameter'] as double,
       steeringAxleWheelWidth: wheels['steering_axle_wheel_width'] as double,
       solidAxleWheelWidth: wheels['solid_axle_wheel_width'] as double,
+      numWheels: wheels['num_wheels'] as int?,
+      wheelSpacing: wheels['wheel_spacing'] as double?,
       pathTrackingMode: PathTrackingMode.values.firstWhere(
         (element) => element.name == steering['path_tracking_mode'] as String,
       ),
@@ -164,6 +169,8 @@ final class Tractor extends AxleSteeredVehicle {
     double? solidAxleWheelDiameter,
     double? steeringAxleWheelWidth,
     double? solidAxleWheelWidth,
+    int? numWheels,
+    double? wheelSpacing,
     Imu? imu,
     Was? was,
     double? autosteeringThresholdVelocity,
@@ -216,6 +223,8 @@ final class Tractor extends AxleSteeredVehicle {
         steeringAxleWheelWidth:
             steeringAxleWheelWidth ?? this.steeringAxleWheelWidth,
         solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
+        numWheels: numWheels ?? this.numWheels,
+        wheelSpacing: wheelSpacing ?? this.wheelSpacing,
         imu: imu ?? this.imu,
         was: was ?? this.was,
         autosteeringThresholdVelocity:

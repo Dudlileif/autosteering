@@ -42,7 +42,7 @@ final initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
 
 typedef InitializeSimCoreRef = AutoDisposeProviderRef<void>;
 String _$commonSimCoreMessageHandlerHash() =>
-    r'bd18013072afeb938d1f5ea60f6343da59c51eef';
+    r'9e3b5d950b5f6f66c06b9af79451a66507e9699c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -109,8 +109,7 @@ class CommonSimCoreMessageHandlerFamily extends Family {
       num distance,
       PathTracking? pathTracking,
       ABTracking? abTracking,
-      AutosteeringState autosteeringState,
-      bool hardwareIsConnected
+      AutosteeringState autosteeringState
     }) message,
   ) {
     return CommonSimCoreMessageHandlerProvider(
@@ -169,8 +168,7 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
       num distance,
       PathTracking? pathTracking,
       ABTracking? abTracking,
-      AutosteeringState autosteeringState,
-      bool hardwareIsConnected
+      AutosteeringState autosteeringState
     }) message,
   ) : this._internal(
           (ref) => commonSimCoreMessageHandler(
@@ -206,8 +204,7 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
     num distance,
     PathTracking? pathTracking,
     ABTracking? abTracking,
-    AutosteeringState autosteeringState,
-    bool hardwareIsConnected
+    AutosteeringState autosteeringState
   }) message;
 
   @override
@@ -237,8 +234,7 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
       num distance,
       PathTracking? pathTracking,
       ABTracking? abTracking,
-      AutosteeringState autosteeringState,
-      bool hardwareIsConnected
+      AutosteeringState autosteeringState
     }),
   ) get argument {
     return (message,);
@@ -287,8 +283,7 @@ mixin CommonSimCoreMessageHandlerRef on AutoDisposeProviderRef<void> {
     num distance,
     PathTracking? pathTracking,
     ABTracking? abTracking,
-    AutosteeringState autosteeringState,
-    bool hardwareIsConnected
+    AutosteeringState autosteeringState
   }) get message;
 }
 
@@ -305,8 +300,7 @@ class _CommonSimCoreMessageHandlerProviderElement
     num distance,
     PathTracking? pathTracking,
     ABTracking? abTracking,
-    AutosteeringState autosteeringState,
-    bool hardwareIsConnected
+    AutosteeringState autosteeringState
   }) get message => (origin as CommonSimCoreMessageHandlerProvider).message;
 }
 

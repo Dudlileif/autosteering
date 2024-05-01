@@ -19,6 +19,8 @@
 
 import 'dart:collection';
 
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'led_bar_config.freezed.dart';
@@ -41,24 +43,21 @@ class LedBarConfig with _$LedBarConfig {
   /// Otherwise [evenCenterSimulateOdd] can be set to true to use the two
   /// center-most lights as a replacement for the one in center.
   ///
-  /// The colors are in hex format `0xAARRGGBB`, and can be changed from the
-  /// default end-red, intermediate-yellow and center-green.
-  ///
   /// [endColor] is the color of the LEDs on the ends of the bar, defaults
   /// to red.
   ///
   /// [intermediateColor] is the color of the LEDs after the ends until the
-  /// center, defualts to yellow.
+  /// center, defaults to yellow.
   ///
   /// [centerColor] is the color of the LEDs in the center of the bar,
-  /// defualts to green.
+  /// defaults to green.
   ///
   /// [ledSize] is the size of the individual LEDs in their largest state (lit).
   ///
   /// [barWidth] is the total width of the LED bar.
   ///
   /// [reverseBar] will reverse the bar so that the LEDs will light up opposite
-  /// of the defualt configuration.
+  /// of the default configuration.
   const factory LedBarConfig({
     /// The amount of green LEDs to the side of the center.
     @Default(2) int centerCount,
@@ -84,16 +83,13 @@ class LedBarConfig with _$LedBarConfig {
     @Default(false) bool evenCenterSimulateOdd,
 
     /// The color of the outermost end LEDs, usually red.
-    /// Format: 0xAARRGGBB
-    @Default(0xFFFF0000) int endColor,
+    @ColorSerializer() @Default(Colors.red) Color endColor,
 
     /// The color of the intermediate LEDs, usually yellow.
-    /// Format: 0xAARRGGBB
-    @Default(0xFFFFEF3B) int intermediateColor,
+    @ColorSerializer() @Default(Colors.yellow) Color intermediateColor,
 
     /// The color of the center LEDs, usually green.
-    /// Format: 0xAARRGGBB
-    @Default(0xFF00FF00) int centerColor,
+    @ColorSerializer() @Default(Colors.green) Color centerColor,
 
     /// The size of the individual LEDs in their largest state (lit).
     @Default(20) double ledSize,
@@ -165,7 +161,7 @@ class LedBarConfig with _$LedBarConfig {
 
   /// Returns the color corresponding to the outermost lit LED for this
   /// cross track [distance].
-  int colorFromDistance(double distance) {
+  Color colorFromDistance(double distance) {
     var ledCount = distance.abs() ~/ distancePerLed;
     if (evenCenterSimulateOdd && centerCount >= 1) {
       ledCount++;

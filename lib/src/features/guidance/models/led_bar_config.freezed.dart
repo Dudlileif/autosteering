@@ -44,16 +44,16 @@ mixin _$LedBarConfig {
   bool get evenCenterSimulateOdd => throw _privateConstructorUsedError;
 
   /// The color of the outermost end LEDs, usually red.
-  /// Format: 0xAARRGGBB
-  int get endColor => throw _privateConstructorUsedError;
+  @ColorSerializer()
+  Color get endColor => throw _privateConstructorUsedError;
 
   /// The color of the intermediate LEDs, usually yellow.
-  /// Format: 0xAARRGGBB
-  int get intermediateColor => throw _privateConstructorUsedError;
+  @ColorSerializer()
+  Color get intermediateColor => throw _privateConstructorUsedError;
 
   /// The color of the center LEDs, usually green.
-  /// Format: 0xAARRGGBB
-  int get centerColor => throw _privateConstructorUsedError;
+  @ColorSerializer()
+  Color get centerColor => throw _privateConstructorUsedError;
 
   /// The size of the individual LEDs in their largest state (lit).
   double get ledSize => throw _privateConstructorUsedError;
@@ -83,9 +83,9 @@ abstract class $LedBarConfigCopyWith<$Res> {
       bool oddCenter,
       double distancePerLed,
       bool evenCenterSimulateOdd,
-      int endColor,
-      int intermediateColor,
-      int centerColor,
+      @ColorSerializer() Color endColor,
+      @ColorSerializer() Color intermediateColor,
+      @ColorSerializer() Color centerColor,
       double ledSize,
       double barWidth,
       bool reverseBar});
@@ -145,15 +145,15 @@ class _$LedBarConfigCopyWithImpl<$Res, $Val extends LedBarConfig>
       endColor: null == endColor
           ? _value.endColor
           : endColor // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Color,
       intermediateColor: null == intermediateColor
           ? _value.intermediateColor
           : intermediateColor // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Color,
       centerColor: null == centerColor
           ? _value.centerColor
           : centerColor // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Color,
       ledSize: null == ledSize
           ? _value.ledSize
           : ledSize // ignore: cast_nullable_to_non_nullable
@@ -185,9 +185,9 @@ abstract class _$$LedBarConfigImplCopyWith<$Res>
       bool oddCenter,
       double distancePerLed,
       bool evenCenterSimulateOdd,
-      int endColor,
-      int intermediateColor,
-      int centerColor,
+      @ColorSerializer() Color endColor,
+      @ColorSerializer() Color intermediateColor,
+      @ColorSerializer() Color centerColor,
       double ledSize,
       double barWidth,
       bool reverseBar});
@@ -245,15 +245,15 @@ class __$$LedBarConfigImplCopyWithImpl<$Res>
       endColor: null == endColor
           ? _value.endColor
           : endColor // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Color,
       intermediateColor: null == intermediateColor
           ? _value.intermediateColor
           : intermediateColor // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Color,
       centerColor: null == centerColor
           ? _value.centerColor
           : centerColor // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Color,
       ledSize: null == ledSize
           ? _value.ledSize
           : ledSize // ignore: cast_nullable_to_non_nullable
@@ -280,9 +280,9 @@ class _$LedBarConfigImpl extends _LedBarConfig {
       this.oddCenter = false,
       this.distancePerLed = 0.04,
       this.evenCenterSimulateOdd = false,
-      this.endColor = 0xFFFF0000,
-      this.intermediateColor = 0xFFFFEF3B,
-      this.centerColor = 0xFF00FF00,
+      @ColorSerializer() this.endColor = Colors.red,
+      @ColorSerializer() this.intermediateColor = Colors.yellow,
+      @ColorSerializer() this.centerColor = Colors.green,
       this.ledSize = 20,
       this.barWidth = 800,
       this.reverseBar = false})
@@ -327,22 +327,22 @@ class _$LedBarConfigImpl extends _LedBarConfig {
   final bool evenCenterSimulateOdd;
 
   /// The color of the outermost end LEDs, usually red.
-  /// Format: 0xAARRGGBB
   @override
   @JsonKey()
-  final int endColor;
+  @ColorSerializer()
+  final Color endColor;
 
   /// The color of the intermediate LEDs, usually yellow.
-  /// Format: 0xAARRGGBB
   @override
   @JsonKey()
-  final int intermediateColor;
+  @ColorSerializer()
+  final Color intermediateColor;
 
   /// The color of the center LEDs, usually green.
-  /// Format: 0xAARRGGBB
   @override
   @JsonKey()
-  final int centerColor;
+  @ColorSerializer()
+  final Color centerColor;
 
   /// The size of the individual LEDs in their largest state (lit).
   @override
@@ -433,9 +433,9 @@ abstract class _LedBarConfig extends LedBarConfig {
       final bool oddCenter,
       final double distancePerLed,
       final bool evenCenterSimulateOdd,
-      final int endColor,
-      final int intermediateColor,
-      final int centerColor,
+      @ColorSerializer() final Color endColor,
+      @ColorSerializer() final Color intermediateColor,
+      @ColorSerializer() final Color centerColor,
       final double ledSize,
       final double barWidth,
       final bool reverseBar}) = _$LedBarConfigImpl;
@@ -476,18 +476,18 @@ abstract class _LedBarConfig extends LedBarConfig {
   @override
 
   /// The color of the outermost end LEDs, usually red.
-  /// Format: 0xAARRGGBB
-  int get endColor;
+  @ColorSerializer()
+  Color get endColor;
   @override
 
   /// The color of the intermediate LEDs, usually yellow.
-  /// Format: 0xAARRGGBB
-  int get intermediateColor;
+  @ColorSerializer()
+  Color get intermediateColor;
   @override
 
   /// The color of the center LEDs, usually green.
-  /// Format: 0xAARRGGBB
-  int get centerColor;
+  @ColorSerializer()
+  Color get centerColor;
   @override
 
   /// The size of the individual LEDs in their largest state (lit).

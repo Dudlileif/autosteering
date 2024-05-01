@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+export 'color_serializer.dart';
 export 'date_time_serializer.dart';
 export 'device.dart';
 export 'file_cached_network_image_provider.dart';

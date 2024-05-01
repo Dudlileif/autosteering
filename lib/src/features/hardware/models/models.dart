@@ -20,5 +20,6 @@ export 'imu/imu.dart';
 export 'message_decoder.dart';
 export 'motor_status.dart';
 export 'pid_controller/pid_controller.dart';
+export 'remote_control/remote_control_button_actions.dart';
 export 'steering_hardware_config/steering_hardware_config.dart';
 export 'was/was.dart';

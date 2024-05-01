@@ -35,7 +35,8 @@ class GuidanceMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    final theme = Theme.of(context);
+    final textStyle = theme.menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Guidance',
       icon: Icons.navigation,
@@ -52,15 +53,17 @@ class GuidanceMenu extends ConsumerWidget {
                     .select((vehicle) => vehicle.pathTrackingMode),
               );
               return SegmentedButton<PathTrackingMode>(
+                style: theme.segmentedButtonTheme.style?.copyWith(
+                  visualDensity: VisualDensity.compact,
+                ),
+                showSelectedIcon: false,
                 onSelectionChanged: (values) {
                   final oldValue = ref.read(
                     mainVehicleProvider
                         .select((value) => value.pathTrackingMode),
                   );
 
-                  ref
-                      .read(simInputProvider.notifier)
-                      .send(values.first);
+                  ref.read(simInputProvider.notifier).send(values.first);
 
                   // Wait a short while before saving the hopefully
                   // updated vehicle.

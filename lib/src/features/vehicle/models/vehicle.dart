@@ -51,6 +51,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
+    int? numWheels,
+    double? wheelSpacing,
     this.wheelsRolledDistance = 0,
     this.antennaPosition = const Geographic(lon: 0, lat: 0),
     this.pathTrackingMode = PathTrackingMode.purePursuit,
@@ -71,7 +73,9 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double roll = 0,
     double velocity = 0,
     this.manualSimulationMode = false,
-  })  : _bearing = bearing,
+  })  : numWheels = numWheels ?? 1,
+        wheelSpacing = wheelSpacing ?? 0.05,
+        _bearing = bearing,
         _pitch = pitch,
         _roll = roll,
         _velocity = velocity,
@@ -205,6 +209,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The distance between the centers of the wheels on the solid axle.
   double trackWidth;
+
+  /// The number of wheels, i.e. twin/triples etc...
+  int numWheels;
+
+  /// The distance between the twin/triple etc. wheels.
+  double wheelSpacing;
 
   /// The best/minimum turning radius, in meters.
   double minTurningRadius;
@@ -708,6 +718,8 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
+    int? numWheels,
+    double? wheelSpacing,
     Was? was,
     Imu? imu,
     double? autosteeringThresholdVelocity,
@@ -766,10 +778,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       'stanley_parameters': stanleyParameters,
     };
 
-    map['manufacturer_colors'] = ManufacturerColors.values
-            .any((element) => element.name == manufacturerColors.name)
-        ? {'name': manufacturerColors.name}
-        : manufacturerColors;
+    map['manufacturer_colors'] = manufacturerColors;
 
     return map;
   }

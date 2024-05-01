@@ -17,9 +17,13 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'package:collection/collection.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'manufacturer_schemes.freezed.dart';
+part 'manufacturer_schemes.g.dart';
 
 /// A class with color schemes for different vehicle manufacturers.
 class ManufacturerSchemes {
@@ -43,69 +47,40 @@ class ManufacturerSchemes {
       );
 }
 
+
+
+
 /// A class that holds information about a vehicle manufacturer's color
 /// scheme.
-class ManufacturerColors {
-  /// A class that holds information about a vehicle manufacturer's color
-  /// scheme.
-  const ManufacturerColors({
-    required this.name,
-    required this.primary,
-    required this.secondary,
-    this.tertiary,
-    this.cabFrame,
-    this.frame,
-    this.rims,
-    this.roof,
-  });
-
-  /// Creates a [ManufacturerColors] from the [json] object.
-  factory ManufacturerColors.fromJson(Map<String, dynamic> json) {
-    final name = json['name'] as String;
-
-    return values.firstWhereOrNull((element) => element.name == name) ??
-        ManufacturerColors(
-          name: name,
-          primary: Color(int.parse(json['primary'] as String, radix: 16)),
-          secondary: Color(int.parse(json['secondary'] as String, radix: 16)),
-          tertiary: json['tertiary'] != null
-              ? Color(int.parse(json['tertiary'] as String, radix: 16))
-              : null,
-          cabFrame: json['cabFrame'] != null
-              ? Color(int.parse(json['cabFrame'] as String, radix: 16))
-              : null,
-          frame: json['frame'] != null
-              ? Color(int.parse(json['frame'] as String, radix: 16))
-              : null,
-          roof: json['roof'] != null
-              ? Color(int.parse(json['roof'] as String, radix: 16))
-              : null,
-        );
-  }
-
+@freezed
+class ManufacturerColors with _$ManufacturerColors {
+  const factory ManufacturerColors({  
   /// The name of the manufacturer.
-  final String name;
-
+    required String name,  
   /// The primary color for the color scheme.
-  final Color primary;
+    @ColorSerializer() required Color primary,  
 
   /// The secondary color for the color scheme.
-  final Color secondary;
+    @ColorSerializer() required Color secondary,
 
-  /// The tertiary color for the color scheme.
-  final Color? tertiary;
+    /// The tertiary color for the color scheme.
+    @ColorSerializerNullable() Color? tertiary,
 
   /// The color of the cab frame for the manufacturer.
-  final Color? cabFrame;
+    @ColorSerializerNullable() Color? cabFrame,
 
   /// The color of the main frame for the manufacturer.
-  final Color? frame;
+    @ColorSerializerNullable() Color? frame,
 
   /// The color of the wheel rims for the manufacturer.
-  final Color? rims;
+    @ColorSerializerNullable() Color? rims,
 
   /// The color of the roof for the manufacturer.
-  final Color? roof;
+    @ColorSerializerNullable() Color? roof,
+  }) = _ManufacturerColors;
+
+  factory ManufacturerColors.fromJson(Map<String, Object?> json) =>
+      _$ManufacturerColorsFromJson(json);
 
   static const caseIH = ManufacturerColors(
     name: 'Case IH',
@@ -233,15 +208,4 @@ class ManufacturerColors {
     valtra,
   ];
 
-  /// Creates a json compatible representation of the object.
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'primary': primary.value.toRadixString(16),
-        'secondary': secondary.value.toRadixString(16),
-        'tertiary': tertiary?.value.toRadixString(16),
-        'cabFrame': cabFrame?.value.toRadixString(16),
-        'frame': frame?.value.toRadixString(16),
-        'rims': rims?.value.toRadixString(16),
-        'roof': roof?.value.toRadixString(16),
-      };
 }

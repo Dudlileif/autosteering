@@ -263,7 +263,7 @@ FutureOr<void> getSteeringHardwareConfig(
 ) async {
   try {
     final url =
-        'http://${ref.watch(hardwareAddressProvider)}/motor_config.json';
+        'http://${ref.watch(steeringHardwareAddressProvider)}/motor_config.json';
     Logger.instance.i('Requesting motor config from hardware: $url');
     final response = await Dio(
       BaseOptions(
@@ -299,14 +299,52 @@ FutureOr<void> getSteeringHardwareConfig(
   ref.invalidateSelf();
 }
 
-/// A provider for updating the motor configuration on the hardware
+/// A provider for updating the motor configuration on the hardware with the
+/// parameters corresponding to [keyContainer].
+@Riverpod(keepAlive: true)
+FutureOr<void> updateSteeringHardwareConfig(
+  UpdateSteeringHardwareConfigRef ref,
+  SteeringHardwareConfigKeysContainer keyContainer,
+) async {
+  try {
+    final steeringHardwareConfig = ref.read(
+      mainVehicleProvider.select((value) => value.steeringHardwareConfig),
+    );
+    final url =
+        '''http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader(keyContainer.keys)}''';
+    Logger.instance.i('Updating motor config with: $url');
+
+    final response = await Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 5),
+      ),
+    ).get<String>(url);
+    if (response.statusCode == 200) {
+      Logger.instance.i(
+        '''Successfully updated motor config on hardware for parameters: ${keyContainer.keys}.''',
+      );
+    } else {
+      Logger.instance.e('Failed to update motor config on hardware: $response');
+    }
+  } catch (error, stackTrace) {
+    Logger.instance.e(
+      'Failed to update motor config on hardware.',
+      error: error,
+      stackTrace: stackTrace,
+    );
+  }
+  ref.invalidateSelf();
+}
+
+/// A provider for sending the whole motor configuration to the hardware.
 @Riverpod(keepAlive: true)
 FutureOr<void> sendSteeringHardwareConfig(
   SendSteeringHardwareConfigRef ref,
 ) async {
   try {
     Logger.instance.i(
-      'Sending motor config to: http://${ref.watch(hardwareAddressProvider)}/update_motor_config',
+      'Sending motor config to: http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config',
     );
     final steeringHardwareConfig = ref.read(
       mainVehicleProvider.select((value) => value.steeringHardwareConfig),
@@ -318,7 +356,7 @@ FutureOr<void> sendSteeringHardwareConfig(
         receiveTimeout: const Duration(seconds: 5),
       ),
     ).get<String>(
-      '''http://${ref.watch(hardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader}''',
+      '''http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader}''',
     );
     if (response.statusCode == 200) {
       Logger.instance.i('Successfully sent motor config to hardware.');

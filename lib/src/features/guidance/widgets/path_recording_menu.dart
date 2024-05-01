@@ -99,6 +99,10 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                 padding: const EdgeInsets.all(8),
                 child: ListTile(
                   title: SegmentedButton<_RecordingMode>(
+                    style: theme.segmentedButtonTheme.style?.copyWith(
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    showSelectedIcon: false,
                     onSelectionChanged: (values) => setState(() {
                       _recordingMode = values.first;
                       ref

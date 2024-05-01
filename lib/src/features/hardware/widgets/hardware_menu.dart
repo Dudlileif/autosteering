@@ -49,6 +49,22 @@ class HardwareMenu extends ConsumerWidget {
             closeOnActivate: false,
             leadingIcon: const Padding(
               padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.settings_remote),
+            ),
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => const RemoteControlConfigurator(),
+            ),
+            child: Text(
+              'Remote control',
+              style: textStyle,
+            ),
+          ),
+        if (Device.isNative)
+          MenuItemButton(
+            closeOnActivate: false,
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.download),
             ),
             child: Text(

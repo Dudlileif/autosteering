@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:autosteering/src/features/gnss/gnss.dart';
@@ -67,6 +68,12 @@ class SimulatorCoreBase {
           updateMainThreadStream.add(message);
           if (message is GnssPositionCommonSentence) {
             state.handleMessage((gnssFixQuality: message.quality ?? 0));
+          } else if (message is ({List<bool> buttonStates})) {
+            state.remoteControlSendStream?.add(
+              Uint8List.fromList(
+                jsonEncode({'button_states': message.buttonStates}).codeUnits,
+              ),
+            );
           }
         }
       }

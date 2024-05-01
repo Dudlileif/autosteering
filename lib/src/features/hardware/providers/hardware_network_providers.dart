@@ -28,11 +28,46 @@ import 'package:universal_io/io.dart';
 
 part 'hardware_network_providers.g.dart';
 
-/// A provider for whether there is a connection with the hardware.
+/// A provider for whether there is a connection with the steering hardware.
 @Riverpod(keepAlive: true)
-class HardwareNetworkAlive extends _$HardwareNetworkAlive {
+class SteeringHardwareNetworkAlive extends _$SteeringHardwareNetworkAlive {
+  Timer? _resetTimer;
+
   @override
-  bool build() => false;
+  bool build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
+    return false;
+  }
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
+
+/// A provider for whether there is a connection with the remote control
+/// hardware.
+@Riverpod(keepAlive: true)
+class RemoteControlHardwareNetworkAlive
+    extends _$RemoteControlHardwareNetworkAlive {
+  Timer? _resetTimer;
+
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(seconds: 2),
+        ref.invalidateSelf,
+      );
+    });
+
+    return false;
+  }
 
   /// Updates [state] to [value].
   void update({required bool value}) => Future(() => state = value);
@@ -40,28 +75,38 @@ class HardwareNetworkAlive extends _$HardwareNetworkAlive {
 
 /// A provider for the wireless IP address of the device.
 @riverpod
-FutureOr<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) =>
-    NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {
-      if (interfaces.isNotEmpty) {
-        return interfaces
-            .firstWhereOrNull(
-              (element) => element.name.toLowerCase().startsWith('w'),
-            )
-            ?.addresses
-            .first
-            .address;
-      }
-      return null;
-    });
+FutureOr<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) async {
+  return await NetworkInterface.list(type: InternetAddressType.IPv4)
+      .then((interfaces) {
+    if (interfaces.isNotEmpty) {
+      return interfaces
+          .firstWhereOrNull(
+            (element) =>
+                element.name.toLowerCase().contains('wlan0') ||
+                element.name
+                    .toLowerCase()
+                    // Regex for wlp2s0 and similar
+                    .contains(RegExp(r'wlp\d{1,}s\d{1,}')),
+          )
+          ?.addresses
+          .first
+          .address;
+    }
+    return null;
+  });
+}
 
 /// A provider for the access point host IP address of the device.
 @riverpod
-FutureOr<String?> deviceIPAdressAP(DeviceIPAdressAPRef ref) =>
-    NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {
+FutureOr<String?> deviceIPAdressAP(DeviceIPAdressAPRef ref) async =>
+    await NetworkInterface.list(type: InternetAddressType.IPv4)
+        .then((interfaces) {
       if (interfaces.isNotEmpty) {
         return interfaces
             .firstWhereOrNull(
-              (element) => element.name.toLowerCase().contains('ap'),
+              (element) =>
+                  element.name.toLowerCase().contains('ap') ||
+                  element.name.toLowerCase().contains('wlan2'),
             )
             ?.addresses
             .first
@@ -74,8 +119,9 @@ FutureOr<String?> deviceIPAdressAP(DeviceIPAdressAPRef ref) =>
 @riverpod
 FutureOr<String?> deviceIPAdressEthernet(
   DeviceIPAdressEthernetRef ref,
-) =>
-    NetworkInterface.list(type: InternetAddressType.IPv4).then((interfaces) {
+) async =>
+    await NetworkInterface.list(type: InternetAddressType.IPv4)
+        .then((interfaces) {
       if (interfaces.isNotEmpty) {
         return interfaces
             .firstWhereOrNull(
@@ -88,9 +134,10 @@ FutureOr<String?> deviceIPAdressEthernet(
       return null;
     });
 
-/// A provider for the IP adress of the hardware we want to communicate with.
+/// A provider for the IP adress of the steering hardware we want to communicate
+/// with.
 @Riverpod(keepAlive: true)
-class HardwareAddress extends _$HardwareAddress {
+class SteeringHardwareAddress extends _$SteeringHardwareAddress {
   @override
   String build() {
     ref.listenSelf((previous, next) {
@@ -105,6 +152,32 @@ class HardwareAddress extends _$HardwareAddress {
             .read(settingsProvider.notifier)
             .getString(SettingsKey.hardwareAdress) ??
         'autosteering.local';
+  }
+
+  /// Update the [state] to [value] if it's a valid IP adress.
+  void update(String value) => Future(() {
+        state = value;
+      });
+}
+
+/// A provider for the IP adress of the remote control hardware we want to
+/// communicate with.
+@Riverpod(keepAlive: true)
+class RemoteControlHardwareAddress extends _$RemoteControlHardwareAddress {
+  @override
+  String build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.remoteControlAddress, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getString(SettingsKey.remoteControlAddress) ??
+        'autosteering-remote-control.local';
   }
 
   /// Update the [state] to [value] if it's a valid IP adress.
@@ -147,7 +220,7 @@ class HardwareUDPReceivePort extends _$HardwareUDPReceivePort {
 }
 
 /// A provider for the UDP send port for the device to send messages to
-/// the hardware in [HardwareAddress].
+/// the hardware in [SteeringHardwareAddress].
 @Riverpod(keepAlive: true)
 class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   @override
@@ -180,13 +253,17 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
       });
 }
 
-/// A provider for the combined state of the [HardwareAddress],
+/// A provider for the combined state of the [SteeringHardwareAddress],
 /// [HardwareUDPReceivePort] and [HardwareUDPSendPort].
 ///
 /// The updated state is automatically sent to the
 @Riverpod(keepAlive: true)
-({String hardwareAddress, int hardwareUDPReceivePort, int hardwareUDPSendPort})
-    hardwareCommunicationConfig(HardwareCommunicationConfigRef ref) {
+({
+  String steeringHardwareAddress,
+  String remoteControlHardwareAddress,
+  int hardwareUDPReceivePort,
+  int hardwareUDPSendPort
+}) hardwareCommunicationConfig(HardwareCommunicationConfigRef ref) {
   ref.listenSelf((previous, next) {
     if (next != previous) {
       ref.read(simInputProvider.notifier).send(next);
@@ -194,7 +271,9 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   });
 
   return (
-    hardwareAddress: ref.watch(hardwareAddressProvider),
+    steeringHardwareAddress: ref.watch(steeringHardwareAddressProvider),
+    remoteControlHardwareAddress:
+        ref.watch(remoteControlHardwareAddressProvider),
     hardwareUDPReceivePort: ref.watch(hardwareUDPReceivePortProvider),
     hardwareUDPSendPort: ref.watch(hardwareUDPSendPortProvider)
   );
@@ -245,7 +324,7 @@ class TcpServer extends _$TcpServer {
       });
 
     return Socket.connect(
-      ref.watch(hardwareAddressProvider),
+      ref.watch(steeringHardwareAddressProvider),
       9999,
       timeout: const Duration(seconds: 1),
     );
@@ -290,7 +369,17 @@ Stream<List<ConnectivityResult>> currentConnection(CurrentConnectionRef ref) {
 /// A provider for whether a network connection can be made.
 ///
 /// If using VPN while being an access point, communication with hardware
-/// is not possible.
+/// is only possible if the subnet of the access point is disallowed throught
+/// the VPN.
+/// For WireGuard the allowed IPs to put in the client can be calculated
+/// here:
+/// https://www.procustodibus.com/blog/2021/03/wireguard-allowedips-calculator/.
+/// If the access point host has IP 192.168.38.49, then input
+/// Allowed IPs: 0.0.0.0/0,::/0
+/// Disallowed IPs: 192.168.38.0/24
+/// Copy the resulting Allowed IPs to the WireGuard client.
+/// On Android the subnet might change every time the device reboots, so more
+/// subnets should be added to Disallowed IPs.
 @Riverpod(keepAlive: true)
 bool networkAvailable(NetworkAvailableRef ref) {
   ref.listenSelf((previous, next) {

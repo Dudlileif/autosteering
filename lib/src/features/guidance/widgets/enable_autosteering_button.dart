@@ -19,7 +19,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 /// A button for enabling/disabling auto steering.
 class EnableAutosteeringButton extends StatelessWidget {
@@ -49,14 +49,12 @@ class EnableAutosteeringButton extends StatelessWidget {
           },
           child: Stack(
             children: [
-              Align(
-                heightFactor: 1.5,
-                child: SvgPicture.asset(
-                  'assets/icons/autosteering_base.svg',
-                  colorFilter:
-                      const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                  height: 30,
-                  width: 30,
+              const Align(
+                heightFactor: 1.1,
+                child: Icon(
+                  Symbols.search_hands_free,
+                  size: 40,
+                  color: Colors.white,
                 ),
               ),
               Align(

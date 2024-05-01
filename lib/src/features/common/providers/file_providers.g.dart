@@ -432,7 +432,7 @@ class _DirectoryDeleteProviderElement
 }
 
 String _$saveJsonToFileDirectoryHash() =>
-    r'82d5048a19929d130269b8ed2899a80850a9caf9';
+    r'bad3146236a2c2d05c7225e9a9d16461c998b8ff';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -697,7 +697,7 @@ class _SaveJsonToFileDirectoryProviderElement
 }
 
 String _$exportJsonToFileDirectoryHash() =>
-    r'ba9065f8e3b86a283b70e7cfc459c530dc0c4392';
+    r'fddbdfe450000228746e608e995cbf0ff3debc9d';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.

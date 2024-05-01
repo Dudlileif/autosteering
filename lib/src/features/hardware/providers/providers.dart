@@ -22,4 +22,5 @@ export 'hardware_network_providers.dart';
 export 'hardware_serial_providers.dart'
     if (dart.library.js_interop) 'hardware_serial_providers_web.dart';
 export 'imu_providers.dart';
+export 'remote_control_providers.dart';
 export 'was_providers.dart';

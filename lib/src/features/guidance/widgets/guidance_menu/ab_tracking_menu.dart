@@ -65,6 +65,10 @@ class ABTrackingMenu extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8),
             child: SegmentedButton<ABTrackingType>(
+              style: theme.segmentedButtonTheme.style?.copyWith(
+                visualDensity: VisualDensity.compact,
+              ),
+              showSelectedIcon: false,
               onSelectionChanged: (values) => ref
                   .read(currentABTrackingTypeProvider.notifier)
                   .update(values.first),

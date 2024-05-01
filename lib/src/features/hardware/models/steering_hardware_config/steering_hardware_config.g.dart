@@ -38,8 +38,8 @@ _$SteeringHardwareConfigImpl _$$SteeringHardwareConfigImplFromJson(
       setConstantChopperAtHighVelocities: json['vhighchm'] as bool? ?? false,
       dcStepLoadMeasurementPulseWidth: (json['DC_TIME'] as num?)?.toInt() ?? 64,
       dcStepStallguardSensitivity: (json['DC_SG'] as num?)?.toInt() ?? 5,
-      hystersisStart: (json['HSTRT'] as num?)?.toInt() ?? 4,
-      hystersisEnd: (json['HEND'] as num?)?.toInt() ?? 1,
+      hysteresisStart: (json['HSTRT'] as num?)?.toInt() ?? 4,
+      hysteresisEnd: (json['HEND'] as num?)?.toInt() ?? 1,
       currentHoldDelay: (json['IHOLDDELAY'] as num?)?.toInt() ?? 1,
       blankTime:
           $enumDecodeNullable(_$ComparatorBlankTimeEnumMap, json['TBL']) ??
@@ -85,8 +85,8 @@ Map<String, dynamic> _$$SteeringHardwareConfigImplToJson(
       'vhighchm': instance.setConstantChopperAtHighVelocities,
       'DC_TIME': instance.dcStepLoadMeasurementPulseWidth,
       'DC_SG': instance.dcStepStallguardSensitivity,
-      'HSTRT': instance.hystersisStart,
-      'HEND': instance.hystersisEnd,
+      'HSTRT': instance.hysteresisStart,
+      'HEND': instance.hysteresisEnd,
       'IHOLDDELAY': instance.currentHoldDelay,
       'TBL': _$ComparatorBlankTimeEnumMap[instance.blankTime]!,
       'TPOWERDOWN': instance.powerDownTime,

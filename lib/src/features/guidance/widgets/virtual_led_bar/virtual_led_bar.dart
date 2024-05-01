@@ -114,7 +114,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
     final leftEndLeds = List.generate(
       config.endCount,
       (index) => VirtualLed(
-        color: Color(config.endColor),
+        color: config.endColor,
         active: activeMap[index] ?? false,
         size: config.ledSize,
       ),
@@ -126,7 +126,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
     final leftIntermediateLeds = List.generate(
       config.intermediateCount,
       (index) => VirtualLed(
-        color: Color(config.intermediateColor),
+        color: config.intermediateColor,
         active: activeMap[cumulativeIndex + index] ?? false,
         size: config.ledSize,
       ),
@@ -138,7 +138,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
     final leftCenterLeds = List.generate(
       config.centerCount,
       (index) => VirtualLed(
-        color: Color(config.centerColor),
+        color: config.centerColor,
         active: activeMap[cumulativeIndex + index] ?? false,
         size: config.ledSize,
       ),
@@ -150,7 +150,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
     final rightCenterLeds = List.generate(
       config.centerCount,
       (index) => VirtualLed(
-        color: Color(config.centerColor),
+        color: config.centerColor,
         active: activeMap[cumulativeIndex + index] ?? false,
         size: config.ledSize,
       ),
@@ -162,7 +162,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
     final rightIntermediateLeds = List.generate(
       config.intermediateCount,
       (index) => VirtualLed(
-        color: Color(config.intermediateColor),
+        color: config.intermediateColor,
         active: activeMap[cumulativeIndex + index] ?? false,
         size: config.ledSize,
       ),
@@ -174,7 +174,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
     final rightEndLeds = List.generate(
       config.endCount,
       (index) => VirtualLed(
-        color: Color(config.endColor),
+        color: config.endColor,
         active: activeMap[cumulativeIndex + index] ?? false,
         size: config.ledSize,
       ),
@@ -220,10 +220,9 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
                   return TextWithStroke(
                     number,
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          color: Color(
+                          color: 
                             config.colorFromDistance(
-                              perpendicularDistance ?? 0,
-                            ),
+                            perpendicularDistance ?? 0,
                           ),
                           fontFamily: 'Noto Sans Mono',
                           fontWeight: FontWeight.bold,

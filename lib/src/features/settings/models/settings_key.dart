@@ -60,6 +60,8 @@ enum SettingsKey {
   ntripUsername('ntrip.username'),
   ntripPassword('ntrip.password'),
   pathRecordingSettings('path_recording_settings'),
+  remoteControlAddress('remote_control.address'),
+  remoteControlButtonActions('remote_control.button_actions'),
   simAllowManualInput('sim.allow_manual_input'),
   simAllowInterpolation('sim.allow_interpolation'),
   simAutoCenterSteering('sim.auto_center_steering'),

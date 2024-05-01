@@ -19,4 +19,5 @@ export 'hardware_menu.dart';
 export 'hardware_status_icon.dart';
 export 'imu_configurator.dart';
 export 'motor_status_icon.dart';
+export 'remote_control_configurator.dart';
 export 'steering_hardware_configurator.dart';

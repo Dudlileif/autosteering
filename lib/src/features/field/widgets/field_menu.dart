@@ -34,7 +34,8 @@ class FieldMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    final theme = Theme.of(context);
+    final textStyle = theme.menuButtonWithChildrenText;
 
     final activeField = ref.watch(activeFieldProvider);
 
@@ -250,38 +251,48 @@ class FieldMenu extends ConsumerWidget {
                         ..cancel();
                   controller.addListener(startProcess.reset);
 
-                  return ListTile(
-                    title: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Border buffer distance',
-                        suffix: ListenableBuilder(
-                          listenable: controller,
-                          builder: (context, child) => Text(
-                            equipmentWidth != null &&
-                                    distanceType ==
-                                        FieldBufferDistanceType.equipmentWidths
-                                ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
-                                : 'm',
+                  return ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: ListTile(
+                      title: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Border buffer distance',
+                          suffix: ListenableBuilder(
+                            listenable: controller,
+                            builder: (context, child) => Text(
+                              equipmentWidth != null &&
+                                      distanceType ==
+                                          FieldBufferDistanceType
+                                              .equipmentWidths
+                                  ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
+                                  : 'm',
+                            ),
                           ),
                         ),
+                        keyboardType: TextInputType.number,
+                        controller: controller,
                       ),
-                      keyboardType: TextInputType.number,
-                      controller: controller,
-                    ),
-                    trailing: SegmentedButton<FieldBufferDistanceType>(
-                      selected: {distanceType},
-                      onSelectionChanged: (values) => ref
-                          .read(activeFieldBufferDistanceTypeProvider.notifier)
-                          .update(values.first),
-                      segments: FieldBufferDistanceType.values
-                          .map(
-                            (type) => ButtonSegment(
-                              value: type,
-                              icon: Icon(type.icon),
-                              tooltip: type.tooltip,
-                            ),
-                          )
-                          .toList(),
+                      trailing: SegmentedButton<FieldBufferDistanceType>(
+                        style: theme.segmentedButtonTheme.style?.copyWith(
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        showSelectedIcon: false,
+                        selected: {distanceType},
+                        onSelectionChanged: (values) => ref
+                            .read(
+                              activeFieldBufferDistanceTypeProvider.notifier,
+                            )
+                            .update(values.first),
+                        segments: FieldBufferDistanceType.values
+                            .map(
+                              (type) => ButtonSegment(
+                                value: type,
+                                icon: Icon(type.icon),
+                                tooltip: type.tooltip,
+                              ),
+                            )
+                            .toList(),
+                      ),
                     ),
                   );
                 },

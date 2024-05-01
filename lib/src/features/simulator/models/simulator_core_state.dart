@@ -35,8 +35,13 @@ class SimulatorCoreState {
   /// A class for holding and updating the state of the [SimulatorCore].
   SimulatorCoreState(this.mainThreadSendStream);
 
-  /// A stream controller for forwarding events to send over the network.
-  StreamController<Uint8List>? networkSendStream;
+  /// A stream controller for forwarding events to send over the network to the
+  /// steering hardware.
+  StreamController<Uint8List>? steeringHardwareSendStream;
+
+  /// A stream controller for forwarding events to send over the network to the
+  /// remote control hardware.
+  StreamController<Uint8List>? remoteControlSendStream;
 
   /// A stream controller for sending messages to the main thread.
   StreamController<dynamic> mainThreadSendStream;
@@ -573,7 +578,7 @@ class SimulatorCoreState {
     }
     // Tell hardware to connect to this device as tcp ntrip server.
     else if (message is ({Uint8List useAsNtripServer})) {
-      networkSendStream?.add(message.useAsNtripServer);
+      steeringHardwareSendStream?.add(message.useAsNtripServer);
     }
     // Enable/disable motor calibration.
     else if (message is ({bool enableMotorCalibration})) {
@@ -582,7 +587,7 @@ class SimulatorCoreState {
     // Send a steering angle override target to the motor.
     else if (message is ({double? steeringAngleOverride})) {
       if (message.steeringAngleOverride != null && vehicle != null) {
-        networkSendStream?.add(
+        steeringHardwareSendStream?.add(
           const Utf8Encoder().convert(
             jsonEncode(
               {
@@ -594,7 +599,7 @@ class SimulatorCoreState {
           ),
         );
       } else {
-        networkSendStream?.add(
+        steeringHardwareSendStream?.add(
           const Utf8Encoder().convert(
             jsonEncode(
               {
@@ -792,7 +797,7 @@ class SimulatorCoreState {
           !motorCalibrationEnabled) {
         if (vehicle!.velocity.abs() > vehicle!.autosteeringThresholdVelocity) {
           wasTarget = vehicle!.wasTargetFromSteeringAngle(steeringAngleTarget!);
-          networkSendStream?.add(
+          steeringHardwareSendStream?.add(
             const Utf8Encoder().convert(
               jsonEncode(
                 {
@@ -806,7 +811,7 @@ class SimulatorCoreState {
         } else {
           autosteeringState = AutosteeringState.standby;
           wasTarget = null;
-          networkSendStream?.add(
+          steeringHardwareSendStream?.add(
             const Utf8Encoder().convert(
               jsonEncode(
                 {
@@ -817,7 +822,7 @@ class SimulatorCoreState {
           );
         }
       } else if (motorCalibrationEnabled) {
-        networkSendStream?.add(
+        steeringHardwareSendStream?.add(
           const Utf8Encoder().convert(
             jsonEncode(
               {
@@ -830,7 +835,7 @@ class SimulatorCoreState {
         wasTarget = null;
       } else {
         wasTarget = null;
-        networkSendStream?.add(
+        steeringHardwareSendStream?.add(
           const Utf8Encoder().convert(
             jsonEncode(
               {

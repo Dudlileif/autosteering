@@ -40,7 +40,6 @@ class SimulatorCore {
         PathTracking? pathTracking,
         ABTracking? abTracking,
         AutosteeringState autosteeringState,
-        bool hardwareIsConnected,
       })> webWorker(
     Stream<dynamic> incomingEvents,
     StreamController<dynamic> updateMainStream,
@@ -50,7 +49,6 @@ class SimulatorCore {
     // The state of the simulation.
     final state = SimulatorCoreState(updateMainStream);
 
-    DateTime? lastHardwareMessageTime;
 
     final messageDecoder = MessageDecoder();
 
@@ -63,23 +61,15 @@ class SimulatorCore {
           PathTracking? pathTracking,
           ABTracking? abTracking,
           AutosteeringState autosteeringState,
-          bool hardwareIsConnected,
         })>();
 
-    var prevHardwareIsConnected = false;
 
     void simulationStep() {
       state.update();
       if (streamController.hasListener) {
-        // Assume that hardware is connected if less than 500 ms since
-        // last message.
-        final hardwareIsConnected = DateTime.now()
-                .difference(lastHardwareMessageTime ?? DateTime(0))
-                .inMilliseconds <
-            500;
+    
         // If the state has changed we add the new state to the stream.
-        if (state.didChange || hardwareIsConnected != prevHardwareIsConnected) {
-          prevHardwareIsConnected = hardwareIsConnected;
+        if (state.didChange) {
           streamController.add(
             (
               vehicle: state.vehicle,
@@ -89,7 +79,6 @@ class SimulatorCore {
               pathTracking: state.pathTracking,
               abTracking: state.abTracking,
               autosteeringState: state.autosteeringState,
-              hardwareIsConnected: hardwareIsConnected,
             ),
           );
         }
