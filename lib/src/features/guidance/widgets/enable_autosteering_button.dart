@@ -55,6 +55,7 @@ class EnableAutosteeringButton extends StatelessWidget {
                   Symbols.search_hands_free,
                   size: 40,
                   color: Colors.white,
+                  weight: 1000,
                 ),
               ),
               Align(

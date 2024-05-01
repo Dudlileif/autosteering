@@ -33,43 +33,93 @@ class RemoteControlConfigurator extends ConsumerWidget {
       title: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Remote control configurator'),
+          Expanded(
+            child: Text(
+              'Remote control configurator',
+              softWrap: true,
+            ),
+          ),
           CloseButton(),
         ],
       ),
       children: [
-        ...List.generate(
-          actions.length,
-          (i) => DropdownButtonFormField<RemoteControlButtonAction>(
-            decoration: InputDecoration(prefixText: 'Button $i'.padRight(11)),
+
+        ...actions
+            .map(
+              (button, action) => MapEntry(
+                button,
+                Padding(
             padding: const EdgeInsets.all(8),
-            value: actions[i],
-            items: [null, ...RemoteControlButtonAction.values]
-                .map(
-                  (action) => DropdownMenuItem(
-                    value: action,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          action?.icon ?? Icons.clear,
-                          fill: 1,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: DropdownMenu<RemoteControlButtonAction?>(
+                          expandedInsets: const EdgeInsets.all(8),
+                          label: Text('Button ${button + 1}'.padRight(9)),
+                          initialSelection: actions[button],
+                          leadingIcon: Icon(
+                            actions[button]?.icon ?? Icons.clear,
+                            fill: 1,
+                            weight: 1000,
+                          ),
+                          dropdownMenuEntries:
+                              [null, ...RemoteControlButtonAction.values]
+                                  .map(
+                                    (action) => DropdownMenuEntry(
+                                      value: action,
+                                      label: action?.description ?? 'No action',
+                                      leadingIcon: Icon(
+                                        action?.icon ?? Icons.clear,
+                                        fill: 1,
+                                        weight: 1000,
+                                      ),
+                                      trailingIcon: action == actions[button]
+                                          ? const Icon(Icons.check)
+                                          : null,
+                                    ),
+                                  )
+                                  .toList(),
+                          onSelected: (action) => ref
+                              .read(remoteControlButtonActionsProvider.notifier)
+                              .updateButton(button, action),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: Text(action?.description ?? 'No action'),
-                        ),
-                      ],
-                    ),
+                      ),
+                      IconButton(
+                        onPressed: actions.length - 1 == button
+                            ? () => ref
+                                .read(
+                                  remoteControlButtonActionsProvider.notifier,
+                                )
+                                .update(actions..remove(button))
+                            : null,
+                        icon: const Icon(Icons.delete),
+                      ),
+                    ],
                   ),
-                )
-                .toList(),
-            onChanged: (action) => ref
-                .read(remoteControlButtonActionsProvider.notifier)
-                .updateButton(i, action),
+                ),
+              ),
+            )
+            .values,
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: ElevatedButton.icon(
+            onPressed: () =>
+                ref.read(remoteControlButtonActionsProvider.notifier).update(
+                      actions
+                        ..update(
+                          actions.length,
+                          (value) => null,
+                          ifAbsent: () => null,
+                        ),
+                    ),
+            icon: const Icon(Icons.add),
+            label: const Text('Add button'),
           ),
         ),
       ],
+          
+        
+    
     );
   }
 }

@@ -71,6 +71,14 @@ class RemoteControlButtonActions extends _$RemoteControlButtonActions {
         () =>
             state = state..update(i, (value) => action, ifAbsent: () => action),
       );
+
+  @override
+  bool updateShouldNotify(
+    Map<int, RemoteControlButtonAction?> previous,
+    Map<int, RemoteControlButtonAction?> next,
+  ) =>
+      const MapEquality<int, RemoteControlButtonAction?>()
+          .equals(previous, next);
 }
 
 /// A provider for sending the current state of the features corresponding of
