@@ -15,19 +15,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
+
 /// An enumerator for remote control button actions.
 enum RemoteControlButtonAction {
   /// Toggle the equipment sections.
-  toggleEquipmentSections('Toggle equipment sections'),
+  toggleEquipmentSections('Toggle equipment sections', Symbols.handyman),
 
   /// Toggle autosteering.
-  toggleAutosteering('Toggle autosteering'),
+  toggleAutosteering('Toggle autosteering', Symbols.search_hands_free),
 
   /// Toggle AB tracking snap to closest line.
-  toggleABSnap('Toggle AB-line snap to closest line');
+  toggleABSnap(
+    'Toggle AB-line snap to closest line',
+    Symbols.format_letter_spacing,
+  );
 
-  const RemoteControlButtonAction(this.description);
+  const RemoteControlButtonAction(this.description, [this.icon]);
 
   /// A short description of this.
   final String description;
+
+  /// An icon that represents this.
+  final IconData? icon;
 }

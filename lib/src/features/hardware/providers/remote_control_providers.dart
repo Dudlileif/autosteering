@@ -36,7 +36,7 @@ class RemoteControlButtonActions extends _$RemoteControlButtonActions {
   Map<int, RemoteControlButtonAction?> build() {
     ref.listenSelf((previous, next) {
       if (previous != null) {
-        if (!const MapEquality<int, RemoteControlButtonAction?>()
+        if (const MapEquality<int, RemoteControlButtonAction?>()
             .equals(previous, next)) {
           ref.read(settingsProvider.notifier).update(
                 SettingsKey.remoteControlButtonActions,
