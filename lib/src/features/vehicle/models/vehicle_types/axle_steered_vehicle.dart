@@ -68,7 +68,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.lastUsed,
     super.manufacturerColors,
     super.manualSimulationMode,
-  }) : _steeringAngleMaxRaw = steeringAngleMax;
+  }) : steeringAngleMaxRaw = steeringAngleMax;
 
   /// The distance between the axles.
   @override
@@ -85,14 +85,16 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// steered.
   double antennaToSolidAxleDistance;
 
-  double _steeringAngleMaxRaw;
+  /// The maximum steering angle of one of the steering wheels.
+  double steeringAngleMaxRaw;
 
   @override
-  set steeringAngleMax(double value) => _steeringAngleMaxRaw = value;
+  set steeringAngleMax(double value) => steeringAngleMaxRaw = value;
 
+  /// The Ackermann max steering angle of a theoretical central wheel.
   @override
   double get steeringAngleMax => WheelAngleToAckermann(
-        wheelAngle: _steeringAngleMaxRaw,
+        wheelAngle: steeringAngleMaxRaw,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
         steeringRatio: ackermannSteeringRatio,
@@ -240,10 +242,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
   @override
   void setSteeringAngleByWasReading() {
     final innerWheelAngle = switch (wasReadingNormalizedInRange < 0) {
-      true => (wasReadingNormalizedInRange * _steeringAngleMaxRaw)
-          .clamp(-_steeringAngleMaxRaw, 0.0),
-      false => (wasReadingNormalizedInRange * _steeringAngleMaxRaw)
-          .clamp(0.0, _steeringAngleMaxRaw)
+      true => (wasReadingNormalizedInRange * steeringAngleMaxRaw)
+          .clamp(steeringAngleMaxRaw, 0.0),
+      false => (wasReadingNormalizedInRange * steeringAngleMaxRaw)
+          .clamp(0.0, steeringAngleMaxRaw)
     };
 
     steeringAngleInput = WheelAngleToAckermann(
@@ -273,7 +275,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The max opposite steering angle for the wheel the angle sensor is
   /// mounted to. I.e. the angle to the right for a front left steering wheel.
   double get maxOppositeSteeringAngle => WheelAngleToAckermann(
-        wheelAngle: _steeringAngleMaxRaw,
+        wheelAngle: steeringAngleMaxRaw,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
         steeringRatio: ackermannSteeringRatio,
@@ -286,6 +288,16 @@ sealed class AxleSteeredVehicle extends Vehicle {
       steeringAngle.abs() <= steeringAngleMax && steeringAngle.abs() > 0
           ? ackermannSteering.turningRadius
           : null;
+
+  /// The minimum achieveable turning radius for the vehicle with
+  /// [steeringAngleMaxRaw].
+  double get minTurningRadiusTheoretic => WheelAngleToAckermann(
+        wheelAngle: steeringAngleMaxRaw,
+        wheelBase: wheelBase,
+        trackWidth: trackWidth,
+        ackermannPercentage: ackermannPercentage,
+        steeringRatio: ackermannSteeringRatio,
+      ).turningRadius;
 
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
@@ -585,7 +597,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
       final minTurningCircumference = 2 *
           pi *
           AckermannSteering(
-            steeringAngle: _steeringAngleMaxRaw,
+            steeringAngle: steeringAngleMaxRaw,
             wheelBase: wheelBase,
             trackWidth: trackWidth,
             steeringRatio: ackermannSteeringRatio,
@@ -701,6 +713,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? trackWidth,
     double? wheelBase,
     double? antennaToSolidAxleDistance,
+    double? ackermannPercentage,
     double? ackermannSteeringRatio,
     double? steeringAxleWheelDiameter,
     double? solidAxleWheelDiameter,
@@ -770,8 +783,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
       })
       ..update(
         'steering_angle_max',
-        (value) => _steeringAngleMaxRaw,
-        ifAbsent: () => _steeringAngleMaxRaw,
+        (value) => steeringAngleMaxRaw,
+        ifAbsent: () => steeringAngleMaxRaw,
       );
 
     map['hitches'] = {

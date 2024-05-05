@@ -26,7 +26,7 @@ final sendRemoteControlLedStateProvider = AutoDisposeProvider<void>.internal(
 
 typedef SendRemoteControlLedStateRef = AutoDisposeProviderRef<void>;
 String _$remoteControlButtonActionsHash() =>
-    r'b6b93263e29e05ccd98d940111c631990abb7998';
+    r'10b0624aaecf45148eaf61277cab823f47002aa7';
 
 /// A provider for which [RemoteControlButtonAction]s the remote control buttons
 /// shuld map to.

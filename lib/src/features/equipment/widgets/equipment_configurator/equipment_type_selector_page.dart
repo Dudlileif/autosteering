@@ -30,7 +30,6 @@ class EquipmentTypeSelectorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(
             padding: EdgeInsets.all(16),
@@ -62,19 +61,6 @@ class EquipmentTypeSelectorPage extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Consumer(
-              builder: (context, ref, child) => EquipmentConfiguratorNextButton(
-                enabled: ref.watch(
-                  configuredEquipmentProvider.select(
-                    (value) =>
-                        value.name != null && (value.name ?? '').isNotEmpty,
-                  ),
-                ),
               ),
             ),
           ),

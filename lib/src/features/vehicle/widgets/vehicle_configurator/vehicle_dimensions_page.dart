@@ -166,22 +166,14 @@ class VehicleDimensionsPage extends ConsumerWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8),
-              child: VehicleConfiguratorPreviousButton(),
-            ),
-            ...children.map(
+          children: children
+              .map(
               (widget) => Padding(
                 padding: const EdgeInsets.all(8),
                 child: SizedBox(width: 400, child: widget),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8),
-              child: VehicleConfiguratorNextButton(),
-            ),
-          ],
+              )
+              .toList(),
         ),
       ),
     );

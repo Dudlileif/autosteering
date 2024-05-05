@@ -43,20 +43,19 @@ class VehicleConfiguratorIndex extends _$VehicleConfiguratorIndex {
 @riverpod
 class VehicleConfiguratorPageController
     extends _$VehicleConfiguratorPageController {
-  static const _animationDuration = Duration(milliseconds: 250);
-  static const _animationCurve = Curves.slowMiddle;
+  static const _animationDuration = Durations.long4;
+  static const _animationCurve = Curves.easeInOutCubicEmphasized;
 
   @override
-  Raw<PageController> build() {
-    final controller = PageController(
+  Raw<PageController> build() => PageController(
       initialPage: ref.read(vehicleConfiguratorIndexProvider),
     )..addListener(() {
         ref
             .read(vehicleConfiguratorIndexProvider.notifier)
             .update((state.page ?? 0).round());
       });
-    return controller;
-  }
+  
+  
 
   /// Animates to the [index] page with [_animationDuration] and
   /// [_animationCurve].
@@ -66,11 +65,7 @@ class VehicleConfiguratorPageController
         duration: _animationDuration,
         curve: _animationCurve,
       )
-      .then(
-        (value) => ref
-            .read(vehicleConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
-      );
+      ;
 
   /// Animates to the next page with [_animationDuration] and [_animationCurve].
   Future<void> nextPage() => state
@@ -78,11 +73,7 @@ class VehicleConfiguratorPageController
         duration: _animationDuration,
         curve: _animationCurve,
       )
-      .then(
-        (value) => ref
-            .read(vehicleConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
-      );
+      ;
 
   /// Animates to the previous page with [_animationDuration] and
   /// [_animationCurve].
@@ -91,11 +82,7 @@ class VehicleConfiguratorPageController
         duration: _animationDuration,
         curve: _animationCurve,
       )
-      .then(
-        (value) => ref
-            .read(vehicleConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
-      );
+    ;
 }
 
 /// A provider for the vehicle from the configurator.

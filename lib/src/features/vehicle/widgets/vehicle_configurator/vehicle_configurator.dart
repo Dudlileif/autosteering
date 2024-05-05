@@ -35,7 +35,44 @@ class VehicleConfigurator extends ConsumerWidget {
   const VehicleConfigurator({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Dialog(
+  Widget build(BuildContext context, WidgetRef ref) {
+    const pages = [
+      VehicleTypeSelectorPage(),
+      VehicleDimensionsPage(),
+      VehicleAntennaPage(),
+      VehicleWheelsPage(),
+      VehicleSteeringPage(),
+      VehicleHitchesPage(),
+    ];
+
+    const destinations = [
+      NavigationRailDestination(
+        icon: Icon(Icons.agriculture),
+        label: Text('Type'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.expand),
+        label: Text('Dimensions'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.settings_input_antenna),
+        label: Text('Antenna'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.circle_outlined),
+        label: Text('Wheels'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.electric_meter),
+        label: Text('Steering'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.commit),
+        label: Text('Hitches'),
+      ),
+    ];
+
+    return Dialog(
       child: Column(
         children: [
           Padding(
@@ -52,7 +89,7 @@ class VehicleConfigurator extends ConsumerWidget {
                     children: [
                       Text(
                         'Configure vehicle',
-                          style: Theme.of(context).textTheme.headlineSmall,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const _ApplyConfigurationToMainVehicleButton(),
                     ],
@@ -77,32 +114,7 @@ class VehicleConfigurator extends ConsumerWidget {
                         builder: (context, ref, child) => NavigationRail(
                           backgroundColor: Colors.transparent,
                           labelType: NavigationRailLabelType.all,
-                          destinations: const [
-                            NavigationRailDestination(
-                              icon: Icon(Icons.agriculture),
-                              label: Text('Type'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.expand),
-                              label: Text('Dimensions'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.settings_input_antenna),
-                              label: Text('Antenna'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.circle_outlined),
-                              label: Text('Wheels'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.electric_meter),
-                              label: Text('Steering'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.commit),
-                              label: Text('Hitches'),
-                            ),
-                          ],
+                          destinations: destinations,
                           selectedIndex: ref.watch(
                             vehicleConfiguratorIndexProvider,
                           ),
@@ -119,17 +131,54 @@ class VehicleConfigurator extends ConsumerWidget {
                 ),
                 const VerticalDivider(),
                 Expanded(
-                  child: PageView(
-                    scrollDirection: Axis.vertical,
-                    controller:
-                        ref.watch(vehicleConfiguratorPageControllerProvider),
-                    children: const [
-                      VehicleTypeSelectorPage(),
-                      VehicleDimensionsPage(),
-                      VehicleAntennaPage(),
-                      VehicleWheelsPage(),
-                      VehicleSteeringPage(),
-                      VehicleHitchesPage(),
+                  child: Column(
+                    children: [
+                      AnimatedOpacity(
+                        opacity: ref.watch(
+                          vehicleConfiguratorIndexProvider
+                              .select((value) => value > 0),
+                        )
+                            ? 1
+                            : 0,
+                        duration: Durations.medium1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: VehicleConfiguratorPreviousButton(
+                            enabled: ref.watch(
+                              vehicleConfiguratorIndexProvider.select(
+                                (value) => value > 0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: PageView(
+                          scrollDirection: Axis.vertical,
+                          controller: ref
+                              .watch(vehicleConfiguratorPageControllerProvider),
+                          children: pages,
+                        ),
+                      ),
+                      AnimatedOpacity(
+                        opacity: ref.watch(
+                          vehicleConfiguratorIndexProvider
+                              .select((value) => value < pages.length - 1),
+                        )
+                            ? 1
+                            : 0,
+                        duration: Durations.medium1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: VehicleConfiguratorNextButton(
+                            enabled: ref.watch(
+                              vehicleConfiguratorIndexProvider.select(
+                                (value) => value < pages.length - 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -138,7 +187,8 @@ class VehicleConfigurator extends ConsumerWidget {
           ),
         ],
       ),
-      );
+    );
+  }
 }
 
 /// A button for going to the next page of the vehicle configurator.

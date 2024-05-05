@@ -114,21 +114,6 @@ class VehicleTypeSelectorPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Consumer(
-                    builder: (context, ref, child) =>
-                        VehicleConfiguratorNextButton(
-                      enabled: ref.watch(
-                        configuredVehicleProvider.select(
-                          (value) =>
-                              value.name != null &&
-                              (value.name ?? '').isNotEmpty,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -169,7 +154,7 @@ class _VehicleTypeSelector extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Expanded(
-                            flex: 10,
+                            flex: 11,
                             child: Text(
                               minDimension / 2 > 100
                                   ? 'Tractor\n(or front axle steering)'
@@ -220,7 +205,7 @@ class _VehicleTypeSelector extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Expanded(
-                            flex: 10,
+                            flex: 11,
                             child: Text(
                               minDimension / 2 > 100
                                   ? '''Articulated tractor\n(or articulated steering)'''
@@ -263,7 +248,7 @@ class _VehicleTypeSelector extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Expanded(
-                            flex: 10,
+                            flex: 11,
                             child: Text(
                               minDimension / 2 > 100
                                   ? 'Harvester\n(or rear axle steering)'

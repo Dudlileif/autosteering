@@ -44,58 +44,38 @@ class EquipmentConfiguratorIndex extends _$EquipmentConfiguratorIndex {
 @riverpod
 class EquipmentConfiguratorPageController
     extends _$EquipmentConfiguratorPageController {
-  static const _animationDuration = Duration(milliseconds: 250);
-  static const _animationCurve = Curves.slowMiddle;
+  static const _animationDuration = Durations.long4;
+  static const _animationCurve = Curves.easeInOutCubicEmphasized;
 
   @override
-  Raw<PageController> build() {
-    final controller = PageController(
+  Raw<PageController> build() => PageController(
       initialPage: ref.read(equipmentConfiguratorIndexProvider),
     )..addListener(() {
         ref
             .read(equipmentConfiguratorIndexProvider.notifier)
             .update((state.page ?? 0).round());
       });
-    return controller;
-  }
+    
 
   /// Animates to the [index] page with [_animationDuration] and
   /// [_animationCurve].
-  Future<void> animateToPage(int index) => state
-      .animateToPage(
+  Future<void> animateToPage(int index) => state.animateToPage(
         index,
         duration: _animationDuration,
         curve: _animationCurve,
-      )
-      .then(
-        (value) => ref
-            .read(equipmentConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
       );
 
   /// Animates to the next page with [_animationDuration] and [_animationCurve].
-  Future<void> nextPage() => state
-      .nextPage(
+  Future<void> nextPage() => state.nextPage(
         duration: _animationDuration,
         curve: _animationCurve,
-      )
-      .then(
-        (value) => ref
-            .read(equipmentConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
       );
 
   /// Animates to the previous page with [_animationDuration] and
   /// [_animationCurve].
-  Future<void> previousPage() => state
-      .previousPage(
+  Future<void> previousPage() => state.previousPage(
         duration: _animationDuration,
         curve: _animationCurve,
-      )
-      .then(
-        (value) => ref
-            .read(equipmentConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
       );
 }
 
@@ -108,9 +88,21 @@ class ConfiguredEquipment extends _$ConfiguredEquipment {
   /// Update the [state] to [equipment].
   void update(Equipment equipment) => Future(() => state = equipment);
 
-  /// Updates the vehicle's name to [name].
+  /// Updates the equipment's name to [name].
   void updateName(String? name) =>
       Future(() => state = state.copyWith(name: name));
+
+  /// Updates the equipment's [section].
+  void updateSection(Section section) => Future(
+        () => state = state.copyWith(
+          sections: state.sections
+            ..replaceRange(
+              section.index,
+              section.index + 1,
+              [section],
+            ),
+        ),
+      );
 }
 
 /// A provider for the [TextEditingController] for the name in the

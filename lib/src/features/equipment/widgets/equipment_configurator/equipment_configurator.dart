@@ -35,107 +35,158 @@ class EquipmentConfigurator extends StatelessWidget {
   const EquipmentConfigurator({super.key});
 
   @override
-  Widget build(BuildContext context) => Dialog(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Wrap(
-                      alignment: WrapAlignment.spaceBetween,
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        Text(
-                          'Configure equipment',
-                          style: Theme.of(context).textTheme.headlineSmall,
+  Widget build(BuildContext context) {
+    const pages = [
+      EquipmentTypeSelectorPage(),
+      EquipmentDimensionsPage(),
+      EquipmentSectionsPage(),
+      EquipmentDecorationPage(),
+      EquipmentHitchesPage(),
+    ];
+
+    const destinations = [
+      NavigationRailDestination(
+        icon: Icon(Icons.handyman),
+        label: Text('Type'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.expand),
+        label: Text('Dimensions'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.view_column),
+        label: Text('Sections'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.square_rounded),
+        label: Text('Decoration'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.commit),
+        label: Text('Hitches'),
+      ),
+    ];
+
+    return Dialog(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      Text(
+                        'Configure equipment',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const _ApplyConfigurationToAttachedEquipmentButton(),
+                    ],
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: CloseButton(),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: SingleChildScrollView(
+                    child: IntrinsicHeight(
+                      child: Consumer(
+                        builder: (context, ref, child) => NavigationRail(
+                          backgroundColor: Colors.transparent,
+                          labelType: NavigationRailLabelType.all,
+                          destinations: destinations,
+                          selectedIndex: ref.watch(
+                            equipmentConfiguratorIndexProvider,
+                          ),
+                          onDestinationSelected: ref
+                              .read(
+                                equipmentConfiguratorPageControllerProvider
+                                    .notifier,
+                              )
+                              .animateToPage,
                         ),
-                        const _ApplyConfigurationToAttachedEquipmentButton(),
+                      ),
+                    ),
+                  ),
+                ),
+                const VerticalDivider(),
+                Expanded(
+                  child: Consumer(
+                    builder: (context, ref, child) => Column(
+                      children: [
+                        AnimatedOpacity(
+                          opacity: ref.watch(
+                            equipmentConfiguratorIndexProvider
+                                .select((value) => value > 0),
+                          )
+                              ? 1
+                              : 0,
+                          duration: Durations.medium1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: EquipmentConfiguratorPreviousButton(
+                              enabled: ref.watch(
+                                equipmentConfiguratorIndexProvider.select(
+                                  (value) => value > 0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: PageView(
+                            scrollDirection: Axis.vertical,
+                            controller: ref.watch(
+                              equipmentConfiguratorPageControllerProvider,
+                            ),
+                            children: pages,
+                          ),
+                        ),
+                        AnimatedOpacity(
+                          opacity: ref.watch(
+                            equipmentConfiguratorIndexProvider
+                                .select((value) => value < pages.length - 1),
+                          )
+                              ? 1
+                              : 0,
+                          duration: Durations.medium1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: EquipmentConfiguratorNextButton(
+                              enabled: ref.watch(
+                                equipmentConfiguratorIndexProvider.select(
+                                  (value) => value < pages.length - 1,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: CloseButton(),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Expanded(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: SingleChildScrollView(
-                      child: IntrinsicHeight(
-                        child: Consumer(
-                          builder: (context, ref, child) => NavigationRail(
-                            backgroundColor: Colors.transparent,
-                            labelType: NavigationRailLabelType.all,
-                            destinations: const [
-                              NavigationRailDestination(
-                                icon: Icon(Icons.handyman),
-                                label: Text('Type'),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(Icons.expand),
-                                label: Text('Dimensions'),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(Icons.view_column),
-                                label: Text('Sections'),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(Icons.square_rounded),
-                                label: Text('Decoration'),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(Icons.commit),
-                                label: Text('Hitches'),
-                              ),
-                            ],
-                            selectedIndex: ref.watch(
-                              equipmentConfiguratorIndexProvider,
-                            ),
-                            onDestinationSelected: ref
-                                .read(
-                                  equipmentConfiguratorPageControllerProvider
-                                      .notifier,
-                                )
-                                .animateToPage,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const VerticalDivider(),
-                  Expanded(
-                    child: Consumer(
-                      builder: (context, ref, child) => PageView(
-                        scrollDirection: Axis.vertical,
-                        controller: ref
-                            .watch(equipmentConfiguratorPageControllerProvider),
-                        children: const [
-                          EquipmentTypeSelectorPage(),
-                          EquipmentDimensionsPage(),
-                          EquipmentSectionsPage(),
-                          EquipmentDecorationPage(),
-                          EquipmentHitchesPage(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 /// A button for going to the next page of the vehicle configurator.

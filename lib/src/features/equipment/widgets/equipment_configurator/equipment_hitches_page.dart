@@ -41,7 +41,7 @@ class EquipmentHitchesPage extends ConsumerWidget {
             (value) => value.hitchToChildFrontFixedHitchLength?.toString(),
           ),
         ),
-        onChanged: (value) {
+        onFieldSubmitted: (value) {
           final distance = double.tryParse(value.replaceAll(',', '.'));
 
           ref.read(configuredEquipmentProvider.notifier).update(
@@ -61,7 +61,7 @@ class EquipmentHitchesPage extends ConsumerWidget {
             (value) => value.hitchToChildRearFixedHitchLength?.toString(),
           ),
         ),
-        onChanged: (value) {
+        onFieldSubmitted: (value) {
           final distance = double.tryParse(value.replaceAll(',', '.'));
 
           ref.read(configuredEquipmentProvider.notifier).update(
@@ -81,7 +81,7 @@ class EquipmentHitchesPage extends ConsumerWidget {
             (value) => value.hitchToChildRearTowbarHitchLength?.toString(),
           ),
         ),
-        onChanged: (value) {
+        onFieldSubmitted: (value) {
           final distance = double.tryParse(value.replaceAll(',', '.'));
 
           ref.read(configuredEquipmentProvider.notifier).update(
@@ -93,18 +93,17 @@ class EquipmentHitchesPage extends ConsumerWidget {
 
     return SingleChildScrollView(
       child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: EquipmentConfiguratorPreviousButton(),
-          ),
-          ...children.map(
-            (widget) => Padding(
-              padding: const EdgeInsets.all(8),
-              child: SizedBox(width: 400, child: widget),
-            ),
-          ),
-        ],
+        children: children
+            .map(
+              (widget) => ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: widget,
+                ),
+              ),
+            )
+            .toList(),
       ),
     );
   }
