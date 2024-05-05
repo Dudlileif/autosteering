@@ -53,6 +53,16 @@ class ShowABTracking extends _$ShowABTracking {
   void update({required bool value}) => Future(() => state = value);
 }
 
+/// A provider for whether the AB-tracking debug features should be shown.
+@Riverpod(keepAlive: true)
+class DebugABTracking extends _$DebugABTracking {
+  @override
+  bool build() => false;
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
+
 /// A provider for the step size of an AB-line.
 @Riverpod(keepAlive: true)
 class ABDebugStepSize extends _$ABDebugStepSize {
@@ -152,7 +162,12 @@ class ABOffsetOppositeTurn extends _$ABOffsetOppositeTurn {
 @Riverpod(keepAlive: true)
 class ABSnapToClosestLine extends _$ABSnapToClosestLine {
   @override
-  bool build() => false;
+  bool build() {
+    ref.listenSelf((previous, next) {
+      ref.read(simInputProvider.notifier).send((abSnapToClosestLine: next));
+    });
+    return false;
+  }
 
   /// Updates [state] to [value].
   void update({required bool value}) => Future(() => state = value);

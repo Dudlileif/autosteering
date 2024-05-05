@@ -542,6 +542,10 @@ class SimulatorCoreState {
             .updateCurrentPathTracking(vehicle!, force: true);
       }
     }
+    // Sets whether the AB-tracking should snap to the closest line.
+    else if (message is ({bool abSnapToClosestLine})) {
+      abTracking?.snapToClosestLine = message.abSnapToClosestLine;
+    }
     // Move the AB-tracking offset by 1 to the left if negative or to the
     // right if positive.
     else if (message is ({int abMoveOffset})) {
@@ -568,6 +572,24 @@ class SimulatorCoreState {
           LogEvent(
             Level.info,
             'Cleared ABTracking finished offsets.',
+          ),
+        );
+      }
+    }
+    // Reset AB tracking finished offsets (lines).
+    else if (message is ({bool abTrackingRecalculateLines})) {
+      if (abTracking != null && message.abTrackingRecalculateLines) {
+        mainThreadSendStream.add(
+          LogEvent(
+            Level.info,
+            'Recalculating ABTracking lines...',
+          ),
+        );
+        abTracking!.calculateLinesWithinBoundary();
+        mainThreadSendStream.add(
+          LogEvent(
+            Level.info,
+            'Recalculated ABTracking lines.',
           ),
         );
       }

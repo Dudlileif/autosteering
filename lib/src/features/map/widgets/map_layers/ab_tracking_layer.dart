@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,6 +35,8 @@ class ABTrackingLayer extends ConsumerWidget {
     ref.watch(configuredABTrackingProvider);
 
     final abTracking = ref.watch(displayABTrackingProvider);
+
+    final debug = ref.watch(debugABTrackingProvider);
 
     final pointA = abTracking?.start ?? ref.watch(aBPointAProvider);
 
@@ -53,6 +56,7 @@ class ABTrackingLayer extends ConsumerWidget {
 
     final darkMode = Theme.of(context).brightness == Brightness.dark;
 
+  
     return Stack(
       children: [
         if (abTracking?.boundary != null)
@@ -60,7 +64,7 @@ class ABTrackingLayer extends ConsumerWidget {
             polygons: [
               abTracking!.boundary!.mapPolygon(
                 borderStrokeWidth: 2,
-                borderColor : Colors.red,
+                borderColor: Colors.red,
               ),
             ],
           ),
@@ -94,12 +98,12 @@ class ABTrackingLayer extends ConsumerWidget {
                       .toList(),
                 ),
               if (abTracking.currentLine != null)
-              Polyline(
+                Polyline(
                   points: abTracking.currentLine!
-                    .map((e) => e.position.latLng)
-                    .toList(),
+                      .map((e) => e.position.latLng)
+                      .toList(),
                   strokeWidth: 3,
-              ),
+                ),
               if (abTracking.limitMode == ABLimitMode.unlimited &&
                   abTracking is ABLine)
                 Polyline(
@@ -145,22 +149,45 @@ class ABTrackingLayer extends ConsumerWidget {
                   ],
                   color: Colors.white,
                 ),
+              if (debug)
+                ...abTracking.currentLine?.mapIndexed(
+                      (index, element) => Polyline(
+                        points: [
+                          element.position.latLng,
+                          element.moveRhumb(distance: 2).position.latLng,
+                        ],
+                        color: Colors.purpleAccent,
+                        strokeWidth: 3,
+                      ),
+                    ) ??
+                    [],
             ],
           ),
         if (abTracking != null || pointA != null || pointB != null)
           CircleLayer(
             circles: [
               if (abTracking != null) ...[
+                if (debug)
+                  ...abTracking.currentLine
+                          ?.map(
+                            (e) => CircleMarker(
+                              point: e.position.latLng,
+                              radius: 5,
+                              color: Colors.yellow,
+                            ),
+                          )
+                          .whereNotNull() ??
+                      [],
                 if (abTracking.currentStart != null)
-                CircleMarker(
+                  CircleMarker(
                     point: abTracking.currentStart!.position.latLng,
-                  radius: 5,
-                ),
+                    radius: 5,
+                  ),
                 if (abTracking.currentEnd != null)
-                CircleMarker(
+                  CircleMarker(
                     point: abTracking.currentEnd!.position.latLng,
-                  radius: 5,
-                ),
+                    radius: 5,
+                  ),
                 if (abTracking.nextStart != null)
                   CircleMarker(
                     point: abTracking.nextStart!.position.latLng,
@@ -249,6 +276,24 @@ class ABTrackingLayer extends ConsumerWidget {
         MarkerLayer(
           markers: [
             if (abTracking != null) ...[
+              if (debug)
+                ...abTracking.currentLine
+                        ?.mapIndexed(
+                          (index, e) => Marker(
+                            point: e.position.latLng,
+                            child: TextWithStroke(
+                              '$index',
+                              style: pointTextStyle,
+                              strokeWidth: 4,
+                            ),
+                            alignment: Alignment.centerRight,
+                            rotate: true,
+                            width: 50,
+                            height: 50,
+                          ),
+                        )
+                        .whereNotNull() ??
+                    [],
               if (abTracking.boundary == null) ...[
                 Marker(
                   point: abTracking.start.position.latLng,
@@ -274,29 +319,29 @@ class ABTrackingLayer extends ConsumerWidget {
                 ),
               ],
               if (abTracking.currentStart != null)
-              Marker(
+                Marker(
                   point: abTracking.currentStart!.position.latLng,
-                child: TextWithStroke(
-                  'A${abTracking.currentOffset}',
-                  style: pointTextStyle,
-                  strokeWidth: 4,
+                  child: TextWithStroke(
+                    'A${abTracking.currentOffset}',
+                    style: pointTextStyle,
+                    strokeWidth: 4,
+                  ),
+                  rotate: true,
+                  width: 50,
+                  height: 50,
                 ),
-                rotate: true,
-                width: 50,
-                height: 50,
-              ),
               if (abTracking.currentEnd != null)
-              Marker(
+                Marker(
                   point: abTracking.currentEnd!.position.latLng,
-                child: TextWithStroke(
-                  'B${abTracking.currentOffset}',
-                  style: pointTextStyle,
-                  strokeWidth: 4,
+                  child: TextWithStroke(
+                    'B${abTracking.currentOffset}',
+                    style: pointTextStyle,
+                    strokeWidth: 4,
+                  ),
+                  rotate: true,
+                  width: 50,
+                  height: 50,
                 ),
-                rotate: true,
-                width: 50,
-                height: 50,
-              ),
               if (abTracking.limitMode != ABLimitMode.unlimited) ...[
                 if (abTracking.nextStart != null)
                   Marker(

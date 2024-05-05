@@ -1038,6 +1038,24 @@ final showABTrackingProvider = NotifierProvider<ShowABTracking, bool>.internal(
 );
 
 typedef _$ShowABTracking = Notifier<bool>;
+String _$debugABTrackingHash() => r'4b7ddb864844d94c5bc11ff2114f8cdb0bf3e484';
+
+/// A provider for whether the AB-tracking debug features should be shown.
+///
+/// Copied from [DebugABTracking].
+@ProviderFor(DebugABTracking)
+final debugABTrackingProvider =
+    NotifierProvider<DebugABTracking, bool>.internal(
+  DebugABTracking.new,
+  name: r'debugABTrackingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugABTrackingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DebugABTracking = Notifier<bool>;
 String _$aBDebugStepSizeHash() => r'9758a5466afb606e1e296ec4d9f2ee6b298d33fb';
 
 /// A provider for the step size of an AB-line.
@@ -1188,7 +1206,7 @@ final aBOffsetOppositeTurnProvider =
 
 typedef _$ABOffsetOppositeTurn = Notifier<bool>;
 String _$aBSnapToClosestLineHash() =>
-    r'ba1b35f9f50fc702ca710d828742ef335261f4c4';
+    r'87a652e9575093946da539c809072bcbbf4ccfe3';
 
 /// A provider for whether the AB-tracking should snap to the closest line.
 ///
