@@ -7,7 +7,7 @@ part of 'combined_communication_providers.dart';
 // **************************************************************************
 
 String _$combinedNativeNetworkHash() =>
-    r'4ba9f82efda0a1ed11b5830d3e95c455319784d1';
+    r'42aa7b4ca8e5462f3b950bb00975a1424aee0ba0';
 
 /// A provider for combining the native network providers that need to be
 /// watched.

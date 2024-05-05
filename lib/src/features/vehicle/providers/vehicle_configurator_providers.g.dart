@@ -27,7 +27,7 @@ final vehicleConfiguratorIndexProvider =
 
 typedef _$VehicleConfiguratorIndex = Notifier<int>;
 String _$vehicleConfiguratorPageControllerHash() =>
-    r'80f4df3524b18c93a0873affcda40efb0cb813a1';
+    r'b0c16cdd5d5196c998123aa4f5bde29e34b5cde6';
 
 /// A provider for creating a [PageController] for using throughout the
 /// [VehicleConfigurator].

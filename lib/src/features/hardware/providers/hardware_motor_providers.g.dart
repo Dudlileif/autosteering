@@ -25,7 +25,7 @@ final getSteeringHardwareConfigProvider = FutureProvider<void>.internal(
 
 typedef GetSteeringHardwareConfigRef = FutureProviderRef<void>;
 String _$updateSteeringHardwareConfigHash() =>
-    r'79ecfde68933d8503a95c09204a13e17e127a07b';
+    r'3fb2b65dcf0114aa981e637fb9fe406c82f843b5';
 
 /// Copied from Dart SDK
 class _SystemHash {

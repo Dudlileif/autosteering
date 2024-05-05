@@ -28,6 +28,9 @@ part 'combined_communication_providers.g.dart';
 @riverpod
 void _combinedNativeNetwork(_CombinedNativeNetworkRef ref) => ref
   ..watch(hardwareCommunicationConfigProvider)
+  ..watch(deviceIPAdressWlanProvider)
+  ..watch(deviceIPAdressAPProvider)
+  ..watch(deviceIPAdressEthernetProvider)
   ..watch(ntripClientProvider)
   ..watch(tcpServerProvider)
   ..watch(ntripDataUsageSessionProvider)

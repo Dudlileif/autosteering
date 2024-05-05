@@ -27,7 +27,7 @@ final equipmentConfiguratorIndexProvider =
 
 typedef _$EquipmentConfiguratorIndex = Notifier<int>;
 String _$equipmentConfiguratorPageControllerHash() =>
-    r'fb9ff60b4db6d3371e94b5cf7219ea525f36a214';
+    r'17cff8e7b7982d8eb5fa386337f94ae9aef665f7';
 
 /// A provider for creating a [PageController] for using throughout the
 /// [EquipmentConfigurator].
@@ -48,7 +48,7 @@ final equipmentConfiguratorPageControllerProvider = AutoDisposeNotifierProvider<
 typedef _$EquipmentConfiguratorPageController
     = AutoDisposeNotifier<Raw<PageController>>;
 String _$configuredEquipmentHash() =>
-    r'f36d79b5d34ad47c42f66855a688b2a8e8e68c47';
+    r'9973f5a2b7b6682b93244830f11c923b40f1f30d';
 
 /// A provider for the vehicle from the configurator.
 ///

@@ -107,8 +107,7 @@ void initializeSimCore(InitializeSimCoreRef ref) {
     ..send((sendMessagesToHardware: ref.read(sendMessagesToHardwareProvider)));
   if (Device.isNative) {
     ref.read(simInputProvider.notifier)
-      ..send(ref.read(hardwareCommunicationConfigProvider))
-      ..send((networkAvailable: ref.read(networkAvailableProvider)))
+      ..send(ref.read(hardwareCommunicationConfigProvider))..send((networkAvailable:ref.read(networkAvailableProvider)))
       ..send(
         (
           logGNSS: ref.read(hardwareLogGnssProvider),

@@ -10,15 +10,14 @@ environment:
     sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
-    archive: ^3.4.10
+    archive: ^3.5.1
     async: ^2.11.0
     collection: ^1.17.1
-    connectivity_plus: ^6.0.3
     cupertino_icons: ^1.0.8
     dio: ^5.4.3+1
     equatable: ^2.0.5
     fast_cached_network_image: ^1.2.9
-    file_picker: ^8.0.2
+    file_picker: ^8.0.3
     flex_color_scheme: ^7.3.1
     flutter:
         sdk: flutter
@@ -47,7 +46,7 @@ dependencies:
     universal_io: ^2.2.2
     # usb_serial: ^0.5.1
     uuid: ^4.4.0
-    wakelock_plus: ^1.2.4
+    wakelock_plus: ^1.2.5
     window_manager: ^0.3.8
     xml: ^6.5.0
 

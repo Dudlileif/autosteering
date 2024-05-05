@@ -39,11 +39,7 @@ class HardwareNetworkMenu extends StatelessWidget {
         if (Device.isNative) ...[
           Consumer(
             builder: (context, ref, child) {
-              final ip = ref.watch(deviceIPAdressWlanProvider).when(
-                    data: (data) => data,
-                    error: (error, stackTrace) => null,
-                    loading: () => null,
-                  );
+              final ip = ref.watch(deviceIPAdressWlanProvider);
               return ip != null
                   ? ListTile(
                 leading: const Icon(Icons.wifi),
@@ -59,11 +55,7 @@ $ip''',
           ),
           Consumer(
             builder: (context, ref, child) {
-              final ip = ref.watch(deviceIPAdressAPProvider).when(
-                    data: (data) => data,
-                    error: (error, stackTrace) => null,
-                    loading: () => null,
-                  );
+              final ip = ref.watch(deviceIPAdressAPProvider);
               return ip != null
                   ? ListTile(
                       leading: const Icon(Icons.router),
@@ -79,11 +71,7 @@ $ip''',
           ),
           Consumer(
             builder: (context, ref, child) {
-              final ip = ref.watch(deviceIPAdressEthernetProvider).when(
-                    data: (data) => data,
-                    error: (error, stackTrace) => null,
-                    loading: () => null,
-                  );
+              final ip = ref.watch(deviceIPAdressEthernetProvider);
               return ip != null
                   ? ListTile(
                 leading: const Icon(Icons.cable),
