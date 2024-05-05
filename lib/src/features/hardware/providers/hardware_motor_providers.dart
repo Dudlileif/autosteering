@@ -306,33 +306,37 @@ FutureOr<void> updateSteeringHardwareConfig(
   UpdateSteeringHardwareConfigRef ref,
   SteeringHardwareConfigKeysContainer keyContainer,
 ) async {
-  try {
-    final steeringHardwareConfig = ref.read(
-      mainVehicleProvider.select((value) => value.steeringHardwareConfig),
-    );
-    final url =
-        '''http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader(keyContainer.keys)}''';
-    Logger.instance.i('Updating motor config with: $url');
-
-    final response = await Dio(
-      BaseOptions(
-        connectTimeout: const Duration(seconds: 5),
-        receiveTimeout: const Duration(seconds: 5),
-      ),
-    ).get<String>(url);
-    if (response.statusCode == 200) {
-      Logger.instance.i(
-        '''Successfully updated motor config on hardware for parameters: ${keyContainer.keys}.''',
+  if (ref.watch(networkAvailableProvider) &&
+      ref.read(steeringHardwareNetworkAliveProvider)) {
+    try {
+      final steeringHardwareConfig = ref.read(
+        mainVehicleProvider.select((value) => value.steeringHardwareConfig),
       );
-    } else {
-      Logger.instance.e('Failed to update motor config on hardware: $response');
+      final url =
+          '''http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader(keyContainer.keys)}''';
+      Logger.instance.i('Updating motor config with: $url');
+
+      final response = await Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 5),
+          receiveTimeout: const Duration(seconds: 5),
+        ),
+      ).get<String>(url);
+      if (response.statusCode == 200) {
+        Logger.instance.i(
+          '''Successfully updated motor config on hardware for parameters: ${keyContainer.keys}.''',
+        );
+      } else {
+        Logger.instance
+            .e('Failed to update motor config on hardware: $response');
+      }
+    } catch (error, stackTrace) {
+      Logger.instance.e(
+        'Failed to update motor config on hardware.',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
-  } catch (error, stackTrace) {
-    Logger.instance.e(
-      'Failed to update motor config on hardware.',
-      error: error,
-      stackTrace: stackTrace,
-    );
   }
   ref.invalidateSelf();
 }
