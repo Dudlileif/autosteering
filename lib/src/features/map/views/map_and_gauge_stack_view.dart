@@ -209,7 +209,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
                   builder: (context, setState) => Positioned(
                     left: offset.dx.clamp(
                       0,
-                      constraints.maxWidth - 380,
+                      constraints.maxWidth - 405,
                     ),
                     top: offset.dy.clamp(0, constraints.maxHeight - 350),
                     child: Padding(
@@ -236,7 +236,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
                                 Offset(
                                   offset.dx.clamp(
                                     0,
-                                    constraints.maxWidth - 380,
+                                    constraints.maxWidth - 405,
                                   ),
                                   offset.dy
                                       .clamp(0, constraints.maxHeight - 350),
@@ -273,7 +273,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
                       padding: const EdgeInsets.all(8),
                       child: SizedBox(
                         height: min(
-                          375,
+                          385,
                           constraints.maxHeight -
                               offset.dy.clamp(0, constraints.maxHeight - 390),
                         ),
@@ -305,12 +305,12 @@ class MapAndGaugeStackView extends ConsumerWidget {
                           feedback: const Opacity(
                             opacity: 0.7,
                             child: SizedBox(
-                              height: 375,
+                              height: 385,
                               child: AutosteeringParameterConfigurator(),
                             ),
                           ),
                           child: const SizedBox(
-                            height: 375,
+                            height: 385,
                             child: AutosteeringParameterConfigurator(),
                           ),
                         ),

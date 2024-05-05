@@ -42,7 +42,7 @@ class SteeringHardwareConfigurator extends StatelessWidget {
     return Card(
       color: Colors.transparent,
       child: SizedBox(
-        width: 300,
+        width: 325,
         child: DefaultTabController(
           length: _tabs.length,
           child: Scaffold(
@@ -293,7 +293,7 @@ class _MotorPage extends ConsumerWidget {
                   .select((value) => value.steeringHardwareConfig.maxRPM),
             ),
             resetValue: 200,
-            text: (value) => 'Max speed: ${value.toStringAsFixed(1)} RPM',
+            text: (value) => 'Max speed: ${value.round()} RPM',
             onChangeEnd: (value) {
               final oldConfig = ref.read(
                 mainVehicleProvider
@@ -330,8 +330,8 @@ class _MotorPage extends ConsumerWidget {
                 );
               });
             },
-            max: 500,
-            divisions: 50,
+            max: 300,
+            divisions: 30,
           ),
         ),
         // Motor max acceletation RPM/s^2
@@ -345,7 +345,7 @@ class _MotorPage extends ConsumerWidget {
             ),
             resetValue: 100,
             text: (value) =>
-                'Max acceleration: ${value.toStringAsFixed(1)} RPM/s²',
+                'Max acceleration: ${value.round()} RPM/s²',
             onChangeEnd: (value) {
               final oldValue = ref.read(
                 mainVehicleProvider.select(

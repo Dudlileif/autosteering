@@ -44,10 +44,10 @@ class SimVehicleVelocityControls extends StatelessWidget {
             child: Stack(
               children: [
                 const Align(
-                  heightFactor: 1.5,
+                  heightFactor: 1.1,
                   child: Icon(
                     Icons.stop_circle,
-                    size: 32,
+                    size: 36,
                   ),
                 ),
                 Align(

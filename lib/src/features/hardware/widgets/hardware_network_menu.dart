@@ -133,8 +133,8 @@ $ip''',
               return TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Steering Hardware Address',
-                  error: SizedBox(
-                    height: 16,
+                  counter: SizedBox(
+                    height: 18,
                     child: Column(
                       children: [
                         ListenableBuilder(
@@ -202,8 +202,8 @@ $ip''',
               return TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Remote Control Hardware Address',
-                  error: SizedBox(
-                    height: 16,
+                  counter: SizedBox(
+                    height: 18,
                     child: Column(
                       children: [
                         ListenableBuilder(
@@ -254,11 +254,7 @@ $ip''',
         ),
         if (Device.isNative)
           Consumer(
-            builder: (context, ref, child) {
-              final controller = TextEditingController(
-                text: ref.read(hardwareUDPReceivePortProvider).toString(),
-              );
-              return ListTile(
+            builder: (context, ref, child) => ListTile(
                 leading: const Icon(Icons.call_received),
                 title: TextFormField(
                   decoration: InputDecoration(
@@ -277,21 +273,18 @@ $ip''',
                         ? 'Valid Port'
                         : 'Invalid Port';
                   },
-                  controller: controller,
+                controller: TextEditingController(
+                  text: ref.read(hardwareUDPReceivePortProvider).toString(),
+                ),
                   onChanged: ref
                       .read(hardwareUDPReceivePortProvider.notifier)
                       .updateFromString,
                 ),
-              );
-            },
+            ),
           ),
         if (Device.isNative)
           Consumer(
-            builder: (context, ref, child) {
-              final controller = TextEditingController(
-                text: ref.read(hardwareUDPSendPortProvider).toString(),
-              );
-              return ListTile(
+            builder: (context, ref, child) => ListTile(
                 leading: const Icon(Icons.send),
                 title: TextFormField(
                   decoration: const InputDecoration(
@@ -308,13 +301,14 @@ $ip''',
                         ? 'Valid Port'
                         : 'Invalid Port';
                   },
-                  controller: controller,
+                controller: TextEditingController(
+                  text: ref.read(hardwareUDPSendPortProvider).toString(),
+                ),
                   onChanged: ref
                       .read(hardwareUDPSendPortProvider.notifier)
                       .updateFromString,
                 ),
-              );
-            },
+            ),
           ),
       ],
     );
