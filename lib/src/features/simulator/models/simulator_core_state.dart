@@ -210,7 +210,6 @@ class SimulatorCoreState {
   void handleMessage(dynamic message) {
     // Force update to reflect changes in case we haven't moved.
     forceChange = true;
-
     // Enable/disable sending messages to the hardware.
     if (message is ({bool sendMessagesToHardware})) {
       sendMessagesToHardware = message.sendMessagesToHardware;
@@ -355,8 +354,9 @@ class SimulatorCoreState {
     // Enable/disable auto steering.
     else if (message is ({bool enableAutoSteer})) {
       if (message.enableAutoSteer) {
-        mainThreadSendStream
-            .add(LogEvent(Level.warning, 'Attempting to activate Autosteer.'));
+        mainThreadSendStream.add(
+          LogEvent(Level.warning, 'Attempting to activate Autosteer.'),
+        );
 
         if (abTracking != null || pathTracking != null) {
           autosteeringState = AutosteeringState.enabled;
@@ -613,8 +613,9 @@ class SimulatorCoreState {
           const Utf8Encoder().convert(
             jsonEncode(
               {
-                'was_target': vehicle!
-                    .wasTargetFromSteeringAngle(message.steeringAngleOverride!),
+                'was_target': vehicle!.wasTargetFromSteeringAngle(
+                  message.steeringAngleOverride!,
+                ),
                 'enable_motor': true,
               },
             ),
@@ -937,8 +938,7 @@ class SimulatorCoreState {
   void updateGauges() {
     // Update based on the last GNSS updates, if we've received one this tick.
     if (gnssUpdate != null) {
-      if (gnssUpdate != null && prevGnssUpdates.lastOrNull != null
-          ) {
+      if (gnssUpdate != null && prevGnssUpdates.lastOrNull != null) {
         // Correct for roll and pitch if IMU bearing is set.
         if (vehicle!.imu.bearingIsSet && vehicle!.imu.config.usePitchAndRoll) {
           gnssUpdate = (

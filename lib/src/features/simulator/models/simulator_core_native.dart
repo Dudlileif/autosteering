@@ -63,24 +63,35 @@ class SimulatorCore {
     final state = SimulatorCoreState(updateMainThreadStream);
 
     void simulationStep() {
-      if (state.vehicle != null) {
-        state.update();
+      try {
+        if (state.vehicle != null) {
+          state.update();
 
-        // If the state has changed we send the new state back to the
-        // main/UI isolate.
-        if (state.didChange) {
-          sendPort.send(
-            (
-              vehicle: state.vehicle,
-              velocity: state.gaugeVelocity,
-              bearing: state.gaugeBearing,
-              distance: state.distance,
-              pathTracking: state.pathTracking,
-              abTracking: state.abTracking,
-              autosteeringState: state.autosteeringState,
-            ),
-          );
+          // If the state has changed we send the new state back to the
+          // main/UI isolate.
+          if (state.didChange) {
+            sendPort.send(
+              (
+                vehicle: state.vehicle,
+                velocity: state.gaugeVelocity,
+                bearing: state.gaugeBearing,
+                distance: state.distance,
+                pathTracking: state.pathTracking,
+                abTracking: state.abTracking,
+                autosteeringState: state.autosteeringState,
+              ),
+            );
+          }
         }
+      } catch (error, stackTrace) {
+        sendPort.send(
+          LogEvent(
+            Level.error,
+            'Sim core exception!',
+            error: error,
+            stackTrace: stackTrace,
+          ),
+        );
       }
     }
 
@@ -91,6 +102,10 @@ class SimulatorCore {
       ),
       (timer) => simulationStep(),
     );
+
+    var networkAvailable = false;
+    var udpReceivePort = 3333;
+    var udpSendPort = 6666;
 
     var steeringHardwareAddress = 'autosteering.local';
     var remoteControlHardwareAddress = 'autosteering-remote-control.local';
@@ -186,19 +201,16 @@ class SimulatorCore {
     Timer? steeringAddressLookupRetryTimer;
     Timer? remoteControlAddressLookupRetryTimer;
 
-    Future<void> setupSteeringSendUdp({
-      required String host,
-      required int sendPort,
-    }) async {
+    Future<void> setupSteeringSendUdp() async {
       try {
-        final steeringHardwareAddress =
-            (await InternetAddress.lookup(host)).firstOrNull;
-        if (steeringHardwareAddress != null) {
+        final steeringHardwareIp =
+            (await InternetAddress.lookup(steeringHardwareAddress)).firstOrNull;
+        if (steeringHardwareIp != null) {
           udpHeartbeatTimer.cancel();
 
           steeringHardwareEndPoint = Endpoint.unicast(
-            steeringHardwareAddress,
-            port: Port(sendPort),
+            steeringHardwareIp,
+            port: Port(udpSendPort),
           );
           updateMainThreadStream
             ..add(
@@ -231,27 +243,22 @@ class SimulatorCore {
         steeringAddressLookupRetryTimer?.cancel();
         steeringAddressLookupRetryTimer =
             Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-          await setupSteeringSendUdp(
-            host: host,
-            sendPort: sendPort,
-          );
+          await setupSteeringSendUdp();
         });
       }
     }
 
-    Future<void> setupRemoteControlSendUdp({
-      required String host,
-      required int sendPort,
-    }) async {
+    Future<void> setupRemoteControlSendUdp() async {
       try {
-        final remoteControlHardwareAddress =
-            (await InternetAddress.lookup(host)).firstOrNull;
-        if (remoteControlHardwareAddress != null) {
+        final remoteControlIp =
+            (await InternetAddress.lookup(remoteControlHardwareAddress))
+                .firstOrNull;
+        if (remoteControlIp != null) {
           udpHeartbeatTimer.cancel();
 
           remoteControlEndPoint = Endpoint.unicast(
-            remoteControlHardwareAddress,
-            port: Port(sendPort),
+            remoteControlIp,
+            port: Port(udpSendPort),
           );
           updateMainThreadStream
             ..add(
@@ -284,28 +291,19 @@ class SimulatorCore {
         remoteControlAddressLookupRetryTimer?.cancel();
         remoteControlAddressLookupRetryTimer =
             Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-          await setupRemoteControlSendUdp(
-            host: host,
-            sendPort: sendPort,
-          );
+          await setupRemoteControlSendUdp();
         });
       }
     }
 
     steeringAddressLookupRetryTimer =
         Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-      await setupSteeringSendUdp(
-        host: steeringHardwareAddress,
-        sendPort: 6666,
-      );
+      await setupSteeringSendUdp();
     });
 
     remoteControlAddressLookupRetryTimer =
         Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-      await setupRemoteControlSendUdp(
-        host: remoteControlHardwareAddress,
-        sendPort: 6666,
-      );
+      await setupRemoteControlSendUdp();
     });
 
     LogReplay? logReplay;
@@ -313,129 +311,158 @@ class SimulatorCore {
 
     // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
-      /// Ensure that the isolate messaging is ready.
-      if (message is RootIsolateToken) {
-        BackgroundIsolateBinaryMessenger.ensureInitialized(message);
-        final logDirectoryPath = [
-          (await getApplicationDocumentsDirectory()).path,
-          '/Autosteering/logs/hardware',
-        ].join();
-        messageDecoder = MessageDecoder(logDirectoryPath: logDirectoryPath);
-      }
-      // Update the udp ip adress for the hardware.
-      else if (message is ({
-        String steeringHardwareAddress,
-        String remoteControlHardwareAddress,
-        int hardwareUDPReceivePort,
-        int hardwareUDPSendPort
-      })) {
-        steeringHardwareAddress = message.steeringHardwareAddress;
-        remoteControlHardwareAddress = message.remoteControlHardwareAddress;
-        udpHeartbeatTimer.cancel();
-        steeringAddressLookupRetryTimer?.cancel();
-        remoteControlAddressLookupRetryTimer?.cancel();
-
-        if (udp?.local.port?.value != message.hardwareUDPReceivePort) {
-          await setupReceiveUdp(message.hardwareUDPReceivePort);
+      try {
+        // Ensure that the isolate messaging is ready.
+        if (message is RootIsolateToken) {
+          BackgroundIsolateBinaryMessenger.ensureInitialized(message);
+          final logDirectoryPath = [
+            (await getApplicationDocumentsDirectory()).path,
+            '/Autosteering/logs/hardware',
+          ].join();
+          messageDecoder = MessageDecoder(logDirectoryPath: logDirectoryPath);
+        } 
+        // Close and remote UDP instances if no network is available, stops
+        // isolate from crashing
+        else if (message is ({bool networkAvailable})) {
+          networkAvailable = message.networkAvailable;
+          if (networkAvailable) {
+            await setupReceiveUdp(udpReceivePort);
+          } else {
+            udp?.close();
+            if (udp != null) {
+              updateMainThreadStream.add(
+                LogEvent(
+                  Level.info,
+                  'Closed current UDP receive instance and sockets.',
+                ),
+              );
+            }
+            udp = null;
+          }
         }
 
-        // Start retrying every 5 seconds in case the hardware gets connected
-        // to the network.
-        steeringAddressLookupRetryTimer =
-            Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-          await setupSteeringSendUdp(
-            host: message.steeringHardwareAddress,
-            sendPort: message.hardwareUDPSendPort,
+        // Update the udp ip adress for the hardware.
+        else if (message is ({
+          String steeringHardwareAddress,
+          String remoteControlHardwareAddress,
+          int hardwareUDPReceivePort,
+          int hardwareUDPSendPort
+        })) {
+          udpReceivePort = message.hardwareUDPReceivePort;
+          udpSendPort = message.hardwareUDPSendPort;
+          steeringHardwareAddress = message.steeringHardwareAddress;
+          remoteControlHardwareAddress = message.remoteControlHardwareAddress;
+          udpHeartbeatTimer.cancel();
+          steeringAddressLookupRetryTimer?.cancel();
+          remoteControlAddressLookupRetryTimer?.cancel();
+
+          if (udp?.local.port?.value != message.hardwareUDPReceivePort) {
+            await setupReceiveUdp(message.hardwareUDPReceivePort);
+          }
+
+          // Start retrying every 5 seconds in case the hardware gets connected
+          // to the network.
+          steeringAddressLookupRetryTimer = Timer(
+              const Duration(seconds: addressLookupRetryPeriod), () async {
+            await setupSteeringSendUdp();
+          });
+          remoteControlAddressLookupRetryTimer = Timer(
+              const Duration(seconds: addressLookupRetryPeriod), () async {
+            await setupRemoteControlSendUdp();
+          });
+        } else if (message is ({
+          bool? logGNSS,
+          bool? logIMU,
+          bool? logWAS,
+          bool? logCombined,
+        })) {
+          messageDecoder.enableLogging(
+            gnss: message.logGNSS,
+            imu: message.logIMU,
+            was: message.logWAS,
+            combined: message.logCombined,
           );
-        });
-        remoteControlAddressLookupRetryTimer =
-            Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-          await setupRemoteControlSendUdp(
-            host: message.remoteControlHardwareAddress,
-            sendPort: message.hardwareUDPSendPort,
+        } else if (message is LogReplay) {
+          logReplay = message;
+          replayListener = logReplay.replay.listen(
+            (record) => SimulatorCoreBase.replayListener(
+              record,
+              messageDecoder,
+              state,
+              updateMainThreadStream,
+            ),
+          )..pause();
+        } else if (message is ({bool replayPause})) {
+          replayListener?.pause();
+        } else if (message is ({bool replayResume})) {
+          replayListener?.resume();
+        } else if (message is ({bool replayCancel})) {
+          await replayListener?.cancel();
+        } else if (message is ({bool replayRestart})) {
+          await replayListener?.cancel();
+          replayListener = logReplay?.replay.listen(
+            (record) => SimulatorCoreBase.replayListener(
+              record,
+              messageDecoder,
+              state,
+              updateMainThreadStream,
+            ),
           );
-        });
-      } else if (message is ({
-        bool? logGNSS,
-        bool? logIMU,
-        bool? logWAS,
-        bool? logCombined,
-      })) {
-        messageDecoder.enableLogging(
-          gnss: message.logGNSS,
-          imu: message.logIMU,
-          was: message.logWAS,
-          combined: message.logCombined,
-        );
-      } else if (message is LogReplay) {
-        logReplay = message;
-        replayListener = logReplay.replay.listen(
-          (record) => SimulatorCoreBase.replayListener(
-            record,
-            messageDecoder,
-            state,
-            updateMainThreadStream,
-          ),
-        )..pause();
-      } else if (message is ({bool replayPause})) {
-        replayListener?.pause();
-      } else if (message is ({bool replayResume})) {
-        replayListener?.resume();
-      } else if (message is ({bool replayCancel})) {
-        await replayListener?.cancel();
-      } else if (message is ({bool replayRestart})) {
-        await replayListener?.cancel();
-        replayListener = logReplay?.replay.listen(
-          (record) => SimulatorCoreBase.replayListener(
-            record,
-            messageDecoder,
-            state,
-            updateMainThreadStream,
-          ),
-        );
-      } else if (message is ({int simulationTargetHz})) {
-        if (message.simulationTargetHz > 0) {
-          simulationTimer.cancel();
-          simulationTimer = Timer.periodic(
-            Duration(microseconds: (1e6 / message.simulationTargetHz).round()),
-            (timer) => simulationStep(),
-          );
-          updateMainThreadStream.add(
-            LogEvent(
-              Level.warning,
-              'Simulation frequency: ${message.simulationTargetHz} Hz',
+        } else if (message is ({int simulationTargetHz})) {
+          if (message.simulationTargetHz > 0) {
+            simulationTimer.cancel();
+            simulationTimer = Timer.periodic(
+              Duration(
+                microseconds: (1e6 / message.simulationTargetHz).round(),
+              ),
+              (timer) => simulationStep(),
+            );
+            updateMainThreadStream.add(
+              LogEvent(
+                Level.warning,
+                'Simulation frequency: ${message.simulationTargetHz} Hz',
+              ),
+            );
+          }
+        } else if (message is ({List<int> remoteControlLedState})) {
+          remoteControlHardwareUdpSendStream.add(
+            Uint8List.fromList(
+              jsonEncode({'remote_states': message.remoteControlLedState})
+                  .codeUnits,
             ),
           );
         }
-      } else if (message is ({List<int> remoteControlLedState})) {
+        // Shut down the isolate.
+        else if (message == null) {
+          break;
+        }
+        // Messages for the state.
+        else {
+          state.handleMessage(message);
+        }
+
+        // Isolate shut down procedure
+        steeringHardwareUdpSendStream.add(
+          Uint8List.fromList(
+            utf8.encode('Simulator shut down.'),
+          ),
+        ); // Isolate shut down procedure
         remoteControlHardwareUdpSendStream.add(
           Uint8List.fromList(
-            jsonEncode({'remote_states': message.remoteControlLedState})
-                .codeUnits,
+            utf8.encode('Simulator shut down.'),
+          ),
+        );
+      } catch (error, stackTrace) {
+        updateMainThreadStream.add(
+          LogEvent(
+            Level.error,
+            'Simulator Core received message error: $message.',
+            error: error,
+            stackTrace: stackTrace,
           ),
         );
       }
-      // Shut down the isolate.
-      else if (message == null) {
-        break;
-      }
-      // Messages for the state.
-      else {
-        state.handleMessage(message);
-      }
     }
-
-    // Isolate shut down procedure
-    steeringHardwareUdpSendStream.add(
-      Uint8List.fromList(
-        utf8.encode('Simulator shut down.'),
-      ),
-    ); // Isolate shut down procedure
-    remoteControlHardwareUdpSendStream.add(
-      Uint8List.fromList(
-        utf8.encode('Simulator shut down.'),
-      ),
-    );
 
     udp?.close();
 

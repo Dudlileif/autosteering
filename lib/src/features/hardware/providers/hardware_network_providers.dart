@@ -385,6 +385,7 @@ bool networkAvailable(NetworkAvailableRef ref) {
   ref.listenSelf((previous, next) {
     if (previous != next) {
       Logger.instance.i('Network available: $next');
+      ref.read(simInputProvider.notifier).send((networkAvailable: next));
     }
   });
 
