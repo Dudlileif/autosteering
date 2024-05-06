@@ -102,7 +102,7 @@ class VehicleTypeSelectorPage extends StatelessWidget {
                             ),
                             keyboardType: TextInputType.text,
                             autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                AutovalidateMode.always,
                             validator: (value) => value != null &&
                                     value.isNotEmpty &&
                                     !value.startsWith(' ')

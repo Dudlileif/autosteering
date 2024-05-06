@@ -29,6 +29,12 @@ class VehicleSteeringPage extends ConsumerWidget {
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
+      Center(
+        child: Text(
+          'Steering',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
       TextFormField(
         decoration: InputDecoration(
           icon: const Icon(Icons.looks),

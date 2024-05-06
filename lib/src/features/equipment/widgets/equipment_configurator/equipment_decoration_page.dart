@@ -32,7 +32,6 @@ class EquipmentDecorationPage extends ConsumerWidget {
       Text(
         'Decoration',
         style: Theme.of(context).textTheme.titleLarge,
-        textAlign: TextAlign.left,
       ),
       TextFormField(
         decoration: const InputDecoration(

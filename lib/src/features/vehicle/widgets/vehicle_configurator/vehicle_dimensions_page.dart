@@ -29,6 +29,12 @@ class VehicleDimensionsPage extends ConsumerWidget {
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
+      Center(
+        child: Text(
+          'Dimensions',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
       TextFormField(
         decoration: const InputDecoration(
           icon: RotatedBox(

@@ -29,6 +29,12 @@ class VehicleAntennaPage extends ConsumerWidget {
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
+      Center(
+        child: Text(
+          'Antenna',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
       TextFormField(
         decoration: const InputDecoration(
           icon: RotatedBox(

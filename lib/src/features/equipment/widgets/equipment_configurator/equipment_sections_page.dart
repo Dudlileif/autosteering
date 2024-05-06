@@ -39,7 +39,6 @@ class EquipmentSectionsPage extends ConsumerWidget {
           child: Text(
             'Sections',
             style: theme.textTheme.titleLarge,
-            textAlign: TextAlign.left,
           ),
         ),
         Center(

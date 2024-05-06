@@ -32,7 +32,6 @@ class EquipmentDimensionsPage extends ConsumerWidget {
       Text(
         'Dimensions',
         style: Theme.of(context).textTheme.titleLarge,
-        textAlign: TextAlign.left,
       ),
       TextFormField(
         decoration: const InputDecoration(

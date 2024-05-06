@@ -45,30 +45,50 @@ class VehicleConfigurator extends ConsumerWidget {
       VehicleHitchesPage(),
     ];
 
-    const destinations = [
-      NavigationRailDestination(
+    final destinations = [
+      const NavigationRailDestination(
         icon: Icon(Icons.agriculture),
         label: Text('Type'),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.expand),
-        label: Text('Dimensions'),
+        icon: const Icon(Icons.expand),
+        label: const Text('Dimensions'),
+        disabled: ref.watch(
+          configuredVehicleProvider
+              .select((value) => value.name?.isEmpty ?? true),
+        ),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.settings_input_antenna),
-        label: Text('Antenna'),
+        icon: const Icon(Icons.settings_input_antenna),
+        label: const Text('Antenna'),
+        disabled: ref.watch(
+          configuredVehicleProvider
+              .select((value) => value.name?.isEmpty ?? true),
+        ),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.circle_outlined),
-        label: Text('Wheels'),
+        icon: const Icon(Icons.circle_outlined),
+        label: const Text('Wheels'),
+        disabled: ref.watch(
+          configuredVehicleProvider
+              .select((value) => value.name?.isEmpty ?? true),
+        ),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.electric_meter),
-        label: Text('Steering'),
+        icon: const Icon(Icons.electric_meter),
+        label: const Text('Steering'),
+        disabled: ref.watch(
+          configuredVehicleProvider
+              .select((value) => value.name?.isEmpty ?? true),
+        ),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.commit),
-        label: Text('Hitches'),
+        icon: const Icon(Icons.commit),
+        label: const Text('Hitches'),
+        disabled: ref.watch(
+          configuredVehicleProvider
+              .select((value) => value.name?.isEmpty ?? true),
+        ),
       ),
     ];
 
@@ -118,6 +138,7 @@ class VehicleConfigurator extends ConsumerWidget {
                           selectedIndex: ref.watch(
                             vehicleConfiguratorIndexProvider,
                           ),
+                          
                           onDestinationSelected: ref
                               .read(
                                 vehicleConfiguratorPageControllerProvider
@@ -175,7 +196,13 @@ class VehicleConfigurator extends ConsumerWidget {
                               vehicleConfiguratorIndexProvider.select(
                                 (value) => value < pages.length - 1,
                               ),
-                            ),
+                                ) &&
+                                ref.watch(
+                                  configuredVehicleProvider.select(
+                                    (value) => value.name?.isNotEmpty ?? false,
+                                  ),
+                                
+                                ),
                           ),
                         ),
                       ),

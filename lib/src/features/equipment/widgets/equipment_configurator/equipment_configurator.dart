@@ -29,13 +29,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A [Dialog] for configuring an equipment, with ability to apply to the
 /// one in the attached hierarchy, save to file or load from file.
-class EquipmentConfigurator extends StatelessWidget {
+class EquipmentConfigurator extends ConsumerWidget {
   /// A [Dialog] for configuring an equipment, with ability to apply to
   /// the equipment in the attached hierarchy, save to file or load from file.
   const EquipmentConfigurator({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     const pages = [
       EquipmentTypeSelectorPage(),
       EquipmentDimensionsPage(),
@@ -44,26 +44,42 @@ class EquipmentConfigurator extends StatelessWidget {
       EquipmentHitchesPage(),
     ];
 
-    const destinations = [
-      NavigationRailDestination(
+    final destinations = [
+      const NavigationRailDestination(
         icon: Icon(Icons.handyman),
         label: Text('Type'),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.expand),
-        label: Text('Dimensions'),
+        icon: const Icon(Icons.expand),
+        label: const Text('Dimensions'),
+        disabled: ref.watch(
+          configuredEquipmentProvider
+              .select((value) => value.name?.isEmpty ?? true),
+        ),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.view_column),
-        label: Text('Sections'),
+        icon: const Icon(Icons.view_column),
+        label: const Text('Sections'),
+        disabled: ref.watch(
+          configuredEquipmentProvider
+              .select((value) => value.name?.isEmpty ?? true),
+        ), 
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.square_rounded),
-        label: Text('Decoration'),
+        icon: const Icon(Icons.square_rounded),
+        label: const Text('Decoration'),
+        disabled: ref.watch(
+          configuredEquipmentProvider
+              .select((value) => value.name?.isEmpty ?? true),
+        ),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.commit),
-        label: Text('Hitches'),
+        icon: const Icon(Icons.commit),
+        label: const Text('Hitches'),
+        disabled: ref.watch(
+          configuredEquipmentProvider
+              .select((value) => value.name?.isEmpty ?? true),
+        ),
       ),
     ];
 
@@ -159,9 +175,14 @@ class EquipmentConfigurator extends StatelessWidget {
                         ),
                         AnimatedOpacity(
                           opacity: ref.watch(
-                            equipmentConfiguratorIndexProvider
-                                .select((value) => value < pages.length - 1),
-                          )
+                                    equipmentConfiguratorIndexProvider.select(
+                                      (value) => value < pages.length - 1,
+                                    ),
+                                  ) &&
+                                  ref.watch(
+                                    configuredEquipmentProvider
+                                        .select((value) => value.name != null),
+                                  )
                               ? 1
                               : 0,
                           duration: Durations.medium1,
@@ -169,10 +190,16 @@ class EquipmentConfigurator extends StatelessWidget {
                             padding: const EdgeInsets.all(16),
                             child: EquipmentConfiguratorNextButton(
                               enabled: ref.watch(
-                                equipmentConfiguratorIndexProvider.select(
-                                  (value) => value < pages.length - 1,
-                                ),
-                              ),
+                                    equipmentConfiguratorIndexProvider.select(
+                                      (value) => value < pages.length - 1,
+                                    ),
+                                  ) &&
+                                  ref.watch(
+                                    configuredEquipmentProvider.select(
+                                      (value) =>
+                                          value.name?.isNotEmpty ?? false,
+                                    ),
+                                  ),
                             ),
                           ),
                         ),

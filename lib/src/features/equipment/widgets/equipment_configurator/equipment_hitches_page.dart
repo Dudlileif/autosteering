@@ -32,7 +32,6 @@ class EquipmentHitchesPage extends ConsumerWidget {
       Text(
         'Child hitches',
         style: Theme.of(context).textTheme.titleLarge,
-        textAlign: TextAlign.left,
       ),
       TextFormField(
         decoration: const InputDecoration(

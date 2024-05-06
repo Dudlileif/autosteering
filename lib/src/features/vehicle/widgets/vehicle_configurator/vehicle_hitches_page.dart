@@ -29,6 +29,12 @@ class VehicleHitchesPage extends ConsumerWidget {
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
+      Center(
+        child: Text(
+          'Hitches',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
       ...switch (vehicle) {
         AxleSteeredVehicle() => [
             TextFormField(
