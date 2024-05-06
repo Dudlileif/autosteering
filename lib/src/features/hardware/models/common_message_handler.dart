@@ -234,6 +234,9 @@ class CommonMessageHandler {
     } else {
       return false;
     }
+    _ref
+        .read(remoteControlHardwareNetworkAliveProvider.notifier)
+        .update(value: true);
     return true;
   }
 
@@ -251,7 +254,9 @@ class CommonMessageHandler {
           _ref.read(simInputProvider.notifier).send(
             (
               uuid: equipment.uuid,
-              activeSections: (equipment..toggleAll()).sectionActivationStatus,
+              activeSections: (equipment
+                    ..toggleAll(deactivateAllIfAnyActive: true))
+                  .sectionActivationStatus,
             ),
           );
         }

@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
@@ -204,43 +203,20 @@ class EquipmentSectionButtons extends ConsumerWidget {
                                 runSpacing: 8,
                                 children: equipment.sections
                                     .map(
-                                      (section) => SizedBox(
-                                        height: 40,
-                                        width: 80,
-                                        child: Material(
-                                          type: MaterialType.button,
-                                          clipBehavior: Clip.antiAlias,
-                                          color: section.active
-                                              ? section.color ?? Colors.green
-                                              : Colors.grey,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          child: InkWell(
-                                            splashFactory: theme.splashFactory,
-                                            splashColor: section.active
-                                                ? Colors.red
-                                                : section.color ?? Colors.green,
-                                            onTap: () => ref
-                                                .read(
-                                              simInputProvider.notifier,
-                                            )
-                                                .send(
-                                              (
-                                                uuid: equipment.uuid,
-                                                activeSections: (equipment
-                                                      ..toggleSection(
-                                                        section.index,
-                                                      ))
-                                                    .sectionActivationStatus
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: TextWithStroke(
-                                                '${section.index + 1}',
-                                                style: textStyle,
-                                                strokeWidth: 3.5,
-                                              ),
-                                            ),
+                                      (section) => _SectionButton(
+                                        section: section,
+                                        onTap: () => ref
+                                            .read(
+                                          simInputProvider.notifier,
+                                        )
+                                            .send(
+                                          (
+                                            uuid: equipment.uuid,
+                                            activeSections: (equipment
+                                                  ..toggleSection(
+                                                    section.index,
+                                                  ))
+                                                .sectionActivationStatus
                                           ),
                                         ),
                                       ),
@@ -258,10 +234,154 @@ class EquipmentSectionButtons extends ConsumerWidget {
   }
 }
 
+class _SectionButton extends ConsumerStatefulWidget {
+  const _SectionButton({required this.section, required this.onTap});
+  final Section section;
+  final void Function() onTap;
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => __SectionButtonState();
+}
+
+class __SectionButtonState extends ConsumerState<_SectionButton>
+    with SingleTickerProviderStateMixin {
+  late bool prevActive = widget.section.active;
+  late final controller =
+      AnimationController(vsync: this, duration: Durations.short4);
+
+  late TweenSequence<Color?> colorAnimation = TweenSequence([
+    TweenSequenceItem(
+      tween: ColorTween(
+        begin: Colors.grey,
+        end: widget.section.color ?? Colors.green,
+      ),
+      weight: 1,
+    ),
+  ]);
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    if (prevActive != widget.section.active) {
+      if (widget.section.active) {
+        final highlightColor =
+            (widget.section.color ?? Colors.green).getShadeColor(
+          lighten: switch (theme.brightness) {
+            Brightness.light => true,
+            Brightness.dark => false
+          },
+        );
+        colorAnimation = TweenSequence<Color?>([
+          TweenSequenceItem(
+            tween: ColorTween(
+              begin: Colors.grey,
+              end: highlightColor,
+            ),
+            weight: 0.2,
+          ),
+          TweenSequenceItem(
+            tween: ColorTween(
+              begin: highlightColor,
+              end: highlightColor,
+            ),
+            weight: 0.5,
+          ),
+          TweenSequenceItem(
+            tween: ColorTween(
+              begin: highlightColor,
+              end: widget.section.color ?? Colors.green,
+            ),
+            weight: 0.3,
+          ),
+        ]);
+      } else {
+        colorAnimation = TweenSequence<Color?>([
+          TweenSequenceItem(
+            tween: ColorTween(
+              begin: widget.section.color ?? Colors.green,
+              end: Colors.red,
+            ),
+            weight: 0.2,
+          ),
+          TweenSequenceItem(
+            tween: ColorTween(
+              begin: Colors.red,
+              end: Colors.red,
+            ),
+            weight: 0.5,
+          ),
+          TweenSequenceItem(
+            tween: ColorTween(
+              begin: Colors.red,
+              end: Colors.grey,
+            ),
+            weight: 0.3,
+          ),
+        ]);
+      }
+      controller
+        ..reset()
+        ..forward();
+    }
+    prevActive = widget.section.active;
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: colorAnimation.evaluate(
+              CurvedAnimation(
+                parent: controller,
+                curve: Easing.standardAccelerate,
+              ),
+            ),
+          ),
+          width: 80,
+          height: 40,
+          clipBehavior: Clip.antiAlias,
+          child: child,
+        );
+      },
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          splashFactory: theme.splashFactory,
+          splashColor: widget.section.active
+              ? Colors.red
+              : (widget.section.color ?? Colors.green).getShadeColor(
+                  lighten: switch (theme.brightness) {
+                    Brightness.light => true,
+                    Brightness.dark => false,
+                  },
+                ),
+          onTap: widget.onTap,
+          child: Center(
+            child: TextWithStroke(
+              '${widget.section.index + 1}',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+              strokeWidth: 3.5,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _CrossPainter extends CustomPainter {
   const _CrossPainter({
     // ignore: unused_element
-    this.fillColor = Colors.red, 
+    this.fillColor = Colors.red,
     // ignore: unused_element
     this.strokeColor = Colors.black,
     // ignore: unused_element

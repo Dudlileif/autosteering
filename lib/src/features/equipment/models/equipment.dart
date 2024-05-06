@@ -74,7 +74,6 @@ class Equipment extends Hitchable with EquatableMixin {
     double bearing = 0,
     Geographic position = const Geographic(lat: 0, lon: 0),
   })  : sections = sections ?? [],
-        
         _position = position,
         _bearing = hitchParent?.bearing ?? bearing,
         lastUsed = lastUsed ?? DateTime.now();
@@ -398,9 +397,16 @@ class Equipment extends Hitchable with EquatableMixin {
   }
 
   /// Toggle all of the [sections].
-  void toggleAll() {
-    for (final element in sections) {
-      element.active = !element.active;
+  ///
+  /// If [deactivateAllIfAnyActive] is true, then all sections will be
+  /// deactivated if any section is active.
+  void toggleAll({bool deactivateAllIfAnyActive = false}) {
+    if (deactivateAllIfAnyActive && sections.any((element) => element.active)) {
+      deactivateAll();
+    } else {
+      for (final element in sections) {
+        element.active = !element.active;
+      }
     }
   }
 
@@ -731,8 +737,7 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// A map of all the section indexes and their [SectionEdgePositions] if they
   /// are active, or null if they're not.
-  Map<int, SectionEdgePositions?> activeEdgePositions({double? fraction}) =>
-      {
+  Map<int, SectionEdgePositions?> activeEdgePositions({double? fraction}) => {
         for (final element in sections)
           element.index: element.active
               ? sectionEdgePositions(element.index, fraction: fraction)
