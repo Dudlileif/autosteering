@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -515,10 +516,11 @@ class _ABCommonMenu extends ConsumerWidget {
             );
           },
         ),
-        Consumer(
+        if (ref.watch(enableDebugModeProvider)) ...[
+          Consumer(
           builder: (context, ref, child) => CheckboxListTile(
             secondary: const Icon(Icons.bug_report),
-            title: const Text('Debug'),
+              title: Text('Debug', style: textStyle),
             value: ref.watch(debugABTrackingProvider),
             onChanged: (value) => value != null
                 ? ref
@@ -592,7 +594,8 @@ class _ABCommonMenu extends ConsumerWidget {
                 ],
               );
             },
-          ),
+            ),
+          ],
         ],
       ],
     );

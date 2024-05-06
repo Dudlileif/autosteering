@@ -57,5 +57,23 @@ final settingsProvider =
 );
 
 typedef _$Settings = Notifier<SplayTreeMap<String, dynamic>>;
+String _$enableDebugModeHash() => r'2620409a83bf2fc27eb9fe765a5d4e982543ca47';
+
+/// A provider for whether the debug features and switches should be shown.
+///
+/// Copied from [EnableDebugMode].
+@ProviderFor(EnableDebugMode)
+final enableDebugModeProvider =
+    NotifierProvider<EnableDebugMode, bool>.internal(
+  EnableDebugMode.new,
+  name: r'enableDebugModeProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$enableDebugModeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$EnableDebugMode = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -25,12 +26,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu for loading, configuring and debugging the vehicle for the program.
-class VehicleMenu extends StatelessWidget {
+class VehicleMenu extends ConsumerWidget {
   /// A menu for loading, configuring and debugging the vehicle for the program.
   const VehicleMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
@@ -129,7 +130,7 @@ class VehicleMenu extends StatelessWidget {
             secondary: child,
           ),
         ),
-        const VehicleDebugMenu(),
+        if (ref.watch(enableDebugModeProvider)) const VehicleDebugMenu(),
         Consumer(
           builder: (context, ref, child) => CheckboxListTile(
             title: Text(

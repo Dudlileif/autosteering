@@ -19,6 +19,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -27,12 +28,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu with attached submenu for interacting with the equipment feature.
-class EquipmentMenu extends StatelessWidget {
+class EquipmentMenu extends ConsumerWidget {
   /// A menu with attached submenu for interacting with the equipment feature.
   const EquipmentMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
 
@@ -73,7 +74,8 @@ class EquipmentMenu extends StatelessWidget {
                 : null,
           ),
         ),
-        Consumer(
+        if (ref.watch(enableDebugModeProvider))
+          Consumer(
           child: Text(
             'Debug equipment',
             style: textStyle,

@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class SettingsMenu extends StatelessWidget {
         SimCoreMenu(),
         ThemeMenu(),
         _ExportLogsButton(),
+        _DebugModeButton(),
         _LicenseButton(),
       ],
     );
@@ -60,6 +62,25 @@ class _ExportLogsButton extends ConsumerWidget {
         'Export logs',
         style: Theme.of(context).menuButtonWithChildrenText,
       ),
+    );
+  }
+}
+
+class _DebugModeButton extends ConsumerWidget {
+  const _DebugModeButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return CheckboxListTile(
+      value: ref.watch(enableDebugModeProvider),
+      onChanged: (value) => value != null
+          ? ref.read(enableDebugModeProvider.notifier).update(value: value)
+          : null,
+      title: Text(
+        'Debug mode',
+        style: Theme.of(context).menuButtonWithChildrenText,
+      ),
+      secondary: const Icon(Icons.bug_report),
     );
   }
 }
