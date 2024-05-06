@@ -538,10 +538,11 @@ class _AttachEquipmentMenu extends ConsumerWidget {
     }
 
     final equipmentName = ref.watch(
-      configuredEquipmentProvider.select((value) => value.name ?? 'Unnamed'),
+      configuredEquipmentProvider.select((value) => value.name),
     );
 
-    return MenuButtonWithChildren(
+    return equipmentName?.isNotEmpty ?? false
+        ? MenuButtonWithChildren(
       text: 'Attach\n$equipmentName',
       icon: Icons.commit,
       menuChildren: [
@@ -550,7 +551,8 @@ class _AttachEquipmentMenu extends ConsumerWidget {
           child: ref.watch(configuredEquipmentProvider),
         ),
       ],
-    );
+          )
+        : const SizedBox.shrink();
   }
 }
 
@@ -577,7 +579,7 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
     ].join('\n');
 
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
-
+    
     if (parent.hitchPoints.isEmpty) {
       return MenuItemButton(
         child: Text(text, style: textStyle),
@@ -587,7 +589,8 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
     return MenuButtonWithChildren(
       text: text,
       menuChildren: [
-        if (parent.hitchFrontFixedChild != null)
+        if (parent.hitchFrontFixedChild != null &&
+            child.hitchType == HitchType.fixed)
           _RecursiveAttachEquipmentMenu(
             parent: parent.hitchFrontFixedChild!,
             child: child,
@@ -611,7 +614,8 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
             parent: parent.hitchRearFixedChild!,
             child: child,
           )
-        else if (parent.hitchRearFixedPoint != null)
+        else if (parent.hitchRearFixedPoint != null &&
+            child.hitchType == HitchType.fixed)
           MenuItemButton(
             onPressed: child.hitchType == HitchType.fixed
                 ? () => ref.read(simInputProvider.notifier).send(
@@ -630,7 +634,8 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
             parent: parent.hitchRearTowbarChild!,
             child: child,
           )
-        else if (parent.hitchRearTowbarPoint != null)
+        else if (parent.hitchRearTowbarPoint != null &&
+            child.hitchType == HitchType.towbar)
           MenuItemButton(
             onPressed: child.hitchType == HitchType.towbar
                 ? () => ref.read(simInputProvider.notifier).send(
