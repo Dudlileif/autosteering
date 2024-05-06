@@ -72,18 +72,21 @@ class EquipmentSectionsPage extends ConsumerWidget {
           ),
         ),
         if (equipment.sections.length >= 2)
-          Center(
-            child: Column(
-              children: [
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    IntrinsicWidth(
-                      child: CheckboxListTile(
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Center(
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  IntrinsicWidth(
+                    child: ExpansionTile(
+                      enabled: equipment.sections.length >= 2,
+                      initiallyExpanded:
+                          ref.watch(configuredEquipmentEqualWidthsProvider),
+                      title: Checkbox(
                         value:
                             ref.watch(configuredEquipmentEqualWidthsProvider),
-                        enabled: equipment.sections.length >= 2,
                         onChanged: (value) => value != null
                             ? ref
                                 .read(
@@ -92,36 +95,16 @@ class EquipmentSectionsPage extends ConsumerWidget {
                                 )
                                 .update(value: value)
                             : null,
-                        title: const Text('Equal widths'),
                       ),
-                    ),
-                    IntrinsicWidth(
-                      child: CheckboxListTile(
-                        value: ref.watch(
-                          configuredEquipmentEqualWorkingWidthsProvider,
-                        ),
-                        enabled: equipment.sections.length >= 2,
-                        onChanged: (value) => value != null
-                            ? ref
-                                .read(
-                                  configuredEquipmentEqualWorkingWidthsProvider
-                                      .notifier,
-                                )
-                                .update(value: value)
-                            : null,
-                        title: const Text('Equal working widths'),
+                      leading: Text(
+                        'Equal widths',
+                        style: theme.textTheme.bodyLarge,
                       ),
-                    ),
-                  ],
-                ),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    if (ref.watch(configuredEquipmentEqualWidthsProvider))
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 200),
-                        child: TextFormField(
+                      childrenPadding: const EdgeInsets.only(top: 8),
+                      children: [
+                        TextFormField(
+                          enabled:
+                              ref.watch(configuredEquipmentEqualWidthsProvider),
                           controller: TextEditingController(
                             text: '${equipment.sections.first.width}',
                           ),
@@ -155,12 +138,38 @@ class EquipmentSectionsPage extends ConsumerWidget {
                             }
                           },
                         ),
+                      ],
+                    ),
+                  ),
+                  IntrinsicWidth(
+                    child: ExpansionTile(
+                      enabled: equipment.sections.length >= 2,
+                      initiallyExpanded: ref.watch(
+                        configuredEquipmentEqualWorkingWidthsProvider,
                       ),
-                    if (ref
-                        .watch(configuredEquipmentEqualWorkingWidthsProvider))
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 200),
-                        child: TextFormField(
+                      title: Checkbox(
+                        value: ref.watch(
+                          configuredEquipmentEqualWorkingWidthsProvider,
+                        ),
+                        onChanged: (value) => value != null
+                            ? ref
+                                .read(
+                                  configuredEquipmentEqualWorkingWidthsProvider
+                                      .notifier,
+                                )
+                                .update(value: value)
+                            : null,
+                      ),
+                      leading: Text(
+                        'Equal working widths',
+                        style: theme.textTheme.bodyLarge,
+                      ),
+                      childrenPadding: const EdgeInsets.only(top: 8),
+                      children: [
+                        TextFormField(
+                          enabled: ref.watch(
+                            configuredEquipmentEqualWorkingWidthsProvider,
+                          ),
                           controller: TextEditingController(
                             text: '${equipment.sections.first.workingWidth}',
                           ),
@@ -194,10 +203,11 @@ class EquipmentSectionsPage extends ConsumerWidget {
                             }
                           },
                         ),
-                      ),
-                  ],
-                ),
-              ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         if (equipment.sections.isNotEmpty)
@@ -253,7 +263,6 @@ class EquipmentSectionsPage extends ConsumerWidget {
                           false => const SizedBox.shrink(),
                         },
                       ),
-                    
                       Expanded(
                         child: Scrollbar(
                           scrollbarOrientation: ScrollbarOrientation.top,
