@@ -52,7 +52,7 @@ class EquipmentTypeSelectorPage extends StatelessWidget {
                         configuredEquipmentNameTextControllerProvider,
                       ),
                       keyboardType: TextInputType.text,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      autovalidateMode: AutovalidateMode.always,
                       validator: (value) => value != null &&
                               value.isNotEmpty &&
                               !value.startsWith(' ')

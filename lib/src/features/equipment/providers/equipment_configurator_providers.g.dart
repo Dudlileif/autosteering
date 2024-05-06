@@ -87,5 +87,46 @@ final configuredEquipmentNameTextControllerProvider = NotifierProvider<
 
 typedef _$ConfiguredEquipmentNameTextController
     = Notifier<Raw<TextEditingController>>;
+String _$configuredEquipmentEqualWidthsHash() =>
+    r'97bb66816bf1ac7fedec51b4edf0dd504e61f845';
+
+/// A provider for whether the configured equipment sections should have equal
+/// widths.
+///
+/// Copied from [ConfiguredEquipmentEqualWidths].
+@ProviderFor(ConfiguredEquipmentEqualWidths)
+final configuredEquipmentEqualWidthsProvider =
+    AutoDisposeNotifierProvider<ConfiguredEquipmentEqualWidths, bool>.internal(
+  ConfiguredEquipmentEqualWidths.new,
+  name: r'configuredEquipmentEqualWidthsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$configuredEquipmentEqualWidthsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ConfiguredEquipmentEqualWidths = AutoDisposeNotifier<bool>;
+String _$configuredEquipmentEqualWorkingWidthsHash() =>
+    r'bf903cff7cceae18776df42c40ae3fe822263ce6';
+
+/// A provider for whether the configured equipment sections should have equal
+/// working widths.
+///
+/// Copied from [ConfiguredEquipmentEqualWorkingWidths].
+@ProviderFor(ConfiguredEquipmentEqualWorkingWidths)
+final configuredEquipmentEqualWorkingWidthsProvider =
+    AutoDisposeNotifierProvider<ConfiguredEquipmentEqualWorkingWidths,
+        bool>.internal(
+  ConfiguredEquipmentEqualWorkingWidths.new,
+  name: r'configuredEquipmentEqualWorkingWidthsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$configuredEquipmentEqualWorkingWidthsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ConfiguredEquipmentEqualWorkingWidths = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

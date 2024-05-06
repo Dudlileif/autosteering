@@ -29,6 +29,11 @@ class EquipmentDimensionsPage extends ConsumerWidget {
     final equipment = ref.watch(configuredEquipmentProvider);
 
     final children = [
+      Text(
+        'Dimensions',
+        style: Theme.of(context).textTheme.titleLarge,
+        textAlign: TextAlign.left,
+      ),
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),

@@ -125,3 +125,82 @@ class ConfiguredEquipmentNameTextController
     return controller;
   }
 }
+
+/// A provider for whether the configured equipment sections should have equal
+/// widths.
+@riverpod
+class ConfiguredEquipmentEqualWidths extends _$ConfiguredEquipmentEqualWidths {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && !previous && next) {
+        final equipment = ref.read(configuredEquipmentProvider);
+        ref.read(configuredEquipmentProvider.notifier).update(
+              equipment.copyWith(
+                sections: equipment.sections
+                    .map(
+                      (section) => section.copyWith(
+                        width: equipment.sections.first.width,
+                      ),
+                    )
+                    .toList(),
+              ),
+            );
+      }
+    });
+
+    return ref.read(
+      configuredEquipmentProvider.select(
+        (value) =>
+            value.sections.isNotEmpty &&
+            value.sections.every(
+              (element) => element.width == value.sections.first.width,
+            ),
+      ),
+    );
+  }
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
+
+/// A provider for whether the configured equipment sections should have equal
+/// working widths.
+@riverpod
+class ConfiguredEquipmentEqualWorkingWidths
+    extends _$ConfiguredEquipmentEqualWorkingWidths {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && !previous && next) {
+        final equipment = ref.read(configuredEquipmentProvider);
+
+        ref.read(configuredEquipmentProvider.notifier).update(
+              equipment.copyWith(
+                sections: equipment.sections
+                    .map(
+                      (section) => section.copyWith(
+                        workingWidth: equipment.sections.first.workingWidth,
+                      ),
+                    )
+                    .toList(),
+              ),
+            );
+      }
+    });
+
+    return ref.read(
+      configuredEquipmentProvider.select(
+        (value) =>
+            value.sections.isNotEmpty &&
+            value.sections.every(
+              (element) =>
+                  element.workingWidth == value.sections.first.workingWidth,
+            ),
+      ),
+    );
+  }
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}

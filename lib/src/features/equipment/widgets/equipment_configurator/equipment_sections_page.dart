@@ -37,9 +37,9 @@ class EquipmentSectionsPage extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.all(8),
           child: Text(
-            'Number of sections',
+            'Sections',
             style: theme.textTheme.titleLarge,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
         ),
         Center(
@@ -72,74 +72,135 @@ class EquipmentSectionsPage extends ConsumerWidget {
             ),
           ),
         ),
-        Center(
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              IntrinsicWidth(
-                child: CheckboxListTile(
-                  value: ref.read(
-                    configuredEquipmentProvider.select(
-                      (value) =>
-                          value.sections.isNotEmpty &&
-                          value.sections.every(
-                            (element) =>
-                                element.width == value.sections.first.width,
-                          ),
+        if (equipment.sections.length >= 2)
+          Center(
+            child: Column(
+              children: [
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    IntrinsicWidth(
+                      child: CheckboxListTile(
+                        value:
+                            ref.watch(configuredEquipmentEqualWidthsProvider),
+                        enabled: equipment.sections.length >= 2,
+                        onChanged: (value) => value != null
+                            ? ref
+                                .read(
+                                  configuredEquipmentEqualWidthsProvider
+                                      .notifier,
+                                )
+                                .update(value: value)
+                            : null,
+                        title: const Text('Equal widths'),
+                      ),
                     ),
-                  ),
-                  enabled: equipment.sections.length >= 2,
-                  onChanged: (value) => value != null
-                      ? ref.read(configuredEquipmentProvider.notifier).update(
-                            equipment.copyWith(
-                              sections: equipment.sections
-                                  .map(
-                                    (section) => section.copyWith(
-                                      width: equipment.sections.first.width,
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          )
-                      : null,
-                  title: const Text('Equal widths'),
-                ),
-              ),
-              IntrinsicWidth(
-                child: CheckboxListTile(
-                  value: ref.read(
-                    configuredEquipmentProvider.select(
-                      (value) =>
-                          value.sections.isNotEmpty &&
-                          value.sections.every(
-                            (element) =>
-                                element.workingWidth ==
-                                value.sections.first.workingWidth,
-                          ),
+                    IntrinsicWidth(
+                      child: CheckboxListTile(
+                        value: ref.watch(
+                          configuredEquipmentEqualWorkingWidthsProvider,
+                        ),
+                        enabled: equipment.sections.length >= 2,
+                        onChanged: (value) => value != null
+                            ? ref
+                                .read(
+                                  configuredEquipmentEqualWorkingWidthsProvider
+                                      .notifier,
+                                )
+                                .update(value: value)
+                            : null,
+                        title: const Text('Equal working widths'),
+                      ),
                     ),
-                  ),
-                  enabled: equipment.sections.length >= 2,
-                  onChanged: (value) => value != null
-                      ? ref.read(configuredEquipmentProvider.notifier).update(
-                            equipment.copyWith(
-                              sections: equipment.sections
-                                  .map(
-                                    (section) => section.copyWith(
-                                      workingWidth:
-                                          equipment.sections.first.workingWidth,
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          )
-                      : null,
-                  title: const Text('Equal working widths'),
+                  ],
                 ),
-              ),
-            ],
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    if (ref.watch(configuredEquipmentEqualWidthsProvider))
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 200),
+                        child: TextFormField(
+                          controller: TextEditingController(
+                            text: '${equipment.sections.first.width}',
+                          ),
+                          decoration: const InputDecoration(
+                            labelText: 'Section width',
+                            suffixText: 'm',
+                          ),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          onFieldSubmitted: (value) {
+                            final newWidth = double.tryParse(
+                              value.replaceAll(',', '.'),
+                            )?.abs();
+
+                            if (newWidth != null) {
+                              ref
+                                  .read(
+                                    configuredEquipmentProvider.notifier,
+                                  )
+                                  .update(
+                                    equipment.copyWith(
+                                      sections: equipment.sections
+                                          .map(
+                                            (section) =>
+                                                section..width = newWidth,
+                                          )
+                                          .toList(),
+                                    ),
+                                  );
+                            }
+                          },
+                        ),
+                      ),
+                    if (ref
+                        .watch(configuredEquipmentEqualWorkingWidthsProvider))
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 200),
+                        child: TextFormField(
+                          controller: TextEditingController(
+                            text: '${equipment.sections.first.workingWidth}',
+                          ),
+                          decoration: const InputDecoration(
+                            labelText: 'Section working width',
+                            suffixText: 'm',
+                          ),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          onFieldSubmitted: (value) {
+                            final newWidth = double.tryParse(
+                              value.replaceAll(',', '.'),
+                            )?.abs();
+
+                            if (newWidth != null) {
+                              ref
+                                  .read(
+                                    configuredEquipmentProvider.notifier,
+                                  )
+                                  .update(
+                                    equipment.copyWith(
+                                      sections: equipment.sections
+                                          .map(
+                                            (section) => section
+                                              ..workingWidth = newWidth,
+                                          )
+                                          .toList(),
+                                    ),
+                                  );
+                            }
+                          },
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
         if (equipment.sections.isNotEmpty)
           Expanded(
             child: Padding(
@@ -193,6 +254,7 @@ class EquipmentSectionsPage extends ConsumerWidget {
                           false => const SizedBox.shrink(),
                         },
                       ),
+                    
                       Expanded(
                         child: Scrollbar(
                           scrollbarOrientation: ScrollbarOrientation.top,
@@ -204,6 +266,7 @@ class EquipmentSectionsPage extends ConsumerWidget {
                           child: CustomScrollView(
                             controller: controller,
                             scrollDirection: Axis.horizontal,
+                            // cacheExtent: equipment.sections.length * 300,
                             slivers: [
                               SliverList.builder(
                                 itemCount: equipment.sections.length,
@@ -241,66 +304,67 @@ class _SectionConfigurator extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     final theme = Theme.of(context);
-    return IntrinsicWidth(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: SingleChildScrollView(
+
+    return SingleChildScrollView(
+      child: IntrinsicWidth(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-              TextFormField(
-                controller: TextEditingController(text: '${section.width}'),
-                    decoration: InputDecoration(
-                      labelText: 'Section ${section.index + 1} width',
-                      suffixText: 'm',
-                    ),
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                onFieldSubmitted: (value) {
-                      final newWidth =
-                          double.tryParse(value.replaceAll(',', '.'));
+              if (!ref.watch(configuredEquipmentEqualWidthsProvider))
+                TextFormField(
+                  controller: TextEditingController(text: '${section.width}'),
+                  decoration: InputDecoration(
+                    labelText: 'Section ${section.index + 1} width',
+                    suffixText: 'm',
+                  ),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  onFieldSubmitted: (value) {
+                    final newWidth =
+                        double.tryParse(value.replaceAll(',', '.'));
 
-                      if (newWidth != null) {
-                        section.width = newWidth;
-                        ref
-                            .read(
-                              configuredEquipmentProvider.notifier,
-                            )
-                        .updateSection(
-                          section,
-                        );
-                      }
-                    },
-              ),
+                    if (newWidth != null) {
+                      section.width = newWidth;
+                      ref
+                          .read(
+                            configuredEquipmentProvider.notifier,
+                          )
+                          .updateSection(
+                            section,
+                          );
+                    }
+                  },
+                ),
+              if (!ref.watch(configuredEquipmentEqualWorkingWidthsProvider))
+                TextFormField(
+                  controller:
+                      TextEditingController(text: '${section.workingWidth}'),
+                  decoration: InputDecoration(
+                    labelText: 'Section ${section.index + 1} width',
+                    suffixText: 'm',
+                  ),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  onFieldSubmitted: (value) {
+                    final newWidth = double.tryParse(
+                      value.replaceAll(',', '.'),
+                    );
 
-              TextFormField(
-                controller:
-                    TextEditingController(text: '${section.workingWidth}'),
-                    decoration: InputDecoration(
-                      labelText: 'Section ${section.index + 1} width',
-                      suffixText: 'm',
-                    ),
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                onFieldSubmitted: (value) {
-                  final newWidth = double.tryParse(
-                    value.replaceAll(',', '.'),
-                  );
-                  
-                      if (newWidth != null) {
-                        section.workingWidth = newWidth;
-                        ref
-                            .read(
-                              configuredEquipmentProvider.notifier,
-                            )
-                        .updateSection(
-                          section,
-                        );
-                      }
-                    },
-                  
-              ),
+                    if (newWidth != null) {
+                      section.workingWidth = newWidth;
+                      ref
+                          .read(
+                            configuredEquipmentProvider.notifier,
+                          )
+                          .updateSection(
+                            section,
+                          );
+                    }
+                  },
+                ),
               DropdownMenu(
                 label: Text(
                   'Section ${section.index + 1} button color',
@@ -320,6 +384,7 @@ class _SectionConfigurator extends ConsumerWidget {
                         section,
                       );
                 },
+                menuStyle: const MenuStyle(alignment: Alignment.topCenter),
                 dropdownMenuEntries: [
                   DropdownMenuEntry(
                     value: null,
@@ -333,7 +398,7 @@ class _SectionConfigurator extends ConsumerWidget {
                   ),
                   ...Colors.primaries.mapIndexed(
                     (index, color) => DropdownMenuEntry(
-                      value: color,
+                      value: color.shade500,
                       label:
                           PrimaryColorNamesExtension.primaryColorNames[index],
                       leadingIcon: Icon(
@@ -384,7 +449,7 @@ class _SectionConfigurator extends ConsumerWidget {
                   ),
                   ...Colors.primaries.mapIndexed(
                     (index, color) => DropdownMenuEntry(
-                      value: color,
+                      value: color.shade500,
                       label:
                           PrimaryColorNamesExtension.primaryColorNames[index],
                       leadingIcon: Icon(
