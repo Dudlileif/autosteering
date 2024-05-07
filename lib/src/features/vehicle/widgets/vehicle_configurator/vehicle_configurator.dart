@@ -29,21 +29,51 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A [Dialog] for configuring a vehicle, with ability to apply to the
 /// current one, save to file or load from file.
-class VehicleConfigurator extends ConsumerWidget {
+class VehicleConfigurator extends ConsumerStatefulWidget {
   /// A [Dialog] for configuring a vehicle, with ability to apply to the
   /// current one, save to file or load from file.
   const VehicleConfigurator({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    const pages = [
-      VehicleTypeSelectorPage(),
-      VehicleDimensionsPage(),
-      VehicleAntennaPage(),
-      VehicleWheelsPage(),
-      VehicleSteeringPage(),
-      VehicleHitchesPage(),
-    ];
+  ConsumerState<VehicleConfigurator> createState() =>
+      _VehicleConfiguratorState();
+}
+
+class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
+    with SingleTickerProviderStateMixin {
+  late final tabController = TabController(
+    length: pages.length,
+    vsync: this,
+    initialIndex: ref.read(vehicleConfiguratorIndexProvider),
+  );
+  static const pages = [
+    VehicleTypeSelectorPage(),
+    VehicleDimensionsPage(),
+    VehicleAntennaPage(),
+    VehicleWheelsPage(),
+    VehicleSteeringPage(),
+    VehicleHitchesPage(),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    tabController.addListener(() {
+      ref
+          .read(vehicleConfiguratorIndexProvider.notifier)
+          .update(tabController.index);
+    });
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+  
 
     final destinations = [
       const NavigationRailDestination(
@@ -126,26 +156,18 @@ class VehicleConfigurator extends ConsumerWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: SingleChildScrollView(
-                    child: IntrinsicHeight(
-                      child: Consumer(
-                        builder: (context, ref, child) => NavigationRail(
-                          backgroundColor: Colors.transparent,
-                          labelType: NavigationRailLabelType.all,
-                          destinations: destinations,
-                          selectedIndex: ref.watch(
-                            vehicleConfiguratorIndexProvider,
-                          ),
-                          
-                          onDestinationSelected: ref
-                              .read(
-                                vehicleConfiguratorPageControllerProvider
-                                    .notifier,
-                              )
-                              .animateToPage,
+                SingleChildScrollView(
+                  child: IntrinsicHeight(
+                    child: Consumer(
+                      builder: (context, ref, child) => NavigationRail(
+                        backgroundColor: Colors.transparent,
+                        labelType: NavigationRailLabelType.all,
+                        destinations: destinations,
+                        selectedIndex: ref.watch(
+                          vehicleConfiguratorIndexProvider,
                         ),
+                        
+                        onDestinationSelected: tabController.animateTo,
                       ),
                     ),
                   ),
@@ -154,56 +176,74 @@ class VehicleConfigurator extends ConsumerWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      AnimatedOpacity(
-                        opacity: ref.watch(
-                          vehicleConfiguratorIndexProvider
-                              .select((value) => value > 0),
-                        )
-                            ? 1
-                            : 0,
-                        duration: Durations.medium1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: VehicleConfiguratorPreviousButton(
-                            enabled: ref.watch(
-                              vehicleConfiguratorIndexProvider.select(
-                                (value) => value > 0,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ListenableBuilder(
+                            listenable: tabController,
+                            builder: (context, child) => AnimatedOpacity(
+                              opacity: tabController.index > 0 ? 1 : 0,
+                              duration: Durations.medium1,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: IconButton.filled(
+                                  icon: const Icon(Icons.arrow_left),
+                                  onPressed: tabController.index > 0
+                                      ? () => tabController.animateTo(
+                                            tabController.index - 1,
+                                          )
+                                      : null,
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          ListenableBuilder(
+                            listenable: tabController,
+                            builder: (context, child) => AnimatedOpacity(
+                              opacity: tabController.index < pages.length - 1 &&
+                                      ref.watch(
+                                        configuredVehicleProvider.select(
+                                          (value) =>
+                                              value.name?.isNotEmpty ?? false,
+                                        ),
+                                      )
+                                  ? 1
+                                  : 0,
+                              duration: Durations.medium1,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: IconButton.filled(
+                                  onPressed: tabController.index <
+                                              pages.length - 1 &&
+                                          ref.watch(
+                                            configuredVehicleProvider.select(
+                                              (value) =>
+                                                  value.name?.isNotEmpty ??
+                                                  false,
+                                            ),
+                                          )
+                                      ? () => tabController.animateTo(
+                                            tabController.index + 1,
+                                          )
+                                      : null,
+                                  icon: const Icon(Icons.arrow_right),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       Expanded(
-                        child: PageView(
-                          scrollDirection: Axis.vertical,
-                          controller: ref
-                              .watch(vehicleConfiguratorPageControllerProvider),
+                        child: TabBarView(
+                          controller: tabController,
+                          physics: ref.watch(
+                            configuredVehicleProvider.select(
+                              (value) => value.name?.isEmpty ?? true,
+                            ),
+                          )
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
                           children: pages,
-                        ),
-                      ),
-                      AnimatedOpacity(
-                        opacity: ref.watch(
-                          vehicleConfiguratorIndexProvider
-                              .select((value) => value < pages.length - 1),
-                        )
-                            ? 1
-                            : 0,
-                        duration: Durations.medium1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: VehicleConfiguratorNextButton(
-                            enabled: ref.watch(
-                              vehicleConfiguratorIndexProvider.select(
-                                (value) => value < pages.length - 1,
-                              ),
-                                ) &&
-                                ref.watch(
-                                  configuredVehicleProvider.select(
-                                    (value) => value.name?.isNotEmpty ?? false,
-                                  ),
-                                
-                                ),
-                          ),
                         ),
                       ),
                     ],
@@ -218,69 +258,6 @@ class VehicleConfigurator extends ConsumerWidget {
   }
 }
 
-/// A button for going to the next page of the vehicle configurator.
-class VehicleConfiguratorNextButton extends ConsumerWidget {
-  /// A button for going to the next page of the vehicle configurator.
-  const VehicleConfiguratorNextButton({
-    this.enabled = true,
-    this.extraOnPressed,
-    super.key,
-  });
-
-  /// Whether the button is enabled.
-  final bool enabled;
-
-  /// Extra function that will run when the button is pressed.
-  final void Function()? extraOnPressed;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
-        onPressed: enabled
-            ? () {
-                extraOnPressed?.call();
-                ref
-                    .read(
-                      vehicleConfiguratorPageControllerProvider.notifier,
-                    )
-                    .nextPage();
-              }
-            : null,
-        icon: const Icon(Icons.arrow_downward),
-        label: const Text('Next'),
-      );
-}
-
-/// A button for going to the previous page of the vehicle configurator.
-class VehicleConfiguratorPreviousButton extends ConsumerWidget {
-  /// A button for going to the previous page of the vehicle configurator.
-  const VehicleConfiguratorPreviousButton({
-    this.enabled = true,
-    this.extraOnPressed,
-    super.key,
-  });
-
-  /// Whether the button is enabled.
-  final bool enabled;
-
-  /// Extra function that will run when the button is pressed.
-  final void Function()? extraOnPressed;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
-        onPressed: enabled
-            ? () {
-                extraOnPressed?.call();
-                ref
-                    .read(
-                      vehicleConfiguratorPageControllerProvider.notifier,
-                    )
-                    .previousPage();
-              }
-            : null,
-        icon: const Icon(Icons.arrow_upward),
-        label: const Text('Previous'),
-      );
-}
 
 /// A button that applies the vehicle configuration in
 /// [configuredVehicleProvider] to the [mainVehicleProvider].
@@ -291,7 +268,11 @@ class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
-        onPressed: () {
+        onPressed: ref.watch(
+          configuredVehicleProvider
+              .select((value) => value.name?.isNotEmpty ?? false),
+        )
+            ? () {
           final position =
               ref.watch(mainVehicleProvider.select((value) => value.position));
           final bearing =
@@ -309,7 +290,8 @@ class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
             ref.read(saveVehicleProvider(vehicle));
           }
           Navigator.of(context).pop();
-        },
+              }
+            : null,
         icon: const Icon(Icons.check),
         label: const Text('Apply configuration'),
       );

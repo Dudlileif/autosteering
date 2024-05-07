@@ -121,21 +121,19 @@ class EquipmentDimensionsPage extends ConsumerWidget {
       ),
     ];
 
-    return SingleChildScrollView(
-      child: Column(
-        children: children
-            .map(
-              (widget) => ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: widget,
-                ),
+    return Column(
+      children: children
+          .map(
+            (widget) => ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: widget,
               ),
-            )
-            .toList(),
-        
-      ),
+            ),
+          )
+          .toList(),
+      
     );
   }
 }

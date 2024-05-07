@@ -39,46 +39,6 @@ class EquipmentConfiguratorIndex extends _$EquipmentConfiguratorIndex {
   void decrease() => update(state - 1);
 }
 
-/// A provider for creating a [PageController] for using throughout the
-/// [EquipmentConfigurator].
-@riverpod
-class EquipmentConfiguratorPageController
-    extends _$EquipmentConfiguratorPageController {
-  static const _animationDuration = Durations.long4;
-  static const _animationCurve = Curves.easeInOutCubicEmphasized;
-
-  @override
-  Raw<PageController> build() => PageController(
-      initialPage: ref.read(equipmentConfiguratorIndexProvider),
-    )..addListener(() {
-        ref
-            .read(equipmentConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round());
-      });
-    
-
-  /// Animates to the [index] page with [_animationDuration] and
-  /// [_animationCurve].
-  Future<void> animateToPage(int index) => state.animateToPage(
-        index,
-        duration: _animationDuration,
-        curve: _animationCurve,
-      );
-
-  /// Animates to the next page with [_animationDuration] and [_animationCurve].
-  Future<void> nextPage() => state.nextPage(
-        duration: _animationDuration,
-        curve: _animationCurve,
-      );
-
-  /// Animates to the previous page with [_animationDuration] and
-  /// [_animationCurve].
-  Future<void> previousPage() => state.previousPage(
-        duration: _animationDuration,
-        curve: _animationCurve,
-      );
-}
-
 /// A provider for the vehicle from the configurator.
 @Riverpod(keepAlive: true)
 class ConfiguredEquipment extends _$ConfiguredEquipment {

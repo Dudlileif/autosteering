@@ -26,27 +26,6 @@ final equipmentConfiguratorIndexProvider =
 );
 
 typedef _$EquipmentConfiguratorIndex = Notifier<int>;
-String _$equipmentConfiguratorPageControllerHash() =>
-    r'17cff8e7b7982d8eb5fa386337f94ae9aef665f7';
-
-/// A provider for creating a [PageController] for using throughout the
-/// [EquipmentConfigurator].
-///
-/// Copied from [EquipmentConfiguratorPageController].
-@ProviderFor(EquipmentConfiguratorPageController)
-final equipmentConfiguratorPageControllerProvider = AutoDisposeNotifierProvider<
-    EquipmentConfiguratorPageController, Raw<PageController>>.internal(
-  EquipmentConfiguratorPageController.new,
-  name: r'equipmentConfiguratorPageControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$equipmentConfiguratorPageControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$EquipmentConfiguratorPageController
-    = AutoDisposeNotifier<Raw<PageController>>;
 String _$configuredEquipmentHash() =>
     r'9973f5a2b7b6682b93244830f11c923b40f1f30d';
 

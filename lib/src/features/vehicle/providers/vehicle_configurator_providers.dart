@@ -38,53 +38,6 @@ class VehicleConfiguratorIndex extends _$VehicleConfiguratorIndex {
   void decrease() => update(state - 1);
 }
 
-/// A provider for creating a [PageController] for using throughout the
-/// [VehicleConfigurator].
-@riverpod
-class VehicleConfiguratorPageController
-    extends _$VehicleConfiguratorPageController {
-  static const _animationDuration = Durations.long4;
-  static const _animationCurve = Curves.easeInOutCubicEmphasized;
-
-  @override
-  Raw<PageController> build() => PageController(
-      initialPage: ref.read(vehicleConfiguratorIndexProvider),
-    )..addListener(() {
-        ref
-            .read(vehicleConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round());
-      });
-  
-  
-
-  /// Animates to the [index] page with [_animationDuration] and
-  /// [_animationCurve].
-  Future<void> animateToPage(int index) => state
-      .animateToPage(
-        index,
-        duration: _animationDuration,
-        curve: _animationCurve,
-      )
-      ;
-
-  /// Animates to the next page with [_animationDuration] and [_animationCurve].
-  Future<void> nextPage() => state
-      .nextPage(
-        duration: _animationDuration,
-        curve: _animationCurve,
-      )
-      ;
-
-  /// Animates to the previous page with [_animationDuration] and
-  /// [_animationCurve].
-  Future<void> previousPage() => state
-      .previousPage(
-        duration: _animationDuration,
-        curve: _animationCurve,
-      )
-    ;
-}
-
 /// A provider for the vehicle from the configurator.
 @Riverpod(keepAlive: true)
 class ConfiguredVehicle extends _$ConfiguredVehicle {

@@ -21,51 +21,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A page for configuring the equipment type and set a name for the equipment.
-class EquipmentTypeSelectorPage extends StatelessWidget {
+class EquipmentTypeSelectorPage extends ConsumerWidget {
   /// A page for configuring the equipment type and set a name for the
   /// equipment.
   const EquipmentTypeSelectorPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: _EquipmentTypeSelector(),
-          ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: SizedBox(
-              width: 500,
-              child: Column(
-                children: [
-                  Consumer(
-                    builder: (context, ref, child) => TextFormField(
-                      decoration: const InputDecoration(
-                        icon: Icon(Icons.label_outline),
-                        labelText: 'Name',
-                      ),
-                      controller: ref.watch(
-                        configuredEquipmentNameTextControllerProvider,
-                      ),
-                      keyboardType: TextInputType.text,
-                      autovalidateMode: AutovalidateMode.always,
-                      validator: (value) => value != null &&
-                              value.isNotEmpty &&
-                              !value.startsWith(' ')
-                          ? null
-                          : '''No name entered! Please enter a name so that the config can be saved!''',
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16),
+          child: _EquipmentTypeSelector(),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: SizedBox(
+            width: 500,
+            child: Column(
+              children: [
+                Consumer(
+                  builder: (context, ref, child) => TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.label_outline),
+                      labelText: 'Name',
                     ),
+                    controller: ref.watch(
+                      configuredEquipmentNameTextControllerProvider,
+                    ),
+                    keyboardType: TextInputType.text,
+                    autovalidateMode: AutovalidateMode.always,
+                    validator: (value) => value != null &&
+                            value.isNotEmpty &&
+                            !value.startsWith(' ')
+                        ? null
+                        : '''No name entered! Please enter a name so that the config can be saved!''',
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

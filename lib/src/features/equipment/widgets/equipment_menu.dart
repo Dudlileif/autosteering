@@ -52,7 +52,7 @@ class EquipmentMenu extends ConsumerWidget {
           child: Text('Configure', style: textStyle),
           onPressed: () => showDialog<void>(
             context: context,
-            builder: (context) => const EquipmentConfigurator(),
+            builder: (context) => EquipmentConfigurator(),
           ),
         ),
         const _SaveEquipmentSetup(),
