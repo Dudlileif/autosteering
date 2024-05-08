@@ -37,16 +37,38 @@ class MainScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: MenuBar(
-          children: [
-            const SettingsMenu(),
-            const WorkSessionMenu(),
-            const FieldMenu(),
-            const GuidanceMenu(),
-            const VehicleMenu(),
-            const EquipmentMenu(),
-            if (Device.isNative) const HardwareMenu(),
-],
+        title: LayoutBuilder(
+          builder: (context, constraints) =>
+              switch (constraints.maxWidth < 300) {
+            true => MenuBar(
+                children: [
+                  MenuButtonWithChildren(
+                    text: 'Menu',
+                    icon: Icons.menu,
+                    menuChildren: [
+                      const SettingsMenu(),
+                      const WorkSessionMenu(),
+                      const FieldMenu(),
+                      const GuidanceMenu(),
+                      const VehicleMenu(),
+                      const EquipmentMenu(),
+                      if (Device.isNative) const HardwareMenu(),
+                    ],
+                  ),
+                ],
+              ),
+            false => MenuBar(
+                children: [
+                  const SettingsMenu(),
+                  const WorkSessionMenu(),
+                  const FieldMenu(),
+                  const GuidanceMenu(),
+                  const VehicleMenu(),
+                  const EquipmentMenu(),
+                  if (Device.isNative) const HardwareMenu(),
+                ],
+              )
+          },
         ),
         actions: [
           // Grid size indicator
