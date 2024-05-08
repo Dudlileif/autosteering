@@ -230,93 +230,105 @@ class ImuConfigurator extends StatelessWidget {
                 ),
               ),
               Consumer(
-                builder: (context, ref, child) {
-                  var delayReadings = ref.read(
-                    mainVehicleProvider
-                        .select((value) => value.imu.config.delayReadings),
-                  );
-                  return StatefulBuilder(
-                    builder: (context, setState) => Column(
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Delay readings: $delayReadings ms',
-                              style: theme.textTheme.bodyLarge,
+                builder: (context, ref, child) => ListTile(
+                  title: Text(
+                    '''Delay readings: ${ref.watch(mainVehicleProvider.select((value) => value.imu.config.delayReadings))} ms''',
+                  ),
+                  onTap: () => showDialog<void>(
+                    context: context,
+                    builder: (context) => Consumer(
+                      builder: (context, ref, child) {
+                        var delayReadings = ref.watch(
+                          mainVehicleProvider.select(
+                            (value) => value.imu.config.delayReadings,
+                          ),
+                        );
+                        return StatefulBuilder(
+                          builder: (context, setState) => SimpleDialog(
+                            contentPadding: const EdgeInsets.only(
+                              left: 24,
+                              right: 24,
+                              bottom: 8,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                final oldValue = delayReadings;
-                                ref.read(simInputProvider.notifier).send(
-                                      ref
-                                          .read(
-                                            mainVehicleProvider.select(
-                                              (value) => value.imu.config,
-                                            ),
-                                          )
-                                          .copyWith(
-                                            delayReadings:
-                                                const ImuConfig().delayReadings,
-                                          ),
-                                    );
-                                // Wait a short while before saving the
-                                // hopefully updated vehicle.
-                                Timer(
-                                  const Duration(milliseconds: 100),
-                                  () {
-                                    final vehicle =
-                                        ref.watch(mainVehicleProvider);
-                                    ref.read(saveVehicleProvider(vehicle));
-                                    Logger.instance.i(
-                                      '''Updated vehicle IMU delay readings: $oldValue ms -> ${vehicle.imu.config.delayReadings} ms''',
-                                    );
-                                  },
-                                );
-                              },
-                              icon: const Icon(Icons.refresh),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Delay readings: $delayReadings ms',
+                                  style: theme.textTheme.bodyLarge,
+                                ),
+                                IconButton(
+                                  onPressed: () => setState(
+                                    () => delayReadings =
+                                        const ImuConfig().delayReadings,
+                                  ),
+                                  icon: const Icon(Icons.refresh),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        Slider(
-                          value: delayReadings.toDouble(),
-                          onChanged: (value) =>
-                              setState(() => delayReadings = value.round()),
-                          onChangeEnd: (value) {
-                            final oldValue = ref.read(
-                              mainVehicleProvider.select(
-                                (value) => value.imu.config.delayReadings,
+                            children: [
+                              Slider(
+                                value: delayReadings.toDouble(),
+                                onChanged: (value) => setState(
+                                  () => delayReadings = value.round(),
+                                ),
+                                max: 100,
+                                divisions: 20,
                               ),
-                            );
-                            ref.read(simInputProvider.notifier).send(
-                                  ref
-                                      .read(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  SimpleDialogOption(
+                                    onPressed: Navigator.of(context).pop,
+                                    child: const Text('Cancel'),
+                                  ),
+                                  SimpleDialogOption(
+                                    child: const Text('Apply'),
+                                    onPressed: () {
+                                      final oldValue = ref.read(
                                         mainVehicleProvider.select(
-                                          (value) => value.imu.config,
+                                          (value) =>
+                                              value.imu.config.delayReadings,
                                         ),
-                                      )
-                                      .copyWith(delayReadings: delayReadings),
-                                );
-                            // Wait a short while before saving the
-                            // hopefully updated vehicle.
-                            Timer(
-                              const Duration(milliseconds: 100),
-                              () {
-                                final vehicle = ref.watch(mainVehicleProvider);
-                                ref.read(saveVehicleProvider(vehicle));
-                                Logger.instance.i(
-                                  '''Updated vehicle IMU delay readings: $oldValue ms -> ${vehicle.imu.config.delayReadings} ms''',
-                                );
-                              },
-                            );
-                          },
-                          max: 100,
-                          divisions: 20,
-                        ),
-                      ],
+                                      );
+                                      ref.read(simInputProvider.notifier).send(
+                                            ref
+                                                .read(
+                                                  mainVehicleProvider.select(
+                                                    (value) => value.imu.config,
+                                                  ),
+                                                )
+                                                .copyWith(
+                                                  delayReadings: delayReadings,
+                                                ),
+                                          );
+                                      // Wait a short while before saving the
+                                      // hopefully updated vehicle.
+                                      Timer(
+                                        const Duration(milliseconds: 100),
+                                        () {
+                                          final vehicle =
+                                              ref.watch(mainVehicleProvider);
+                                          ref.read(
+                                            saveVehicleProvider(vehicle),
+                                          );
+                                          Logger.instance.i(
+                                            '''Updated vehicle IMU delay readings: $oldValue ms -> ${vehicle.imu.config.delayReadings} ms''',
+                                          );
+                                        },
+                                      );
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8),
@@ -394,178 +406,191 @@ class ImuConfigurator extends StatelessWidget {
                 ),
               ),
               Consumer(
-                builder: (context, ref, child) {
-                  var pitchGain = ref.read(
-                    mainVehicleProvider
-                        .select((value) => value.imu.config.pitchGain),
-                  );
-                  return StatefulBuilder(
-                    builder: (context, setState) => Column(
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Pitch gain: ${pitchGain.toStringAsFixed(2)}',
-                              style: theme.textTheme.bodyLarge,
+                builder: (context, ref, child) => ListTile(
+                  title: Text(
+                    '''Pitch gain: ${ref.watch(mainVehicleProvider.select((value) => value.imu.config.pitchGain)).toStringAsFixed(2)}''',
+                  ),
+                  onTap: () => showDialog<void>(
+                    context: context,
+                    builder: (context) => Consumer(
+                      builder: (context, ref, child) {
+                        var pitchGain = ref.watch(
+                          mainVehicleProvider
+                              .select((value) => value.imu.config.pitchGain),
+                        );
+                        return StatefulBuilder(
+                          builder: (context, setState) => SimpleDialog(
+                            contentPadding: const EdgeInsets.only(
+                              left: 24,
+                              right: 24,
+                              bottom: 8,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                final oldValue = pitchGain;
-                                ref.read(simInputProvider.notifier).send(
-                                      ref
-                                          .read(
-                                            mainVehicleProvider.select(
-                                              (value) => value.imu.config,
-                                            ),
-                                          )
-                                          .copyWith(pitchGain: 1),
-                                    );
-                                // Wait a short while before saving the
-                                // hopefully updated vehicle.
-                                Timer(
-                                  const Duration(milliseconds: 100),
-                                  () {
-                                    final vehicle =
-                                        ref.watch(mainVehicleProvider);
-                                    ref.read(saveVehicleProvider(vehicle));
-                                    Logger.instance.i(
-                                      '''Updated vehicle IMU pitch gain: $oldValue -> ${vehicle.imu.config.pitchGain}''',
-                                    );
-                                  },
-                                );
-                              },
-                              icon: const Icon(Icons.refresh),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Pitch gain: ${pitchGain.toStringAsFixed(2)}',
+                                  style: theme.textTheme.bodyLarge,
+                                ),
+                                IconButton(
+                                  onPressed: () =>
+                                      setState(() => pitchGain = 1),
+                                  icon: const Icon(Icons.refresh),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        Slider(
-                          value: pitchGain,
-                          onChanged: (value) =>
-                              setState(() => pitchGain = value),
-                          onChangeEnd: (value) {
-                            final oldValue = ref.read(
-                              mainVehicleProvider.select(
-                                (value) => value.imu.config.pitchGain,
+                            children: [
+                              Slider(
+                                value: pitchGain,
+                                onChanged: (value) =>
+                                    setState(() => pitchGain = value),
+                                max: 2,
+                                divisions: 20,
                               ),
-                            );
-                            ref.read(simInputProvider.notifier).send(
-                                  ref
-                                      .read(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  SimpleDialogOption(
+                                    onPressed: Navigator.of(context).pop,
+                                    child: const Text('Cancel'),
+                                  ),
+                                  SimpleDialogOption(
+                                    onPressed: () {
+                                      final oldValue = ref.read(
                                         mainVehicleProvider.select(
-                                          (value) => value.imu.config,
+                                          (value) => value.imu.config.pitchGain,
                                         ),
-                                      )
-                                      .copyWith(pitchGain: pitchGain),
-                                );
-                            // Wait a short while before saving the
-                            // hopefully updated vehicle.
-                            Timer(
-                              const Duration(milliseconds: 100),
-                              () {
-                                final vehicle = ref.watch(mainVehicleProvider);
-                                ref.read(saveVehicleProvider(vehicle));
-                                Logger.instance.i(
-                                  '''Updated vehicle IMU pitch gain: $oldValue -> ${vehicle.imu.config.pitchGain}''',
-                                );
-                              },
-                            );
-                          },
-                          max: 2,
-                          divisions: 20,
-                        ),
-                      ],
+                                      );
+                                      ref.read(simInputProvider.notifier).send(
+                                            ref
+                                                .read(
+                                                  mainVehicleProvider.select(
+                                                    (value) => value.imu.config,
+                                                  ),
+                                                )
+                                                .copyWith(pitchGain: pitchGain),
+                                          );
+                                      // Wait a short while before saving the
+                                      // hopefully updated vehicle.
+                                      Timer(
+                                        const Duration(milliseconds: 100),
+                                        () {
+                                          final vehicle =
+                                              ref.watch(mainVehicleProvider);
+                                          ref.read(
+                                            saveVehicleProvider(vehicle),
+                                          );
+                                          Logger.instance.i(
+                                            '''Updated vehicle IMU pitch gain: $oldValue -> ${vehicle.imu.config.pitchGain}''',
+                                          );
+                                        },
+                                      );
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Apply'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
               Consumer(
-                builder: (context, ref, child) {
-                  var rollGain = ref.read(
-                    mainVehicleProvider
-                        .select((value) => value.imu.config.rollGain),
-                  );
-                  return StatefulBuilder(
-                    builder: (context, setState) => Column(
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Roll gain: ${rollGain.toStringAsFixed(2)}',
-                              style: theme.textTheme.bodyLarge,
+                builder: (context, ref, child) => ListTile(
+                  title: Text(
+                    '''Roll gain: ${ref.watch(mainVehicleProvider.select((value) => value.imu.config.rollGain)).toStringAsFixed(2)}''',
+                  ),
+                  onTap: () => showDialog<void>(
+                    context: context,
+                    builder: (context) => Consumer(
+                      builder: (context, ref, child) {
+                        var rollGain = ref.watch(
+                          mainVehicleProvider
+                              .select((value) => value.imu.config.rollGain),
+                        );
+                        return StatefulBuilder(
+                          builder: (context, setState) => SimpleDialog(
+                            contentPadding: const EdgeInsets.only(
+                              left: 24,
+                              right: 24,
+                              bottom: 8,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                final oldValue = rollGain;
-                                ref.read(simInputProvider.notifier).send(
-                                      ref
-                                          .read(
-                                            mainVehicleProvider.select(
-                                              (value) => value.imu.config,
-                                            ),
-                                          )
-                                          .copyWith(rollGain: 1),
-                                    );
-                                // Wait a short while before saving the
-                                // hopefully updated vehicle.
-                                Timer(
-                                  const Duration(milliseconds: 100),
-                                  () {
-                                    final vehicle =
-                                        ref.watch(mainVehicleProvider);
-                                    ref.read(
-                                      saveVehicleProvider(vehicle),
-                                    );
-                                    Logger.instance.i(
-                                      '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imu.config.rollGain}''',
-                                    );
-                                  },
-                                );
-                              },
-                              icon: const Icon(Icons.refresh),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Roll gain: ${rollGain.toStringAsFixed(2)}',
+                                  style: theme.textTheme.bodyLarge,
+                                ),
+                                IconButton(
+                                  onPressed: () => setState(() => rollGain = 1),
+                                  icon: const Icon(Icons.refresh),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        Slider(
-                          value: rollGain,
-                          onChanged: (value) =>
-                              setState(() => rollGain = value),
-                          onChangeEnd: (value) {
-                            final oldValue = ref.read(
-                              mainVehicleProvider.select(
-                                (value) => value.imu.config.rollGain,
+                            children: [
+                              Slider(
+                                value: rollGain,
+                                onChanged: (value) =>
+                                    setState(() => rollGain = value),
+                                max: 2,
+                                divisions: 20,
                               ),
-                            );
-                            ref.read(simInputProvider.notifier).send(
-                                  ref
-                                      .read(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  SimpleDialogOption(
+                                    onPressed: Navigator.of(context).pop,
+                                    child: const Text('Cancel'),
+                                  ),
+                                  SimpleDialogOption(
+                                    onPressed: () {
+                                      final oldValue = ref.read(
                                         mainVehicleProvider.select(
-                                          (value) => value.imu.config,
+                                          (value) => value.imu.config.rollGain,
                                         ),
-                                      )
-                                      .copyWith(rollGain: rollGain),
-                                );
-                            // Wait a short while before saving the hopefully
-                            // updated vehicle.
-                            Timer(
-                              const Duration(milliseconds: 100),
-                              () {
-                                final vehicle = ref.watch(mainVehicleProvider);
-                                ref.read(saveVehicleProvider(vehicle));
-                                Logger.instance.i(
-                                  '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imu.config.rollGain}''',
-                                );
-                              },
-                            );
-                          },
-                          max: 2,
-                          divisions: 20,
-                        ),
-                      ],
+                                      );
+                                      ref.read(simInputProvider.notifier).send(
+                                            ref
+                                                .read(
+                                                  mainVehicleProvider.select(
+                                                    (value) => value.imu.config,
+                                                  ),
+                                                )
+                                                .copyWith(rollGain: rollGain),
+                                          );
+                                      // Wait a short while before saving the
+                                      // hopefully updated vehicle.
+                                      Timer(
+                                        const Duration(milliseconds: 100),
+                                        () {
+                                          final vehicle =
+                                              ref.watch(mainVehicleProvider);
+                                          ref.read(
+                                            saveVehicleProvider(vehicle),
+                                          );
+                                          Logger.instance.i(
+                                            '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imu.config.rollGain}''',
+                                          );
+                                        },
+                                      );
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Apply'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
               Consumer(
                 child: Text(
