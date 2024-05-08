@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:math';
+
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:flutter/material.dart';
@@ -28,41 +30,60 @@ class EquipmentTypeSelectorPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(16),
-          child: _EquipmentTypeSelector(),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            width: 500,
-            child: Column(
-              children: [
-                Consumer(
-                  builder: (context, ref, child) => TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.label_outline),
-                      labelText: 'Name',
+    final theme = Theme.of(context);
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: _EquipmentTypeSelector(),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: SizedBox(
+              width: 300,
+              child: Column(
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) => TextFormField(
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.label_outline),
+                        labelText: 'Name',
+                      ),
+                      controller: ref.watch(
+                        configuredEquipmentNameTextControllerProvider,
+                      ),
+                      keyboardType: TextInputType.text,
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: (value) => value == null ||
+                              (value.isEmpty || value.startsWith(' '))
+                          ? 'No name entered!'
+                          : null,
                     ),
-                    controller: ref.watch(
-                      configuredEquipmentNameTextControllerProvider,
-                    ),
-                    keyboardType: TextInputType.text,
-                    autovalidateMode: AutovalidateMode.always,
-                    validator: (value) => value != null &&
-                            value.isNotEmpty &&
-                            !value.startsWith(' ')
-                        ? null
-                        : '''No name entered! Please enter a name so that the config can be saved!''',
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+          Consumer(
+            builder: (context, ref, child) => switch (ref.watch(
+              configuredEquipmentProvider.select(
+                (value) =>
+                    value.name == null ||
+                    (value.name!.isEmpty || value.name!.startsWith(' ')),
+              ),
+            )) {
+              true => child ?? const SizedBox.shrink(),
+              false => const SizedBox.shrink(),
+            },
+            child: Text(
+              'Please enter a name so that the config can be saved!',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.error),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -78,100 +99,81 @@ class _EquipmentTypeSelector extends ConsumerWidget {
 
     final equipment = ref.watch(configuredEquipmentProvider);
 
-    return SizedBox(
-      height: 220,
-      child: Material(
-        type: MaterialType.transparency,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: SizedBox(
-                width: 200,
-                height: 200,
-                child: ListTile(
-                  title: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: Text(
-                          'Three point hitch\n(fixed hitch)',
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black,
-                          ),
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 18,
-                        // TODO(dudlileif): Make three point hitch icon
-                        child: Icon(Icons.workspaces, size: 100),
-                      ),
-                    ],
-                  ),
-                  selected: equipment.hitchType == HitchType.fixed,
-                  selectedTileColor: theme.toggleButtonsTheme.splashColor,
-                  onTap: () {
-                    ref.read(configuredEquipmentProvider.notifier).update(
-                          Equipment(hitchType: HitchType.fixed),
-                        );
-                    ref.invalidate(
-                      configuredEquipmentNameTextControllerProvider,
-                    );
-                  },
-                ),
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) => SegmentedButton<HitchType>(
+        showSelectedIcon: false,
+        style: theme.segmentedButtonTheme.style?.copyWith(
+          shape: const MaterialStatePropertyAll(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16)),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: SizedBox(
-                width: 200,
-                height: 200,
-                child: ListTile(
-                  title: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: Text(
-                          'Towbar hitch',
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black,
-                          ),
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 18,
-                        // TODO(dudlileif): Make towbar hitch icon
-                        child: Icon(Icons.commit, size: 100),
-                      ),
-                    ],
-                  ),
-                  selected: equipment.hitchType == HitchType.towbar,
-                  selectedTileColor: theme.toggleButtonsTheme.splashColor,
-                  onTap: () {
-                    ref.read(configuredEquipmentProvider.notifier).update(
-                          Equipment(hitchType: HitchType.towbar),
-                        );
-                    ref.invalidate(
-                      configuredEquipmentNameTextControllerProvider,
-                    );
-                  },
-                ),
-              ),
+          ),
+          padding: const MaterialStatePropertyAll(EdgeInsets.all(8)),
+          iconSize: MaterialStatePropertyAll(
+            min(
+              100,
+              constraints.biggest.shortestSide / 4,
             ),
-          ],
+          ),
+          iconColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
+              return theme.primaryColor;
+            }
+            return null;
+          }),
+          textStyle: MaterialStatePropertyAll(
+            theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
+        onSelectionChanged: (values) {
+          ref.read(configuredEquipmentProvider.notifier).update(
+                Equipment(hitchType: values.first),
+              );
+          ref.invalidate(
+            configuredEquipmentNameTextControllerProvider,
+          );
+        },
+        selected: {equipment.hitchType},
+        segments: [
+          const ButtonSegment(
+            value: HitchType.fixed,
+            label: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Fixed hitch',
+                  textAlign: TextAlign.center,
+                ),
+                Icon(
+                  Icons.workspaces,
+                ),
+              ],
+            ),
+          ),
+          ButtonSegment(
+            value: HitchType.towbar,
+            label: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Towbar hitch',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                ),
+                const Icon(
+                  Icons.commit,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

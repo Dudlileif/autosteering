@@ -94,11 +94,11 @@ class EquipmentSectionsPage extends ConsumerWidget {
                       runSpacing: 8,
                       children: [
                         ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 200),
+                          constraints: const BoxConstraints(maxWidth: 220),
                           child: const _SectionWidthExpansionTile(),
                         ),
                         ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 250),
+                          constraints: const BoxConstraints(maxWidth: 275),
                           child: const _SectionWorkingWidthExpansionTile(),
                         ),
                       ],
@@ -143,7 +143,7 @@ class EquipmentSectionsPage extends ConsumerWidget {
                                         curve: Curves.easeInOutCubicEmphasized,
                                       ),
                                       child: Text(
-                                        '${(equipment.sections.length / 2).ceil()}',
+                                        '''${(equipment.sections.length / 2).ceil()}''',
                                       ),
                                     ),
                                     TextButton(

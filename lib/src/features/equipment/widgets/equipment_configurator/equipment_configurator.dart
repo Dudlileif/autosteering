@@ -44,7 +44,15 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
   late final tabController = TabController(
     length: pages.length,
     vsync: this,
-    initialIndex: ref.read(equipmentConfiguratorIndexProvider),
+    initialIndex: ref.read(
+      configuredEquipmentProvider.select(
+        (value) =>
+            value.name == null ||
+            (value.name!.isEmpty || value.name!.startsWith(' ')),
+      ),
+    )
+        ? 0
+        : ref.read(equipmentConfiguratorIndexProvider),
   );
   static const pages = [
     EquipmentTypeSelectorPage(),
@@ -63,7 +71,7 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
     tabController.addListener(() {
       ref
           .read(equipmentConfiguratorIndexProvider.notifier)
-          .update(tabController.index);
+          .update((tabController.index + tabController.offset).round());
     });
   }
 
@@ -74,101 +82,157 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final destinations = [
-      const NavigationRailDestination(
-        icon: Icon(Icons.handyman),
-        label: Text('Type'),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(Icons.expand),
-        label: const Text('Dimensions'),
-        disabled: ref.watch(
-          configuredEquipmentProvider
-              .select((value) => value.name?.isEmpty ?? true),
-        ),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(Icons.view_column),
-        label: const Text('Sections'),
-        disabled: ref.watch(
-          configuredEquipmentProvider
-              .select((value) => value.name?.isEmpty ?? true),
-        ),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(Icons.square_rounded),
-        label: const Text('Decoration'),
-        disabled: ref.watch(
-          configuredEquipmentProvider
-              .select((value) => value.name?.isEmpty ?? true),
-        ),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(Icons.commit),
-        label: const Text('Hitches'),
-        disabled: ref.watch(
-          configuredEquipmentProvider
-              .select((value) => value.name?.isEmpty ?? true),
-        ),
-      ),
-    ];
-
-    return Dialog(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      Text(
-                        'Configure equipment',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const _ApplyConfigurationToAttachedEquipmentButton(),
-                    ],
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: CloseButton(),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SingleChildScrollView(
-                  child: IntrinsicHeight(
-                    child: Consumer(
-                      builder: (context, ref, child) => NavigationRail(
-                        backgroundColor: Colors.transparent,
-                        labelType: NavigationRailLabelType.all,
-                        destinations: destinations,
-                        selectedIndex: ref.watch(
-                          equipmentConfiguratorIndexProvider,
+  Widget build(BuildContext context) => Dialog(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        Text(
+                          'Configure equipment',
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
-                        onDestinationSelected: tabController.animateTo,
-                      ),
+                        const _ApplyConfigurationToAttachedEquipmentButton(),
+                      ],
                     ),
                   ),
-                ),
-                const VerticalDivider(),
-                Expanded(
-                  child: Consumer(
-                    builder: (context, ref, child) => Column(
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: CloseButton(),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final disabled = ref.watch(
+                    configuredEquipmentProvider.select(
+                      (value) =>
+                          value.name == null ||
+                          (value.name!.isEmpty || value.name!.startsWith(' ')),
+                    ),
+                  );
+
+                  final orientation = MediaQuery.orientationOf(context);
+                  if (orientation == Orientation.portrait ||
+                      (constraints.maxHeight > 250 &&
+                          constraints.maxWidth > 800)) {
+                    final tabs = [
+                      const Tab(
+                        icon: Icon(Icons.handyman),
+                        text: 'Type',
+                      ),
+                      const Tab(
+                        icon: Icon(Icons.expand),
+                        text: 'Dimensions',
+                      ),
+                      const Tab(
+                        icon: Icon(Icons.view_column),
+                        text: 'Sections',
+                      ),
+                      const Tab(
+                        icon: Icon(Icons.square_rounded),
+                        text: 'Decoration',
+                      ),
+                      const Tab(
+                        icon: Icon(Icons.commit),
+                        text: 'Hitches',
+                      ),
+                    ];
+
+                    return Column(
                       children: [
-                        Row(
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final tabBar = TabBar(
+                              tabAlignment: constraints.maxWidth < 500
+                                  ? TabAlignment.center
+                                  : TabAlignment.fill,
+                              isScrollable: constraints.maxWidth < 500,
+                              padding: const EdgeInsets.all(8),
+                              dividerHeight: 1,
+                              dividerColor: Theme.of(context).dividerColor,
+                              controller: tabController,
+                              tabs: tabs,
+                            );
+                            if (disabled) {
+                              return IgnorePointer(child: tabBar);
+                            }
+                            return tabBar;
+                          },
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            controller: tabController,
+                            physics: disabled
+                                ? const NeverScrollableScrollPhysics()
+                                : null,
+                            children: pages,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  final destinations = [
+                    const NavigationRailDestination(
+                      icon: Icon(Icons.handyman),
+                      label: Text('Type'),
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.expand),
+                      label: const Text('Dimensions'),
+                      disabled: disabled,
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.view_column),
+                      label: const Text('Sections'),
+                      disabled: disabled,
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.square_rounded),
+                      label: const Text('Decoration'),
+                      disabled: disabled,
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.commit),
+                      label: const Text('Hitches'),
+                      disabled: disabled,
+                    ),
+                  ];
+
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SingleChildScrollView(
+                        child: IntrinsicHeight(
+                          child: Consumer(
+                            builder: (context, ref, child) => NavigationRail(
+                              backgroundColor: Colors.transparent,
+                              labelType: NavigationRailLabelType.all,
+                              destinations: destinations,
+                              selectedIndex: ref.watch(
+                                equipmentConfiguratorIndexProvider,
+                              ),
+                              onDestinationSelected: tabController.animateTo,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const VerticalDivider(),
+                      Expanded(
+                        child: Consumer(
+                          builder: (context, ref, child) => Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ListenableBuilder(
@@ -189,17 +253,23 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
                                 ),
                               ),
                             ),
+                              Expanded(
+                                child: Consumer(
+                                  builder: (context, ref, child) => TabBarView(
+                                    controller: tabController,
+                                    physics: disabled
+                                        ? const NeverScrollableScrollPhysics()
+                                        : null,
+                                    children: pages,
+                                  ),
+                                ),
+                              ),
                             ListenableBuilder(
                               listenable: tabController,
                               builder: (context, child) => AnimatedOpacity(
                                 opacity: tabController.index <
                                             pages.length - 1 &&
-                                        ref.watch(
-                                          configuredEquipmentProvider.select(
-                                            (value) =>
-                                                value.name?.isNotEmpty ?? false,
-                                          ),
-                                        )
+                                              !disabled
                                     ? 1
                                     : 0,
                                 duration: Durations.medium1,
@@ -208,14 +278,7 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
                                   child: IconButton.filled(
                                     onPressed: tabController.index <
                                                 pages.length - 1 &&
-                                            ref.watch(
-                                              configuredEquipmentProvider
-                                                  .select(
-                                                (value) =>
-                                                    value.name?.isNotEmpty ??
-                                                    false,
-                                              ),
-                                            )
+                                              !disabled
                                         ? () => tabController.animateTo(
                                               tabController.index + 1,
                                             )
@@ -226,33 +289,17 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
                               ),
                             ),
                           ],
-                        ),
-                        Expanded(
-                          child: Consumer(
-                            builder: (context, ref, child) => TabBarView(
-                              controller: tabController,
-                              physics: ref.watch(
-                                configuredEquipmentProvider.select(
-                                  (value) => value.name?.isEmpty ?? true,
-                                ),
-                              )
-                                  ? const NeverScrollableScrollPhysics()
-                                  : null,
-                              children: pages,
-                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                      ),
+                    ],
+                  );
+                },
             ),
           ),
         ],
       ),
-    );
-  }
+      );
 }
 
 /// A button that applies the equipment configuration in
@@ -267,10 +314,14 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
         onPressed: ref.watch(
-          configuredEquipmentProvider
-              .select((value) => value.name?.isNotEmpty ?? false),
+          configuredEquipmentProvider.select(
+            (value) =>
+                value.name == null ||
+                (value.name!.isEmpty || value.name!.startsWith(' ')),
+          ),
         )
-            ? () {
+            ? null
+            : () {
                 final equipment = ref.watch(configuredEquipmentProvider)
                   ..lastUsed = DateTime.now();
 
@@ -283,7 +334,7 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
                 }
                 Navigator.of(context).pop();
               }
-            : null,
+            ,
         icon: const Icon(Icons.check),
         label: const Text('Apply configuration'),
       );

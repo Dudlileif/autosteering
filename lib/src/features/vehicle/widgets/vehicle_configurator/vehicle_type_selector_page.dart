@@ -31,94 +31,99 @@ class VehicleTypeSelectorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: SizedBox(
-                    height: min(216, constraints.maxHeight),
-                    child: const _VehicleTypeSelector(),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final textStyle =
-                          Theme.of(context).menuButtonWithChildrenText;
-                      final vehicle = ref.watch(configuredVehicleProvider);
-                      return DropdownMenu<ManufacturerColors>(
-                        leadingIcon: Icon(
-                          Icons.color_lens,
-                          color: vehicle.manufacturerColors.primary,
-                        ),
-                        initialSelection: vehicle.manufacturerColors,
-                        textStyle: textStyle,
-                        onSelected: (value) =>
-                            ref.read(configuredVehicleProvider.notifier).update(
-                                  vehicle.copyWith(manufacturerColors: value),
-                                ),
-                        dropdownMenuEntries: ManufacturerColors.values
-                            .map(
-                              (scheme) => DropdownMenuEntry<ManufacturerColors>(
-                                label: scheme.name,
-                                value: scheme,
-                                leadingIcon: Icon(
-                                  Icons.color_lens,
-                                  color: scheme.primary,
-                                ),
-                                labelWidget: Text(
-                                  scheme.name,
-                                  style: textStyle,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      );
-                    },
-                  ),
-                ),
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: SizedBox(
-                    width: 500,
-                    child: Column(
-                      children: [
-                        Consumer(
-                          builder: (context, ref, child) => TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.label_outline),
-                              labelText: 'Name',
-                            ),
-                            controller: ref.watch(
-                              configuredVehicleNameTextControllerProvider,
-                            ),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.always,
-                            validator: (value) => value != null &&
-                                    value.isNotEmpty &&
-                                    !value.startsWith(' ')
-                                ? null
-                                : '''No name entered! Please enter a name so that the config can be saved!''',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    final theme = Theme.of(context);
+    return SingleChildScrollView(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: _VehicleTypeSelector(),
             ),
-          ),
-        );
-      },
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final textStyle =
+                      Theme.of(context).menuButtonWithChildrenText;
+                  final vehicle = ref.watch(configuredVehicleProvider);
+                  return DropdownMenu<ManufacturerColors>(
+                    width: 300,
+                    leadingIcon: Icon(
+                      Icons.color_lens,
+                      color: vehicle.manufacturerColors.primary,
+                    ),
+                    initialSelection: vehicle.manufacturerColors,
+                    textStyle: textStyle,
+                    onSelected: (value) =>
+                        ref.read(configuredVehicleProvider.notifier).update(
+                              vehicle.copyWith(manufacturerColors: value),
+                            ),
+                    dropdownMenuEntries: ManufacturerColors.values
+                        .map(
+                          (scheme) => DropdownMenuEntry<ManufacturerColors>(
+                            label: scheme.name,
+                            value: scheme,
+                            leadingIcon: Icon(
+                              Icons.color_lens,
+                              color: scheme.primary,
+                            ),
+                            labelWidget: Text(
+                              scheme.name,
+                              style: textStyle,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                width: 300,
+                child: Consumer(
+                  builder: (context, ref, child) => TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.label_outline),
+                      labelText: 'Name',
+                    ),
+                    controller: ref.watch(
+                      configuredVehicleNameTextControllerProvider,
+                    ),
+                    keyboardType: TextInputType.text,
+                    autovalidateMode: AutovalidateMode.always,
+                    validator: (value) => value == null ||
+                            (value.isEmpty || value.startsWith(' '))
+                        ? 'No name entered!'
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+            Consumer(
+              builder: (context, ref, child) => switch (ref.watch(
+                configuredVehicleProvider.select(
+                  (value) =>
+                      value.name == null ||
+                      (value.name!.isEmpty || value.name!.startsWith(' ')),
+                ),
+              )) {
+                true => child ?? const SizedBox.shrink(),
+                false => const SizedBox.shrink(),
+              },
+              child: Text(
+                'Please enter a name so that the config can be saved!',
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: theme.colorScheme.error),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -130,161 +135,109 @@ class _VehicleTypeSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-
     final vehicle = ref.watch(configuredVehicleProvider);
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final minDimension = min(constraints.maxWidth, constraints.maxHeight);
         final boxSize = min(200, minDimension).toDouble();
-        return SizedBox(
-          height: boxSize + 16,
-          child: Material(
-            type: MaterialType.transparency,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: SizedBox.square(
-                    dimension: boxSize,
-                    child: ListTile(
-                      title: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            flex: 11,
-                            child: Text(
-                              minDimension / 2 > 100
-                                  ? 'Tractor\n(or front axle steering)'
-                                  : 'Tractor',
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: theme.brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 18,
-                            child: SvgPicture(
-                              height: boxSize * 0.4,
-                              width: boxSize * 0.4,
-                              SvgAssetLoader(
-                                'assets/images/vehicle_types/side_view/tractor_side_view.svg',
-                                colorMapper: _VehicleSideColorMapper(
-                                  vehicle.manufacturerColors,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      selected: vehicle is Tractor,
-                      selectedTileColor: theme.toggleButtonsTheme.splashColor,
-                      onTap: () {
-                        ref.read(configuredVehicleProvider.notifier).update(
-                              PreconfiguredVehicles.tractor,
-                            );
-                        ref.invalidate(
-                          configuredVehicleNameTextControllerProvider,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: SizedBox.square(
-                    dimension: boxSize,
-                    child: ListTile(
-                      title: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            flex: 11,
-                            child: Text(
-                              minDimension / 2 > 100
-                                  ? '''Articulated tractor\n(or articulated steering)'''
-                                  : 'Articulated',
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: theme.brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                          ),
-                          // TODO(dudlileif): make Articulated Tractor drawing
-                          const Expanded(
-                            flex: 18,
-                            child: SizedBox.shrink(),
-                          ),
-                        ],
-                      ),
-                      selected: vehicle is ArticulatedTractor,
-                      selectedTileColor: theme.toggleButtonsTheme.splashColor,
-                      onTap: () {
-                        ref.read(configuredVehicleProvider.notifier).update(
-                              PreconfiguredVehicles.articulatedTractor,
-                            );
-                        ref.invalidate(
-                          configuredVehicleNameTextControllerProvider,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: SizedBox.square(
-                    dimension: boxSize,
-                    child: ListTile(
-                      title: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            flex: 11,
-                            child: Text(
-                              minDimension / 2 > 100
-                                  ? 'Harvester\n(or rear axle steering)'
-                                  : 'Harvester',
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: theme.brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 18,
-                            // TODO(dudlileif): make Harvester drawing
-                            child: SizedBox.shrink(),
-                          ),
-                        ],
-                      ),
-                      selected: vehicle is Harvester,
-                      selectedTileColor: theme.toggleButtonsTheme.splashColor,
-                      onTap: () {
-                        ref.read(configuredVehicleProvider.notifier).update(
-                              PreconfiguredVehicles.harvester,
-                            );
-                        ref.invalidate(
-                          configuredVehicleNameTextControllerProvider,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
+        return SegmentedButton<Type>(
+          showSelectedIcon: false,
+          style: theme.segmentedButtonTheme.style?.copyWith(
+            shape: const MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+            ),
+            padding: const MaterialStatePropertyAll(EdgeInsets.all(8)),
+            iconSize: MaterialStatePropertyAll(
+              min(
+                100,
+                constraints.biggest.shortestSide / 4,
+              ),
+            ),
+            iconColor: MaterialStateProperty.resolveWith((states) {
+              if (states.contains(MaterialState.selected)) {
+                return theme.primaryColor;
+              }
+              return null;
+            }),
+            textStyle: MaterialStatePropertyAll(
+              theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
+          onSelectionChanged: (values) {
+            ref.read(configuredVehicleProvider.notifier).update(
+                  switch (values.first) {
+                    ArticulatedTractor =>
+                      PreconfiguredVehicles.articulatedTractor,
+                    Harvester => PreconfiguredVehicles.harvester,
+                    Tractor || _ => PreconfiguredVehicles.tractor,
+                  },
+                );
+            ref.invalidate(configuredVehicleNameTextControllerProvider);
+          },
+          selected: {vehicle.runtimeType},
+          segments: [
+            ButtonSegment(
+              value: Tractor,
+              label: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    minDimension / 2 > 150
+                        ? 'Tractor\n(or front axle steering)'
+                        : 'Tractor',
+                    textAlign: TextAlign.center,
+                  ),
+                  SvgPicture(
+                    height: boxSize * 0.4,
+                    width: boxSize * 0.4,
+                    SvgAssetLoader(
+                      'assets/images/vehicle_types/side_view/tractor_side_view.svg',
+                      colorMapper: _VehicleSideColorMapper(
+                        vehicle.manufacturerColors,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ButtonSegment(
+              value: ArticulatedTractor,
+              label: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    minDimension / 2 > 150
+                        ? '''Articulated tractor\n(or articulated steering)'''
+                        : 'Articulated',
+                    textAlign: TextAlign.center,
+                  ),
+                  // TODO(dudlileif): make Articulated Tractor drawing
+                  const SizedBox.shrink(),
+                ],
+              ),
+            ),
+            ButtonSegment(
+              value: Harvester,
+              label: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    minDimension / 2 > 150
+                        ? 'Harvester\n(or rear axle steering)'
+                        : 'Harvester',
+                    textAlign: TextAlign.center,
+                  
+                  ),
+                  const SizedBox.shrink(),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );
