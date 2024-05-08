@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// A menu for configuring the NTRIP Client settings.
 class NtripMenu extends ConsumerWidget {
@@ -182,7 +183,9 @@ class NtripMenu extends ConsumerWidget {
                   children: [
                     TextSpan(
                       text: fileEntitySize(dataUsage),
-                      style: textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                      style: GoogleFonts.robotoMono(
+                        textStyle: textStyle,
+                      ),
                     ),
                   ],
                 ),
@@ -210,7 +213,9 @@ class NtripMenu extends ConsumerWidget {
                       TextSpan(
                         text: fileEntitySize(dataUsage),
                         style:
-                            textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                            GoogleFonts.robotoMono(
+                          textStyle: textStyle,
+                        ),
                       ),
                     ],
                   ),

@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// A widget with buttons for toggling active sections of equipment.
 class EquipmentSectionButtons extends ConsumerWidget {
@@ -48,47 +49,24 @@ class EquipmentSectionButtons extends ConsumerWidget {
                   (equipment) => Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: switch (equipment.sections.length == 1) {
-                      true => SizedBox(
-                          height: 40,
-                          width: 80,
-                          child: Material(
-                            type: MaterialType.button,
-                            clipBehavior: Clip.antiAlias,
-                            color: equipment.sections.first.active
-                                ? equipment.sections.first.color ?? Colors.green
-                                : Colors.grey,
-                            borderRadius: BorderRadius.circular(8),
-                            child: InkWell(
-                              splashFactory: theme.splashFactory,
-                              splashColor: equipment.sections.first.active
-                                  ? Colors.red
-                                  : equipment.sections.first.color ??
-                                      Colors.green,
-                              onTap: () => ref
-                                  .read(
-                                simInputProvider.notifier,
-                              )
-                                  .send(
-                                (
-                                  uuid: equipment.uuid,
-                                  activeSections: (equipment
-                                        ..toggleSection(
-                                          0,
-                                        ))
-                                      .sectionActivationStatus
-                                ),
-                              ),
-                              child: Center(
-                                child: TextWithStroke(
-                                  equipment.sections.first.active
-                                      ? 'On'
-                                      : 'Off',
-                                  style: textStyle,
-                                  strokeWidth: 3.5,
-                                ),
-                              ),
+                      true => _SectionButton(
+                          section: equipment.sections.first,
+                          onTap: () => ref
+                              .read(
+                            simInputProvider.notifier,
+                          )
+                              .send(
+                            (
+                              uuid: equipment.uuid,
+                              activeSections: (equipment
+                                    ..toggleSection(
+                                      0,
+                                    ))
+                                  .sectionActivationStatus
                             ),
                           ),
+                          overrideOnText: 'ON',
+                          overrideOffText: 'OFF',
                         ),
                       false => Column(
                           mainAxisSize: MainAxisSize.min,
@@ -235,9 +213,16 @@ class EquipmentSectionButtons extends ConsumerWidget {
 }
 
 class _SectionButton extends ConsumerStatefulWidget {
-  const _SectionButton({required this.section, required this.onTap});
+  const _SectionButton({
+    required this.section,
+    required this.onTap,
+    this.overrideOnText,
+    this.overrideOffText,
+  });
   final Section section;
   final void Function() onTap;
+  final String? overrideOnText;
+  final String? overrideOffText;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => __SectionButtonState();
@@ -364,10 +349,13 @@ class __SectionButtonState extends ConsumerState<_SectionButton>
           onTap: widget.onTap,
           child: Center(
             child: TextWithStroke(
-              '${widget.section.index + 1}',
-              style: theme.textTheme.bodyLarge?.copyWith(
+              widget.section.active
+                  ? widget.overrideOnText ?? '${widget.section.index + 1}'
+                  : widget.overrideOffText ?? '${widget.section.index + 1}',
+              style: GoogleFonts.robotoMono(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
+                textStyle: theme.textTheme.bodyLarge,
               ),
               strokeWidth: 3.5,
             ),

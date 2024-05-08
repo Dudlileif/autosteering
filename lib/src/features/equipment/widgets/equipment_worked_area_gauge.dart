@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// A simple gauge for showing the worked area of the first registered
 /// equipment in the [EquipmentWorkedArea] provider.
@@ -53,10 +54,10 @@ ${area != null ? (area / 1e4).toStringAsFixed(2) : '-'} / ${(fieldArea! / 1e4).t
 ${area != null ? '${(100 * area / fieldArea).clamp(0, 100).toStringAsFixed(1)}%' : ''}''',
             false => '${(area! / 1e4).toStringAsFixed(2)} ha',
           },
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Colors.white,
-                fontFamily: 'Noto Sans Mono',
-              ),
+          style: GoogleFonts.robotoMono(
+            color: Colors.white,
+            textStyle: Theme.of(context).textTheme.titleMedium,
+          ),
           strokeWidth: 3.5,
         ),
       );

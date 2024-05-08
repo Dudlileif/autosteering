@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 
 /// A menu for showing and updating the default home position.
@@ -42,23 +43,21 @@ class HomePositionMenu extends StatelessWidget {
               return SelectableText.rich(
                 TextSpan(
                   text: 'Lat:',
-                  style: textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                  style: GoogleFonts.robotoMono(textStyle: textStyle),
                   children: [
                     TextSpan(
                       text:
                           '''${position.latitude.toStringAsFixed(9).padLeft(14)}°''',
-                      style: textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                      style: GoogleFonts.robotoMono(textStyle: textStyle),
                     ),
                     TextSpan(
                       text: '\nLon:',
-                      style: textStyle?.copyWith(fontFamily: 'Noto Sans Mono'),
+                      style: GoogleFonts.robotoMono(textStyle: textStyle),
                       children: [
                         TextSpan(
                           text:
                               '''${position.longitude.toStringAsFixed(9).padLeft(14)}°''',
-                          style: textStyle?.copyWith(
-                            fontFamily: 'Noto Sans Mono',
-                          ),
+                          style: GoogleFonts.robotoMono(textStyle: textStyle),
                         ),
                       ],
                     ),
@@ -155,7 +154,10 @@ class _EnterHomePositionDialogState
             builder: (context, ref, child) {
               return TextFormField(
                 decoration: const InputDecoration(
-                  icon: Icon(Icons.navigation),
+                  icon: RotatedBox(
+                    quarterTurns: 1,
+                    child: Icon(Icons.navigation),
+                  ),
                   labelText: 'Longitude (E/W)',
                   suffixText: '°',
                 ),

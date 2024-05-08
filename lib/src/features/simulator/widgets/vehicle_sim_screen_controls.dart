@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Basic on screen controls for the simulated vehicle.
 ///
@@ -54,9 +55,10 @@ class SimVehicleVelocityControls extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: Text(
                     'STOP',
-                    style: theme.textTheme.labelLarge?.copyWith(
+                    style: GoogleFonts.robotoMono(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      textStyle: theme.textTheme.labelLarge,
                     ),
                   ),
                 ),
@@ -92,21 +94,20 @@ class SimVehicleVelocityControls extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TextWithStroke(
                           'Velocity',
-                          style:
-                              theme.textTheme.titleMedium?.copyWith(
-                                    color: Colors.white,
-                                    fontFamily: 'Noto Sans Mono',
-                                  ),
+                          style: GoogleFonts.robotoMono(
+                            color: Colors.white,
+                            textStyle: theme.textTheme.titleMedium,
+                          ),
                           strokeWidth: 3.5,
                         ),
                       ),
                       TextWithStroke(
-                        '${velocity.toStringAsFixed(1)} m/s',
+                        '${velocity.toStringAsFixed(1).padLeft(5)} m/s',
                         style:
-                            theme.textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontFamily: 'Noto Sans Mono',
-                                ),
+                          GoogleFonts.robotoMono(
+                          color: Colors.white,
+                          textStyle: theme.textTheme.titleMedium,
+                        ),
                         strokeWidth: 3.5,
                       ),
                       RotatedBox(
@@ -178,7 +179,11 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
     final steeringAngle = overrideEnabled
         ? ref.watch(overrideSteeringAngleProvider)
         : ref.watch(
-            mainVehicleProvider.select((vehicle) => vehicle.steeringAngle),
+            mainVehicleProvider.select(
+              (vehicle) => vehicle is AxleSteeredVehicle
+                  ? vehicle.ackermannSteering.innerAngle
+                  : vehicle.steeringAngle,
+            ),
           );
 
     final steeringAngleMax = ref.watch(
@@ -204,11 +209,11 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
                 : null,
           ),
         TextWithStroke(
-          '''Steering:${steeringAngle.toStringAsFixed(1).padLeft(5)}°''',
-          style: theme
-              .textTheme
-              .titleMedium
-              ?.copyWith(color: Colors.white, fontFamily: 'Noto Sans Mono'),
+          '''Steering:${steeringAngle.toStringAsFixed(1).padLeft(6)}°''',
+          style: GoogleFonts.robotoMono(
+            color: Colors.white,
+            textStyle: theme.textTheme.titleMedium,
+          ),
           strokeWidth: 3.5,
         ),
         SizedBox(

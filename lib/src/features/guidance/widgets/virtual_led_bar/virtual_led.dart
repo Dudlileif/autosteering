@@ -94,7 +94,7 @@ class _VirtualLedPainter extends CustomPainter {
 
       canvas.drawCircle(
         size.center(Offset.zero),
-        size.shortestSide,
+        size.shortestSide * 0.875,
         Paint()..shader = shader,
       );
     }
