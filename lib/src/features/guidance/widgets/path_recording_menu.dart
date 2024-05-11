@@ -295,7 +295,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                     switch (target) {
                       PathRecordingTarget.abCurve => 'Create AB curve',
                       PathRecordingTarget.field =>
-                        'Use as field exterior boundary',
+                        'Use as exterior boundary',
                       PathRecordingTarget.pathTracking =>
                         'Create path tracking',
                     },
@@ -319,7 +319,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       )
                       ..invalidate(finishedPathRecordingListProvider),
                     child:
-                        Text('Add field interior boundary', style: textStyle),
+                        Text('Add interior boundary', style: textStyle),
                   ),
                 ],
               ],
