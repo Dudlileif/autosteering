@@ -175,38 +175,31 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
             final nmea = ref.watch(gnssCurrentSentenceProvider);
             final fixQuality = nmea?.fixQuality ?? GnssFixQuality.notAvailable;
             final numSatellites = nmea?.numSatellites ?? 0;
-            return Stack(
-              children: [
-                Align(
-                  child: Icon(
-                    Icons.satellite_alt,
-                    size: widget.size,
-                    color: switch (fixQuality) {
-                      GnssFixQuality.rtk => Colors.green,
-                      GnssFixQuality.floatRTK ||
-                      GnssFixQuality.ppsFix =>
-                        Colors.lime,
-                      GnssFixQuality.differentialFix => Colors.yellow,
-                      GnssFixQuality.fix => Colors.orange,
-                      GnssFixQuality.notAvailable => Colors.red,
-                      GnssFixQuality.manualInput => Colors.purple,
-                      GnssFixQuality.simulation => Colors.blue,
-                      GnssFixQuality.estimated => Colors.blueGrey,
-                    },
-                    shadows: const [
-                      Shadow(offset: Offset(1, 0)),
-                      Shadow(offset: Offset(0, 1)),
-                    ],
-                  ),
+            return Badge.count(
+              count: numSatellites,
+              child: Transform.flip(
+                flipX: true,
+                child: Icon(
+                  Icons.satellite_alt,
+                  size: widget.size,
+                  color: switch (fixQuality) {
+                    GnssFixQuality.rtk => Colors.green,
+                    GnssFixQuality.floatRTK ||
+                    GnssFixQuality.ppsFix =>
+                      Colors.lime,
+                    GnssFixQuality.differentialFix => Colors.yellow,
+                    GnssFixQuality.fix => Colors.orange,
+                    GnssFixQuality.notAvailable => Colors.red,
+                    GnssFixQuality.manualInput => Colors.purple,
+                    GnssFixQuality.simulation => Colors.blue,
+                    GnssFixQuality.estimated => Colors.blueGrey,
+                  },
+                  shadows: const [
+                    Shadow(offset: Offset(1, 0)),
+                    Shadow(offset: Offset(0, 1)),
+                  ],
                 ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Card(
-                    margin: EdgeInsets.zero,
-                    child: Text('$numSatellites'),
-                  ),
-                ),
-              ],
+              ),
             );
           },
         ),

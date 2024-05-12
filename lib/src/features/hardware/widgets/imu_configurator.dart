@@ -38,9 +38,11 @@ class ImuConfigurator extends StatelessWidget {
       child: SizedBox(
         width: 300,
         child: Scaffold(
+          primary: false,
           backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
           appBar: AppBar(
             primary: false,
+            scrolledUnderElevation: 0,
             title: const Text('IMU Configurator'),
             actions: [
               Padding(

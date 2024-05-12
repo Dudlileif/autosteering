@@ -37,6 +37,8 @@ class MainScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 20,
+        scrolledUnderElevation: 20,
         title: LayoutBuilder(
           builder: (context, constraints) =>
               switch (constraints.maxWidth < 300) {

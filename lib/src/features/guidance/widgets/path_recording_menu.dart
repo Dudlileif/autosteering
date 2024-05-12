@@ -69,6 +69,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
         child: Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
           appBar: AppBar(
+            scrolledUnderElevation: 0,
             primary: false,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
