@@ -243,7 +243,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   void setSteeringAngleByWasReading() {
     final innerWheelAngle = switch (wasReadingNormalizedInRange < 0) {
       true => (wasReadingNormalizedInRange * steeringAngleMaxRaw)
-          .clamp(steeringAngleMaxRaw, 0.0),
+          .clamp(-steeringAngleMaxRaw, 0.0),
       false => (wasReadingNormalizedInRange * steeringAngleMaxRaw)
           .clamp(0.0, steeringAngleMaxRaw)
     };
