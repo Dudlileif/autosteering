@@ -21,7 +21,6 @@
 enum SettingsKey {
   gaugesAverageCount('gauges.average_count'),
   hardwareAdress('hardware.network.address'),
-  hardwareNetworkSendMessages('hardware.network.send_messages'),
   hardwareUDPReceivePort('hardware.network.udp.receive_port'),
   hardwareUDPSendPort('hardware.network.udp.send_port'),
   hardwareSerialBaudRate('hardware.serial.baud_rate'),

@@ -46,9 +46,6 @@ class SimulatorCoreState {
   /// A stream controller for sending messages to the main thread.
   StreamController<dynamic> mainThreadSendStream;
 
-  /// Whether the Simulator Core should send messages to the hardware.
-  bool sendMessagesToHardware = false;
-
   /// Whether the simulation should accept incoming control input from
   /// keyboard, gamepad, sliders etc...
   bool allowManualSimInput = false;
@@ -210,12 +207,8 @@ class SimulatorCoreState {
   void handleMessage(dynamic message) {
     // Force update to reflect changes in case we haven't moved.
     forceChange = true;
-    // Enable/disable sending messages to the hardware.
-    if (message is ({bool sendMessagesToHardware})) {
-      sendMessagesToHardware = message.sendMessagesToHardware;
-    }
     // Set the vehicle to simulate.
-    else if (message is Vehicle) {
+    if (message is Vehicle) {
       vehicle = message.copyWith(
         velocity: vehicle?.velocity,
         bearing: vehicle?.bearing,

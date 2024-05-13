@@ -194,7 +194,6 @@ class EquipmentSectionsPage extends ConsumerWidget {
                                     primary: false,
                                     controller: controller,
                                     scrollDirection: Axis.horizontal,
-                                    // cacheExtent: equipment.sections.length * 300,
                                     slivers: [
                                       SliverList.builder(
                                         itemCount: equipment.sections.length,

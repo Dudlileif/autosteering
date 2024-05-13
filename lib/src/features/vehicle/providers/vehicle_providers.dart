@@ -253,7 +253,7 @@ FutureOr<Vehicle?> importVehicle(
         vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json as Map));
       } catch (error, stackTrace) {
         Logger.instance.w(
-          'Failed to vehicle.',
+          'Failed to import vehicle.',
           error: error,
           stackTrace: stackTrace,
         );

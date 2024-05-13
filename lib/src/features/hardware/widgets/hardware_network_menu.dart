@@ -17,7 +17,6 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
-import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -86,21 +85,6 @@ $ip''',
             },
           ),
         ],
-        Consumer(
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(sendMessagesToHardwareIfNetworkProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(sendMessagesToHardwareIfNetworkProvider.notifier)
-                    .update(value: value)
-                : null,
-            title: Text(
-              'Send messages',
-              style: textStyle,
-            ),
-            secondary: const Icon(Icons.message),
-          ),
-        ),
         ListTile(
           leading: Column(
             children: [
@@ -116,7 +100,7 @@ $ip''',
           title: Consumer(
             builder: (context, ref, child) {
               final controller = TextEditingController(
-                text: ref.read(steeringHardwareAddressProvider),
+                text: ref.watch(steeringHardwareAddressProvider),
               );
               return TextFormField(
                 decoration: InputDecoration(
@@ -164,7 +148,7 @@ $ip''',
                   ),
                 ),
                 controller: controller,
-                onChanged:
+                onFieldSubmitted:
                     ref.read(steeringHardwareAddressProvider.notifier).update,
               );
             },
@@ -185,7 +169,7 @@ $ip''',
           title: Consumer(
             builder: (context, ref, child) {
               final controller = TextEditingController(
-                text: ref.read(remoteControlHardwareAddressProvider),
+                text: ref.watch(remoteControlHardwareAddressProvider),
               );
               return TextFormField(
                 decoration: InputDecoration(
@@ -233,7 +217,7 @@ $ip''',
                   ),
                 ),
                 controller: controller,
-                onChanged: ref
+                onFieldSubmitted: ref
                     .read(remoteControlHardwareAddressProvider.notifier)
                     .update,
               );
