@@ -112,8 +112,10 @@ class SimulatorCore {
 
     Endpoint? steeringHardwareEndPoint;
     Endpoint? remoteControlEndPoint;
-    Endpoint? endPoint;
-    UDP? udp;
+    Endpoint? receiveEndPoint;
+    Endpoint? sendEndPoint;
+    UDP? receiveUdp;
+    UDP? sendUdp;
 
     final steeringHardwareUdpSendStream = StreamController<Uint8List>();
     final remoteControlHardwareUdpSendStream = StreamController<Uint8List>();
@@ -123,16 +125,38 @@ class SimulatorCore {
       ..remoteControlSendStream = remoteControlHardwareUdpSendStream;
 
     steeringHardwareUdpSendStream.stream.listen(
-      (event) {
-        if (udp != null && steeringHardwareEndPoint != null) {
-          udp!.send(event, steeringHardwareEndPoint!);
+      (event) async {
+        if (sendUdp != null && steeringHardwareEndPoint != null) {
+          try {
+            await sendUdp!.send(event, steeringHardwareEndPoint!);
+          } catch (error, stackTrace) {
+            updateMainThreadStream.add(
+              LogEvent(
+                Level.error,
+                'UDP steering hardware send error.',
+                error: error,
+                stackTrace: stackTrace,
+              ),
+            );
+          }
         }
       },
     );
     remoteControlHardwareUdpSendStream.stream.listen(
-      (event) {
-        if (udp != null && remoteControlEndPoint != null) {
-          udp!.send(event, remoteControlEndPoint!);
+      (event) async {
+        if (sendUdp != null && remoteControlEndPoint != null) {
+          try {
+            await sendUdp!.send(event, remoteControlEndPoint!);
+          } catch (error, stackTrace) {
+            updateMainThreadStream.add(
+              LogEvent(
+                Level.error,
+                'UDP remote control send error.',
+                error: error,
+                stackTrace: stackTrace,
+              ),
+            );
+          }
         }
       },
     );
@@ -168,16 +192,36 @@ class SimulatorCore {
           if (datagram.address != remoteControlEndPoint?.address) {
             updateMainThreadStream
                 .add((remoteControlHardwareAddress: datagram.address));
-          } else {
-            updateMainThreadStream.add((remoteControlHeartbeat: true));
           }
+          updateMainThreadStream.add((remoteControlHeartbeat: true));
         }
       }
     }
 
+    Future<void> setupSendUdp() async {
+      sendEndPoint = Endpoint.any();
+      sendUdp?.close();
+
+      updateMainThreadStream.add(
+        LogEvent(
+          Level.info,
+          'Closed current UDP send instance and sockets.',
+        ),
+      );
+      if (sendEndPoint != null) {
+        sendUdp = await UDP.bind(sendEndPoint!);
+      }
+      updateMainThreadStream.add(
+        LogEvent(
+          Level.info,
+          '''Set up local UDP send endpoint on IP: ${sendUdp?.local.address}, port: ${sendUdp?.local.port?.value}''',
+        ),
+      );
+    }
+
     Future<void> setupReceiveUdp(int receivePort) async {
-      endPoint = Endpoint.any(port: Port(receivePort));
-      udp?.close();
+      receiveEndPoint = Endpoint.any(port: Port(receivePort));
+      receiveUdp?.close();
 
       updateMainThreadStream.add(
         LogEvent(
@@ -185,17 +229,17 @@ class SimulatorCore {
           'Closed current UDP receive instance and sockets.',
         ),
       );
-      if (endPoint != null) {
-        udp = await UDP.bind(endPoint!);
+      if (receiveEndPoint != null) {
+        receiveUdp = await UDP.bind(receiveEndPoint!);
       }
       updateMainThreadStream.add(
         LogEvent(
           Level.info,
-          '''Set up local UDP receive endpoint on IP: ${udp?.local.address}, port: ${udp?.local.port?.value}''',
+          '''Set up local UDP receive endpoint on IP: ${receiveUdp?.local.address}, port: ${receiveUdp?.local.port?.value}''',
         ),
       );
 
-      udp?.asStream().listen(handleUdpData);
+      receiveUdp?.asStream().listen(handleUdpData);
     }
 
     Timer? steeringAddressLookupRetryTimer;
@@ -320,16 +364,18 @@ class SimulatorCore {
             '/Autosteering/logs/hardware',
           ].join();
           messageDecoder = MessageDecoder(logDirectoryPath: logDirectoryPath);
-        } 
+        }
         // Close and remote UDP instances if no network is available, stops
         // isolate from crashing
         else if (message is ({bool networkAvailable})) {
           networkAvailable = message.networkAvailable;
           if (networkAvailable) {
+            await setupSendUdp();
             await setupReceiveUdp(udpReceivePort);
           } else {
-            udp?.close();
-            if (udp != null) {
+            sendUdp?.close();
+            receiveUdp?.close();
+            if (sendUdp != null || receiveUdp != null) {
               updateMainThreadStream.add(
                 LogEvent(
                   Level.info,
@@ -337,7 +383,8 @@ class SimulatorCore {
                 ),
               );
             }
-            udp = null;
+            receiveUdp = null;
+            sendUdp = null;
           }
         }
 
@@ -356,7 +403,7 @@ class SimulatorCore {
           steeringAddressLookupRetryTimer?.cancel();
           remoteControlAddressLookupRetryTimer?.cancel();
 
-          if (udp?.local.port?.value != message.hardwareUDPReceivePort) {
+          if (receiveUdp?.local.port?.value != message.hardwareUDPReceivePort) {
             await setupReceiveUdp(message.hardwareUDPReceivePort);
           }
 
@@ -463,8 +510,8 @@ class SimulatorCore {
         );
       }
     }
-
-    udp?.close();
+    receiveUdp?.close();
+    sendUdp?.close();
 
     updateMainThreadStream.add(
       LogEvent(Level.info, 'Simulator Core isolate exited.'),
