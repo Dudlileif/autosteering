@@ -40,8 +40,6 @@ class GnssQualityStatusIcon extends ConsumerStatefulWidget {
 }
 
 class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
-  Geoid? geoid;
-
   final OverlayPortalController portalController = OverlayPortalController();
 
   String get message {
@@ -89,34 +87,15 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
       textLines.add('Alt. Acc: $verticalAccuracy m');
     }
     final altitude = nmea?.altitudeMSL;
-    final geoidSep = nmea?.geoidSeparation;
     if (altitude != null) {
-      if (geoidSep != null) {
-        if (geoid != null && latitude != null && longitude != null) {
-          textLines.add(
-            '''Altitude MSL: ${(altitude + geoidSep - geoid!.height(lat: latitude, lon: longitude)).toStringAsFixed(1)} m''',
-          );
-        } else {
-          Geoid.egm96_5().then((value) => geoid = value);
-          textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
-        }
-      } else {
-        textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
-      }
+
+      textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
     }
     final altitudeRef = nmea?.altitudeRef;
     if (altitudeRef != null &&
         nmea?.latitude != null &&
         nmea?.longitude != null) {
       textLines.add('Altitude HAE: ${altitudeRef.toStringAsFixed(1)} m');
-
-      if (geoid != null && latitude != null && longitude != null) {
-        textLines.add(
-          '''Altitude MSL: ${(altitudeRef - geoid!.height(lat: latitude, lon: longitude)).toStringAsFixed(1)} m''',
-        );
-      } else {
-        Geoid.egm96_5().then((value) => geoid = value);
-      }
     }
 
     final age = nmea?.ageOfDifferentialData;
