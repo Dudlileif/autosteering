@@ -351,7 +351,7 @@ class SimulatorCore {
     });
 
     LogReplay? logReplay;
-    StreamSubscription<String>? replayListener;
+    StreamSubscription<LogReplayRecord>? replayListener;
 
     // Handle incoming messages from other dart isolates.
     await for (final message in commandPort) {
@@ -432,29 +432,53 @@ class SimulatorCore {
         } else if (message is LogReplay) {
           logReplay = message;
           replayListener = logReplay.replay.listen(
-            (record) => SimulatorCoreBase.replayListener(
-              record,
-              messageDecoder,
-              state,
-              updateMainThreadStream,
-            ),
+            (record) {
+              SimulatorCoreBase.replayListener(
+                record.message,
+                messageDecoder,
+                state,
+                updateMainThreadStream,
+              );
+              updateMainThreadStream.add((logReplayIndex: record.index));
+            },
           )..pause();
         } else if (message is ({bool replayPause})) {
           replayListener?.pause();
+          logReplay?.stopTimer();
         } else if (message is ({bool replayResume})) {
           replayListener?.resume();
+          logReplay?.startTimer();
         } else if (message is ({bool replayCancel})) {
           await replayListener?.cancel();
+          logReplay?.stopTimer();
         } else if (message is ({bool replayRestart})) {
           await replayListener?.cancel();
           replayListener = logReplay?.replay.listen(
-            (record) => SimulatorCoreBase.replayListener(
-              record,
+            (record) {
+              SimulatorCoreBase.replayListener(
+                record.message,
+                messageDecoder,
+                state,
+                updateMainThreadStream,
+              );
+              updateMainThreadStream.add((logReplayIndex: record.index));
+            },
+          );
+          logReplay?.startTimer();
+        } else if (message is ({bool replayLoop})) {
+          logReplay?.loop = message.replayLoop;
+        } else if (message is ({int replayScrubIndex})) {
+          final record = logReplay?.scrubToIndex(message.replayScrubIndex);
+          if (record != null) {
+            SimulatorCoreBase.replayListener(
+              record.message,
               messageDecoder,
               state,
               updateMainThreadStream,
-            ),
-          );
+            );
+            updateMainThreadStream
+                .add((logReplayIndex: message.replayScrubIndex));
+          }
         } else if (message is ({int simulationTargetHz})) {
           if (message.simulationTargetHz > 0) {
             simulationTimer.cancel();

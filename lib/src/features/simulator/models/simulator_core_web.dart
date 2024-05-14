@@ -49,7 +49,6 @@ class SimulatorCore {
     // The state of the simulation.
     final state = SimulatorCoreState(updateMainStream);
 
-
     final messageDecoder = MessageDecoder();
 
     final streamController = StreamController<
@@ -63,11 +62,9 @@ class SimulatorCore {
           AutosteeringState autosteeringState,
         })>();
 
-
     void simulationStep() {
       state.update();
       if (streamController.hasListener) {
-    
         // If the state has changed we add the new state to the stream.
         if (state.didChange) {
           streamController.add(
@@ -95,19 +92,22 @@ class SimulatorCore {
     );
 
     LogReplay? logReplay;
-    StreamSubscription<String>? replayListener;
+    StreamSubscription<LogReplayRecord>? replayListener;
 
     // Handle the incoming messages.
     incomingEvents.listen((message) async {
       if (message is LogReplay) {
         logReplay = message;
         replayListener = logReplay?.replay.listen(
-          (record) => SimulatorCoreBase.replayListener(
-            record,
-            messageDecoder,
-            state,
-            updateMainStream,
-          ),
+          (record) {
+            SimulatorCoreBase.replayListener(
+              record.message,
+              messageDecoder,
+              state,
+              updateMainStream,
+            );
+            updateMainStream.add((logReplayIndex: record.index));
+          },
         )?..pause();
       } else if (message is ({bool replayPause})) {
         replayListener?.pause();
@@ -118,13 +118,29 @@ class SimulatorCore {
       } else if (message is ({bool replayRestart})) {
         await replayListener?.cancel();
         replayListener = logReplay?.replay.listen(
-          (record) => SimulatorCoreBase.replayListener(
-            record,
+          (record) {
+            SimulatorCoreBase.replayListener(
+              record.message,
+              messageDecoder,
+              state,
+              updateMainStream,
+            );
+            updateMainStream.add((logReplayIndex: record.index));
+          },
+        );
+      } else if (message is ({bool replayLoop})) {
+        logReplay?.loop = message.replayLoop;
+      } else if (message is ({int replayScrubIndex})) {
+        final record = logReplay?.scrubToIndex(message.replayScrubIndex);
+        if (record != null) {
+          SimulatorCoreBase.replayListener(
+            record.message,
             messageDecoder,
             state,
             updateMainStream,
-          ),
-        );
+          );
+          updateMainStream.add((logReplayIndex: message.replayScrubIndex));
+        }
       } else if (message is ({int simulationTargetHz})) {
         if (message.simulationTargetHz > 0) {
           simulationTimer.cancel();

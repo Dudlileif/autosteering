@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+export 'log_replay_providers.dart';
 export 'simulator_core_native_providers.dart'
     if (dart.library.js_interop) 'simulator_core_web_providers.dart';
 export 'simulator_core_providers.dart';
