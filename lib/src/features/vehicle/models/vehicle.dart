@@ -36,6 +36,9 @@ part 'vehicle_types/axle_steered_vehicle.dart';
 part 'vehicle_types/harvester.dart';
 part 'vehicle_types/tractor.dart';
 
+// TODO (dudlileif): Add nudging by moving the path tracking point sideways by
+// specified amount in the opposite direction
+
 /// A base class for vehicles that handles all common parameters/variables
 /// and methods.
 sealed class Vehicle extends Hitchable with EquatableMixin {
