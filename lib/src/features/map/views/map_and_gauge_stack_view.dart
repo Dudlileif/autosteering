@@ -379,7 +379,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
           if (ref.watch(showNudgingControlsProvider))
             Consumer(
               builder: (context, ref, child) {
-                const height = 250.0;
+                const height = 325.0;
                 var offset = ref.read(nudgingControlsUiOffsetProvider);
                 return StatefulBuilder(
                   builder: (context, setState) => Positioned(

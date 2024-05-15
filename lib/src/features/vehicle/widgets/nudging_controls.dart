@@ -236,13 +236,17 @@ class NudgingControls extends StatelessWidget {
                             '${(currentDistance * 100).round()} cm'.padLeft(7);
                       }
 
-                      return ElevatedButton(
+                      return FilledButton(
                         onPressed: () => ref
                             .read(simInputProvider.notifier)
                             .send((nudgeDistance: currentDistance!)),
-                        child: Text(
+                        child: TextWithStroke(
                           text,
-                          style: GoogleFonts.robotoMono(),
+                          style: GoogleFonts.robotoMono(
+                            color: Colors.white,
+                            textStyle: theme.textTheme.titleMedium,
+                          ),
+                          strokeWidth: 3.5,
                         ),
                       );
                     }
