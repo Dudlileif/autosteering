@@ -49,6 +49,7 @@ class SteeringHardwareConfigurator extends StatelessWidget {
             backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
             appBar: AppBar(
               primary: false,
+              scrolledUnderElevation: 0,
               title: const Text('Steering Configurator'),
               actions: [
                 Padding(

@@ -414,13 +414,3 @@ sealed class PathTracking {
         'uuid': uuid,
       };
 }
-
-/// An extension on [Vehicle] for finding the right path tracking reference
-/// point.
-extension VehiclePathTrackingExtension on Vehicle {
-  /// Finds the point position corresponding to the [pathTrackingMode].
-  Geographic get pathTrackingPoint => switch (pathTrackingMode) {
-        PathTrackingMode.purePursuit => lookAheadStartPosition,
-        PathTrackingMode.stanley => stanleyAxlePosition,
-      };
-}

@@ -131,6 +131,24 @@ class VehicleMenu extends ConsumerWidget {
             secondary: child,
           ),
         ),
+        Consumer(
+          builder: (context, ref, child) => CheckboxListTile(
+            title: Text(
+              'Show nudging controls',
+              style: textStyle,
+            ),
+            secondary: const RotatedBox(
+              quarterTurns: 1,
+              child: Icon(Icons.vertical_align_center),
+            ),
+            value: ref.watch(showNudgingControlsProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(showNudgingControlsProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
         if (ref.watch(enableDebugModeProvider)) const VehicleDebugMenu(),
         Consumer(
           builder: (context, ref, child) => CheckboxListTile(

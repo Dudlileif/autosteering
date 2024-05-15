@@ -391,6 +391,14 @@ class SimulatorCoreState {
         abTracking = null;
       }
     }
+    // Update vehicle nudge distance.
+    else if (message is ({num nudgeDistance})) {
+      vehicle?.nudgeDistance = message.nudgeDistance.toDouble();
+    }
+    // Incrementally update the vehicle nudge distance.
+    else if (message is ({num nudgeIncrement})) {
+      vehicle?.nudgeDistance += message.nudgeIncrement;
+    }
     // Update whether to automatically slow down.
     else if (message is ({bool autoSlowDown})) {
       autoSlowDown = message.autoSlowDown;

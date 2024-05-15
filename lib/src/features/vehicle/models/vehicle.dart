@@ -36,9 +36,6 @@ part 'vehicle_types/axle_steered_vehicle.dart';
 part 'vehicle_types/harvester.dart';
 part 'vehicle_types/tractor.dart';
 
-// TODO (dudlileif): Add nudging by moving the path tracking point sideways by
-// specified amount in the opposite direction
-
 /// A base class for vehicles that handles all common parameters/variables
 /// and methods.
 sealed class Vehicle extends Hitchable with EquatableMixin {
@@ -75,6 +72,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double pitch = 0,
     double roll = 0,
     double velocity = 0,
+    this.nudgeDistance = 0,
     this.manualSimulationMode = false,
   })  : numWheels = numWheels ?? 1,
         wheelSpacing = wheelSpacing ?? 0.05,
@@ -251,6 +249,10 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The minimum required velocity to engage autosteering.
   double autosteeringThresholdVelocity;
+
+  /// The sideways distance to nudge the vehicle from the path tracking line.
+  /// Positive means to the right in the driving direction.
+  double nudgeDistance;
 
   /// The velocity of the vehicle as set from the outside.
   double _velocity;
@@ -529,6 +531,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// calculating Stanley path tracking values.
   Geographic get stanleyAxlePosition;
 
+  /// Finds the point position corresponding to the [pathTrackingMode].
+  Geographic get pathTrackingPoint => switch (pathTrackingMode) {
+        PathTrackingMode.purePursuit => lookAheadStartPosition,
+        PathTrackingMode.stanley => stanleyAxlePosition,
+      };
+
   /// Basic circle markers for showing the vehicle's steering related
   /// points.
   List<map.CircleMarker> get steeringDebugMarkers;
@@ -679,7 +687,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       // Straight
       final newPoint = stanleyAxlePosition.rhumb
           .destinationPoint(distance: velocity * period, bearing: bearing);
-
       return (position: newPoint, bearing: bearing);
     }
     return (position: stanleyAxlePosition, bearing: bearing);
@@ -737,6 +744,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double? steeringAngleInput,
     double? length,
     double? width,
+    double? nudgeDistance,
     double? wheelsRolledDistance,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,

@@ -72,6 +72,7 @@ enum SettingsKey {
   themeMode('theme.mode'),
   uiAutosteeringConfiguratorOffset('ui.autosteering_configurator_offset'),
   uiImuConfiguratorOffset('ui.imu_configurator_offset'),
+  uiNudgningControlsOffset('ui.nudgning_controls_offset'),
   uiPathRecordingMenuOffset('ui.path_recording_menu_offset'),
   uiSteeringHardwareConfiguratorOffset(
     'ui.steering_hardware_configurator_offset',
