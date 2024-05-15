@@ -41,6 +41,7 @@ class VehicleMenu extends ConsumerWidget {
         const _LoadVehicleMenu(),
         const _ImportExportMenu(),
         MenuItemButton(
+          closeOnActivate: false,
           leadingIcon: const Padding(
             padding: EdgeInsets.only(left: 8),
             child: Icon(Icons.settings),

@@ -45,6 +45,7 @@ class EquipmentMenu extends ConsumerWidget {
         const _LoadEquipmentMenu(),
         const _ImportExportMenu(),
         MenuItemButton(
+          closeOnActivate: false,
           leadingIcon: const Padding(
             padding: EdgeInsets.only(left: 8),
             child: Icon(Icons.settings),
