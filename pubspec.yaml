@@ -12,6 +12,7 @@ environment:
 dependencies:
     archive: ^3.5.1
     async: ^2.11.0
+    audioplayers: ^6.0.0
     collection: ^1.17.1
     cupertino_icons: ^1.0.8
     dio: ^5.4.3+1
@@ -74,6 +75,7 @@ flutter:
 
     assets:
         - assets/
+        - assets/audio/
         - assets/icons/
         - assets/images/
         - assets/images/vehicle_types/side_view/

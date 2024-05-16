@@ -18,6 +18,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:autosteering/src/features/audio/audio.dart';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
@@ -75,7 +76,21 @@ class MainVehicle extends _$MainVehicle {
 @Riverpod(keepAlive: true)
 class ActiveAutosteeringState extends _$ActiveAutosteeringState {
   @override
-  AutosteeringState build() => AutosteeringState.disabled;
+  AutosteeringState build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        switch (next) {
+          case AutosteeringState.enabled:
+            ref.read(audioAutosteeringEnabledProvider);
+          case AutosteeringState.disabled:
+            ref.read(audioAutosteeringDisabledProvider);
+          case AutosteeringState.standby:
+            ref.read(audioAutosteeringStandbyProvider);
+        }
+      }
+    });
+    return AutosteeringState.disabled;
+  }
 
   /// Updates [state] to [value].
   void update(AutosteeringState value) => Future(() => state = value);

@@ -7,7 +7,7 @@ part of 'gnss_data_providers.dart';
 // **************************************************************************
 
 String _$gnssCurrentSentenceHash() =>
-    r'f1be260fb8f6d957e5b7865d9d543e3720306022';
+    r'3ffe10145521a3b5cdaa3822d6af75cb8614ffe2';
 
 /// A provider for the quality of last GNSS position update.
 ///

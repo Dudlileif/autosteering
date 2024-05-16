@@ -973,7 +973,7 @@ final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
 
 typedef _$MainVehicle = Notifier<Vehicle>;
 String _$activeAutosteeringStateHash() =>
-    r'35c2fabbbb9a104f1c1794d94049ad4cd0e2b65f';
+    r'53f62be630a97e3459a6d47f665abd14f7effcc6';
 
 /// A provider for the active [AutosteeringState] of the vehicle.
 ///
