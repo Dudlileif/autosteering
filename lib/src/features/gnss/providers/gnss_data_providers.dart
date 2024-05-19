@@ -17,6 +17,7 @@
 
 import 'dart:async';
 
+import 'package:autosteering/src/features/audio/audio.dart';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,10 +33,12 @@ class GnssCurrentSentence extends _$GnssCurrentSentence {
   GnssPositionCommonSentence? build() {
     ref.listenSelf((previous, next) {
       _resetTimer?.cancel();
-      _resetTimer = Timer(
-        const Duration(milliseconds: 350),
-        ref.invalidateSelf,
-      );
+      _resetTimer = Timer(const Duration(milliseconds: 350), () {
+        if (stateOrNull?.fixQuality == GnssFixQuality.rtk) {
+          ref.read(audioRTKLostAlarmProvider);
+        }
+        ref.invalidateSelf();
+      });
 
       final logStrings = <String>[];
 
@@ -54,6 +57,11 @@ class GnssCurrentSentence extends _$GnssCurrentSentence {
           '''GNSS fix quality: ${next?.fixQuality}, PUBX nav status: ${next?.ubxNavStatus}''',
         );
       }
+      if (previous?.fixQuality == GnssFixQuality.rtk &&
+          next?.fixQuality != GnssFixQuality.rtk) {
+        ref.read(audioRTKLostAlarmProvider);
+      }
+
       if (previous?.numSatellites != next?.numSatellites) {
         logStrings.add('GNSS satellite count: ${next?.numSatellites}');
       }

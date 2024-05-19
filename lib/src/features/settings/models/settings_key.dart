@@ -19,6 +19,10 @@
 
 /// An enumerator for all the settings of the program.
 enum SettingsKey {
+  audioVolumeAutosteeringDisabled('audio.volume.autosteering_disabled'),
+  audioVolumeAutosteeringEnabled('audio.volume.autosteering_enabled'),
+  audioVolumeAutosteeringStandby('audio.volume.autosteering_standby'),
+  audioVolumeRTKLostAlarm('audio.volume.rtk_lost_alarm'),
   gaugesAverageCount('gauges.average_count'),
   hardwareAdress('hardware.network.address'),
   hardwareUDPReceivePort('hardware.network.udp.receive_port'),
