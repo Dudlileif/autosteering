@@ -83,5 +83,24 @@ final steeringHardwareConfiguratorUiOffsetProvider =
 );
 
 typedef _$SteeringHardwareConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
+String _$nudgingControlsUiOffsetHash() =>
+    r'155c3a7613c6dde0851dcac4114520286518d0e6';
+
+/// A provider for the UI [Offset] for the nudging controls.
+///
+/// Copied from [NudgingControlsUiOffset].
+@ProviderFor(NudgingControlsUiOffset)
+final nudgingControlsUiOffsetProvider =
+    AutoDisposeNotifierProvider<NudgingControlsUiOffset, Offset>.internal(
+  NudgingControlsUiOffset.new,
+  name: r'nudgingControlsUiOffsetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$nudgingControlsUiOffsetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NudgingControlsUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

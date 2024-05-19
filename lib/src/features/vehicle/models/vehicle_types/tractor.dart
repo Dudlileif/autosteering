@@ -54,6 +54,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.steeringAngleInput,
     super.length = 4,
     super.width = 2.5,
+    super.nudgeDistance,
     super.wheelsRolledDistance,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
@@ -138,7 +139,12 @@ final class Tractor extends AxleSteeredVehicle {
         true => solidAxlePosition.rhumb
             .destinationPoint(distance: wheelBase, bearing: bearing + 180),
         false => steeringAxlePosition,
-      };
+      }
+          .rhumb
+          .destinationPoint(
+            distance: nudgeDistance,
+            bearing: (bearing - 90).wrap360(),
+          );
 
   /// The angle of the left steering wheel when using Ackermann steering.
   @override
@@ -186,6 +192,7 @@ final class Tractor extends AxleSteeredVehicle {
     double? steeringAngleInput,
     double? length,
     double? width,
+    double? nudgeDistance,
     double? wheelsRolledDistance,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
@@ -242,6 +249,7 @@ final class Tractor extends AxleSteeredVehicle {
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,
+        nudgeDistance: nudgeDistance ?? this.nudgeDistance,
         wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
         hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,

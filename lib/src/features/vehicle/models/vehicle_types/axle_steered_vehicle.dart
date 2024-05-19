@@ -59,6 +59,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.steeringAngleInput,
     super.length = 4,
     super.width = 2.5,
+    super.nudgeDistance,
     super.wheelsRolledDistance,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
@@ -185,7 +186,11 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// Where the look ahead distance calculation should start.
   @override
-  Geographic get lookAheadStartPosition => solidAxlePosition;
+  Geographic get lookAheadStartPosition =>
+      solidAxlePosition.rhumb.destinationPoint(
+        distance: nudgeDistance,
+        bearing: (bearing - 90).wrap360(),
+      );
 
   /// Basic circle markers for showing the vehicle's Ackermann related
   /// points.
@@ -738,6 +743,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? steeringAngleInput,
     double? length,
     double? width,
+    double? nudgeDistance,
     double? wheelsRolledDistance,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,

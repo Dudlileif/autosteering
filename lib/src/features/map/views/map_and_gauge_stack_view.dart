@@ -376,6 +376,69 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 );
               },
             ),
+          if (ref.watch(showNudgingControlsProvider))
+            Consumer(
+              builder: (context, ref, child) {
+                const height = 325.0;
+                var offset = ref.read(nudgingControlsUiOffsetProvider);
+                return StatefulBuilder(
+                  builder: (context, setState) => Positioned(
+                    left: offset.dx.clamp(
+                      0,
+                      constraints.maxWidth - 380,
+                    ),
+                    top: offset.dy.clamp(0, constraints.maxHeight - height),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(
+                        height: min(
+                          height,
+                          constraints.maxHeight -
+                              offset.dy
+                                  .clamp(0, constraints.maxHeight - height),
+                        ),
+                        child: LongPressDraggable(
+                          onDragUpdate: (update) {
+                            setState(
+                              () => offset = Offset(
+                                offset.dx + update.delta.dx,
+                                offset.dy + update.delta.dy,
+                              ),
+                            );
+                          },
+                          onDragEnd: (details) => ref
+                              .read(
+                                nudgingControlsUiOffsetProvider.notifier,
+                              )
+                              .update(
+                                Offset(
+                                  offset.dx.clamp(
+                                    0,
+                                    constraints.maxWidth - 380,
+                                  ),
+                                  offset.dy
+                                      .clamp(0, constraints.maxHeight - height),
+                                ),
+                              ),
+                          childWhenDragging: const SizedBox.shrink(),
+                          feedback: const Opacity(
+                            opacity: 0.7,
+                            child: SizedBox(
+                              height: height,
+                              child: NudgingControls(),
+                            ),
+                          ),
+                          child: const SizedBox(
+                            height: height,
+                            child: NudgingControls(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );

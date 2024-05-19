@@ -60,6 +60,7 @@ final class ArticulatedTractor extends Vehicle {
     super.steeringAngleInput,
     super.length = 4,
     super.width = 2.5,
+    super.nudgeDistance,
     super.wheelsRolledDistance,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
@@ -161,7 +162,10 @@ final class ArticulatedTractor extends Vehicle {
 
   /// Where the look ahead distance calculation should start.
   @override
-  Geographic get lookAheadStartPosition => pivotPosition;
+  Geographic get lookAheadStartPosition => pivotPosition.rhumb.destinationPoint(
+        distance: nudgeDistance,
+        bearing: (bearing - 90).wrap360(),
+      );
 
   /// The angle from the pivot point to the front axle.
   double get frontAxleAngle => (bearing + steeringAngle / 2).wrap360();
@@ -217,7 +221,12 @@ final class ArticulatedTractor extends Vehicle {
   Geographic get stanleyAxlePosition => switch (isReversing) {
         true => rearAxlePosition,
         false => frontAxlePosition,
-      };
+      }
+          .rhumb
+          .destinationPoint(
+            distance: nudgeDistance,
+            bearing: (bearing - 90).wrap360(),
+          );
 
   @override
   ({Geographic position, double bearing}) updatedPositionAndBearingTurning(
@@ -829,6 +838,7 @@ final class ArticulatedTractor extends Vehicle {
     double? steeringAngleInput,
     double? length,
     double? width,
+    double? nudgeDistance,
     double? wheelsRolledDistance,
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
@@ -878,6 +888,7 @@ final class ArticulatedTractor extends Vehicle {
         steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
         length: length ?? this.length,
         width: width ?? this.width,
+        nudgeDistance: nudgeDistance ?? this.nudgeDistance,
         wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
         hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
         hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
