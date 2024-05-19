@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
@@ -132,18 +133,22 @@ class PathTrackingMenu extends ConsumerWidget {
             },
           ),
         ),
-        Consumer(
-          builder: (context, ref, child) => CheckboxListTile(
-            secondary: const Icon(Icons.bug_report),
-            title: const Text('Debug'),
-            value: ref.watch(debugPathTrackingProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(debugPathTrackingProvider.notifier)
-                    .update(value: value)
-                : null,
+        if (ref.watch(enableDebugModeProvider))
+          Consumer(
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: const Icon(Icons.bug_report),
+              title: Text(
+                'Debug',
+                style: textStyle,
+              ),
+              value: ref.watch(debugPathTrackingProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(debugPathTrackingProvider.notifier)
+                      .update(value: value)
+                  : null,
+            ),
           ),
-        ),
       ],
     );
   }

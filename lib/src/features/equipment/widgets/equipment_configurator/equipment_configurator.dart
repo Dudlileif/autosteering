@@ -29,10 +29,57 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A [Dialog] for configuring an equipment, with ability to apply to the
 /// one in the attached hierarchy, save to file or load from file.
-class EquipmentConfigurator extends StatelessWidget {
+class EquipmentConfigurator extends ConsumerStatefulWidget {
   /// A [Dialog] for configuring an equipment, with ability to apply to
   /// the equipment in the attached hierarchy, save to file or load from file.
   const EquipmentConfigurator({super.key});
+
+  @override
+  ConsumerState<EquipmentConfigurator> createState() =>
+      _EquipmentConfiguratorState();
+}
+
+class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
+    with SingleTickerProviderStateMixin {
+  late final tabController = TabController(
+    length: pages.length,
+    vsync: this,
+    initialIndex: ref.read(
+      configuredEquipmentProvider.select(
+        (value) =>
+            value.name == null ||
+            (value.name!.isEmpty || value.name!.startsWith(' ')),
+      ),
+    )
+        ? 0
+        : ref.read(equipmentConfiguratorIndexProvider),
+  );
+  static const pages = [
+    EquipmentTypeSelectorPage(),
+    EquipmentDimensionsPage(),
+    EquipmentSectionsPage(),
+    EquipmentDecorationPage(),
+    Padding(
+      padding: EdgeInsets.only(top: 16),
+      child: EquipmentHitchesPage(),
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    tabController.addListener(() {
+      ref
+          .read(equipmentConfiguratorIndexProvider.notifier)
+          .update((tabController.index + tabController.offset).round());
+    });
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => Dialog(
@@ -66,139 +113,192 @@ class EquipmentConfigurator extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: SingleChildScrollView(
-                      child: IntrinsicHeight(
-                        child: Consumer(
-                          builder: (context, ref, child) => NavigationRail(
-                            backgroundColor: Colors.transparent,
-                            labelType: NavigationRailLabelType.all,
-                            destinations: const [
-                              NavigationRailDestination(
-                                icon: Icon(Icons.handyman),
-                                label: Text('Type'),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final disabled = ref.watch(
+                    configuredEquipmentProvider.select(
+                      (value) =>
+                          value.name == null ||
+                          (value.name!.isEmpty || value.name!.startsWith(' ')),
+                    ),
+                  );
+
+                  final orientation = MediaQuery.orientationOf(context);
+                  if (orientation == Orientation.portrait ||
+                      (constraints.maxHeight > 250 &&
+                          constraints.maxWidth > 800)) {
+                    final tabs = [
+                      const Tab(
+                        icon: Icon(Icons.handyman),
+                        text: 'Type',
+                      ),
+                      const Tab(
+                        icon: Icon(Icons.expand),
+                        text: 'Dimensions',
+                      ),
+                      const Tab(
+                        icon: Icon(Icons.view_column),
+                        text: 'Sections',
+                      ),
+                      const Tab(
+                        icon: Icon(Icons.square_rounded),
+                        text: 'Decoration',
+                      ),
+                      const Tab(
+                        icon: Icon(Icons.commit),
+                        text: 'Hitches',
+                      ),
+                    ];
+
+                    return Column(
+                      children: [
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final tabBar = TabBar(
+                              tabAlignment: constraints.maxWidth < 500
+                                  ? TabAlignment.center
+                                  : TabAlignment.fill,
+                              isScrollable: constraints.maxWidth < 500,
+                              padding: const EdgeInsets.all(8),
+                              dividerHeight: 1,
+                              dividerColor: Theme.of(context).dividerColor,
+                              controller: tabController,
+                              tabs: tabs,
+                            );
+                            if (disabled) {
+                              return IgnorePointer(child: tabBar);
+                            }
+                            return tabBar;
+                          },
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            controller: tabController,
+                            physics: disabled
+                                ? const NeverScrollableScrollPhysics()
+                                : null,
+                            children: pages,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  final destinations = [
+                    const NavigationRailDestination(
+                      icon: Icon(Icons.handyman),
+                      label: Text('Type'),
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.expand),
+                      label: const Text('Dimensions'),
+                      disabled: disabled,
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.view_column),
+                      label: const Text('Sections'),
+                      disabled: disabled,
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.square_rounded),
+                      label: const Text('Decoration'),
+                      disabled: disabled,
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.commit),
+                      label: const Text('Hitches'),
+                      disabled: disabled,
+                    ),
+                  ];
+
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SingleChildScrollView(
+                        child: IntrinsicHeight(
+                          child: Consumer(
+                            builder: (context, ref, child) => NavigationRail(
+                              backgroundColor: Colors.transparent,
+                              labelType: NavigationRailLabelType.all,
+                              destinations: destinations,
+                              selectedIndex: ref.watch(
+                                equipmentConfiguratorIndexProvider,
                               ),
-                              NavigationRailDestination(
-                                icon: Icon(Icons.expand),
-                                label: Text('Dimensions'),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(Icons.view_column),
-                                label: Text('Sections'),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(Icons.square_rounded),
-                                label: Text('Decoration'),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(Icons.commit),
-                                label: Text('Hitches'),
-                              ),
-                            ],
-                            selectedIndex: ref.watch(
-                              equipmentConfiguratorIndexProvider,
+                              onDestinationSelected: tabController.animateTo,
                             ),
-                            onDestinationSelected: ref
-                                .read(
-                                  equipmentConfiguratorPageControllerProvider
-                                      .notifier,
-                                )
-                                .animateToPage,
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  const VerticalDivider(),
-                  Expanded(
-                    child: Consumer(
-                      builder: (context, ref, child) => PageView(
-                        scrollDirection: Axis.vertical,
-                        controller: ref
-                            .watch(equipmentConfiguratorPageControllerProvider),
-                        children: const [
-                          EquipmentTypeSelectorPage(),
-                          EquipmentDimensionsPage(),
-                          EquipmentSectionsPage(),
-                          EquipmentDecorationPage(),
-                          EquipmentHitchesPage(),
-                        ],
+                      const VerticalDivider(),
+                      Expanded(
+                        child: Consumer(
+                          builder: (context, ref, child) => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ListenableBuilder(
+                              listenable: tabController,
+                              builder: (context, child) => AnimatedOpacity(
+                                opacity: tabController.index > 0 ? 1 : 0,
+                                duration: Durations.medium1,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: IconButton.filled(
+                                    icon: const Icon(Icons.arrow_left),
+                                    onPressed: tabController.index > 0
+                                        ? () => tabController.animateTo(
+                                              tabController.index - 1,
+                                            )
+                                        : null,
+                                  ),
+                                ),
+                              ),
+                            ),
+                              Expanded(
+                                child: Consumer(
+                                  builder: (context, ref, child) => TabBarView(
+                                    controller: tabController,
+                                    physics: disabled
+                                        ? const NeverScrollableScrollPhysics()
+                                        : null,
+                                    children: pages,
+                                  ),
+                                ),
+                              ),
+                            ListenableBuilder(
+                              listenable: tabController,
+                              builder: (context, child) => AnimatedOpacity(
+                                opacity: tabController.index <
+                                            pages.length - 1 &&
+                                              !disabled
+                                    ? 1
+                                    : 0,
+                                duration: Durations.medium1,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: IconButton.filled(
+                                    onPressed: tabController.index <
+                                                pages.length - 1 &&
+                                              !disabled
+                                        ? () => tabController.animateTo(
+                                              tabController.index + 1,
+                                            )
+                                        : null,
+                                    icon: const Icon(Icons.arrow_right),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
+                    ],
+                  );
+                },
             ),
-          ],
-        ),
-      );
-}
-
-/// A button for going to the next page of the vehicle configurator.
-class EquipmentConfiguratorNextButton extends ConsumerWidget {
-  /// A button for going to the next page of the vehicle configurator.
-  const EquipmentConfiguratorNextButton({
-    this.enabled = true,
-    this.extraOnPressed,
-    super.key,
-  });
-
-  /// Whether the button is enabled.
-  final bool enabled;
-
-  /// Extra function that will run when the button is pressed.
-  final void Function()? extraOnPressed;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
-        onPressed: enabled
-            ? () {
-                extraOnPressed?.call();
-                ref
-                    .read(
-                      equipmentConfiguratorPageControllerProvider.notifier,
-                    )
-                    .nextPage();
-              }
-            : null,
-        icon: const Icon(Icons.arrow_downward),
-        label: const Text('Next'),
-      );
-}
-
-/// A button for going to the previous page of the vehicle configurator.
-class EquipmentConfiguratorPreviousButton extends ConsumerWidget {
-  /// A button for going to the previous page of the vehicle configurator.
-  const EquipmentConfiguratorPreviousButton({
-    this.enabled = true,
-    this.extraOnPressed,
-    super.key,
-  });
-
-  /// Whether the button is enabled.
-  final bool enabled;
-
-  /// Extra function that will run when the button is pressed.
-  final void Function()? extraOnPressed;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
-        onPressed: enabled
-            ? () {
-                extraOnPressed?.call();
-                ref
-                    .read(
-                      equipmentConfiguratorPageControllerProvider.notifier,
-                    )
-                    .previousPage();
-              }
-            : null,
-        icon: const Icon(Icons.arrow_upward),
-        label: const Text('Previous'),
+          ),
+        ],
+      ),
       );
 }
 
@@ -213,19 +313,28 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
-        onPressed: () {
-          final equipment = ref.watch(configuredEquipmentProvider)
-            ..lastUsed = DateTime.now();
+        onPressed: ref.watch(
+          configuredEquipmentProvider.select(
+            (value) =>
+                value.name == null ||
+                (value.name!.isEmpty || value.name!.startsWith(' ')),
+          ),
+        )
+            ? null
+            : () {
+                final equipment = ref.watch(configuredEquipmentProvider)
+                  ..lastUsed = DateTime.now();
 
-          ref
-              .read(simInputProvider.notifier)
-              .send((updatedEquipment: equipment));
+                ref
+                    .read(simInputProvider.notifier)
+                    .send((updatedEquipment: equipment));
 
-          if (Device.isNative) {
-            ref.read(saveEquipmentProvider(equipment));
-          }
-          Navigator.of(context).pop();
-        },
+                if (Device.isNative) {
+                  ref.read(saveEquipmentProvider(equipment));
+                }
+                Navigator.of(context).pop();
+              }
+            ,
         icon: const Icon(Icons.check),
         label: const Text('Apply configuration'),
       );

@@ -40,8 +40,6 @@ class GnssQualityStatusIcon extends ConsumerStatefulWidget {
 }
 
 class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
-  Geoid? geoid;
-
   final OverlayPortalController portalController = OverlayPortalController();
 
   String get message {
@@ -89,34 +87,15 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
       textLines.add('Alt. Acc: $verticalAccuracy m');
     }
     final altitude = nmea?.altitudeMSL;
-    final geoidSep = nmea?.geoidSeparation;
     if (altitude != null) {
-      if (geoidSep != null) {
-        if (geoid != null && latitude != null && longitude != null) {
-          textLines.add(
-            '''Altitude MSL: ${(altitude + geoidSep - geoid!.height(lat: latitude, lon: longitude)).toStringAsFixed(1)} m''',
-          );
-        } else {
-          Geoid.egm96_5().then((value) => geoid = value);
-          textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
-        }
-      } else {
-        textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
-      }
+
+      textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
     }
     final altitudeRef = nmea?.altitudeRef;
     if (altitudeRef != null &&
         nmea?.latitude != null &&
         nmea?.longitude != null) {
       textLines.add('Altitude HAE: ${altitudeRef.toStringAsFixed(1)} m');
-
-      if (geoid != null && latitude != null && longitude != null) {
-        textLines.add(
-          '''Altitude MSL: ${(altitudeRef - geoid!.height(lat: latitude, lon: longitude)).toStringAsFixed(1)} m''',
-        );
-      } else {
-        Geoid.egm96_5().then((value) => geoid = value);
-      }
     }
 
     final age = nmea?.ageOfDifferentialData;
@@ -175,38 +154,31 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
             final nmea = ref.watch(gnssCurrentSentenceProvider);
             final fixQuality = nmea?.fixQuality ?? GnssFixQuality.notAvailable;
             final numSatellites = nmea?.numSatellites ?? 0;
-            return Stack(
-              children: [
-                Align(
-                  child: Icon(
-                    Icons.satellite_alt,
-                    size: widget.size,
-                    color: switch (fixQuality) {
-                      GnssFixQuality.rtk => Colors.green,
-                      GnssFixQuality.floatRTK ||
-                      GnssFixQuality.ppsFix =>
-                        Colors.lime,
-                      GnssFixQuality.differentialFix => Colors.yellow,
-                      GnssFixQuality.fix => Colors.orange,
-                      GnssFixQuality.notAvailable => Colors.red,
-                      GnssFixQuality.manualInput => Colors.purple,
-                      GnssFixQuality.simulation => Colors.blue,
-                      GnssFixQuality.estimated => Colors.blueGrey,
-                    },
-                    shadows: const [
-                      Shadow(offset: Offset(1, 0)),
-                      Shadow(offset: Offset(0, 1)),
-                    ],
-                  ),
+            return Badge.count(
+              count: numSatellites,
+              child: Transform.flip(
+                flipX: true,
+                child: Icon(
+                  Icons.satellite_alt,
+                  size: widget.size,
+                  color: switch (fixQuality) {
+                    GnssFixQuality.rtk => Colors.green,
+                    GnssFixQuality.floatRTK ||
+                    GnssFixQuality.ppsFix =>
+                      Colors.lime,
+                    GnssFixQuality.differentialFix => Colors.yellow,
+                    GnssFixQuality.fix => Colors.orange,
+                    GnssFixQuality.notAvailable => Colors.red,
+                    GnssFixQuality.manualInput => Colors.purple,
+                    GnssFixQuality.simulation => Colors.blue,
+                    GnssFixQuality.estimated => Colors.blueGrey,
+                  },
+                  shadows: const [
+                    Shadow(offset: Offset(1, 0)),
+                    Shadow(offset: Offset(0, 1)),
+                  ],
                 ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Card(
-                    margin: EdgeInsets.zero,
-                    child: Text('$numSatellites'),
-                  ),
-                ),
-              ],
+              ),
             );
           },
         ),

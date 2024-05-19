@@ -7,7 +7,7 @@ part of 'combined_communication_providers.dart';
 // **************************************************************************
 
 String _$combinedNativeNetworkHash() =>
-    r'4ba9f82efda0a1ed11b5830d3e95c455319784d1';
+    r'42aa7b4ca8e5462f3b950bb00975a1424aee0ba0';
 
 /// A provider for combining the native network providers that need to be
 /// watched.
@@ -43,7 +43,7 @@ final _combinedSerialProvider = AutoDisposeProvider<void>.internal(
 
 typedef _CombinedSerialRef = AutoDisposeProviderRef<void>;
 String _$combinedCommunicationHash() =>
-    r'523f693ef489fabc85f94b707793f1bc8e8a05c6';
+    r'd4e8c2dbc907095193a878ab37e3d4e3e68e9967';
 
 /// A provider for combining all the network and hardware communication
 /// providers that need to be watched.

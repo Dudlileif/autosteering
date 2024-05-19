@@ -7,13 +7,13 @@ part of 'hardware_network_providers.dart';
 // **************************************************************************
 
 String _$deviceIPAdressWlanHash() =>
-    r'5de5e289b585ba5b746f1962a8a77f024a9627ca';
+    r'8e71712cf22af98a29678a6e4b8425f7074a70d5';
 
 /// A provider for the wireless IP address of the device.
 ///
 /// Copied from [deviceIPAdressWlan].
 @ProviderFor(deviceIPAdressWlan)
-final deviceIPAdressWlanProvider = AutoDisposeFutureProvider<String?>.internal(
+final deviceIPAdressWlanProvider = Provider<String?>.internal(
   deviceIPAdressWlan,
   name: r'deviceIPAdressWlanProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -23,14 +23,14 @@ final deviceIPAdressWlanProvider = AutoDisposeFutureProvider<String?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef DeviceIPAdressWlanRef = AutoDisposeFutureProviderRef<String?>;
-String _$deviceIPAdressAPHash() => r'e61c5924afabc3bfc9f0ff93a3c01996e8beed55';
+typedef DeviceIPAdressWlanRef = ProviderRef<String?>;
+String _$deviceIPAdressAPHash() => r'43da6ed39ad3f505db37110cb2481d8f5ee6642a';
 
 /// A provider for the access point host IP address of the device.
 ///
 /// Copied from [deviceIPAdressAP].
 @ProviderFor(deviceIPAdressAP)
-final deviceIPAdressAPProvider = AutoDisposeFutureProvider<String?>.internal(
+final deviceIPAdressAPProvider = Provider<String?>.internal(
   deviceIPAdressAP,
   name: r'deviceIPAdressAPProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -40,16 +40,15 @@ final deviceIPAdressAPProvider = AutoDisposeFutureProvider<String?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef DeviceIPAdressAPRef = AutoDisposeFutureProviderRef<String?>;
+typedef DeviceIPAdressAPRef = ProviderRef<String?>;
 String _$deviceIPAdressEthernetHash() =>
-    r'd50284aa3ec6f28ccf0854397fac4b87a8cd1ff9';
+    r'd0b3e493db864ca4b7d683293a50b2722bf627a9';
 
 /// A provider for the ethernet IP address of the device.
 ///
 /// Copied from [deviceIPAdressEthernet].
 @ProviderFor(deviceIPAdressEthernet)
-final deviceIPAdressEthernetProvider =
-    AutoDisposeFutureProvider<String?>.internal(
+final deviceIPAdressEthernetProvider = Provider<String?>.internal(
   deviceIPAdressEthernet,
   name: r'deviceIPAdressEthernetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -59,7 +58,7 @@ final deviceIPAdressEthernetProvider =
   allTransitiveDependencies: null,
 );
 
-typedef DeviceIPAdressEthernetRef = AutoDisposeFutureProviderRef<String?>;
+typedef DeviceIPAdressEthernetRef = ProviderRef<String?>;
 String _$hardwareCommunicationConfigHash() =>
     r'3633f1b1258bcc18ff12ebf4d4469b438aa22931';
 
@@ -93,25 +92,7 @@ typedef HardwareCommunicationConfigRef = ProviderRef<
       int hardwareUDPReceivePort,
       int hardwareUDPSendPort
     })>;
-String _$currentConnectionHash() => r'1b84c22e8dbac870f08d39874ff7c59d437f6e3b';
-
-/// A provider for the current connection of the device.
-///
-/// Copied from [currentConnection].
-@ProviderFor(currentConnection)
-final currentConnectionProvider =
-    StreamProvider<List<ConnectivityResult>>.internal(
-  currentConnection,
-  name: r'currentConnectionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentConnectionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef CurrentConnectionRef = StreamProviderRef<List<ConnectivityResult>>;
-String _$networkAvailableHash() => r'b4a4e0fbd04dc84266ecad3af680debe4959ec1f';
+String _$networkAvailableHash() => r'f5f42aa1be914492fbf0e5a6baad5c6854229ad7';
 
 /// A provider for whether a network connection can be made.
 ///
@@ -180,6 +161,24 @@ final remoteControlHardwareNetworkAliveProvider =
 );
 
 typedef _$RemoteControlHardwareNetworkAlive = Notifier<bool>;
+String _$networkInterfacesHash() => r'266036be313e3b83042620c5dde1da749893a17a';
+
+/// A provider for all the
+///
+/// Copied from [NetworkInterfaces].
+@ProviderFor(NetworkInterfaces)
+final networkInterfacesProvider =
+    NotifierProvider<NetworkInterfaces, List<NetworkInterface>>.internal(
+  NetworkInterfaces.new,
+  name: r'networkInterfacesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$networkInterfacesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NetworkInterfaces = Notifier<List<NetworkInterface>>;
 String _$steeringHardwareAddressHash() =>
     r'4508da53c714f433e85ea2d8b7672aca61824b32';
 

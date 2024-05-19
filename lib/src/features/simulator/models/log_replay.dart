@@ -17,6 +17,8 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
+
 /// A class for replicating an already recorded log.
 class LogReplay {
   /// Creates a [LogReplay] from the [log].
@@ -24,23 +26,35 @@ class LogReplay {
   /// [log] is split into single lines that are parsed as records, if the
   /// records are split over several lines a different factory must be used
   /// or created.
-  factory LogReplay({required String log}) {
+  ///
+  /// [loop] is whehter the log should restart when reaching the end.
+  factory LogReplay({required String log, bool loop = false}) {
     DateTime? firstRecordTime;
     final records = log
         .split('\n')
         .where((element) => element.isNotEmpty && element.contains(':'))
-        .map((raw) {
-      final record =
-          LogReplayRecord(raw: raw, firstRecordTime: firstRecordTime);
+        .mapIndexed((index, raw) {
+      final record = LogReplayRecord(
+        index: index,
+        raw: raw,
+        firstRecordTime: firstRecordTime,
+      );
       firstRecordTime ??= record.logTime;
       return record;
     }).toList();
 
-    return LogReplay._(log: log, records: records);
+    return LogReplay._(log: log, records: records, loop: loop);
   }
 
   /// Default constructor
-  const LogReplay._({required this.log, required this.records});
+  LogReplay._({
+    required this.log,
+    required this.records,
+    this.loop = false,
+  });
+
+  /// Whether the replay should loop.
+  bool loop;
 
   /// Raw string of the log.
   final String log;
@@ -55,56 +69,72 @@ class LogReplay {
   /// Duration from the first to the last message in the log.
   Duration? get duration => records.lastOrNull?.replayTime;
 
+  /// Scrub the replay to [index] of [records].
+  LogReplayRecord? scrubToIndex(int index) {
+    if (index >= 0) {
+      final record = records[index];
+      _ticks = record.replayTime.inMilliseconds;
+      _readyRecords
+        ..clear()
+        ..addAll(records.sublist(index));
+      _controller.add(record);
+      return record;
+    }
+    return null;
+  }
+
+  late final _readyRecords = [...records];
+  Timer? _recordTimer;
+  var _ticks = 0;
+
+  /// Stops the timer for replaying the log, i.e. stops the playback.
+  void stopTimer() {
+    _recordTimer?.cancel();
+    _recordTimer = null;
+  }
+
+  /// Starts the timer for replaying the log.
+  void startTimer() {
+    _recordTimer = Timer.periodic(const Duration(milliseconds: 1), _tick);
+  }
+
+  Future<void> _tick(Timer timer) async {
+    _ticks++;
+    final indices = <int>[];
+    for (var i = 0; i < _readyRecords.length; i++) {
+      if (_readyRecords[i].replayTime.inMilliseconds < _ticks) {
+        indices.add(i);
+      } else {
+        break;
+      }
+    }
+    if (indices.isNotEmpty) {
+      _readyRecords
+          .getRange(indices.first, indices.last + 1)
+          .forEach((record) => _controller.add(record));
+      _readyRecords.removeRange(indices.first, indices.last + 1);
+    }
+    if (_readyRecords.isEmpty) {
+      if (loop) {
+        _readyRecords.addAll(records);
+        stopTimer();
+        _ticks = 0;
+        _recordTimer = Timer.periodic(const Duration(milliseconds: 1), _tick);
+      } else {
+        stopTimer();
+      }
+    }
+  }
+
+  late final StreamController<LogReplayRecord> _controller =
+      StreamController.broadcast();
+
   /// A stream replicating the recorded log.
   ///
   /// By listening to this stream the [LogReplayRecord.message] of the [records]
   /// will be dispatched when the listen duration passes the
   /// [LogReplayRecord.replayTime] for the given record.
-  Stream<String> get replay {
-    final readyRecords = [...records];
-    late final StreamController<String> controller;
-    Timer? recordTimer;
-    var ticks = 0;
-    void stopTimer() {
-      recordTimer?.cancel();
-      recordTimer = null;
-    }
-
-    Future<void> tick(Timer timer) async {
-      ticks++;
-      final indices = <int>[];
-      for (var i = 0; i < readyRecords.length; i++) {
-        if (readyRecords[i].replayTime.inMilliseconds < ticks) {
-          indices.add(i);
-        } else {
-          break;
-        }
-      }
-      if (indices.isNotEmpty) {
-        readyRecords
-            .getRange(indices.first, indices.last + 1)
-            .forEach((record) => controller.add(record.message));
-        readyRecords.removeRange(indices.first, indices.last + 1);
-      }
-      if (readyRecords.isEmpty) {
-        stopTimer();
-        await controller.close();
-      }
-    }
-
-    void startTimer() {
-      recordTimer = Timer.periodic(const Duration(milliseconds: 1), tick);
-    }
-
-    controller = StreamController<String>(
-      onListen: startTimer,
-      onPause: stopTimer,
-      onCancel: stopTimer,
-      onResume: startTimer,
-    );
-
-    return controller.stream;
-  }
+  Stream<LogReplayRecord> get replay => _controller.stream;
 }
 
 /// A log record for use with [LogReplay].
@@ -118,11 +148,21 @@ class LogReplayRecord {
   ///
   /// If [firstRecordTime] is given, the [replayTime] will be calculated from
   /// the difference to that from the parsed [logTime].
-  factory LogReplayRecord({required String raw, DateTime? firstRecordTime}) {
-    final splits = raw.split(': ');
-    final logTime = DateTime.parse(splits.first);
+  factory LogReplayRecord({
+    required int index,
+    required String raw,
+    DateTime? firstRecordTime,
+  }) {
+    // Regex for basic ISO 8601 datetime.
+    final splits =
+        raw.split(RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d*Z*: '));
+    final timeString =
+        RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d*Z*').matchAsPrefix(raw);
+    final logTime =
+        DateTime.parse(raw.substring(timeString?.start ?? 0, timeString?.end));
     final message = splits.last;
     return LogReplayRecord._(
+      index: index,
       raw: raw,
       message: message,
       logTime: logTime,
@@ -134,11 +174,15 @@ class LogReplayRecord {
 
   /// Default constructor
   const LogReplayRecord._({
+    required this.index,
     required this.raw,
     required this.message,
     required this.logTime,
     required this.replayTime,
   });
+
+  /// The index of this in the log.
+  final int index;
 
   /// Raw string line of this.
   final String raw;

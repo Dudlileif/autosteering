@@ -52,42 +52,6 @@ class SimulatorUpdateFrequency extends _$SimulatorUpdateFrequency {
   void update(int value) => Future(() => state = value);
 }
 
-/// A provider for whether we should send messages to the hardware from the
-/// Simulator Core when network is available, see [networkAvailable].
-@Riverpod(keepAlive: true)
-class SendMessagesToHardwareIfNetwork
-    extends _$SendMessagesToHardwareIfNetwork {
-  @override
-  bool build() {
-    ref.listenSelf((previous, next) {
-      if (previous != null && next != previous) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.hardwareNetworkSendMessages, next);
-      }
-    });
-
-    return ref
-            .read(settingsProvider.notifier)
-            .getBool(SettingsKey.hardwareNetworkSendMessages) ??
-        true;
-  }
-
-  /// Updates the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-}
-
-/// A provider for whether we should send messages to the hardware.
-@riverpod
-bool sendMessagesToHardware(SendMessagesToHardwareRef ref) {
-  ref.listenSelf((previous, next) {
-    ref.read(simInputProvider.notifier).send((sendMessagesToHardware: next));
-  });
-
-  return ref.watch(sendMessagesToHardwareIfNetworkProvider) &&
-      ref.watch(networkAvailableProvider);
-}
-
 /// Sends initial parameters to  the sim core.
 @riverpod
 void initializeSimCore(InitializeSimCoreRef ref) {
@@ -103,11 +67,11 @@ void initializeSimCore(InitializeSimCoreRef ref) {
     ..send((allowSimInterpolation: ref.read(simCoreAllowInterpolationProvider)))
     ..send(ref.read(activeABConfigProvider))
     ..send((pathTracking: ref.read(displayPathTrackingProvider)))
-    ..send((abTracking: ref.read(displayABTrackingProvider)))
-    ..send((sendMessagesToHardware: ref.read(sendMessagesToHardwareProvider)));
+    ..send((abTracking: ref.read(displayABTrackingProvider)));
   if (Device.isNative) {
     ref.read(simInputProvider.notifier)
       ..send(ref.read(hardwareCommunicationConfigProvider))
+      ..send((networkAvailable: ref.read(networkAvailableProvider)))
       ..send(
         (
           logGNSS: ref.read(hardwareLogGnssProvider),

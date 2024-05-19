@@ -103,6 +103,7 @@ class _CopernicusIDButton extends ConsumerWidget {
       );
     }
     return MenuItemButton(
+      closeOnActivate: false,
       leadingIcon: const Padding(
         padding: EdgeInsets.only(left: 8),
         child: Icon(Icons.satellite_alt),

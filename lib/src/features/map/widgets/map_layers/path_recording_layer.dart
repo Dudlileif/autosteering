@@ -35,15 +35,15 @@ class PathRecordingLayer extends ConsumerWidget {
     final settings = ref.watch(activePathRecordingSettingsProvider);
     var vehicleWayPoint =
         ref.watch(mainVehicleProvider.select((vehicle) => vehicle.wayPoint));
-    if (settings.longitudinalOffset.abs() > 0) {
-      vehicleWayPoint =
-          vehicleWayPoint.moveRhumb(distance: settings.longitudinalOffset);
-    }
     if (settings.lateralOffset.abs() > 0) {
       vehicleWayPoint = vehicleWayPoint.moveRhumb(
         distance: settings.lateralOffset,
         angleFromBearing: 90,
       );
+    }
+    if (settings.longitudinalOffset.abs() > 0) {
+      vehicleWayPoint =
+          vehicleWayPoint.moveRhumb(distance: settings.longitudinalOffset);
     }
     return Stack(
       children: [

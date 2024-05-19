@@ -938,7 +938,7 @@ final lastUsedVehicleProvider = Provider<AsyncValue<Vehicle>>.internal(
 );
 
 typedef LastUsedVehicleRef = ProviderRef<AsyncValue<Vehicle>>;
-String _$importVehicleHash() => r'7da6fd5a2c5f77153d4f172be904f7bb36a7f4d7';
+String _$importVehicleHash() => r'5404b690145aadc0cfe630c1898a0c91c02c6b31';
 
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.

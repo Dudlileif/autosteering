@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:autosteering/src/features/common/utils/position_projection_extensions.dart';
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:collection/collection.dart';
@@ -60,6 +60,7 @@ class EditablePathLayer extends ConsumerWidget {
                       return Marker(
                         point: midPoint.position.latLng,
                         child: AddPointMarker(
+                          alwaysVisible: Device.isMobile,
                           point: midPoint.position,
                           radius: 5,
                           onTap: () => ref
@@ -78,6 +79,9 @@ class EditablePathLayer extends ConsumerWidget {
                     (index, point) => Marker(
                       point: point.position.latLng,
                       child: GestureDetector(
+                        onDoubleTap: () => ref
+                            .read(finishedPathRecordingListProvider.notifier)
+                            .remove(index),
                         onSecondaryTap: () => ref
                             .read(finishedPathRecordingListProvider.notifier)
                             .remove(index),

@@ -180,4 +180,7 @@ class WheelAngleToAckermann {
   double get oppositeAngle =>
       wheelAngle -
       (ackermannPercentage / 100) * (wheelAngle - ackermannAngle.toDegrees());
+
+  /// The rurning radius for this wheel angle.
+  double get turningRadius => tan(pi / 2 - ackermannAngle).abs() * wheelBase;
 }

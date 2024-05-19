@@ -698,9 +698,13 @@ class _ABTrackingMenu extends ConsumerWidget {
         menuChildren: trackings
             .map(
               (tracking) => ListTile(
-                onTap: () => ref
-                    .read(configuredABTrackingProvider.notifier)
-                    .update(tracking),
+                onTap: () {
+                  ref
+                    ..read(configuredABTrackingProvider.notifier)
+                        .update(tracking)
+                    ..read(currentABTrackingTypeProvider.notifier)
+                        .update(tracking.type);
+                },
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -764,7 +768,7 @@ class _ABTrackingMenu extends ConsumerWidget {
                       text += '${tracking.initialBearing.toStringAsFixed(0)}° ';
                     }
                     text += '| ${tracking.width} m |';
-                    text += ' - ${tracking.lines.length} swaths';
+                    text += ' ${tracking.lines.length} swaths';
 
                     return Text(text);
                   },

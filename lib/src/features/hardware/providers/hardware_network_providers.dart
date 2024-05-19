@@ -22,7 +22,6 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:collection/collection.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -73,66 +72,100 @@ class RemoteControlHardwareNetworkAlive
   void update({required bool value}) => Future(() => state = value);
 }
 
+/// A provider for all the
+@Riverpod(keepAlive: true)
+class NetworkInterfaces extends _$NetworkInterfaces {
+  @override
+  List<NetworkInterface> build() {
+    Timer.periodic(const Duration(milliseconds: 100), (timer) async {
+      state = await NetworkInterface.list();
+    });
+    return [];
+  }
+
+  @override
+  bool updateShouldNotify(
+    List<NetworkInterface> previous,
+    List<NetworkInterface> next,
+  ) =>
+      !const DeepCollectionEquality.unordered().equals(previous, next);
+}
+
 /// A provider for the wireless IP address of the device.
-@riverpod
-FutureOr<String?> deviceIPAdressWlan(DeviceIPAdressWlanRef ref) async {
-  return await NetworkInterface.list(type: InternetAddressType.IPv4)
-      .then((interfaces) {
-    if (interfaces.isNotEmpty) {
-      return interfaces
-          .firstWhereOrNull(
-            (element) =>
-                element.name.toLowerCase().contains('wlan0') ||
-                element.name
-                    .toLowerCase()
-                    // Regex for wlp2s0 and similar
-                    .contains(RegExp(r'wlp\d{1,}s\d{1,}')),
-          )
-          ?.addresses
-          .first
-          .address;
+@Riverpod(keepAlive: true)
+String? deviceIPAdressWlan(DeviceIPAdressWlanRef ref) {
+  ref.listenSelf((previous, next) {
+    if (next != previous) {
+      if (next == null) {
+        Logger.instance.i('Lost WLAN connection IP.');
+      } else {
+        Logger.instance.i('Acquired WLAN connection IP: $next');
+      }
     }
-    return null;
   });
+  return ref
+      .watch(networkInterfacesProvider)
+      .firstWhereOrNull(
+        (element) =>
+            element.name.toLowerCase().startsWith('wlan0') ||
+            element.name
+                .toLowerCase()
+                // Regex for wlp2s0 and similar
+                .contains(RegExp(r'wlp\d{1,}s\d{1,}')),
+      )
+      ?.addresses
+      .first
+      .address;
 }
 
 /// A provider for the access point host IP address of the device.
-@riverpod
-FutureOr<String?> deviceIPAdressAP(DeviceIPAdressAPRef ref) async =>
-    await NetworkInterface.list(type: InternetAddressType.IPv4)
-        .then((interfaces) {
-      if (interfaces.isNotEmpty) {
-        return interfaces
-            .firstWhereOrNull(
-              (element) =>
-                  element.name.toLowerCase().contains('ap') ||
-                  element.name.toLowerCase().contains('wlan2'),
-            )
-            ?.addresses
-            .first
-            .address;
+@Riverpod(keepAlive: true)
+String? deviceIPAdressAP(DeviceIPAdressAPRef ref) {
+  ref.listenSelf((previous, next) {
+    if (next != previous) {
+      if (next == null) {
+        Logger.instance.i('Lost AP connection IP.');
+      } else {
+        Logger.instance.i('Acquired AP connection IP: $next');
       }
-      return null;
-    });
+    }
+  });
+  return ref
+      .watch(networkInterfacesProvider)
+      .firstWhereOrNull(
+        (element) =>
+            element.name.toLowerCase().contains('ap') ||
+            element.name.toLowerCase().contains('wlan2') ||
+            element.name.toLowerCase().contains('swlan'),
+      )
+      ?.addresses
+      .first
+      .address;
+}
 
 /// A provider for the ethernet IP address of the device.
-@riverpod
-FutureOr<String?> deviceIPAdressEthernet(
+@Riverpod(keepAlive: true)
+String? deviceIPAdressEthernet(
   DeviceIPAdressEthernetRef ref,
-) async =>
-    await NetworkInterface.list(type: InternetAddressType.IPv4)
-        .then((interfaces) {
-      if (interfaces.isNotEmpty) {
-        return interfaces
-            .firstWhereOrNull(
-              (element) => element.name.toLowerCase().startsWith('e'),
-            )
-            ?.addresses
-            .first
-            .address;
+) {
+  ref.listenSelf((previous, next) {
+    if (next != previous) {
+      if (next == null) {
+        Logger.instance.i('Lost Ethernet connection IP.');
+      } else {
+        Logger.instance.i('Acquired Ethernet connection IP: $next');
       }
-      return null;
-    });
+    }
+  });
+  return ref
+      .watch(networkInterfacesProvider)
+      .firstWhereOrNull(
+        (element) => element.name.toLowerCase().startsWith('e'),
+      )
+      ?.addresses
+      .first
+      .address;
+}
 
 /// A provider for the IP adress of the steering hardware we want to communicate
 /// with.
@@ -338,34 +371,6 @@ class TcpServer extends _$TcpServer {
   }
 }
 
-/// A provider for the current connection of the device.
-@Riverpod(keepAlive: true)
-Stream<List<ConnectivityResult>> currentConnection(CurrentConnectionRef ref) {
-  ref.listenSelf((previous, next) {
-    next.when(
-      data: (data) {
-        if (data != previous?.value) {
-          if (previous != next) {
-            Logger.instance
-                .i('Device connections: ${data.map((e) => e.name).toList()}');
-            ref
-              ..invalidate(deviceIPAdressWlanProvider)
-              ..invalidate(deviceIPAdressAPProvider)
-              ..invalidate(deviceIPAdressEthernetProvider);
-          }
-        }
-      },
-      error: (error, stackTrace) => Logger.instance.e(
-        'Error getting device connection.',
-        error: error,
-        stackTrace: stackTrace,
-      ),
-      loading: () {},
-    );
-  });
-  return Connectivity().onConnectivityChanged;
-}
-
 /// A provider for whether a network connection can be made.
 ///
 /// If using VPN while being an access point, communication with hardware
@@ -384,28 +389,11 @@ Stream<List<ConnectivityResult>> currentConnection(CurrentConnectionRef ref) {
 bool networkAvailable(NetworkAvailableRef ref) {
   ref.listenSelf((previous, next) {
     if (previous != next) {
-      Logger.instance.i('Network available: $next');
+      ref.read(simInputProvider.notifier).send((networkAvailable: next));
     }
   });
 
-  return ref.watch(currentConnectionProvider).when(
-        data: (data) => data.any(
-          (element) => switch (element) {
-            ConnectivityResult.ethernet ||
-            ConnectivityResult.wifi ||
-            ConnectivityResult.mobile =>
-              true,
-            _ => false,
-          },
-        ),
-        error: (error, stackTrace) {
-          Logger.instance.e(
-            'Failed to find current connection type.',
-            error: error,
-            stackTrace: stackTrace,
-          );
-          return false;
-        },
-        loading: () => false,
-      );
+  return ref.watch(deviceIPAdressWlanProvider) != null ||
+      ref.watch(deviceIPAdressAPProvider) != null ||
+      ref.watch(deviceIPAdressEthernetProvider) != null;
 }

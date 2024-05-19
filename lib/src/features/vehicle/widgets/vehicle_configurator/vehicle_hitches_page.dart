@@ -29,6 +29,12 @@ class VehicleHitchesPage extends ConsumerWidget {
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
+      Center(
+        child: Text(
+          'Hitches',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
       ...switch (vehicle) {
         AxleSteeredVehicle() => [
             TextFormField(
@@ -188,18 +194,14 @@ class VehicleHitchesPage extends ConsumerWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8),
-              child: VehicleConfiguratorPreviousButton(),
-            ),
-            ...children.map(
+          children: children
+              .map(
               (widget) => Padding(
                 padding: const EdgeInsets.all(8),
                 child: SizedBox(width: 400, child: widget),
               ),
-            ),
-          ],
+              )
+              .toList(),
         ),
       ),
     );

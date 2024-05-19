@@ -25,7 +25,7 @@ final ntripClientProvider = FutureProvider<NtripClient?>.internal(
 );
 
 typedef NtripClientRef = FutureProviderRef<NtripClient?>;
-String _$ntripSourcetableHash() => r'2042b381721d57ec175460e8eb05df227d39047a';
+String _$ntripSourcetableHash() => r'e313f394680cdfee69893cee40d890f75f64c9e8';
 
 /// A provider for the NTRIP caster sourcetable for the currently selected
 /// NTRIP caster server.

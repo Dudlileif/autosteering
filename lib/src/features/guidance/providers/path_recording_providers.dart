@@ -141,15 +141,15 @@ Future<void> automaticPathRecording(AutomaticPathRecordingRef ref) async {
         ref.watch(mainVehicleProvider.select((vehicle) => vehicle.wayPoint));
     if (wayPoint != points.lastOrNull) {
       var correctedWayPoint = wayPoint;
-      if (settings.longitudinalOffset.abs() > 0) {
-        correctedWayPoint = correctedWayPoint.moveRhumb(
-          distance: settings.longitudinalOffset,
-        );
-      }
       if (settings.lateralOffset.abs() > 0) {
         correctedWayPoint = correctedWayPoint.moveRhumb(
           distance: settings.lateralOffset,
           angleFromBearing: 90,
+        );
+      }
+      if (settings.longitudinalOffset.abs() > 0) {
+        correctedWayPoint = correctedWayPoint.moveRhumb(
+          distance: settings.longitudinalOffset,
         );
       }
       if (points.isNotEmpty) {

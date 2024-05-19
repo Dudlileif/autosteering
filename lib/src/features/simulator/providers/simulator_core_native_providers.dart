@@ -164,6 +164,12 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
       ref
           .read(remoteControlHardwareNetworkAliveProvider.notifier)
           .update(value: message.remoteControlHeartbeat);
+    } else if (message is ({int logReplayIndex})) {
+      if (ref.exists(logReplayIndexProvider)) {
+        ref
+            .read(logReplayIndexProvider.notifier)
+            .update(message.logReplayIndex);
+      }
     } else if (message is List) {
       if (message.any((element) => element is Exception)) {
         Logger.instance.e(

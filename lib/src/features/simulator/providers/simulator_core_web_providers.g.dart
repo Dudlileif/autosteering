@@ -6,7 +6,7 @@ part of 'simulator_core_web_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$simCoreWebStreamHash() => r'f269bc40493cd5343a4ac36112246b2554eb9586';
+String _$simCoreWebStreamHash() => r'350a25d1fb2561279c32b956f3f49383106aca0b';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.

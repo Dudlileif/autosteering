@@ -18,7 +18,6 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
-import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'combined_communication_providers.g.dart';
@@ -28,6 +27,9 @@ part 'combined_communication_providers.g.dart';
 @riverpod
 void _combinedNativeNetwork(_CombinedNativeNetworkRef ref) => ref
   ..watch(hardwareCommunicationConfigProvider)
+  ..watch(deviceIPAdressWlanProvider)
+  ..watch(deviceIPAdressAPProvider)
+  ..watch(deviceIPAdressEthernetProvider)
   ..watch(ntripClientProvider)
   ..watch(tcpServerProvider)
   ..watch(ntripDataUsageSessionProvider)
@@ -49,8 +51,7 @@ void combinedCommunication(CombinedCommunicationRef ref) {
     ref.watch(_combinedSerialProvider);
   }
   ref
-    ..watch(sendMessagesToHardwareProvider)
-    ..watch(sendRemoteControlLedStateProvider);
+.watch(sendRemoteControlLedStateProvider);
 }
 
 /// A provider for whether any hardware is connected and communicating with

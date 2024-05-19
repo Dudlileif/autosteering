@@ -226,7 +226,7 @@ class WayPoint extends Equatable {
   ///
   /// If [oppositeOfBearing] is true, then [bearing] + 180 is used to look
   /// for intersections.
-  WayPoint? intersectionWithRhumb(
+  List<WayPoint> intersectionsWithRhumb(
     Iterable<Geographic> ring, {
     bool oppositeOfBearing = false,
   }) {
@@ -236,15 +236,6 @@ class WayPoint extends Equatable {
       final start = ring.elementAt(i);
       final end = ring.elementAt((i + 1) % ring.length);
 
-      final bearingToStart = position.rhumb.initialBearingTo(start);
-      final bearingToEnd = position.rhumb.initialBearingTo(end);
-
-      // Skip lines that are to behind of this point or ahead if
-      // [oppositeOfBearing].
-      if ((bearingDifference(bearing, bearingToStart) > 90 &&
-              bearingDifference(bearing, bearingToEnd) > 90) &&
-          !oppositeOfBearing) continue;
-
       final ringIntersection = position.spherical.intersectionWith(
         bearing: oppositeOfBearing ? (bearing + 180).wrap360() : bearing,
         other: start,
@@ -252,6 +243,17 @@ class WayPoint extends Equatable {
       );
 
       if (ringIntersection != null) {
+        // Skip lines that are behind of this point or ahead if
+        // [oppositeOfBearing].
+        final bearingDifferenceToIntersection = bearingDifference(
+          bearing,
+          position.rhumb.initialBearingTo(ringIntersection),
+        );
+        if ((bearingDifferenceToIntersection > 90 && !oppositeOfBearing) ||
+            (bearingDifferenceToIntersection < 90 && oppositeOfBearing)) {
+          continue;
+        }
+
         // Check that we're inside the boundary box.
         final distanceAlongLine = ringIntersection.spherical
             .alongTrackDistanceTo(start: start, end: end);
@@ -269,25 +271,21 @@ class WayPoint extends Equatable {
         }
       }
     }
-    if (intersections.isNotEmpty) {
-      intersections.sortByCompare<double>(
-        (element) => position.rhumb.distanceTo(element),
-        (a, b) => a.compareTo(b),
-      );
-
-      return copyWith(
-        position: intersections.first,
-        bearing: position.rhumb.finalBearingTo(intersections.first),
-      );
-    }
-    return null;
+    return intersections
+        .map(
+          (intersection) => copyWith(
+            position: intersection,
+            bearing: position.rhumb.finalBearingTo(intersection),
+          ),
+        )
+        .toList();
   }
 
   /// Finds an intersection from this to [ring] with the [bearing] of this.
   ///
   /// If [oppositeOfBearing] is true, then [bearing] + 180 is used to look
   /// for intersections.
-  WayPoint? intersectionWithSpherical(
+  List<WayPoint> intersectionsWithSpherical(
     Iterable<Geographic> ring, {
     bool oppositeOfBearing = false,
   }) {
@@ -297,15 +295,6 @@ class WayPoint extends Equatable {
       final start = ring.elementAt(i);
       final end = ring.elementAt((i + 1) % ring.length);
 
-      final bearingToStart = position.spherical.initialBearingTo(start);
-      final bearingToEnd = position.spherical.initialBearingTo(end);
-
-      // Skip lines that are to behind of this point or ahead if
-      // [oppositeOfBearing].
-      if ((bearingDifference(bearing, bearingToStart) > 90 &&
-              bearingDifference(bearing, bearingToEnd) > 90) &&
-          !oppositeOfBearing) continue;
-
       final ringIntersection = position.spherical.intersectionWith(
         bearing: oppositeOfBearing ? (bearing + 180).wrap360() : bearing,
         other: start,
@@ -313,6 +302,17 @@ class WayPoint extends Equatable {
       );
 
       if (ringIntersection != null) {
+        // Skip lines that are behind of this point or ahead if
+        // [oppositeOfBearing].
+        final bearingDifferenceToIntersection = bearingDifference(
+          bearing,
+          position.spherical.initialBearingTo(ringIntersection),
+        );
+        if ((bearingDifferenceToIntersection > 90 && !oppositeOfBearing) ||
+            (bearingDifferenceToIntersection < 90 && oppositeOfBearing)) {
+          continue;
+        }
+
         // Check that we're inside the boundary box.
         final distanceAlongLine = ringIntersection.spherical
             .alongTrackDistanceTo(start: start, end: end);
@@ -330,16 +330,54 @@ class WayPoint extends Equatable {
         }
       }
     }
+    return intersections
+        .map(
+          (intersection) => copyWith(
+            position: intersection,
+            bearing: position.spherical.finalBearingTo(intersection),
+          ),
+        )
+        .toList();
+  }
+
+  /// Finds an intersection from this to [ring] with the [bearing] of this.
+  ///
+  /// If [oppositeOfBearing] is true, then [bearing] + 180 is used to look
+  /// for intersections.
+  WayPoint? intersectionWithRhumb(
+    Iterable<Geographic> ring, {
+    bool oppositeOfBearing = false,
+  }) {
+    final intersections =
+        intersectionsWithRhumb(ring, oppositeOfBearing: oppositeOfBearing);
     if (intersections.isNotEmpty) {
       intersections.sortByCompare<double>(
-        (element) => position.spherical.distanceTo(element),
+        (element) => position.rhumb.distanceTo(element.position),
         (a, b) => a.compareTo(b),
       );
 
-      return copyWith(
-        position: intersections.first,
-        bearing: position.spherical.finalBearingTo(intersections.first),
+      return intersections.first;
+    }
+    return null;
+  }
+
+  /// Finds an intersection from this to [ring] with the [bearing] of this.
+  ///
+  /// If [oppositeOfBearing] is true, then [bearing] + 180 is used to look
+  /// for intersections.
+  WayPoint? intersectionWithSpherical(
+    Iterable<Geographic> ring, {
+    bool oppositeOfBearing = false,
+  }) {
+    final intersections =
+        intersectionsWithSpherical(ring, oppositeOfBearing: oppositeOfBearing);
+    if (intersections.isNotEmpty) {
+      intersections.sortByCompare<double>(
+        (element) => position.spherical.distanceTo(element.position),
+        (a, b) => a.compareTo(b),
       );
+
+      return intersections.first;
     }
     return null;
   }

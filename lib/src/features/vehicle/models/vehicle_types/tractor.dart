@@ -202,7 +202,7 @@ final class Tractor extends AxleSteeredVehicle {
         antennaHeight: antennaHeight ?? this.antennaHeight,
         antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
         minTurningRadius: minTurningRadius ?? this.minTurningRadius,
-        steeringAngleMax: steeringAngleMax ?? _steeringAngleMaxRaw,
+        steeringAngleMax: steeringAngleMax ?? steeringAngleMaxRaw,
         trackWidth: trackWidth ?? this.trackWidth,
         wheelBase: wheelBase ?? this.wheelBase,
         antennaToSolidAxleDistance:

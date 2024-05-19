@@ -42,7 +42,7 @@ class SteeringHardwareConfigurator extends StatelessWidget {
     return Card(
       color: Colors.transparent,
       child: SizedBox(
-        width: 300,
+        width: 325,
         child: DefaultTabController(
           length: _tabs.length,
           child: Scaffold(
@@ -73,6 +73,7 @@ class SteeringHardwareConfigurator extends StatelessWidget {
                   unselectedLabelStyle: theme.textTheme.bodyMedium
                       ?.copyWith(fontWeight: FontWeight.w300),
                   tabs: _tabs,
+                  dividerColor: theme.dividerColor,
                 ),
                 const Expanded(
                   child: TabBarView(
@@ -91,8 +92,8 @@ class SteeringHardwareConfigurator extends StatelessWidget {
   }
 }
 
-class _SteeringHardwareConfigSlider extends StatefulWidget {
-  const _SteeringHardwareConfigSlider({
+class _SteeringHardwareConfigListTile extends StatelessWidget {
+  const _SteeringHardwareConfigListTile({
     required this.initialValue,
     required this.text,
     required this.onChangeEnd,
@@ -104,6 +105,53 @@ class _SteeringHardwareConfigSlider extends StatefulWidget {
     this.divisions,
     this.selectionValues,
     super.key,
+  });
+
+  final num initialValue;
+  final String Function(double value) text;
+  final void Function(double value) onChangeEnd;
+  final String? subtitle;
+  final num? resetValue;
+  final Widget Function(void Function(double) updateValue)? setWidget;
+  final num? min;
+  final num? max;
+  final int? divisions;
+  final List<num>? selectionValues;
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(text(initialValue.toDouble())),
+      onTap: () => showDialog<void>(
+        context: context,
+        builder: (context) => _SteeringHardwareConfigDialog(
+          initialValue: initialValue,
+          text: text,
+          onChangeEnd: onChangeEnd,
+          subtitle: subtitle,
+          resetValue: resetValue,
+          setWidget: setWidget,
+          min: min,
+          max: max,
+          divisions: divisions,
+          selectionValues: selectionValues,
+        ),
+      ),
+    );
+  }
+}
+
+class _SteeringHardwareConfigDialog extends StatefulWidget {
+  const _SteeringHardwareConfigDialog({
+    required this.initialValue,
+    required this.text,
+    required this.onChangeEnd,
+    this.subtitle,
+    this.resetValue,
+    this.setWidget,
+    this.min,
+    this.max,
+    this.divisions,
+    this.selectionValues,
   });
   final num initialValue;
   final String Function(double value) text;
@@ -117,11 +165,11 @@ class _SteeringHardwareConfigSlider extends StatefulWidget {
   final List<num>? selectionValues;
 
   @override
-  State<StatefulWidget> createState() => __SteeringHardwareConfigSliderState();
+  State<StatefulWidget> createState() => __SteeringHardwareConfigDialogState();
 }
 
-class __SteeringHardwareConfigSliderState
-    extends State<_SteeringHardwareConfigSlider> {
+class __SteeringHardwareConfigDialogState
+    extends State<_SteeringHardwareConfigDialog> {
   late var _value = widget.initialValue.toDouble();
 
   @override
@@ -131,36 +179,26 @@ class __SteeringHardwareConfigSliderState
       widget.text(_value),
       style: theme.textTheme.bodyLarge,
     );
-    final description = widget.subtitle != null
-        ? Column(
-            children: [
-              text,
-              Text(widget.subtitle!),
-            ],
-          )
-        : text;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (widget.resetValue != null)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              description,
-              IconButton(
-                onPressed: () {
-                  setState(() => _value = widget.resetValue!.toDouble());
-                  widget.onChangeEnd(widget.resetValue!.toDouble());
-                },
-                icon: const Icon(Icons.refresh),
-              ),
-              if (widget.setWidget != null)
-                widget.setWidget!((value) => setState(() => _value = value)),
-            ],
-          )
-        else
+  
+    return SimpleDialog(
+      contentPadding: const EdgeInsets.only(left: 24, right: 24, bottom: 8),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
           text,
+          if (widget.resetValue != null)
+            IconButton(
+              onPressed: () {
+                setState(() => _value = widget.resetValue!.toDouble());
+              },
+              icon: const Icon(Icons.refresh),
+            ),
+        ],
+      ),
+      children: [
+        if (widget.subtitle != null) Text(widget.subtitle!),
+        if (widget.setWidget != null)
+          widget.setWidget!((value) => setState(() => _value = value)),
         Slider(
           value: widget.selectionValues != null
               ? widget.selectionValues!.indexOf(_value.round()).toDouble()
@@ -170,11 +208,6 @@ class __SteeringHardwareConfigSliderState
                 ? widget.selectionValues![value.round()].toDouble()
                 : value,
           ),
-          onChangeEnd: (value) {
-            widget.onChangeEnd(
-              widget.selectionValues?[value.round()].toDouble() ?? value,
-            );
-          },
           min: widget.min?.toDouble() ?? 0,
           max: widget.selectionValues != null
               ? widget.selectionValues!.length - 1
@@ -182,6 +215,22 @@ class __SteeringHardwareConfigSliderState
           divisions: widget.selectionValues != null
               ? widget.selectionValues!.length - 1
               : widget.divisions,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SimpleDialogOption(
+              onPressed: Navigator.of(context).pop,
+              child: const Text('Cancel'),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                widget.onChangeEnd(_value);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Apply'),
+            ),
+          ],
         ),
       ],
     );
@@ -200,158 +249,21 @@ class _MotorPage extends ConsumerWidget {
           .select((value) => value.steeringHardwareConfig.maxRPM),
     );
 
-    return ListView(
-      children: [
-        // Invert motor output
-        Consumer(
-          child: Text(
-            'Invert motor direction',
-            style: theme.textTheme.bodyLarge,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(
-              mainVehicleProvider.select(
-                (vehicle) => vehicle.steeringHardwareConfig.invertDirection,
-              ),
-            ),
-            onChanged: (value) {
-              if (value != null) {
-                ref.read(simInputProvider.notifier).send(
-                      ref
-                          .read(
-                            mainVehicleProvider.select(
-                              (value) => value.steeringHardwareConfig,
-                            ),
-                          )
-                          .copyWith(invertDirection: value),
-                    );
-
-                // Wait a short while before saving the hopefully
-                // updated vehicle.
-                Timer(const Duration(milliseconds: 100), () {
-                  ref.read(
-                    updateSteeringHardwareConfigProvider(
-                      const SteeringHardwareConfigKeysContainer(
-                        {SteeringHardwareConfigKey.invertDirection},
-                      ),
-                    ),
-                  );
-                  final vehicle = ref.watch(mainVehicleProvider);
-                  ref.read(saveVehicleProvider(vehicle));
-                  Logger.instance.i(
-                    '''Updated vehicle motor config invert output: ${!value} -> ${vehicle.steeringHardwareConfig.invertDirection}''',
-                  );
-                });
-              }
-            },
-            secondary: child,
-          ),
+    final children = [
+      // Invert motor output
+      Consumer(
+        child: Text(
+          'Invert motor direction',
+          style: theme.textTheme.bodyLarge,
         ),
-        // Threshold velocity
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: _SteeringHardwareConfigSlider(
-            initialValue: ref.read(
-              mainVehicleProvider
-                  .select((value) => value.autosteeringThresholdVelocity),
+        builder: (context, ref, child) => CheckboxListTile(
+          value: ref.watch(
+            mainVehicleProvider.select(
+              (vehicle) => vehicle.steeringHardwareConfig.invertDirection,
             ),
-            resetValue: 0.05,
-            text: (value) =>
-                '''Steering threshold: ${value.toStringAsFixed(2)} m/s''',
-            subtitle: 'Minimum velocity for autosteering',
-            onChangeEnd: (value) {
-              final oldValue = ref.read(
-                mainVehicleProvider
-                    .select((value) => value.autosteeringThresholdVelocity),
-              );
-              ref.read(simInputProvider.notifier).send(
-                    ref.read(mainVehicleProvider).copyWith(
-                          autosteeringThresholdVelocity: value,
-                        ),
-                  );
-              // Wait a short while before saving the
-              // hopefully updated vehicle.
-              Timer(const Duration(milliseconds: 100), () {
-                final vehicle = ref.watch(mainVehicleProvider);
-                ref.read(saveVehicleProvider(vehicle));
-                Logger.instance.i(
-                  '''Updated vehicle motor config threshold velocity: $oldValue -> ${vehicle.autosteeringThresholdVelocity}''',
-                );
-              });
-            },
-            min: 0.01,
-            max: 0.4,
-            divisions: 39,
           ),
-        ),
-        // Motor max RPM
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: _SteeringHardwareConfigSlider(
-            initialValue: ref.read(
-              mainVehicleProvider
-                  .select((value) => value.steeringHardwareConfig.maxRPM),
-            ),
-            resetValue: 200,
-            text: (value) => 'Max speed: ${value.toStringAsFixed(1)} RPM',
-            onChangeEnd: (value) {
-              final oldConfig = ref.read(
-                mainVehicleProvider
-                    .select((value) => value.steeringHardwareConfig),
-              );
-              ref.read(simInputProvider.notifier).send(
-                    oldConfig.copyWith(
-                      maxRPM: value,
-                      coolstepThresholdRPM:
-                          oldConfig.coolstepThresholdRPM.clamp(0, value),
-                      dcStepThresholdRPM:
-                          oldConfig.dcStepThresholdRPM.clamp(0, value),
-                      highVelocityChopperModeChangeThresholdRPM: oldConfig
-                          .highVelocityChopperModeChangeThresholdRPM
-                          .clamp(0, value),
-                      stealthChopThresholdRPM:
-                          oldConfig.stealthChopThresholdRPM.clamp(0, value),
-                    ),
-                  );
-              // Wait a short while before saving the
-              // hopefully updated vehicle.
-              Timer(const Duration(milliseconds: 100), () {
-                ref.read(
-                  updateSteeringHardwareConfigProvider(
-                    const SteeringHardwareConfigKeysContainer(
-                      {SteeringHardwareConfigKey.maxRPM},
-                    ),
-                  ),
-                );
-                final vehicle = ref.watch(mainVehicleProvider);
-                ref.read(saveVehicleProvider(vehicle));
-                Logger.instance.i(
-                  '''Updated vehicle motor config max RPM: ${oldConfig.maxRPM} -> ${vehicle.steeringHardwareConfig.maxRPM}''',
-                );
-              });
-            },
-            max: 500,
-            divisions: 50,
-          ),
-        ),
-        // Motor max acceletation RPM/s^2
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: _SteeringHardwareConfigSlider(
-            initialValue: ref.read(
-              mainVehicleProvider.select(
-                (value) => value.steeringHardwareConfig.maxAcceleration,
-              ),
-            ),
-            resetValue: 100,
-            text: (value) =>
-                'Max acceleration: ${value.toStringAsFixed(1)} RPM/s²',
-            onChangeEnd: (value) {
-              final oldValue = ref.read(
-                mainVehicleProvider.select(
-                  (value) => value.steeringHardwareConfig.maxAcceleration,
-                ),
-              );
+          onChanged: (value) {
+            if (value != null) {
               ref.read(simInputProvider.notifier).send(
                     ref
                         .read(
@@ -359,33 +271,158 @@ class _MotorPage extends ConsumerWidget {
                             (value) => value.steeringHardwareConfig,
                           ),
                         )
-                        .copyWith(
-                          maxAcceleration: value,
-                        ),
+                        .copyWith(invertDirection: value),
                   );
-              // Wait a short while before saving the
-              // hopefully updated vehicle.
+
+              // Wait a short while before saving the hopefully
+              // updated vehicle.
               Timer(const Duration(milliseconds: 100), () {
                 ref.read(
                   updateSteeringHardwareConfigProvider(
                     const SteeringHardwareConfigKeysContainer(
-                      {SteeringHardwareConfigKey.maxAcceleration},
+                      {SteeringHardwareConfigKey.invertDirection},
                     ),
                   ),
                 );
                 final vehicle = ref.watch(mainVehicleProvider);
                 ref.read(saveVehicleProvider(vehicle));
                 Logger.instance.i(
-                  '''Updated vehicle motor config max acceleration RPM/s²: $oldValue -> ${vehicle.steeringHardwareConfig.maxAcceleration}''',
+                  '''Updated vehicle motor config invert output: ${!value} -> ${vehicle.steeringHardwareConfig.invertDirection}''',
                 );
               });
-            },
-            max: 200,
-            divisions: 20,
+            }
+          },
+          secondary: child,
+        ),
+      ),
+      // Threshold velocity
+      _SteeringHardwareConfigListTile(
+        initialValue: ref.read(
+          mainVehicleProvider
+              .select((value) => value.autosteeringThresholdVelocity),
+        ),
+        resetValue: 0.05,
+        text: (value) =>
+            '''Steering threshold: ${value.toStringAsFixed(2)} m/s''',
+        subtitle: 'Minimum velocity for autosteering',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
+            mainVehicleProvider
+                .select((value) => value.autosteeringThresholdVelocity),
+          );
+          ref.read(simInputProvider.notifier).send(
+                ref.read(mainVehicleProvider).copyWith(
+                      autosteeringThresholdVelocity: value,
+                    ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config threshold velocity: $oldValue -> ${vehicle.autosteeringThresholdVelocity}''',
+            );
+          });
+        },
+        min: 0.01,
+        max: 0.4,
+        divisions: 39,
+      ),
+      // Motor max RPM
+      _SteeringHardwareConfigListTile(
+        initialValue: ref.read(
+          mainVehicleProvider
+              .select((value) => value.steeringHardwareConfig.maxRPM),
+        ),
+        resetValue: 200,
+        text: (value) => 'Max speed: ${value.round()} RPM',
+        onChangeEnd: (value) {
+          final oldConfig = ref.read(
+            mainVehicleProvider.select((value) => value.steeringHardwareConfig),
+          );
+          ref.read(simInputProvider.notifier).send(
+                oldConfig.copyWith(
+                  maxRPM: value,
+                  coolstepThresholdRPM:
+                      oldConfig.coolstepThresholdRPM.clamp(0, value),
+                  dcStepThresholdRPM:
+                      oldConfig.dcStepThresholdRPM.clamp(0, value),
+                  highVelocityChopperModeChangeThresholdRPM: oldConfig
+                      .highVelocityChopperModeChangeThresholdRPM
+                      .clamp(0, value),
+                  stealthChopThresholdRPM:
+                      oldConfig.stealthChopThresholdRPM.clamp(0, value),
+                ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer(
+                  {SteeringHardwareConfigKey.maxRPM},
+                ),
+              ),
+            );
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config max RPM: ${oldConfig.maxRPM} -> ${vehicle.steeringHardwareConfig.maxRPM}''',
+            );
+          });
+        },
+        max: 300,
+        divisions: 30,
+      ),
+      // Motor max acceletation RPM/s^2
+      _SteeringHardwareConfigListTile(
+        initialValue: ref.read(
+          mainVehicleProvider.select(
+            (value) => value.steeringHardwareConfig.maxAcceleration,
           ),
         ),
+        resetValue: 100,
+        text: (value) => 'Max acceleration: ${value.round()} RPM/s²',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
+            mainVehicleProvider.select(
+              (value) => value.steeringHardwareConfig.maxAcceleration,
+            ),
+          );
+          ref.read(simInputProvider.notifier).send(
+                ref
+                    .read(
+                      mainVehicleProvider.select(
+                        (value) => value.steeringHardwareConfig,
+                      ),
+                    )
+                    .copyWith(
+                      maxAcceleration: value,
+                    ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer(
+                  {SteeringHardwareConfigKey.maxAcceleration},
+                ),
+              ),
+            );
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config max acceleration RPM/s²: $oldValue -> ${vehicle.steeringHardwareConfig.maxAcceleration}''',
+            );
+          });
+        },
+        max: 200,
+        divisions: 20,
+      ),
         // Micro steps
-        _SteeringHardwareConfigSlider(
+      _SteeringHardwareConfigListTile(
           initialValue: ref.read(
             mainVehicleProvider
                 .select((value) => value.steeringHardwareConfig.microSteps),
@@ -429,7 +466,7 @@ class _MotorPage extends ConsumerWidget {
           resetValue: 256,
         ),
         // Steps per rotation
-        _SteeringHardwareConfigSlider(
+      _SteeringHardwareConfigListTile(
           initialValue: ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig.stepsPerRotation,
@@ -474,7 +511,7 @@ class _MotorPage extends ConsumerWidget {
           resetValue: 200,
         ),
         // RMS current
-        _SteeringHardwareConfigSlider(
+      _SteeringHardwareConfigListTile(
           initialValue: ref.read(
             mainVehicleProvider
                 .select((value) => value.steeringHardwareConfig.rmsCurrent),
@@ -518,7 +555,7 @@ class _MotorPage extends ConsumerWidget {
           resetValue: 1000,
         ),
         // StallGuard threshold
-        _SteeringHardwareConfigSlider(
+      _SteeringHardwareConfigListTile(
           initialValue: ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig.stallguardThreshold,
@@ -566,7 +603,7 @@ class _MotorPage extends ConsumerWidget {
           subtitle: 'Stalling sensitivity',
         ),
         // StealthChop upper threshold
-        _SteeringHardwareConfigSlider(
+      _SteeringHardwareConfigListTile(
           key: ValueKey('StealthChop - $maxRPM'),
           initialValue: ref.watch(
             mainVehicleProvider.select(
@@ -615,7 +652,7 @@ class _MotorPage extends ConsumerWidget {
           subtitle: 'Upper threshold',
         ),
         // High velocity chopper change threshold
-        _SteeringHardwareConfigSlider(
+      _SteeringHardwareConfigListTile(
           key: ValueKey('High velocity - $maxRPM'),
           initialValue: ref.watch(
             mainVehicleProvider.select(
@@ -667,7 +704,7 @@ class _MotorPage extends ConsumerWidget {
           subtitle: 'Lower threshold',
         ),
         // CoolStep threshold
-        _SteeringHardwareConfigSlider(
+      _SteeringHardwareConfigListTile(
           key: ValueKey('CoolStep - $maxRPM'),
           initialValue: ref.watch(
             mainVehicleProvider.select(
@@ -716,7 +753,7 @@ class _MotorPage extends ConsumerWidget {
           subtitle: 'Lower threshold',
         ),
         // DcStep threshold
-        _SteeringHardwareConfigSlider(
+      _SteeringHardwareConfigListTile(
           key: ValueKey('DcStep - $maxRPM'),
           initialValue: ref.watch(
             mainVehicleProvider.select(
@@ -764,7 +801,11 @@ class _MotorPage extends ConsumerWidget {
           resetValue: 0,
           subtitle: 'Lower threshold',
         ),
-      ],
+    ];
+
+    return ListView.builder(
+      itemCount: children.length,
+      itemBuilder: (context, index) => children[index],
     );
   }
 }
@@ -853,141 +894,130 @@ class _WasPage extends ConsumerWidget {
           ),
         ),
         // Bits
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: _SteeringHardwareConfigSlider(
-            initialValue: ref.read(
-              mainVehicleProvider.select((value) => value.was.config.bits),
-            ),
-            text: (value) => 'Bits: ${value.round()}',
-            onChangeEnd: (value) {
-              final oldValue = ref.read(
-                mainVehicleProvider.select((value) => value.was.config.bits),
-              );
-              ref.read(simInputProvider.notifier).send(
-                    ref
-                        .read(
-                          mainVehicleProvider.select(
-                            (value) => value.was.config,
-                          ),
-                        )
-                        .copyWith(
-                          bits: value.round(),
-                        ),
-                  );
-              // Wait a short while before saving the hopefully
-              // updated vehicle.
-              Timer(const Duration(milliseconds: 100), () {
-                final vehicle = ref.watch(mainVehicleProvider);
-                ref.read(saveVehicleProvider(vehicle));
-                Logger.instance.i(
-                  '''Updated vehicle WAS config bits: $oldValue -> ${vehicle.was.config.bits}''',
-                );
-              });
-            },
-            min: 10,
-            max: 20,
-            divisions: 10,
+        _SteeringHardwareConfigListTile(
+          initialValue: ref.read(
+            mainVehicleProvider.select((value) => value.was.config.bits),
           ),
+          text: (value) => 'Bits: ${value.round()}',
+          onChangeEnd: (value) {
+            final oldValue = ref.read(
+              mainVehicleProvider.select((value) => value.was.config.bits),
+            );
+            ref.read(simInputProvider.notifier).send(
+                  ref
+                      .read(
+                        mainVehicleProvider.select(
+                          (value) => value.was.config,
+                        ),
+                      )
+                      .copyWith(
+                        bits: value.round(),
+                      ),
+                );
+            // Wait a short while before saving the hopefully
+            // updated vehicle.
+            Timer(const Duration(milliseconds: 100), () {
+              final vehicle = ref.watch(mainVehicleProvider);
+              ref.read(saveVehicleProvider(vehicle));
+              Logger.instance.i(
+                '''Updated vehicle WAS config bits: $oldValue -> ${vehicle.was.config.bits}''',
+              );
+            });
+          },
+          min: 10,
+          max: 20,
+          divisions: 10,
         ),
         // Sensor discrete reading
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Consumer(
-            builder: (context, ref, child) {
-              final config = ref.watch(
-                mainVehicleProvider.select((value) => value.was.config),
-              );
+        Consumer(
+          builder: (context, ref, child) {
+            final config = ref.watch(
+              mainVehicleProvider.select((value) => value.was.config),
+            );
 
-              final reading = ref
-                  .watch(
-                    mainVehicleProvider.select(
-                      (vehicle) => vehicle.was.reading.value,
+            final reading = ref
+                .watch(
+                  mainVehicleProvider.select(
+                    (vehicle) => vehicle.was.reading.value,
+                  ),
+                )
+                .clamp(0, pow(2, config.bits) - 1);
+
+            return Column(
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Discrete: $reading',
+                      style: theme.textTheme.bodyLarge,
                     ),
-                  )
-                  .clamp(0, pow(2, config.bits) - 1);
-
-              return Column(
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Discrete: $reading',
-                        style: theme.textTheme.bodyLarge,
-                      ),
-                      IconButton(
-                        onPressed: () => ref
-                            .read(simInputProvider.notifier)
-                            .send(
-                              WasReading(
-                                receiveTime: DateTime.now(),
-                                value: ref.read(
-                                  mainVehicleProvider.select(
-                                    (value) =>
-                                        value.steeringHardwareConfig.wasCenter,
-                                  ),
+                    IconButton(
+                      onPressed: () => ref.read(simInputProvider.notifier).send(
+                            WasReading(
+                              receiveTime: DateTime.now(),
+                              value: ref.read(
+                                mainVehicleProvider.select(
+                                  (value) =>
+                                      value.steeringHardwareConfig.wasCenter,
                                 ),
                               ),
                             ),
-                        icon: const Icon(Icons.refresh),
-                      ),
-                    ],
-                  ),
-                  Slider(
-                    value: reading.toDouble(),
-                    onChanged: (value) {
-                      ref.read(simInputProvider.notifier).send(
-                            WasReading(
-                              receiveTime: DateTime.now(),
-                              value: value.round(),
-                            ),
-                          );
-                    },
-                    max: pow(2, config.bits).toDouble() - 1,
-                  ),
-                ],
-              );
-            },
-          ),
+                          ),
+                      icon: const Icon(Icons.refresh),
+                    ),
+                  ],
+                ),
+                Slider(
+                  value: reading.toDouble(),
+                  onChanged: (value) {
+                    ref.read(simInputProvider.notifier).send(
+                          WasReading(
+                            receiveTime: DateTime.now(),
+                            value: value.round(),
+                          ),
+                        );
+                  },
+                  max: pow(2, config.bits).toDouble() - 1,
+                ),
+              ],
+            );
+          },
         ),
         // Sensor normalized reading
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Consumer(
-            builder: (context, ref, child) {
-              final reading = ref
-                  .watch(
-                    mainVehicleProvider.select(
-                      (vehicle) => vehicle.wasReadingNormalizedInRange,
-                    ),
-                  )
-                  .clamp(-1.0, 1.0);
-              return Column(
-                children: [
-                  Text(
-                    'Normalized: ${reading.toStringAsFixed(3)}',
-                    style: theme.textTheme.bodyLarge,
+        Consumer(
+          builder: (context, ref, child) {
+            final reading = ref
+                .watch(
+                  mainVehicleProvider.select(
+                    (vehicle) => vehicle.wasReadingNormalizedInRange,
                   ),
-                  Slider(
-                    value: reading,
-                    onChanged: null,
-                    min: -1,
-                  ),
-                ],
-              );
-            },
-          ),
+                )
+                .clamp(-1.0, 1.0);
+            return Column(
+              children: [
+                Text(
+                  'Normalized: ${reading.toStringAsFixed(3)}',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                Slider(
+                  value: reading,
+                  onChanged: null,
+                  min: -1,
+                ),
+              ],
+            );
+          },
         ),
         // Range min
-        _SteeringHardwareConfigSlider(
+        _SteeringHardwareConfigListTile(
           initialValue: ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig.wasMin.toDouble(),
             ),
           ),
           resetValue: 250,
-          text: (value) => 'Min: ${value.round()}',
+          text: (value) => 'WAS min: ${value.round()}',
           onChangeEnd: (value) {
             final oldValue = ref.read(
               mainVehicleProvider.select(
@@ -1036,7 +1066,7 @@ class _WasPage extends ConsumerWidget {
                 ),
               ).toDouble() -
               1,
-          setWidget: (updateValue) => FilledButton(
+          setWidget: (updateValue) => ElevatedButton(
             onPressed: () {
               final oldValue = ref.read(
                 mainVehicleProvider
@@ -1077,11 +1107,15 @@ class _WasPage extends ConsumerWidget {
                 },
               );
             },
-            child: const Text('Set'),
+            child: Consumer(
+              builder: (context, ref, child) => Text(
+                '''Set to live reading: ${ref.watch(mainVehicleProvider.select((value) => value.was.reading.value))}''',
+              ),
+            ),
           ),
         ),
         // Range center
-        _SteeringHardwareConfigSlider(
+        _SteeringHardwareConfigListTile(
           initialValue: ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig.wasCenter.toDouble(),
@@ -1098,7 +1132,7 @@ class _WasPage extends ConsumerWidget {
                   ) -
                   1)
               .round(),
-          text: (value) => 'Center: ${value.round()}',
+          text: (value) => 'WAS center: ${value.round()}',
           onChangeEnd: (value) {
             final oldValue = ref.read(
               mainVehicleProvider.select(
@@ -1147,7 +1181,7 @@ class _WasPage extends ConsumerWidget {
                 ),
               ).toDouble() -
               1,
-          setWidget: (updateValue) => FilledButton(
+          setWidget: (updateValue) => ElevatedButton(
             onPressed: () {
               final oldValue = ref.read(
                 mainVehicleProvider
@@ -1188,11 +1222,15 @@ class _WasPage extends ConsumerWidget {
                 },
               );
             },
-            child: const Text('Set'),
+            child: Consumer(
+              builder: (context, ref, child) => Text(
+                '''Set to live reading: ${ref.watch(mainVehicleProvider.select((value) => value.was.reading.value))}''',
+              ),
+            ),
           ),
         ),
         // Range max
-        _SteeringHardwareConfigSlider(
+        _SteeringHardwareConfigListTile(
           initialValue: ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig.wasMax.toDouble(),
@@ -1208,7 +1246,7 @@ class _WasPage extends ConsumerWidget {
                   ) -
                   1)
               .round(),
-          text: (value) => 'Max: ${value.round()}',
+          text: (value) => 'WAS max: ${value.round()}',
           onChangeEnd: (value) {
             final oldValue = ref.read(
               mainVehicleProvider.select(
@@ -1257,7 +1295,7 @@ class _WasPage extends ConsumerWidget {
                 ),
               ).toDouble() -
               1,
-          setWidget: (updateValue) => FilledButton(
+          setWidget: (updateValue) => ElevatedButton(
             onPressed: () {
               final oldValue = ref.read(
                 mainVehicleProvider
@@ -1298,7 +1336,11 @@ class _WasPage extends ConsumerWidget {
                 },
               );
             },
-            child: const Text('Set'),
+            child: Consumer(
+              builder: (context, ref, child) => Text(
+                '''Set to live reading: ${ref.watch(mainVehicleProvider.select((value) => value.was.reading.value))}''',
+              ),
+            ),
           ),
         ),
         // Raw data

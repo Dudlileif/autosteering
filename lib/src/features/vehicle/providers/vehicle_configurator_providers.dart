@@ -38,66 +38,6 @@ class VehicleConfiguratorIndex extends _$VehicleConfiguratorIndex {
   void decrease() => update(state - 1);
 }
 
-/// A provider for creating a [PageController] for using throughout the
-/// [VehicleConfigurator].
-@riverpod
-class VehicleConfiguratorPageController
-    extends _$VehicleConfiguratorPageController {
-  static const _animationDuration = Duration(milliseconds: 250);
-  static const _animationCurve = Curves.slowMiddle;
-
-  @override
-  Raw<PageController> build() {
-    final controller = PageController(
-      initialPage: ref.read(vehicleConfiguratorIndexProvider),
-    )..addListener(() {
-        ref
-            .read(vehicleConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round());
-      });
-    return controller;
-  }
-
-  /// Animates to the [index] page with [_animationDuration] and
-  /// [_animationCurve].
-  Future<void> animateToPage(int index) => state
-      .animateToPage(
-        index,
-        duration: _animationDuration,
-        curve: _animationCurve,
-      )
-      .then(
-        (value) => ref
-            .read(vehicleConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
-      );
-
-  /// Animates to the next page with [_animationDuration] and [_animationCurve].
-  Future<void> nextPage() => state
-      .nextPage(
-        duration: _animationDuration,
-        curve: _animationCurve,
-      )
-      .then(
-        (value) => ref
-            .read(vehicleConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
-      );
-
-  /// Animates to the previous page with [_animationDuration] and
-  /// [_animationCurve].
-  Future<void> previousPage() => state
-      .previousPage(
-        duration: _animationDuration,
-        curve: _animationCurve,
-      )
-      .then(
-        (value) => ref
-            .read(vehicleConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
-      );
-}
-
 /// A provider for the vehicle from the configurator.
 @Riverpod(keepAlive: true)
 class ConfiguredVehicle extends _$ConfiguredVehicle {

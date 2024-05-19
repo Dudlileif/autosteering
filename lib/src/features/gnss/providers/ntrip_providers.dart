@@ -449,8 +449,13 @@ Connection: close\r
       final socket = await Socket.connect(host, port);
       socket.add(message.codeUnits);
 
-      final lines =
-          (await socket.toList()).map(String.fromCharCodes).join().split('\n');
+      final data = await socket.toList();
+
+      ref
+          .read(ntripDataUsageSessionProvider.notifier)
+          .updateBy(data.map((e) => e.lengthInBytes).sum);
+
+      final lines = data.map(String.fromCharCodes).join().split('\n');
 
       Logger.instance.i('NTRIP sourcetable found with ${lines.length} lines.');
 

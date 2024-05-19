@@ -6,25 +6,7 @@ part of 'simulator_core_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sendMessagesToHardwareHash() =>
-    r'139814ce487ed859535b886067e87e51fd310660';
-
-/// A provider for whether we should send messages to the hardware.
-///
-/// Copied from [sendMessagesToHardware].
-@ProviderFor(sendMessagesToHardware)
-final sendMessagesToHardwareProvider = AutoDisposeProvider<bool>.internal(
-  sendMessagesToHardware,
-  name: r'sendMessagesToHardwareProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$sendMessagesToHardwareHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef SendMessagesToHardwareRef = AutoDisposeProviderRef<bool>;
-String _$initializeSimCoreHash() => r'1e8d9724c0f4960984958766a3c29cb25c30691f';
+String _$initializeSimCoreHash() => r'699cb4d45e3dafd307104e0b86b081eb9b5d9ca0';
 
 /// Sends initial parameters to  the sim core.
 ///
@@ -323,26 +305,6 @@ final simulatorUpdateFrequencyProvider =
 );
 
 typedef _$SimulatorUpdateFrequency = Notifier<int>;
-String _$sendMessagesToHardwareIfNetworkHash() =>
-    r'6d7cdb5fd546be2709271925379a3056e929aadf';
-
-/// A provider for whether we should send messages to the hardware from the
-/// Simulator Core when network is available, see [networkAvailable].
-///
-/// Copied from [SendMessagesToHardwareIfNetwork].
-@ProviderFor(SendMessagesToHardwareIfNetwork)
-final sendMessagesToHardwareIfNetworkProvider =
-    NotifierProvider<SendMessagesToHardwareIfNetwork, bool>.internal(
-  SendMessagesToHardwareIfNetwork.new,
-  name: r'sendMessagesToHardwareIfNetworkProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$sendMessagesToHardwareIfNetworkHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SendMessagesToHardwareIfNetwork = Notifier<bool>;
 String _$simCoreDebugAllowLongBreaksHash() =>
     r'f53980f91f616f7793d52dd2332281cab8661f26';
 

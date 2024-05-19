@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/guidance/providers/virtual_led_bar_pro
 import 'package:autosteering/src/features/guidance/widgets/virtual_led_bar/virtual_led.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// A virtuial LED bar for showing the user how far off track they are.
 ///
@@ -193,7 +194,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
           ...leftIntermediateLeds,
           ...leftCenterLeds,
           SizedBox(
-            width: 80,
+            width: 85,
             child: Center(
               child: Consumer(
                 builder: (context, ref, child) {
@@ -202,7 +203,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
                   if (!distance.isFinite) {
                     distance = 0;
                   }
-
+      
                   var number = (distance.abs() * 100)
                       .truncate()
                       .clamp(-99, 99)
@@ -215,17 +216,16 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
                         '''${distance.abs().clamp(0, 99).toStringAsFixed(0)}.''';
                   }
                   if (distance.abs() >= 0.01) {
-                    number = distance.isNegative ? '⊲ $number ' : ' $number ⊳';
+                    number = distance.isNegative ? '⊲$number' : '$number⊳';
                   }
                   return TextWithStroke(
                     number,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          color: 
-                            config.colorFromDistance(
+                    style: GoogleFonts.robotoMono(
+                      fontWeight: FontWeight.bold,
+                      color: config.colorFromDistance(
                             perpendicularDistance ?? 0,
                           ),
-                          fontFamily: 'Noto Sans Mono',
-                          fontWeight: FontWeight.bold,
+                      textStyle: Theme.of(context).textTheme.headlineLarge,
                         ),
                     strokeWidth: 4,
                   );

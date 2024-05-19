@@ -29,6 +29,10 @@ class EquipmentDecorationPage extends ConsumerWidget {
     final equipment = ref.watch(configuredEquipmentProvider);
 
     final children = [
+      Text(
+        'Decoration',
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),
@@ -41,14 +45,17 @@ class EquipmentDecorationPage extends ConsumerWidget {
             (value) => value.hitchToDecorationStartLength?.toString(),
           ),
         ),
-        onChanged: (value) {
+        onFieldSubmitted: (value) {
           final length = double.tryParse(value.replaceAll(',', '.'));
 
-          ref
-              .read(configuredEquipmentProvider.notifier)
-              .update(equipment.copyWith(hitchToDecorationStartLength: length));
+          ref.read(configuredEquipmentProvider.notifier).update(
+                equipment..hitchToDecorationStartLength = length,
+              );
         },
+          
+        
       ),
+    
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),
@@ -60,12 +67,12 @@ class EquipmentDecorationPage extends ConsumerWidget {
           configuredEquipmentProvider
               .select((value) => value.decorationLength?.toString()),
         ),
-        onChanged: (value) {
+        onFieldSubmitted: (value) {
           final length = double.tryParse(value.replaceAll(',', '.'));
 
           ref
               .read(configuredEquipmentProvider.notifier)
-              .update(equipment.copyWith(decorationLength: length?.abs()));
+              .update(equipment..decorationLength = length?.abs());
         },
       ),
       TextFormField(
@@ -79,12 +86,12 @@ class EquipmentDecorationPage extends ConsumerWidget {
           configuredEquipmentProvider
               .select((value) => value.decorationWidth?.toString()),
         ),
-        onChanged: (value) {
+        onFieldSubmitted: (value) {
           final length = double.tryParse(value.replaceAll(',', '.'));
 
           ref
               .read(configuredEquipmentProvider.notifier)
-              .update(equipment.copyWith(decorationWidth: length?.abs()));
+              .update(equipment..decorationWidth = length?.abs());
         },
       ),
       TextFormField(
@@ -98,34 +105,31 @@ class EquipmentDecorationPage extends ConsumerWidget {
           configuredEquipmentProvider
               .select((value) => value.decorationSidewaysOffset?.toString()),
         ),
-        onChanged: (value) {
+        onFieldSubmitted: (value) {
           final offset = double.tryParse(value.replaceAll(',', '.'));
 
           ref
               .read(configuredEquipmentProvider.notifier)
-              .update(equipment.copyWith(decorationSidewaysOffset: offset));
+              .update(equipment..decorationSidewaysOffset = offset);
         },
       ),
     ];
 
     return SingleChildScrollView(
       child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: EquipmentConfiguratorPreviousButton(),
-          ),
-          ...children.map(
-            (widget) => Padding(
-              padding: const EdgeInsets.all(8),
-              child: SizedBox(width: 400, child: widget),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: EquipmentConfiguratorNextButton(),
-          ),
-        ],
+        children: children
+            .map(
+              (widget) => ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: widget,
+                ),
+              ),
+            )
+            .toList(),
+          
+        
       ),
     );
   }

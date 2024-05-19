@@ -254,7 +254,7 @@ class RingBuffer {
             // For round and miter we just check that they aren't too close to
             // the original points wih some room for precision error for the
             // buffer distance.
-            _ => 0.98 * distance.abs()
+            _ => 0.97 * distance.abs(),
           };
 
           final startIndex = bufferedRing.indexOf(end1);

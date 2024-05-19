@@ -21,6 +21,7 @@ import 'dart:convert';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_html/html.dart' show Storage, window;
 import 'package:universal_io/io.dart';
@@ -123,8 +124,7 @@ class Settings extends _$Settings {
       state.containsKey(key.name) ? state[key.name] as bool? : null;
 
   /// Get the value of type [double] for the setting [key], if it exists.
-  double? getDouble(SettingsKey key) =>
-      state.containsKey(key.name)
+  double? getDouble(SettingsKey key) => state.containsKey(key.name)
       ? (state[key.name] as num?)?.toDouble()
       : null;
 
@@ -139,14 +139,14 @@ class Settings extends _$Settings {
   /// Get the value of type [Map] for the setting [key], if it exists.
   Map<String, Object?>? getMap(SettingsKey key) =>
       state.containsKey(key.name) && state[key.name] is Map
-      ? Map<String, Object?>.from(state[key.name] as Map)
-      : null;
+          ? Map<String, Object?>.from(state[key.name] as Map)
+          : null;
 
   /// Get the value of type [List] for the setting [key], if it exists.
   List<dynamic>? getList(SettingsKey key) =>
       state.containsKey(key.name) && state[key.name] is List
-      ? List<dynamic>.from(state[key.name] as List)
-      : null;
+          ? List<dynamic>.from(state[key.name] as List)
+          : null;
 
   @override
   bool updateShouldNotify(
@@ -155,4 +155,16 @@ class Settings extends _$Settings {
   ) {
     return const DeepCollectionEquality().equals(previous, next);
   }
+}
+
+/// A provider for whether the debug features and switches should be shown.
+@Riverpod(keepAlive: true)
+class EnableDebugMode extends _$EnableDebugMode {
+  @override
+  bool build() {
+    return kDebugMode;
+  }
+
+  /// Update [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
 }

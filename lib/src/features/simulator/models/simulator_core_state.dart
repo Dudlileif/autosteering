@@ -46,9 +46,6 @@ class SimulatorCoreState {
   /// A stream controller for sending messages to the main thread.
   StreamController<dynamic> mainThreadSendStream;
 
-  /// Whether the Simulator Core should send messages to the hardware.
-  bool sendMessagesToHardware = false;
-
   /// Whether the simulation should accept incoming control input from
   /// keyboard, gamepad, sliders etc...
   bool allowManualSimInput = false;
@@ -210,13 +207,8 @@ class SimulatorCoreState {
   void handleMessage(dynamic message) {
     // Force update to reflect changes in case we haven't moved.
     forceChange = true;
-
-    // Enable/disable sending messages to the hardware.
-    if (message is ({bool sendMessagesToHardware})) {
-      sendMessagesToHardware = message.sendMessagesToHardware;
-    }
     // Set the vehicle to simulate.
-    else if (message is Vehicle) {
+    if (message is Vehicle) {
       vehicle = message.copyWith(
         velocity: vehicle?.velocity,
         bearing: vehicle?.bearing,
@@ -355,8 +347,9 @@ class SimulatorCoreState {
     // Enable/disable auto steering.
     else if (message is ({bool enableAutoSteer})) {
       if (message.enableAutoSteer) {
-        mainThreadSendStream
-            .add(LogEvent(Level.warning, 'Attempting to activate Autosteer.'));
+        mainThreadSendStream.add(
+          LogEvent(Level.warning, 'Attempting to activate Autosteer.'),
+        );
 
         if (abTracking != null || pathTracking != null) {
           autosteeringState = AutosteeringState.enabled;
@@ -542,6 +535,10 @@ class SimulatorCoreState {
             .updateCurrentPathTracking(vehicle!, force: true);
       }
     }
+    // Sets whether the AB-tracking should snap to the closest line.
+    else if (message is ({bool abSnapToClosestLine})) {
+      abTracking?.snapToClosestLine = message.abSnapToClosestLine;
+    }
     // Move the AB-tracking offset by 1 to the left if negative or to the
     // right if positive.
     else if (message is ({int abMoveOffset})) {
@@ -572,6 +569,24 @@ class SimulatorCoreState {
         );
       }
     }
+    // Reset AB tracking finished offsets (lines).
+    else if (message is ({bool abTrackingRecalculateLines})) {
+      if (abTracking != null && message.abTrackingRecalculateLines) {
+        mainThreadSendStream.add(
+          LogEvent(
+            Level.info,
+            'Recalculating ABTracking lines...',
+          ),
+        );
+        abTracking!.calculateLinesWithinBoundary();
+        mainThreadSendStream.add(
+          LogEvent(
+            Level.info,
+            'Recalculated ABTracking lines.',
+          ),
+        );
+      }
+    }
     // Update whether manual driving should update path tracking.
     else if (message is ({bool allowManualTrackingUpdates})) {
       allowManualTrackingUpdates = message.allowManualTrackingUpdates;
@@ -591,8 +606,9 @@ class SimulatorCoreState {
           const Utf8Encoder().convert(
             jsonEncode(
               {
-                'was_target': vehicle!
-                    .wasTargetFromSteeringAngle(message.steeringAngleOverride!),
+                'was_target': vehicle!.wasTargetFromSteeringAngle(
+                  message.steeringAngleOverride!,
+                ),
                 'enable_motor': true,
               },
             ),
@@ -915,8 +931,7 @@ class SimulatorCoreState {
   void updateGauges() {
     // Update based on the last GNSS updates, if we've received one this tick.
     if (gnssUpdate != null) {
-      if (gnssUpdate != null && prevGnssUpdates.lastOrNull != null
-          ) {
+      if (gnssUpdate != null && prevGnssUpdates.lastOrNull != null) {
         // Correct for roll and pitch if IMU bearing is set.
         if (vehicle!.imu.bearingIsSet && vehicle!.imu.config.usePitchAndRoll) {
           gnssUpdate = (

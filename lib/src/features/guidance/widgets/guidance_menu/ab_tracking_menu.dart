@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -74,8 +75,10 @@ class ABTrackingMenu extends ConsumerWidget {
                   .update(values.first),
               selected: {abTrackingType},
               segments: ABTrackingType.values
-                  .map((type) =>
-                      ButtonSegment(value: type, label: Text(type.name)),)
+                  .map(
+                    (type) =>
+                        ButtonSegment(value: type, label: Text(type.name)),
+                  )
                   .toList(),
             ),
           ),
@@ -226,11 +229,16 @@ class ABTrackingMenu extends ConsumerWidget {
             ),
             closeOnActivate: false,
             child: child,
-            onPressed: () => ref
-              ..invalidate(aPlusLineProvider)
-              ..invalidate(aBLineProvider)
-              ..invalidate(aBCurveProvider)
-              ..invalidate(configuredABTrackingProvider),
+            onPressed: () => switch (workSessionGuidanceActive) {
+              true => ref
+                  .read(simInputProvider.notifier)
+                  .send((abTrackingRecalculateLines: true)),
+              false => ref
+                ..invalidate(aPlusLineProvider)
+                ..invalidate(aBLineProvider)
+                ..invalidate(aBCurveProvider)
+                ..invalidate(configuredABTrackingProvider),
+            },
           ),
         ),
       ],
@@ -431,28 +439,27 @@ class _ABCommonMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final controller = TextEditingController(
-              text: ref.read(aBWidthProvider).toString(),
-            );
-            controller.addListener(() {
-              final value = double.tryParse(controller.text);
-              if (value != null && value >= 0) {
-                ref.read(aBWidthProvider.notifier).update(value);
-              }
-            });
+          
             return ListTile(
               title: TextFormField(
+                controller: TextEditingController(
+                  text: ref.read(aBWidthProvider).toString(),
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Spacing/width',
                   suffixText: 'm',
                 ),
                 keyboardType: TextInputType.number,
-                controller: controller,
+                onFieldSubmitted: (value) {
+                  final spacing = double.tryParse(value);
+                  if (spacing != null && spacing >= 0) {
+                    ref.read(aBWidthProvider.notifier).update(spacing);
+                  }
+                },
               ),
               trailing: IconButton(
                 onPressed: () {
                   ref.invalidate(aBWidthProvider);
-                  controller.text = ref.read(aBWidthProvider).toString();
                 },
                 icon: const Icon(Icons.handyman),
                 tooltip: 'Set to equipment width',
@@ -461,36 +468,31 @@ class _ABCommonMenu extends ConsumerWidget {
           },
         ),
         Consumer(
-          builder: (context, ref, child) {
-            final controller = TextEditingController(
-              text: ref.read(aBTurningRadiusProvider).toString(),
-            );
-            controller.addListener(() {
-              final value = double.tryParse(controller.text);
-              if (value != null && value >= 0) {
-                ref.read(aBTurningRadiusProvider.notifier).update(value);
-              }
-            });
-            return ListTile(
+          builder: (context, ref, child) => ListTile(
               title: TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Turning radius',
                   suffixText: 'm',
                 ),
                 keyboardType: TextInputType.number,
-                controller: controller,
+              controller: TextEditingController(
+                text: ref.read(aBTurningRadiusProvider).toString(),
+              ),
+              onFieldSubmitted: (value) {
+                final radius = double.tryParse(value);
+                if (radius != null && radius >= 0) {
+                  ref.read(aBTurningRadiusProvider.notifier).update(radius);
+                }
+              },
               ),
               trailing: IconButton(
                 onPressed: () {
-                  ref.invalidate(aBTurningRadiusProvider);
-                  controller.text =
-                      ref.read(aBTurningRadiusProvider).toString();
+                ref.invalidate(aBTurningRadiusProvider);
                 },
                 icon: const Icon(Icons.agriculture),
                 tooltip: 'Set to 1.25 x vehicle turning radius',
               ),
-            );
-          },
+          ),
         ),
         Consumer(
           builder: (context, ref, child) {
@@ -514,70 +516,87 @@ class _ABCommonMenu extends ConsumerWidget {
             );
           },
         ),
-        Consumer(
-          builder: (context, ref, child) {
-            final stepSize = ref.watch(aBDebugStepSizeProvider);
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Step size: ${stepSize.toStringAsFixed(1)} m',
-                  style: textStyle,
-                ),
-                Slider.adaptive(
-                  value: stepSize,
-                  onChanged: ref.read(aBDebugStepSizeProvider.notifier).update,
-                  max: 10,
-                  divisions: 20,
-                ),
-              ],
-            );
-          },
+        if (ref.watch(enableDebugModeProvider)) ...[
+          Consumer(
+          builder: (context, ref, child) => CheckboxListTile(
+            secondary: const Icon(Icons.bug_report),
+              title: Text('Debug', style: textStyle),
+            value: ref.watch(debugABTrackingProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugABTrackingProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
         ),
-        Consumer(
-          builder: (context, ref, child) {
-            final numPointsAhead = ref.watch(aBDebugNumPointsAheadProvider);
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Points ahead: $numPointsAhead',
-                  style: textStyle,
-                ),
-                Slider.adaptive(
-                  value: numPointsAhead.toDouble(),
-                  onChanged: (value) => ref
-                      .read(aBDebugNumPointsAheadProvider.notifier)
-                      .update(value.round()),
-                  max: 10,
-                  divisions: 10,
-                ),
-              ],
-            );
-          },
-        ),
-        Consumer(
-          builder: (context, ref, child) {
-            final numPointsBehind = ref.watch(aBDebugNumPointsBehindProvider);
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Points behind: $numPointsBehind',
-                  style: textStyle,
-                ),
-                Slider.adaptive(
-                  value: numPointsBehind.toDouble(),
-                  onChanged: (value) => ref
-                      .read(aBDebugNumPointsBehindProvider.notifier)
-                      .update(value.round()),
-                  max: 10,
-                  divisions: 10,
-                ),
-              ],
-            );
-          },
-        ),
+        if (ref.watch(debugABTrackingProvider)) ...[
+          Consumer(
+            builder: (context, ref, child) {
+              final stepSize = ref.watch(aBDebugStepSizeProvider);
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Step size: ${stepSize.toStringAsFixed(1)} m',
+                    style: textStyle,
+                  ),
+                  Slider.adaptive(
+                    value: stepSize,
+                    onChanged:
+                        ref.read(aBDebugStepSizeProvider.notifier).update,
+                    max: 10,
+                    divisions: 20,
+                  ),
+                ],
+              );
+            },
+          ),
+          Consumer(
+            builder: (context, ref, child) {
+              final numPointsAhead = ref.watch(aBDebugNumPointsAheadProvider);
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Points ahead: $numPointsAhead',
+                    style: textStyle,
+                  ),
+                  Slider.adaptive(
+                    value: numPointsAhead.toDouble(),
+                    onChanged: (value) => ref
+                        .read(aBDebugNumPointsAheadProvider.notifier)
+                        .update(value.round()),
+                    max: 10,
+                    divisions: 10,
+                  ),
+                ],
+              );
+            },
+          ),
+          Consumer(
+            builder: (context, ref, child) {
+              final numPointsBehind = ref.watch(aBDebugNumPointsBehindProvider);
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Points behind: $numPointsBehind',
+                    style: textStyle,
+                  ),
+                  Slider.adaptive(
+                    value: numPointsBehind.toDouble(),
+                    onChanged: (value) => ref
+                        .read(aBDebugNumPointsBehindProvider.notifier)
+                        .update(value.round()),
+                    max: 10,
+                    divisions: 10,
+                  ),
+                ],
+              );
+            },
+            ),
+          ],
+        ],
       ],
     );
   }

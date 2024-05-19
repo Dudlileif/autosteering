@@ -19,6 +19,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -27,12 +28,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu with attached submenu for interacting with the equipment feature.
-class EquipmentMenu extends StatelessWidget {
+class EquipmentMenu extends ConsumerWidget {
   /// A menu with attached submenu for interacting with the equipment feature.
   const EquipmentMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
 
@@ -44,6 +45,7 @@ class EquipmentMenu extends StatelessWidget {
         const _LoadEquipmentMenu(),
         const _ImportExportMenu(),
         MenuItemButton(
+          closeOnActivate: false,
           leadingIcon: const Padding(
             padding: EdgeInsets.only(left: 8),
             child: Icon(Icons.settings),
@@ -73,7 +75,8 @@ class EquipmentMenu extends StatelessWidget {
                 : null,
           ),
         ),
-        Consumer(
+        if (ref.watch(enableDebugModeProvider))
+          Consumer(
           child: Text(
             'Debug equipment',
             style: textStyle,
@@ -536,10 +539,11 @@ class _AttachEquipmentMenu extends ConsumerWidget {
     }
 
     final equipmentName = ref.watch(
-      configuredEquipmentProvider.select((value) => value.name ?? 'Unnamed'),
+      configuredEquipmentProvider.select((value) => value.name),
     );
 
-    return MenuButtonWithChildren(
+    return equipmentName?.isNotEmpty ?? false
+        ? MenuButtonWithChildren(
       text: 'Attach\n$equipmentName',
       icon: Icons.commit,
       menuChildren: [
@@ -548,7 +552,8 @@ class _AttachEquipmentMenu extends ConsumerWidget {
           child: ref.watch(configuredEquipmentProvider),
         ),
       ],
-    );
+          )
+        : const SizedBox.shrink();
   }
 }
 
@@ -575,7 +580,7 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
     ].join('\n');
 
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
-
+    
     if (parent.hitchPoints.isEmpty) {
       return MenuItemButton(
         child: Text(text, style: textStyle),
@@ -585,7 +590,8 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
     return MenuButtonWithChildren(
       text: text,
       menuChildren: [
-        if (parent.hitchFrontFixedChild != null)
+        if (parent.hitchFrontFixedChild != null &&
+            child.hitchType == HitchType.fixed)
           _RecursiveAttachEquipmentMenu(
             parent: parent.hitchFrontFixedChild!,
             child: child,
@@ -609,7 +615,8 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
             parent: parent.hitchRearFixedChild!,
             child: child,
           )
-        else if (parent.hitchRearFixedPoint != null)
+        else if (parent.hitchRearFixedPoint != null &&
+            child.hitchType == HitchType.fixed)
           MenuItemButton(
             onPressed: child.hitchType == HitchType.fixed
                 ? () => ref.read(simInputProvider.notifier).send(
@@ -628,7 +635,8 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
             parent: parent.hitchRearTowbarChild!,
             child: child,
           )
-        else if (parent.hitchRearTowbarPoint != null)
+        else if (parent.hitchRearTowbarPoint != null &&
+            child.hitchType == HitchType.towbar)
           MenuItemButton(
             onPressed: child.hitchType == HitchType.towbar
                 ? () => ref.read(simInputProvider.notifier).send(

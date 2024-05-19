@@ -26,27 +26,6 @@ final vehicleConfiguratorIndexProvider =
 );
 
 typedef _$VehicleConfiguratorIndex = Notifier<int>;
-String _$vehicleConfiguratorPageControllerHash() =>
-    r'80f4df3524b18c93a0873affcda40efb0cb813a1';
-
-/// A provider for creating a [PageController] for using throughout the
-/// [VehicleConfigurator].
-///
-/// Copied from [VehicleConfiguratorPageController].
-@ProviderFor(VehicleConfiguratorPageController)
-final vehicleConfiguratorPageControllerProvider = AutoDisposeNotifierProvider<
-    VehicleConfiguratorPageController, Raw<PageController>>.internal(
-  VehicleConfiguratorPageController.new,
-  name: r'vehicleConfiguratorPageControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$vehicleConfiguratorPageControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$VehicleConfiguratorPageController
-    = AutoDisposeNotifier<Raw<PageController>>;
 String _$configuredVehicleHash() => r'eb1f64783782544db4e453b41900d68d6c47a02f';
 
 /// A provider for the vehicle from the configurator.

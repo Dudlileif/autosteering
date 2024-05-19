@@ -39,66 +39,6 @@ class EquipmentConfiguratorIndex extends _$EquipmentConfiguratorIndex {
   void decrease() => update(state - 1);
 }
 
-/// A provider for creating a [PageController] for using throughout the
-/// [EquipmentConfigurator].
-@riverpod
-class EquipmentConfiguratorPageController
-    extends _$EquipmentConfiguratorPageController {
-  static const _animationDuration = Duration(milliseconds: 250);
-  static const _animationCurve = Curves.slowMiddle;
-
-  @override
-  Raw<PageController> build() {
-    final controller = PageController(
-      initialPage: ref.read(equipmentConfiguratorIndexProvider),
-    )..addListener(() {
-        ref
-            .read(equipmentConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round());
-      });
-    return controller;
-  }
-
-  /// Animates to the [index] page with [_animationDuration] and
-  /// [_animationCurve].
-  Future<void> animateToPage(int index) => state
-      .animateToPage(
-        index,
-        duration: _animationDuration,
-        curve: _animationCurve,
-      )
-      .then(
-        (value) => ref
-            .read(equipmentConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
-      );
-
-  /// Animates to the next page with [_animationDuration] and [_animationCurve].
-  Future<void> nextPage() => state
-      .nextPage(
-        duration: _animationDuration,
-        curve: _animationCurve,
-      )
-      .then(
-        (value) => ref
-            .read(equipmentConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
-      );
-
-  /// Animates to the previous page with [_animationDuration] and
-  /// [_animationCurve].
-  Future<void> previousPage() => state
-      .previousPage(
-        duration: _animationDuration,
-        curve: _animationCurve,
-      )
-      .then(
-        (value) => ref
-            .read(equipmentConfiguratorIndexProvider.notifier)
-            .update((state.page ?? 0).round()),
-      );
-}
-
 /// A provider for the vehicle from the configurator.
 @Riverpod(keepAlive: true)
 class ConfiguredEquipment extends _$ConfiguredEquipment {
@@ -108,9 +48,21 @@ class ConfiguredEquipment extends _$ConfiguredEquipment {
   /// Update the [state] to [equipment].
   void update(Equipment equipment) => Future(() => state = equipment);
 
-  /// Updates the vehicle's name to [name].
+  /// Updates the equipment's name to [name].
   void updateName(String? name) =>
       Future(() => state = state.copyWith(name: name));
+
+  /// Updates the equipment's [section].
+  void updateSection(Section section) => Future(
+        () => state = state.copyWith(
+          sections: state.sections
+            ..replaceRange(
+              section.index,
+              section.index + 1,
+              [section],
+            ),
+        ),
+      );
 }
 
 /// A provider for the [TextEditingController] for the name in the
@@ -132,4 +84,83 @@ class ConfiguredEquipmentNameTextController
 
     return controller;
   }
+}
+
+/// A provider for whether the configured equipment sections should have equal
+/// widths.
+@riverpod
+class ConfiguredEquipmentEqualWidths extends _$ConfiguredEquipmentEqualWidths {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && !previous && next) {
+        final equipment = ref.read(configuredEquipmentProvider);
+        ref.read(configuredEquipmentProvider.notifier).update(
+              equipment.copyWith(
+                sections: equipment.sections
+                    .map(
+                      (section) => section.copyWith(
+                        width: equipment.sections.first.width,
+                      ),
+                    )
+                    .toList(),
+              ),
+            );
+      }
+    });
+
+    return ref.read(
+      configuredEquipmentProvider.select(
+        (value) =>
+            value.sections.isNotEmpty &&
+            value.sections.every(
+              (element) => element.width == value.sections.first.width,
+            ),
+      ),
+    );
+  }
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
+
+/// A provider for whether the configured equipment sections should have equal
+/// working widths.
+@riverpod
+class ConfiguredEquipmentEqualWorkingWidths
+    extends _$ConfiguredEquipmentEqualWorkingWidths {
+  @override
+  bool build() {
+    ref.listenSelf((previous, next) {
+      if (previous != null && !previous && next) {
+        final equipment = ref.read(configuredEquipmentProvider);
+
+        ref.read(configuredEquipmentProvider.notifier).update(
+              equipment.copyWith(
+                sections: equipment.sections
+                    .map(
+                      (section) => section.copyWith(
+                        workingWidth: equipment.sections.first.workingWidth,
+                      ),
+                    )
+                    .toList(),
+              ),
+            );
+      }
+    });
+
+    return ref.read(
+      configuredEquipmentProvider.select(
+        (value) =>
+            value.sections.isNotEmpty &&
+            value.sections.every(
+              (element) =>
+                  element.workingWidth == value.sections.first.workingWidth,
+            ),
+      ),
+    );
+  }
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
 }

@@ -7,7 +7,7 @@ part of 'path_recording_providers.dart';
 // **************************************************************************
 
 String _$automaticPathRecordingHash() =>
-    r'4d6f776be461ed049e0135f666894fdad94b9b17';
+    r'4b421489b90a2f6878e9bae73b0da410beea45b1';
 
 /// A provider for watching to keep the automatic path recording going.
 ///

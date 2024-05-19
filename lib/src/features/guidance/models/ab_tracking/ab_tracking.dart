@@ -80,11 +80,13 @@ sealed class ABTracking {
       boundary = Polygon.parse(boundaryString);
     }
     if (boundary == null && currentOffset != null) {
+      offsetLine(currentOffset!);
       currentPathTracking = PurePursuitPathTracking(wayPoints: currentLine!);
-      if (nextOffset != null && nextLine != null) {
-        nextPathTracking = PurePursuitPathTracking(wayPoints: nextLine!);
-        lines[0] = currentLine!;
-        lines[nextOffset!] = offsetLine(nextOffset!);
+      if (nextOffset != null) {
+        offsetLine(nextOffset!);
+        if (nextLine != null) {
+          nextPathTracking = PurePursuitPathTracking(wayPoints: nextLine!);
+        }
       }
     }
     length = baseLine.foldIndexed(
@@ -95,6 +97,8 @@ sealed class ABTracking {
     );
     if (calculateLinesOnCreation) {
       calculateLinesWithinBoundary();
+    } else if (boundary != null) {
+      allOffsetsInsideBoundaryFound = true;
     }
   }
 
@@ -189,6 +193,9 @@ sealed class ABTracking {
   /// The offset lines that are within the [boundary], if one is given.
   SplayTreeSet<int>? offsetsInsideBoundary;
 
+  /// Whether all the offsets within [boundary] are founde.
+  bool allOffsetsInsideBoundaryFound = false;
+
   /// Offset lines that have been completed.
   final finishedOffsets = SplayTreeSet<int>();
 
@@ -209,16 +216,6 @@ sealed class ABTracking {
   /// Whether the vehicle has passed the middle point of the line in the
   /// driving direction.
   bool passedMiddle = false;
-
-  /// Whether we are waiting to re-engage [snapToClosestLine] when the
-  /// [currentOffset] equals [numOffsetsToClosestLine].
-  ///
-  /// If we are currently snapping to the closest line, but want to go to a
-  /// different offset, we can temporarily disengage the snapping and
-  /// re-engage it when the wanted offset is the closest line.
-  ///
-  /// See [checkIfShouldReengageSnap].
-  bool awaitToReengageSnap = false;
 
   /// The bearing at the start point.
   double get initialBearing => start.bearing;
@@ -330,13 +327,14 @@ sealed class ABTracking {
   /// the inside boundary lines or 0.
   void clearFinishedOffsets() {
     finishedOffsets.clear();
-    _currentOffset = offsetsInsideBoundary?.first ?? 0;
+    currentOffset = offsetsInsideBoundary?.first ?? 0;
   }
 
   /// Calculates all the lines/offsets within the [boundary], if there is one.
   void calculateLinesWithinBoundary() {
-    if (boundary != null && boundary?.exterior != null) {
+    if (boundary?.exterior != null) {
       lines.clear();
+      allOffsetsInsideBoundaryFound = false;
 
       offsetsInsideBoundary = SplayTreeSet();
 
@@ -350,7 +348,6 @@ sealed class ABTracking {
       for (var i = 0; i <= offsetsToCheck; i++) {
         offsetLine(
           i,
-          boundaryBox: boundingBox,
           extraStraightDistance: diagonal,
         );
         if (!offsetsInsideBoundary!.contains(i)) {
@@ -360,7 +357,6 @@ sealed class ABTracking {
       for (var i = 1; i <= offsetsToCheck; i++) {
         offsetLine(
           -i,
-          boundaryBox: boundingBox,
           extraStraightDistance: diagonal,
         );
         if (!offsetsInsideBoundary!.contains(-i)) {
@@ -378,6 +374,8 @@ sealed class ABTracking {
                       : previousValue,
             )
           : null;
+
+      allOffsetsInsideBoundaryFound = true;
     }
     if (nextOffset != null && nextLine != null) {
       nextPathTracking = PurePursuitPathTracking(wayPoints: nextLine!);
@@ -389,22 +387,13 @@ sealed class ABTracking {
   /// Negative [offset] means the point is offset in the opposite direction.
   List<WayPoint> offsetLine(
     int offset, {
-    GeoBox? boundaryBox,
     double? extraStraightDistance,
   }) {
     if (lines[offset] != null) {
       return lines[offset]!;
     }
-
-    // A single straight line
-    if (baseLine.length == 2 && boundary == null) {
-      final line = baseLine
-          .map(
-            (e) => e.moveRhumb(distance: offset * width, angleFromBearing: 90),
-          )
-          .toList();
-      lines[offset] = line;
-      return line;
+    if (allOffsetsInsideBoundaryFound) {
+      return [];
     }
 
     final extendedStart = baseLine.first.position.rhumb.destinationPoint(
@@ -426,28 +415,30 @@ sealed class ABTracking {
       distance: offset * width,
       extendEnds: false,
       smoothingFactor: 4.0 * (1 + offset.abs()).clamp(1, 30),
-      swapDirectionIfClockwise: !isCCW,
+      swapDirectionIfClockwise: !isCurveCounterclockwise(path),
     );
 
     final newPath = <WayPoint>[];
     if (buffered.length >= 2) {
       buffered.forEachIndexed((index, element) {
-        if (index == 0) {
-          newPath.add(
-            WayPoint(
-              position: element,
-              bearing:
-                  element.rhumb.initialBearingTo(buffered.elementAt(index + 1)),
-            ),
-          );
-        } else {
-          newPath.add(
-            WayPoint(
-              position: element,
-              bearing:
-                  buffered.elementAt(index - 1).rhumb.finalBearingTo(element),
-            ),
-          );
+        {
+          if (index == 0) {
+            newPath.add(
+              WayPoint(
+                position: element,
+                bearing: element.rhumb
+                    .initialBearingTo(buffered.elementAt(index + 1)),
+              ),
+            );
+          } else {
+            newPath.add(
+              WayPoint(
+                position: element,
+                bearing:
+                    buffered.elementAt(index - 1).rhumb.finalBearingTo(element),
+              ),
+            );
+          }
         }
       });
     }
@@ -473,226 +464,204 @@ sealed class ABTracking {
       }
     }
 
-    final boundaryRing = boundary?.exterior?.toGeographicPositions ??
-        [
-          _offsetStartRaw(offset - 1).position,
-          _offsetEndRaw(offset - 1).position,
-          _offsetEndRaw(offset + 1).position,
-          _offsetStartRaw(offset + 1).position,
-        ];
-
-    // Find indices for points outside the start end of the field.
-    final outsideStartIndices = <int>[];
-
-    for (var i = 0; i < newPath.length; i++) {
-      final point = newPath.elementAt(i);
-      var pointInsideRing = false;
-      final pointInsideBoundaryBox =
-          boundaryBox?.intersectsPoint2D(point.position) ?? true;
-      if (pointInsideBoundaryBox) {
-        pointInsideRing = point.position.isWithinRing(boundaryRing);
-      }
-      if (pointInsideRing) {
-        break;
-      }
-      outsideStartIndices.add(i);
-    }
-
-    if (outsideStartIndices.length == newPath.length) {
-      if (newPath.length < 2) {
+    if (boundary?.exterior != null && newPath.isNotEmpty) {
+      final boundaryRing = boundary!.exterior!.toGeographicPositions;
+      // Skip lines that don't have any possible intersections with the boundary
+      if (!newPath.any(
+        (element) => element.intersectionsWithRhumb(boundaryRing).isNotEmpty,
+      )) {
         return [];
       }
-      // check if any line passes through ring, if so return for now
-      if (newPath.length >= 2) {
-        final intersects = <int>[];
-        for (var i = 0; i < newPath.length; i++) {
-          if (newPath[i].intersectionWithRhumb(boundaryRing) != null) {
-            intersects.add(i);
-          }
-        }
-        if (intersects.isNotEmpty) {
-          // Interpolate the path from the last intersection
-          var index = intersects.last;
-          if (intersects.length > 1) {
-            var prevIndex = intersects[intersects.length - 2];
-            while (index - prevIndex > 1) {
-              index = prevIndex;
-              prevIndex = intersects[(intersects.indexOf(index) - 1)
-                  .clamp(0, intersects.length - 1)];
-            }
-          }
-          // Interpolate the path to ensure that some points are within
-          // boundary
-          while (index + 1 < newPath.length) {
-            final point = newPath[index];
-            final nextPoint = newPath[index + 1];
-            if (point.position.rhumb.distanceTo(nextPoint.position) >
-                width / 2) {
-              newPath.insert(
-                index + 1,
-                point.copyWith(
-                  position: point.position.rhumb.destinationPoint(
-                    distance: width / 2,
-                    bearing: point.position.rhumb
-                        .initialBearingTo(nextPoint.position),
-                  ),
-                ),
-              );
-            }
-            index++;
-          }
-          // Retest to see if there are any point's within.
-          outsideStartIndices.clear();
-          for (var i = 0; i < newPath.length; i++) {
-            final point = newPath.elementAt(i);
-            var pointInsideRing = false;
-            final pointInsideBoundaryBox =
-                boundaryBox?.intersectsPoint2D(point.position) ?? true;
-            if (pointInsideBoundaryBox) {
-              pointInsideRing = point.position.isWithinRing(boundaryRing);
-            }
-            if (pointInsideRing) {
-              break;
-            }
-            outsideStartIndices.add(i);
-          }
-        }
-      }
-    }
 
-    // Filter out points outside the start end of the field.
-    if (outsideStartIndices.isNotEmpty) {
-      final lastPointOutside = newPath.elementAt(outsideStartIndices.last);
+      if (type == ABTrackingType.abLine || type == ABTrackingType.aPlusLine) {
+        final intersectionsBehind = newPath.first.intersectionsWithRhumb(
+          boundaryRing,
+          oppositeOfBearing: true,
+        );
+        final intersectionsAhead = newPath.first.intersectionsWithRhumb(
+          boundary!.exterior!.toGeographicPositions,
+        );
 
-      if (outsideStartIndices.length > 1) {
+        final ahead = [...intersectionsBehind, ...intersectionsAhead]
+            .where(
+              (element) =>
+                  bearingDifference(
+                    baseLine.first.bearing,
+                    baseLine.first.initialBearingToRhumb(element),
+                  ) <=
+                  90,
+            )
+            .sortedBy<num>(
+              (element) => baseLine.first.distanceToRhumb(element),
+            );
+        final behind = [...intersectionsBehind, ...intersectionsAhead]
+            .where(
+              (element) =>
+                  bearingDifference(
+                    baseLine.first.bearing,
+                    baseLine.first.initialBearingToRhumb(element),
+                  ) >
+                  90,
+            )
+            .sortedBy<num>(
+              (element) => -baseLine.first.distanceToRhumb(element),
+            );
         newPath.replaceRange(
           0,
-          outsideStartIndices.last + 1,
-          [],
-        );
-      } else {
-        newPath.removeAt(outsideStartIndices.first);
-      }
-      if (newPath.isNotEmpty) {
-        final firstPointInside = newPath.first;
-
-        final boundaryIntersection = firstPointInside
-            .copyWith(
-              bearing: lastPointOutside.finalBearingToRhumb(firstPointInside),
-            )
-            .intersectionWithRhumb(
-              boundaryRing,
-              oppositeOfBearing: true,
-            );
-        if (boundaryIntersection != null) {
-          final distanceAlong =
-              boundaryIntersection.alongTrackDistanceToSpherical(
-            start: lastPointOutside,
-            end: firstPointInside,
-          );
-
-          final intersectingLength =
-              lastPointOutside.distanceToRhumb(firstPointInside);
-
-          final pointOnLine = lastPointOutside.intermediatePointToSpherical(
-            firstPointInside,
-            fraction: distanceAlong / intersectingLength,
-          );
-
-          newPath.insert(
-            0,
-            switch (pointOnLine.isValid) {
-              true => pointOnLine,
-              false => boundaryIntersection,
-            },
-          );
-        }
-      }
-    }
-
-    // Find indices for points outside the start end of the field.
-    final outsideEndIndices = <int>[];
-
-    for (var i = newPath.length - 1; i >= 0; i--) {
-      final point = newPath.elementAt(i);
-
-      var pointInsideRing = false;
-      final pointInsideBoundaryBox =
-          boundaryBox?.intersectsPoint2D(point.position) ?? true;
-      if (pointInsideBoundaryBox) {
-        pointInsideRing = point.position.isWithinRing(boundaryRing);
-      }
-      if (!pointInsideRing && i != 0) {
-        outsideEndIndices.add(i);
-      }
-    }
-
-    // Filter out points outside the start end of the field.
-    if (outsideEndIndices.isNotEmpty) {
-      final lastOutsideIndex =
-          outsideEndIndices.firstWhereIndexedOrNull((index, element) {
-                if (index < outsideEndIndices.length - 1) {
-                  // > 1 doesn't give correct points all the time
-                  if (element - outsideEndIndices[index + 1] > 2) {
-                    return true;
-                  }
-                }
-                return false;
-              }) ??
-              outsideEndIndices.last;
-      final lastPointOutside = newPath.elementAt(lastOutsideIndex);
-
-      if (outsideEndIndices.length > 1) {
-        newPath.replaceRange(
-          lastOutsideIndex,
           newPath.length,
-          [],
+          [...behind, ...ahead],
         );
-      } else {
-        newPath.removeLast();
-      }
-      if (newPath.isNotEmpty) {
-        final lastPointInside = newPath.last;
+      } else if (type == ABTrackingType.abCurve) {
+        // TODO(dudlileif): Wrong intersections might get picked if the curve
+        // is shaped like a U or where A and B are roughly the same distance
+        // from both of the intersection sides of the boundary.
 
-        final boundaryIntersection = lastPointInside
-            .copyWith(
-              bearing: lastPointInside.initialBearingToRhumb(lastPointOutside),
-            )
-            .intersectionWithRhumb(
-              boundaryRing,
+        final indicesOutsideStart = <int>[];
+        final indicesOutsideEnd = <int>[];
+
+        for (var i = 0; i < newPath.length; i++) {
+          final point = newPath[i];
+          if (!point.position.isWithinRing(boundaryRing)) {
+            indicesOutsideStart.add(i);
+          } else {
+            break;
+          }
+        }
+        if (indicesOutsideStart.length != newPath.length) {
+          final startIntersections = newPath
+              .elementAt(indicesOutsideStart.lastOrNull ?? 0)
+              .intersectionsWithRhumb(boundaryRing);
+
+          if (indicesOutsideStart.isNotEmpty) {
+            newPath.replaceRange(
+              indicesOutsideStart.first,
+              indicesOutsideStart.last + 1,
+              [
+                if (startIntersections.isNotEmpty)
+                  startIntersections.reduce(
+                    (value, element) => newPath.first.distanceToRhumb(element) <
+                            newPath.first.distanceToRhumb(value)
+                        ? element
+                        : value,
+                  ),
+              ],
             );
-        if (boundaryIntersection != null) {
-          final distanceAlong =
-              boundaryIntersection.alongTrackDistanceToSpherical(
-            start: lastPointInside,
-            end: lastPointOutside,
-          );
+          }
+          for (var i = newPath.length - 1; i >= 0; i--) {
+            final point = newPath[i];
+            if (!point.position.isWithinRing(boundaryRing)) {
+              indicesOutsideEnd.add(i);
+            } else {
+              break;
+            }
+          }
+          final endIntersections = newPath
+              .elementAt(indicesOutsideEnd.lastOrNull ?? 0)
+              .intersectionsWithRhumb(boundaryRing, oppositeOfBearing: true);
+          if (indicesOutsideEnd.isNotEmpty) {
+            newPath.replaceRange(
+              indicesOutsideEnd.last - 1,
+              indicesOutsideEnd.first + 1,
+              [
+                if (endIntersections.isNotEmpty)
+                  endIntersections
+                      .reduce(
+                        (value, element) =>
+                            newPath.last.distanceToRhumb(element) <
+                                    newPath.last.distanceToRhumb(value)
+                                ? element
+                                : value,
+                      )
+                      .rotateByAngle(180),
+              ],
+            );
+          }
+        } else if (newPath.length >= 2) {
+          // Split the end-most lines in half and the new split lines until
+          // a point is inside the boundary, or until the distance between the
+          // points is less than the min distance, set to 10 meters as lines
+          // shorter than this aren't really practical on the field.
 
-          final intersectingLength =
-              lastPointInside.distanceToRhumb(lastPointOutside);
+          // Only split while distance is larger than this.
+          const minDistance = 10;
 
-          final pointOnLine = lastPointInside.intermediatePointToSpherical(
-            lastPointOutside,
-            fraction: distanceAlong / intersectingLength,
-          );
+          final intersections = <WayPoint>[];
 
-          newPath.add(
-            switch (pointOnLine.isValid) {
-              true => pointOnLine,
-              false => boundaryIntersection,
-            },
+          // From start
+          final splitLinesStart = [newPath.first, newPath[1]];
+          while (splitLinesStart.first.distanceToRhumb(splitLinesStart[1]) >
+              minDistance) {
+            var i = 0;
+            var breakout = false;
+            while (i < splitLinesStart.length - 1) {
+              splitLinesStart.replaceRange(i, i + 2, [
+                splitLinesStart[i],
+                splitLinesStart[i].intermediatePointToRhumb(
+                  splitLinesStart[i + 1],
+                  fraction: 0.5,
+                ),
+                splitLinesStart[i + 1],
+              ]);
+
+              if (splitLinesStart.any(
+                (element) => element.position.isWithinRing(boundaryRing),
+              )) {
+                intersections.addAll(
+                  newPath.first.intersectionsWithRhumb(
+                    boundaryRing,
+                  ),
+                );
+                breakout = true;
+                break;
+              }
+              i += 2;
+            }
+            if (breakout) {
+              break;
+            }
+          }
+          // From end
+          final splitLinesEnd = [newPath.last, newPath[newPath.length - 2]];
+          while (splitLinesEnd.first.distanceToRhumb(splitLinesEnd[1]) >
+              minDistance) {
+            var i = 0;
+            var breakout = false;
+            while (i < splitLinesEnd.length - 1) {
+              splitLinesEnd.replaceRange(i, i + 2, [
+                splitLinesEnd[i],
+                splitLinesEnd[i].intermediatePointToRhumb(
+                  splitLinesEnd[i + 1],
+                  fraction: 0.5,
+                ),
+                splitLinesEnd[i + 1],
+              ]);
+
+              if (splitLinesEnd.any(
+                (element) => element.position.isWithinRing(boundaryRing),
+              )) {
+                intersections.addAll(
+                  newPath.last.intersectionsWithRhumb(
+                    boundaryRing,
+                    oppositeOfBearing: true,
+                  ),
+                );
+                breakout = true;
+                break;
+              }
+              i += 2;
+            }
+            if (breakout) {
+              break;
+            }
+          }
+          newPath.replaceRange(
+            0,
+            newPath.length,
+            intersections,
           );
         }
       }
     }
-
-    // Remove all points outside the rectangular bounding box
-    if (boundaryBox != null) {
-      newPath.removeWhere(
-        (element) => !boundaryBox.intersectsPoint2D(element.position),
-      );
-    }
-
     if (newPath.length < 2) {
       return [];
     }
@@ -700,7 +669,9 @@ sealed class ABTracking {
     // Filter out points that are within 10 cm of others to mitigate bearing
     // errors, but preserve start/end points.
     if (newPath.length >= 2) {
-      newPath.forEachIndexed((index, element) {
+      var index = 0;
+      while (index < newPath.length) {
+        final element = newPath.elementAt(index);
         if (index == newPath.length - 1) {
           if (element.distanceToRhumb(newPath.elementAt(index - 1)) < 0.1) {
             newPath.removeAt(index - 1);
@@ -710,19 +681,27 @@ sealed class ABTracking {
             newPath.removeAt(index);
           }
         }
-      });
+        index++;
+      }
     }
 
     // Ensure that the end points have the correct bearings.
     if (newPath.length >= 2) {
       newPath[0] = newPath.first.copyWith(
-        bearing: newPath.first.initialBearingToRhumb(newPath[1]),
+        bearing: newPath.first.initialBearingToRhumb(
+          newPath.firstWhere(
+            (element) => newPath.first.distanceToRhumb(element) > 0.5,
+          ),
+        ),
       );
       newPath[newPath.length - 1] = newPath.last.copyWith(
-        bearing: newPath[newPath.length - 2].finalBearingToRhumb(newPath.last),
+        bearing: newPath.reversed
+            .firstWhere(
+              (element) => newPath.last.distanceToRhumb(element) > 0.5,
+            )
+            .finalBearingToRhumb(newPath.last),
       );
     }
-
     offsetsInsideBoundary?.add(offset);
     lines[offset] = newPath;
     return newPath;
@@ -779,19 +758,6 @@ sealed class ABTracking {
   /// Toggles the [snapToClosestLine] to the inverse value.
   void toggleSnapToClosestLine() => snapToClosestLine = !snapToClosestLine;
 
-  /// If the snapping is paused until the wanted offset/line is the closest,
-  /// we check if that is the case and re-engage [snapToClosestLine] if it is.
-  ///
-  /// The [vehicle] is used to find which offset/line is the closest.
-  void checkIfShouldReengageSnap(Vehicle vehicle) {
-    if (awaitToReengageSnap) {
-      if (currentOffset == numOffsetsToClosestLine(vehicle)) {
-        snapToClosestLine = true;
-        awaitToReengageSnap = false;
-      }
-    }
-  }
-
   /// The perpendicular distance from [vehicle] to the base line.
   ///
   /// The distance is negative if the point is to the left of the base line.
@@ -809,8 +775,14 @@ sealed class ABTracking {
 
   /// How many [width] offsets from the original line we need to get the
   /// closest line.
-  int numOffsetsToClosestLine(Vehicle vehicle) =>
-      (perpendicularDistanceToBaseLine(vehicle) / width).round();
+  int numOffsetsToClosestLine(Vehicle vehicle) {
+    final val = (compareToBearing(vehicle) *
+                (currentPathTracking?.perpendicularDistance(vehicle) ?? 0) /
+                width +
+            (currentOffset ?? 0))
+        .round();
+    return val;
+  }
 
   /// Compares [vehicle]'s bearing to current line bearing at the
   /// [currentPerpendicularIntersect] to determine what should be left and
@@ -856,14 +828,15 @@ sealed class ABTracking {
   void moveOffset(Vehicle vehicle, {int offset = 1}) {
     if (currentOffset != null) {
       final newOffset = currentOffset! + offset * compareToBearing(vehicle);
-      if (offsetsInsideBoundary != null &&
-          nextOffset != null &&
-          !offsetsInsideBoundary!.contains(newOffset)) {
+      offsetLine(newOffset);
+      if ((offsetsInsideBoundary != null &&
+              nextOffset != null &&
+              !offsetsInsideBoundary!.contains(newOffset)) ||
+          lines[newOffset] == null) {
         return;
       }
       if (snapToClosestLine) {
         snapToClosestLine = false;
-        awaitToReengageSnap = true;
       }
       currentOffset = newOffset;
       activeTurn = null;
@@ -884,7 +857,8 @@ sealed class ABTracking {
   /// Sets the [currentOffset] to the closest line.
   void setCurrentOffsetToClosest(Vehicle vehicle) {
     final closest = numOffsetsToClosestLine(vehicle);
-    if (closest != currentOffset) {
+    offsetLine(closest);
+    if (closest != currentOffset && lines[closest] != null) {
       if (boundary != null && offsetsInsideBoundary != null) {
         if (offsetsInsideBoundary!.contains(closest)) {
           currentOffset = closest;
@@ -901,8 +875,6 @@ sealed class ABTracking {
     if (snapToClosestLine && activeTurn == null) {
       setCurrentOffsetToClosest(vehicle);
     }
-
-    checkIfShouldReengageSnap(vehicle);
   }
 
   /// Update the [nextOffset] to cover a new line.

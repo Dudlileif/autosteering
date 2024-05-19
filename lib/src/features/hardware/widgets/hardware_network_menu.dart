@@ -17,7 +17,6 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
-import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,11 +38,7 @@ class HardwareNetworkMenu extends StatelessWidget {
         if (Device.isNative) ...[
           Consumer(
             builder: (context, ref, child) {
-              final ip = ref.watch(deviceIPAdressWlanProvider).when(
-                    data: (data) => data,
-                    error: (error, stackTrace) => null,
-                    loading: () => null,
-                  );
+              final ip = ref.watch(deviceIPAdressWlanProvider);
               return ip != null
                   ? ListTile(
                 leading: const Icon(Icons.wifi),
@@ -59,11 +54,7 @@ $ip''',
           ),
           Consumer(
             builder: (context, ref, child) {
-              final ip = ref.watch(deviceIPAdressAPProvider).when(
-                    data: (data) => data,
-                    error: (error, stackTrace) => null,
-                    loading: () => null,
-                  );
+              final ip = ref.watch(deviceIPAdressAPProvider);
               return ip != null
                   ? ListTile(
                       leading: const Icon(Icons.router),
@@ -79,11 +70,7 @@ $ip''',
           ),
           Consumer(
             builder: (context, ref, child) {
-              final ip = ref.watch(deviceIPAdressEthernetProvider).when(
-                    data: (data) => data,
-                    error: (error, stackTrace) => null,
-                    loading: () => null,
-                  );
+              final ip = ref.watch(deviceIPAdressEthernetProvider);
               return ip != null
                   ? ListTile(
                 leading: const Icon(Icons.cable),
@@ -98,21 +85,6 @@ $ip''',
             },
           ),
         ],
-        Consumer(
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(sendMessagesToHardwareIfNetworkProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(sendMessagesToHardwareIfNetworkProvider.notifier)
-                    .update(value: value)
-                : null,
-            title: Text(
-              'Send messages',
-              style: textStyle,
-            ),
-            secondary: const Icon(Icons.message),
-          ),
-        ),
         ListTile(
           leading: Column(
             children: [
@@ -128,13 +100,13 @@ $ip''',
           title: Consumer(
             builder: (context, ref, child) {
               final controller = TextEditingController(
-                text: ref.read(steeringHardwareAddressProvider),
+                text: ref.watch(steeringHardwareAddressProvider),
               );
               return TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Steering Hardware Address',
-                  error: SizedBox(
-                    height: 16,
+                  counter: SizedBox(
+                    height: 18,
                     child: Column(
                       children: [
                         ListenableBuilder(
@@ -176,7 +148,7 @@ $ip''',
                   ),
                 ),
                 controller: controller,
-                onChanged:
+                onFieldSubmitted:
                     ref.read(steeringHardwareAddressProvider.notifier).update,
               );
             },
@@ -197,13 +169,13 @@ $ip''',
           title: Consumer(
             builder: (context, ref, child) {
               final controller = TextEditingController(
-                text: ref.read(remoteControlHardwareAddressProvider),
+                text: ref.watch(remoteControlHardwareAddressProvider),
               );
               return TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Remote Control Hardware Address',
-                  error: SizedBox(
-                    height: 16,
+                  counter: SizedBox(
+                    height: 18,
                     child: Column(
                       children: [
                         ListenableBuilder(
@@ -245,7 +217,7 @@ $ip''',
                   ),
                 ),
                 controller: controller,
-                onChanged: ref
+                onFieldSubmitted: ref
                     .read(remoteControlHardwareAddressProvider.notifier)
                     .update,
               );
@@ -254,11 +226,7 @@ $ip''',
         ),
         if (Device.isNative)
           Consumer(
-            builder: (context, ref, child) {
-              final controller = TextEditingController(
-                text: ref.read(hardwareUDPReceivePortProvider).toString(),
-              );
-              return ListTile(
+            builder: (context, ref, child) => ListTile(
                 leading: const Icon(Icons.call_received),
                 title: TextFormField(
                   decoration: InputDecoration(
@@ -277,21 +245,18 @@ $ip''',
                         ? 'Valid Port'
                         : 'Invalid Port';
                   },
-                  controller: controller,
+                controller: TextEditingController(
+                  text: ref.read(hardwareUDPReceivePortProvider).toString(),
+                ),
                   onChanged: ref
                       .read(hardwareUDPReceivePortProvider.notifier)
                       .updateFromString,
                 ),
-              );
-            },
+            ),
           ),
         if (Device.isNative)
           Consumer(
-            builder: (context, ref, child) {
-              final controller = TextEditingController(
-                text: ref.read(hardwareUDPSendPortProvider).toString(),
-              );
-              return ListTile(
+            builder: (context, ref, child) => ListTile(
                 leading: const Icon(Icons.send),
                 title: TextFormField(
                   decoration: const InputDecoration(
@@ -308,13 +273,14 @@ $ip''',
                         ? 'Valid Port'
                         : 'Invalid Port';
                   },
-                  controller: controller,
+                controller: TextEditingController(
+                  text: ref.read(hardwareUDPSendPortProvider).toString(),
+                ),
                   onChanged: ref
                       .read(hardwareUDPSendPortProvider.notifier)
                       .updateFromString,
                 ),
-              );
-            },
+            ),
           ),
       ],
     );
