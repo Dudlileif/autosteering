@@ -122,11 +122,13 @@ class _CloseDialog extends ConsumerWidget {
             const CloseButton(),
           ],
         ),
+        contentPadding:
+            const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
         children: [
           Center(
             child: Wrap(
               runSpacing: 8,
-              spacing: 8,
+              spacing: 24,
               children: [
                 Column(
                   children: [
@@ -134,60 +136,68 @@ class _CloseDialog extends ConsumerWidget {
                       'Start',
                       style: theme.textTheme.titleLarge,
                     ),
-                    SelectableText(
-                      workSession.start != null
-                          ? '''${DateFormat(DateFormat.YEAR_MONTH_DAY).format(workSession.start!)} ${DateFormat(DateFormat.HOUR24_MINUTE).format(workSession.start!)}'''
-                          : '-',
-                      style: theme.menuButtonWithChildrenText,
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        showDatePicker(
-                          context: context,
-                          firstDate: workSession.start ??
-                              DateTime.now().subtract(
-                                const Duration(days: 7),
-                              ),
-                          lastDate: DateTime.now(),
-                        ).then(
-                          (time) => time != null
-                              ? ref
-                                  .read(
-                                    activeWorkSessionProvider.notifier,
-                                  )
-                                  .updateStartTime(time)
-                              : null,
-                        );
-                      },
-                      icon: const Icon(Icons.calendar_today),
-                      label: const Text('Set date'),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        final date = workSession.start ?? DateTime.now();
-                        showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.now(),
-                        ).then(
-                          (time) => time != null
-                              ? ref
-                                  .read(
-                                    activeWorkSessionProvider.notifier,
-                                  )
-                                  .updateStartTime(
-                                    DateTime(
-                                      date.year,
-                                      date.month,
-                                      date.day,
-                                      time.hour,
-                                      time.minute,
-                                    ),
-                                  )
-                              : null,
-                        );
-                      },
-                      icon: const Icon(Icons.schedule),
-                      label: const Text('Set time of day'),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      direction: Axis.vertical,
+                      children: [
+                        SelectableText(
+                          workSession.start != null
+                              ? '''${DateFormat(DateFormat.YEAR_MONTH_DAY).format(workSession.start!)} ${DateFormat(DateFormat.HOUR24_MINUTE).format(workSession.start!)}'''
+                              : '-',
+                          style: theme.menuButtonWithChildrenText,
+                        ),
+                    
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            showDatePicker(
+                              context: context,
+                              firstDate: workSession.start ??
+                                  DateTime.now().subtract(
+                                    const Duration(days: 7),
+                                  ),
+                              lastDate: DateTime.now(),
+                            ).then(
+                              (time) => time != null
+                                  ? ref
+                                      .read(
+                                        activeWorkSessionProvider.notifier,
+                                      )
+                                      .updateStartTime(time)
+                                  : null,
+                            );
+                          },
+                          icon: const Icon(Icons.calendar_today),
+                          label: const Text('Set date'),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            final date = workSession.start ?? DateTime.now();
+                            showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            ).then(
+                              (time) => time != null
+                                  ? ref
+                                      .read(
+                                        activeWorkSessionProvider.notifier,
+                                      )
+                                      .updateStartTime(
+                                        DateTime(
+                                          date.year,
+                                          date.month,
+                                          date.day,
+                                          time.hour,
+                                          time.minute,
+                                        ),
+                                      )
+                                  : null,
+                            );
+                          },
+                          icon: const Icon(Icons.schedule),
+                          label: const Text('Set time of day'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -197,68 +207,77 @@ class _CloseDialog extends ConsumerWidget {
                       'End',
                       style: theme.textTheme.titleLarge,
                     ),
-                    SelectableText(
-                      workSession.end != null
-                          ? '''${DateFormat(DateFormat.YEAR_MONTH_DAY).format(workSession.end!)} ${DateFormat(DateFormat.HOUR24_MINUTE).format(workSession.end!)}'''
-                          : '-',
-                      style: theme.menuButtonWithChildrenText,
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        showDatePicker(
-                          context: context,
-                          firstDate: workSession.start ??
-                              DateTime.now().subtract(
-                                const Duration(days: 7),
-                              ),
-                          lastDate: DateTime.now(),
-                        ).then(
-                          (time) => time != null
-                              ? ref
-                                  .read(
-                                    activeWorkSessionProvider.notifier,
-                                  )
-                                  .updateEndTime(time)
-                              : null,
-                        );
-                      },
-                      icon: const Icon(Icons.calendar_today),
-                      label: const Text('Set date'),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        final date = workSession.end ?? DateTime.now();
-                        showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.now(),
-                        ).then(
-                          (time) => time != null
-                              ? ref
-                                  .read(
-                                    activeWorkSessionProvider.notifier,
-                                  )
-                                  .updateEndTime(
-                                    DateTime(
-                                      date.year,
-                                      date.month,
-                                      date.day,
-                                      time.hour,
-                                      time.minute,
-                                    ),
-                                  )
-                              : null,
-                        );
-                      },
-                      icon: const Icon(Icons.schedule),
-                      label: const Text('Set time of day'),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      direction: Axis.vertical,
+                      children: [
+                        SelectableText(
+                          workSession.end != null
+                              ? '''${DateFormat(DateFormat.YEAR_MONTH_DAY).format(workSession.end!)} ${DateFormat(DateFormat.HOUR24_MINUTE).format(workSession.end!)}'''
+                              : '-',
+                          style: theme.menuButtonWithChildrenText,
+                        ),
+                    
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            showDatePicker(
+                              context: context,
+                              firstDate: workSession.start ??
+                                  DateTime.now().subtract(
+                                    const Duration(days: 7),
+                                  ),
+                              lastDate: DateTime.now(),
+                            ).then(
+                              (time) => time != null
+                                  ? ref
+                                      .read(
+                                        activeWorkSessionProvider.notifier,
+                                      )
+                                      .updateEndTime(time)
+                                  : null,
+                            );
+                          },
+                          icon: const Icon(Icons.calendar_today),
+                          label: const Text('Set date'),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            final date = workSession.end ?? DateTime.now();
+                            showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            ).then(
+                              (time) => time != null
+                                  ? ref
+                                      .read(
+                                        activeWorkSessionProvider.notifier,
+                                      )
+                                      .updateEndTime(
+                                        DateTime(
+                                          date.year,
+                                          date.month,
+                                          date.day,
+                                          time.hour,
+                                          time.minute,
+                                        ),
+                                      )
+                                  : null,
+                            );
+                          },
+                          icon: const Icon(Icons.schedule),
+                          label: const Text('Set time of day'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
           ),
+          
           Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.only(top: 16),
             child: Align(
               alignment: Alignment.centerRight,
               child: Wrap(
@@ -417,84 +436,83 @@ class _CreateWorkSessionDialogState
           ),
         ],
       ),
+      contentPadding:
+          const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: SingleChildScrollView(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    decoration: const InputDecoration(
-                      label: Text('Title'),
-                    ),
-                    onChanged: (value) =>
-                        setState(() => workSession.title = value),
+        SingleChildScrollView(
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  decoration: const InputDecoration(
+                    label: Text('Title'),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: DropdownMenu<Field>(
-                      leadingIcon: const Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Icon(Icons.texture),
-                          Icon(Icons.square_outlined),
-                        ],
-                      ),
-                      hintText: 'Field',
-                      onSelected: (value) =>
-                          setState(() => workSession.field = value),
-                      dropdownMenuEntries: (ref.watch(savedFieldsProvider).when(
-                                data: (data) => data,
-                                error: (error, stackTrace) => <Field>[],
-                                loading: () => <Field>[],
-                              )..sort(
-                              (a, b) => b.lastUsed.compareTo(a.lastUsed),
-                            ))
-                          .map(
-                            (field) => DropdownMenuEntry(
-                              value: field,
-                              label: field.name,
-                            ),
-                          )
-                          .toList(),
+                  onChanged: (value) =>
+                      setState(() => workSession.title = value),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: DropdownMenu<Field>(
+                    leadingIcon: const Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Icon(Icons.texture),
+                        Icon(Icons.square_outlined),
+                      ],
                     ),
+                    hintText: 'Field',
+                    onSelected: (value) =>
+                        setState(() => workSession.field = value),
+                    dropdownMenuEntries: (ref.watch(savedFieldsProvider).when(
+                              data: (data) => data,
+                              error: (error, stackTrace) => <Field>[],
+                              loading: () => <Field>[],
+                            )..sort(
+                            (a, b) => b.lastUsed.compareTo(a.lastUsed),
+                          ))
+                        .map(
+                          (field) => DropdownMenuEntry(
+                            value: field,
+                            label: field.name,
+                          ),
+                        )
+                        .toList(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: DropdownMenu<EquipmentSetup>(
-                      leadingIcon: const Icon(Icons.handyman),
-                      hintText: 'Equipment setup',
-                      onSelected: (value) => setState(
-                        () => workSession.equipmentSetup = value,
-                      ),
-                      dropdownMenuEntries:
-                          (ref.watch(savedEquipmentSetupsProvider).when(
-                                    data: (data) => data,
-                                    error: (error, stackTrace) =>
-                                        <EquipmentSetup>[],
-                                    loading: () => <EquipmentSetup>[],
-                                  )..sort(
-                                  (a, b) => b.lastUsed.compareTo(a.lastUsed),
-                                ))
-                              .map(
-                                (equipmentSetup) => DropdownMenuEntry(
-                                  value: equipmentSetup,
-                                  label: equipmentSetup.name,
-                                ),
-                              )
-                              .toList(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: DropdownMenu<EquipmentSetup>(
+                    leadingIcon: const Icon(Icons.handyman),
+                    hintText: 'Equipment setup',
+                    onSelected: (value) => setState(
+                      () => workSession.equipmentSetup = value,
                     ),
+                    dropdownMenuEntries: (ref
+                            .watch(savedEquipmentSetupsProvider)
+                            .when(
+                              data: (data) => data,
+                              error: (error, stackTrace) => <EquipmentSetup>[],
+                              loading: () => <EquipmentSetup>[],
+                            )..sort(
+                            (a, b) => b.lastUsed.compareTo(a.lastUsed),
+                          ))
+                        .map(
+                          (equipmentSetup) => DropdownMenuEntry(
+                            value: equipmentSetup,
+                            label: equipmentSetup.name,
+                          ),
+                        )
+                        .toList(),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.only(top: 16),
           child: Align(
             alignment: Alignment.centerRight,
             child: Wrap(
@@ -506,9 +524,10 @@ class _CreateWorkSessionDialogState
                   icon: const Icon(Icons.cancel),
                   label: const Text('Cancel'),
                 ),
-                if (workSession.title != null && workSession.title!.isNotEmpty)
-                  FilledButton.icon(
-                    onPressed: () {
+                FilledButton.icon(
+                  onPressed: (workSession.title != null &&
+                          workSession.title!.isNotEmpty)
+                      ? () {
                       workSession
                         ..vehicle = ref.watch(mainVehicleProvider)
                         ..equipmentSetup ??= ref
@@ -532,7 +551,8 @@ class _CreateWorkSessionDialogState
                         );
                       }
                       Navigator.of(context).pop();
-                    },
+                        }
+                      : null,
                     icon: const Icon(Icons.check),
                     label: const Text('Create'),
                   ),
@@ -626,40 +646,15 @@ class _LoadWorkSessionMenu extends ConsumerWidget {
                         onPressed: () async {
                           await showDialog<bool>(
                             context: context,
-                            builder: (context) => SimpleDialog(
-                              title: Text(
-                                'Delete ${workSession.title ?? 'No title'}?',
-                              ),
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    SimpleDialogOption(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(false),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    Consumer(
-                                      builder: (context, ref, child) =>
-                                          SimpleDialogOption(
-                                        onPressed: () async {
-                                          await ref
-                                              .watch(
-                                                deleteWorkSessionProvider(
-                                                  workSession,
-                                                ).future,
-                                              )
-                                              .then(
-                                                (value) => Navigator.of(context)
-                                                    .pop(true),
-                                              );
-                                        },
-                                        child: const Text('Confirm'),
-                                      ),
-                                    ),
-                                  ],
+                            builder: (context) => Consumer(
+                              builder: (context, ref, child) => DeleteDialog(
+                                name: workSession.title ?? 'Session',
+                                onDelete: () async => await ref.watch(
+                                  deleteWorkSessionProvider(
+                                    workSession,
+                                  ).future,
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },
@@ -718,36 +713,15 @@ class _ABTrackingMenu extends ConsumerWidget {
                     IconButton(
                       onPressed: () => showDialog<bool>(
                         context: context,
-                        builder: (context) => SimpleDialog(
-                          title: Text(
-                            'Delete ${tracking.name ?? tracking.type.name}?',
+                        builder: (context) => Consumer(
+                          builder: (context, ref, child) => ConfirmationDialog(
+                            title: 'Remove ${tracking.name ?? tracking.uuid}?',
+                            onConfirmation: () async => ref
+                                .read(
+                                  activeWorkSessionProvider.notifier,
+                                )
+                                .removeABTracking(tracking.uuid),
                           ),
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                SimpleDialogOption(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: const Text('Cancel'),
-                                ),
-                                Consumer(
-                                  builder: (context, ref, child) =>
-                                      SimpleDialogOption(
-                                    onPressed: () {
-                                      ref
-                                          .read(
-                                            activeWorkSessionProvider.notifier,
-                                          )
-                                          .removeABTracking(tracking.uuid);
-                                      Navigator.of(context).pop(true);
-                                    },
-                                    child: const Text('Confirm'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
                         ),
                       ),
                       icon: const Icon(Icons.delete),
@@ -791,50 +765,56 @@ class _RenameABTrackingDialog extends StatelessWidget {
       text: tracking.name,
     );
     return SimpleDialog(
-      title: const Text('Rename AB Tracking'),
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text('Rename AB Tracking'), CloseButton()],
+      ),
+      contentPadding:
+          const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
+
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: TextField(
-            decoration: const InputDecoration(
-              labelText: 'Name',
-            ),
-            controller: controller,
+        TextField(
+          decoration: const InputDecoration(
+            labelText: 'Name',
           ),
+          controller: controller,
         ),
         Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.cancel),
-                label: const Text('Cancel'),
-              ),
-              ListenableBuilder(
-                listenable: controller,
-                builder: (context, child) => Consumer(
-                  builder: (context, ref, child) => FilledButton.icon(
-                    onPressed: controller.text.isNotEmpty
-                        ? () {
-                            ref
-                                .read(
-                                  activeWorkSessionProvider.notifier,
-                                )
-                                .updateABTracking(
-                                  tracking..name = controller.text,
-                                );
-                            Navigator.of(context).pop();
-                          }
-                        : null,
-                    icon: const Icon(Icons.check),
-                    label: const Text('Rename'),
+          padding: const EdgeInsets.only(top: 16),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.cancel),
+                  label: const Text('Cancel'),
+                ),
+                ListenableBuilder(
+                  listenable: controller,
+                  builder: (context, child) => Consumer(
+                    builder: (context, ref, child) => FilledButton.icon(
+                      onPressed: controller.text.isNotEmpty
+                          ? () {
+                              ref
+                                  .read(
+                                    activeWorkSessionProvider.notifier,
+                                  )
+                                  .updateABTracking(
+                                    tracking..name = controller.text,
+                                  );
+                              Navigator.of(context).pop();
+                            }
+                          : null,
+                      icon: const Icon(Icons.check),
+                      label: const Text('Rename'),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -878,36 +858,15 @@ class _PathTrackingMenu extends ConsumerWidget {
                     IconButton(
                       onPressed: () => showDialog<bool>(
                         context: context,
-                        builder: (context) => SimpleDialog(
-                          title: Text(
-                            'Delete ${tracking.name ?? tracking.uuid}?',
+                        builder: (context) => Consumer(
+                          builder: (context, ref, child) => ConfirmationDialog(
+                            title: 'Remove ${tracking.name ?? tracking.uuid}?',
+                            onConfirmation: () async => ref
+                                .read(
+                                  activeWorkSessionProvider.notifier,
+                                )
+                                .removePathTracking(tracking.uuid),
                           ),
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                SimpleDialogOption(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: const Text('Cancel'),
-                                ),
-                                Consumer(
-                                  builder: (context, ref, child) =>
-                                      SimpleDialogOption(
-                                    onPressed: () {
-                                      ref
-                                          .read(
-                                            activeWorkSessionProvider.notifier,
-                                          )
-                                          .removePathTracking(tracking.uuid);
-                                      Navigator.of(context).pop(true);
-                                    },
-                                    child: const Text('Confirm'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
                         ),
                       ),
                       icon: const Icon(Icons.delete),
@@ -947,50 +906,58 @@ class _RenamePathTrackingDialog extends StatelessWidget {
       text: tracking.name,
     );
     return SimpleDialog(
-      title: const Text('Rename Path Tracking'),
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Rename Path Tracking'),
+          CloseButton(),
+        ],
+      ),
+      contentPadding:
+          const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: TextField(
-            decoration: const InputDecoration(
-              labelText: 'Name',
-            ),
-            controller: controller,
+        TextField(
+          decoration: const InputDecoration(
+            labelText: 'Name',
           ),
+          controller: controller,
         ),
         Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.cancel),
-                label: const Text('Cancel'),
-              ),
-              ListenableBuilder(
-                listenable: controller,
-                builder: (context, child) => Consumer(
-                  builder: (context, ref, child) => FilledButton.icon(
-                    onPressed: controller.text.isNotEmpty
-                        ? () {
-                            ref
-                                .read(
-                                  activeWorkSessionProvider.notifier,
-                                )
-                                .updatePathTracking(
-                                  tracking..name = controller.text,
-                                );
-                            Navigator.of(context).pop();
-                          }
-                        : null,
-                    icon: const Icon(Icons.check),
-                    label: const Text('Rename'),
+          padding: const EdgeInsets.only(top: 16),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.cancel),
+                  label: const Text('Cancel'),
+                ),
+                ListenableBuilder(
+                  listenable: controller,
+                  builder: (context, child) => Consumer(
+                    builder: (context, ref, child) => FilledButton.icon(
+                      onPressed: controller.text.isNotEmpty
+                          ? () {
+                              ref
+                                  .read(
+                                    activeWorkSessionProvider.notifier,
+                                  )
+                                  .updatePathTracking(
+                                    tracking..name = controller.text,
+                                  );
+                              Navigator.of(context).pop();
+                            }
+                          : null,
+                      icon: const Icon(Icons.check),
+                      label: const Text('Rename'),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -1014,49 +981,54 @@ class _EditNoteDialog extends ConsumerWidget {
           CloseButton(),
         ],
       ),
+      contentPadding:
+          const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
+
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: TextField(
-            decoration: const InputDecoration(
-              labelText: 'Note',
-            ),
-            controller: controller,
-            maxLines: null,
-            minLines: 5,
+        TextField(
+          decoration: const InputDecoration(
+            labelText: 'Note',
           ),
+          controller: controller,
+          maxLines: null,
+          minLines: 5,
         ),
         Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.cancel),
-                label: const Text('Cancel'),
-              ),
-              ListenableBuilder(
-                listenable: controller,
-                builder: (context, child) => Consumer(
-                  builder: (context, ref, child) => FilledButton.icon(
-                    onPressed: () {
-                      ref
-                          .read(
-                            activeWorkSessionProvider.notifier,
-                          )
-                          .updateNote(
-                            controller.text.isNotEmpty ? controller.text : null,
-                          );
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.check),
-                    label: const Text('Confirm'),
+          padding: const EdgeInsets.only(top: 16),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.cancel),
+                  label: const Text('Cancel'),
+                ),
+                ListenableBuilder(
+                  listenable: controller,
+                  builder: (context, child) => Consumer(
+                    builder: (context, ref, child) => FilledButton.icon(
+                      onPressed: () {
+                        ref
+                            .read(
+                              activeWorkSessionProvider.notifier,
+                            )
+                            .updateNote(
+                              controller.text.isNotEmpty
+                                  ? controller.text
+                                  : null,
+                            );
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.check),
+                      label: const Text('Confirm'),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

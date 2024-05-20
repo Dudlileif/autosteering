@@ -115,19 +115,17 @@ class _EnterHomePositionDialog extends ConsumerStatefulWidget {
 class _EnterHomePositionDialogState
     extends ConsumerState<_EnterHomePositionDialog> {
   late double? lat =
-      ref.read(homePositionProvider.select((value) => value.latitude));
+      ref.watch(homePositionProvider.select((value) => value.latitude));
   late double? lon =
-      ref.read(homePositionProvider.select((value) => value.longitude));
+      ref.watch(homePositionProvider.select((value) => value.longitude));
 
   @override
-  Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).menuButtonWithChildrenText;
-    return SimpleDialog(
+  Widget build(BuildContext context) => SimpleDialog(
       title: const Text('Enter home position'),
+      contentPadding:
+          const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Consumer(
+        Consumer(
             builder: (context, ref, child) {
               return TextFormField(
                 decoration: const InputDecoration(
@@ -147,9 +145,9 @@ class _EnterHomePositionDialogState
               );
             },
           ),
-        ),
+        
         Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.only(top: 16),
           child: Consumer(
             builder: (context, ref, child) {
               return TextFormField(
@@ -175,19 +173,20 @@ class _EnterHomePositionDialogState
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          padding: const EdgeInsets.only(top: 16),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
             children: [
-              SimpleDialogOption(
+                ElevatedButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'Cancel',
-                  style: textStyle,
-                ),
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Cancel'),
               ),
               Consumer(
-                builder: (context, ref, child) => SimpleDialogOption(
+                  builder: (context, ref, child) => FilledButton.icon(
                   onPressed: lat != null && lon != null
                       ? () {
                           if (lat != null && lon != null) {
@@ -198,24 +197,14 @@ class _EnterHomePositionDialogState
                           Navigator.of(context).pop();
                         }
                       : null,
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 8),
-                        child: Icon(Icons.check),
-                      ),
-                      Text(
-                        'Use entered position',
-                        style: textStyle,
-                      ),
-                    ],
+                    icon: const Icon(Icons.check),
+                    label: const Text('Use entered position'),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
-    );
-  }
+      );
 }
