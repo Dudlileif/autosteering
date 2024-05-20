@@ -50,7 +50,7 @@ class ShowEquipmentDebug extends _$ShowEquipmentDebug {
 class EquipmentRecordPositionFraction
     extends _$EquipmentRecordPositionFraction {
   @override
-  double ?build() => null;
+  double? build() => null;
 
   /// Updates [state] to [value];
   void update(double? value) => Future(() => state = value?.clamp(0, 1));
@@ -157,7 +157,7 @@ class EquipmentWorkedArea extends _$EquipmentWorkedArea {
 /// A provider for tracking the worked paths for the given equipment [uuid].
 @Riverpod(keepAlive: true)
 class EquipmentPaths extends _$EquipmentPaths {
-  var _prevSectionActivationStatus = <bool>[];
+  Map<int, bool> _prevSectionActivationStatus = {};
   Map<int, SectionEdgePositions?> _lastActivePositions = {};
 
   double _coveredArea = 0;
@@ -180,35 +180,34 @@ class EquipmentPaths extends _$EquipmentPaths {
               ref.read(equipmentRecordPositionFractionProvider);
           final positions =
               equipment.activeEdgePositions(fraction: recordFraction);
-          if (!equipment.sectionActivationStatus
-                  .equals(_prevSectionActivationStatus) ||
+          if (!const MapEquality<int, bool>().equals(
+                equipment.sectionActivationStatus,
+                _prevSectionActivationStatus,
+              ) ||
               state.isEmpty) {
             // If we're deactivating sections, update the state positions
             // before we start new paths.
             _addPointsIfDeactivation(equipment);
 
-            final points = equipment.sectionActivationStatus.mapIndexed(
+            final sectionLines = equipment.sectionActivationStatus.map(
               (section, active) => active &&
-                      (_prevSectionActivationStatus.elementAtOrNull(section) ??
-                          false)
-                  ? [
-                      state.lastOrNull?[section]?.lastOrNull ??
-                          equipment.sectionEdgePositions(
-                            section,
-                            fraction: recordFraction,
-                          ),
-                    ]
-                  : positions[section] != null
-                      ? [positions[section]!]
-                      : null,
-            );
-
-            final sectionLines =
-                Map<int, List<SectionEdgePositions>?>.fromEntries(
-              points.mapIndexed(MapEntry.new),
+                      (_prevSectionActivationStatus[section] ?? false)
+                  ? MapEntry(
+                      section,
+                      [
+                        state.lastOrNull?[section]?.lastOrNull ??
+                            equipment.sectionEdgePositions(
+                              section,
+                              fraction: recordFraction,
+                            )!,
+                      ],
+                    )
+                  : MapEntry(
+                      section,
+                      positions[section] != null ? [positions[section]!] : null,
+                    ),
             );
             state = state..add(sectionLines);
-
             _prevSectionActivationStatus = equipment.sectionActivationStatus;
           }
 
@@ -262,12 +261,12 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// section, before we start a new set of paths.
   void _addPointsIfDeactivation(Equipment equipment) {
     if (state.isNotEmpty) {
-      final prevActive = _prevSectionActivationStatus.fold(
+      final prevActive = _prevSectionActivationStatus.values.fold(
         0,
         (previousValue, element) =>
             element == true ? previousValue + 1 : previousValue,
       );
-      final nextActive = equipment.sectionActivationStatus.fold(
+      final nextActive = equipment.sectionActivationStatus.values.fold(
         0,
         (previousValue, element) =>
             element == true ? previousValue + 1 : previousValue,
@@ -276,13 +275,18 @@ class EquipmentPaths extends _$EquipmentPaths {
       if (nextActive < prevActive) {
         state = state
           ..last.updateAll(
-            (key, value) => value
-              ?..add(
-                equipment.sectionEdgePositions(
-                  key,
-                  fraction: recordFraction,
-                ),
-              ),
+            (key, value) {
+              if (value != null) {
+                return value
+                  ..add(
+                    equipment.sectionEdgePositions(
+                      key,
+                      fraction: recordFraction,
+                    )!,
+                  );
+              }
+              return null;
+            },
           );
       }
     }

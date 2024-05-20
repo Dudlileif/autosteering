@@ -85,7 +85,7 @@ class _EquipmentWorkedPathsLayerState
                       fraction: recordFraction,
                     );
                     final offset1 = camera
-                        .latLngToScreenPoint(points.left.latLng)
+                        .latLngToScreenPoint(points!.left.latLng)
                         .toOffset();
                     final offset2 = camera
                         .latLngToScreenPoint(points.right.latLng)
@@ -111,7 +111,11 @@ class _EquipmentWorkedPathsLayerState
               points: screenPoints,
               color: Theme.of(context).primaryColor,
               sectionColors:
-                  equipment.sections.map((e) => e.workedPathColor).toList(),
+Map<int, Color?>.fromEntries(
+                equipment.sections
+                    .where((section) => section.workingWidth > 0)
+                    .map((e) => MapEntry(e.index, e.workedPathColor)),
+              ),
             ),
             size: size,
             isComplex: true,
@@ -172,7 +176,7 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
 
   /// A list of override colors to use for each individual section. If the
   /// value is null, the default [color] is applied.
-  List<Color?>? sectionColors;
+  Map<int, Color?>? sectionColors;
 
   @override
   void paint(Canvas canvas, Size size) {
