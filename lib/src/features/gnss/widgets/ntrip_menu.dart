@@ -52,10 +52,11 @@ class NtripMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.public),
+            
             title: TextFormField(
               decoration: const InputDecoration(
                 labelText: 'Host address',
+                icon: Icon(Icons.public),
               ),
               initialValue: ref.read(ntripHostProvider),
               onChanged: ref.read(ntripHostProvider.notifier).update,
@@ -64,12 +65,14 @@ class NtripMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.tag),
+            
             title: TextFormField(
+              
               decoration: InputDecoration(
                 labelText: 'Host port',
                 labelStyle: textStyle,
                 floatingLabelStyle: textStyle,
+                icon: const Icon(Icons.tag),
               ),
               keyboardType: TextInputType.number,
               maxLength: 5,
@@ -89,10 +92,12 @@ class NtripMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.email),
+            
             title: TextFormField(
               decoration: const InputDecoration(
                 labelText: 'Username',
+            
+                icon: Icon(Icons.email),
               ),
               initialValue: ref.read(ntripUsernameProvider),
               onChanged: ref.read(ntripUsernameProvider.notifier).update,
@@ -101,10 +106,11 @@ class NtripMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.password),
+            
             title: TextFormField(
               decoration: const InputDecoration(
                 labelText: 'Password',
+                icon: Icon(Icons.password),
               ),
               obscureText: true,
               initialValue: ref.read(ntripPasswordProvider),
@@ -114,10 +120,11 @@ class NtripMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.router),
+            
             title: TextFormField(
               decoration: const InputDecoration(
                 labelText: 'Mount point / base station',
+                icon: Icon(Icons.router),
               ),
               textCapitalization: TextCapitalization.characters,
               initialValue: ref.read(activeNtripMountPointProvider),
@@ -138,7 +145,7 @@ class NtripMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.timer_outlined),
+            
             title: Builder(
               builder: (context) {
                 final controller = TextEditingController(
@@ -147,6 +154,7 @@ class NtripMenu extends ConsumerWidget {
                 return TextFormField(
                   decoration: InputDecoration(
                     labelText: 'GGA sending interval (s)',
+                    icon: const Icon(Icons.timer_outlined),
                     suffixIcon: IconButton(
                       onPressed: () {
                         controller.clear();

@@ -41,13 +41,13 @@ class HardwareNetworkMenu extends StatelessWidget {
               final ip = ref.watch(deviceIPAdressWlanProvider);
               return ip != null
                   ? ListTile(
-                leading: const Icon(Icons.wifi),
-                title: Text(
-                  '''
+                      leading: const Icon(Icons.wifi),
+                      title: Text(
+                        '''
 This device WLAN:
 $ip''',
-                  style: textStyle,
-                ),
+                        style: textStyle,
+                      ),
                     )
                   : const SizedBox.shrink();
             },
@@ -73,30 +73,19 @@ $ip''',
               final ip = ref.watch(deviceIPAdressEthernetProvider);
               return ip != null
                   ? ListTile(
-                leading: const Icon(Icons.cable),
-                title: Text(
-                  '''
+                      leading: const Icon(Icons.cable),
+                      title: Text(
+                        '''
 This device Ethernet:
 $ip''',
-                  style: textStyle,
-                ),
+                        style: textStyle,
+                      ),
                     )
                   : const SizedBox.shrink();
             },
           ),
         ],
         ListTile(
-          leading: Column(
-            children: [
-              Consumer(
-                builder: (context, ref, child) =>
-                    ref.watch(steeringHardwareNetworkAliveProvider)
-                        ? const Icon(Icons.check, color: Colors.green)
-                        : const Icon(Icons.clear, color: Colors.red),
-              ),
-              const Icon(Icons.router),
-            ],
-          ),
           title: Consumer(
             builder: (context, ref, child) {
               final controller = TextEditingController(
@@ -146,6 +135,17 @@ $ip''',
                       ],
                     ),
                   ),
+                  icon: Column(
+                    children: [
+                      Consumer(
+                        builder: (context, ref, child) =>
+                            ref.watch(steeringHardwareNetworkAliveProvider)
+                                ? const Icon(Icons.check, color: Colors.green)
+                                : const Icon(Icons.clear, color: Colors.red),
+                      ),
+                      const Icon(Icons.router),
+                    ],
+                  ),
                 ),
                 controller: controller,
                 onFieldSubmitted:
@@ -155,17 +155,6 @@ $ip''',
           ),
         ),
         ListTile(
-          leading: Column(
-            children: [
-              Consumer(
-                builder: (context, ref, child) =>
-                    ref.watch(remoteControlHardwareNetworkAliveProvider)
-                        ? const Icon(Icons.check, color: Colors.green)
-                        : const Icon(Icons.clear, color: Colors.red),
-              ),
-              const Icon(Icons.settings_remote),
-            ],
-          ),
           title: Consumer(
             builder: (context, ref, child) {
               final controller = TextEditingController(
@@ -215,6 +204,17 @@ $ip''',
                       ],
                     ),
                   ),
+                  icon: Column(
+                    children: [
+                      Consumer(
+                        builder: (context, ref, child) =>
+                            ref.watch(remoteControlHardwareNetworkAliveProvider)
+                                ? const Icon(Icons.check, color: Colors.green)
+                                : const Icon(Icons.clear, color: Colors.red),
+                      ),
+                      const Icon(Icons.settings_remote),
+                    ],
+                  ),
                 ),
                 controller: controller,
                 onFieldSubmitted: ref
@@ -227,59 +227,59 @@ $ip''',
         if (Device.isNative)
           Consumer(
             builder: (context, ref, child) => ListTile(
-                leading: const Icon(Icons.call_received),
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Receive port',
-                    labelStyle: textStyle,
-                    floatingLabelStyle: textStyle,
-                  ),
-                  keyboardType: TextInputType.number,
-                  maxLength: 5,
-                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) {
-                    final port = value != null ? int.tryParse(value) : null;
+              title: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Receive port',
+                  labelStyle: textStyle,
+                  floatingLabelStyle: textStyle,
+                  icon: const Icon(Icons.call_received),
+                ),
+                keyboardType: TextInputType.number,
+                maxLength: 5,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) {
+                  final port = value != null ? int.tryParse(value) : null;
 
-                    return port != null && port >= 1000 && port <= 65535
-                        ? 'Valid Port'
-                        : 'Invalid Port';
-                  },
+                  return port != null && port >= 1000 && port <= 65535
+                      ? 'Valid Port'
+                      : 'Invalid Port';
+                },
                 controller: TextEditingController(
                   text: ref.read(hardwareUDPReceivePortProvider).toString(),
                 ),
-                  onChanged: ref
-                      .read(hardwareUDPReceivePortProvider.notifier)
-                      .updateFromString,
-                ),
+                onChanged: ref
+                    .read(hardwareUDPReceivePortProvider.notifier)
+                    .updateFromString,
+              ),
             ),
           ),
         if (Device.isNative)
           Consumer(
             builder: (context, ref, child) => ListTile(
-                leading: const Icon(Icons.send),
-                title: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Send port',
-                  ),
-                  keyboardType: TextInputType.number,
-                  maxLength: 5,
-                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) {
-                    final port = value != null ? int.tryParse(value) : null;
+              title: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Send port',
+                  icon: Icon(Icons.send),
+                ),
+                keyboardType: TextInputType.number,
+                maxLength: 5,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) {
+                  final port = value != null ? int.tryParse(value) : null;
 
-                    return port != null && port >= 1000 && port <= 65535
-                        ? 'Valid Port'
-                        : 'Invalid Port';
-                  },
+                  return port != null && port >= 1000 && port <= 65535
+                      ? 'Valid Port'
+                      : 'Invalid Port';
+                },
                 controller: TextEditingController(
                   text: ref.read(hardwareUDPSendPortProvider).toString(),
                 ),
-                  onChanged: ref
-                      .read(hardwareUDPSendPortProvider.notifier)
-                      .updateFromString,
-                ),
+                onChanged: ref
+                    .read(hardwareUDPSendPortProvider.notifier)
+                    .updateFromString,
+              ),
             ),
           ),
       ],
