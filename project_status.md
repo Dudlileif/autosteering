@@ -47,9 +47,13 @@
 
 - Basic remote control support over UDP.
 
+- Audio alerts
+
+- Nudging to offset vehicle from tracking line
+
 ## To be implemented
 
-- Implement tablet/phone UI
+- Improve tablet/phone UI
 
 - Improved performance,
   - ~~Immutable/copyWith vehicle/equipment implementation is too taxing~~ improved with mutable vehicle/equipments
@@ -71,8 +75,6 @@
 - Improve autosteering, look at more algorithms
 
 - Debugging graphs/logs
-
-- Audio alerts
 
 - Hardware configuration
 
