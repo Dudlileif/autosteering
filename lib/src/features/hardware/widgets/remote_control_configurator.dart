@@ -30,6 +30,12 @@ class RemoteControlConfigurator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final actions = ref.watch(remoteControlButtonActionsProvider);
     return SimpleDialog(
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        top: 12,
+        right: 24,
+        bottom: 16,
+      ),
       title: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -49,7 +55,7 @@ class RemoteControlConfigurator extends ConsumerWidget {
               (button, action) => MapEntry(
                 button,
                 Padding(
-            padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.only(top: 16),
                   child: Row(
                     children: [
                       Expanded(
@@ -101,7 +107,7 @@ class RemoteControlConfigurator extends ConsumerWidget {
             )
             .values,
         Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.only(top: 16),
           child: ElevatedButton.icon(
             onPressed: () =>
                 ref.read(remoteControlButtonActionsProvider.notifier).update(

@@ -223,40 +223,15 @@ class _LoadVehicleMenu extends ConsumerWidget {
                         onPressed: () async {
                           await showDialog<bool>(
                             context: context,
-                            builder: (context) => SimpleDialog(
-                              title: Text(
-                                'Delete ${vehicle.name ?? vehicle.uuid}?',
-                              ),
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    SimpleDialogOption(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(false),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    Consumer(
-                                      builder: (context, ref, child) =>
-                                          SimpleDialogOption(
-                                        onPressed: () async {
-                                          await ref
-                                              .watch(
-                                                deleteVehicleProvider(
-                                                  vehicle,
-                                                ).future,
-                                              )
-                                              .then(
-                                                (value) => Navigator.of(context)
-                                                    .pop(true),
-                                              );
-                                        },
-                                        child: const Text('Confirm'),
-                                      ),
-                                    ),
-                                  ],
+                            builder: (context) => Consumer(
+                              builder: (context, ref, child) => DeleteDialog(
+                                name: vehicle.name ?? vehicle.uuid,
+                                onDelete: () async => await ref.watch(
+                                  deleteVehicleProvider(
+                                    vehicle,
+                                  ).future,
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },

@@ -6,7 +6,27 @@ part of 'startup_loading_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$startupLoadingHash() => r'0a5b887de3b0977961de5f5b059035fe025e7913';
+String _$webArtificialStartupDelayHash() =>
+    r'b29b7eca285fb9384eea01ca6e1495a35a880170';
+
+/// A provider for adding an artificial startup delay on web, as it won't
+/// properly load without it.
+///
+/// Copied from [webArtificialStartupDelay].
+@ProviderFor(webArtificialStartupDelay)
+final webArtificialStartupDelayProvider =
+    AutoDisposeFutureProvider<void>.internal(
+  webArtificialStartupDelay,
+  name: r'webArtificialStartupDelayProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$webArtificialStartupDelayHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef WebArtificialStartupDelayRef = AutoDisposeFutureProviderRef<void>;
+String _$startupLoadingHash() => r'95a7005dcef92355d5c5f35370743193bb09292d';
 
 /// A provider for handling the initial loading of saved user files.
 ///

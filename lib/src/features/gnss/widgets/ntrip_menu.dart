@@ -248,70 +248,72 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
         'NTRIP caster sourcetable',
         style: theme.textTheme.headlineSmall,
       ),
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        top: 12,
+        right: 24,
+        bottom: 16,
+      ),
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Consumer(
-            builder: (context, ref, child) => ref
-                .watch(ntripMountPointsSortedProvider)
-                .when(
-                  data: (data) {
-                    if (data != null && data.isNotEmpty) {
-                      final entries = data.entries.take(10);
+        Consumer(
+          builder: (context, ref, child) =>
+              ref.watch(ntripMountPointsSortedProvider).when(
+                    data: (data) {
+                      if (data != null && data.isNotEmpty) {
+                        final entries = data.entries.take(10);
 
-                      return MenuItemButton(
-                        closeOnActivate: false,
-                        child: DropdownMenu(
-                          initialSelection: entries.first,
-                          onSelected: (value) => setState(
-                            () => selectedMountPoint = value?.key.name,
+                        return MenuItemButton(
+                          closeOnActivate: false,
+                          child: DropdownMenu(
+                            initialSelection: entries.first,
+                            onSelected: (value) => setState(
+                              () => selectedMountPoint = value?.key.name,
+                            ),
+                            dropdownMenuEntries: entries.map(
+                              (station) {
+                                final label = <String>[];
+                                final name = station.key.name ?? 'No name';
+                                label.add(name);
+                                final identifier = station.key.identifier;
+                                if (identifier != null) {
+                                  label.add(identifier);
+                                }
+                                final country = station.key.country;
+                                if (country != null && country != identifier) {
+                                  label.add(country);
+                                }
+                                final distance = station.value != null
+                                    ? '''${(station.value! / 1000).toStringAsFixed(1)} km'''
+                                    : null;
+                                if (distance != null) {
+                                  label.add(distance);
+                                }
+
+                                return DropdownMenuEntry<
+                                    MapEntry<NtripMountPointStream, double?>>(
+                                  value: station,
+                                  label: label.join(', '),
+                                );
+                              },
+                            ).toList(),
                           ),
-                          dropdownMenuEntries: entries.map(
-                            (station) {
-                              final label = <String>[];
-                              final name = station.key.name ?? 'No name';
-                              label.add(name);
-                              final identifier = station.key.identifier;
-                              if (identifier != null) {
-                                label.add(identifier);
-                              }
-                              final country = station.key.country;
-                              if (country != null && country != identifier) {
-                                label.add(country);
-                              }
-                              final distance = station.value != null
-                                  ? '''${(station.value! / 1000).toStringAsFixed(1)} km'''
-                                  : null;
-                              if (distance != null) {
-                                label.add(distance);
-                              }
-
-                              return DropdownMenuEntry<
-                                  MapEntry<NtripMountPointStream, double?>>(
-                                value: station,
-                                label: label.join(', '),
-                              );
-                            },
-                          ).toList(),
-                        ),
+                        );
+                      }
+                      return Text(
+                        'No sourcetable found at the host.',
+                        style: textStyle,
                       );
-                    }
-                    return Text(
-                      'No sourcetable found at the host.',
-                      style: textStyle,
-                    );
-                  },
-                  error: (error, stackTrace) => ErrorWidget(error),
-                  loading: () => const Column(
-                    children: [
-                      CircularProgressIndicator(),
-                    ],
-                  ),
+                    },
+                    error: (error, stackTrace) => ErrorWidget(error),
+                    loading: () => const Column(
+                      children: [
+                        CircularProgressIndicator(),
+                      ],
                 ),
-          ),
+                  ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.only(top: 16),
           child: Align(
             alignment: Alignment.centerRight,
             child: Wrap(

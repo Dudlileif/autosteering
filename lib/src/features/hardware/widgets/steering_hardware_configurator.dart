@@ -182,7 +182,8 @@ class __SteeringHardwareConfigDialogState
     );
   
     return SimpleDialog(
-      contentPadding: const EdgeInsets.only(left: 24, right: 24, bottom: 8),
+      contentPadding:
+          const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -217,21 +218,27 @@ class __SteeringHardwareConfigDialogState
               ? widget.selectionValues!.length - 1
               : widget.divisions,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+        Align(
+          alignment: Alignment.centerRight,
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
           children: [
-            SimpleDialogOption(
+              ElevatedButton.icon(
               onPressed: Navigator.of(context).pop,
-              child: const Text('Cancel'),
+                icon: const Icon(Icons.clear),
+                label: const Text('Cancel'),
             ),
-            SimpleDialogOption(
+              FilledButton.icon(
               onPressed: () {
                 widget.onChangeEnd(_value);
                 Navigator.of(context).pop();
               },
-              child: const Text('Apply'),
+                icon: const Icon(Icons.check),
+                label: const Text('Apply'),
             ),
           ],
+          ),
         ),
       ],
     );

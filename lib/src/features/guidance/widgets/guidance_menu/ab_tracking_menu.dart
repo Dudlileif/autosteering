@@ -269,12 +269,14 @@ class _APlusLineBearingDialogState
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textStyle = theme.menuButtonWithChildrenText;
-
-    return SimpleDialog(
+  Widget build(BuildContext context) => SimpleDialog(
       title: const Text('A+ line bearing'),
+        contentPadding: const EdgeInsets.only(
+          left: 24,
+          top: 12,
+          right: 24,
+          bottom: 16,
+        ),
       children: [
         Padding(
           padding: const EdgeInsets.all(8),
@@ -306,47 +308,38 @@ class _APlusLineBearingDialogState
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SimpleDialogOption(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'Cancel',
-                  style: textStyle,
-                ),
-              ),
-              Consumer(
-                builder: (context, ref, child) => SimpleDialogOption(
-                  onPressed: bearing != null
-                      ? () {
-                          ref
-                              .read(aPlusLineBearingProvider.notifier)
-                              .update(bearing);
-                          Navigator.of(context).pop();
-                        }
-                      : null,
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 8),
-                        child: Icon(Icons.check),
-                      ),
-                      Text(
-                        'Use ${bearing?.toStringAsFixed(2)}°',
-                        style: textStyle,
-                      ),
-                    ],
+            padding: const EdgeInsets.only(top: 16),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.clear),
+                    label: const Text('Cancel'),
                   ),
-                ),
+                  Consumer(
+                    builder: (context, ref, child) => FilledButton.icon(
+                      onPressed: bearing != null
+                          ? () {
+                              ref
+                                  .read(aPlusLineBearingProvider.notifier)
+                                  .update(bearing);
+                              Navigator.of(context).pop();
+                            }
+                          : null,
+                      icon: const Icon(Icons.check),
+                      label: Text('Use ${bearing?.toStringAsFixed(2)}°'),
+                    ),
+                  ),
+                ],
               ),
-            ],
           ),
         ),
       ],
-    );
-  }
+      );
 }
 
 /// A [Column] widget with common menu items for the different AB-tracking
@@ -439,7 +432,6 @@ class _ABCommonMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-          
             return ListTile(
               title: TextFormField(
                 controller: TextEditingController(
@@ -469,12 +461,12 @@ class _ABCommonMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) => ListTile(
-              title: TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Turning radius',
-                  suffixText: 'm',
-                ),
-                keyboardType: TextInputType.number,
+            title: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Turning radius',
+                suffixText: 'm',
+              ),
+              keyboardType: TextInputType.number,
               controller: TextEditingController(
                 text: ref.read(aBTurningRadiusProvider).toString(),
               ),
@@ -484,14 +476,14 @@ class _ABCommonMenu extends ConsumerWidget {
                   ref.read(aBTurningRadiusProvider.notifier).update(radius);
                 }
               },
-              ),
-              trailing: IconButton(
-                onPressed: () {
+            ),
+            trailing: IconButton(
+              onPressed: () {
                 ref.invalidate(aBTurningRadiusProvider);
-                },
-                icon: const Icon(Icons.agriculture),
-                tooltip: 'Set to 1.25 x vehicle turning radius',
-              ),
+              },
+              icon: const Icon(Icons.agriculture),
+              tooltip: 'Set to 1.25 x vehicle turning radius',
+            ),
           ),
         ),
         Consumer(
@@ -518,82 +510,83 @@ class _ABCommonMenu extends ConsumerWidget {
         ),
         if (ref.watch(enableDebugModeProvider)) ...[
           Consumer(
-          builder: (context, ref, child) => CheckboxListTile(
-            secondary: const Icon(Icons.bug_report),
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: const Icon(Icons.bug_report),
               title: Text('Debug', style: textStyle),
-            value: ref.watch(debugABTrackingProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(debugABTrackingProvider.notifier)
-                    .update(value: value)
-                : null,
+              value: ref.watch(debugABTrackingProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(debugABTrackingProvider.notifier)
+                      .update(value: value)
+                  : null,
+            ),
           ),
-        ),
-        if (ref.watch(debugABTrackingProvider)) ...[
-          Consumer(
-            builder: (context, ref, child) {
-              final stepSize = ref.watch(aBDebugStepSizeProvider);
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Step size: ${stepSize.toStringAsFixed(1)} m',
-                    style: textStyle,
-                  ),
-                  Slider.adaptive(
-                    value: stepSize,
-                    onChanged:
-                        ref.read(aBDebugStepSizeProvider.notifier).update,
-                    max: 10,
-                    divisions: 20,
-                  ),
-                ],
-              );
-            },
-          ),
-          Consumer(
-            builder: (context, ref, child) {
-              final numPointsAhead = ref.watch(aBDebugNumPointsAheadProvider);
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Points ahead: $numPointsAhead',
-                    style: textStyle,
-                  ),
-                  Slider.adaptive(
-                    value: numPointsAhead.toDouble(),
-                    onChanged: (value) => ref
-                        .read(aBDebugNumPointsAheadProvider.notifier)
-                        .update(value.round()),
-                    max: 10,
-                    divisions: 10,
-                  ),
-                ],
-              );
-            },
-          ),
-          Consumer(
-            builder: (context, ref, child) {
-              final numPointsBehind = ref.watch(aBDebugNumPointsBehindProvider);
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Points behind: $numPointsBehind',
-                    style: textStyle,
-                  ),
-                  Slider.adaptive(
-                    value: numPointsBehind.toDouble(),
-                    onChanged: (value) => ref
-                        .read(aBDebugNumPointsBehindProvider.notifier)
-                        .update(value.round()),
-                    max: 10,
-                    divisions: 10,
-                  ),
-                ],
-              );
-            },
+          if (ref.watch(debugABTrackingProvider)) ...[
+            Consumer(
+              builder: (context, ref, child) {
+                final stepSize = ref.watch(aBDebugStepSizeProvider);
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Step size: ${stepSize.toStringAsFixed(1)} m',
+                      style: textStyle,
+                    ),
+                    Slider.adaptive(
+                      value: stepSize,
+                      onChanged:
+                          ref.read(aBDebugStepSizeProvider.notifier).update,
+                      max: 10,
+                      divisions: 20,
+                    ),
+                  ],
+                );
+              },
+            ),
+            Consumer(
+              builder: (context, ref, child) {
+                final numPointsAhead = ref.watch(aBDebugNumPointsAheadProvider);
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Points ahead: $numPointsAhead',
+                      style: textStyle,
+                    ),
+                    Slider.adaptive(
+                      value: numPointsAhead.toDouble(),
+                      onChanged: (value) => ref
+                          .read(aBDebugNumPointsAheadProvider.notifier)
+                          .update(value.round()),
+                      max: 10,
+                      divisions: 10,
+                    ),
+                  ],
+                );
+              },
+            ),
+            Consumer(
+              builder: (context, ref, child) {
+                final numPointsBehind =
+                    ref.watch(aBDebugNumPointsBehindProvider);
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Points behind: $numPointsBehind',
+                      style: textStyle,
+                    ),
+                    Slider.adaptive(
+                      value: numPointsBehind.toDouble(),
+                      onChanged: (value) => ref
+                          .read(aBDebugNumPointsBehindProvider.notifier)
+                          .update(value.round()),
+                      max: 10,
+                      divisions: 10,
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ],

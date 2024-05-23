@@ -553,33 +553,31 @@ class _CreateFieldButton extends ConsumerWidget {
               return StatefulBuilder(
                 builder: (context, setState) => SimpleDialog(
                     title: const Text('Name the field'),
+                  contentPadding: const EdgeInsets.only(
+                    left: 24,
+                    top: 12,
+                    right: 24,
+                    bottom: 16,
+                  ),
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.label_outline),
-                            labelText: 'Name',
-                          ),
-                          initialValue: name,
-                          onChanged: (value) => setState(() => name = value),
-                          onFieldSubmitted: (value) =>
-                              setState(() => name = value),
-                          keyboardType: TextInputType.text,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => value != null &&
-                                  value.isNotEmpty &&
-                                  !value.startsWith(' ')
-                              ? null
-                              : '''No name entered! Please enter a name so that the field can be saved!''',
-                        ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.label_outline),
+                        labelText: 'Name',
+                      ),
+                      initialValue: name,
+                      onChanged: (value) => setState(() => name = value),
+                      onFieldSubmitted: (value) => setState(() => name = value),
+                      keyboardType: TextInputType.text,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) => value != null &&
+                              value.isNotEmpty &&
+                              !value.startsWith(' ')
+                          ? null
+                          : '''No name entered! Please enter a name so that the field can be saved!''',
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(
-                          left: 8,
-                          right: 8,
-                          top: 8,
-                        ),
+                      padding: const EdgeInsets.only(top: 16),
                         child: Consumer(
                           builder: (context, ref, child) => FilledButton(
                             onPressed: () {

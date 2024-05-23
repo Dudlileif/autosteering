@@ -201,46 +201,69 @@ class _SaveEquipmentSetup extends StatelessWidget {
                 var name = '';
                 return StatefulBuilder(
                   builder: (context, setState) => SimpleDialog(
+                    title: const Text('Save equipment setup'),
+                    contentPadding: const EdgeInsets.only(
+                      left: 24,
+                      top: 12,
+                      right: 24,
+                      bottom: 16,
+                    ),
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.label_outline),
-                            labelText: 'Name',
-                          ),
-                          initialValue: name,
-                          onChanged: (value) => setState(() => name = value),
-                          onFieldSubmitted: (value) =>
-                              setState(() => name = value),
-                          keyboardType: TextInputType.text,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => value != null &&
-                                  value.isNotEmpty &&
-                                  !value.startsWith(' ')
-                              ? null
-                              : '''No name entered! Please enter a name so that the setup can be saved!''',
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.label_outline),
+                          labelText: 'Name',
                         ),
+                        initialValue: name,
+                        onChanged: (value) => setState(() => name = value),
+                        onFieldSubmitted: (value) =>
+                            setState(() => name = value),
+                        keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) => value != null &&
+                                value.isNotEmpty &&
+                                !value.startsWith(' ')
+                            ? null
+                            : '''No name entered! Please enter a name so that the setup can be saved!''',
                       ),
                       Padding(
                         padding:
-                            const EdgeInsets.only(left: 8, right: 8, top: 8),
-                        child: Consumer(
-                          builder: (context, ref, child) => FilledButton(
-                            onPressed: () {
-                              ref.read(
-                                saveEquipmentSetupProvider(
-                                  ref.read(
-                                    mainVehicleProvider.select(
-                                      (value) => value.equipmentSetup(name),
-                                    ),
-                                  ),
-                                  downloadIfWeb: true,
+                            const EdgeInsets.only(top: 16),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: Navigator.of(context).pop,
+                                icon: const Icon(Icons.clear),
+                                label: const Text('Cancel'),
+                              ),
+                              Consumer(
+                                builder: (context, ref, child) =>
+                                    FilledButton.icon(
+                                  onPressed: name.isNotEmpty
+                                      ? () {
+                                          ref.read(
+                                            saveEquipmentSetupProvider(
+                                              ref.read(
+                                                mainVehicleProvider.select(
+                                                  (value) => value
+                                                      .equipmentSetup(name),
+                                                ),
+                                              ),
+                                              downloadIfWeb: true,
+                                            ),
+                                          );
+                                          Navigator.of(context).pop();
+                                        }
+                                      : null,
+                                  icon: const Icon(Icons.check),
+                                  label: const Text('Save'),
                                 ),
-                              );
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Name the setup'),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -304,40 +327,15 @@ class _LoadEquipmentMenu extends ConsumerWidget {
                         onPressed: () async {
                           await showDialog<bool>(
                             context: context,
-                            builder: (context) => SimpleDialog(
-                              title: Text(
-                                'Delete ${equipment.name ?? equipment.uuid}?',
-                              ),
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    SimpleDialogOption(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(false),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    Consumer(
-                                      builder: (context, ref, child) =>
-                                          SimpleDialogOption(
-                                        onPressed: () async {
-                                          await ref
-                                              .watch(
-                                                deleteEquipmentProvider(
-                                                  equipment,
-                                                ).future,
-                                              )
-                                              .then(
-                                                (value) => Navigator.of(context)
-                                                    .pop(true),
-                                              );
-                                        },
-                                        child: const Text('Confirm'),
-                                      ),
-                                    ),
-                                  ],
+                            builder: (context) => Consumer(
+                              builder: (context, ref, child) => DeleteDialog(
+                                name: equipment.name ?? equipment.uuid,
+                                onDelete: () async => await ref.watch(
+                                  deleteEquipmentProvider(
+                                    equipment,
+                                  ).future,
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },
@@ -473,40 +471,15 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
                         onPressed: () async {
                           await showDialog<bool>(
                             context: context,
-                            builder: (context) => SimpleDialog(
-                              title: Text(
-                                'Delete ${setup.name}?',
-                              ),
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    SimpleDialogOption(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(false),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    Consumer(
-                                      builder: (context, ref, child) =>
-                                          SimpleDialogOption(
-                                        onPressed: () async {
-                                          await ref
-                                              .watch(
-                                                deleteEquipmentSetupProvider(
-                                                  setup,
-                                                ).future,
-                                              )
-                                              .then(
-                                                (value) => Navigator.of(context)
-                                                    .pop(true),
-                                              );
-                                        },
-                                        child: const Text('Confirm'),
-                                      ),
-                                    ),
-                                  ],
+                            builder: (context) => Consumer(
+                              builder: (context, ref, child) => DeleteDialog(
+                                name: setup.name,
+                                onDelete: () async => await ref.watch(
+                                  deleteEquipmentSetupProvider(
+                                    setup,
+                                  ).future,
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },

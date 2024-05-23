@@ -185,40 +185,15 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
                         onPressed: () async {
                           await showDialog<bool>(
                             context: context,
-                            builder: (context) => SimpleDialog(
-                              title: Text(
-                                'Delete ${pathTracking.name ?? ''}?',
-                              ),
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    SimpleDialogOption(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(false),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    Consumer(
-                                      builder: (context, ref, child) =>
-                                          SimpleDialogOption(
-                                        onPressed: () async {
-                                          await ref
-                                              .watch(
-                                                deletePathTrackingProvider(
-                                                  pathTracking,
-                                                ).future,
-                                              )
-                                              .then(
-                                                (value) => Navigator.of(context)
-                                                    .pop(true),
-                                              );
-                                        },
-                                        child: const Text('Confirm'),
-                                      ),
-                                    ),
-                                  ],
+                            builder: (context) => Consumer(
+                              builder: (context, ref, child) => DeleteDialog(
+                                name: pathTracking.name ?? pathTracking.uuid,
+                                onDelete: () async => await ref.watch(
+                                  deletePathTrackingProvider(
+                                    pathTracking,
+                                  ).future,
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },
@@ -226,6 +201,15 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
                       )
                     : null,
                 title: Text(pathTracking.name ?? 'No name', style: textStyle),
+                subtitle: Builder(
+                  builder: (context) {
+                    final length =
+                        pathTracking.cumulativePathSegmentLengths.last;
+                    return Text(
+                      '${length.toStringAsFixed(1)} m',
+                    );
+                  },
+                ),
               ),
             ),
           )
@@ -278,38 +262,16 @@ class _LoadABTrackingMenu extends ConsumerWidget {
                         onPressed: () async {
                           await showDialog<bool>(
                             context: context,
-                            builder: (context) => SimpleDialog(
-                              title: Text('Delete ${abTracking.name ?? ''}?'),
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    SimpleDialogOption(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(false),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    Consumer(
-                                      builder: (context, ref, child) =>
-                                          SimpleDialogOption(
-                                        onPressed: () async {
-                                          await ref
+                            builder: (context) => Consumer(
+                              builder: (context, ref, child) => DeleteDialog(
+                                name: abTracking.name ?? abTracking.uuid,
+                                onDelete: () async => await ref
                                               .watch(
                                                 deleteABTrackingProvider(
                                                   abTracking,
-                                                ).future,
-                                              )
-                                              .then(
-                                                (value) => Navigator.of(context)
-                                                    .pop(true),
-                                              );
-                                        },
-                                        child: const Text('Confirm'),
-                                      ),
-                                    ),
-                                  ],
+                                  ).future,
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },
@@ -414,6 +376,12 @@ class _SaveABTrackingButton extends ConsumerWidget {
                 return StatefulBuilder(
                   builder: (context, setState) => SimpleDialog(
                     title: const Text('Name the AB tracking'),
+                    contentPadding: const EdgeInsets.only(
+                      left: 24,
+                      top: 12,
+                      right: 24,
+                      bottom: 16,
+                    ),
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8),
@@ -436,11 +404,7 @@ class _SaveABTrackingButton extends ConsumerWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(
-                          left: 8,
-                          right: 8,
-                          top: 8,
-                        ),
+                        padding: const EdgeInsets.only(top: 16),
                         child: Consumer(
                           builder: (context, ref, child) => FilledButton(
                             onPressed: () {
@@ -505,33 +469,32 @@ class _SavePathTrackingButton extends ConsumerWidget {
                 return StatefulBuilder(
                   builder: (context, setState) => SimpleDialog(
                     title: const Text('Name the path tracking'),
+                    contentPadding: const EdgeInsets.only(
+                      left: 24,
+                      top: 12,
+                      right: 24,
+                      bottom: 16,
+                    ),
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.label_outline),
-                            labelText: 'Name',
-                          ),
-                          initialValue: name,
-                          onChanged: (value) => setState(() => name = value),
-                          onFieldSubmitted: (value) =>
-                              setState(() => name = value),
-                          keyboardType: TextInputType.text,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => value != null &&
-                                  value.isNotEmpty &&
-                                  !value.startsWith(' ')
-                              ? null
-                              : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.label_outline),
+                          labelText: 'Name',
                         ),
+                        initialValue: name,
+                        onChanged: (value) => setState(() => name = value),
+                        onFieldSubmitted: (value) =>
+                            setState(() => name = value),
+                        keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) => value != null &&
+                                value.isNotEmpty &&
+                                !value.startsWith(' ')
+                            ? null
+                            : '''No name entered! Please enter a name so that the tracking can be saved!''',
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(
-                          left: 8,
-                          right: 8,
-                          top: 8,
-                        ),
+                        padding: const EdgeInsets.only(top: 16),
                         child: Consumer(
                           builder: (context, ref, child) => FilledButton(
                             onPressed: () {

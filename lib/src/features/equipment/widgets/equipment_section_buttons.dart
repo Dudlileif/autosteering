@@ -180,6 +180,9 @@ class EquipmentSectionButtons extends ConsumerWidget {
                                 spacing: 8,
                                 runSpacing: 8,
                                 children: equipment.sections
+                                    .where(
+                                      (section) => section.workingWidth > 0,
+                                    )
                                     .map(
                                       (section) => _SectionButton(
                                         section: section,

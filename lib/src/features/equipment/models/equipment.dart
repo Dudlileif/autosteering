@@ -425,8 +425,11 @@ class Equipment extends Hitchable with EquatableMixin {
   }
 
   /// A list of the current activation status for the [sections].
-  List<bool> get sectionActivationStatus =>
-      sections.map((e) => e.active).toList();
+  Map<int, bool> get sectionActivationStatus => Map.fromEntries(
+        sections
+            .where((section) => section.workingWidth > 0)
+            .map((section) => MapEntry(section.index, section.active)),
+      );
 
   /// The hitch connection position where this equipment is attached to the
   /// [hitchParent], if it's connected.
@@ -672,7 +675,11 @@ class Equipment extends Hitchable with EquatableMixin {
   ///   front right,
   /// ]
   /// ```
-  List<Geographic> sectionCornerPoints(int index) {
+  List<Geographic>? sectionCornerPoints(int index, {bool force = false}) {
+    if (sections[index].workingWidth == 0 && !force) {
+      return null;
+    }
+
     // The starting point of this equipment, i.e. the center-front point
     // of the working area.
     final equipmentStart = switch (parentHitch) {
@@ -717,28 +724,32 @@ class Equipment extends Hitchable with EquatableMixin {
   /// [index].
   ///
   /// [fraction] can be set to override the [recordingPositionFraction].
-  SectionEdgePositions sectionEdgePositions(
+  SectionEdgePositions? sectionEdgePositions(
     int index, {
     double? fraction,
+    bool force = false,
   }) {
-    final points = sectionCornerPoints(index);
-
-    return SectionEdgePositions(
-      left: points[1].spherical.intermediatePointTo(
-            points[0],
-            fraction: fraction ?? recordingPositionFraction,
-          ),
-      right: points[2].spherical.intermediatePointTo(
-            points[3],
-            fraction: fraction ?? recordingPositionFraction,
-          ),
-    );
+    final points = sectionCornerPoints(index, force: force);
+    if (points != null) {
+      return SectionEdgePositions(
+        left: points[1].spherical.intermediatePointTo(
+              points[0],
+              fraction: fraction ?? recordingPositionFraction,
+            ),
+        right: points[2].spherical.intermediatePointTo(
+              points[3],
+              fraction: fraction ?? recordingPositionFraction,
+            ),
+      );
+    }
+    return null;
   }
 
   /// A map of all the section indexes and their [SectionEdgePositions] if they
   /// are active, or null if they're not.
   Map<int, SectionEdgePositions?> activeEdgePositions({double? fraction}) => {
-        for (final element in sections)
+        for (final element
+            in sections.where((section) => section.workingWidth > 0))
           element.index: element.active
               ? sectionEdgePositions(element.index, fraction: fraction)
               : null,
@@ -758,11 +769,17 @@ class Equipment extends Hitchable with EquatableMixin {
       );
 
   /// The working polygon for the given [section].
-  Polygon sectionWorkingPolygon(int section) => Polygon(
+  Polygon? sectionWorkingPolygon(int section) {
+    final cornerPoints = sectionCornerPoints(section);
+    if (cornerPoints != null) {
+      return Polygon(
         [
-          PositionSeries.from(sectionCornerPoints(section)),
+          PositionSeries.from(cornerPoints),
         ],
       );
+    }
+    return null;
+  }
 
   /// An iterable of all the sections' polygons.
   Iterable<Polygon> get sectionPolygons =>
@@ -791,10 +808,10 @@ class Equipment extends Hitchable with EquatableMixin {
   }
 
   /// The map polygon for the [Section]'s work area with the given [index].
-  map.Polygon sectionWorkingMapPolygon(int index) {
+  map.Polygon? sectionWorkingMapPolygon(int index) {
     final section = sections[index];
 
-    return sectionWorkingPolygon(index).mapPolygon(
+    return sectionWorkingPolygon(index)?.mapPolygon(
       borderStrokeWidth: 2,
       isFilled: section.active,
       borderColor: switch (section.workingWidth > 0) {
@@ -838,12 +855,12 @@ class Equipment extends Hitchable with EquatableMixin {
                     bearing: bearing - 90,
                   )
                   .latLng,
-              sectionEdgePositions(0, fraction: 1)
+              sectionEdgePositions(0, fraction: 1, force: true)!
                   .left
                   .rhumb
                   .destinationPoint(distance: 0.1, bearing: bearing)
                   .latLng,
-              sectionEdgePositions(0, fraction: 1).left.latLng,
+              sectionEdgePositions(0, fraction: 1, force: true)!.left.latLng,
               drawbarEnd.rhumb
                   .destinationPoint(
                     distance: 0.05,
@@ -866,12 +883,20 @@ class Equipment extends Hitchable with EquatableMixin {
                     bearing: bearing + 90,
                   )
                   .latLng,
-              sectionEdgePositions(sections.length - 1, fraction: 1)
+              sectionEdgePositions(
+                sections.length - 1,
+                fraction: 1,
+                force: true,
+              )!
                   .right
                   .rhumb
                   .destinationPoint(distance: 0.1, bearing: bearing)
                   .latLng,
-              sectionEdgePositions(sections.length - 1, fraction: 1)
+              sectionEdgePositions(
+                sections.length - 1,
+                fraction: 1,
+                force: true,
+              )!
                   .right
                   .latLng,
               drawbarEnd.rhumb

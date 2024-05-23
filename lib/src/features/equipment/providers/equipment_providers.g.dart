@@ -1015,7 +1015,7 @@ final equipmentWorkedAreaProvider =
 );
 
 typedef _$EquipmentWorkedArea = Notifier<Map<String, double>>;
-String _$equipmentPathsHash() => r'0b1e8760049eeb8181b4b98f6ccf33bcd58bbae2';
+String _$equipmentPathsHash() => r'45d0468a5b95a0dd1ff8d10b46e16f3973624f08';
 
 abstract class _$EquipmentPaths
     extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {

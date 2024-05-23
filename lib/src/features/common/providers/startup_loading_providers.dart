@@ -26,6 +26,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'startup_loading_providers.g.dart';
 
+/// A provider for adding an artificial startup delay on web, as it won't
+/// properly load without it.
+@riverpod
+FutureOr<void> webArtificialStartupDelay(
+  WebArtificialStartupDelayRef ref,
+) async =>
+    await Future.delayed(const Duration(milliseconds: 500));
+
 /// A provider for handling the initial loading of saved user files.
 ///
 /// Returns true whilst loading and false when all files have been loaded.
@@ -33,7 +41,8 @@ part 'startup_loading_providers.g.dart';
 bool startupLoading(StartupLoadingRef ref) {
 // Return on web as there is no files to be read.
   if (Device.isWeb) {
-    return ref.watch(lastUsedVehicleProvider) is! AsyncData;
+    return ref.watch(lastUsedVehicleProvider) is! AsyncData ||
+        ref.watch(webArtificialStartupDelayProvider) is! AsyncData;
   }
   // Native platforms with file directory support.
   else {

@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+export 'confirmation_dialog.dart';
 export 'menu_button_with_children.dart';
 export 'perspective_with_overflow.dart';
 export 'text_with_stroke.dart';
