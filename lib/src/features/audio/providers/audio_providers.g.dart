@@ -7,9 +7,12 @@ part of 'audio_providers.dart';
 // **************************************************************************
 
 String _$audioAutosteeringEnabledHash() =>
-    r'2cba6692cd6e5e7700be8f1ca9e3a0fd054c81ff';
+    r'9263e59d683b32fdec8d705d90cd9b3a5bfd6bb1';
 
-/// See also [audioAutosteeringEnabled].
+/// A provider for playing an audio notification/sound when enabling
+/// autosteering.
+///
+/// Copied from [audioAutosteeringEnabled].
 @ProviderFor(audioAutosteeringEnabled)
 final audioAutosteeringEnabledProvider =
     AutoDisposeFutureProvider<void>.internal(
@@ -24,9 +27,12 @@ final audioAutosteeringEnabledProvider =
 
 typedef AudioAutosteeringEnabledRef = AutoDisposeFutureProviderRef<void>;
 String _$audioAutosteeringDisabledHash() =>
-    r'6b00e6b889f6ac0eaa98d7a19a3b03fadb4dadef';
+    r'1583d3adc8d0e84ffa2bdc499453f3001dcf9462';
 
-/// See also [audioAutosteeringDisabled].
+/// A provider for playing an audio notification/sound when disabling
+/// autosteering.
+///
+/// Copied from [audioAutosteeringDisabled].
 @ProviderFor(audioAutosteeringDisabled)
 final audioAutosteeringDisabledProvider =
     AutoDisposeFutureProvider<void>.internal(
@@ -41,9 +47,12 @@ final audioAutosteeringDisabledProvider =
 
 typedef AudioAutosteeringDisabledRef = AutoDisposeFutureProviderRef<void>;
 String _$audioAutosteeringStandbyHash() =>
-    r'671f7be849560b00349827e311f55b126f3fbf89';
+    r'541894d9268491a8cb4395ff55d7052b3621e769';
 
-/// See also [audioAutosteeringStandby].
+/// A provider for playing an audio notification/sound when autosteering is
+/// in standby.
+///
+/// Copied from [audioAutosteeringStandby].
 @ProviderFor(audioAutosteeringStandby)
 final audioAutosteeringStandbyProvider =
     AutoDisposeFutureProvider<void>.internal(
@@ -57,9 +66,12 @@ final audioAutosteeringStandbyProvider =
 );
 
 typedef AudioAutosteeringStandbyRef = AutoDisposeFutureProviderRef<void>;
-String _$audioRTKLostAlarmHash() => r'0977d2ad7ac7a08e957a87da377bb6134febb1aa';
+String _$audioRTKLostAlarmHash() => r'3c1954590ac05c965bc45d3c932e5b3e7b01f7d9';
 
-/// See also [audioRTKLostAlarm].
+/// A provider for playing an audio notification/sound when GNSS RTK fix
+/// accuracy is lost.
+///
+/// Copied from [audioRTKLostAlarm].
 @ProviderFor(audioRTKLostAlarm)
 final audioRTKLostAlarmProvider = AutoDisposeFutureProvider<void>.internal(
   audioRTKLostAlarm,
@@ -75,7 +87,9 @@ typedef AudioRTKLostAlarmRef = AutoDisposeFutureProviderRef<void>;
 String _$audioVolumeAutosteeringEnabledHash() =>
     r'899e6f8ec7f3b39e7c0cbf44b0db7423e44df7f6';
 
-/// See also [AudioVolumeAutosteeringEnabled].
+/// A provider for the audio volume level for [audioAutosteeringEnabled].
+///
+/// Copied from [AudioVolumeAutosteeringEnabled].
 @ProviderFor(AudioVolumeAutosteeringEnabled)
 final audioVolumeAutosteeringEnabledProvider = AutoDisposeNotifierProvider<
     AudioVolumeAutosteeringEnabled, double>.internal(
@@ -92,7 +106,9 @@ typedef _$AudioVolumeAutosteeringEnabled = AutoDisposeNotifier<double>;
 String _$audioVolumeAutosteeringDisabledHash() =>
     r'994919c93949aff4220ec244feaea76abb70e299';
 
-/// See also [AudioVolumeAutosteeringDisabled].
+/// A provider for the audio volume level for [audioAutosteeringDisabled].
+///
+/// Copied from [AudioVolumeAutosteeringDisabled].
 @ProviderFor(AudioVolumeAutosteeringDisabled)
 final audioVolumeAutosteeringDisabledProvider = AutoDisposeNotifierProvider<
     AudioVolumeAutosteeringDisabled, double>.internal(
@@ -109,7 +125,9 @@ typedef _$AudioVolumeAutosteeringDisabled = AutoDisposeNotifier<double>;
 String _$audioVolumeAutosteeringStandbyHash() =>
     r'5e03892f35e115db18094f3a5fb5a7c66bded371';
 
-/// See also [AudioVolumeAutosteeringStandby].
+/// A provider for the audio volume level for [audioAutosteeringStandby].
+///
+/// Copied from [AudioVolumeAutosteeringStandby].
 @ProviderFor(AudioVolumeAutosteeringStandby)
 final audioVolumeAutosteeringStandbyProvider = AutoDisposeNotifierProvider<
     AudioVolumeAutosteeringStandby, double>.internal(
@@ -126,7 +144,9 @@ typedef _$AudioVolumeAutosteeringStandby = AutoDisposeNotifier<double>;
 String _$audioVolumeRTKLostAlarmHash() =>
     r'87abaf523ea94b8ee70518fc7c94351a194aada3';
 
-/// See also [AudioVolumeRTKLostAlarm].
+/// A provider for the audio volume level for [audioRTKLostAlarm].
+///
+/// Copied from [AudioVolumeRTKLostAlarm].
 @ProviderFor(AudioVolumeRTKLostAlarm)
 final audioVolumeRTKLostAlarmProvider =
     AutoDisposeNotifierProvider<AudioVolumeRTKLostAlarm, double>.internal(
