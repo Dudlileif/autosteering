@@ -195,13 +195,13 @@ sealed class PathTracking {
       final point = wayPoints[i];
       if (i > 0) {
         final prevPoint = path.last;
-        if (prevPoint.position.rhumb.distanceTo(point.position) <
+        if (prevPoint.distanceToRhumb(point) <
             (minDistance ?? 0.5)) {
           continue;
         }
         path.add(
           point.copyWith(
-            bearing: prevPoint.position.rhumb.finalBearingTo(point.position),
+            bearing: prevPoint.finalBearingToRhumb(point),
           ),
         );
       } else {
@@ -213,33 +213,40 @@ sealed class PathTracking {
       while (index + 1 < path.length) {
         final point = path[index];
         final nextPoint = path[index + 1];
-        if (point.position.rhumb.distanceTo(nextPoint.position) >
+        if (point.distanceToRhumb(nextPoint) >
             interpolationDistance!) {
+
           path.insert(
             index + 1,
             point.copyWith(
               position: point.position.rhumb.destinationPoint(
                 distance: interpolationDistance!,
-                bearing:
-                    point.position.rhumb.initialBearingTo(nextPoint.position),
+                bearing: point.initialBearingToRhumb(nextPoint),
               ),
             ),
           );
         }
         index++;
       }
+      for (var i = 0; i < path.length; i++) {
+        path[i] = path[i].copyWith(
+          bearing: switch (i < path.length - 1) {
+            true => path[i].initialBearingToRhumb(path[i + 1]),
+            false => path[i - 1].finalBearingToRhumb(path[i]),
+          },
+        );
+      }
 
       if (loopMode == PathTrackingLoopMode.straight) {
-        while (path.last.position.rhumb.distanceTo(
-              path.first.position,
+        while (path.last.distanceToRhumb(
+              path.first,
             ) >
             (interpolationDistance ?? 4)) {
           path.add(
             path.last.copyWith(
               position: path.last.position.rhumb.destinationPoint(
                 distance: interpolationDistance ?? 4,
-                bearing: path.last.position.rhumb
-                    .initialBearingTo(path.first.position),
+                bearing: path.last.initialBearingToRhumb(path.first),
               ),
             ),
           );

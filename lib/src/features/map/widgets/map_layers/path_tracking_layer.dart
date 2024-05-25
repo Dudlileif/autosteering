@@ -179,6 +179,17 @@ class PathTrackingLayer extends ConsumerWidget {
                         ),
                     ],
                   ],
+                  if (debug)
+                    ...tracking.path.mapIndexed(
+                      (index, point) => Polyline(
+                        color: Colors.orange,
+                        strokeWidth: 1.5,
+                        points: [
+                          point.position.latLng,
+                          point.moveRhumb(distance: 2).position.latLng,
+                        ],
+                      ),
+                    ),
                 ],
               ),
               CircleLayer(
@@ -219,6 +230,12 @@ class PathTrackingLayer extends ConsumerWidget {
                         color: Colors.pink,
                       ),
                     if (debug) ...[
+                      ...tracking.path.map(
+                        (point) => CircleMarker(
+                          point: point.position.latLng,
+                          radius: 2,
+                        ),
+                      ),
                       CircleMarker(
                         point: tracking
                             .findLookAheadLinePoints(
