@@ -122,7 +122,7 @@ class MainScaffold extends StatelessWidget {
               descendantsAreFocusable: false,
               descendantsAreTraversable: false,
               child: Padding(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.only(left: 8, top: 8, right: 16, bottom: 8),
                 child: GnssQualityStatusIcon(size: 32),
               ),
             ),
