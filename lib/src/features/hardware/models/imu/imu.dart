@@ -55,22 +55,24 @@ class Imu {
   /// Attempts to find the latest reading that arrived more than
   /// [ImuConfig.delayReadings] milliseconds ago, otherwise the latest reading
   /// is returned.
-  ImuReading get reading =>
-      readings.firstWhereOrNull(
-        (element) =>
-            DateTime.now().difference(element.receiveTime).inMilliseconds >
-            config.delayReadings,
-      ) ??
-      readings.first;
+  ImuReading get reading {
+    final now = DateTime.now();
+    return readings.firstWhereOrNull(
+          (element) =>
+              now.difference(element.receiveTime).inMilliseconds >
+              config.delayReadings,
+        ) ??
+        readings.firstOrNull ??
+        ImuReading(receiveTime: now);
+  }
 
   /// The bearing reading accounted for [config.zeroValues.bearingZero].
   double? get bearing => switch (bearingIsSet) {
         true => ((reading.yaw - config.zeroValues.bearingZero) *
                 switch (config.invertYaw) {
-                  true => -1,
-                  false => 1,
+                  true => -1.0,
+                  false => 1.0,
                 })
-            .toDouble()
             .wrap360(),
         false => null
       };
@@ -78,24 +80,26 @@ class Imu {
   /// The pitch reading accounted for [config.zeroValues.pitchZero].
   double get pitch =>
       switch (config.swapPitchAndRoll) {
-        false => (reading.pitch - config.zeroValues.pitchZero).clamp(-90, 90),
-        true => (reading.roll - config.zeroValues.rollZero).clamp(-180, 180)
+        false =>
+          (reading.pitch - config.zeroValues.pitchZero).clamp(-90.0, 90.0),
+        true => (reading.roll - config.zeroValues.rollZero).clamp(-180.0, 180.0)
       } *
       switch (config.invertPitch) {
-        true => -1,
-        false => 1,
+        true => -1.0,
+        false => 1.0,
       } *
       config.pitchGain;
 
   /// The roll reading accounted for [config.zeroValues.rollZero].
   double get roll =>
       switch (config.swapPitchAndRoll) {
-        false => (reading.roll - config.zeroValues.rollZero).clamp(-180, 180),
-        true => (reading.pitch - config.zeroValues.pitchZero).clamp(-90, 90)
+        false =>
+          (reading.roll - config.zeroValues.rollZero).clamp(-180.0, 180.0),
+        true => (reading.pitch - config.zeroValues.pitchZero).clamp(-90.0, 90.0)
       } *
       switch (config.invertRoll) {
-        true => -1,
-        false => 1,
+        true => -1.0,
+        false => 1.0,
       } *
       config.rollGain;
 
