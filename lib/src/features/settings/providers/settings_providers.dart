@@ -56,10 +56,11 @@ Storage webLocalStorage(WebLocalStorageRef ref) {
 /// A provider for the settings map for the application.
 @Riverpod(keepAlive: true)
 class Settings extends _$Settings {
+  bool _saveToRemoveDeprecated = false;
   @override
   SplayTreeMap<String, dynamic> build() {
     ref.listenSelf((previous, next) {
-      if (previous != null && previous != next) {
+      if ((previous != null && previous != next) || _saveToRemoveDeprecated) {
         if (Device.isWeb) {
           ref.watch(webLocalStorageProvider)['settings'] = jsonEncode(next);
           Logger.instance.i('Saved settings to web localStorage.');
@@ -75,6 +76,7 @@ class Settings extends _$Settings {
               );
         }
       }
+      _saveToRemoveDeprecated = false;
     });
 
     final fileString = switch (Device.isWeb) {
@@ -87,8 +89,25 @@ class Settings extends _$Settings {
       return SplayTreeMap<String, dynamic>();
     }
 
-    final settings = jsonDecode(fileString) as Map;
+    final settings = Map<String, dynamic>.from(jsonDecode(fileString) as Map);
     Logger.instance.i('Loaded ${settings.length} settings from storage.');
+
+    final settingsToRemove = <String>[];
+    for (final setting in settings.keys) {
+      if (!SettingsKey.values.map((key) => key.name).contains(setting)) {
+        settingsToRemove.add(setting);
+      }
+    }
+    if (settingsToRemove.isNotEmpty) {
+      for (final setting in settingsToRemove) {
+        settings.remove(setting);
+      }
+      _saveToRemoveDeprecated = true;
+      Logger.instance.i(
+        '''Removed ${settingsToRemove.length} deprecated settings: $settingsToRemove.''',
+      );
+    }
+
     return SplayTreeMap<String, dynamic>.from(settings);
   }
 
