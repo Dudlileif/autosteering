@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'd129dd22e650effb507c515dff05e28096e1915a';
+String _$ntripClientHash() => r'd41e6143bcc741c26dd8f8d67e7cb0faad83e671';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -25,47 +25,546 @@ final ntripClientProvider = FutureProvider<NtripClient?>.internal(
 );
 
 typedef NtripClientRef = FutureProviderRef<NtripClient?>;
-String _$ntripSourcetableHash() => r'e313f394680cdfee69893cee40d890f75f64c9e8';
+String _$ntripSourcetableHash() => r'4fc1db0b1322f82b1b176094ad7baf9386fedc33';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
 
 /// A provider for the NTRIP caster sourcetable for the currently selected
 /// NTRIP caster server.
 ///
 /// Copied from [ntripSourcetable].
 @ProviderFor(ntripSourcetable)
-final ntripSourcetableProvider =
-    AutoDisposeFutureProvider<Iterable<NtripMountPoint>?>.internal(
-  ntripSourcetable,
-  name: r'ntripSourcetableProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$ntripSourcetableHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const ntripSourcetableProvider = NtripSourcetableFamily();
 
-typedef NtripSourcetableRef
-    = AutoDisposeFutureProviderRef<Iterable<NtripMountPoint>?>;
+/// A provider for the NTRIP caster sourcetable for the currently selected
+/// NTRIP caster server.
+///
+/// Copied from [ntripSourcetable].
+class NtripSourcetableFamily extends Family {
+  /// A provider for the NTRIP caster sourcetable for the currently selected
+  /// NTRIP caster server.
+  ///
+  /// Copied from [ntripSourcetable].
+  const NtripSourcetableFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'ntripSourcetableProvider';
+
+  /// A provider for the NTRIP caster sourcetable for the currently selected
+  /// NTRIP caster server.
+  ///
+  /// Copied from [ntripSourcetable].
+  NtripSourcetableProvider call({
+    required String host,
+    int port = 2101,
+    String? username,
+    String? password,
+  }) {
+    return NtripSourcetableProvider(
+      host: host,
+      port: port,
+      username: username,
+      password: password,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  NtripSourcetableProvider getProviderOverride(
+    covariant NtripSourcetableProvider provider,
+  ) {
+    return call(
+      host: provider.host,
+      port: provider.port,
+      username: provider.username,
+      password: provider.password,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<Iterable<NtripMountPoint>?> Function(NtripSourcetableRef ref)
+          create) {
+    return _$NtripSourcetableFamilyOverride(this, create);
+  }
+}
+
+class _$NtripSourcetableFamilyOverride implements FamilyOverride {
+  _$NtripSourcetableFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<Iterable<NtripMountPoint>?> Function(NtripSourcetableRef ref)
+      create;
+
+  @override
+  final NtripSourcetableFamily overriddenFamily;
+
+  @override
+  NtripSourcetableProvider getProviderOverride(
+    covariant NtripSourcetableProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for the NTRIP caster sourcetable for the currently selected
+/// NTRIP caster server.
+///
+/// Copied from [ntripSourcetable].
+class NtripSourcetableProvider
+    extends AutoDisposeFutureProvider<Iterable<NtripMountPoint>?> {
+  /// A provider for the NTRIP caster sourcetable for the currently selected
+  /// NTRIP caster server.
+  ///
+  /// Copied from [ntripSourcetable].
+  NtripSourcetableProvider({
+    required String host,
+    int port = 2101,
+    String? username,
+    String? password,
+  }) : this._internal(
+          (ref) => ntripSourcetable(
+            ref as NtripSourcetableRef,
+            host: host,
+            port: port,
+            username: username,
+            password: password,
+          ),
+          from: ntripSourcetableProvider,
+          name: r'ntripSourcetableProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$ntripSourcetableHash,
+          dependencies: NtripSourcetableFamily._dependencies,
+          allTransitiveDependencies:
+              NtripSourcetableFamily._allTransitiveDependencies,
+          host: host,
+          port: port,
+          username: username,
+          password: password,
+        );
+
+  NtripSourcetableProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.host,
+    required this.port,
+    required this.username,
+    required this.password,
+  }) : super.internal();
+
+  final String host;
+  final int port;
+  final String? username;
+  final String? password;
+
+  @override
+  Override overrideWith(
+    FutureOr<Iterable<NtripMountPoint>?> Function(NtripSourcetableRef ref)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: NtripSourcetableProvider._internal(
+        (ref) => create(ref as NtripSourcetableRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        host: host,
+        port: port,
+        username: username,
+        password: password,
+      ),
+    );
+  }
+
+  @override
+  ({
+    String host,
+    int port,
+    String? username,
+    String? password,
+  }) get argument {
+    return (
+      host: host,
+      port: port,
+      username: username,
+      password: password,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Iterable<NtripMountPoint>?> createElement() {
+    return _NtripSourcetableProviderElement(this);
+  }
+
+  NtripSourcetableProvider _copyWith(
+    FutureOr<Iterable<NtripMountPoint>?> Function(NtripSourcetableRef ref)
+        create,
+  ) {
+    return NtripSourcetableProvider._internal(
+      (ref) => create(ref as NtripSourcetableRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      host: host,
+      port: port,
+      username: username,
+      password: password,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is NtripSourcetableProvider &&
+        other.host == host &&
+        other.port == port &&
+        other.username == username &&
+        other.password == password;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, host.hashCode);
+    hash = _SystemHash.combine(hash, port.hashCode);
+    hash = _SystemHash.combine(hash, username.hashCode);
+    hash = _SystemHash.combine(hash, password.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin NtripSourcetableRef
+    on AutoDisposeFutureProviderRef<Iterable<NtripMountPoint>?> {
+  /// The parameter `host` of this provider.
+  String get host;
+
+  /// The parameter `port` of this provider.
+  int get port;
+
+  /// The parameter `username` of this provider.
+  String? get username;
+
+  /// The parameter `password` of this provider.
+  String? get password;
+}
+
+class _NtripSourcetableProviderElement
+    extends AutoDisposeFutureProviderElement<Iterable<NtripMountPoint>?>
+    with NtripSourcetableRef {
+  _NtripSourcetableProviderElement(super.provider);
+
+  @override
+  String get host => (origin as NtripSourcetableProvider).host;
+  @override
+  int get port => (origin as NtripSourcetableProvider).port;
+  @override
+  String? get username => (origin as NtripSourcetableProvider).username;
+  @override
+  String? get password => (origin as NtripSourcetableProvider).password;
+}
+
 String _$ntripMountPointsSortedHash() =>
-    r'a06451e3dd9c72a2374b1093d253923e002a556d';
+    r'1d11d8cd14a89069242e34c4a5ad3d3b89c4735c';
 
 /// A provider for sorting the [ntripSourcetable] by their distance to
 /// [MainVehicle].
 ///
 /// Copied from [ntripMountPointsSorted].
 @ProviderFor(ntripMountPointsSorted)
-final ntripMountPointsSortedProvider =
-    AutoDisposeFutureProvider<Map<NtripMountPointStream, double?>?>.internal(
-  ntripMountPointsSorted,
-  name: r'ntripMountPointsSortedProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$ntripMountPointsSortedHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const ntripMountPointsSortedProvider = NtripMountPointsSortedFamily();
 
-typedef NtripMountPointsSortedRef
-    = AutoDisposeFutureProviderRef<Map<NtripMountPointStream, double?>?>;
+/// A provider for sorting the [ntripSourcetable] by their distance to
+/// [MainVehicle].
+///
+/// Copied from [ntripMountPointsSorted].
+class NtripMountPointsSortedFamily extends Family {
+  /// A provider for sorting the [ntripSourcetable] by their distance to
+  /// [MainVehicle].
+  ///
+  /// Copied from [ntripMountPointsSorted].
+  const NtripMountPointsSortedFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'ntripMountPointsSortedProvider';
+
+  /// A provider for sorting the [ntripSourcetable] by their distance to
+  /// [MainVehicle].
+  ///
+  /// Copied from [ntripMountPointsSorted].
+  NtripMountPointsSortedProvider call({
+    required String host,
+    int port = 2101,
+    String? username,
+    String? password,
+  }) {
+    return NtripMountPointsSortedProvider(
+      host: host,
+      port: port,
+      username: username,
+      password: password,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  NtripMountPointsSortedProvider getProviderOverride(
+    covariant NtripMountPointsSortedProvider provider,
+  ) {
+    return call(
+      host: provider.host,
+      port: provider.port,
+      username: provider.username,
+      password: provider.password,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<Map<NtripMountPointStream, double?>?> Function(
+              NtripMountPointsSortedRef ref)
+          create) {
+    return _$NtripMountPointsSortedFamilyOverride(this, create);
+  }
+}
+
+class _$NtripMountPointsSortedFamilyOverride implements FamilyOverride {
+  _$NtripMountPointsSortedFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<Map<NtripMountPointStream, double?>?> Function(
+      NtripMountPointsSortedRef ref) create;
+
+  @override
+  final NtripMountPointsSortedFamily overriddenFamily;
+
+  @override
+  NtripMountPointsSortedProvider getProviderOverride(
+    covariant NtripMountPointsSortedProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for sorting the [ntripSourcetable] by their distance to
+/// [MainVehicle].
+///
+/// Copied from [ntripMountPointsSorted].
+class NtripMountPointsSortedProvider
+    extends AutoDisposeFutureProvider<Map<NtripMountPointStream, double?>?> {
+  /// A provider for sorting the [ntripSourcetable] by their distance to
+  /// [MainVehicle].
+  ///
+  /// Copied from [ntripMountPointsSorted].
+  NtripMountPointsSortedProvider({
+    required String host,
+    int port = 2101,
+    String? username,
+    String? password,
+  }) : this._internal(
+          (ref) => ntripMountPointsSorted(
+            ref as NtripMountPointsSortedRef,
+            host: host,
+            port: port,
+            username: username,
+            password: password,
+          ),
+          from: ntripMountPointsSortedProvider,
+          name: r'ntripMountPointsSortedProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$ntripMountPointsSortedHash,
+          dependencies: NtripMountPointsSortedFamily._dependencies,
+          allTransitiveDependencies:
+              NtripMountPointsSortedFamily._allTransitiveDependencies,
+          host: host,
+          port: port,
+          username: username,
+          password: password,
+        );
+
+  NtripMountPointsSortedProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.host,
+    required this.port,
+    required this.username,
+    required this.password,
+  }) : super.internal();
+
+  final String host;
+  final int port;
+  final String? username;
+  final String? password;
+
+  @override
+  Override overrideWith(
+    FutureOr<Map<NtripMountPointStream, double?>?> Function(
+            NtripMountPointsSortedRef ref)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: NtripMountPointsSortedProvider._internal(
+        (ref) => create(ref as NtripMountPointsSortedRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        host: host,
+        port: port,
+        username: username,
+        password: password,
+      ),
+    );
+  }
+
+  @override
+  ({
+    String host,
+    int port,
+    String? username,
+    String? password,
+  }) get argument {
+    return (
+      host: host,
+      port: port,
+      username: username,
+      password: password,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Map<NtripMountPointStream, double?>?>
+      createElement() {
+    return _NtripMountPointsSortedProviderElement(this);
+  }
+
+  NtripMountPointsSortedProvider _copyWith(
+    FutureOr<Map<NtripMountPointStream, double?>?> Function(
+            NtripMountPointsSortedRef ref)
+        create,
+  ) {
+    return NtripMountPointsSortedProvider._internal(
+      (ref) => create(ref as NtripMountPointsSortedRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      host: host,
+      port: port,
+      username: username,
+      password: password,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is NtripMountPointsSortedProvider &&
+        other.host == host &&
+        other.port == port &&
+        other.username == username &&
+        other.password == password;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, host.hashCode);
+    hash = _SystemHash.combine(hash, port.hashCode);
+    hash = _SystemHash.combine(hash, username.hashCode);
+    hash = _SystemHash.combine(hash, password.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin NtripMountPointsSortedRef
+    on AutoDisposeFutureProviderRef<Map<NtripMountPointStream, double?>?> {
+  /// The parameter `host` of this provider.
+  String get host;
+
+  /// The parameter `port` of this provider.
+  int get port;
+
+  /// The parameter `username` of this provider.
+  String? get username;
+
+  /// The parameter `password` of this provider.
+  String? get password;
+}
+
+class _NtripMountPointsSortedProviderElement
+    extends AutoDisposeFutureProviderElement<
+        Map<NtripMountPointStream, double?>?> with NtripMountPointsSortedRef {
+  _NtripMountPointsSortedProviderElement(super.provider);
+
+  @override
+  String get host => (origin as NtripMountPointsSortedProvider).host;
+  @override
+  int get port => (origin as NtripMountPointsSortedProvider).port;
+  @override
+  String? get username => (origin as NtripMountPointsSortedProvider).username;
+  @override
+  String? get password => (origin as NtripMountPointsSortedProvider).password;
+}
+
 String _$ntripEnabledHash() => r'b4af9922a2c6f028ece8fd3808d7457b513ab338';
 
 /// A provider for whether the [ntripClient] provider should run.
@@ -82,110 +581,43 @@ final ntripEnabledProvider = NotifierProvider<NtripEnabled, bool>.internal(
 );
 
 typedef _$NtripEnabled = Notifier<bool>;
-String _$ntripHostHash() => r'ac1883525d3e5d2a90987ce8973b9506cd405128';
+String _$ntripProfilesHash() => r'b03548c94d5628aa11766bd3b363c581a318dc99';
 
-/// A provider for the NTRIP caster host address.
+/// A provider for the stored [NtripProfile]s.
 ///
-/// Copied from [NtripHost].
-@ProviderFor(NtripHost)
-final ntripHostProvider = NotifierProvider<NtripHost, String?>.internal(
-  NtripHost.new,
-  name: r'ntripHostProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$ntripHostHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$NtripHost = Notifier<String?>;
-String _$ntripPortHash() => r'30b47fcccbf01fd0712054310c24307464e47322';
-
-/// A provider for the NTRIP caster port.
-///
-/// Copied from [NtripPort].
-@ProviderFor(NtripPort)
-final ntripPortProvider = NotifierProvider<NtripPort, int>.internal(
-  NtripPort.new,
-  name: r'ntripPortProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$ntripPortHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$NtripPort = Notifier<int>;
-String _$activeNtripMountPointHash() =>
-    r'65bf23c96b44822bf81b72b1fec6098620c9784d';
-
-/// A provider for the NTRIP caster mounting point.
-///
-/// Copied from [ActiveNtripMountPoint].
-@ProviderFor(ActiveNtripMountPoint)
-final activeNtripMountPointProvider =
-    NotifierProvider<ActiveNtripMountPoint, String?>.internal(
-  ActiveNtripMountPoint.new,
-  name: r'activeNtripMountPointProvider',
+/// Copied from [NtripProfiles].
+@ProviderFor(NtripProfiles)
+final ntripProfilesProvider =
+    NotifierProvider<NtripProfiles, List<NtripProfile>>.internal(
+  NtripProfiles.new,
+  name: r'ntripProfilesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$activeNtripMountPointHash,
+      : _$ntripProfilesHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ActiveNtripMountPoint = Notifier<String?>;
-String _$ntripUsernameHash() => r'fe9d2c5ffcd474715779a50328285bb22fd73580';
+typedef _$NtripProfiles = Notifier<List<NtripProfile>>;
+String _$activeNtripProfileHash() =>
+    r'339bb950ce22c402fc1ed3e1979892a98bb0ac28';
 
-/// A provider for the NTRIP caster username (email).
+/// A provider for the active [NtripProfile], if there is one.
 ///
-/// Copied from [NtripUsername].
-@ProviderFor(NtripUsername)
-final ntripUsernameProvider = NotifierProvider<NtripUsername, String?>.internal(
-  NtripUsername.new,
-  name: r'ntripUsernameProvider',
+/// Copied from [ActiveNtripProfile].
+@ProviderFor(ActiveNtripProfile)
+final activeNtripProfileProvider =
+    NotifierProvider<ActiveNtripProfile, NtripProfile?>.internal(
+  ActiveNtripProfile.new,
+  name: r'activeNtripProfileProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$ntripUsernameHash,
+      : _$activeNtripProfileHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$NtripUsername = Notifier<String?>;
-String _$ntripPasswordHash() => r'bd139633d4980924a7e4065d5f8444ce85a1d1fc';
-
-/// A provider for the NTRIP caster password.
-///
-/// Copied from [NtripPassword].
-@ProviderFor(NtripPassword)
-final ntripPasswordProvider = NotifierProvider<NtripPassword, String?>.internal(
-  NtripPassword.new,
-  name: r'ntripPasswordProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$ntripPasswordHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$NtripPassword = Notifier<String?>;
-String _$ntripGGASendingIntervalHash() =>
-    r'54b576c1b12b982c65a8178d52ebd633f43322f6';
-
-/// A provider for the period between sending [GGASentence]s to the caster.
-///
-/// Copied from [NtripGGASendingInterval].
-@ProviderFor(NtripGGASendingInterval)
-final ntripGGASendingIntervalProvider =
-    NotifierProvider<NtripGGASendingInterval, int?>.internal(
-  NtripGGASendingInterval.new,
-  name: r'ntripGGASendingIntervalProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$ntripGGASendingIntervalHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$NtripGGASendingInterval = Notifier<int?>;
+typedef _$ActiveNtripProfile = Notifier<NtripProfile?>;
 String _$ntripDataUsageSessionHash() =>
     r'fa7c2e5b463dff14668b2ba57d943472d7f80767';
 

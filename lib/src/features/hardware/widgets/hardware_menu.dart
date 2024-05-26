@@ -71,7 +71,14 @@ class HardwareMenu extends ConsumerWidget {
               'Get hardware config',
               style: textStyle,
             ),
-            onPressed: () => ref.read(getSteeringHardwareConfigProvider),
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => ConfirmationDialog(
+                title: 'Get hardware config?',
+                onConfirmation: () async =>
+                    ref.read(getSteeringHardwareConfigProvider),
+              ),
+            ),
           ),
         if (Device.isNative)
           MenuItemButton(
@@ -84,7 +91,14 @@ class HardwareMenu extends ConsumerWidget {
               'Send hardware config',
               style: textStyle,
             ),
-            onPressed: () => ref.read(sendSteeringHardwareConfigProvider),
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => ConfirmationDialog(
+                title: 'Send hardware config?',
+                onConfirmation: () async =>
+                    ref.read(sendSteeringHardwareConfigProvider),
+              ),
+            ),
           ),
         Consumer(
           child: Text(
