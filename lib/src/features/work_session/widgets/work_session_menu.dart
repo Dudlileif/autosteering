@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
@@ -23,6 +25,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -39,7 +42,7 @@ class WorkSessionMenu extends ConsumerWidget {
     final textStyle = theme.menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Work session',
-      icon: Icons.work,
+      icon: Icons.work_outline,
       menuChildren: [
         if (ref.watch(
           activeWorkSessionProvider.select((value) => value != null),
@@ -57,6 +60,87 @@ class WorkSessionMenu extends ConsumerWidget {
             child: Text('Close', style: textStyle),
           ),
           const _ExportButton(),
+          Consumer(
+            child: Text('Rename', style: textStyle),
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.edit),
+              ),
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (context) {
+                  final session = ref.watch(activeWorkSessionProvider);
+                  var name = session?.name ?? '';
+                  return StatefulBuilder(
+                    builder: (context, setState) => SimpleDialog(
+                      title: const Text('Name the work session'),
+                      contentPadding: const EdgeInsets.only(
+                        left: 24,
+                        top: 12,
+                        right: 24,
+                        bottom: 16,
+                      ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.label_outline),
+                              labelText: 'Name',
+                            ),
+                            initialValue: name,
+                            onChanged: (value) => setState(() => name = value),
+                            onFieldSubmitted: (value) =>
+                                setState(() => name = value),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) => value != null &&
+                                    value.isNotEmpty &&
+                                    !value.startsWith(' ')
+                                ? null
+                                : '''No name entered! Please enter a name so that the field can be saved!''',
+                          ),
+                        ),
+                        if (session != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Consumer(
+                              builder: (context, ref, child) => FilledButton(
+                                onPressed: () {
+                                  if (session.name != name && name.isNotEmpty) {
+                                    Timer(const Duration(milliseconds: 100),
+                                        () {
+                                      ref
+                                        ..read(
+                                          deleteWorkSessionProvider(session),
+                                        )
+                                        ..read(
+                                          saveWorkSessionProvider(
+                                            session
+                                              ..name = name.isNotEmpty
+                                                  ? name
+                                                  : session.name,
+                                          ),
+                                        );
+                                    });
+                                  }
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Save work session'),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              child: child,
+            ),
+          ),
           MenuItemButton(
             leadingIcon: const Padding(
               padding: EdgeInsets.only(left: 8),
@@ -118,7 +202,7 @@ class _CloseDialog extends ConsumerWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Close ${workSession.title}'),
+            Text('Close ${workSession.name}'),
             const CloseButton(),
           ],
         ),
@@ -147,7 +231,6 @@ class _CloseDialog extends ConsumerWidget {
                               : '-',
                           style: theme.menuButtonWithChildrenText,
                         ),
-                    
                         ElevatedButton.icon(
                           onPressed: () {
                             showDatePicker(
@@ -218,7 +301,6 @@ class _CloseDialog extends ConsumerWidget {
                               : '-',
                           style: theme.menuButtonWithChildrenText,
                         ),
-                    
                         ElevatedButton.icon(
                           onPressed: () {
                             showDatePicker(
@@ -275,7 +357,6 @@ class _CloseDialog extends ConsumerWidget {
               ],
             ),
           ),
-          
           Padding(
             padding: const EdgeInsets.only(top: 16),
             child: Align(
@@ -342,7 +423,7 @@ class _ExportButton extends ConsumerWidget {
       onPressed: ref.watch(
         activeWorkSessionProvider.select(
           (value) =>
-              value != null && value.title != null && value.title!.isNotEmpty,
+              value != null && value.name != null && value.name!.isNotEmpty,
         ),
       )
           ? () => ref.watch(
@@ -409,9 +490,130 @@ class _CreateWorkSessionDialogState
     extends ConsumerState<_CreateWorkSessionDialog> {
   WorkSession workSession = WorkSession();
 
+  final fieldController = TextEditingController();
+  final equipmentSetupController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final workSessions = ref.watch(savedWorkSessionsProvider).when(
+          data: (data) => data,
+          error: (error, stackTrace) => <WorkSession>[],
+          loading: () => <WorkSession>[],
+        )..sort(
+        (a, b) =>
+            (b.start ?? DateTime.now()).compareTo(a.start ?? DateTime.now()),
+      );
+
+    final fields = ref.watch(savedFieldsProvider).when(
+          data: (data) => data,
+          error: (error, stackTrace) => <Field>[],
+          loading: () => <Field>[],
+        )..sort(
+        (a, b) => b.lastUsed.compareTo(a.lastUsed),
+      );
+
+    final equipmentSetups = ref.watch(savedEquipmentSetupsProvider).when(
+          data: (data) => data,
+          error: (error, stackTrace) => <EquipmentSetup>[],
+          loading: () => <EquipmentSetup>[],
+        )..sort(
+        (a, b) => b.lastUsed.compareTo(a.lastUsed),
+      );
+
     final theme = Theme.of(context);
+
+    final name = ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 300),
+      child: TextFormField(
+        decoration: const InputDecoration(
+          label: Text('Name'),
+          prefixIcon: Icon(Icons.label_outline),
+        ),
+        maxLines: null,
+        initialValue: workSession.name,
+        onChanged: (value) => setState(() => workSession.name = value),
+      ),
+    );
+
+    final field = DropdownMenu<Field>(
+      controller: fieldController,
+      width: 300,
+      leadingIcon: const Stack(
+        alignment: Alignment.center,
+        children: [
+          Icon(Icons.texture),
+          Icon(Icons.square_outlined),
+        ],
+      ),
+      hintText: 'Field',
+      onSelected: (value) => setState(() => workSession.field = value),
+      initialSelection: fields.firstWhereOrNull(
+        (element) => element.uuid == workSession.field?.uuid,
+      ),
+      dropdownMenuEntries: fields
+          .map(
+            (field) => DropdownMenuEntry(
+              value: field,
+              label: field.name,
+            ),
+          )
+          .toList(),
+    );
+
+    final equipment = DropdownMenu<EquipmentSetup>(
+      controller: equipmentSetupController,
+      width: 300,
+      leadingIcon: const Icon(Icons.handyman),
+      hintText: 'Equipment setup',
+      onSelected: (value) => setState(
+        () => workSession.equipmentSetup = value,
+      ),
+      initialSelection: equipmentSetups.firstWhereOrNull(
+        (element) => element.name == workSession.equipmentSetup?.name,
+      ),
+      dropdownMenuEntries: equipmentSetups
+          .map(
+            (equipmentSetup) => DropdownMenuEntry(
+              value: equipmentSetup,
+              label: equipmentSetup.name,
+            ),
+          )
+          .toList(),
+    );
+
+    final fromSession = DropdownMenu<WorkSession>(
+      enabled: workSessions.isNotEmpty,
+      leadingIcon: const Icon(Icons.work_outline),
+      helperText: 'Copy field, equipment and guidance from this.',
+      hintText: 'Copy from work session',
+      width: 300,
+      dropdownMenuEntries: workSessions
+          .map(
+            (session) => DropdownMenuEntry(
+              label: session.name ?? 'No name',
+              value: session,
+            ),
+          )
+          .toList(),
+      onSelected: (session) {
+        if (session != null) {
+          if (session.field == null) {
+            fieldController.clear();
+          }
+          if (session.equipmentSetup == null) {
+            equipmentSetupController.clear();
+          }
+          setState(() {
+            workSession
+              ..field = session.field
+              ..equipmentSetup = session.equipmentSetup
+              ..abTracking = session.abTracking
+              ..pathTracking = session.pathTracking;
+          });
+        }
+      },
+    );
+
     return SimpleDialog(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -439,82 +641,29 @@ class _CreateWorkSessionDialogState
       contentPadding:
           const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
       children: [
-        SingleChildScrollView(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  decoration: const InputDecoration(
-                    label: Text('Title'),
-                  ),
-                  onChanged: (value) =>
-                      setState(() => workSession.title = value),
-                ),
+        Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: name,
+              ),
+              if (workSessions.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 16),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(minWidth: 200),
-                    child: DropdownMenu<Field>(
-                      leadingIcon: const Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Icon(Icons.texture),
-                          Icon(Icons.square_outlined),
-                        ],
-                      ),
-                      hintText: 'Field',
-                      onSelected: (value) =>
-                          setState(() => workSession.field = value),
-                      dropdownMenuEntries: (ref.watch(savedFieldsProvider).when(
-                                data: (data) => data,
-                                error: (error, stackTrace) => <Field>[],
-                                loading: () => <Field>[],
-                              )..sort(
-                              (a, b) => b.lastUsed.compareTo(a.lastUsed),
-                            ))
-                          .map(
-                            (field) => DropdownMenuEntry(
-                              value: field,
-                              label: field.name,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
+                  child: fromSession,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(minWidth: 200),
-                    child: DropdownMenu<EquipmentSetup>(
-                      leadingIcon: const Icon(Icons.handyman),
-                      hintText: 'Equipment setup',
-                      onSelected: (value) => setState(
-                        () => workSession.equipmentSetup = value,
-                      ),
-                      dropdownMenuEntries:
-                          (ref.watch(savedEquipmentSetupsProvider).when(
-                                    data: (data) => data,
-                                    error: (error, stackTrace) =>
-                                        <EquipmentSetup>[],
-                                    loading: () => <EquipmentSetup>[],
-                                  )..sort(
-                                  (a, b) => b.lastUsed.compareTo(a.lastUsed),
-                                ))
-                              .map(
-                                (equipmentSetup) => DropdownMenuEntry(
-                                  value: equipmentSetup,
-                                  label: equipmentSetup.name,
-                                ),
-                              )
-                              .toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: field,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: equipment,
+              ),
+            ],
           ),
         ),
         Padding(
@@ -531,37 +680,39 @@ class _CreateWorkSessionDialogState
                   label: const Text('Cancel'),
                 ),
                 FilledButton.icon(
-                  onPressed: (workSession.title != null &&
-                          workSession.title!.isNotEmpty)
+                  onPressed: (workSession.name != null &&
+                          workSession.name!.isNotEmpty)
                       ? () {
-                      workSession
-                        ..vehicle = ref.watch(mainVehicleProvider)
-                        ..equipmentSetup ??= ref
-                            .watch(mainVehicleProvider)
-                            .equipmentSetup('${workSession.title} setup');
-                      ref
-                          .read(activeWorkSessionProvider.notifier)
-                          .update(workSession);
-                      ref.read(saveWorkSessionProvider(workSession));
-                      ref
-                          .read(activeFieldProvider.notifier)
-                          .update(workSession.field);
-                      if (workSession.equipmentSetup != null) {
-                        ref.read(simInputProvider.notifier).send(
-                          (
-                            equipmentSetup: workSession.equipmentSetup!,
-                            parentUuid: ref.watch(
-                              mainVehicleProvider.select((value) => value.uuid),
-                            )
-                          ),
-                        );
-                      }
-                      Navigator.of(context).pop();
+                          workSession
+                            ..vehicle = ref.watch(mainVehicleProvider)
+                            ..equipmentSetup ??=
+                                ref.watch(mainVehicleProvider).equipmentSetup(
+                                      '${workSession.name} setup',
+                                    );
+                          ref
+                              .read(activeWorkSessionProvider.notifier)
+                              .update(workSession);
+                          ref.read(saveWorkSessionProvider(workSession));
+                          ref
+                              .read(activeFieldProvider.notifier)
+                              .update(workSession.field);
+                          if (workSession.equipmentSetup != null) {
+                            ref.read(simInputProvider.notifier).send(
+                              (
+                                equipmentSetup: workSession.equipmentSetup!,
+                                parentUuid: ref.watch(
+                                  mainVehicleProvider
+                                      .select((value) => value.uuid),
+                                )
+                              ),
+                            );
+                          }
+                          Navigator.of(context).pop();
                         }
                       : null,
-                    icon: const Icon(Icons.check),
-                    label: const Text('Create'),
-                  ),
+                  icon: const Icon(Icons.check),
+                  label: const Text('Create'),
+                ),
               ],
             ),
           ),
@@ -599,7 +750,7 @@ class _LoadWorkSessionMenu extends ConsumerWidget {
             (workSession) => ConstrainedBox(
               constraints: const BoxConstraints(minWidth: 200),
               child: ListTile(
-                title: Text(workSession.title ?? 'No title', style: textStyle),
+                title: Text(workSession.name ?? 'No name', style: textStyle),
                 subtitle: Builder(
                   builder: (context) {
                     var text = '';
@@ -620,7 +771,7 @@ class _LoadWorkSessionMenu extends ConsumerWidget {
                 ),
                 onTap: () {
                   Logger.instance.i(
-                    'Loaded work session: ${workSession.title}.',
+                    'Loaded work session: ${workSession.name}.',
                   );
                   ref
                     ..read(activeWorkSessionProvider.notifier)
@@ -654,7 +805,7 @@ class _LoadWorkSessionMenu extends ConsumerWidget {
                             context: context,
                             builder: (context) => Consumer(
                               builder: (context, ref, child) => DeleteDialog(
-                                name: workSession.title ?? 'Session',
+                                name: workSession.name ?? 'Session',
                                 onDelete: () async => await ref.watch(
                                   deleteWorkSessionProvider(
                                     workSession,
@@ -777,7 +928,6 @@ class _RenameABTrackingDialog extends StatelessWidget {
       ),
       contentPadding:
           const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
-
       children: [
         TextField(
           decoration: const InputDecoration(
@@ -989,7 +1139,6 @@ class _EditNoteDialog extends ConsumerWidget {
       ),
       contentPadding:
           const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
-
       children: [
         TextField(
           decoration: const InputDecoration(

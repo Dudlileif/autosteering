@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:uuid/uuid.dart';
 
 /// A class that contains objects used in and info about a work session.
 class WorkSession {
@@ -31,13 +32,15 @@ class WorkSession {
     this.equipmentSetup,
     List<ABTracking>? abTracking,
     List<PathTracking>? pathTracking,
-    this.title,
+    this.name,
     this.note,
     this.start,
     this.end,
     this.workedPaths,
+    String? uuid,
   })  : abTracking = abTracking ?? [],
-        pathTracking = pathTracking ?? [];
+        pathTracking = pathTracking ?? [],
+        uuid = uuid ?? const Uuid().v4();
 
   /// Creates a work session object from the [json] object.
   factory WorkSession.fromJson(Map<String, dynamic> json) {
@@ -69,8 +72,9 @@ class WorkSession {
 
     final info = Map<String, dynamic>.from(json['info'] as Map);
 
-    final title = info['title'] as String?;
+    final name = info['name'] as String?;
     final note = info['note'] as String?;
+    final uuid = info['uuid'] as String?;
 
     final time = Map<String, dynamic>.from(json['time'] as Map);
 
@@ -83,8 +87,7 @@ class WorkSession {
     final workedPaths = json['worked_paths'] != null
         ? Map<String, List<dynamic>>.from(
             json['worked_paths'] as Map,
-          )
-            .map(
+          ).map(
             (uuid, activations) => MapEntry(
               uuid,
               List<Map<String, dynamic>>.from(activations)
@@ -112,8 +115,9 @@ class WorkSession {
       equipmentSetup: equipmentSetup,
       abTracking: abTracking,
       pathTracking: pathTracking,
-      title: title,
+      name: name,
       note: note,
+      uuid: uuid,
       start: start,
       end: end,
       workedPaths: workedPaths,
@@ -138,8 +142,11 @@ class WorkSession {
   /// The recorded path used in this work session.
   List<WayPoint>? pathRecording;
 
-  /// A title for the work session.
-  String? title;
+  /// A name for the work session.
+  String? name;
+
+  /// A unique identifier for this.
+  final String uuid;
 
   /// A note for adding some info about the work, e.g. type of work done,
   /// species, application rate etc...
@@ -170,8 +177,9 @@ class WorkSession {
     };
 
     map['info'] = {
-      'title': title,
+      'name': name,
       'note': note,
+      'uuid': uuid,
     };
 
     map['field'] = field;

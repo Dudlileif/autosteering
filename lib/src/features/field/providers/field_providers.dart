@@ -28,6 +28,7 @@ import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
+import 'package:uuid/uuid.dart';
 
 part 'field_providers.g.dart';
 
@@ -277,7 +278,7 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
           debugLabel: 'Field Buffering: ${field.name}',
         ),
       );
-    }
+    } 
 
     return field.copyWith(
       polygon: bufferedPolygon,
@@ -285,6 +286,7 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
               (!bufferedPolygon.exterior!.isEmptyByGeometry)
           ? GeoBox.from(bufferedPolygon.exterior!.toGeographicPositions)
           : null,
+      uuid: const Uuid().v4(),
     );
   }
   return null;

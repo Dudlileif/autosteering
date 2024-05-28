@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -63,9 +64,8 @@ class ActiveWorkSession extends _$ActiveWorkSession {
   /// Updates [state] to [value].
   void update(WorkSession? value) => Future(() => state = value);
 
-  /// Updates the [WorkSession.title] of the [state].
-  void updateTitle(String? title) =>
-      Future(() => state = state?..title = title);
+  /// Updates the [WorkSession.name] of the [state].
+  void updateName(String? name) => Future(() => state = state?..name = name);
 
   /// Updates the [WorkSession.note] of the [state].
   void updateNote(String? note) => Future(() => state = state?..note = note);
@@ -211,7 +211,7 @@ FutureOr<void> saveWorkSession(
       saveJsonToFileDirectoryProvider(
         object: workSession,
         fileName: overrideName ??
-            workSession.title ??
+            workSession.name ??
             DateTime.now().toIso8601String(),
         folder: 'work_sessions',
         downloadIfWeb: downloadIfWeb,
@@ -232,7 +232,7 @@ FutureOr<void> exportWorkSession(
       exportJsonToFileDirectoryProvider(
         object: workSession,
         fileName: overrideName ??
-            workSession.title ??
+            workSession.name ??
             DateTime.now().toIso8601String(),
         folder: 'work_sessions',
       ).future,
@@ -244,12 +244,69 @@ FutureOr<void> exportWorkSession(
 FutureOr<List<WorkSession>> savedWorkSessions(SavedWorkSessionsRef ref) async =>
     await ref
         .watch(
-          savedFilesProvider(
-            fromJson: WorkSession.fromJson,
-            folder: 'work_sessions',
-          ).future,
-        )
-        .then((data) => data.cast());
+      savedFilesProvider(
+        fromJson: WorkSession.fromJson,
+        folder: 'work_sessions',
+      ).future,
+    )
+        .then((data) async {
+      final sessions = data.cast<WorkSession>();
+      if (sessions.isNotEmpty) {
+        if (sessions.any((element) => element.field != null)) {
+          final savedFields = await ref.read(
+            savedFieldsProvider.selectAsync(
+              (data) => data.map((e) => (uuid: e.uuid, name: e.name)),
+            ),
+          );
+          final fieldsToAdd = <Field>[];
+          for (final session
+              in sessions.where((element) => element.field != null)) {
+            if (savedFields
+                    .none((field) => field.uuid == session.field!.uuid) &&
+                fieldsToAdd
+                    .none((field) => field.uuid == session.field!.uuid)) {
+              fieldsToAdd.add(session.field!);
+            }
+            for (final field in savedFields) {
+              if (field.uuid == session.field!.uuid &&
+                  field.name != session.field!.name) {
+                session.field = session.field!.copyWith(name: field.name);
+              }
+            }
+          }
+          if (fieldsToAdd.isNotEmpty) {
+            for (final field in fieldsToAdd) {
+              await ref.read(saveFieldProvider(field).future);
+            }
+          }
+        }
+        if (sessions.any((element) => element.equipmentSetup != null)) {
+          final savedSetups = await ref.read(
+            savedEquipmentSetupsProvider.selectAsync(
+              (data) => data.map((e) => (name: e.name)),
+            ),
+          );
+          final setupsToAdd = <EquipmentSetup>[];
+          for (final session
+              in sessions.where((element) => element.equipmentSetup != null)) {
+            if (savedSetups.none(
+                  (element) => element.name == session.equipmentSetup!.name,
+                ) &&
+                setupsToAdd.none(
+                  (element) => element.name == session.equipmentSetup!.name,
+                )) {
+              setupsToAdd.add(session.equipmentSetup!);
+            }
+          }
+          if (setupsToAdd.isNotEmpty) {
+            for (final setup in setupsToAdd) {
+              await ref.read(saveEquipmentSetupProvider(setup).future);
+            }
+          }
+        }
+      }
+      return sessions;
+    });
 
 /// A provider for deleting [workSession] from the user file system.
 ///
@@ -263,7 +320,7 @@ FutureOr<void> deleteWorkSession(
     await ref.watch(
       deleteJsonFromFileDirectoryProvider(
         fileName: overrideName ??
-            workSession.title ??
+            workSession.name ??
             DateTime.now().toIso8601String(),
         folder: 'work_sessions',
       ).future,
@@ -314,7 +371,7 @@ FutureOr<WorkSession?> importWorkSession(
   }
   if (workSession != null) {
     Logger.instance.i(
-      'Imported work session: ${workSession.title}.',
+      'Imported work session: ${workSession.name}.',
     );
     ref
       ..read(activeWorkSessionProvider.notifier).update(workSession)

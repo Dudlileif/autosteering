@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:async/async.dart';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
@@ -89,6 +91,85 @@ class FieldMenu extends ConsumerWidget {
           const _CreateFieldButton(),
         ],
         if (activeField != null) ...[
+          Consumer(
+            child: Text('Rename', style: textStyle),
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.edit),
+              ),
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (context) {
+                  final field = ref.watch(activeFieldProvider);
+                  var name = field?.name ?? '';
+                  return StatefulBuilder(
+                    builder: (context, setState) => SimpleDialog(
+                      title: const Text('Name the field'),
+                      contentPadding: const EdgeInsets.only(
+                        left: 24,
+                        top: 12,
+                        right: 24,
+                        bottom: 16,
+                      ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.label_outline),
+                              labelText: 'Name',
+                            ),
+                            initialValue: name,
+                            onChanged: (value) => setState(() => name = value),
+                            onFieldSubmitted: (value) =>
+                                setState(() => name = value),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) => value != null &&
+                                    value.isNotEmpty &&
+                                    !value.startsWith(' ')
+                                ? null
+                                : '''No name entered! Please enter a name so that the field can be saved!''',
+                          ),
+                        ),
+                        if (field != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Consumer(
+                              builder: (context, ref, child) => FilledButton(
+                                onPressed: () {
+                                  if (field.name != name && name.isNotEmpty) {
+                                    Timer(const Duration(milliseconds: 100),
+                                        () {
+                                      ref
+                                        ..read(deleteFieldProvider(field))
+                                        ..read(
+                                          saveFieldProvider(
+                                            field.copyWith(
+                                              name:
+                                                  name.isNotEmpty ? name : null,
+                                            ),
+                                          ),
+                                        );
+                                    });
+                                  }
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Save field'),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              child: child,
+            ),
+          ),
           Consumer(
             child: Text(
               'Show field',
@@ -468,16 +549,77 @@ class FieldMenu extends ConsumerWidget {
                   ),
                   closeOnActivate: false,
                   onPressed: field != null
-                      ? () => ref.watch(
-                            saveFieldProvider(
-                              field.copyWith(
-                                name: '${field.name} buffered',
-                                lastUsed: DateTime.now(),
-                              ),
-                              overrideName: '${field.name} buffered',
-                              downloadIfWeb: true,
-                            ),
-                          )
+                      ? () {
+                          showDialog<void>(
+                            context: context,
+                            builder: (context) {
+                              var name = '';
+                              return StatefulBuilder(
+                                builder: (context, setState) => SimpleDialog(
+                                  title: const Text('Name the bufferd field'),
+                                  contentPadding: const EdgeInsets.only(
+                                    left: 24,
+                                    top: 12,
+                                    right: 24,
+                                    bottom: 16,
+                                  ),
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: TextFormField(
+                                        decoration: const InputDecoration(
+                                          icon: Icon(Icons.label_outline),
+                                          labelText: 'Name',
+                                        ),
+                                        initialValue: name,
+                                        onChanged: (value) =>
+                                            setState(() => name = value),
+                                        onFieldSubmitted: (value) =>
+                                            setState(() => name = value),
+                                        keyboardType: TextInputType.text,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        validator: (value) => value != null &&
+                                                value.isNotEmpty &&
+                                                !value.startsWith(' ')
+                                            ? null
+                                            : '''No name entered! Please enter a name so that the field can be saved!''',
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 16),
+                                      child: Consumer(
+                                        builder: (context, ref, child) =>
+                                            FilledButton(
+                                          onPressed: () {
+                                            Timer(
+                                                const Duration(
+                                                  milliseconds: 100,
+                                                ), () {
+                                              ref.read(
+                                                saveFieldProvider(
+                                                  field.copyWith(
+                                                    name: name.isNotEmpty
+                                                        ? name
+                                                        : null,
+                                                  ),
+                                                  downloadIfWeb: true,
+                                                ),
+                                              );
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                          child:
+                                              const Text('Save bufferd field'),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        }
                       : null,
                   child: child,
                 );

@@ -59,8 +59,8 @@ bool startupLoading(StartupLoadingRef ref) {
           ref.watch(savedEquipmentSetupsProvider) is! AsyncData,
           ref.watch(savedABTrackingsProvider) is! AsyncData,
           ref.watch(savedPathTrackingsProvider) is! AsyncData,
-          ref.watch(savedWorkSessionsProvider) is! AsyncData,
           ref.watch(savedFieldsProvider) is! AsyncData,
+          ref.watch(savedWorkSessionsProvider) is! AsyncData,
           ref.watch(lastUsedVehicleProvider) is! AsyncData,
         ].any((element) => element);
       }

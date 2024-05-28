@@ -113,23 +113,23 @@ FutureOr<void> saveJsonToFileDirectory(
     }
   } else {
     try {
-    final path =
-        '${ref.watch(fileDirectoryProvider).requireValue.path}/$folder/$fileName.json';
-    final file = File(path);
-    final exists = file.existsSync();
-    if (!exists) {
-      await file.create(recursive: true);
-    }
-    await file.writeAsString(dataString);
-    Logger.instance.i(
-      switch (exists) {
-        false => 'Created and wrote data to $path',
-        true => 'Wrote data to $path',
-      },
-    );
+      final path =
+          '${ref.watch(fileDirectoryProvider).requireValue.path}/$folder/$fileName.json';
+      final file = File(path);
+      final exists = file.existsSync();
+      if (!exists) {
+        await file.create(recursive: true);
+      }
+      await file.writeAsString(dataString);
+      Logger.instance.i(
+        switch (exists) {
+          false => 'Created and wrote data to $path',
+          true => 'Wrote data to $path',
+        },
+      );
     } catch (error, stackTrace) {
       Logger.instance.w(
-        'Failed to import save json.',
+        'Failed to save json.',
         error: error,
         stackTrace: stackTrace,
       );
