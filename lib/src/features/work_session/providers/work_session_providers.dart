@@ -70,6 +70,9 @@ class ActiveWorkSession extends _$ActiveWorkSession {
   /// Updates the [WorkSession.note] of the [state].
   void updateNote(String? note) => Future(() => state = state?..note = note);
 
+  /// Updates the [WorkSession.field] of the [state] to [field].
+  void updateField(Field? field) => Future(() => state = state?..field = field);
+
   /// Removes the [ABTracking] with [uuid] from [WorkSession.abTracking].
   void removeABTracking(String uuid) => Future(
         () => state = state

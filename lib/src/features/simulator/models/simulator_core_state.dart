@@ -173,6 +173,7 @@ class SimulatorCoreState {
     final now = DateTime.now();
     period = now.difference(prevUpdateTime).inMicroseconds / 1e6;
     prevUpdateTime = now;
+    vehicle?.lastUsed = now;
   }
 
   /// Change state parameters/values according to the incomming [message].
@@ -1068,7 +1069,6 @@ class SimulatorCoreState {
             ],
             weights: [39, 1],
           );
-
 
           vehicle!.imu
             ..config = vehicle!.imu.config.copyWith(

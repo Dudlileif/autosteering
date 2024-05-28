@@ -58,6 +58,7 @@ class Equipment extends Hitchable with EquatableMixin {
     super.hitchRearTowbarChild,
     super.name,
     super.uuid,
+    super.lastUsed,
     this.workingAreaLength = 2,
     this.drawbarLength = 1,
     this.sidewaysOffset = 0,
@@ -70,13 +71,11 @@ class Equipment extends Hitchable with EquatableMixin {
     this.decorationLength,
     this.decorationWidth,
     List<Section>? sections,
-    DateTime? lastUsed,
     double bearing = 0,
     Geographic position = const Geographic(lat: 0, lon: 0),
   })  : sections = sections ?? [],
         _position = position,
-        _bearing = hitchParent?.bearing ?? bearing,
-        lastUsed = lastUsed ?? DateTime.now();
+        _bearing = hitchParent?.bearing ?? bearing;
 
   /// Creates an [Equipment] from the [json] object.
   factory Equipment.fromJson(Map<String, dynamic> json) {
@@ -158,9 +157,6 @@ class Equipment extends Hitchable with EquatableMixin {
 
     return equipment;
   }
-
-  /// The last time this equipment was used.
-  DateTime lastUsed;
 
   /// Which type of hitch point this equipment has.
   HitchType hitchType;
@@ -740,20 +736,25 @@ class Equipment extends Hitchable with EquatableMixin {
               points[3],
               fraction: fraction ?? recordingPositionFraction,
             ),
+        time: lastUsed,
       );
     }
     return null;
   }
 
   /// A map of all the section indexes and their [SectionEdgePositions] if they
-  /// are active, or null if they're not.
-  Map<int, SectionEdgePositions?> activeEdgePositions({double? fraction}) => {
-        for (final element
-            in sections.where((section) => section.workingWidth > 0))
-          element.index: element.active
-              ? sectionEdgePositions(element.index, fraction: fraction)
-              : null,
-      };
+  /// are active.
+  Map<int, SectionEdgePositions> activeEdgePositions({double? fraction}) {
+    final map = <int, SectionEdgePositions>{};
+    for (final element
+        in sections.where((section) => section.workingWidth > 0)) {
+      if (element.active) {
+        map[element.index] =
+            sectionEdgePositions(element.index, fraction: fraction)!;
+      }
+    }
+    return map;
+  }
 
   /// The center point of the given [section].
   Geographic sectionCenter(int section) {

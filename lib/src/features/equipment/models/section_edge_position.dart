@@ -17,17 +17,40 @@
 
 part of 'section.dart';
 
-/// A class with positions for the left and right edge of a [Section].
+/// A class with positions for the [left] and [right] edge of a [Section], and
+/// optionally a [time]stamp.
 class SectionEdgePositions {
-  /// A class with positions for the left and right edge of a [Section].
-  const SectionEdgePositions({required this.left, required this.right});
+  /// A class with positions for the [left] and [right] edge of a [Section], and
+  /// optionally a [time]stamp.
+  const SectionEdgePositions({
+    required this.left,
+    required this.right,
+    this.time,
+  });
+
+  /// Creates a [SectionEdgePositions] with [DateTime.now] as [time].
+  factory SectionEdgePositions.now({
+    required Geographic left,
+    required Geographic right,
+  }) =>
+      SectionEdgePositions(
+        left: left,
+        right: right,
+        time: DateTime.now(),
+      );
 
   /// Creates a [SectionEdgePositions] object from the [json] object.
-  factory SectionEdgePositions.fromJson(Map<String, dynamic> json) =>
-      SectionEdgePositions(
-        left: Geographic.parse(json['left'] as String),
-        right: Geographic.parse(json['right'] as String),
-      );
+  factory SectionEdgePositions.fromJson(Map<String, dynamic> json) {
+    DateTime? time;
+    if (json['time'] is String) {
+      time = DateTime.tryParse(json['time'] as String);
+    }
+    return SectionEdgePositions(
+      left: Geographic.parse(json['left'] as String),
+      right: Geographic.parse(json['right'] as String),
+      time: time,
+    );
+  }
 
   /// The left edge position of the parent section.
   final Geographic left;
@@ -35,9 +58,18 @@ class SectionEdgePositions {
   /// The right edge of the parent section.
   final Geographic right;
 
+  /// The timestamp of this.
+  final DateTime? time;
+
   /// Converts the objet to a json compatible structure.
-  Map<String, dynamic> toJson() => {
-        'left': left.toText(),
-        'right': right.toText(),
-      };
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{
+      'left': left.toText(),
+      'right': right.toText(),
+    };
+    if (time != null) {
+      map['time'] = time?.toIso8601String();
+    }
+    return map;
+  }
 }

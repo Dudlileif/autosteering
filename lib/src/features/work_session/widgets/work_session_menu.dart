@@ -454,57 +454,63 @@ class _CreateWorkSessionDialogState
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 16),
-                  child: DropdownMenu<Field>(
-                    leadingIcon: const Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(Icons.texture),
-                        Icon(Icons.square_outlined),
-                      ],
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minWidth: 200),
+                    child: DropdownMenu<Field>(
+                      leadingIcon: const Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Icon(Icons.texture),
+                          Icon(Icons.square_outlined),
+                        ],
+                      ),
+                      hintText: 'Field',
+                      onSelected: (value) =>
+                          setState(() => workSession.field = value),
+                      dropdownMenuEntries: (ref.watch(savedFieldsProvider).when(
+                                data: (data) => data,
+                                error: (error, stackTrace) => <Field>[],
+                                loading: () => <Field>[],
+                              )..sort(
+                              (a, b) => b.lastUsed.compareTo(a.lastUsed),
+                            ))
+                          .map(
+                            (field) => DropdownMenuEntry(
+                              value: field,
+                              label: field.name,
+                            ),
+                          )
+                          .toList(),
                     ),
-                    hintText: 'Field',
-                    onSelected: (value) =>
-                        setState(() => workSession.field = value),
-                    dropdownMenuEntries: (ref.watch(savedFieldsProvider).when(
-                              data: (data) => data,
-                              error: (error, stackTrace) => <Field>[],
-                              loading: () => <Field>[],
-                            )..sort(
-                            (a, b) => b.lastUsed.compareTo(a.lastUsed),
-                          ))
-                        .map(
-                          (field) => DropdownMenuEntry(
-                            value: field,
-                            label: field.name,
-                          ),
-                        )
-                        .toList(),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 16),
-                  child: DropdownMenu<EquipmentSetup>(
-                    leadingIcon: const Icon(Icons.handyman),
-                    hintText: 'Equipment setup',
-                    onSelected: (value) => setState(
-                      () => workSession.equipmentSetup = value,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minWidth: 200),
+                    child: DropdownMenu<EquipmentSetup>(
+                      leadingIcon: const Icon(Icons.handyman),
+                      hintText: 'Equipment setup',
+                      onSelected: (value) => setState(
+                        () => workSession.equipmentSetup = value,
+                      ),
+                      dropdownMenuEntries:
+                          (ref.watch(savedEquipmentSetupsProvider).when(
+                                    data: (data) => data,
+                                    error: (error, stackTrace) =>
+                                        <EquipmentSetup>[],
+                                    loading: () => <EquipmentSetup>[],
+                                  )..sort(
+                                  (a, b) => b.lastUsed.compareTo(a.lastUsed),
+                                ))
+                              .map(
+                                (equipmentSetup) => DropdownMenuEntry(
+                                  value: equipmentSetup,
+                                  label: equipmentSetup.name,
+                                ),
+                              )
+                              .toList(),
                     ),
-                    dropdownMenuEntries: (ref
-                            .watch(savedEquipmentSetupsProvider)
-                            .when(
-                              data: (data) => data,
-                              error: (error, stackTrace) => <EquipmentSetup>[],
-                              loading: () => <EquipmentSetup>[],
-                            )..sort(
-                            (a, b) => b.lastUsed.compareTo(a.lastUsed),
-                          ))
-                        .map(
-                          (equipmentSetup) => DropdownMenuEntry(
-                            value: equipmentSetup,
-                            label: equipmentSetup.name,
-                          ),
-                        )
-                        .toList(),
                   ),
                 ),
               ],

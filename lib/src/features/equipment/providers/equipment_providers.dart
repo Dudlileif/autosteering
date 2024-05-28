@@ -174,12 +174,14 @@ class EquipmentPaths extends _$EquipmentPaths {
 
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
-        // Activation/deactivation
-        if (equipment.sections.isNotEmpty) {
+        if (equipment.sections.isNotEmpty &&
+            equipment.sections.any((element) => element.workingWidth > 0)) {
           final recordFraction =
               ref.read(equipmentRecordPositionFractionProvider);
           final positions =
               equipment.activeEdgePositions(fraction: recordFraction);
+
+          // Activation/deactivation
           if (!const MapEquality<int, bool>().equals(
                 equipment.sectionActivationStatus,
                 _prevSectionActivationStatus,
@@ -206,33 +208,37 @@ class EquipmentPaths extends _$EquipmentPaths {
                       section,
                       positions[section] != null ? [positions[section]!] : null,
                     ),
-            );
-            state = state..add(sectionLines);
+            )..removeWhere((key, value) => value == null);
+            if (sectionLines.isNotEmpty) {
+              state = state..add(sectionLines);
+            }
             _prevSectionActivationStatus = equipment.sectionActivationStatus;
           }
 
           // Continuation
           else {
-            final addNext = positions
-                .map(
-                  (section, position) => MapEntry(
-                    section,
-                    position != null && shouldAddNext(position, section),
-                  ),
-                )
-                .values
-                .reduce((value, element) => value || element);
+            if (positions.isNotEmpty) {
+              final addNext = positions
+                  .map(
+                    (section, position) => MapEntry(
+                      section,
+                      shouldAddNext(position, section),
+                    ),
+                  )
+                  .values
+                  .reduce((value, element) => value || element);
 
-            if (addNext) {
-              state = state
-                ..last.updateAll(
-                  (section, value) {
-                    if (positions[section] != null) {
-                      return value?..add(positions[section]!);
-                    }
-                    return null;
-                  },
-                );
+              if (addNext) {
+                state = state
+                  ..last.updateAll(
+                    (section, value) {
+                      if (positions[section] != null) {
+                        return value?..add(positions[section]!);
+                      }
+                      return null;
+                    },
+                  );
+              }
             }
           }
           // Update covered working area
