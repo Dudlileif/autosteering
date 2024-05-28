@@ -85,7 +85,7 @@ typedef _$DebugVehicleTravelledPath = AutoDisposeNotifier<bool>;
 String _$debugVehicleTravelledPathSizeHash() =>
     r'5f05e91b3ba1249e41a79944bfad86c33079981c';
 
-/// The amount of points [DebugTravelledPathList] should hold.
+/// The amount of points [DebugVehicleTravelledPathList] should hold.
 ///
 /// Copied from [DebugVehicleTravelledPathSize].
 @ProviderFor(DebugVehicleTravelledPathSize)

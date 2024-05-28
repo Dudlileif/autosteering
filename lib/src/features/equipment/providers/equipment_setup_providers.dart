@@ -82,12 +82,17 @@ FutureOr<List<EquipmentSetup>> savedEquipmentSetups(
 ) async =>
     await ref
         .watch(
-          savedFilesProvider(
-            fromJson: EquipmentSetup.fromJson,
-            folder: 'equipment/setups',
-          ).future,
-        )
-        .then((data) => data.cast());
+      savedFilesProvider(
+        fromJson: EquipmentSetup.fromJson,
+        folder: 'equipment/setups',
+      ).future,
+    )
+        .then((data) {
+      final setups = data.cast<EquipmentSetup>();
+      
+
+      return setups;
+    });
 
 /// A provider for deleting [setup] form the user file system.
 ///

@@ -23,20 +23,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A page for configuring the equipment type and set a name for the equipment.
-class EquipmentTypeSelectorPage extends ConsumerWidget {
+class EquipmentTypeSelectorPage extends ConsumerStatefulWidget {
   /// A page for configuring the equipment type and set a name for the
   /// equipment.
   const EquipmentTypeSelectorPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<EquipmentTypeSelectorPage> createState() =>
+      _EquipmentTypeSelectorPageState();
+}
+
+class _EquipmentTypeSelectorPageState
+    extends ConsumerState<EquipmentTypeSelectorPage> {
+  late final nameController = TextEditingController(
+    text: ref.watch(configuredEquipmentProvider.select((value) => value.name)),
+  );
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SingleChildScrollView(
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: _EquipmentTypeSelector(),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: _EquipmentTypeSelector(clearName: nameController.clear),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -45,21 +62,24 @@ class EquipmentTypeSelectorPage extends ConsumerWidget {
               child: Column(
                 children: [
                   Consumer(
-                    builder: (context, ref, child) => TextFormField(
-                      decoration: const InputDecoration(
-                        icon: Icon(Icons.label_outline),
-                        labelText: 'Name',
-                      ),
-                      controller: ref.watch(
-                        configuredEquipmentNameTextControllerProvider,
-                      ),
-                      keyboardType: TextInputType.text,
-                      autovalidateMode: AutovalidateMode.always,
-                      validator: (value) => value == null ||
-                              (value.isEmpty || value.startsWith(' '))
-                          ? 'No name entered!'
-                          : null,
-                    ),
+                    builder: (context, ref, child) {
+                      return TextFormField(
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.label_outline),
+                          labelText: 'Name',
+                        ),
+                        controller: nameController,
+                        onFieldSubmitted: ref
+                            .read(configuredEquipmentProvider.notifier)
+                            .updateName,
+                        keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.always,
+                        validator: (value) => value == null ||
+                                (value.isEmpty || value.startsWith(' '))
+                            ? 'No name entered!'
+                            : null,
+                      );
+                    },
                   ),
                 ],
               ),
@@ -77,7 +97,7 @@ class EquipmentTypeSelectorPage extends ConsumerWidget {
               false => const SizedBox.shrink(),
             },
             child: Text(
-              'Please enter a name so that the config can be saved!',
+              'Please enter a name so that the equipment can be saved!',
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: theme.colorScheme.error),
             ),
@@ -91,7 +111,9 @@ class EquipmentTypeSelectorPage extends ConsumerWidget {
 /// The actual selector part of the page.
 class _EquipmentTypeSelector extends ConsumerWidget {
   /// The actual selector part of the page.
-  const _EquipmentTypeSelector();
+  const _EquipmentTypeSelector({this.clearName});
+
+  final void Function()? clearName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -131,9 +153,7 @@ class _EquipmentTypeSelector extends ConsumerWidget {
           ref.read(configuredEquipmentProvider.notifier).update(
                 Equipment(hitchType: values.first),
               );
-          ref.invalidate(
-            configuredEquipmentNameTextControllerProvider,
-          );
+          clearName?.call();
         },
         selected: {equipment.hitchType},
         segments: [

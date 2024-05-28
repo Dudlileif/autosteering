@@ -92,6 +92,52 @@ class EquipmentSetup with EquatableMixin {
     }
   }
 
+  /// Attempts to update [child] if it's in the hierarchy.
+  bool updateChild(Hitchable child) {
+    var updated = false;
+    if (frontFixedChild?.uuid == child.uuid) {
+      frontFixedChild = child
+        ..copyWith(
+          hitchFrontFixedChild: frontFixedChild!.hitchFrontFixedChild,
+          hitchRearFixedChild: frontFixedChild!.hitchRearFixedChild,
+          hitchRearTowbarChild: frontFixedChild!.hitchRearTowbarChild,
+        );
+      updated = true;
+    } else if (rearFixedChild?.uuid == child.uuid) {
+      rearFixedChild = child
+        ..copyWith(
+          hitchFrontFixedChild: rearFixedChild!.hitchFrontFixedChild,
+          hitchRearFixedChild: rearFixedChild!.hitchRearFixedChild,
+          hitchRearTowbarChild: rearFixedChild!.hitchRearTowbarChild,
+        );
+      updated = true;
+    } else if (rearTowbarChild?.uuid == child.uuid) {
+      rearTowbarChild = child
+        ..copyWith(
+          hitchFrontFixedChild: rearTowbarChild!.hitchFrontFixedChild,
+          hitchRearFixedChild: rearTowbarChild!.hitchRearFixedChild,
+          hitchRearTowbarChild: rearTowbarChild!.hitchRearTowbarChild,
+        );
+      updated = true;
+    } else {
+      updated = (frontFixedChild?.updateChild(child) ?? false) ||
+          (rearFixedChild?.updateChild(child) ?? false) ||
+          (rearTowbarChild?.updateChild(child) ?? false);
+    }
+    return updated;
+  }
+
+  /// Lists all the children attached and their children recursively.
+  List<Hitchable> get allAttached {
+    final list = <Hitchable>[
+      if (frontFixedChild != null) frontFixedChild!,
+      if (rearFixedChild != null) rearFixedChild!,
+      if (rearTowbarChild != null) rearTowbarChild!,
+    ];
+
+    return list;
+  }
+
   /// Converts the object to a json compatible structure.
   Map<String, dynamic> toJson() => {
         'name': name,

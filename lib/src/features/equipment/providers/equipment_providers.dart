@@ -44,6 +44,16 @@ class EquipmentRecordPositionFraction
   void update(double? value) => Future(() => state = value?.clamp(0, 1));
 }
 
+/// A provider for the currently loaded equipment.
+@Riverpod(keepAlive: true)
+class LoadedEquipment extends _$LoadedEquipment {
+  @override
+  Equipment? build() => null;
+
+  /// Updates [state] to [value].
+  void update(Equipment? value) => Future(() => state = value);
+}
+
 /// A provider that holds all of the equipments.
 @Riverpod(keepAlive: true)
 class AllEquipments extends _$AllEquipments {
@@ -509,8 +519,7 @@ FutureOr<Equipment?> importEquipment(
       'Imported equipment: ${equipment.name ?? equipment.uuid}.',
     );
     equipment.lastUsed = DateTime.now();
-    ref.read(configuredEquipmentProvider.notifier).update(equipment);
-    ref.invalidate(configuredEquipmentNameTextControllerProvider);
+    ref.read(loadedEquipmentProvider.notifier).update(equipment);
     await ref.watch(saveEquipmentProvider(equipment).future);
   }
 

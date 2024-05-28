@@ -414,12 +414,8 @@ class _LoadEquipmentMenu extends ConsumerWidget {
                   equipment.lastUsed = DateTime.now();
 
                   ref
-                      .read(configuredEquipmentProvider.notifier)
-                      .update(equipment);
-
-                  ref
-                    ..read(saveEquipmentProvider(equipment))
-                    ..invalidate(configuredEquipmentNameTextControllerProvider);
+                    ..read(loadedEquipmentProvider.notifier).update(equipment)
+                    ..read(saveEquipmentProvider(equipment));
                 },
                 title: Text(equipment.name ?? equipment.uuid, style: textStyle),
                 subtitle: Text(
@@ -479,14 +475,14 @@ class _ImportExportMenu extends ConsumerWidget {
             return MenuItemButton(
               closeOnActivate: false,
               onPressed: ref.watch(
-                configuredEquipmentProvider.select(
+                loadedEquipmentProvider.select(
                   (value) =>
-                      value.name != null && (value.name ?? '').isNotEmpty,
+                      value?.name != null && (value?.name ?? '').isNotEmpty,
                 ),
               )
                   ? () => ref.watch(
                         exportEquipmentProvider(
-                          ref.watch(configuredEquipmentProvider),
+                          ref.watch(loadedEquipmentProvider)!,
                         ),
                       )
                   : null,
@@ -615,7 +611,7 @@ class _AttachEquipmentMenu extends ConsumerWidget {
     }
 
     final equipmentName = ref.watch(
-      configuredEquipmentProvider.select((value) => value.name),
+      loadedEquipmentProvider.select((value) => value?.name),
     );
 
     return equipmentName?.isNotEmpty ?? false
@@ -625,7 +621,7 @@ class _AttachEquipmentMenu extends ConsumerWidget {
             menuChildren: [
               _RecursiveAttachEquipmentMenu(
                 parent: ref.watch(mainVehicleProvider),
-                child: ref.watch(configuredEquipmentProvider),
+                child: ref.watch(loadedEquipmentProvider)!,
               ),
             ],
           )

@@ -27,9 +27,9 @@ final equipmentConfiguratorIndexProvider =
 
 typedef _$EquipmentConfiguratorIndex = Notifier<int>;
 String _$configuredEquipmentHash() =>
-    r'9973f5a2b7b6682b93244830f11c923b40f1f30d';
+    r'b7c8ba36e74c11777dea123a17b281783100b62b';
 
-/// A provider for the vehicle from the configurator.
+/// A provider for the equipment from the configurator.
 ///
 /// Copied from [ConfiguredEquipment].
 @ProviderFor(ConfiguredEquipment)
@@ -45,27 +45,6 @@ final configuredEquipmentProvider =
 );
 
 typedef _$ConfiguredEquipment = Notifier<Equipment>;
-String _$configuredEquipmentNameTextControllerHash() =>
-    r'3878676ff2f7f2bd83325e00081e17499463cbd4';
-
-/// A provider for the [TextEditingController] for the name in the
-/// equipment configurator.
-///
-/// Copied from [ConfiguredEquipmentNameTextController].
-@ProviderFor(ConfiguredEquipmentNameTextController)
-final configuredEquipmentNameTextControllerProvider = NotifierProvider<
-    ConfiguredEquipmentNameTextController, Raw<TextEditingController>>.internal(
-  ConfiguredEquipmentNameTextController.new,
-  name: r'configuredEquipmentNameTextControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$configuredEquipmentNameTextControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ConfiguredEquipmentNameTextController
-    = Notifier<Raw<TextEditingController>>;
 String _$configuredEquipmentEqualWidthsHash() =>
     r'97bb66816bf1ac7fedec51b4edf0dd504e61f845';
 

@@ -326,10 +326,7 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
 }
 
 class _NtripProfileDialog extends StatefulWidget {
-  const _NtripProfileDialog({
-    this.profile,
-    super.key,
-  });
+  const _NtripProfileDialog({this.profile});
   final NtripProfile? profile;
 
   @override

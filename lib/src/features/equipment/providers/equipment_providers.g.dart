@@ -921,7 +921,7 @@ class _DeleteEquipmentProviderElement
   String? get overrideName => (origin as DeleteEquipmentProvider).overrideName;
 }
 
-String _$importEquipmentHash() => r'e69319653bba183e429a3bed04cef9909b4823d0';
+String _$importEquipmentHash() => r'949fda77e74d872ecebdea5b7152249b595d7746';
 
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.
@@ -959,6 +959,24 @@ final equipmentRecordPositionFractionProvider =
 );
 
 typedef _$EquipmentRecordPositionFraction = Notifier<double?>;
+String _$loadedEquipmentHash() => r'ab5df27cb509589b4b9c2a0836d6b50a8cde3c6f';
+
+/// A provider for the currently loaded equipment.
+///
+/// Copied from [LoadedEquipment].
+@ProviderFor(LoadedEquipment)
+final loadedEquipmentProvider =
+    NotifierProvider<LoadedEquipment, Equipment?>.internal(
+  LoadedEquipment.new,
+  name: r'loadedEquipmentProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$loadedEquipmentHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LoadedEquipment = Notifier<Equipment?>;
 String _$allEquipmentsHash() => r'68433ed44da5d975f1761df5e05474ebdd0c05a7';
 
 /// A provider that holds all of the equipments.

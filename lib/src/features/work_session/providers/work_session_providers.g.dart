@@ -212,7 +212,7 @@ class _LoadWorkSessionFromFileProviderElement
   String get path => (origin as LoadWorkSessionFromFileProvider).path;
 }
 
-String _$saveWorkSessionHash() => r'ccfd037715590471ace99225a92b095997be49e3';
+String _$saveWorkSessionHash() => r'82178e6440b264bc6fe4d110847a5ecef0baecf0';
 
 /// A provider for saving [workSession] to a file in the user file directory.
 ///
@@ -450,7 +450,7 @@ class _SaveWorkSessionProviderElement
   bool get downloadIfWeb => (origin as SaveWorkSessionProvider).downloadIfWeb;
 }
 
-String _$exportWorkSessionHash() => r'0675aa408c72ecbb02628d1e249fa4ab69764a97';
+String _$exportWorkSessionHash() => r'0c2beb6a966f97b31c71a3d6acf411d084106e74';
 
 /// A provider for exporting [workSession] to a file.
 ///
@@ -689,7 +689,7 @@ class _ExportWorkSessionProviderElement
   bool get downloadIfWeb => (origin as ExportWorkSessionProvider).downloadIfWeb;
 }
 
-String _$savedWorkSessionsHash() => r'ee89c9bbfa53b74784de9137a6afd5eefe4b45ec';
+String _$savedWorkSessionsHash() => r'd2ab4bc851392f153d3a832b6c44059198f41e4e';
 
 /// A provider for reading and holding all the saved [WorkSession]s in the
 /// user file directory.
@@ -707,7 +707,7 @@ final savedWorkSessionsProvider = FutureProvider<List<WorkSession>>.internal(
 );
 
 typedef SavedWorkSessionsRef = FutureProviderRef<List<WorkSession>>;
-String _$deleteWorkSessionHash() => r'83e7333e3d8066201801b2c9f83ea6573e56a0cd';
+String _$deleteWorkSessionHash() => r'6a484bceb01997d0795100cf22353a6e11b657f2';
 
 /// A provider for deleting [workSession] from the user file system.
 ///
@@ -927,7 +927,7 @@ class _DeleteWorkSessionProviderElement
       (origin as DeleteWorkSessionProvider).overrideName;
 }
 
-String _$importWorkSessionHash() => r'8766dad3adf959f1ca01d2d555c8826a531fbc6a';
+String _$importWorkSessionHash() => r'0ed6ba27fe2538180d74960e61d7b88d643a3b92';
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
@@ -946,7 +946,7 @@ final importWorkSessionProvider =
 );
 
 typedef ImportWorkSessionRef = AutoDisposeFutureProviderRef<WorkSession?>;
-String _$activeWorkSessionHash() => r'eae3f055cff5857f30355c31cea6f0dac7183955';
+String _$activeWorkSessionHash() => r'96a702a8b386aa5dd813e30959b6681373746630';
 
 /// A provider for holding the active [WorkSession].
 ///

@@ -243,7 +243,7 @@ abstract class Hitchable {
   }
 
   /// Update the [child] at the correct point/position in the hierarchy.
-  void updateChild(Hitchable child) {
+  bool updateChild(Hitchable child) {
     final foundChild = findChildRecursive(child.uuid);
 
     foundChild?.hitchParent?.attachChild(
@@ -254,6 +254,7 @@ abstract class Hitchable {
       ),
       foundChild.parentHitch ?? Hitch.rearFixed,
     );
+    return foundChild != null;
   }
 
   /// Detaches the child with the given [uuid] from the hierarchy.

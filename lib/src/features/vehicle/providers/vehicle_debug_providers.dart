@@ -74,7 +74,7 @@ class DebugVehicleTravelledPath extends _$DebugVehicleTravelledPath {
   void toggle() => Future(() => state = !state);
 }
 
-/// The amount of points [DebugTravelledPathList] should hold.
+/// The amount of points [DebugVehicleTravelledPathList] should hold.
 @Riverpod(keepAlive: true)
 class DebugVehicleTravelledPathSize extends _$DebugVehicleTravelledPathSize {
   @override
