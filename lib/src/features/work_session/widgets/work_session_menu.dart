@@ -856,6 +856,27 @@ class _ABTrackingMenu extends ConsumerWidget {
                         .update(tracking)
                     ..read(currentABTrackingTypeProvider.notifier)
                         .update(tracking.type);
+                  if (tracking is APlusLine) {
+                    ref
+                      ..read(aBPointAProvider.notifier).update(tracking.start)
+                      ..invalidate(aBPointBProvider)
+                      ..read(aPlusLineBearingProvider.notifier)
+                          .update(tracking.initialBearing);
+                  } else if (tracking is ABLine) {
+                    ref
+                      ..read(aBPointAProvider.notifier).update(tracking.start)
+                      ..read(aBPointBProvider.notifier).update(tracking.end);
+                  } else if (tracking is ABCurve) {
+                    ref
+                      ..read(aBPointAProvider.notifier).update(tracking.start)
+                      ..read(aBPointBProvider.notifier).update(tracking.end);
+                    ref
+                        .read(aBCurvePointsProvider.notifier)
+                        .update(tracking.baseLine);
+                  }
+                  Logger.instance.i(
+                    'Loaded AB tracking from work session: ${tracking.name}.',
+                  );
                 },
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -997,9 +1018,14 @@ class _PathTrackingMenu extends ConsumerWidget {
         menuChildren: trackings
             .map(
               (tracking) => ListTile(
-                onTap: () => ref
-                    .read(configuredPathTrackingProvider.notifier)
-                    .update(tracking),
+                onTap: () {
+                  ref
+                      .read(configuredPathTrackingProvider.notifier)
+                      .update(tracking);
+                  Logger.instance.i(
+                    '''Loaded path tracking from work session: ${tracking.name}.''',
+                  );
+                },
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

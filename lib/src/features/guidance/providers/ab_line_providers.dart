@@ -35,13 +35,12 @@ Future<ABLine?> aBLine(ABLineRef ref) async {
         if (data != null) {
           ref.listenSelf((previous, next) {
             Logger.instance.i(
-              '''ABLine created: A:${data.start}, B: ${data.end}, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
+              '''ABLine created: A:${data.start}, B: ${data.end}, width:${data.width} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
             );
           });
         } else if (previous?.value != null && data == null) {
           Logger.instance.i('ABLine deleted.');
         }
-        ref.read(configuredABTrackingProvider.notifier).update(data);
       },
       error: (error, stackTrace) => Logger.instance
           .e('Failed to create ABLine.', error: error, stackTrace: stackTrace),
@@ -57,12 +56,15 @@ Future<ABLine?> aBLine(ABLineRef ref) async {
       a.copyWith(bearing: a.initialBearingToRhumb(b)),
       b.copyWith(bearing: a.finalBearingToRhumb(b)),
     ];
-    final boundary = ref.watch(bufferedFieldProvider).when(
-          data: (data) =>
-              data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
-          error: (error, stackTrace) => null,
-          loading: () => null,
-        );
+    final boundary = ref.read(
+          configuredABTrackingProvider.select((value) => value?.boundary),
+        ) ??
+        ref.watch(bufferedFieldProvider).when(
+              data: (data) =>
+                  data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
+              error: (error, stackTrace) => null,
+              loading: () => null,
+            );
     final width = ref.watch(aBWidthProvider);
     final turningRadius = ref.read(aBTurningRadiusProvider);
     final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);
@@ -125,13 +127,12 @@ Future<APlusLine?> aPlusLine(APlusLineRef ref) async {
         if (data != null) {
           ref.listenSelf((previous, next) {
             Logger.instance.i(
-              '''APlusLine created: A:${data.start}, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
+              '''APlusLine created: A:${data.start}, width: ${data.width} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
             );
           });
         } else if (previous?.value != null && data == null) {
           Logger.instance.i('APlusLine deleted.');
         }
-        ref.read(configuredABTrackingProvider.notifier).update(data);
       },
       error: (error, stackTrace) => Logger.instance
           .e('Failed to create ABLine.', error: error, stackTrace: stackTrace),
@@ -144,12 +145,15 @@ Future<APlusLine?> aPlusLine(APlusLineRef ref) async {
   final start = ref.watch(aBPointAProvider)?.copyWith(bearing: bearing);
 
   if (start != null) {
-    final boundary = ref.watch(bufferedFieldProvider).when(
-          data: (data) =>
-              data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
-          error: (error, stackTrace) => null,
-          loading: () => null,
-        );
+    final boundary = ref.read(
+          configuredABTrackingProvider.select((value) => value?.boundary),
+        ) ??
+        ref.watch(bufferedFieldProvider).when(
+              data: (data) =>
+                  data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
+              error: (error, stackTrace) => null,
+              loading: () => null,
+            );
     final width = ref.watch(aBWidthProvider);
     final turningRadius = ref.read(aBTurningRadiusProvider);
     final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);

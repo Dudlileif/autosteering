@@ -987,7 +987,7 @@ final importEquipmentSetupProvider =
 
 typedef ImportEquipmentSetupRef = AutoDisposeFutureProviderRef<EquipmentSetup?>;
 String _$configuredEquipmentSetupHash() =>
-    r'71c216b7b74326207c15483b43159727e9ee7743';
+    r'4f72d22d954ac4e1f0a81208d10ab3bdfd2a225d';
 
 /// A provider or holding the configured/loaded [EquipmentSetup] in memory.
 ///

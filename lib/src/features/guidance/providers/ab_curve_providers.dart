@@ -71,13 +71,12 @@ Future<ABCurve?> aBCurve(ABCurveRef ref) async {
         if (data != null) {
           ref.listenSelf((previous, next) {
             Logger.instance.i(
-              '''ABCurve created: A:${data.start}, B: ${data.end}, points: ${data.baseLine.length}, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
+              '''ABCurve created: A:${data.start}, B: ${data.end}, points: ${data.baseLine.length}, width: ${data.width} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
             );
           });
         } else if (previous?.value != null && data == null) {
           Logger.instance.i('ABCurve deleted.');
         }
-        ref.read(configuredABTrackingProvider.notifier).update(data);
       },
       error: (error, stackTrace) {},
       loading: () {},
@@ -88,7 +87,10 @@ Future<ABCurve?> aBCurve(ABCurveRef ref) async {
 
   if (points != null) {
     if ((points.length) >= 2) {
-      final boundary = ref.watch(bufferedFieldProvider).when(
+      final boundary = ref.read(
+            configuredABTrackingProvider.select((value) => value?.boundary),
+          ) ??
+          ref.watch(bufferedFieldProvider).when(
             data: (data) =>
                 data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
             error: (error, stackTrace) => null,

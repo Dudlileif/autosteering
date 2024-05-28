@@ -24,7 +24,6 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
-import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -101,11 +100,7 @@ class ABWidth extends _$ABWidth {
   @override
   double build() =>
       ref.read(
-        allEquipmentsProvider.select(
-          (value) => value.values
-              .firstWhereOrNull((element) => element.width > 0)
-              ?.width,
-        ),
+        loadedEquipmentProvider.select((value) => value?.width),
       ) ??
       15;
 
@@ -208,23 +203,20 @@ class ConfiguredABTracking extends _$ConfiguredABTracking {
 @Riverpod(keepAlive: true)
 class ConfiguredMenuABTracking extends _$ConfiguredMenuABTracking {
   @override
-  ABTracking? build() => switch (ref.watch(currentABTrackingTypeProvider)) {
-        ABTrackingType.aPlusLine => ref.watch(aPlusLineProvider),
-        ABTrackingType.abLine => ref.watch(aBLineProvider),
-        ABTrackingType.abCurve => ref.watch(aBCurveProvider),
-      }
-          .when(
-        data: (data) => data,
-        error: (error, stackTracke) => null,
-        loading: () => null,
-      );
+  FutureOr<ABTracking?> build() async =>
+      await switch (ref.watch(currentABTrackingTypeProvider)) {
+        ABTrackingType.aPlusLine => ref.watch(aPlusLineProvider.future),
+        ABTrackingType.abLine => ref.watch(aBLineProvider.future),
+        ABTrackingType.abCurve => ref.watch(aBCurveProvider.future),
+      };
 
   /// Send the [state] to the simulator.
   void sendToSim() =>
       ref.read(simInputProvider.notifier).send((abTracking: state));
 
   /// Updates [state] to [value].
-  void update(ABTracking? value) => Future(() => state = value);
+  void updateTo(ABTracking? value) =>
+      Future(() => state = AsyncValue.data(value));
 }
 
 /// A provider for the [ABTracking] to display.

@@ -183,6 +183,9 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
                   ref
                       .read(configuredPathTrackingProvider.notifier)
                       .update(pathTracking);
+                  Logger.instance.i(
+                    '''Loaded path tracking: ${pathTracking.name}.''',
+                  );
                 },
                 trailing: Device.isNative
                     ? IconButton(
@@ -260,6 +263,30 @@ class _LoadABTrackingMenu extends ConsumerWidget {
                   ref
                       .read(configuredABTrackingProvider.notifier)
                       .update(abTracking);
+                  ref
+                      .read(currentABTrackingTypeProvider.notifier)
+                      .update(abTracking.type);
+                  if (abTracking is APlusLine) {
+                    ref
+                      ..read(aBPointAProvider.notifier).update(abTracking.start)
+                      ..invalidate(aBPointBProvider)
+                      ..read(aPlusLineBearingProvider.notifier)
+                          .update(abTracking.initialBearing);
+                  } else if (abTracking is ABLine) {
+                    ref
+                      ..read(aBPointAProvider.notifier).update(abTracking.start)
+                      ..read(aBPointBProvider.notifier).update(abTracking.end);
+                  } else if (abTracking is ABCurve) {
+                    ref
+                      ..read(aBPointAProvider.notifier).update(abTracking.start)
+                      ..read(aBPointBProvider.notifier).update(abTracking.end);
+                    ref
+                        .read(aBCurvePointsProvider.notifier)
+                        .update(abTracking.baseLine);
+                  }
+                  Logger.instance.i(
+                    'Loaded AB tracking: ${abTracking.name}.',
+                  );
                 },
                 trailing: Device.isNative
                     ? IconButton(

@@ -30,7 +30,19 @@ part 'equipment_setup_providers.g.dart';
 @Riverpod(keepAlive: true)
 class ConfiguredEquipmentSetup extends _$ConfiguredEquipmentSetup {
   @override
-  EquipmentSetup? build() => null;
+  EquipmentSetup? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null && next.allAttached.isNotEmpty) {
+        ref.read(loadedEquipmentProvider.notifier).update(
+              next.allAttached.cast<Equipment>().reduce(
+                    (value, element) =>
+                        value.width >= element.width ? value : element,
+                  ),
+            );
+      }
+    });
+    return null;
+  }
 
   /// Updates the [state] to [value].
   void update(EquipmentSetup? value) => Future(() => state = value);
@@ -89,7 +101,6 @@ FutureOr<List<EquipmentSetup>> savedEquipmentSetups(
     )
         .then((data) {
       final setups = data.cast<EquipmentSetup>();
-      
 
       return setups;
     });
