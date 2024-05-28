@@ -649,21 +649,17 @@ final class ArticulatedTractor extends Vehicle {
   /// Based on the current [steeringAngle], [velocity] and
   /// [currentTurningRadius].
   @override
-  Path get trajectory {
+  LineString trajectory({double? seconds, double? minLength}) {
+    final time = seconds ?? 10;
     final points = <Geographic>[frontAxlePosition];
 
     if (currentTurningRadius != null) {
-      final minTurningCircumference = 2 *
-          pi *
-          (pivotToFrontAxle * cos(degToRadian(steeringAngleMax)) +
-              pivotToRearAxle) /
-          sin(degToRadian(steeringAngleMax));
-
-      // Clamp the number of turning revolutions so that we only display
-      // up to one whole turning circle.
-      final revolutionsOfTurningCircle =
-          (minTurningCircumference / (2 * pi * currentTurningRadius!))
-              .clamp(0, 1);
+      var arcDegrees = (time * angularVelocity!.abs()).clamp(0.0, 360.0);
+      if (minLength != null) {
+        if (arcDegrees.toRadians() * currentTurningRadius! < minLength) {
+          arcDegrees = (minLength / currentTurningRadius!).toDegrees();
+        }
+      }
 
       const numberOfPoints = 36;
       for (var i = 0; i < numberOfPoints + 1; i++) {
@@ -674,24 +670,16 @@ final class ArticulatedTractor extends Vehicle {
             // Turning left
             true => switch (isReversing) {
                 // Reversing
-                true => frontAxleAngle +
-                    90 +
-                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+                true => frontAxleAngle + 90 + i / numberOfPoints * arcDegrees,
                 // Forward
-                false => frontAxleAngle +
-                    90 -
-                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+                false => frontAxleAngle + 90 - i / numberOfPoints * arcDegrees,
               },
             // Turning right
             false => switch (isReversing) {
                 // Reversing
-                true => frontAxleAngle -
-                    90 -
-                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+                true => frontAxleAngle - 90 - i / numberOfPoints * arcDegrees,
                 // Forward
-                false => frontAxleAngle -
-                    90 +
-                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+                false => frontAxleAngle - 90 + i / numberOfPoints * arcDegrees,
               },
           };
 
@@ -704,15 +692,23 @@ final class ArticulatedTractor extends Vehicle {
         }
       }
     } else {
+      var distance = time * velocity;
+      if (minLength != null && distance.abs() < minLength) {
+        distance = minLength *
+            switch (velocity.isNegative) {
+              true => -1,
+              false => 1,
+            };
+      }
       points.add(
         position.rhumb.destinationPoint(
-          distance: isReversing ? -30 : 5 + 30,
+          distance: distance,
           bearing: bearing.wrap360(),
         ),
       );
     }
 
-    return Path()..addAll(points.map((e) => e.latLng).toList());
+    return LineString.from(points);
   }
 
   /// Polygons for visualizing the extent of the vehicle.

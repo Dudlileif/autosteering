@@ -939,25 +939,6 @@ final importEquipmentProvider = AutoDisposeFutureProvider<Equipment?>.internal(
 );
 
 typedef ImportEquipmentRef = AutoDisposeFutureProviderRef<Equipment?>;
-String _$showEquipmentDebugHash() =>
-    r'1e3a6744e92da54c0a72fd64c65b5a2e0644052b';
-
-/// Whether or not to show the equipment debugging features.
-///
-/// Copied from [ShowEquipmentDebug].
-@ProviderFor(ShowEquipmentDebug)
-final showEquipmentDebugProvider =
-    AutoDisposeNotifierProvider<ShowEquipmentDebug, bool>.internal(
-  ShowEquipmentDebug.new,
-  name: r'showEquipmentDebugProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showEquipmentDebugHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ShowEquipmentDebug = AutoDisposeNotifier<bool>;
 String _$equipmentRecordPositionFractionHash() =>
     r'141d41b58a05019f861cf68c7d4aaf0038849c5d';
 
@@ -1015,7 +996,7 @@ final equipmentWorkedAreaProvider =
 );
 
 typedef _$EquipmentWorkedArea = Notifier<Map<String, double>>;
-String _$equipmentPathsHash() => r'45d0468a5b95a0dd1ff8d10b46e16f3973624f08';
+String _$equipmentPathsHash() => r'bd9aca4d0962648558dd5789257637c17dd97de5';
 
 abstract class _$EquipmentPaths
     extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {

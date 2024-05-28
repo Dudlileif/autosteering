@@ -47,6 +47,7 @@ class PathTrackingLayer extends ConsumerWidget {
                     points: tracking.path
                         .map((point) => point.position.latLng)
                         .toList(),
+                    strokeWidth: 2,
                   ),
                   Polyline(
                     points: [

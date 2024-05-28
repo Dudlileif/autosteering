@@ -45,7 +45,7 @@ class BasicVehicleGauges extends StatelessWidget {
             ),
             onTap: () => ref
               ..invalidate(gaugeTravelledDistanceProvider)
-              ..invalidate(debugTravelledPathListProvider),
+              ..invalidate(debugVehicleTravelledPathListProvider),
             title: TextWithStroke(
               '''${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1).padLeft(5)} m''',
               style: GoogleFonts.robotoMono(

@@ -16,15 +16,15 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'vehicle_debug_providers.g.dart';
+part 'equipment_debug_providers.g.dart';
 
-/// Whether to show vehicle debug polygons.
+/// Whether to show equipment turning debug features.
 @riverpod
-class DebugVehiclePolygons extends _$DebugVehiclePolygons {
+class DebugEquipmentTurning extends _$DebugEquipmentTurning {
   @override
   bool build() => false;
 
@@ -35,9 +35,9 @@ class DebugVehiclePolygons extends _$DebugVehiclePolygons {
   void toggle() => Future(() => state = !state);
 }
 
-/// Whether to show vehicle steering debug features.
+/// Whether to show equipment trajectory debug features.
 @riverpod
-class DebugVehicleSteering extends _$DebugVehicleSteering {
+class DebugEquipmentTrajectory extends _$DebugEquipmentTrajectory {
   @override
   bool build() => false;
 
@@ -48,9 +48,9 @@ class DebugVehicleSteering extends _$DebugVehicleSteering {
   void toggle() => Future(() => state = !state);
 }
 
-/// Whether to show vehicle trajectory debug features.
+/// Whether to show equipment travelled path debug.
 @riverpod
-class DebugVehicleTrajectory extends _$DebugVehicleTrajectory {
+class DebugEquipmentTravelledPath extends _$DebugEquipmentTravelledPath {
   @override
   bool build() => false;
 
@@ -61,22 +61,10 @@ class DebugVehicleTrajectory extends _$DebugVehicleTrajectory {
   void toggle() => Future(() => state = !state);
 }
 
-/// Whether to show vehicle travelled path debug.
-@riverpod
-class DebugVehicleTravelledPath extends _$DebugVehicleTravelledPath {
-  @override
-  bool build() => false;
-
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current [state].
-  void toggle() => Future(() => state = !state);
-}
-
-/// The amount of points [DebugTravelledPathList] should hold.
+/// The amount of points [DebugEquipmentTravelledPathList] should hold.
 @Riverpod(keepAlive: true)
-class DebugVehicleTravelledPathSize extends _$DebugVehicleTravelledPathSize {
+class DebugEquipmentTravelledPathSize
+    extends _$DebugEquipmentTravelledPathSize {
   @override
   int build() => 100;
 
@@ -84,35 +72,39 @@ class DebugVehicleTravelledPathSize extends _$DebugVehicleTravelledPathSize {
   void update(int value) => Future(() => state = value);
 }
 
-/// A list of the last [DebugVehicleTravelledPathSize] position points for the
-/// vehicle.
+/// A list of the last [DebugEquipmentTravelledPathSize] position points for the
+/// equipments.
 @riverpod
-class DebugVehicleTravelledPathList extends _$DebugVehicleTravelledPathList {
+class DebugEquipmentTravelledPathList
+    extends _$DebugEquipmentTravelledPathList {
   @override
-  List<LatLng> build() {
-    if (ref.watch(debugVehicleTravelledPathProvider)) {
-      ref.listen(
-        mainVehicleProvider,
-        (previous, next) => add(next.position.latLng),
-        fireImmediately: true,
-      );
+  Map<String, List<LatLng>> build() {
+    if (ref.watch(debugEquipmentTravelledPathProvider)) {
+      ref.listen(allEquipmentsProvider, (prev, next) {
+        for (final equipment in next.values) {
+          add(equipment.uuid, equipment.workingCenter.latLng);
+        }
+      });
     }
 
-    return <LatLng>[];
+    return {};
   }
 
   /// Add the [point] to the travelled path.
-  void add(LatLng point) => Future(() {
-        if (state.length == ref.watch(debugVehicleTravelledPathSizeProvider)) {
-          state.removeLast();
+  void add(String uuid, LatLng point) => Future(() {
+        if (state[uuid] != null) {
+          while (state[uuid]!.length >
+              ref.watch(debugEquipmentTravelledPathSizeProvider)) {
+            state[uuid] = state[uuid]!..removeLast();
+          }
         }
-        state = [point, ...state];
+        state[uuid] = [point, ...state[uuid] ?? []];
       });
 }
 
-/// Whether to show vehicle hitches debug.
+/// Whether to show equipment hitches debug.
 @riverpod
-class DebugVehicleHitches extends _$DebugVehicleHitches {
+class DebugEquipmentHitches extends _$DebugEquipmentHitches {
   @override
   bool build() => false;
 
@@ -123,9 +115,9 @@ class DebugVehicleHitches extends _$DebugVehicleHitches {
   void toggle() => Future(() => state = !state);
 }
 
-/// Whether to show vehicle antenna position debug.
+/// Whether to show equipment section debug features.
 @riverpod
-class DebugVehicleAntennaPosition extends _$DebugVehicleAntennaPosition {
+class DebugEquipmentSections extends _$DebugEquipmentSections {
   @override
   bool build() => false;
 
@@ -136,9 +128,10 @@ class DebugVehicleAntennaPosition extends _$DebugVehicleAntennaPosition {
   void toggle() => Future(() => state = !state);
 }
 
-/// The amount of seconds vehicle trajectories should predict.
+/// The amount of seconds equipment trajectories should predict.
 @Riverpod(keepAlive: true)
-class DebugVehicleTrajectorySeconds extends _$DebugVehicleTrajectorySeconds {
+class DebugEquipmentTrajectorySeconds
+    extends _$DebugEquipmentTrajectorySeconds {
   @override
   double build() => 10;
 
@@ -146,10 +139,10 @@ class DebugVehicleTrajectorySeconds extends _$DebugVehicleTrajectorySeconds {
   void update(double value) => Future(() => state = value);
 }
 
-/// The minimum length vehicle trajectories should predict.
+/// The minimum length equipment trajectories should predict.
 @Riverpod(keepAlive: true)
-class DebugVehicleTrajectoryMinLength
-    extends _$DebugVehicleTrajectoryMinLength {
+class DebugEquipmentTrajectoryMinLength
+    extends _$DebugEquipmentTrajectoryMinLength {
   @override
   double build() => 10;
 

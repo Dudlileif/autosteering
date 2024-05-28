@@ -52,48 +52,144 @@ class EquipmentDebugLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final debugTurning = ref.watch(debugEquipmentTurningProvider);
+    final debugTrajectory = ref.watch(debugEquipmentTrajectoryProvider);
+    final debugTravelledPath = ref.watch(debugEquipmentTravelledPathProvider);
+    final debugHitches = ref.watch(debugEquipmentHitchesProvider);
+    final debugSections = ref.watch(debugEquipmentSectionsProvider);
+    final trajectorySeconds =
+        ref.watch(debugEquipmentTrajectorySecondsProvider);
+    final trajectoryMinLength =
+        ref.watch(debugEquipmentTrajectoryMinLengthProvider);
+
+
     final equipments = ref.watch(
       allEquipmentsProvider.select(
         (value) => value.values.where((element) => element.hitchParent != null),
       ),
     );
     final darkTheme = Theme.of(context).brightness == Brightness.dark;
-    return CircleLayer(
-      circles: [
-        ...equipments
-            .where(
-              (element) =>
-                  element.turningRadiusCenter != null &&
-                  element.currentTurningRadius != null,
-            )
-            .map(
-              (equipment) => CircleMarker(
-                point: equipment.turningRadiusCenter!.latLng,
-                radius: equipment.currentTurningRadius!,
-                color: darkTheme
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.black.withOpacity(0.1),
-                useRadiusInMeter: true,
-              ),
-            ),
-        ...equipments
-            .map(
-              (equipment) => equipment.hitchPoints.mapIndexed(
-                (index, hitch) => CircleMarker(
-                  point: hitch.latLng,
+    return Stack(
+      children: [
+        if (debugTrajectory || debugTravelledPath)
+          PolylineLayer(
+            polylines: [
+              if (debugTravelledPath)
+                ...equipments.map(
+                  (equipment) => Polyline(
+                    points: ref.watch(
+                      debugEquipmentTravelledPathListProvider
+                          .select((value) => value[equipment.uuid] ?? []),
+                    ),
+                  ),
+                ),
+              if (debugTrajectory) ...[
+                ...equipments.map(
+                  (e) => Polyline(
+                    points: e
+                        .trajectory(
+                          seconds: trajectorySeconds,
+                          minLength: trajectoryMinLength,
+                        )
+                        .chain
+                        .toGeographicPositions
+                        .map((e) => e.latLng)
+                        .toList(),
+                    strokeWidth: 2,
+                    color: Colors.orange,
+                  ),
+                ),
+                ...equipments.map((equipment) {
+                  if (equipment.sections.isEmpty) {
+                    return <Polyline>[];
+                  }
+                  final leftMost = equipment
+                      .sectionEdgeTrajectories(
+                        0,
+                        seconds: trajectorySeconds,
+                        minLength: trajectoryMinLength,
+                      )
+                      .left;
+                  final rightMost = equipment
+                      .sectionEdgeTrajectories(
+                        equipment.sections.length - 1,
+                        seconds: trajectorySeconds,
+                        minLength: trajectoryMinLength,
+                      )
+                      .right;
+                  return <Polyline>[
+                    Polyline(
+                      points: leftMost.chain.toGeographicPositions
+                          .map((e) => e.latLng)
+                          .toList(),
+                      strokeWidth: 2,
+                      color: Colors.red,
+                    ),
+                    Polyline(
+                      points: rightMost.chain.toGeographicPositions
+                          .map((e) => e.latLng)
+                          .toList(),
+                      strokeWidth: 2,
+                      color: Colors.red,
+                    ),
+                  ];
+                }).flattened,
+              ],
+            ],
+          ),
+        if (debugTurning || debugHitches || debugSections)
+          CircleLayer(
+            circles: [
+              if (debugTurning)
+                ...equipments
+                    .where(
+                      (element) =>
+                          element.turningRadiusCenter != null &&
+                          element.currentTurningRadius != null,
+                    )
+                    .map(
+                      (equipment) => CircleMarker(
+                        point: equipment.turningRadiusCenter!.latLng,
+                        radius: equipment.currentTurningRadius!,
+                        color: darkTheme
+                            ? Colors.white.withOpacity(0.1)
+                            : Colors.black.withOpacity(0.1),
+                        useRadiusInMeter: true,
+                      ),
+                    ),
+              if (debugHitches)
+                ...equipments
+                    .map(
+                      (equipment) => equipment.hitchPoints.mapIndexed(
+                        (index, hitch) => CircleMarker(
+                          point: hitch.latLng,
+                          radius: 5,
+                          color: [Colors.red, Colors.green, Colors.blue][index],
+                        ),
+                      ),
+                    )
+                    .flattened,
+              ...equipments.map(
+                (equipment) => CircleMarker(
+                  point: equipment.workingCenter.latLng,
                   radius: 5,
-                  color: [Colors.red, Colors.green, Colors.blue][index],
+                  color: Colors.yellow,
                 ),
               ),
-            )
-            .flattened,
-        ...equipments.map(
-          (equipment) => CircleMarker(
-            point: equipment.workingCenter.latLng,
-            radius: 5,
-            color: Colors.yellow,
+              if (debugSections)
+                ...equipments
+                    .map(
+                      (equipment) => equipment.sections.map(
+                        (section) => CircleMarker(
+                          point: equipment.sectionCenter(section.index).latLng,
+                          radius: 4,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    )
+                    .flattened,
+            ],
           ),
-        ),
       ],
     );
   }

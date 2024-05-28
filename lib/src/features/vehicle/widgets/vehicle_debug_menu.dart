@@ -74,26 +74,74 @@ class VehicleDebugMenu extends StatelessWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(debugSteeringProvider),
+            value: ref.watch(debugVehicleSteeringProvider),
             onChanged: (value) => value != null
-                ? ref.read(debugSteeringProvider.notifier).update(value: value)
+                ? ref
+                    .read(debugVehicleSteeringProvider.notifier)
+                    .update(value: value)
                 : null,
             secondary: child,
           ),
         ),
-        Consumer(
-          child: Text(
-            'Trajectory',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(debugTrajectoryProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(debugTrajectoryProvider.notifier)
-                    .update(value: value)
-                : null,
-            secondary: child,
+        ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 320),
+          child: Consumer(
+            child: Text(
+              'Trajectory',
+              style: textStyle,
+            ),
+            builder: (context, ref, child) => CheckboxListTile(
+              value: ref.watch(debugVehicleTrajectoryProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(debugVehicleTrajectoryProvider.notifier)
+                      .update(value: value)
+                  : null,
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  child ?? const SizedBox.shrink(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Time'),
+                      Slider.adaptive(
+                        value: ref.watch(debugVehicleTrajectorySecondsProvider),
+                        onChanged: (value) => ref
+                            .read(
+                              debugVehicleTrajectorySecondsProvider.notifier,
+                            )
+                            .update(value),
+                        min: 1,
+                        max: 20,
+                        divisions: 19,
+                        label:
+                            '''${ref.watch(debugVehicleTrajectorySecondsProvider).round()} s''',
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Min'),
+                      Slider.adaptive(
+                        value:
+                            ref.watch(debugVehicleTrajectoryMinLengthProvider),
+                        onChanged: (value) => ref
+                            .read(
+                              debugVehicleTrajectoryMinLengthProvider.notifier,
+                            )
+                            .update(value),
+                        max: 20,
+                        divisions: 20,
+                        label:
+                            '''${ref.watch(debugVehicleTrajectoryMinLengthProvider).round()} m''',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
         Consumer(
@@ -102,10 +150,10 @@ class VehicleDebugMenu extends StatelessWidget {
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(debugTravelledPathProvider),
+            value: ref.watch(debugVehicleTravelledPathProvider),
             onChanged: (value) => value != null
                 ? ref
-                    .read(debugTravelledPathProvider.notifier)
+                    .read(debugVehicleTravelledPathProvider.notifier)
                     .update(value: value)
                 : null,
             title: Column(
@@ -113,9 +161,11 @@ class VehicleDebugMenu extends StatelessWidget {
               children: [
                 child ?? const SizedBox.shrink(),
                 Slider.adaptive(
-                  value: ref.watch(debugTravelledPathSizeProvider).toDouble(),
+                  value: ref
+                      .watch(debugVehicleTravelledPathSizeProvider)
+                      .toDouble(),
                   onChanged: (value) => ref
-                      .read(debugTravelledPathSizeProvider.notifier)
+                      .read(debugVehicleTravelledPathSizeProvider.notifier)
                       .update(value.toInt()),
                   min: 1,
                   max: 1000,

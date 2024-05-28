@@ -31,18 +31,6 @@ import 'package:universal_io/io.dart';
 
 part 'equipment_providers.g.dart';
 
-/// Whether or not to show the equipment debugging features.
-@riverpod
-class ShowEquipmentDebug extends _$ShowEquipmentDebug {
-  @override
-  bool build() => false;
-
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current [state].
-  void toggle() => Future(() => state = !state);
-}
 
 /// A provider for how the [SectionEdgePositions] should be recorded, as the
 /// fraction parameter that goes in [Equipment.sectionEdgePositions].

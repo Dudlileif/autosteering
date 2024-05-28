@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'd41e6143bcc741c26dd8f8d67e7cb0faad83e671';
+String _$ntripClientHash() => r'53b9ef1f087bbb1ab59195d548a7605d9acd4d3e';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -581,7 +581,7 @@ final ntripEnabledProvider = NotifierProvider<NtripEnabled, bool>.internal(
 );
 
 typedef _$NtripEnabled = Notifier<bool>;
-String _$ntripProfilesHash() => r'b03548c94d5628aa11766bd3b363c581a318dc99';
+String _$ntripProfilesHash() => r'b6918a52a011eb51a14acb02ca649becedcb1bc4';
 
 /// A provider for the stored [NtripProfile]s.
 ///

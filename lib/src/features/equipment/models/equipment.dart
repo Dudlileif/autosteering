@@ -246,54 +246,35 @@ class Equipment extends Hitchable with EquatableMixin {
   @override
   double? get currentTurningRadius {
     if (hitchType == HitchType.fixed && hitchParent != null) {
-      if (hitchParent!.currentTurningRadius != null) {
-        final hitchToParentTurningCircleBase =
-            switch (hitchParent.runtimeType) {
-          Tractor ||
-          Harvester =>
-            (hitchParent! as AxleSteeredVehicle).solidAxleToRearTowbarDistance,
-          ArticulatedTractor =>
-            (hitchParent! as ArticulatedTractor).rearAxleToTowbarDistance,
-          Equipment =>
-            (hitchParent! as Equipment).hitchToChildRearTowbarHitchLength! -
-                (hitchParent! as Equipment).drawbarLength,
-          _ => null,
-        };
-        if (hitchToParentTurningCircleBase != null) {
-          return sqrt(
-            pow(hitchParent!.currentTurningRadius!, 2) +
-                pow(hitchToParentTurningCircleBase, 2),
-          );
-        }
-      }
+      return turningRadiusCenter?.rhumb.distanceTo(workingCenter);
     }
-
     return _turningRadius;
   }
 
   @override
   Geographic? get turningRadiusCenter {
-    if (hitchType == HitchType.fixed &&
-        hitchParent != null &&
-        currentTurningRadius != null) {
-      var leftOrRightModifier = 1;
-      if (hitchParent!.turningRadiusCenter != null &&
-          signedBearingDifference(
-                hitchParent!.position.rhumb.initialBearingTo(
-                  (hitchParent!).turningRadiusCenter!,
-                ),
-                hitchParent!.bearing,
-              ) >
-              0) {
-        leftOrRightModifier *= -1;
-      }
-
-      return workingCenter.rhumb.destinationPoint(
-        distance: currentTurningRadius!,
-        bearing: bearing + 90 * leftOrRightModifier,
-      );
+    if (hitchType == HitchType.fixed && hitchParent != null) {
+      return hitchParent!.turningRadiusCenter;
     }
     return _turningRadiusCenter;
+  }
+
+  /// The angular velocity of the equipment, if it is turning.
+  /// Unit is degrees/s.
+  double? get angularVelocity {
+    if (currentTurningRadius == null) {
+      return null;
+    }
+    var value = (velocity / (2 * pi * currentTurningRadius!)) * 360;
+    final isTurningLeft = signedBearingDifference(
+          bearing,
+          turningRadiusCenter!.rhumb.initialBearingTo(workingCenter),
+        ) <
+        0;
+    if (isTurningLeft) {
+      value *= -1;
+    }
+    return value;
   }
 
   /// The position of the hitch point of the equipment, will use the parent's
@@ -492,7 +473,7 @@ class Equipment extends Hitchable with EquatableMixin {
 
         final bearingChange = signedBearingDifference(
           _prevBearing,
-          workingCenter.rhumb.initialBearingTo(position),
+          drawbarEnd.rhumb.initialBearingTo(position),
         );
 
         var turningRadius = bearingChange.abs() > 0
@@ -500,6 +481,7 @@ class Equipment extends Hitchable with EquatableMixin {
             ? (movedDistance / (2 * sin(bearingChange.toRadians() / 2)))
                 .clamp(-500.0, 500.0)
             : null;
+
         if (turningRadius != null) {
           if (turningRadius.abs() >= 500) {
             turningRadius = null;
@@ -596,7 +578,8 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The working area center of this equipment.
   Geographic get workingCenter => position.rhumb
       .destinationPoint(
-        distance: drawbarLength + workingAreaLength / 2,
+        distance:
+            drawbarLength + (1 - recordingPositionFraction) * workingAreaLength,
         bearing: switch (parentHitch) {
           Hitch.frontFixed => bearing,
           Hitch.rearFixed => bearing + 180,
@@ -759,7 +742,10 @@ class Equipment extends Hitchable with EquatableMixin {
   /// The center point of the given [section].
   Geographic sectionCenter(int section) {
     final points = sectionPoints(section);
-    return points[0].rhumb.midPointTo(points[2]);
+    return points[0].rhumb.midPointTo(points[3]).rhumb.destinationPoint(
+          distance: (1 - recordingPositionFraction) * workingAreaLength,
+          bearing: (bearing - 180).wrap360(),
+        );
   }
 
   /// The polygon for the given [section].
@@ -1077,6 +1063,125 @@ class Equipment extends Hitchable with EquatableMixin {
         growable: false,
       ).whereNotNull(),
     ];
+  }
+
+  /// The projected trajectory of the [workingCenter] for the moving equipment.
+  LineString trajectory({double? seconds, double? minLength}) =>
+      trajectoryFrom(workingCenter, seconds: seconds, minLength: minLength);
+
+  /// Finds the trajectory form an arbitrary [start] point.
+  /// Looks 10 seconds ahead in time
+  LineString trajectoryFrom(
+    Geographic start, {
+    double? seconds,
+    double? minLength,
+  }) {
+    final time = seconds ?? 10;
+    final points = <Geographic>[start];
+
+    if (turningRadiusCenter != null && currentTurningRadius != null) {
+      final isTurningLeft = signedBearingDifference(
+            bearing,
+            turningRadiusCenter!.rhumb.initialBearingTo(workingCenter),
+          ) <
+          0;
+
+      var arcDegrees = (time * angularVelocity!.abs()).clamp(0.0, 360.0);
+
+      if (minLength != null) {
+        final centerTurningRadius =
+            workingCenter.rhumb.distanceTo(turningRadiusCenter!);
+        if (arcDegrees.toRadians() * centerTurningRadius < minLength) {
+          arcDegrees = (minLength / centerTurningRadius).toDegrees();
+        }
+      }
+
+      final bearingFromRadiusCenterToEquipment =
+          turningRadiusCenter!.rhumb.initialBearingTo(start);
+
+      final turningRadius = start.rhumb.distanceTo(turningRadiusCenter!);
+
+      const numberOfPoints = 36;
+      for (var i = 0; i < numberOfPoints + 1; i++) {
+        {
+          // The angle from the turning circle center to the projected
+          // position.
+          final angle = bearingFromRadiusCenterToEquipment -
+              switch (isTurningLeft) {
+                // Turning left
+                true => switch (isReversing) {
+                    // Reversing
+                    true => i / numberOfPoints * arcDegrees,
+                    // Forward
+                    false => -i / numberOfPoints * arcDegrees,
+                  },
+                // Turning right
+                false => switch (isReversing) {
+                    // Reversing
+                    true => -i / numberOfPoints * arcDegrees,
+                    // Forward
+                    false => i / numberOfPoints * arcDegrees,
+                  },
+              };
+
+          points.add(
+            turningRadiusCenter!.rhumb.destinationPoint(
+              distance: turningRadius,
+              bearing: angle.wrap360(),
+            ),
+          );
+        }
+      }
+    } else {
+      var distance = time * velocity;
+      if (minLength != null && distance.abs() < minLength) {
+        distance = minLength *
+            switch (velocity.isNegative) {
+              true => -1,
+              false => 1,
+            };
+      }
+      points.add(
+        start.rhumb.destinationPoint(
+          distance: distance,
+          bearing: bearing,
+        ),
+      );
+    }
+    return LineString.from(points);
+  }
+
+  /// The projected trajectory of the [sectionCenter] for the given [section].
+  LineString sectionCenterTrajectory(
+    int section, {
+    double? seconds,
+    double? minLength,
+  }) =>
+      trajectoryFrom(
+        sectionCenter(section),
+        seconds: seconds,
+        minLength: minLength,
+      );
+
+  /// The projected trajectories for the [section]s edge positions.
+  ({LineString left, LineString right}) sectionEdgeTrajectories(
+    int section, {
+    double? seconds,
+    double? minLength,
+  }) {
+    final edgePositions = sectionEdgePositions(section, force: true)!;
+    return (
+      left: trajectoryFrom(
+        edgePositions.left,
+        seconds: seconds,
+        minLength: minLength,
+      ),
+      right: trajectoryFrom(
+        edgePositions.right,
+        seconds: seconds,
+        minLength: minLength,
+      )
+    );
   }
 
   /// Properties used to check for equality.

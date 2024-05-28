@@ -559,9 +559,13 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The projected trajectory for the moving vehicle.
   ///
+  /// [seconds] can be set to change the prediction time from the default 10
+  /// seconds, and [minLength] can force a minimum length of the trajectory 
+  /// line.
+  /// 
   /// Based on the current [steeringAngle], [velocity] and
   /// [currentTurningRadius].
-  Path get trajectory;
+  LineString trajectory({double? seconds, double?minLength});
 
   /// Whether the vehicle is reversing or not.
   @override

@@ -60,38 +60,142 @@ class EquipmentMenu extends ConsumerWidget {
         const _AttachEquipmentMenu(),
         const _AttachEquipmentSetupMenu(),
         const _DetachMenu(),
-        Consumer(
-          child: Text(
-            'Draw equipment',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            title: child,
-            value: ref.watch(showEquipmentDrawingLayerProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(showEquipmentDrawingLayerProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
-        ),
         if (ref.watch(enableDebugModeProvider))
-          Consumer(
-          child: Text(
-            'Debug equipment',
-            style: textStyle,
+          MenuButtonWithChildren(
+            text: 'Debug',
+            icon: Icons.bug_report,
+            menuChildren: [
+              Consumer(
+                child: Text(
+                  'Draw equipment',
+                  style: textStyle,
+                ),
+                builder: (context, ref, child) => CheckboxListTile(
+                  title: child,
+                  value: ref.watch(showEquipmentDrawingLayerProvider),
+                  onChanged: (value) => value != null
+                      ? ref
+                          .read(showEquipmentDrawingLayerProvider.notifier)
+                          .update(value: value)
+                      : null,
+                ),
+              ),
+              Consumer(
+                child: Text(
+                  'Turning',
+                  style: textStyle,
+                ),
+                builder: (context, ref, child) => CheckboxListTile(
+                  title: child,
+                  value: ref.watch(debugEquipmentTurningProvider),
+                  onChanged: (value) => value != null
+                      ? ref
+                          .read(debugEquipmentTurningProvider.notifier)
+                          .update(value: value)
+                      : null,
+                ),
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints(minWidth: 320),
+                child: Consumer(
+                  child: Text(
+                    'Trajectory',
+                    style: textStyle,
+                  ),
+                  builder: (context, ref, child) => CheckboxListTile(
+                    title: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        child ?? const SizedBox.shrink(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Time'),
+                            Slider.adaptive(
+                              value: ref.watch(
+                                debugEquipmentTrajectorySecondsProvider,
+                              ),
+                              onChanged: ref
+                                  .read(
+                                    debugEquipmentTrajectorySecondsProvider
+                                        .notifier,
+                                  )
+                                  .update,
+                              min: 1,
+                              max: 20,
+                              divisions: 19,
+                              label:
+                                  '''${ref.watch(debugEquipmentTrajectorySecondsProvider).round()} s''',
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Min'),
+                            Slider.adaptive(
+                              value: ref.watch(
+                                debugEquipmentTrajectoryMinLengthProvider,
+                              ),
+                              onChanged: ref
+                                  .read(
+                                    debugEquipmentTrajectoryMinLengthProvider
+                                        .notifier,
+                                  )
+                                  .update,
+                              max: 20,
+                              divisions: 20,
+                              label:
+                                  '''${ref.watch(debugEquipmentTrajectoryMinLengthProvider).round()} m''',
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    value: ref.watch(debugEquipmentTrajectoryProvider),
+                    onChanged: (value) => value != null
+                        ? ref
+                            .read(debugEquipmentTrajectoryProvider.notifier)
+                            .update(value: value)
+                        : null,
+                  ),
+                ),
+              ),
+              Consumer(
+                child: Text(
+                  'Travelled path',
+                  style: textStyle,
+                ),
+                builder: (context, ref, child) => CheckboxListTile(
+                  title: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      child ?? const SizedBox.shrink(),
+                      Slider.adaptive(
+                        value: ref
+                            .watch(debugEquipmentTravelledPathSizeProvider)
+                            .toDouble(),
+                        onChanged: (value) => ref
+                            .read(
+                              debugEquipmentTravelledPathSizeProvider.notifier,
+                            )
+                            .update(value.toInt()),
+                        min: 1,
+                        max: 1000,
+                        divisions: 10,
+                      ),
+                    ],
+                  ),
+                  value: ref.watch(debugEquipmentTravelledPathProvider),
+                  onChanged: (value) => value != null
+                      ? ref
+                          .read(debugEquipmentTravelledPathProvider.notifier)
+                          .update(value: value)
+                      : null,
+                ),
+              ),
+            ],
           ),
-          builder: (context, ref, child) => CheckboxListTile(
-            secondary: const Icon(Icons.bug_report),
-            title: child,
-            value: ref.watch(showEquipmentDebugProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(showEquipmentDebugProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
-        ),
         Consumer(
           child: Text(
             'Clear unused',
@@ -227,8 +331,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
                             : '''No name entered! Please enter a name so that the setup can be saved!''',
                       ),
                       Padding(
-                        padding:
-                            const EdgeInsets.only(top: 16),
+                        padding: const EdgeInsets.only(top: 16),
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Wrap(
@@ -517,14 +620,14 @@ class _AttachEquipmentMenu extends ConsumerWidget {
 
     return equipmentName?.isNotEmpty ?? false
         ? MenuButtonWithChildren(
-      text: 'Attach\n$equipmentName',
-      icon: Icons.commit,
-      menuChildren: [
-        _RecursiveAttachEquipmentMenu(
-          parent: ref.watch(mainVehicleProvider),
-          child: ref.watch(configuredEquipmentProvider),
-        ),
-      ],
+            text: 'Attach\n$equipmentName',
+            icon: Icons.commit,
+            menuChildren: [
+              _RecursiveAttachEquipmentMenu(
+                parent: ref.watch(mainVehicleProvider),
+                child: ref.watch(configuredEquipmentProvider),
+              ),
+            ],
           )
         : const SizedBox.shrink();
   }
@@ -553,7 +656,7 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
     ].join('\n');
 
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
-    
+
     if (parent.hitchPoints.isEmpty) {
       return MenuItemButton(
         child: Text(text, style: textStyle),

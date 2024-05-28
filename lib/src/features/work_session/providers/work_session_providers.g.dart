@@ -946,7 +946,7 @@ final importWorkSessionProvider =
 );
 
 typedef ImportWorkSessionRef = AutoDisposeFutureProviderRef<WorkSession?>;
-String _$activeWorkSessionHash() => r'845b7522264721a3e1513ddd84dbdc23098d1f55';
+String _$activeWorkSessionHash() => r'eae3f055cff5857f30355c31cea6f0dac7183955';
 
 /// A provider for holding the active [WorkSession].
 ///
