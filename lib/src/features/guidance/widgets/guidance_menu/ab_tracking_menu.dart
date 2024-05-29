@@ -470,38 +470,85 @@ class _ABCommonMenu extends ConsumerWidget {
           },
         ),
         Consumer(
-          builder: (context, ref, child) {
-            return ListTile(
-              title: TextFormField(
-                controller: TextEditingController(
-                  text: ref.watch(aBWidthProvider).toString(),
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text('AB spacing/width'), CloseButton()],
                 ),
-                decoration: const InputDecoration(
-                  labelText: 'Spacing/width',
-                  suffixText: 'm',
+                contentPadding: const EdgeInsets.only(
+                  left: 24,
+                  top: 12,
+                  right: 24,
+                  bottom: 16,
                 ),
-                keyboardType: TextInputType.number,
-                onFieldSubmitted: (value) {
-                  final spacing = double.tryParse(value);
-                  if (spacing != null && spacing >= 0) {
-                    ref.read(aBWidthProvider.notifier).update(spacing);
-                  }
-                },
-              ),
-              trailing: IconButton(
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) => TextFormField(
+                      controller: TextEditingController(
+                        text: ref.watch(aBWidthProvider).toString(),
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Spacing/width',
+                        suffixText: 'm',
+                      ),
+                      keyboardType: TextInputType.number,
+                      onFieldSubmitted: (value) {
+                        final spacing = double.tryParse(value);
+                        if (spacing != null && spacing >= 0) {
+                          ref.read(aBWidthProvider.notifier).update(spacing);
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Consumer(
+                      builder: (context, ref, child) => ElevatedButton.icon(
                 onPressed: () {
                   ref.invalidate(aBWidthProvider);
                 },
                 icon: const Icon(Icons.handyman),
-                tooltip: 'Set to equipment width',
+                        label: const Text('Set to equipment width'),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            );
-          },
+            ),
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+            ),
+            child: Text(
+              'Spacing: ${ref.watch(aBWidthProvider).toStringAsFixed(1)} m',
+              style: textStyle,
+            ),
+          ),
         ),
         Consumer(
-          builder: (context, ref, child) => ListTile(
-            title: TextFormField(
-              decoration: const InputDecoration(
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text('AB turning radius'), CloseButton()],
+                ),
+                contentPadding: const EdgeInsets.only(
+                  left: 24,
+                  top: 12,
+                  right: 24,
+                  bottom: 16,
+                ),
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) => TextFormField(
+                      decoration: const InputDecoration(
                 labelText: 'Turning radius',
                 suffixText: 'm',
               ),
@@ -515,13 +562,31 @@ class _ABCommonMenu extends ConsumerWidget {
                   ref.read(aBTurningRadiusProvider.notifier).update(radius);
                 }
               },
-            ),
-            trailing: IconButton(
+                    ),
+                  ),
+                  Consumer(
+                    builder: (context, ref, child) => Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: ElevatedButton.icon(
               onPressed: () {
                 ref.invalidate(aBTurningRadiusProvider);
               },
               icon: const Icon(Icons.agriculture),
-              tooltip: 'Set to 1.25 x vehicle turning radius',
+                        label:
+                            const Text('Set to 1.25 x vehicle turning radius'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.looks),
+            ),
+            child: Text(
+              '''Turning radius: ${ref.watch(aBTurningRadiusProvider).toStringAsFixed(1)} m''',
+              style: textStyle,
             ),
           ),
         ),

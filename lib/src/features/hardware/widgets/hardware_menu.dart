@@ -19,7 +19,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hardware/widgets/hardware_logging_menu.dart';
-import 'package:autosteering/src/features/hardware/widgets/hardware_network_menu.dart';
+import 'package:autosteering/src/features/hardware/widgets/hardware_network_dialog.dart';
 import 'package:autosteering/src/features/hardware/widgets/hardware_serial_menu.dart'
     if (dart.library.js_interop) 'hardware_serial_menu_web.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -40,7 +40,18 @@ class HardwareMenu extends ConsumerWidget {
       text: 'Hardware',
       icon: Icons.router,
       menuChildren: [
-        const HardwareNetworkMenu(),
+        MenuItemButton(
+          leadingIcon: const Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Icon(Icons.settings_ethernet),
+          ),
+          closeOnActivate: false,
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => const HardwareNetworkDialog(),
+          ),
+          child: Text('Network', style: textStyle),
+        ),
         if (Device.isNative) const NtripMenu(),
         if (Device.supportsSerial) const HardwareSerialMenu(),
         if (Device.isNative) const HardwareLoggingMenu(),

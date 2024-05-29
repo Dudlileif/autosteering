@@ -284,178 +284,18 @@ class FieldMenu extends ConsumerWidget {
                       : null,
                 ),
               ),
-              Consumer(
-                builder: (context, ref, child) {
-                  final distanceType =
-                      ref.watch(activeFieldBufferDistanceTypeProvider);
-                  final equipmentWidth = ref.read(
-                    allEquipmentsProvider.select(
-                      (value) => value.values
-                          .firstWhereOrNull((element) => element.width > 0)
-                          ?.width,
-                    ),
-                  );
-                  final controller = TextEditingController(
-                    text: equipmentWidth != null &&
-                            distanceType ==
-                                FieldBufferDistanceType.equipmentWidths
-                        ? (ref.read(fieldExteriorBufferDistanceProvider) /
-                                equipmentWidth)
-                            .toStringAsFixed(2)
-                        : ref
-                            .read(fieldExteriorBufferDistanceProvider)
-                            .toString(),
-                  );
-                  final startProcess =
-                      RestartableTimer(const Duration(seconds: 1), () {
-                    final value = double.tryParse(controller.text);
-                    {
-                      if (value != null) {
-                        if (distanceType ==
-                                FieldBufferDistanceType.equipmentWidths &&
-                            equipmentWidth != null) {
-                          ref
-                              .read(
-                                fieldExteriorBufferDistanceProvider.notifier,
-                              )
-                              .update(value * equipmentWidth);
-                        } else {
-                          ref
-                              .read(
-                                fieldExteriorBufferDistanceProvider.notifier,
-                              )
-                              .update(value);
-                        }
-                      }
-                    }
-                  })
-                        ..cancel();
-                  controller.addListener(startProcess.reset);
-
-                  return ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 400),
-                    child: ListTile(
-                      title: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Border buffer distance',
-                          suffix: ListenableBuilder(
-                            listenable: controller,
-                            builder: (context, child) => Text(
-                              equipmentWidth != null &&
-                                      distanceType ==
-                                          FieldBufferDistanceType
-                                              .equipmentWidths
-                                  ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
-                                  : 'm',
-                            ),
-                          ),
-                        ),
-                        keyboardType: const TextInputType.numberWithOptions(
-                          signed: true,
-                          decimal: true,
-                        ),
-                        controller: controller,
-                      ),
-                      trailing: SegmentedButton<FieldBufferDistanceType>(
-                        style: theme.segmentedButtonTheme.style?.copyWith(
-                          visualDensity: VisualDensity.compact,
-                        ),
-                        showSelectedIcon: false,
-                        selected: {distanceType},
-                        onSelectionChanged: (values) => ref
-                            .read(
-                              activeFieldBufferDistanceTypeProvider.notifier,
-                            )
-                            .update(values.first),
-                        segments: FieldBufferDistanceType.values
-                            .map(
-                              (type) => ButtonSegment(
-                                value: type,
-                                icon: Icon(type.icon),
-                                tooltip: type.tooltip,
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              if (ref.watch(activeFieldProvider)?.polygon.interior.isNotEmpty ??
-                  false)
-                Consumer(
-                  builder: (context, ref, child) {
-                    final distanceType =
-                        ref.watch(activeFieldBufferDistanceTypeProvider);
-                    final equipmentWidth = ref.read(
-                      allEquipmentsProvider.select(
-                        (value) => value.values
-                            .firstWhereOrNull((element) => element.width > 0)
-                            ?.width,
-                      ),
-                    );
-                    final controller = TextEditingController(
-                      text: equipmentWidth != null &&
-                              distanceType ==
-                                  FieldBufferDistanceType.equipmentWidths
-                          ? (ref.read(fieldInteriorBufferDistanceProvider) /
-                                  equipmentWidth)
-                              .toStringAsFixed(2)
-                          : ref
-                              .read(fieldInteriorBufferDistanceProvider)
-                              .toString(),
-                    );
-                    final startProcess =
-                        RestartableTimer(const Duration(seconds: 1), () {
-                      final value = double.tryParse(controller.text);
-                      {
-                        if (value != null) {
-                          if (distanceType ==
-                                  FieldBufferDistanceType.equipmentWidths &&
-                              equipmentWidth != null) {
-                            ref
-                                .read(
-                                  fieldInteriorBufferDistanceProvider.notifier,
-                                )
-                                .update(value * equipmentWidth);
-                          } else {
-                            ref
-                                .read(
-                                  fieldInteriorBufferDistanceProvider.notifier,
-                                )
-                                .update(value);
-                          }
-                        }
-                      }
-                    })
-                          ..cancel();
-                    controller.addListener(startProcess.reset);
-
-                    return ListTile(
-                      title: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Interior border (holes) buffer distance',
-                          suffix: ListenableBuilder(
-                            listenable: controller,
-                            builder: (context, child) => Text(
-                              equipmentWidth != null &&
-                                      distanceType ==
-                                          FieldBufferDistanceType
-                                              .equipmentWidths
-                                  ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
-                                  : 'm',
-                            ),
-                          ),
-                        ),
-                        keyboardType: const TextInputType.numberWithOptions(
-                          signed: true,
-                          decimal: true,
-                        ),
-                        controller: controller,
-                      ),
-                    );
-                  },
+              MenuItemButton(
+                leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.straighten),
                 ),
+                closeOnActivate: false,
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (context) => const _BufferDistancesDialog(),
+                ),
+                child: Text('Buffer distances', style: textStyle),
+              ),
               if (ref.watch(showBufferedFieldProvider))
                 Consumer(
                   builder: (context, ref, child) {
@@ -827,6 +667,196 @@ class _CreateFieldButton extends ConsumerWidget {
         'Create field from recording',
         style: textStyle,
       ),
+    );
+  }
+}
+
+class _BufferDistancesDialog extends ConsumerWidget {
+  const _BufferDistancesDialog();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final distanceType = ref.watch(activeFieldBufferDistanceTypeProvider);
+    final field = ref.watch(activeFieldProvider);
+
+    return SimpleDialog(
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Buffer distances'),
+          CloseButton(),
+        ],
+      ),
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        top: 12,
+        right: 24,
+        bottom: 16,
+      ),
+      children: [
+        SegmentedButton<FieldBufferDistanceType>(
+          style: theme.segmentedButtonTheme.style?.copyWith(
+            visualDensity: VisualDensity.compact,
+          ),
+          selected: {distanceType},
+          onSelectionChanged: (values) => ref
+              .read(
+                activeFieldBufferDistanceTypeProvider.notifier,
+              )
+              .update(values.first),
+          segments: FieldBufferDistanceType.values
+              .map(
+                (type) => ButtonSegment(
+                  value: type,
+                  icon: Icon(type.icon),
+                  label: Text(type.tooltip),
+                  tooltip: type.tooltip,
+                ),
+              )
+              .toList(),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: Consumer(
+            builder: (context, ref, child) {
+              final equipmentWidth = ref.read(
+                allEquipmentsProvider.select(
+                  (value) => value.values
+                      .firstWhereOrNull((element) => element.width > 0)
+                      ?.width,
+                ),
+              );
+              final controller = TextEditingController(
+                text: equipmentWidth != null &&
+                        distanceType == FieldBufferDistanceType.equipmentWidths
+                    ? (ref.read(fieldExteriorBufferDistanceProvider) /
+                            equipmentWidth)
+                        .toStringAsFixed(2)
+                    : ref.read(fieldExteriorBufferDistanceProvider).toString(),
+              );
+              final startProcess =
+                  RestartableTimer(const Duration(seconds: 1), () {
+                final value = double.tryParse(controller.text);
+                {
+                  if (value != null) {
+                    if (distanceType ==
+                            FieldBufferDistanceType.equipmentWidths &&
+                        equipmentWidth != null) {
+                      ref
+                          .read(
+                            fieldExteriorBufferDistanceProvider.notifier,
+                          )
+                          .update(value * equipmentWidth);
+                    } else {
+                      ref
+                          .read(
+                            fieldExteriorBufferDistanceProvider.notifier,
+                          )
+                          .update(value);
+                    }
+                  }
+                }
+              })
+                    ..cancel();
+              controller.addListener(startProcess.reset);
+
+              return TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Border buffer distance',
+                  suffix: ListenableBuilder(
+                    listenable: controller,
+                    builder: (context, child) => Text(
+                      equipmentWidth != null &&
+                              distanceType ==
+                                  FieldBufferDistanceType.equipmentWidths
+                          ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
+                          : 'm',
+                    ),
+                  ),
+                ),
+                keyboardType: const TextInputType.numberWithOptions(
+                  signed: true,
+                  decimal: true,
+                ),
+                controller: controller,
+              );
+            },
+          ),
+        ),
+        if (field?.polygon.interior.isNotEmpty ?? false)
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final equipmentWidth = ref.read(
+                  allEquipmentsProvider.select(
+                    (value) => value.values
+                        .firstWhereOrNull((element) => element.width > 0)
+                        ?.width,
+                  ),
+                );
+                final controller = TextEditingController(
+                  text: equipmentWidth != null &&
+                          distanceType ==
+                              FieldBufferDistanceType.equipmentWidths
+                      ? (ref.read(fieldInteriorBufferDistanceProvider) /
+                              equipmentWidth)
+                          .toStringAsFixed(2)
+                      : ref
+                          .read(fieldInteriorBufferDistanceProvider)
+                          .toString(),
+                );
+                final startProcess =
+                    RestartableTimer(const Duration(seconds: 1), () {
+                  final value = double.tryParse(controller.text);
+                  {
+                    if (value != null) {
+                      if (distanceType ==
+                              FieldBufferDistanceType.equipmentWidths &&
+                          equipmentWidth != null) {
+                        ref
+                            .read(
+                              fieldInteriorBufferDistanceProvider.notifier,
+                            )
+                            .update(value * equipmentWidth);
+                      } else {
+                        ref
+                            .read(
+                              fieldInteriorBufferDistanceProvider.notifier,
+                            )
+                            .update(value);
+                      }
+                    }
+                  }
+                })
+                      ..cancel();
+                controller.addListener(startProcess.reset);
+
+                return TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Interior border (holes) buffer distance',
+                    suffix: ListenableBuilder(
+                      listenable: controller,
+                      builder: (context, child) => Text(
+                        equipmentWidth != null &&
+                                distanceType ==
+                                    FieldBufferDistanceType.equipmentWidths
+                            ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
+                            : 'm',
+                      ),
+                    ),
+                  ),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    signed: true,
+                    decimal: true,
+                  ),
+                  controller: controller,
+                );
+              },
+            ),
+          ),
+      ],
     );
   }
 }
