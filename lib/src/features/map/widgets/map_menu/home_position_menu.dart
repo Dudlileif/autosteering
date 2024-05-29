@@ -134,7 +134,10 @@ class _EnterHomePositionDialogState
                   suffixText: '°',
                 ),
                 keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                    const TextInputType.numberWithOptions(
+                  decimal: true,
+                  signed: true,
+                ),
                 initialValue: (lat ?? 0).toStringAsFixed(9),
                 onChanged: (value) {
                   final updated =
@@ -160,7 +163,10 @@ class _EnterHomePositionDialogState
                   suffixText: '°',
                 ),
                 keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                    const TextInputType.numberWithOptions(
+                    decimal: true,
+                    signed: true,
+                  ),
                 initialValue: (lon ?? 0).toStringAsFixed(9),
                 onChanged: (value) {
                   final updated =

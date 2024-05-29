@@ -350,7 +350,10 @@ class FieldMenu extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          signed: true,
+                          decimal: true,
+                        ),
                         controller: controller,
                       ),
                       trailing: SegmentedButton<FieldBufferDistanceType>(
@@ -444,7 +447,10 @@ class FieldMenu extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          signed: true,
+                          decimal: true,
+                        ),
                         controller: controller,
                       ),
                     );

@@ -41,10 +41,13 @@ class VehicleAntennaPage extends ConsumerWidget {
             quarterTurns: 1,
             child: Icon(Icons.expand),
           ),
-          labelText: 'Antenna lateral offset',
+          labelText: 'Antenna lateral offset (-left / +right)',
           suffixText: 'm',
         ),
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        keyboardType: const TextInputType.numberWithOptions(
+          decimal: true,
+          signed: true,
+        ),
         initialValue: ref.read(
           configuredVehicleProvider
               .select((value) => value.antennaLateralOffset.toString()),
@@ -88,7 +91,10 @@ class VehicleAntennaPage extends ConsumerWidget {
                 suffixText: 'm',
               ),
               keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+                  const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
               initialValue: ref.read(
                 configuredVehicleProvider.select(
                   (value) {
@@ -124,7 +130,10 @@ class VehicleAntennaPage extends ConsumerWidget {
                 helperText: 'Antenna MUST be on the front body of the vehicle!',
               ),
               keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+                  const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
               initialValue: ref.read(
                 configuredVehicleProvider.select(
                   (value) => (value as ArticulatedTractor)
