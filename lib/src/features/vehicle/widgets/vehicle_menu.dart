@@ -173,7 +173,10 @@ class VehicleMenu extends ConsumerWidget {
                 : null,
           ),
         ),
-        if (ref.watch(enableDebugModeProvider)) const VehicleDebugMenu(),
+        if (ref.watch(enableDebugModeProvider))
+          const VehicleDebugMenu()
+        else
+          const VehicleTrajectoryButton(),
         Consumer(
           builder: (context, ref, child) => CheckboxListTile(
             title: Text(

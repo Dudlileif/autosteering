@@ -83,67 +83,7 @@ class VehicleDebugMenu extends StatelessWidget {
             secondary: child,
           ),
         ),
-        ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 320),
-          child: Consumer(
-            child: Text(
-              'Trajectory',
-              style: textStyle,
-            ),
-            builder: (context, ref, child) => CheckboxListTile(
-              value: ref.watch(debugVehicleTrajectoryProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(debugVehicleTrajectoryProvider.notifier)
-                      .update(value: value)
-                  : null,
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  child ?? const SizedBox.shrink(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Time'),
-                      Slider.adaptive(
-                        value: ref.watch(debugVehicleTrajectorySecondsProvider),
-                        onChanged: (value) => ref
-                            .read(
-                              debugVehicleTrajectorySecondsProvider.notifier,
-                            )
-                            .update(value),
-                        min: 1,
-                        max: 20,
-                        divisions: 19,
-                        label:
-                            '''${ref.watch(debugVehicleTrajectorySecondsProvider).round()} s''',
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Min'),
-                      Slider.adaptive(
-                        value:
-                            ref.watch(debugVehicleTrajectoryMinLengthProvider),
-                        onChanged: (value) => ref
-                            .read(
-                              debugVehicleTrajectoryMinLengthProvider.notifier,
-                            )
-                            .update(value),
-                        max: 20,
-                        divisions: 20,
-                        label:
-                            '''${ref.watch(debugVehicleTrajectoryMinLengthProvider).round()} m''',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+        const VehicleTrajectoryButton(),
         Consumer(
           child: Text(
             'Travelled path',
@@ -218,6 +158,86 @@ class VehicleDebugMenu extends StatelessWidget {
                     .update(value: value)
                 : null,
             secondary: child,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A button with a single menu item for configuring the vehicle trajectory
+/// capability.
+class VehicleTrajectoryButton extends StatelessWidget {
+  /// A button with a single menu item for configuring the vehicle trajectory
+  /// capability.
+  const VehicleTrajectoryButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    return MenuButtonWithChildren(
+      text: 'Trajectory',
+      icon: Icons.straight,
+      menuChildren: [
+        ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 320),
+          child: Consumer(
+            child: Text(
+              'Trajectory',
+              style: textStyle,
+            ),
+            builder: (context, ref, child) => CheckboxListTile(
+              value: ref.watch(debugVehicleTrajectoryProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(debugVehicleTrajectoryProvider.notifier)
+                      .update(value: value)
+                  : null,
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  child ?? const SizedBox.shrink(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Time'),
+                      Slider.adaptive(
+                        value: ref.watch(debugVehicleTrajectorySecondsProvider),
+                        onChanged: (value) => ref
+                            .read(
+                              debugVehicleTrajectorySecondsProvider.notifier,
+                            )
+                            .update(value),
+                        min: 1,
+                        max: 20,
+                        divisions: 19,
+                        label:
+                            '''${ref.watch(debugVehicleTrajectorySecondsProvider).round()} s''',
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Min'),
+                      Slider.adaptive(
+                        value:
+                            ref.watch(debugVehicleTrajectoryMinLengthProvider),
+                        onChanged: (value) => ref
+                            .read(
+                              debugVehicleTrajectoryMinLengthProvider.notifier,
+                            )
+                            .update(value),
+                        max: 20,
+                        divisions: 20,
+                        label:
+                            '''${ref.watch(debugVehicleTrajectoryMinLengthProvider).round()} m''',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ],
