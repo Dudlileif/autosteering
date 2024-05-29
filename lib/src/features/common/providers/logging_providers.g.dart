@@ -55,7 +55,7 @@ final exportLogsProvider = AutoDisposeFutureProvider<void>.internal(
 );
 
 typedef ExportLogsRef = AutoDisposeFutureProviderRef<void>;
-String _$numLogFilesHash() => r'c895a18c677dcbad03cd88f3cf65040b6c060843';
+String _$numLogFilesHash() => r'21064b74a0124b4c85f1346f9cb67ac191d18a54';
 
 /// A provider for the number of log files to keep in the logs directory.
 ///

@@ -99,7 +99,7 @@ Future<void> audioRTKLostAlarm(AudioRTKLostAlarmRef ref) async {
 class AudioVolumeAutosteeringEnabled extends _$AudioVolumeAutosteeringEnabled {
   @override
   double build() {
-    ref.listenSelf((previous, next) {
+    ref..watch(reloadAllSettingsProvider)..listenSelf((previous, next) {
       if (previous != null) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.audioVolumeAutosteeringEnabled,
@@ -124,7 +124,9 @@ class AudioVolumeAutosteeringDisabled
     extends _$AudioVolumeAutosteeringDisabled {
   @override
   double build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.audioVolumeAutosteeringDisabled,
@@ -148,7 +150,9 @@ class AudioVolumeAutosteeringDisabled
 class AudioVolumeAutosteeringStandby extends _$AudioVolumeAutosteeringStandby {
   @override
   double build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.audioVolumeAutosteeringStandby,
@@ -172,7 +176,9 @@ class AudioVolumeAutosteeringStandby extends _$AudioVolumeAutosteeringStandby {
 class AudioVolumeRTKLostAlarm extends _$AudioVolumeRTKLostAlarm {
   @override
   double build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)

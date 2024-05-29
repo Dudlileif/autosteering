@@ -43,7 +43,9 @@ class HardwareSerialBaudRate extends _$HardwareSerialBaudRate {
 
   @override
   int build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (next != previous) {
         ref
             .read(settingsProvider.notifier)

@@ -35,8 +35,9 @@ part 'ntrip_providers.g.dart';
 class NtripEnabled extends _$NtripEnabled {
   @override
   bool build() {
-    const initValue = true;
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (next != previous) {
         ref
             .read(settingsProvider.notifier)
@@ -50,7 +51,7 @@ class NtripEnabled extends _$NtripEnabled {
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.ntripEnabled) ??
-        initValue;
+        false;
   }
 
   /// Updates [state] to [value].
@@ -65,7 +66,9 @@ class NtripEnabled extends _$NtripEnabled {
 class NtripProfiles extends _$NtripProfiles {
   @override
   List<NtripProfile> build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (!const DeepCollectionEquality.unordered().equals(previous, next)) {
         ref
             .read(settingsProvider.notifier)
@@ -114,7 +117,9 @@ class NtripProfiles extends _$NtripProfiles {
 class ActiveNtripProfile extends _$ActiveNtripProfile {
   @override
   NtripProfile? build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != next) {
         ref
             .read(settingsProvider.notifier)

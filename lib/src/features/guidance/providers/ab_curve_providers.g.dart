@@ -6,7 +6,7 @@ part of 'ab_curve_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$aBCurveHash() => r'a516bbb22d4e362f5fc49e86e4a2a91e96223e9c';
+String _$aBCurveHash() => r'da39192d9637f0332c5a2b79ea60d6a19372120c';
 
 /// A provider for the AB-curve.
 ///

@@ -34,7 +34,9 @@ part 'remote_control_providers.g.dart';
 class RemoteControlButtonActions extends _$RemoteControlButtonActions {
   @override
   Map<int, RemoteControlButtonAction?> build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         if (const MapEquality<int, RemoteControlButtonAction?>()
             .equals(previous, next)) {

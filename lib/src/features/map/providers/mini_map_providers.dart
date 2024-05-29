@@ -33,6 +33,7 @@ class ShowMiniMap extends _$ShowMiniMap {
   @override
   bool build() {
     ref
+      ..watch(reloadAllSettingsProvider)
       ..listen(activeFieldProvider, (previous, next) {
         if (ref.read(miniMapLockToFieldProvider)) {
           if (next != null) {
@@ -106,6 +107,7 @@ class MiniMapLockToField extends _$MiniMapLockToField {
   @override
   bool build() {
     ref
+      ..watch(reloadAllSettingsProvider)
       ..listen(
         miniMapSizeProvider,
         (previous, next) =>
@@ -172,7 +174,9 @@ class MiniMapLockToField extends _$MiniMapLockToField {
 class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (ref.read(miniMapReadyProvider)) {
         if (next) {
           ref.read(miniMapControllerProvider).rotate(0);
@@ -206,7 +210,9 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
 class MiniMapSize extends _$MiniMapSize {
   @override
   double build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)

@@ -7,7 +7,7 @@ part of 'sentinel_providers.dart';
 // **************************************************************************
 
 String _$copernicusInstanceIdHash() =>
-    r'ddc4f4f0364bdce963a3e76dc7e90832959977d0';
+    r'97ddf17211c226eb72fdb080718fb05204cb26fa';
 
 /// A provider for the Sentinel Dataspace instance id.
 ///
@@ -26,7 +26,7 @@ final copernicusInstanceIdProvider =
 
 typedef _$CopernicusInstanceId = AutoDisposeNotifier<String?>;
 String _$availableSentinelLayersHash() =>
-    r'39db3ad3fcd343727a6a20805aa1b962654dbab9';
+    r'db4a46125443ed994b7eb8420afc2ff0d97b3819';
 
 /// A provider for the available Sentinel layers.
 ///
@@ -45,7 +45,7 @@ final availableSentinelLayersProvider = AutoDisposeNotifierProvider<
 
 typedef _$AvailableSentinelLayers = AutoDisposeNotifier<List<SentinelLayer>>;
 String _$sentinelMaxCloudCoveragePercentHash() =>
-    r'9f440d06accdd0a566ac2657080060a3e5587a8d';
+    r'b966dbe264051389c049e0834e0d4cdcb398ab69';
 
 /// A provider for the max level of cloud coverage that the Sentinel layers
 /// should query for.
@@ -65,7 +65,7 @@ final sentinelMaxCloudCoveragePercentProvider = AutoDisposeNotifierProvider<
 
 typedef _$SentinelMaxCloudCoveragePercent = AutoDisposeNotifier<double>;
 String _$enabledSentinelLayersHash() =>
-    r'6070ce50d84395687808f893f8eb8bd6ff2a6f94';
+    r'bee60205b8ed030f2a8146c71d0aeeff7001fd63';
 
 /// A provider for the set of selected Sentinel layers.
 ///
@@ -84,7 +84,7 @@ final enabledSentinelLayersProvider = AutoDisposeNotifierProvider<
 
 typedef _$EnabledSentinelLayers = AutoDisposeNotifier<Set<SentinelLayer>>;
 String _$sentinelLayerOpacitiesHash() =>
-    r'f64bd81c470e4871fc5c824d33de9eddaf7565be';
+    r'729dfb09620f667171fa36234731ce13f1314033';
 
 /// A map for the Sentinel layers and their opacities, which can be specified.
 ///

@@ -41,6 +41,7 @@ class SettingsMenu extends StatelessWidget {
         ThemeMenu(),
         AudioVolumeMenu(),
         _ExportLogsButton(),
+        _ImportExportSettingsButton(),
         _DebugModeButton(),
         _LicenseButton(),
       ],
@@ -52,18 +53,116 @@ class _ExportLogsButton extends ConsumerWidget {
   const _ExportLogsButton();
 
   @override
+  Widget build(BuildContext context, WidgetRef ref) => MenuItemButton(
+        onPressed: () => ref.read(exportLogsProvider),
+        closeOnActivate: false,
+        leadingIcon: const Padding(
+          padding: EdgeInsets.only(left: 8),
+          child: Icon(Symbols.export_notes),
+        ),
+        child: Text(
+          'Export logs',
+          style: Theme.of(context).menuButtonWithChildrenText,
+        ),
+      );
+}
+
+class _ImportExportSettingsButton extends ConsumerWidget {
+  const _ImportExportSettingsButton();
+
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MenuItemButton(
-      onPressed: () => ref.read(exportLogsProvider),
-      closeOnActivate: false,
-      leadingIcon: const Padding(
-        padding: EdgeInsets.only(left: 8),
-        child: Icon(Symbols.export_notes),
-      ),
-      child: Text(
-        'Export logs',
-        style: Theme.of(context).menuButtonWithChildrenText,
-      ),
+    final theme = Theme.of(context);
+    return MenuButtonWithChildren(
+      text: 'Import/Export settings',
+      icon: Icons.import_export,
+      menuChildren: [
+        MenuItemButton(
+          leadingIcon: const Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Icon(Icons.download),
+          ),
+          closeOnActivate: false,
+          onPressed: () => ref.read(importSettingsProvider),
+          child: Text('Import', style: theme.menuButtonWithChildrenText),
+        ),
+        MenuItemButton(
+          leadingIcon: const Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Icon(Icons.upload),
+          ),
+          closeOnActivate: false,
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => Consumer(
+              builder: (context, ref, child) {
+                var removeSensitiveData = false;
+                return StatefulBuilder(
+                  builder: (context, setState) {
+                    return SimpleDialog(
+                      title: const Text('Export settings'),
+                      contentPadding: const EdgeInsets.only(
+                        left: 24,
+                        top: 12,
+                        right: 24,
+                        bottom: 16,
+                      ),
+                      children: [
+                        CheckboxListTile(
+                          value: removeSensitiveData,
+                          onChanged: (value) => setState(
+                            () => removeSensitiveData =
+                                value ?? removeSensitiveData,
+                          ),
+                          title: const Text('Remove sensitive data'),
+                          subtitle: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 200),
+                            child: const Text(
+                              '''Removes NTRIP profiles (username, password), Copernicus ID and home position''',
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: Navigator.of(context).pop,
+                                  icon: const Icon(Icons.clear),
+                                  label: const Text('Cancel'),
+                                ),
+                                FilledButton.icon(
+                                  onPressed: () async => ref
+                                      .read(
+                                        exportSettingsProvider(
+                                          removeSensitiveData:
+                                              removeSensitiveData,
+                                        ).future,
+                                      )
+                                      .then(
+                                        (value) => Navigator.of(context).pop(),
+                                      ),
+                                  icon: const Icon(Icons.check),
+                                  label: const Text('Confirm'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          child: Text('Export', style: theme.menuButtonWithChildrenText),
+        ),
+      ],
     );
   }
 }
@@ -72,41 +171,38 @@ class _DebugModeButton extends ConsumerWidget {
   const _DebugModeButton();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return CheckboxListTile(
-      value: ref.watch(enableDebugModeProvider),
-      onChanged: (value) => value != null
-          ? ref.read(enableDebugModeProvider.notifier).update(value: value)
-          : null,
-      title: Text(
-        'Debug mode',
-        style: Theme.of(context).menuButtonWithChildrenText,
-      ),
-      secondary: const Icon(Icons.bug_report),
-    );
-  }
+  Widget build(BuildContext context, WidgetRef ref) => CheckboxListTile(
+        value: ref.watch(enableDebugModeProvider),
+        onChanged: (value) => value != null
+            ? ref.read(enableDebugModeProvider.notifier).update(value: value)
+            : null,
+        title: Text(
+          'Debug mode',
+          style: Theme.of(context).menuButtonWithChildrenText,
+        ),
+        secondary: const Icon(Icons.bug_report),
+      );
 }
 
 class _LicenseButton extends StatelessWidget {
   const _LicenseButton();
 
   @override
-  Widget build(BuildContext context) {
-    return MenuItemButton(
-      closeOnActivate: false,
-      leadingIcon: const Padding(
-        padding: EdgeInsets.only(left: 8),
-        child: Icon(Symbols.info),
-      ),
-      child: Text(
-        'About',
-        style: Theme.of(context).menuButtonWithChildrenText,
-      ),
-      onPressed: () => showAboutDialog(
-        context: context,
-        applicationName: 'Autosteering',
-        applicationVersion: '0.1.0',
-        applicationLegalese: '''
+  Widget build(BuildContext context) => MenuItemButton(
+        closeOnActivate: false,
+        leadingIcon: const Padding(
+          padding: EdgeInsets.only(left: 8),
+          child: Icon(Symbols.info),
+        ),
+        child: Text(
+          'About',
+          style: Theme.of(context).menuButtonWithChildrenText,
+        ),
+        onPressed: () => showAboutDialog(
+          context: context,
+          applicationName: 'Autosteering',
+          applicationVersion: '0.1.0',
+          applicationLegalese: '''
 Copyright (C) 2024 Gaute Hagen
 
 Autosteering is free software: you can redistribute it and/or modify
@@ -122,7 +218,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Autosteering. If not, see https://www.gnu.org/licenses/.
 ''',
-      ),
-    );
-  }
+        ),
+      );
 }

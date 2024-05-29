@@ -85,7 +85,7 @@ final audioRTKLostAlarmProvider = AutoDisposeFutureProvider<void>.internal(
 
 typedef AudioRTKLostAlarmRef = AutoDisposeFutureProviderRef<void>;
 String _$audioVolumeAutosteeringEnabledHash() =>
-    r'899e6f8ec7f3b39e7c0cbf44b0db7423e44df7f6';
+    r'34613bd6ea9cec3bd0056de89cdd873a107cd5d9';
 
 /// A provider for the audio volume level for [audioAutosteeringEnabled].
 ///
@@ -104,7 +104,7 @@ final audioVolumeAutosteeringEnabledProvider = AutoDisposeNotifierProvider<
 
 typedef _$AudioVolumeAutosteeringEnabled = AutoDisposeNotifier<double>;
 String _$audioVolumeAutosteeringDisabledHash() =>
-    r'994919c93949aff4220ec244feaea76abb70e299';
+    r'6deab12a1bc64d1aae7d650e24ba467d4d54b439';
 
 /// A provider for the audio volume level for [audioAutosteeringDisabled].
 ///
@@ -123,7 +123,7 @@ final audioVolumeAutosteeringDisabledProvider = AutoDisposeNotifierProvider<
 
 typedef _$AudioVolumeAutosteeringDisabled = AutoDisposeNotifier<double>;
 String _$audioVolumeAutosteeringStandbyHash() =>
-    r'5e03892f35e115db18094f3a5fb5a7c66bded371';
+    r'482ae8beb00514aacf700effa88d1a7d68a3a4a7';
 
 /// A provider for the audio volume level for [audioAutosteeringStandby].
 ///
@@ -142,7 +142,7 @@ final audioVolumeAutosteeringStandbyProvider = AutoDisposeNotifierProvider<
 
 typedef _$AudioVolumeAutosteeringStandby = AutoDisposeNotifier<double>;
 String _$audioVolumeRTKLostAlarmHash() =>
-    r'87abaf523ea94b8ee70518fc7c94351a194aada3';
+    r'10e33e251ec8fc49d50161db355d7d24f2dd4d53';
 
 /// A provider for the audio volume level for [audioRTKLostAlarm].
 ///

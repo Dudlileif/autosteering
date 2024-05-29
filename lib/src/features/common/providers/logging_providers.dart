@@ -33,7 +33,9 @@ part 'logging_providers.g.dart';
 class NumLogFiles extends _$NumLogFiles {
   @override
   int build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (next != previous) {
         ref
             .read(settingsProvider.notifier)

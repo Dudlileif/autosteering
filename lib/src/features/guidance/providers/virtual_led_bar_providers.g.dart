@@ -27,7 +27,7 @@ final virtualLedBarPerpendicularDistanceProvider =
 
 typedef VirtualLedBarPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
 String _$virtualLedBarEnabledHash() =>
-    r'348428ccc475bfc1835c795a0ee98be6cfaca0d9';
+    r'7a632335c05cb31df6ccffc883715df48395aa0c';
 
 /// A provider for whether the virtual led bar should be enabled/shown.
 ///
@@ -46,7 +46,7 @@ final virtualLedBarEnabledProvider =
 
 typedef _$VirtualLedBarEnabled = AutoDisposeNotifier<bool>;
 String _$virtualLedBarConfigurationHash() =>
-    r'782d374aec8ed618f396ccb9dd33741dd252ef72';
+    r'b78d4a79f2d7d3ee4fe0b7e86d72b5a408008a7e';
 
 /// A provider for storing the configuration for the virtual led bar.
 ///

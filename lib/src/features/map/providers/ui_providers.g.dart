@@ -7,7 +7,7 @@ part of 'ui_providers.dart';
 // **************************************************************************
 
 String _$autosteeringConfiguratorUiOffsetHash() =>
-    r'b87755416b77ae111351f7816d191d2da8eed619';
+    r'a69d7f2df051a604a4a795e7193d2e3d37bb96aa';
 
 /// A provider for the UI [Offset] for the autosteering configurator.
 ///
@@ -26,7 +26,7 @@ final autosteeringConfiguratorUiOffsetProvider = AutoDisposeNotifierProvider<
 
 typedef _$AutosteeringConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 String _$imuConfiguratorUiOffsetHash() =>
-    r'b261649bb94f91631ea1e90337fbeac0084df6b7';
+    r'f8d8aabf14a028fb7d2ec3bda828d6d7df4bc116';
 
 /// A provider for the UI [Offset] for the IMU configurator.
 ///
@@ -45,7 +45,7 @@ final imuConfiguratorUiOffsetProvider =
 
 typedef _$ImuConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 String _$pathRecordingMenuUiOffsetHash() =>
-    r'ad60265c570f46b72b79a2f6d18c5a7bdb055bc5';
+    r'bbaf637aa0a398246f00e34b75b7d70f1ced920f';
 
 /// A provider for the UI [Offset] for the path recording configurator.
 ///
@@ -64,7 +64,7 @@ final pathRecordingMenuUiOffsetProvider =
 
 typedef _$PathRecordingMenuUiOffset = AutoDisposeNotifier<Offset>;
 String _$steeringHardwareConfiguratorUiOffsetHash() =>
-    r'904e729ac666fc703313edd6b14432c756d64fc5';
+    r'9c45e360205fad3785b54f56feb9e8af2b9d6ce5';
 
 /// A provider for the UI [Offset] for the steering hardware configurator.
 ///
@@ -84,7 +84,7 @@ final steeringHardwareConfiguratorUiOffsetProvider =
 
 typedef _$SteeringHardwareConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 String _$nudgingControlsUiOffsetHash() =>
-    r'155c3a7613c6dde0851dcac4114520286518d0e6';
+    r'b0a62ba6a2ac14796c4a4df85c776d24d9f983b8';
 
 /// A provider for the UI [Offset] for the nudging controls.
 ///

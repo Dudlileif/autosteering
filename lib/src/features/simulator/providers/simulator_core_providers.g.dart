@@ -287,7 +287,7 @@ class _CommonSimCoreMessageHandlerProviderElement
 }
 
 String _$simulatorUpdateFrequencyHash() =>
-    r'd33f3a9784212dae5ecc5fd62cea7c40d13ee8f2';
+    r'ce52ab296a84403c6d6a1e5b914aa429bfe5263e';
 
 /// A provider for the target simulation update frequency.
 ///
@@ -327,7 +327,7 @@ final simCoreDebugAllowLongBreaksProvider =
 
 typedef _$SimCoreDebugAllowLongBreaks = Notifier<bool>;
 String _$simCoreAllowManualInputHash() =>
-    r'6d5c8c79ee57841155736403f685c88f7587f39e';
+    r'2213c22577fd3ce0573530d148c9587950d0c829';
 
 /// A provider for whether the sim core should allow manual inputs from the
 /// user, i.e. not only sensors from the vehicle.
@@ -347,7 +347,7 @@ final simCoreAllowManualInputProvider =
 
 typedef _$SimCoreAllowManualInput = Notifier<bool>;
 String _$simCoreAllowInterpolationHash() =>
-    r'62d3d9034ad5436e5e2df9e507b2c2096755b1e1';
+    r'531b8b3c7473c663e3c9b2e85cbe7d61d3ac6b5c';
 
 /// A provider for whether the sim core should allow interpolation steps
 /// between the hardware GNSS updates.
@@ -367,7 +367,7 @@ final simCoreAllowInterpolationProvider =
 
 typedef _$SimCoreAllowInterpolation = Notifier<bool>;
 String _$simCoreVehicleAutoCenterSteeringHash() =>
-    r'0d48d6d46f67170250b16d9a8bc0b1dd43d0cc6b';
+    r'09878b390fdc62db0b2a203c86e370237a1253db';
 
 /// A provider for whether the steering automatically should recenter when
 /// no input is provided.
@@ -387,7 +387,7 @@ final simCoreVehicleAutoCenterSteeringProvider =
 
 typedef _$SimCoreVehicleAutoCenterSteering = Notifier<bool>;
 String _$simCoreVehicleAutoSlowDownHash() =>
-    r'daeeb925351e6d9b780309d0afe5556b2913705b';
+    r'7f250dcdb91c38cfe35b3255536364ee43014d5d';
 
 /// A provider for whether the vehicle should slow down when no input is
 /// provided.

@@ -565,7 +565,7 @@ class _NtripMountPointsSortedProviderElement
   String? get password => (origin as NtripMountPointsSortedProvider).password;
 }
 
-String _$ntripEnabledHash() => r'b4af9922a2c6f028ece8fd3808d7457b513ab338';
+String _$ntripEnabledHash() => r'9f454c6ff2473e061c1004411c9f8c1addf6ef24';
 
 /// A provider for whether the [ntripClient] provider should run.
 ///
@@ -581,7 +581,7 @@ final ntripEnabledProvider = NotifierProvider<NtripEnabled, bool>.internal(
 );
 
 typedef _$NtripEnabled = Notifier<bool>;
-String _$ntripProfilesHash() => r'b6918a52a011eb51a14acb02ca649becedcb1bc4';
+String _$ntripProfilesHash() => r'9dc50fe4497cab709fd221b4eca2be85b3e3ba2d';
 
 /// A provider for the stored [NtripProfile]s.
 ///
@@ -600,7 +600,7 @@ final ntripProfilesProvider =
 
 typedef _$NtripProfiles = Notifier<List<NtripProfile>>;
 String _$activeNtripProfileHash() =>
-    r'339bb950ce22c402fc1ed3e1979892a98bb0ac28';
+    r'e673a2647c82d288d050eae0df456165a43e1603';
 
 /// A provider for the active [NtripProfile], if there is one.
 ///

@@ -180,7 +180,7 @@ final networkInterfacesProvider =
 
 typedef _$NetworkInterfaces = Notifier<List<NetworkInterface>>;
 String _$steeringHardwareAddressHash() =>
-    r'4508da53c714f433e85ea2d8b7672aca61824b32';
+    r'6997c150b25bf3f17de05bcd365bcbe1bb744234';
 
 /// A provider for the IP adress of the steering hardware we want to communicate
 /// with.
@@ -200,7 +200,7 @@ final steeringHardwareAddressProvider =
 
 typedef _$SteeringHardwareAddress = Notifier<String>;
 String _$remoteControlHardwareAddressHash() =>
-    r'22e54b981c0170742b9370f31b6bc07b4f7452b0';
+    r'c4d2e7ae1463b76c1fc62d1defe2b10a4930977b';
 
 /// A provider for the IP adress of the remote control hardware we want to
 /// communicate with.
@@ -220,7 +220,7 @@ final remoteControlHardwareAddressProvider =
 
 typedef _$RemoteControlHardwareAddress = Notifier<String>;
 String _$hardwareUDPReceivePortHash() =>
-    r'91dbd7461ad74145dfdb3e30087d93af782aac83';
+    r'9dc859a8609c4fc1e6edfbd8350735f1a57bbbca';
 
 /// A provider for the UDP receive port for the device.
 ///
@@ -239,7 +239,7 @@ final hardwareUDPReceivePortProvider =
 
 typedef _$HardwareUDPReceivePort = Notifier<int>;
 String _$hardwareUDPSendPortHash() =>
-    r'8fb2c394511108ca165925cab8e4d31e8abda11c';
+    r'8feeee8cfb37b2d1535a07ca03fa3cf535b5f7c7';
 
 /// A provider for the UDP send port for the device to send messages to
 /// the hardware in [SteeringHardwareAddress].

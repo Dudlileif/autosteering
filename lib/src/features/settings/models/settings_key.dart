@@ -17,6 +17,7 @@
 
 // ignore_for_file: public_member_api_docs
 
+
 /// An enumerator for all the settings of the program.
 enum SettingsKey {
   audioVolumeAutosteeringDisabled('audio.volume.autosteering_disabled'),
@@ -85,4 +86,11 @@ enum SettingsKey {
   /// The string that will be used when writing to/reading from the settings
   /// file.
   final String name;
+
+  static const List<SettingsKey> canContainSensitiveData = [
+    mapCopernicusInstanceId,
+    mapHomePosition,
+    ntripProfiles,
+    ntripActiveProfile,
+  ];
 }

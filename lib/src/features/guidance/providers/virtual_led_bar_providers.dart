@@ -26,7 +26,9 @@ part 'virtual_led_bar_providers.g.dart';
 class VirtualLedBarEnabled extends _$VirtualLedBarEnabled {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
@@ -52,7 +54,9 @@ class VirtualLedBarEnabled extends _$VirtualLedBarEnabled {
 class VirtualLedBarConfiguration extends _$VirtualLedBarConfiguration {
   @override
   LedBarConfig build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)

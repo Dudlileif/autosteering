@@ -25,7 +25,7 @@ final appThemeProvider = AutoDisposeProvider<AppTheme>.internal(
 );
 
 typedef AppThemeRef = AutoDisposeProviderRef<AppTheme>;
-String _$activeThemeModeHash() => r'05dfb332b1df0291fc57bbea0779d5960a50d0f7';
+String _$activeThemeModeHash() => r'a50229066ec77b1070dff1df8f8beb270a70b2c9';
 
 /// A provider that contains the current theme mode state.
 ///
@@ -43,7 +43,7 @@ final activeThemeModeProvider =
 );
 
 typedef _$ActiveThemeMode = AutoDisposeNotifier<ThemeMode>;
-String _$manufacturerHash() => r'13fa2dbcabf1b262c973bccd5610e13fa05bf34d';
+String _$manufacturerHash() => r'380fa025686141a51c42eed5030fb3e0a19c84ad';
 
 /// A provider that contains theme color state.
 ///
@@ -61,7 +61,7 @@ final manufacturerProvider =
 
 typedef _$Manufacturer = AutoDisposeNotifier<ManufacturerColors>;
 String _$colorSchemeInheritFromVehicleHash() =>
-    r'3057e13434fa9738e1cecd5a61c17f3ab4da1a31';
+    r'4c61ca7954dd990aaf6febed62665d514c802a3b';
 
 /// A provider for whether the [appTheme] should use [ManufacturerColors]
 /// inherited from the active vehicle or from a selected one.

@@ -44,7 +44,7 @@ final hardwareSerialStreamProvider = StreamProvider<String?>.internal(
 
 typedef HardwareSerialStreamRef = StreamProviderRef<String?>;
 String _$hardwareSerialBaudRateHash() =>
-    r'44e0974b8d9a3527549121492e82f5c4423eeed4';
+    r'0d984a20206a95d788d57c3b9223e52bad8d87e5';
 
 /// A provider for the baud rate for the [HardwareSerial] connection.
 ///

@@ -1244,7 +1244,7 @@ final configuredABTrackingProvider =
 
 typedef _$ConfiguredABTracking = Notifier<ABTracking?>;
 String _$configuredMenuABTrackingHash() =>
-    r'd1f10a9004508a9e91ffdecfbf2eac1d0f7c8f98';
+    r'fd8fd83d4987359c06a488675144d5e82c0a95f4';
 
 /// A provider for the currently configured [ABTracking].
 ///
