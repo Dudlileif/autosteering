@@ -549,14 +549,12 @@ final class ArticulatedTractor extends Vehicle {
   /// The left front wheel polygon.
   map.Polygon get leftFrontWheelPolygon => map.Polygon(
         points: wheelPoints().map((e) => e.latLng).toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
   /// The right front wheel polygon.
   map.Polygon get rightFrontWheelPolygon => map.Polygon(
         points: wheelPoints(left: false).map((e) => e.latLng).toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
@@ -623,7 +621,6 @@ final class ArticulatedTractor extends Vehicle {
   /// The left rear wheel polygon.
   map.Polygon get leftRearWheelPolygon => map.Polygon(
         points: wheelPoints(rear: true).map((e) => e.latLng).toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
@@ -631,7 +628,6 @@ final class ArticulatedTractor extends Vehicle {
   map.Polygon get rightRearWheelPolygon => map.Polygon(
         points:
             wheelPoints(left: false, rear: true).map((e) => e.latLng).toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
@@ -785,7 +781,6 @@ final class ArticulatedTractor extends Vehicle {
           ...frontLeftSide.map((e) => e.latLng),
           ...frontRightSide.map((e) => e.latLng),
         ],
-        isFilled: true,
         color: Colors.yellow.withOpacity(0.5),
       ),
       map.Polygon(
@@ -794,7 +789,7 @@ final class ArticulatedTractor extends Vehicle {
           ...rearRightSide.map((e) => e.latLng),
           ...rearLeftSide.map((e) => e.latLng),
         ],
-        isFilled: true,
+
         color: Colors.yellow.withOpacity(0.5),
       ),
     ];

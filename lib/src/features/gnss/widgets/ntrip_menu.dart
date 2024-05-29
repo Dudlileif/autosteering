@@ -96,7 +96,7 @@ class NtripMenu extends ConsumerWidget {
                             .menuButtonTheme
                             .style
                             ?.overlayColor
-                            ?.resolve({MaterialState.selected}),
+                            ?.resolve({WidgetState.selected}),
                         selected:
                             profile == ref.watch(activeNtripProfileProvider),
                         title: Text(profile.name, style: textStyle),

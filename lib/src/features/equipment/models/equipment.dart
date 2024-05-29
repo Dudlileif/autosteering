@@ -782,14 +782,13 @@ class Equipment extends Hitchable with EquatableMixin {
 
     return sectionPolygon(index).mapPolygon(
       borderStrokeWidth: 2,
-      isFilled: section.active,
       borderColor: switch (section.active) {
         true => section.color?.brighten(30) ?? Colors.greenAccent,
         false => Colors.grey,
       },
       color: switch (section.active) {
         true => (section.color ?? Colors.green).withOpacity(0.8),
-        false => Colors.grey.withOpacity(0.4),
+        false => Colors.grey.withOpacity(0.2),
       },
     );
   }
@@ -800,7 +799,6 @@ class Equipment extends Hitchable with EquatableMixin {
 
     return sectionWorkingPolygon(index)?.mapPolygon(
       borderStrokeWidth: 2,
-      isFilled: section.active,
       borderColor: switch (section.workingWidth > 0) {
         true => switch (section.active) {
             true => section.color?.brighten(30) ?? Colors.greenAccent,
@@ -810,7 +808,7 @@ class Equipment extends Hitchable with EquatableMixin {
       },
       color: switch (section.active) {
         true => (section.color ?? Colors.green).withOpacity(0.8),
-        false => Colors.grey.withOpacity(0.4),
+        false => Colors.grey.withOpacity(0.2),
       },
     );
   }
@@ -830,7 +828,6 @@ class Equipment extends Hitchable with EquatableMixin {
         if (sections.isNotEmpty) ...[
           map.Polygon(
             borderStrokeWidth: 3,
-            isFilled: true,
             color: Colors.grey.shade800,
             borderColor: Colors.black,
             points: [
@@ -858,7 +855,6 @@ class Equipment extends Hitchable with EquatableMixin {
           ),
           map.Polygon(
             borderStrokeWidth: 3,
-            isFilled: true,
             color: Colors.grey.shade800,
             borderColor: Colors.black,
             points: [
@@ -899,7 +895,6 @@ class Equipment extends Hitchable with EquatableMixin {
           HitchType.towbar => [
               map.Polygon(
                 borderStrokeWidth: 3,
-                isFilled: true,
                 color: Colors.grey.shade800,
                 borderColor: Colors.black,
                 points: [
@@ -934,7 +929,6 @@ class Equipment extends Hitchable with EquatableMixin {
               // Left hitch bar
               map.Polygon(
                 borderStrokeWidth: 3,
-                isFilled: true,
                 color: Colors.grey.shade800,
                 borderColor: Colors.black,
                 points: [
@@ -967,7 +961,6 @@ class Equipment extends Hitchable with EquatableMixin {
               // Right hitch bar
               map.Polygon(
                 borderStrokeWidth: 3,
-                isFilled: true,
                 color: Colors.grey.shade800,
                 borderColor: Colors.black,
                 points: [
@@ -1041,7 +1034,6 @@ class Equipment extends Hitchable with EquatableMixin {
       ];
 
       return map.Polygon(
-        isFilled: true,
         borderStrokeWidth: 3,
         color: Colors.grey.shade800.withOpacity(0.7),
         borderColor: Colors.black,

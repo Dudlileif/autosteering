@@ -554,21 +554,18 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The left steering wheel polygon.
   map.Polygon get leftSteeringWheelPolygon => map.Polygon(
         points: wheelPoints().map((e) => e.latLng).toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
   /// The right steering wheel polygon.
   map.Polygon get rightSteeringWheelPolygon => map.Polygon(
         points: wheelPoints(left: false).map((e) => e.latLng).toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
   /// The left solid axle wheel polygon.
   map.Polygon get leftSolidAxleWheelPolygon => map.Polygon(
         points: wheelPoints(steering: false).map((e) => e.latLng).toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
@@ -577,7 +574,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
         points: wheelPoints(left: false, steering: false)
             .map((e) => e.latLng)
             .toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
@@ -701,7 +697,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
   List<map.Polygon> get polygons => [
         map.Polygon(
           points: points.map((e) => e.latLng).toList(),
-          isFilled: true,
           color: Colors.yellow.withOpacity(0.5),
         ),
       ];

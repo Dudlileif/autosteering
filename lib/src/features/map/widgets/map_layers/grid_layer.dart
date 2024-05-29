@@ -46,7 +46,6 @@ class GridLayer extends ConsumerWidget {
     ref.read(mapGridSizeProvider.notifier).update(vertical.size);
     }
     return PolylineLayer(
-      polylineCulling: true,
       polylines: [
         ...vertical.lines.map(
           (line) => Polyline(

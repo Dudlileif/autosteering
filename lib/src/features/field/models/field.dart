@@ -102,6 +102,7 @@ class Field with EquatableMixin {
             )
             .toList(),
         borderStrokeWidth: 1,
+        color: Colors.transparent,
       );
 
   /// Map the [polygon]'s exterior ring points with [map].

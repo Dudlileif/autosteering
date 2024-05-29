@@ -276,7 +276,7 @@ class MapVehicleTopDownPainter extends StatelessWidget {
 
     final vectorX = (pxTopRight - pxTopLeft) / bounds.size.x;
     final vectorY = (pxBottomLeft - pxTopLeft) / bounds.size.y;
-    final offset = pxTopLeft.subtract(bounds.topLeft);
+    final offset = pxTopLeft - (bounds.topLeft);
 
     final a = vectorX.x;
     final b = vectorX.y;

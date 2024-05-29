@@ -47,8 +47,7 @@ class PathRecordingLayer extends ConsumerWidget {
     }
     return Stack(
       children: [
-              PolylineLayer(
-                polylineCulling: true,
+        PolylineLayer(
                 polylines: [
                   Polyline(
                     points: [

@@ -42,7 +42,6 @@ class VehicleDebugLayer extends ConsumerWidget {
       children: [
         if (debugTravelledPath || debugTrajectory || debugSteering)
           PolylineLayer(
-            polylineCulling: true,
             polylines: [
               if (debugTravelledPath && travelledPath.isNotEmpty)
                 Polyline(
@@ -73,7 +72,6 @@ class VehicleDebugLayer extends ConsumerWidget {
           ),
         if (debugPolygons)
           PolygonLayer(
-            polygonCulling: true,
             polygons: [
               ...vehicle.wheelPolygons,
               ...vehicle.polygons.map(

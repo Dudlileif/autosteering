@@ -41,7 +41,6 @@ class PathTrackingLayer extends ConsumerWidget {
       children: tracking != null
           ? [
               PolylineLayer(
-                polylineCulling: true,
                 polylines: [
                   Polyline(
                     points: tracking.path

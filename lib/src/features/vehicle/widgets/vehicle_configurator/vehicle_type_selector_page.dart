@@ -144,25 +144,25 @@ class _VehicleTypeSelector extends ConsumerWidget {
         return SegmentedButton<Type>(
           showSelectedIcon: false,
           style: theme.segmentedButtonTheme.style?.copyWith(
-            shape: const MaterialStatePropertyAll(
+            shape: const WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(16)),
               ),
             ),
-            padding: const MaterialStatePropertyAll(EdgeInsets.all(8)),
-            iconSize: MaterialStatePropertyAll(
+            padding: const WidgetStatePropertyAll(EdgeInsets.all(8)),
+            iconSize: WidgetStatePropertyAll(
               min(
                 100,
                 constraints.biggest.shortestSide / 4,
               ),
             ),
-            iconColor: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.selected)) {
+            iconColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
                 return theme.primaryColor;
               }
               return null;
             }),
-            textStyle: MaterialStatePropertyAll(
+            textStyle: WidgetStatePropertyAll(
               theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),

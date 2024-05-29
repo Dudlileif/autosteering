@@ -70,7 +70,7 @@ class ABTrackingLayer extends ConsumerWidget {
           ),
         if (abTracking != null)
           PolylineLayer(
-            polylines: [
+            polylines: <Polyline>[
               if (showAllLines)
                 ...abTracking.lines
                     .map(
@@ -166,7 +166,7 @@ class ABTrackingLayer extends ConsumerWidget {
         if (abTracking != null || pointA != null || pointB != null)
           CircleLayer(
             circles: [
-              if (abTracking != null) ...[
+              if (abTracking != null) ...<CircleMarker>[
                 if (debug)
                   ...abTracking.currentLine
                           ?.map(
