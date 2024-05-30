@@ -397,12 +397,12 @@ sealed class ABTracking {
     }
 
     final extendedStart = baseLine.first.position.rhumb.destinationPoint(
-      distance: extraStraightDistance ?? 100,
+      distance: extraStraightDistance ?? 1000,
       bearing: baseLine[1].finalBearingToRhumb(baseLine.first),
     );
 
     final extendedEnd = baseLine.last.position.rhumb.destinationPoint(
-      distance: extraStraightDistance ?? 100,
+      distance: extraStraightDistance ?? 1000,
       bearing: baseLine[baseLine.length - 2].finalBearingToRhumb(baseLine.last),
     );
 

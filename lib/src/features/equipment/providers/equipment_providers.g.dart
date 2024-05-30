@@ -921,7 +921,7 @@ class _DeleteEquipmentProviderElement
   String? get overrideName => (origin as DeleteEquipmentProvider).overrideName;
 }
 
-String _$importEquipmentHash() => r'e69319653bba183e429a3bed04cef9909b4823d0';
+String _$importEquipmentHash() => r'949fda77e74d872ecebdea5b7152249b595d7746';
 
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.
@@ -939,25 +939,6 @@ final importEquipmentProvider = AutoDisposeFutureProvider<Equipment?>.internal(
 );
 
 typedef ImportEquipmentRef = AutoDisposeFutureProviderRef<Equipment?>;
-String _$showEquipmentDebugHash() =>
-    r'1e3a6744e92da54c0a72fd64c65b5a2e0644052b';
-
-/// Whether or not to show the equipment debugging features.
-///
-/// Copied from [ShowEquipmentDebug].
-@ProviderFor(ShowEquipmentDebug)
-final showEquipmentDebugProvider =
-    AutoDisposeNotifierProvider<ShowEquipmentDebug, bool>.internal(
-  ShowEquipmentDebug.new,
-  name: r'showEquipmentDebugProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showEquipmentDebugHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ShowEquipmentDebug = AutoDisposeNotifier<bool>;
 String _$equipmentRecordPositionFractionHash() =>
     r'141d41b58a05019f861cf68c7d4aaf0038849c5d';
 
@@ -978,6 +959,24 @@ final equipmentRecordPositionFractionProvider =
 );
 
 typedef _$EquipmentRecordPositionFraction = Notifier<double?>;
+String _$loadedEquipmentHash() => r'ab5df27cb509589b4b9c2a0836d6b50a8cde3c6f';
+
+/// A provider for the currently loaded equipment.
+///
+/// Copied from [LoadedEquipment].
+@ProviderFor(LoadedEquipment)
+final loadedEquipmentProvider =
+    NotifierProvider<LoadedEquipment, Equipment?>.internal(
+  LoadedEquipment.new,
+  name: r'loadedEquipmentProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$loadedEquipmentHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LoadedEquipment = Notifier<Equipment?>;
 String _$allEquipmentsHash() => r'68433ed44da5d975f1761df5e05474ebdd0c05a7';
 
 /// A provider that holds all of the equipments.
@@ -1015,7 +1014,7 @@ final equipmentWorkedAreaProvider =
 );
 
 typedef _$EquipmentWorkedArea = Notifier<Map<String, double>>;
-String _$equipmentPathsHash() => r'45d0468a5b95a0dd1ff8d10b46e16f3973624f08';
+String _$equipmentPathsHash() => r'bd9aca4d0962648558dd5789257637c17dd97de5';
 
 abstract class _$EquipmentPaths
     extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {

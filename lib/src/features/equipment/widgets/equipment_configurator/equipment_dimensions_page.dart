@@ -104,7 +104,8 @@ class EquipmentDimensionsPage extends ConsumerWidget {
           labelText: 'Sideways offset (-left / +right)',
           suffixText: 'm',
         ),
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        keyboardType:
+            const TextInputType.numberWithOptions(decimal: true, signed: true),
         initialValue: ref.read(
           configuredEquipmentProvider
               .select((value) => value.sidewaysOffset.toString()),

@@ -31,18 +31,6 @@ import 'package:universal_io/io.dart';
 
 part 'equipment_providers.g.dart';
 
-/// Whether or not to show the equipment debugging features.
-@riverpod
-class ShowEquipmentDebug extends _$ShowEquipmentDebug {
-  @override
-  bool build() => false;
-
-  /// Update the [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
-
-  /// Invert the current [state].
-  void toggle() => Future(() => state = !state);
-}
 
 /// A provider for how the [SectionEdgePositions] should be recorded, as the
 /// fraction parameter that goes in [Equipment.sectionEdgePositions].
@@ -54,6 +42,16 @@ class EquipmentRecordPositionFraction
 
   /// Updates [state] to [value];
   void update(double? value) => Future(() => state = value?.clamp(0, 1));
+}
+
+/// A provider for the currently loaded equipment.
+@Riverpod(keepAlive: true)
+class LoadedEquipment extends _$LoadedEquipment {
+  @override
+  Equipment? build() => null;
+
+  /// Updates [state] to [value].
+  void update(Equipment? value) => Future(() => state = value);
 }
 
 /// A provider that holds all of the equipments.
@@ -174,12 +172,14 @@ class EquipmentPaths extends _$EquipmentPaths {
 
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
-        // Activation/deactivation
-        if (equipment.sections.isNotEmpty) {
+        if (equipment.sections.isNotEmpty &&
+            equipment.sections.any((element) => element.workingWidth > 0)) {
           final recordFraction =
               ref.read(equipmentRecordPositionFractionProvider);
           final positions =
               equipment.activeEdgePositions(fraction: recordFraction);
+
+          // Activation/deactivation
           if (!const MapEquality<int, bool>().equals(
                 equipment.sectionActivationStatus,
                 _prevSectionActivationStatus,
@@ -206,33 +206,37 @@ class EquipmentPaths extends _$EquipmentPaths {
                       section,
                       positions[section] != null ? [positions[section]!] : null,
                     ),
-            );
-            state = state..add(sectionLines);
+            )..removeWhere((key, value) => value == null);
+            if (sectionLines.isNotEmpty) {
+              state = state..add(sectionLines);
+            }
             _prevSectionActivationStatus = equipment.sectionActivationStatus;
           }
 
           // Continuation
           else {
-            final addNext = positions
-                .map(
-                  (section, position) => MapEntry(
-                    section,
-                    position != null && shouldAddNext(position, section),
-                  ),
-                )
-                .values
-                .reduce((value, element) => value || element);
+            if (positions.isNotEmpty) {
+              final addNext = positions
+                  .map(
+                    (section, position) => MapEntry(
+                      section,
+                      shouldAddNext(position, section),
+                    ),
+                  )
+                  .values
+                  .reduce((value, element) => value || element);
 
-            if (addNext) {
-              state = state
-                ..last.updateAll(
-                  (section, value) {
-                    if (positions[section] != null) {
-                      return value?..add(positions[section]!);
-                    }
-                    return null;
-                  },
-                );
+              if (addNext) {
+                state = state
+                  ..last.updateAll(
+                    (section, value) {
+                      if (positions[section] != null) {
+                        return value?..add(positions[section]!);
+                      }
+                      return null;
+                    },
+                  );
+              }
             }
           }
           // Update covered working area
@@ -515,8 +519,7 @@ FutureOr<Equipment?> importEquipment(
       'Imported equipment: ${equipment.name ?? equipment.uuid}.',
     );
     equipment.lastUsed = DateTime.now();
-    ref.read(configuredEquipmentProvider.notifier).update(equipment);
-    ref.invalidate(configuredEquipmentNameTextControllerProvider);
+    ref.read(loadedEquipmentProvider.notifier).update(equipment);
     await ref.watch(saveEquipmentProvider(equipment).future);
   }
 

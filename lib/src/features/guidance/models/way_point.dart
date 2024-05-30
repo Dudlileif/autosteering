@@ -401,6 +401,16 @@ class WayPoint extends Equatable {
     }
     return map;
   }
+
+  @override
+  String toString() {
+    var string = 'WayPoint(position: $position. bearing: $bearing°';
+    if (velocity.abs() > 0) {
+      string += ', velocity: $velocity m/s';
+    }
+
+    return '$string)';
+  }
 }
 
 /// A class for tweening two [WayPoint].

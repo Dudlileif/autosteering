@@ -81,35 +81,7 @@ class SimulatorCoreState {
 
   /// The minimum distance between GNSS updates for updating the bearing
   /// gauge.
-  double get minBearingUpdateDistance => switch (gnssFixQuality) {
-        GnssFixQuality.fix => 5,
-        GnssFixQuality.differentialFix => 3,
-        GnssFixQuality.floatRTK => 2.5,
-        GnssFixQuality.ppsFix => 2,
-        GnssFixQuality.rtk => 0.5,
-        _ => double.infinity,
-      };
-
-  /// The upper threshold for the standard deviation of the bearings from the
-  /// [prevGnssUpdates] and the [gnssUpdate].
-  ///
-  /// If the deviation is lower than the threshold, the IMU bearing zero
-  /// value will be set to the average of the bearings.
-  double get bearingZeroDeviationMaxThreshold => switch (gnssFixQuality) {
-        GnssFixQuality.fix => 0.03,
-        GnssFixQuality.differentialFix => 0.02,
-        GnssFixQuality.floatRTK => 0.01,
-        GnssFixQuality.ppsFix => 0.01,
-        GnssFixQuality.rtk => 0.006,
-        _ => double.infinity,
-      };
-
-  /// The last time the IMU bearing was zeroed.
-  DateTime? bearingZeroTime;
-
-  /// Minimum number of seconds to wait before the next attempt at setting
-  /// a new IMU bearing zero.
-  int bearingZeroMinDuration = 10;
+  static const minBearingUpdateDistance = 0.1;
 
   /// The velocity of the current vehicle, as calculated from the [distance] and
   /// [period].
@@ -201,6 +173,7 @@ class SimulatorCoreState {
     final now = DateTime.now();
     period = now.difference(prevUpdateTime).inMicroseconds / 1e6;
     prevUpdateTime = now;
+    vehicle?.lastUsed = now;
   }
 
   /// Change state parameters/values according to the incomming [message].
@@ -1072,10 +1045,7 @@ class SimulatorCoreState {
             break CheckIfUpdateIsUsable;
           }
 
-          final bearingReference = switch (allowManualSimInput) {
-            true => vehicle!.bearingRaw,
-            false => vehicle!.imu.bearing ?? vehicle!.bearingRaw,
-          };
+          final bearingReference = vehicle!.imu.bearing ?? vehicle!.bearingRaw;
 
           drivingDirectionSign =
               switch (bearingDifference(bearing, bearingReference) > 90) {
@@ -1089,45 +1059,24 @@ class SimulatorCoreState {
             false => bearing
           };
 
-          if (bearingZeroTime == null ||
-              DateTime.now()
-                      .difference(bearingZeroTime ?? DateTime.now())
-                      .inSeconds >
-                  bearingZeroMinDuration) {
-            final bearings = prevGnssUpdates.map(
-              (e) {
-                final bearing = e.gnssPosition.rhumb
-                    .finalBearingTo(gnssUpdate!.gnssPosition);
+          // A moving weighted average for zeroing the IMU bearing to prevent
+          // drift, the GNSS bearing is weighted 1/40 and the rest is the
+          // current IMU bearing.
+          final bearingAvg = bearingAverageWeighted(
+            bearings: [
+              vehicle!.imu.bearing ?? directionCorrectedBearing,
+              directionCorrectedBearing,
+            ],
+            weights: [39, 1],
+          );
 
-                return switch (drivingDirectionSign.isNegative) {
-                  true => (bearing + 180).wrap360(),
-                  false => bearing
-                };
-              },
-            );
-
-            final bearingAvg = bearingAverage(bearings);
-            final bearingStdDev = bearingStandardDeviation(bearings);
-            // If the variance is very low, we can assume a straight line and
-            // set the IMU bearing zero value to the average bearing.
-            if (bearingStdDev < bearingZeroDeviationMaxThreshold) {
-              vehicle!.imu
-                ..config = vehicle!.imu.config.copyWith(
-                  zeroValues: vehicle!.imu.config.zeroValues.copyWith(
-                    bearingZero:
-                        (vehicle!.imu.reading.yaw - bearingAvg).wrap360(),
-                  ),
-                )
-                ..bearingIsSet = true;
-              mainThreadSendStream.add(
-                LogEvent(
-                  Level.info,
-                  '''Straight line detected, IMU bearing zero updated: ${(vehicle!.imu.reading.yaw - bearingAvg).wrap360()}°, measures avg: $bearingAvg°, std.dev: $bearingStdDev''',
-                ),
-              );
-              bearingZeroTime = DateTime.now();
-            }
-          }
+          vehicle!.imu
+            ..config = vehicle!.imu.config.copyWith(
+              zeroValues: vehicle!.imu.config.zeroValues.copyWith(
+                bearingZero: vehicle!.imu.reading.yaw - bearingAvg,
+              ),
+            )
+            ..bearingIsSet = true;
 
           gaugeBearing = directionCorrectedBearing;
           gaugeVelocity = drivingDirectionSign * velocityAvg;

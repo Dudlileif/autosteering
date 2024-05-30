@@ -43,10 +43,15 @@ class ABTrackingMenu extends ConsumerWidget {
         ref.watch(
           configuredABTrackingProvider.select((value) => value != null),
         );
-
+    final menuConfiguredTracking = ref.watch(configuredMenuABTrackingProvider);
+    
     final abTracking = switch (workSessionGuidanceActive) {
       true => ref.watch(configuredABTrackingProvider),
-      false => ref.watch(configuredMenuABTrackingProvider)
+      false => menuConfiguredTracking.when(
+          data: (data) => data,
+          error: (error, stackTrace) => null,
+          loading: () => null,
+        ),
     };
 
     return MenuButtonWithChildren(
@@ -82,6 +87,42 @@ class ABTrackingMenu extends ConsumerWidget {
                   .toList(),
             ),
           ),
+        Consumer(
+          child: Text('Apply and use', style: theme.menuButtonWithChildrenText),
+          builder: (context, ref, child) => menuConfiguredTracking.when(
+            data: (data) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.check),
+              ),
+              onPressed: data != null
+                  ? () => ref
+                      .read(simInputProvider.notifier)
+                      .send((abTracking: data))
+                  : null,
+              child: child,
+            ),
+            error: (error, stackTrace) => Text(
+              'Error during creation.',
+              style: theme.menuButtonWithChildrenText
+                  ?.copyWith(color: theme.colorScheme.error),
+            ),
+            loading: () => MenuItemButton(
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: SizedBox.square(
+                  dimension: 20,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              child: Text(
+                'Creating tracking',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
+          ),
+        ),
         if (!workSessionGuidanceActive &&
             (abTrackingType == ABTrackingType.aPlusLine ||
                 abTrackingType == ABTrackingType.abLine))
@@ -165,12 +206,10 @@ class ABTrackingMenu extends ConsumerWidget {
 
               return MenuItemButton(
                 closeOnActivate: false,
-                onPressed: workSessionGuidanceActive
-                    ? null
-                    : () => showDialog<void>(
-                          context: context,
-                          builder: (context) => const _APlusLineBearingDialog(),
-                        ),
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (context) => const _APlusLineBearingDialog(),
+                ),
                 trailingIcon: IconButton(
                   icon: const Icon(Icons.clear),
                   onPressed: () => ref.invalidate(aPlusLineBearingProvider),
@@ -219,7 +258,7 @@ class ABTrackingMenu extends ConsumerWidget {
         ),
         Consumer(
           child: Text(
-            'Recalc bounded lines',
+            'Recalculate lines',
             style: theme.menuButtonWithChildrenText,
           ),
           builder: (context, ref, child) => MenuItemButton(
@@ -229,15 +268,14 @@ class ABTrackingMenu extends ConsumerWidget {
             ),
             closeOnActivate: false,
             child: child,
-            onPressed: () => switch (workSessionGuidanceActive) {
-              true => ref
-                  .read(simInputProvider.notifier)
-                  .send((abTrackingRecalculateLines: true)),
-              false => ref
+            onPressed: () {
+              ref
                 ..invalidate(aPlusLineProvider)
                 ..invalidate(aBLineProvider)
-                ..invalidate(aBCurveProvider)
-                ..invalidate(configuredABTrackingProvider),
+                ..invalidate(aBCurveProvider);
+              if (!workSessionGuidanceActive) {
+                ref.invalidate(configuredABTrackingProvider);
+              }
             },
           ),
         ),
@@ -270,44 +308,45 @@ class _APlusLineBearingDialogState
 
   @override
   Widget build(BuildContext context) => SimpleDialog(
-      title: const Text('A+ line bearing'),
+        title: const Text('A+ line bearing'),
         contentPadding: const EdgeInsets.only(
           left: 24,
           top: 12,
           right: 24,
           bottom: 16,
         ),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Consumer(
-            builder: (context, ref, child) {
-              final aPlusLine = ref.watch(aPlusLineProvider);
-              return TextFormField(
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.navigation),
-                  labelText: 'Bearing',
-                  suffixText: '°',
-                ),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                initialValue: (aPlusLine.value?.initialBearing ??
-                        ref.read(aBPointAProvider)?.bearing ??
-                        ref.read(
-                          mainVehicleProvider.select((value) => value.bearing),
-                        ) ??
-                        0)
-                    .toStringAsFixed(2),
-                onChanged: (value) {
-                  final updated =
-                      double.tryParse(value.replaceAll(',', '.')) ?? bearing;
-                  setState(() => bearing = updated);
-                },
-              );
-            },
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final aPlusLine = ref.watch(aPlusLineProvider);
+                return TextFormField(
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.navigation),
+                    labelText: 'Bearing',
+                    suffixText: '°',
+                  ),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  initialValue: (aPlusLine.value?.initialBearing ??
+                          ref.read(aBPointAProvider)?.bearing ??
+                          ref.read(
+                            mainVehicleProvider
+                                .select((value) => value.bearing),
+                          ) ??
+                          0)
+                      .toStringAsFixed(2),
+                  onChanged: (value) {
+                    final updated =
+                        double.tryParse(value.replaceAll(',', '.')) ?? bearing;
+                    setState(() => bearing = updated);
+                  },
+                );
+              },
+            ),
           ),
-        ),
-        Padding(
+          Padding(
             padding: const EdgeInsets.only(top: 16),
             child: Align(
               alignment: Alignment.centerRight,
@@ -336,9 +375,9 @@ class _APlusLineBearingDialogState
                   ),
                 ],
               ),
+            ),
           ),
-        ),
-      ],
+        ],
       );
 }
 
@@ -431,44 +470,91 @@ class _ABCommonMenu extends ConsumerWidget {
           },
         ),
         Consumer(
-          builder: (context, ref, child) {
-            return ListTile(
-              title: TextFormField(
-                controller: TextEditingController(
-                  text: ref.read(aBWidthProvider).toString(),
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text('AB spacing/width'), CloseButton()],
                 ),
-                decoration: const InputDecoration(
-                  labelText: 'Spacing/width',
-                  suffixText: 'm',
+                contentPadding: const EdgeInsets.only(
+                  left: 24,
+                  top: 12,
+                  right: 24,
+                  bottom: 16,
                 ),
-                keyboardType: TextInputType.number,
-                onFieldSubmitted: (value) {
-                  final spacing = double.tryParse(value);
-                  if (spacing != null && spacing >= 0) {
-                    ref.read(aBWidthProvider.notifier).update(spacing);
-                  }
-                },
-              ),
-              trailing: IconButton(
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) => TextFormField(
+                      controller: TextEditingController(
+                        text: ref.watch(aBWidthProvider).toString(),
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Spacing/width',
+                        suffixText: 'm',
+                      ),
+                      keyboardType: TextInputType.number,
+                      onFieldSubmitted: (value) {
+                        final spacing = double.tryParse(value);
+                        if (spacing != null && spacing >= 0) {
+                          ref.read(aBWidthProvider.notifier).update(spacing);
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Consumer(
+                      builder: (context, ref, child) => ElevatedButton.icon(
                 onPressed: () {
                   ref.invalidate(aBWidthProvider);
                 },
                 icon: const Icon(Icons.handyman),
-                tooltip: 'Set to equipment width',
+                        label: const Text('Set to equipment width'),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            );
-          },
+            ),
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+            ),
+            child: Text(
+              'Spacing: ${ref.watch(aBWidthProvider).toStringAsFixed(1)} m',
+              style: textStyle,
+            ),
+          ),
         ),
         Consumer(
-          builder: (context, ref, child) => ListTile(
-            title: TextFormField(
-              decoration: const InputDecoration(
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text('AB turning radius'), CloseButton()],
+                ),
+                contentPadding: const EdgeInsets.only(
+                  left: 24,
+                  top: 12,
+                  right: 24,
+                  bottom: 16,
+                ),
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) => TextFormField(
+                      decoration: const InputDecoration(
                 labelText: 'Turning radius',
                 suffixText: 'm',
               ),
               keyboardType: TextInputType.number,
               controller: TextEditingController(
-                text: ref.read(aBTurningRadiusProvider).toString(),
+                text: ref.watch(aBTurningRadiusProvider).toString(),
               ),
               onFieldSubmitted: (value) {
                 final radius = double.tryParse(value);
@@ -476,13 +562,31 @@ class _ABCommonMenu extends ConsumerWidget {
                   ref.read(aBTurningRadiusProvider.notifier).update(radius);
                 }
               },
-            ),
-            trailing: IconButton(
+                    ),
+                  ),
+                  Consumer(
+                    builder: (context, ref, child) => Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: ElevatedButton.icon(
               onPressed: () {
                 ref.invalidate(aBTurningRadiusProvider);
               },
               icon: const Icon(Icons.agriculture),
-              tooltip: 'Set to 1.25 x vehicle turning radius',
+                        label:
+                            const Text('Set to 1.25 x vehicle turning radius'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.looks),
+            ),
+            child: Text(
+              '''Turning radius: ${ref.watch(aBTurningRadiusProvider).toStringAsFixed(1)} m''',
+              style: textStyle,
             ),
           ),
         ),

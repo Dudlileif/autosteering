@@ -100,7 +100,8 @@ class EquipmentDecorationPage extends ConsumerWidget {
           labelText: 'Decoration sideways offset (-left / +right)',
           suffixText: 'm',
         ),
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        keyboardType:
+            const TextInputType.numberWithOptions(decimal: true, signed: true),
         initialValue: ref.read(
           configuredEquipmentProvider
               .select((value) => value.decorationSidewaysOffset?.toString()),

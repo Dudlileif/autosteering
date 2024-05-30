@@ -16,5 +16,6 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 export 'equipment_configurator_providers.dart';
+export 'equipment_debug_providers.dart';
 export 'equipment_providers.dart';
 export 'equipment_setup_providers.dart';

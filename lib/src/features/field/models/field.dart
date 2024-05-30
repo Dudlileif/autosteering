@@ -21,6 +21,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
+import 'package:uuid/uuid.dart';
 
 /// A base class for a field.
 class Field with EquatableMixin {
@@ -32,7 +33,9 @@ class Field with EquatableMixin {
     required this.polygon,
     required this.boundingBox,
     DateTime? lastUsed,
-  }) : lastUsed = lastUsed ?? DateTime.now();
+    String? uuid,
+  })  : lastUsed = lastUsed ?? DateTime.now(),
+        uuid = uuid ?? const Uuid().v4();
 
   /// Creates a [Field] from a json map object.
   ///
@@ -50,6 +53,7 @@ class Field with EquatableMixin {
 
   factory Field.fromJson(Map<String, dynamic> json) {
     final name = json['name'] as String;
+    final uuid = json['uuid'] as String?;
     final lastUsed = DateTime.tryParse(json['last_used'] as String);
     final polygon = Polygon.parse(json['polygon'] as String);
     final boundingBox = polygon.exterior != null
@@ -57,6 +61,7 @@ class Field with EquatableMixin {
         : null;
     return Field(
       name: name,
+      uuid: uuid,
       polygon: polygon,
       boundingBox: boundingBox,
       lastUsed: lastUsed,
@@ -65,6 +70,9 @@ class Field with EquatableMixin {
 
   /// The name of the field.
   final String name;
+
+  /// The unique identifier for this.
+  final String uuid;
 
   /// The polygon that contains the exterior boundary and interior boundaries
   /// if there are any.
@@ -94,6 +102,7 @@ class Field with EquatableMixin {
             )
             .toList(),
         borderStrokeWidth: 1,
+        color: Colors.transparent,
       );
 
   /// Map the [polygon]'s exterior ring points with [map].
@@ -208,12 +217,14 @@ class Field with EquatableMixin {
     Polygon? polygon,
     GeoBox? boundingBox,
     DateTime? lastUsed,
+    String? uuid,
   }) =>
       Field(
         name: name ?? this.name,
         polygon: polygon ?? this.polygon,
         boundingBox: boundingBox ?? this.boundingBox,
         lastUsed: lastUsed ?? this.lastUsed,
+        uuid: uuid ?? this.uuid,
       );
 
   /// Properties used for checking for equality.
@@ -223,13 +234,14 @@ class Field with EquatableMixin {
         polygon,
         boundingBox,
         lastUsed,
+        uuid,
       ];
 
   /// Convert the model to a json compatible map.
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-
     map['name'] = name;
+    map['uuid'] = uuid;
     map['last_used'] = lastUsed.toIso8601String();
     map['polygon'] = polygon.toText();
     return map;

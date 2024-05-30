@@ -35,8 +35,9 @@ part 'ntrip_providers.g.dart';
 class NtripEnabled extends _$NtripEnabled {
   @override
   bool build() {
-    const initValue = true;
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (next != previous) {
         ref
             .read(settingsProvider.notifier)
@@ -50,7 +51,7 @@ class NtripEnabled extends _$NtripEnabled {
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.ntripEnabled) ??
-        initValue;
+        false;
   }
 
   /// Updates [state] to [value].
@@ -60,146 +61,82 @@ class NtripEnabled extends _$NtripEnabled {
   void toggle() => Future(() => state = !state);
 }
 
-/// A provider for the NTRIP caster host address.
+/// A provider for the stored [NtripProfile]s.
 @Riverpod(keepAlive: true)
-class NtripHost extends _$NtripHost {
+class NtripProfiles extends _$NtripProfiles {
   @override
-  String? build() {
-    ref.listenSelf((previous, next) {
-      if (next != previous) {
-        ref.read(settingsProvider.notifier).update(SettingsKey.ntripHost, next);
-      }
-    });
-
-    return ref
+  List<NtripProfile> build() {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
+      if (!const DeepCollectionEquality.unordered().equals(previous, next)) {
+        ref
             .read(settingsProvider.notifier)
-            .getString(SettingsKey.ntripHost) ??
-        'rtk2go.com';
-  }
-
-  /// Updates [state] to [value].
-  void update(String? value) => Future(() => state = value);
-}
-
-/// A provider for the NTRIP caster port.
-@Riverpod(keepAlive: true)
-class NtripPort extends _$NtripPort {
-  @override
-  int build() {
-    ref.listenSelf((previous, next) {
-      if (next != previous) {
-        ref.read(settingsProvider.notifier).update(SettingsKey.ntripPort, next);
+            .update(SettingsKey.ntripProfiles, next);
       }
     });
-
-    return ref.read(settingsProvider.notifier).getInt(SettingsKey.ntripPort) ??
-        2101;
+    final profiles =
+        ref.read(settingsProvider.notifier).getList(SettingsKey.ntripProfiles);
+    if (profiles != null) {
+      return List<Map<String, dynamic>>.from(profiles)
+          .map(NtripProfile.fromJson)
+          .toList();
+    }
+    return [];
   }
 
-  /// Updates [state] to [value].
+  /// Updates [state] to [profiles].
+  void update(List<NtripProfile> profiles) => Future(() => state = profiles);
 
-  void update(int value) => Future(() => state = value);
+  /// Adds [profile] to [state].
+  void add(NtripProfile profile) => Future(() => state = state..add(profile));
 
-  /// Update the [state] to [value] if it's a valid integer.
-  void updateFromString(String value) => Future(() {
-        final port = int.tryParse(value);
-        if (port != null) {
-          if (port >= 1000 && port <= 65535) {
-            state = port;
-          }
-        }
+  /// Replaces the item in [state] that has a matching name with [profile].
+  /// If no item was replaced the [profile] will still be added.
+  void replace(NtripProfile profile) => Future(() {
+        state.removeWhere((element) => element.name == profile.name);
+        state = state..add(profile);
       });
+
+  /// Removes [profile] from [state].
+  void remove(NtripProfile profile) =>
+      Future(() => state = state..remove(profile));
+
+  @override
+  bool updateShouldNotify(
+    List<NtripProfile> previous,
+    List<NtripProfile> next,
+  ) {
+    final equal = const DeepCollectionEquality().equals(previous, next);
+    return !equal;
+  }
 }
 
-/// A provider for the NTRIP caster mounting point.
+/// A provider for the active [NtripProfile], if there is one.
 @Riverpod(keepAlive: true)
-class ActiveNtripMountPoint extends _$ActiveNtripMountPoint {
+class ActiveNtripProfile extends _$ActiveNtripProfile {
   @override
-  String? build() {
-    ref.listenSelf((previous, next) {
-      if (next != previous) {
+  NtripProfile? build() {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
+      if (previous != next) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.ntripMountPoint, next);
+            .update(SettingsKey.ntripActiveProfile, next);
       }
     });
-
-    return ref
+    final json = ref
         .read(settingsProvider.notifier)
-        .getString(SettingsKey.ntripMountPoint);
+        .getMap(SettingsKey.ntripActiveProfile);
+    if (json != null) {
+      return NtripProfile.fromJson(json);
+    }
+    return null;
   }
 
   /// Updates [state] to [value].
-
-  void update(String? value) => Future(() => state = value);
-}
-
-/// A provider for the NTRIP caster username (email).
-@Riverpod(keepAlive: true)
-class NtripUsername extends _$NtripUsername {
-  @override
-  String? build() {
-    ref.listenSelf((previous, next) {
-      if (next != previous) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.ntripUsername, next);
-      }
-    });
-
-    return ref
-        .read(settingsProvider.notifier)
-        .getString(SettingsKey.ntripUsername);
-  }
-
-  /// Updates [state] to [value].
-
-  void update(String? value) => Future(() => state = value);
-}
-
-/// A provider for the NTRIP caster password.
-@Riverpod(keepAlive: true)
-class NtripPassword extends _$NtripPassword {
-  @override
-  String? build() {
-    ref.listenSelf((previous, next) {
-      if (next != previous) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.ntripPassword, next);
-      }
-    });
-
-    return ref
-        .read(settingsProvider.notifier)
-        .getString(SettingsKey.ntripPassword);
-  }
-
-  /// Updates [state] to [value].
-
-  void update(String? value) => Future(() => state = value);
-}
-
-/// A provider for the period between sending [GGASentence]s to the caster.
-@Riverpod(keepAlive: true)
-class NtripGGASendingInterval extends _$NtripGGASendingInterval {
-  @override
-  int? build() {
-    ref.listenSelf((previous, next) {
-      if (next != previous) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.ntripGGASendingInterval, next);
-      }
-    });
-
-    return ref
-        .read(settingsProvider.notifier)
-        .getInt(SettingsKey.ntripGGASendingInterval);
-  }
-
-  /// Updates [state] to [value].
-  void update(int? value) => Future(() => state = value);
+  void update(NtripProfile? value) => Future(() => state = value);
 }
 
 /// A provider for the NTRIP data usage in bytes for this session.
@@ -312,7 +249,7 @@ FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
         data: (client) {
           if (client != null) {
             Logger.instance.i(
-              '''NTRIP client connecting to ${client.host}:${client.port} asking for station ${client.mountPoint}.''',
+              '''NTRIP client connecting to ${client.profile.hostAddress}:${client.profile.port} asking for station ${client.profile.mountPoint}.''',
             );
 
             bool sendGGA() {
@@ -331,8 +268,8 @@ FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
               }
             }
 
-            if (client.ggaSendingInterval != null &&
-                client.ggaSendingInterval! >= 1 &&
+            if (client.profile.ggaSendingInterval != null &&
+                client.profile.ggaSendingInterval! >= 1 &&
                 ggaSendingTimer == null) {
               if (sendGGA()) {
                 Logger.instance.i('Sent GGA sentence to the NTRIP caster');
@@ -351,14 +288,13 @@ FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
               } else {
                 ref.read(tcpServerProvider.notifier).send(event);
               }
-              if (event.length == 12) {
-                //If message is 'ICY 200 OK', we have a confirmed connection.
-                if (String.fromCharCodes(event).contains('ICY 200 OK')) {
-                  Logger.instance.i('NTRIP client connection confirmed.');
-                }
-              }
               final dataString = String.fromCharCodes(event);
-              if (dataString.contains('SOURCETABLE 200 OK') ||
+
+              //If message is 'ICY 200 OK', we have a confirmed connection.
+              if (dataString.contains('ICY 200 OK')) {
+                Logger.instance.i('NTRIP client connection confirmed.');
+              }
+              else if (dataString.contains('SOURCETABLE 200 OK') ||
                   dataString.contains('ENDSOURCETABLE')) {
                 ref.read(ntripEnabledProvider.notifier).update(value: false);
                 Logger.instance.i(
@@ -367,15 +303,22 @@ FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
                 ref
                   ..invalidate(ntripSourcetableProvider)
                   ..invalidateSelf();
+              } 
+              else if (dataString.contains('400 BAD REQUEST')) {
+                ref.read(ntripEnabledProvider.notifier).update(value: false);
+                Logger.instance.i(
+                  '''NTRIP client bad request.''',
+                  error: dataString,
+                );
               }
-              if (client.ggaSendingInterval != null &&
-                  client.ggaSendingInterval! >= 1 &&
+              if (client.profile.ggaSendingInterval != null &&
+                  client.profile.ggaSendingInterval! >= 1 &&
                   ggaSendingTimer == null) {
                 Logger.instance.i(
-                  '''Starting to send NMEA GGA messages every: ${client.ggaSendingInterval} seconds.''',
+                  '''Starting to send NMEA GGA messages every: ${client.profile.ggaSendingInterval} seconds.''',
                 );
                 ggaSendingTimer = Timer.periodic(
-                  Duration(seconds: client.ggaSendingInterval!),
+                  Duration(seconds: client.profile.ggaSendingInterval!),
                   (timer) => sendGGA(),
                 );
               }
@@ -396,22 +339,9 @@ FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
       );
     });
 
-  final host = ref.watch(ntripHostProvider);
-  final port = ref.watch(ntripPortProvider);
-  final username = ref.watch(ntripUsernameProvider);
-  final password = ref.watch(ntripPasswordProvider) ?? '';
-  final mountPoint = ref.watch(activeNtripMountPointProvider);
-  final ggaSendingInterval = ref.watch(ntripGGASendingIntervalProvider);
-
-  if (host != null && username != null && mountPoint != null) {
-    return NtripClient.create(
-      host: host,
-      port: port,
-      password: password,
-      mountPoint: mountPoint,
-      username: username,
-      ggaSendingInterval: ggaSendingInterval,
-    );
+  final ntripProfile = ref.watch(activeNtripProfileProvider);
+  if (ntripProfile != null) {
+    return NtripClient.create(ntripProfile);
   }
   return null;
 }
@@ -420,21 +350,19 @@ FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
 /// NTRIP caster server.
 @riverpod
 FutureOr<Iterable<NtripMountPoint>?> ntripSourcetable(
-  NtripSourcetableRef ref,
-) async {
+  NtripSourcetableRef ref, {
+  required String host,
+  int port = 2101,
+  String? username,
+  String? password,
+}) async {
   ref.onDispose(() {
     Logger.instance.i('NTRIP caster sourcetable cleared.');
   });
 
-  final host = ref.read(ntripHostProvider);
-  final port = ref.read(ntripPortProvider);
-  final username = ref.read(ntripUsernameProvider);
-  final password = ref.read(ntripPasswordProvider);
-  if (host != null) {
-    try {
-      final auth =
-          const Base64Encoder().convert('$username:$password'.codeUnits);
-      final message = '''
+  try {
+    final auth = const Base64Encoder().convert('$username:$password'.codeUnits);
+    final message = '''
 GET / HTTP/1.1\r
 User-Agent: NTRIP NTRIPClient/0.1\r
 Accept: */*\r
@@ -443,32 +371,30 @@ Connection: close\r
 \r
 ''';
 
-      Logger.instance
-          .i('Attempting to get NTRIP sourcetable from: $host:$port.');
+    Logger.instance.i('Attempting to get NTRIP sourcetable from: $host:$port.');
 
-      final socket = await Socket.connect(host, port);
-      socket.add(message.codeUnits);
+    final socket = await Socket.connect(host, port);
+    socket.add(message.codeUnits);
 
-      final data = await socket.toList();
+    final data = await socket.toList();
 
-      ref
-          .read(ntripDataUsageSessionProvider.notifier)
-          .updateBy(data.map((e) => e.lengthInBytes).sum);
+    ref
+        .read(ntripDataUsageSessionProvider.notifier)
+        .updateBy(data.map((e) => e.lengthInBytes).sum);
 
-      final lines = data.map(String.fromCharCodes).join().split('\n');
+    final lines = data.map(String.fromCharCodes).join().split('\n');
 
-      Logger.instance.i('NTRIP sourcetable found with ${lines.length} lines.');
+    Logger.instance.i('NTRIP sourcetable found with ${lines.length} lines.');
 
-      final table = lines.map(NtripSourcetableEntry.fromString);
+    final table = lines.map(NtripSourcetableEntry.fromString);
 
-      return table.whereType<NtripMountPoint>();
-    } catch (error, stackTrace) {
-      Logger.instance.i(
-        '''Failed getting the sourcetable for NTRIP caster server: $host:$port.''',
-        error: error,
-        stackTrace: stackTrace,
-      );
-    }
+    return table.whereType<NtripMountPoint>();
+  } catch (error, stackTrace) {
+    Logger.instance.i(
+      '''Failed getting the sourcetable for NTRIP caster server: $host:$port.''',
+      error: error,
+      stackTrace: stackTrace,
+    );
   }
 
   return null;
@@ -478,9 +404,20 @@ Connection: close\r
 /// [MainVehicle].
 @riverpod
 FutureOr<Map<NtripMountPointStream, double?>?> ntripMountPointsSorted(
-  NtripMountPointsSortedRef ref,
-) async {
-  final sourcetable = await ref.watch(ntripSourcetableProvider.future);
+  NtripMountPointsSortedRef ref, {
+  required String host,
+  int port = 2101,
+  String? username,
+  String? password,
+}) async {
+  final sourcetable = await ref.watch(
+    ntripSourcetableProvider(
+      host: host,
+      port: port,
+      username: username,
+      password: password,
+    ).future,
+  );
 
   final position =
       ref.read(mainVehicleProvider.select((value) => value.position));

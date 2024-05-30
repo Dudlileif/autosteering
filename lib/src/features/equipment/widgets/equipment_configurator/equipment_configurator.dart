@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/equipment/widgets/equipment_configurat
 import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_type_selector_page.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -233,26 +234,26 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
                       Expanded(
                         child: Consumer(
                           builder: (context, ref, child) => Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ListenableBuilder(
-                              listenable: tabController,
-                              builder: (context, child) => AnimatedOpacity(
-                                opacity: tabController.index > 0 ? 1 : 0,
-                                duration: Durations.medium1,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: IconButton.filled(
-                                    icon: const Icon(Icons.arrow_left),
-                                    onPressed: tabController.index > 0
-                                        ? () => tabController.animateTo(
-                                              tabController.index - 1,
-                                            )
-                                        : null,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ListenableBuilder(
+                                listenable: tabController,
+                                builder: (context, child) => AnimatedOpacity(
+                                  opacity: tabController.index > 0 ? 1 : 0,
+                                  duration: Durations.medium1,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: IconButton.filled(
+                                      icon: const Icon(Icons.arrow_left),
+                                      onPressed: tabController.index > 0
+                                          ? () => tabController.animateTo(
+                                                tabController.index - 1,
+                                              )
+                                          : null,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
                               Expanded(
                                 child: Consumer(
                                   builder: (context, ref, child) => TabBarView(
@@ -264,41 +265,41 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
                                   ),
                                 ),
                               ),
-                            ListenableBuilder(
-                              listenable: tabController,
-                              builder: (context, child) => AnimatedOpacity(
-                                opacity: tabController.index <
-                                            pages.length - 1 &&
+                              ListenableBuilder(
+                                listenable: tabController,
+                                builder: (context, child) => AnimatedOpacity(
+                                  opacity:
+                                      tabController.index < pages.length - 1 &&
                                               !disabled
-                                    ? 1
-                                    : 0,
-                                duration: Durations.medium1,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: IconButton.filled(
-                                    onPressed: tabController.index <
-                                                pages.length - 1 &&
+                                          ? 1
+                                          : 0,
+                                  duration: Durations.medium1,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: IconButton.filled(
+                                      onPressed: tabController.index <
+                                                  pages.length - 1 &&
                                               !disabled
-                                        ? () => tabController.animateTo(
-                                              tabController.index + 1,
-                                            )
-                                        : null,
-                                    icon: const Icon(Icons.arrow_right),
+                                          ? () => tabController.animateTo(
+                                                tabController.index + 1,
+                                              )
+                                          : null,
+                                      icon: const Icon(Icons.arrow_right),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
                           ),
                         ),
                       ),
                     ],
                   );
                 },
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       );
 }
 
@@ -321,20 +322,50 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
           ),
         )
             ? null
-            : () {
-                final equipment = ref.watch(configuredEquipmentProvider)
-                  ..lastUsed = DateTime.now();
+            : () async {
+                await Future<void>(() async {
+                  final equipment = ref.watch(configuredEquipmentProvider)
+                    ..lastUsed = DateTime.now();
 
-                ref
-                    .read(simInputProvider.notifier)
-                    .send((updatedEquipment: equipment));
+                  ref
+                      .read(simInputProvider.notifier)
+                      .send((updatedEquipment: equipment));
+                  final updatedSetups = await ref.watch(
+                    savedEquipmentSetupsProvider.selectAsync(
+                      (data) => data
+                          .where((element) => element.updateChild(equipment)),
+                    ),
+                  );
 
-                if (Device.isNative) {
-                  ref.read(saveEquipmentProvider(equipment));
-                }
-                Navigator.of(context).pop();
-              }
-            ,
+                  ref.read(
+                    activeWorkSessionProvider.select(
+                      (value) =>
+                          value?.equipmentSetup?.updateChild(equipment) ??
+                          false,
+                    ),
+                  );
+
+                  final updatedWorkSessions = await ref.watch(
+                    savedWorkSessionsProvider.selectAsync(
+                      (data) => data.where(
+                        (element) =>
+                            element.equipmentSetup?.updateChild(equipment) ??
+                            false,
+                      ),
+                    ),
+                  );
+                  if (Device.isNative) {
+                    await ref.read(saveEquipmentProvider(equipment).future);
+                    for (final setup in updatedSetups) {
+                      await ref.read(saveEquipmentSetupProvider(setup).future);
+                    }
+                    for (final session in updatedWorkSessions) {
+                      await ref.read(saveWorkSessionProvider(session).future);
+                    }
+                  }
+                  ref.read(loadedEquipmentProvider.notifier).update(equipment);
+                }).then((value) => Navigator.of(context).pop());
+              },
         icon: const Icon(Icons.check),
         label: const Text('Apply configuration'),
       );

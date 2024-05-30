@@ -56,12 +56,10 @@ class FieldLayer extends ConsumerWidget {
                 bufferedField != null;
 
         final showBorderPoints = ref.watch(showFieldBorderPointsProvider);
-
-
+        
         return Stack(
           children: [
             PolygonLayer(
-              polygonCulling: true,
               polygons: [
                 if (showField)
                   field.mapPolygon.copyWith(
@@ -79,6 +77,7 @@ class FieldLayer extends ConsumerWidget {
                         field.mapBoundingBox((point) => point.latLng).toList(),
                     borderStrokeWidth: 1,
                     borderColor: darkModeEnabled ? Colors.white : Colors.black,
+                    color: Colors.transparent,
                   ),
                 if (showBufferedFieldBoundingBox)
                   Polygon(
@@ -86,6 +85,7 @@ class FieldLayer extends ConsumerWidget {
                         .mapBoundingBox((point) => point.latLng)
                         .toList(),
                     borderStrokeWidth: 1,
+                    color: Colors.transparent,
                     borderColor: Colors.red,
                   ),
               ],
@@ -132,7 +132,6 @@ class FieldLayer extends ConsumerWidget {
       return Stack(
         children: [
           PolygonLayer(
-            polygonCulling: true,
             polygons: [
               if (recordingExteriorRing != null)
                 Polygon(

@@ -509,7 +509,7 @@ class _ExportEquipmentSetupProviderElement
 }
 
 String _$savedEquipmentSetupsHash() =>
-    r'4f67f5c8f44f66b8311f1316b2d26498dcc991d0';
+    r'b28d981ab200ba87502288e3e9ad1336f2be4006';
 
 /// A provider for reading and holding all the saved [EquipmentSetup]s in the
 /// user file directory.
@@ -987,7 +987,7 @@ final importEquipmentSetupProvider =
 
 typedef ImportEquipmentSetupRef = AutoDisposeFutureProviderRef<EquipmentSetup?>;
 String _$configuredEquipmentSetupHash() =>
-    r'71c216b7b74326207c15483b43159727e9ee7743';
+    r'4f72d22d954ac4e1f0a81208d10ab3bdfd2a225d';
 
 /// A provider or holding the configured/loaded [EquipmentSetup] in memory.
 ///

@@ -214,7 +214,9 @@ AsyncValue<Vehicle> lastUsedVehicle(LastUsedVehicleRef ref) =>
 class GaugesAverageCount extends _$GaugesAverageCount {
   @override
   int build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)

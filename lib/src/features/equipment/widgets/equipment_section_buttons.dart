@@ -33,18 +33,22 @@ class EquipmentSectionButtons extends ConsumerWidget {
     final equipments = ref.watch(
       allEquipmentsProvider.select(
         (entry) =>
-            entry.values.where((equipment) => equipment.sections.isNotEmpty),
+            entry.values.where(
+          (equipment) =>
+              equipment.sections.any((element) => element.workingWidth > 0),
+        ),
       ),
     );
+
     final theme = Theme.of(context);
     final textStyle = theme.textTheme.bodyLarge
         ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold);
+
     return equipments.isEmpty
         ? const SizedBox.shrink()
         : Column(
             mainAxisSize: MainAxisSize.min,
             children: equipments
-                .where((element) => element.sections.isNotEmpty)
                 .map(
                   (equipment) => Padding(
                     padding: const EdgeInsets.only(bottom: 8),

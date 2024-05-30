@@ -17,7 +17,6 @@
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'equipment_configurator_providers.g.dart';
@@ -39,11 +38,13 @@ class EquipmentConfiguratorIndex extends _$EquipmentConfiguratorIndex {
   void decrease() => update(state - 1);
 }
 
-/// A provider for the vehicle from the configurator.
+/// A provider for the equipment from the configurator.
 @Riverpod(keepAlive: true)
 class ConfiguredEquipment extends _$ConfiguredEquipment {
   @override
-  Equipment build() => Equipment(hitchType: HitchType.fixed);
+  Equipment build() =>
+      ref.watch(loadedEquipmentProvider) ??
+      Equipment(hitchType: HitchType.fixed);
 
   /// Update the [state] to [equipment].
   void update(Equipment equipment) => Future(() => state = equipment);
@@ -63,27 +64,6 @@ class ConfiguredEquipment extends _$ConfiguredEquipment {
             ),
         ),
       );
-}
-
-/// A provider for the [TextEditingController] for the name in the
-/// equipment configurator.
-@Riverpod(keepAlive: true)
-class ConfiguredEquipmentNameTextController
-    extends _$ConfiguredEquipmentNameTextController {
-  @override
-  Raw<TextEditingController> build() {
-    final controller = TextEditingController(
-      text: ref.read(configuredEquipmentProvider.select((value) => value.name)),
-    );
-
-    controller.addListener(() {
-      ref
-          .read(configuredEquipmentProvider.notifier)
-          .updateName(controller.text);
-    });
-
-    return controller;
-  }
 }
 
 /// A provider for whether the configured equipment sections should have equal
@@ -134,7 +114,6 @@ class ConfiguredEquipmentEqualWorkingWidths
     ref.listenSelf((previous, next) {
       if (previous != null && !previous && next) {
         final equipment = ref.read(configuredEquipmentProvider);
-
         ref.read(configuredEquipmentProvider.notifier).update(
               equipment.copyWith(
                 sections: equipment.sections

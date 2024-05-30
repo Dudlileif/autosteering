@@ -992,7 +992,7 @@ final activeAutosteeringStateProvider =
 
 typedef _$ActiveAutosteeringState = Notifier<AutosteeringState>;
 String _$gaugesAverageCountHash() =>
-    r'8b36c1bc95239048650b55ea1f7da6920ea3ddc0';
+    r'3a61a280ef00f4f7898c45aeabcb6a5fe36b5bff';
 
 /// A provider for the number of previous positions to use for calculating
 /// the gauge velocity and bearing values.

@@ -21,12 +21,14 @@ import 'dart:convert';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
+import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
+import 'package:uuid/uuid.dart';
 
 part 'field_providers.g.dart';
 
@@ -54,6 +56,12 @@ class ActiveField extends _$ActiveField {
         if (next != null) {
           Logger.instance.i('Loaded active field: ${next.name}.');
           ref.read(fieldBufferEnabledProvider.notifier).update(value: false);
+          if (ref.read(
+            activeWorkSessionProvider
+                .select((value) => value != null && value.field == null),
+          )) {
+            ref.read(activeWorkSessionProvider.notifier).updateField(next);
+          }
         }
       });
 
@@ -270,7 +278,7 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
           debugLabel: 'Field Buffering: ${field.name}',
         ),
       );
-    }
+    } 
 
     return field.copyWith(
       polygon: bufferedPolygon,
@@ -278,6 +286,7 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
               (!bufferedPolygon.exterior!.isEmptyByGeometry)
           ? GeoBox.from(bufferedPolygon.exterior!.toGeographicPositions)
           : null,
+      uuid: const Uuid().v4(),
     );
   }
   return null;

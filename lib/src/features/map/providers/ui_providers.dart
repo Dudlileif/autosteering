@@ -29,7 +29,9 @@ class AutosteeringConfiguratorUiOffset
     extends _$AutosteeringConfiguratorUiOffset {
   @override
   Offset build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && next != previous) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.uiAutosteeringConfiguratorOffset,
@@ -55,7 +57,9 @@ class AutosteeringConfiguratorUiOffset
 class ImuConfiguratorUiOffset extends _$ImuConfiguratorUiOffset {
   @override
   Offset build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && next != previous) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.uiImuConfiguratorOffset,
@@ -82,7 +86,9 @@ class ImuConfiguratorUiOffset extends _$ImuConfiguratorUiOffset {
 class PathRecordingMenuUiOffset extends _$PathRecordingMenuUiOffset {
   @override
   Offset build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && next != previous) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.uiPathRecordingMenuOffset,
@@ -109,7 +115,9 @@ class SteeringHardwareConfiguratorUiOffset
     extends _$SteeringHardwareConfiguratorUiOffset {
   @override
   Offset build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && next != previous) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.uiSteeringHardwareConfiguratorOffset,
@@ -136,7 +144,9 @@ class SteeringHardwareConfiguratorUiOffset
 class NudgingControlsUiOffset extends _$NudgingControlsUiOffset {
   @override
   Offset build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && next != previous) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.uiNudgningControlsOffset,

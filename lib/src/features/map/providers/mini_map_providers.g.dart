@@ -6,7 +6,7 @@ part of 'mini_map_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$showMiniMapHash() => r'9fada958c4a57d796e52cef45c3ad98dcc44dac7';
+String _$showMiniMapHash() => r'36c867fd9d1f05d4b83fe5a7a5e73f173341ad23';
 
 /// Whether the mini map should be shown.
 ///
@@ -60,7 +60,7 @@ final miniMapControllerProvider =
 
 typedef _$MiniMapController = AutoDisposeNotifier<MapController>;
 String _$miniMapLockToFieldHash() =>
-    r'920e53ea1f850381de472d79a02836209d2d0654';
+    r'2cc95a43066ca0a447389424a40a831637646b7f';
 
 /// Whether the mini map always should point to the north and not rotate.
 ///
@@ -79,7 +79,7 @@ final miniMapLockToFieldProvider =
 
 typedef _$MiniMapLockToField = AutoDisposeNotifier<bool>;
 String _$miniMapAlwaysPointNorthHash() =>
-    r'1060b12d398b845b570b648e5a7ad4c7f77ca72f';
+    r'ec759ea3aef81d55ad98ff7b552974c7a3008c85';
 
 /// Whether the mini map always should point to the north and not rotate.
 ///
@@ -97,7 +97,7 @@ final miniMapAlwaysPointNorthProvider =
 );
 
 typedef _$MiniMapAlwaysPointNorth = Notifier<bool>;
-String _$miniMapSizeHash() => r'1946e3b3523b482a98084e3394cdfff002a77e96';
+String _$miniMapSizeHash() => r'e18b3a58783be66b3042a5f2618cc8faeed697f1';
 
 /// Whether the mini map always should point to the north and not rotate.
 ///

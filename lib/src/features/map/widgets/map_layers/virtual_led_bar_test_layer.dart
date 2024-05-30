@@ -45,7 +45,7 @@ class VirtualLedBarTestLayer extends ConsumerWidget {
     final vehicle = ref.watch(mainVehicleProvider);
 
     return PolylineLayer(
-      polylineCulling: true,
+      
       polylines: [
         Polyline(
           points: [

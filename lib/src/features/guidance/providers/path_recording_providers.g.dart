@@ -82,7 +82,7 @@ final enableAutomaticPathRecorderProvider =
 
 typedef _$EnableAutomaticPathRecorder = Notifier<bool>;
 String _$activePathRecordingSettingsHash() =>
-    r'a48ada6924856a5d2aa54b1663755114f1904f15';
+    r'af7d99d95caa8694a64188edd03a92b057032024';
 
 /// A provider for the [PathRecordingSettings] which configures how paths
 /// should be recorded.

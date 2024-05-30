@@ -29,14 +29,14 @@ extension PolygonCopyWith on Polygon {
     double? borderStrokeWidth,
     Color? borderColor,
     bool? disableHolesBorder,
-    bool? isDotted,
-    bool? isFilled,
+    StrokePattern? pattern,
     StrokeCap? strokeCap,
     StrokeJoin? strokeJoin,
     String? label,
     TextStyle? labelStyle,
     PolygonLabelPlacement? labelPlacement,
     bool? rotateLabel,
+    Object? hitValue,
   }) =>
       Polygon(
         points: points ?? this.points,
@@ -45,14 +45,14 @@ extension PolygonCopyWith on Polygon {
         borderStrokeWidth: borderStrokeWidth ?? this.borderStrokeWidth,
         borderColor: borderColor ?? this.borderColor,
         disableHolesBorder: disableHolesBorder ?? this.disableHolesBorder,
-        isDotted: isDotted ?? this.isDotted,
-        isFilled: isFilled ?? this.isFilled,
+        pattern: pattern ?? this.pattern,
         strokeCap: strokeCap ?? this.strokeCap,
         strokeJoin: strokeJoin ?? this.strokeJoin,
         label: label ?? this.label,
         labelStyle: labelStyle ?? this.labelStyle,
         labelPlacement: labelPlacement ?? this.labelPlacement,
         rotateLabel: rotateLabel ?? this.rotateLabel,
+        hitValue: hitValue ?? this.hitValue,
       );
 }
 
@@ -67,10 +67,11 @@ extension PolylineCopyWith on Polyline {
     Color? borderColor,
     List<Color>? gradientColors,
     List<double>? colorsStop,
-    bool? isDotted,
+    StrokePattern? pattern,
     StrokeCap? strokeCap,
     StrokeJoin? strokeJoin,
     bool? useStrokeWidthInMeter,
+    Object? hitValue,
   }) =>
       Polyline(
         points: points ?? this.points,
@@ -80,10 +81,11 @@ extension PolylineCopyWith on Polyline {
         borderColor: borderColor ?? this.borderColor,
         gradientColors: gradientColors ?? this.gradientColors,
         colorsStop: colorsStop ?? this.colorsStop,
-        isDotted: isDotted ?? this.isDotted,
+        pattern: pattern ?? this.pattern,
         strokeCap: strokeCap ?? this.strokeCap,
         strokeJoin: strokeJoin ?? this.strokeJoin,
         useStrokeWidthInMeter:
             useStrokeWidthInMeter ?? this.useStrokeWidthInMeter,
+        hitValue: hitValue ?? this.hitValue,
       );
 }

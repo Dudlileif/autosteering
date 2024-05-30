@@ -25,30 +25,21 @@ import 'package:universal_io/io.dart';
 class NtripClient {
   /// A client for receiving NTRIP messages from an NTRIP caster.
   const NtripClient._({
-    required this.host,
+    required this.profile,
     required this.socket,
-    required this.username,
-    required this.password,
-    required this.port,
-    required this.mountPoint,
-    this.ggaSendingInterval,
   });
 
   /// Attempts to create an [NtripClient], but will only succeed if
-  /// [socket] is given or it manages to create and connect to one given
-  /// by [host], [port] and [mountPoint].
-  static Future<NtripClient?> create({
-    required String host,
-    required String mountPoint,
-    required String username,
-    String password = '',
-    int port = 2101,
+  /// [socket] is given or it manages to create and connect to one with the
+  /// supplied [NtripProfile].
+  static Future<NtripClient?> create(
+    NtripProfile profile, {
     Socket? connectedSocket,
-    int? ggaSendingInterval,
   }) async {
-    final auth = const Base64Encoder().convert('$username:$password'.codeUnits);
+    final auth = const Base64Encoder()
+        .convert('${profile.username}:${profile.password}'.codeUnits);
     final message = '''
-GET /$mountPoint HTTP/1.1\r
+GET /${profile.mountPoint} HTTP/1.1\r
 User-Agent: NTRIP NTRIPClient/0.1\r
 Authorization: Basic $auth\r
 Accept: */*\r
@@ -56,46 +47,26 @@ Connection: close\r
 \r
       ''';
     try {
-      final socket = (connectedSocket ?? await Socket.connect(host, port))
+      final socket = (connectedSocket ??
+          await Socket.connect(profile.hostAddress, profile.port))
         ..add(message.codeUnits);
 
       return NtripClient._(
-        host: host,
-        port: port,
-        username: username,
-        password: password,
-        mountPoint: mountPoint,
+        profile: profile,
         socket: socket,
-        ggaSendingInterval: ggaSendingInterval,
       );
     } catch (error) {
       Logger.instance.e(
-        'Failed to connect to NTRIP server $host:$port with message: $message',
+        '''Failed to connect to NTRIP server ${profile.hostAddress}:${profile.port} with message: $message''',
         error: error,
       );
       return null;
     }
   }
 
-  /// The host of the NTRIP caster service.
-  final String host;
-
-  /// The port for the NTRIP caster service.
-  final int port;
-
-  /// The username/email for authenticating with the NTRIP caster service.
-  final String username;
-
-  /// The password for authenticating with the NTRIP caster service.
-  final String password;
-
-  /// Which mounting point/base station to connect to at the NTRIP caster
-  /// service.
-  final String mountPoint;
+  /// The profile configuration for connecting to the NTRIP caster service.
+  final NtripProfile profile;
 
   /// The socket communicating with the NTRIP caster service.
   final Socket socket;
-
-  /// The time in seconds between [GGASentence]s should be sent to the caster.
-  final int? ggaSendingInterval;
 }

@@ -67,7 +67,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     SteeringHardwareConfig? steeringHardwareConfig,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
-    DateTime? lastUsed,
+    super.lastUsed,
     double bearing = 0,
     double pitch = 0,
     double roll = 0,
@@ -86,8 +86,7 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
             steeringHardwareConfig ?? const SteeringHardwareConfig(),
         stanleyParameters = stanleyParameters ?? const StanleyParameters(),
         purePursuitParameters =
-            purePursuitParameters ?? const PurePursuitParameters(),
-        lastUsed = lastUsed ?? DateTime.now();
+            purePursuitParameters ?? const PurePursuitParameters();
 
   /// Creates the appropriate [Vehicle] subclass from the [json] object.
   ///
@@ -194,9 +193,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
       manufacturerColors: manufacturerColors,
     );
   }
-
-  /// The last time this vehicle was used.
-  DateTime lastUsed;
 
   /// The manufacturer color scheme of the vehicle.
   ManufacturerColors manufacturerColors;
@@ -563,9 +559,13 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The projected trajectory for the moving vehicle.
   ///
+  /// [seconds] can be set to change the prediction time from the default 10
+  /// seconds, and [minLength] can force a minimum length of the trajectory 
+  /// line.
+  /// 
   /// Based on the current [steeringAngle], [velocity] and
   /// [currentTurningRadius].
-  Path get trajectory;
+  LineString trajectory({double? seconds, double?minLength});
 
   /// Whether the vehicle is reversing or not.
   @override

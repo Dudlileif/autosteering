@@ -39,7 +39,7 @@ class GuidanceMenu extends ConsumerWidget {
     final textStyle = theme.menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Guidance',
-      icon: Icons.navigation,
+      icon: Icons.navigation_outlined,
       menuChildren: [
         ListTile(
           title: Text(
@@ -117,10 +117,14 @@ class GuidanceMenu extends ConsumerWidget {
           if (Device.isNative) const _LoadABTrackingMenu(),
           const _ImportMenu(),
         ],
-        if (ref.watch(displayABTrackingProvider) != null)
+        if (ref.watch(displayABTrackingProvider) != null) ...[
           const _SaveABTrackingButton(),
-        if (ref.watch(displayPathTrackingProvider) != null)
+          const _RenameABTrackingButton(),
+        ],
+        if (ref.watch(displayPathTrackingProvider) != null) ...[
           const _SavePathTrackingButton(),
+          const _RenamePathTrackingButton(),
+        ],
         if (ref.watch(displayABTrackingProvider) != null ||
             ref.watch(displayPathTrackingProvider) != null) ...[
           const _ExportButton(),
@@ -161,7 +165,7 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Load path recording',
+      text: 'Load path tracking',
       icon: Icons.history,
       menuChildren: pathTrackings
           .map(
@@ -179,6 +183,9 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
                   ref
                       .read(configuredPathTrackingProvider.notifier)
                       .update(pathTracking);
+                  Logger.instance.i(
+                    '''Loaded path tracking: ${pathTracking.name}.''',
+                  );
                 },
                 trailing: Device.isNative
                     ? IconButton(
@@ -256,6 +263,30 @@ class _LoadABTrackingMenu extends ConsumerWidget {
                   ref
                       .read(configuredABTrackingProvider.notifier)
                       .update(abTracking);
+                  ref
+                      .read(currentABTrackingTypeProvider.notifier)
+                      .update(abTracking.type);
+                  if (abTracking is APlusLine) {
+                    ref
+                      ..read(aBPointAProvider.notifier).update(abTracking.start)
+                      ..invalidate(aBPointBProvider)
+                      ..read(aPlusLineBearingProvider.notifier)
+                          .update(abTracking.initialBearing);
+                  } else if (abTracking is ABLine) {
+                    ref
+                      ..read(aBPointAProvider.notifier).update(abTracking.start)
+                      ..read(aBPointBProvider.notifier).update(abTracking.end);
+                  } else if (abTracking is ABCurve) {
+                    ref
+                      ..read(aBPointAProvider.notifier).update(abTracking.start)
+                      ..read(aBPointBProvider.notifier).update(abTracking.end);
+                    ref
+                        .read(aBCurvePointsProvider.notifier)
+                        .update(abTracking.baseLine);
+                  }
+                  Logger.instance.i(
+                    'Loaded AB tracking: ${abTracking.name}.',
+                  );
                 },
                 trailing: Device.isNative
                     ? IconButton(
@@ -265,10 +296,9 @@ class _LoadABTrackingMenu extends ConsumerWidget {
                             builder: (context) => Consumer(
                               builder: (context, ref, child) => DeleteDialog(
                                 name: abTracking.name ?? abTracking.uuid,
-                                onDelete: () async => await ref
-                                              .watch(
-                                                deleteABTrackingProvider(
-                                                  abTracking,
+                                onDelete: () async => await ref.watch(
+                                  deleteABTrackingProvider(
+                                    abTracking,
                                   ).future,
                                 ),
                               ),
@@ -339,6 +369,170 @@ class _ExportButton extends ConsumerWidget {
                   .watch(exportPathTrackingProvider(pathTracking).future)
               : null,
       child: Text('Export', style: textStyle),
+    );
+  }
+}
+
+class _RenameABTrackingButton extends ConsumerWidget {
+  const _RenameABTrackingButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final abTracking = ref.watch(configuredABTrackingProvider);
+    if (abTracking == null) {
+      return const SizedBox.shrink();
+    }
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    return MenuItemButton(
+      closeOnActivate: false,
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.edit),
+      ),
+      onPressed: () => showDialog<void>(
+        context: context,
+        builder: (context) {
+          var name = abTracking.name ?? '';
+          return StatefulBuilder(
+            builder: (context, setState) => SimpleDialog(
+              title: const Text('Name the AB tracking'),
+              contentPadding: const EdgeInsets.only(
+                left: 24,
+                top: 12,
+                right: 24,
+                bottom: 16,
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.label_outline),
+                      labelText: 'Name',
+                    ),
+                    initialValue: name,
+                    onChanged: (value) => setState(() => name = value),
+                    onFieldSubmitted: (value) => setState(() => name = value),
+                    keyboardType: TextInputType.text,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value != null &&
+                            value.isNotEmpty &&
+                            !value.startsWith(' ')
+                        ? null
+                        : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Consumer(
+                    builder: (context, ref, child) => FilledButton(
+                      onPressed: () {
+                        if (abTracking.name != name && name.isNotEmpty) {
+                          Timer(const Duration(milliseconds: 100), () {
+                            ref
+                              ..read(deleteABTrackingProvider(abTracking))
+                              ..read(
+                                saveABTrackingProvider(
+                                  abTracking
+                                    ..name = name.isNotEmpty ? name : null,
+                                ),
+                              );
+                          });
+                        }
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Save tracking'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      child: Text('Rename AB tracking', style: textStyle),
+    );
+  }
+}
+
+class _RenamePathTrackingButton extends ConsumerWidget {
+  const _RenamePathTrackingButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pathTracking = ref.watch(configuredPathTrackingProvider);
+    if (pathTracking == null) {
+      return const SizedBox.shrink();
+    }
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    return MenuItemButton(
+      closeOnActivate: false,
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.edit),
+      ),
+      onPressed: () => showDialog<void>(
+        context: context,
+        builder: (context) {
+          var name = pathTracking.name ?? '';
+          return StatefulBuilder(
+            builder: (context, setState) => SimpleDialog(
+              title: const Text('Name the AB tracking'),
+              contentPadding: const EdgeInsets.only(
+                left: 24,
+                top: 12,
+                right: 24,
+                bottom: 16,
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.label_outline),
+                      labelText: 'Name',
+                    ),
+                    initialValue: name,
+                    onChanged: (value) => setState(() => name = value),
+                    onFieldSubmitted: (value) => setState(() => name = value),
+                    keyboardType: TextInputType.text,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value != null &&
+                            value.isNotEmpty &&
+                            !value.startsWith(' ')
+                        ? null
+                        : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Consumer(
+                    builder: (context, ref, child) => FilledButton(
+                      onPressed: () {
+                        if (pathTracking.name != name && name.isNotEmpty) {
+                          Timer(const Duration(milliseconds: 100), () {
+                            ref
+                              ..read(deletePathTrackingProvider(pathTracking))
+                              ..read(
+                                savePathTrackingProvider(
+                                  pathTracking
+                                    ..name = name.isNotEmpty ? name : null,
+                                ),
+                              );
+                          });
+                        }
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Save tracking'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      child: Text('Rename path tracking', style: textStyle),
     );
   }
 }

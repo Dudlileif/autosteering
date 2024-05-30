@@ -96,7 +96,7 @@ final showEditablePathLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowEditablePathLayerRef = AutoDisposeProviderRef<bool>;
 String _$showVehicleDebugLayerHash() =>
-    r'8756a6e6a4385fc9e0c9a4898f9f043b98a099de';
+    r'e5f5659bcf4c00b8ac0cd7fa3971abe7a30541e0';
 
 /// Whether the debugging layer for the vehicle should be shown.
 ///
@@ -167,7 +167,7 @@ final showFieldLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowFieldLayerRef = AutoDisposeProviderRef<bool>;
 String _$showEquipmentDebugLayerHash() =>
-    r'b8a001de87bdbfba763dd2bd7e6c3f128188e39d';
+    r'7b0f5d48bd0ef047c83a28213c6455cbb30dab11';
 
 /// Whether the debugging layer for the equipment should be shown.
 ///
@@ -202,7 +202,7 @@ final showABTrackingLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowABTrackingLayerRef = AutoDisposeProviderRef<bool>;
-String _$showOSMLayerHash() => r'69fa6c23cf1ffb4f8258a52571a0acfe940cb316';
+String _$showOSMLayerHash() => r'b0a5ae14d55cd882f2456e2786f1e8bffd836a79';
 
 /// Whether the OpenStreetMap layer should be shown.
 ///
@@ -257,7 +257,7 @@ final showEquipmentDrawingLayerProvider =
 );
 
 typedef _$ShowEquipmentDrawingLayer = AutoDisposeNotifier<bool>;
-String _$showGridLayerHash() => r'5446b343924291b9c086887956e98fe44f385ef6';
+String _$showGridLayerHash() => r'e3607479b6f71e85ea1c15bf80b2d89e45f7ce35';
 
 /// Whether the map should show grid lines.
 ///

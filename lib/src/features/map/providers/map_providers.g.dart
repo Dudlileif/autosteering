@@ -304,7 +304,7 @@ final mainMapControllerProvider =
 );
 
 typedef _$MainMapController = AutoDisposeNotifier<MapController>;
-String _$homePositionHash() => r'61275c8560df6ef3194e8e49a75efaa06b1599de';
+String _$homePositionHash() => r'e2185356d1440812f79ec9e598d427c90dd55e7d';
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
 ///
@@ -322,7 +322,7 @@ final homePositionProvider =
 
 typedef _$HomePosition = AutoDisposeNotifier<LatLng>;
 String _$centerMapOnVehicleHash() =>
-    r'2544348c225c1f2032f2bf779899fe45cbe70e9a';
+    r'c0b7e0d3a4ed182389c105d826978b7c60481530';
 
 /// Whether the map should center on the vehicle or if it could be moved freely.
 ///
@@ -361,7 +361,7 @@ final zoomTimerControllerProvider =
 );
 
 typedef _$ZoomTimerController = AutoDisposeNotifier<Timer?>;
-String _$mapOffset2DHash() => r'8bc38501e2863cdbd511010cd440bc5b74757238';
+String _$mapOffset2DHash() => r'7e7d0636d6c7eb2e73b8f229d609629e47d8587a';
 
 /// How much the map center should be offset from the vehicle when using
 /// 2D view.
@@ -379,7 +379,7 @@ final mapOffset2DProvider =
 );
 
 typedef _$MapOffset2D = AutoDisposeNotifier<MapCenterOffset>;
-String _$mapOffset3DHash() => r'e638fbb2cbd604ddfc7a10bea4b2efcfaac1ef9e';
+String _$mapOffset3DHash() => r'c990811beac0027271c895fa9181dd002f7dafc1';
 
 /// How much the map center should be offset from the vehicle when using
 /// 3D view.
@@ -397,7 +397,7 @@ final mapOffset3DProvider =
 );
 
 typedef _$MapOffset3D = AutoDisposeNotifier<MapCenterOffset>;
-String _$alwaysPointNorthHash() => r'2d456621396d42dd6b437c355fb25ff009c51eec';
+String _$alwaysPointNorthHash() => r'48634e14540da355b328ec529f0fcf6563888bd7';
 
 /// Whether the map always should point to the north and not rotate.
 ///
@@ -416,7 +416,7 @@ final alwaysPointNorthProvider =
 
 typedef _$AlwaysPointNorth = AutoDisposeNotifier<bool>;
 String _$mapUse3DPerspectiveHash() =>
-    r'1f3cb69eeef0c67fa3efcd06c268738d732b6de3';
+    r'6969716084cd8395dac8cd6cdfbe5279dc60a566';
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
@@ -436,7 +436,7 @@ final mapUse3DPerspectiveProvider =
 
 typedef _$MapUse3DPerspective = AutoDisposeNotifier<bool>;
 String _$map3DPerspectiveAngleHash() =>
-    r'c798b25a9e8cdbd44c11ef6b04f555a0a43d200c';
+    r'82eb65be52290dc00a2b6194a6e433a2e7421e88';
 
 /// The angle that the 3D perspective should be seen from, as in radians
 /// from the orthogonal view.
@@ -455,7 +455,7 @@ final map3DPerspectiveAngleProvider =
 );
 
 typedef _$Map3DPerspectiveAngle = AutoDisposeNotifier<double>;
-String _$mapZoomHash() => r'341411f8b3402f47a9008c6758f3ced5cdc1cdaa';
+String _$mapZoomHash() => r'eeb2a18fd7b4dafdb4d10b219abe6e55f98bbd5f';
 
 /// The zoom value that the map should use when being created.
 ///
@@ -471,7 +471,7 @@ final mapZoomProvider = AutoDisposeNotifierProvider<MapZoom, double>.internal(
 );
 
 typedef _$MapZoom = AutoDisposeNotifier<double>;
-String _$mapAllowDownloadHash() => r'4544d9f79d96035a17077394da45c17ba7e25c32';
+String _$mapAllowDownloadHash() => r'80aa2823626a7e2946b6e8b22a46a72029677ebe';
 
 /// Whether the map should be allowed to download tiles over the internet.
 ///
@@ -507,7 +507,7 @@ final mapGridSizeProvider =
 
 typedef _$MapGridSize = AutoDisposeNotifier<double?>;
 String _$showGridSizeIndicatorHash() =>
-    r'809364e9ca0b95d276f02c80069b5753a96b7c81';
+    r'4b7f81f86705c4eb21ff7aadd44b6e454ba5a931';
 
 /// Whether the grid size indicator should be shown.
 ///

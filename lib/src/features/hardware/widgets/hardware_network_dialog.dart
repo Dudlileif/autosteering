@@ -23,70 +23,83 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A menu for changing network settings to connect to the hardware.
-class HardwareNetworkMenu extends StatelessWidget {
+class HardwareNetworkDialog extends ConsumerWidget {
   /// A menu for changing network settings to connect to the hardware.
-  const HardwareNetworkMenu({super.key});
+  const HardwareNetworkDialog({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
-    return MenuButtonWithChildren(
-      text: 'Network',
-      icon: Icons.settings_ethernet,
-      menuChildren: [
+    return SimpleDialog(
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text('Network'), CloseButton()],
+      ),
+      contentPadding:
+          const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
+      children: [
         if (Device.isNative) ...[
-          Consumer(
-            builder: (context, ref, child) {
-              final ip = ref.watch(deviceIPAdressWlanProvider);
-              return ip != null
-                  ? ListTile(
-                      leading: const Icon(Icons.wifi),
-                      title: Text(
-                        '''
+          if (ref.watch(
+            deviceIPAdressWlanProvider.select((value) => value != null),
+          ))
+            Consumer(
+              builder: (context, ref, child) => Row(
+                children: [
+                  const Icon(Icons.wifi),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 28),
+                    child: SelectableText(
+                      '''
 This device WLAN:
-$ip''',
-                        style: textStyle,
-                      ),
-                    )
-                  : const SizedBox.shrink();
-            },
-          ),
-          Consumer(
-            builder: (context, ref, child) {
-              final ip = ref.watch(deviceIPAdressAPProvider);
-              return ip != null
-                  ? ListTile(
-                      leading: const Icon(Icons.router),
-                      title: Text(
-                        '''
+${ref.watch(deviceIPAdressWlanProvider)}''',
+                      style: textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          if (ref
+              .watch(deviceIPAdressAPProvider.select((value) => value != null)))
+            Consumer(
+              builder: (context, ref, child) => Row(
+                children: [
+                  const Icon(Icons.router),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 28),
+                    child: Text(
+                      '''
 This device AP host:
-$ip''',
-                        style: textStyle,
-                      ),
-                    )
-                  : const SizedBox.shrink();
-            },
-          ),
-          Consumer(
-            builder: (context, ref, child) {
-              final ip = ref.watch(deviceIPAdressEthernetProvider);
-              return ip != null
-                  ? ListTile(
-                      leading: const Icon(Icons.cable),
-                      title: Text(
-                        '''
+${ref.watch(deviceIPAdressAPProvider)}''',
+                      style: textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          if (ref.watch(
+            deviceIPAdressEthernetProvider.select((value) => value != null),
+          ))
+            Consumer(
+              builder: (context, ref, child) => Row(
+                children: [
+                  const Icon(Icons.cable),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 28),
+                    child: Text(
+                      '''
 This device Ethernet:
-$ip''',
-                        style: textStyle,
-                      ),
-                    )
-                  : const SizedBox.shrink();
-            },
-          ),
+${ref.watch(deviceIPAdressEthernetProvider)}''',
+                      style: textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
-        ListTile(
-          title: Consumer(
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: Consumer(
             builder: (context, ref, child) {
               final controller = TextEditingController(
                 text: ref.watch(steeringHardwareAddressProvider),
@@ -154,8 +167,9 @@ $ip''',
             },
           ),
         ),
-        ListTile(
-          title: Consumer(
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: Consumer(
             builder: (context, ref, child) {
               final controller = TextEditingController(
                 text: ref.watch(remoteControlHardwareAddressProvider),
@@ -224,10 +238,11 @@ $ip''',
             },
           ),
         ),
-        if (Device.isNative)
-          Consumer(
-            builder: (context, ref, child) => ListTile(
-              title: TextFormField(
+        if (Device.isNative) ...[
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Consumer(
+              builder: (context, ref, child) => TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Receive port',
                   labelStyle: textStyle,
@@ -254,10 +269,10 @@ $ip''',
               ),
             ),
           ),
-        if (Device.isNative)
-          Consumer(
-            builder: (context, ref, child) => ListTile(
-              title: TextFormField(
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Consumer(
+              builder: (context, ref, child) => TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Send port',
                   icon: Icon(Icons.send),
@@ -282,6 +297,7 @@ $ip''',
               ),
             ),
           ),
+        ],
       ],
     );
   }

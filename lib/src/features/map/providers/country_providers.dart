@@ -34,7 +34,9 @@ part 'country_providers.g.dart';
 class CurrentCountry extends _$CurrentCountry {
   @override
   Country? build() {
-    ref.listenSelf(
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf(
       (previous, next) {
         if (next != previous) {
           ref
@@ -109,7 +111,9 @@ class CurrentCountry extends _$CurrentCountry {
 class AvailableCountryLayers extends _$AvailableCountryLayers {
   @override
   List<TileLayerData> build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.mapLayersCountrySorted,
@@ -163,7 +167,9 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
 class EnabledCountryLayers extends _$EnabledCountryLayers {
   @override
   Set<TileLayerData> build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.mapLayersCountryEnabled,
@@ -249,7 +255,9 @@ class CountryLayerOpacities extends _$CountryLayerOpacities {
 
   @override
   Map<String, double> build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         if (!const DeepCollectionEquality().equals(previous, next)) {
           _saveToSettingsTimer?.cancel();

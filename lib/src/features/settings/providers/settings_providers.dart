@@ -15,16 +15,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_html/html.dart' show Storage, window;
 import 'package:universal_io/io.dart';
+import 'package:uuid/uuid.dart';
 
 part 'settings_providers.g.dart';
 
@@ -56,10 +59,11 @@ Storage webLocalStorage(WebLocalStorageRef ref) {
 /// A provider for the settings map for the application.
 @Riverpod(keepAlive: true)
 class Settings extends _$Settings {
+  bool _saveToRemoveDeprecated = false;
   @override
   SplayTreeMap<String, dynamic> build() {
     ref.listenSelf((previous, next) {
-      if (previous != null && previous != next) {
+      if ((previous != null && previous != next) || _saveToRemoveDeprecated) {
         if (Device.isWeb) {
           ref.watch(webLocalStorageProvider)['settings'] = jsonEncode(next);
           Logger.instance.i('Saved settings to web localStorage.');
@@ -75,6 +79,7 @@ class Settings extends _$Settings {
               );
         }
       }
+      _saveToRemoveDeprecated = false;
     });
 
     final fileString = switch (Device.isWeb) {
@@ -87,8 +92,25 @@ class Settings extends _$Settings {
       return SplayTreeMap<String, dynamic>();
     }
 
-    final settings = jsonDecode(fileString) as Map;
+    final settings = Map<String, dynamic>.from(jsonDecode(fileString) as Map);
     Logger.instance.i('Loaded ${settings.length} settings from storage.');
+
+    final settingsToRemove = <String>[];
+    for (final setting in settings.keys) {
+      if (!SettingsKey.values.map((key) => key.name).contains(setting)) {
+        settingsToRemove.add(setting);
+      }
+    }
+    if (settingsToRemove.isNotEmpty) {
+      for (final setting in settingsToRemove) {
+        settings.remove(setting);
+      }
+      _saveToRemoveDeprecated = true;
+      Logger.instance.i(
+        '''Removed ${settingsToRemove.length} deprecated settings: $settingsToRemove.''',
+      );
+    }
+
     return SplayTreeMap<String, dynamic>.from(settings);
   }
 
@@ -115,6 +137,9 @@ class Settings extends _$Settings {
           Logger.instance.i('Updated setting ${key.name}: $oldValue => $value');
         },
       );
+
+  /// Sets [state] to [value].
+  void set(SplayTreeMap<String, dynamic> value) => Future(() => state = value);
 
   /// Whether the settings contains a value for [key].
   bool containsKey(SettingsKey key) => state.containsKey(key.name);
@@ -168,3 +193,94 @@ class EnableDebugMode extends _$EnableDebugMode {
   /// Update [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 }
+
+/// A provider for exporting [Settings] to a file.
+@riverpod
+FutureOr<void> exportSettings(
+  ExportSettingsRef ref, {
+  String? overrideName,
+  bool downloadIfWeb = true,
+  bool removeSensitiveData = false,
+}) async {
+  final settings = ref.watch(settingsProvider);
+  if (removeSensitiveData) {
+    settings.removeWhere(
+      (key, value) =>
+          SettingsKey.canContainSensitiveData.map((e) => e.name).contains(key),
+    );
+  }
+  await ref.watch(
+    exportJsonToFileDirectoryProvider(
+      object: settings,
+      fileName: overrideName ?? 'settings',
+      downloadIfWeb: downloadIfWeb,
+    ).future,
+  );
+}
+
+/// A provider for importing [Settings] from a file.
+@riverpod
+FutureOr<Map<String, dynamic>?> importSettings(ImportSettingsRef ref) async {
+  ref.keepAlive();
+  Timer(
+    const Duration(seconds: 5),
+    ref.invalidateSelf,
+  );
+  final pickedFiles = await FilePicker.platform.pickFiles(
+    allowedExtensions: ['json'],
+    type: FileType.custom,
+    dialogTitle: 'Choose settings file',
+  );
+
+  Map<String, dynamic>? settings;
+  if (Device.isWeb) {
+    final data = pickedFiles?.files.first.bytes;
+    if (data != null) {
+      try {
+        final json = jsonDecode(String.fromCharCodes(data));
+        settings = Map<String, dynamic>.from(json as Map);
+      } catch (error, stackTrace) {
+        Logger.instance.w(
+          'Failed to import settings.',
+          error: error,
+          stackTrace: stackTrace,
+        );
+      }
+    } else {
+      Logger.instance.w(
+        'Failed to import settings, data is null.',
+      );
+    }
+  } else {
+    final filePath = pickedFiles?.paths.first;
+    if (filePath != null) {
+      final file = File(filePath);
+      if (file.existsSync()) {
+        try {
+          final json = jsonDecode(await file.readAsString());
+          settings = Map<String, dynamic>.from(json as Map);
+        } catch (error, stackTrace) {
+          Logger.instance.w(
+            'Failed to load settings from: $filePath.',
+            error: error,
+            stackTrace: stackTrace,
+          );
+        }
+      }
+    } else {
+      Logger.instance.w('Failed to import settings: $filePath.');
+    }
+  }
+  if (settings != null) {
+    Logger.instance.i('Imported ${settings.length} settings.');
+    ref.read(settingsProvider.notifier).set(SplayTreeMap.from(settings));
+    ref.invalidate(reloadAllSettingsProvider);
+  }
+
+  return settings;
+}
+
+/// A provider for rebuilding all providers that reads [Settings] during the
+/// build method.
+@Riverpod(keepAlive: true)
+String reloadAllSettings(ReloadAllSettingsRef ref) => const Uuid().v4();

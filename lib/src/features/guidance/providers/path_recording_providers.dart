@@ -97,7 +97,9 @@ class EnableAutomaticPathRecorder extends _$EnableAutomaticPathRecorder {
 class ActivePathRecordingSettings extends _$ActivePathRecordingSettings {
   @override
   PathRecordingSettings build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)

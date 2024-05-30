@@ -40,6 +40,18 @@ class VehicleMenu extends ConsumerWidget {
       menuChildren: [
         const _LoadVehicleMenu(),
         const _ImportExportMenu(),
+        if (Device.isNative)
+          MenuItemButton(
+            closeOnActivate: false,
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.navigation),
+            ),
+            child: Text('Reset bearing', style: textStyle),
+            onPressed: () => ref
+                .read(simInputProvider.notifier)
+                .send((setZeroIMUBearingToNextGNSSBearing: true)),
+          ),
         MenuItemButton(
           closeOnActivate: false,
           leadingIcon: const Padding(
@@ -56,18 +68,21 @@ class VehicleMenu extends ConsumerWidget {
           ),
         ),
         Consumer(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.memory),
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Text(
-                  'IMU Configurator',
-                  style: textStyle,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 4),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.memory),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    'IMU Configurator',
+                    style: textStyle,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(showIMUConfigProvider),
@@ -80,18 +95,21 @@ class VehicleMenu extends ConsumerWidget {
           ),
         ),
         Consumer(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.electric_meter),
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Text(
-                  'WAS & Motor Configurator',
-                  style: textStyle,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 4),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.electric_meter),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    'WAS & Motor Configurator',
+                    style: textStyle,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(showSteeringHardwareConfigProvider),
@@ -106,18 +124,21 @@ class VehicleMenu extends ConsumerWidget {
           ),
         ),
         Consumer(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.abc),
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Text(
-                  'Autosteering Parameters',
-                  style: textStyle,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 4),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.abc),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    'Autosteering Parameters',
+                    style: textStyle,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(showAutosteeringParameterConfigProvider),
@@ -137,9 +158,12 @@ class VehicleMenu extends ConsumerWidget {
               'Show nudging controls',
               style: textStyle,
             ),
-            secondary: const RotatedBox(
-              quarterTurns: 1,
-              child: Icon(Icons.vertical_align_center),
+            secondary: const Padding(
+              padding: EdgeInsets.only(left: 4),
+              child: RotatedBox(
+                quarterTurns: 1,
+                child: Icon(Icons.vertical_align_center),
+              ),
             ),
             value: ref.watch(showNudgingControlsProvider),
             onChanged: (value) => value != null
@@ -149,14 +173,20 @@ class VehicleMenu extends ConsumerWidget {
                 : null,
           ),
         ),
-        if (ref.watch(enableDebugModeProvider)) const VehicleDebugMenu(),
+        if (ref.watch(enableDebugModeProvider))
+          const VehicleDebugMenu()
+        else
+          const VehicleTrajectoryButton(),
         Consumer(
           builder: (context, ref, child) => CheckboxListTile(
             title: Text(
               'Show motor target override',
               style: textStyle,
             ),
-            secondary: const Icon(Icons.warning_rounded),
+            secondary: const Padding(
+              padding: EdgeInsets.only(left: 4),
+              child: Icon(Icons.warning_rounded),
+            ),
             value: ref.watch(showOverrideSteeringProvider),
             onChanged: (value) => value != null
                 ? ref

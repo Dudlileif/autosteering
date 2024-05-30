@@ -36,7 +36,6 @@ class EditablePathLayer extends ConsumerWidget {
       children: points.isNotEmpty
           ? [
               PolylineLayer(
-                polylineCulling: true,
                 polylines: [
                   Polyline(
                     points: [

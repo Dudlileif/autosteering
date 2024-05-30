@@ -19,7 +19,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
 
@@ -216,12 +216,11 @@ extension PolygonBufferExtension on Polygon {
   map.Polygon mapPolygon({
     bool withExterior = true,
     bool withInteriorHoles = true,
-    Color color = const Color(0xFF00FF00),
+    Color color =Colors.transparent,
     double borderStrokeWidth = 0.0,
     Color borderColor = const Color(0xFFFFFF00),
     bool disableHolesBorder = false,
-    bool isDotted = false,
-    bool isFilled = false,
+    map.StrokePattern? pattern,
     StrokeCap strokeCap = StrokeCap.round,
     StrokeJoin strokeJoin = StrokeJoin.round,
     String? label,
@@ -249,8 +248,7 @@ extension PolygonBufferExtension on Polygon {
         borderStrokeWidth: borderStrokeWidth,
         borderColor: borderColor,
         disableHolesBorder: disableHolesBorder,
-        isDotted: isDotted,
-        isFilled: isFilled,
+        pattern: pattern ?? const map.StrokePattern.solid(),
         strokeCap: strokeCap,
         strokeJoin: strokeJoin,
         label: label,

@@ -30,7 +30,9 @@ part 'enabled_map_layers_providers.g.dart';
 class ShowOSMLayer extends _$ShowOSMLayer {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
@@ -102,22 +104,14 @@ class ShowVehicleDrawingLayer extends _$ShowVehicleDrawingLayer {
 
 /// Whether the debugging layer for the vehicle should be shown.
 @riverpod
-bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) {
-  final debugTravelledPath = ref.watch(debugTravelledPathProvider);
-  final debugTrajectory = ref.watch(debugTrajectoryProvider);
-  final debugSteering = ref.watch(debugSteeringProvider);
-  final debugPolygons = ref.watch(debugVehiclePolygonsProvider);
-  final debugHitches = ref.watch(debugVehicleHitchesProvider);
-  final debugAntennaPosition = ref.watch(debugVehicleAntennaPositionProvider);
-
-  final enabled = debugTravelledPath ||
-      debugTrajectory ||
-      debugSteering ||
-      debugPolygons ||
-      debugHitches ||
-      debugAntennaPosition;
-  return enabled;
-}
+bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) => [
+      ref.watch(debugVehicleTravelledPathProvider),
+      ref.watch(debugVehicleTrajectoryProvider),
+      ref.watch(debugVehicleSteeringProvider),
+      ref.watch(debugVehiclePolygonsProvider),
+      ref.watch(debugVehicleHitchesProvider),
+      ref.watch(debugVehicleAntennaPositionProvider),
+    ].any((element) => element);
 
 /// Whether the debugging layer for the Dubins path should be shown.
 @riverpod
@@ -164,7 +158,12 @@ class ShowEquipmentDrawingLayer extends _$ShowEquipmentDrawingLayer {
 /// Whether the debugging layer for the equipment should be shown.
 @riverpod
 bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) =>
-    ref.watch(showEquipmentDebugProvider);
+    <bool>[
+      ref.watch(debugEquipmentTurningProvider),
+      ref.watch(debugEquipmentHitchesProvider),
+      ref.watch(debugEquipmentTrajectoryProvider),
+      ref.watch(debugEquipmentTravelledPathProvider),
+    ].any((element) => element);
 
 /// Whether the layer for AB-tracking should be shown.
 @riverpod
@@ -176,7 +175,9 @@ bool showABTrackingLayer(ShowABTrackingLayerRef ref) =>
 class ShowGridLayer extends _$ShowGridLayer {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)

@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:file_picker/file_picker.dart';
@@ -97,10 +98,10 @@ FutureOr<void> saveJsonToFileDirectory(
   required String folder,
   bool downloadIfWeb = false,
 }) async {
-  final dataString = const JsonEncoder.withIndent('    ').convert(object);
-
   if (Device.isWeb) {
     if (downloadIfWeb) {
+      final dataString = const JsonEncoder.withIndent('    ').convert(object);
+
       html.AnchorElement()
         ..href = '${Uri.dataFromString(
           dataString,
@@ -113,23 +114,44 @@ FutureOr<void> saveJsonToFileDirectory(
     }
   } else {
     try {
-    final path =
-        '${ref.watch(fileDirectoryProvider).requireValue.path}/$folder/$fileName.json';
-    final file = File(path);
-    final exists = file.existsSync();
-    if (!exists) {
-      await file.create(recursive: true);
-    }
-    await file.writeAsString(dataString);
-    Logger.instance.i(
-      switch (exists) {
-        false => 'Created and wrote data to $path',
-        true => 'Wrote data to $path',
-      },
-    );
+      final path =
+          '${ref.watch(fileDirectoryProvider).requireValue.path}/$folder/$fileName.json';
+      await Isolate.run<LogEvent>(() async {
+        try {
+          final dataString =
+              const JsonEncoder.withIndent('    ').convert(object);
+          final file = File(path);
+          final exists = file.existsSync();
+          if (!exists) {
+            await file.create(recursive: true);
+          }
+          await file.writeAsString(dataString);
+          return LogEvent(
+            Level.info,
+            switch (exists) {
+              false => 'Created and wrote data to $path',
+              true => 'Wrote data to $path',
+            },
+          );
+        } catch (error, stackTrace) {
+          return LogEvent(
+            Level.error,
+            'Failed to save json.',
+            error: error,
+            stackTrace: stackTrace,
+          );
+        }
+      }).then(
+        (value) => Logger.instance.log(
+          value.level,
+          value.message,
+          error: value.error,
+          stackTrace: value.stackTrace,
+        ),
+      );
     } catch (error, stackTrace) {
-      Logger.instance.w(
-        'Failed to import save json.',
+      Logger.instance.e(
+        'Failed to run saving isolate.',
         error: error,
         stackTrace: stackTrace,
       );
@@ -149,10 +171,9 @@ FutureOr<void> exportJsonToFileDirectory(
   String? folder,
   bool downloadIfWeb = true,
 }) async {
-  final dataString = const JsonEncoder.withIndent('    ').convert(object);
-
   if (Device.isWeb) {
     if (downloadIfWeb) {
+      final dataString = const JsonEncoder.withIndent('    ').convert(object);
       html.AnchorElement()
         ..href = '${Uri.dataFromString(
           dataString,
@@ -168,6 +189,10 @@ FutureOr<void> exportJsonToFileDirectory(
       final exportFolder = await FilePicker.platform
           .getDirectoryPath(dialogTitle: 'Select export folder');
       if (exportFolder != null) {
+        await Isolate.run<LogEvent>(() async {
+          try {
+            final dataString =
+                const JsonEncoder.withIndent('    ').convert(object);
         var path = '';
         if (exportFolder.endsWith('autosteering_export')) {
           path = folder != null
@@ -188,18 +213,35 @@ FutureOr<void> exportJsonToFileDirectory(
           await file.create(recursive: true);
         }
         await file.writeAsString(dataString);
-        Logger.instance.i(
+            return LogEvent(
+              Level.info,
           switch (exists) {
             false => 'Created and wrote data to $path',
             true => 'Wrote data to $path',
           },
+            );
+          } catch (error, stackTrace) {
+            return LogEvent(
+              Level.error,
+              'Failed to export json.',
+              error: error,
+              stackTrace: stackTrace,
+            );
+          }
+        }).then(
+          (value) => Logger.instance.log(
+            value.level,
+            value.message,
+            error: value.error,
+            stackTrace: value.stackTrace,
+          ),
         );
       } else {
         Logger.instance.i('No export folder selected.');
       }
     } catch (error, stackTrace) {
-      Logger.instance.w(
-        'Failed to export json.',
+      Logger.instance.e(
+        'Failed to run export isolate.',
         error: error,
         stackTrace: stackTrace,
       );

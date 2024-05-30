@@ -29,14 +29,15 @@ part 'theme_providers.g.dart';
 class ActiveThemeMode extends _$ActiveThemeMode {
   @override
   ThemeMode build() {
-    ref.listenSelf((previous, next) {
-      if (previous != null) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.themeMode, next.name);
-      }
-    });
-
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
+        if (previous != null) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.themeMode, next.name);
+        }
+      });
     final name =
         ref.read(settingsProvider.notifier).getString(SettingsKey.themeMode);
 
@@ -64,18 +65,20 @@ class ActiveThemeMode extends _$ActiveThemeMode {
 class Manufacturer extends _$Manufacturer {
   @override
   ManufacturerColors build() {
-    ref.listenSelf((previous, next) {
-      if (previous != null) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.themeColorScheme, next.name);
-        if (next.name == 'Custom') {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
+        if (previous != null) {
           ref
               .read(settingsProvider.notifier)
-              .update(SettingsKey.themeColorSchemeCustom, next.toJson());
+              .update(SettingsKey.themeColorScheme, next.name);
+          if (next.name == 'Custom') {
+            ref
+                .read(settingsProvider.notifier)
+                .update(SettingsKey.themeColorSchemeCustom, next.toJson());
+          }
         }
-      }
-    });
+      });
 
     final name = ref
         .read(settingsProvider.notifier)
@@ -110,13 +113,15 @@ class Manufacturer extends _$Manufacturer {
 class ColorSchemeInheritFromVehicle extends _$ColorSchemeInheritFromVehicle {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
-      if (previous != null) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.themeColorSchemeInheritFromVehicle, next);
-      }
-    });
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
+        if (previous != null) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.themeColorSchemeInheritFromVehicle, next);
+        }
+      });
 
     return ref
             .read(settingsProvider.notifier)

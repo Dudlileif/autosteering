@@ -90,7 +90,9 @@ class MainMapController extends _$MainMapController {
 class HomePosition extends _$HomePosition {
   @override
   LatLng build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
@@ -126,7 +128,9 @@ class HomePosition extends _$HomePosition {
 class CenterMapOnVehicle extends _$CenterMapOnVehicle {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && next) {
         ref.read(mainMapControllerProvider).rotate(0);
       }
@@ -215,7 +219,9 @@ class MapOffset2D extends _$MapOffset2D {
 
   @override
   MapCenterOffset build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         _saveToSettingsTimer?.cancel();
 
@@ -258,7 +264,9 @@ class MapOffset3D extends _$MapOffset3D {
 
   @override
   MapCenterOffset build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         _saveToSettingsTimer?.cancel();
 
@@ -329,7 +337,9 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
 class AlwaysPointNorth extends _$AlwaysPointNorth {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (ref.read(mapReadyProvider)) {
         if (next) {
           ref.read(mainMapControllerProvider).rotate(0);
@@ -364,7 +374,9 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
 class MapUse3DPerspective extends _$MapUse3DPerspective {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
@@ -393,7 +405,9 @@ class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
 
   @override
   double build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         _saveToSettingsTimer?.cancel();
 
@@ -423,7 +437,9 @@ class MapZoom extends _$MapZoom {
 
   @override
   double build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         _saveToSettingsTimer?.cancel();
         _saveToSettingsTimer = Timer(
@@ -470,7 +486,9 @@ FutureOr<List<String>> mapCacheDirectories(MapCacheDirectoriesRef ref) async =>
 class MapAllowDownload extends _$MapAllowDownload {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
@@ -506,7 +524,9 @@ class ShowGridSizeIndicator extends _$ShowGridSizeIndicator {
   @override
   bool build() {
 
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)

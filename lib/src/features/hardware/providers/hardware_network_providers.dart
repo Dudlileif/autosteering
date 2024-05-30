@@ -173,7 +173,9 @@ String? deviceIPAdressEthernet(
 class SteeringHardwareAddress extends _$SteeringHardwareAddress {
   @override
   String build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
@@ -199,7 +201,9 @@ class SteeringHardwareAddress extends _$SteeringHardwareAddress {
 class RemoteControlHardwareAddress extends _$RemoteControlHardwareAddress {
   @override
   String build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
@@ -224,7 +228,9 @@ class RemoteControlHardwareAddress extends _$RemoteControlHardwareAddress {
 class HardwareUDPReceivePort extends _$HardwareUDPReceivePort {
   @override
   int build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
@@ -258,7 +264,9 @@ class HardwareUDPReceivePort extends _$HardwareUDPReceivePort {
 class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   @override
   int build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)

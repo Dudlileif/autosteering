@@ -26,7 +26,7 @@ final webArtificialStartupDelayProvider =
 );
 
 typedef WebArtificialStartupDelayRef = AutoDisposeFutureProviderRef<void>;
-String _$startupLoadingHash() => r'95a7005dcef92355d5c5f35370743193bb09292d';
+String _$startupLoadingHash() => r'6810817788fa515e4800d07d5cb38d0e4d03b9b5';
 
 /// A provider for handling the initial loading of saved user files.
 ///

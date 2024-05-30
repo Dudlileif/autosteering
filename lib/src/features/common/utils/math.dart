@@ -55,9 +55,47 @@ double circularAverage(Iterable<double> angles) {
   return radAvg;
 }
 
+/// Finds the average weighted angle betewwn all the [angles], which are assumed
+/// to be in radians.
+///
+/// Result is in range `-PI ... PI`.
+double circularAverageWeighted({
+  required Iterable<double> angles,
+  required Iterable<double> weights,
+}) {
+  assert(
+    angles.length == weights.length,
+    'angles and weights must have the same length',
+  );
+  final cosSum = angles
+      .mapIndexed((index, angle) => weights.elementAt(index) * cos(angle))
+      .sum;
+  final sinSum = angles
+      .mapIndexed((index, angle) => weights.elementAt(index) * sin(angle))
+      .sum;
+
+  final radAvg = atan2(sinSum, cosSum);
+  return radAvg;
+}
+
 /// Finds the average bearing between all the [bearings].
 double bearingAverage(Iterable<double> bearings) =>
     circularAverage(bearings.map((e) => e.toRadians())).toDegrees().wrap360();
+
+/// Finds the average weighted bearing between all the [bearings].
+double bearingAverageWeighted({
+  required Iterable<double> bearings,
+  required Iterable<double> weights,
+}) {
+  assert(
+    bearings.length == weights.length,
+    'bearings and weights must have the same length',
+  );
+  return circularAverageWeighted(
+    angles: bearings.map((e) => e.toRadians()),
+    weights: weights,
+  ).toDegrees().wrap360();
+}
 
 /// Finds the circular standard deviation for the [angles], which are assumed
 /// to be in radians.

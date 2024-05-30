@@ -28,21 +28,20 @@ class VehicleDebugLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final debugTravelledPath = ref.watch(debugTravelledPathProvider);
-    final debugTrajectory = ref.watch(debugTrajectoryProvider);
-    final debugSteering = ref.watch(debugSteeringProvider);
+    final debugTravelledPath = ref.watch(debugVehicleTravelledPathProvider);
+    final debugTrajectory = ref.watch(debugVehicleTrajectoryProvider);
+    final debugSteering = ref.watch(debugVehicleSteeringProvider);
     final debugPolygons = ref.watch(debugVehiclePolygonsProvider);
     final debugHitches = ref.watch(debugVehicleHitchesProvider);
     final debugAntennaPosition = ref.watch(debugVehicleAntennaPositionProvider);
 
     final vehicle = ref.watch(mainVehicleProvider);
-    final travelledPath = ref.watch(debugTravelledPathListProvider);
+    final travelledPath = ref.watch(debugVehicleTravelledPathListProvider);
 
     return Stack(
       children: [
         if (debugTravelledPath || debugTrajectory || debugSteering)
           PolylineLayer(
-            polylineCulling: true,
             polylines: [
               if (debugTravelledPath && travelledPath.isNotEmpty)
                 Polyline(
@@ -53,7 +52,17 @@ class VehicleDebugLayer extends ConsumerWidget {
                 ),
               if (debugTrajectory)
                 Polyline(
-                  points: vehicle.trajectory.coordinates,
+                  points: vehicle
+                      .trajectory(
+                        seconds:
+                            ref.watch(debugVehicleTrajectorySecondsProvider),
+                        minLength:
+                            ref.watch(debugVehicleTrajectoryMinLengthProvider),
+                      )
+                      .chain
+                      .toGeographicPositions
+                      .map((e) => e.latLng)
+                      .toList(),
                   strokeWidth: 2,
                   color: Colors.blue,
                 ),
@@ -63,7 +72,6 @@ class VehicleDebugLayer extends ConsumerWidget {
           ),
         if (debugPolygons)
           PolygonLayer(
-            polygonCulling: true,
             polygons: [
               ...vehicle.wheelPolygons,
               ...vehicle.polygons.map(

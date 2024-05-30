@@ -554,21 +554,18 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The left steering wheel polygon.
   map.Polygon get leftSteeringWheelPolygon => map.Polygon(
         points: wheelPoints().map((e) => e.latLng).toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
   /// The right steering wheel polygon.
   map.Polygon get rightSteeringWheelPolygon => map.Polygon(
         points: wheelPoints(left: false).map((e) => e.latLng).toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
   /// The left solid axle wheel polygon.
   map.Polygon get leftSolidAxleWheelPolygon => map.Polygon(
         points: wheelPoints(steering: false).map((e) => e.latLng).toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
@@ -577,7 +574,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
         points: wheelPoints(left: false, steering: false)
             .map((e) => e.latLng)
             .toList(),
-        isFilled: true,
         color: Colors.black,
       );
 
@@ -595,25 +591,17 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// Based on the current [steeringAngle], [velocity] and
   /// [currentTurningRadius].
   @override
-  Path get trajectory {
+  LineString trajectory({double? seconds, double? minLength}) {
+    final time = seconds ?? 10;
     final points = <Geographic>[solidAxlePosition];
 
     if (currentTurningRadius != null) {
-      final minTurningCircumference = 2 *
-          pi *
-          AckermannSteering(
-            steeringAngle: steeringAngleMaxRaw,
-            wheelBase: wheelBase,
-            trackWidth: trackWidth,
-            steeringRatio: ackermannSteeringRatio,
-            ackermannPercentage: ackermannPercentage,
-          ).turningRadius;
-
-      // Clamp the number of turning revolutions so that we only display
-      // up to one whole turning circle.
-      final revolutionsOfTurningCircle =
-          (minTurningCircumference / (2 * pi * currentTurningRadius!))
-              .clamp(0, 1);
+      var arcDegrees = (time * angularVelocity!.abs()).clamp(0.0, 360.0);
+      if (minLength != null) {
+        if (arcDegrees.toRadians() * currentTurningRadius! < minLength) {
+          arcDegrees = (minLength / currentTurningRadius!).toDegrees();
+        }
+      }
 
       const numberOfPoints = 36;
       for (var i = 0; i < numberOfPoints + 1; i++) {
@@ -626,22 +614,22 @@ sealed class AxleSteeredVehicle extends Vehicle {
                 // Reversing
                 true => bearing +
                     90 +
-                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+                    i / numberOfPoints * arcDegrees,
                 // Forward
                 false => bearing +
                     90 -
-                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+                    i / numberOfPoints * arcDegrees,
               },
             // Turning right
             false => switch (isReversing) {
                 // Reversing
                 true => bearing -
                     90 -
-                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+                    i / numberOfPoints * arcDegrees,
                 // Forward
                 false => bearing -
                     90 +
-                    i / numberOfPoints * revolutionsOfTurningCircle * 360,
+                    i / numberOfPoints * arcDegrees,
               },
           };
 
@@ -654,15 +642,23 @@ sealed class AxleSteeredVehicle extends Vehicle {
         }
       }
     } else {
+      var distance = time * velocity;
+      if (minLength != null && distance.abs() < minLength) {
+        distance = minLength *
+            switch (velocity.isNegative) {
+              true => -1,
+              false => 1,
+            };
+      }
       points.add(
         solidAxlePosition.rhumb.destinationPoint(
-          distance: isReversing ? -30 : 5 + 30,
+          distance: distance,
           bearing: bearing.wrap360(),
         ),
       );
     }
 
-    return Path()..addAll(points.map((e) => e.latLng).toList());
+    return LineString.from(points);
   }
 
   /// Props used for checking for equality.
@@ -701,7 +697,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
   List<map.Polygon> get polygons => [
         map.Polygon(
           points: points.map((e) => e.latLng).toList(),
-          isFilled: true,
           color: Colors.yellow.withOpacity(0.5),
         ),
       ];

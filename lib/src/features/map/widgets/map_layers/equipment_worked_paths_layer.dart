@@ -52,6 +52,7 @@ class _EquipmentWorkedPathsLayerState
 
     final children = <Widget>[];
     for (final equipment in equipments) {
+      final activationStatus = equipment.sectionActivationStatus;
       final workedLines = ref.watch(equipmentPathsProvider(equipment.uuid));
       if (workedLines.isNotEmpty) {
         final screenPoints = workedLines
@@ -79,7 +80,8 @@ class _EquipmentWorkedPathsLayerState
                       .flattened
                       .toList();
 
-                  if (activationIndex == workedLines.length - 1) {
+                  if (activationIndex == workedLines.length - 1 &&
+                      activationStatus[section]!) {
                     final points = equipment.sectionEdgePositions(
                       section,
                       fraction: recordFraction,
@@ -110,8 +112,7 @@ class _EquipmentWorkedPathsLayerState
             painter: _EquipentWorkedPathsPainter(
               points: screenPoints,
               color: Theme.of(context).primaryColor,
-              sectionColors:
-Map<int, Color?>.fromEntries(
+              sectionColors: Map<int, Color?>.fromEntries(
                 equipment.sections
                     .where((section) => section.workingWidth > 0)
                     .map((e) => MapEntry(e.index, e.workedPathColor)),

@@ -17,6 +17,7 @@
 
 // ignore_for_file: public_member_api_docs
 
+
 /// An enumerator for all the settings of the program.
 enum SettingsKey {
   audioVolumeAutosteeringDisabled('audio.volume.autosteering_disabled'),
@@ -56,12 +57,8 @@ enum SettingsKey {
   miniMapLockToField('mini_map.lock_to_field'),
   miniMapSize('mini_map.size'),
   ntripEnabled('ntrip.enabled'),
-  ntripGGASendingInterval('ntrip.gga_sending_interval'),
-  ntripHost('ntrip.host'),
-  ntripPort('ntrip.port'),
-  ntripMountPoint('ntrip.mount_point'),
-  ntripUsername('ntrip.username'),
-  ntripPassword('ntrip.password'),
+  ntripActiveProfile('ntrip.active_profile'),
+  ntripProfiles('ntrip.profiles'),
   pathRecordingSettings('path_recording_settings'),
   remoteControlAddress('remote_control.address'),
   remoteControlButtonActions('remote_control.button_actions'),
@@ -89,4 +86,11 @@ enum SettingsKey {
   /// The string that will be used when writing to/reading from the settings
   /// file.
   final String name;
+
+  static const List<SettingsKey> canContainSensitiveData = [
+    mapCopernicusInstanceId,
+    mapHomePosition,
+    ntripProfiles,
+    ntripActiveProfile,
+  ];
 }

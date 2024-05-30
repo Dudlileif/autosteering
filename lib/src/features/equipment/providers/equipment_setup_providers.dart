@@ -30,7 +30,19 @@ part 'equipment_setup_providers.g.dart';
 @Riverpod(keepAlive: true)
 class ConfiguredEquipmentSetup extends _$ConfiguredEquipmentSetup {
   @override
-  EquipmentSetup? build() => null;
+  EquipmentSetup? build() {
+    ref.listenSelf((previous, next) {
+      if (next != null && next.allAttached.isNotEmpty) {
+        ref.read(loadedEquipmentProvider.notifier).update(
+              next.allAttached.cast<Equipment>().reduce(
+                    (value, element) =>
+                        value.width >= element.width ? value : element,
+                  ),
+            );
+      }
+    });
+    return null;
+  }
 
   /// Updates the [state] to [value].
   void update(EquipmentSetup? value) => Future(() => state = value);
@@ -82,12 +94,16 @@ FutureOr<List<EquipmentSetup>> savedEquipmentSetups(
 ) async =>
     await ref
         .watch(
-          savedFilesProvider(
-            fromJson: EquipmentSetup.fromJson,
-            folder: 'equipment/setups',
-          ).future,
-        )
-        .then((data) => data.cast());
+      savedFilesProvider(
+        fromJson: EquipmentSetup.fromJson,
+        folder: 'equipment/setups',
+      ).future,
+    )
+        .then((data) {
+      final setups = data.cast<EquipmentSetup>();
+
+      return setups;
+    });
 
 /// A provider for deleting [setup] form the user file system.
 ///

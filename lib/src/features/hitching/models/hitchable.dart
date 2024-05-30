@@ -68,13 +68,18 @@ abstract class Hitchable {
     this.hitchRearFixedChild,
     this.hitchRearTowbarChild,
     String? uuid,
-  }) : uuid = uuid ?? const Uuid().v4();
+    DateTime? lastUsed,
+  })  : uuid = uuid ?? const Uuid().v4(),
+        lastUsed = lastUsed ?? DateTime.now();
 
   /// A unique identifier for every [Hitchable].
   final String uuid;
 
   /// The name/id of this.
   String? name;
+
+  /// The last time this was used.
+  DateTime lastUsed;
 
   /// The parent of this, if there is one.
   Hitchable? hitchParent;
@@ -238,7 +243,7 @@ abstract class Hitchable {
   }
 
   /// Update the [child] at the correct point/position in the hierarchy.
-  void updateChild(Hitchable child) {
+  bool updateChild(Hitchable child) {
     final foundChild = findChildRecursive(child.uuid);
 
     foundChild?.hitchParent?.attachChild(
@@ -249,6 +254,7 @@ abstract class Hitchable {
       ),
       foundChild.parentHitch ?? Hitch.rearFixed,
     );
+    return foundChild != null;
   }
 
   /// Detaches the child with the given [uuid] from the hierarchy.
@@ -314,10 +320,13 @@ abstract class Hitchable {
   /// Update the children connected to this.
   void updateChildren(double period) {
     hitchFrontFixedChild?.hitchParent = this;
+    hitchFrontFixedChild?.lastUsed = lastUsed;
     hitchFrontFixedChild?.updateChildren(period);
     hitchRearFixedChild?.hitchParent = this;
+    hitchRearFixedChild?.lastUsed = lastUsed;
     hitchRearFixedChild?.updateChildren(period);
     hitchRearTowbarChild?.hitchParent = this;
+    hitchRearTowbarChild?.lastUsed = lastUsed;
     hitchRearTowbarChild?.updateChildren(period);
   }
 
@@ -330,6 +339,7 @@ abstract class Hitchable {
     Hitchable? hitchRearTowbarChild,
     String? name,
     String? uuid,
+    DateTime? lastUsed,
   });
 
   /// Converts the object to a json compatible structure.

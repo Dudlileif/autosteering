@@ -432,7 +432,7 @@ class _DirectoryDeleteProviderElement
 }
 
 String _$saveJsonToFileDirectoryHash() =>
-    r'bad3146236a2c2d05c7225e9a9d16461c998b8ff';
+    r'82205544093a04945a868404dc4e9e582d3728c5';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.

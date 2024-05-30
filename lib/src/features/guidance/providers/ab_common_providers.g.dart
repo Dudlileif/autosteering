@@ -1114,7 +1114,7 @@ final aBDebugNumPointsBehindProvider =
 );
 
 typedef _$ABDebugNumPointsBehind = Notifier<int>;
-String _$aBWidthHash() => r'd1d517533a8474b5f3494636ff74a7cf1dca6115';
+String _$aBWidthHash() => r'fc2b4b68f975bbd6163b0f9bb1176a198d415f4e';
 
 /// A provider for the width of an AB-line.
 ///
@@ -1244,14 +1244,14 @@ final configuredABTrackingProvider =
 
 typedef _$ConfiguredABTracking = Notifier<ABTracking?>;
 String _$configuredMenuABTrackingHash() =>
-    r'22e8673a06e9d9d90f502d6f52953d3941174e72';
+    r'fd8fd83d4987359c06a488675144d5e82c0a95f4';
 
 /// A provider for the currently configured [ABTracking].
 ///
 /// Copied from [ConfiguredMenuABTracking].
 @ProviderFor(ConfiguredMenuABTracking)
 final configuredMenuABTrackingProvider =
-    NotifierProvider<ConfiguredMenuABTracking, ABTracking?>.internal(
+    AsyncNotifierProvider<ConfiguredMenuABTracking, ABTracking?>.internal(
   ConfiguredMenuABTracking.new,
   name: r'configuredMenuABTrackingProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -1261,7 +1261,7 @@ final configuredMenuABTrackingProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ConfiguredMenuABTracking = Notifier<ABTracking?>;
+typedef _$ConfiguredMenuABTracking = AsyncNotifier<ABTracking?>;
 String _$displayABTrackingHash() => r'c87af4669ab69a5d1d63dbfe52b435458b6de676';
 
 /// A provider for the [ABTracking] to display.
