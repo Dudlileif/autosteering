@@ -71,7 +71,7 @@ Future<ABCurve?> aBCurve(ABCurveRef ref) async {
         if (data != null) {
           ref.listenSelf((previous, next) {
             Logger.instance.i(
-              '''ABCurve created: A:${data.start}, B: ${data.end}, points: ${data.baseLine.length}, width: ${data.width} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
+              '''ABCurve created: A:${data.start}, B: ${data.end}, points: ${data.baseLine.length}, width: ${data.width} m, sideways offset: ${data.baseLineSidewaysOffset} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
             );
           });
         } else if (previous?.value != null && data == null) {
@@ -91,12 +91,13 @@ Future<ABCurve?> aBCurve(ABCurveRef ref) async {
             configuredABTrackingProvider.select((value) => value?.boundary),
           ) ??
           ref.watch(bufferedFieldProvider).when(
-            data: (data) =>
-                data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
-            error: (error, stackTrace) => null,
-            loading: () => null,
-          );
+                data: (data) =>
+                    data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
+                error: (error, stackTrace) => null,
+                loading: () => null,
+              );
       final width = ref.watch(aBWidthProvider);
+      final sidewaysOffset = ref.watch(aBSidewaysOffsetProvider);
       final turningRadius = ref.read(aBTurningRadiusProvider);
       final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);
       final limitMode = ref.read(aBTrackingLimitModeProvider);
@@ -109,6 +110,7 @@ Future<ABCurve?> aBCurve(ABCurveRef ref) async {
           turningRadius: turningRadius,
           turnOffsetMinSkips: turnOffsetMinSkips,
           limitMode: limitMode,
+          baseLineSidewaysOffset: sidewaysOffset,
         );
       }
       final json = await Future(
@@ -121,6 +123,7 @@ Future<ABCurve?> aBCurve(ABCurveRef ref) async {
           'limit_mode': limitMode,
           'calculate_lines': true,
           'type': 'AB Curve',
+          'base_line_sideways_offset': sidewaysOffset,
         }),
       );
 

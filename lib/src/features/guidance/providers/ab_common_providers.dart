@@ -108,6 +108,16 @@ class ABWidth extends _$ABWidth {
   void update(double value) => Future(() => state = value);
 }
 
+/// A provider for the sideways offset of an AB-line.
+@Riverpod(keepAlive: true)
+class ABSidewaysOffset extends _$ABSidewaysOffset {
+  @override
+  double build() => 0;
+
+  /// Updates [state] to [value].
+  void update(double value) => Future(() => state = value);
+}
+
 /// A provider for the turning radius of an AB-line.
 @Riverpod(keepAlive: true)
 class ABTurningRadius extends _$ABTurningRadius {

@@ -1036,7 +1036,7 @@ final pathTrackingPointsProvider =
 
 typedef _$PathTrackingPoints = Notifier<List<WayPoint>?>;
 String _$configuredPathTrackingHash() =>
-    r'67f9e8adefe4b2ff7cc49ae6c2db29251d89d587';
+    r'00e84454d1e4b3aa96a0df55fbceb8d8c28ec37e';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.

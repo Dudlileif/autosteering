@@ -1130,6 +1130,24 @@ final aBWidthProvider = NotifierProvider<ABWidth, double>.internal(
 );
 
 typedef _$ABWidth = Notifier<double>;
+String _$aBSidewaysOffsetHash() => r'b1fd3bf03e7b556ba796993d2946c2dc7f1a9ffb';
+
+/// A provider for the sideways offset of an AB-line.
+///
+/// Copied from [ABSidewaysOffset].
+@ProviderFor(ABSidewaysOffset)
+final aBSidewaysOffsetProvider =
+    NotifierProvider<ABSidewaysOffset, double>.internal(
+  ABSidewaysOffset.new,
+  name: r'aBSidewaysOffsetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$aBSidewaysOffsetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ABSidewaysOffset = Notifier<double>;
 String _$aBTurningRadiusHash() => r'615d6433b0ca314298f69339c19208d00ceb5df9';
 
 /// A provider for the turning radius of an AB-line.
@@ -1225,7 +1243,7 @@ final aBSnapToClosestLineProvider =
 
 typedef _$ABSnapToClosestLine = Notifier<bool>;
 String _$configuredABTrackingHash() =>
-    r'721cb82ab8e73539c8ebae597b83cfb22e5d60c5';
+    r'a527401d61143262c66095bbe8017988f3b2b322';
 
 /// A provider for the currently configured [ABTracking].
 ///

@@ -582,6 +582,57 @@ class _ABCommonMenu extends ConsumerWidget {
               builder: (context) => SimpleDialog(
                 title: const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text('Offset from base line'), CloseButton()],
+                ),
+                contentPadding: const EdgeInsets.only(
+                  left: 24,
+                  top: 12,
+                  right: 24,
+                  bottom: 16,
+                ),
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) => TextFormField(
+                      controller: TextEditingController(
+                        text: ref.watch(aBSidewaysOffsetProvider).toString(),
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Offset (-left / +right)',
+                        suffixText: 'm',
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        signed: true,
+                        decimal: true,
+                      ),
+                      onFieldSubmitted: (value) {
+                        final offset = double.tryParse(value);
+                        if (offset != null) {
+                          ref.read(aBSidewaysOffsetProvider.notifier).update(offset);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+            ),
+            child: Text(
+              'Sideways offset: ${ref.watch(aBSidewaysOffsetProvider).toStringAsFixed(1)} m',
+              style: textStyle,
+            ),
+          ),
+        ),
+        Consumer(
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [Text('AB turning radius'), CloseButton()],
                 ),
                 contentPadding: const EdgeInsets.only(

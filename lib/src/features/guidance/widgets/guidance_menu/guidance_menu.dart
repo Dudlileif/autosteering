@@ -29,7 +29,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // TODO(dudlileif): AB tracking from part of path tracking/field border
-// TODO(dudlileif): Allow moving/offsetting the line
 
 /// A menu with attached submenu for working with the guidance features.
 class GuidanceMenu extends ConsumerWidget {

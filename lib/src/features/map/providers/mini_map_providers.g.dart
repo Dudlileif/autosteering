@@ -6,7 +6,7 @@ part of 'mini_map_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$showMiniMapHash() => r'36c867fd9d1f05d4b83fe5a7a5e73f173341ad23';
+String _$showMiniMapHash() => r'489b0f4ea6a29f5cd976e1085fd1258bf081f872';
 
 /// Whether the mini map should be shown.
 ///

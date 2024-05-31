@@ -70,15 +70,23 @@ sealed class ABTracking {
     this.snapToClosestLine = false,
     bool calculateLinesOnCreation = true,
     this.name,
+    double? baseLineSidewaysOffset,
+    this.correctedBaseLine,
     String? uuid,
   })  : uuid = uuid ?? const Uuid().v4(),
         start = baseLine.first,
         end = baseLine.last,
+        baseLineSidewaysOffset = baseLineSidewaysOffset ?? 0,
         isCCW = isCurveCounterclockwise(baseLine.map((e) => e.position)),
-        baseLinePathTracking = PurePursuitPathTracking(wayPoints: baseLine) {
+        baseLinePathTracking =
+            PurePursuitPathTracking(wayPoints: correctedBaseLine ?? baseLine) {
+    if (baseLineSidewaysOffset != null && correctedBaseLine == null) {
+      _findCorrectedBaseLine();
+    }
     if (boundary == null && boundaryString != null) {
       boundary = Polygon.parse(boundaryString);
     }
+
     if (boundary == null && currentOffset != null) {
       offsetLine(currentOffset!);
       currentPathTracking = PurePursuitPathTracking(wayPoints: currentLine!);
@@ -130,6 +138,13 @@ sealed class ABTracking {
 
   /// The boundary that the tracking lines are limited to, if there is one.
   late final Polygon? boundary;
+
+  /// The sideways distance to offset the [baseLine]. -left / +right in
+  /// [start] to [end] direction.
+  final double baseLineSidewaysOffset;
+
+  /// The [baseLine] corrected for [baseLineSidewaysOffset].
+  List<WayPoint>? correctedBaseLine;
 
   /// Name or description of this.
   String? name;
@@ -382,37 +397,61 @@ sealed class ABTracking {
     }
   }
 
+  List<WayPoint>? _findCorrectedBaseLine() {
+    if (baseLineSidewaysOffset.abs() > 0) {
+      return correctedBaseLine = offsetLine(
+        0,
+        extraStraightDistance: 10,
+        overrideSpacing: baseLineSidewaysOffset,
+        ignoreBoundary: true,
+        addToLines: false,
+      );
+    }
+    return null;
+  }
+
   /// Offsets the [baseLine] point by [offset]*[width] meters to the side.
   ///
   /// Negative [offset] means the point is offset in the opposite direction.
   List<WayPoint> offsetLine(
     int offset, {
-    double? extraStraightDistance,
+    double extraStraightDistance = 1000,
+    double? overrideSpacing,
+    bool ignoreBoundary = false,
+    bool addToLines = true,
   }) {
-    if (lines[offset] != null) {
-      return lines[offset]!;
+    if (addToLines) {
+      if (lines[offset] != null) {
+        return lines[offset]!;
+      }
+      if (allOffsetsInsideBoundaryFound) {
+        return [];
+      }
     }
-    if (allOffsetsInsideBoundaryFound) {
-      return [];
+
+    final baseLine = correctedBaseLine ?? this.baseLine;
+
+    final path = baseLine.map((e) => e.position).toList();
+    if (extraStraightDistance.abs() > 0) {
+      final extendedStart = baseLine.first.position.rhumb.destinationPoint(
+        distance: extraStraightDistance,
+        bearing: baseLine[1].finalBearingToRhumb(baseLine.first),
+      );
+
+      final extendedEnd = baseLine.last.position.rhumb.destinationPoint(
+        distance: extraStraightDistance,
+        bearing:
+            baseLine[baseLine.length - 2].finalBearingToRhumb(baseLine.last),
+      );
+
+      path
+        ..insert(0, extendedStart)
+        ..add(extendedEnd);
     }
-
-    final extendedStart = baseLine.first.position.rhumb.destinationPoint(
-      distance: extraStraightDistance ?? 1000,
-      bearing: baseLine[1].finalBearingToRhumb(baseLine.first),
-    );
-
-    final extendedEnd = baseLine.last.position.rhumb.destinationPoint(
-      distance: extraStraightDistance ?? 1000,
-      bearing: baseLine[baseLine.length - 2].finalBearingToRhumb(baseLine.last),
-    );
-
-    final path = baseLine.map((e) => e.position).toList()
-      ..insert(0, extendedStart)
-      ..add(extendedEnd);
 
     final buffered = RingBuffer.bufferCircular(
       ring: path,
-      distance: offset * width,
+      distance: overrideSpacing ?? offset * width,
       extendEnds: false,
       smoothingFactor: 4.0 * (1 + offset.abs()).clamp(1, 30),
       swapDirectionIfClockwise: !isCurveCounterclockwise(path),
@@ -464,7 +503,7 @@ sealed class ABTracking {
       }
     }
 
-    if (boundary?.exterior != null && newPath.isNotEmpty) {
+    if (!ignoreBoundary && boundary?.exterior != null && newPath.isNotEmpty) {
       final boundaryRing = boundary!.exterior!.toGeographicPositions;
       // Skip lines that don't have any possible intersections with the boundary
       if (!newPath.any(
@@ -702,8 +741,10 @@ sealed class ABTracking {
             .finalBearingToRhumb(newPath.last),
       );
     }
-    offsetsInsideBoundary?.add(offset);
-    lines[offset] = newPath;
+    if (addToLines) {
+      offsetsInsideBoundary?.add(offset);
+      lines[offset] = newPath;
+    }
     return newPath;
   }
 
@@ -1308,26 +1349,34 @@ sealed class ABTracking {
   }
 
   /// Creates a json compatible structure of the object.
-  Map<String, dynamic> toJson() => {
-        'uuid': uuid,
-        'type': type.name,
-        'name': name,
-        'base_line': baseLine.map((e) => e.toJson()).toList(),
-        'boundary': boundary?.toText(),
-        'width': width,
-        'is_CCW': isCCW,
-        'turning_radius': turningRadius,
-        'turn_offset_skips': turnOffsetMinSkips,
-        'offsets_inside_boundary': offsetsInsideBoundary?.toList(),
-        'finished_offsets': finishedOffsets.toList(),
-        'lines': {
-          'offsets': lines.keys.toList(),
-          'paths': lines.values
-              .map((line) => line.map((e) => e.toJson()).toList())
-              .toList(),
-        },
-        'calculate_lines': boundary != null && lines.isEmpty,
-      };
+  Map<String, dynamic> toJson() {
+    final map = {
+      'uuid': uuid,
+      'type': type.name,
+      'name': name,
+      'base_line': baseLine.map((e) => e.toJson()).toList(),
+      'boundary': boundary?.toText(),
+      'width': width,
+      'is_CCW': isCCW,
+      'turning_radius': turningRadius,
+      'turn_offset_skips': turnOffsetMinSkips,
+      'offsets_inside_boundary': offsetsInsideBoundary?.toList(),
+      'finished_offsets': finishedOffsets.toList(),
+      'lines': {
+        'offsets': lines.keys.toList(),
+        'paths': lines.values
+            .map((line) => line.map((e) => e.toJson()).toList())
+            .toList(),
+      },
+      'calculate_lines': boundary != null && lines.isEmpty,
+    };
+    if (correctedBaseLine != null || baseLineSidewaysOffset.abs() > 0) {
+      map['base_line_sideways_offset'] = baseLineSidewaysOffset;
+      map['corrected_base_line'] =
+          correctedBaseLine?.map((e) => e.toJson()).toList();
+    }
+    return map;
+  }
 
   /// Creates an [ABTracking] object from the [json] string and returns
   /// the [toJson] object as a string.

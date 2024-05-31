@@ -35,7 +35,7 @@ Future<ABLine?> aBLine(ABLineRef ref) async {
         if (data != null) {
           ref.listenSelf((previous, next) {
             Logger.instance.i(
-              '''ABLine created: A:${data.start}, B: ${data.end}, width:${data.width} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
+              '''ABLine created: A:${data.start}, B: ${data.end}, width:${data.width} m, sideways offset: ${data.baseLineSidewaysOffset} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
             );
           });
         } else if (previous?.value != null && data == null) {
@@ -66,6 +66,7 @@ Future<ABLine?> aBLine(ABLineRef ref) async {
               loading: () => null,
             );
     final width = ref.watch(aBWidthProvider);
+    final sidewaysOffset = ref.watch(aBSidewaysOffsetProvider);
     final turningRadius = ref.read(aBTurningRadiusProvider);
     final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);
     final limitMode = ref.read(aBTrackingLimitModeProvider);
@@ -78,6 +79,7 @@ Future<ABLine?> aBLine(ABLineRef ref) async {
         turningRadius: turningRadius,
         turnOffsetMinSkips: turnOffsetMinSkips,
         limitMode: limitMode,
+        baseLineSidewaysOffset: sidewaysOffset,
       );
     }
     final json = await Future(
@@ -89,6 +91,8 @@ Future<ABLine?> aBLine(ABLineRef ref) async {
         'turn_offset_skips': turnOffsetMinSkips,
         'limit_mode': limitMode,
         'calculate_lines': true,
+        'base_line_sideways_offset': sidewaysOffset,
+
       }),
     );
 
@@ -127,7 +131,7 @@ Future<APlusLine?> aPlusLine(APlusLineRef ref) async {
         if (data != null) {
           ref.listenSelf((previous, next) {
             Logger.instance.i(
-              '''APlusLine created: A:${data.start}, width: ${data.width} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
+              '''APlusLine created: A:${data.start}, width: ${data.width} m, sideways offset: ${data.baseLineSidewaysOffset} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
             );
           });
         } else if (previous?.value != null && data == null) {
@@ -155,6 +159,7 @@ Future<APlusLine?> aPlusLine(APlusLineRef ref) async {
               loading: () => null,
             );
     final width = ref.watch(aBWidthProvider);
+    final sidewaysOffset = ref.watch(aBSidewaysOffsetProvider);
     final turningRadius = ref.read(aBTurningRadiusProvider);
     final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);
     final limitMode = ref.read(aBTrackingLimitModeProvider);
@@ -167,6 +172,7 @@ Future<APlusLine?> aPlusLine(APlusLineRef ref) async {
         turningRadius: turningRadius,
         turnOffsetMinSkips: turnOffsetMinSkips,
         limitMode: limitMode,
+        baseLineSidewaysOffset: sidewaysOffset,
       );
     }
     final json = await Future(
@@ -179,6 +185,7 @@ Future<APlusLine?> aPlusLine(APlusLineRef ref) async {
         'limit_mode': limitMode,
         'calculate_lines': true,
         'type': 'A+ Line',
+        'base_line_sideways_offset': sidewaysOffset,
       }),
     );
 
