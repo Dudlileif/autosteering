@@ -44,7 +44,7 @@ class ABTrackingMenu extends ConsumerWidget {
           configuredABTrackingProvider.select((value) => value != null),
         );
     final menuConfiguredTracking = ref.watch(configuredMenuABTrackingProvider);
-    
+
     final abTracking = switch (workSessionGuidanceActive) {
       true => ref.watch(configuredABTrackingProvider),
       false => menuConfiguredTracking.when(
@@ -97,9 +97,30 @@ class ABTrackingMenu extends ConsumerWidget {
                 child: Icon(Icons.check),
               ),
               onPressed: data != null
-                  ? () => ref
-                      .read(simInputProvider.notifier)
-                      .send((abTracking: data))
+                  ? () {
+                      if (ref.watch(
+                        displayPathTrackingProvider
+                            .select((value) => value != null),
+                      )) {
+                        showDialog<void>(
+                          context: context,
+                          builder: (context) => Consumer(
+                            builder: (context, ref, child) {
+                              return ConfirmationDialog(
+                                title: 'Close active path tracking?',
+                                onConfirmation: () async => ref
+                                    .read(simInputProvider.notifier)
+                                    .send((abTracking: data)),
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        ref
+                            .read(simInputProvider.notifier)
+                            .send((abTracking: data));
+                      }
+                    }
                   : null,
               child: child,
             ),
@@ -141,9 +162,21 @@ class ABTrackingMenu extends ConsumerWidget {
                       : const Icon(Icons.gps_not_fixed),
                 ),
                 trailingIcon: pointIsSet
-                    ? IconButton(
-                        onPressed: () => ref.invalidate(aBPointAProvider),
-                        icon: const Icon(Icons.clear),
+                    ? Row(
+                        children: [
+                          IconButton(
+                            onPressed:
+                                ref.read(showABPointAProvider.notifier).toggle,
+                            icon: switch (ref.watch(showABPointAProvider)) {
+                              true => const Icon(Icons.visibility),
+                              false => const Icon(Icons.visibility_off)
+                            },
+                          ),
+                          IconButton(
+                            onPressed: () => ref.invalidate(aBPointAProvider),
+                            icon: const Icon(Icons.clear),
+                          ),
+                        ],
                       )
                     : null,
                 closeOnActivate: false,
@@ -176,9 +209,21 @@ class ABTrackingMenu extends ConsumerWidget {
                       : const Icon(Icons.gps_not_fixed),
                 ),
                 trailingIcon: pointIsSet
-                    ? IconButton(
+                    ? Row(
+                        children: [
+                          IconButton(
+                            onPressed:
+                                ref.read(showABPointBProvider.notifier).toggle,
+                            icon: switch (ref.watch(showABPointBProvider)) {
+                              true => const Icon(Icons.visibility),
+                              false => const Icon(Icons.visibility_off)
+                            },
+                          ),
+                          IconButton(
                         onPressed: () => ref.invalidate(aBPointBProvider),
                         icon: const Icon(Icons.clear),
+                          ),
+                        ],
                       )
                     : null,
                 closeOnActivate: false,
@@ -508,10 +553,10 @@ class _ABCommonMenu extends ConsumerWidget {
                     padding: const EdgeInsets.only(top: 16),
                     child: Consumer(
                       builder: (context, ref, child) => ElevatedButton.icon(
-                onPressed: () {
-                  ref.invalidate(aBWidthProvider);
-                },
-                icon: const Icon(Icons.handyman),
+                        onPressed: () {
+                          ref.invalidate(aBWidthProvider);
+                        },
+                        icon: const Icon(Icons.handyman),
                         label: const Text('Set to equipment width'),
                       ),
                     ),
@@ -549,29 +594,31 @@ class _ABCommonMenu extends ConsumerWidget {
                   Consumer(
                     builder: (context, ref, child) => TextFormField(
                       decoration: const InputDecoration(
-                labelText: 'Turning radius',
-                suffixText: 'm',
-              ),
-              keyboardType: TextInputType.number,
-              controller: TextEditingController(
-                text: ref.watch(aBTurningRadiusProvider).toString(),
-              ),
-              onFieldSubmitted: (value) {
-                final radius = double.tryParse(value);
-                if (radius != null && radius >= 0) {
-                  ref.read(aBTurningRadiusProvider.notifier).update(radius);
-                }
-              },
+                        labelText: 'Turning radius',
+                        suffixText: 'm',
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: TextEditingController(
+                        text: ref.watch(aBTurningRadiusProvider).toString(),
+                      ),
+                      onFieldSubmitted: (value) {
+                        final radius = double.tryParse(value);
+                        if (radius != null && radius >= 0) {
+                          ref
+                              .read(aBTurningRadiusProvider.notifier)
+                              .update(radius);
+                        }
+                      },
                     ),
                   ),
                   Consumer(
                     builder: (context, ref, child) => Padding(
                       padding: const EdgeInsets.only(top: 16),
                       child: ElevatedButton.icon(
-              onPressed: () {
-                ref.invalidate(aBTurningRadiusProvider);
-              },
-              icon: const Icon(Icons.agriculture),
+                        onPressed: () {
+                          ref.invalidate(aBTurningRadiusProvider);
+                        },
+                        icon: const Icon(Icons.agriculture),
                         label:
                             const Text('Set to 1.25 x vehicle turning radius'),
                       ),

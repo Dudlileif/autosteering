@@ -71,7 +71,6 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
             ..invalidate(displayABTrackingProvider);
           ref.read(activeWorkSessionProvider.notifier).updatePathTracking(next);
         }
-        sendToSim();
       }
     });
 

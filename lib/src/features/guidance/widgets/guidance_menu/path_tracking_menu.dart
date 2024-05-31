@@ -41,6 +41,41 @@ class PathTrackingMenu extends ConsumerWidget {
       menuChildren: [
         MenuItemButton(
           closeOnActivate: false,
+          onPressed: ref.watch(
+            configuredPathTrackingProvider.select((value) => value != null),
+          )
+              ? () {
+                  if (ref.watch(
+                    displayABTrackingProvider.select((value) => value != null),
+                  )) {
+                    showDialog<void>(
+                      context: context,
+                      builder: (context) => Consumer(
+                        builder: (context, ref, child) => ConfirmationDialog(
+                          title: 'Close active AB tracking?',
+                          onConfirmation: () async => ref
+                              .read(
+                                configuredPathTrackingProvider.notifier,
+                              )
+                              .sendToSim(),
+                        ),
+                      ),
+                    );
+                  } else {
+                    ref
+                        .read(configuredPathTrackingProvider.notifier)
+                        .sendToSim();
+                  }
+                }
+              : null,
+          leadingIcon: const Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Icon(Icons.check),
+          ),
+          child: Text('Apply and use', style: textStyle),
+        ),
+        MenuItemButton(
+          closeOnActivate: false,
           leadingIcon: const Padding(
             padding: EdgeInsets.only(left: 8),
             child: Icon(Icons.voicemail),

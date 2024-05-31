@@ -268,6 +268,33 @@ class ABPointB extends _$ABPointB {
 
   /// Updates [state] to [point].
   void update(WayPoint point) => Future(() => state = point);
+
+}
+
+/// A provider for whether to show the starting point A of an AB-line.
+@Riverpod(keepAlive: true)
+class ShowABPointA extends _$ShowABPointA {
+  @override
+  bool build() => true;
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Toggles [state] to [!state].
+  void toggle() => Future(() => state = !state);
+}
+
+/// A provider for whether to show the ending point B of an AB-line.
+@Riverpod(keepAlive: true)
+class ShowABPointB extends _$ShowABPointB {
+  @override
+  bool build() => true;
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Toggles [state] to [!state].
+  void toggle() => Future(() => state = !state);
 }
 
 /// A provider for the perpendicular distance from the AB tracking line

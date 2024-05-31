@@ -38,9 +38,13 @@ class ABTrackingLayer extends ConsumerWidget {
 
     final debug = ref.watch(debugABTrackingProvider);
 
-    final pointA = abTracking?.start ?? ref.watch(aBPointAProvider);
+    final pointA = ref.watch(showABPointAProvider)
+        ? abTracking?.start ?? ref.watch(aBPointAProvider)
+        : null;
 
-    final pointB = abTracking?.end ?? ref.watch(aBPointBProvider);
+    final pointB = ref.watch(showABPointBProvider)
+        ? abTracking?.end ?? ref.watch(aBPointBProvider)
+        : null;
 
     final autoSteerEnabled = ref.watch(
       activeAutosteeringStateProvider
@@ -56,7 +60,6 @@ class ABTrackingLayer extends ConsumerWidget {
 
     final darkMode = Theme.of(context).brightness == Brightness.dark;
 
-  
     return Stack(
       children: [
         if (abTracking?.boundary != null)
@@ -294,30 +297,6 @@ class ABTrackingLayer extends ConsumerWidget {
                         )
                         .whereNotNull() ??
                     [],
-              if (abTracking.boundary == null) ...[
-                Marker(
-                  point: abTracking.start.position.latLng,
-                  child: const TextWithStroke(
-                    'A',
-                    style: pointTextStyle,
-                    strokeWidth: 4,
-                  ),
-                  rotate: true,
-                  width: 50,
-                  height: 50,
-                ),
-                Marker(
-                  point: abTracking.end.position.latLng,
-                  child: const TextWithStroke(
-                    'B',
-                    style: pointTextStyle,
-                    strokeWidth: 4,
-                  ),
-                  rotate: true,
-                  width: 50,
-                  height: 50,
-                ),
-              ],
               if (abTracking.currentStart != null)
                 Marker(
                   point: abTracking.currentStart!.position.latLng,
@@ -368,32 +347,31 @@ class ABTrackingLayer extends ConsumerWidget {
                     height: 50,
                   ),
               ],
-            ] else if (pointA != null || pointB != null) ...[
-              if (pointA != null)
-                Marker(
-                  point: pointA.position.latLng,
-                  child: const TextWithStroke(
-                    'A',
-                    style: pointTextStyle,
-                    strokeWidth: 4,
-                  ),
-                  rotate: true,
-                  width: 50,
-                  height: 50,
-                ),
-              if (pointB != null)
-                Marker(
-                  point: pointB.position.latLng,
-                  child: const TextWithStroke(
-                    'B',
-                    style: pointTextStyle,
-                    strokeWidth: 4,
-                  ),
-                  rotate: true,
-                  width: 50,
-                  height: 50,
-                ),
             ],
+            if (pointA != null)
+              Marker(
+                point: pointA.position.latLng,
+                child: const TextWithStroke(
+                  'A',
+                  style: pointTextStyle,
+                  strokeWidth: 4,
+                ),
+                rotate: true,
+                width: 50,
+                height: 50,
+              ),
+            if (pointB != null)
+              Marker(
+                point: pointB.position.latLng,
+                child: const TextWithStroke(
+                  'B',
+                  style: pointTextStyle,
+                  strokeWidth: 4,
+                ),
+                rotate: true,
+                width: 50,
+                height: 50,
+              ),
           ],
         ),
       ],

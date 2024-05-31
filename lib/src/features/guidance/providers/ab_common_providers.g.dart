@@ -1312,6 +1312,38 @@ final aBPointBProvider = NotifierProvider<ABPointB, WayPoint?>.internal(
 );
 
 typedef _$ABPointB = Notifier<WayPoint?>;
+String _$showABPointAHash() => r'9aeb6c8f9e43081b52c30e1c75cd504de2d0034a';
+
+/// A provider for whether to show the starting point A of an AB-line.
+///
+/// Copied from [ShowABPointA].
+@ProviderFor(ShowABPointA)
+final showABPointAProvider = NotifierProvider<ShowABPointA, bool>.internal(
+  ShowABPointA.new,
+  name: r'showABPointAProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$showABPointAHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowABPointA = Notifier<bool>;
+String _$showABPointBHash() => r'd957ec5d535e0b6e2f29e00900bcae1a52ac3827';
+
+/// A provider for whether to show the ending point B of an AB-line.
+///
+/// Copied from [ShowABPointB].
+@ProviderFor(ShowABPointB)
+final showABPointBProvider = NotifierProvider<ShowABPointB, bool>.internal(
+  ShowABPointB.new,
+  name: r'showABPointBProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$showABPointBHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ShowABPointB = Notifier<bool>;
 String _$aBTrackingShowAllLinesHash() =>
     r'00e1cfb03e0eb198ed297d2fbcdeaa29876a7561';
 

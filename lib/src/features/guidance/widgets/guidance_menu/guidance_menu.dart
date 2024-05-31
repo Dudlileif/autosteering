@@ -28,6 +28,10 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// TODO(dudlileif): AB tracking from part of path tracking/field border
+// TODO(dudlileif): Allow moving/offsetting the line
+// TODO(dudlileif): Allow setting AB points/curve with path tracking open
+
 /// A menu with attached submenu for working with the guidance features.
 class GuidanceMenu extends ConsumerWidget {
   /// A menu with attached submenu for working with the guidance features.
@@ -129,14 +133,8 @@ class GuidanceMenu extends ConsumerWidget {
             ref.watch(displayPathTrackingProvider) != null) ...[
           const _ExportButton(),
         ],
-        if (ref.watch(
-          displayPathTrackingProvider.select((value) => value == null),
-        ))
-          const ABTrackingMenu(),
-        if (ref.watch(
-          displayABTrackingProvider.select((value) => value == null),
-        ))
-          const PathTrackingMenu(),
+        const ABTrackingMenu(),
+        const PathTrackingMenu(),
         const VirtualLedBarMenu(),
       ],
     );

@@ -121,7 +121,6 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                         label: Text('Manual'),
                       ),
                     ],
-
                   ),
                 ),
               ),
@@ -256,47 +255,53 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                     padding: EdgeInsets.only(left: 8),
                     child: Icon(Icons.check),
                   ),
-                  onPressed: () => switch (target) {
-                    PathRecordingTarget.abCurve => ref
-                      ..read(aBCurvePointsProvider.notifier)
-                          .update(ref.read(finishedPathRecordingListProvider))
-                      ..read(showABTrackingProvider.notifier)
-                          .update(value: true)
-                      ..read(
-                        showPathRecordingMenuProvider.notifier,
-                      ).update(value: false)
-                      ..read(enablePathRecorderProvider.notifier)
-                          .update(value: false)
-                      ..read(showFinishedPathProvider.notifier)
-                          .update(value: false),
-                    PathRecordingTarget.field =>
-                      ref
-                      ..read(fieldExteriorRingProvider.notifier).update(
+                  onPressed: () {
+                    switch (target) {
+                      case PathRecordingTarget.abCurve:
+                        ref
+                          ..read(aBCurvePointsProvider.notifier).update(
+                            ref.read(finishedPathRecordingListProvider),
+                          )
+                          ..read(showABTrackingProvider.notifier)
+                              .update(value: true)
+                          ..read(
+                            showPathRecordingMenuProvider.notifier,
+                          ).update(value: false)
+                          ..read(enablePathRecorderProvider.notifier)
+                              .update(value: false)
+                          ..read(showFinishedPathProvider.notifier)
+                              .update(value: false);
+                      case PathRecordingTarget.field:
+                        ref
+                          ..read(fieldExteriorRingProvider.notifier).update(
                             ref
                                 .read(finishedPathRecordingListProvider)
                                 ?.map((e) => e.position)
                                 .toList(),
-                      )
-                      ..invalidate(finishedPathRecordingListProvider),
-                    PathRecordingTarget.pathTracking => ref
-                      ..read(pathTrackingPointsProvider.notifier)
-                          .update(ref.read(finishedPathRecordingListProvider))
-                      ..read(showPathTrackingProvider.notifier)
-                          .update(value: true)
-                      ..read(
-                        showPathRecordingMenuProvider.notifier,
-                      ).update(value: false)
-                      ..read(enablePathRecorderProvider.notifier)
-                          .update(value: false)
-                      ..read(showFinishedPathProvider.notifier)
-                          .update(value: false)
-                      ..invalidate(finishedPathRecordingListProvider),
+                          )
+                          ..invalidate(finishedPathRecordingListProvider);
+                      case PathRecordingTarget.pathTracking:
+                        ref
+                          ..read(pathTrackingPointsProvider.notifier)
+                                  .update(
+                            ref.watch(finishedPathRecordingListProvider),
+                          )
+                          ..read(showPathTrackingProvider.notifier)
+                              .update(value: true)
+                          ..read(
+                            showPathRecordingMenuProvider.notifier,
+                          ).update(value: false)
+                          ..read(enablePathRecorderProvider.notifier)
+                              .update(value: false)
+                          ..read(showFinishedPathProvider.notifier)
+                              .update(value: false)
+                          ..invalidate(finishedPathRecordingListProvider);
+                    }
                   },
                   child: Text(
                     switch (target) {
                       PathRecordingTarget.abCurve => 'Create AB curve',
-                      PathRecordingTarget.field =>
-                        'Use as exterior boundary',
+                      PathRecordingTarget.field => 'Use as exterior boundary',
                       PathRecordingTarget.pathTracking =>
                         'Create path tracking',
                     },
@@ -310,17 +315,15 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       padding: EdgeInsets.only(left: 8),
                       child: Icon(Icons.add),
                     ),
-                    onPressed: () =>
-                        ref
+                    onPressed: () => ref
                       ..read(fieldInteriorRingsProvider.notifier).addRing(
-                              ref
-                                  .read(finishedPathRecordingListProvider)
-                                  ?.map((e) => e.position)
-                                  .toList(),
+                        ref
+                            .read(finishedPathRecordingListProvider)
+                            ?.map((e) => e.position)
+                            .toList(),
                       )
                       ..invalidate(finishedPathRecordingListProvider),
-                    child:
-                        Text('Add interior boundary', style: textStyle),
+                    child: Text('Add interior boundary', style: textStyle),
                   ),
                 ],
               ],
@@ -552,14 +555,14 @@ class _CreateFieldButton extends ConsumerWidget {
               var name = '';
               return StatefulBuilder(
                 builder: (context, setState) => SimpleDialog(
-                    title: const Text('Name the field'),
+                  title: const Text('Name the field'),
                   contentPadding: const EdgeInsets.only(
                     left: 24,
                     top: 12,
                     right: 24,
                     bottom: 16,
                   ),
-                    children: [
+                  children: [
                     TextFormField(
                       decoration: const InputDecoration(
                         icon: Icon(Icons.label_outline),
@@ -575,65 +578,65 @@ class _CreateFieldButton extends ConsumerWidget {
                               !value.startsWith(' ')
                           ? null
                           : '''No name entered! Please enter a name so that the field can be saved!''',
-                      ),
-                      Padding(
+                    ),
+                    Padding(
                       padding: const EdgeInsets.only(top: 16),
-                        child: Consumer(
-                          builder: (context, ref, child) => FilledButton(
-                            onPressed: () {
+                      child: Consumer(
+                        builder: (context, ref, child) => FilledButton(
+                          onPressed: () {
                             Timer(
-                                  const Duration(
-                                    milliseconds: 100,
-                                  ), () {
-                                final exteriorRing = ref.read(
-                                  fieldExteriorRingProvider,
-                                );
-                                final interiorRings = ref.read(
-                                      fieldInteriorRingsProvider,
-                                    ) ??
-                                    [];
-                                if (exteriorRing != null) {
-                                  final field = Field(
-                                    name: name,
-                                    polygon: Polygon([
-                                      PositionSeries.from(
-                                        exteriorRing,
-                                      ),
-                                      ...interiorRings.map(
-                                        PositionSeries.from,
-                                      ),
-                                    ]),
-                                    boundingBox: GeoBox.from(
+                                const Duration(
+                                  milliseconds: 100,
+                                ), () {
+                              final exteriorRing = ref.read(
+                                fieldExteriorRingProvider,
+                              );
+                              final interiorRings = ref.read(
+                                    fieldInteriorRingsProvider,
+                                  ) ??
+                                  [];
+                              if (exteriorRing != null) {
+                                final field = Field(
+                                  name: name,
+                                  polygon: Polygon([
+                                    PositionSeries.from(
                                       exteriorRing,
                                     ),
-                                  );
-                                  ref
-                                    ..read(
-                                      saveFieldProvider(field),
-                                    )
-                                    ..read(
-                                      activeFieldProvider.notifier,
-                                    ).update(field)
-                                    ..read(showFieldProvider.notifier)
-                                        .update(value: true)
-                                    ..read(
-                                      showPathRecordingMenuProvider.notifier,
-                                    ).update(value: false)
-                                    ..read(enablePathRecorderProvider.notifier)
-                                        .update(value: false)
-                                    ..read(showFinishedPathProvider.notifier)
-                                        .update(value: false)
-                                    ..invalidate(fieldExteriorRingProvider)
-                                    ..invalidate(fieldInteriorRingsProvider);
-                                }
-                              });
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Save field'),
-                          ),
+                                    ...interiorRings.map(
+                                      PositionSeries.from,
+                                    ),
+                                  ]),
+                                  boundingBox: GeoBox.from(
+                                    exteriorRing,
+                                  ),
+                                );
+                                ref
+                                  ..read(
+                                    saveFieldProvider(field),
+                                  )
+                                  ..read(
+                                    activeFieldProvider.notifier,
+                                  ).update(field)
+                                  ..read(showFieldProvider.notifier)
+                                      .update(value: true)
+                                  ..read(
+                                    showPathRecordingMenuProvider.notifier,
+                                  ).update(value: false)
+                                  ..read(enablePathRecorderProvider.notifier)
+                                      .update(value: false)
+                                  ..read(showFinishedPathProvider.notifier)
+                                      .update(value: false)
+                                  ..invalidate(fieldExteriorRingProvider)
+                                  ..invalidate(fieldInteriorRingsProvider);
+                              }
+                            });
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Save field'),
                         ),
                       ),
-                    ],
+                    ),
+                  ],
                 ),
               );
             },
