@@ -466,6 +466,7 @@ class _CreateFieldFromPathTracking extends ConsumerWidget {
         padding: EdgeInsets.only(left: 8),
         child: Icon(Icons.route),
       ),
+      closeOnActivate: false,
       child: Text('Create from path tracking', style: textStyle),
       onPressed: () => showDialog<void>(
         context: context,
