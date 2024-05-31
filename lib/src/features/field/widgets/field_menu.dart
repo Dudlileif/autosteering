@@ -89,87 +89,14 @@ class FieldMenu extends ConsumerWidget {
           const _LoadFieldMenu(),
           const _ImportButton(),
           const _CreateFieldButton(),
+          if (ref.watch(
+            displayPathTrackingProvider
+                .select((value) => value != null && value.wayPoints.length > 2),
+          ))
+            const _CreateFieldFromPathTracking(),
         ],
         if (activeField != null) ...[
-          Consumer(
-            child: Text('Rename', style: textStyle),
-            builder: (context, ref, child) => MenuItemButton(
-              closeOnActivate: false,
-              leadingIcon: const Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Icon(Icons.edit),
-              ),
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (context) {
-                  final field = ref.watch(activeFieldProvider);
-                  var name = field?.name ?? '';
-                  return StatefulBuilder(
-                    builder: (context, setState) => SimpleDialog(
-                      title: const Text('Name the field'),
-                      contentPadding: const EdgeInsets.only(
-                        left: 24,
-                        top: 12,
-                        right: 24,
-                        bottom: 16,
-                      ),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.label_outline),
-                              labelText: 'Name',
-                            ),
-                            initialValue: name,
-                            onChanged: (value) => setState(() => name = value),
-                            onFieldSubmitted: (value) =>
-                                setState(() => name = value),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) => value != null &&
-                                    value.isNotEmpty &&
-                                    !value.startsWith(' ')
-                                ? null
-                                : '''No name entered! Please enter a name so that the field can be saved!''',
-                          ),
-                        ),
-                        if (field != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Consumer(
-                              builder: (context, ref, child) => FilledButton(
-                                onPressed: () {
-                                  if (field.name != name && name.isNotEmpty) {
-                                    Timer(const Duration(milliseconds: 100),
-                                        () {
-                                      ref
-                                        ..read(deleteFieldProvider(field))
-                                        ..read(
-                                          saveFieldProvider(
-                                            field.copyWith(
-                                              name:
-                                                  name.isNotEmpty ? name : null,
-                                            ),
-                                          ),
-                                        );
-                                    });
-                                  }
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Save field'),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-              child: child,
-            ),
-          ),
+          const _RenameFieldButton(),
           Consumer(
             child: Text(
               'Show field',
@@ -376,152 +303,9 @@ class FieldMenu extends ConsumerWidget {
             ],
           ],
           if (ref.watch(fieldBufferEnabledProvider))
-            Consumer(
-              child: Text(
-                'Save buffered field',
-                style: textStyle,
-              ),
-              builder: (context, ref, child) {
-                final field = ref.watch(bufferedFieldProvider).when(
-                      data: (data) => data,
-                      error: (error, stackTrace) => null,
-                      loading: () => null,
-                    );
-
-                return MenuItemButton(
-                  leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Icon(Icons.save),
-                  ),
-                  closeOnActivate: false,
-                  onPressed: field != null
-                      ? () {
-                          showDialog<void>(
-                            context: context,
-                            builder: (context) {
-                              var name = '';
-                              return StatefulBuilder(
-                                builder: (context, setState) => SimpleDialog(
-                                  title: const Text('Name the bufferd field'),
-                                  contentPadding: const EdgeInsets.only(
-                                    left: 24,
-                                    top: 12,
-                                    right: 24,
-                                    bottom: 16,
-                                  ),
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: TextFormField(
-                                        decoration: const InputDecoration(
-                                          icon: Icon(Icons.label_outline),
-                                          labelText: 'Name',
-                                        ),
-                                        initialValue: name,
-                                        onChanged: (value) =>
-                                            setState(() => name = value),
-                                        onFieldSubmitted: (value) =>
-                                            setState(() => name = value),
-                                        keyboardType: TextInputType.text,
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        validator: (value) => value != null &&
-                                                value.isNotEmpty &&
-                                                !value.startsWith(' ')
-                                            ? null
-                                            : '''No name entered! Please enter a name so that the field can be saved!''',
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 16),
-                                      child: Consumer(
-                                        builder: (context, ref, child) =>
-                                            FilledButton(
-                                          onPressed: () {
-                                            Timer(
-                                                const Duration(
-                                                  milliseconds: 100,
-                                                ), () {
-                                              ref.read(
-                                                saveFieldProvider(
-                                                  field.copyWith(
-                                                    name: name.isNotEmpty
-                                                        ? name
-                                                        : null,
-                                                  ),
-                                                  downloadIfWeb: true,
-                                                ),
-                                              );
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                          child:
-                                              const Text('Save bufferd field'),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        }
-                      : null,
-                  child: child,
-                );
-              },
-            ),
+            const _SaveBufferedFieldButton(),
           if (ref.watch(fieldBufferEnabledProvider))
-            Consumer(
-              child: Text(
-                'Create path tracking from buffered field exterior',
-                style: textStyle,
-              ),
-              builder: (context, ref, child) {
-                final wayPoints = ref.watch(bufferedFieldProvider).when(
-                      data: (data) {
-                        final points = <WayPoint>[];
-                        final positions =
-                            data?.polygon.exterior?.toGeographicPositions;
-                        if (positions != null && positions.length >= 2) {
-                          for (var i = 0; i < positions.length; i++) {
-                            final point = positions.elementAt(i);
-                            final nextPoint =
-                                positions.elementAt((i + 1) % positions.length);
-                            points.add(
-                              WayPoint(
-                                position: point,
-                                bearing:
-                                    point.rhumb.initialBearingTo(nextPoint),
-                              ),
-                            );
-                          }
-                          return points;
-                        }
-
-                        return null;
-                      },
-                      error: (error, stackTrace) => null,
-                      loading: () => null,
-                    );
-
-                return MenuItemButton(
-                  leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Icon(Icons.route),
-                  ),
-                  closeOnActivate: false,
-                  onPressed: wayPoints != null
-                      ? () {
-                          ref
-                              .read(pathTrackingPointsProvider.notifier)
-                              .update(wayPoints);
-                        }
-                      : null,
-                  child: child,
-                );
-              },
-            ),
+            const _CreatePathTrackingFromBufferedFieldExteriorButton(),
         ],
       ],
     );
@@ -667,6 +451,178 @@ class _CreateFieldButton extends ConsumerWidget {
         'Create field from recording',
         style: textStyle,
       ),
+    );
+  }
+}
+
+class _CreateFieldFromPathTracking extends ConsumerWidget {
+  const _CreateFieldFromPathTracking();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    return MenuItemButton(
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.route),
+      ),
+      child: Text('Create from path tracking', style: textStyle),
+      onPressed: () => showDialog<void>(
+        context: context,
+        builder: (context) => Consumer(
+          builder: (context, ref, child) {
+            final controller = TextEditingController();
+            return SimpleDialog(
+              title: const Text('Create field from path tracking'),
+              contentPadding: const EdgeInsets.only(
+                left: 24,
+                top: 12,
+                right: 24,
+                bottom: 16,
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.label_outline),
+                      labelText: 'Name',
+                    ),
+                    controller: controller,
+                    keyboardType: TextInputType.text,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value != null &&
+                            value.isNotEmpty &&
+                            !value.startsWith(' ')
+                        ? null
+                        : '''No name entered! Please enter a name so that the field can be saved!''',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Consumer(
+                    builder: (context, ref, child) => ListenableBuilder(
+                      listenable: controller,
+                      builder: (context, child) => FilledButton(
+                        onPressed: controller.text.isNotEmpty
+                            ? () async {
+                                final points = ref.watch(
+                                  displayPathTrackingProvider.select(
+                                    (value) =>
+                                        value!.wayPoints.map((e) => e.position),
+                                  ),
+                                );
+                                final field = Field(
+                                  name: controller.text,
+                                  polygon: Polygon.from([points]),
+                                  boundingBox: GeoBox.from(points),
+                                );
+
+                                await ref
+                                    .read(
+                                  saveFieldProvider(field).future,
+                                )
+                                    .then((value) {
+                                  ref
+                                      .read(
+                                        activeFieldProvider.notifier,
+                                      )
+                                      .update(field);
+                                  Navigator.of(context).pop();
+                                });
+                              }
+                            : null,
+                        child: const Text('Save field'),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _RenameFieldButton extends ConsumerWidget {
+  const _RenameFieldButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    return MenuItemButton(
+      closeOnActivate: false,
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.edit),
+      ),
+      onPressed: () => showDialog<void>(
+        context: context,
+        builder: (context) {
+          final field = ref.watch(activeFieldProvider);
+          var name = field?.name ?? '';
+          return StatefulBuilder(
+            builder: (context, setState) => SimpleDialog(
+              title: const Text('Name the field'),
+              contentPadding: const EdgeInsets.only(
+                left: 24,
+                top: 12,
+                right: 24,
+                bottom: 16,
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.label_outline),
+                      labelText: 'Name',
+                    ),
+                    initialValue: name,
+                    onChanged: (value) => setState(() => name = value),
+                    onFieldSubmitted: (value) => setState(() => name = value),
+                    keyboardType: TextInputType.text,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value != null &&
+                            value.isNotEmpty &&
+                            !value.startsWith(' ')
+                        ? null
+                        : '''No name entered! Please enter a name so that the field can be saved!''',
+                  ),
+                ),
+                if (field != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Consumer(
+                      builder: (context, ref, child) => FilledButton(
+                        onPressed: () {
+                          if (field.name != name && name.isNotEmpty) {
+                            Timer(const Duration(milliseconds: 100), () {
+                              ref
+                                ..read(deleteFieldProvider(field))
+                                ..read(
+                                  saveFieldProvider(
+                                    field.copyWith(
+                                      name: name.isNotEmpty ? name : null,
+                                    ),
+                                  ),
+                                );
+                            });
+                          }
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Save field'),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
+      child: Text('Rename', style: textStyle),
     );
   }
 }
@@ -857,6 +813,153 @@ class _BufferDistancesDialog extends ConsumerWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _SaveBufferedFieldButton extends ConsumerWidget {
+  const _SaveBufferedFieldButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    final field = ref.watch(bufferedFieldProvider).when(
+          data: (data) => data,
+          error: (error, stackTrace) => null,
+          loading: () => null,
+        );
+
+    return MenuItemButton(
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.save),
+      ),
+      closeOnActivate: false,
+      onPressed: field != null
+          ? () {
+              showDialog<void>(
+                context: context,
+                builder: (context) {
+                  var name = '';
+                  return StatefulBuilder(
+                    builder: (context, setState) => SimpleDialog(
+                      title: const Text('Name the bufferd field'),
+                      contentPadding: const EdgeInsets.only(
+                        left: 24,
+                        top: 12,
+                        right: 24,
+                        bottom: 16,
+                      ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.label_outline),
+                              labelText: 'Name',
+                            ),
+                            initialValue: name,
+                            onChanged: (value) => setState(() => name = value),
+                            onFieldSubmitted: (value) =>
+                                setState(() => name = value),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) => value != null &&
+                                    value.isNotEmpty &&
+                                    !value.startsWith(' ')
+                                ? null
+                                : '''No name entered! Please enter a name so that the field can be saved!''',
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Consumer(
+                            builder: (context, ref, child) => FilledButton(
+                              onPressed: () {
+                                Timer(
+                                    const Duration(
+                                      milliseconds: 100,
+                                    ), () {
+                                  ref.read(
+                                    saveFieldProvider(
+                                      field.copyWith(
+                                        name: name.isNotEmpty ? name : null,
+                                      ),
+                                      downloadIfWeb: true,
+                                    ),
+                                  );
+                                });
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Save bufferd field'),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+          : null,
+      child: Text(
+        'Save buffered field',
+        style: textStyle,
+      ),
+    );
+  }
+}
+
+class _CreatePathTrackingFromBufferedFieldExteriorButton
+    extends ConsumerWidget {
+  const _CreatePathTrackingFromBufferedFieldExteriorButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    final wayPoints = ref.watch(bufferedFieldProvider).when(
+          data: (data) {
+            final points = <WayPoint>[];
+            final positions = data?.polygon.exterior?.toGeographicPositions;
+            if (positions != null && positions.length >= 2) {
+              for (var i = 0; i < positions.length; i++) {
+                final point = positions.elementAt(i);
+                final nextPoint =
+                    positions.elementAt((i + 1) % positions.length);
+                points.add(
+                  WayPoint(
+                    position: point,
+                    bearing: point.rhumb.initialBearingTo(nextPoint),
+                  ),
+                );
+              }
+              return points;
+            }
+
+            return null;
+          },
+          error: (error, stackTrace) => null,
+          loading: () => null,
+        );
+
+    return MenuItemButton(
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.route),
+      ),
+      closeOnActivate: false,
+      onPressed: wayPoints != null
+          ? () {
+              ref.read(pathTrackingPointsProvider.notifier).update(wayPoints);
+            }
+          : null,
+      child: Text(
+        'Create path tracking from buffered field exterior',
+        style: textStyle,
+      ),
     );
   }
 }
