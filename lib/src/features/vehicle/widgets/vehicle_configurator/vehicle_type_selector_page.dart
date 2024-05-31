@@ -233,6 +233,7 @@ class _VehicleTypeSelector extends ConsumerWidget {
                     textAlign: TextAlign.center,
                   
                   ),
+                  // TODO(dudlileif): make Harvester drawing
                   const SizedBox.shrink(),
                 ],
               ),

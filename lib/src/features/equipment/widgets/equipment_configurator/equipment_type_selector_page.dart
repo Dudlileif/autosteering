@@ -166,6 +166,7 @@ class _EquipmentTypeSelector extends ConsumerWidget {
                   'Fixed hitch',
                   textAlign: TextAlign.center,
                 ),
+                // TODO(dudlileif): Make three point hitch drawing
                 Icon(
                   Icons.workspaces,
                 ),
@@ -187,6 +188,7 @@ class _EquipmentTypeSelector extends ConsumerWidget {
                         : Colors.black,
                   ),
                 ),
+                // TODO(dudlileif): Make towbar drawing
                 const Icon(
                   Icons.commit,
                 ),
