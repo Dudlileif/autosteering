@@ -38,15 +38,15 @@ class NtripEnabled extends _$NtripEnabled {
     ref
       ..watch(reloadAllSettingsProvider)
       ..listenSelf((previous, next) {
-      if (next != previous) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.ntripEnabled, next);
-      }
-      if (!next) {
-        ref.invalidate(ntripAliveProvider);
-      }
-    });
+        if (next != previous) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.ntripEnabled, next, force: true);
+        }
+        if (!next) {
+          ref.invalidate(ntripAliveProvider);
+        }
+      });
 
     return ref
             .read(settingsProvider.notifier)
@@ -69,12 +69,12 @@ class NtripProfiles extends _$NtripProfiles {
     ref
       ..watch(reloadAllSettingsProvider)
       ..listenSelf((previous, next) {
-      if (!const DeepCollectionEquality.unordered().equals(previous, next)) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.ntripProfiles, next);
-      }
-    });
+        if (previous != null) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.ntripProfiles, next);
+        }
+      });
     final profiles =
         ref.read(settingsProvider.notifier).getList(SettingsKey.ntripProfiles);
     if (profiles != null) {
@@ -106,10 +106,9 @@ class NtripProfiles extends _$NtripProfiles {
   bool updateShouldNotify(
     List<NtripProfile> previous,
     List<NtripProfile> next,
-  ) {
-    final equal = const DeepCollectionEquality().equals(previous, next);
-    return !equal;
-  }
+  ) =>
+      true;
+  
 }
 
 /// A provider for the active [NtripProfile], if there is one.
@@ -120,12 +119,12 @@ class ActiveNtripProfile extends _$ActiveNtripProfile {
     ref
       ..watch(reloadAllSettingsProvider)
       ..listenSelf((previous, next) {
-      if (previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.ntripActiveProfile, next);
-      }
-    });
+        if (previous != next) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.ntripActiveProfile, next);
+        }
+      });
     final json = ref
         .read(settingsProvider.notifier)
         .getMap(SettingsKey.ntripActiveProfile);
@@ -293,8 +292,7 @@ FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
               //If message is 'ICY 200 OK', we have a confirmed connection.
               if (dataString.contains('ICY 200 OK')) {
                 Logger.instance.i('NTRIP client connection confirmed.');
-              }
-              else if (dataString.contains('SOURCETABLE 200 OK') ||
+              } else if (dataString.contains('SOURCETABLE 200 OK') ||
                   dataString.contains('ENDSOURCETABLE')) {
                 ref.read(ntripEnabledProvider.notifier).update(value: false);
                 Logger.instance.i(
@@ -303,8 +301,7 @@ FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
                 ref
                   ..invalidate(ntripSourcetableProvider)
                   ..invalidateSelf();
-              } 
-              else if (dataString.contains('400 BAD REQUEST')) {
+              } else if (dataString.contains('400 BAD REQUEST')) {
                 ref.read(ntripEnabledProvider.notifier).update(value: false);
                 Logger.instance.i(
                   '''NTRIP client bad request.''',

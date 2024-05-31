@@ -115,16 +115,18 @@ class Settings extends _$Settings {
   }
 
   /// Update the setting [key] to [value].
-  void update(SettingsKey key, dynamic value) => Future(
+  void update(SettingsKey key, dynamic value, {bool force = false}) => Future(
         () {
           final oldValue = state[key.name];
           // Skip if value is not new.
-          if (oldValue is Iterable) {
-            if (const DeepCollectionEquality().equals(oldValue, value)) {
+          if (!force) {
+            if (oldValue is Iterable) {
+              if (const DeepCollectionEquality().equals(oldValue, value)) {
+                return;
+              }
+            } else if (oldValue == value) {
               return;
             }
-          } else if (oldValue == value) {
-            return;
           }
 
           state = SplayTreeMap.from(state)
