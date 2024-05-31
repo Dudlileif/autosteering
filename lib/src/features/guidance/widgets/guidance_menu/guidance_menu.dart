@@ -93,8 +93,12 @@ class GuidanceMenu extends ConsumerWidget {
             },
           ),
         ),
-        if (ref.watch(displayABTrackingProvider) != null ||
-            ref.watch(displayPathTrackingProvider) != null)
+        if (ref.watch(
+              displayABTrackingProvider.select((value) => value != null),
+            ) ||
+            ref.watch(
+              displayPathTrackingProvider.select((value) => value != null),
+            ))
           MenuItemButton(
             leadingIcon: const Padding(
               padding: EdgeInsets.only(left: 8),
@@ -114,22 +118,34 @@ class GuidanceMenu extends ConsumerWidget {
               style: textStyle,
             ),
           ),
-        if (ref.watch(displayABTrackingProvider) == null &&
-            ref.watch(displayPathTrackingProvider) == null) ...[
+        if (ref.watch(
+              displayABTrackingProvider.select((value) => value == null),
+            ) &&
+            ref.watch(
+              displayPathTrackingProvider.select((value) => value == null),
+            )) ...[
           if (Device.isNative) const _LoadPathTrackingMenu(),
           if (Device.isNative) const _LoadABTrackingMenu(),
           const _ImportMenu(),
         ],
-        if (ref.watch(displayABTrackingProvider) != null) ...[
+        if (ref.watch(
+          displayABTrackingProvider.select((value) => value != null),
+        )) ...[
           const _SaveABTrackingButton(),
           const _RenameABTrackingButton(),
         ],
-        if (ref.watch(displayPathTrackingProvider) != null) ...[
+        if (ref.watch(
+          displayPathTrackingProvider.select((value) => value != null),
+        )) ...[
           const _SavePathTrackingButton(),
           const _RenamePathTrackingButton(),
         ],
-        if (ref.watch(displayABTrackingProvider) != null ||
-            ref.watch(displayPathTrackingProvider) != null) ...[
+        if (ref.watch(
+              displayABTrackingProvider.select((value) => value != null),
+            ) ||
+            ref.watch(
+              displayPathTrackingProvider.select((value) => value != null),
+            )) ...[
           const _ExportButton(),
         ],
         const ABTrackingMenu(),
@@ -375,7 +391,7 @@ class _RenameABTrackingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final abTracking = ref.watch(configuredABTrackingProvider);
+    final abTracking = ref.watch(displayABTrackingProvider);
     if (abTracking == null) {
       return const SizedBox.shrink();
     }
@@ -457,7 +473,7 @@ class _RenamePathTrackingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pathTracking = ref.watch(configuredPathTrackingProvider);
+    final pathTracking = ref.watch(displayPathTrackingProvider);
     if (pathTracking == null) {
       return const SizedBox.shrink();
     }
@@ -539,7 +555,7 @@ class _SaveABTrackingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final abTracking = ref.watch(configuredABTrackingProvider);
+    final abTracking = ref.watch(displayABTrackingProvider);
     if (abTracking == null) {
       return const SizedBox.shrink();
     }
@@ -631,7 +647,7 @@ class _SavePathTrackingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pathTracking = ref.watch(configuredPathTrackingProvider);
+    final pathTracking = ref.watch(displayPathTrackingProvider);
     if (pathTracking == null) {
       return const SizedBox.shrink();
     }

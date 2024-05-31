@@ -181,11 +181,20 @@ class ConfiguredABTracking extends _$ConfiguredABTracking {
         Logger.instance.i('Path tracking set to ${next?.runtimeType}');
         if (next != null) {
           ref
-            ..invalidate(configuredPathTrackingProvider)
             ..invalidate(displayPathTrackingProvider)
             ..read(activeWorkSessionProvider.notifier).updateABTracking(next);
+
+          if (ref.read(
+                displayPathTrackingProvider.select((value) => value == null),
+              ) &&
+              ref.read(
+                displayABTrackingProvider.select((value) => value == null),
+              )) {
+            sendToSim();
+          }
+        } else {
+          sendToSim();
         }
-        sendToSim();
       }
     });
     return null;
@@ -268,7 +277,6 @@ class ABPointB extends _$ABPointB {
 
   /// Updates [state] to [point].
   void update(WayPoint point) => Future(() => state = point);
-
 }
 
 /// A provider for whether to show the starting point A of an AB-line.
