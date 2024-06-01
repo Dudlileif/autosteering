@@ -322,7 +322,7 @@ final reloadAllSettingsProvider = Provider<String>.internal(
 );
 
 typedef ReloadAllSettingsRef = ProviderRef<String>;
-String _$settingsHash() => r'10fc904c876955f67102705744d3bbd3aae8c501';
+String _$settingsHash() => r'2f7ad3b3ff767a50749c52334fb8ef8355c9a1a5';
 
 /// A provider for the settings map for the application.
 ///

@@ -30,7 +30,7 @@ enum SettingsKey {
   hardwareUDPSendPort('hardware.network.udp.send_port'),
   hardwareSerialBaudRate('hardware.serial.baud_rate'),
   hardwareSerialPort('hardware.serial.port'),
-  logNumFiles('log.num_files'),
+  logDaysToKeep('log.days_to_keep'),
   mapAllowDownload('map.allow_download'),
   mapCopernicusInstanceId('map.copernicus_instance_id'),
   mapCurrentCountry('map.current_country'),

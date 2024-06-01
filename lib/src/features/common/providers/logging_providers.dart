@@ -27,23 +27,23 @@ part 'logging_providers.g.dart';
 
 /// A provider for the number of log files to keep in the logs directory.
 @Riverpod(keepAlive: true)
-class NumLogFiles extends _$NumLogFiles {
+class DaysToKeepLogFiles extends _$DaysToKeepLogFiles {
   @override
   int build() {
     ref
       ..watch(reloadAllSettingsProvider)
       ..listenSelf((previous, next) {
-      if (next != previous) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.logNumFiles, next);
-      }
-    });
+        if (next != previous) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.logDaysToKeep, next);
+        }
+      });
 
     return ref
             .read(settingsProvider.notifier)
-            .getInt(SettingsKey.logNumFiles) ??
-        10;
+            .getInt(SettingsKey.logDaysToKeep) ??
+        30;
   }
 
   /// Update the [state] to [value].
@@ -67,6 +67,14 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
       );
 
   if (dirPath != null) {
+    final now = DateTime.now().copyWith(
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      microsecond: 0,
+    );
+
     final logsDir = Directory([dirPath, 'logs'].join('/'));
     if (logsDir.existsSync()) {
       final files = logsDir
@@ -78,13 +86,26 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
           )
           .toList();
 
-      if (files.length > ref.watch(numLogFilesProvider)) {
-        files.sortByCompare((file) => file.path, (a, b) => b.compareTo(a));
-        final removed = <String>[];
-        for (var i = ref.watch(numLogFilesProvider); i < files.length; i++) {
-          removed.add(files[i].path);
-          await files[i].delete();
+      final removed = <String>[];
+      for (final file in files) {
+        final time = DateTime.tryParse(
+          file.path.split(Platform.pathSeparator).last.split('.log').first,
+        )?.copyWith(
+          hour: 0,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+          microsecond: 0,
+        );
+        if (time != null) {
+          if (now.difference(time).inDays >
+              ref.read(daysToKeepLogFilesProvider)) {
+            await file.delete();
+            removed.add(file.path);
+          }
         }
+      }
+      if (removed.isNotEmpty) {
         Logger.instance.i('Deleted old log files: $removed');
       }
     }
@@ -101,14 +122,26 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
                   FileSystemEntityType.file,
             )
             .toList();
-
-        if (files.length > ref.watch(numLogFilesProvider)) {
-          files.sortByCompare((file) => file.path, (a, b) => b.compareTo(a));
-          final removed = <String>[];
-          for (var i = ref.watch(numLogFilesProvider); i < files.length; i++) {
-            removed.add(files[i].path);
-            await files[i].delete();
+        final removed = <String>[];
+        for (final file in files) {
+          final time = DateTime.tryParse(
+            file.path.split(Platform.pathSeparator).last.split('.log').first,
+          )?.copyWith(
+            hour: 0,
+            minute: 0,
+            second: 0,
+            millisecond: 0,
+            microsecond: 0,
+          );
+          if (time != null) {
+            if (now.difference(time).inDays >
+                ref.read(daysToKeepLogFilesProvider)) {
+              await file.delete();
+              removed.add(file.path);
+            }
           }
+        }
+        if (removed.isNotEmpty) {
           Logger.instance
               .i('Deleted old hardware $hardware log files: $removed');
         }
