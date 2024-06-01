@@ -77,7 +77,7 @@ final hardwareLogWasProvider = NotifierProvider<HardwareLogWas, bool>.internal(
 
 typedef _$HardwareLogWas = Notifier<bool>;
 String _$hardwareLogCombinedHash() =>
-    r'da33dc4e518ef212634abd8af037473426ae4bb5';
+    r'0ea4368c180a272850507efb1ba39f3f5f5d4ab0';
 
 /// A provider for whether received NMEA, IMU and WAS messages should be logged
 /// in a single file.

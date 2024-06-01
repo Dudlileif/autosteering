@@ -947,7 +947,7 @@ final importWorkSessionProvider =
 
 typedef ImportWorkSessionRef = AutoDisposeFutureProviderRef<WorkSession?>;
 String _$exportWorkSessionsHash() =>
-    r'a807d0443d1966540e73833f6ec46a29029fcc40';
+    r'53dd47af789709d9c9a52160b8cabb04cbabe472';
 
 /// A provider for exporting all work session files.
 ///

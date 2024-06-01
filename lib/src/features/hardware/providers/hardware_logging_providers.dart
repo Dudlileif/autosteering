@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,15 +27,23 @@ part 'hardware_logging_providers.g.dart';
 class HardwareLogGnss extends _$HardwareLogGnss {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send(
         (logGNSS: next, logIMU: null, logWAS: null, logCombined: null),
       );
       if (previous != null) {
-        Logger.instance.i('GNSS logging ${next ? 'enabled' : 'disabled'}');
+          Logger.instance.i('GNSS logging ${next ? 'enabled' : 'disabled'}');
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.logHardwareGNSS, next);
       }
     });
-    return false;
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.logHardwareGNSS) ??
+        false;
   }
 
   /// Updates [state] to [value].
@@ -46,15 +55,23 @@ class HardwareLogGnss extends _$HardwareLogGnss {
 class HardwareLogImu extends _$HardwareLogImu {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send(
         (logGNSS: null, logIMU: next, logWAS: null, logCombined: null),
       );
       if (previous != null) {
-        Logger.instance.i('IMU logging ${next ? 'enabled' : 'disabled'}');
+          Logger.instance.i('IMU logging ${next ? 'enabled' : 'disabled'}');
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.logHardwareIMU, next);
       }
     });
-    return false;
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.logHardwareIMU) ??
+        false;
   }
 
   /// Updates [state] to [value].
@@ -66,15 +83,23 @@ class HardwareLogImu extends _$HardwareLogImu {
 class HardwareLogWas extends _$HardwareLogWas {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send(
         (logGNSS: null, logIMU: null, logWAS: next, logCombined: null),
       );
       if (previous != null) {
-        Logger.instance.i('WAS logging ${next ? 'enabled' : 'disabled'}');
+          Logger.instance.i('WAS logging ${next ? 'enabled' : 'disabled'}');
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.logHardwareWAS, next);
       }
     });
-    return false;
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.logHardwareWAS) ??
+        false;
   }
 
   /// Updates [state] to [value].
@@ -87,16 +112,24 @@ class HardwareLogWas extends _$HardwareLogWas {
 class HardwareLogCombined extends _$HardwareLogCombined {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send(
         (logGNSS: null, logIMU: null, logWAS: null, logCombined: next),
-      );
+        );  
       if (previous != null) {
         Logger.instance
-            .i('Combined hardware logging ${next ? 'enabled' : 'disabled'}');
+              .i('Combined hardware logging ${next ? 'enabled' : 'disabled'}');
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.logHardwareCombined, next);
       }
     });
-    return false;
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.logHardwareCombined) ??
+        false;
   }
 
   /// Updates [state] to [value].
