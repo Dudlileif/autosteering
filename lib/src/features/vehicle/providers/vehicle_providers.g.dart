@@ -956,6 +956,189 @@ final importVehicleProvider = AutoDisposeFutureProvider<Vehicle?>.internal(
 );
 
 typedef ImportVehicleRef = AutoDisposeFutureProviderRef<Vehicle?>;
+String _$exportVehiclesHash() => r'54ec2f0b7430d3f878dad695628af952d99bfadd';
+
+/// A provider for exporting all vehicle files.
+///
+/// Copied from [exportVehicles].
+@ProviderFor(exportVehicles)
+const exportVehiclesProvider = ExportVehiclesFamily();
+
+/// A provider for exporting all vehicle files.
+///
+/// Copied from [exportVehicles].
+class ExportVehiclesFamily extends Family {
+  /// A provider for exporting all vehicle files.
+  ///
+  /// Copied from [exportVehicles].
+  const ExportVehiclesFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportVehiclesProvider';
+
+  /// A provider for exporting all vehicle files.
+  ///
+  /// Copied from [exportVehicles].
+  ExportVehiclesProvider call({
+    bool zip = true,
+  }) {
+    return ExportVehiclesProvider(
+      zip: zip,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportVehiclesProvider getProviderOverride(
+    covariant ExportVehiclesProvider provider,
+  ) {
+    return call(
+      zip: provider.zip,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(FutureOr<void> Function(ExportVehiclesRef ref) create) {
+    return _$ExportVehiclesFamilyOverride(this, create);
+  }
+}
+
+class _$ExportVehiclesFamilyOverride implements FamilyOverride {
+  _$ExportVehiclesFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportVehiclesRef ref) create;
+
+  @override
+  final ExportVehiclesFamily overriddenFamily;
+
+  @override
+  ExportVehiclesProvider getProviderOverride(
+    covariant ExportVehiclesProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for exporting all vehicle files.
+///
+/// Copied from [exportVehicles].
+class ExportVehiclesProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for exporting all vehicle files.
+  ///
+  /// Copied from [exportVehicles].
+  ExportVehiclesProvider({
+    bool zip = true,
+  }) : this._internal(
+          (ref) => exportVehicles(
+            ref as ExportVehiclesRef,
+            zip: zip,
+          ),
+          from: exportVehiclesProvider,
+          name: r'exportVehiclesProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportVehiclesHash,
+          dependencies: ExportVehiclesFamily._dependencies,
+          allTransitiveDependencies:
+              ExportVehiclesFamily._allTransitiveDependencies,
+          zip: zip,
+        );
+
+  ExportVehiclesProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.zip,
+  }) : super.internal();
+
+  final bool zip;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportVehiclesRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportVehiclesProvider._internal(
+        (ref) => create(ref as ExportVehiclesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        zip: zip,
+      ),
+    );
+  }
+
+  @override
+  ({
+    bool zip,
+  }) get argument {
+    return (zip: zip,);
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportVehiclesProviderElement(this);
+  }
+
+  ExportVehiclesProvider _copyWith(
+    FutureOr<void> Function(ExportVehiclesRef ref) create,
+  ) {
+    return ExportVehiclesProvider._internal(
+      (ref) => create(ref as ExportVehiclesRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      zip: zip,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportVehiclesProvider && other.zip == zip;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, zip.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportVehiclesRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `zip` of this provider.
+  bool get zip;
+}
+
+class _ExportVehiclesProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ExportVehiclesRef {
+  _ExportVehiclesProviderElement(super.provider);
+
+  @override
+  bool get zip => (origin as ExportVehiclesProvider).zip;
+}
+
 String _$mainVehicleHash() => r'dd2c1e60707dd90caeef5e4ac7460333506bf47a';
 
 /// The main provider for the vehicle state.

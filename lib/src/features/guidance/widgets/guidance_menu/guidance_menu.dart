@@ -125,6 +125,14 @@ class GuidanceMenu extends ConsumerWidget {
             )) ...[
           if (Device.isNative) const _LoadPathTrackingMenu(),
           if (Device.isNative) const _LoadABTrackingMenu(),
+          if (ref.watch(displayPathTrackingProvider
+                  .select((value) => value == null)) &&
+              ref.watch(
+                  displayABTrackingProvider.select((value) => value == null)))
+            ExportAllMenuButton(
+              onPressed: () =>
+                  ref.read(exportAllProvider(directory: 'guidance')),
+            ),
           const _ImportMenu(),
         ],
         if (ref.watch(

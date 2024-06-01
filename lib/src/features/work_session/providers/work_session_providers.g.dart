@@ -946,6 +946,191 @@ final importWorkSessionProvider =
 );
 
 typedef ImportWorkSessionRef = AutoDisposeFutureProviderRef<WorkSession?>;
+String _$exportWorkSessionsHash() =>
+    r'a807d0443d1966540e73833f6ec46a29029fcc40';
+
+/// A provider for exporting all work session files.
+///
+/// Copied from [exportWorkSessions].
+@ProviderFor(exportWorkSessions)
+const exportWorkSessionsProvider = ExportWorkSessionsFamily();
+
+/// A provider for exporting all work session files.
+///
+/// Copied from [exportWorkSessions].
+class ExportWorkSessionsFamily extends Family {
+  /// A provider for exporting all work session files.
+  ///
+  /// Copied from [exportWorkSessions].
+  const ExportWorkSessionsFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportWorkSessionsProvider';
+
+  /// A provider for exporting all work session files.
+  ///
+  /// Copied from [exportWorkSessions].
+  ExportWorkSessionsProvider call({
+    bool zip = true,
+  }) {
+    return ExportWorkSessionsProvider(
+      zip: zip,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportWorkSessionsProvider getProviderOverride(
+    covariant ExportWorkSessionsProvider provider,
+  ) {
+    return call(
+      zip: provider.zip,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(ExportWorkSessionsRef ref) create) {
+    return _$ExportWorkSessionsFamilyOverride(this, create);
+  }
+}
+
+class _$ExportWorkSessionsFamilyOverride implements FamilyOverride {
+  _$ExportWorkSessionsFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportWorkSessionsRef ref) create;
+
+  @override
+  final ExportWorkSessionsFamily overriddenFamily;
+
+  @override
+  ExportWorkSessionsProvider getProviderOverride(
+    covariant ExportWorkSessionsProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for exporting all work session files.
+///
+/// Copied from [exportWorkSessions].
+class ExportWorkSessionsProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for exporting all work session files.
+  ///
+  /// Copied from [exportWorkSessions].
+  ExportWorkSessionsProvider({
+    bool zip = true,
+  }) : this._internal(
+          (ref) => exportWorkSessions(
+            ref as ExportWorkSessionsRef,
+            zip: zip,
+          ),
+          from: exportWorkSessionsProvider,
+          name: r'exportWorkSessionsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportWorkSessionsHash,
+          dependencies: ExportWorkSessionsFamily._dependencies,
+          allTransitiveDependencies:
+              ExportWorkSessionsFamily._allTransitiveDependencies,
+          zip: zip,
+        );
+
+  ExportWorkSessionsProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.zip,
+  }) : super.internal();
+
+  final bool zip;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportWorkSessionsRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportWorkSessionsProvider._internal(
+        (ref) => create(ref as ExportWorkSessionsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        zip: zip,
+      ),
+    );
+  }
+
+  @override
+  ({
+    bool zip,
+  }) get argument {
+    return (zip: zip,);
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportWorkSessionsProviderElement(this);
+  }
+
+  ExportWorkSessionsProvider _copyWith(
+    FutureOr<void> Function(ExportWorkSessionsRef ref) create,
+  ) {
+    return ExportWorkSessionsProvider._internal(
+      (ref) => create(ref as ExportWorkSessionsRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      zip: zip,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportWorkSessionsProvider && other.zip == zip;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, zip.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportWorkSessionsRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `zip` of this provider.
+  bool get zip;
+}
+
+class _ExportWorkSessionsProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ExportWorkSessionsRef {
+  _ExportWorkSessionsProviderElement(super.provider);
+
+  @override
+  bool get zip => (origin as ExportWorkSessionsProvider).zip;
+}
+
 String _$activeWorkSessionHash() => r'96a702a8b386aa5dd813e30959b6681373746630';
 
 /// A provider for holding the active [WorkSession].

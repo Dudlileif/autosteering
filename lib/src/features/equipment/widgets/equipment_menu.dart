@@ -333,7 +333,9 @@ class _ImportExportMenu extends ConsumerWidget {
             return MenuItemButton(
               closeOnActivate: false,
               onPressed: () => ref.read(importEquipmentProvider),
-              leadingIcon: const Icon(Icons.file_open),
+              leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.file_open)),
               child: Text('Import', style: textStyle),
             );
           },
@@ -354,7 +356,9 @@ class _ImportExportMenu extends ConsumerWidget {
                         ),
                       )
                   : null,
-              leadingIcon: const Icon(Icons.save_alt),
+              leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.save_alt)),
               child: Text('Export', style: textStyle),
             );
           },
@@ -364,7 +368,9 @@ class _ImportExportMenu extends ConsumerWidget {
             return MenuItemButton(
               closeOnActivate: false,
               onPressed: () => ref.read(importEquipmentSetupProvider),
-              leadingIcon: const Icon(Icons.file_open),
+              leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.file_open)),
               child: Text('Import setup', style: textStyle),
             );
           },
@@ -387,11 +393,19 @@ class _ImportExportMenu extends ConsumerWidget {
                           ),
                         )
                     : null,
-                leadingIcon: const Icon(Icons.save_alt),
+                leadingIcon: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Icon(Icons.save_alt)),
                 child: Text('Export setup', style: textStyle),
               );
             },
           ),
+        Consumer(
+          builder: (context, ref, child) => ExportAllMenuButton(
+            onPressed: () =>
+                ref.read(exportAllProvider(directory: 'equipment')),
+          ),
+        ),
       ],
     );
   }

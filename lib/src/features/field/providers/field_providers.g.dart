@@ -948,6 +948,189 @@ final importFieldProvider = AutoDisposeFutureProvider<Field?>.internal(
 );
 
 typedef ImportFieldRef = AutoDisposeFutureProviderRef<Field?>;
+String _$exportFieldsHash() => r'8bdc685459722ae1976f5f68ab21b94e9a17beb0';
+
+/// A provider for exporting all field files.
+///
+/// Copied from [exportFields].
+@ProviderFor(exportFields)
+const exportFieldsProvider = ExportFieldsFamily();
+
+/// A provider for exporting all field files.
+///
+/// Copied from [exportFields].
+class ExportFieldsFamily extends Family {
+  /// A provider for exporting all field files.
+  ///
+  /// Copied from [exportFields].
+  const ExportFieldsFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportFieldsProvider';
+
+  /// A provider for exporting all field files.
+  ///
+  /// Copied from [exportFields].
+  ExportFieldsProvider call({
+    bool zip = true,
+  }) {
+    return ExportFieldsProvider(
+      zip: zip,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportFieldsProvider getProviderOverride(
+    covariant ExportFieldsProvider provider,
+  ) {
+    return call(
+      zip: provider.zip,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(FutureOr<void> Function(ExportFieldsRef ref) create) {
+    return _$ExportFieldsFamilyOverride(this, create);
+  }
+}
+
+class _$ExportFieldsFamilyOverride implements FamilyOverride {
+  _$ExportFieldsFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportFieldsRef ref) create;
+
+  @override
+  final ExportFieldsFamily overriddenFamily;
+
+  @override
+  ExportFieldsProvider getProviderOverride(
+    covariant ExportFieldsProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for exporting all field files.
+///
+/// Copied from [exportFields].
+class ExportFieldsProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for exporting all field files.
+  ///
+  /// Copied from [exportFields].
+  ExportFieldsProvider({
+    bool zip = true,
+  }) : this._internal(
+          (ref) => exportFields(
+            ref as ExportFieldsRef,
+            zip: zip,
+          ),
+          from: exportFieldsProvider,
+          name: r'exportFieldsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportFieldsHash,
+          dependencies: ExportFieldsFamily._dependencies,
+          allTransitiveDependencies:
+              ExportFieldsFamily._allTransitiveDependencies,
+          zip: zip,
+        );
+
+  ExportFieldsProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.zip,
+  }) : super.internal();
+
+  final bool zip;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportFieldsRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportFieldsProvider._internal(
+        (ref) => create(ref as ExportFieldsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        zip: zip,
+      ),
+    );
+  }
+
+  @override
+  ({
+    bool zip,
+  }) get argument {
+    return (zip: zip,);
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportFieldsProviderElement(this);
+  }
+
+  ExportFieldsProvider _copyWith(
+    FutureOr<void> Function(ExportFieldsRef ref) create,
+  ) {
+    return ExportFieldsProvider._internal(
+      (ref) => create(ref as ExportFieldsRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      zip: zip,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportFieldsProvider && other.zip == zip;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, zip.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportFieldsRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `zip` of this provider.
+  bool get zip;
+}
+
+class _ExportFieldsProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ExportFieldsRef {
+  _ExportFieldsProviderElement(super.provider);
+
+  @override
+  bool get zip => (origin as ExportFieldsProvider).zip;
+}
+
 String _$showFieldHash() => r'ebab742cb524d06aa00b5ac6dfa2ee9419256ec8';
 
 /// A provider for whether the active field should be shown.

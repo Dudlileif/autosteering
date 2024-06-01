@@ -87,8 +87,20 @@ class FieldMenu extends ConsumerWidget {
         ],
         if (activeField == null) ...[
           const _LoadFieldMenu(),
-          const _ImportButton(),
           const _CreateFieldButton(),
+          if (ref.watch(
+            savedFieldsProvider.select(
+              (value) => value.when(
+                data: (data) => data.isNotEmpty,
+                error: (error, stackTrace) => false,
+                loading: () => false,
+              ),
+            ),
+          ))
+            ExportAllMenuButton(
+              onPressed: () => ref.read(exportAllProvider(directory: 'fields')),
+            ),
+          const _ImportButton(),
           if (ref.watch(
             displayPathTrackingProvider
                 .select((value) => value != null && value.wayPoints.length > 2),

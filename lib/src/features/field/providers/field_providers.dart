@@ -498,3 +498,8 @@ FutureOr<Field?> importField(
 
   return field;
 }
+
+/// A provider for exporting all field files.
+@riverpod
+FutureOr<void> exportFields(ExportFieldsRef ref, {bool zip = true}) async =>
+    await ref.watch(exportAllProvider(directory: 'fields').future);

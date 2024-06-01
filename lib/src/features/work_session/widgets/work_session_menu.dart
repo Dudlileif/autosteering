@@ -183,6 +183,10 @@ class WorkSessionMenu extends ConsumerWidget {
           activeWorkSessionProvider.select((value) => value == null),
         )) ...[
           const _LoadWorkSessionMenu(),
+          ExportAllMenuButton(
+            onPressed: () =>
+                ref.read(exportAllProvider(directory: 'work_sessions')),
+          ),
           const _ImportButton(),
         ],
       ],

@@ -331,3 +331,12 @@ FutureOr<PathTracking?> importPathTracking(
   }
   return pathTracking;
 }
+
+
+/// A provider for exporting all guidance files.
+@riverpod
+FutureOr<void> exportGuidances(
+  ExportGuidancesRef ref, {
+  bool zip = true,
+}) async =>
+    await ref.watch(exportAllProvider(directory: 'guidance').future);

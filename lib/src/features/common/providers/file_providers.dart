@@ -193,32 +193,32 @@ FutureOr<void> exportJsonToFileDirectory(
           try {
             final dataString =
                 const JsonEncoder.withIndent('    ').convert(object);
-        var path = '';
-        if (exportFolder.endsWith('autosteering_export')) {
-          path = folder != null
-              ? '$exportFolder/$folder/$fileName.json'
-              : '$exportFolder/$fileName.json';
-        } else if (exportFolder.contains('autosteering_export')) {
-          path = folder != null
-              ? '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$folder/$fileName.json'
-              : '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$fileName.json';
-        } else {
-          path = folder != null
-              ? '$exportFolder/autosteering_export/$folder/$fileName.json'
-              : '$exportFolder/autosteering_export/$fileName.json';
-        }
-        final file = File(path);
-        final exists = file.existsSync();
-        if (!exists) {
-          await file.create(recursive: true);
-        }
-        await file.writeAsString(dataString);
+            var path = '';
+            if (exportFolder.endsWith('autosteering_export')) {
+              path = folder != null
+                  ? '$exportFolder/$folder/$fileName.json'
+                  : '$exportFolder/$fileName.json';
+            } else if (exportFolder.contains('autosteering_export')) {
+              path = folder != null
+                  ? '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$folder/$fileName.json'
+                  : '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$fileName.json';
+            } else {
+              path = folder != null
+                  ? '$exportFolder/autosteering_export/$folder/$fileName.json'
+                  : '$exportFolder/autosteering_export/$fileName.json';
+            }
+            final file = File(path);
+            final exists = file.existsSync();
+            if (!exists) {
+              await file.create(recursive: true);
+            }
+            await file.writeAsString(dataString);
             return LogEvent(
               Level.info,
-          switch (exists) {
-            false => 'Created and wrote data to $path',
-            true => 'Wrote data to $path',
-          },
+              switch (exists) {
+                false => 'Created and wrote data to $path',
+                true => 'Wrote data to $path',
+              },
             );
           } catch (error, stackTrace) {
             return LogEvent(
@@ -332,4 +332,150 @@ FutureOr<void> deleteJsonFromFileDirectory(
       Logger.instance.i('File already deleted/does not exist: $path');
     }
   }
+}
+
+
+/// A provider for exporting the whole file directory to a ZIP file.
+@riverpod
+FutureOr<void> exportWholeFileDirectory(ExportWholeFileDirectoryRef ref) async {
+  ref.keepAlive();
+  try {
+    if (Device.isNative) {
+      final exportFolder = await FilePicker.platform
+          .getDirectoryPath(dialogTitle: 'Select export folder');
+      if (exportFolder != null) {
+        ref.read(exportProgressProvider.notifier).update(0);
+
+        final fileDir = ref.watch(fileDirectoryProvider).requireValue;
+        var exportDirPath = '';
+        if (exportFolder.endsWith('autosteering_export')) {
+          exportDirPath = exportFolder;
+        } else if (exportFolder.contains('autosteering_export')) {
+          exportDirPath =
+              '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export';
+        } else {
+          exportDirPath = '$exportFolder/autosteering_export';
+        }
+        final dir = Directory(exportDirPath);
+        if (!dir.existsSync()) {
+          dir.createSync(recursive: true);
+        }
+
+        final path = [
+          exportDirPath,
+          '''all_files-${DateTime.now().toIso8601String().replaceAll(':', '_')}.zip''',
+        ].join('/');
+
+        final export = FileHandler.exportFileDirectory(
+          dirPath: fileDir.path,
+          exportPath: path,
+        );
+
+        await for (final progress in export) {
+          ref.read(exportProgressProvider.notifier).update(progress);
+        }
+
+        ref.read(exportProgressProvider.notifier).update(1);
+        Logger.instance.i('Exported whole file directory to :$path.');
+        await Future.delayed(const Duration(milliseconds: 500), () {});
+      }
+    }
+  } catch (error, stackTrace) {
+    Logger.instance.e(
+      'Failed exporting whole file directory.',
+      error: error,
+      stackTrace: stackTrace,
+    );
+  }
+  ref
+    ..invalidate(exportProgressProvider)
+    ..invalidateSelf();
+}
+
+/// A provider for the progress of the currently ongoing export, if there is
+/// one.
+@riverpod
+class ExportProgress extends _$ExportProgress {
+  @override
+  double? build() => null;
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for exporting all files in a [directory].
+@riverpod
+FutureOr<void> exportAll(
+  ExportAllRef ref, {
+  required String directory,
+  bool zip = true,
+}) async {
+  ref.keepAlive();
+  try {
+    if (Device.isNative) {
+      final exportFolder = await FilePicker.platform
+          .getDirectoryPath(dialogTitle: 'Select export folder');
+      if (exportFolder != null) {
+        final dirPath = ref.watch(fileDirectoryProvider).requireValue.path;
+
+        final dir = Directory([dirPath, directory].join('/'));
+        if (dir.existsSync()) {
+          final files = dir
+              .listSync(recursive: true)
+              .where(
+                (element) =>
+                    FileSystemEntity.typeSync(element.path) ==
+                    FileSystemEntityType.file,
+              )
+              .toList();
+          if (files.isNotEmpty) {
+            var exportDirPath = '';
+            if (exportFolder.endsWith('autosteering_export')) {
+              exportDirPath = '$exportFolder/logs';
+            } else if (exportFolder.contains('autosteering_export')) {
+              exportDirPath =
+                  '${exportFolder.substring(0, exportFolder.indexOf('autosteering_export') - 1)}/autosteering_export/$directory';
+            } else {
+              exportDirPath = '$exportFolder/autosteering_export/$directory';
+            }
+            final exportDir = Directory(exportDirPath);
+            if (!exportDir.existsSync()) {
+              exportDir.createSync(recursive: true);
+            }
+            ref.read(exportProgressProvider.notifier).update(0);
+            if (zip) {
+              final path = [
+                exportDirPath,
+                '''$directory-${DateTime.now().toIso8601String().replaceAll(':', '_')}.zip''',
+              ].join('/');
+              final export = FileHandler.exportFileDirectory(
+                dirPath: dir.path,
+                exportPath: path,
+              );
+
+              await for (final progress in export) {
+                ref.read(exportProgressProvider.notifier).update(progress);
+              }
+
+              ref.read(exportProgressProvider.notifier).update(1);
+              Logger.instance
+                  .i('Exported ${files.length} $directory files to $path.');
+              await Future.delayed(const Duration(milliseconds: 500), () {});
+            }
+          }
+        } else {
+          Logger.instance.i('No $directory directory found: ${dir.path}.');
+        }
+      }
+    }
+  } catch (error, stackTrace) {
+    Logger.instance.e(
+      'Failed to export £directory.',
+      error: error,
+      stackTrace: stackTrace,
+    );
+  }
+  ref
+    ..invalidate(exportProgressProvider)
+    ..invalidateSelf();
 }

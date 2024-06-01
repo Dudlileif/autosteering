@@ -939,6 +939,190 @@ final importEquipmentProvider = AutoDisposeFutureProvider<Equipment?>.internal(
 );
 
 typedef ImportEquipmentRef = AutoDisposeFutureProviderRef<Equipment?>;
+String _$exportEquipmentsHash() => r'7489881fdecd927b31b25473dc438cd8d5222300';
+
+/// A provider for exporting all equipment files.
+///
+/// Copied from [exportEquipments].
+@ProviderFor(exportEquipments)
+const exportEquipmentsProvider = ExportEquipmentsFamily();
+
+/// A provider for exporting all equipment files.
+///
+/// Copied from [exportEquipments].
+class ExportEquipmentsFamily extends Family {
+  /// A provider for exporting all equipment files.
+  ///
+  /// Copied from [exportEquipments].
+  const ExportEquipmentsFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportEquipmentsProvider';
+
+  /// A provider for exporting all equipment files.
+  ///
+  /// Copied from [exportEquipments].
+  ExportEquipmentsProvider call({
+    bool zip = true,
+  }) {
+    return ExportEquipmentsProvider(
+      zip: zip,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportEquipmentsProvider getProviderOverride(
+    covariant ExportEquipmentsProvider provider,
+  ) {
+    return call(
+      zip: provider.zip,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(ExportEquipmentsRef ref) create) {
+    return _$ExportEquipmentsFamilyOverride(this, create);
+  }
+}
+
+class _$ExportEquipmentsFamilyOverride implements FamilyOverride {
+  _$ExportEquipmentsFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportEquipmentsRef ref) create;
+
+  @override
+  final ExportEquipmentsFamily overriddenFamily;
+
+  @override
+  ExportEquipmentsProvider getProviderOverride(
+    covariant ExportEquipmentsProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for exporting all equipment files.
+///
+/// Copied from [exportEquipments].
+class ExportEquipmentsProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for exporting all equipment files.
+  ///
+  /// Copied from [exportEquipments].
+  ExportEquipmentsProvider({
+    bool zip = true,
+  }) : this._internal(
+          (ref) => exportEquipments(
+            ref as ExportEquipmentsRef,
+            zip: zip,
+          ),
+          from: exportEquipmentsProvider,
+          name: r'exportEquipmentsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportEquipmentsHash,
+          dependencies: ExportEquipmentsFamily._dependencies,
+          allTransitiveDependencies:
+              ExportEquipmentsFamily._allTransitiveDependencies,
+          zip: zip,
+        );
+
+  ExportEquipmentsProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.zip,
+  }) : super.internal();
+
+  final bool zip;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportEquipmentsRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportEquipmentsProvider._internal(
+        (ref) => create(ref as ExportEquipmentsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        zip: zip,
+      ),
+    );
+  }
+
+  @override
+  ({
+    bool zip,
+  }) get argument {
+    return (zip: zip,);
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportEquipmentsProviderElement(this);
+  }
+
+  ExportEquipmentsProvider _copyWith(
+    FutureOr<void> Function(ExportEquipmentsRef ref) create,
+  ) {
+    return ExportEquipmentsProvider._internal(
+      (ref) => create(ref as ExportEquipmentsRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      zip: zip,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportEquipmentsProvider && other.zip == zip;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, zip.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportEquipmentsRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `zip` of this provider.
+  bool get zip;
+}
+
+class _ExportEquipmentsProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ExportEquipmentsRef {
+  _ExportEquipmentsProviderElement(super.provider);
+
+  @override
+  bool get zip => (origin as ExportEquipmentsProvider).zip;
+}
+
 String _$equipmentRecordPositionFractionHash() =>
     r'141d41b58a05019f861cf68c7d4aaf0038849c5d';
 
