@@ -335,7 +335,8 @@ class _ImportExportMenu extends ConsumerWidget {
               onPressed: () => ref.read(importEquipmentProvider),
               leadingIcon: const Padding(
                   padding: EdgeInsets.only(left: 8),
-                  child: Icon(Icons.file_open)),
+                child: Icon(Icons.file_open),
+              ),
               child: Text('Import', style: textStyle),
             );
           },
@@ -358,7 +359,8 @@ class _ImportExportMenu extends ConsumerWidget {
                   : null,
               leadingIcon: const Padding(
                   padding: EdgeInsets.only(left: 8),
-                  child: Icon(Icons.save_alt)),
+                child: Icon(Icons.save_alt),
+              ),
               child: Text('Export', style: textStyle),
             );
           },
@@ -370,7 +372,8 @@ class _ImportExportMenu extends ConsumerWidget {
               onPressed: () => ref.read(importEquipmentSetupProvider),
               leadingIcon: const Padding(
                   padding: EdgeInsets.only(left: 8),
-                  child: Icon(Icons.file_open)),
+                child: Icon(Icons.file_open),
+              ),
               child: Text('Import setup', style: textStyle),
             );
           },
@@ -395,7 +398,8 @@ class _ImportExportMenu extends ConsumerWidget {
                     : null,
                 leadingIcon: const Padding(
                     padding: EdgeInsets.only(left: 8),
-                    child: Icon(Icons.save_alt)),
+                  child: Icon(Icons.save_alt),
+                ),
                 child: Text('Export setup', style: textStyle),
               );
             },

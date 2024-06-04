@@ -927,7 +927,7 @@ class _SaveBufferedFieldButton extends ConsumerWidget {
 
 class _CreatePathTrackingFromBufferedFieldExteriorButton
     extends ConsumerWidget {
-  const _CreatePathTrackingFromBufferedFieldExteriorButton({super.key});
+  const _CreatePathTrackingFromBufferedFieldExteriorButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

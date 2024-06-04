@@ -273,7 +273,7 @@ class _VehicleSideColorMapper extends ColorMapper {
         }
       } else if (id.contains('Bonnet branding stripe') &&
           attributeName == 'fill') {
-        return manufacturerColors.secondary;
+        return manufacturerColors.brandingLine ?? color;
       } else if (id.contains('Cab frame') && attributeName == 'fill') {
         return manufacturerColors.cabFrame ?? color;
       } else if (id.contains('Cab frame') && attributeName == 'fill') {

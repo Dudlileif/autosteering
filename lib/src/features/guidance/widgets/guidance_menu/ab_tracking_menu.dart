@@ -607,7 +607,9 @@ class _ABCommonMenu extends ConsumerWidget {
                       onFieldSubmitted: (value) {
                         final offset = double.tryParse(value);
                         if (offset != null) {
-                          ref.read(aBSidewaysOffsetProvider.notifier).update(offset);
+                          ref.read(aBSidewaysOffsetProvider.notifier).update(
+                                offset,
+                              );
                         }
                       },
                     ),
@@ -620,7 +622,7 @@ class _ABCommonMenu extends ConsumerWidget {
               child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
             ),
             child: Text(
-              'Sideways offset: ${ref.watch(aBSidewaysOffsetProvider).toStringAsFixed(1)} m',
+              '''Sideways offset: ${ref.watch(aBSidewaysOffsetProvider).toStringAsFixed(1)} m''',
               style: textStyle,
             ),
           ),

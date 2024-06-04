@@ -222,5 +222,3 @@ class SimCoreMenu extends ConsumerWidget {
     );
   }
 }
-
-
