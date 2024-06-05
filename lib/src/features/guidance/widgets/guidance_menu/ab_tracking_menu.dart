@@ -16,7 +16,9 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -25,6 +27,7 @@ import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geobase/geobase.dart';
 
 /// A menu for configuring and using an [ABTracking] to track after.
 class ABTrackingMenu extends ConsumerWidget {
@@ -220,8 +223,8 @@ class ABTrackingMenu extends ConsumerWidget {
                             },
                           ),
                           IconButton(
-                        onPressed: () => ref.invalidate(aBPointBProvider),
-                        icon: const Icon(Icons.clear),
+                            onPressed: () => ref.invalidate(aBPointBProvider),
+                            icon: const Icon(Icons.clear),
                           ),
                         ],
                       )
@@ -296,6 +299,157 @@ class ABTrackingMenu extends ConsumerWidget {
               },
               child:
                   Text('Record curve', style: theme.menuButtonWithChildrenText),
+            ),
+          ),
+        if (ref.watch(
+              displayPathTrackingProvider.select(
+                (value) => value != null && value.wayPoints.length >= 2,
+              ),
+            ) &&
+            !ref.watch(enableSelectablePathProvider))
+          Consumer(
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.route),
+              ),
+              onPressed: () {
+                final tracking = ref.watch(displayPathTrackingProvider);
+                ref
+                    .read(selectablePathPointsProvider.notifier)
+                    .update(tracking?.wayPoints.map((e) => e.position));
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: true);
+              },
+              child: Text(
+                'Select from path tracking',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
+          ),
+        if (ref.watch(
+              activeFieldProvider.select(
+                (value) =>
+                    value?.polygon.exterior != null &&
+                    value!.polygon.exterior!.positionCount >= 2,
+              ),
+            ) &&
+            !ref.watch(enableSelectablePathProvider))
+          Consumer(
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Stack(
+                  children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+                ),
+              ),
+              onPressed: () {
+                final points = ref.watch(
+                  activeFieldProvider.select(
+                    (value) => value?.polygon.exterior?.toGeographicPositions,
+                  ),
+                );
+                ref.read(selectablePathPointsProvider.notifier).update(points);
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: true);
+              },
+              child: Text(
+                'Select from field border',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
+          ),
+        if (ref.watch(
+              bufferedFieldProvider.select(
+                (value) => value.when(
+                  data: (data) =>
+                      data?.polygon.exterior != null &&
+                      data!.polygon.exterior!.positionCount >= 2,
+                  error: (error, stackTrace) => false,
+                  loading: () => false,
+                ),
+              ),
+            ) &&
+            !ref.watch(enableSelectablePathProvider))
+          Consumer(
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Stack(
+                  children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+                ),
+              ),
+              onPressed: () async {
+                final points = await ref.watch(
+                  bufferedFieldProvider.selectAsync(
+                    (value) => value?.polygon.exterior?.toGeographicPositions,
+                  ),
+                );
+                ref.read(selectablePathPointsProvider.notifier).update(points);
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: true);
+              },
+              child: Text(
+                'Select from buffered field border',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
+          ),
+        if (ref.watch(enableSelectablePathProvider) &&
+            ref.watch(
+              selectablePathIndicesProvider
+                  .select((value) => value != null && value.length >= 2),
+            ))
+          Consumer(
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.route),
+              ),
+              onPressed: () {
+                final points = ref.watch(selectablePathStartToEndProvider);
+                if (points != null && points.isNotEmpty) {
+                  final wayPoints = <WayPoint>[];
+                  for (final (index, point) in points.indexed) {
+                    if (index < points.length - 1) {
+                      wayPoints.add(
+                        WayPoint(
+                          position: point,
+                          bearing: point.rhumb
+                              .initialBearingTo(points.elementAt(index + 1)),
+                        ),
+                      );
+                    } else {
+                      wayPoints.add(
+                        WayPoint(
+                          position: point,
+                          bearing: points
+                              .elementAt(index - 1)
+                              .rhumb
+                              .finalBearingTo(point),
+                        ),
+                      );
+                    }
+                  }
+                  ref.read(aBPointAProvider.notifier).update(wayPoints.first);
+                  ref.read(aBPointBProvider.notifier).update(wayPoints.last);
+                  ref.read(aBCurvePointsProvider.notifier).update(wayPoints);
+                }
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: false);
+              },
+              child: Text(
+                'Use selected path',
+                style: theme.menuButtonWithChildrenText,
+              ),
             ),
           ),
         _ABCommonMenu(

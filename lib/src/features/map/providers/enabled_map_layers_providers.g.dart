@@ -202,6 +202,24 @@ final showABTrackingLayerProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef ShowABTrackingLayerRef = AutoDisposeProviderRef<bool>;
+String _$showSelectablePathLayerHash() =>
+    r'c522b5e23b57229051ffdfc8e63bc9a2a42f374e';
+
+/// Whether the layer for selectable path should be shown.
+///
+/// Copied from [showSelectablePathLayer].
+@ProviderFor(showSelectablePathLayer)
+final showSelectablePathLayerProvider = AutoDisposeProvider<bool>.internal(
+  showSelectablePathLayer,
+  name: r'showSelectablePathLayerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$showSelectablePathLayerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ShowSelectablePathLayerRef = AutoDisposeProviderRef<bool>;
 String _$showOSMLayerHash() => r'b0a5ae14d55cd882f2456e2786f1e8bffd836a79';
 
 /// Whether the OpenStreetMap layer should be shown.

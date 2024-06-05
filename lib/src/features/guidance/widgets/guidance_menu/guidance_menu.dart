@@ -28,8 +28,6 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// TODO(dudlileif): AB tracking from part of path tracking/field border
-
 /// A menu with attached submenu for working with the guidance features.
 class GuidanceMenu extends ConsumerWidget {
   /// A menu with attached submenu for working with the guidance features.

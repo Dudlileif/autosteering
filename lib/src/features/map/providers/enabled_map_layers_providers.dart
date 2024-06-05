@@ -199,3 +199,13 @@ class ShowGridLayer extends _$ShowGridLayer {
   /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
+
+/// Whether the layer for selectable path should be shown.
+@riverpod
+bool showSelectablePathLayer(ShowSelectablePathLayerRef ref) =>
+    ref.watch(enableSelectablePathProvider) &&
+    ref.watch(
+      selectablePathPointsProvider.select(
+        (value) => value != null && value.length >= 2,
+      ),
+    );
