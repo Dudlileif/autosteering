@@ -31,6 +31,7 @@ class VirtualLed extends StatelessWidget {
   const VirtualLed({
     required this.color,
     required this.active,
+    this.showWhenInactive = true,
     this.size,
     super.key,
   });
@@ -41,13 +42,17 @@ class VirtualLed extends StatelessWidget {
   /// Whether the indicator should light up.
   final bool active;
 
+  /// Whether the widget should be hidden when [active] is false.
+  final bool showWhenInactive;
+
   /// The size of the LED.
   final double? size;
 
   @override
   Widget build(BuildContext context) => SizedBox.square(
         dimension: size,
-        child: ShaderBuilder(
+        child: active || showWhenInactive
+            ? ShaderBuilder(
           (context, shader, child) => CustomPaint(
             painter: _VirtualLedPainter(
               active: active,
@@ -56,7 +61,8 @@ class VirtualLed extends StatelessWidget {
             ),
           ),
           assetKey: 'assets/shaders/glow.frag',
-        ),
+              )
+            : null,
       );
 }
 

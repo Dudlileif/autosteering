@@ -117,7 +117,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.endColor,
         active: activeMap[index] ?? false,
-        size: config.ledSize,
+        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -129,7 +129,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.intermediateColor,
         active: activeMap[cumulativeIndex + index] ?? false,
-        size: config.ledSize,
+        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -141,7 +141,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.centerColor,
         active: activeMap[cumulativeIndex + index] ?? false,
-        size: config.ledSize,
+        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -153,7 +153,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.centerColor,
         active: activeMap[cumulativeIndex + index] ?? false,
-        size: config.ledSize,
+        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -165,7 +165,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.intermediateColor,
         active: activeMap[cumulativeIndex + index] ?? false,
-        size: config.ledSize,
+        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -177,7 +177,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.endColor,
         active: activeMap[cumulativeIndex + index] ?? false,
-        size: config.ledSize,
+        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );

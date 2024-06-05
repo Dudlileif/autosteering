@@ -161,6 +161,17 @@ class VirtualLedBarMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) => CheckboxListTile(
+            value: !config.showInactiveLeds,
+            onChanged: (value) => value != null
+                ? ref
+                    .read(virtualLedBarConfigurationProvider.notifier)
+                    .update(config.copyWith(showInactiveLeds: !value))
+                : null,
+            secondary: Text('Hide unlit LEDs', style: textStyle),
+          ),
+        ),
+        Consumer(
+          builder: (context, ref, child) => CheckboxListTile(
             value: config.reverseBar,
             onChanged: (value) => value != null
                 ? ref

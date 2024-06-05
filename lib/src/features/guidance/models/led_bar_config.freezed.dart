@@ -64,6 +64,9 @@ mixin _$LedBarConfig {
   /// Whether the bar should be reversed/inverted.
   bool get reverseBar => throw _privateConstructorUsedError;
 
+  /// Whether the LEDs should be hidden when not lit/active.
+  bool get showInactiveLeds => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $LedBarConfigCopyWith<LedBarConfig> get copyWith =>
@@ -88,7 +91,8 @@ abstract class $LedBarConfigCopyWith<$Res> {
       @ColorSerializer() Color centerColor,
       double ledSize,
       double barWidth,
-      bool reverseBar});
+      bool reverseBar,
+      bool showInactiveLeds});
 }
 
 /// @nodoc
@@ -116,6 +120,7 @@ class _$LedBarConfigCopyWithImpl<$Res, $Val extends LedBarConfig>
     Object? ledSize = null,
     Object? barWidth = null,
     Object? reverseBar = null,
+    Object? showInactiveLeds = null,
   }) {
     return _then(_value.copyWith(
       centerCount: null == centerCount
@@ -166,6 +171,10 @@ class _$LedBarConfigCopyWithImpl<$Res, $Val extends LedBarConfig>
           ? _value.reverseBar
           : reverseBar // ignore: cast_nullable_to_non_nullable
               as bool,
+      showInactiveLeds: null == showInactiveLeds
+          ? _value.showInactiveLeds
+          : showInactiveLeds // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -190,7 +199,8 @@ abstract class _$$LedBarConfigImplCopyWith<$Res>
       @ColorSerializer() Color centerColor,
       double ledSize,
       double barWidth,
-      bool reverseBar});
+      bool reverseBar,
+      bool showInactiveLeds});
 }
 
 /// @nodoc
@@ -216,6 +226,7 @@ class __$$LedBarConfigImplCopyWithImpl<$Res>
     Object? ledSize = null,
     Object? barWidth = null,
     Object? reverseBar = null,
+    Object? showInactiveLeds = null,
   }) {
     return _then(_$LedBarConfigImpl(
       centerCount: null == centerCount
@@ -266,6 +277,10 @@ class __$$LedBarConfigImplCopyWithImpl<$Res>
           ? _value.reverseBar
           : reverseBar // ignore: cast_nullable_to_non_nullable
               as bool,
+      showInactiveLeds: null == showInactiveLeds
+          ? _value.showInactiveLeds
+          : showInactiveLeds // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -285,7 +300,8 @@ class _$LedBarConfigImpl extends _LedBarConfig {
       @ColorSerializer() this.centerColor = Colors.green,
       this.ledSize = 20,
       this.barWidth = 800,
-      this.reverseBar = false})
+      this.reverseBar = false,
+      this.showInactiveLeds = true})
       : super._();
 
   factory _$LedBarConfigImpl.fromJson(Map<String, dynamic> json) =>
@@ -359,9 +375,14 @@ class _$LedBarConfigImpl extends _LedBarConfig {
   @JsonKey()
   final bool reverseBar;
 
+  /// Whether the LEDs should be hidden when not lit/active.
+  @override
+  @JsonKey()
+  final bool showInactiveLeds;
+
   @override
   String toString() {
-    return 'LedBarConfig(centerCount: $centerCount, intermediateCount: $intermediateCount, endCount: $endCount, oddCenter: $oddCenter, distancePerLed: $distancePerLed, evenCenterSimulateOdd: $evenCenterSimulateOdd, endColor: $endColor, intermediateColor: $intermediateColor, centerColor: $centerColor, ledSize: $ledSize, barWidth: $barWidth, reverseBar: $reverseBar)';
+    return 'LedBarConfig(centerCount: $centerCount, intermediateCount: $intermediateCount, endCount: $endCount, oddCenter: $oddCenter, distancePerLed: $distancePerLed, evenCenterSimulateOdd: $evenCenterSimulateOdd, endColor: $endColor, intermediateColor: $intermediateColor, centerColor: $centerColor, ledSize: $ledSize, barWidth: $barWidth, reverseBar: $reverseBar, showInactiveLeds: $showInactiveLeds)';
   }
 
   @override
@@ -391,7 +412,9 @@ class _$LedBarConfigImpl extends _LedBarConfig {
             (identical(other.barWidth, barWidth) ||
                 other.barWidth == barWidth) &&
             (identical(other.reverseBar, reverseBar) ||
-                other.reverseBar == reverseBar));
+                other.reverseBar == reverseBar) &&
+            (identical(other.showInactiveLeds, showInactiveLeds) ||
+                other.showInactiveLeds == showInactiveLeds));
   }
 
   @JsonKey(ignore: true)
@@ -409,7 +432,8 @@ class _$LedBarConfigImpl extends _LedBarConfig {
       centerColor,
       ledSize,
       barWidth,
-      reverseBar);
+      reverseBar,
+      showInactiveLeds);
 
   @JsonKey(ignore: true)
   @override
@@ -438,7 +462,8 @@ abstract class _LedBarConfig extends LedBarConfig {
       @ColorSerializer() final Color centerColor,
       final double ledSize,
       final double barWidth,
-      final bool reverseBar}) = _$LedBarConfigImpl;
+      final bool reverseBar,
+      final bool showInactiveLeds}) = _$LedBarConfigImpl;
   const _LedBarConfig._() : super._();
 
   factory _LedBarConfig.fromJson(Map<String, dynamic> json) =
@@ -500,6 +525,10 @@ abstract class _LedBarConfig extends LedBarConfig {
 
   /// Whether the bar should be reversed/inverted.
   bool get reverseBar;
+  @override
+
+  /// Whether the LEDs should be hidden when not lit/active.
+  bool get showInactiveLeds;
   @override
   @JsonKey(ignore: true)
   _$$LedBarConfigImplCopyWith<_$LedBarConfigImpl> get copyWith =>

@@ -31,7 +31,7 @@ mixin _$ManufacturerColors {
   @ColorSerializerNullable()
   Color? get tertiary => throw _privateConstructorUsedError;
 
-  /// The secondary color for the color scheme.
+  /// The color of the branding line for the manufacturer.
   @ColorSerializerNullable()
   Color? get brandingLine => throw _privateConstructorUsedError;
 
@@ -239,7 +239,7 @@ class _$ManufacturerColorsImpl implements _ManufacturerColors {
   @ColorSerializerNullable()
   final Color? tertiary;
 
-  /// The secondary color for the color scheme.
+  /// The color of the branding line for the manufacturer.
   @override
   @ColorSerializerNullable()
   final Color? brandingLine;
@@ -337,7 +337,7 @@ abstract class _ManufacturerColors implements ManufacturerColors {
   Color? get tertiary;
   @override
 
-  /// The secondary color for the color scheme.
+  /// The color of the branding line for the manufacturer.
   @ColorSerializerNullable()
   Color? get brandingLine;
   @override

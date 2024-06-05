@@ -105,7 +105,7 @@ final selectablePathIndexEndProvider =
 
 typedef _$SelectablePathIndexEnd = AutoDisposeNotifier<int?>;
 String _$selectablePathPointsHash() =>
-    r'07dc1c2236d891af816f21bb79a3b4e3f1bae111';
+    r'06f91cf6b0848eaa312ce04e62f0587ac09f2160';
 
 /// A provider for the selectable path to get indices from.
 ///
