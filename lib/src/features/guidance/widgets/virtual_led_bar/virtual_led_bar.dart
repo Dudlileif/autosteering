@@ -117,7 +117,8 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.endColor,
         active: activeMap[index] ?? false,
-        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
+        size: config.ledSize,
+        showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -129,7 +130,8 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.intermediateColor,
         active: activeMap[cumulativeIndex + index] ?? false,
-        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
+        size: config.ledSize,
+        showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -141,7 +143,8 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.centerColor,
         active: activeMap[cumulativeIndex + index] ?? false,
-        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
+        size: config.ledSize,
+        showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -153,7 +156,8 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.centerColor,
         active: activeMap[cumulativeIndex + index] ?? false,
-        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
+        size: config.ledSize,
+        showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -165,7 +169,8 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.intermediateColor,
         active: activeMap[cumulativeIndex + index] ?? false,
-        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
+        size: config.ledSize,
+        showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -177,7 +182,8 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       (index) => VirtualLed(
         color: config.endColor,
         active: activeMap[cumulativeIndex + index] ?? false,
-        size: config.ledSize,showWhenInactive: config.showInactiveLeds,
+        size: config.ledSize,
+        showWhenInactive: config.showInactiveLeds,
       ),
       growable: false,
     );
@@ -194,7 +200,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
           ...leftIntermediateLeds,
           ...leftCenterLeds,
           SizedBox(
-            width: 85,
+            width: 110,
             child: Center(
               child: Consumer(
                 builder: (context, ref, child) {
@@ -203,7 +209,7 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
                   if (!distance.isFinite) {
                     distance = 0;
                   }
-      
+
                   var number = (distance.abs() * 100)
                       .truncate()
                       .clamp(-99, 99)
@@ -215,19 +221,43 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
                     number =
                         '''${distance.abs().clamp(0, 99).toStringAsFixed(0)}.''';
                   }
-                  if (distance.abs() >= 0.01) {
-                    number = distance.isNegative ? '⊲$number' : '$number⊳';
-                  }
-                  return TextWithStroke(
-                    number,
-                    style: GoogleFonts.robotoMono(
-                      fontWeight: FontWeight.bold,
-                      color: config.colorFromDistance(
-                            perpendicularDistance ?? 0,
+                  final color = config.colorFromDistance(
+                    perpendicularDistance ?? 0,
+                  );
+                  final textStyle = GoogleFonts.robotoMono(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                    textStyle: Theme.of(context).textTheme.headlineLarge,
+                  );
+                  const strokeWidth = 4.0;
+                  return Stack(
+                    children: [
+                      if (distance <= -0.01)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextWithStroke(
+                            '⊲',
+                            style: textStyle,
+                            strokeWidth: strokeWidth,
                           ),
-                      textStyle: Theme.of(context).textTheme.headlineLarge,
+                        )
+                      else if (distance >= 0.01)
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextWithStroke(
+                            '⊳',
+                            style: textStyle,
+                            strokeWidth: strokeWidth,
+                          ),
                         ),
-                    strokeWidth: 4,
+                      Center(
+                        child: TextWithStroke(
+                          number,
+                          style: textStyle,
+                          strokeWidth: strokeWidth,
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
