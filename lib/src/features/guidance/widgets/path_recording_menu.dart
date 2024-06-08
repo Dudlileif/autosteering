@@ -19,6 +19,7 @@ import 'dart:async';
 
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -282,8 +283,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                           ..invalidate(finishedPathRecordingListProvider);
                       case PathRecordingTarget.pathTracking:
                         ref
-                          ..read(pathTrackingPointsProvider.notifier)
-                                  .update(
+                          ..read(pathTrackingPointsProvider.notifier).update(
                             ref.watch(finishedPathRecordingListProvider),
                           )
                           ..read(showPathTrackingProvider.notifier)
@@ -516,9 +516,22 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       padding: EdgeInsets.only(left: 8),
                       child: Icon(Icons.clear),
                     ),
-                    onPressed: ref
-                        .read(finishedPathRecordingListProvider.notifier)
-                        .clear,
+                    onPressed: () {
+                      ref
+                          .read(finishedPathRecordingListProvider.notifier)
+                          .clear();
+                      if (ref.watch(
+                        activeEditablePathTypeProvider.select(
+                          (value) => value == EditablePathType.recordedPath,
+                        ),
+                      )) {
+                        ref
+                          ..invalidate(editablePathPointsProvider)
+                          ..read(activeEditablePathTypeProvider.notifier)
+                              .update(null)
+                          ..invalidate(editFinishedPathProvider);
+                      }
+                    },
                     child: Text(
                       'Clear recorded path',
                       style: textStyle,

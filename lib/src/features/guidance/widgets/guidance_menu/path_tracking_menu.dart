@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
@@ -74,23 +75,73 @@ class PathTrackingMenu extends ConsumerWidget {
           ),
           child: Text('Apply and use', style: textStyle),
         ),
-        MenuItemButton(
-          closeOnActivate: false,
-          leadingIcon: const Padding(
-            padding: EdgeInsets.only(left: 8),
-            child: Icon(Icons.voicemail),
-          ),
-          onPressed: () {
-            ref.read(enablePathRecorderProvider.notifier).update(value: true);
-            ref
-                .read(activePathRecordingTargetProvider.notifier)
-                .update(PathRecordingTarget.pathTracking);
-            ref
-                .read(showPathRecordingMenuProvider.notifier)
-                .update(value: true);
-          },
-          child: Text('Path recording', style: textStyle),
-        ),
+        switch (ref.watch(
+          displayPathTrackingProvider.select((value) => value != null),
+        )) {
+          true => switch (ref.watch(activeEditablePathTypeProvider)) {
+              null => MenuItemButton(
+                  closeOnActivate: false,
+                  leadingIcon: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Icon(Icons.edit),
+                  ),
+                  onPressed: () {
+                    ref
+                        .read(activeEditablePathTypeProvider.notifier)
+                        .update(EditablePathType.pathTracking);
+                    ref.read(editablePathPointsProvider.notifier).update(
+                          ref.read(
+                            displayPathTrackingProvider.select(
+                              (value) => value?.wayPoints
+                                  .map((e) => e.position)
+                                  .toList(),
+                            ),
+                          ),
+                        );
+                  },
+                  child: Text('Edit path', style: textStyle),
+                ),
+              EditablePathType.pathTracking => MenuItemButton(
+                  closeOnActivate: false,
+                  leadingIcon: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Icon(Icons.edit),
+                  ),
+                  onPressed: () {
+                    final wayPoints =
+                        ref.watch(editablePathAsWayPointsProvider);
+                    ref
+                        .read(pathTrackingPointsProvider.notifier)
+                        .update(wayPoints);
+                    ref
+                        .read(activeEditablePathTypeProvider.notifier)
+                        .update(null);
+                  },
+                  child: Text('Finish editing', style: textStyle),
+                ),
+              _ => const SizedBox.shrink()
+            },
+          false =>
+            MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.voicemail),
+              ),
+              onPressed: () {
+                ref
+                    .read(enablePathRecorderProvider.notifier)
+                    .update(value: true);
+                ref
+                    .read(activePathRecordingTargetProvider.notifier)
+                    .update(PathRecordingTarget.pathTracking);
+                ref
+                    .read(showPathRecordingMenuProvider.notifier)
+                    .update(value: true);
+              },
+              child: Text('Path recording', style: textStyle),
+            ),
+        },
         Consumer(
           child: Text(
             'Show',

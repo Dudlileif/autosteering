@@ -101,10 +101,10 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showEquipmentDebugLayerProvider))
           const EquipmentDebugLayer(),
         if (ref.watch(showPathTrackingLayerProvider)) const PathTrackingLayer(),
-        if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showDubinsPathDebugLayerProvider))
           const DubinsPathDebugLayer(),
         if (ref.watch(showABTrackingLayerProvider)) const ABTrackingLayer(),
+        if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showSelectablePathLayerProvider))
           SelectablePathLayer(
             highlightSelectedPath: ref.watch(

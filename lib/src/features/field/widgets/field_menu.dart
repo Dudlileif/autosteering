@@ -22,7 +22,9 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +56,20 @@ class FieldMenu extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.clear),
             ),
-            onPressed: () => ref.invalidate(activeFieldProvider),
+            onPressed: () {
+              ref.invalidate(activeFieldProvider);
+              if (ref.watch(
+                activeEditablePathTypeProvider.select(
+                  (value) =>
+                      value == EditablePathType.fieldExterior ||
+                      value == EditablePathType.fieldInterior,
+                ),
+              )) {
+                ref
+                  ..invalidate(editablePathPointsProvider)
+                  ..read(activeEditablePathTypeProvider.notifier).update(null);
+              }
+            },
             child: Text('Close', style: textStyle),
           ),
           Consumer(
@@ -109,6 +124,7 @@ class FieldMenu extends ConsumerWidget {
         ],
         if (activeField != null) ...[
           const _RenameFieldButton(),
+          const _EditFieldBorderButton(),
           Consumer(
             child: Text(
               'Show field',
@@ -637,6 +653,61 @@ class _RenameFieldButton extends ConsumerWidget {
       ),
       child: Text('Rename', style: textStyle),
     );
+  }
+}
+
+class _EditFieldBorderButton extends ConsumerWidget {
+  const _EditFieldBorderButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    final activeField = ref.watch(activeFieldProvider);
+    final editablePathType = ref.watch(activeEditablePathTypeProvider);
+
+    if (editablePathType == EditablePathType.fieldExterior) {
+      return MenuItemButton(
+        closeOnActivate: false,
+        leadingIcon: const Padding(
+          padding: EdgeInsets.only(left: 8),
+          child: Icon(Icons.check),
+        ),
+        child: Text('Finish editing border', style: textStyle),
+        onPressed: () {
+          final exterior = ref.watch(editablePathPointsProvider);
+          if (exterior != null && activeField != null) {
+            final interiors = activeField.mapInteriorPoints((e) => e);
+            final field = activeField.copyWith(
+              polygon: Polygon.from([exterior, ...interiors]),
+            );
+            ref.read(activeFieldProvider.notifier).update(field);
+            ref.read(activeWorkSessionProvider.notifier).updateField(field);
+          }
+          ref
+            ..invalidate(editablePathPointsProvider)
+            ..read(activeEditablePathTypeProvider.notifier).update(null);
+        },
+      );
+    } else if (editablePathType == null &&
+        activeField?.polygon.exterior != null) {
+      return MenuItemButton(
+        closeOnActivate: false,
+        leadingIcon: const Padding(
+          padding: EdgeInsets.only(left: 8),
+          child: Icon(Icons.edit),
+        ),
+        child: Text('Edit border', style: textStyle),
+        onPressed: () {
+          ref
+            ..read(activeEditablePathTypeProvider.notifier)
+                .update(EditablePathType.fieldExterior)
+            ..read(editablePathPointsProvider.notifier).update(
+              activeField?.polygon.exterior?.toGeographicPositions.toList(),
+            );
+        },
+      );
+    }
+    return const SizedBox.shrink();
   }
 }
 

@@ -15,10 +15,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-export 'country/country.dart';
-export 'editable_path_type.dart';
-export 'file_cached_tile_provider.dart';
-export 'hive_cached_tile_provider.dart';
-export 'map_center_offset.dart';
-export 'sentinel_layer.dart';
-export 'tile_layer_data.dart';
+/// An enumerator for the different types of editable path.
+enum EditablePathType {
+  /// AB-curve
+  abCurve,
+
+  /// Path tracking
+  pathTracking,
+
+  /// Field exterior
+  fieldExterior,
+
+  /// Field interior
+  fieldInterior,
+
+  /// Recorded path (before being used with a field or tracking).
+  recordedPath,
+}

@@ -279,28 +279,84 @@ class ABTrackingMenu extends ConsumerWidget {
             ),
           )
         else if (abTrackingType == ABTrackingType.abCurve)
-          Consumer(
-            builder: (context, ref, child) => MenuItemButton(
-              closeOnActivate: false,
-              leadingIcon: const Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Icon(Icons.voicemail),
-              ),
-              onPressed: () {
-                ref
-                    .read(enablePathRecorderProvider.notifier)
-                    .update(value: true);
-                ref
-                    .read(activePathRecordingTargetProvider.notifier)
-                    .update(PathRecordingTarget.abCurve);
-                ref
-                    .read(showPathRecordingMenuProvider.notifier)
-                    .update(value: true);
+          switch (ref.watch(
+            displayABTrackingProvider.select((value) => value != null),
+          )) {
+            true => switch (ref.watch(activeEditablePathTypeProvider)) {
+                null => MenuItemButton(
+                    closeOnActivate: false,
+                    leadingIcon: const Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Icon(Icons.edit),
+                    ),
+                    onPressed: () {
+                      ref
+                          .read(activeEditablePathTypeProvider.notifier)
+                          .update(EditablePathType.abCurve);
+                      ref.read(editablePathPointsProvider.notifier).update(
+                            ref.read(
+                              displayABTrackingProvider.select(
+                                (value) => value?.baseLine
+                                    .map((e) => e.position)
+                                    .toList(),
+                              ),
+                            ),
+                          );
+                    },
+                    child: Text(
+                      'Edit path',
+                      style: theme.menuButtonWithChildrenText,
+                    ),
+                  ),
+                EditablePathType.abCurve => MenuItemButton(
+                    closeOnActivate: false,
+                    leadingIcon: const Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Icon(Icons.edit),
+                    ),
+                    onPressed: () {
+                      final wayPoints =
+                          ref.watch(editablePathAsWayPointsProvider);
+                      ref
+                          .read(aBCurvePointsProvider.notifier)
+                          .update(wayPoints);
+                      ref
+                          .read(activeEditablePathTypeProvider.notifier)
+                          .update(null);
+                    },
+                    child: Text(
+                      'Finish editing',
+                      style: theme.menuButtonWithChildrenText,
+                    ),
+                  ),
+                _ => const SizedBox.shrink()
               },
-              child:
-                  Text('Record curve', style: theme.menuButtonWithChildrenText),
-            ),
-          ),
+            false => Consumer(
+                builder: (context, ref, child) => MenuItemButton(
+                  closeOnActivate: false,
+                  leadingIcon: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Icon(Icons.voicemail),
+                  ),
+                  onPressed: () {
+                    ref
+                        .read(enablePathRecorderProvider.notifier)
+                        .update(value: true);
+                    ref
+                        .read(activePathRecordingTargetProvider.notifier)
+                        .update(PathRecordingTarget.abCurve);
+                    ref
+                        .read(showPathRecordingMenuProvider.notifier)
+                        .update(value: true);
+                  },
+                  child: Text(
+                    'Record curve',
+                    style: theme.menuButtonWithChildrenText,
+                  ),
+                ),
+              ),
+          },
+          
         if (ref.watch(
               displayPathTrackingProvider.select(
                 (value) => value != null && value.wayPoints.length >= 2,

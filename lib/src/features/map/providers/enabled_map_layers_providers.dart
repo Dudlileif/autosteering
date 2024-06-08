@@ -82,10 +82,12 @@ bool showPathRecordingLayer(ShowPathRecordingLayerRef ref) =>
 /// Whether the editable recorded path should be shown.
 @riverpod
 bool showEditablePathLayer(ShowEditablePathLayerRef ref) {
-  final isEditing = ref.watch(editFinishedPathProvider);
-  final points = ref.watch(finishedPathRecordingListProvider);
+  final isEditing = ref
+      .watch(activeEditablePathTypeProvider.select((value) => value != null));
+  final pointsNotEmpty =
+      ref.watch(editablePathPointsProvider.select((value) => value != null));
 
-  final enabled = isEditing && points != null;
+  final enabled = isEditing && pointsNotEmpty;
   return enabled;
 }
 

@@ -175,7 +175,7 @@ final showFinishedPathProvider =
 );
 
 typedef _$ShowFinishedPath = Notifier<bool>;
-String _$editFinishedPathHash() => r'0ab5beaa8cb235809637c1249ae5ae99ff37832f';
+String _$editFinishedPathHash() => r'14c7b55229f2a230ab4c0ac547ea871e1b2fa22e';
 
 /// Whether to activate editing of the last finished path recording.
 ///

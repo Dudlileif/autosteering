@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/ab_tracking_menu.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/path_tracking_menu.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/virtual_led_bar_menu.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -108,6 +109,17 @@ class GuidanceMenu extends ConsumerWidget {
                 ..invalidate(configuredABTrackingProvider)
                 ..invalidate(configuredPathTrackingProvider)
                 ..invalidate(pathTrackingPointsProvider);
+              if (ref.read(
+                activeEditablePathTypeProvider.select(
+                  (value) =>
+                      value == EditablePathType.abCurve ||
+                      value == EditablePathType.pathTracking,
+                ),
+              )) {
+                ref
+                  ..invalidate(editablePathPointsProvider)
+                  ..read(activeEditablePathTypeProvider.notifier).update(null);
+              }
             },
             closeOnActivate: false,
             child: Text(
@@ -123,8 +135,8 @@ class GuidanceMenu extends ConsumerWidget {
             )) ...[
           if (Device.isNative) const _LoadPathTrackingMenu(),
           if (Device.isNative) const _LoadABTrackingMenu(),
-          if (ref.watch(displayPathTrackingProvider
-                  .select((value) => value == null),
+          if (ref.watch(
+                displayPathTrackingProvider.select((value) => value == null),
               ) &&
               ref.watch(
                 displayABTrackingProvider.select((value) => value == null),

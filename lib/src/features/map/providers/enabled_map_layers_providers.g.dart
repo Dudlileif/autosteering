@@ -78,7 +78,7 @@ final showPathRecordingLayerProvider = AutoDisposeProvider<bool>.internal(
 
 typedef ShowPathRecordingLayerRef = AutoDisposeProviderRef<bool>;
 String _$showEditablePathLayerHash() =>
-    r'18c4ca86fc37494746fef72752d7e348e8d5dcdc';
+    r'a6eea51803adfdd7e33fb0e61e199871e7ea557e';
 
 /// Whether the editable recorded path should be shown.
 ///
