@@ -120,8 +120,7 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
+  Widget build(BuildContext context) => InkWell(
       onTap: () => switch (portalController.isShowing) {
         true => portalController.hide(),
         false => portalController.show(),
@@ -154,14 +153,7 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
             final nmea = ref.watch(gnssCurrentSentenceProvider);
             final fixQuality = nmea?.fixQuality ?? GnssFixQuality.notAvailable;
             final numSatellites = nmea?.numSatellites ?? 0;
-            return Badge.count(
-              count: numSatellites,
-              child: Transform.flip(
-                flipX: true,
-                child: Icon(
-                  Icons.satellite_alt,
-                  size: widget.size,
-                  color: switch (fixQuality) {
+              final color = switch (fixQuality) {
                     GnssFixQuality.rtk => Colors.green,
                     GnssFixQuality.floatRTK ||
                     GnssFixQuality.ppsFix =>
@@ -172,7 +164,20 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
                     GnssFixQuality.manualInput => Colors.purple,
                     GnssFixQuality.simulation => Colors.blue,
                     GnssFixQuality.estimated => Colors.blueGrey,
-                  },
+              };
+              return Badge.count(
+                count: numSatellites,
+                backgroundColor: color,
+                textColor: ThemeData.estimateBrightnessForColor(color) ==
+                        Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+                child: Transform.flip(
+                  flipX: true,
+                  child: Icon(
+                    Icons.satellite_alt,
+                    size: widget.size,
+                    color: color,
                   shadows: const [
                     Shadow(offset: Offset(1, 0)),
                     Shadow(offset: Offset(0, 1)),
@@ -183,6 +188,5 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
           },
         ),
       ),
-    );
-  }
+      );
 }

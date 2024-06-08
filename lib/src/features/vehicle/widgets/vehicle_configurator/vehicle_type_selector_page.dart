@@ -23,6 +23,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:quiver/strings.dart';
 
 /// A page for configuring the vehicle type and set a name for the vehicle.
 class VehicleTypeSelectorPage extends StatelessWidget {
@@ -96,8 +97,8 @@ class VehicleTypeSelectorPage extends StatelessWidget {
                     ),
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.always,
-                    validator: (value) => value == null ||
-                            (value.isEmpty || value.startsWith(' '))
+                    validator: (value) =>
+                        isBlank(value)
                         ? 'No name entered!'
                         : null,
                   ),
@@ -106,11 +107,8 @@ class VehicleTypeSelectorPage extends StatelessWidget {
             ),
             Consumer(
               builder: (context, ref, child) => switch (ref.watch(
-                configuredVehicleProvider.select(
-                  (value) =>
-                      value.name == null ||
-                      (value.name!.isEmpty || value.name!.startsWith(' ')),
-                ),
+                configuredVehicleProvider
+                    .select((value) => isBlank(value.name)),
               )) {
                 true => child ?? const SizedBox.shrink(),
                 false => const SizedBox.shrink(),

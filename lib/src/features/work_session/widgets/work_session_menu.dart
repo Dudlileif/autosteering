@@ -30,6 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:quiver/strings.dart';
 
 /// A menu for creating, loading and handling work sessions.
 class WorkSessionMenu extends ConsumerWidget {
@@ -97,11 +98,9 @@ class WorkSessionMenu extends ConsumerWidget {
                             keyboardType: TextInputType.text,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
-                            validator: (value) => value != null &&
-                                    value.isNotEmpty &&
-                                    !value.startsWith(' ')
-                                ? null
-                                : '''No name entered! Please enter a name so that the field can be saved!''',
+                            validator: (value) => isBlank(value)
+                                ? '''No name entered! Please enter a name so that the field can be saved!'''
+                                : null,
                           ),
                         ),
                         if (session != null)

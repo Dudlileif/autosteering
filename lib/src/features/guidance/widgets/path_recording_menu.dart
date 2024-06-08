@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
+import 'package:quiver/strings.dart';
 
 /// An enumerator for what mode the recording should use.
 enum _RecordingMode {
@@ -586,11 +587,9 @@ class _CreateFieldButton extends ConsumerWidget {
                       onFieldSubmitted: (value) => setState(() => name = value),
                       keyboardType: TextInputType.text,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (value) => value != null &&
-                              value.isNotEmpty &&
-                              !value.startsWith(' ')
-                          ? null
-                          : '''No name entered! Please enter a name so that the field can be saved!''',
+                      validator: (value) => isBlank(value)
+                          ? '''No name entered! Please enter a name so that the field can be saved!'''
+                          : null,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 16),

@@ -28,6 +28,7 @@ import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiver/strings.dart';
 
 /// A menu with attached submenu for working with the guidance features.
 class GuidanceMenu extends ConsumerWidget {
@@ -447,11 +448,9 @@ class _RenameABTrackingButton extends ConsumerWidget {
                     onFieldSubmitted: (value) => setState(() => name = value),
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value != null &&
-                            value.isNotEmpty &&
-                            !value.startsWith(' ')
-                        ? null
-                        : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                    validator: (value) => isBlank(value)
+                        ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                        : null,
                   ),
                 ),
                 Padding(
@@ -529,11 +528,9 @@ class _RenamePathTrackingButton extends ConsumerWidget {
                     onFieldSubmitted: (value) => setState(() => name = value),
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value != null &&
-                            value.isNotEmpty &&
-                            !value.startsWith(' ')
-                        ? null
-                        : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                    validator: (value) => isBlank(value)
+                        ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                        : null,
                   ),
                 ),
                 Padding(
@@ -622,11 +619,9 @@ class _SaveABTrackingButton extends ConsumerWidget {
                               setState(() => name = value),
                           keyboardType: TextInputType.text,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => value != null &&
-                                  value.isNotEmpty &&
-                                  !value.startsWith(' ')
-                              ? null
-                              : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                          validator: (value) => isBlank(value)
+                              ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                              : null,
                         ),
                       ),
                       Padding(
@@ -713,11 +708,9 @@ class _SavePathTrackingButton extends ConsumerWidget {
                             setState(() => name = value),
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) => value != null &&
-                                value.isNotEmpty &&
-                                !value.startsWith(' ')
-                            ? null
-                            : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                        validator: (value) => isBlank(value)
+                            ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                            : null,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 16),

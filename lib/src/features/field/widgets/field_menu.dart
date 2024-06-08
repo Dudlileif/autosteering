@@ -30,6 +30,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
+import 'package:quiver/strings.dart';
 
 /// A menu with attached submenu for interacting with the field feature.
 class FieldMenu extends ConsumerWidget {
@@ -520,11 +521,9 @@ class _CreateFieldFromPathTracking extends ConsumerWidget {
                     controller: controller,
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value != null &&
-                            value.isNotEmpty &&
-                            !value.startsWith(' ')
-                        ? null
-                        : '''No name entered! Please enter a name so that the field can be saved!''',
+                    validator: (value) => isBlank(value)
+                        ? '''No name entered! Please enter a name so that the field can be saved!'''
+                        : null,
                   ),
                 ),
                 Padding(
@@ -614,11 +613,9 @@ class _RenameFieldButton extends ConsumerWidget {
                     onFieldSubmitted: (value) => setState(() => name = value),
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value != null &&
-                            value.isNotEmpty &&
-                            !value.startsWith(' ')
-                        ? null
-                        : '''No name entered! Please enter a name so that the field can be saved!''',
+                    validator: (value) => isBlank(value)
+                        ? '''No name entered! Please enter a name so that the field can be saved!'''
+                        : null,
                   ),
                 ),
                 if (field != null)
@@ -950,11 +947,9 @@ class _SaveBufferedFieldButton extends ConsumerWidget {
                             keyboardType: TextInputType.text,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
-                            validator: (value) => value != null &&
-                                    value.isNotEmpty &&
-                                    !value.startsWith(' ')
-                                ? null
-                                : '''No name entered! Please enter a name so that the field can be saved!''',
+                            validator: (value) => isBlank(value)
+                                ? '''No name entered! Please enter a name so that the field can be saved!'''
+                                : null,
                           ),
                         ),
                         Padding(

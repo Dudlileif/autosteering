@@ -26,6 +26,7 @@ import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/v
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_wheels_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiver/strings.dart';
 
 /// A [Dialog] for configuring a vehicle, with ability to apply to the
 /// current one, save to file or load from file.
@@ -45,14 +46,10 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
     length: pages.length,
     vsync: this,
     initialIndex: ref.read(
-      configuredVehicleProvider.select(
-        (value) =>
-            value.name == null ||
-            (value.name!.isEmpty || value.name!.startsWith(' ')),
-      ),
+      configuredVehicleProvider.select((value) => isNotBlank(value.name)),
     )
-        ? 0
-        : ref.read(vehicleConfiguratorIndexProvider),
+        ? ref.read(vehicleConfiguratorIndexProvider)
+        : 0,
   );
   static const pages = [
     VehicleTypeSelectorPage(),
@@ -115,9 +112,7 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
                 builder: (context, constraints) {
                   final disabled = ref.watch(
                     configuredVehicleProvider.select(
-                      (value) =>
-                          value.name == null ||
-                          (value.name!.isEmpty || value.name!.startsWith(' ')),
+                      (value) => isBlank(value.name),
                     ),
                   );
 

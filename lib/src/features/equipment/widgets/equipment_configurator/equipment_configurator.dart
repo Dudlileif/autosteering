@@ -27,6 +27,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiver/strings.dart';
 
 /// A [Dialog] for configuring an equipment, with ability to apply to the
 /// one in the attached hierarchy, save to file or load from file.
@@ -46,14 +47,11 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
     length: pages.length,
     vsync: this,
     initialIndex: ref.read(
-      configuredEquipmentProvider.select(
-        (value) =>
-            value.name == null ||
-            (value.name!.isEmpty || value.name!.startsWith(' ')),
-      ),
+      configuredEquipmentProvider.select((value) => isNotBlank(value.name)),
+      
     )
-        ? 0
-        : ref.read(equipmentConfiguratorIndexProvider),
+        ? ref.read(equipmentConfiguratorIndexProvider)
+        : 0,
   );
   static const pages = [
     EquipmentTypeSelectorPage(),
@@ -118,9 +116,7 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
                 builder: (context, constraints) {
                   final disabled = ref.watch(
                     configuredEquipmentProvider.select(
-                      (value) =>
-                          value.name == null ||
-                          (value.name!.isEmpty || value.name!.startsWith(' ')),
+                      (value) => isBlank(value.name),
                     ),
                   );
 
@@ -317,12 +313,11 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
         onPressed: ref.watch(
           configuredEquipmentProvider.select(
             (value) =>
-                value.name == null ||
-                (value.name!.isEmpty || value.name!.startsWith(' ')),
+              isNotBlank(value.name),
           ),
         )
-            ? null
-            : () async {
+            
+            ? () async {
                 await Future<void>(() async {
                   final equipment = ref.watch(configuredEquipmentProvider)
                     ..lastUsed = DateTime.now();
@@ -365,7 +360,8 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
                   }
                   ref.read(loadedEquipmentProvider.notifier).update(equipment);
                 }).then((value) => Navigator.of(context).pop());
-              },
+              }
+            : null,
         icon: const Icon(Icons.check),
         label: const Text('Apply configuration'),
       );

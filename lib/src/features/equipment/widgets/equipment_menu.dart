@@ -26,6 +26,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiver/strings.dart';
 
 /// A menu with attached submenu for interacting with the equipment feature.
 class EquipmentMenu extends ConsumerWidget {
@@ -192,11 +193,9 @@ class _SaveEquipmentSetup extends StatelessWidget {
                             setState(() => name = value),
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) => value != null &&
-                                value.isNotEmpty &&
-                                !value.startsWith(' ')
-                            ? null
-                            : '''No name entered! Please enter a name so that the setup can be saved!''',
+                        validator: (value) => isBlank(value)
+                            ? '''No name entered! Please enter a name so that the setup can be saved!'''
+                            : null,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 16),

@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiver/strings.dart';
 
 /// A page for configuring the equipment type and set a name for the equipment.
 class EquipmentTypeSelectorPage extends ConsumerStatefulWidget {
@@ -74,8 +75,8 @@ class _EquipmentTypeSelectorPageState
                             .updateName,
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.always,
-                        validator: (value) => value == null ||
-                                (value.isEmpty || value.startsWith(' '))
+                        validator: (value) =>
+                            isBlank(value)
                             ? 'No name entered!'
                             : null,
                       );
@@ -89,8 +90,7 @@ class _EquipmentTypeSelectorPageState
             builder: (context, ref, child) => switch (ref.watch(
               configuredEquipmentProvider.select(
                 (value) =>
-                    value.name == null ||
-                    (value.name!.isEmpty || value.name!.startsWith(' ')),
+                    isBlank(value.name),
               ),
             )) {
               true => child ?? const SizedBox.shrink(),
