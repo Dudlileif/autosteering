@@ -84,15 +84,13 @@
 
 - Improved safety measures
 
-- Import/export with AgOpenGps and ISOXML, maybe other formats
+- Import/export with AgOpenGps and ISOXML ([WIP library](https://github.com/Dudlileif/isoxml_dart)), maybe other formats
 
 - Hotkeys
 
 ## Further ideas
 
 - Use OSM to look for powerlines/obstacles in fields/polygons
-
-- Restrict map layer to polygon extent, directly from wms?
 
 - Google Drive / cloud shape files etc...
 
