@@ -179,7 +179,7 @@ class ABTrackingLayer extends ConsumerWidget {
                               color: Colors.yellow,
                             ),
                           )
-                          .whereNotNull() ??
+                          .nonNulls ??
                       [],
                 if (abTracking.currentStart != null)
                   CircleMarker(
@@ -295,7 +295,7 @@ class ABTrackingLayer extends ConsumerWidget {
                             height: 50,
                           ),
                         )
-                        .whereNotNull() ??
+                        .nonNulls ??
                     [],
               if (abTracking.currentStart != null)
                 Marker(

@@ -894,6 +894,21 @@ class _EqiupmentDebugMenu extends StatelessWidget {
         ),
         Consumer(
           child: Text(
+            'Sections',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            value: ref.watch(debugEquipmentSectionsProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugEquipmentSectionsProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
+        Consumer(
+          child: Text(
             'Turning',
             style: textStyle,
           ),
@@ -903,6 +918,21 @@ class _EqiupmentDebugMenu extends StatelessWidget {
             onChanged: (value) => value != null
                 ? ref
                     .read(debugEquipmentTurningProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Hitches',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            value: ref.watch(debugEquipmentHitchesProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugEquipmentHitchesProvider.notifier)
                     .update(value: value)
                 : null,
           ),

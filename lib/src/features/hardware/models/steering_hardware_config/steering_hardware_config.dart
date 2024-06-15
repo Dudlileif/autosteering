@@ -496,7 +496,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
           }
           return '$key=$value';
         })
-        .whereNotNull()
+        .nonNulls
         .join('&');
   }
 

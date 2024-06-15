@@ -36,11 +36,12 @@ class EquipmentDrawerLayer extends ConsumerWidget {
     );
 
     return PolygonLayer(
-      polygons: equipments
+      polygons: [
+        for (final equipment in equipments
           .map((e) => e.mapPolygons)
-          .whereNotNull()
-          .flattened
-          .toList(),
+          .nonNulls)
+          ...equipment,
+      ],
     );
   }
 }
@@ -99,7 +100,8 @@ class EquipmentDebugLayer extends ConsumerWidget {
                     color: Colors.orange,
                   ),
                 ),
-                ...equipments.map((equipment) {
+                ...[
+                  for (final equipment in equipments.map((equipment) {
                   if (equipment.sections.isEmpty) {
                     return <Polyline>[];
                   }
@@ -133,7 +135,9 @@ class EquipmentDebugLayer extends ConsumerWidget {
                       color: Colors.red,
                     ),
                   ];
-                }).flattened,
+                  }))
+                    ...equipment,
+                ],
               ],
             ],
           ),
@@ -158,7 +162,15 @@ class EquipmentDebugLayer extends ConsumerWidget {
                       ),
                     ),
               if (debugHitches)
-                ...equipments
+                ...[
+                ...equipments.map(
+                  (equipment) => CircleMarker(
+                    point: equipment.position.latLng,
+                    radius: 5,
+                    color: Colors.white,
+                  ),
+                ),
+                for (final equipment in equipments
                     .map(
                       (equipment) => equipment.hitchPoints.mapIndexed(
                         (index, hitch) => CircleMarker(
@@ -166,9 +178,11 @@ class EquipmentDebugLayer extends ConsumerWidget {
                           radius: 5,
                           color: [Colors.red, Colors.green, Colors.blue][index],
                         ),
-                      ),
-                    )
-                    .flattened,
+                  ),
+                ))
+                  ...equipment,
+              ],
+              if (debugTurning)
               ...equipments.map(
                 (equipment) => CircleMarker(
                   point: equipment.workingCenter.latLng,
@@ -177,7 +191,8 @@ class EquipmentDebugLayer extends ConsumerWidget {
                 ),
               ),
               if (debugSections)
-                ...equipments
+                ...[
+                for (final equipment in equipments
                     .map(
                       (equipment) => equipment.sections.map(
                         (section) => CircleMarker(
@@ -186,8 +201,9 @@ class EquipmentDebugLayer extends ConsumerWidget {
                           color: Colors.orange,
                         ),
                       ),
-                    )
-                    .flattened,
+                ))
+                  ...equipment,
+              ],
             ],
           ),
       ],

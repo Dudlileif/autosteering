@@ -60,7 +60,8 @@ class _EquipmentWorkedPathsLayerState
               (activationIndex, activation) =>
                   activation.map<int, Float32List>((section, points) {
                 if (points != null) {
-                  final offsets = points
+                  final offsets = [
+                    for (final offset in points
                       .map(
                         (e) {
                           final offset1 = camera
@@ -76,9 +77,9 @@ class _EquipmentWorkedPathsLayerState
                             offset2.dy,
                           ];
                         },
-                      )
-                      .flattened
-                      .toList();
+                    ))
+                      ...offset,
+                  ];
 
                   if (activationIndex == workedLines.length - 1 &&
                       activationStatus[section]!) {
