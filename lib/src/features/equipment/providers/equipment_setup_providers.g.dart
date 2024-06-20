@@ -7,7 +7,7 @@ part of 'equipment_setup_providers.dart';
 // **************************************************************************
 
 String _$saveEquipmentSetupHash() =>
-    r'eeb18d15598e5ae048c7f6c027a337be61a338ba';
+    r'bde677b91909ace410351d6ed1b0c1f82da7258a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -268,7 +268,7 @@ class _SaveEquipmentSetupProviderElement
 }
 
 String _$exportEquipmentSetupHash() =>
-    r'8b63aa8b1a112ef1a580db187bebc1e3e78f0113';
+    r'00e637d3be31a5d9b5e30f509d7c6858f2f47769';
 
 /// A provider for exporting [setup] to a file.
 ///
@@ -509,7 +509,7 @@ class _ExportEquipmentSetupProviderElement
 }
 
 String _$savedEquipmentSetupsHash() =>
-    r'b28d981ab200ba87502288e3e9ad1336f2be4006';
+    r'9f6bfefb83f7c9da8e0d24d3861b25b2e5cb2d2a';
 
 /// A provider for reading and holding all the saved [EquipmentSetup]s in the
 /// user file directory.
@@ -529,7 +529,7 @@ final savedEquipmentSetupsProvider =
 
 typedef SavedEquipmentSetupsRef = FutureProviderRef<List<EquipmentSetup>>;
 String _$deleteEquipmentSetupHash() =>
-    r'606fc12bca98c2e8c9b7563205e0a79dbdc6e114';
+    r'3b19dbf88d3dfa02f8c0389a9c7d41f440bdbfe0';
 
 /// A provider for deleting [setup] form the user file system.
 ///

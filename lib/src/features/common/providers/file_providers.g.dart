@@ -6,7 +6,7 @@ part of 'file_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fileDirectoryHash() => r'e6a3328b4716ad17d353e807dafbdc48ff31f5f1';
+String _$fileDirectoryHash() => r'0d7bbbb97993af78abe5df58d8a641a45423d458';
 
 /// A provider for the main user file directory for the application.
 ///
@@ -432,7 +432,7 @@ class _DirectoryDeleteProviderElement
 }
 
 String _$saveJsonToFileDirectoryHash() =>
-    r'7ee46aec60cf860a7e03eb8f946c4e70785ecd71';
+    r'ac389047f30dd98e9fb4f0695a7ea38ef7299fa8';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -482,12 +482,14 @@ class SaveJsonToFileDirectoryFamily extends Family {
     required dynamic object,
     required String fileName,
     required String folder,
+    String? subFolder,
     bool downloadIfWeb = false,
   }) {
     return SaveJsonToFileDirectoryProvider(
       object: object,
       fileName: fileName,
       folder: folder,
+      subFolder: subFolder,
       downloadIfWeb: downloadIfWeb,
     );
   }
@@ -501,6 +503,7 @@ class SaveJsonToFileDirectoryFamily extends Family {
       object: provider.object,
       fileName: provider.fileName,
       folder: provider.folder,
+      subFolder: provider.subFolder,
       downloadIfWeb: provider.downloadIfWeb,
     );
   }
@@ -545,6 +548,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
     required dynamic object,
     required String fileName,
     required String folder,
+    String? subFolder,
     bool downloadIfWeb = false,
   }) : this._internal(
           (ref) => saveJsonToFileDirectory(
@@ -552,6 +556,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
             object: object,
             fileName: fileName,
             folder: folder,
+            subFolder: subFolder,
             downloadIfWeb: downloadIfWeb,
           ),
           from: saveJsonToFileDirectoryProvider,
@@ -566,6 +571,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
           object: object,
           fileName: fileName,
           folder: folder,
+          subFolder: subFolder,
           downloadIfWeb: downloadIfWeb,
         );
 
@@ -579,12 +585,14 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
     required this.object,
     required this.fileName,
     required this.folder,
+    required this.subFolder,
     required this.downloadIfWeb,
   }) : super.internal();
 
   final dynamic object;
   final String fileName;
   final String folder;
+  final String? subFolder;
   final bool downloadIfWeb;
 
   @override
@@ -603,6 +611,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
         object: object,
         fileName: fileName,
         folder: folder,
+        subFolder: subFolder,
         downloadIfWeb: downloadIfWeb,
       ),
     );
@@ -613,12 +622,14 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
     dynamic object,
     String fileName,
     String folder,
+    String? subFolder,
     bool downloadIfWeb,
   }) get argument {
     return (
       object: object,
       fileName: fileName,
       folder: folder,
+      subFolder: subFolder,
       downloadIfWeb: downloadIfWeb,
     );
   }
@@ -641,6 +652,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
       object: object,
       fileName: fileName,
       folder: folder,
+      subFolder: subFolder,
       downloadIfWeb: downloadIfWeb,
     );
   }
@@ -651,6 +663,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
         other.object == object &&
         other.fileName == fileName &&
         other.folder == folder &&
+        other.subFolder == subFolder &&
         other.downloadIfWeb == downloadIfWeb;
   }
 
@@ -660,6 +673,7 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
     hash = _SystemHash.combine(hash, object.hashCode);
     hash = _SystemHash.combine(hash, fileName.hashCode);
     hash = _SystemHash.combine(hash, folder.hashCode);
+    hash = _SystemHash.combine(hash, subFolder.hashCode);
     hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
 
     return _SystemHash.finish(hash);
@@ -675,6 +689,9 @@ mixin SaveJsonToFileDirectoryRef on AutoDisposeFutureProviderRef<void> {
 
   /// The parameter `folder` of this provider.
   String get folder;
+
+  /// The parameter `subFolder` of this provider.
+  String? get subFolder;
 
   /// The parameter `downloadIfWeb` of this provider.
   bool get downloadIfWeb;
@@ -692,12 +709,15 @@ class _SaveJsonToFileDirectoryProviderElement
   @override
   String get folder => (origin as SaveJsonToFileDirectoryProvider).folder;
   @override
+  String? get subFolder =>
+      (origin as SaveJsonToFileDirectoryProvider).subFolder;
+  @override
   bool get downloadIfWeb =>
       (origin as SaveJsonToFileDirectoryProvider).downloadIfWeb;
 }
 
 String _$exportJsonToFileDirectoryHash() =>
-    r'0ceb65c7c3b0c009b2aff28c5f2b5a95ab838ffb';
+    r'87eec3dc92ce76fdeab0ae702ef31a17c31578f4';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -747,12 +767,14 @@ class ExportJsonToFileDirectoryFamily extends Family {
     required dynamic object,
     required String fileName,
     String? folder,
+    String? subFolder,
     bool downloadIfWeb = true,
   }) {
     return ExportJsonToFileDirectoryProvider(
       object: object,
       fileName: fileName,
       folder: folder,
+      subFolder: subFolder,
       downloadIfWeb: downloadIfWeb,
     );
   }
@@ -766,6 +788,7 @@ class ExportJsonToFileDirectoryFamily extends Family {
       object: provider.object,
       fileName: provider.fileName,
       folder: provider.folder,
+      subFolder: provider.subFolder,
       downloadIfWeb: provider.downloadIfWeb,
     );
   }
@@ -811,6 +834,7 @@ class ExportJsonToFileDirectoryProvider
     required dynamic object,
     required String fileName,
     String? folder,
+    String? subFolder,
     bool downloadIfWeb = true,
   }) : this._internal(
           (ref) => exportJsonToFileDirectory(
@@ -818,6 +842,7 @@ class ExportJsonToFileDirectoryProvider
             object: object,
             fileName: fileName,
             folder: folder,
+            subFolder: subFolder,
             downloadIfWeb: downloadIfWeb,
           ),
           from: exportJsonToFileDirectoryProvider,
@@ -832,6 +857,7 @@ class ExportJsonToFileDirectoryProvider
           object: object,
           fileName: fileName,
           folder: folder,
+          subFolder: subFolder,
           downloadIfWeb: downloadIfWeb,
         );
 
@@ -845,12 +871,14 @@ class ExportJsonToFileDirectoryProvider
     required this.object,
     required this.fileName,
     required this.folder,
+    required this.subFolder,
     required this.downloadIfWeb,
   }) : super.internal();
 
   final dynamic object;
   final String fileName;
   final String? folder;
+  final String? subFolder;
   final bool downloadIfWeb;
 
   @override
@@ -869,6 +897,7 @@ class ExportJsonToFileDirectoryProvider
         object: object,
         fileName: fileName,
         folder: folder,
+        subFolder: subFolder,
         downloadIfWeb: downloadIfWeb,
       ),
     );
@@ -879,12 +908,14 @@ class ExportJsonToFileDirectoryProvider
     dynamic object,
     String fileName,
     String? folder,
+    String? subFolder,
     bool downloadIfWeb,
   }) get argument {
     return (
       object: object,
       fileName: fileName,
       folder: folder,
+      subFolder: subFolder,
       downloadIfWeb: downloadIfWeb,
     );
   }
@@ -907,6 +938,7 @@ class ExportJsonToFileDirectoryProvider
       object: object,
       fileName: fileName,
       folder: folder,
+      subFolder: subFolder,
       downloadIfWeb: downloadIfWeb,
     );
   }
@@ -917,6 +949,7 @@ class ExportJsonToFileDirectoryProvider
         other.object == object &&
         other.fileName == fileName &&
         other.folder == folder &&
+        other.subFolder == subFolder &&
         other.downloadIfWeb == downloadIfWeb;
   }
 
@@ -926,6 +959,7 @@ class ExportJsonToFileDirectoryProvider
     hash = _SystemHash.combine(hash, object.hashCode);
     hash = _SystemHash.combine(hash, fileName.hashCode);
     hash = _SystemHash.combine(hash, folder.hashCode);
+    hash = _SystemHash.combine(hash, subFolder.hashCode);
     hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
 
     return _SystemHash.finish(hash);
@@ -941,6 +975,9 @@ mixin ExportJsonToFileDirectoryRef on AutoDisposeFutureProviderRef<void> {
 
   /// The parameter `folder` of this provider.
   String? get folder;
+
+  /// The parameter `subFolder` of this provider.
+  String? get subFolder;
 
   /// The parameter `downloadIfWeb` of this provider.
   bool get downloadIfWeb;
@@ -958,11 +995,14 @@ class _ExportJsonToFileDirectoryProviderElement
   @override
   String? get folder => (origin as ExportJsonToFileDirectoryProvider).folder;
   @override
+  String? get subFolder =>
+      (origin as ExportJsonToFileDirectoryProvider).subFolder;
+  @override
   bool get downloadIfWeb =>
       (origin as ExportJsonToFileDirectoryProvider).downloadIfWeb;
 }
 
-String _$savedFilesHash() => r'778875525d9d2aa1e377bd52cbbd1278f91b702a';
+String _$savedFilesHash() => r'54d5b11822d84068f845c5895ba0a8c59d82cfd1';
 
 /// A provider for reading and holding all the saved objects of
 /// the given type in the in the user file directory.
@@ -1003,10 +1043,14 @@ class SavedFilesFamily extends Family {
   SavedFilesProvider call({
     required dynamic Function(Map<String, dynamic> json) fromJson,
     required String folder,
+    bool rebuildOnFileModification = true,
+    bool elementsInSubFolders = false,
   }) {
     return SavedFilesProvider(
       fromJson: fromJson,
       folder: folder,
+      rebuildOnFileModification: rebuildOnFileModification,
+      elementsInSubFolders: elementsInSubFolders,
     );
   }
 
@@ -1018,6 +1062,8 @@ class SavedFilesFamily extends Family {
     return call(
       fromJson: provider.fromJson,
       folder: provider.folder,
+      rebuildOnFileModification: provider.rebuildOnFileModification,
+      elementsInSubFolders: provider.elementsInSubFolders,
     );
   }
 
@@ -1056,11 +1102,15 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
   SavedFilesProvider({
     required dynamic Function(Map<String, dynamic> json) fromJson,
     required String folder,
+    bool rebuildOnFileModification = true,
+    bool elementsInSubFolders = false,
   }) : this._internal(
           (ref) => savedFiles(
             ref as SavedFilesRef,
             fromJson: fromJson,
             folder: folder,
+            rebuildOnFileModification: rebuildOnFileModification,
+            elementsInSubFolders: elementsInSubFolders,
           ),
           from: savedFilesProvider,
           name: r'savedFilesProvider',
@@ -1073,6 +1123,8 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
               SavedFilesFamily._allTransitiveDependencies,
           fromJson: fromJson,
           folder: folder,
+          rebuildOnFileModification: rebuildOnFileModification,
+          elementsInSubFolders: elementsInSubFolders,
         );
 
   SavedFilesProvider._internal(
@@ -1084,10 +1136,14 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
     required super.from,
     required this.fromJson,
     required this.folder,
+    required this.rebuildOnFileModification,
+    required this.elementsInSubFolders,
   }) : super.internal();
 
   final dynamic Function(Map<String, dynamic> json) fromJson;
   final String folder;
+  final bool rebuildOnFileModification;
+  final bool elementsInSubFolders;
 
   @override
   Override overrideWith(
@@ -1104,6 +1160,8 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
         debugGetCreateSourceHash: null,
         fromJson: fromJson,
         folder: folder,
+        rebuildOnFileModification: rebuildOnFileModification,
+        elementsInSubFolders: elementsInSubFolders,
       ),
     );
   }
@@ -1112,10 +1170,14 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
   ({
     dynamic Function(Map<String, dynamic> json) fromJson,
     String folder,
+    bool rebuildOnFileModification,
+    bool elementsInSubFolders,
   }) get argument {
     return (
       fromJson: fromJson,
       folder: folder,
+      rebuildOnFileModification: rebuildOnFileModification,
+      elementsInSubFolders: elementsInSubFolders,
     );
   }
 
@@ -1136,6 +1198,8 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
       from: from,
       fromJson: fromJson,
       folder: folder,
+      rebuildOnFileModification: rebuildOnFileModification,
+      elementsInSubFolders: elementsInSubFolders,
     );
   }
 
@@ -1143,7 +1207,9 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
   bool operator ==(Object other) {
     return other is SavedFilesProvider &&
         other.fromJson == fromJson &&
-        other.folder == folder;
+        other.folder == folder &&
+        other.rebuildOnFileModification == rebuildOnFileModification &&
+        other.elementsInSubFolders == elementsInSubFolders;
   }
 
   @override
@@ -1151,6 +1217,8 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, fromJson.hashCode);
     hash = _SystemHash.combine(hash, folder.hashCode);
+    hash = _SystemHash.combine(hash, rebuildOnFileModification.hashCode);
+    hash = _SystemHash.combine(hash, elementsInSubFolders.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -1162,6 +1230,12 @@ mixin SavedFilesRef on FutureProviderRef<List<dynamic>> {
 
   /// The parameter `folder` of this provider.
   String get folder;
+
+  /// The parameter `rebuildOnFileModification` of this provider.
+  bool get rebuildOnFileModification;
+
+  /// The parameter `elementsInSubFolders` of this provider.
+  bool get elementsInSubFolders;
 }
 
 class _SavedFilesProviderElement extends FutureProviderElement<List<dynamic>>
@@ -1173,10 +1247,254 @@ class _SavedFilesProviderElement extends FutureProviderElement<List<dynamic>>
       (origin as SavedFilesProvider).fromJson;
   @override
   String get folder => (origin as SavedFilesProvider).folder;
+  @override
+  bool get rebuildOnFileModification =>
+      (origin as SavedFilesProvider).rebuildOnFileModification;
+  @override
+  bool get elementsInSubFolders =>
+      (origin as SavedFilesProvider).elementsInSubFolders;
+}
+
+String _$savedFilesInSubDirectoriesHash() =>
+    r'14160093fe72b8a4c90f450f01154789f8743b73';
+
+/// A provider for reading and holding all the saved objects of
+/// the given type in the in the user file directory.
+///
+/// Copied from [savedFilesInSubDirectories].
+@ProviderFor(savedFilesInSubDirectories)
+const savedFilesInSubDirectoriesProvider = SavedFilesInSubDirectoriesFamily();
+
+/// A provider for reading and holding all the saved objects of
+/// the given type in the in the user file directory.
+///
+/// Copied from [savedFilesInSubDirectories].
+class SavedFilesInSubDirectoriesFamily extends Family {
+  /// A provider for reading and holding all the saved objects of
+  /// the given type in the in the user file directory.
+  ///
+  /// Copied from [savedFilesInSubDirectories].
+  const SavedFilesInSubDirectoriesFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'savedFilesInSubDirectoriesProvider';
+
+  /// A provider for reading and holding all the saved objects of
+  /// the given type in the in the user file directory.
+  ///
+  /// Copied from [savedFilesInSubDirectories].
+  SavedFilesInSubDirectoriesProvider call({
+    required dynamic Function(Map<String, dynamic> json) fromJson,
+    required String folder,
+    bool rebuildOnFileModification = true,
+  }) {
+    return SavedFilesInSubDirectoriesProvider(
+      fromJson: fromJson,
+      folder: folder,
+      rebuildOnFileModification: rebuildOnFileModification,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  SavedFilesInSubDirectoriesProvider getProviderOverride(
+    covariant SavedFilesInSubDirectoriesProvider provider,
+  ) {
+    return call(
+      fromJson: provider.fromJson,
+      folder: provider.folder,
+      rebuildOnFileModification: provider.rebuildOnFileModification,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<List<dynamic>> Function(SavedFilesInSubDirectoriesRef ref)
+          create) {
+    return _$SavedFilesInSubDirectoriesFamilyOverride(this, create);
+  }
+}
+
+class _$SavedFilesInSubDirectoriesFamilyOverride implements FamilyOverride {
+  _$SavedFilesInSubDirectoriesFamilyOverride(
+      this.overriddenFamily, this.create);
+
+  final FutureOr<List<dynamic>> Function(SavedFilesInSubDirectoriesRef ref)
+      create;
+
+  @override
+  final SavedFilesInSubDirectoriesFamily overriddenFamily;
+
+  @override
+  SavedFilesInSubDirectoriesProvider getProviderOverride(
+    covariant SavedFilesInSubDirectoriesProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for reading and holding all the saved objects of
+/// the given type in the in the user file directory.
+///
+/// Copied from [savedFilesInSubDirectories].
+class SavedFilesInSubDirectoriesProvider extends FutureProvider<List<dynamic>> {
+  /// A provider for reading and holding all the saved objects of
+  /// the given type in the in the user file directory.
+  ///
+  /// Copied from [savedFilesInSubDirectories].
+  SavedFilesInSubDirectoriesProvider({
+    required dynamic Function(Map<String, dynamic> json) fromJson,
+    required String folder,
+    bool rebuildOnFileModification = true,
+  }) : this._internal(
+          (ref) => savedFilesInSubDirectories(
+            ref as SavedFilesInSubDirectoriesRef,
+            fromJson: fromJson,
+            folder: folder,
+            rebuildOnFileModification: rebuildOnFileModification,
+          ),
+          from: savedFilesInSubDirectoriesProvider,
+          name: r'savedFilesInSubDirectoriesProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$savedFilesInSubDirectoriesHash,
+          dependencies: SavedFilesInSubDirectoriesFamily._dependencies,
+          allTransitiveDependencies:
+              SavedFilesInSubDirectoriesFamily._allTransitiveDependencies,
+          fromJson: fromJson,
+          folder: folder,
+          rebuildOnFileModification: rebuildOnFileModification,
+        );
+
+  SavedFilesInSubDirectoriesProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.fromJson,
+    required this.folder,
+    required this.rebuildOnFileModification,
+  }) : super.internal();
+
+  final dynamic Function(Map<String, dynamic> json) fromJson;
+  final String folder;
+  final bool rebuildOnFileModification;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<dynamic>> Function(SavedFilesInSubDirectoriesRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SavedFilesInSubDirectoriesProvider._internal(
+        (ref) => create(ref as SavedFilesInSubDirectoriesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        fromJson: fromJson,
+        folder: folder,
+        rebuildOnFileModification: rebuildOnFileModification,
+      ),
+    );
+  }
+
+  @override
+  ({
+    dynamic Function(Map<String, dynamic> json) fromJson,
+    String folder,
+    bool rebuildOnFileModification,
+  }) get argument {
+    return (
+      fromJson: fromJson,
+      folder: folder,
+      rebuildOnFileModification: rebuildOnFileModification,
+    );
+  }
+
+  @override
+  FutureProviderElement<List<dynamic>> createElement() {
+    return _SavedFilesInSubDirectoriesProviderElement(this);
+  }
+
+  SavedFilesInSubDirectoriesProvider _copyWith(
+    FutureOr<List<dynamic>> Function(SavedFilesInSubDirectoriesRef ref) create,
+  ) {
+    return SavedFilesInSubDirectoriesProvider._internal(
+      (ref) => create(ref as SavedFilesInSubDirectoriesRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      fromJson: fromJson,
+      folder: folder,
+      rebuildOnFileModification: rebuildOnFileModification,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SavedFilesInSubDirectoriesProvider &&
+        other.fromJson == fromJson &&
+        other.folder == folder &&
+        other.rebuildOnFileModification == rebuildOnFileModification;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, fromJson.hashCode);
+    hash = _SystemHash.combine(hash, folder.hashCode);
+    hash = _SystemHash.combine(hash, rebuildOnFileModification.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin SavedFilesInSubDirectoriesRef on FutureProviderRef<List<dynamic>> {
+  /// The parameter `fromJson` of this provider.
+  dynamic Function(Map<String, dynamic> json) get fromJson;
+
+  /// The parameter `folder` of this provider.
+  String get folder;
+
+  /// The parameter `rebuildOnFileModification` of this provider.
+  bool get rebuildOnFileModification;
+}
+
+class _SavedFilesInSubDirectoriesProviderElement
+    extends FutureProviderElement<List<dynamic>>
+    with SavedFilesInSubDirectoriesRef {
+  _SavedFilesInSubDirectoriesProviderElement(super.provider);
+
+  @override
+  dynamic Function(Map<String, dynamic> json) get fromJson =>
+      (origin as SavedFilesInSubDirectoriesProvider).fromJson;
+  @override
+  String get folder => (origin as SavedFilesInSubDirectoriesProvider).folder;
+  @override
+  bool get rebuildOnFileModification =>
+      (origin as SavedFilesInSubDirectoriesProvider).rebuildOnFileModification;
 }
 
 String _$deleteJsonFromFileDirectoryHash() =>
-    r'546b298f9d5a0d5b63918fa3cfeacd797a46a922';
+    r'232132d19d72be35fafdf8448f51a80d80cdac8d';
 
 /// A provider for deleting the [fileName] in [folder] if it exists.
 ///
@@ -1386,8 +1704,223 @@ class _DeleteJsonFromFileDirectoryProviderElement
   String get folder => (origin as DeleteJsonFromFileDirectoryProvider).folder;
 }
 
+String _$deleteDirectoryFromFileDirectoryHash() =>
+    r'1d899567355ef22cd0559c86a0497fe8fba8448f';
+
+/// A provider for deleting the [directoryName] in [folder] if it exists.
+///
+/// Copied from [deleteDirectoryFromFileDirectory].
+@ProviderFor(deleteDirectoryFromFileDirectory)
+const deleteDirectoryFromFileDirectoryProvider =
+    DeleteDirectoryFromFileDirectoryFamily();
+
+/// A provider for deleting the [directoryName] in [folder] if it exists.
+///
+/// Copied from [deleteDirectoryFromFileDirectory].
+class DeleteDirectoryFromFileDirectoryFamily extends Family {
+  /// A provider for deleting the [directoryName] in [folder] if it exists.
+  ///
+  /// Copied from [deleteDirectoryFromFileDirectory].
+  const DeleteDirectoryFromFileDirectoryFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteDirectoryFromFileDirectoryProvider';
+
+  /// A provider for deleting the [directoryName] in [folder] if it exists.
+  ///
+  /// Copied from [deleteDirectoryFromFileDirectory].
+  DeleteDirectoryFromFileDirectoryProvider call({
+    required String directoryName,
+    required String folder,
+  }) {
+    return DeleteDirectoryFromFileDirectoryProvider(
+      directoryName: directoryName,
+      folder: folder,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  DeleteDirectoryFromFileDirectoryProvider getProviderOverride(
+    covariant DeleteDirectoryFromFileDirectoryProvider provider,
+  ) {
+    return call(
+      directoryName: provider.directoryName,
+      folder: provider.folder,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(DeleteDirectoryFromFileDirectoryRef ref) create) {
+    return _$DeleteDirectoryFromFileDirectoryFamilyOverride(this, create);
+  }
+}
+
+class _$DeleteDirectoryFromFileDirectoryFamilyOverride
+    implements FamilyOverride {
+  _$DeleteDirectoryFromFileDirectoryFamilyOverride(
+      this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(DeleteDirectoryFromFileDirectoryRef ref) create;
+
+  @override
+  final DeleteDirectoryFromFileDirectoryFamily overriddenFamily;
+
+  @override
+  DeleteDirectoryFromFileDirectoryProvider getProviderOverride(
+    covariant DeleteDirectoryFromFileDirectoryProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for deleting the [directoryName] in [folder] if it exists.
+///
+/// Copied from [deleteDirectoryFromFileDirectory].
+class DeleteDirectoryFromFileDirectoryProvider
+    extends AutoDisposeFutureProvider<void> {
+  /// A provider for deleting the [directoryName] in [folder] if it exists.
+  ///
+  /// Copied from [deleteDirectoryFromFileDirectory].
+  DeleteDirectoryFromFileDirectoryProvider({
+    required String directoryName,
+    required String folder,
+  }) : this._internal(
+          (ref) => deleteDirectoryFromFileDirectory(
+            ref as DeleteDirectoryFromFileDirectoryRef,
+            directoryName: directoryName,
+            folder: folder,
+          ),
+          from: deleteDirectoryFromFileDirectoryProvider,
+          name: r'deleteDirectoryFromFileDirectoryProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$deleteDirectoryFromFileDirectoryHash,
+          dependencies: DeleteDirectoryFromFileDirectoryFamily._dependencies,
+          allTransitiveDependencies:
+              DeleteDirectoryFromFileDirectoryFamily._allTransitiveDependencies,
+          directoryName: directoryName,
+          folder: folder,
+        );
+
+  DeleteDirectoryFromFileDirectoryProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.directoryName,
+    required this.folder,
+  }) : super.internal();
+
+  final String directoryName;
+  final String folder;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(DeleteDirectoryFromFileDirectoryRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DeleteDirectoryFromFileDirectoryProvider._internal(
+        (ref) => create(ref as DeleteDirectoryFromFileDirectoryRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        directoryName: directoryName,
+        folder: folder,
+      ),
+    );
+  }
+
+  @override
+  ({
+    String directoryName,
+    String folder,
+  }) get argument {
+    return (
+      directoryName: directoryName,
+      folder: folder,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _DeleteDirectoryFromFileDirectoryProviderElement(this);
+  }
+
+  DeleteDirectoryFromFileDirectoryProvider _copyWith(
+    FutureOr<void> Function(DeleteDirectoryFromFileDirectoryRef ref) create,
+  ) {
+    return DeleteDirectoryFromFileDirectoryProvider._internal(
+      (ref) => create(ref as DeleteDirectoryFromFileDirectoryRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      directoryName: directoryName,
+      folder: folder,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeleteDirectoryFromFileDirectoryProvider &&
+        other.directoryName == directoryName &&
+        other.folder == folder;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, directoryName.hashCode);
+    hash = _SystemHash.combine(hash, folder.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin DeleteDirectoryFromFileDirectoryRef
+    on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `directoryName` of this provider.
+  String get directoryName;
+
+  /// The parameter `folder` of this provider.
+  String get folder;
+}
+
+class _DeleteDirectoryFromFileDirectoryProviderElement
+    extends AutoDisposeFutureProviderElement<void>
+    with DeleteDirectoryFromFileDirectoryRef {
+  _DeleteDirectoryFromFileDirectoryProviderElement(super.provider);
+
+  @override
+  String get directoryName =>
+      (origin as DeleteDirectoryFromFileDirectoryProvider).directoryName;
+  @override
+  String get folder =>
+      (origin as DeleteDirectoryFromFileDirectoryProvider).folder;
+}
+
 String _$exportWholeFileDirectoryHash() =>
-    r'ca1c16db3da10d6c0c425ff869956d56a9495213';
+    r'a2b987f5d594154c8f308b95ad8f3c78f5f2af3f';
 
 /// A provider for exporting the whole file directory to a ZIP file.
 ///
@@ -1405,7 +1938,7 @@ final exportWholeFileDirectoryProvider =
 );
 
 typedef ExportWholeFileDirectoryRef = AutoDisposeFutureProviderRef<void>;
-String _$exportAllHash() => r'f16b3702330a37f98cbe906530afc7d75af85af5';
+String _$exportAllHash() => r'8be8c125bd85c4728942cd2feb4b43ad3f2fc3b8';
 
 /// A provider for exporting all files in a [directory].
 ///

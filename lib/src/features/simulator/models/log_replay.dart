@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 
@@ -30,8 +31,8 @@ class LogReplay {
   /// [loop] is whehter the log should restart when reaching the end.
   factory LogReplay({required String log, bool loop = false}) {
     DateTime? firstRecordTime;
-    final records = log
-        .split('\n')
+    final records = const LineSplitter()
+        .convert(log)
         .where((element) => element.isNotEmpty && element.contains(':'))
         .mapIndexed((index, raw) {
       final record = LogReplayRecord(

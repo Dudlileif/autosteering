@@ -8,7 +8,8 @@ part of 'imu_reading.dart';
 
 _$ImuReadingImpl _$$ImuReadingImplFromJson(Map<String, dynamic> json) =>
     _$ImuReadingImpl(
-      receiveTime: DateTime.parse(json['receiveTime'] as String),
+      receiveTime:
+          const DateTimeSerializer().fromJson(json['receiveTime'] as String),
       yaw: json['yaw'] as num? ?? 0,
       pitch: json['pitch'] as num? ?? 0,
       roll: json['roll'] as num? ?? 0,
@@ -19,7 +20,7 @@ _$ImuReadingImpl _$$ImuReadingImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$ImuReadingImplToJson(_$ImuReadingImpl instance) =>
     <String, dynamic>{
-      'receiveTime': instance.receiveTime.toIso8601String(),
+      'receiveTime': const DateTimeSerializer().toJson(instance.receiveTime),
       'yaw': instance.yaw,
       'pitch': instance.pitch,
       'roll': instance.roll,

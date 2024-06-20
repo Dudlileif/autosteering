@@ -62,7 +62,7 @@ FutureOr<void> saveEquipmentSetup(
       saveJsonToFileDirectoryProvider(
         object: setup,
         fileName: overrideName ?? setup.name,
-        folder: 'equipment/setups',
+        folder: ['equipment', 'setups'].join(Platform.pathSeparator),
         downloadIfWeb: downloadIfWeb,
       ).future,
     );
@@ -81,7 +81,7 @@ FutureOr<void> exportEquipmentSetup(
       exportJsonToFileDirectoryProvider(
         object: setup,
         fileName: overrideName ?? setup.name,
-        folder: 'equipment/setups',
+        folder: ['equipment', 'setups'].join(Platform.pathSeparator),
         downloadIfWeb: downloadIfWeb,
       ).future,
     );
@@ -96,7 +96,7 @@ FutureOr<List<EquipmentSetup>> savedEquipmentSetups(
         .watch(
       savedFilesProvider(
         fromJson: EquipmentSetup.fromJson,
-        folder: 'equipment/setups',
+        folder: ['equipment', 'setups'].join(Platform.pathSeparator),
       ).future,
     )
         .then((data) {
@@ -118,7 +118,7 @@ FutureOr<void> deleteEquipmentSetup(
     await ref.watch(
       deleteJsonFromFileDirectoryProvider(
         fileName: overrideName ?? setup.name,
-        folder: 'equipment/setups',
+        folder: ['equipment', 'setups'].join(Platform.pathSeparator),
       ).future,
     );
 

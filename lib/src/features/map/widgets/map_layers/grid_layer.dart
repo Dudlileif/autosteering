@@ -18,7 +18,6 @@
 import 'dart:math';
 
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -34,9 +33,10 @@ class GridLayer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final camera = MapCamera.of(context);
-    final origo = ref.watch(
-          activeFieldProvider.select((value) => value?.boundingBox?.min),
-        ) ??
+    final origo =
+        // ref.watch(
+        //       activeFieldProvider.select((value) => value?.boundingBox?.min),
+        //     ) ??
         ref.watch(homePositionProvider).gbPosition;
 
     final vertical = Grid.verticalLines(origo, camera);

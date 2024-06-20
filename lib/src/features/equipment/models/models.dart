@@ -16,5 +16,6 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 export 'equipment.dart';
+export 'equipment_log_record.dart';
 export 'equipment_setup.dart';
 export 'section.dart';

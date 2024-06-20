@@ -75,7 +75,7 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
       microsecond: 0,
     );
 
-    final logsDir = Directory([dirPath, 'logs'].join('/'));
+    final logsDir = Directory([dirPath, 'logs'].join(Platform.pathSeparator));
     if (logsDir.existsSync()) {
       final files = logsDir
           .listSync()
@@ -112,7 +112,9 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
 
     for (final hardware in ['combined', 'imu', 'gnss', 'was']) {
       final hardwareLogsDir =
-          Directory([dirPath, 'logs', 'hardware', hardware].join('/'));
+          Directory(
+        [dirPath, 'logs', 'hardware', hardware].join(Platform.pathSeparator),
+      );
       if (hardwareLogsDir.existsSync()) {
         final files = hardwareLogsDir
             .listSync()
@@ -152,7 +154,7 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
       dirPath,
       'logs',
       '${Logger.instance.initializeTime.toIso8601String()}.log',
-    ].join('/');
+    ].join(Platform.pathSeparator);
 
     final file = await File(path).create(recursive: true);
 

@@ -406,12 +406,19 @@ class MessageDecoder {
               if (_logIMU && logDirectoryPath != null) {
                 _imuLogStartTime ??= DateTime.now();
                 final file = File(
-                  '$logDirectoryPath/imu/${_imuLogStartTime!.toIso8601String()}.log',
+                  [
+                    logDirectoryPath,
+                    'imu',
+                    '${_imuLogStartTime!.toIso8601String()}.log',
+                  ].join(Platform.pathSeparator),
                 );
                 if (!file.existsSync()) {
                   file.createSync(recursive: true);
                 }
-                file.writeAsStringSync('$reading\n', mode: FileMode.append);
+                file.writeAsStringSync(
+                  [reading, Platform.lineTerminator,].join(),
+                  mode: FileMode.append,
+                );
               }
             }
           }
@@ -436,12 +443,22 @@ class MessageDecoder {
               if (_logWAS && logDirectoryPath != null) {
                 _wasLogStartTime ??= DateTime.now();
                 final file = File(
-                  '$logDirectoryPath/was/${_wasLogStartTime!.toIso8601String()}.log',
+                  [
+                    logDirectoryPath,
+                    'was',
+                    '${_wasLogStartTime!.toIso8601String()}.log',
+                  ].join(Platform.pathSeparator),
                 );
                 if (!file.existsSync()) {
                   file.createSync(recursive: true);
                 }
-                file.writeAsStringSync('$reading\n', mode: FileMode.append);
+                file.writeAsStringSync(
+                  [
+                    reading,
+                    Platform.lineTerminator,
+                  ].join(),
+                  mode: FileMode.append,
+                );
               }
             }
           }
@@ -587,13 +604,20 @@ class MessageDecoder {
         if (_logGNSS && logDirectoryPath != null) {
           _gnssLogStartTime ??= DateTime.now();
           final file = File(
-            '$logDirectoryPath/gnss/${_gnssLogStartTime!.toIso8601String()}.log',
+            [
+              logDirectoryPath,
+              'gnss',
+              '${_gnssLogStartTime!.toIso8601String()}.log',
+            ].join(Platform.pathSeparator),
           );
           if (!file.existsSync()) {
             file.createSync(recursive: true);
           }
           file.writeAsStringSync(
-            '${DateTime.now().toIso8601String()}: ${nmea?.raw}\n',
+            [
+              '${DateTime.now().toIso8601String()}: ${nmea?.raw}',
+              Platform.lineTerminator,
+            ].join(),
             mode: FileMode.append,
           );
         }
@@ -611,13 +635,20 @@ class MessageDecoder {
       if (_logCombined && logDirectoryPath != null) {
         _combinedLogStartTime ??= DateTime.now();
         final file = File(
-          '$logDirectoryPath/combined/${_combinedLogStartTime!.toIso8601String()}.log',
+          [
+            logDirectoryPath,
+            'combined',
+            '${_combinedLogStartTime!.toIso8601String()}.log',
+          ].join(Platform.pathSeparator),
         );
         if (!file.existsSync()) {
           file.createSync(recursive: true);
         }
         file.writeAsStringSync(
-          '${DateTime.now().toIso8601String()}: $str\n',
+          [
+            '${DateTime.now().toIso8601String()}: $str',
+            Platform.lineTerminator,
+          ].join(),
           mode: FileMode.append,
         );
       }

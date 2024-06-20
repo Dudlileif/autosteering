@@ -463,7 +463,7 @@ class MapZoom extends _$MapZoom {
 /// at the given [path].
 @riverpod
 FutureOr<DateTime?> mapCacheDate(MapCacheDateRef ref, String path) async {
-  final file = File([path, 'created'].join('/'));
+  final file = File([path, 'created'].join(Platform.pathSeparator));
 
   if (file.existsSync()) {
     return DateTime.tryParse(await file.readAsString());
@@ -478,7 +478,7 @@ FutureOr<List<String>> mapCacheDirectories(MapCacheDirectoriesRef ref) async =>
       [
         ref.watch(fileDirectoryProvider).requireValue.path,
         'map_image_cache',
-      ].join('/'),
+      ].join(Platform.pathSeparator),
     ).findSubfoldersWithTargetFile();
 
 /// Whether the map should be allowed to download tiles over the internet.

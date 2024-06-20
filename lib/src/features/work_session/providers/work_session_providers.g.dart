@@ -212,7 +212,7 @@ class _LoadWorkSessionFromFileProviderElement
   String get path => (origin as LoadWorkSessionFromFileProvider).path;
 }
 
-String _$saveWorkSessionHash() => r'82178e6440b264bc6fe4d110847a5ecef0baecf0';
+String _$saveWorkSessionHash() => r'947bad0366aa976655c9794c66c35133d03d35a8';
 
 /// A provider for saving [workSession] to a file in the user file directory.
 ///
@@ -450,7 +450,270 @@ class _SaveWorkSessionProviderElement
   bool get downloadIfWeb => (origin as SaveWorkSessionProvider).downloadIfWeb;
 }
 
-String _$exportWorkSessionHash() => r'0c2beb6a966f97b31c71a3d6acf411d084106e74';
+String _$saveWorkSessionEquipmentLogsHash() =>
+    r'caf29764addc500b0719b8bd9a600aea09165b93';
+
+/// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
+/// their respective files.
+///
+/// Set the [overwrite] parameter to false to preserve already existing files.
+/// [singleUuid] can be used to specify a single equipment's logs that should
+/// be saved.
+///
+/// Copied from [saveWorkSessionEquipmentLogs].
+@ProviderFor(saveWorkSessionEquipmentLogs)
+const saveWorkSessionEquipmentLogsProvider =
+    SaveWorkSessionEquipmentLogsFamily();
+
+/// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
+/// their respective files.
+///
+/// Set the [overwrite] parameter to false to preserve already existing files.
+/// [singleUuid] can be used to specify a single equipment's logs that should
+/// be saved.
+///
+/// Copied from [saveWorkSessionEquipmentLogs].
+class SaveWorkSessionEquipmentLogsFamily extends Family {
+  /// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
+  /// their respective files.
+  ///
+  /// Set the [overwrite] parameter to false to preserve already existing files.
+  /// [singleUuid] can be used to specify a single equipment's logs that should
+  /// be saved.
+  ///
+  /// Copied from [saveWorkSessionEquipmentLogs].
+  const SaveWorkSessionEquipmentLogsFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveWorkSessionEquipmentLogsProvider';
+
+  /// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
+  /// their respective files.
+  ///
+  /// Set the [overwrite] parameter to false to preserve already existing files.
+  /// [singleUuid] can be used to specify a single equipment's logs that should
+  /// be saved.
+  ///
+  /// Copied from [saveWorkSessionEquipmentLogs].
+  SaveWorkSessionEquipmentLogsProvider call(
+    WorkSession workSession, {
+    bool overwrite = true,
+    String? singleUuid,
+  }) {
+    return SaveWorkSessionEquipmentLogsProvider(
+      workSession,
+      overwrite: overwrite,
+      singleUuid: singleUuid,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  SaveWorkSessionEquipmentLogsProvider getProviderOverride(
+    covariant SaveWorkSessionEquipmentLogsProvider provider,
+  ) {
+    return call(
+      provider.workSession,
+      overwrite: provider.overwrite,
+      singleUuid: provider.singleUuid,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(SaveWorkSessionEquipmentLogsRef ref) create) {
+    return _$SaveWorkSessionEquipmentLogsFamilyOverride(this, create);
+  }
+}
+
+class _$SaveWorkSessionEquipmentLogsFamilyOverride implements FamilyOverride {
+  _$SaveWorkSessionEquipmentLogsFamilyOverride(
+      this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(SaveWorkSessionEquipmentLogsRef ref) create;
+
+  @override
+  final SaveWorkSessionEquipmentLogsFamily overriddenFamily;
+
+  @override
+  SaveWorkSessionEquipmentLogsProvider getProviderOverride(
+    covariant SaveWorkSessionEquipmentLogsProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
+/// their respective files.
+///
+/// Set the [overwrite] parameter to false to preserve already existing files.
+/// [singleUuid] can be used to specify a single equipment's logs that should
+/// be saved.
+///
+/// Copied from [saveWorkSessionEquipmentLogs].
+class SaveWorkSessionEquipmentLogsProvider
+    extends AutoDisposeFutureProvider<void> {
+  /// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
+  /// their respective files.
+  ///
+  /// Set the [overwrite] parameter to false to preserve already existing files.
+  /// [singleUuid] can be used to specify a single equipment's logs that should
+  /// be saved.
+  ///
+  /// Copied from [saveWorkSessionEquipmentLogs].
+  SaveWorkSessionEquipmentLogsProvider(
+    WorkSession workSession, {
+    bool overwrite = true,
+    String? singleUuid,
+  }) : this._internal(
+          (ref) => saveWorkSessionEquipmentLogs(
+            ref as SaveWorkSessionEquipmentLogsRef,
+            workSession,
+            overwrite: overwrite,
+            singleUuid: singleUuid,
+          ),
+          from: saveWorkSessionEquipmentLogsProvider,
+          name: r'saveWorkSessionEquipmentLogsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$saveWorkSessionEquipmentLogsHash,
+          dependencies: SaveWorkSessionEquipmentLogsFamily._dependencies,
+          allTransitiveDependencies:
+              SaveWorkSessionEquipmentLogsFamily._allTransitiveDependencies,
+          workSession: workSession,
+          overwrite: overwrite,
+          singleUuid: singleUuid,
+        );
+
+  SaveWorkSessionEquipmentLogsProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.workSession,
+    required this.overwrite,
+    required this.singleUuid,
+  }) : super.internal();
+
+  final WorkSession workSession;
+  final bool overwrite;
+  final String? singleUuid;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(SaveWorkSessionEquipmentLogsRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SaveWorkSessionEquipmentLogsProvider._internal(
+        (ref) => create(ref as SaveWorkSessionEquipmentLogsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        workSession: workSession,
+        overwrite: overwrite,
+        singleUuid: singleUuid,
+      ),
+    );
+  }
+
+  @override
+  (
+    WorkSession, {
+    bool overwrite,
+    String? singleUuid,
+  }) get argument {
+    return (
+      workSession,
+      overwrite: overwrite,
+      singleUuid: singleUuid,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _SaveWorkSessionEquipmentLogsProviderElement(this);
+  }
+
+  SaveWorkSessionEquipmentLogsProvider _copyWith(
+    FutureOr<void> Function(SaveWorkSessionEquipmentLogsRef ref) create,
+  ) {
+    return SaveWorkSessionEquipmentLogsProvider._internal(
+      (ref) => create(ref as SaveWorkSessionEquipmentLogsRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      workSession: workSession,
+      overwrite: overwrite,
+      singleUuid: singleUuid,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SaveWorkSessionEquipmentLogsProvider &&
+        other.workSession == workSession &&
+        other.overwrite == overwrite &&
+        other.singleUuid == singleUuid;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, workSession.hashCode);
+    hash = _SystemHash.combine(hash, overwrite.hashCode);
+    hash = _SystemHash.combine(hash, singleUuid.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin SaveWorkSessionEquipmentLogsRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `workSession` of this provider.
+  WorkSession get workSession;
+
+  /// The parameter `overwrite` of this provider.
+  bool get overwrite;
+
+  /// The parameter `singleUuid` of this provider.
+  String? get singleUuid;
+}
+
+class _SaveWorkSessionEquipmentLogsProviderElement
+    extends AutoDisposeFutureProviderElement<void>
+    with SaveWorkSessionEquipmentLogsRef {
+  _SaveWorkSessionEquipmentLogsProviderElement(super.provider);
+
+  @override
+  WorkSession get workSession =>
+      (origin as SaveWorkSessionEquipmentLogsProvider).workSession;
+  @override
+  bool get overwrite =>
+      (origin as SaveWorkSessionEquipmentLogsProvider).overwrite;
+  @override
+  String? get singleUuid =>
+      (origin as SaveWorkSessionEquipmentLogsProvider).singleUuid;
+}
+
+String _$exportWorkSessionHash() => r'fb3ff5314e651b2cc9a65a6c6ec3c4dcb55e246d';
 
 /// A provider for exporting [workSession] to a file.
 ///
@@ -496,11 +759,13 @@ class ExportWorkSessionFamily extends Family {
     WorkSession workSession, {
     String? overrideName,
     bool downloadIfWeb = false,
+    bool withEquipmentLogs = true,
   }) {
     return ExportWorkSessionProvider(
       workSession,
       overrideName: overrideName,
       downloadIfWeb: downloadIfWeb,
+      withEquipmentLogs: withEquipmentLogs,
     );
   }
 
@@ -513,6 +778,7 @@ class ExportWorkSessionFamily extends Family {
       provider.workSession,
       overrideName: provider.overrideName,
       downloadIfWeb: provider.downloadIfWeb,
+      withEquipmentLogs: provider.withEquipmentLogs,
     );
   }
 
@@ -554,12 +820,14 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
     WorkSession workSession, {
     String? overrideName,
     bool downloadIfWeb = false,
+    bool withEquipmentLogs = true,
   }) : this._internal(
           (ref) => exportWorkSession(
             ref as ExportWorkSessionRef,
             workSession,
             overrideName: overrideName,
             downloadIfWeb: downloadIfWeb,
+            withEquipmentLogs: withEquipmentLogs,
           ),
           from: exportWorkSessionProvider,
           name: r'exportWorkSessionProvider',
@@ -573,6 +841,7 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
           workSession: workSession,
           overrideName: overrideName,
           downloadIfWeb: downloadIfWeb,
+          withEquipmentLogs: withEquipmentLogs,
         );
 
   ExportWorkSessionProvider._internal(
@@ -585,11 +854,13 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
     required this.workSession,
     required this.overrideName,
     required this.downloadIfWeb,
+    required this.withEquipmentLogs,
   }) : super.internal();
 
   final WorkSession workSession;
   final String? overrideName;
   final bool downloadIfWeb;
+  final bool withEquipmentLogs;
 
   @override
   Override overrideWith(
@@ -607,6 +878,7 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
         workSession: workSession,
         overrideName: overrideName,
         downloadIfWeb: downloadIfWeb,
+        withEquipmentLogs: withEquipmentLogs,
       ),
     );
   }
@@ -616,11 +888,13 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
     WorkSession, {
     String? overrideName,
     bool downloadIfWeb,
+    bool withEquipmentLogs,
   }) get argument {
     return (
       workSession,
       overrideName: overrideName,
       downloadIfWeb: downloadIfWeb,
+      withEquipmentLogs: withEquipmentLogs,
     );
   }
 
@@ -642,6 +916,7 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
       workSession: workSession,
       overrideName: overrideName,
       downloadIfWeb: downloadIfWeb,
+      withEquipmentLogs: withEquipmentLogs,
     );
   }
 
@@ -650,7 +925,8 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
     return other is ExportWorkSessionProvider &&
         other.workSession == workSession &&
         other.overrideName == overrideName &&
-        other.downloadIfWeb == downloadIfWeb;
+        other.downloadIfWeb == downloadIfWeb &&
+        other.withEquipmentLogs == withEquipmentLogs;
   }
 
   @override
@@ -659,6 +935,7 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
     hash = _SystemHash.combine(hash, workSession.hashCode);
     hash = _SystemHash.combine(hash, overrideName.hashCode);
     hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
+    hash = _SystemHash.combine(hash, withEquipmentLogs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -673,6 +950,9 @@ mixin ExportWorkSessionRef on AutoDisposeFutureProviderRef<void> {
 
   /// The parameter `downloadIfWeb` of this provider.
   bool get downloadIfWeb;
+
+  /// The parameter `withEquipmentLogs` of this provider.
+  bool get withEquipmentLogs;
 }
 
 class _ExportWorkSessionProviderElement
@@ -687,9 +967,12 @@ class _ExportWorkSessionProviderElement
       (origin as ExportWorkSessionProvider).overrideName;
   @override
   bool get downloadIfWeb => (origin as ExportWorkSessionProvider).downloadIfWeb;
+  @override
+  bool get withEquipmentLogs =>
+      (origin as ExportWorkSessionProvider).withEquipmentLogs;
 }
 
-String _$savedWorkSessionsHash() => r'd2ab4bc851392f153d3a832b6c44059198f41e4e';
+String _$savedWorkSessionsHash() => r'0a7005b98eef7ecfe11a8031ce10833223609459';
 
 /// A provider for reading and holding all the saved [WorkSession]s in the
 /// user file directory.
@@ -707,11 +990,11 @@ final savedWorkSessionsProvider = FutureProvider<List<WorkSession>>.internal(
 );
 
 typedef SavedWorkSessionsRef = FutureProviderRef<List<WorkSession>>;
-String _$deleteWorkSessionHash() => r'6a484bceb01997d0795100cf22353a6e11b657f2';
+String _$deleteWorkSessionHash() => r'65cc4a7123ad600558056f806c8731a44240f0fb';
 
 /// A provider for deleting [workSession] from the user file system.
 ///
-/// Override the file name with [overrideName].
+/// Override the directory name with [overrideName].
 ///
 /// Copied from [deleteWorkSession].
 @ProviderFor(deleteWorkSession)
@@ -719,13 +1002,13 @@ const deleteWorkSessionProvider = DeleteWorkSessionFamily();
 
 /// A provider for deleting [workSession] from the user file system.
 ///
-/// Override the file name with [overrideName].
+/// Override the directory name with [overrideName].
 ///
 /// Copied from [deleteWorkSession].
 class DeleteWorkSessionFamily extends Family {
   /// A provider for deleting [workSession] from the user file system.
   ///
-  /// Override the file name with [overrideName].
+  /// Override the directory name with [overrideName].
   ///
   /// Copied from [deleteWorkSession].
   const DeleteWorkSessionFamily();
@@ -746,7 +1029,7 @@ class DeleteWorkSessionFamily extends Family {
 
   /// A provider for deleting [workSession] from the user file system.
   ///
-  /// Override the file name with [overrideName].
+  /// Override the directory name with [overrideName].
   ///
   /// Copied from [deleteWorkSession].
   DeleteWorkSessionProvider call(
@@ -795,13 +1078,13 @@ class _$DeleteWorkSessionFamilyOverride implements FamilyOverride {
 
 /// A provider for deleting [workSession] from the user file system.
 ///
-/// Override the file name with [overrideName].
+/// Override the directory name with [overrideName].
 ///
 /// Copied from [deleteWorkSession].
 class DeleteWorkSessionProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for deleting [workSession] from the user file system.
   ///
-  /// Override the file name with [overrideName].
+  /// Override the directory name with [overrideName].
   ///
   /// Copied from [deleteWorkSession].
   DeleteWorkSessionProvider(
@@ -927,7 +1210,7 @@ class _DeleteWorkSessionProviderElement
       (origin as DeleteWorkSessionProvider).overrideName;
 }
 
-String _$importWorkSessionHash() => r'0ed6ba27fe2538180d74960e61d7b88d643a3b92';
+String _$importWorkSessionHash() => r'ba6c4595c03b7f18e63873270b7487012bc1469c';
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
@@ -1131,7 +1414,7 @@ class _ExportWorkSessionsProviderElement
   bool get zip => (origin as ExportWorkSessionsProvider).zip;
 }
 
-String _$activeWorkSessionHash() => r'96a702a8b386aa5dd813e30959b6681373746630';
+String _$activeWorkSessionHash() => r'f16bb30c8990506861463f165a8b09cad4a8899f';
 
 /// A provider for holding the active [WorkSession].
 ///

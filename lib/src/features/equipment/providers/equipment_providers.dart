@@ -31,7 +31,6 @@ import 'package:universal_io/io.dart';
 
 part 'equipment_providers.g.dart';
 
-
 /// A provider for how the [SectionEdgePositions] should be recorded, as the
 /// fraction parameter that goes in [Equipment.sectionEdgePositions].
 @Riverpod(keepAlive: true)
@@ -161,14 +160,7 @@ class EquipmentPaths extends _$EquipmentPaths {
   double _coveredArea = 0;
 
   @override
-  List<Map<int, List<SectionEdgePositions>?>> build(String uuid) {
-    ref.listenSelf((previous, next) {
-      ref
-          .read(activeWorkSessionProvider.notifier)
-          .updateEquipmentPaths(uuid, next);
-    });
-    return [];
-  }
+  List<Map<int, List<SectionEdgePositions>?>> build(String uuid) => [];
 
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
@@ -209,6 +201,9 @@ class EquipmentPaths extends _$EquipmentPaths {
             )..removeWhere((key, value) => value == null);
             if (sectionLines.isNotEmpty) {
               state = state..add(sectionLines);
+              ref
+                  .read(equipmentLogRecordsProvider(uuid).notifier)
+                  .add(equipment.logRecord);
             }
             _prevSectionActivationStatus = equipment.sectionActivationStatus;
           }
@@ -236,6 +231,9 @@ class EquipmentPaths extends _$EquipmentPaths {
                       return null;
                     },
                   );
+                ref
+                    .read(equipmentLogRecordsProvider(uuid).notifier)
+                    .add(equipment.logRecord);
               }
             }
           }
@@ -292,6 +290,9 @@ class EquipmentPaths extends _$EquipmentPaths {
               return null;
             },
           );
+        ref
+            .read(equipmentLogRecordsProvider(uuid).notifier)
+            .add(equipment.logRecord);
       }
     }
   }
@@ -334,7 +335,9 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// Clears all the painted areas for the equipment.
   void clear() => Future(() {
         _coveredArea = 0;
-        ref.read(equipmentWorkedAreaProvider.notifier).updateValue(uuid, 0);
+        ref
+          ..read(equipmentWorkedAreaProvider.notifier).updateValue(uuid, 0)
+          ..invalidate(equipmentLogRecordsProvider(uuid));
         return state = [];
       });
 
@@ -367,8 +370,125 @@ class EquipmentPaths extends _$EquipmentPaths {
         ref
             .read(equipmentWorkedAreaProvider.notifier)
             .updateValue(uuid, _coveredArea);
-        return state = value;
+        return state = List.from(value);
       });
+
+  /// Add all the elements of [value] to [state].
+  void addAll(List<Map<int, List<SectionEdgePositions>?>> value) => Future(() {
+        for (final activation in value) {
+          activation.forEach((section, path) {
+            if (path != null && path.length >= 2) {
+              SectionEdgePositions? prevPos;
+              _coveredArea += path.fold(0, (previousValue, pos) {
+                var increment = 0.0;
+                if (prevPos != null) {
+                  increment = Polygon.from([
+                    [
+                      prevPos!.left,
+                      prevPos!.right,
+                      pos.right,
+                      pos.left,
+                    ]
+                  ]).area;
+                }
+                prevPos = pos;
+                return previousValue + increment;
+              });
+            }
+          });
+        }
+
+        ref
+            .read(equipmentWorkedAreaProvider.notifier)
+            .updateValue(uuid, _coveredArea);
+        return state = state..addAll(value);
+      });
+
+  /// Updates [state] by creating worked paths from the [records] with the
+  /// [equipment].
+  void updateFromLogRecords({
+    required List<EquipmentLogRecord> records,
+    required Equipment equipment,
+    Hitch? overrideHitch,
+    bool set = true,
+  }) {
+    final workedPaths = <Map<int, List<SectionEdgePositions>?>>[];
+
+    var prevStatus = <int>[];
+    for (final record in records) {
+      equipment.updateByLogRecord(record);
+      final positions = equipment.activeEdgePositions(
+        forceIndices: prevStatus
+            .where(
+              (section) => !record.activeSections.contains(section),
+            )
+            .toList(),
+        overrideHitch: overrideHitch,
+        overrideTime: record.time,
+      );
+
+      if (!const ListEquality<int>()
+              .equals(prevStatus, record.activeSections) ||
+          workedPaths.isEmpty) {
+        if (record.activeSections.length < prevStatus.length) {
+          /// Add deactivation points
+          workedPaths.lastOrNull?.updateAll((section, value) {
+            if (positions[section] != null) {
+              return value?..add(positions[section]!);
+            }
+            return null;
+          });
+        }
+
+        if (record.activeSections.isNotEmpty) {
+          /// New lines (activation points)
+          final sectionLines = equipment.sectionActivationStatus.map(
+            (section, active) => active && (prevStatus.contains(section))
+                ? MapEntry(
+                    section,
+                    [
+                      workedPaths.lastOrNull?[section]?.lastOrNull ??
+                          equipment.sectionEdgePositions(
+                            section,
+                            fraction: equipment.recordingPositionFraction,
+                            overrideHitch: overrideHitch,
+                            overrideTime: record.time,
+                          )!,
+                    ],
+                  )
+                : MapEntry(
+                    section,
+                    positions[section] != null ? [positions[section]!] : null,
+                  ),
+          )..removeWhere((key, value) => value == null);
+          if (sectionLines.isNotEmpty) {
+            workedPaths.add(sectionLines);
+          }
+        }
+      }
+
+      /// Continue lines with same active sections
+      else {
+        workedPaths.last.updateAll(
+          (section, value) {
+            if (positions[section] != null) {
+              return value?..add(positions[section]!);
+            }
+            return null;
+          },
+        );
+      }
+
+      prevStatus = record.activeSections;
+    }
+    if (set) {
+      this.set(workedPaths);
+    } else {
+      addAll(workedPaths);
+    }
+    equipment.deactivateAll();
+    _prevSectionActivationStatus = equipment.sectionActivationStatus;
+  }
 
   /// Always update as the state is complex and any change to it is usually
   /// different to the previous state.
@@ -376,6 +496,38 @@ class EquipmentPaths extends _$EquipmentPaths {
   bool updateShouldNotify(
     List<Map<int, List<SectionEdgePositions>?>> previous,
     List<Map<int, List<SectionEdgePositions>?>> next,
+  ) =>
+      true;
+}
+
+/// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
+/// given UUID.
+@Riverpod(keepAlive: true)
+class EquipmentLogRecords extends _$EquipmentLogRecords {
+  @override
+  List<EquipmentLogRecord>? build(String uuid) {
+    ref.onDispose(() {
+      ref.read(activeWorkSessionProvider.notifier).deleteLogRecordsFile(uuid);
+    });
+    return null;
+  }
+
+  /// Add [record] to [state].
+  void add(EquipmentLogRecord record) => Future(() {
+        if (state != null) {
+          state = state!..add(record);
+        } else {
+          state = [record];
+        }
+        ref
+            .read(activeWorkSessionProvider.notifier)
+            .addEquipmentLogRecord(uuid, record);
+      });
+
+  @override
+  bool updateShouldNotify(
+    List<EquipmentLogRecord>? previous,
+    List<EquipmentLogRecord>? next,
   ) =>
       true;
 }
@@ -525,7 +677,6 @@ FutureOr<Equipment?> importEquipment(
 
   return equipment;
 }
-
 
 /// A provider for exporting all equipment files.
 @riverpod

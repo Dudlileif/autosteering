@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
@@ -36,10 +37,11 @@ class WorkSession {
     this.note,
     this.start,
     this.end,
-    this.workedPaths,
+    Map<String, List<EquipmentLogRecord>>? equipmentLogs,
     String? uuid,
   })  : abTracking = abTracking ?? [],
         pathTracking = pathTracking ?? [],
+        equipmentLogs = equipmentLogs ?? {},
         uuid = uuid ?? const Uuid().v4();
 
   /// Creates a work session object from the [json] object.
@@ -84,30 +86,23 @@ class WorkSession {
     final end =
         time['end'] != null ? DateTime.tryParse(time['end'] as String) : null;
 
-    final workedPaths = json['worked_paths'] != null
-        ? Map<String, List<dynamic>>.from(
-            json['worked_paths'] as Map,
+    final equipmentLogs = json['equipment_logs'] != null
+        ? Map<String, dynamic>.from(
+            json['equipment_logs'] as Map,
           ).map(
-            (uuid, activations) => MapEntry(
+            (uuid, log) => MapEntry(
               uuid,
-              List<Map<String, dynamic>>.from(activations)
+              List<String>.from(log as List)
                   .map(
-                    (activation) =>
-                        Map<String, List<dynamic>?>.from(activation as Map).map(
-                      (section, path) => MapEntry(
-                        int.parse(section),
-                        path != null
-                            ? List<Map<String, dynamic>>.from(path)
-                                .map(SectionEdgePositions.fromJson)
-                                .toList()
-                            : null,
-                      ),
+                    (line) => EquipmentLogRecord.fromJson(
+                      Map<String, dynamic>.from(jsonDecode(line) as Map),
                     ),
                   )
                   .toList(),
             ),
           )
         : null;
+
 
     return WorkSession(
       field: field,
@@ -120,7 +115,7 @@ class WorkSession {
       uuid: uuid,
       start: start,
       end: end,
-      workedPaths: workedPaths,
+      equipmentLogs: equipmentLogs,
     );
   }
 
@@ -139,9 +134,6 @@ class WorkSession {
   /// The [PathTracking]s used in this work session.
   List<PathTracking> pathTracking = [];
 
-  /// The recorded path used in this work session.
-  List<WayPoint>? pathRecording;
-
   /// A name for the work session.
   String? name;
 
@@ -158,17 +150,37 @@ class WorkSession {
   /// The ending time of the working session.
   DateTime? end;
 
-  /// The work duration for the session. If the [end] time is not set, then
-  /// the duration is from [start] to [DateTime.now].
-  Duration? get workDuration =>
+  /// The duration for the session from [start] to [end]. If the [end] time is
+  /// not set, then the duration is from [start] to [DateTime.now].
+  Duration? get startToEndDuration =>
       start != null ? (end ?? DateTime.now()).difference(start!) : null;
 
-  /// A map with lists of the worked paths for the equipment used in the
-  /// session.
-  Map<String, List<Map<int, List<SectionEdgePositions>?>>>? workedPaths;
+  /// The active work duration, i.e. accumulated time where at least one
+  /// equipment section was active.
+  // TODO(dudlileif): implement work duration
+  Duration? get workDuration => null;
+
+  /// The idle duration, i.e. accumulated time where all equipment sections are
+  /// disabled after the first section activiation.
+  // TODO(dudlileif): implement idle duration
+  Duration? get idleDuration => null;
+
+  /// The total duration from the first to the last active section activation,
+  /// i.e. the sum of [workDuration] and [idleDuration].
+  Duration? get workAndIdleDuration {
+    if (idleDuration != null) {
+      return (workDuration ?? Duration.zero) + idleDuration!;
+    }
+    return workDuration;
+  }
+
+  /// A map with equipment logs for all the equipment that have been active at
+  /// some point.
+  Map<String, List<EquipmentLogRecord>> equipmentLogs;
+
 
   /// Creates a json compatible structure of the object.
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool withEquipmentLogs = false}) {
     final map = SplayTreeMap<String, dynamic>();
 
     map['time'] = {
@@ -192,21 +204,43 @@ class WorkSession {
 
     map['path_tracking'] = pathTracking;
 
-    map['worked_paths'] = workedPaths?.map(
-      (uuid, paths) => MapEntry(
-        uuid,
-        paths
-            .map(
-              (activation) => activation.map(
-                (section, positions) => MapEntry(
-                  '$section',
-                  positions?.map((e) => e.toJson()).toList(),
-                ),
-              ),
-            )
-            .toList(),
-      ),
-    );
+    if (withEquipmentLogs && equipmentLogs.isNotEmpty) {
+      map['equipment_logs'] = equipmentLogs.map(
+        (uuid, log) => MapEntry(
+          uuid,
+          log.map((record) => jsonEncode(record.toJson())).toList(),
+        ),
+      );
+    }
+
     return map;
   }
+
+  /// Creates a new work session with some parameters altered.
+  WorkSession copyWith({
+    Field? field,
+    Vehicle? vehicle,
+    EquipmentSetup? equipmentSetup,
+    List<ABTracking>? abTracking,
+    List<PathTracking>? pathTracking,
+    String? name,
+    String? note,
+    DateTime? start,
+    DateTime? end,
+    Map<String, List<EquipmentLogRecord>>? equipmentLogs,
+    String? uuid,
+  }) =>
+      WorkSession(
+        uuid: uuid ?? this.uuid,
+        field: field ?? this.field,
+        vehicle: vehicle ?? this.vehicle,
+        equipmentSetup: equipmentSetup ?? this.equipmentSetup,
+        abTracking: abTracking ?? List.from(this.abTracking),
+        pathTracking: pathTracking ?? List.from(this.pathTracking),
+        name: name ?? this.name,
+        note: note ?? this.note,
+        start: start ?? this.start,
+        end: end ?? this.end,
+        equipmentLogs: equipmentLogs ?? Map.from(this.equipmentLogs),
+      );
 }

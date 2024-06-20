@@ -36,7 +36,7 @@ extension SubDirectoryFinder on Directory {
     final contents = listSync();
 
     for (final element in contents) {
-      if (element.path == ([path, 'created'].join('/'))) {
+      if (element.path == ([path, 'created'].join(Platform.pathSeparator))) {
         result.add(path);
       } else if (element.statSync().type == FileSystemEntityType.directory) {
         result.addAll(

@@ -61,22 +61,21 @@ class _EquipmentWorkedPathsLayerState
                   activation.map<int, Float32List>((section, points) {
                 if (points != null) {
                   final offsets = [
-                    for (final offset in points
-                      .map(
-                        (e) {
-                          final offset1 = camera
-                              .latLngToScreenPoint(e.left.latLng)
-                              .toOffset();
-                          final offset2 = camera
-                              .latLngToScreenPoint(e.right.latLng)
-                              .toOffset();
-                          return [
-                            offset1.dx,
-                            offset1.dy,
-                            offset2.dx,
-                            offset2.dy,
-                          ];
-                        },
+                    for (final offset in points.map(
+                      (e) {
+                        final offset1 = camera
+                            .latLngToScreenPoint(e.left.latLng)
+                            .toOffset();
+                        final offset2 = camera
+                            .latLngToScreenPoint(e.right.latLng)
+                            .toOffset();
+                        return [
+                          offset1.dx,
+                          offset1.dy,
+                          offset2.dx,
+                          offset2.dy,
+                        ];
+                      },
                     ))
                       ...offset,
                   ];
@@ -132,7 +131,11 @@ class _EquipmentWorkedPathsLayerState
       return children.first;
     }
 
-    return Stack(children: children);
+    return Stack(
+      children: [
+        ...children,
+      ],
+    );
   }
 }
 

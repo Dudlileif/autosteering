@@ -361,8 +361,10 @@ class SimulatorCore {
           BackgroundIsolateBinaryMessenger.ensureInitialized(message);
           final logDirectoryPath = [
             (await getApplicationDocumentsDirectory()).path,
-            '/Autosteering/logs/hardware',
-          ].join();
+            'Autosteering',
+            'logs',
+            'hardware',
+          ].join(Platform.pathSeparator);
           messageDecoder = MessageDecoder(logDirectoryPath: logDirectoryPath);
         }
         // Close and remote UDP instances if no network is available, stops

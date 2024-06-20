@@ -41,7 +41,7 @@ final offsetVehiclePositionProvider = AutoDisposeProvider<LatLng>.internal(
 );
 
 typedef OffsetVehiclePositionRef = AutoDisposeProviderRef<LatLng>;
-String _$mapCacheDateHash() => r'0b10a2822bb4319c72710f2de30016f2b501372c';
+String _$mapCacheDateHash() => r'9b324f0312bfcd69326fac1f4d7abaf143acd223';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -251,7 +251,7 @@ class _MapCacheDateProviderElement
 }
 
 String _$mapCacheDirectoriesHash() =>
-    r'466efc3812ee4ab6265fa42d67f9be292e413542';
+    r'765cf6cb05cbeed5d5b2f99b328e65a7a100183e';
 
 /// A provider for listing all the map layer cache folders.
 ///

@@ -83,7 +83,7 @@ class FileCachedTileProvider extends TileProvider {
           [
             layerDirectory.path,
             'created',
-          ].join('/'),
+          ].join(Platform.pathSeparator),
         )
           ..createSync(recursive: true)
           ..writeAsStringSync(time.toIso8601String());
@@ -102,7 +102,7 @@ class FileCachedTileProvider extends TileProvider {
                 '${coordinates.z}',
                 '${coordinates.y}',
                 '${coordinates.x}.png',
-              ].join('/'),
+              ].join(Platform.pathSeparator),
             )
           : null,
       allowDownload: allowDownloads,
