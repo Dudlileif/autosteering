@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
 /// A class that contains a setup for attached [Equipment]s that
@@ -130,12 +131,38 @@ class EquipmentSetup with EquatableMixin {
   /// Lists all the children attached and their children recursively.
   List<Hitchable> get allAttached {
     final list = <Hitchable>[
-      if (frontFixedChild != null) frontFixedChild!,
-      if (rearFixedChild != null) rearFixedChild!,
-      if (rearTowbarChild != null) rearTowbarChild!,
+      if (frontFixedChild != null) ...[
+        frontFixedChild!,
+        ...frontFixedChild!.hitchChildren,
+      ],
+      if (rearFixedChild != null) ...[
+        rearFixedChild!,
+        ...rearFixedChild!.hitchChildren,
+      ],
+      if (rearTowbarChild != null) ...[
+        rearTowbarChild!,
+        ...rearTowbarChild!.hitchChildren,
+      ],
     ];
 
     return list;
+  }
+
+  /// Attempts to find the parent-child hitch relation of [child] in this,
+  /// otherwise returns null.
+  Hitch? findHitchOfChild(Hitchable child) {
+    if (child.uuid == frontFixedChild?.uuid) {
+      return Hitch.frontFixed;
+    }
+    if (child.uuid == rearFixedChild?.uuid) {
+      return Hitch.rearFixed;
+    }
+    if (child.uuid == rearTowbarChild?.uuid) {
+      return Hitch.rearTowbar;
+    }
+    final recursiveChild =
+        allAttached.firstWhereOrNull((element) => element.uuid == child.uuid);
+    return recursiveChild?.parentHitch;
   }
 
   /// Converts the object to a json compatible structure.

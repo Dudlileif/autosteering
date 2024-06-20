@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
@@ -31,6 +32,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/strings.dart';
+import 'package:universal_io/io.dart';
 
 /// A menu for creating, loading and handling work sessions.
 class WorkSessionMenu extends ConsumerWidget {
@@ -71,71 +73,7 @@ class WorkSessionMenu extends ConsumerWidget {
               ),
               onPressed: () => showDialog<void>(
                 context: context,
-                builder: (context) {
-                  final session = ref.watch(activeWorkSessionProvider);
-                  var name = session?.name ?? '';
-                  return StatefulBuilder(
-                    builder: (context, setState) => SimpleDialog(
-                      title: const Text('Name the work session'),
-                      contentPadding: const EdgeInsets.only(
-                        left: 24,
-                        top: 12,
-                        right: 24,
-                        bottom: 16,
-                      ),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.label_outline),
-                              labelText: 'Name',
-                            ),
-                            initialValue: name,
-                            onChanged: (value) => setState(() => name = value),
-                            onFieldSubmitted: (value) =>
-                                setState(() => name = value),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) => isBlank(value)
-                                ? '''No name entered! Please enter a name so that the field can be saved!'''
-                                : null,
-                          ),
-                        ),
-                        if (session != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Consumer(
-                              builder: (context, ref, child) => FilledButton(
-                                onPressed: () {
-                                  if (session.name != name && name.isNotEmpty) {
-                                    Timer(const Duration(milliseconds: 100),
-                                        () {
-                                      ref
-                                        ..read(
-                                          deleteWorkSessionProvider(session),
-                                        )
-                                        ..read(
-                                          saveWorkSessionProvider(
-                                            session
-                                              ..name = name.isNotEmpty
-                                                  ? name
-                                                  : session.name,
-                                          ),
-                                        );
-                                    });
-                                  }
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Save work session'),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  );
-                },
+                builder: (context) => const _RenameDialog(),
               ),
               child: child,
             ),
@@ -188,6 +126,87 @@ class WorkSessionMenu extends ConsumerWidget {
           ),
           const _ImportButton(),
         ],
+      ],
+    );
+  }
+}
+
+class _RenameDialog extends ConsumerStatefulWidget {
+  const _RenameDialog();
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => __RenameDialogState();
+}
+
+class __RenameDialogState extends ConsumerState<_RenameDialog> {
+  late final session = ref.watch(activeWorkSessionProvider);
+  late String? name = session?.name;
+
+  @override
+  Widget build(BuildContext context) {
+    final otherSessionNames = ref.watch(
+      savedWorkSessionsProvider.select(
+        (value) => value.when(
+          data: (data) =>
+              data.where((e) => e.uuid != session?.uuid).map((e) => e.name),
+          error: (error, stackTrace) => <String?>[],
+          loading: () => <String?>[],
+        ),
+      ),
+    );
+    return SimpleDialog(
+      title: const Text('Name the work session'),
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        top: 12,
+        right: 24,
+        bottom: 16,
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              icon: Icon(Icons.label_outline),
+              labelText: 'Name',
+            ),
+            initialValue: name,
+            onChanged: (value) => setState(() => name = value.trim()),
+            onFieldSubmitted: (value) => setState(() => name = value.trim()),
+            keyboardType: TextInputType.text,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (value) => isBlank(value?.trim())
+                ? '''No name entered! Please enter a name so that the session can be saved!'''
+                : otherSessionNames.any((element) => element == value?.trim())
+                    ? 'Name already in use'
+                    : null,
+          ),
+        ),
+        if (session != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Consumer(
+              builder: (context, ref, child) => FilledButton(
+                onPressed: name != null && name!.isNotEmpty
+                    ? () {
+                        if (session!.name != name && name!.isNotEmpty) {
+                          Timer(const Duration(milliseconds: 100), () {
+                            ref
+                              ..read(
+                                deleteWorkSessionProvider(session!),
+                              )
+                              ..read(
+                                saveWorkSessionProvider(session!..name = name),
+                              );
+                          });
+                        }
+                        Navigator.of(context).pop();
+                      }
+                    : null,
+                child: const Text('Rename and save'),
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -374,9 +393,18 @@ class _CloseDialog extends ConsumerWidget {
                     label: const Text('Cancel'),
                   ),
                   FilledButton.icon(
-                    onPressed: () {
-                      ref.read(
-                        saveWorkSessionProvider(workSession),
+                    onPressed: () async {
+                      ref
+                          .read(activeWorkSessionProvider.notifier)
+                          .addAllDeactivationEquipmentLogRecords();
+                      await ref.read(
+                        saveWorkSessionProvider(workSession).future,
+                      );
+                      await ref.read(
+                        saveWorkSessionEquipmentLogsProvider(
+                          workSession,
+                          overwrite: false,
+                        ).future,
                       );
                       Logger.instance.i(
                         'Closed work session.',
@@ -394,7 +422,13 @@ class _CloseDialog extends ConsumerWidget {
                         ..invalidate(aBCurvePointsProvider)
                         ..read(
                           configuredPathTrackingProvider.notifier,
-                        ).update(null);
+                        ).update(null)
+                        ..invalidate(
+                          savedFilesInSubDirectoriesProvider(
+                            fromJson: WorkSession.fromJson,
+                            folder: 'work_sessions',
+                          ),
+                        );
                     },
                     icon: const Icon(Icons.check),
                     label: const Text('Confirm'),
@@ -532,9 +566,15 @@ class _CreateWorkSessionDialogState
           label: Text('Name'),
           prefixIcon: Icon(Icons.label_outline),
         ),
-        maxLines: null,
         initialValue: workSession.name,
-        onChanged: (value) => setState(() => workSession.name = value),
+        onChanged: (value) => setState(() => workSession.name = value.trim()),
+        keyboardType: TextInputType.text,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: (value) => isBlank(value?.trim())
+            ? 'Enter a name for the session'
+            : workSessions.any((e) => e.name == value?.trim())
+                ? 'Name already in use'
+                : null,
       ),
     );
 
@@ -684,7 +724,8 @@ class _CreateWorkSessionDialogState
                 ),
                 FilledButton.icon(
                   onPressed: (workSession.name != null &&
-                          workSession.name!.isNotEmpty)
+                          workSession.name!.isNotEmpty &&
+                          workSessions.none((e) => e.name == workSession.name))
                       ? () {
                           workSession
                             ..vehicle = ref.watch(mainVehicleProvider)
@@ -793,12 +834,104 @@ class _LoadWorkSessionMenu extends ConsumerWidget {
                       ),
                     );
                   }
-                  if (workSession.workedPaths != null) {
-                    workSession.workedPaths!.forEach((equipmentUuid, paths) {
-                      ref
-                          .read(equipmentPathsProvider(equipmentUuid).notifier)
-                          .set(paths);
-                    });
+                  if (workSession.equipmentLogs.isNotEmpty) {
+                    for (final equipment in workSession
+                        .equipmentSetup!.allAttached
+                        .cast<Equipment>()) {
+                      final records = workSession.equipmentLogs[equipment.uuid];
+                      if (records != null) {
+                        final overrideHitch = workSession.equipmentSetup
+                            ?.findHitchOfChild(equipment);
+
+                        ref
+                            .read(
+                              equipmentPathsProvider(equipment.uuid).notifier,
+                            )
+                            .updateFromLogRecords(
+                              records: records,
+                              equipment: equipment,
+                              overrideHitch: overrideHitch,
+                            );
+                      }
+                    }
+                  }
+                  if (Device.isNative) {
+                    for (final equipment in workSession
+                        .equipmentSetup!.allAttached
+                        .cast<Equipment>()) {
+                      final fileName = [
+                        ref.read(fileDirectoryProvider).requireValue.path,
+                        'work_sessions',
+                        workSession.name ?? workSession.uuid,
+                        'equipment_logs',
+                        '${equipment.uuid}.log',
+                      ].join(Platform.pathSeparator);
+
+                      final file = File(fileName);
+
+                      if (file.existsSync()) {
+                        Logger.instance
+                            .i('Loading equipment logs from file: $fileName.');
+                        final records = const LineSplitter()
+                            .convert(
+                              file.readAsStringSync(),
+                            )
+                            .map(
+                              (line) => EquipmentLogRecord.fromJson(
+                                Map<String, dynamic>.from(
+                                  jsonDecode(line) as Map,
+                                ),
+                              ),
+                            )
+                            .toList();
+                        if (records.isNotEmpty) {
+                          workSession.equipmentLogs.update(
+                            equipment.uuid,
+                            (oldRecords) => oldRecords.isEmpty
+                                ? [...records]
+                                : [
+                                    ...oldRecords,
+                                    ...records.where(
+                                      (record) => oldRecords.last.time
+                                          .isBefore(record.time),
+                                    ),
+                                  ],
+                            ifAbsent: () => records,
+                          );
+                        }
+
+                        Logger.instance.i(
+                          '''Loaded ${records.length} log records from: $fileName.''',
+                        );
+
+                        final overrideHitch = workSession.equipmentSetup
+                            ?.findHitchOfChild(equipment);
+
+                        ref
+                            .read(
+                              equipmentPathsProvider(equipment.uuid).notifier,
+                            )
+                            .updateFromLogRecords(
+                              records: records,
+                              equipment: equipment,
+                              overrideHitch: overrideHitch,
+                            );
+                      } else {
+                        if (workSession.equipmentLogs
+                            .containsKey(equipment.uuid)) {
+                          file
+                            ..createSync(recursive: true)
+                            ..writeAsStringSync(
+                              [
+                                workSession.equipmentLogs[equipment.uuid]!
+                                    .map((e) => jsonEncode(e.toJson()))
+                                    .join(Platform.lineTerminator),
+                                Platform.lineTerminator,
+                              ].join(),
+                            );
+                        }
+                      }
+                    }
                   }
                 },
                 trailing: Device.isNative

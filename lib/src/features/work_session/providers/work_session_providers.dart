@@ -35,50 +35,97 @@ part 'work_session_providers.g.dart';
 /// A provider for holding the active [WorkSession].
 @Riverpod(keepAlive: true)
 class ActiveWorkSession extends _$ActiveWorkSession {
-  Timer? _autoSaveTimer;
   DateTime? _firstPathUpdate;
 
   @override
-  WorkSession? build() {
-    ref
-      ..listenSelf((previous, next) {
-        if (previous == null && next != null && _autoSaveTimer == null) {
-          _autoSaveTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-            if (state != null) {
-              ref.read(saveWorkSessionProvider(state!));
-            }
-          });
-        } else if (next == null) {
-          _autoSaveTimer?.cancel();
-          _autoSaveTimer = null;
-        }
-      })
-      ..onDispose(() {
-        _autoSaveTimer?.cancel();
-        _firstPathUpdate = null;
-        _autoSaveTimer = null;
-      });
-    return null;
-  }
+  WorkSession? build() => null;
 
   /// Updates [state] to [value].
-  void update(WorkSession? value) => Future(() => state = value);
+  void update(WorkSession? value) => Future(() {
+        _firstPathUpdate = null;
+        state = value;
+        if (state != null) {
+          for (final equipment
+              in state!.equipmentSetup!.allAttached.cast<Equipment>()) {
+            if (state!.equipmentLogs[equipment.uuid] == null ||
+                state!.equipmentLogs[equipment.uuid]!.isEmpty) {
+              if (ref.read(
+                equipmentLogRecordsProvider(equipment.uuid).select(
+                  (value) => value != null && value.isNotEmpty,
+                ),
+              )) {
+                setEquipmentLogRecords(
+                  equipment.uuid,
+                  ref.read(
+                        equipmentLogRecordsProvider(
+                          equipment.uuid,
+                        ),
+                      ) ??
+                      [],
+                );
+              }
+            }
+          }
+
+          final firstRecords = state!.equipmentLogs.values
+              .map((logs) => logs.firstOrNull)
+              .nonNulls;
+          if (firstRecords.isNotEmpty) {
+            _firstPathUpdate =
+                firstRecords.sortedBy((record) => record.time).first.time;
+            if (state!.start == null) {
+              state!.start = _firstPathUpdate;
+            }
+          }
+          if (state!.end == null) {
+            final lastRecords = state!.equipmentLogs.values
+                .map((logs) => logs.lastOrNull)
+                .nonNulls;
+            if (lastRecords.isNotEmpty) {
+              state!.end =
+                  lastRecords.sortedBy((record) => record.time).last.time;
+            }
+          }
+
+          ref.read(saveWorkSessionProvider(state!));
+        }
+      });
 
   /// Updates the [WorkSession.name] of the [state].
-  void updateName(String? name) => Future(() => state = state?..name = name);
+  void updateName(String? name) => Future(() {
+        state = state?..name = name;
+        if (state != null) {
+          ref.read(saveWorkSessionProvider(state!));
+        }
+      });
 
   /// Updates the [WorkSession.note] of the [state].
-  void updateNote(String? note) => Future(() => state = state?..note = note);
+  void updateNote(String? note) => Future(() {
+        state = state?..note = note;
+        if (state != null) {
+          ref.read(saveWorkSessionProvider(state!));
+        }
+      });
 
   /// Updates the [WorkSession.field] of the [state] to [field].
-  void updateField(Field? field) => Future(() => state = state?..field = field);
+  void updateField(Field? field) => Future(() {
+        state = state?..field = field;
+        if (state != null) {
+          ref.read(saveWorkSessionProvider(state!));
+        }
+      });
 
   /// Removes the [ABTracking] with [uuid] from [WorkSession.abTracking].
   void removeABTracking(String uuid) => Future(
-        () => state = state
-          ?..abTracking = (state?.abTracking
-                ?..removeWhere((element) => element.uuid == uuid)) ??
-              [],
+        () {
+          state = state
+            ?..abTracking = (state?.abTracking
+                  ?..removeWhere((element) => element.uuid == uuid)) ??
+                [];
+          if (state != null) {
+            ref.read(saveWorkSessionProvider(state!));
+          }
+        },
       );
 
   /// Removes the [PathTracking] with [uuid] from [WorkSession.pathTracking].
@@ -86,7 +133,10 @@ class ActiveWorkSession extends _$ActiveWorkSession {
         () {
           final newState = state
             ?..pathTracking.removeWhere((element) => element.uuid == uuid);
-          return state = newState;
+          state = newState;
+          if (state != null) {
+            ref.read(saveWorkSessionProvider(state!));
+          }
         },
       );
 
@@ -95,10 +145,13 @@ class ActiveWorkSession extends _$ActiveWorkSession {
         final index = state?.abTracking
             .indexWhere((element) => element.uuid == tracking.uuid);
         if (index != null && index >= 0) {
-          return state = state
-            ?..abTracking.replaceRange(index, index + 1, [tracking]);
+          state = state?..abTracking.replaceRange(index, index + 1, [tracking]);
+        } else {
+          state = state?..abTracking.add(tracking);
         }
-        return state = state?..abTracking.add(tracking);
+        if (state != null) {
+          ref.read(saveWorkSessionProvider(state!));
+        }
       });
 
   /// Updates the [WorkSession.pathTracking].
@@ -106,64 +159,178 @@ class ActiveWorkSession extends _$ActiveWorkSession {
         final index = state?.pathTracking
             .indexWhere((element) => element.uuid == tracking.uuid);
         if (index != null && index >= 0) {
-          return state = state
-            ?..pathTracking.replaceRange(index, index + 1, [tracking]);
-        }
-        return state = state?..pathTracking.add(tracking);
-      });
-
-  /// Updates the [WorkSession.workedPaths].
-  void updateEquipmentPaths(
-    String equipmentUuid,
-    List<Map<int, List<SectionEdgePositions>?>> paths,
-  ) =>
-      Future(() {
-        if (state?.workedPaths != null) {
           state = state
-            ?..workedPaths?.update(
-              equipmentUuid,
-              (value) => paths,
-              ifAbsent: () => paths,
-            );
-          if (state?.start == null &&
-              paths.any(
-                (activation) => activation.entries.any(
-                  (section) =>
-                      section.value != null && section.value!.isNotEmpty,
-                ),
-              )) {
-            state = state?..start = DateTime.now();
-          }
-          if (_firstPathUpdate != null) {
-            if (DateTime.now().difference(_firstPathUpdate!) >
-                    const Duration(seconds: 1) &&
-                paths.any(
-                  (activation) => activation.entries.any(
-                    (section) =>
-                        section.value != null && section.value!.isNotEmpty,
-                  ),
-                )) {
-              state = state?..end = DateTime.now();
-            }
-          } else if (paths.any(
-            (activation) => activation.entries.any(
-              (section) => section.value != null && section.value!.isNotEmpty,
-            ),
-          )) {
-            _firstPathUpdate = DateTime.now();
-          }
+            ?..pathTracking.replaceRange(index, index + 1, [tracking]);
         } else {
-          state = state?..workedPaths = {equipmentUuid: paths};
+          return state = state?..pathTracking.add(tracking);
+        }
+        if (state != null) {
+          ref.read(saveWorkSessionProvider(state!));
         }
       });
 
   /// Updates the [WorkSession.start] time to [time].
-  void updateStartTime(DateTime? time) =>
-      Future(() => state = state?..start = time);
+  void updateStartTime(DateTime? time) => Future(() {
+        state = state?..start = time;
+        if (state != null) {
+          ref.read(saveWorkSessionProvider(state!));
+        }
+      });
 
   /// Updates the [WorkSession.end] time to [time].
-  void updateEndTime(DateTime? time) =>
-      Future(() => state = state?..end = time);
+  void updateEndTime(DateTime? time) => Future(() {
+        state = state?..end = time;
+        if (state != null) {
+          ref.read(saveWorkSessionProvider(state!));
+        }
+      });
+
+  /// Add the [record] to the log record file for the equipment with
+  /// [Equipment.uuid] equal to [equipmentUuid].
+  void addEquipmentLogRecord(String equipmentUuid, EquipmentLogRecord record) =>
+      Future(() {
+        if (state != null) {
+          if (_firstPathUpdate == null) {
+            _firstPathUpdate = record.time;
+            state = state!..start = record.time;
+          } else {
+            state!.end = record.time;
+          }
+
+          var skipIfLastAlsoHadNoActiveSections = false;
+          if (state!.equipmentLogs.containsKey(equipmentUuid)) {
+            if (record.activeSections.isEmpty &&
+                (state!.equipmentLogs[equipmentUuid]!.lastOrNull?.activeSections
+                        .isEmpty ??
+                    false)) {
+              skipIfLastAlsoHadNoActiveSections = true;
+            } else {
+              state!.equipmentLogs[equipmentUuid]!.add(record);
+            }
+          } else {
+            state!.equipmentLogs[equipmentUuid] = [record];
+          }
+          if (Device.isNative && !skipIfLastAlsoHadNoActiveSections) {
+            final fileName = [
+              ref.read(fileDirectoryProvider).requireValue.path,
+              'work_sessions',
+              state!.name ?? state!.uuid,
+              'equipment_logs',
+              '$equipmentUuid.log',
+            ].join(Platform.pathSeparator);
+
+            final file = File(fileName);
+            if (!file.existsSync()) {
+              file.createSync(recursive: true);
+            }
+            file.writeAsStringSync(
+              [
+                jsonEncode(record),
+                Platform.lineTerminator,
+              ].join(),
+              mode: FileMode.append,
+            );
+          }
+        }
+      });
+
+  /// Sets the [WorkSession.equipmentLogs] for the [equipmentUuid] to [records].
+  ///
+  /// The corresponding log file will be created.
+  Future<void> setEquipmentLogRecords(
+    String equipmentUuid,
+    List<EquipmentLogRecord> records,
+  ) async =>
+      Future(() async {
+        if (state != null) {
+          state = state!
+            ..equipmentLogs.update(
+              equipmentUuid,
+              (_) => records,
+              ifAbsent: () => records,
+            );
+          if (Device.isNative) {
+            await ref.read(
+              saveWorkSessionEquipmentLogsProvider(
+                state!,
+                singleUuid: equipmentUuid,
+              ).future,
+            );
+          }
+        }
+      });
+
+  /// Add an [EquipmentLogRecord] with all sections deactivated to all the
+  /// [EquipmentLogRecord]s files.
+  void addAllDeactivationEquipmentLogRecords() => Future(() {
+        if (state != null) {
+          if (state?.equipmentSetup != null) {
+            for (final equipmentReference
+                in state!.equipmentSetup!.allAttached.cast<Equipment>()) {
+              final equipment = ref.read(
+                allEquipmentsProvider
+                    .select((value) => value[equipmentReference.uuid]),
+              );
+              if (equipment != null) {
+                final record = equipment.logRecord.copyWith(activeSections: []);
+                if (state!.equipmentLogs.containsKey(equipment.uuid)) {
+                  if (state!.equipmentLogs[equipment.uuid]!.isNotEmpty) {
+                    if (state!.equipmentLogs[equipment.uuid]!.last
+                        .activeSections.isNotEmpty) {
+                      state!.equipmentLogs[equipment.uuid]!.add(record);
+
+                      if (Device.isNative) {
+                        final fileName = [
+                          ref.read(fileDirectoryProvider).requireValue.path,
+                          'work_sessions',
+                          state!.name ?? state!.uuid,
+                          'equipment_logs',
+                          '${equipment.uuid}.log',
+                        ].join(Platform.pathSeparator);
+
+                        final file = File(fileName);
+                        if (file.existsSync()) {
+                          file.writeAsStringSync(
+                            [
+                              jsonEncode(record),
+                              Platform.lineTerminator,
+                            ].join(),
+                            mode: FileMode.append,
+                          );
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+
+  /// Delete the [EquipmentLogRecord]s file for the equipment with
+  /// [Equipment.uuid] equal to [equipmentUuid].
+  void deleteLogRecordsFile(String equipmentUuid) => Future(() {
+        if (state != null) {
+          if (state!.equipmentLogs.containsKey(equipmentUuid)) {
+            state!.equipmentLogs.remove(equipmentUuid);
+          }
+          if (Device.isNative) {
+            final fileName = [
+              ref.read(fileDirectoryProvider).requireValue.path,
+              'work_sessions',
+              state!.name ?? state!.uuid,
+              'equipment_logs',
+              '$equipmentUuid.log',
+            ].join(Platform.pathSeparator);
+
+            final file = File(fileName);
+            if (file.existsSync()) {
+              file.deleteSync();
+            }
+          }
+        }
+      });
 
   // Always update as the state is complex and any change to it is usually
   /// different to the previous state.
@@ -206,17 +373,71 @@ FutureOr<void> saveWorkSession(
   WorkSession workSession, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async =>
-    await ref.watch(
-      saveJsonToFileDirectoryProvider(
-        object: workSession,
-        fileName: overrideName ??
-            workSession.name ??
-            DateTime.now().toIso8601String(),
-        folder: 'work_sessions',
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async {
+  await ref.watch(
+    saveJsonToFileDirectoryProvider(
+      object: workSession.toJson(),
+      fileName: overrideName ?? workSession.name ?? workSession.uuid,
+      folder: 'work_sessions',
+      subFolder: overrideName ?? workSession.name ?? workSession.uuid,
+      downloadIfWeb: downloadIfWeb,
+    ).future,
+  );
+}
+
+/// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
+/// their respective files.
+///
+/// Set the [overwrite] parameter to false to preserve already existing files.
+/// [singleUuid] can be used to specify a single equipment's logs that should
+/// be saved.
+@riverpod
+FutureOr<void> saveWorkSessionEquipmentLogs(
+  SaveWorkSessionEquipmentLogsRef ref,
+  WorkSession workSession, {
+  bool overwrite = true,
+  String? singleUuid,
+}) async {
+  if (Device.isNative && workSession.equipmentLogs.isNotEmpty) {
+    for (final equipment in workSession.equipmentSetup!.allAttached
+        .where(
+          (element) => singleUuid == null || singleUuid == element.uuid,
+        )
+        .cast<Equipment>()) {
+      final records = workSession.equipmentLogs[equipment.uuid];
+      if (records != null) {
+        if (Device.isNative) {
+          final fileName = [
+            ref.read(fileDirectoryProvider).requireValue.path,
+            'work_sessions',
+            workSession.name ?? workSession.uuid,
+            'equipment_logs',
+            '${equipment.uuid}.log',
+          ].join(Platform.pathSeparator);
+
+          final file = File(fileName);
+
+          if (workSession.equipmentLogs.containsKey(equipment.uuid)) {
+            if (overwrite || !file.existsSync()) {
+              await file.create(recursive: true);
+              await file.writeAsString(
+                [
+                  records
+                      .map((e) => jsonEncode(e.toJson()))
+                      .join(Platform.lineTerminator),
+                  Platform.lineTerminator,
+                ].join(),
+              );
+              Logger.instance.i(
+                '''Wrote equipment logs for ${equipment.name ?? equipment.uuid} to: $fileName''',
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 /// A provider for exporting [workSession] to a file.
 ///
@@ -227,10 +448,13 @@ FutureOr<void> exportWorkSession(
   WorkSession workSession, {
   String? overrideName,
   bool downloadIfWeb = false,
+  bool withEquipmentLogs = true,
 }) async =>
     await ref.watch(
       exportJsonToFileDirectoryProvider(
-        object: workSession,
+        object: workSession.toJson(
+          withEquipmentLogs: withEquipmentLogs,
+        ),
         fileName: overrideName ??
             workSession.name ??
             DateTime.now().toIso8601String(),
@@ -244,7 +468,7 @@ FutureOr<void> exportWorkSession(
 FutureOr<List<WorkSession>> savedWorkSessions(SavedWorkSessionsRef ref) async =>
     await ref
         .watch(
-      savedFilesProvider(
+      savedFilesInSubDirectoriesProvider(
         fromJson: WorkSession.fromJson,
         folder: 'work_sessions',
       ).future,
@@ -304,13 +528,14 @@ FutureOr<List<WorkSession>> savedWorkSessions(SavedWorkSessionsRef ref) async =>
             }
           }
         }
+    
       }
       return sessions;
     });
 
 /// A provider for deleting [workSession] from the user file system.
 ///
-/// Override the file name with [overrideName].
+/// Override the directory name with [overrideName].
 @riverpod
 FutureOr<void> deleteWorkSession(
   DeleteWorkSessionRef ref,
@@ -318,8 +543,8 @@ FutureOr<void> deleteWorkSession(
   String? overrideName,
 }) async =>
     await ref.watch(
-      deleteJsonFromFileDirectoryProvider(
-        fileName: overrideName ??
+      deleteDirectoryFromFileDirectoryProvider(
+        directoryName: overrideName ??
             workSession.name ??
             DateTime.now().toIso8601String(),
         folder: 'work_sessions',
@@ -387,15 +612,36 @@ FutureOr<WorkSession?> importWorkSession(
         ),
       );
     }
-    if (workSession.workedPaths != null) {
-      workSession.workedPaths!.forEach((equipmentUuid, paths) {
-        ref.read(equipmentPathsProvider(equipmentUuid).notifier).set(paths);
-      });
+    
+    if (workSession.equipmentLogs.isNotEmpty) {
+      for (final equipment
+          in workSession.equipmentSetup!.allAttached.cast<Equipment>()) {
+        final overrideHitch =
+            workSession.equipmentSetup?.findHitchOfChild(equipment);
+        final records = workSession.equipmentLogs[equipment.uuid];
+        if (records != null) {
+          ref
+              .read(
+                equipmentPathsProvider(equipment.uuid).notifier,
+              )
+              .updateFromLogRecords(
+                records: records,
+                equipment: equipment,
+                overrideHitch: overrideHitch,
+              );
+        }
+      }
+      if (Device.isNative) {
+        await ref.watch(
+          saveWorkSessionEquipmentLogsProvider(workSession).future,
+        );
+      }
     }
+
+    await ref.read(saveWorkSessionProvider(workSession).future);
   }
   return workSession;
 }
-
 
 /// A provider for exporting all work session files.
 @riverpod

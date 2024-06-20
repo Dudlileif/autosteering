@@ -26,7 +26,7 @@ final editablePathAsWayPointsProvider =
 
 typedef EditablePathAsWayPointsRef = AutoDisposeProviderRef<List<WayPoint>?>;
 String _$activeEditablePathTypeHash() =>
-    r'c2a4479bf77a4662c5dac23c2dfe5bde67923fea';
+    r'2259071575a7b5ee68ebdd9ff4e6fee7b9471fa8';
 
 /// A provider for whether the editable path feature should be enabled.
 ///

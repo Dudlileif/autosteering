@@ -15,12 +15,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/utils/menu_button_text_extension.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:universal_io/io.dart';
 
 /// A menu/button for for deleting map layer caches.
 ///
@@ -78,7 +80,7 @@ class _CacheDeleter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pathSplit = path.split('/').reversed;
+    final pathSplit = path.split(Platform.pathSeparator).reversed;
 
     return MenuItemButton(
       closeOnActivate: false,

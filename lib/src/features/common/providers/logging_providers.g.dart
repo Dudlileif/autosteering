@@ -6,7 +6,7 @@ part of 'logging_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loggingFileHash() => r'f87dfce64626880f837b9e8322b605260c647986';
+String _$loggingFileHash() => r'6a8fddc7f2fa51853389e25c769df2133e637232';
 
 /// A provider for creating a logging file for the session.
 ///

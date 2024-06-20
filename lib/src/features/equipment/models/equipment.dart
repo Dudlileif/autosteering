@@ -20,6 +20,7 @@ import 'dart:math';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/vehicle/models/models.dart';
 import 'package:autosteering/src/features/vehicle/models/vehicle.dart';
@@ -408,6 +409,29 @@ class Equipment extends Hitchable with EquatableMixin {
             .map((section) => MapEntry(section.index, section.active)),
       );
 
+  /// A log record with position, active sections and a time stamp for the
+  /// current state.
+  EquipmentLogRecord get logRecord => EquipmentLogRecord(
+        wayPoint: WayPoint(position: position, bearing: bearing),
+        activeSections: sections
+            .where((section) => section.active)
+            .map((section) => section.index)
+            .toList(),
+        time: DateTime.now(),
+      );
+
+  /// Updates the state of this with [record].
+  ///
+  /// Typically used to create worked paths after loading a work session log
+  /// file.
+  void updateByLogRecord(EquipmentLogRecord record) {
+    position = record.wayPoint.position;
+    bearing = record.wayPoint.bearing;
+    for (final section in sections) {
+      section.active = record.activeSections.contains(section.index);
+    }
+  }
+
   /// The hitch connection position where this equipment is attached to the
   /// [hitchParent], if it's connected.
   Geographic? get parentHitchPoint => switch (parentHitch != null) {
@@ -473,7 +497,7 @@ class Equipment extends Hitchable with EquatableMixin {
 
         final bearingChange = signedBearingDifference(
           _prevBearing,
-          drawbarEnd.rhumb.initialBearingTo(position),
+          drawbarEnd().rhumb.initialBearingTo(position),
         );
 
         var turningRadius = bearingChange.abs() > 0
@@ -592,7 +616,8 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// The position of the end of the drawbar, i.e. furthest away from the
   /// parent, where the working area starts.
-  Geographic get drawbarEnd => switch (parentHitch) {
+  Geographic drawbarEnd({Hitch? overrideHitch}) =>
+      switch (overrideHitch ?? parentHitch) {
         Hitch.frontFixed => position.rhumb
             .destinationPoint(distance: drawbarLength, bearing: bearing),
         Hitch.rearFixed => position.rhumb
@@ -608,9 +633,10 @@ class Equipment extends Hitchable with EquatableMixin {
     // The starting point of this equipment, i.e. the center-front point
     // of the working area.
     final equipmentStart = switch (parentHitch) {
-      Hitch.frontFixed => drawbarEnd.rhumb
+      Hitch.frontFixed => drawbarEnd()
+          .rhumb
           .destinationPoint(distance: workingAreaLength, bearing: bearing),
-      _ => drawbarEnd
+      _ => drawbarEnd()
     }
         .rhumb
         .destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
@@ -654,17 +680,22 @@ class Equipment extends Hitchable with EquatableMixin {
   ///   front right,
   /// ]
   /// ```
-  List<Geographic>? sectionCornerPoints(int index, {bool force = false}) {
+  List<Geographic>? sectionCornerPoints(
+    int index, {
+    bool force = false,
+    Hitch? overrideHitch,
+  }) {
     if (sections[index].workingWidth == 0 && !force) {
       return null;
     }
 
     // The starting point of this equipment, i.e. the center-front point
     // of the working area.
-    final equipmentStart = switch (parentHitch) {
-      Hitch.frontFixed => drawbarEnd.rhumb
+    final equipmentStart = switch (overrideHitch ?? parentHitch) {
+      Hitch.frontFixed => drawbarEnd(overrideHitch: overrideHitch)
+          .rhumb
           .destinationPoint(distance: workingAreaLength, bearing: bearing),
-      _ => drawbarEnd
+      _ => drawbarEnd(overrideHitch: overrideHitch)
     }
         .rhumb
         .destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
@@ -707,8 +738,14 @@ class Equipment extends Hitchable with EquatableMixin {
     int index, {
     double? fraction,
     bool force = false,
+    Hitch? overrideHitch,
+    DateTime? overrideTime,
   }) {
-    final points = sectionCornerPoints(index, force: force);
+    final points = sectionCornerPoints(
+      index,
+      force: force,
+      overrideHitch: overrideHitch,
+    );
     if (points != null) {
       return SectionEdgePositions(
         left: points[1].spherical.intermediatePointTo(
@@ -719,7 +756,7 @@ class Equipment extends Hitchable with EquatableMixin {
               points[3],
               fraction: fraction ?? recordingPositionFraction,
             ),
-        time: lastUsed,
+        time: overrideTime ?? lastUsed,
       );
     }
     return null;
@@ -727,20 +764,29 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// A map of all the section indexes and their [SectionEdgePositions] if they
   /// are active.
-  Map<int, SectionEdgePositions> activeEdgePositions({double? fraction}) {
+  Map<int, SectionEdgePositions> activeEdgePositions({
+    double? fraction,
+    List<int> forceIndices = const [],
+    Hitch? overrideHitch,
+    DateTime? overrideTime,
+  }) {
     final map = <int, SectionEdgePositions>{};
     for (final element
         in sections.where((section) => section.workingWidth > 0)) {
-      if (element.active) {
-        map[element.index] =
-            sectionEdgePositions(element.index, fraction: fraction)!;
+      if (element.active || forceIndices.contains(element.index)) {
+        map[element.index] = sectionEdgePositions(
+          element.index,
+          fraction: fraction,
+          overrideHitch: overrideHitch,
+          overrideTime: overrideTime,
+        )!;
       }
     }
     return map;
   }
 
   /// The center point of the given [section].
-  Geographic sectionCenter(int section) {
+  Geographic sectionCenter(int section, {Hitch? overrideHitch}) {
     final points = sectionPoints(section);
     return points[0].rhumb.midPointTo(points[3]).rhumb.destinationPoint(
           distance: (1 - recordingPositionFraction) * workingAreaLength,
@@ -831,7 +877,8 @@ class Equipment extends Hitchable with EquatableMixin {
             color: Colors.grey.shade800,
             borderColor: Colors.black,
             points: [
-              drawbarEnd.rhumb
+              drawbarEnd()
+                  .rhumb
                   .destinationPoint(distance: 0.1, bearing: bearing)
                   .rhumb
                   .destinationPoint(
@@ -845,7 +892,8 @@ class Equipment extends Hitchable with EquatableMixin {
                   .destinationPoint(distance: 0.1, bearing: bearing)
                   .latLng,
               sectionEdgePositions(0, fraction: 1, force: true)!.left.latLng,
-              drawbarEnd.rhumb
+              drawbarEnd()
+                  .rhumb
                   .destinationPoint(
                     distance: 0.05,
                     bearing: bearing - 90,
@@ -858,7 +906,8 @@ class Equipment extends Hitchable with EquatableMixin {
             color: Colors.grey.shade800,
             borderColor: Colors.black,
             points: [
-              drawbarEnd.rhumb
+              drawbarEnd()
+                  .rhumb
                   .destinationPoint(distance: 0.1, bearing: bearing)
                   .rhumb
                   .destinationPoint(
@@ -882,7 +931,8 @@ class Equipment extends Hitchable with EquatableMixin {
               )!
                   .right
                   .latLng,
-              drawbarEnd.rhumb
+              drawbarEnd()
+                  .rhumb
                   .destinationPoint(
                     distance: 0.05,
                     bearing: bearing + 90,
@@ -904,13 +954,15 @@ class Equipment extends Hitchable with EquatableMixin {
                         bearing: bearing - 90,
                       )
                       .latLng,
-                  drawbarEnd.rhumb
+                  drawbarEnd()
+                      .rhumb
                       .destinationPoint(
                         distance: 0.05,
                         bearing: bearing - 90,
                       )
                       .latLng,
-                  drawbarEnd.rhumb
+                  drawbarEnd()
+                      .rhumb
                       .destinationPoint(
                         distance: 0.05,
                         bearing: bearing + 90,
@@ -938,13 +990,15 @@ class Equipment extends Hitchable with EquatableMixin {
                         bearing: bearing - 90,
                       )
                       .latLng,
-                  drawbarEnd.rhumb
+                  drawbarEnd()
+                      .rhumb
                       .destinationPoint(
                         distance: 0.35,
                         bearing: bearing - 90,
                       )
                       .latLng,
-                  drawbarEnd.rhumb
+                  drawbarEnd()
+                      .rhumb
                       .destinationPoint(
                         distance: 0.3,
                         bearing: bearing - 90,
@@ -970,13 +1024,15 @@ class Equipment extends Hitchable with EquatableMixin {
                         bearing: bearing + 90,
                       )
                       .latLng,
-                  drawbarEnd.rhumb
+                  drawbarEnd()
+                      .rhumb
                       .destinationPoint(
                         distance: 0.35,
                         bearing: bearing + 90,
                       )
                       .latLng,
-                  drawbarEnd.rhumb
+                  drawbarEnd()
+                      .rhumb
                       .destinationPoint(
                         distance: 0.3,
                         bearing: bearing + 90,

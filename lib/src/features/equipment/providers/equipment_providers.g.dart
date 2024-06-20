@@ -1198,7 +1198,7 @@ final equipmentWorkedAreaProvider =
 );
 
 typedef _$EquipmentWorkedArea = Notifier<Map<String, double>>;
-String _$equipmentPathsHash() => r'bd9aca4d0962648558dd5789257637c17dd97de5';
+String _$equipmentPathsHash() => r'f2f4b26a006664308c06218d51213fb23a310cad';
 
 abstract class _$EquipmentPaths
     extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {
@@ -1394,6 +1394,210 @@ class _EquipmentPathsProviderElement extends NotifierProviderElement<
 
   @override
   String get uuid => (origin as EquipmentPathsProvider).uuid;
+}
+
+String _$equipmentLogRecordsHash() =>
+    r'58bb0faed8b3db7b1cced9e13998c0b74f1b5c4c';
+
+abstract class _$EquipmentLogRecords
+    extends BuildlessNotifier<List<EquipmentLogRecord>?> {
+  late final String uuid;
+
+  List<EquipmentLogRecord>? build(
+    String uuid,
+  );
+}
+
+/// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
+/// given UUID.
+///
+/// Copied from [EquipmentLogRecords].
+@ProviderFor(EquipmentLogRecords)
+const equipmentLogRecordsProvider = EquipmentLogRecordsFamily();
+
+/// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
+/// given UUID.
+///
+/// Copied from [EquipmentLogRecords].
+class EquipmentLogRecordsFamily extends Family {
+  /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
+  /// given UUID.
+  ///
+  /// Copied from [EquipmentLogRecords].
+  const EquipmentLogRecordsFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'equipmentLogRecordsProvider';
+
+  /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
+  /// given UUID.
+  ///
+  /// Copied from [EquipmentLogRecords].
+  EquipmentLogRecordsProvider call(
+    String uuid,
+  ) {
+    return EquipmentLogRecordsProvider(
+      uuid,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  EquipmentLogRecordsProvider getProviderOverride(
+    covariant EquipmentLogRecordsProvider provider,
+  ) {
+    return call(
+      provider.uuid,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(EquipmentLogRecords Function() create) {
+    return _$EquipmentLogRecordsFamilyOverride(this, create);
+  }
+}
+
+class _$EquipmentLogRecordsFamilyOverride implements FamilyOverride {
+  _$EquipmentLogRecordsFamilyOverride(this.overriddenFamily, this.create);
+
+  final EquipmentLogRecords Function() create;
+
+  @override
+  final EquipmentLogRecordsFamily overriddenFamily;
+
+  @override
+  EquipmentLogRecordsProvider getProviderOverride(
+    covariant EquipmentLogRecordsProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
+/// given UUID.
+///
+/// Copied from [EquipmentLogRecords].
+class EquipmentLogRecordsProvider extends NotifierProviderImpl<
+    EquipmentLogRecords, List<EquipmentLogRecord>?> {
+  /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
+  /// given UUID.
+  ///
+  /// Copied from [EquipmentLogRecords].
+  EquipmentLogRecordsProvider(
+    String uuid,
+  ) : this._internal(
+          () => EquipmentLogRecords()..uuid = uuid,
+          from: equipmentLogRecordsProvider,
+          name: r'equipmentLogRecordsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$equipmentLogRecordsHash,
+          dependencies: EquipmentLogRecordsFamily._dependencies,
+          allTransitiveDependencies:
+              EquipmentLogRecordsFamily._allTransitiveDependencies,
+          uuid: uuid,
+        );
+
+  EquipmentLogRecordsProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.uuid,
+  }) : super.internal();
+
+  final String uuid;
+
+  @override
+  List<EquipmentLogRecord>? runNotifierBuild(
+    covariant EquipmentLogRecords notifier,
+  ) {
+    return notifier.build(
+      uuid,
+    );
+  }
+
+  @override
+  Override overrideWith(EquipmentLogRecords Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: EquipmentLogRecordsProvider._internal(
+        () => create()..uuid = uuid,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        uuid: uuid,
+      ),
+    );
+  }
+
+  @override
+  (String,) get argument {
+    return (uuid,);
+  }
+
+  @override
+  NotifierProviderElement<EquipmentLogRecords, List<EquipmentLogRecord>?>
+      createElement() {
+    return _EquipmentLogRecordsProviderElement(this);
+  }
+
+  EquipmentLogRecordsProvider _copyWith(
+    EquipmentLogRecords Function() create,
+  ) {
+    return EquipmentLogRecordsProvider._internal(
+      () => create()..uuid = uuid,
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      uuid: uuid,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is EquipmentLogRecordsProvider && other.uuid == uuid;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, uuid.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin EquipmentLogRecordsRef on NotifierProviderRef<List<EquipmentLogRecord>?> {
+  /// The parameter `uuid` of this provider.
+  String get uuid;
+}
+
+class _EquipmentLogRecordsProviderElement extends NotifierProviderElement<
+    EquipmentLogRecords,
+    List<EquipmentLogRecord>?> with EquipmentLogRecordsRef {
+  _EquipmentLogRecordsProviderElement(super.provider);
+
+  @override
+  String get uuid => (origin as EquipmentLogRecordsProvider).uuid;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

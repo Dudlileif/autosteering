@@ -93,6 +93,6 @@ class TileLayerData {
           'map_image_cache',
           if (folderName != null) folderName,
           name,
-        ].join('/'),
+        ].join(Platform.pathSeparator),
       );
 }
