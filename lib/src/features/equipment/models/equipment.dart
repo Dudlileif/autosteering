@@ -427,6 +427,7 @@ class Equipment extends Hitchable with EquatableMixin {
   void updateByLogRecord(EquipmentLogRecord record) {
     position = record.wayPoint.position;
     bearing = record.wayPoint.bearing;
+
     for (final section in sections) {
       section.active = record.activeSections.contains(section.index);
     }
@@ -616,17 +617,33 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// The position of the end of the drawbar, i.e. furthest away from the
   /// parent, where the working area starts.
-  Geographic drawbarEnd({Hitch? overrideHitch}) =>
-      switch (overrideHitch ?? parentHitch) {
-        Hitch.frontFixed => position.rhumb
-            .destinationPoint(distance: drawbarLength, bearing: bearing),
-        Hitch.rearFixed => position.rhumb
-            .destinationPoint(distance: drawbarLength, bearing: bearing + 180),
-        Hitch.rearTowbar => position.rhumb
-            .destinationPoint(distance: drawbarLength, bearing: bearing + 180),
-        null => position.rhumb
-            .destinationPoint(distance: drawbarLength, bearing: bearing),
-      };
+  Geographic drawbarEnd({
+    Hitch? overrideHitch,
+    bool forceOwnPositionAndBearing = false,
+  }) {
+    final calculationBearing = forceOwnPositionAndBearing ? _bearing : bearing;
+    final calculationPosition =
+        forceOwnPositionAndBearing ? _position : position;
+
+    return switch (overrideHitch ?? parentHitch) {
+      Hitch.frontFixed => calculationPosition.rhumb.destinationPoint(
+          distance: drawbarLength,
+          bearing: calculationBearing,
+        ),
+      Hitch.rearFixed => calculationPosition.rhumb.destinationPoint(
+          distance: drawbarLength,
+          bearing: calculationBearing + 180,
+        ),
+      Hitch.rearTowbar => calculationPosition.rhumb.destinationPoint(
+          distance: drawbarLength,
+          bearing: calculationBearing + 180,
+        ),
+      null => calculationPosition.rhumb.destinationPoint(
+          distance: drawbarLength,
+          bearing: calculationBearing,
+        ),
+    };
+  }
 
   /// The corner points for the given [section].
   List<Geographic> sectionPoints(int section) {
@@ -684,21 +701,34 @@ class Equipment extends Hitchable with EquatableMixin {
     int index, {
     bool force = false,
     Hitch? overrideHitch,
+    bool forceOwnPositionAndBearing = false,
   }) {
     if (sections[index].workingWidth == 0 && !force) {
       return null;
     }
 
+    final calculationBearing = forceOwnPositionAndBearing ? _bearing : bearing;
+
     // The starting point of this equipment, i.e. the center-front point
     // of the working area.
     final equipmentStart = switch (overrideHitch ?? parentHitch) {
-      Hitch.frontFixed => drawbarEnd(overrideHitch: overrideHitch)
-          .rhumb
-          .destinationPoint(distance: workingAreaLength, bearing: bearing),
-      _ => drawbarEnd(overrideHitch: overrideHitch)
+      Hitch.frontFixed => drawbarEnd(
+          overrideHitch: overrideHitch,
+          forceOwnPositionAndBearing: forceOwnPositionAndBearing,
+        ).rhumb.destinationPoint(
+              distance: workingAreaLength,
+              bearing: calculationBearing,
+            ),
+      _ => drawbarEnd(
+          overrideHitch: overrideHitch,
+          forceOwnPositionAndBearing: forceOwnPositionAndBearing,
+        )
     }
         .rhumb
-        .destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
+        .destinationPoint(
+          distance: sidewaysOffset,
+          bearing: calculationBearing + 90,
+        );
 
     final section = sections[index];
 
@@ -708,19 +738,23 @@ class Equipment extends Hitchable with EquatableMixin {
 
     final sectionFrontLeft = equipmentStart.rhumb.destinationPoint(
       distance: width / 2 - widthBefore,
-      bearing: bearing - 90,
+      bearing: calculationBearing - 90,
     );
 
-    final sectionRearLeft = sectionFrontLeft.rhumb
-        .destinationPoint(distance: workingAreaLength, bearing: bearing + 180);
+    final sectionRearLeft = sectionFrontLeft.rhumb.destinationPoint(
+      distance: workingAreaLength,
+      bearing: calculationBearing + 180,
+    );
 
     final sectionRearRight = sectionRearLeft.rhumb.destinationPoint(
       distance: section.workingWidth,
-      bearing: bearing + 90,
+      bearing: calculationBearing + 90,
     );
 
-    final sectionFrontRight = sectionRearRight.rhumb
-        .destinationPoint(distance: workingAreaLength, bearing: bearing);
+    final sectionFrontRight = sectionRearRight.rhumb.destinationPoint(
+      distance: workingAreaLength,
+      bearing: calculationBearing,
+    );
 
     return [
       sectionFrontLeft,
@@ -740,11 +774,13 @@ class Equipment extends Hitchable with EquatableMixin {
     bool force = false,
     Hitch? overrideHitch,
     DateTime? overrideTime,
+    bool forceOwnPositionAndBearing = false,
   }) {
     final points = sectionCornerPoints(
       index,
       force: force,
       overrideHitch: overrideHitch,
+      forceOwnPositionAndBearing: forceOwnPositionAndBearing,
     );
     if (points != null) {
       return SectionEdgePositions(
@@ -769,6 +805,7 @@ class Equipment extends Hitchable with EquatableMixin {
     List<int> forceIndices = const [],
     Hitch? overrideHitch,
     DateTime? overrideTime,
+    bool forceOwnPositionAndBearing = false,
   }) {
     final map = <int, SectionEdgePositions>{};
     for (final element
@@ -779,6 +816,7 @@ class Equipment extends Hitchable with EquatableMixin {
           fraction: fraction,
           overrideHitch: overrideHitch,
           overrideTime: overrideTime,
+          forceOwnPositionAndBearing: forceOwnPositionAndBearing,
         )!;
       }
     }

@@ -104,6 +104,9 @@ class AllEquipments extends _$AllEquipments {
   void clearPaintedArea() => Future(() {
         for (final equipment in state.values) {
           ref.read(equipmentPathsProvider(equipment.uuid).notifier).clear();
+          ref
+              .read(activeWorkSessionProvider.notifier)
+              .deleteLogRecordsFile(equipment.uuid);
         }
         ref.read(equipmentWorkedAreaProvider.notifier).clear();
         ref.read(activeWorkSessionProvider.notifier).updateStartTime(null);
@@ -425,6 +428,7 @@ class EquipmentPaths extends _$EquipmentPaths {
             .toList(),
         overrideHitch: overrideHitch,
         overrideTime: record.time,
+        forceOwnPositionAndBearing: true,
       );
 
       if (!const ListEquality<int>()
@@ -453,6 +457,7 @@ class EquipmentPaths extends _$EquipmentPaths {
                             fraction: equipment.recordingPositionFraction,
                             overrideHitch: overrideHitch,
                             overrideTime: record.time,
+                            forceOwnPositionAndBearing: true,
                           )!,
                     ],
                   )
@@ -505,12 +510,8 @@ class EquipmentPaths extends _$EquipmentPaths {
 @Riverpod(keepAlive: true)
 class EquipmentLogRecords extends _$EquipmentLogRecords {
   @override
-  List<EquipmentLogRecord>? build(String uuid) {
-    ref.onDispose(() {
-      ref.read(activeWorkSessionProvider.notifier).deleteLogRecordsFile(uuid);
-    });
-    return null;
-  }
+  List<EquipmentLogRecord>? build(String uuid) => null;
+  
 
   /// Add [record] to [state].
   void add(EquipmentLogRecord record) => Future(() {
@@ -523,6 +524,8 @@ class EquipmentLogRecords extends _$EquipmentLogRecords {
             .read(activeWorkSessionProvider.notifier)
             .addEquipmentLogRecord(uuid, record);
       });
+
+
 
   @override
   bool updateShouldNotify(

@@ -130,7 +130,6 @@ class _EquipmentWorkedPathsLayerState
     } else if (children.length == 1) {
       return children.first;
     }
-
     return Stack(
       children: [
         ...children,

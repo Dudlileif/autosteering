@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
 /// A class that contains objects used in and info about a work session.
@@ -103,7 +104,6 @@ class WorkSession {
           )
         : null;
 
-
     return WorkSession(
       field: field,
       vehicle: vehicle,
@@ -157,13 +157,194 @@ class WorkSession {
 
   /// The active work duration, i.e. accumulated time where at least one
   /// equipment section was active.
-  // TODO(dudlileif): implement work duration
-  Duration? get workDuration => null;
+  Duration? get workDuration {
+    if (equipmentLogs.isEmpty) {
+      return null;
+    }
+    DateTime? firstWorkTime;
+
+    final timeSpans = <String, List<({DateTime start, DateTime end})>>{};
+    for (final equipment in equipmentLogs.entries) {
+      final uuid = equipment.key;
+      final logs = equipment.value;
+
+      DateTime? start;
+      for (final record in logs) {
+        if (start == null && record.activeSections.isNotEmpty) {
+          firstWorkTime ??= record.time;
+          if (record.time.isBefore(firstWorkTime)) {
+            firstWorkTime = record.time;
+          }
+          start = record.time;
+        } else if (record.activeSections.isEmpty) {
+          if (start != null) {
+            timeSpans.update(
+              uuid,
+              (prevSpans) => [...prevSpans, (start: start!, end: record.time)],
+              ifAbsent: () => [(start: start!, end: record.time)],
+            );
+          }
+          start = null;
+        }
+      }
+    }
+    if (timeSpans.isEmpty) {
+      return null;
+    } else if (timeSpans.length == 1) {
+      return timeSpans.values.first.fold<Duration>(
+        Duration.zero,
+        (duration, span) => duration + span.end.difference(span.start),
+      );
+    } else {
+      final flattened = [for (final equipment in timeSpans.values) ...equipment]
+          .sortedBy<DateTime>((e) => e.start);
+
+      flattened.removeWhere(
+        (span) => flattened
+            .whereNot(
+              (other) => other.start == span.start && other.end == span.end,
+            )
+            .any(
+              (other) =>
+                  other.start.isBefore(span.start) &&
+                  other.end.isAfter(span.end),
+            ),
+      );
+      var loop = true;
+      while (loop) {
+        var doBreak = false;
+        for (var i = 0; i < flattened.length; i++) {
+          if (doBreak) {
+            break;
+          }
+          for (var j = 0; j < flattened.length; j++) {
+            if (i != j) {
+              final span = flattened[i];
+              final other = flattened[j];
+              if (span.start.isBefore(other.start)) {
+                if (span.end.isAfter(other.end)) {
+                  flattened.removeAt(j);
+                  doBreak = true;
+                  break;
+                } else if (span.end.isAfter(other.start)) {
+                  flattened[i] = (start: span.start, end: other.end);
+                  flattened.removeAt(j);
+                  doBreak = true;
+                  break;
+                }
+              }
+              // span.start is after other.start
+              else {
+                if (span.end.isBefore(other.end)) {
+                  flattened.removeAt(i);
+                  doBreak = true;
+                  break;
+                } else if (span.start.isBefore(other.end) &&
+                    span.end.isAfter(other.end)) {
+                  flattened[i] = (start: other.start, end: span.end);
+                  flattened.removeAt(j);
+                  doBreak = true;
+                  break;
+                }
+              }
+            }
+          }
+        }
+        if (doBreak) {
+          continue;
+        }
+        loop = flattened.any(
+          (span) => flattened
+              .whereNot(
+                (other) => other.start == span.start && other.end == span.end,
+              )
+              .any(
+                (other) =>
+                    other.start.isBefore(span.start) &&
+                    other.end.isAfter(span.end),
+              ),
+        );
+      }
+      return flattened.fold<Duration>(
+        Duration.zero,
+        (duration, span) => duration + span.end.difference(span.start),
+      );
+    }
+  }
 
   /// The idle duration, i.e. accumulated time where all equipment sections are
   /// disabled after the first section activiation.
-  // TODO(dudlileif): implement idle duration
-  Duration? get idleDuration => null;
+  Duration? get idleDuration {
+    if (equipmentLogs.isEmpty) {
+      return null;
+    } else if (equipmentLogs.length == 1) {
+      final timeSpans = <String, List<({DateTime start, DateTime end})>>{};
+      DateTime? firstTime;
+
+      for (final equipment in equipmentLogs.entries) {
+        final uuid = equipment.key;
+        final logs = equipment.value;
+
+        DateTime? start;
+        for (final record in logs) {
+          if (record.activeSections.isEmpty) {
+            firstTime ??= record.time;
+            if (record.time.isBefore(firstTime)) {
+              firstTime = record.time;
+            }
+            start = record.time;
+          } else {
+            if (start != null) {
+              timeSpans.update(
+                uuid,
+                (prevSpans) =>
+                    [...prevSpans, (start: start!, end: record.time)],
+                ifAbsent: () => [(start: start!, end: record.time)],
+              );
+            }
+            start = null;
+          }
+        }
+      }
+
+      return timeSpans.values.firstOrNull?.fold<Duration>(
+        Duration.zero,
+        (duration, span) => duration + span.end.difference(span.start),
+      );
+    } else {
+      DateTime? firstActivation;
+      DateTime? lastDeactivation;
+
+      for (final equipment in equipmentLogs.entries) {
+        final logs = equipment.value;
+
+        for (final record in logs) {
+          if (record.activeSections.isNotEmpty) {
+            if (firstActivation != null &&
+                record.time.isBefore(firstActivation)) {
+              firstActivation = record.time;
+            } else {
+              firstActivation ??= record.time;
+            }
+          } else {
+            if (lastDeactivation != null &&
+                record.time.isAfter(lastDeactivation)) {
+              lastDeactivation = record.time;
+            } else {
+              lastDeactivation ??= record.time;
+            }
+          }
+        }
+      }
+
+      if (firstActivation != null && lastDeactivation != null) {
+        return lastDeactivation.difference(firstActivation) -
+            (workDuration ?? Duration.zero);
+      }
+    }
+
+    return null;
+  }
 
   /// The total duration from the first to the last active section activation,
   /// i.e. the sum of [workDuration] and [idleDuration].
@@ -177,7 +358,6 @@ class WorkSession {
   /// A map with equipment logs for all the equipment that have been active at
   /// some point.
   Map<String, List<EquipmentLogRecord>> equipmentLogs;
-
 
   /// Creates a json compatible structure of the object.
   Map<String, dynamic> toJson({bool withEquipmentLogs = false}) {

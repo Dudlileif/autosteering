@@ -288,11 +288,27 @@ abstract class Hitchable {
     foundChild?.hitchRearTowbarChild = null;
   }
 
-  /// A list of the currently attached children.
+  /// A list of the directly attached children.
   List<Hitchable> get hitchChildren => [
         if (hitchFrontFixedChild != null) hitchFrontFixedChild!,
         if (hitchRearFixedChild != null) hitchRearFixedChild!,
         if (hitchRearTowbarChild != null) hitchRearTowbarChild!,
+      ];
+
+  /// A list of the all the recursively attached children.
+  List<Hitchable> get hitchChildrenRecursively => [
+        if (hitchFrontFixedChild != null) ...[
+          hitchFrontFixedChild!,
+          ...hitchFrontFixedChild!.hitchChildrenRecursively,
+        ],
+        if (hitchRearFixedChild != null) ...[
+          hitchRearFixedChild!,
+          ...hitchRearFixedChild!.hitchChildrenRecursively,
+        ],
+        if (hitchRearTowbarChild != null) ...[
+          hitchRearTowbarChild!,
+          ...hitchRearTowbarChild!.hitchChildrenRecursively,
+        ],
       ];
 
   /// The position of the front fixed hitch point, if there is one.

@@ -528,7 +528,6 @@ FutureOr<List<WorkSession>> savedWorkSessions(SavedWorkSessionsRef ref) async =>
             }
           }
         }
-    
       }
       return sessions;
     });
@@ -612,7 +611,7 @@ FutureOr<WorkSession?> importWorkSession(
         ),
       );
     }
-    
+
     if (workSession.equipmentLogs.isNotEmpty) {
       for (final equipment
           in workSession.equipmentSetup!.allAttached.cast<Equipment>()) {

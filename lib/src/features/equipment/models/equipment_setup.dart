@@ -133,15 +133,15 @@ class EquipmentSetup with EquatableMixin {
     final list = <Hitchable>[
       if (frontFixedChild != null) ...[
         frontFixedChild!,
-        ...frontFixedChild!.hitchChildren,
+        ...frontFixedChild!.hitchChildrenRecursively,
       ],
       if (rearFixedChild != null) ...[
         rearFixedChild!,
-        ...rearFixedChild!.hitchChildren,
+        ...rearFixedChild!.hitchChildrenRecursively,
       ],
       if (rearTowbarChild != null) ...[
         rearTowbarChild!,
-        ...rearTowbarChild!.hitchChildren,
+        ...rearTowbarChild!.hitchChildrenRecursively,
       ],
     ];
 
