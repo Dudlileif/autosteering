@@ -770,11 +770,11 @@ class Equipment extends Hitchable with EquatableMixin {
 
   /// An iterable of all the sections' polygons.
   Iterable<Polygon> get sectionPolygons =>
-      Iterable.generate(sections.length, sectionPolygon).whereNotNull();
+      Iterable.generate(sections.length, sectionPolygon).nonNulls;
 
   /// An iterable of all the sections' working polygons.
   Iterable<Polygon> get sectionWorkingPolygons =>
-      Iterable.generate(sections.length, sectionWorkingPolygon).whereNotNull();
+      Iterable.generate(sections.length, sectionWorkingPolygon).nonNulls;
 
   /// The map polygon for the [Section] with the given [index].
   map.Polygon sectionMapPolygon(int index) {
@@ -816,12 +816,12 @@ class Equipment extends Hitchable with EquatableMixin {
   /// An iterable of all the sections' polygons.
   Iterable<map.Polygon> get sectionMapPolygons =>
       List.generate(sections.length, sectionMapPolygon, growable: false)
-          .whereNotNull();
+          .nonNulls;
 
   /// An iterable of all the sections' working polygons.
   Iterable<map.Polygon> get sectionWorkingMapPolygons =>
       List.generate(sections.length, sectionWorkingMapPolygon, growable: false)
-          .whereNotNull();
+          .nonNulls;
 
   /// A list of the polygon(s) for the drawbar(s).
   List<map.Polygon> get drawbarMapPolygons => [
@@ -1053,7 +1053,7 @@ class Equipment extends Hitchable with EquatableMixin {
         sections.length,
         sectionWorkingMapPolygon,
         growable: false,
-      ).whereNotNull(),
+      ).nonNulls,
     ];
   }
 

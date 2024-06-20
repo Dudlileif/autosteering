@@ -40,8 +40,7 @@ class SettingsMenu extends StatelessWidget {
         SimCoreMenu(),
         ThemeMenu(),
         AudioVolumeMenu(),
-        _ExportLogsButton(),
-        _ImportExportSettingsButton(),
+        _ImportExportMenu(),
         _DebugModeButton(),
         _LicenseButton(),
       ],
@@ -49,12 +48,27 @@ class SettingsMenu extends StatelessWidget {
   }
 }
 
+class _ImportExportMenu extends StatelessWidget {
+  const _ImportExportMenu();
+
+  @override
+  Widget build(BuildContext context) => const MenuButtonWithChildren(
+        text: 'Import/Export',
+        icon: Icons.import_export,
+        menuChildren: [
+          _ExportLogsButton(),
+          _ExportEverythingButton(),
+          _ImportExportSettingsButton(),
+        ],
+      );
+}
+
 class _ExportLogsButton extends ConsumerWidget {
   const _ExportLogsButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => MenuItemButton(
-        onPressed: () => ref.read(exportLogsProvider),
+        onPressed: () => ref.read(exportLogsProvider()),
         closeOnActivate: false,
         leadingIcon: const Padding(
           padding: EdgeInsets.only(left: 8),
@@ -220,4 +234,22 @@ along with Autosteering. If not, see https://www.gnu.org/licenses/.
 ''',
         ),
       );
+}
+
+class _ExportEverythingButton extends ConsumerWidget {
+  const _ExportEverythingButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    return MenuItemButton(
+      closeOnActivate: false,
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.folder_zip_outlined),
+      ),
+      child: Text('Export everything', style: textStyle),
+      onPressed: () => ref.read(exportWholeFileDirectoryProvider),
+    );
+  }
 }

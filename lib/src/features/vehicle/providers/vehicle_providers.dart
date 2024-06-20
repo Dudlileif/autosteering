@@ -386,3 +386,9 @@ class OverrideSteeringAngle extends _$OverrideSteeringAngle {
   /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
+
+
+/// A provider for exporting all vehicle files.
+@riverpod
+FutureOr<void> exportVehicles(ExportVehiclesRef ref, {bool zip = true}) async =>
+    await ref.watch(exportAllProvider(directory: 'vehicles').future);

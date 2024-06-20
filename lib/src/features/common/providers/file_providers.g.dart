@@ -432,7 +432,7 @@ class _DirectoryDeleteProviderElement
 }
 
 String _$saveJsonToFileDirectoryHash() =>
-    r'82205544093a04945a868404dc4e9e582d3728c5';
+    r'7ee46aec60cf860a7e03eb8f946c4e70785ecd71';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -697,7 +697,7 @@ class _SaveJsonToFileDirectoryProviderElement
 }
 
 String _$exportJsonToFileDirectoryHash() =>
-    r'fddbdfe450000228746e608e995cbf0ff3debc9d';
+    r'0ceb65c7c3b0c009b2aff28c5f2b5a95ab838ffb';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -1385,5 +1385,248 @@ class _DeleteJsonFromFileDirectoryProviderElement
   @override
   String get folder => (origin as DeleteJsonFromFileDirectoryProvider).folder;
 }
+
+String _$exportWholeFileDirectoryHash() =>
+    r'ca1c16db3da10d6c0c425ff869956d56a9495213';
+
+/// A provider for exporting the whole file directory to a ZIP file.
+///
+/// Copied from [exportWholeFileDirectory].
+@ProviderFor(exportWholeFileDirectory)
+final exportWholeFileDirectoryProvider =
+    AutoDisposeFutureProvider<void>.internal(
+  exportWholeFileDirectory,
+  name: r'exportWholeFileDirectoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$exportWholeFileDirectoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ExportWholeFileDirectoryRef = AutoDisposeFutureProviderRef<void>;
+String _$exportAllHash() => r'f16b3702330a37f98cbe906530afc7d75af85af5';
+
+/// A provider for exporting all files in a [directory].
+///
+/// Copied from [exportAll].
+@ProviderFor(exportAll)
+const exportAllProvider = ExportAllFamily();
+
+/// A provider for exporting all files in a [directory].
+///
+/// Copied from [exportAll].
+class ExportAllFamily extends Family {
+  /// A provider for exporting all files in a [directory].
+  ///
+  /// Copied from [exportAll].
+  const ExportAllFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportAllProvider';
+
+  /// A provider for exporting all files in a [directory].
+  ///
+  /// Copied from [exportAll].
+  ExportAllProvider call({
+    required String directory,
+    bool zip = true,
+  }) {
+    return ExportAllProvider(
+      directory: directory,
+      zip: zip,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportAllProvider getProviderOverride(
+    covariant ExportAllProvider provider,
+  ) {
+    return call(
+      directory: provider.directory,
+      zip: provider.zip,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(FutureOr<void> Function(ExportAllRef ref) create) {
+    return _$ExportAllFamilyOverride(this, create);
+  }
+}
+
+class _$ExportAllFamilyOverride implements FamilyOverride {
+  _$ExportAllFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportAllRef ref) create;
+
+  @override
+  final ExportAllFamily overriddenFamily;
+
+  @override
+  ExportAllProvider getProviderOverride(
+    covariant ExportAllProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for exporting all files in a [directory].
+///
+/// Copied from [exportAll].
+class ExportAllProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for exporting all files in a [directory].
+  ///
+  /// Copied from [exportAll].
+  ExportAllProvider({
+    required String directory,
+    bool zip = true,
+  }) : this._internal(
+          (ref) => exportAll(
+            ref as ExportAllRef,
+            directory: directory,
+            zip: zip,
+          ),
+          from: exportAllProvider,
+          name: r'exportAllProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportAllHash,
+          dependencies: ExportAllFamily._dependencies,
+          allTransitiveDependencies: ExportAllFamily._allTransitiveDependencies,
+          directory: directory,
+          zip: zip,
+        );
+
+  ExportAllProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.directory,
+    required this.zip,
+  }) : super.internal();
+
+  final String directory;
+  final bool zip;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportAllRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportAllProvider._internal(
+        (ref) => create(ref as ExportAllRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        directory: directory,
+        zip: zip,
+      ),
+    );
+  }
+
+  @override
+  ({
+    String directory,
+    bool zip,
+  }) get argument {
+    return (
+      directory: directory,
+      zip: zip,
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportAllProviderElement(this);
+  }
+
+  ExportAllProvider _copyWith(
+    FutureOr<void> Function(ExportAllRef ref) create,
+  ) {
+    return ExportAllProvider._internal(
+      (ref) => create(ref as ExportAllRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      directory: directory,
+      zip: zip,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportAllProvider &&
+        other.directory == directory &&
+        other.zip == zip;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, directory.hashCode);
+    hash = _SystemHash.combine(hash, zip.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportAllRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `directory` of this provider.
+  String get directory;
+
+  /// The parameter `zip` of this provider.
+  bool get zip;
+}
+
+class _ExportAllProviderElement extends AutoDisposeFutureProviderElement<void>
+    with ExportAllRef {
+  _ExportAllProviderElement(super.provider);
+
+  @override
+  String get directory => (origin as ExportAllProvider).directory;
+  @override
+  bool get zip => (origin as ExportAllProvider).zip;
+}
+
+String _$exportProgressHash() => r'e345b26f7fc97d563c9a80a694913ad2707efa8a';
+
+/// A provider for the progress of the currently ongoing export, if there is
+/// one.
+///
+/// Copied from [ExportProgress].
+@ProviderFor(ExportProgress)
+final exportProgressProvider =
+    AutoDisposeNotifierProvider<ExportProgress, double?>.internal(
+  ExportProgress.new,
+  name: r'exportProgressProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$exportProgressHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ExportProgress = AutoDisposeNotifier<double?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

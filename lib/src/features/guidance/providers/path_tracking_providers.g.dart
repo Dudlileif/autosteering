@@ -997,6 +997,190 @@ final importPathTrackingProvider =
 );
 
 typedef ImportPathTrackingRef = AutoDisposeFutureProviderRef<PathTracking?>;
+String _$exportGuidancesHash() => r'a60744726b52930c15ed1fd4334b73d45a59c11a';
+
+/// A provider for exporting all guidance files.
+///
+/// Copied from [exportGuidances].
+@ProviderFor(exportGuidances)
+const exportGuidancesProvider = ExportGuidancesFamily();
+
+/// A provider for exporting all guidance files.
+///
+/// Copied from [exportGuidances].
+class ExportGuidancesFamily extends Family {
+  /// A provider for exporting all guidance files.
+  ///
+  /// Copied from [exportGuidances].
+  const ExportGuidancesFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportGuidancesProvider';
+
+  /// A provider for exporting all guidance files.
+  ///
+  /// Copied from [exportGuidances].
+  ExportGuidancesProvider call({
+    bool zip = true,
+  }) {
+    return ExportGuidancesProvider(
+      zip: zip,
+    );
+  }
+
+  @visibleForOverriding
+  @override
+  ExportGuidancesProvider getProviderOverride(
+    covariant ExportGuidancesProvider provider,
+  ) {
+    return call(
+      zip: provider.zip,
+    );
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<void> Function(ExportGuidancesRef ref) create) {
+    return _$ExportGuidancesFamilyOverride(this, create);
+  }
+}
+
+class _$ExportGuidancesFamilyOverride implements FamilyOverride {
+  _$ExportGuidancesFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<void> Function(ExportGuidancesRef ref) create;
+
+  @override
+  final ExportGuidancesFamily overriddenFamily;
+
+  @override
+  ExportGuidancesProvider getProviderOverride(
+    covariant ExportGuidancesProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// A provider for exporting all guidance files.
+///
+/// Copied from [exportGuidances].
+class ExportGuidancesProvider extends AutoDisposeFutureProvider<void> {
+  /// A provider for exporting all guidance files.
+  ///
+  /// Copied from [exportGuidances].
+  ExportGuidancesProvider({
+    bool zip = true,
+  }) : this._internal(
+          (ref) => exportGuidances(
+            ref as ExportGuidancesRef,
+            zip: zip,
+          ),
+          from: exportGuidancesProvider,
+          name: r'exportGuidancesProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$exportGuidancesHash,
+          dependencies: ExportGuidancesFamily._dependencies,
+          allTransitiveDependencies:
+              ExportGuidancesFamily._allTransitiveDependencies,
+          zip: zip,
+        );
+
+  ExportGuidancesProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.zip,
+  }) : super.internal();
+
+  final bool zip;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ExportGuidancesRef ref) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ExportGuidancesProvider._internal(
+        (ref) => create(ref as ExportGuidancesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        zip: zip,
+      ),
+    );
+  }
+
+  @override
+  ({
+    bool zip,
+  }) get argument {
+    return (zip: zip,);
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ExportGuidancesProviderElement(this);
+  }
+
+  ExportGuidancesProvider _copyWith(
+    FutureOr<void> Function(ExportGuidancesRef ref) create,
+  ) {
+    return ExportGuidancesProvider._internal(
+      (ref) => create(ref as ExportGuidancesRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      zip: zip,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportGuidancesProvider && other.zip == zip;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, zip.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ExportGuidancesRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `zip` of this provider.
+  bool get zip;
+}
+
+class _ExportGuidancesProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ExportGuidancesRef {
+  _ExportGuidancesProviderElement(super.provider);
+
+  @override
+  bool get zip => (origin as ExportGuidancesProvider).zip;
+}
+
 String _$pathInterpolationDistanceHash() =>
     r'3838e0d5947ecf47190196f1fa4998a29f429156';
 
@@ -1036,7 +1220,7 @@ final pathTrackingPointsProvider =
 
 typedef _$PathTrackingPoints = Notifier<List<WayPoint>?>;
 String _$configuredPathTrackingHash() =>
-    r'67f9e8adefe4b2ff7cc49ae6c2db29251d89d587';
+    r'00e84454d1e4b3aa96a0df55fbceb8d8c28ec37e';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.

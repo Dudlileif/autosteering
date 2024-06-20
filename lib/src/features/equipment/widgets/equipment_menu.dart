@@ -26,6 +26,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiver/strings.dart';
 
 /// A menu with attached submenu for interacting with the equipment feature.
 class EquipmentMenu extends ConsumerWidget {
@@ -192,11 +193,9 @@ class _SaveEquipmentSetup extends StatelessWidget {
                             setState(() => name = value),
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) => value != null &&
-                                value.isNotEmpty &&
-                                !value.startsWith(' ')
-                            ? null
-                            : '''No name entered! Please enter a name so that the setup can be saved!''',
+                        validator: (value) => isBlank(value)
+                            ? '''No name entered! Please enter a name so that the setup can be saved!'''
+                            : null,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
@@ -333,7 +332,10 @@ class _ImportExportMenu extends ConsumerWidget {
             return MenuItemButton(
               closeOnActivate: false,
               onPressed: () => ref.read(importEquipmentProvider),
-              leadingIcon: const Icon(Icons.file_open),
+              leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.file_open),
+              ),
               child: Text('Import', style: textStyle),
             );
           },
@@ -354,7 +356,10 @@ class _ImportExportMenu extends ConsumerWidget {
                         ),
                       )
                   : null,
-              leadingIcon: const Icon(Icons.save_alt),
+              leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.save_alt),
+              ),
               child: Text('Export', style: textStyle),
             );
           },
@@ -364,7 +369,10 @@ class _ImportExportMenu extends ConsumerWidget {
             return MenuItemButton(
               closeOnActivate: false,
               onPressed: () => ref.read(importEquipmentSetupProvider),
-              leadingIcon: const Icon(Icons.file_open),
+              leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.file_open),
+              ),
               child: Text('Import setup', style: textStyle),
             );
           },
@@ -387,11 +395,20 @@ class _ImportExportMenu extends ConsumerWidget {
                           ),
                         )
                     : null,
-                leadingIcon: const Icon(Icons.save_alt),
+                leadingIcon: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.save_alt),
+                ),
                 child: Text('Export setup', style: textStyle),
               );
             },
           ),
+        Consumer(
+          builder: (context, ref, child) => ExportAllMenuButton(
+            onPressed: () =>
+                ref.read(exportAllProvider(directory: 'equipment')),
+          ),
+        ),
       ],
     );
   }
@@ -877,6 +894,21 @@ class _EqiupmentDebugMenu extends StatelessWidget {
         ),
         Consumer(
           child: Text(
+            'Sections',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            value: ref.watch(debugEquipmentSectionsProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugEquipmentSectionsProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
+        Consumer(
+          child: Text(
             'Turning',
             style: textStyle,
           ),
@@ -886,6 +918,21 @@ class _EqiupmentDebugMenu extends StatelessWidget {
             onChanged: (value) => value != null
                 ? ref
                     .read(debugEquipmentTurningProvider.notifier)
+                    .update(value: value)
+                : null,
+          ),
+        ),
+        Consumer(
+          child: Text(
+            'Hitches',
+            style: textStyle,
+          ),
+          builder: (context, ref, child) => CheckboxListTile(
+            title: child,
+            value: ref.watch(debugEquipmentHitchesProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(debugEquipmentHitchesProvider.notifier)
                     .update(value: value)
                 : null,
           ),

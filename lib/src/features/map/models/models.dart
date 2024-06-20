@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 export 'country/country.dart';
+export 'editable_path_type.dart';
 export 'file_cached_tile_provider.dart';
 export 'hive_cached_tile_provider.dart';
 export 'map_center_offset.dart';

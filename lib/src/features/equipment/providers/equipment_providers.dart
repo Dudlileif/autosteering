@@ -525,3 +525,12 @@ FutureOr<Equipment?> importEquipment(
 
   return equipment;
 }
+
+
+/// A provider for exporting all equipment files.
+@riverpod
+FutureOr<void> exportEquipments(
+  ExportEquipmentsRef ref, {
+  bool zip = true,
+}) async =>
+    await ref.watch(exportAllProvider(directory: 'equipments').future);

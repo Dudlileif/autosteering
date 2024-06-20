@@ -309,7 +309,7 @@ abstract class Hitchable {
         hitchFrontFixedPoint,
         hitchRearFixedPoint,
         hitchRearTowbarPoint,
-      ].whereNotNull();
+      ].nonNulls;
 
   /// The number of children recursively attached to this.
   int get numAttachedChildren => hitchChildren.fold(

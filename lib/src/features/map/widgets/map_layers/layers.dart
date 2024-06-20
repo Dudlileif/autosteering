@@ -27,6 +27,7 @@ export 'grid_layer.dart';
 export 'osm_layer.dart';
 export 'path_recording_layer.dart';
 export 'path_tracking_layer.dart';
+export 'selectable_path_layer.dart';
 export 'sentinel_layers.dart';
 export 'vehicle_debug_layer.dart';
 export 'vehicle_drawer_layer.dart';

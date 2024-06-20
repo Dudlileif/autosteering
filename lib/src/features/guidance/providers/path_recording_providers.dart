@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
@@ -100,12 +101,12 @@ class ActivePathRecordingSettings extends _$ActivePathRecordingSettings {
     ref
       ..watch(reloadAllSettingsProvider)
       ..listenSelf((previous, next) {
-      if (previous != null && previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.pathRecordingSettings, next);
-      }
-    });
+        if (previous != null && previous != next) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.pathRecordingSettings, next);
+        }
+      });
     final json = ref
         .read(settingsProvider.notifier)
         .getMap(SettingsKey.pathRecordingSettings);
@@ -302,8 +303,30 @@ class EditFinishedPath extends _$EditFinishedPath {
   @override
   bool build() {
     ref.listenSelf((previous, next) {
-      if (next || previous != null) {
-        Logger.instance.i('Editing recorded path: $next.');
+      if (previous != null) {
+        Logger.instance.i('Editing recorded path: $next');
+        if (!previous && next) {
+          ref
+              .read(activeEditablePathTypeProvider.notifier)
+              .update(EditablePathType.recordedPath);
+          ref.read(editablePathPointsProvider.notifier).update(
+                ref.read(
+                  finishedPathRecordingListProvider.select(
+                    (value) => value?.map((e) => e.position).toList(),
+                  ),
+                ),
+              );
+        } else if (previous && !next) {
+          final wayPoints = ref.read(editablePathAsWayPointsProvider);
+          if (wayPoints != null) {
+            ref
+                .read(finishedPathRecordingListProvider.notifier)
+                .update(wayPoints);
+          }
+          ref
+            ..invalidate(editablePathPointsProvider)
+            ..read(activeEditablePathTypeProvider.notifier).update(null);
+        }
       }
     });
     return false;

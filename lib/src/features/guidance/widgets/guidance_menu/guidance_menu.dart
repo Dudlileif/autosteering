@@ -22,11 +22,13 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/ab_tracking_menu.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/path_tracking_menu.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/virtual_led_bar_menu.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiver/strings.dart';
 
 /// A menu with attached submenu for working with the guidance features.
 class GuidanceMenu extends ConsumerWidget {
@@ -90,8 +92,12 @@ class GuidanceMenu extends ConsumerWidget {
             },
           ),
         ),
-        if (ref.watch(displayABTrackingProvider) != null ||
-            ref.watch(displayPathTrackingProvider) != null)
+        if (ref.watch(
+              displayABTrackingProvider.select((value) => value != null),
+            ) ||
+            ref.watch(
+              displayPathTrackingProvider.select((value) => value != null),
+            ))
           MenuItemButton(
             leadingIcon: const Padding(
               padding: EdgeInsets.only(left: 8),
@@ -104,6 +110,17 @@ class GuidanceMenu extends ConsumerWidget {
                 ..invalidate(configuredABTrackingProvider)
                 ..invalidate(configuredPathTrackingProvider)
                 ..invalidate(pathTrackingPointsProvider);
+              if (ref.read(
+                activeEditablePathTypeProvider.select(
+                  (value) =>
+                      value == EditablePathType.abCurve ||
+                      value == EditablePathType.pathTracking,
+                ),
+              )) {
+                ref
+                  ..invalidate(editablePathPointsProvider)
+                  ..read(activeEditablePathTypeProvider.notifier).update(null);
+              }
             },
             closeOnActivate: false,
             child: Text(
@@ -111,32 +128,48 @@ class GuidanceMenu extends ConsumerWidget {
               style: textStyle,
             ),
           ),
-        if (ref.watch(displayABTrackingProvider) == null &&
-            ref.watch(displayPathTrackingProvider) == null) ...[
+        if (ref.watch(
+              displayABTrackingProvider.select((value) => value == null),
+            ) &&
+            ref.watch(
+              displayPathTrackingProvider.select((value) => value == null),
+            )) ...[
           if (Device.isNative) const _LoadPathTrackingMenu(),
           if (Device.isNative) const _LoadABTrackingMenu(),
+          if (ref.watch(
+                displayPathTrackingProvider.select((value) => value == null),
+              ) &&
+              ref.watch(
+                displayABTrackingProvider.select((value) => value == null),
+              ))
+            ExportAllMenuButton(
+              onPressed: () =>
+                  ref.read(exportAllProvider(directory: 'guidance')),
+            ),
           const _ImportMenu(),
         ],
-        if (ref.watch(displayABTrackingProvider) != null) ...[
+        if (ref.watch(
+          displayABTrackingProvider.select((value) => value != null),
+        )) ...[
           const _SaveABTrackingButton(),
           const _RenameABTrackingButton(),
         ],
-        if (ref.watch(displayPathTrackingProvider) != null) ...[
+        if (ref.watch(
+          displayPathTrackingProvider.select((value) => value != null),
+        )) ...[
           const _SavePathTrackingButton(),
           const _RenamePathTrackingButton(),
         ],
-        if (ref.watch(displayABTrackingProvider) != null ||
-            ref.watch(displayPathTrackingProvider) != null) ...[
+        if (ref.watch(
+              displayABTrackingProvider.select((value) => value != null),
+            ) ||
+            ref.watch(
+              displayPathTrackingProvider.select((value) => value != null),
+            )) ...[
           const _ExportButton(),
         ],
-        if (ref.watch(
-          displayPathTrackingProvider.select((value) => value == null),
-        ))
-          const ABTrackingMenu(),
-        if (ref.watch(
-          displayABTrackingProvider.select((value) => value == null),
-        ))
-          const PathTrackingMenu(),
+        const ABTrackingMenu(),
+        const PathTrackingMenu(),
         const VirtualLedBarMenu(),
       ],
     );
@@ -378,7 +411,7 @@ class _RenameABTrackingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final abTracking = ref.watch(configuredABTrackingProvider);
+    final abTracking = ref.watch(displayABTrackingProvider);
     if (abTracking == null) {
       return const SizedBox.shrink();
     }
@@ -415,11 +448,9 @@ class _RenameABTrackingButton extends ConsumerWidget {
                     onFieldSubmitted: (value) => setState(() => name = value),
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value != null &&
-                            value.isNotEmpty &&
-                            !value.startsWith(' ')
-                        ? null
-                        : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                    validator: (value) => isBlank(value)
+                        ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                        : null,
                   ),
                 ),
                 Padding(
@@ -460,7 +491,7 @@ class _RenamePathTrackingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pathTracking = ref.watch(configuredPathTrackingProvider);
+    final pathTracking = ref.watch(displayPathTrackingProvider);
     if (pathTracking == null) {
       return const SizedBox.shrink();
     }
@@ -497,11 +528,9 @@ class _RenamePathTrackingButton extends ConsumerWidget {
                     onFieldSubmitted: (value) => setState(() => name = value),
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value != null &&
-                            value.isNotEmpty &&
-                            !value.startsWith(' ')
-                        ? null
-                        : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                    validator: (value) => isBlank(value)
+                        ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                        : null,
                   ),
                 ),
                 Padding(
@@ -542,7 +571,7 @@ class _SaveABTrackingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final abTracking = ref.watch(configuredABTrackingProvider);
+    final abTracking = ref.watch(displayABTrackingProvider);
     if (abTracking == null) {
       return const SizedBox.shrink();
     }
@@ -590,11 +619,9 @@ class _SaveABTrackingButton extends ConsumerWidget {
                               setState(() => name = value),
                           keyboardType: TextInputType.text,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => value != null &&
-                                  value.isNotEmpty &&
-                                  !value.startsWith(' ')
-                              ? null
-                              : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                          validator: (value) => isBlank(value)
+                              ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                              : null,
                         ),
                       ),
                       Padding(
@@ -634,7 +661,7 @@ class _SavePathTrackingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pathTracking = ref.watch(configuredPathTrackingProvider);
+    final pathTracking = ref.watch(displayPathTrackingProvider);
     if (pathTracking == null) {
       return const SizedBox.shrink();
     }
@@ -681,11 +708,9 @@ class _SavePathTrackingButton extends ConsumerWidget {
                             setState(() => name = value),
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) => value != null &&
-                                value.isNotEmpty &&
-                                !value.startsWith(' ')
-                            ? null
-                            : '''No name entered! Please enter a name so that the tracking can be saved!''',
+                        validator: (value) => isBlank(value)
+                            ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                            : null,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 16),

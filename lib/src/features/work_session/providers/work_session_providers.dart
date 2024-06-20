@@ -395,3 +395,12 @@ FutureOr<WorkSession?> importWorkSession(
   }
   return workSession;
 }
+
+
+/// A provider for exporting all work session files.
+@riverpod
+FutureOr<void> exportWorkSessions(
+  ExportWorkSessionsRef ref, {
+  bool zip = true,
+}) async =>
+    await ref.watch(exportAllProvider(directory: 'work_sessions').future);

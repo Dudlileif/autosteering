@@ -27,6 +27,7 @@ _$LedBarConfigImpl _$$LedBarConfigImplFromJson(Map<String, dynamic> json) =>
       ledSize: (json['ledSize'] as num?)?.toDouble() ?? 20,
       barWidth: (json['barWidth'] as num?)?.toDouble() ?? 800,
       reverseBar: json['reverseBar'] as bool? ?? false,
+      showInactiveLeds: json['showInactiveLeds'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$LedBarConfigImplToJson(_$LedBarConfigImpl instance) =>
@@ -44,4 +45,5 @@ Map<String, dynamic> _$$LedBarConfigImplToJson(_$LedBarConfigImpl instance) =>
       'ledSize': instance.ledSize,
       'barWidth': instance.barWidth,
       'reverseBar': instance.reverseBar,
+      'showInactiveLeds': instance.showInactiveLeds,
     };

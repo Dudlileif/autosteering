@@ -66,12 +66,20 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
       if (next != null || previous != null) {
         Logger.instance.i('Path tracking set to ${next?.runtimeType}');
         if (next != null) {
-          ref
-            ..invalidate(configuredABTrackingProvider)
-            ..invalidate(displayABTrackingProvider);
+          ref.invalidate(displayABTrackingProvider);
           ref.read(activeWorkSessionProvider.notifier).updatePathTracking(next);
+
+          if (ref.read(
+                displayPathTrackingProvider.select((value) => value == null),
+              ) &&
+              ref.read(
+                displayABTrackingProvider.select((value) => value == null),
+              )) {
+            sendToSim();
+          }
+        } else {
+          sendToSim();
         }
-        sendToSim();
       }
     });
 
@@ -323,3 +331,12 @@ FutureOr<PathTracking?> importPathTracking(
   }
   return pathTracking;
 }
+
+
+/// A provider for exporting all guidance files.
+@riverpod
+FutureOr<void> exportGuidances(
+  ExportGuidancesRef ref, {
+  bool zip = true,
+}) async =>
+    await ref.watch(exportAllProvider(directory: 'guidance').future);

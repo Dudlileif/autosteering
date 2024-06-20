@@ -101,10 +101,21 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showEquipmentDebugLayerProvider))
           const EquipmentDebugLayer(),
         if (ref.watch(showPathTrackingLayerProvider)) const PathTrackingLayer(),
-        if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
         if (ref.watch(showDubinsPathDebugLayerProvider))
           const DubinsPathDebugLayer(),
         if (ref.watch(showABTrackingLayerProvider)) const ABTrackingLayer(),
+        if (ref.watch(showEditablePathLayerProvider)) const EditablePathLayer(),
+        if (ref.watch(showSelectablePathLayerProvider))
+          SelectablePathLayer(
+            highlightSelectedPath: ref.watch(
+              currentABTrackingTypeProvider
+                  .select((value) => value == ABTrackingType.abCurve),
+            ),
+            showStraightLine: ref.watch(
+              currentABTrackingTypeProvider
+                  .select((value) => value != ABTrackingType.abCurve),
+            ),
+          ),
         if (ref.watch(virtualLedBarTestingProvider))
           const VirtualLedBarTestLayer(),
       ],

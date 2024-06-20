@@ -16,12 +16,12 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geobase/geobase.dart';
 
 /// A combination layer for the editable points and the lines between.
 class EditablePathLayer extends ConsumerWidget {
@@ -30,17 +30,19 @@ class EditablePathLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final points = ref.watch(finishedPathRecordingListProvider) ?? const [];
+    final points = ref.watch(editablePathPointsProvider);
 
     return Stack(
-      children: points.isNotEmpty
+      children: points != null && points.length >= 2
           ? [
               PolylineLayer(
                 polylines: [
                   Polyline(
                     points: [
-                      ...points.map((point) => point.position.latLng),
+                      ...points.map((point) => point.latLng),
                     ],
+                    color: Colors.blue,
+                    strokeWidth: 2,
                   ),
                 ],
               ),
@@ -50,52 +52,41 @@ class EditablePathLayer extends ConsumerWidget {
                     (index, point) {
                       final nextPoint = index == points.length - 1
                           ? points.first
-                          : points[index + 1];
+                          : points.elementAt(index + 1);
 
-                      final midPoint =
-                          WayPointTween(begin: point, end: nextPoint)
-                              .transform(0.5);
+                      final midPoint = point.spherical
+                          .intermediatePointTo(nextPoint, fraction: 0.5);
 
                       return Marker(
-                        point: midPoint.position.latLng,
+                        point: midPoint.latLng,
                         child: AddPointMarker(
                           alwaysVisible: Device.isMobile,
-                          point: midPoint.position,
+                          point: midPoint,
                           radius: 5,
                           onTap: () => ref
-                              .read(
-                                finishedPathRecordingListProvider.notifier,
-                              )
-                              .insert(
-                                index + 1,
-                                midPoint,
-                              ),
+                              .read(editablePathPointsProvider.notifier)
+                              .insert(index + 1, midPoint),
                         ),
                       );
                     },
                   ),
                   ...points.mapIndexed(
                     (index, point) => Marker(
-                      point: point.position.latLng,
+                      point: point.latLng,
                       child: GestureDetector(
                         onDoubleTap: () => ref
-                            .read(finishedPathRecordingListProvider.notifier)
+                            .read(editablePathPointsProvider.notifier)
                             .remove(index),
                         onSecondaryTap: () => ref
-                            .read(finishedPathRecordingListProvider.notifier)
+                            .read(editablePathPointsProvider.notifier)
                             .remove(index),
                         child: MovableMapMarker(
-                          point: point.position,
+                          point: point,
                           radius: 5,
                           onMoved: (position) {
                             ref
-                                .read(
-                                  finishedPathRecordingListProvider.notifier,
-                                )
-                                .movePoint(
-                                  index,
-                                  point.copyWith(position: position),
-                                );
+                                .read(editablePathPointsProvider.notifier)
+                                .movePoint(index, position);
                           },
                         ),
                       ),

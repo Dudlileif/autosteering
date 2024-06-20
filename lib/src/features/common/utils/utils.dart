@@ -19,6 +19,7 @@ export 'color_serializer.dart';
 export 'date_time_serializer.dart';
 export 'device.dart';
 export 'file_cached_network_image_provider.dart';
+export 'file_handler.dart';
 export 'logger.dart';
 export 'math.dart';
 export 'offset_json_extension.dart';

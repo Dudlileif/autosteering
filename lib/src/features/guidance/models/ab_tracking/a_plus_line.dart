@@ -39,6 +39,8 @@ class APlusLine extends ABTracking {
     super.limitMode,
     super.snapToClosestLine,
     super.calculateLinesOnCreation,
+    super.baseLineSidewaysOffset,
+    super.correctedBaseLine,
     super.name,
     super.uuid,
   }) : super(
@@ -62,6 +64,8 @@ class APlusLine extends ABTracking {
     Iterable<int>? finishedOffsets,
     Iterable<int>? offsetsInsideBoundary,
     super.calculateLinesOnCreation = false,
+    super.baseLineSidewaysOffset,
+    super.correctedBaseLine,
     super.name,
     super.uuid,
   }) : super(type: ABTrackingType.aPlusLine) {
@@ -92,6 +96,12 @@ class APlusLine extends ABTracking {
     if (baseLine.length < 2) {
       throw Exception('The base line was not found.');
     }
+
+    final correctedBaseLine = json['corrected_base_line'] != null
+        ? List<Map<String, dynamic>>.from(json['corrected_base_line'] as List)
+            .map(WayPoint.fromJson)
+            .toList()
+        : null;
 
     final boundary = json['boundary'] != null
         ? Polygon.parse(json['boundary'] as String)
@@ -134,6 +144,8 @@ class APlusLine extends ABTracking {
       finishedOffsets: finishedOffsets,
       offsetsInsideBoundary: offsetsInsideBoundary,
       calculateLinesOnCreation: json['calculate_lines'] as bool,
+      correctedBaseLine: correctedBaseLine,
+      baseLineSidewaysOffset: json['base_line_sideways_offset'] as double?,
       name: json['name'] as String?,
     );
   }

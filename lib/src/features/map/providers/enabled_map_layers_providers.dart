@@ -82,10 +82,12 @@ bool showPathRecordingLayer(ShowPathRecordingLayerRef ref) =>
 /// Whether the editable recorded path should be shown.
 @riverpod
 bool showEditablePathLayer(ShowEditablePathLayerRef ref) {
-  final isEditing = ref.watch(editFinishedPathProvider);
-  final points = ref.watch(finishedPathRecordingListProvider);
+  final isEditing = ref
+      .watch(activeEditablePathTypeProvider.select((value) => value != null));
+  final pointsNotEmpty =
+      ref.watch(editablePathPointsProvider.select((value) => value != null));
 
-  final enabled = isEditing && points != null;
+  final enabled = isEditing && pointsNotEmpty;
   return enabled;
 }
 
@@ -199,3 +201,13 @@ class ShowGridLayer extends _$ShowGridLayer {
   /// Invert the current [state].
   void toggle() => Future(() => state = !state);
 }
+
+/// Whether the layer for selectable path should be shown.
+@riverpod
+bool showSelectablePathLayer(ShowSelectablePathLayerRef ref) =>
+    ref.watch(enableSelectablePathProvider) &&
+    ref.watch(
+      selectablePathPointsProvider.select(
+        (value) => value != null && value.length >= 2,
+      ),
+    );

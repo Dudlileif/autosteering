@@ -35,21 +35,23 @@ class ShowMiniMap extends _$ShowMiniMap {
     ref
       ..watch(reloadAllSettingsProvider)
       ..listen(activeFieldProvider, (previous, next) {
-        if (ref.read(miniMapLockToFieldProvider)) {
-          if (next != null) {
-            ref.read(miniMapLockToFieldProvider.notifier).updateBounds();
-          } else {
-            final mapController = ref.read(miniMapControllerProvider);
-            final vehicle = ref.read(
-              mainVehicleProvider.select(
-                (value) => (position: value.position, bearing: value.bearing),
-              ),
-            );
-            mapController.moveAndRotate(
-              vehicle.position.latLng,
-              mapController.camera.zoom,
-              -vehicle.bearing,
-            );
+        if (ref.read(miniMapReadyProvider)) {
+          if (ref.read(miniMapLockToFieldProvider)) {
+            if (next != null) {
+              ref.read(miniMapLockToFieldProvider.notifier).updateBounds();
+            } else {
+              final mapController = ref.read(miniMapControllerProvider);
+              final vehicle = ref.read(
+                mainVehicleProvider.select(
+                  (value) => (position: value.position, bearing: value.bearing),
+                ),
+              );
+              mapController.moveAndRotate(
+                vehicle.position.latLng,
+                mapController.camera.zoom,
+                -vehicle.bearing,
+              );
+            }
           }
         }
       })
@@ -177,21 +179,23 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
     ref
       ..watch(reloadAllSettingsProvider)
       ..listenSelf((previous, next) {
-      if (ref.read(miniMapReadyProvider)) {
-        if (next) {
-          ref.read(miniMapControllerProvider).rotate(0);
-        } else {
-          ref.read(miniMapControllerProvider).rotate(
-                ref.read(mainVehicleProvider.select((value) => -value.bearing)),
-              );
+        if (ref.read(miniMapReadyProvider)) {
+          if (next) {
+            ref.read(miniMapControllerProvider).rotate(0);
+          } else {
+            ref.read(miniMapControllerProvider).rotate(
+                  ref.read(
+                    mainVehicleProvider.select((value) => -value.bearing),
+                  ),
+                );
+          }
         }
-      }
-      if (previous != null && previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.miniMapAlwaysPointNorth, next);
-      }
-    });
+        if (previous != null && previous != next) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.miniMapAlwaysPointNorth, next);
+        }
+      });
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.miniMapAlwaysPointNorth) ??
@@ -213,12 +217,12 @@ class MiniMapSize extends _$MiniMapSize {
     ref
       ..watch(reloadAllSettingsProvider)
       ..listenSelf((previous, next) {
-      if (previous != null && previous != next) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.miniMapSize, next);
-      }
-    });
+        if (previous != null && previous != next) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.miniMapSize, next);
+        }
+      });
     return ref
             .read(settingsProvider.notifier)
             .getDouble(SettingsKey.miniMapSize) ??

@@ -16,7 +16,9 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -25,6 +27,7 @@ import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geobase/geobase.dart';
 
 /// A menu for configuring and using an [ABTracking] to track after.
 class ABTrackingMenu extends ConsumerWidget {
@@ -44,7 +47,7 @@ class ABTrackingMenu extends ConsumerWidget {
           configuredABTrackingProvider.select((value) => value != null),
         );
     final menuConfiguredTracking = ref.watch(configuredMenuABTrackingProvider);
-    
+
     final abTracking = switch (workSessionGuidanceActive) {
       true => ref.watch(configuredABTrackingProvider),
       false => menuConfiguredTracking.when(
@@ -97,9 +100,30 @@ class ABTrackingMenu extends ConsumerWidget {
                 child: Icon(Icons.check),
               ),
               onPressed: data != null
-                  ? () => ref
-                      .read(simInputProvider.notifier)
-                      .send((abTracking: data))
+                  ? () {
+                      if (ref.watch(
+                        displayPathTrackingProvider
+                            .select((value) => value != null),
+                      )) {
+                        showDialog<void>(
+                          context: context,
+                          builder: (context) => Consumer(
+                            builder: (context, ref, child) {
+                              return ConfirmationDialog(
+                                title: 'Close active path tracking?',
+                                onConfirmation: () async => ref
+                                    .read(simInputProvider.notifier)
+                                    .send((abTracking: data)),
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        ref
+                            .read(simInputProvider.notifier)
+                            .send((abTracking: data));
+                      }
+                    }
                   : null,
               child: child,
             ),
@@ -141,9 +165,21 @@ class ABTrackingMenu extends ConsumerWidget {
                       : const Icon(Icons.gps_not_fixed),
                 ),
                 trailingIcon: pointIsSet
-                    ? IconButton(
-                        onPressed: () => ref.invalidate(aBPointAProvider),
-                        icon: const Icon(Icons.clear),
+                    ? Row(
+                        children: [
+                          IconButton(
+                            onPressed:
+                                ref.read(showABPointAProvider.notifier).toggle,
+                            icon: switch (ref.watch(showABPointAProvider)) {
+                              true => const Icon(Icons.visibility),
+                              false => const Icon(Icons.visibility_off)
+                            },
+                          ),
+                          IconButton(
+                            onPressed: () => ref.invalidate(aBPointAProvider),
+                            icon: const Icon(Icons.clear),
+                          ),
+                        ],
                       )
                     : null,
                 closeOnActivate: false,
@@ -176,9 +212,21 @@ class ABTrackingMenu extends ConsumerWidget {
                       : const Icon(Icons.gps_not_fixed),
                 ),
                 trailingIcon: pointIsSet
-                    ? IconButton(
-                        onPressed: () => ref.invalidate(aBPointBProvider),
-                        icon: const Icon(Icons.clear),
+                    ? Row(
+                        children: [
+                          IconButton(
+                            onPressed:
+                                ref.read(showABPointBProvider.notifier).toggle,
+                            icon: switch (ref.watch(showABPointBProvider)) {
+                              true => const Icon(Icons.visibility),
+                              false => const Icon(Icons.visibility_off)
+                            },
+                          ),
+                          IconButton(
+                            onPressed: () => ref.invalidate(aBPointBProvider),
+                            icon: const Icon(Icons.clear),
+                          ),
+                        ],
                       )
                     : null,
                 closeOnActivate: false,
@@ -231,26 +279,233 @@ class ABTrackingMenu extends ConsumerWidget {
             ),
           )
         else if (abTrackingType == ABTrackingType.abCurve)
+          switch (ref.watch(
+            displayABTrackingProvider.select((value) => value != null),
+          )) {
+            true => switch (ref.watch(activeEditablePathTypeProvider)) {
+                null => MenuItemButton(
+                    closeOnActivate: false,
+                    leadingIcon: const Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Icon(Icons.edit),
+                    ),
+                    onPressed: () {
+                      ref
+                          .read(activeEditablePathTypeProvider.notifier)
+                          .update(EditablePathType.abCurve);
+                      ref.read(editablePathPointsProvider.notifier).update(
+                            ref.read(
+                              displayABTrackingProvider.select(
+                                (value) => value?.baseLine
+                                    .map((e) => e.position)
+                                    .toList(),
+                              ),
+                            ),
+                          );
+                    },
+                    child: Text(
+                      'Edit path',
+                      style: theme.menuButtonWithChildrenText,
+                    ),
+                  ),
+                EditablePathType.abCurve => MenuItemButton(
+                    closeOnActivate: false,
+                    leadingIcon: const Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Icon(Icons.edit),
+                    ),
+                    onPressed: () {
+                      final wayPoints =
+                          ref.watch(editablePathAsWayPointsProvider);
+                      ref
+                          .read(aBCurvePointsProvider.notifier)
+                          .update(wayPoints);
+                      ref
+                          .read(activeEditablePathTypeProvider.notifier)
+                          .update(null);
+                    },
+                    child: Text(
+                      'Finish editing',
+                      style: theme.menuButtonWithChildrenText,
+                    ),
+                  ),
+                _ => const SizedBox.shrink()
+              },
+            false => Consumer(
+                builder: (context, ref, child) => MenuItemButton(
+                  closeOnActivate: false,
+                  leadingIcon: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Icon(Icons.voicemail),
+                  ),
+                  onPressed: () {
+                    ref
+                        .read(enablePathRecorderProvider.notifier)
+                        .update(value: true);
+                    ref
+                        .read(activePathRecordingTargetProvider.notifier)
+                        .update(PathRecordingTarget.abCurve);
+                    ref
+                        .read(showPathRecordingMenuProvider.notifier)
+                        .update(value: true);
+                  },
+                  child: Text(
+                    'Record curve',
+                    style: theme.menuButtonWithChildrenText,
+                  ),
+                ),
+              ),
+          },
+          
+        if (ref.watch(
+              displayPathTrackingProvider.select(
+                (value) => value != null && value.wayPoints.length >= 2,
+              ),
+            ) &&
+            !ref.watch(enableSelectablePathProvider))
           Consumer(
             builder: (context, ref, child) => MenuItemButton(
               closeOnActivate: false,
               leadingIcon: const Padding(
                 padding: EdgeInsets.only(left: 8),
-                child: Icon(Icons.voicemail),
+                child: Icon(Icons.route),
               ),
               onPressed: () {
+                final tracking = ref.watch(displayPathTrackingProvider);
                 ref
-                    .read(enablePathRecorderProvider.notifier)
-                    .update(value: true);
+                    .read(selectablePathPointsProvider.notifier)
+                    .update(tracking?.wayPoints.map((e) => e.position));
                 ref
-                    .read(activePathRecordingTargetProvider.notifier)
-                    .update(PathRecordingTarget.abCurve);
-                ref
-                    .read(showPathRecordingMenuProvider.notifier)
+                    .read(enableSelectablePathProvider.notifier)
                     .update(value: true);
               },
-              child:
-                  Text('Record curve', style: theme.menuButtonWithChildrenText),
+              child: Text(
+                'Select from path tracking',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
+          ),
+        if (ref.watch(
+              activeFieldProvider.select(
+                (value) =>
+                    value?.polygon.exterior != null &&
+                    value!.polygon.exterior!.positionCount >= 2,
+              ),
+            ) &&
+            !ref.watch(enableSelectablePathProvider))
+          Consumer(
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Stack(
+                  children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+                ),
+              ),
+              onPressed: () {
+                final points = ref.watch(
+                  activeFieldProvider.select(
+                    (value) => value?.polygon.exterior?.toGeographicPositions,
+                  ),
+                );
+                ref.read(selectablePathPointsProvider.notifier).update(points);
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: true);
+              },
+              child: Text(
+                'Select from field border',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
+          ),
+        if (ref.watch(
+              bufferedFieldProvider.select(
+                (value) => value.when(
+                  data: (data) =>
+                      data?.polygon.exterior != null &&
+                      data!.polygon.exterior!.positionCount >= 2,
+                  error: (error, stackTrace) => false,
+                  loading: () => false,
+                ),
+              ),
+            ) &&
+            !ref.watch(enableSelectablePathProvider))
+          Consumer(
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Stack(
+                  children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+                ),
+              ),
+              onPressed: () async {
+                final points = await ref.watch(
+                  bufferedFieldProvider.selectAsync(
+                    (value) => value?.polygon.exterior?.toGeographicPositions,
+                  ),
+                );
+                ref.read(selectablePathPointsProvider.notifier).update(points);
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: true);
+              },
+              child: Text(
+                'Select from buffered field border',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
+          ),
+        if (ref.watch(enableSelectablePathProvider) &&
+            ref.watch(
+              selectablePathIndicesProvider
+                  .select((value) => value != null && value.length >= 2),
+            ))
+          Consumer(
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.route),
+              ),
+              onPressed: () {
+                final points = ref.watch(selectablePathStartToEndProvider);
+                if (points != null && points.isNotEmpty) {
+                  final wayPoints = <WayPoint>[];
+                  for (final (index, point) in points.indexed) {
+                    if (index < points.length - 1) {
+                      wayPoints.add(
+                        WayPoint(
+                          position: point,
+                          bearing: point.rhumb
+                              .initialBearingTo(points.elementAt(index + 1)),
+                        ),
+                      );
+                    } else {
+                      wayPoints.add(
+                        WayPoint(
+                          position: point,
+                          bearing: points
+                              .elementAt(index - 1)
+                              .rhumb
+                              .finalBearingTo(point),
+                        ),
+                      );
+                    }
+                  }
+                  ref.read(aBPointAProvider.notifier).update(wayPoints.first);
+                  ref.read(aBPointBProvider.notifier).update(wayPoints.last);
+                  ref.read(aBCurvePointsProvider.notifier).update(wayPoints);
+                }
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: false);
+              },
+              child: Text(
+                'Use selected path',
+                style: theme.menuButtonWithChildrenText,
+              ),
             ),
           ),
         _ABCommonMenu(
@@ -508,10 +763,10 @@ class _ABCommonMenu extends ConsumerWidget {
                     padding: const EdgeInsets.only(top: 16),
                     child: Consumer(
                       builder: (context, ref, child) => ElevatedButton.icon(
-                onPressed: () {
-                  ref.invalidate(aBWidthProvider);
-                },
-                icon: const Icon(Icons.handyman),
+                        onPressed: () {
+                          ref.invalidate(aBWidthProvider);
+                        },
+                        icon: const Icon(Icons.handyman),
                         label: const Text('Set to equipment width'),
                       ),
                     ),
@@ -537,6 +792,59 @@ class _ABCommonMenu extends ConsumerWidget {
               builder: (context) => SimpleDialog(
                 title: const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text('Offset from base line'), CloseButton()],
+                ),
+                contentPadding: const EdgeInsets.only(
+                  left: 24,
+                  top: 12,
+                  right: 24,
+                  bottom: 16,
+                ),
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) => TextFormField(
+                      controller: TextEditingController(
+                        text: ref.watch(aBSidewaysOffsetProvider).toString(),
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Offset (-left / +right)',
+                        suffixText: 'm',
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        signed: true,
+                        decimal: true,
+                      ),
+                      onFieldSubmitted: (value) {
+                        final offset = double.tryParse(value);
+                        if (offset != null) {
+                          ref.read(aBSidewaysOffsetProvider.notifier).update(
+                                offset,
+                              );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+            ),
+            child: Text(
+              '''Sideways offset: ${ref.watch(aBSidewaysOffsetProvider).toStringAsFixed(1)} m''',
+              style: textStyle,
+            ),
+          ),
+        ),
+        Consumer(
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [Text('AB turning radius'), CloseButton()],
                 ),
                 contentPadding: const EdgeInsets.only(
@@ -549,29 +857,31 @@ class _ABCommonMenu extends ConsumerWidget {
                   Consumer(
                     builder: (context, ref, child) => TextFormField(
                       decoration: const InputDecoration(
-                labelText: 'Turning radius',
-                suffixText: 'm',
-              ),
-              keyboardType: TextInputType.number,
-              controller: TextEditingController(
-                text: ref.watch(aBTurningRadiusProvider).toString(),
-              ),
-              onFieldSubmitted: (value) {
-                final radius = double.tryParse(value);
-                if (radius != null && radius >= 0) {
-                  ref.read(aBTurningRadiusProvider.notifier).update(radius);
-                }
-              },
+                        labelText: 'Turning radius',
+                        suffixText: 'm',
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: TextEditingController(
+                        text: ref.watch(aBTurningRadiusProvider).toString(),
+                      ),
+                      onFieldSubmitted: (value) {
+                        final radius = double.tryParse(value);
+                        if (radius != null && radius >= 0) {
+                          ref
+                              .read(aBTurningRadiusProvider.notifier)
+                              .update(radius);
+                        }
+                      },
                     ),
                   ),
                   Consumer(
                     builder: (context, ref, child) => Padding(
                       padding: const EdgeInsets.only(top: 16),
                       child: ElevatedButton.icon(
-              onPressed: () {
-                ref.invalidate(aBTurningRadiusProvider);
-              },
-              icon: const Icon(Icons.agriculture),
+                        onPressed: () {
+                          ref.invalidate(aBTurningRadiusProvider);
+                        },
+                        icon: const Icon(Icons.agriculture),
                         label:
                             const Text('Set to 1.25 x vehicle turning radius'),
                       ),

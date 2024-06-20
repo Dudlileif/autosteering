@@ -99,6 +99,9 @@ class LedBarConfig with _$LedBarConfig {
 
     /// Whether the bar should be reversed/inverted.
     @Default(false) bool reverseBar,
+
+    /// Whether the LEDs should be hidden when not lit/active.
+    @Default(true) bool showInactiveLeds,
   }) = _LedBarConfig;
 
   const LedBarConfig._();

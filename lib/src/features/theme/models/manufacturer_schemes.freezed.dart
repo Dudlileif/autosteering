@@ -27,13 +27,13 @@ mixin _$ManufacturerColors {
   @ColorSerializer()
   Color get primary => throw _privateConstructorUsedError;
 
-  /// The secondary color for the color scheme.
-  @ColorSerializer()
-  Color get secondary => throw _privateConstructorUsedError;
-
   /// The tertiary color for the color scheme.
   @ColorSerializerNullable()
   Color? get tertiary => throw _privateConstructorUsedError;
+
+  /// The color of the branding line for the manufacturer.
+  @ColorSerializerNullable()
+  Color? get brandingLine => throw _privateConstructorUsedError;
 
   /// The color of the cab frame for the manufacturer.
   @ColorSerializerNullable()
@@ -66,8 +66,8 @@ abstract class $ManufacturerColorsCopyWith<$Res> {
   $Res call(
       {String name,
       @ColorSerializer() Color primary,
-      @ColorSerializer() Color secondary,
       @ColorSerializerNullable() Color? tertiary,
+      @ColorSerializerNullable() Color? brandingLine,
       @ColorSerializerNullable() Color? cabFrame,
       @ColorSerializerNullable() Color? frame,
       @ColorSerializerNullable() Color? rims,
@@ -89,8 +89,8 @@ class _$ManufacturerColorsCopyWithImpl<$Res, $Val extends ManufacturerColors>
   $Res call({
     Object? name = null,
     Object? primary = null,
-    Object? secondary = null,
     Object? tertiary = freezed,
+    Object? brandingLine = freezed,
     Object? cabFrame = freezed,
     Object? frame = freezed,
     Object? rims = freezed,
@@ -105,13 +105,13 @@ class _$ManufacturerColorsCopyWithImpl<$Res, $Val extends ManufacturerColors>
           ? _value.primary
           : primary // ignore: cast_nullable_to_non_nullable
               as Color,
-      secondary: null == secondary
-          ? _value.secondary
-          : secondary // ignore: cast_nullable_to_non_nullable
-              as Color,
       tertiary: freezed == tertiary
           ? _value.tertiary
           : tertiary // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      brandingLine: freezed == brandingLine
+          ? _value.brandingLine
+          : brandingLine // ignore: cast_nullable_to_non_nullable
               as Color?,
       cabFrame: freezed == cabFrame
           ? _value.cabFrame
@@ -144,8 +144,8 @@ abstract class _$$ManufacturerColorsImplCopyWith<$Res>
   $Res call(
       {String name,
       @ColorSerializer() Color primary,
-      @ColorSerializer() Color secondary,
       @ColorSerializerNullable() Color? tertiary,
+      @ColorSerializerNullable() Color? brandingLine,
       @ColorSerializerNullable() Color? cabFrame,
       @ColorSerializerNullable() Color? frame,
       @ColorSerializerNullable() Color? rims,
@@ -165,8 +165,8 @@ class __$$ManufacturerColorsImplCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
     Object? primary = null,
-    Object? secondary = null,
     Object? tertiary = freezed,
+    Object? brandingLine = freezed,
     Object? cabFrame = freezed,
     Object? frame = freezed,
     Object? rims = freezed,
@@ -181,13 +181,13 @@ class __$$ManufacturerColorsImplCopyWithImpl<$Res>
           ? _value.primary
           : primary // ignore: cast_nullable_to_non_nullable
               as Color,
-      secondary: null == secondary
-          ? _value.secondary
-          : secondary // ignore: cast_nullable_to_non_nullable
-              as Color,
       tertiary: freezed == tertiary
           ? _value.tertiary
           : tertiary // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      brandingLine: freezed == brandingLine
+          ? _value.brandingLine
+          : brandingLine // ignore: cast_nullable_to_non_nullable
               as Color?,
       cabFrame: freezed == cabFrame
           ? _value.cabFrame
@@ -215,8 +215,8 @@ class _$ManufacturerColorsImpl implements _ManufacturerColors {
   const _$ManufacturerColorsImpl(
       {required this.name,
       @ColorSerializer() required this.primary,
-      @ColorSerializer() required this.secondary,
       @ColorSerializerNullable() this.tertiary,
+      @ColorSerializerNullable() this.brandingLine,
       @ColorSerializerNullable() this.cabFrame,
       @ColorSerializerNullable() this.frame,
       @ColorSerializerNullable() this.rims,
@@ -234,15 +234,15 @@ class _$ManufacturerColorsImpl implements _ManufacturerColors {
   @ColorSerializer()
   final Color primary;
 
-  /// The secondary color for the color scheme.
-  @override
-  @ColorSerializer()
-  final Color secondary;
-
   /// The tertiary color for the color scheme.
   @override
   @ColorSerializerNullable()
   final Color? tertiary;
+
+  /// The color of the branding line for the manufacturer.
+  @override
+  @ColorSerializerNullable()
+  final Color? brandingLine;
 
   /// The color of the cab frame for the manufacturer.
   @override
@@ -266,7 +266,7 @@ class _$ManufacturerColorsImpl implements _ManufacturerColors {
 
   @override
   String toString() {
-    return 'ManufacturerColors(name: $name, primary: $primary, secondary: $secondary, tertiary: $tertiary, cabFrame: $cabFrame, frame: $frame, rims: $rims, roof: $roof)';
+    return 'ManufacturerColors(name: $name, primary: $primary, tertiary: $tertiary, brandingLine: $brandingLine, cabFrame: $cabFrame, frame: $frame, rims: $rims, roof: $roof)';
   }
 
   @override
@@ -276,10 +276,10 @@ class _$ManufacturerColorsImpl implements _ManufacturerColors {
             other is _$ManufacturerColorsImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.primary, primary) || other.primary == primary) &&
-            (identical(other.secondary, secondary) ||
-                other.secondary == secondary) &&
             (identical(other.tertiary, tertiary) ||
                 other.tertiary == tertiary) &&
+            (identical(other.brandingLine, brandingLine) ||
+                other.brandingLine == brandingLine) &&
             (identical(other.cabFrame, cabFrame) ||
                 other.cabFrame == cabFrame) &&
             (identical(other.frame, frame) || other.frame == frame) &&
@@ -289,8 +289,8 @@ class _$ManufacturerColorsImpl implements _ManufacturerColors {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, primary, secondary,
-      tertiary, cabFrame, frame, rims, roof);
+  int get hashCode => Object.hash(runtimeType, name, primary, tertiary,
+      brandingLine, cabFrame, frame, rims, roof);
 
   @JsonKey(ignore: true)
   @override
@@ -311,8 +311,8 @@ abstract class _ManufacturerColors implements ManufacturerColors {
   const factory _ManufacturerColors(
       {required final String name,
       @ColorSerializer() required final Color primary,
-      @ColorSerializer() required final Color secondary,
       @ColorSerializerNullable() final Color? tertiary,
+      @ColorSerializerNullable() final Color? brandingLine,
       @ColorSerializerNullable() final Color? cabFrame,
       @ColorSerializerNullable() final Color? frame,
       @ColorSerializerNullable() final Color? rims,
@@ -332,14 +332,14 @@ abstract class _ManufacturerColors implements ManufacturerColors {
   Color get primary;
   @override
 
-  /// The secondary color for the color scheme.
-  @ColorSerializer()
-  Color get secondary;
-  @override
-
   /// The tertiary color for the color scheme.
   @ColorSerializerNullable()
   Color? get tertiary;
+  @override
+
+  /// The color of the branding line for the manufacturer.
+  @ColorSerializerNullable()
+  Color? get brandingLine;
   @override
 
   /// The color of the cab frame for the manufacturer.

@@ -19,7 +19,6 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,23 +96,25 @@ class FieldLayer extends ConsumerWidget {
                     ...field.mapExteriorPoints(
                       (point) => CircleMarker(point: point.latLng, radius: 2),
                     ),
-                    ...field
+                    ...[
+                      for (final ring in field
                         .mapInteriorPoints(
                           (point) =>
                               CircleMarker(point: point.latLng, radius: 2),
-                        )
-                        .flattened,
+                      ))
+                        ...ring,
+                    ],
                   ],
                   if (showBufferedField) ...[
                     ...bufferedField.mapExteriorPoints(
                       (point) => CircleMarker(point: point.latLng, radius: 2),
                     ),
-                    ...bufferedField
+                    ...[for (final ring in bufferedField
                         .mapInteriorPoints(
                           (point) =>
                               CircleMarker(point: point.latLng, radius: 2),
-                        )
-                        .flattened,
+                        ))
+                        ...ring,],
                   ],
                 ],
               ),

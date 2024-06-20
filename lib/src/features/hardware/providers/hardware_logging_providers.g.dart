@@ -24,7 +24,7 @@ final hardwareAnyLoggingEnabledProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef HardwareAnyLoggingEnabledRef = AutoDisposeProviderRef<bool>;
-String _$hardwareLogGnssHash() => r'608f130f5218ad63263ad7df2db59bdadc9b138e';
+String _$hardwareLogGnssHash() => r'965abb3350f3b1122e85d201e52b03323ce263ec';
 
 /// A provider for whether received NMEA messages should be logged.
 ///
@@ -42,7 +42,7 @@ final hardwareLogGnssProvider =
 );
 
 typedef _$HardwareLogGnss = Notifier<bool>;
-String _$hardwareLogImuHash() => r'9b7232a547328b9ec19fc5904e0c35f558c704c4';
+String _$hardwareLogImuHash() => r'f7eabfbdc8a756df6f48cc0d891323298eb57d5e';
 
 /// A provider for whether received IMU messages should be logged.
 ///
@@ -59,7 +59,7 @@ final hardwareLogImuProvider = NotifierProvider<HardwareLogImu, bool>.internal(
 );
 
 typedef _$HardwareLogImu = Notifier<bool>;
-String _$hardwareLogWasHash() => r'3e4ffa066fe9ab10cae29d92bec7a08a7b2b24a5';
+String _$hardwareLogWasHash() => r'f7060d5906277ee9bf396ef312d2a4a0027ea353';
 
 /// A provider for whether received WAS messages should be logged.
 ///
@@ -77,7 +77,7 @@ final hardwareLogWasProvider = NotifierProvider<HardwareLogWas, bool>.internal(
 
 typedef _$HardwareLogWas = Notifier<bool>;
 String _$hardwareLogCombinedHash() =>
-    r'da33dc4e518ef212634abd8af037473426ae4bb5';
+    r'9d881bffe5ef705ef031fab1e1039f2fb2b64efc';
 
 /// A provider for whether received NMEA, IMU and WAS messages should be logged
 /// in a single file.

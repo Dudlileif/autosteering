@@ -11,9 +11,10 @@ _$ManufacturerColorsImpl _$$ManufacturerColorsImplFromJson(
     _$ManufacturerColorsImpl(
       name: json['name'] as String,
       primary: const ColorSerializer().fromJson(json['primary'] as String),
-      secondary: const ColorSerializer().fromJson(json['secondary'] as String),
       tertiary: _$JsonConverterFromJson<String, Color?>(
           json['tertiary'], const ColorSerializerNullable().fromJson),
+      brandingLine: _$JsonConverterFromJson<String, Color?>(
+          json['brandingLine'], const ColorSerializerNullable().fromJson),
       cabFrame: _$JsonConverterFromJson<String, Color?>(
           json['cabFrame'], const ColorSerializerNullable().fromJson),
       frame: _$JsonConverterFromJson<String, Color?>(
@@ -29,8 +30,9 @@ Map<String, dynamic> _$$ManufacturerColorsImplToJson(
     <String, dynamic>{
       'name': instance.name,
       'primary': const ColorSerializer().toJson(instance.primary),
-      'secondary': const ColorSerializer().toJson(instance.secondary),
       'tertiary': const ColorSerializerNullable().toJson(instance.tertiary),
+      'brandingLine':
+          const ColorSerializerNullable().toJson(instance.brandingLine),
       'cabFrame': const ColorSerializerNullable().toJson(instance.cabFrame),
       'frame': const ColorSerializerNullable().toJson(instance.frame),
       'rims': const ColorSerializerNullable().toJson(instance.rims),

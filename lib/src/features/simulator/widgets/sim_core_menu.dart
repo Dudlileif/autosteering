@@ -183,6 +183,40 @@ class SimCoreMenu extends ConsumerWidget {
             );
           },
         ),
+        Consumer(
+          builder: (context, ref, child) {
+            var value = ref.watch(daysToKeepLogFilesProvider);
+            return StatefulBuilder(
+              builder: (context, setState) {
+                return ListTile(
+                  title: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Keep logs for $value ${value == 1 ? 'day' : 'days'}',
+                        style: textStyle,
+                      ),
+                      const Text(
+                        'Effective on restart',
+                      ),
+                      Slider(
+                        value: value.toDouble(),
+                        onChanged: (newValue) =>
+                            setState(() => value = newValue.round()),
+                        min: 1,
+                        max: 30,
+                        divisions: 29,
+                        onChangeEnd: (value) => ref
+                            .read(daysToKeepLogFilesProvider.notifier)
+                            .update(value.round()),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        ),
         const LogReplayMenu(),
       ],
     );

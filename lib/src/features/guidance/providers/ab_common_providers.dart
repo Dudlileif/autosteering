@@ -108,6 +108,16 @@ class ABWidth extends _$ABWidth {
   void update(double value) => Future(() => state = value);
 }
 
+/// A provider for the sideways offset of an AB-line.
+@Riverpod(keepAlive: true)
+class ABSidewaysOffset extends _$ABSidewaysOffset {
+  @override
+  double build() => 0;
+
+  /// Updates [state] to [value].
+  void update(double value) => Future(() => state = value);
+}
+
 /// A provider for the turning radius of an AB-line.
 @Riverpod(keepAlive: true)
 class ABTurningRadius extends _$ABTurningRadius {
@@ -181,11 +191,20 @@ class ConfiguredABTracking extends _$ConfiguredABTracking {
         Logger.instance.i('Path tracking set to ${next?.runtimeType}');
         if (next != null) {
           ref
-            ..invalidate(configuredPathTrackingProvider)
             ..invalidate(displayPathTrackingProvider)
             ..read(activeWorkSessionProvider.notifier).updateABTracking(next);
+
+          if (ref.read(
+                displayPathTrackingProvider.select((value) => value == null),
+              ) &&
+              ref.read(
+                displayABTrackingProvider.select((value) => value == null),
+              )) {
+            sendToSim();
+          }
+        } else {
+          sendToSim();
         }
-        sendToSim();
       }
     });
     return null;
@@ -268,6 +287,32 @@ class ABPointB extends _$ABPointB {
 
   /// Updates [state] to [point].
   void update(WayPoint point) => Future(() => state = point);
+}
+
+/// A provider for whether to show the starting point A of an AB-line.
+@Riverpod(keepAlive: true)
+class ShowABPointA extends _$ShowABPointA {
+  @override
+  bool build() => true;
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Toggles [state] to [!state].
+  void toggle() => Future(() => state = !state);
+}
+
+/// A provider for whether to show the ending point B of an AB-line.
+@Riverpod(keepAlive: true)
+class ShowABPointB extends _$ShowABPointB {
+  @override
+  bool build() => true;
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Toggles [state] to [!state].
+  void toggle() => Future(() => state = !state);
 }
 
 /// A provider for the perpendicular distance from the AB tracking line

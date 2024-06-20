@@ -28,6 +28,8 @@ import 'package:flutter_shaders/flutter_shaders.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
+// TODO(dudlileif): Make app icon
+
 Future<void> main() async {
   Logger.instance.i('Application startup initiated...');
   WidgetsFlutterBinding.ensureInitialized();
