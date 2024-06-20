@@ -53,6 +53,12 @@ dependencies:
     window_manager: ^0.3.9
     xml: ^6.5.0
 
+dependency_overrides:
+    universal_io:
+        git: 
+            url: https://github.com/dint-dev/universal_io.git   
+            ref: 41df5f997ffb8e177a06e1be2b539227dbc860ac
+
 dev_dependencies:
     build_runner: ^2.4.11
     custom_lint: ^0.5.11
