@@ -17,6 +17,7 @@
 
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
@@ -352,15 +353,28 @@ class _MotorPage extends ConsumerWidget {
           ref.read(simInputProvider.notifier).send(
                 oldConfig.copyWith(
                   maxRPM: value,
-                  coolstepThresholdRPM:
-                      oldConfig.coolstepThresholdRPM.clamp(0, value),
-                  dcStepThresholdRPM:
-                      oldConfig.dcStepThresholdRPM.clamp(0, value),
-                  highVelocityChopperModeChangeThresholdRPM: oldConfig
+                  coolstepThresholdRPM: clampDouble(
+                    oldConfig.coolstepThresholdRPM,
+                    0,
+                    value,
+                  ),
+                  dcStepThresholdRPM: clampDouble(
+                    oldConfig.dcStepThresholdRPM,
+                    0,
+                    value,
+                  ),
+                  highVelocityChopperModeChangeThresholdRPM: clampDouble(
+                    oldConfig
                       .highVelocityChopperModeChangeThresholdRPM
-                      .clamp(0, value),
-                  stealthChopThresholdRPM:
-                      oldConfig.stealthChopThresholdRPM.clamp(0, value),
+                      ,
+                    0,
+                    value,
+                  ),
+                  stealthChopThresholdRPM: clampDouble(
+                    oldConfig.stealthChopThresholdRPM,
+                    0,
+                    value,
+                  ),
                 ),
               );
           // Wait a short while before saving the
@@ -995,13 +1009,17 @@ class _WasPage extends ConsumerWidget {
         // Sensor normalized reading
         Consumer(
           builder: (context, ref, child) {
-            final reading = ref
+            final reading = clampDouble(
+              ref
                 .watch(
                   mainVehicleProvider.select(
                     (vehicle) => vehicle.wasReadingNormalizedInRange,
                   ),
                 )
-                .clamp(-1.0, 1.0);
+                ,
+              -1,
+              1,
+            );
             return Column(
               children: [
                 Text(

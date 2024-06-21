@@ -650,7 +650,7 @@ final class ArticulatedTractor extends Vehicle {
     final points = <Geographic>[frontAxlePosition];
 
     if (currentTurningRadius != null) {
-      var arcDegrees = (time * angularVelocity!.abs()).clamp(0.0, 360.0);
+      var arcDegrees = clampDouble(time * angularVelocity!.abs(),0.0, 360.0);
       if (minLength != null) {
         if (arcDegrees.toRadians() * currentTurningRadius! < minLength) {
           arcDegrees = (minLength / currentTurningRadius!).toDegrees();

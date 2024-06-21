@@ -17,6 +17,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
@@ -40,7 +41,8 @@ class EquipmentRecordPositionFraction
   double? build() => null;
 
   /// Updates [state] to [value];
-  void update(double? value) => Future(() => state = value?.clamp(0, 1));
+  void update(double? value) =>
+      Future(() => state = value != null ? clampDouble(value, 0, 1) : value);
 }
 
 /// A provider for the currently loaded equipment.

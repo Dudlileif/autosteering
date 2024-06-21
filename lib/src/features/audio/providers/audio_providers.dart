@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:ui';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -103,15 +105,19 @@ class AudioVolumeAutosteeringEnabled extends _$AudioVolumeAutosteeringEnabled {
       if (previous != null) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.audioVolumeAutosteeringEnabled,
-              next.clamp(0, 1),
+                clampDouble(next, 0, 1),
             );
       }
     });
-    return ref
+    return clampDouble(
+      ref
             .read(settingsProvider.notifier)
             .getDouble(SettingsKey.audioVolumeAutosteeringEnabled)
-            ?.clamp(0, 1) ??
-        1;
+            ??
+          1,
+      0,
+      1,
+    );
   }
 
   /// Update [state] to [value].
@@ -130,15 +136,19 @@ class AudioVolumeAutosteeringDisabled
       if (previous != null) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.audioVolumeAutosteeringDisabled,
-              next.clamp(0, 1),
+                clampDouble(next, 0, 1),
             );
       }
     });
-    return ref
+    return clampDouble(
+      ref
             .read(settingsProvider.notifier)
             .getDouble(SettingsKey.audioVolumeAutosteeringDisabled)
-            ?.clamp(0, 1) ??
-        1;
+            ??
+          1,
+      0,
+      1,
+    );
   }
 
   /// Update [state] to [value].
@@ -156,15 +166,19 @@ class AudioVolumeAutosteeringStandby extends _$AudioVolumeAutosteeringStandby {
       if (previous != null) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.audioVolumeAutosteeringStandby,
-              next.clamp(0, 1),
+                clampDouble(next, 0, 1),
             );
       }
     });
-    return ref
+    return clampDouble(
+      ref
             .read(settingsProvider.notifier)
             .getDouble(SettingsKey.audioVolumeAutosteeringStandby)
-            ?.clamp(0, 1) ??
-        1;
+            ??
+          1,
+      0,
+      1,
+    );
   }
 
   /// Update [state] to [value].
@@ -182,14 +196,21 @@ class AudioVolumeRTKLostAlarm extends _$AudioVolumeRTKLostAlarm {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.audioVolumeRTKLostAlarm, next.clamp(0, 1));
+            .update(
+                SettingsKey.audioVolumeRTKLostAlarm,
+                clampDouble(next, 0, 1),
+              );
       }
     });
-    return ref
+    return clampDouble(
+      ref
             .read(settingsProvider.notifier)
             .getDouble(SettingsKey.audioVolumeRTKLostAlarm)
-            ?.clamp(0, 1) ??
-        1;
+            ??
+          1,
+      0,
+      1,
+    );
   }
 
   /// Update [state] to [value].

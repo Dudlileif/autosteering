@@ -18,6 +18,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
@@ -636,21 +637,27 @@ class SimulatorCoreState {
           vehicle!.velocity = 0;
           velocityChange = SimInputChange.hold;
         case SimInputChange.increase:
-          vehicle!.velocity = (vehicle!.velocity +
-                  period *
-                      switch (vehicle!.velocity.isNegative) {
-                        true => brakingRate,
-                        false => accelerationRate,
-                      })
-              .clamp(-12.0, 12.0);
+          vehicle!.velocity = clampDouble(
+            vehicle!.velocity +
+                period *
+                    switch (vehicle!.velocity.isNegative) {
+                      true => brakingRate,
+                      false => accelerationRate,
+                    },
+            -12,
+            12,
+          );
         case SimInputChange.decrease:
-          vehicle!.velocity = (vehicle!.velocity -
-                  period *
-                      switch (vehicle!.velocity.isNegative) {
-                        true => accelerationRate,
-                        false => brakingRate,
-                      })
-              .clamp(-12.0, 12.0);
+          vehicle!.velocity = clampDouble(
+            vehicle!.velocity -
+                period *
+                    switch (vehicle!.velocity.isNegative) {
+                      true => accelerationRate,
+                      false => brakingRate,
+                    },
+            -12,
+            12,
+          );
 
         case SimInputChange.hold:
           if (autoSlowDown) {
@@ -669,18 +676,23 @@ class SimulatorCoreState {
       }
 
       // The steering rate of the vehicle, deg/s
-      const steeringRate = 30;
+      const steeringRate = 30.0;
 
       if (!receivingManualInput &&
           steeringAngleTarget != null &&
           autosteeringState == AutosteeringState.enabled) {
         final pidVelocity =
             vehicle!.simulatedMotorVelocityPid(steeringAngleTarget!);
-        vehicle!.steeringAngleInput = (vehicle!.steeringAngleInput +=
-                ((pidVelocity * steeringRate)
-                        .clamp(-steeringRate, steeringRate)) *
-                    period)
-            .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+        vehicle!.steeringAngleInput = clampDouble(
+          vehicle!.steeringAngleInput += (clampDouble(
+                pidVelocity * steeringRate,
+                -steeringRate,
+                steeringRate,
+              )) *
+              period,
+          -vehicle!.steeringAngleMax,
+          vehicle!.steeringAngleMax,
+        );
       } else {
         switch (steeringChange) {
           case SimInputChange.reset:
@@ -691,16 +703,20 @@ class SimulatorCoreState {
             if (vehicle!.steeringAngleInput == 0) {
               vehicle!.steeringAngleInput = 0.01;
             }
-            vehicle!.steeringAngleInput = (vehicle!.steeringAngleInput +
-                    period * steeringRate)
-                .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+            vehicle!.steeringAngleInput = clampDouble(
+              vehicle!.steeringAngleInput + period * steeringRate,
+              -vehicle!.steeringAngleMax,
+              vehicle!.steeringAngleMax,
+            );
           case SimInputChange.decrease:
             if (vehicle!.steeringAngleInput == 0) {
               vehicle!.steeringAngleInput = -0.01;
             }
-            vehicle!.steeringAngleInput = (vehicle!.steeringAngleInput -
-                    period * steeringRate)
-                .clamp(-vehicle!.steeringAngleMax, vehicle!.steeringAngleMax);
+            vehicle!.steeringAngleInput = clampDouble(
+              vehicle!.steeringAngleInput - period * steeringRate,
+              -vehicle!.steeringAngleMax,
+              vehicle!.steeringAngleMax,
+            );
 
           case SimInputChange.hold:
             receivingManualInput = false;

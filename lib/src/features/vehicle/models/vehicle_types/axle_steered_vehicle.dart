@@ -247,10 +247,16 @@ sealed class AxleSteeredVehicle extends Vehicle {
   @override
   void setSteeringAngleByWasReading() {
     final innerWheelAngle = switch (wasReadingNormalizedInRange < 0) {
-      true => (wasReadingNormalizedInRange * steeringAngleMaxRaw)
-          .clamp(-steeringAngleMaxRaw, 0.0),
-      false => (wasReadingNormalizedInRange * steeringAngleMaxRaw)
-          .clamp(0.0, steeringAngleMaxRaw)
+      true => clampDouble(
+          wasReadingNormalizedInRange * steeringAngleMaxRaw,
+          -steeringAngleMaxRaw,
+          0,
+        ),
+      false => clampDouble(
+          wasReadingNormalizedInRange * steeringAngleMaxRaw,
+          0,
+          steeringAngleMaxRaw,
+        )
     };
 
     steeringAngleInput = WheelAngleToAckermann(
@@ -596,7 +602,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     final points = <Geographic>[solidAxlePosition];
 
     if (currentTurningRadius != null) {
-      var arcDegrees = (time * angularVelocity!.abs()).clamp(0.0, 360.0);
+      var arcDegrees = clampDouble(time * angularVelocity!.abs(), 0, 360);
       if (minLength != null) {
         if (arcDegrees.toRadians() * currentTurningRadius! < minLength) {
           arcDegrees = (minLength / currentTurningRadius!).toDegrees();
