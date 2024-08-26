@@ -34,6 +34,7 @@ class SteeringHardwareConfigurator extends StatelessWidget {
   static const List<Tab> _tabs = [
     Tab(text: 'Motor'),
     Tab(text: 'WAS'),
+    Tab(text: 'PID'),
   ];
 
   @override
@@ -82,6 +83,7 @@ class SteeringHardwareConfigurator extends StatelessWidget {
                     children: [
                       _MotorPage(),
                       _WasPage(),
+                      _PidPage(),
                     ],
                   ),
                 ),
@@ -259,16 +261,16 @@ class _MotorPage extends ConsumerWidget {
     );
 
     final children = [
-      // Invert motor output
+      // Reverse motor output
       Consumer(
         child: Text(
-          'Invert motor direction',
+          'Reverse motor direction',
           style: theme.textTheme.bodyLarge,
         ),
         builder: (context, ref, child) => CheckboxListTile(
           value: ref.watch(
             mainVehicleProvider.select(
-              (vehicle) => vehicle.steeringHardwareConfig.invertDirection,
+              (vehicle) => vehicle.steeringHardwareConfig.reverseDirection,
             ),
           ),
           onChanged: (value) {
@@ -280,7 +282,7 @@ class _MotorPage extends ConsumerWidget {
                             (value) => value.steeringHardwareConfig,
                           ),
                         )
-                        .copyWith(invertDirection: value),
+                        .copyWith(reverseDirection: value),
                   );
 
               // Wait a short while before saving the hopefully
@@ -289,14 +291,14 @@ class _MotorPage extends ConsumerWidget {
                 ref.read(
                   updateSteeringHardwareConfigProvider(
                     const SteeringHardwareConfigKeysContainer(
-                      {SteeringHardwareConfigKey.invertDirection},
+                      {SteeringHardwareConfigKey.reverseDirection},
                     ),
                   ),
                 );
                 final vehicle = ref.watch(mainVehicleProvider);
                 ref.read(saveVehicleProvider(vehicle));
                 Logger.instance.i(
-                  '''Updated vehicle motor config invert output: ${!value} -> ${vehicle.steeringHardwareConfig.invertDirection}''',
+                  '''Updated vehicle motor config reverse output: ${!value} -> ${vehicle.steeringHardwareConfig.reverseDirection}''',
                 );
               });
             }
@@ -397,7 +399,7 @@ class _MotorPage extends ConsumerWidget {
         max: 300,
         divisions: 30,
       ),
-      // Motor max acceletation RPM/s^2
+      // Motor max acceletation RPM/s
       _SteeringHardwareConfigListTile(
         initialValue: ref.read(
           mainVehicleProvider.select(
@@ -405,7 +407,7 @@ class _MotorPage extends ConsumerWidget {
           ),
         ),
         resetValue: 100,
-        text: (value) => 'Max acceleration: ${value.round()} RPM/s²',
+        text: (value) => 'Max acceleration: ${value.round()} RPM/s',
         onChangeEnd: (value) {
           final oldValue = ref.read(
             mainVehicleProvider.select(
@@ -436,7 +438,7 @@ class _MotorPage extends ConsumerWidget {
             final vehicle = ref.watch(mainVehicleProvider);
             ref.read(saveVehicleProvider(vehicle));
             Logger.instance.i(
-              '''Updated vehicle motor config max acceleration RPM/s²: $oldValue -> ${vehicle.steeringHardwareConfig.maxAcceleration}''',
+              '''Updated vehicle motor config max acceleration RPM/s: $oldValue -> ${vehicle.steeringHardwareConfig.maxAcceleration}''',
             );
           });
         },
@@ -450,7 +452,7 @@ class _MotorPage extends ConsumerWidget {
                 .select((value) => value.steeringHardwareConfig.microSteps),
           ),
           text: (value) =>
-              'Microsteps: ${value.round() == 1 ? 'Fullstep' : value.round()}',
+            'Microsteps: ${value.round() == 0 ? 'Fullstep' : value.round()}',
           onChangeEnd: (value) {
             final oldValue = ref.read(
               mainVehicleProvider
@@ -484,7 +486,7 @@ class _MotorPage extends ConsumerWidget {
               );
             });
           },
-          selectionValues: const [1, 2, 4, 8, 16, 32, 64, 128, 256],
+        selectionValues: const [0, 2, 4, 8, 16, 32, 64, 128, 256],
           resetValue: 256,
         ),
         // Steps per rotation
@@ -1402,6 +1404,175 @@ class _WasPage extends ConsumerWidget {
               );
             },
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PidPage extends ConsumerWidget {
+  const _PidPage();
+
+  void onChangeEnd(double value, String key, WidgetRef ref) {
+    // Wait a short while before saving the hopefully
+    // updated vehicle.
+    Timer(const Duration(milliseconds: 100), () {
+      final vehicle = ref.watch(mainVehicleProvider);
+      ref.read(saveVehicleProvider(vehicle));
+      Logger.instance.i(
+        '''Updated vehicle PID parameters: ${vehicle.pidParameters}''',
+      );
+      ref.read(
+        updateSteeringHardwareConfigProvider(
+          SteeringHardwareConfigKeysContainer({key}),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // P
+        Consumer(
+          builder: (context, ref, child) {
+            final p = ref.watch(
+              mainVehicleProvider.select((vehicle) => vehicle.pidParameters.p),
+            );
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'P: ${p.toStringAsFixed(1)}',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                Text('Current error', style: theme.textTheme.bodySmall),
+                Slider(
+                  value: p,
+                  max: 50,
+                  divisions: 50,
+                  onChanged: (value) {
+                    ref.read(simInputProvider.notifier).send(
+                          ref
+                              .watch(
+                                mainVehicleProvider.select(
+                                  (vehicle) => vehicle.steeringHardwareConfig,
+                                ),
+                              )
+                              .copyWith(pidP: value),
+                        );
+
+                    final configuredVehicle =
+                        ref.watch(configuredVehicleProvider);
+                    ref.read(configuredVehicleProvider.notifier).update(
+                          configuredVehicle.copyWith(
+                            steeringHardwareConfig: configuredVehicle
+                                .steeringHardwareConfig
+                                .copyWith(pidP: value),
+                          ),
+                        );
+                  },
+                  onChangeEnd: (value) =>
+                      onChangeEnd(value, SteeringHardwareConfigKey.pidP, ref),
+                ),
+              ],
+            );
+          },
+        ),
+        // I
+        Consumer(
+          builder: (context, ref, child) {
+            final i = ref.watch(
+              mainVehicleProvider.select((vehicle) => vehicle.pidParameters.i),
+            );
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'I: ${i.toStringAsFixed(3)}',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                Text('Error over time', style: theme.textTheme.bodySmall),
+                Slider(
+                  value: i,
+                  max: 2,
+                  divisions: 200,
+                  onChanged: (value) {
+                    ref.read(simInputProvider.notifier).send(
+                          ref
+                              .watch(
+                                mainVehicleProvider.select(
+                                  (vehicle) => vehicle.steeringHardwareConfig,
+                                ),
+                              )
+                              .copyWith(pidI: value),
+                        );
+
+                    final configuredVehicle =
+                        ref.watch(configuredVehicleProvider);
+                    ref.read(configuredVehicleProvider.notifier).update(
+                          configuredVehicle.copyWith(
+                            steeringHardwareConfig: configuredVehicle
+                                .steeringHardwareConfig
+                                .copyWith(pidI: value),
+                          ),
+                        );
+                  },
+                  onChangeEnd: (value) =>
+                      onChangeEnd(value, SteeringHardwareConfigKey.pidI, ref),
+                ),
+              ],
+            );
+          },
+        ),
+        // D
+        Consumer(
+          builder: (context, ref, child) {
+            final d = ref.watch(
+              mainVehicleProvider.select((vehicle) => vehicle.pidParameters.d),
+            );
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'D: ${d.toStringAsFixed(3)}',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                Text('Error rate of change', style: theme.textTheme.bodySmall),
+                Slider(
+                  value: d,
+                  max: 2,
+                  divisions: 100,
+                  onChanged: (value) {
+                    ref.read(simInputProvider.notifier).send(
+                          ref
+                              .watch(
+                                mainVehicleProvider.select(
+                                  (vehicle) => vehicle.steeringHardwareConfig,
+                                ),
+                              )
+                              .copyWith(pidD: value),
+                        );
+
+                    final configuredVehicle =
+                        ref.watch(configuredVehicleProvider);
+                    ref.read(configuredVehicleProvider.notifier).update(
+                          configuredVehicle.copyWith(
+                            steeringHardwareConfig: configuredVehicle
+                                .steeringHardwareConfig
+                                .copyWith(pidD: value),
+                          ),
+                        );
+                  },
+                  onChangeEnd: (value) =>
+                      onChangeEnd(value, SteeringHardwareConfigKey.pidD, ref),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );

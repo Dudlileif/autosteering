@@ -18,6 +18,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/hardware/models/models.dart';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -26,9 +27,9 @@ part 'steering_hardware_config.g.dart';
 
 /// A class with string keys for the [SteeringHardwareConfig].
 class SteeringHardwareConfigKey {
-  /// Key for[SteeringHardwareConfig.invertDirection].
-  /// Key for [SteeringHardwareConfig.invertDirection].
-  static const invertDirection = 'invertDirection';
+  /// Key for[SteeringHardwareConfig.reverseDirection].
+  /// Key for [SteeringHardwareConfig.reverseDirection].
+  static const reverseDirection = 'reverseDirection';
 
   /// Key for [SteeringHardwareConfig.microSteps].
   static const microSteps = 'MICRO_STEPS';
@@ -46,7 +47,7 @@ class SteeringHardwareConfigKey {
   static const freeWheel = 'freewheel';
 
   /// Key for [SteeringHardwareConfig.maxAcceleration].
-  static const maxAcceleration = 'AMAX_RPM_S_2';
+  static const maxAcceleration = 'AMAX_RPM_S';
 
   /// Key for [SteeringHardwareConfig.maxRPM].
   static const maxRPM = 'VMAX_RPM';
@@ -171,12 +172,12 @@ class SteeringHardwareConfigKeysContainer {
 }
 
 /// A configuration for a steering wheel motor of a vehicle.
-@freezed
+@Freezed(fromJson: true, toJson: true)
 class SteeringHardwareConfig with _$SteeringHardwareConfig {
   /// A configuration for a steering wheel motor of a vehicle.
   @Assert(
     '''
-    microSteps == 1 ||
+    microSteps == 0 ||
     microSteps == 2 ||
     microSteps == 4 ||
     microSteps == 8 ||
@@ -186,7 +187,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     microSteps == 128 ||
     microSteps == 256
     ''',
-    'microSteps needs to be a power of 2 up to 256.',
+    'microSteps needs to be 0 or a power of 2 from 2 up to 256.',
   )
   @Assert(
     'stepsPerRotation==200 || stepsPerRotation==400',
@@ -200,8 +201,8 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     'holdMultiplier>=0 && holdMultiplier<=1',
     'holdMultiplier should be in range 0 to 1.',
   )
-  @Assert('maxAcceleration>=0', 'maxAcceleration should be positive.')
-  @Assert('maxRPM>=0', 'maxRPM should be positive.')
+  @Assert('maxAcceleration>0', 'maxAcceleration should be positive.')
+  @Assert('maxRPM>0', 'maxRPM should be positive.')
   @Assert('vStop>=0', 'vStop should be positive.')
   @Assert('vStart>=0', 'vStart should be positive.')
   @Assert('tOff>=0 && tOff<=15', 'tOff should be in range 0 to 15.')
@@ -280,10 +281,10 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     'wasMax should be positive and larger than wasCenter.',
   )
   const factory SteeringHardwareConfig({
-    /// Whether the motor rotation direction should be inverted.
-    @JsonKey(name: SteeringHardwareConfigKey.invertDirection)
+    /// Whether the motor rotation direction should be reversed.
+    @JsonKey(name: SteeringHardwareConfigKey.reverseDirection)
     @Default(false)
-    bool invertDirection,
+    bool reverseDirection,
 
     /// The number of micro steps to divide one fullstep into.
     @JsonKey(name: SteeringHardwareConfigKey.microSteps)
@@ -311,14 +312,14 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     @Default(MotorHoldingMode.freewheel)
     MotorHoldingMode freeWheel,
 
-    /// Maximum acceleration in RPM/s^2.
+    /// Maximum acceleration in RPM/s.
     @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
-    @Default(100)
+    @Default(80)
     double maxAcceleration,
 
     /// Maximum RPM
     @JsonKey(name: SteeringHardwareConfigKey.maxRPM)
-    @Default(200)
+    @Default(150)
     double maxRPM,
 
     /// Stopping velocity, should be higher than [vStart].
@@ -355,7 +356,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
 
     /// Lower velocity RPM threshold to enable CoolStep and StallGuard.
     @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)
-    @Default(10)
+    @Default(50)
     double coolstepThresholdRPM,
 
     /// Uppper velocity RPM threshold for StealthChop.
@@ -365,8 +366,8 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
 
     /// Which stepper chopper mode is used.
     @JsonKey(name: SteeringHardwareConfigKey.chopperMode)
-    @Default(ChopperMode.spreadCycle)
-    ChopperMode chopperMode,
+    @Default(false)
+    bool chopperMode,
 
     /// Lower velocity RPM threshold for switching to a different chopper mode
     /// at high velocities.
@@ -387,8 +388,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     @Default(false)
     bool fullstepAtHighVelocities,
 
-    /// Whether chopper mode switch to
-    /// [ChopperMode.constantTimeOffWithFastDecay] should be done above
+    /// Whether chopper mode switch to 1 should be done above
     /// [highVelocityChopperModeChangeThresholdRPM].
     @JsonKey(name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)
     @Default(false)
@@ -451,13 +451,13 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     bool automaticPWMTuning,
 
     /// Proportional gain coefficient for steering.
-    @JsonKey(name: SteeringHardwareConfigKey.pidP) @Default(20) double pidP,
+    @JsonKey(name: SteeringHardwareConfigKey.pidP) @Default(3) double pidP,
 
     /// Integral gain coefficient for steering.
-    @JsonKey(name: SteeringHardwareConfigKey.pidI) @Default(0.13) double pidI,
+    @JsonKey(name: SteeringHardwareConfigKey.pidI) @Default(0) double pidI,
 
     /// Derivative gain coefficient for steering.
-    @JsonKey(name: SteeringHardwareConfigKey.pidD) @Default(0.06) double pidD,
+    @JsonKey(name: SteeringHardwareConfigKey.pidD) @Default(2) double pidD,
 
     /// Minimum reading value for WAS.
     @JsonKey(name: SteeringHardwareConfigKey.wasMin) @Default(250) int wasMin,
@@ -475,8 +475,15 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
   const SteeringHardwareConfig._();
 
   /// Creates a [SteeringHardwareConfig] object from the [json] object.
-  factory SteeringHardwareConfig.fromJson(Map<String, Object?> json) =>
-      _$SteeringHardwareConfigFromJson(json);
+  factory SteeringHardwareConfig.fromJson(Map<String, Object?> json) {
+    // Handle change from int to bool for chm
+    if (json['chm'] is int) {
+      final chm = json['chm']! as int;
+      json.remove('chm');
+      json['chm'] = chm == 1;
+    }
+    return _$SteeringHardwareConfigFromJson(json);
+  }
 
   /// Parameters for use with a [PidController] in a small separate object.
   PidParameters get pidParameters => PidParameters(p: pidP, i: pidI, d: pidD);
@@ -484,78 +491,23 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
   /// An HTTP header with the parameters corresponding to [keys] for sending a
   /// request to update the motor config on the hardware.
   String httpHeader(Set<String> keys) {
-    final json = toJson();
-    return keys
-        .map((key) {
-          var value = json[key];
-          if (value == null) {
-            return null;
-          }
-          if (value is bool) {
-            value = value ? 1 : 0;
-          }
-          return '$key=$value';
-        })
-        .nonNulls
-        .join('&');
+    final json = toJson()..removeWhere((key, value) => !keys.contains(key));
+    return json.entries.map((entry) {
+      if (entry.value is bool) {
+        return '${entry.key}=${(entry.value as bool) ? 1 : 0}';
+      }
+      return '${entry.key}=${entry.value}';
+    }).join('&');
   }
 
   /// An HTTP header with all parameters for sending a request to update the
   /// motor config on the hardware.
-  String get httpHeaderFull => [
-        'invertDirection=${invertDirection ? 1 : 0}',
-        'MICRO_STEPS=$microSteps',
-        'STEPS_PER_ROT=$stepsPerRotation',
-        'RMS_CURRENT=$rmsCurrent',
-        'hold_multiplier=$holdMultiplier',
-        'freewheel=$freeWheel',
-        'AMAX_RPM_S_2=$maxAcceleration',
-        'VMAX_RPM=$maxRPM',
-        'VSTOP=$vStop',
-        'VSTART=$vStart',
-        'TOFF=$tOff',
-        'SGT=$stallguardThreshold',
-        'sg_stop=${stallguardStop ? 1 : 0}',
-        'semin=$semin',
-        'semax=$semax',
-        'TCOOLTHRS_RPM=$coolstepThresholdRPM',
-        'TPWMTHRS_RPM=$stealthChopThresholdRPM',
-        'chm=${chopperMode.index}',
-        '''THIGH_RPM=$highVelocityChopperModeChangeThresholdRPM''',
-        'VDCMIN_RPM=$dcStepThresholdRPM',
-        'vhighfs=${fullstepAtHighVelocities ? 1 : 0}',
-        '''vhighchm=${setConstantChopperAtHighVelocities ? 1 : 0}''',
-        'DC_TIME=$dcStepLoadMeasurementPulseWidth',
-        'DC_SG=$dcStepStallguardSensitivity',
-        'HSTRT=$hysteresisStart',
-        'HEND=$hysteresisEnd',
-        'IHOLDDELAY=$currentHoldDelay',
-        'TBL=${blankTime.index}',
-        'TPOWERDONW=$powerDownTime',
-        'TZEROWAIT=$zeroWaitTime',
-        'en_pwm_mode=${enableStealthChop ? 1 : 0}',
-        'pwm_autoscale=${automaticCurrentControl ? 1 : 0}',
-        'pwm_autograd=${automaticPWMTuning ? 1 : 0}',
-        'pid_P=$pidP',
-        'pid_I=$pidI',
-        'pid_D=$pidD',
-        'was_min=$wasMin',
-        'was_center=$wasCenter',
-        'was_max=$wasMax',
-      ].join('&');
-}
-
-/// An enumerator for the choices of chopper mode (chm).
-enum ChopperMode {
-  /// SpreadCycle, standard mode
-  @JsonValue(0)
-  spreadCycle,
-
-  ///  Constant off time with fast decay time. Fast decay time is also
-  /// terminated when the negative nominal current is reached. Fast decay is
-  /// after on time.
-  @JsonValue(1)
-  constantTimeOffWithFastDecay;
+  String get httpHeaderFull => toJson().entries.map((entry) {
+        if (entry.value is bool) {
+          return '${entry.key}=${(entry.value as bool) ? 1 : 0}';
+        }
+        return '${entry.key}=${entry.value}';
+      }).join('&');
 }
 
 /// An enumerator for the choices of motor holdig mode (freewheel).
