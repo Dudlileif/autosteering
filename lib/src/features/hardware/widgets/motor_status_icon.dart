@@ -20,8 +20,8 @@ import 'dart:math';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 /// An icon with extendable menu for showing the status of the steering motor.
 /// The icon will spin following the motor's RPM.
@@ -46,24 +46,6 @@ class MotorStatusIcon extends ConsumerStatefulWidget {
 class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
     with SingleTickerProviderStateMixin {
   final portalController = OverlayPortalController();
-
-  double motorRotationAngle = 0;
-  int prevTickerTimeMicroseconds = 0;
-  late final motorRotationTicker = Ticker(
-    (elapsed) {
-      final rpm = ref.watch(steeringMotorActualRPMProvider) ?? 0;
-      if (rpm.abs() > 0) {
-        final tick =
-            (elapsed.inMicroseconds - prevTickerTimeMicroseconds) / 1e6;
-        final radiansPerTick = 2 * pi * (-rpm / 60) * tick;
-        setState(
-          () => motorRotationAngle =
-              (motorRotationAngle + radiansPerTick) % (2 * pi),
-        );
-      }
-      prevTickerTimeMicroseconds = elapsed.inMicroseconds;
-    },
-  );
 
   String get message {
     final textLines = <String>[];
@@ -146,12 +128,6 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
   }
 
   @override
-  void initState() {
-    super.initState();
-    motorRotationTicker.start();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => switch (portalController.isShowing) {
@@ -184,14 +160,21 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
         child: Consumer(
           builder: (context, ref, child) {
             final motorStatus = ref.watch(steeringMotorStatusProvider);
-
+            final motorRotationAngle = ref.watch(
+                  mainVehicleProvider.select(
+                    (value) => value.steeringAngle / value.steeringAngleMax,
+                  ),
+                ) *
+                3.5 *
+                pi;
             return Stack(
               children: [
                 Align(
                   child: Transform.rotate(
                     angle: motorRotationAngle,
                     child: Icon(
-                      Icons.settings_backup_restore,
+                      Symbols.search_hands_free,
+                      weight: 1000,
                       size: widget.size,
                       color: switch (motorStatus) {
                         MotorStatus.running => Colors.green,
