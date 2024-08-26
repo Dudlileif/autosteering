@@ -209,7 +209,7 @@ Logger logging(LoggingRef ref) {
 
   final elevatedPrinter = PrettyPrinter(
     colors: false,
-    printTime: true,
+    dateTimeFormat: DateTimeFormat.dateAndTime,
   );
 
   return Logger.instance

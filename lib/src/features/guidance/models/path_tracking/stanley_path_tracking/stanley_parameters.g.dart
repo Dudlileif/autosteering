@@ -10,7 +10,7 @@ _$StanleyParametersImpl _$$StanleyParametersImplFromJson(
         Map<String, dynamic> json) =>
     _$StanleyParametersImpl(
       crossDistanceGain: (json['crossDistanceGain'] as num?)?.toDouble() ?? 1.5,
-      softeningGain: (json['softeningGain'] as num?)?.toDouble() ?? 1e-5,
+      softeningGain: (json['softeningGain'] as num?)?.toDouble() ?? 0.00001,
       velocityGain: (json['velocityGain'] as num?)?.toDouble() ?? 1.3,
     );
 

@@ -22,7 +22,7 @@ final loggingFileProvider = FutureProvider<File?>.internal(
 );
 
 typedef LoggingFileRef = FutureProviderRef<File?>;
-String _$loggingHash() => r'920750c2de3d064f19412962729f3a2d911315c3';
+String _$loggingHash() => r'e89d83725e8bc15b3b4094f7c528dd257520bb0a';
 
 /// A provider for the [Logger] that prints the logs to console and a file
 /// if on native platforms.

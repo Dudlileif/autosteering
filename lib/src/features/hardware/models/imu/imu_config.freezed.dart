@@ -52,8 +52,12 @@ mixin _$ImuConfig {
   /// time.
   int get delayReadings => throw _privateConstructorUsedError;
 
+  /// Serializes this ImuConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ImuConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ImuConfigCopyWith<ImuConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -88,6 +92,8 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ImuConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -146,6 +152,8 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
     ) as $Val);
   }
 
+  /// Create a copy of ImuConfig
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ImuZeroValuesCopyWith<$Res> get zeroValues {
@@ -187,6 +195,8 @@ class __$$ImuConfigImplCopyWithImpl<$Res>
       _$ImuConfigImpl _value, $Res Function(_$ImuConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ImuConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -347,7 +357,7 @@ class _$ImuConfigImpl implements _ImuConfig {
                 other.delayReadings == delayReadings));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -362,7 +372,9 @@ class _$ImuConfigImpl implements _ImuConfig {
       rollGain,
       delayReadings);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ImuConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ImuConfigImplCopyWith<_$ImuConfigImpl> get copyWith =>
@@ -392,50 +404,52 @@ abstract class _ImuConfig implements ImuConfig {
   factory _ImuConfig.fromJson(Map<String, dynamic> json) =
       _$ImuConfigImpl.fromJson;
 
-  @override
-
   /// Whether the vehicle should take into account pitch and roll when
   /// representing its position.
-  bool get usePitchAndRoll;
   @override
+  bool get usePitchAndRoll;
 
   /// Whether the pich and roll axes should be swapped.
-  bool get swapPitchAndRoll;
   @override
+  bool get swapPitchAndRoll;
 
   /// The zero values for the different axes of the IMU.
-  ImuZeroValues get zeroValues;
   @override
+  ImuZeroValues get zeroValues;
 
   /// Whether the vehicle's bearing should be the one from the IMU.
-  bool get useYaw;
   @override
+  bool get useYaw;
 
   /// Whether the bearing axis should be inverted.
-  bool get invertYaw;
   @override
+  bool get invertYaw;
 
   /// Whether the pitch axis should be inverted.
-  bool get invertPitch;
   @override
+  bool get invertPitch;
 
   /// Whether the roll axis should be inverted.
+  @override
   bool get invertRoll;
-  @override
 
   /// A multiplier for how much the pitch reading should be amplified/reduced.
+  @override
   double get pitchGain;
-  @override
 
   /// A multiplier for how much the pitch reading should be amplified/reduced.
-  double get rollGain;
   @override
+  double get rollGain;
 
   /// How many milliseconds we should delay the readings to match the GNSS fix
   /// time.
-  int get delayReadings;
   @override
-  @JsonKey(ignore: true)
+  int get delayReadings;
+
+  /// Create a copy of ImuConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ImuConfigImplCopyWith<_$ImuConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

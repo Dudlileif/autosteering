@@ -546,18 +546,18 @@ class _CreateFieldFromPathTracking extends ConsumerWidget {
                                   boundingBox: GeoBox.from(points),
                                 );
 
-                                await ref
-                                    .read(
+                                await ref.read(
                                   saveFieldProvider(field).future,
-                                )
-                                    .then((value) {
-                                  ref
-                                      .read(
-                                        activeFieldProvider.notifier,
-                                      )
-                                      .update(field);
+                                );
+                                ref
+                                    .read(
+                                      activeFieldProvider.notifier,
+                                    )
+                                    .update(field);
+
+                                if (context.mounted) {
                                   Navigator.of(context).pop();
-                                });
+                                }
                               }
                             : null,
                         child: const Text('Save field'),

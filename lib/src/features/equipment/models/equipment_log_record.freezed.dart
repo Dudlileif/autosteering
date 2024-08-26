@@ -30,8 +30,12 @@ mixin _$EquipmentLogRecord {
   /// [WayPoint] for position and bearing of the equipment.
   WayPoint get wayPoint => throw _privateConstructorUsedError;
 
+  /// Serializes this EquipmentLogRecord to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EquipmentLogRecord
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EquipmentLogRecordCopyWith<EquipmentLogRecord> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,6 +62,8 @@ class _$EquipmentLogRecordCopyWithImpl<$Res, $Val extends EquipmentLogRecord>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EquipmentLogRecord
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -104,6 +110,8 @@ class __$$EquipmentLogRecordImplCopyWithImpl<$Res>
       $Res Function(_$EquipmentLogRecordImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EquipmentLogRecord
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -177,12 +185,14 @@ class _$EquipmentLogRecordImpl implements _EquipmentLogRecord {
                 other.wayPoint == wayPoint));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, time,
       const DeepCollectionEquality().hash(_activeSections), wayPoint);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EquipmentLogRecord
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EquipmentLogRecordImplCopyWith<_$EquipmentLogRecordImpl> get copyWith =>
@@ -206,21 +216,23 @@ abstract class _EquipmentLogRecord implements EquipmentLogRecord {
   factory _EquipmentLogRecord.fromJson(Map<String, dynamic> json) =
       _$EquipmentLogRecordImpl.fromJson;
 
-  @override
-
   /// Time stamp of this.
+  @override
   @DateTimeSerializer()
   DateTime get time;
-  @override
 
   /// List of the section indices for the active sections only.
-  List<int> get activeSections;
   @override
+  List<int> get activeSections;
 
   /// [WayPoint] for position and bearing of the equipment.
-  WayPoint get wayPoint;
   @override
-  @JsonKey(ignore: true)
+  WayPoint get wayPoint;
+
+  /// Create a copy of EquipmentLogRecord
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EquipmentLogRecordImplCopyWith<_$EquipmentLogRecordImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

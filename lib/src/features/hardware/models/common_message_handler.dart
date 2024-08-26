@@ -126,9 +126,11 @@ class CommonMessageHandler {
             .update(message.wasTarget);
       }
     } else if (message is ({double? motorActualRPM})) {
-      _ref
-          .read(steeringMotorActualRPMProvider.notifier)
-          .update(message.motorActualRPM);
+      if (_ref.exists(steeringMotorActualRPMProvider)) {
+        _ref
+            .read(steeringMotorActualRPMProvider.notifier)
+            .update(message.motorActualRPM);
+      }
     } else if (message is ({bool motorEnabled})) {
       _ref.read(steeringMotorStatusProvider.notifier).update(
             switch (message.motorEnabled) {

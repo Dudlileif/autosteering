@@ -39,8 +39,12 @@ mixin _$PathRecordingSettings {
   /// vehicle's position.
   double get longitudinalOffset => throw _privateConstructorUsedError;
 
+  /// Serializes this PathRecordingSettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PathRecordingSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PathRecordingSettingsCopyWith<PathRecordingSettings> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -70,6 +74,8 @@ class _$PathRecordingSettingsCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PathRecordingSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -130,6 +136,8 @@ class __$$PathRecordingSettingsImplCopyWithImpl<$Res>
       $Res Function(_$PathRecordingSettingsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PathRecordingSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -227,12 +235,14 @@ class _$PathRecordingSettingsImpl implements _PathRecordingSettings {
                 other.longitudinalOffset == longitudinalOffset));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, minDistance, maxDistance,
       maxBearingDifference, lateralOffset, longitudinalOffset);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PathRecordingSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PathRecordingSettingsImplCopyWith<_$PathRecordingSettingsImpl>
@@ -258,31 +268,33 @@ abstract class _PathRecordingSettings implements PathRecordingSettings {
   factory _PathRecordingSettings.fromJson(Map<String, dynamic> json) =
       _$PathRecordingSettingsImpl.fromJson;
 
-  @override
-
   /// Minimum distance between points in meters.
-  double get minDistance;
   @override
+  double get minDistance;
 
   /// Maximum distance between points in meters.
-  double get maxDistance;
   @override
+  double get maxDistance;
 
   /// Maximum difference between the previous [WayPoint.bearing] and the
   /// vehicle's current bearing.
-  double get maxBearingDifference;
   @override
+  double get maxBearingDifference;
 
   /// Offset distance in meters in the bearing+90° direction from the
   /// vehicle's position.
-  double get lateralOffset;
   @override
+  double get lateralOffset;
 
   /// Offset distance in meters in the bearing direction from the
   /// vehicle's position.
-  double get longitudinalOffset;
   @override
-  @JsonKey(ignore: true)
+  double get longitudinalOffset;
+
+  /// Create a copy of PathRecordingSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PathRecordingSettingsImplCopyWith<_$PathRecordingSettingsImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

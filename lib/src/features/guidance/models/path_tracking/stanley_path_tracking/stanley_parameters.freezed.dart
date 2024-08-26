@@ -31,8 +31,12 @@ mixin _$StanleyParameters {
   /// steering angle.
   double get velocityGain => throw _privateConstructorUsedError;
 
+  /// Serializes this StanleyParameters to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of StanleyParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StanleyParametersCopyWith<StanleyParameters> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -57,6 +61,8 @@ class _$StanleyParametersCopyWithImpl<$Res, $Val extends StanleyParameters>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of StanleyParameters
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -101,6 +107,8 @@ class __$$StanleyParametersImplCopyWithImpl<$Res>
       $Res Function(_$StanleyParametersImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of StanleyParameters
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -130,7 +138,7 @@ class __$$StanleyParametersImplCopyWithImpl<$Res>
 class _$StanleyParametersImpl implements _StanleyParameters {
   const _$StanleyParametersImpl(
       {this.crossDistanceGain = 1.5,
-      this.softeningGain = 1e-5,
+      this.softeningGain = 0.00001,
       this.velocityGain = 1.3});
 
   factory _$StanleyParametersImpl.fromJson(Map<String, dynamic> json) =>
@@ -171,12 +179,14 @@ class _$StanleyParametersImpl implements _StanleyParameters {
                 other.velocityGain == velocityGain));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, crossDistanceGain, softeningGain, velocityGain);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StanleyParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StanleyParametersImplCopyWith<_$StanleyParametersImpl> get copyWith =>
@@ -200,22 +210,24 @@ abstract class _StanleyParameters implements StanleyParameters {
   factory _StanleyParameters.fromJson(Map<String, dynamic> json) =
       _$StanleyParametersImpl.fromJson;
 
-  @override
-
   /// Proportional cross distance gain coefficient.
-  double get crossDistanceGain;
   @override
+  double get crossDistanceGain;
 
   /// The coefficient to ensure numerical stability when velocity is close to
   /// zero.
-  double get softeningGain;
   @override
+  double get softeningGain;
 
   /// Proportional coefficient for how much the velocity should alter the
   /// steering angle.
-  double get velocityGain;
   @override
-  @JsonKey(ignore: true)
+  double get velocityGain;
+
+  /// Create a copy of StanleyParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StanleyParametersImplCopyWith<_$StanleyParametersImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

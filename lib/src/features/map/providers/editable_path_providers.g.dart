@@ -7,7 +7,7 @@ part of 'editable_path_providers.dart';
 // **************************************************************************
 
 String _$editablePathAsWayPointsHash() =>
-    r'cdc1ff455bcdc08cd149b206f0dbd59b7250fffd';
+    r'f1fce3daf0e066d30ec91e21d24d6670ede4a8f6';
 
 /// A provider with [EditablePathPoints] converted to [WayPoint]s.
 ///

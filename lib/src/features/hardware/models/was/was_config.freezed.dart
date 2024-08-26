@@ -24,8 +24,12 @@ mixin _$WasConfig {
   bool get invertInput => throw _privateConstructorUsedError;
   int get bits => throw _privateConstructorUsedError;
 
+  /// Serializes this WasConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of WasConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $WasConfigCopyWith<WasConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$WasConfigCopyWithImpl<$Res, $Val extends WasConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of WasConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -91,6 +97,8 @@ class __$$WasConfigImplCopyWithImpl<$Res>
       _$WasConfigImpl _value, $Res Function(_$WasConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of WasConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -150,11 +158,13 @@ class _$WasConfigImpl implements _WasConfig {
             (identical(other.bits, bits) || other.bits == bits));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, useWas, invertInput, bits);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WasConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$WasConfigImplCopyWith<_$WasConfigImpl> get copyWith =>
@@ -183,8 +193,11 @@ abstract class _WasConfig implements WasConfig {
   bool get invertInput;
   @override
   int get bits;
+
+  /// Create a copy of WasConfig
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WasConfigImplCopyWith<_$WasConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

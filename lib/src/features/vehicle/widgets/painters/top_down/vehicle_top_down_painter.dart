@@ -98,17 +98,15 @@ class _VehiclePainterState extends State<VehicleTopDownPainter> {
           ) ??
           sourceHeight;
 
-      unawaited(
-        vg
-            .loadPicture(
-              SvgAssetLoader(
-                'assets/images/vehicle_types/top_view/tractor_top_view.svg',
-                colorMapper: _VehicleTopColorMapper(widget.colors),
-              ),
-              context,
-            )
-            .then((value) => svgPicture.value = value.picture),
-      );
+      await vg
+          .loadPicture(
+            SvgAssetLoader(
+              'assets/images/vehicle_types/top_view/tractor_top_view.svg',
+              colorMapper: _VehicleTopColorMapper(widget.colors),
+            ),
+            context.mounted ? context : null,
+          )
+          .then((value) => svgPicture.value = value.picture);
     });
   }
 

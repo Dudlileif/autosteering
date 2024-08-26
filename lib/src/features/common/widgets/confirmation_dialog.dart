@@ -55,9 +55,12 @@ class ConfirmationDialog extends StatelessWidget {
                 label: const Text('Cancel'),
               ),
               FilledButton.icon(
-                onPressed: () async => onConfirmation().then(
-                  (value) => Navigator.of(context).pop(true),
-                ),
+                onPressed: () async {
+                  await onConfirmation();
+                  if (context.mounted) {
+                    Navigator.of(context).pop(true);
+                  }
+                },
                 icon: const Icon(Icons.check),
                 label: const Text('Confirm'),
               ),

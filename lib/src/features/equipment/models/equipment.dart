@@ -184,7 +184,7 @@ class Equipment extends Hitchable with EquatableMixin {
   /// the front of the work area. 0 means the rear and 1 means the front
   /// Defaults to the front, 1.
   ///
-  /// ```
+  /// ```_
   ///  1    ---------
   ///       |       |
   ///       |       |
@@ -504,8 +504,11 @@ class Equipment extends Hitchable with EquatableMixin {
 
         var turningRadius = bearingChange.abs() > 0
             // Circle chord to radius
-            ?clampDouble( movedDistance / (2 * sin(bearingChange.toRadians() / 2))
-                ,-500, 500,)
+            ? clampDouble(
+                movedDistance / (2 * sin(bearingChange.toRadians() / 2)),
+                -500,
+                500,
+              )
             : null;
 
         if (turningRadius != null) {
@@ -689,7 +692,7 @@ class Equipment extends Hitchable with EquatableMixin {
   ///
   /// The order of the points is
   ///
-  /// ```
+  /// ```_
   /// [
   ///   front left,
   ///   rear left,

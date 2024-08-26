@@ -1210,7 +1210,7 @@ class _DeleteWorkSessionProviderElement
       (origin as DeleteWorkSessionProvider).overrideName;
 }
 
-String _$importWorkSessionHash() => r'ba6c4595c03b7f18e63873270b7487012bc1469c';
+String _$importWorkSessionHash() => r'0541c69f8020d51d79e243dc23cd4fa3d1486429';
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.

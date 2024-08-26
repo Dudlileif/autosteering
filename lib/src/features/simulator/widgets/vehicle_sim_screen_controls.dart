@@ -227,7 +227,11 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
             ),
             child: Slider(
-              value:clampDouble(steeringAngle,-steeringAngleMax, steeringAngleMax),
+              value: clampDouble(
+                steeringAngle,
+                -steeringAngleMax,
+                steeringAngleMax,
+              ),
               onChangeStart: (value) => ref.watch(
                 simCoreVehicleAutoCenterSteeringProvider,
               )

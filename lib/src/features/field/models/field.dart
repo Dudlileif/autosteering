@@ -41,7 +41,7 @@ class Field with EquatableMixin {
   ///
   /// Expects a json map of this format:
   ///
-  ///```
+  ///```json
   /// {
   ///   "name": "some name",
   ///   "polygon": "{\"type\":\"Polygon\",\"coordinates\":[[[10, 60], [11, 60], [11, 61], [10, 61]]]
@@ -50,7 +50,6 @@ class Field with EquatableMixin {
   ///
   /// Caution, the "polygon" field stores a *string* of a GeoJson polygon, not
   /// the GeoJson polygon itself.
-
   factory Field.fromJson(Map<String, dynamic> json) {
     final name = json['name'] as String;
     final uuid = json['uuid'] as String?;

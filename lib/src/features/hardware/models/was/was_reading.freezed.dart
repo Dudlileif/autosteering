@@ -27,8 +27,12 @@ mixin _$WasReading {
   /// The discrete value of the sensor reading.
   int get value => throw _privateConstructorUsedError;
 
+  /// Serializes this WasReading to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of WasReading
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $WasReadingCopyWith<WasReading> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,6 +56,8 @@ class _$WasReadingCopyWithImpl<$Res, $Val extends WasReading>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of WasReading
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -90,6 +96,8 @@ class __$$WasReadingImplCopyWithImpl<$Res>
       _$WasReadingImpl _value, $Res Function(_$WasReadingImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of WasReading
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -143,11 +151,13 @@ class _$WasReadingImpl implements _WasReading {
             (identical(other.value, value) || other.value == value));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, receiveTime, value);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WasReading
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$WasReadingImplCopyWith<_$WasReadingImpl> get copyWith =>
@@ -169,17 +179,19 @@ abstract class _WasReading implements WasReading {
   factory _WasReading.fromJson(Map<String, dynamic> json) =
       _$WasReadingImpl.fromJson;
 
-  @override
-
   /// The time of the reading being received.
+  @override
   @DateTimeSerializer()
   DateTime get receiveTime;
-  @override
 
   /// The discrete value of the sensor reading.
-  int get value;
   @override
-  @JsonKey(ignore: true)
+  int get value;
+
+  /// Create a copy of WasReading
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WasReadingImplCopyWith<_$WasReadingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

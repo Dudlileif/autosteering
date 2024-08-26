@@ -29,8 +29,12 @@ mixin _$PidParameters {
   /// Derivative gain.
   double get d => throw _privateConstructorUsedError;
 
+  /// Serializes this PidParameters to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PidParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PidParametersCopyWith<PidParameters> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,6 +58,8 @@ class _$PidParametersCopyWithImpl<$Res, $Val extends PidParameters>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PidParameters
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -97,6 +103,8 @@ class __$$PidParametersImplCopyWithImpl<$Res>
       _$PidParametersImpl _value, $Res Function(_$PidParametersImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PidParameters
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -159,11 +167,13 @@ class _$PidParametersImpl implements _PidParameters {
             (identical(other.d, d) || other.d == d));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, p, i, d);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PidParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PidParametersImplCopyWith<_$PidParametersImpl> get copyWith =>
@@ -184,20 +194,22 @@ abstract class _PidParameters implements PidParameters {
   factory _PidParameters.fromJson(Map<String, dynamic> json) =
       _$PidParametersImpl.fromJson;
 
-  @override
-
   /// Proportional gain.
-  double get p;
   @override
+  double get p;
 
   /// Integral gain.
-  double get i;
   @override
+  double get i;
 
   /// Derivative gain.
-  double get d;
   @override
-  @JsonKey(ignore: true)
+  double get d;
+
+  /// Create a copy of PidParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PidParametersImplCopyWith<_$PidParametersImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
