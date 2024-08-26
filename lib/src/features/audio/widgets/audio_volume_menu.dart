@@ -29,29 +29,25 @@ class AudioVolumeMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuButtonWithChildren(
+    return const MenuButtonWithChildren(
       text: 'Audio levels',
       icon: Icons.volume_up,
       menuChildren: [
         _AudioVolumeTile(
           title: 'Autosteering enabled',
-          audioProvider: audioAutosteeringEnabledProvider,
-          volumeProvider: audioVolumeAutosteeringEnabledProvider,
+          audioAsset: AudioAsset.autosteeringEnabled,
         ),
         _AudioVolumeTile(
           title: 'Autosteering disable',
-          audioProvider: audioAutosteeringDisabledProvider,
-          volumeProvider: audioVolumeAutosteeringDisabledProvider,
+          audioAsset: AudioAsset.autosteeringDisabled,
         ),
         _AudioVolumeTile(
           title: 'Autosteering standby',
-          audioProvider: audioAutosteeringStandbyProvider,
-          volumeProvider: audioVolumeAutosteeringStandbyProvider,
+          audioAsset: AudioAsset.autosteeringStandby,
         ),
         _AudioVolumeTile(
           title: 'RTK lost alarm',
-          audioProvider: audioRTKLostAlarmProvider,
-          volumeProvider: audioVolumeRTKLostAlarmProvider,
+          audioAsset: AudioAsset.rtkLostAlarm,
         ),
       ],
     );
@@ -61,17 +57,16 @@ class AudioVolumeMenu extends StatelessWidget {
 class _AudioVolumeTile extends ConsumerWidget {
   const _AudioVolumeTile({
     required this.title,
-    required this.audioProvider,
-    required this.volumeProvider,
+    required this.audioAsset,
   });
 
   final String title;
-  final AutoDisposeFutureProvider<void> audioProvider;
-  final AutoDisposeNotifierProvider<dynamic, double> volumeProvider;
+  final AudioAsset audioAsset;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var volume = ref.read(volumeProvider);
+    var volume =
+        ref.read(audioVolumeProvider.select((value) => value[audioAsset])) ?? 1;
     return ListTile(
       title: Text(title),
       subtitle: StatefulBuilder(
@@ -80,13 +75,15 @@ class _AudioVolumeTile extends ConsumerWidget {
             value: volume,
             onChanged: (value) => setState(() => volume = value),
             onChangeEnd: (value) =>
-                ref.read(volumeProvider.notifier).update(value),
+                ref
+                .read(audioVolumeProvider.notifier)
+                .update(audioAsset, value),
             divisions: 10,
           );
         },
       ),
       trailing: IconButton(
-        onPressed: () => ref.read(audioProvider),
+        onPressed: () => ref.read(audioPlayerProvider(audioAsset)),
         icon: const Icon(Icons.play_arrow),
       ),
     );

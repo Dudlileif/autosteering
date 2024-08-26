@@ -79,14 +79,15 @@ class ActiveAutosteeringState extends _$ActiveAutosteeringState {
   AutosteeringState build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        switch (next) {
-          case AutosteeringState.enabled:
-            ref.read(audioAutosteeringEnabledProvider);
-          case AutosteeringState.disabled:
-            ref.read(audioAutosteeringDisabledProvider);
-          case AutosteeringState.standby:
-            ref.read(audioAutosteeringStandbyProvider);
-        }
+        ref.read(
+          audioPlayerProvider(
+            switch (next) {
+              AutosteeringState.enabled => AudioAsset.autosteeringEnabled,
+              AutosteeringState.disabled => AudioAsset.autosteeringDisabled,
+              AutosteeringState.standby => AudioAsset.autosteeringStandby
+            },
+          ),
+        );
       }
     });
     return AutosteeringState.disabled;
