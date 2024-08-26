@@ -61,8 +61,8 @@ class AudioVolume extends _$AudioVolume {
       });
     final map =
         ref.read(settingsProvider.notifier).getMap(SettingsKey.audioVolumes);
-    if (map != null && map is Map<String, double>) {
-      return map.map(
+    if (map != null) {
+      return map.cast<String, double>().map(
         (key, value) =>
             MapEntry(AudioAsset.fromPath(key), clampDouble(value, 0, 1)),
       );
