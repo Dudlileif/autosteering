@@ -39,25 +39,11 @@ const loadWorkSessionFromFileProvider = LoadWorkSessionFromFileFamily();
 /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
 ///
 /// Copied from [loadWorkSessionFromFile].
-class LoadWorkSessionFromFileFamily extends Family {
+class LoadWorkSessionFromFileFamily extends Family<AsyncValue<WorkSession?>> {
   /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
   ///
   /// Copied from [loadWorkSessionFromFile].
   const LoadWorkSessionFromFileFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadWorkSessionFromFileProvider';
 
   /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
   ///
@@ -70,7 +56,6 @@ class LoadWorkSessionFromFileFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   LoadWorkSessionFromFileProvider getProviderOverride(
     covariant LoadWorkSessionFromFileProvider provider,
@@ -80,27 +65,19 @@ class LoadWorkSessionFromFileFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<WorkSession?> Function(LoadWorkSessionFromFileRef ref) create) {
-    return _$LoadWorkSessionFromFileFamilyOverride(this, create);
-  }
-}
-
-class _$LoadWorkSessionFromFileFamilyOverride implements FamilyOverride {
-  _$LoadWorkSessionFromFileFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<WorkSession?> Function(LoadWorkSessionFromFileRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final LoadWorkSessionFromFileFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  LoadWorkSessionFromFileProvider getProviderOverride(
-    covariant LoadWorkSessionFromFileProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadWorkSessionFromFileProvider';
 }
 
 /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
@@ -131,7 +108,7 @@ class LoadWorkSessionFromFileProvider
         );
 
   LoadWorkSessionFromFileProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -144,7 +121,7 @@ class LoadWorkSessionFromFileProvider
 
   @override
   Override overrideWith(
-    FutureOr<WorkSession?> Function(LoadWorkSessionFromFileRef ref) create,
+    FutureOr<WorkSession?> Function(LoadWorkSessionFromFileRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -161,27 +138,8 @@ class LoadWorkSessionFromFileProvider
   }
 
   @override
-  (String,) get argument {
-    return (path,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<WorkSession?> createElement() {
     return _LoadWorkSessionFromFileProviderElement(this);
-  }
-
-  LoadWorkSessionFromFileProvider _copyWith(
-    FutureOr<WorkSession?> Function(LoadWorkSessionFromFileRef ref) create,
-  ) {
-    return LoadWorkSessionFromFileProvider._internal(
-      (ref) => create(ref as LoadWorkSessionFromFileRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      path: path,
-    );
   }
 
   @override
@@ -227,27 +185,13 @@ const saveWorkSessionProvider = SaveWorkSessionFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveWorkSession].
-class SaveWorkSessionFamily extends Family {
+class SaveWorkSessionFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [workSession] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveWorkSession].
   const SaveWorkSessionFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveWorkSessionProvider';
 
   /// A provider for saving [workSession] to a file in the user file directory.
   ///
@@ -266,7 +210,6 @@ class SaveWorkSessionFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   SaveWorkSessionProvider getProviderOverride(
     covariant SaveWorkSessionProvider provider,
@@ -278,27 +221,19 @@ class SaveWorkSessionFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(SaveWorkSessionRef ref) create) {
-    return _$SaveWorkSessionFamilyOverride(this, create);
-  }
-}
-
-class _$SaveWorkSessionFamilyOverride implements FamilyOverride {
-  _$SaveWorkSessionFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(SaveWorkSessionRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final SaveWorkSessionFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  SaveWorkSessionProvider getProviderOverride(
-    covariant SaveWorkSessionProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveWorkSessionProvider';
 }
 
 /// A provider for saving [workSession] to a file in the user file directory.
@@ -338,7 +273,7 @@ class SaveWorkSessionProvider extends AutoDisposeFutureProvider<void> {
         );
 
   SaveWorkSessionProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -355,7 +290,7 @@ class SaveWorkSessionProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveWorkSessionRef ref) create,
+    FutureOr<void> Function(SaveWorkSessionRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -374,37 +309,8 @@ class SaveWorkSessionProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    WorkSession, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      workSession,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveWorkSessionProviderElement(this);
-  }
-
-  SaveWorkSessionProvider _copyWith(
-    FutureOr<void> Function(SaveWorkSessionRef ref) create,
-  ) {
-    return SaveWorkSessionProvider._internal(
-      (ref) => create(ref as SaveWorkSessionRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      workSession: workSession,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -473,7 +379,7 @@ const saveWorkSessionEquipmentLogsProvider =
 /// be saved.
 ///
 /// Copied from [saveWorkSessionEquipmentLogs].
-class SaveWorkSessionEquipmentLogsFamily extends Family {
+class SaveWorkSessionEquipmentLogsFamily extends Family<AsyncValue<void>> {
   /// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
   /// their respective files.
   ///
@@ -483,20 +389,6 @@ class SaveWorkSessionEquipmentLogsFamily extends Family {
   ///
   /// Copied from [saveWorkSessionEquipmentLogs].
   const SaveWorkSessionEquipmentLogsFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveWorkSessionEquipmentLogsProvider';
 
   /// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
   /// their respective files.
@@ -518,7 +410,6 @@ class SaveWorkSessionEquipmentLogsFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   SaveWorkSessionEquipmentLogsProvider getProviderOverride(
     covariant SaveWorkSessionEquipmentLogsProvider provider,
@@ -530,28 +421,19 @@ class SaveWorkSessionEquipmentLogsFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(SaveWorkSessionEquipmentLogsRef ref) create) {
-    return _$SaveWorkSessionEquipmentLogsFamilyOverride(this, create);
-  }
-}
-
-class _$SaveWorkSessionEquipmentLogsFamilyOverride implements FamilyOverride {
-  _$SaveWorkSessionEquipmentLogsFamilyOverride(
-      this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(SaveWorkSessionEquipmentLogsRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final SaveWorkSessionEquipmentLogsFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  SaveWorkSessionEquipmentLogsProvider getProviderOverride(
-    covariant SaveWorkSessionEquipmentLogsProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveWorkSessionEquipmentLogsProvider';
 }
 
 /// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
@@ -598,7 +480,7 @@ class SaveWorkSessionEquipmentLogsProvider
         );
 
   SaveWorkSessionEquipmentLogsProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -615,7 +497,7 @@ class SaveWorkSessionEquipmentLogsProvider
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveWorkSessionEquipmentLogsRef ref) create,
+    FutureOr<void> Function(SaveWorkSessionEquipmentLogsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -634,37 +516,8 @@ class SaveWorkSessionEquipmentLogsProvider
   }
 
   @override
-  (
-    WorkSession, {
-    bool overwrite,
-    String? singleUuid,
-  }) get argument {
-    return (
-      workSession,
-      overwrite: overwrite,
-      singleUuid: singleUuid,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveWorkSessionEquipmentLogsProviderElement(this);
-  }
-
-  SaveWorkSessionEquipmentLogsProvider _copyWith(
-    FutureOr<void> Function(SaveWorkSessionEquipmentLogsRef ref) create,
-  ) {
-    return SaveWorkSessionEquipmentLogsProvider._internal(
-      (ref) => create(ref as SaveWorkSessionEquipmentLogsRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      workSession: workSession,
-      overwrite: overwrite,
-      singleUuid: singleUuid,
-    );
   }
 
   @override
@@ -728,27 +581,13 @@ const exportWorkSessionProvider = ExportWorkSessionFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [exportWorkSession].
-class ExportWorkSessionFamily extends Family {
+class ExportWorkSessionFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting [workSession] to a file.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [exportWorkSession].
   const ExportWorkSessionFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportWorkSessionProvider';
 
   /// A provider for exporting [workSession] to a file.
   ///
@@ -769,7 +608,6 @@ class ExportWorkSessionFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportWorkSessionProvider getProviderOverride(
     covariant ExportWorkSessionProvider provider,
@@ -782,27 +620,19 @@ class ExportWorkSessionFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(ExportWorkSessionRef ref) create) {
-    return _$ExportWorkSessionFamilyOverride(this, create);
-  }
-}
-
-class _$ExportWorkSessionFamilyOverride implements FamilyOverride {
-  _$ExportWorkSessionFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportWorkSessionRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportWorkSessionFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportWorkSessionProvider getProviderOverride(
-    covariant ExportWorkSessionProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportWorkSessionProvider';
 }
 
 /// A provider for exporting [workSession] to a file.
@@ -845,7 +675,7 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportWorkSessionProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -864,7 +694,7 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportWorkSessionRef ref) create,
+    FutureOr<void> Function(ExportWorkSessionRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -884,40 +714,8 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    WorkSession, {
-    String? overrideName,
-    bool downloadIfWeb,
-    bool withEquipmentLogs,
-  }) get argument {
-    return (
-      workSession,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-      withEquipmentLogs: withEquipmentLogs,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportWorkSessionProviderElement(this);
-  }
-
-  ExportWorkSessionProvider _copyWith(
-    FutureOr<void> Function(ExportWorkSessionRef ref) create,
-  ) {
-    return ExportWorkSessionProvider._internal(
-      (ref) => create(ref as ExportWorkSessionRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      workSession: workSession,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-      withEquipmentLogs: withEquipmentLogs,
-    );
   }
 
   @override
@@ -1005,27 +803,13 @@ const deleteWorkSessionProvider = DeleteWorkSessionFamily();
 /// Override the directory name with [overrideName].
 ///
 /// Copied from [deleteWorkSession].
-class DeleteWorkSessionFamily extends Family {
+class DeleteWorkSessionFamily extends Family<AsyncValue<void>> {
   /// A provider for deleting [workSession] from the user file system.
   ///
   /// Override the directory name with [overrideName].
   ///
   /// Copied from [deleteWorkSession].
   const DeleteWorkSessionFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'deleteWorkSessionProvider';
 
   /// A provider for deleting [workSession] from the user file system.
   ///
@@ -1042,7 +826,6 @@ class DeleteWorkSessionFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   DeleteWorkSessionProvider getProviderOverride(
     covariant DeleteWorkSessionProvider provider,
@@ -1053,27 +836,19 @@ class DeleteWorkSessionFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(DeleteWorkSessionRef ref) create) {
-    return _$DeleteWorkSessionFamilyOverride(this, create);
-  }
-}
-
-class _$DeleteWorkSessionFamilyOverride implements FamilyOverride {
-  _$DeleteWorkSessionFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(DeleteWorkSessionRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final DeleteWorkSessionFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  DeleteWorkSessionProvider getProviderOverride(
-    covariant DeleteWorkSessionProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteWorkSessionProvider';
 }
 
 /// A provider for deleting [workSession] from the user file system.
@@ -1110,7 +885,7 @@ class DeleteWorkSessionProvider extends AutoDisposeFutureProvider<void> {
         );
 
   DeleteWorkSessionProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -1125,7 +900,7 @@ class DeleteWorkSessionProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(DeleteWorkSessionRef ref) create,
+    FutureOr<void> Function(DeleteWorkSessionRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1143,34 +918,8 @@ class DeleteWorkSessionProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    WorkSession, {
-    String? overrideName,
-  }) get argument {
-    return (
-      workSession,
-      overrideName: overrideName,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _DeleteWorkSessionProviderElement(this);
-  }
-
-  DeleteWorkSessionProvider _copyWith(
-    FutureOr<void> Function(DeleteWorkSessionRef ref) create,
-  ) {
-    return DeleteWorkSessionProvider._internal(
-      (ref) => create(ref as DeleteWorkSessionRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      workSession: workSession,
-      overrideName: overrideName,
-    );
   }
 
   @override
@@ -1241,25 +990,11 @@ const exportWorkSessionsProvider = ExportWorkSessionsFamily();
 /// A provider for exporting all work session files.
 ///
 /// Copied from [exportWorkSessions].
-class ExportWorkSessionsFamily extends Family {
+class ExportWorkSessionsFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all work session files.
   ///
   /// Copied from [exportWorkSessions].
   const ExportWorkSessionsFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportWorkSessionsProvider';
 
   /// A provider for exporting all work session files.
   ///
@@ -1272,7 +1007,6 @@ class ExportWorkSessionsFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportWorkSessionsProvider getProviderOverride(
     covariant ExportWorkSessionsProvider provider,
@@ -1282,27 +1016,19 @@ class ExportWorkSessionsFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(ExportWorkSessionsRef ref) create) {
-    return _$ExportWorkSessionsFamilyOverride(this, create);
-  }
-}
-
-class _$ExportWorkSessionsFamilyOverride implements FamilyOverride {
-  _$ExportWorkSessionsFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportWorkSessionsRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportWorkSessionsFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportWorkSessionsProvider getProviderOverride(
-    covariant ExportWorkSessionsProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportWorkSessionsProvider';
 }
 
 /// A provider for exporting all work session files.
@@ -1332,7 +1058,7 @@ class ExportWorkSessionsProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportWorkSessionsProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -1345,7 +1071,7 @@ class ExportWorkSessionsProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportWorkSessionsRef ref) create,
+    FutureOr<void> Function(ExportWorkSessionsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1362,29 +1088,8 @@ class ExportWorkSessionsProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  ({
-    bool zip,
-  }) get argument {
-    return (zip: zip,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportWorkSessionsProviderElement(this);
-  }
-
-  ExportWorkSessionsProvider _copyWith(
-    FutureOr<void> Function(ExportWorkSessionsRef ref) create,
-  ) {
-    return ExportWorkSessionsProvider._internal(
-      (ref) => create(ref as ExportWorkSessionsRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      zip: zip,
-    );
   }
 
   @override
@@ -1433,4 +1138,4 @@ final activeWorkSessionProvider =
 
 typedef _$ActiveWorkSession = Notifier<WorkSession?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

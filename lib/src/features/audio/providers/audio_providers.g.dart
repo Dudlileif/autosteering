@@ -40,26 +40,12 @@ const audioPlayerProvider = AudioPlayerFamily();
 /// accuracy is lost.
 ///
 /// Copied from [audioPlayer].
-class AudioPlayerFamily extends Family {
+class AudioPlayerFamily extends Family<AsyncValue<void>> {
   /// A provider for playing an audio notification/sound when GNSS RTK fix
   /// accuracy is lost.
   ///
   /// Copied from [audioPlayer].
   const AudioPlayerFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'audioPlayerProvider';
 
   /// A provider for playing an audio notification/sound when GNSS RTK fix
   /// accuracy is lost.
@@ -73,7 +59,6 @@ class AudioPlayerFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   AudioPlayerProvider getProviderOverride(
     covariant AudioPlayerProvider provider,
@@ -83,26 +68,19 @@ class AudioPlayerFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(AudioPlayerRef ref) create) {
-    return _$AudioPlayerFamilyOverride(this, create);
-  }
-}
-
-class _$AudioPlayerFamilyOverride implements FamilyOverride {
-  _$AudioPlayerFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(AudioPlayerRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final AudioPlayerFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  AudioPlayerProvider getProviderOverride(
-    covariant AudioPlayerProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'audioPlayerProvider';
 }
 
 /// A provider for playing an audio notification/sound when GNSS RTK fix
@@ -134,7 +112,7 @@ class AudioPlayerProvider extends AutoDisposeFutureProvider<void> {
         );
 
   AudioPlayerProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -147,7 +125,7 @@ class AudioPlayerProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(AudioPlayerRef ref) create,
+    FutureOr<void> Function(AudioPlayerRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -164,27 +142,8 @@ class AudioPlayerProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (AudioAsset,) get argument {
-    return (asset,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _AudioPlayerProviderElement(this);
-  }
-
-  AudioPlayerProvider _copyWith(
-    FutureOr<void> Function(AudioPlayerRef ref) create,
-  ) {
-    return AudioPlayerProvider._internal(
-      (ref) => create(ref as AudioPlayerRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      asset: asset,
-    );
   }
 
   @override
@@ -214,7 +173,7 @@ class _AudioPlayerProviderElement extends AutoDisposeFutureProviderElement<void>
   AudioAsset get asset => (origin as AudioPlayerProvider).asset;
 }
 
-String _$audioVolumeHash() => r'e72ad3338dda207f382714b789d0a3c0403fdf35';
+String _$audioVolumeHash() => r'fdb8c304e003e7758b1d6251c17d7bbe5a1abb14';
 
 /// A provider for all the audio volume levels.
 ///
@@ -232,4 +191,4 @@ final audioVolumeProvider =
 
 typedef _$AudioVolume = Notifier<Map<AudioAsset, double>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

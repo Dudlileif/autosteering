@@ -111,8 +111,7 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
     }
 
     for (final hardware in ['combined', 'imu', 'gnss', 'was']) {
-      final hardwareLogsDir =
-          Directory(
+      final hardwareLogsDir = Directory(
         [dirPath, 'logs', 'hardware', hardware].join(Platform.pathSeparator),
       );
       if (hardwareLogsDir.existsSync()) {

@@ -75,26 +75,12 @@ const mapCacheDateProvider = MapCacheDateFamily();
 /// at the given [path].
 ///
 /// Copied from [mapCacheDate].
-class MapCacheDateFamily extends Family {
+class MapCacheDateFamily extends Family<AsyncValue<DateTime?>> {
   /// A provider for finding the first cache date of the map layer cache
   /// at the given [path].
   ///
   /// Copied from [mapCacheDate].
   const MapCacheDateFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'mapCacheDateProvider';
 
   /// A provider for finding the first cache date of the map layer cache
   /// at the given [path].
@@ -108,7 +94,6 @@ class MapCacheDateFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   MapCacheDateProvider getProviderOverride(
     covariant MapCacheDateProvider provider,
@@ -118,27 +103,19 @@ class MapCacheDateFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<DateTime?> Function(MapCacheDateRef ref) create) {
-    return _$MapCacheDateFamilyOverride(this, create);
-  }
-}
-
-class _$MapCacheDateFamilyOverride implements FamilyOverride {
-  _$MapCacheDateFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<DateTime?> Function(MapCacheDateRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final MapCacheDateFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  MapCacheDateProvider getProviderOverride(
-    covariant MapCacheDateProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'mapCacheDateProvider';
 }
 
 /// A provider for finding the first cache date of the map layer cache
@@ -170,7 +147,7 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
         );
 
   MapCacheDateProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -183,7 +160,7 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
 
   @override
   Override overrideWith(
-    FutureOr<DateTime?> Function(MapCacheDateRef ref) create,
+    FutureOr<DateTime?> Function(MapCacheDateRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -200,27 +177,8 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
   }
 
   @override
-  (String,) get argument {
-    return (path,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<DateTime?> createElement() {
     return _MapCacheDateProviderElement(this);
-  }
-
-  MapCacheDateProvider _copyWith(
-    FutureOr<DateTime?> Function(MapCacheDateRef ref) create,
-  ) {
-    return MapCacheDateProvider._internal(
-      (ref) => create(ref as MapCacheDateRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      path: path,
-    );
   }
 
   @override
@@ -526,4 +484,4 @@ final showGridSizeIndicatorProvider =
 
 typedef _$ShowGridSizeIndicator = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

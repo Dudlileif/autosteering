@@ -58,26 +58,12 @@ const commonSimCoreMessageHandlerProvider = CommonSimCoreMessageHandlerFamily();
 /// simulation.
 ///
 /// Copied from [commonSimCoreMessageHandler].
-class CommonSimCoreMessageHandlerFamily extends Family {
+class CommonSimCoreMessageHandlerFamily extends Family<void> {
   /// A provider for handling the common sim core messages for the state of the
   /// simulation.
   ///
   /// Copied from [commonSimCoreMessageHandler].
   const CommonSimCoreMessageHandlerFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'commonSimCoreMessageHandlerProvider';
 
   /// A provider for handling the common sim core messages for the state of the
   /// simulation.
@@ -85,13 +71,13 @@ class CommonSimCoreMessageHandlerFamily extends Family {
   /// Copied from [commonSimCoreMessageHandler].
   CommonSimCoreMessageHandlerProvider call(
     ({
-      Vehicle? vehicle,
-      num velocity,
+      ABTracking? abTracking,
+      AutosteeringState autosteeringState,
       num bearing,
       num distance,
       PathTracking? pathTracking,
-      ABTracking? abTracking,
-      AutosteeringState autosteeringState
+      Vehicle? vehicle,
+      num velocity
     }) message,
   ) {
     return CommonSimCoreMessageHandlerProvider(
@@ -99,7 +85,6 @@ class CommonSimCoreMessageHandlerFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   CommonSimCoreMessageHandlerProvider getProviderOverride(
     covariant CommonSimCoreMessageHandlerProvider provider,
@@ -109,28 +94,19 @@ class CommonSimCoreMessageHandlerFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      void Function(CommonSimCoreMessageHandlerRef ref) create) {
-    return _$CommonSimCoreMessageHandlerFamilyOverride(this, create);
-  }
-}
-
-class _$CommonSimCoreMessageHandlerFamilyOverride implements FamilyOverride {
-  _$CommonSimCoreMessageHandlerFamilyOverride(
-      this.overriddenFamily, this.create);
-
-  final void Function(CommonSimCoreMessageHandlerRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final CommonSimCoreMessageHandlerFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  CommonSimCoreMessageHandlerProvider getProviderOverride(
-    covariant CommonSimCoreMessageHandlerProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'commonSimCoreMessageHandlerProvider';
 }
 
 /// A provider for handling the common sim core messages for the state of the
@@ -144,13 +120,13 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
   /// Copied from [commonSimCoreMessageHandler].
   CommonSimCoreMessageHandlerProvider(
     ({
-      Vehicle? vehicle,
-      num velocity,
+      ABTracking? abTracking,
+      AutosteeringState autosteeringState,
       num bearing,
       num distance,
       PathTracking? pathTracking,
-      ABTracking? abTracking,
-      AutosteeringState autosteeringState
+      Vehicle? vehicle,
+      num velocity
     }) message,
   ) : this._internal(
           (ref) => commonSimCoreMessageHandler(
@@ -170,7 +146,7 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
         );
 
   CommonSimCoreMessageHandlerProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -180,18 +156,18 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
   }) : super.internal();
 
   final ({
-    Vehicle? vehicle,
-    num velocity,
+    ABTracking? abTracking,
+    AutosteeringState autosteeringState,
     num bearing,
     num distance,
     PathTracking? pathTracking,
-    ABTracking? abTracking,
-    AutosteeringState autosteeringState
+    Vehicle? vehicle,
+    num velocity
   }) message;
 
   @override
   Override overrideWith(
-    void Function(CommonSimCoreMessageHandlerRef ref) create,
+    void Function(CommonSimCoreMessageHandlerRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -208,37 +184,8 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
   }
 
   @override
-  (
-    ({
-      Vehicle? vehicle,
-      num velocity,
-      num bearing,
-      num distance,
-      PathTracking? pathTracking,
-      ABTracking? abTracking,
-      AutosteeringState autosteeringState
-    }),
-  ) get argument {
-    return (message,);
-  }
-
-  @override
   AutoDisposeProviderElement<void> createElement() {
     return _CommonSimCoreMessageHandlerProviderElement(this);
-  }
-
-  CommonSimCoreMessageHandlerProvider _copyWith(
-    void Function(CommonSimCoreMessageHandlerRef ref) create,
-  ) {
-    return CommonSimCoreMessageHandlerProvider._internal(
-      (ref) => create(ref as CommonSimCoreMessageHandlerRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      message: message,
-    );
   }
 
   @override
@@ -259,13 +206,13 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
 mixin CommonSimCoreMessageHandlerRef on AutoDisposeProviderRef<void> {
   /// The parameter `message` of this provider.
   ({
-    Vehicle? vehicle,
-    num velocity,
+    ABTracking? abTracking,
+    AutosteeringState autosteeringState,
     num bearing,
     num distance,
     PathTracking? pathTracking,
-    ABTracking? abTracking,
-    AutosteeringState autosteeringState
+    Vehicle? vehicle,
+    num velocity
   }) get message;
 }
 
@@ -276,13 +223,13 @@ class _CommonSimCoreMessageHandlerProviderElement
 
   @override
   ({
-    Vehicle? vehicle,
-    num velocity,
+    ABTracking? abTracking,
+    AutosteeringState autosteeringState,
     num bearing,
     num distance,
     PathTracking? pathTracking,
-    ABTracking? abTracking,
-    AutosteeringState autosteeringState
+    Vehicle? vehicle,
+    num velocity
   }) get message => (origin as CommonSimCoreMessageHandlerProvider).message;
 }
 
@@ -407,4 +354,4 @@ final simCoreVehicleAutoSlowDownProvider =
 
 typedef _$SimCoreVehicleAutoSlowDown = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

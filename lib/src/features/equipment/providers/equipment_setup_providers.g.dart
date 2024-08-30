@@ -43,27 +43,13 @@ const saveEquipmentSetupProvider = SaveEquipmentSetupFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveEquipmentSetup].
-class SaveEquipmentSetupFamily extends Family {
+class SaveEquipmentSetupFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [setup] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveEquipmentSetup].
   const SaveEquipmentSetupFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveEquipmentSetupProvider';
 
   /// A provider for saving [setup] to a file in the user file directory.
   ///
@@ -82,7 +68,6 @@ class SaveEquipmentSetupFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   SaveEquipmentSetupProvider getProviderOverride(
     covariant SaveEquipmentSetupProvider provider,
@@ -94,27 +79,19 @@ class SaveEquipmentSetupFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(SaveEquipmentSetupRef ref) create) {
-    return _$SaveEquipmentSetupFamilyOverride(this, create);
-  }
-}
-
-class _$SaveEquipmentSetupFamilyOverride implements FamilyOverride {
-  _$SaveEquipmentSetupFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(SaveEquipmentSetupRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final SaveEquipmentSetupFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  SaveEquipmentSetupProvider getProviderOverride(
-    covariant SaveEquipmentSetupProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveEquipmentSetupProvider';
 }
 
 /// A provider for saving [setup] to a file in the user file directory.
@@ -154,7 +131,7 @@ class SaveEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
         );
 
   SaveEquipmentSetupProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -171,7 +148,7 @@ class SaveEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveEquipmentSetupRef ref) create,
+    FutureOr<void> Function(SaveEquipmentSetupRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -190,37 +167,8 @@ class SaveEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    EquipmentSetup, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      setup,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveEquipmentSetupProviderElement(this);
-  }
-
-  SaveEquipmentSetupProvider _copyWith(
-    FutureOr<void> Function(SaveEquipmentSetupRef ref) create,
-  ) {
-    return SaveEquipmentSetupProvider._internal(
-      (ref) => create(ref as SaveEquipmentSetupRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      setup: setup,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -283,27 +231,13 @@ const exportEquipmentSetupProvider = ExportEquipmentSetupFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [exportEquipmentSetup].
-class ExportEquipmentSetupFamily extends Family {
+class ExportEquipmentSetupFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting [setup] to a file.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [exportEquipmentSetup].
   const ExportEquipmentSetupFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportEquipmentSetupProvider';
 
   /// A provider for exporting [setup] to a file.
   ///
@@ -322,7 +256,6 @@ class ExportEquipmentSetupFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportEquipmentSetupProvider getProviderOverride(
     covariant ExportEquipmentSetupProvider provider,
@@ -334,27 +267,19 @@ class ExportEquipmentSetupFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(ExportEquipmentSetupRef ref) create) {
-    return _$ExportEquipmentSetupFamilyOverride(this, create);
-  }
-}
-
-class _$ExportEquipmentSetupFamilyOverride implements FamilyOverride {
-  _$ExportEquipmentSetupFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportEquipmentSetupRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportEquipmentSetupFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportEquipmentSetupProvider getProviderOverride(
-    covariant ExportEquipmentSetupProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportEquipmentSetupProvider';
 }
 
 /// A provider for exporting [setup] to a file.
@@ -394,7 +319,7 @@ class ExportEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportEquipmentSetupProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -411,7 +336,7 @@ class ExportEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportEquipmentSetupRef ref) create,
+    FutureOr<void> Function(ExportEquipmentSetupRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -430,37 +355,8 @@ class ExportEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    EquipmentSetup, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      setup,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportEquipmentSetupProviderElement(this);
-  }
-
-  ExportEquipmentSetupProvider _copyWith(
-    FutureOr<void> Function(ExportEquipmentSetupRef ref) create,
-  ) {
-    return ExportEquipmentSetupProvider._internal(
-      (ref) => create(ref as ExportEquipmentSetupRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      setup: setup,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -544,27 +440,13 @@ const deleteEquipmentSetupProvider = DeleteEquipmentSetupFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [deleteEquipmentSetup].
-class DeleteEquipmentSetupFamily extends Family {
+class DeleteEquipmentSetupFamily extends Family<AsyncValue<void>> {
   /// A provider for deleting [setup] form the user file system.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteEquipmentSetup].
   const DeleteEquipmentSetupFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'deleteEquipmentSetupProvider';
 
   /// A provider for deleting [setup] form the user file system.
   ///
@@ -583,7 +465,6 @@ class DeleteEquipmentSetupFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   DeleteEquipmentSetupProvider getProviderOverride(
     covariant DeleteEquipmentSetupProvider provider,
@@ -595,27 +476,19 @@ class DeleteEquipmentSetupFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(DeleteEquipmentSetupRef ref) create) {
-    return _$DeleteEquipmentSetupFamilyOverride(this, create);
-  }
-}
-
-class _$DeleteEquipmentSetupFamilyOverride implements FamilyOverride {
-  _$DeleteEquipmentSetupFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(DeleteEquipmentSetupRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final DeleteEquipmentSetupFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  DeleteEquipmentSetupProvider getProviderOverride(
-    covariant DeleteEquipmentSetupProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteEquipmentSetupProvider';
 }
 
 /// A provider for deleting [setup] form the user file system.
@@ -655,7 +528,7 @@ class DeleteEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
         );
 
   DeleteEquipmentSetupProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -672,7 +545,7 @@ class DeleteEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(DeleteEquipmentSetupRef ref) create,
+    FutureOr<void> Function(DeleteEquipmentSetupRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -691,37 +564,8 @@ class DeleteEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    EquipmentSetup, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      setup,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _DeleteEquipmentSetupProviderElement(this);
-  }
-
-  DeleteEquipmentSetupProvider _copyWith(
-    FutureOr<void> Function(DeleteEquipmentSetupRef ref) create,
-  ) {
-    return DeleteEquipmentSetupProvider._internal(
-      (ref) => create(ref as DeleteEquipmentSetupRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      setup: setup,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -783,26 +627,13 @@ const loadEquipmentSetupFromFileProvider = LoadEquipmentSetupFromFileFamily();
 /// valid.
 ///
 /// Copied from [loadEquipmentSetupFromFile].
-class LoadEquipmentSetupFromFileFamily extends Family {
+class LoadEquipmentSetupFromFileFamily
+    extends Family<AsyncValue<EquipmentSetup?>> {
   /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
   /// valid.
   ///
   /// Copied from [loadEquipmentSetupFromFile].
   const LoadEquipmentSetupFromFileFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadEquipmentSetupFromFileProvider';
 
   /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
   /// valid.
@@ -816,7 +647,6 @@ class LoadEquipmentSetupFromFileFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   LoadEquipmentSetupFromFileProvider getProviderOverride(
     covariant LoadEquipmentSetupFromFileProvider provider,
@@ -826,30 +656,19 @@ class LoadEquipmentSetupFromFileFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<EquipmentSetup?> Function(LoadEquipmentSetupFromFileRef ref)
-          create) {
-    return _$LoadEquipmentSetupFromFileFamilyOverride(this, create);
-  }
-}
-
-class _$LoadEquipmentSetupFromFileFamilyOverride implements FamilyOverride {
-  _$LoadEquipmentSetupFromFileFamilyOverride(
-      this.overriddenFamily, this.create);
-
-  final FutureOr<EquipmentSetup?> Function(LoadEquipmentSetupFromFileRef ref)
-      create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final LoadEquipmentSetupFromFileFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  LoadEquipmentSetupFromFileProvider getProviderOverride(
-    covariant LoadEquipmentSetupFromFileProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadEquipmentSetupFromFileProvider';
 }
 
 /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
@@ -882,7 +701,7 @@ class LoadEquipmentSetupFromFileProvider
         );
 
   LoadEquipmentSetupFromFileProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -895,7 +714,7 @@ class LoadEquipmentSetupFromFileProvider
 
   @override
   Override overrideWith(
-    FutureOr<EquipmentSetup?> Function(LoadEquipmentSetupFromFileRef ref)
+    FutureOr<EquipmentSetup?> Function(LoadEquipmentSetupFromFileRef provider)
         create,
   ) {
     return ProviderOverride(
@@ -913,28 +732,8 @@ class LoadEquipmentSetupFromFileProvider
   }
 
   @override
-  (String,) get argument {
-    return (path,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<EquipmentSetup?> createElement() {
     return _LoadEquipmentSetupFromFileProviderElement(this);
-  }
-
-  LoadEquipmentSetupFromFileProvider _copyWith(
-    FutureOr<EquipmentSetup?> Function(LoadEquipmentSetupFromFileRef ref)
-        create,
-  ) {
-    return LoadEquipmentSetupFromFileProvider._internal(
-      (ref) => create(ref as LoadEquipmentSetupFromFileRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      path: path,
-    );
   }
 
   @override
@@ -1006,4 +805,4 @@ final configuredEquipmentSetupProvider =
 
 typedef _$ConfiguredEquipmentSetup = Notifier<EquipmentSetup?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
