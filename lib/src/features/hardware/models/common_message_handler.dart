@@ -79,6 +79,14 @@ class CommonMessageHandler {
             .read(gnssCurrentFrequencyProvider.notifier)
             .update(message.gnssCurrentFrequency);
       }
+    } else if (message is ({
+      double? latitudeError,
+      double? longitudeError,
+      double? altitudeError
+    })) {
+      if (_ref.exists(gnssPrecisionErrorProvider)) {
+        _ref.read(gnssPrecisionErrorProvider.notifier).update(message);
+      }
     } else if (message is ({ImuReading? imuLatestRaw})) {
       if (_ref.exists(imuCurrentReadingProvider)) {
         _ref

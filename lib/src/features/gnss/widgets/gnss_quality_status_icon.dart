@@ -44,6 +44,7 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
 
   String get message {
     final nmea = ref.watch(gnssCurrentSentenceProvider);
+    final precisionError = ref.watch(gnssPrecisionErrorProvider);
 
     final textLines = <String>[];
     if (nmea?.posMode != null) {
@@ -78,17 +79,23 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
     if (tdop != null) {
       textLines.add('TDOP: $tdop');
     }
-    final horizontalAccuracy = nmea?.horizontalAccuracy;
+    var horizontalAccuracy = nmea?.horizontalAccuracy;
+    if (horizontalAccuracy == null &&
+        precisionError?.latitudeError != null &&
+        precisionError?.longitudeError != null) {
+      horizontalAccuracy =
+          (precisionError!.latitudeError! + precisionError.longitudeError!) / 2;
+    }
     if (horizontalAccuracy != null) {
       textLines.add('Pos. Acc: $horizontalAccuracy m');
     }
-    final verticalAccuracy = nmea?.verticalAccuracy;
+    final verticalAccuracy =
+        nmea?.verticalAccuracy ?? precisionError?.altitudeError;
     if (verticalAccuracy != null) {
       textLines.add('Alt. Acc: $verticalAccuracy m');
     }
     final altitude = nmea?.altitudeMSL;
     if (altitude != null) {
-
       textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
     }
     final altitudeRef = nmea?.altitudeRef;
@@ -121,49 +128,48 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
 
   @override
   Widget build(BuildContext context) => InkWell(
-      onTap: () => switch (portalController.isShowing) {
-        true => portalController.hide(),
-        false => portalController.show(),
-      },
-      child: OverlayPortal(
-        controller: portalController,
-        overlayChildBuilder: (context) {
-          // The render box of the InkWell/icon widget. Use this to position
-          // the tooltip.
-          final box = this.context.findRenderObject()! as RenderBox;
-          final target = box.localToGlobal(box.size.center(Offset.zero));
-          return Positioned(
-            top: target.dy + box.size.height / 2 + 8,
-            right: 0,
-            child: DecoratedBox(
-              decoration: Theme.of(context).tooltipTheme.decoration ??
-                  const BoxDecoration(),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  message,
-                  style: Theme.of(context).textTheme.bodyMedium,
+        onTap: () => switch (portalController.isShowing) {
+          true => portalController.hide(),
+          false => portalController.show(),
+        },
+        child: OverlayPortal(
+          controller: portalController,
+          overlayChildBuilder: (context) {
+            // The render box of the InkWell/icon widget. Use this to position
+            // the tooltip.
+            final box = this.context.findRenderObject()! as RenderBox;
+            final target = box.localToGlobal(box.size.center(Offset.zero));
+            return Positioned(
+              top: target.dy + box.size.height / 2 + 8,
+              right: 0,
+              child: DecoratedBox(
+                decoration: Theme.of(context).tooltipTheme.decoration ??
+                    const BoxDecoration(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    message,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
-        child: Consumer(
-          builder: (context, ref, child) {
-            final nmea = ref.watch(gnssCurrentSentenceProvider);
-            final fixQuality = nmea?.fixQuality ?? GnssFixQuality.notAvailable;
-            final numSatellites = nmea?.numSatellites ?? 0;
+            );
+          },
+          child: Consumer(
+            builder: (context, ref, child) {
+              final nmea = ref.watch(gnssCurrentSentenceProvider);
+              final fixQuality =
+                  nmea?.fixQuality ?? GnssFixQuality.notAvailable;
+              final numSatellites = nmea?.numSatellites ?? 0;
               final color = switch (fixQuality) {
-                    GnssFixQuality.rtk => Colors.green,
-                    GnssFixQuality.floatRTK ||
-                    GnssFixQuality.ppsFix =>
-                      Colors.lime,
-                    GnssFixQuality.differentialFix => Colors.yellow,
-                    GnssFixQuality.fix => Colors.orange,
-                    GnssFixQuality.notAvailable => Colors.red,
-                    GnssFixQuality.manualInput => Colors.purple,
-                    GnssFixQuality.simulation => Colors.blue,
-                    GnssFixQuality.estimated => Colors.blueGrey,
+                GnssFixQuality.rtk => Colors.green,
+                GnssFixQuality.floatRTK || GnssFixQuality.ppsFix => Colors.lime,
+                GnssFixQuality.differentialFix => Colors.yellow,
+                GnssFixQuality.fix => Colors.orange,
+                GnssFixQuality.notAvailable => Colors.red,
+                GnssFixQuality.manualInput => Colors.purple,
+                GnssFixQuality.simulation => Colors.blue,
+                GnssFixQuality.estimated => Colors.blueGrey,
               };
               return Badge.count(
                 count: numSatellites,
@@ -178,15 +184,15 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
                     Icons.satellite_alt,
                     size: widget.size,
                     color: color,
-                  shadows: const [
-                    Shadow(offset: Offset(1, 0)),
-                    Shadow(offset: Offset(0, 1)),
-                  ],
+                    shadows: const [
+                      Shadow(offset: Offset(1, 0)),
+                      Shadow(offset: Offset(0, 1)),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
       );
 }

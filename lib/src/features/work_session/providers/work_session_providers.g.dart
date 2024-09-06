@@ -1119,7 +1119,7 @@ class _ExportWorkSessionsProviderElement
   bool get zip => (origin as ExportWorkSessionsProvider).zip;
 }
 
-String _$activeWorkSessionHash() => r'f16bb30c8990506861463f165a8b09cad4a8899f';
+String _$activeWorkSessionHash() => r'65037f61e3fa588f5d94a7027873ec9a974db542';
 
 /// A provider for holding the active [WorkSession].
 ///

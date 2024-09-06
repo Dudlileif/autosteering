@@ -53,6 +53,7 @@ class MessageDecoder {
   )
     ..registerTalkerSentence('GGA', (line) => GGASentence(raw: line))
     ..registerTalkerSentence('GNS', (line) => GNSSentence(raw: line))
+    ..registerTalkerSentence('GST', (line) => GSTSentence(raw: line))
     ..registerTalkerSentence('VTG', (line) => VTGSentence(raw: line))
     ..registerTalkerSentence('TXT', (line) => TXTSentence(raw: line))
     ..registerProprietarySentence('UBX', (line) => PUBXSentence(raw: line));
@@ -92,6 +93,9 @@ class MessageDecoder {
   /// [GnssPositionCommonSentence]s and [PUBXSentence]s decoded.
   /// Used for calculating the [gnssFrequency].
   List<GnssPositionCommonSentence> gnssSentences = [];
+
+  /// A list of the previous [messagesToKeep] count of [GSTSentence]s decoded.
+  List<GSTSentence> gstSentences = [];
 
   /// A list of the previous [messagesToKeep] count of [VTGSentence]s decoded.
   List<VTGSentence> vtgSentences = [];
@@ -416,7 +420,10 @@ class MessageDecoder {
                   file.createSync(recursive: true);
                 }
                 file.writeAsStringSync(
-                  [reading, Platform.lineTerminator,].join(),
+                  [
+                    reading,
+                    Platform.lineTerminator,
+                  ].join(),
                   mode: FileMode.append,
                 );
               }
@@ -529,6 +536,20 @@ class MessageDecoder {
         vtgSentences.add(nmea);
         while (vtgSentences.length > messagesToKeep) {
           vtgSentences.removeAt(0);
+        }
+        messages.add(null);
+      }
+      if (nmea is GSTSentence) {
+        messages.add(
+          (
+            latitudeError: nmea.stdLat,
+            longitudeError: nmea.stdLon,
+            altitudeError: nmea.stdAltitude
+          ),
+        );
+        gstSentences.add(nmea);
+        while (gstSentences.length > messagesToKeep) {
+          gstSentences.removeAt(0);
         }
         messages.add(null);
       } else if (nmea is TXTSentence) {

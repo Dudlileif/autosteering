@@ -15,7 +15,7 @@ dependencies:
     audioplayers: ^6.1.0
     collection: ^1.18.0
     cupertino_icons: ^1.0.8
-    dio: ^5.6.0
+    dio: ^5.7.0
     equatable: ^2.0.5
     fast_cached_network_image: ^1.2.9
     file_picker: ^8.1.2
@@ -48,7 +48,7 @@ dependencies:
     universal_html: ^2.2.4
     universal_io: ^2.2.2
     # usb_serial: ^0.5.1
-    uuid: ^4.4.2
+    uuid: ^4.5.0
     wakelock_plus: ^1.2.8
     window_manager: ^0.4.2
     xml: ^6.5.0
