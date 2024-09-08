@@ -183,7 +183,7 @@ class __SteeringHardwareConfigDialogState
       widget.text(_value),
       style: theme.textTheme.bodyLarge,
     );
-  
+
     return SimpleDialog(
       contentPadding:
           const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
@@ -226,21 +226,21 @@ class __SteeringHardwareConfigDialogState
           child: Wrap(
             spacing: 8,
             runSpacing: 8,
-          children: [
+            children: [
               ElevatedButton.icon(
-              onPressed: Navigator.of(context).pop,
+                onPressed: Navigator.of(context).pop,
                 icon: const Icon(Icons.clear),
                 label: const Text('Cancel'),
-            ),
+              ),
               FilledButton.icon(
-              onPressed: () {
-                widget.onChangeEnd(_value);
-                Navigator.of(context).pop();
-              },
+                onPressed: () {
+                  widget.onChangeEnd(_value);
+                  Navigator.of(context).pop();
+                },
                 icon: const Icon(Icons.check),
                 label: const Text('Apply'),
-            ),
-          ],
+              ),
+            ],
           ),
         ),
       ],
@@ -366,9 +366,7 @@ class _MotorPage extends ConsumerWidget {
                     value,
                   ),
                   highVelocityChopperModeChangeThresholdRPM: clampDouble(
-                    oldConfig
-                      .highVelocityChopperModeChangeThresholdRPM
-                      ,
+                    oldConfig.highVelocityChopperModeChangeThresholdRPM,
                     0,
                     value,
                   ),
@@ -445,386 +443,386 @@ class _MotorPage extends ConsumerWidget {
         max: 200,
         divisions: 20,
       ),
-        // Micro steps
+      // Micro steps
       _SteeringHardwareConfigListTile(
-          initialValue: ref.read(
+        initialValue: ref.read(
+          mainVehicleProvider
+              .select((value) => value.steeringHardwareConfig.microSteps),
+        ),
+        text: (value) =>
+            'Microsteps: ${value.round() == 0 ? 'Fullstep' : value.round()}',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
             mainVehicleProvider
                 .select((value) => value.steeringHardwareConfig.microSteps),
-          ),
-          text: (value) =>
-            'Microsteps: ${value.round() == 0 ? 'Fullstep' : value.round()}',
-          onChangeEnd: (value) {
-            final oldValue = ref.read(
-              mainVehicleProvider
-                  .select((value) => value.steeringHardwareConfig.microSteps),
-            );
-            ref.read(simInputProvider.notifier).send(
-                  ref
-                      .read(
-                        mainVehicleProvider.select(
-                          (value) => value.steeringHardwareConfig,
-                        ),
-                      )
-                      .copyWith(
-                        microSteps: value.round(),
+          );
+          ref.read(simInputProvider.notifier).send(
+                ref
+                    .read(
+                      mainVehicleProvider.select(
+                        (value) => value.steeringHardwareConfig,
                       ),
-                );
-            // Wait a short while before saving the
-            // hopefully updated vehicle.
-            Timer(const Duration(milliseconds: 100), () {
-              ref.read(
-                updateSteeringHardwareConfigProvider(
-                  const SteeringHardwareConfigKeysContainer(
-                    {SteeringHardwareConfigKey.microSteps},
-                  ),
+                    )
+                    .copyWith(
+                      microSteps: value.round(),
+                    ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer(
+                  {SteeringHardwareConfigKey.microSteps},
                 ),
-              );
-              final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
-              Logger.instance.i(
-                '''Updated vehicle motor config micro steps²: $oldValue -> ${vehicle.steeringHardwareConfig.microSteps}''',
-              );
-            });
-          },
+              ),
+            );
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config micro steps²: $oldValue -> ${vehicle.steeringHardwareConfig.microSteps}''',
+            );
+          });
+        },
         selectionValues: const [0, 2, 4, 8, 16, 32, 64, 128, 256],
-          resetValue: 256,
-        ),
-        // Steps per rotation
+        resetValue: 256,
+      ),
+      // Steps per rotation
       _SteeringHardwareConfigListTile(
-          initialValue: ref.read(
+        initialValue: ref.read(
+          mainVehicleProvider.select(
+            (value) => value.steeringHardwareConfig.stepsPerRotation,
+          ),
+        ),
+        text: (value) => 'Steps per rotation: ${value.round()}',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig.stepsPerRotation,
             ),
-          ),
-          text: (value) => 'Steps per rotation: ${value.round()}',
-          onChangeEnd: (value) {
-            final oldValue = ref.read(
-              mainVehicleProvider.select(
-                (value) => value.steeringHardwareConfig.stepsPerRotation,
+          );
+          ref.read(simInputProvider.notifier).send(
+                ref
+                    .read(
+                      mainVehicleProvider.select(
+                        (value) => value.steeringHardwareConfig,
+                      ),
+                    )
+                    .copyWith(
+                      stepsPerRotation: value.round(),
+                    ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer(
+                  {SteeringHardwareConfigKey.stepsPerRotation},
+                ),
               ),
             );
-            ref.read(simInputProvider.notifier).send(
-                  ref
-                      .read(
-                        mainVehicleProvider.select(
-                          (value) => value.steeringHardwareConfig,
-                        ),
-                      )
-                      .copyWith(
-                        stepsPerRotation: value.round(),
-                      ),
-                );
-            // Wait a short while before saving the
-            // hopefully updated vehicle.
-            Timer(const Duration(milliseconds: 100), () {
-              ref.read(
-                updateSteeringHardwareConfigProvider(
-                  const SteeringHardwareConfigKeysContainer(
-                    {SteeringHardwareConfigKey.stepsPerRotation},
-                  ),
-                ),
-              );
-              final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
-              Logger.instance.i(
-                '''Updated vehicle motor steps per rotation: $oldValue -> ${vehicle.steeringHardwareConfig.stepsPerRotation}''',
-              );
-            });
-          },
-          selectionValues: const [200, 400],
-          resetValue: 200,
-        ),
-        // RMS current
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor steps per rotation: $oldValue -> ${vehicle.steeringHardwareConfig.stepsPerRotation}''',
+            );
+          });
+        },
+        selectionValues: const [200, 400],
+        resetValue: 200,
+      ),
+      // RMS current
       _SteeringHardwareConfigListTile(
-          initialValue: ref.read(
+        initialValue: ref.read(
+          mainVehicleProvider
+              .select((value) => value.steeringHardwareConfig.rmsCurrent),
+        ),
+        text: (value) => 'RMS current: ${value.round()} mA',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
             mainVehicleProvider
                 .select((value) => value.steeringHardwareConfig.rmsCurrent),
-          ),
-          text: (value) => 'RMS current: ${value.round()} mA',
-          onChangeEnd: (value) {
-            final oldValue = ref.read(
-              mainVehicleProvider
-                  .select((value) => value.steeringHardwareConfig.rmsCurrent),
-            );
-            ref.read(simInputProvider.notifier).send(
-                  ref
-                      .read(
-                        mainVehicleProvider.select(
-                          (value) => value.steeringHardwareConfig,
-                        ),
-                      )
-                      .copyWith(
-                        rmsCurrent: value.round(),
+          );
+          ref.read(simInputProvider.notifier).send(
+                ref
+                    .read(
+                      mainVehicleProvider.select(
+                        (value) => value.steeringHardwareConfig,
                       ),
-                );
-            // Wait a short while before saving the
-            // hopefully updated vehicle.
-            Timer(const Duration(milliseconds: 100), () {
-              ref.read(
-                updateSteeringHardwareConfigProvider(
-                  const SteeringHardwareConfigKeysContainer(
-                    {SteeringHardwareConfigKey.rmsCurrent},
-                  ),
+                    )
+                    .copyWith(
+                      rmsCurrent: value.round(),
+                    ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer(
+                  {SteeringHardwareConfigKey.rmsCurrent},
                 ),
-              );
-              final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
-              Logger.instance.i(
-                '''Updated vehicle motor config RMS current: $oldValue -> ${vehicle.steeringHardwareConfig.rmsCurrent}''',
-              );
-            });
-          },
-          max: 3000,
-          divisions: 30,
-          resetValue: 1000,
-        ),
-        // StallGuard threshold
+              ),
+            );
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config RMS current: $oldValue -> ${vehicle.steeringHardwareConfig.rmsCurrent}''',
+            );
+          });
+        },
+        max: 3000,
+        divisions: 30,
+        resetValue: 1000,
+      ),
+      // StallGuard threshold
       _SteeringHardwareConfigListTile(
-          initialValue: ref.read(
+        initialValue: ref.read(
+          mainVehicleProvider.select(
+            (value) => value.steeringHardwareConfig.stallguardThreshold,
+          ),
+        ),
+        text: (value) => 'StallGuard threshold: ${value.round()}',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig.stallguardThreshold,
             ),
-          ),
-          text: (value) => 'StallGuard threshold: ${value.round()}',
-          onChangeEnd: (value) {
-            final oldValue = ref.read(
-              mainVehicleProvider.select(
-                (value) => value.steeringHardwareConfig.stallguardThreshold,
+          );
+          ref.read(simInputProvider.notifier).send(
+                ref
+                    .read(
+                      mainVehicleProvider.select(
+                        (value) => value.steeringHardwareConfig,
+                      ),
+                    )
+                    .copyWith(
+                      stallguardThreshold: value.round(),
+                    ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer(
+                  {SteeringHardwareConfigKey.stallguardThreshold},
+                ),
               ),
             );
-            ref.read(simInputProvider.notifier).send(
-                  ref
-                      .read(
-                        mainVehicleProvider.select(
-                          (value) => value.steeringHardwareConfig,
-                        ),
-                      )
-                      .copyWith(
-                        stallguardThreshold: value.round(),
-                      ),
-                );
-            // Wait a short while before saving the
-            // hopefully updated vehicle.
-            Timer(const Duration(milliseconds: 100), () {
-              ref.read(
-                updateSteeringHardwareConfigProvider(
-                  const SteeringHardwareConfigKeysContainer(
-                    {SteeringHardwareConfigKey.stallguardThreshold},
-                  ),
-                ),
-              );
-              final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
-              Logger.instance.i(
-                '''Updated vehicle motor config StallGuard threshold: $oldValue -> ${vehicle.steeringHardwareConfig.stallguardThreshold}''',
-              );
-            });
-          },
-          max: 63,
-          min: -64,
-          divisions: 127,
-          resetValue: 0,
-          subtitle: 'Stalling sensitivity',
-        ),
-        // StealthChop upper threshold
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config StallGuard threshold: $oldValue -> ${vehicle.steeringHardwareConfig.stallguardThreshold}''',
+            );
+          });
+        },
+        max: 63,
+        min: -64,
+        divisions: 127,
+        resetValue: 0,
+        subtitle: 'Stalling sensitivity',
+      ),
+      // StealthChop upper threshold
       _SteeringHardwareConfigListTile(
-          key: ValueKey('StealthChop - $maxRPM'),
-          initialValue: ref.watch(
+        key: ValueKey('StealthChop - $maxRPM'),
+        initialValue: ref.watch(
+          mainVehicleProvider.select(
+            (value) => value.steeringHardwareConfig.stealthChopThresholdRPM,
+          ),
+        ),
+        text: (value) =>
+            '''StealthChop max: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig.stealthChopThresholdRPM,
             ),
-          ),
-          text: (value) =>
-              '''StealthChop max: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
-          onChangeEnd: (value) {
-            final oldValue = ref.read(
-              mainVehicleProvider.select(
-                (value) => value.steeringHardwareConfig.stealthChopThresholdRPM,
+          );
+          ref.read(simInputProvider.notifier).send(
+                ref
+                    .read(
+                      mainVehicleProvider.select(
+                        (value) => value.steeringHardwareConfig,
+                      ),
+                    )
+                    .copyWith(
+                      stealthChopThresholdRPM: value,
+                    ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer(
+                  {SteeringHardwareConfigKey.stealthChopThresholdRPM},
+                ),
               ),
             );
-            ref.read(simInputProvider.notifier).send(
-                  ref
-                      .read(
-                        mainVehicleProvider.select(
-                          (value) => value.steeringHardwareConfig,
-                        ),
-                      )
-                      .copyWith(
-                        stealthChopThresholdRPM: value,
-                      ),
-                );
-            // Wait a short while before saving the
-            // hopefully updated vehicle.
-            Timer(const Duration(milliseconds: 100), () {
-              ref.read(
-                updateSteeringHardwareConfigProvider(
-                  const SteeringHardwareConfigKeysContainer(
-                    {SteeringHardwareConfigKey.stealthChopThresholdRPM},
-                  ),
-                ),
-              );
-              final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
-              Logger.instance.i(
-                '''Updated vehicle motor config StealthChop threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.stealthChopThresholdRPM}''',
-              );
-            });
-          },
-          max: maxRPM,
-          divisions: maxRPM ~/ 5,
-          resetValue: 0,
-          subtitle: 'Upper threshold',
-        ),
-        // High velocity chopper change threshold
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config StealthChop threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.stealthChopThresholdRPM}''',
+            );
+          });
+        },
+        max: maxRPM,
+        divisions: maxRPM ~/ 5,
+        resetValue: 0,
+        subtitle: 'Upper threshold',
+      ),
+      // High velocity chopper change threshold
       _SteeringHardwareConfigListTile(
-          key: ValueKey('High velocity - $maxRPM'),
-          initialValue: ref.watch(
+        key: ValueKey('High velocity - $maxRPM'),
+        initialValue: ref.watch(
+          mainVehicleProvider.select(
+            (value) => value.steeringHardwareConfig
+                .highVelocityChopperModeChangeThresholdRPM,
+          ),
+        ),
+        text: (value) =>
+            '''High velocity min: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig
                   .highVelocityChopperModeChangeThresholdRPM,
             ),
-          ),
-          text: (value) =>
-              '''High velocity min: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
-          onChangeEnd: (value) {
-            final oldValue = ref.read(
-              mainVehicleProvider.select(
-                (value) => value.steeringHardwareConfig
-                    .highVelocityChopperModeChangeThresholdRPM,
+          );
+          ref.read(simInputProvider.notifier).send(
+                ref
+                    .read(
+                      mainVehicleProvider.select(
+                        (value) => value.steeringHardwareConfig,
+                      ),
+                    )
+                    .copyWith(
+                      highVelocityChopperModeChangeThresholdRPM: value,
+                    ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer({
+                  SteeringHardwareConfigKey
+                      .highVelocityChopperModeChangeThresholdRPM,
+                }),
               ),
             );
-            ref.read(simInputProvider.notifier).send(
-                  ref
-                      .read(
-                        mainVehicleProvider.select(
-                          (value) => value.steeringHardwareConfig,
-                        ),
-                      )
-                      .copyWith(
-                        highVelocityChopperModeChangeThresholdRPM: value,
-                      ),
-                );
-            // Wait a short while before saving the
-            // hopefully updated vehicle.
-            Timer(const Duration(milliseconds: 100), () {
-              ref.read(
-                updateSteeringHardwareConfigProvider(
-                  const SteeringHardwareConfigKeysContainer({
-                    SteeringHardwareConfigKey
-                        .highVelocityChopperModeChangeThresholdRPM,
-                  }),
-                ),
-              );
-              final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
-              Logger.instance.i(
-                '''Updated vehicle motor config high velocity chopper mode change threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.highVelocityChopperModeChangeThresholdRPM}''',
-              );
-            });
-          },
-          max: maxRPM,
-          divisions: maxRPM ~/ 5,
-          resetValue: 0,
-          subtitle: 'Lower threshold',
-        ),
-        // CoolStep threshold
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config high velocity chopper mode change threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.highVelocityChopperModeChangeThresholdRPM}''',
+            );
+          });
+        },
+        max: maxRPM,
+        divisions: maxRPM ~/ 5,
+        resetValue: 0,
+        subtitle: 'Lower threshold',
+      ),
+      // CoolStep threshold
       _SteeringHardwareConfigListTile(
-          key: ValueKey('CoolStep - $maxRPM'),
-          initialValue: ref.watch(
+        key: ValueKey('CoolStep - $maxRPM'),
+        initialValue: ref.watch(
+          mainVehicleProvider.select(
+            (value) => value.steeringHardwareConfig.coolstepThresholdRPM,
+          ),
+        ),
+        text: (value) =>
+            '''CoolStep min: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig.coolstepThresholdRPM,
             ),
-          ),
-          text: (value) =>
-              '''CoolStep min: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
-          onChangeEnd: (value) {
-            final oldValue = ref.read(
-              mainVehicleProvider.select(
-                (value) => value.steeringHardwareConfig.coolstepThresholdRPM,
+          );
+          ref.read(simInputProvider.notifier).send(
+                ref
+                    .read(
+                      mainVehicleProvider.select(
+                        (value) => value.steeringHardwareConfig,
+                      ),
+                    )
+                    .copyWith(
+                      coolstepThresholdRPM: value,
+                    ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer(
+                  {SteeringHardwareConfigKey.coolstepThresholdRPM},
+                ),
               ),
             );
-            ref.read(simInputProvider.notifier).send(
-                  ref
-                      .read(
-                        mainVehicleProvider.select(
-                          (value) => value.steeringHardwareConfig,
-                        ),
-                      )
-                      .copyWith(
-                        coolstepThresholdRPM: value,
-                      ),
-                );
-            // Wait a short while before saving the
-            // hopefully updated vehicle.
-            Timer(const Duration(milliseconds: 100), () {
-              ref.read(
-                updateSteeringHardwareConfigProvider(
-                  const SteeringHardwareConfigKeysContainer(
-                    {SteeringHardwareConfigKey.coolstepThresholdRPM},
-                  ),
-                ),
-              );
-              final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
-              Logger.instance.i(
-                '''Updated vehicle motor config CoolStep threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.coolstepThresholdRPM}''',
-              );
-            });
-          },
-          max: maxRPM,
-          divisions: maxRPM ~/ 5,
-          resetValue: 0,
-          subtitle: 'Lower threshold',
-        ),
-        // DcStep threshold
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config CoolStep threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.coolstepThresholdRPM}''',
+            );
+          });
+        },
+        max: maxRPM,
+        divisions: maxRPM ~/ 5,
+        resetValue: 0,
+        subtitle: 'Lower threshold',
+      ),
+      // DcStep threshold
       _SteeringHardwareConfigListTile(
-          key: ValueKey('DcStep - $maxRPM'),
-          initialValue: ref.watch(
+        key: ValueKey('DcStep - $maxRPM'),
+        initialValue: ref.watch(
+          mainVehicleProvider.select(
+            (value) => value.steeringHardwareConfig.dcStepThresholdRPM,
+          ),
+        ),
+        text: (value) =>
+            '''DcStep min: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
             mainVehicleProvider.select(
               (value) => value.steeringHardwareConfig.dcStepThresholdRPM,
             ),
-          ),
-          text: (value) =>
-              '''DcStep min: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
-          onChangeEnd: (value) {
-            final oldValue = ref.read(
-              mainVehicleProvider.select(
-                (value) => value.steeringHardwareConfig.dcStepThresholdRPM,
+          );
+          ref.read(simInputProvider.notifier).send(
+                ref
+                    .read(
+                      mainVehicleProvider.select(
+                        (value) => value.steeringHardwareConfig,
+                      ),
+                    )
+                    .copyWith(
+                      dcStepThresholdRPM: value,
+                    ),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer(
+                  {SteeringHardwareConfigKey.dcStepThresholdRPM},
+                ),
               ),
             );
-            ref.read(simInputProvider.notifier).send(
-                  ref
-                      .read(
-                        mainVehicleProvider.select(
-                          (value) => value.steeringHardwareConfig,
-                        ),
-                      )
-                      .copyWith(
-                        dcStepThresholdRPM: value,
-                      ),
-                );
-            // Wait a short while before saving the
-            // hopefully updated vehicle.
-            Timer(const Duration(milliseconds: 100), () {
-              ref.read(
-                updateSteeringHardwareConfigProvider(
-                  const SteeringHardwareConfigKeysContainer(
-                    {SteeringHardwareConfigKey.dcStepThresholdRPM},
-                  ),
-                ),
-              );
-              final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
-              Logger.instance.i(
-                '''Updated vehicle motor config CoolStep threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.dcStepThresholdRPM}''',
-              );
-            });
-          },
-          max: maxRPM,
-          divisions: maxRPM ~/ 5,
-          resetValue: 0,
-          subtitle: 'Lower threshold',
-        ),
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config CoolStep threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.dcStepThresholdRPM}''',
+            );
+          });
+        },
+        max: maxRPM,
+        divisions: maxRPM ~/ 5,
+        resetValue: 0,
+        subtitle: 'Lower threshold',
+      ),
     ];
 
     return ListView.builder(
@@ -1012,13 +1010,11 @@ class _WasPage extends ConsumerWidget {
         Consumer(
           builder: (context, ref, child) {
             final reading = clampDouble(
-              ref
-                .watch(
-                  mainVehicleProvider.select(
-                    (vehicle) => vehicle.wasReadingNormalizedInRange,
-                  ),
-                )
-                ,
+              ref.watch(
+                mainVehicleProvider.select(
+                  (vehicle) => vehicle.wasReadingNormalizedInRange,
+                ),
+              ),
               -1,
               1,
             );
@@ -1577,4 +1573,88 @@ class _PidPage extends ConsumerWidget {
       ],
     );
   }
+}
+
+/// A draggable version of [SteeringHardwareConfigurator], typically used as
+/// a child of a [Stack] that is a child of a [LayoutBuilder].
+class DraggableSteeringHardwareConfigurator extends ConsumerStatefulWidget {
+  /// A draggable version of [SteeringHardwareConfigurator], typically used as
+  /// a child of a [Stack] that is a child of a [LayoutBuilder].
+  ///
+  /// [constraints] are used to layout the widget.
+  const DraggableSteeringHardwareConfigurator({
+    required this.constraints,
+    super.key,
+  });
+
+  /// Constraints used to layout this widget.
+  final BoxConstraints constraints;
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _DraggableSteeringHardwareConfiguratorState();
+}
+
+class _DraggableSteeringHardwareConfiguratorState
+    extends ConsumerState<DraggableSteeringHardwareConfigurator> {
+  late Offset offset = ref.read(steeringHardwareConfiguratorUiOffsetProvider);
+
+  @override
+  Widget build(BuildContext context) => Positioned(
+        left: clampDouble(
+          offset.dx,
+          0,
+          widget.constraints.maxWidth - 405,
+        ),
+        top: clampDouble(offset.dy, 0, widget.constraints.maxHeight - 350),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SizedBox(
+            height: min(
+              700,
+              widget.constraints.maxHeight -
+                  clampDouble(
+                    offset.dy,
+                    0,
+                    widget.constraints.maxHeight - 350,
+                  ),
+            ),
+            child: LongPressDraggable(
+              onDragUpdate: (update) => setState(
+                () => offset = Offset(
+                  offset.dx + update.delta.dx,
+                  offset.dy + update.delta.dy,
+                ),
+              ),
+              onDragEnd: (details) => ref
+                  .read(
+                    steeringHardwareConfiguratorUiOffsetProvider.notifier,
+                  )
+                  .update(
+                    Offset(
+                      clampDouble(
+                        offset.dx,
+                        0,
+                        widget.constraints.maxWidth - 405,
+                      ),
+                      clampDouble(
+                        offset.dy,
+                        0,
+                        widget.constraints.maxHeight - 350,
+                      ),
+                    ),
+                  ),
+              childWhenDragging: const SizedBox.shrink(),
+              feedback: const Opacity(
+                opacity: 0.7,
+                child: SizedBox(
+                  height: 700,
+                  child: SteeringHardwareConfigurator(),
+                ),
+              ),
+              child: const SteeringHardwareConfigurator(),
+            ),
+          ),
+        ),
+      );
 }

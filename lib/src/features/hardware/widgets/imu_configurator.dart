@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -287,7 +288,6 @@ class ImuConfigurator extends StatelessWidget {
                                   children: [
                                     ElevatedButton.icon(
                                       onPressed: Navigator.of(context).pop,
-                                      
                                       icon: const Icon(Icons.clear),
                                       label: const Text('Cancel'),
                                     ),
@@ -574,49 +574,53 @@ class ImuConfigurator extends StatelessWidget {
                                 child: Wrap(
                                   spacing: 8,
                                   runSpacing: 8,
-                                children: [
+                                  children: [
                                     ElevatedButton.icon(
-                                    onPressed: Navigator.of(context).pop,
+                                      onPressed: Navigator.of(context).pop,
                                       icon: const Icon(Icons.clear),
                                       label: const Text('Cancel'),
-                                  ),
+                                    ),
                                     FilledButton.icon(
-                                    onPressed: () {
-                                      final oldValue = ref.read(
-                                        mainVehicleProvider.select(
-                                          (value) => value.imu.config.rollGain,
-                                        ),
-                                      );
-                                      ref.read(simInputProvider.notifier).send(
-                                            ref
-                                                .read(
-                                                  mainVehicleProvider.select(
-                                                    (value) => value.imu.config,
-                                                  ),
-                                                )
-                                                .copyWith(rollGain: rollGain),
-                                          );
-                                      // Wait a short while before saving the
-                                      // hopefully updated vehicle.
-                                      Timer(
-                                        const Duration(milliseconds: 100),
-                                        () {
-                                          final vehicle =
-                                              ref.watch(mainVehicleProvider);
-                                          ref.read(
-                                            saveVehicleProvider(vehicle),
-                                          );
-                                          Logger.instance.i(
-                                            '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imu.config.rollGain}''',
-                                          );
-                                        },
-                                      );
-                                      Navigator.of(context).pop();
-                                    },
+                                      onPressed: () {
+                                        final oldValue = ref.read(
+                                          mainVehicleProvider.select(
+                                            (value) =>
+                                                value.imu.config.rollGain,
+                                          ),
+                                        );
+                                        ref
+                                            .read(simInputProvider.notifier)
+                                            .send(
+                                              ref
+                                                  .read(
+                                                    mainVehicleProvider.select(
+                                                      (value) =>
+                                                          value.imu.config,
+                                                    ),
+                                                  )
+                                                  .copyWith(rollGain: rollGain),
+                                            );
+                                        // Wait a short while before saving the
+                                        // hopefully updated vehicle.
+                                        Timer(
+                                          const Duration(milliseconds: 100),
+                                          () {
+                                            final vehicle =
+                                                ref.watch(mainVehicleProvider);
+                                            ref.read(
+                                              saveVehicleProvider(vehicle),
+                                            );
+                                            Logger.instance.i(
+                                              '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imu.config.rollGain}''',
+                                            );
+                                          },
+                                        );
+                                        Navigator.of(context).pop();
+                                      },
                                       icon: const Icon(Icons.check),
                                       label: const Text('Apply'),
-                                  ),
-                                ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -767,6 +771,90 @@ class ImuConfigurator extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A draggable version of [ImuConfigurator], typically used as
+/// a child of a [Stack] that is a child of a [LayoutBuilder].
+class DraggableImuConfigurator extends ConsumerStatefulWidget {
+  /// A draggable version of [ImuConfigurator], typically used as
+  /// a child of a [Stack] that is a child of a [LayoutBuilder].
+  ///
+  /// [constraints] as used to layout the widget.
+  const DraggableImuConfigurator({required this.constraints, super.key});
+
+  /// Constraints used to layout this widget.
+  final BoxConstraints constraints;
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _DraggableImuConfiguratorState();
+}
+
+class _DraggableImuConfiguratorState
+    extends ConsumerState<DraggableImuConfigurator> {
+  late Offset offset = ref.read(imuConfiguratorUiOffsetProvider);
+
+  @override
+  Widget build(BuildContext context) {
+    return StatefulBuilder(
+      builder: (context, setState) => Positioned(
+        left: clampDouble(
+          offset.dx,
+          0,
+          widget.constraints.maxWidth - 380,
+        ),
+        top: clampDouble(offset.dy, 0, widget.constraints.maxHeight - 350),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SizedBox(
+            height: min(
+              700,
+              widget.constraints.maxHeight -
+                  clampDouble(
+                    offset.dy,
+                    0,
+                    widget.constraints.maxHeight - 350,
+                  ),
+            ),
+            child: LongPressDraggable(
+              onDragUpdate: (update) => setState(
+                () => offset = Offset(
+                  offset.dx + update.delta.dx,
+                  offset.dy + update.delta.dy,
+                ),
+              ),
+              onDragEnd: (details) => ref
+                  .read(
+                    imuConfiguratorUiOffsetProvider.notifier,
+                  )
+                  .update(
+                    Offset(
+                      clampDouble(
+                        offset.dx,
+                        0,
+                        widget.constraints.maxWidth - 380,
+                      ),
+                      clampDouble(
+                        offset.dy,
+                        0,
+                        widget.constraints.maxHeight - 350,
+                      ),
+                    ),
+                  ),
+              childWhenDragging: const SizedBox.shrink(),
+              feedback: const Opacity(
+                opacity: 0.7,
+                child: SizedBox(
+                  height: 700,
+                  child: ImuConfigurator(),
+                ),
+              ),
+              child: const ImuConfigurator(),
+            ),
           ),
         ),
       ),

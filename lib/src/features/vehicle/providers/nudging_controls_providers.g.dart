@@ -42,5 +42,24 @@ final nudgeStepSizeProvider = NotifierProvider<NudgeStepSize, double>.internal(
 );
 
 typedef _$NudgeStepSize = Notifier<double>;
+String _$nudgingControlsUiOffsetHash() =>
+    r'b0a62ba6a2ac14796c4a4df85c776d24d9f983b8';
+
+/// A provider for the UI [Offset] for the nudging controls.
+///
+/// Copied from [NudgingControlsUiOffset].
+@ProviderFor(NudgingControlsUiOffset)
+final nudgingControlsUiOffsetProvider =
+    AutoDisposeNotifierProvider<NudgingControlsUiOffset, Offset>.internal(
+  NudgingControlsUiOffset.new,
+  name: r'nudgingControlsUiOffsetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$nudgingControlsUiOffsetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NudgingControlsUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

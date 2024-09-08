@@ -16,8 +16,11 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:ui';
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'imu_providers.g.dart';
@@ -77,4 +80,32 @@ class ShowIMUConfig extends _$ShowIMUConfig {
 
   /// Invert the current [state].
   void toggle() => Future(() => state = !state);
+}
+
+/// A provider for the UI [Offset] for the IMU configurator.
+@riverpod
+class ImuConfiguratorUiOffset extends _$ImuConfiguratorUiOffset {
+  @override
+  Offset build() {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
+        if (previous != null && next != previous) {
+          ref.read(settingsProvider.notifier).update(
+                SettingsKey.uiImuConfiguratorOffset,
+                next.toJson(),
+              );
+        }
+      });
+
+    final setting = ref
+        .read(settingsProvider.notifier)
+        .getMap(SettingsKey.uiImuConfiguratorOffset);
+    return setting != null
+        ? OffsetJsonExtension.fromJson(Map<String, dynamic>.from(setting))
+        : Offset.zero;
+  }
+
+  /// Updates [state] to [value].
+  void update(Offset value) => Future(() => state = value);
 }

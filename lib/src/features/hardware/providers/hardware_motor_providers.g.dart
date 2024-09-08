@@ -410,5 +410,25 @@ final steeringMotorStepsPerWasIncrementCenterToMaxProvider =
 
 typedef _$SteeringMotorStepsPerWasIncrementCenterToMax
     = AutoDisposeNotifier<double?>;
+String _$steeringHardwareConfiguratorUiOffsetHash() =>
+    r'9c45e360205fad3785b54f56feb9e8af2b9d6ce5';
+
+/// A provider for the UI [Offset] for the steering hardware configurator.
+///
+/// Copied from [SteeringHardwareConfiguratorUiOffset].
+@ProviderFor(SteeringHardwareConfiguratorUiOffset)
+final steeringHardwareConfiguratorUiOffsetProvider =
+    AutoDisposeNotifierProvider<SteeringHardwareConfiguratorUiOffset,
+        Offset>.internal(
+  SteeringHardwareConfiguratorUiOffset.new,
+  name: r'steeringHardwareConfiguratorUiOffsetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$steeringHardwareConfiguratorUiOffsetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SteeringHardwareConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

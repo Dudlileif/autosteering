@@ -61,5 +61,24 @@ final showIMUConfigProvider =
 );
 
 typedef _$ShowIMUConfig = AutoDisposeNotifier<bool>;
+String _$imuConfiguratorUiOffsetHash() =>
+    r'f8d8aabf14a028fb7d2ec3bda828d6d7df4bc116';
+
+/// A provider for the UI [Offset] for the IMU configurator.
+///
+/// Copied from [ImuConfiguratorUiOffset].
+@ProviderFor(ImuConfiguratorUiOffset)
+final imuConfiguratorUiOffsetProvider =
+    AutoDisposeNotifierProvider<ImuConfiguratorUiOffset, Offset>.internal(
+  ImuConfiguratorUiOffset.new,
+  name: r'imuConfiguratorUiOffsetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$imuConfiguratorUiOffsetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ImuConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

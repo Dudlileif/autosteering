@@ -193,5 +193,24 @@ final editFinishedPathProvider =
 );
 
 typedef _$EditFinishedPath = Notifier<bool>;
+String _$pathRecordingMenuUiOffsetHash() =>
+    r'bbaf637aa0a398246f00e34b75b7d70f1ced920f';
+
+/// A provider for the UI [Offset] for the path recording configurator.
+///
+/// Copied from [PathRecordingMenuUiOffset].
+@ProviderFor(PathRecordingMenuUiOffset)
+final pathRecordingMenuUiOffsetProvider =
+    AutoDisposeNotifierProvider<PathRecordingMenuUiOffset, Offset>.internal(
+  PathRecordingMenuUiOffset.new,
+  name: r'pathRecordingMenuUiOffsetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pathRecordingMenuUiOffsetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$PathRecordingMenuUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

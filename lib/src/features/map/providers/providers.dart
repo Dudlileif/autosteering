@@ -22,4 +22,3 @@ export 'map_providers.dart';
 export 'mini_map_providers.dart';
 export 'selectable_path_providers.dart';
 export 'sentinel_providers.dart';
-export 'ui_providers.dart';
