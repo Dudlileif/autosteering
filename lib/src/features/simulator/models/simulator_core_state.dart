@@ -779,7 +779,6 @@ class SimulatorCoreState {
           pathTracking!.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
         }
       }
-
       steeringAngleTarget = 0.0;
       if (abTracking != null) {
         if (abTracking!.isCompleted &&
@@ -861,6 +860,7 @@ class SimulatorCoreState {
           ),
         );
       }
+
       mainThreadSendStream
         ..add((steeringAngleTarget: steeringAngleTarget))
         ..add((wasTarget: wasTarget));

@@ -15,14 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/graph/graph.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -157,6 +156,9 @@ class MapAndGaugeStackView extends ConsumerWidget {
             DraggablePathRecordingMenu(constraints: constraints),
           if (ref.watch(showNudgingControlsProvider))
             DraggableNudgingControls(constraints: constraints),
+          if (ref.watch(enableDebugModeProvider) &&
+              ref.watch(showDraggableGraphProvider))
+            DraggableGraph(constraints: constraints),
         ],
       ),
     );

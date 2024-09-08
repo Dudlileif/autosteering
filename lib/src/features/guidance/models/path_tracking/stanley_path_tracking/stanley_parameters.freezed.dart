@@ -138,7 +138,7 @@ class __$$StanleyParametersImplCopyWithImpl<$Res>
 class _$StanleyParametersImpl implements _StanleyParameters {
   const _$StanleyParametersImpl(
       {this.crossDistanceGain = 1.5,
-      this.softeningGain = 0.00001,
+      this.softeningGain = 1e-5,
       this.velocityGain = 1.3});
 
   factory _$StanleyParametersImpl.fromJson(Map<String, dynamic> json) =>

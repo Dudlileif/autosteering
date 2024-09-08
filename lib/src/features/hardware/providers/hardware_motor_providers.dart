@@ -30,7 +30,7 @@ part 'hardware_motor_providers.g.dart';
 
 /// A provider for the WAS target for the steering motor when using guidance.
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SteeringMotorWasTarget extends _$SteeringMotorWasTarget {
   @override
   int? build() => null;

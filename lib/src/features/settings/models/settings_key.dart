@@ -17,7 +17,6 @@
 
 // ignore_for_file: public_member_api_docs
 
-
 /// An enumerator for all the settings of the program.
 enum SettingsKey {
   audioVolumes('audio.volumes'),
@@ -73,6 +72,7 @@ enum SettingsKey {
   themeColorSchemeInheritFromVehicle('theme.color_sheme.inherit_from_vehicle'),
   themeMode('theme.mode'),
   uiAutosteeringConfiguratorOffset('ui.autosteering_configurator_offset'),
+  uiDraggableGraphOffset('ui.graph_offset'),
   uiImuConfiguratorOffset('ui.imu_configurator_offset'),
   uiNudgningControlsOffset('ui.nudgning_controls_offset'),
   uiPathRecordingMenuOffset('ui.path_recording_menu_offset'),

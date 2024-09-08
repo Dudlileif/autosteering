@@ -960,14 +960,14 @@ final gaugesAverageCountProvider =
 
 typedef _$GaugesAverageCount = Notifier<int>;
 String _$vehicleSteeringAngleTargetHash() =>
-    r'7d5f2ffb6c1757fe4633b37829f487579cf704e0';
+    r'a347c0e38a1f5a0300bb32f6872853c2aa6b99b8';
 
 /// A provider for the target steering angle when using guidance.
 ///
 /// Copied from [VehicleSteeringAngleTarget].
 @ProviderFor(VehicleSteeringAngleTarget)
 final vehicleSteeringAngleTargetProvider =
-    AutoDisposeNotifierProvider<VehicleSteeringAngleTarget, double?>.internal(
+    NotifierProvider<VehicleSteeringAngleTarget, double?>.internal(
   VehicleSteeringAngleTarget.new,
   name: r'vehicleSteeringAngleTargetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -977,7 +977,7 @@ final vehicleSteeringAngleTargetProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$VehicleSteeringAngleTarget = AutoDisposeNotifier<double?>;
+typedef _$VehicleSteeringAngleTarget = Notifier<double?>;
 String _$showOverrideSteeringHash() =>
     r'589da280c5feee0b9e1f741c7a3e00bc2db71966';
 

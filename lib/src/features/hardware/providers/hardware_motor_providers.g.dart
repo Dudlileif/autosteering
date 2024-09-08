@@ -214,14 +214,14 @@ final sendSteeringHardwareConfigProvider = FutureProvider<void>.internal(
 
 typedef SendSteeringHardwareConfigRef = FutureProviderRef<void>;
 String _$steeringMotorWasTargetHash() =>
-    r'8c4800171e50833b3f3208064bf689fa6920a60d';
+    r'72bfced1cb682b28c99afc2943d54c3d6564dcbd';
 
 /// A provider for the WAS target for the steering motor when using guidance.
 ///
 /// Copied from [SteeringMotorWasTarget].
 @ProviderFor(SteeringMotorWasTarget)
 final steeringMotorWasTargetProvider =
-    AutoDisposeNotifierProvider<SteeringMotorWasTarget, int?>.internal(
+    NotifierProvider<SteeringMotorWasTarget, int?>.internal(
   SteeringMotorWasTarget.new,
   name: r'steeringMotorWasTargetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -231,7 +231,7 @@ final steeringMotorWasTargetProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$SteeringMotorWasTarget = AutoDisposeNotifier<int?>;
+typedef _$SteeringMotorWasTarget = Notifier<int?>;
 String _$steeringMotorActualRPMHash() =>
     r'd28dc8f5619531c4cee35a05ff99919fbfb6de7e';
 

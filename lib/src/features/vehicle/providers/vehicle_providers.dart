@@ -236,7 +236,7 @@ class GaugesAverageCount extends _$GaugesAverageCount {
 }
 
 /// A provider for the target steering angle when using guidance.
-@riverpod
+@Riverpod(keepAlive:true)
 class VehicleSteeringAngleTarget extends _$VehicleSteeringAngleTarget {
   @override
   double? build() => null;
