@@ -538,8 +538,7 @@ class MessageDecoder {
           vtgSentences.removeAt(0);
         }
         messages.add(null);
-      }
-      if (nmea is GSTSentence) {
+      } else if (nmea is GSTSentence) {
         messages.add(
           (
             latitudeError: nmea.stdLat,
