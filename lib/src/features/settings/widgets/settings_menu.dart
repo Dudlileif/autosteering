@@ -54,13 +54,14 @@ class _ImportExportMenu extends StatelessWidget {
   const _ImportExportMenu();
 
   @override
-  Widget build(BuildContext context) => const MenuButtonWithChildren(
+  Widget build(BuildContext context) => MenuButtonWithChildren(
         text: 'Import/Export',
         icon: Icons.import_export,
         menuChildren: [
-          _ExportLogsButton(),
-          _ExportEverythingButton(),
-          _ImportExportSettingsButton(),
+          const _ExportLogsButton(),
+          const _ExportEverythingButton(),
+          const _ImportExportSettingsButton(),
+          if (Device.isNative) const _ImportEverythingButton(),
         ],
       );
 }
@@ -254,6 +255,24 @@ class _ExportEverythingButton extends ConsumerWidget {
       ),
       child: Text('Export everything', style: textStyle),
       onPressed: () => ref.read(exportWholeFileDirectoryProvider),
+    );
+  }
+}
+
+class _ImportEverythingButton extends ConsumerWidget {
+  const _ImportEverythingButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    return MenuItemButton(
+      closeOnActivate: false,
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.folder_zip_outlined),
+      ),
+      child: Text('Import everything', style: textStyle),
+      onPressed: () => ref.read(importWholeFileDirectoryProvider),
     );
   }
 }

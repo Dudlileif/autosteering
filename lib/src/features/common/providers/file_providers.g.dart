@@ -1687,6 +1687,25 @@ class _ExportAllProviderElement extends AutoDisposeFutureProviderElement<void>
   bool get zip => (origin as ExportAllProvider).zip;
 }
 
+String _$importWholeFileDirectoryHash() =>
+    r'8606273b93572328b38817acaab4fad718530a47';
+
+/// A provider for importing all directory files from a zip file.
+///
+/// Copied from [importWholeFileDirectory].
+@ProviderFor(importWholeFileDirectory)
+final importWholeFileDirectoryProvider =
+    AutoDisposeFutureProvider<void>.internal(
+  importWholeFileDirectory,
+  name: r'importWholeFileDirectoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$importWholeFileDirectoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ImportWholeFileDirectoryRef = AutoDisposeFutureProviderRef<void>;
 String _$exportProgressHash() => r'e345b26f7fc97d563c9a80a694913ad2707efa8a';
 
 /// A provider for the progress of the currently ongoing export, if there is
@@ -1706,5 +1725,24 @@ final exportProgressProvider =
 );
 
 typedef _$ExportProgress = AutoDisposeNotifier<double?>;
+String _$importProgressHash() => r'1449469df452e916f31da19b9df8d26ac2ffbf09';
+
+/// A provider for the progress of the currently ongoing import, if there is
+/// one.
+///
+/// Copied from [ImportProgress].
+@ProviderFor(ImportProgress)
+final importProgressProvider =
+    AutoDisposeNotifierProvider<ImportProgress, double?>.internal(
+  ImportProgress.new,
+  name: r'importProgressProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$importProgressHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ImportProgress = AutoDisposeNotifier<double?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

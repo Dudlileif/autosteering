@@ -19,9 +19,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 
+import 'package:archive/archive_io.dart';
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_html/html.dart' as html;
@@ -33,19 +36,19 @@ part 'file_providers.g.dart';
 @Riverpod(keepAlive: true)
 FutureOr<Directory> fileDirectory(FileDirectoryRef ref) async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
-  final path =
+  final dirPath =
       [documentsDirectory.path, 'Autosteering'].join(Platform.pathSeparator);
-  final directory = Directory(path);
+  final directory = Directory(dirPath);
 
   if (directory.existsSync()) {
-    Logger.instance.i('File directory found: $path');
+    Logger.instance.i('File directory found: $dirPath');
     return directory;
   }
-  Logger.instance.i('Attempting to create file directory: $path');
+  Logger.instance.i('Attempting to create file directory: $dirPath');
 
   await directory.create(recursive: true);
 
-  Logger.instance.i('File directory created: $path');
+  Logger.instance.i('File directory created: $dirPath');
 
   return directory;
 }
@@ -118,7 +121,7 @@ FutureOr<void> saveJsonToFileDirectory(
     }
   } else {
     try {
-      final path = [
+      final filePath = [
         ref.watch(fileDirectoryProvider).requireValue.path,
         folder,
         if (subFolder != null) subFolder,
@@ -128,7 +131,7 @@ FutureOr<void> saveJsonToFileDirectory(
         try {
           final dataString =
               const JsonEncoder.withIndent('    ').convert(object);
-          final file = File(path);
+          final file = File(filePath);
           final exists = file.existsSync();
           if (!exists) {
             await file.create(recursive: true);
@@ -137,8 +140,8 @@ FutureOr<void> saveJsonToFileDirectory(
           return LogEvent(
             Level.info,
             switch (exists) {
-              false => 'Created and wrote data to $path',
-              true => 'Wrote data to $path',
+              false => 'Created and wrote data to $filePath',
+              true => 'Wrote data to $filePath',
             },
           );
         } catch (error, stackTrace) {
@@ -202,15 +205,13 @@ FutureOr<void> exportJsonToFileDirectory(
           try {
             final dataString =
                 const JsonEncoder.withIndent('    ').convert(object);
-            var path = '';
+            var filePath = '';
             if (exportFolder.endsWith('autosteering_export')) {
-              path = folder != null
-                  ? [exportFolder, folder, '$fileName.json']
-                      .join(Platform.pathSeparator)
-                  : [exportFolder, '$fileName.json']
-                      .join(Platform.pathSeparator);
+              filePath = folder != null
+                  ? path.join(exportFolder, folder, '$fileName.json')
+                  : path.join(exportFolder, '$fileName.json');
             } else if (exportFolder.contains('autosteering_export')) {
-              path = folder != null
+              filePath = folder != null
                   ? [
                       exportFolder.substring(
                         0,
@@ -229,7 +230,7 @@ FutureOr<void> exportJsonToFileDirectory(
                       '$fileName.json',
                     ].join(Platform.pathSeparator);
             } else {
-              path = folder != null
+              filePath = folder != null
                   ? [
                       exportFolder,
                       'autosteering_export',
@@ -239,7 +240,7 @@ FutureOr<void> exportJsonToFileDirectory(
                   : [exportFolder, 'autosteering_export', '$fileName.json']
                       .join(Platform.pathSeparator);
             }
-            final file = File(path);
+            final file = File(filePath);
             final exists = file.existsSync();
             if (!exists) {
               await file.create(recursive: true);
@@ -248,8 +249,8 @@ FutureOr<void> exportJsonToFileDirectory(
             return LogEvent(
               Level.info,
               switch (exists) {
-                false => 'Created and wrote data to $path',
-                true => 'Wrote data to $path',
+                false => 'Created and wrote data to $filePath',
+                true => 'Wrote data to $filePath',
               },
             );
           } catch (error, stackTrace) {
@@ -421,24 +422,24 @@ FutureOr<void> deleteJsonFromFileDirectory(
   required String folder,
 }) async {
   if (Device.isNative) {
-    final path = [
+    final filePath = [
       ref.watch(fileDirectoryProvider).requireValue.path,
       folder,
       '$fileName.json',
     ].join(Platform.pathSeparator);
-    final file = File(path);
+    final file = File(filePath);
     var exists = file.existsSync();
     if (exists) {
       await file.delete(recursive: true);
       exists = file.existsSync();
       Logger.instance.i(
         switch (exists) {
-          false => 'Deleted file: $path',
-          true => 'Failed to delete file: $path',
+          false => 'Deleted file: $filePath',
+          true => 'Failed to delete file: $filePath',
         },
       );
     } else {
-      Logger.instance.i('File already deleted/does not exist: $path');
+      Logger.instance.i('File already deleted/does not exist: $filePath');
     }
   }
 }
@@ -451,24 +452,24 @@ FutureOr<void> deleteDirectoryFromFileDirectory(
   required String folder,
 }) async {
   if (Device.isNative) {
-    final path = [
+    final dirPath = [
       ref.watch(fileDirectoryProvider).requireValue.path,
       folder,
       directoryName,
     ].join(Platform.pathSeparator);
-    final dir = Directory(path);
+    final dir = Directory(dirPath);
     var exists = dir.existsSync();
     if (exists) {
       await dir.delete(recursive: true);
       exists = dir.existsSync();
       Logger.instance.i(
         switch (exists) {
-          false => 'Deleted directory: $path',
-          true => 'Failed to delete dircetory: $path',
+          false => 'Deleted directory: $dirPath',
+          true => 'Failed to delete dircetory: $dirPath',
         },
       );
     } else {
-      Logger.instance.i('Directory already deleted/does not exist: $path');
+      Logger.instance.i('Directory already deleted/does not exist: $dirPath');
     }
   }
 }
@@ -505,14 +506,14 @@ FutureOr<void> exportWholeFileDirectory(ExportWholeFileDirectoryRef ref) async {
           dir.createSync(recursive: true);
         }
 
-        final path = [
+        final exportPath = [
           exportDirPath,
           '''all_files-${DateTime.now().toIso8601String().replaceAll(':', '_')}.zip''',
         ].join(Platform.pathSeparator);
 
         final export = FileHandler.exportFileDirectory(
           dirPath: fileDir.path,
-          exportPath: path,
+          exportPath: exportPath,
         );
 
         await for (final progress in export) {
@@ -520,7 +521,7 @@ FutureOr<void> exportWholeFileDirectory(ExportWholeFileDirectoryRef ref) async {
         }
 
         ref.read(exportProgressProvider.notifier).update(1);
-        Logger.instance.i('Exported whole file directory to :$path.');
+        Logger.instance.i('Exported whole file directory to :$exportPath.');
         await Future.delayed(const Duration(milliseconds: 500), () {});
       }
     }
@@ -597,13 +598,13 @@ FutureOr<void> exportAll(
             }
             ref.read(exportProgressProvider.notifier).update(0);
             if (zip) {
-              final path = [
+              final exportPath = [
                 exportDirPath,
                 '''$directory-${DateTime.now().toIso8601String().replaceAll(':', '_')}.zip''',
               ].join(Platform.pathSeparator);
               final export = FileHandler.exportFileDirectory(
                 dirPath: dir.path,
-                exportPath: path,
+                exportPath: exportPath,
               );
 
               await for (final progress in export) {
@@ -611,8 +612,9 @@ FutureOr<void> exportAll(
               }
 
               ref.read(exportProgressProvider.notifier).update(1);
-              Logger.instance
-                  .i('Exported ${files.length} $directory files to $path.');
+              Logger.instance.i(
+                'Exported ${files.length} $directory files to $exportPath.',
+              );
               await Future.delayed(const Duration(milliseconds: 500), () {});
             }
           }
@@ -630,5 +632,86 @@ FutureOr<void> exportAll(
   }
   ref
     ..invalidate(exportProgressProvider)
+    ..invalidateSelf();
+}
+
+/// A provider for the progress of the currently ongoing import, if there is
+/// one.
+@riverpod
+class ImportProgress extends _$ImportProgress {
+  @override
+  double? build() => null;
+
+  /// Updates [state] to [value].
+  void update(double? value) => Future(() => state = value);
+}
+
+/// A provider for importing all directory files from a zip file.
+@riverpod
+FutureOr<void> importWholeFileDirectory(ImportWholeFileDirectoryRef ref) async {
+  ref.keepAlive();
+  try {
+    if (Device.isNative) {
+      final importFile = await FilePicker.platform.pickFiles(
+        dialogTitle: 'Select ZIP file to import',
+        type: FileType.custom,
+        allowedExtensions: ['zip'],
+      );
+      if (importFile != null && importFile.files.firstOrNull?.path != null) {
+        final dirPath = ref.watch(fileDirectoryProvider).requireValue.path;
+
+        final inputStream = InputFileStream(importFile.files.first.path!);
+
+        final archive = ZipDecoder().decodeBuffer(inputStream);
+
+        final files = archive.files.where((f) => f.isFile);
+        final numberOfFiles = files.length;
+        var processed = 0;
+        ref.read(importProgressProvider.notifier).update(0);
+        for (final file in files) {
+          final filePath = path.join(dirPath, path.normalize(file.name));
+          if (path.isWithin(
+            path.canonicalize(dirPath),
+            path.canonicalize(filePath),
+          )) {
+            final output = File(filePath);
+            final f = await output.create(recursive: true);
+            final fp = await f.open(mode: FileMode.write);
+            final bytes = file.content as List<int>;
+            final fp2 = await fp.writeFrom(bytes);
+            file.clear();
+            await fp2.close();
+            processed++;
+            ref
+                .read(importProgressProvider.notifier)
+                .update(processed / numberOfFiles);
+          }
+        }
+        ref.read(importProgressProvider.notifier).update(1);
+
+        Logger.instance.i(
+          '''
+Imported whole file directory from ${importFile.files.first.path}.'
+Reloading all settings and files...''',
+        );
+        ref
+          ..invalidate(startupLoadingProvider)
+          ..invalidate(fileDirectoryProvider)
+          ..invalidate(settingsFileProvider)
+          ..invalidate(reloadAllSettingsProvider);
+        await Future.delayed(const Duration(milliseconds: 500), () {});
+      } else {
+        Logger.instance.i('No import all file found.');
+      }
+    }
+  } catch (error, stackTrace) {
+    Logger.instance.e(
+      'Failed to import all files.',
+      error: error,
+      stackTrace: stackTrace,
+    );
+  }
+  ref
+    ..invalidate(importProgressProvider)
     ..invalidateSelf();
 }
