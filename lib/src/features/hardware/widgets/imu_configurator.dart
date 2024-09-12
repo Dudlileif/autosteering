@@ -16,7 +16,6 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -780,7 +779,7 @@ class ImuConfigurator extends StatelessWidget {
 
 /// A draggable version of [ImuConfigurator], typically used as
 /// a child of a [Stack] that is a child of a [LayoutBuilder].
-class DraggableImuConfigurator extends ConsumerStatefulWidget {
+class DraggableImuConfigurator extends ConsumerWidget {
   /// A draggable version of [ImuConfigurator], typically used as
   /// a child of a [Stack] that is a child of a [LayoutBuilder].
   ///
@@ -789,75 +788,16 @@ class DraggableImuConfigurator extends ConsumerStatefulWidget {
 
   /// Constraints used to layout this widget.
   final BoxConstraints constraints;
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _DraggableImuConfiguratorState();
-}
-
-class _DraggableImuConfiguratorState
-    extends ConsumerState<DraggableImuConfigurator> {
-  late Offset offset = ref.read(imuConfiguratorUiOffsetProvider);
 
   @override
-  Widget build(BuildContext context) {
-    return StatefulBuilder(
-      builder: (context, setState) => Positioned(
-        left: clampDouble(
-          offset.dx,
-          0,
-          widget.constraints.maxWidth - 380,
-        ),
-        top: clampDouble(offset.dy, 0, widget.constraints.maxHeight - 350),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            height: min(
-              700,
-              widget.constraints.maxHeight -
-                  clampDouble(
-                    offset.dy,
-                    0,
-                    widget.constraints.maxHeight - 350,
-                  ),
-            ),
-            child: LongPressDraggable(
-              onDragUpdate: (update) => setState(
-                () => offset = Offset(
-                  offset.dx + update.delta.dx,
-                  offset.dy + update.delta.dy,
-                ),
-              ),
-              onDragEnd: (details) => ref
-                  .read(
-                    imuConfiguratorUiOffsetProvider.notifier,
-                  )
-                  .update(
-                    Offset(
-                      clampDouble(
-                        offset.dx,
-                        0,
-                        widget.constraints.maxWidth - 380,
-                      ),
-                      clampDouble(
-                        offset.dy,
-                        0,
-                        widget.constraints.maxHeight - 350,
-                      ),
-                    ),
-                  ),
-              childWhenDragging: const SizedBox.shrink(),
-              feedback: const Opacity(
-                opacity: 0.7,
-                child: SizedBox(
-                  height: 700,
-                  child: ImuConfigurator(),
-                ),
-              ),
-              child: const ImuConfigurator(),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context, WidgetRef ref) => DynamicDraggableWidget(
+        offset: ref.watch(imuConfiguratorUiOffsetProvider),
+        constraints: constraints,
+        maxWidth: 350,
+        maxHeight: 700,
+        maxWidthFraction: 0.7,
+        maxHeightFraction: 1,
+        onDragEnd: ref.read(imuConfiguratorUiOffsetProvider.notifier).update,
+        child: const ImuConfigurator(),
+      );
 }

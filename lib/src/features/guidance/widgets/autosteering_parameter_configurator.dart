@@ -16,8 +16,6 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
-import 'dart:math';
-import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
@@ -370,8 +368,7 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
 /// A draggable version of [AutosteeringParameterConfigurator], typically used
 /// as a child of a [Stack] that is a child of a [LayoutBuilder].
 
-class DraggableAutosteeringParameterConfigurator
-    extends ConsumerStatefulWidget {
+class DraggableAutosteeringParameterConfigurator extends ConsumerWidget {
   /// A draggable version of [AutosteeringParameterConfigurator], typically used
   /// as a child of a [Stack] that is a child of a [LayoutBuilder].
   ///
@@ -385,75 +382,15 @@ class DraggableAutosteeringParameterConfigurator
   final BoxConstraints constraints;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _DraggableAutosteeringParameterConfiguratorState();
-}
-
-class _DraggableAutosteeringParameterConfiguratorState
-    extends ConsumerState<DraggableAutosteeringParameterConfigurator> {
-  late Offset offset = ref.read(autosteeringConfiguratorUiOffsetProvider);
-
-  @override
-  Widget build(BuildContext context) => Positioned(
-        left: clampDouble(
-          offset.dx,
-          0,
-          widget.constraints.maxWidth - 380,
-        ),
-        top: clampDouble(offset.dy, 0, widget.constraints.maxHeight - 390),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            height: min(
-              385,
-              widget.constraints.maxHeight -
-                  clampDouble(
-                    offset.dy,
-                    0,
-                    widget.constraints.maxHeight - 390,
-                  ),
-            ),
-            child: LongPressDraggable(
-              onDragUpdate: (update) {
-                setState(
-                  () => offset = Offset(
-                    offset.dx + update.delta.dx,
-                    offset.dy + update.delta.dy,
-                  ),
-                );
-              },
-              onDragEnd: (details) => ref
-                  .read(
-                    autosteeringConfiguratorUiOffsetProvider.notifier,
-                  )
-                  .update(
-                    Offset(
-                      clampDouble(
-                        offset.dx,
-                        0,
-                        widget.constraints.maxWidth - 380,
-                      ),
-                      clampDouble(
-                        offset.dy,
-                        0,
-                        widget.constraints.maxHeight - 390,
-                      ),
-                    ),
-                  ),
-              childWhenDragging: const SizedBox.shrink(),
-              feedback: const Opacity(
-                opacity: 0.7,
-                child: SizedBox(
-                  height: 385,
-                  child: AutosteeringParameterConfigurator(),
-                ),
-              ),
-              child: const SizedBox(
-                height: 385,
-                child: AutosteeringParameterConfigurator(),
-              ),
-            ),
-          ),
-        ),
+  Widget build(BuildContext context, WidgetRef ref) => DynamicDraggableWidget(
+        offset: ref.watch(autosteeringConfiguratorUiOffsetProvider),
+        constraints: constraints,
+        maxWidth: 400,
+        maxHeight: 350,
+        maxWidthFraction: 0.7,
+        maxHeightFraction: 1,
+        onDragEnd:
+            ref.read(autosteeringConfiguratorUiOffsetProvider.notifier).update,
+        child: const AutosteeringParameterConfigurator(),
       );
 }

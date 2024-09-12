@@ -15,9 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
@@ -267,7 +264,7 @@ class NudgingControls extends StatelessWidget {
 
 /// A draggable version of [NudgingControls], typically used as a child of
 /// a [Stack] that is a child of a [LayoutBuilder].
-class DraggableNudgingControls extends ConsumerStatefulWidget {
+class DraggableNudgingControls extends ConsumerWidget {
   /// A draggable version of [NudgingControls], typically used as a child of
   /// a [Stack] that is a child of a [LayoutBuilder].
   ///
@@ -278,79 +275,13 @@ class DraggableNudgingControls extends ConsumerStatefulWidget {
   final BoxConstraints constraints;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _DraggableNudgingControlsState();
-}
-
-class _DraggableNudgingControlsState
-    extends ConsumerState<DraggableNudgingControls> {
-  static const height = 325.0;
-  late Offset offset = ref.read(nudgingControlsUiOffsetProvider);
-  @override
-  Widget build(BuildContext context) => Positioned(
-        left: clampDouble(
-          offset.dx,
-          0,
-          widget.constraints.maxWidth - 380,
-        ),
-        top: clampDouble(
-          offset.dy,
-          0,
-          widget.constraints.maxHeight - height,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            height: min(
-              height,
-              widget.constraints.maxHeight -
-                  clampDouble(
-                    offset.dy,
-                    0,
-                    widget.constraints.maxHeight - height,
-                  ),
-            ),
-            child: LongPressDraggable(
-              onDragUpdate: (update) {
-                setState(
-                  () => offset = Offset(
-                    offset.dx + update.delta.dx,
-                    offset.dy + update.delta.dy,
-                  ),
-                );
-              },
-              onDragEnd: (details) => ref
-                  .read(
-                    nudgingControlsUiOffsetProvider.notifier,
-                  )
-                  .update(
-                    Offset(
-                      clampDouble(
-                        offset.dx,
-                        0,
-                        widget.constraints.maxWidth - 380,
-                      ),
-                      clampDouble(
-                        offset.dy,
-                        0,
-                        widget.constraints.maxHeight - height,
-                      ),
-                    ),
-                  ),
-              childWhenDragging: const SizedBox.shrink(),
-              feedback: const Opacity(
-                opacity: 0.7,
-                child: SizedBox(
-                  height: height,
-                  child: NudgingControls(),
-                ),
-              ),
-              child: const SizedBox(
-                height: height,
-                child: NudgingControls(),
-              ),
-            ),
-          ),
-        ),
+  Widget build(BuildContext context, WidgetRef ref) => DynamicDraggableWidget(
+        offset: ref.watch(nudgingControlsUiOffsetProvider),
+        constraints: constraints,
+        maxWidth: 400,
+        maxHeight: 325,
+        maxWidthFraction: 1,
+        onDragEnd: ref.read(nudgingControlsUiOffsetProvider.notifier).update,
+        child: const NudgingControls(),
       );
 }

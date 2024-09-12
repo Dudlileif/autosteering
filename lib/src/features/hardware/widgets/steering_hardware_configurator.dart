@@ -1577,7 +1577,7 @@ class _PidPage extends ConsumerWidget {
 
 /// A draggable version of [SteeringHardwareConfigurator], typically used as
 /// a child of a [Stack] that is a child of a [LayoutBuilder].
-class DraggableSteeringHardwareConfigurator extends ConsumerStatefulWidget {
+class DraggableSteeringHardwareConfigurator extends ConsumerWidget {
   /// A draggable version of [SteeringHardwareConfigurator], typically used as
   /// a child of a [Stack] that is a child of a [LayoutBuilder].
   ///
@@ -1591,70 +1591,16 @@ class DraggableSteeringHardwareConfigurator extends ConsumerStatefulWidget {
   final BoxConstraints constraints;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _DraggableSteeringHardwareConfiguratorState();
-}
-
-class _DraggableSteeringHardwareConfiguratorState
-    extends ConsumerState<DraggableSteeringHardwareConfigurator> {
-  late Offset offset = ref.read(steeringHardwareConfiguratorUiOffsetProvider);
-
-  @override
-  Widget build(BuildContext context) => Positioned(
-        left: clampDouble(
-          offset.dx,
-          0,
-          widget.constraints.maxWidth - 405,
-        ),
-        top: clampDouble(offset.dy, 0, widget.constraints.maxHeight - 350),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            height: min(
-              700,
-              widget.constraints.maxHeight -
-                  clampDouble(
-                    offset.dy,
-                    0,
-                    widget.constraints.maxHeight - 350,
-                  ),
-            ),
-            child: LongPressDraggable(
-              onDragUpdate: (update) => setState(
-                () => offset = Offset(
-                  offset.dx + update.delta.dx,
-                  offset.dy + update.delta.dy,
-                ),
-              ),
-              onDragEnd: (details) => ref
-                  .read(
-                    steeringHardwareConfiguratorUiOffsetProvider.notifier,
-                  )
-                  .update(
-                    Offset(
-                      clampDouble(
-                        offset.dx,
-                        0,
-                        widget.constraints.maxWidth - 405,
-                      ),
-                      clampDouble(
-                        offset.dy,
-                        0,
-                        widget.constraints.maxHeight - 350,
-                      ),
-                    ),
-                  ),
-              childWhenDragging: const SizedBox.shrink(),
-              feedback: const Opacity(
-                opacity: 0.7,
-                child: SizedBox(
-                  height: 700,
-                  child: SteeringHardwareConfigurator(),
-                ),
-              ),
-              child: const SteeringHardwareConfigurator(),
-            ),
-          ),
-        ),
+  Widget build(BuildContext context, WidgetRef ref) => DynamicDraggableWidget(
+        offset: ref.watch(steeringHardwareConfiguratorUiOffsetProvider),
+        constraints: constraints,
+        maxWidth: 350,
+        maxHeight: 700,
+        maxWidthFraction: 0.7,
+        maxHeightFraction: 1,
+        onDragEnd: ref
+            .read(steeringHardwareConfiguratorUiOffsetProvider.notifier)
+            .update,
+        child: const SteeringHardwareConfigurator(),
       );
 }

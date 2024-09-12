@@ -48,102 +48,122 @@ class Graph extends ConsumerWidget {
     final count = retainSeconds / 33e-3;
     final data = ref.watch(graphValuesProvider);
 
-    return Row(
-      children: [
-        Expanded(
-          child: LineChart(
-            LineChartData(
-              minY: 0,
-              maxY: 1,
-              minX: 0,
-              maxX: count,
-              borderData: FlBorderData(
-                border: Border.all(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              ),
-              titlesData: FlTitlesData(
-                leftTitles: const AxisTitles(),
-                topTitles: const AxisTitles(),
-                bottomTitles: const AxisTitles(),
-                rightTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 48,
-                    getTitlesWidget: (value, meta) => Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: Text(
-                        switch (value) {
-                          1 => 'Max',
-                          0.5 => 'Center',
-                          0 => 'Min',
-                          _ => ''
-                        },
-                      ),
-                    ),
-                    interval: 0.5,
+    return LayoutBuilder(
+      builder: (context, constraints) => Flex(
+        direction: switch (constraints.maxWidth > constraints.maxHeight) {
+          true => Axis.horizontal,
+          false => Axis.vertical,
+        },
+        children: [
+          Expanded(
+            child: LineChart(
+              LineChartData(
+                minY: 0,
+                maxY: 1,
+                minX: 0,
+                maxX: count,
+                borderData: FlBorderData(
+                  border: Border.all(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
                   ),
                 ),
-              ),
-              gridData: FlGridData(
-                checkToShowHorizontalLine: (value) => value == 0.5,
-                checkToShowVerticalLine: (value) => (value / count) % 0.2 == 0,
-              ),
-              lineTouchData: const LineTouchData(
-                enabled: false,
-              ),
-              lineBarsData: data.entries.mapIndexed(
-                (index, entry) {
-                  final evenlySpreadIndex = (Colors.primaries.length *
-                          index /
-                          (data.length.clamp(1, double.infinity)))
-                      .round();
-                  return LineChartBarData(
-                    spots: entry.value
-                        .mapIndexed(
-                          (i, e) => switch (e) {
-                            null => FlSpot.nullSpot,
-                            _ => FlSpot(i.toDouble(), e.normalized)
+                titlesData: FlTitlesData(
+                  leftTitles: const AxisTitles(),
+                  topTitles: const AxisTitles(),
+                  bottomTitles: const AxisTitles(),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 48,
+                      getTitlesWidget: (value, meta) => Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Text(
+                          switch (value) {
+                            1 => 'Max',
+                            0.5 => 'Center',
+                            0 => 'Min',
+                            _ => ''
                           },
-                        )
-                        .toList(),
-                    dotData: FlDotData(
-                      checkToShowDot: (spot, barData) =>
-                          spot == barData.mostRightSpot,
+                        ),
+                      ),
+                      interval: 0.5,
                     ),
-                    color: Colors
-                        .primaries[evenlySpreadIndex % Colors.primaries.length],
-                  );
-                },
-              ).toList(),
+                  ),
+                ),
+                gridData: FlGridData(
+                  checkToShowHorizontalLine: (value) => value == 0.5,
+                  checkToShowVerticalLine: (value) =>
+                      (value / count) % 0.2 == 0,
+                ),
+                lineTouchData: const LineTouchData(
+                  enabled: false,
+                ),
+                lineBarsData: data.entries.mapIndexed(
+                  (index, entry) {
+                    final evenlySpreadIndex = (Colors.primaries.length *
+                            index /
+                            (data.length.clamp(1, double.infinity)))
+                        .round();
+                    return LineChartBarData(
+                      spots: entry.value
+                          .mapIndexed(
+                            (i, e) => switch (e) {
+                              null => FlSpot.nullSpot,
+                              _ => FlSpot(i.toDouble(), e.normalized)
+                            },
+                          )
+                          .toList(),
+                      dotData: FlDotData(
+                        checkToShowDot: (spot, barData) =>
+                            spot == barData.mostRightSpot,
+                      ),
+                      color: Colors.primaries[
+                          evenlySpreadIndex % Colors.primaries.length],
+                    );
+                  },
+                ).toList(),
+              ),
             ),
           ),
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: data.entries.mapIndexed((index, entry) {
-            final evenlySpreadIndex = (Colors.primaries.length *
-                    index /
-                    (data.length.clamp(1, double.infinity)))
-                .round();
-            var value = '';
-            if (entry.value.last?.raw is double) {
-              value = '${entry.value.last?.raw.toStringAsFixed(2).padLeft(6)}';
-            } else if (entry.value.last?.raw is int) {
-              value = '${entry.value.last?.raw}'.padLeft(6);
-            }
-            return TextWithStroke(
-              value,
-              style: GoogleFonts.robotoMono(
-                color: Colors
-                    .primaries[evenlySpreadIndex % Colors.primaries.length],
-              ),
-            );
-          }).toList(),
-        ),
-      ],
+          Padding(
+            padding: EdgeInsets.only(
+              top: switch (constraints.maxWidth > constraints.maxHeight) {
+                true => 0,
+                false => 8,
+              },
+            ),
+            child: Wrap(
+              direction: switch (constraints.maxWidth > constraints.maxHeight) {
+                true => Axis.vertical,
+                false => Axis.horizontal,
+              },
+              spacing: 4,
+              children: data.entries.mapIndexed((index, entry) {
+                final evenlySpreadIndex = (Colors.primaries.length *
+                        index /
+                        (data.length.clamp(1, double.infinity)))
+                    .round();
+                var value = '';
+                if (entry.value.last?.raw is double) {
+                  value =
+                      '${entry.value.last?.raw.toStringAsFixed(2).padLeft(6)}';
+                } else if (entry.value.last?.raw is int) {
+                  value = '${entry.value.last?.raw}'.padLeft(6);
+                }
+                return TextWithStroke(
+                  value,
+                  style: GoogleFonts.robotoMono(
+                    color: Colors
+                        .primaries[evenlySpreadIndex % Colors.primaries.length],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

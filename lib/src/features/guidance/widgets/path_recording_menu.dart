@@ -16,9 +16,8 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
-import 'dart:math';
-import 'dart:ui';
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
@@ -75,28 +74,33 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
           appBar: AppBar(
             scrolledUnderElevation: 0,
             primary: false,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            title: Wrap(
+              spacing: 4,
               children: [
-                Text('${switch (target) {
-                  PathRecordingTarget.abCurve => 'AB Curve',
-                  PathRecordingTarget.field => 'Field',
-                  PathRecordingTarget.pathTracking => 'Tracking'
-                }} Recording'),
-                Consumer(
-                  builder: (context, ref, child) => CloseButton(
-                    onPressed: () {
-                      ref
-                          .read(showPathRecordingMenuProvider.notifier)
-                          .update(value: false);
-                      ref
-                          .read(enablePathRecorderProvider.notifier)
-                          .update(value: false);
-                    },
-                  ),
+                Text(
+                  switch (target) {
+                    PathRecordingTarget.abCurve => 'AB Curve',
+                    PathRecordingTarget.field => 'Field',
+                    PathRecordingTarget.pathTracking => 'Tracking'
+                  },
                 ),
+                const Text('Recording'),
               ],
             ),
+            actions: [
+              Consumer(
+                builder: (context, ref, child) => CloseButton(
+                  onPressed: () {
+                    ref
+                        .read(showPathRecordingMenuProvider.notifier)
+                        .update(value: false);
+                    ref
+                        .read(enablePathRecorderProvider.notifier)
+                        .update(value: false);
+                  },
+                ),
+              ),
+            ],
           ),
           body: ListView(
             children: [
@@ -667,7 +671,7 @@ class _CreateFieldButton extends ConsumerWidget {
 
 /// A draggable version of [PathRecordingMenu], typically used as
 /// a child of a [Stack] that is a child of a [LayoutBuilder].
-class DraggablePathRecordingMenu extends ConsumerStatefulWidget {
+class DraggablePathRecordingMenu extends ConsumerWidget {
   /// A draggable version of [PathRecordingMenu], typically used as
   /// a child of a [Stack] that is a child of a [LayoutBuilder].
   ///
@@ -676,71 +680,16 @@ class DraggablePathRecordingMenu extends ConsumerStatefulWidget {
 
   /// Constraints used to layout this widget.
   final BoxConstraints constraints;
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _DraggablePathRecordingMenuState();
-}
-
-class _DraggablePathRecordingMenuState
-    extends ConsumerState<DraggablePathRecordingMenu> {
-  late Offset offset = ref.read(pathRecordingMenuUiOffsetProvider);
 
   @override
-  Widget build(BuildContext context) => Positioned(
-        left: clampDouble(
-          offset.dx,
-          0,
-          widget.constraints.maxWidth - 380,
-        ),
-        top: clampDouble(offset.dy, 0, widget.constraints.maxHeight - 350),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            height: min(
-              700,
-              widget.constraints.maxHeight -
-                  clampDouble(
-                    offset.dy,
-                    0,
-                    widget.constraints.maxHeight - 350,
-                  ),
-            ),
-            child: LongPressDraggable(
-              onDragUpdate: (update) => setState(
-                () => offset = Offset(
-                  offset.dx + update.delta.dx,
-                  offset.dy + update.delta.dy,
-                ),
-              ),
-              onDragEnd: (details) => ref
-                  .read(
-                    pathRecordingMenuUiOffsetProvider.notifier,
-                  )
-                  .update(
-                    Offset(
-                      clampDouble(
-                        offset.dx,
-                        0,
-                        widget.constraints.maxWidth - 380,
-                      ),
-                      clampDouble(
-                        offset.dy,
-                        0,
-                        widget.constraints.maxHeight - 350,
-                      ),
-                    ),
-                  ),
-              childWhenDragging: const SizedBox.shrink(),
-              feedback: const Opacity(
-                opacity: 0.7,
-                child: SizedBox(
-                  height: 700,
-                  child: PathRecordingMenu(),
-                ),
-              ),
-              child: const PathRecordingMenu(),
-            ),
-          ),
-        ),
+  Widget build(BuildContext context, WidgetRef ref) => DynamicDraggableWidget(
+        offset: ref.watch(pathRecordingMenuUiOffsetProvider),
+        constraints: constraints,
+        maxWidth: 350,
+        maxHeight: 700,
+        maxWidthFraction: 0.6,
+        maxHeightFraction: 1,
+        onDragEnd: ref.read(pathRecordingMenuUiOffsetProvider.notifier).update,
+        child: const PathRecordingMenu(),
       );
 }
