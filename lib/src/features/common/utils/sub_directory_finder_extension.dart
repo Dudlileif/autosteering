@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:path/path.dart' as path_handler;
 import 'package:universal_io/io.dart';
 
 /// An extension that adds a method for finding subdirectories within
@@ -36,7 +37,7 @@ extension SubDirectoryFinder on Directory {
     final contents = listSync();
 
     for (final element in contents) {
-      if (element.path == ([path, 'created'].join(Platform.pathSeparator))) {
+      if (element.path == path_handler.join(path, 'created')) {
         result.add(path);
       } else if (element.statSync().type == FileSystemEntityType.directory) {
         result.addAll(

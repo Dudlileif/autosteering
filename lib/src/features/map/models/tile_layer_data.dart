@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:path/path.dart' as path;
 import 'package:universal_io/io.dart';
 
 /// A configuration class for a map tile layer.
@@ -88,11 +89,11 @@ class TileLayerData {
 
   /// The folder which the cached image tiles of this layer is stored in.
   Directory cacheDirectory(String userFolder) => Directory(
-        [
+        path.joinAll([
           userFolder,
           'map_image_cache',
-          if (folderName != null) folderName,
+          if (folderName != null) folderName!,
           name,
-        ].join(Platform.pathSeparator),
+        ]),
       );
 }

@@ -36,8 +36,7 @@ part 'file_providers.g.dart';
 @Riverpod(keepAlive: true)
 FutureOr<Directory> fileDirectory(FileDirectoryRef ref) async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
-  final dirPath =
-      [documentsDirectory.path, 'Autosteering'].join(Platform.pathSeparator);
+  final dirPath = path.join(documentsDirectory.path, 'Autosteering');
   final directory = Directory(dirPath);
 
   if (directory.existsSync()) {
@@ -121,12 +120,12 @@ FutureOr<void> saveJsonToFileDirectory(
     }
   } else {
     try {
-      final filePath = [
+      final filePath = path.joinAll([
         ref.watch(fileDirectoryProvider).requireValue.path,
         folder,
         if (subFolder != null) subFolder,
         '$fileName.json',
-      ].join(Platform.pathSeparator);
+      ]);
       await Isolate.run<LogEvent>(() async {
         try {
           final dataString =
@@ -211,34 +210,22 @@ FutureOr<void> exportJsonToFileDirectory(
                   ? path.join(exportFolder, folder, '$fileName.json')
                   : path.join(exportFolder, '$fileName.json');
             } else if (exportFolder.contains('autosteering_export')) {
-              filePath = folder != null
-                  ? [
-                      exportFolder.substring(
-                        0,
-                        exportFolder.indexOf('autosteering_export') - 1,
-                      ),
-                      'autosteering_export',
-                      folder,
-                      '$fileName.json',
-                    ].join(Platform.pathSeparator)
-                  : [
-                      exportFolder.substring(
-                        0,
-                        exportFolder.indexOf('autosteering_export') - 1,
-                      ),
-                      'autosteering_export',
-                      '$fileName.json',
-                    ].join(Platform.pathSeparator);
+              filePath = path.joinAll([
+                exportFolder.substring(
+                  0,
+                  exportFolder.indexOf('autosteering_export') - 1,
+                ),
+                'autosteering_export',
+                if (folder != null) folder,
+                '$fileName.json',
+              ]);
             } else {
-              filePath = folder != null
-                  ? [
-                      exportFolder,
-                      'autosteering_export',
-                      folder,
-                      '$fileName.json',
-                    ].join(Platform.pathSeparator)
-                  : [exportFolder, 'autosteering_export', '$fileName.json']
-                      .join(Platform.pathSeparator);
+              filePath = path.joinAll([
+                exportFolder,
+                'autosteering_export',
+                if (folder != null) folder,
+                '$fileName.json',
+              ]);
             }
             final file = File(filePath);
             final exists = file.existsSync();
@@ -296,10 +283,10 @@ FutureOr<List<dynamic>> savedFiles(
     return [];
   }
 
-  final dirPath = [
+  final dirPath = path.join(
     ref.watch(fileDirectoryProvider).requireValue.path,
     folder,
-  ].join(Platform.pathSeparator);
+  );
 
   Logger.instance.i('Attempting to read saved files in: $dirPath');
   final dir = Directory(dirPath);
@@ -357,10 +344,10 @@ FutureOr<List<dynamic>> savedFilesInSubDirectories(
     return [];
   }
 
-  final dirPath = [
+  final dirPath = path.join(
     ref.watch(fileDirectoryProvider).requireValue.path,
     folder,
-  ].join(Platform.pathSeparator);
+  );
 
   Logger.instance
       .i('Attempting to read saved files from directories in: $dirPath');
@@ -388,8 +375,8 @@ FutureOr<List<dynamic>> savedFilesInSubDirectories(
             final dir = Directory.fromUri(fileEntity.uri);
             final files = dir.listSync();
             final file = files.firstWhereOrNull(
-              (file) => file.path.split(Platform.pathSeparator).last.startsWith(
-                    fileEntity.path.split(Platform.pathSeparator).last,
+              (file) => path.split(file.path).last.startsWith(
+                    path.split(fileEntity.path).last,
                   ),
             );
             if (file is File) {
@@ -422,11 +409,11 @@ FutureOr<void> deleteJsonFromFileDirectory(
   required String folder,
 }) async {
   if (Device.isNative) {
-    final filePath = [
+    final filePath = path.join(
       ref.watch(fileDirectoryProvider).requireValue.path,
       folder,
       '$fileName.json',
-    ].join(Platform.pathSeparator);
+    );
     final file = File(filePath);
     var exists = file.existsSync();
     if (exists) {
@@ -452,11 +439,11 @@ FutureOr<void> deleteDirectoryFromFileDirectory(
   required String folder,
 }) async {
   if (Device.isNative) {
-    final dirPath = [
+    final dirPath = path.join(
       ref.watch(fileDirectoryProvider).requireValue.path,
       folder,
       directoryName,
-    ].join(Platform.pathSeparator);
+    );
     final dir = Directory(dirPath);
     var exists = dir.existsSync();
     if (exists) {
@@ -490,26 +477,25 @@ FutureOr<void> exportWholeFileDirectory(ExportWholeFileDirectoryRef ref) async {
         if (exportFolder.endsWith('autosteering_export')) {
           exportDirPath = exportFolder;
         } else if (exportFolder.contains('autosteering_export')) {
-          exportDirPath = [
+          exportDirPath = path.join(
             exportFolder.substring(
               0,
               exportFolder.indexOf('autosteering_export') - 1,
             ),
             'autosteering_export',
-          ].join(Platform.pathSeparator);
+          );
         } else {
-          exportDirPath = [exportFolder, 'autosteering_export']
-              .join(Platform.pathSeparator);
+          exportDirPath = path.join(exportFolder, 'autosteering_export');
         }
         final dir = Directory(exportDirPath);
         if (!dir.existsSync()) {
           dir.createSync(recursive: true);
         }
 
-        final exportPath = [
+        final exportPath = path.join(
           exportDirPath,
           '''all_files-${DateTime.now().toIso8601String().replaceAll(':', '_')}.zip''',
-        ].join(Platform.pathSeparator);
+        );
 
         final export = FileHandler.exportFileDirectory(
           dirPath: fileDir.path,
@@ -563,8 +549,7 @@ FutureOr<void> exportAll(
       if (exportFolder != null) {
         final dirPath = ref.watch(fileDirectoryProvider).requireValue.path;
 
-        final dir =
-            Directory([dirPath, directory].join(Platform.pathSeparator));
+        final dir = Directory(path.join(dirPath, directory));
         if (dir.existsSync()) {
           final files = dir
               .listSync(recursive: true)
@@ -577,20 +562,19 @@ FutureOr<void> exportAll(
           if (files.isNotEmpty) {
             var exportDirPath = '';
             if (exportFolder.endsWith('autosteering_export')) {
-              exportDirPath =
-                  [exportFolder, 'logs'].join(Platform.pathSeparator);
+              exportDirPath = path.join(exportFolder, 'logs');
             } else if (exportFolder.contains('autosteering_export')) {
-              exportDirPath = [
+              exportDirPath = path.join(
                 exportFolder.substring(
                   0,
                   exportFolder.indexOf('autosteering_export') - 1,
                 ),
                 'autosteering_export',
                 directory,
-              ].join(Platform.pathSeparator);
+              );
             } else {
-              exportDirPath = [exportFolder, 'autosteering_export', directory]
-                  .join(Platform.pathSeparator);
+              exportDirPath =
+                  path.join(exportFolder, 'autosteering_export', directory);
             }
             final exportDir = Directory(exportDirPath);
             if (!exportDir.existsSync()) {
@@ -598,10 +582,10 @@ FutureOr<void> exportAll(
             }
             ref.read(exportProgressProvider.notifier).update(0);
             if (zip) {
-              final exportPath = [
+              final exportPath = path.join(
                 exportDirPath,
                 '''$directory-${DateTime.now().toIso8601String().replaceAll(':', '_')}.zip''',
-              ].join(Platform.pathSeparator);
+              );
               final export = FileHandler.exportFileDirectory(
                 dirPath: dir.path,
                 exportPath: exportPath,

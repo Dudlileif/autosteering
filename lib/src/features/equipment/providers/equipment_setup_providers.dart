@@ -21,6 +21,7 @@ import 'dart:convert';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -62,7 +63,7 @@ FutureOr<void> saveEquipmentSetup(
       saveJsonToFileDirectoryProvider(
         object: setup,
         fileName: overrideName ?? setup.name,
-        folder: ['equipment', 'setups'].join(Platform.pathSeparator),
+        folder: path.join('equipment', 'setups'),
         downloadIfWeb: downloadIfWeb,
       ).future,
     );
@@ -81,7 +82,7 @@ FutureOr<void> exportEquipmentSetup(
       exportJsonToFileDirectoryProvider(
         object: setup,
         fileName: overrideName ?? setup.name,
-        folder: ['equipment', 'setups'].join(Platform.pathSeparator),
+        folder: path.join('equipment', 'setups'),
         downloadIfWeb: downloadIfWeb,
       ).future,
     );
@@ -96,7 +97,7 @@ FutureOr<List<EquipmentSetup>> savedEquipmentSetups(
         .watch(
       savedFilesProvider(
         fromJson: EquipmentSetup.fromJson,
-        folder: ['equipment', 'setups'].join(Platform.pathSeparator),
+        folder: path.join('equipment', 'setups'),
       ).future,
     )
         .then((data) {
@@ -118,7 +119,7 @@ FutureOr<void> deleteEquipmentSetup(
     await ref.watch(
       deleteJsonFromFileDirectoryProvider(
         fileName: overrideName ?? setup.name,
-        folder: ['equipment', 'setups'].join(Platform.pathSeparator),
+        folder: path.join('equipment', 'setups'),
       ).future,
     );
 

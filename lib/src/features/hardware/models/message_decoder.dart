@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:nmea/nmea.dart';
+import 'package:path/path.dart' as path;
 import 'package:universal_io/io.dart';
 
 /// A message decoder for decoding [Uint8List] data received from connected
@@ -410,11 +411,11 @@ class MessageDecoder {
               if (_logIMU && logDirectoryPath != null) {
                 _imuLogStartTime ??= DateTime.now();
                 final file = File(
-                  [
-                    logDirectoryPath,
+                  path.join(
+                    logDirectoryPath!,
                     'imu',
                     '${_imuLogStartTime!.toIso8601String()}.log',
-                  ].join(Platform.pathSeparator),
+                  ),
                 );
                 if (!file.existsSync()) {
                   file.createSync(recursive: true);
@@ -450,11 +451,11 @@ class MessageDecoder {
               if (_logWAS && logDirectoryPath != null) {
                 _wasLogStartTime ??= DateTime.now();
                 final file = File(
-                  [
-                    logDirectoryPath,
+                  path.join(
+                    logDirectoryPath!,
                     'was',
                     '${_wasLogStartTime!.toIso8601String()}.log',
-                  ].join(Platform.pathSeparator),
+                  ),
                 );
                 if (!file.existsSync()) {
                   file.createSync(recursive: true);
@@ -624,11 +625,11 @@ class MessageDecoder {
         if (_logGNSS && logDirectoryPath != null) {
           _gnssLogStartTime ??= DateTime.now();
           final file = File(
-            [
-              logDirectoryPath,
+            path.join(
+              logDirectoryPath!,
               'gnss',
               '${_gnssLogStartTime!.toIso8601String()}.log',
-            ].join(Platform.pathSeparator),
+            ),
           );
           if (!file.existsSync()) {
             file.createSync(recursive: true);
@@ -655,20 +656,20 @@ class MessageDecoder {
       if (_logCombined && logDirectoryPath != null) {
         _combinedLogStartTime ??= DateTime.now();
         final file = File(
-          [
-            logDirectoryPath,
+          path.join(
+            logDirectoryPath!,
             'combined',
             '${_combinedLogStartTime!.toIso8601String()}.log',
-          ].join(Platform.pathSeparator),
+          ),
         );
         if (!file.existsSync()) {
           file.createSync(recursive: true);
         }
         file.writeAsStringSync(
-          [
+          path.join(
             '${DateTime.now().toIso8601String()}: $str',
             Platform.lineTerminator,
-          ].join(),
+          ),
           mode: FileMode.append,
         );
       }

@@ -26,6 +26,7 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/models/simulator_core_state.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:udp/udp.dart';
 
@@ -359,12 +360,12 @@ class SimulatorCore {
         // Ensure that the isolate messaging is ready.
         if (message is RootIsolateToken) {
           BackgroundIsolateBinaryMessenger.ensureInitialized(message);
-          final logDirectoryPath = [
+          final logDirectoryPath = path.join(
             (await getApplicationDocumentsDirectory()).path,
             'Autosteering',
             'logs',
             'hardware',
-          ].join(Platform.pathSeparator);
+          );
           messageDecoder = MessageDecoder(logDirectoryPath: logDirectoryPath);
         }
         // Close and remote UDP instances if no network is available, stops
