@@ -347,7 +347,8 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
           } else {
             ref.read(mainMapControllerProvider).rotate(
                   ref.read(
-                      mainVehicleProvider.select((value) => -value.bearing)),
+                    mainVehicleProvider.select((value) => -value.bearing),
+                  ),
                 );
           }
         }
