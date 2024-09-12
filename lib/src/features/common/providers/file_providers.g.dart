@@ -6,7 +6,7 @@ part of 'file_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fileDirectoryHash() => r'0d7bbbb97993af78abe5df58d8a641a45423d458';
+String _$fileDirectoryHash() => r'a034e67b5c3331e8806a3d33434e1f09d6e037ce';
 
 /// A provider for the main user file directory for the application.
 ///
@@ -349,7 +349,7 @@ class _DirectoryDeleteProviderElement
 }
 
 String _$saveJsonToFileDirectoryHash() =>
-    r'ac389047f30dd98e9fb4f0695a7ea38ef7299fa8';
+    r'c00a529bf2247184a81fac33ff5cc708483de69f';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -576,7 +576,7 @@ class _SaveJsonToFileDirectoryProviderElement
 }
 
 String _$exportJsonToFileDirectoryHash() =>
-    r'87eec3dc92ce76fdeab0ae702ef31a17c31578f4';
+    r'f91e5638cf0aa15357b12971cd0dd10dc4c910e9';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -803,7 +803,7 @@ class _ExportJsonToFileDirectoryProviderElement
       (origin as ExportJsonToFileDirectoryProvider).downloadIfWeb;
 }
 
-String _$savedFilesHash() => r'54d5b11822d84068f845c5895ba0a8c59d82cfd1';
+String _$savedFilesHash() => r'ee1307aa7557caf469ef31d0c26464e93142a95f';
 
 /// A provider for reading and holding all the saved objects of
 /// the given type in the in the user file directory.
@@ -1002,7 +1002,7 @@ class _SavedFilesProviderElement extends FutureProviderElement<List<dynamic>>
 }
 
 String _$savedFilesInSubDirectoriesHash() =>
-    r'14160093fe72b8a4c90f450f01154789f8743b73';
+    r'5f6720f10b68bc50110ea712454c260e156819f9';
 
 /// A provider for reading and holding all the saved objects of
 /// the given type in the in the user file directory.
@@ -1187,7 +1187,7 @@ class _SavedFilesInSubDirectoriesProviderElement
 }
 
 String _$deleteJsonFromFileDirectoryHash() =>
-    r'232132d19d72be35fafdf8448f51a80d80cdac8d';
+    r'14971d38f576d4a8a613e896c5d72177dd1c3fb0';
 
 /// A provider for deleting the [fileName] in [folder] if it exists.
 ///
@@ -1348,7 +1348,7 @@ class _DeleteJsonFromFileDirectoryProviderElement
 }
 
 String _$deleteDirectoryFromFileDirectoryHash() =>
-    r'1d899567355ef22cd0559c86a0497fe8fba8448f';
+    r'4f948894f41b1a97fa776aa0aa4ece1cefd72062';
 
 /// A provider for deleting the [directoryName] in [folder] if it exists.
 ///
@@ -1513,7 +1513,7 @@ class _DeleteDirectoryFromFileDirectoryProviderElement
 }
 
 String _$exportWholeFileDirectoryHash() =>
-    r'a2b987f5d594154c8f308b95ad8f3c78f5f2af3f';
+    r'43efc2021f2efd48dbe1da5bc1e2b4c84191d33d';
 
 /// A provider for exporting the whole file directory to a ZIP file.
 ///
@@ -1531,7 +1531,7 @@ final exportWholeFileDirectoryProvider =
 );
 
 typedef ExportWholeFileDirectoryRef = AutoDisposeFutureProviderRef<void>;
-String _$exportAllHash() => r'8be8c125bd85c4728942cd2feb4b43ad3f2fc3b8';
+String _$exportAllHash() => r'46c178f81921b781e4f9ef5a891616c3a6021dd8';
 
 /// A provider for exporting all files in a [directory].
 ///
@@ -1688,7 +1688,7 @@ class _ExportAllProviderElement extends AutoDisposeFutureProviderElement<void>
 }
 
 String _$importWholeFileDirectoryHash() =>
-    r'8606273b93572328b38817acaab4fad718530a47';
+    r'ef147f5607d6e5592284a667e0775c89f1d6846e';
 
 /// A provider for importing all directory files from a zip file.
 ///

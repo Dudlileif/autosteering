@@ -357,7 +357,7 @@ class _SaveWorkSessionProviderElement
 }
 
 String _$saveWorkSessionEquipmentLogsHash() =>
-    r'caf29764addc500b0719b8bd9a600aea09165b93';
+    r'4010c495126be45d41a75a6f22c38109b36138a6';
 
 /// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
 /// their respective files.
@@ -1119,7 +1119,7 @@ class _ExportWorkSessionsProviderElement
   bool get zip => (origin as ExportWorkSessionsProvider).zip;
 }
 
-String _$activeWorkSessionHash() => r'65037f61e3fa588f5d94a7027873ec9a974db542';
+String _$activeWorkSessionHash() => r'a5e99f946bd356990b9246d165eb7604dccecf0d';
 
 /// A provider for holding the active [WorkSession].
 ///

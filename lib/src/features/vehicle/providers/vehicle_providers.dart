@@ -79,15 +79,13 @@ class ActiveAutosteeringState extends _$ActiveAutosteeringState {
   AutosteeringState build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref.read(
-          audioPlayerProvider(
-            switch (next) {
-              AutosteeringState.enabled => AudioAsset.autosteeringEnabled,
-              AutosteeringState.disabled => AudioAsset.autosteeringDisabled,
-              AutosteeringState.standby => AudioAsset.autosteeringStandby
-            },
-          ),
-        );
+        ref.read(audioQueueProvider.notifier).add(
+              switch (next) {
+                AutosteeringState.enabled => AudioAsset.autosteeringEnabled,
+                AutosteeringState.disabled => AudioAsset.autosteeringDisabled,
+                AutosteeringState.standby => AudioAsset.autosteeringStandby
+              },
+            );
       }
     });
     return AutosteeringState.disabled;
@@ -236,7 +234,7 @@ class GaugesAverageCount extends _$GaugesAverageCount {
 }
 
 /// A provider for the target steering angle when using guidance.
-@Riverpod(keepAlive:true)
+@Riverpod(keepAlive: true)
 class VehicleSteeringAngleTarget extends _$VehicleSteeringAngleTarget {
   @override
   double? build() => null;
