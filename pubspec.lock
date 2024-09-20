@@ -290,18 +290,18 @@ packages:
     dependency: "direct dev"
     description:
       name: custom_lint
-      sha256: cbea60b2e574a2958170bfb7a76b2d85e07e175911a7931a8e8eef42cc36673e
+      sha256: "6e1ec47427ca968f22bce734d00028ae7084361999b41673291138945c5baca0"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.6"
+    version: "0.6.7"
   custom_lint_builder:
     dependency: transitive
     description:
       name: custom_lint_builder
-      sha256: "534cbf2f540a46ee4143563c4706deb6d0886370c258300954c801e02ebfc864"
+      sha256: ba2f90fff4eff71d202d097eb14b14f87087eaaef742e956208c0eb9d3a40a21
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.6"
+    version: "0.6.7"
   custom_lint_core:
     dependency: transitive
     description:
@@ -794,10 +794,10 @@ packages:
     dependency: "direct main"
     description:
       name: material_symbols_icons
-      sha256: "6a482f4a99546515155d3ed6d66c5d8a13a305bcb080336806f21b8721d8fd33"
+      sha256: "66416c4e30bd363508e12669634fc4f3250b83b69e862de67f4f9c480cf42414"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2785.0"
+    version: "4.2785.1"
   meta:
     dependency: transitive
     description:
@@ -826,10 +826,10 @@ packages:
     dependency: "direct main"
     description:
       name: nmea
-      sha256: "04c2a76b9cb8a1bf46f4dfbe1cf042e1ca7825b9d45b572f9361c4f32f33f398"
+      sha256: a49fc8682bbb6285a9b3cb8d2a37b4724d6f36e2d6dd2f1c0824602a48a23b50
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.0"
+    version: "3.3.2"
   package_config:
     dependency: transitive
     description:
