@@ -20,6 +20,7 @@ import 'dart:async';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:logger/logger.dart' as implementation;
+import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -75,7 +76,7 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
       microsecond: 0,
     );
 
-    final logsDir = Directory([dirPath, 'logs'].join(Platform.pathSeparator));
+    final logsDir = Directory(path.join(dirPath, 'logs'));
     if (logsDir.existsSync()) {
       final files = logsDir
           .listSync()
@@ -89,7 +90,7 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
       final removed = <String>[];
       for (final file in files) {
         final time = DateTime.tryParse(
-          file.path.split(Platform.pathSeparator).last.split('.log').first,
+          path.split(file.path).last.split('.log').first,
         )?.copyWith(
           hour: 0,
           minute: 0,
@@ -112,7 +113,7 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
 
     for (final hardware in ['combined', 'imu', 'gnss', 'was']) {
       final hardwareLogsDir = Directory(
-        [dirPath, 'logs', 'hardware', hardware].join(Platform.pathSeparator),
+        path.join(dirPath, 'logs', 'hardware', hardware),
       );
       if (hardwareLogsDir.existsSync()) {
         final files = hardwareLogsDir
@@ -126,7 +127,7 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
         final removed = <String>[];
         for (final file in files) {
           final time = DateTime.tryParse(
-            file.path.split(Platform.pathSeparator).last.split('.log').first,
+            path.split(file.path).last.split('.log').first,
           )?.copyWith(
             hour: 0,
             minute: 0,
@@ -149,15 +150,15 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
       }
     }
 
-    final path = [
+    final filePath = path.join(
       dirPath,
       'logs',
       '${Logger.instance.initializeTime.toIso8601String()}.log',
-    ].join(Platform.pathSeparator);
+    );
 
-    final file = await File(path).create(recursive: true);
+    final file = await File(filePath).create(recursive: true);
 
-    Logger.instance.i('Log file created: $path');
+    Logger.instance.i('Log file created: $filePath');
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
       var exists = logsDir.existsSync();
@@ -167,7 +168,7 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
       if (!exists) {
         timer.cancel();
         Logger.instance.fileLogger = null;
-        Logger.instance.i('Log file deleted or moved: $path');
+        Logger.instance.i('Log file deleted or moved: $filePath');
         Logger.instance.i('Attempting to create a new log file...');
         ref.invalidateSelf();
       }

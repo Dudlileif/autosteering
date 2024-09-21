@@ -24,23 +24,49 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'audio_providers.g.dart';
 
-/// A provider for playing an audio notification/sound when GNSS RTK fix
-/// accuracy is lost.
-@riverpod
-Future<void> audioPlayer(AudioPlayerRef ref, AudioAsset asset) async {
-  ref.keepAlive();
-  final volume =
-      ref.watch(audioVolumeProvider.select((value) => value[asset])) ?? 1;
-  if (volume == 0) {
-    ref.invalidateSelf();
+/// A provider for a set queue of [AudioAsset]s, which also automatically plays
+/// and removes them after they are added.
+@Riverpod(keepAlive: true)
+class AudioQueue extends _$AudioQueue {
+  AudioPlayer? _player;
+  @override
+  Set<AudioAsset> build() {
+    ref.listenSelf((previous, next) async {
+      if (next.isNotEmpty) {
+        if (_player?.state != PlayerState.playing) {
+          _player = AudioPlayer()
+            ..onPlayerComplete.listen((event) {
+              _player?.dispose();
+              _player = null;
+              removeFirst();
+            });
+          final asset = next.first;
+          final volume =
+              ref.read(audioVolumeProvider.select((value) => value[asset])) ??
+                  1;
+          await _player?.setVolume(volume);
+          await _player?.setSourceAsset('audio/${asset.path}.ogg');
+          await _player?.resume();
+        }
+      }
+    });
+
+    return {};
   }
-  final player = AudioPlayer(playerId: asset.path);
-  await player.setVolume(volume);
-  await player.setSourceAsset('audio/${asset.path}.ogg');
-  await player.resume();
-  await player.onPlayerComplete.first;
-  await player.dispose();
-  ref.invalidateSelf();
+
+  /// Add [asset] to the [state] queue.
+  void add(AudioAsset asset) => Future(() => state = state..add(asset));
+
+  /// Removes the first asset of the [state] queue.
+  void removeFirst() => Future(() {
+        if (state.isNotEmpty) {
+          state = state..remove(state.first);
+        }
+      });
+
+  @override
+  bool updateShouldNotify(Set<AudioAsset> previous, Set<AudioAsset> next) =>
+      const SetEquality<AudioAsset>().equals(previous, next);
 }
 
 /// A provider for all the audio volume levels.
@@ -63,9 +89,9 @@ class AudioVolume extends _$AudioVolume {
         ref.read(settingsProvider.notifier).getMap(SettingsKey.audioVolumes);
     if (map != null) {
       return map.cast<String, double>().map(
-        (key, value) =>
-            MapEntry(AudioAsset.fromPath(key), clampDouble(value, 0, 1)),
-      );
+            (key, value) =>
+                MapEntry(AudioAsset.fromPath(key), clampDouble(value, 0, 1)),
+          );
     }
     return {for (final asset in AudioAsset.values) asset: 1};
   }

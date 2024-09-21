@@ -96,7 +96,6 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
   }
 }
 
-
 class _PurePursuitConfigurator extends ConsumerWidget {
   const _PurePursuitConfigurator();
 
@@ -364,4 +363,34 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
       ],
     );
   }
+}
+
+/// A draggable version of [AutosteeringParameterConfigurator], typically used
+/// as a child of a [Stack] that is a child of a [LayoutBuilder].
+
+class DraggableAutosteeringParameterConfigurator extends ConsumerWidget {
+  /// A draggable version of [AutosteeringParameterConfigurator], typically used
+  /// as a child of a [Stack] that is a child of a [LayoutBuilder].
+  ///
+  /// [constraints] are used to layout the widget.
+  const DraggableAutosteeringParameterConfigurator({
+    required this.constraints,
+    super.key,
+  });
+
+  /// Constraints used to layout this widget.
+  final BoxConstraints constraints;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => DynamicDraggableWidget(
+        offset: ref.watch(autosteeringConfiguratorUiOffsetProvider),
+        constraints: constraints,
+        maxWidth: 400,
+        maxHeight: 350,
+        maxWidthFraction: 0.7,
+        maxHeightFraction: 1,
+        onDragEnd:
+            ref.read(autosteeringConfiguratorUiOffsetProvider.notifier).update,
+        child: const AutosteeringParameterConfigurator(),
+      );
 }

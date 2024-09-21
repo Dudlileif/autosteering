@@ -27,6 +27,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -245,13 +246,13 @@ class ActiveWorkSession extends _$ActiveWorkSession {
             state!.equipmentLogs[equipmentUuid] = [record];
           }
           if (Device.isNative && !skipIfLastAlsoHadNoActiveSections) {
-            final fileName = [
+            final fileName = path.join(
               ref.read(fileDirectoryProvider).requireValue.path,
               'work_sessions',
               state!.name ?? state!.uuid,
               'equipment_logs',
               '$equipmentUuid.log',
-            ].join(Platform.pathSeparator);
+            );
 
             final file = File(fileName);
             if (!file.existsSync()) {
@@ -314,13 +315,13 @@ class ActiveWorkSession extends _$ActiveWorkSession {
                       state!.equipmentLogs[equipment.uuid]!.add(record);
 
                       if (Device.isNative) {
-                        final fileName = [
+                        final fileName = path.join(
                           ref.read(fileDirectoryProvider).requireValue.path,
                           'work_sessions',
                           state!.name ?? state!.uuid,
                           'equipment_logs',
                           '${equipment.uuid}.log',
-                        ].join(Platform.pathSeparator);
+                        );
 
                         final file = File(fileName);
                         if (file.existsSync()) {
@@ -350,13 +351,13 @@ class ActiveWorkSession extends _$ActiveWorkSession {
             state!.equipmentLogs.remove(equipmentUuid);
           }
           if (Device.isNative) {
-            final fileName = [
+            final fileName = path.join(
               ref.read(fileDirectoryProvider).requireValue.path,
               'work_sessions',
               state!.name ?? state!.uuid,
               'equipment_logs',
               '$equipmentUuid.log',
-            ].join(Platform.pathSeparator);
+            );
 
             final file = File(fileName);
             if (file.existsSync()) {
@@ -441,13 +442,13 @@ FutureOr<void> saveWorkSessionEquipmentLogs(
       final records = workSession.equipmentLogs[equipment.uuid];
       if (records != null) {
         if (Device.isNative) {
-          final fileName = [
+          final fileName = path.join(
             ref.read(fileDirectoryProvider).requireValue.path,
             'work_sessions',
             workSession.name ?? workSession.uuid,
             'equipment_logs',
             '${equipment.uuid}.log',
-          ].join(Platform.pathSeparator);
+          );
 
           final file = File(fileName);
 

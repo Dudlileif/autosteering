@@ -214,14 +214,14 @@ final sendSteeringHardwareConfigProvider = FutureProvider<void>.internal(
 
 typedef SendSteeringHardwareConfigRef = FutureProviderRef<void>;
 String _$steeringMotorWasTargetHash() =>
-    r'8c4800171e50833b3f3208064bf689fa6920a60d';
+    r'72bfced1cb682b28c99afc2943d54c3d6564dcbd';
 
 /// A provider for the WAS target for the steering motor when using guidance.
 ///
 /// Copied from [SteeringMotorWasTarget].
 @ProviderFor(SteeringMotorWasTarget)
 final steeringMotorWasTargetProvider =
-    AutoDisposeNotifierProvider<SteeringMotorWasTarget, int?>.internal(
+    NotifierProvider<SteeringMotorWasTarget, int?>.internal(
   SteeringMotorWasTarget.new,
   name: r'steeringMotorWasTargetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -231,7 +231,7 @@ final steeringMotorWasTargetProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$SteeringMotorWasTarget = AutoDisposeNotifier<int?>;
+typedef _$SteeringMotorWasTarget = Notifier<int?>;
 String _$steeringMotorActualRPMHash() =>
     r'd28dc8f5619531c4cee35a05ff99919fbfb6de7e';
 
@@ -410,5 +410,25 @@ final steeringMotorStepsPerWasIncrementCenterToMaxProvider =
 
 typedef _$SteeringMotorStepsPerWasIncrementCenterToMax
     = AutoDisposeNotifier<double?>;
+String _$steeringHardwareConfiguratorUiOffsetHash() =>
+    r'9c45e360205fad3785b54f56feb9e8af2b9d6ce5';
+
+/// A provider for the UI [Offset] for the steering hardware configurator.
+///
+/// Copied from [SteeringHardwareConfiguratorUiOffset].
+@ProviderFor(SteeringHardwareConfiguratorUiOffset)
+final steeringHardwareConfiguratorUiOffsetProvider =
+    AutoDisposeNotifierProvider<SteeringHardwareConfiguratorUiOffset,
+        Offset>.internal(
+  SteeringHardwareConfiguratorUiOffset.new,
+  name: r'steeringHardwareConfiguratorUiOffsetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$steeringHardwareConfiguratorUiOffsetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SteeringHardwareConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

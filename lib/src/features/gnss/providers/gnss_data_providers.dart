@@ -35,7 +35,7 @@ class GnssCurrentSentence extends _$GnssCurrentSentence {
       _resetTimer?.cancel();
       _resetTimer = Timer(const Duration(milliseconds: 350), () {
         if (stateOrNull?.fixQuality == GnssFixQuality.rtk) {
-          ref.read(audioPlayerProvider(AudioAsset.rtkLostAlarm));
+          ref.read(audioQueueProvider.notifier).add(AudioAsset.rtkLostAlarm);
         }
         ref.invalidateSelf();
       });
@@ -59,7 +59,7 @@ class GnssCurrentSentence extends _$GnssCurrentSentence {
       }
       if (previous?.fixQuality == GnssFixQuality.rtk &&
           next?.fixQuality != GnssFixQuality.rtk) {
-        ref.read(audioPlayerProvider(AudioAsset.rtkLostAlarm));
+        ref.read(audioQueueProvider.notifier).add(AudioAsset.rtkLostAlarm);
       }
 
       if (previous?.numSatellites != next?.numSatellites) {

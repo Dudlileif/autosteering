@@ -41,7 +41,7 @@ final offsetVehiclePositionProvider = AutoDisposeProvider<LatLng>.internal(
 );
 
 typedef OffsetVehiclePositionRef = AutoDisposeProviderRef<LatLng>;
-String _$mapCacheDateHash() => r'9b324f0312bfcd69326fac1f4d7abaf143acd223';
+String _$mapCacheDateHash() => r'2d479f4744f44db692bb2c8875af21bbb72bb5af';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -87,10 +87,10 @@ class MapCacheDateFamily extends Family<AsyncValue<DateTime?>> {
   ///
   /// Copied from [mapCacheDate].
   MapCacheDateProvider call(
-    String path,
+    String filePath,
   ) {
     return MapCacheDateProvider(
-      path,
+      filePath,
     );
   }
 
@@ -99,7 +99,7 @@ class MapCacheDateFamily extends Family<AsyncValue<DateTime?>> {
     covariant MapCacheDateProvider provider,
   ) {
     return call(
-      provider.path,
+      provider.filePath,
     );
   }
 
@@ -128,11 +128,11 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
   ///
   /// Copied from [mapCacheDate].
   MapCacheDateProvider(
-    String path,
+    String filePath,
   ) : this._internal(
           (ref) => mapCacheDate(
             ref as MapCacheDateRef,
-            path,
+            filePath,
           ),
           from: mapCacheDateProvider,
           name: r'mapCacheDateProvider',
@@ -143,7 +143,7 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
           dependencies: MapCacheDateFamily._dependencies,
           allTransitiveDependencies:
               MapCacheDateFamily._allTransitiveDependencies,
-          path: path,
+          filePath: filePath,
         );
 
   MapCacheDateProvider._internal(
@@ -153,10 +153,10 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.path,
+    required this.filePath,
   }) : super.internal();
 
-  final String path;
+  final String filePath;
 
   @override
   Override overrideWith(
@@ -171,7 +171,7 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        path: path,
+        filePath: filePath,
       ),
     );
   }
@@ -183,21 +183,21 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
 
   @override
   bool operator ==(Object other) {
-    return other is MapCacheDateProvider && other.path == path;
+    return other is MapCacheDateProvider && other.filePath == filePath;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, path.hashCode);
+    hash = _SystemHash.combine(hash, filePath.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
 mixin MapCacheDateRef on AutoDisposeFutureProviderRef<DateTime?> {
-  /// The parameter `path` of this provider.
-  String get path;
+  /// The parameter `filePath` of this provider.
+  String get filePath;
 }
 
 class _MapCacheDateProviderElement
@@ -205,11 +205,11 @@ class _MapCacheDateProviderElement
   _MapCacheDateProviderElement(super.provider);
 
   @override
-  String get path => (origin as MapCacheDateProvider).path;
+  String get filePath => (origin as MapCacheDateProvider).filePath;
 }
 
 String _$mapCacheDirectoriesHash() =>
-    r'765cf6cb05cbeed5d5b2f99b328e65a7a100183e';
+    r'4dd6e60cfb3cc5dff186bd46f4030dae56714e00';
 
 /// A provider for listing all the map layer cache folders.
 ///

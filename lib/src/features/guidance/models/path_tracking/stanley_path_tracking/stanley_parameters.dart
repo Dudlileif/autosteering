@@ -15,37 +15,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-
-
-
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'stanley_parameters.freezed.dart';
 part 'stanley_parameters.g.dart';
+
 /// A class for encompassing the gains for [StanleyPathTracking].
 
 @freezed
-class StanleyParameters with _$StanleyParameters {  
+class StanleyParameters with _$StanleyParameters {
   /// A class for encompassing the gains for [StanleyPathTracking].
   ///
   /// [crossDistanceGain] is the cross distance gain gain.
-  /// 
+  ///
   /// [softeningGain] is the softening gain for low speeds, it
   /// helps keeping numerical stability when the velocity is close to zero.
-  /// 
+  ///
   /// [velocityGain] is the gain for how much the velocity
   /// should reduce cross distance part of the equation.
-const factory StanleyParameters({
+  const factory StanleyParameters({
     /// Proportional cross distance gain coefficient.
     @Default(1.5) double crossDistanceGain,
 
-    /// The coefficient to ensure numerical stability when velocity is close to
+    /// Coefficient to ensure numerical stability when velocity is close to
     /// zero.
     @Default(1e-5) double softeningGain,
 
     /// Proportional coefficient for how much the velocity should alter the
-  /// steering angle.
+    /// steering angle.
     @Default(1.3) double velocityGain,
   }) = _StanleyParameters;
 

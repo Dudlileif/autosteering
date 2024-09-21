@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:ui';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
@@ -337,4 +339,32 @@ class EditFinishedPath extends _$EditFinishedPath {
 
   /// Invert the current state.
   void toggle() => Future(() => state != state);
+}
+
+/// A provider for the UI [Offset] for the path recording configurator.
+@riverpod
+class PathRecordingMenuUiOffset extends _$PathRecordingMenuUiOffset {
+  @override
+  Offset build() {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
+        if (previous != null && next != previous) {
+          ref.read(settingsProvider.notifier).update(
+                SettingsKey.uiPathRecordingMenuOffset,
+                next.toJson(),
+              );
+        }
+      });
+
+    final setting = ref
+        .read(settingsProvider.notifier)
+        .getMap(SettingsKey.uiPathRecordingMenuOffset);
+    return setting != null
+        ? OffsetJsonExtension.fromJson(Map<String, dynamic>.from(setting))
+        : Offset.zero;
+  }
+
+  /// Updates [state] to [value].
+  void update(Offset value) => Future(() => state = value);
 }

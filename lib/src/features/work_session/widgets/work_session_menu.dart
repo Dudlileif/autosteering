@@ -31,6 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart' as path;
 import 'package:quiver/strings.dart';
 import 'package:universal_io/io.dart';
 
@@ -859,14 +860,13 @@ class _LoadWorkSessionMenu extends ConsumerWidget {
                     for (final equipment in workSession
                         .equipmentSetup!.allAttached
                         .cast<Equipment>()) {
-                      final fileName = [
+                      final fileName = path.join(
                         ref.read(fileDirectoryProvider).requireValue.path,
                         'work_sessions',
                         workSession.name ?? workSession.uuid,
                         'equipment_logs',
                         '${equipment.uuid}.log',
-                      ].join(Platform.pathSeparator);
-
+                      );
                       final file = File(fileName);
 
                       if (file.existsSync()) {

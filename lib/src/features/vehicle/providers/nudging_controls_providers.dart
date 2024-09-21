@@ -15,6 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:ui';
+
+import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nudging_controls_providers.g.dart';
@@ -40,4 +44,32 @@ class NudgeStepSize extends _$NudgeStepSize {
 
   @override
   double build() => 0.05;
+}
+
+/// A provider for the UI [Offset] for the nudging controls.
+@riverpod
+class NudgingControlsUiOffset extends _$NudgingControlsUiOffset {
+  @override
+  Offset build() {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
+        if (previous != null && next != previous) {
+          ref.read(settingsProvider.notifier).update(
+                SettingsKey.uiNudgningControlsOffset,
+                next.toJson(),
+              );
+        }
+      });
+
+    final setting = ref
+        .read(settingsProvider.notifier)
+        .getMap(SettingsKey.uiNudgningControlsOffset);
+    return setting != null
+        ? OffsetJsonExtension.fromJson(Map<String, dynamic>.from(setting))
+        : Offset.zero;
+  }
+
+  /// Updates [state] to [value].
+  void update(Offset value) => Future(() => state = value);
 }

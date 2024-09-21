@@ -16,9 +16,11 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:dio/dio.dart';
@@ -28,7 +30,7 @@ part 'hardware_motor_providers.g.dart';
 
 /// A provider for the WAS target for the steering motor when using guidance.
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SteeringMotorWasTarget extends _$SteeringMotorWasTarget {
   @override
   int? build() => null;
@@ -375,4 +377,33 @@ FutureOr<void> sendSteeringHardwareConfig(
     );
   }
   ref.invalidateSelf();
+}
+
+/// A provider for the UI [Offset] for the steering hardware configurator.
+@riverpod
+class SteeringHardwareConfiguratorUiOffset
+    extends _$SteeringHardwareConfiguratorUiOffset {
+  @override
+  Offset build() {
+    ref
+      ..watch(reloadAllSettingsProvider)
+      ..listenSelf((previous, next) {
+        if (previous != null && next != previous) {
+          ref.read(settingsProvider.notifier).update(
+                SettingsKey.uiSteeringHardwareConfiguratorOffset,
+                next.toJson(),
+              );
+        }
+      });
+
+    final setting = ref
+        .read(settingsProvider.notifier)
+        .getMap(SettingsKey.uiSteeringHardwareConfiguratorOffset);
+    return setting != null
+        ? OffsetJsonExtension.fromJson(Map<String, dynamic>.from(setting))
+        : Offset.zero;
+  }
+
+  /// Updates [state] to [value].
+  void update(Offset value) => Future(() => state = value);
 }

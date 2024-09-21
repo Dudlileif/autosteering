@@ -108,113 +108,7 @@ class EquipmentSectionsPage extends ConsumerWidget {
               if (equipment.sections.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Builder(
-                    builder: (context) {
-                      final controller = ScrollController();
-                      return Column(
-                        children: [
-                          ListenableBuilder(
-                            listenable: controller,
-                            builder: (context, child) => switch ((controller
-                                            .positions
-                                            .firstOrNull
-                                            ?.maxScrollExtent ??
-                                        0) >
-                                    0 ||
-                                equipment.sections.length >= 5) {
-                              true => Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () => controller.animateTo(
-                                        0,
-                                        duration: Durations.long4,
-                                        curve: Curves.easeInOutCubicEmphasized,
-                                      ),
-                                      child: const Text('1'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => controller.animateTo(
-                                        controller.positions.first
-                                                .maxScrollExtent /
-                                            2,
-                                        duration: Durations.long4,
-                                        curve: Curves.easeInOutCubicEmphasized,
-                                      ),
-                                      child: Text(
-                                        '''${(equipment.sections.length / 2).ceil()}''',
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        controller.animateTo(
-                                          controller
-                                              .positions.first.maxScrollExtent,
-                                          duration: Durations.long4,
-                                          curve:
-                                              Curves.easeInOutCubicEmphasized,
-                                        );
-                                      },
-                                      child:
-                                          Text('${equipment.sections.length}'),
-                                    ),
-                                  ],
-                                ),
-                              false => const SizedBox.shrink(),
-                            },
-                          ),
-                          Scrollbar(
-                            scrollbarOrientation: ScrollbarOrientation.top,
-                            controller: controller,
-                            interactive: Device.isDesktop || Device.isWeb,
-                            thumbVisibility: Device.isDesktop || Device.isWeb,
-                            trackVisibility: Device.isDesktop || Device.isWeb,
-                            radius: const Radius.circular(8),
-                            child: Consumer(
-                              builder: (context, ref, child) {
-                                var heightModifier = 0.0;
-                                if (equipment.sections.length > 1) {
-                                  heightModifier += ref.watch(
-                                    configuredEquipmentEqualWidthsProvider,
-                                  )
-                                      ? 1
-                                      : 0;
-                                  heightModifier += ref.watch(
-                                    configuredEquipmentEqualWorkingWidthsProvider,
-                                  )
-                                      ? 1
-                                      : 0;
-                                }
-
-                                return AnimatedContainer(
-                                  duration: Durations.medium1,
-                                  height: 350 - 80 * heightModifier,
-                                  child: CustomScrollView(
-                                    primary: false,
-                                    controller: controller,
-                                    scrollDirection: Axis.horizontal,
-                                    slivers: [
-                                      SliverList.builder(
-                                        itemCount: equipment.sections.length,
-                                        itemBuilder: (context, index) {
-                                          return _SectionConfigurator(
-                                            index,
-                                            singleSection:
-                                                equipment.sections.length == 1,
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                  child: _Sections(equipment.sections),
                 ),
             ],
           );
@@ -769,6 +663,107 @@ class _SectionWorkedPathColorSelector extends ConsumerWidget {
                     Icons.check,
                   )
                 : null,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Sections extends StatelessWidget {
+  const _Sections(this.sections);
+
+  final List<Section> sections;
+  @override
+  Widget build(BuildContext context) {
+    final controller = ScrollController();
+    return Column(
+      children: [
+        ListenableBuilder(
+          listenable: controller,
+          builder: (context, child) => switch (
+              (controller.positions.firstOrNull?.maxScrollExtent ?? 0) > 0 ||
+                  sections.length >= 5) {
+            true => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () => controller.animateTo(
+                      0,
+                      duration: Durations.long4,
+                      curve: Curves.easeInOutCubicEmphasized,
+                    ),
+                    child: const Text('1'),
+                  ),
+                  TextButton(
+                    onPressed: () => controller.animateTo(
+                      controller.positions.first.maxScrollExtent / 2,
+                      duration: Durations.long4,
+                      curve: Curves.easeInOutCubicEmphasized,
+                    ),
+                    child: Text(
+                      '''${(sections.length / 2).ceil()}''',
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      controller.animateTo(
+                        controller.positions.first.maxScrollExtent,
+                        duration: Durations.long4,
+                        curve: Curves.easeInOutCubicEmphasized,
+                      );
+                    },
+                    child: Text('${sections.length}'),
+                  ),
+                ],
+              ),
+            false => const SizedBox.shrink(),
+          },
+        ),
+        Scrollbar(
+          scrollbarOrientation: ScrollbarOrientation.top,
+          controller: controller,
+          interactive: Device.isDesktop || Device.isWeb,
+          thumbVisibility: Device.isDesktop || Device.isWeb,
+          trackVisibility: Device.isDesktop || Device.isWeb,
+          radius: const Radius.circular(8),
+          child: Consumer(
+            builder: (context, ref, child) {
+              var heightModifier = 0.0;
+              if (sections.length > 1) {
+                heightModifier += ref.watch(
+                  configuredEquipmentEqualWidthsProvider,
+                )
+                    ? 1
+                    : 0;
+                heightModifier += ref.watch(
+                  configuredEquipmentEqualWorkingWidthsProvider,
+                )
+                    ? 1
+                    : 0;
+              }
+
+              return AnimatedContainer(
+                duration: Durations.medium1,
+                height: 350 - 80 * heightModifier,
+                child: CustomScrollView(
+                  primary: false,
+                  controller: controller,
+                  scrollDirection: Axis.horizontal,
+                  slivers: [
+                    SliverList.builder(
+                      itemCount: sections.length,
+                      itemBuilder: (context, index) {
+                        return _SectionConfigurator(
+                          index,
+                          singleSection: sections.length == 1,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ],

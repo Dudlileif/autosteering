@@ -39,55 +39,103 @@ class MainScaffold extends ConsumerStatefulWidget {
 
 class _MainScaffoldState extends ConsumerState<MainScaffold> {
   bool exportInProgress = false;
+  bool importInProgress = false;
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(exportProgressProvider, (previous, next) {
-      if (next != null && !exportInProgress) {
-        exportInProgress = true;
-        showDialog<void>(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => SimpleDialog(
-            title: Consumer(
-              builder: (context, ref, child) {
-                final value = ref.watch(exportProgressProvider);
-                return Text(
-                  value == 0 ? 'Preparing export...' : 'Exporting...',
-                );
-              },
-            ),
-            contentPadding: const EdgeInsets.only(
-              left: 24,
-              top: 12,
-              right: 24,
-              bottom: 16,
-            ),
-            children: [
-              Consumer(
+    ref
+      ..listen(exportProgressProvider, (previous, next) {
+        if (next != null && !exportInProgress && !importInProgress) {
+          exportInProgress = true;
+          showDialog<void>(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => SimpleDialog(
+              title: Consumer(
                 builder: (context, ref, child) {
                   final value = ref.watch(exportProgressProvider);
-                  if (value == null) {
-                    exportInProgress = false;
-                    Navigator.of(context).pop();
-                  }
-                  return Column(
-                    children: [
-                      SizedBox.square(
-                        dimension: 50,
-                        child: CircularProgressIndicator(
-                          value: value == 0 ? null : value,
-                        ),
-                      ),
-                    ],
+                  return Text(
+                    value == 0 ? 'Preparing export...' : 'Exporting...',
                   );
                 },
               ),
-            ],
-          ),
-        );
-      }
-    });
+              contentPadding: const EdgeInsets.only(
+                left: 24,
+                top: 12,
+                right: 24,
+                bottom: 16,
+              ),
+              children: [
+                Consumer(
+                  builder: (context, ref, child) {
+                    final value = ref.watch(exportProgressProvider);
+                    if (value == null) {
+                      exportInProgress = false;
+                      Navigator.of(context).pop();
+                    }
+                    return Column(
+                      children: [
+                        SizedBox.square(
+                          dimension: 50,
+                          child: CircularProgressIndicator(
+                            value: value == 0 ? null : value,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+      })
+      ..listen(importProgressProvider, (previous, next) {
+        if (next != null && !exportInProgress && !importInProgress) {
+          importInProgress = true;
+          showDialog<void>(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => SimpleDialog(
+              title: Consumer(
+                builder: (context, ref, child) {
+                  final value = ref.watch(importProgressProvider);
+                  return Text(
+                    value == 0 ? 'Preparing import...' : 'Importing...',
+                  );
+                },
+              ),
+              contentPadding: const EdgeInsets.only(
+                left: 24,
+                top: 12,
+                right: 24,
+                bottom: 16,
+              ),
+              children: [
+                Consumer(
+                  builder: (context, ref, child) {
+                    final value = ref.watch(importProgressProvider);
+                    if (value == null) {
+                      importInProgress = false;
+                      Navigator.of(context).pop();
+                    }
+                    return Column(
+                      children: [
+                        SizedBox.square(
+                          dimension: 50,
+                          child: CircularProgressIndicator(
+                            value: value == 0 ? null : value,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+      });
     return Scaffold(
       appBar: AppBar(
         elevation: 20,

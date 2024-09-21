@@ -74,8 +74,7 @@ class _AudioVolumeTile extends ConsumerWidget {
           return Slider(
             value: volume,
             onChanged: (value) => setState(() => volume = value),
-            onChangeEnd: (value) =>
-                ref
+            onChangeEnd: (value) => ref
                 .read(audioVolumeProvider.notifier)
                 .update(audioAsset, value),
             divisions: 10,
@@ -83,7 +82,7 @@ class _AudioVolumeTile extends ConsumerWidget {
         },
       ),
       trailing: IconButton(
-        onPressed: () => ref.read(audioPlayerProvider(audioAsset)),
+        onPressed: () => ref.read(audioQueueProvider.notifier).add(audioAsset),
         icon: const Icon(Icons.play_arrow),
       ),
     );

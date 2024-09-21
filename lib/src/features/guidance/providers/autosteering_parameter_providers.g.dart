@@ -25,5 +25,24 @@ final showAutosteeringParameterConfigProvider =
 );
 
 typedef _$ShowAutosteeringParameterConfig = AutoDisposeNotifier<bool>;
+String _$autosteeringConfiguratorUiOffsetHash() =>
+    r'a69d7f2df051a604a4a795e7193d2e3d37bb96aa';
+
+/// A provider for the UI [Offset] for the autosteering configurator.
+///
+/// Copied from [AutosteeringConfiguratorUiOffset].
+@ProviderFor(AutosteeringConfiguratorUiOffset)
+final autosteeringConfiguratorUiOffsetProvider = AutoDisposeNotifierProvider<
+    AutosteeringConfiguratorUiOffset, Offset>.internal(
+  AutosteeringConfiguratorUiOffset.new,
+  name: r'autosteeringConfiguratorUiOffsetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$autosteeringConfiguratorUiOffsetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$AutosteeringConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

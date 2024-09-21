@@ -261,3 +261,27 @@ class NudgingControls extends StatelessWidget {
     );
   }
 }
+
+/// A draggable version of [NudgingControls], typically used as a child of
+/// a [Stack] that is a child of a [LayoutBuilder].
+class DraggableNudgingControls extends ConsumerWidget {
+  /// A draggable version of [NudgingControls], typically used as a child of
+  /// a [Stack] that is a child of a [LayoutBuilder].
+  ///
+  /// [constraints] are used to layout the widget.
+  const DraggableNudgingControls({required this.constraints, super.key});
+
+  /// Constraints used to layout this widget.
+  final BoxConstraints constraints;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => DynamicDraggableWidget(
+        offset: ref.watch(nudgingControlsUiOffsetProvider),
+        constraints: constraints,
+        maxWidth: 400,
+        maxHeight: 325,
+        maxWidthFraction: 1,
+        onDragEnd: ref.read(nudgingControlsUiOffsetProvider.notifier).update,
+        child: const NudgingControls(),
+      );
+}

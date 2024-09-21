@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/audio/audio.dart';
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/graph/graph.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
@@ -42,6 +43,7 @@ class SettingsMenu extends StatelessWidget {
         AudioVolumeMenu(),
         _ImportExportMenu(),
         _DebugModeButton(),
+        _GraphButton(),
         _LicenseButton(),
       ],
     );
@@ -52,13 +54,14 @@ class _ImportExportMenu extends StatelessWidget {
   const _ImportExportMenu();
 
   @override
-  Widget build(BuildContext context) => const MenuButtonWithChildren(
+  Widget build(BuildContext context) => MenuButtonWithChildren(
         text: 'Import/Export',
         icon: Icons.import_export,
         menuChildren: [
-          _ExportLogsButton(),
-          _ExportEverythingButton(),
-          _ImportExportSettingsButton(),
+          const _ExportLogsButton(),
+          const _ExportEverythingButton(),
+          const _ImportExportSettingsButton(),
+          if (Device.isNative) const _ImportEverythingButton(),
         ],
       );
 }
@@ -254,4 +257,45 @@ class _ExportEverythingButton extends ConsumerWidget {
       onPressed: () => ref.read(exportWholeFileDirectoryProvider),
     );
   }
+}
+
+class _ImportEverythingButton extends ConsumerWidget {
+  const _ImportEverythingButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    return MenuItemButton(
+      closeOnActivate: false,
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Icons.folder_zip_outlined),
+      ),
+      child: Text('Import everything', style: textStyle),
+      onPressed: () => ref.read(importWholeFileDirectoryProvider),
+    );
+  }
+}
+
+class _GraphButton extends ConsumerWidget {
+  const _GraphButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) =>
+      switch (ref.watch(enableDebugModeProvider)) {
+        true => CheckboxListTile(
+            value: ref.watch(showDraggableGraphProvider),
+            onChanged: (value) => value != null
+                ? ref
+                    .read(showDraggableGraphProvider.notifier)
+                    .update(value: value)
+                : null,
+            title: Text(
+              'Graph',
+              style: Theme.of(context).menuButtonWithChildrenText,
+            ),
+            secondary: const Icon(Icons.line_axis),
+          ),
+        false => const SizedBox.shrink()
+      };
 }

@@ -21,6 +21,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart';
 import 'package:http/retry.dart';
+import 'package:path/path.dart' as path;
 import 'package:universal_io/io.dart';
 
 /// A [TileProvider] for network images that will be downloaded to the file
@@ -80,10 +81,10 @@ class FileCachedTileProvider extends TileProvider {
         layerDirectory.createSync(recursive: true);
         final time = DateTime.now();
         File(
-          [
+          path.join(
             layerDirectory.path,
             'created',
-          ].join(Platform.pathSeparator),
+          ),
         )
           ..createSync(recursive: true)
           ..writeAsStringSync(time.toIso8601String());
@@ -97,12 +98,12 @@ class FileCachedTileProvider extends TileProvider {
       httpClient: httpClient,
       cacheFile: layerDirectory != null
           ? File(
-              [
+              path.join(
                 layerDirectory.path,
                 '${coordinates.z}',
                 '${coordinates.y}',
                 '${coordinates.x}.png',
-              ].join(Platform.pathSeparator),
+              ),
             )
           : null,
       allowDownload: allowDownloads,

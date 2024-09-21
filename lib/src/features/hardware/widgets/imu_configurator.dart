@@ -287,7 +287,6 @@ class ImuConfigurator extends StatelessWidget {
                                   children: [
                                     ElevatedButton.icon(
                                       onPressed: Navigator.of(context).pop,
-                                      
                                       icon: const Icon(Icons.clear),
                                       label: const Text('Cancel'),
                                     ),
@@ -574,49 +573,53 @@ class ImuConfigurator extends StatelessWidget {
                                 child: Wrap(
                                   spacing: 8,
                                   runSpacing: 8,
-                                children: [
+                                  children: [
                                     ElevatedButton.icon(
-                                    onPressed: Navigator.of(context).pop,
+                                      onPressed: Navigator.of(context).pop,
                                       icon: const Icon(Icons.clear),
                                       label: const Text('Cancel'),
-                                  ),
+                                    ),
                                     FilledButton.icon(
-                                    onPressed: () {
-                                      final oldValue = ref.read(
-                                        mainVehicleProvider.select(
-                                          (value) => value.imu.config.rollGain,
-                                        ),
-                                      );
-                                      ref.read(simInputProvider.notifier).send(
-                                            ref
-                                                .read(
-                                                  mainVehicleProvider.select(
-                                                    (value) => value.imu.config,
-                                                  ),
-                                                )
-                                                .copyWith(rollGain: rollGain),
-                                          );
-                                      // Wait a short while before saving the
-                                      // hopefully updated vehicle.
-                                      Timer(
-                                        const Duration(milliseconds: 100),
-                                        () {
-                                          final vehicle =
-                                              ref.watch(mainVehicleProvider);
-                                          ref.read(
-                                            saveVehicleProvider(vehicle),
-                                          );
-                                          Logger.instance.i(
-                                            '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imu.config.rollGain}''',
-                                          );
-                                        },
-                                      );
-                                      Navigator.of(context).pop();
-                                    },
+                                      onPressed: () {
+                                        final oldValue = ref.read(
+                                          mainVehicleProvider.select(
+                                            (value) =>
+                                                value.imu.config.rollGain,
+                                          ),
+                                        );
+                                        ref
+                                            .read(simInputProvider.notifier)
+                                            .send(
+                                              ref
+                                                  .read(
+                                                    mainVehicleProvider.select(
+                                                      (value) =>
+                                                          value.imu.config,
+                                                    ),
+                                                  )
+                                                  .copyWith(rollGain: rollGain),
+                                            );
+                                        // Wait a short while before saving the
+                                        // hopefully updated vehicle.
+                                        Timer(
+                                          const Duration(milliseconds: 100),
+                                          () {
+                                            final vehicle =
+                                                ref.watch(mainVehicleProvider);
+                                            ref.read(
+                                              saveVehicleProvider(vehicle),
+                                            );
+                                            Logger.instance.i(
+                                              '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imu.config.rollGain}''',
+                                            );
+                                          },
+                                        );
+                                        Navigator.of(context).pop();
+                                      },
                                       icon: const Icon(Icons.check),
                                       label: const Text('Apply'),
-                                  ),
-                                ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -772,4 +775,29 @@ class ImuConfigurator extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A draggable version of [ImuConfigurator], typically used as
+/// a child of a [Stack] that is a child of a [LayoutBuilder].
+class DraggableImuConfigurator extends ConsumerWidget {
+  /// A draggable version of [ImuConfigurator], typically used as
+  /// a child of a [Stack] that is a child of a [LayoutBuilder].
+  ///
+  /// [constraints] as used to layout the widget.
+  const DraggableImuConfigurator({required this.constraints, super.key});
+
+  /// Constraints used to layout this widget.
+  final BoxConstraints constraints;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => DynamicDraggableWidget(
+        offset: ref.watch(imuConfiguratorUiOffsetProvider),
+        constraints: constraints,
+        maxWidth: 350,
+        maxHeight: 700,
+        maxWidthFraction: 0.7,
+        maxHeightFraction: 1,
+        onDragEnd: ref.read(imuConfiguratorUiOffsetProvider.notifier).update,
+        child: const ImuConfigurator(),
+      );
 }
