@@ -75,7 +75,8 @@ final class StanleyPathTracking extends PathTracking {
                   parameters.velocityGain * vehicle.velocity.abs()),
         ).toDegrees();
 
-    return steeringAngle.clamp(
+    return clampDouble(
+      steeringAngle,
       -vehicle.steeringAngleMax,
       vehicle.steeringAngleMax,
     );

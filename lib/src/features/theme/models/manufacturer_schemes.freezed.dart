@@ -51,8 +51,12 @@ mixin _$ManufacturerColors {
   @ColorSerializerNullable()
   Color? get roof => throw _privateConstructorUsedError;
 
+  /// Serializes this ManufacturerColors to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ManufacturerColors
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ManufacturerColorsCopyWith<ManufacturerColors> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -84,6 +88,8 @@ class _$ManufacturerColorsCopyWithImpl<$Res, $Val extends ManufacturerColors>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ManufacturerColors
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -160,6 +166,8 @@ class __$$ManufacturerColorsImplCopyWithImpl<$Res>
       $Res Function(_$ManufacturerColorsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ManufacturerColors
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -287,12 +295,14 @@ class _$ManufacturerColorsImpl implements _ManufacturerColors {
             (identical(other.roof, roof) || other.roof == roof));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name, primary, tertiary,
       brandingLine, cabFrame, frame, rims, roof);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ManufacturerColors
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ManufacturerColorsImplCopyWith<_$ManufacturerColorsImpl> get copyWith =>
@@ -321,47 +331,49 @@ abstract class _ManufacturerColors implements ManufacturerColors {
   factory _ManufacturerColors.fromJson(Map<String, dynamic> json) =
       _$ManufacturerColorsImpl.fromJson;
 
-  @override
-
   /// The name of the manufacturer.
-  String get name;
   @override
+  String get name;
 
   /// The primary color for the color scheme.
+  @override
   @ColorSerializer()
   Color get primary;
-  @override
 
   /// The tertiary color for the color scheme.
+  @override
   @ColorSerializerNullable()
   Color? get tertiary;
-  @override
 
   /// The color of the branding line for the manufacturer.
+  @override
   @ColorSerializerNullable()
   Color? get brandingLine;
-  @override
 
   /// The color of the cab frame for the manufacturer.
+  @override
   @ColorSerializerNullable()
   Color? get cabFrame;
-  @override
 
   /// The color of the main frame for the manufacturer.
+  @override
   @ColorSerializerNullable()
   Color? get frame;
-  @override
 
   /// The color of the wheel rims for the manufacturer.
+  @override
   @ColorSerializerNullable()
   Color? get rims;
-  @override
 
   /// The color of the roof for the manufacturer.
+  @override
   @ColorSerializerNullable()
   Color? get roof;
+
+  /// Create a copy of ManufacturerColors
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ManufacturerColorsImplCopyWith<_$ManufacturerColorsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

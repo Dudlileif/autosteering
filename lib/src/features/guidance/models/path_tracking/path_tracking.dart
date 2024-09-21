@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
@@ -195,8 +196,7 @@ sealed class PathTracking {
       final point = wayPoints[i];
       if (i > 0) {
         final prevPoint = path.last;
-        if (prevPoint.distanceToRhumb(point) <
-            (minDistance ?? 0.5)) {
+        if (prevPoint.distanceToRhumb(point) < (minDistance ?? 0.5)) {
           continue;
         }
         path.add(
@@ -213,9 +213,7 @@ sealed class PathTracking {
       while (index + 1 < path.length) {
         final point = path[index];
         final nextPoint = path[index + 1];
-        if (point.distanceToRhumb(nextPoint) >
-            interpolationDistance!) {
-
+        if (point.distanceToRhumb(nextPoint) > interpolationDistance!) {
           path.insert(
             index + 1,
             point.copyWith(
@@ -366,10 +364,16 @@ sealed class PathTracking {
   ///
   /// The value is negative if the vehicle is to the left of the line.
   double perpendicularDistance(Vehicle vehicle) =>
-      vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
-        start: currentWayPoint(vehicle).position,
-        end: nextForwardWayPoint(vehicle).position,
-      );
+      switch (vehicle.isReversing) {
+        true => vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
+            start: nextReversingWayPoint(vehicle).position,
+            end: currentWayPoint(vehicle).position,
+          ),
+        false => vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
+            start: currentWayPoint(vehicle).position,
+            end: nextForwardWayPoint(vehicle).position,
+          )
+      };
 
   /// The waypoint in [path] that is closest to the [vehicle].
   WayPoint closestWayPoint(Vehicle vehicle) => path.reduce(

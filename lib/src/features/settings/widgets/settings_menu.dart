@@ -150,16 +150,18 @@ class _ImportExportSettingsButton extends ConsumerWidget {
                                   label: const Text('Cancel'),
                                 ),
                                 FilledButton.icon(
-                                  onPressed: () async => ref
-                                      .read(
-                                        exportSettingsProvider(
-                                          removeSensitiveData:
-                                              removeSensitiveData,
-                                        ).future,
-                                      )
-                                      .then(
-                                        (value) => Navigator.of(context).pop(),
-                                      ),
+                                  onPressed: () async {
+                                    await ref.read(
+                                      exportSettingsProvider(
+                                        removeSensitiveData:
+                                            removeSensitiveData,
+                                      ).future,
+                                    );
+
+                                    if (context.mounted) {
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
                                   icon: const Icon(Icons.check),
                                   label: const Text('Confirm'),
                                 ),

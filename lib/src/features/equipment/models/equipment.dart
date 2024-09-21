@@ -17,6 +17,7 @@
 
 import 'dart:collection';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
@@ -183,7 +184,7 @@ class Equipment extends Hitchable with EquatableMixin {
   /// the front of the work area. 0 means the rear and 1 means the front
   /// Defaults to the front, 1.
   ///
-  /// ```
+  /// ```_
   ///  1    ---------
   ///       |       |
   ///       |       |
@@ -503,8 +504,11 @@ class Equipment extends Hitchable with EquatableMixin {
 
         var turningRadius = bearingChange.abs() > 0
             // Circle chord to radius
-            ? (movedDistance / (2 * sin(bearingChange.toRadians() / 2)))
-                .clamp(-500.0, 500.0)
+            ? clampDouble(
+                movedDistance / (2 * sin(bearingChange.toRadians() / 2)),
+                -500,
+                500,
+              )
             : null;
 
         if (turningRadius != null) {
@@ -549,17 +553,16 @@ class Equipment extends Hitchable with EquatableMixin {
               : 0.0;
 
           var y2 = hitchParent!.currentTurningRadius != null
-              ? asin(
-                  (drawbarLength /
+              ? clampDouble(asin(
+                  drawbarLength /
                           sqrt(
                             pow(hitchToParentTurningCircleBase, 2) +
                                 pow(
                                   hitchParent!.currentTurningRadius!,
                                   2,
                                 ),
-                          ))
-                      .clamp(-1, 1),
-                )
+                          ),
+              ),-1, 1,)
               : 0.0;
           if (y2.isNaN) {
             y2 = 0;
@@ -576,9 +579,9 @@ class Equipment extends Hitchable with EquatableMixin {
                   0) {
             targetStaticAngle *= -1;
           }
-          hitchAngle = (_prevHitchAngle +
-                  (targetStaticAngle - _prevHitchAngle) * a * period)
-              .clamp(-90, 90);
+          hitchAngle = clampDouble(_prevHitchAngle +
+                  (targetStaticAngle - _prevHitchAngle) * a * period
+              ,-90, 90,);
 
           bearing = (position.rhumb.initialBearingTo(hitchParent!.position) +
                   hitchAngle)
@@ -689,7 +692,7 @@ class Equipment extends Hitchable with EquatableMixin {
   ///
   /// The order of the points is
   ///
-  /// ```
+  /// ```_
   /// [
   ///   front left,
   ///   rear left,
@@ -1172,7 +1175,7 @@ class Equipment extends Hitchable with EquatableMixin {
           ) <
           0;
 
-      var arcDegrees = (time * angularVelocity!.abs()).clamp(0.0, 360.0);
+      var arcDegrees =clampDouble( time * angularVelocity!.abs(),0, 360);
 
       if (minLength != null) {
         final centerTurningRadius =

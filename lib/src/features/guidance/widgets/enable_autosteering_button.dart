@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:math';
+
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -50,13 +52,28 @@ class EnableAutosteeringButton extends StatelessWidget {
           },
           child: Stack(
             children: [
-              const Align(
+              Align(
                 heightFactor: 1.1,
-                child: Icon(
-                  Symbols.search_hands_free,
-                  size: 36,
-                  color: Colors.white,
-                  weight: 1000,
+                child: Consumer(
+                  builder: (context, ref, child) => Transform.rotate(
+                    angle: switch (state) {
+                      AutosteeringState.disabled => 0,
+                      _ => ref.watch(
+                            mainVehicleProvider.select(
+                              (value) =>
+                                  value.steeringAngle / value.steeringAngleMax,
+                            ),
+                          ) *
+                          3.5 *
+                          pi
+                    },
+                    child: const Icon(
+                      Symbols.search_hands_free,
+                      size: 36,
+                      color: Colors.white,
+                      weight: 1000,
+                    ),
+                  ),
                 ),
               ),
               Align(

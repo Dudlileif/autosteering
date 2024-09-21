@@ -7,7 +7,7 @@ part of 'editable_path_providers.dart';
 // **************************************************************************
 
 String _$editablePathAsWayPointsHash() =>
-    r'cdc1ff455bcdc08cd149b206f0dbd59b7250fffd';
+    r'f1fce3daf0e066d30ec91e21d24d6670ede4a8f6';
 
 /// A provider with [EditablePathPoints] converted to [WayPoint]s.
 ///
@@ -64,4 +64,4 @@ final editablePathPointsProvider =
 
 typedef _$EditablePathPoints = AutoDisposeNotifier<List<Geographic>?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

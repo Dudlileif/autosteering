@@ -142,30 +142,53 @@ class ActiveWorkSession extends _$ActiveWorkSession {
 
   /// Updates the [WorkSession.abTracking].
   void updateABTracking(ABTracking tracking) => Future(() {
-        final index = state?.abTracking
-            .indexWhere((element) => element.uuid == tracking.uuid);
-        if (index != null && index >= 0) {
-          state = state?..abTracking.replaceRange(index, index + 1, [tracking]);
-        } else {
-          state = state?..abTracking.add(tracking);
-        }
         if (state != null) {
-          ref.read(saveWorkSessionProvider(state!));
+          final index = state?.abTracking
+              .indexWhere((element) => element.uuid == tracking.uuid);
+          var changed = false;
+          if (index != null && index >= 0) {
+            final existing = state!.abTracking[index];
+
+            if (!const SetEquality<int>().equals(
+                  existing.finishedOffsets,
+                  tracking.finishedOffsets,
+                ) ||
+                existing.name != tracking.name) {
+              changed = true;
+            }
+            state = state!
+              ..abTracking.replaceRange(index, index + 1, [tracking]);
+          } else {
+            state = state?..abTracking.add(tracking);
+            changed = true;
+          }
+          if (changed) {
+            ref.read(saveWorkSessionProvider(state!));
+          }
         }
       });
 
   /// Updates the [WorkSession.pathTracking].
   void updatePathTracking(PathTracking tracking) => Future(() {
-        final index = state?.pathTracking
-            .indexWhere((element) => element.uuid == tracking.uuid);
-        if (index != null && index >= 0) {
-          state = state
-            ?..pathTracking.replaceRange(index, index + 1, [tracking]);
-        } else {
-          return state = state?..pathTracking.add(tracking);
-        }
         if (state != null) {
-          ref.read(saveWorkSessionProvider(state!));
+          final index = state?.pathTracking
+              .indexWhere((element) => element.uuid == tracking.uuid);
+          var changed = false;
+          if (index != null && index >= 0) {
+            final existing = state!.pathTracking[index];
+            if (existing.loopMode != tracking.loopMode ||
+                existing.name != tracking.name) {
+              changed = true;
+            }
+            state = state!
+              ..pathTracking.replaceRange(index, index + 1, [tracking]);
+          } else {
+            state = state?..pathTracking.add(tracking);
+            changed = true;
+          }
+          if (changed) {
+            ref.read(saveWorkSessionProvider(state!));
+          }
         }
       });
 
@@ -190,6 +213,17 @@ class ActiveWorkSession extends _$ActiveWorkSession {
   void addEquipmentLogRecord(String equipmentUuid, EquipmentLogRecord record) =>
       Future(() {
         if (state != null) {
+          if (!(state!.equipmentSetup?.allAttached
+                  .any((e) => e.uuid == equipmentUuid) ??
+              false)) {
+            state = state!
+              ..equipmentSetup = ref.read(
+                mainVehicleProvider.select(
+                  (value) => value.equipmentSetup('${state!.name} setup'),
+                ),
+              );
+            ref.read(saveWorkSessionProvider(state!));
+          }
           if (_firstPathUpdate == null) {
             _firstPathUpdate = record.time;
             state = state!..start = record.time;

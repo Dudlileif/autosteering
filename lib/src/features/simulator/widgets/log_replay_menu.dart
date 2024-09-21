@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:ui';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -167,13 +169,15 @@ class LogReplayMenu extends ConsumerWidget {
                         ),
                         Slider(
                           value: index,
-                          max: ref
-                              .watch(
-                                activeLogReplayProvider.select(
-                                  (value) => (value?.records.length ?? 0) - 1.0,
-                                ),
-                              )
-                              .clamp(0, double.infinity),
+                          max: clampDouble(
+                            ref.watch(
+                              activeLogReplayProvider.select(
+                                (value) => (value?.records.length ?? 0) - 1.0,
+                              ),
+                            ),
+                            0,
+                            double.infinity,
+                          ),
                           divisions: ref.watch(
                             activeLogReplayProvider.select(
                               (value) => value?.records.length,

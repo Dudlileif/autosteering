@@ -29,8 +29,12 @@ mixin _$ImuZeroValues {
   /// The zero level for the roll.
   num get rollZero => throw _privateConstructorUsedError;
 
+  /// Serializes this ImuZeroValues to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ImuZeroValues
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ImuZeroValuesCopyWith<ImuZeroValues> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,6 +58,8 @@ class _$ImuZeroValuesCopyWithImpl<$Res, $Val extends ImuZeroValues>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ImuZeroValues
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -97,6 +103,8 @@ class __$$ImuZeroValuesImplCopyWithImpl<$Res>
       _$ImuZeroValuesImpl _value, $Res Function(_$ImuZeroValuesImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ImuZeroValues
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -163,12 +171,14 @@ class _$ImuZeroValuesImpl implements _ImuZeroValues {
                 other.rollZero == rollZero));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, bearingZero, pitchZero, rollZero);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ImuZeroValues
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ImuZeroValuesImplCopyWith<_$ImuZeroValuesImpl> get copyWith =>
@@ -191,20 +201,22 @@ abstract class _ImuZeroValues implements ImuZeroValues {
   factory _ImuZeroValues.fromJson(Map<String, dynamic> json) =
       _$ImuZeroValuesImpl.fromJson;
 
-  @override
-
   /// The zero (North) value for the bearing.
-  num get bearingZero;
   @override
+  num get bearingZero;
 
   /// The zero level for the pitch.
-  num get pitchZero;
   @override
+  num get pitchZero;
 
   /// The zero level for the roll.
-  num get rollZero;
   @override
-  @JsonKey(ignore: true)
+  num get rollZero;
+
+  /// Create a copy of ImuZeroValues
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ImuZeroValuesImplCopyWith<_$ImuZeroValuesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

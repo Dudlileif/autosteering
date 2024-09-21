@@ -79,14 +79,15 @@ class ActiveAutosteeringState extends _$ActiveAutosteeringState {
   AutosteeringState build() {
     ref.listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        switch (next) {
-          case AutosteeringState.enabled:
-            ref.read(audioAutosteeringEnabledProvider);
-          case AutosteeringState.disabled:
-            ref.read(audioAutosteeringDisabledProvider);
-          case AutosteeringState.standby:
-            ref.read(audioAutosteeringStandbyProvider);
-        }
+        ref.read(
+          audioPlayerProvider(
+            switch (next) {
+              AutosteeringState.enabled => AudioAsset.autosteeringEnabled,
+              AutosteeringState.disabled => AudioAsset.autosteeringDisabled,
+              AutosteeringState.standby => AudioAsset.autosteeringStandby
+            },
+          ),
+        );
       }
     });
     return AutosteeringState.disabled;
@@ -217,12 +218,12 @@ class GaugesAverageCount extends _$GaugesAverageCount {
     ref
       ..watch(reloadAllSettingsProvider)
       ..listenSelf((previous, next) {
-      if (previous != null) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.gaugesAverageCount, next);
-      }
-    });
+        if (previous != null) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.gaugesAverageCount, next);
+        }
+      });
 
     return ref
             .read(settingsProvider.notifier)
@@ -386,7 +387,6 @@ class OverrideSteeringAngle extends _$OverrideSteeringAngle {
   /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
-
 
 /// A provider for exporting all vehicle files.
 @riverpod

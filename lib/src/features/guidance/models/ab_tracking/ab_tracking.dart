@@ -18,6 +18,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
@@ -453,7 +454,7 @@ sealed class ABTracking {
       ring: path,
       distance: overrideSpacing ?? offset * width,
       extendEnds: false,
-      smoothingFactor: 4.0 * (1 + offset.abs()).clamp(1, 30),
+      smoothingFactor: clampDouble(4.0 * (1 + offset.abs()),1, 30),
       swapDirectionIfClockwise: !isCurveCounterclockwise(path),
     );
 

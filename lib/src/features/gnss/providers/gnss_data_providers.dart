@@ -35,7 +35,7 @@ class GnssCurrentSentence extends _$GnssCurrentSentence {
       _resetTimer?.cancel();
       _resetTimer = Timer(const Duration(milliseconds: 350), () {
         if (stateOrNull?.fixQuality == GnssFixQuality.rtk) {
-          ref.read(audioRTKLostAlarmProvider);
+          ref.read(audioPlayerProvider(AudioAsset.rtkLostAlarm));
         }
         ref.invalidateSelf();
       });
@@ -59,7 +59,7 @@ class GnssCurrentSentence extends _$GnssCurrentSentence {
       }
       if (previous?.fixQuality == GnssFixQuality.rtk &&
           next?.fixQuality != GnssFixQuality.rtk) {
-        ref.read(audioRTKLostAlarmProvider);
+        ref.read(audioPlayerProvider(AudioAsset.rtkLostAlarm));
       }
 
       if (previous?.numSatellites != next?.numSatellites) {
@@ -103,11 +103,51 @@ class GnssCurrentFrequency extends _$GnssCurrentFrequency {
 @riverpod
 class GnssLastUpdateTime extends _$GnssLastUpdateTime {
   @override
-  ({DateTime device, DateTime? receiver, Duration? delay})? build() => null;
+  ({
+    DateTime device,
+    DateTime? receiver,
+    Duration? delay,
+  })? build() => null;
 
   /// Updates [state] to [value].
   void update(
-    ({DateTime device, DateTime? receiver, Duration? delay})? value,
+    ({
+      DateTime device,
+      DateTime? receiver,
+      Duration? delay,
+    })? value,
+  ) =>
+      Future(() => state = value);
+}
+
+/// A provider for the precision error of the last GNSS update.
+@riverpod
+class GnssPrecisionError extends _$GnssPrecisionError {
+  Timer? _resetTimer;
+
+  @override
+  ({
+    double? latitudeError,
+    double? longitudeError,
+    double? altitudeError,
+  })? build() {
+    ref.listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(
+    ({
+      double? latitudeError,
+      double? longitudeError,
+      double? altitudeError,
+    })? value,
   ) =>
       Future(() => state = value);
 }

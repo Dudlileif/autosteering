@@ -34,8 +34,12 @@ mixin _$GamepadConfig {
   Map<GamepadAnalogInput, double> get analogDeadZoneMin =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this GamepadConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of GamepadConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $GamepadConfigCopyWith<GamepadConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -62,6 +66,8 @@ class _$GamepadConfigCopyWithImpl<$Res, $Val extends GamepadConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of GamepadConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -108,6 +114,8 @@ class __$$GamepadConfigImplCopyWithImpl<$Res>
       _$GamepadConfigImpl _value, $Res Function(_$GamepadConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of GamepadConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -201,7 +209,7 @@ class _$GamepadConfigImpl extends _GamepadConfig {
                 .equals(other._analogDeadZoneMin, _analogDeadZoneMin));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -209,7 +217,9 @@ class _$GamepadConfigImpl extends _GamepadConfig {
       const DeepCollectionEquality().hash(_analogDeadZoneMax),
       const DeepCollectionEquality().hash(_analogDeadZoneMin));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of GamepadConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$GamepadConfigImplCopyWith<_$GamepadConfigImpl> get copyWith =>
@@ -234,23 +244,25 @@ abstract class _GamepadConfig extends GamepadConfig {
   factory _GamepadConfig.fromJson(Map<String, dynamic> json) =
       _$GamepadConfigImpl.fromJson;
 
-  @override
-
   /// The maximum discrete analog value. Typically 2^16-1=65535, 16 bits.
-  int get analogMaxValue;
   @override
+  int get analogMaxValue;
 
   /// The maximum values that increases input. Values in distance from 0.
   /// The max value is 1. Typically 0.8-0.9 can prevent jitter/drift.
-  Map<GamepadAnalogInput, double> get analogDeadZoneMax;
   @override
+  Map<GamepadAnalogInput, double> get analogDeadZoneMax;
 
   /// The minimum values that are required before input
   /// is registered. Values in distance from 0.
   /// Typically 0.1-0.2 can prevent jitter/drift.
-  Map<GamepadAnalogInput, double> get analogDeadZoneMin;
   @override
-  @JsonKey(ignore: true)
+  Map<GamepadAnalogInput, double> get analogDeadZoneMin;
+
+  /// Create a copy of GamepadConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$GamepadConfigImplCopyWith<_$GamepadConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

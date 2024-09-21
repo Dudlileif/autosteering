@@ -41,8 +41,12 @@ mixin _$NtripProfile {
   /// The interval in seconds for sending position back to the caster.
   int? get ggaSendingInterval => throw _privateConstructorUsedError;
 
+  /// Serializes this NtripProfile to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NtripProfile
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NtripProfileCopyWith<NtripProfile> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -73,6 +77,8 @@ class _$NtripProfileCopyWithImpl<$Res, $Val extends NtripProfile>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NtripProfile
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -143,6 +149,8 @@ class __$$NtripProfileImplCopyWithImpl<$Res>
       _$NtripProfileImpl _value, $Res Function(_$NtripProfileImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NtripProfile
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -255,12 +263,14 @@ class _$NtripProfileImpl implements _NtripProfile {
                 other.ggaSendingInterval == ggaSendingInterval));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name, hostAddress, mountPoint,
       port, username, password, ggaSendingInterval);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NtripProfile
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NtripProfileImplCopyWith<_$NtripProfileImpl> get copyWith =>
@@ -287,36 +297,38 @@ abstract class _NtripProfile implements NtripProfile {
   factory _NtripProfile.fromJson(Map<String, dynamic> json) =
       _$NtripProfileImpl.fromJson;
 
-  @override
-
   /// The name of this profile.
-  String get name;
   @override
+  String get name;
 
   /// The host address for the NTRIP caster.
-  String get hostAddress;
   @override
+  String get hostAddress;
 
   /// The mount point to connect to.
-  String get mountPoint;
   @override
+  String get mountPoint;
 
   /// The port for connecting to the NTRIP caster.
-  int get port;
   @override
+  int get port;
 
   /// Username for connecting to the mount point.
-  String? get username;
   @override
+  String? get username;
 
   /// Password for connecting to the mount point.
-  String? get password;
   @override
+  String? get password;
 
   /// The interval in seconds for sending position back to the caster.
-  int? get ggaSendingInterval;
   @override
-  @JsonKey(ignore: true)
+  int? get ggaSendingInterval;
+
+  /// Create a copy of NtripProfile
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NtripProfileImplCopyWith<_$NtripProfileImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

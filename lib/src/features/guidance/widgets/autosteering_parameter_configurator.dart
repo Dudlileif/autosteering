@@ -19,7 +19,6 @@ import 'dart:async';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
-import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +32,6 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
   const AutosteeringParameterConfigurator({super.key});
 
   static const List<Tab> _tabs = [
-    Tab(text: 'PID'),
     Tab(text: 'Pure\nPursuit'),
     Tab(text: 'Stanley'),
   ];
@@ -46,7 +44,7 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
       child: SizedBox(
         width: 300,
         child: DefaultTabController(
-          length: 3,
+          length: 2,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
             appBar: AppBar(
@@ -83,7 +81,6 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
                     padding: EdgeInsets.only(top: 8),
                     child: TabBarView(
                       children: [
-                        _PidParametersConfigurator(),
                         _PurePursuitConfigurator(),
                         _StanleyParametersConfigurator(),
                       ],
@@ -99,165 +96,6 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
   }
 }
 
-class _PidParametersConfigurator extends ConsumerWidget {
-  const _PidParametersConfigurator();
-
-  void onChangeEnd(double value, String key, WidgetRef ref) {
-    // Wait a short while before saving the hopefully
-    // updated vehicle.
-    Timer(const Duration(milliseconds: 100), () {
-      final vehicle = ref.watch(mainVehicleProvider);
-      ref.read(saveVehicleProvider(vehicle));
-      Logger.instance.i(
-        '''Updated vehicle PID parameters: ${vehicle.pidParameters}''',
-      );
-      ref.read(
-        updateSteeringHardwareConfigProvider(
-          SteeringHardwareConfigKeysContainer({key}),
-        ),
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // P
-        Consumer(
-          builder: (context, ref, child) {
-            final p = ref.watch(
-              mainVehicleProvider.select((vehicle) => vehicle.pidParameters.p),
-            );
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('P: ${p.toStringAsFixed(1)}'),
-                Text('Current error', style: theme.textTheme.bodySmall),
-                Slider(
-                  value: p,
-                  max: 50,
-                  divisions: 50,
-                  onChanged: (value) {
-                    ref.read(simInputProvider.notifier).send(
-                          ref
-                              .watch(
-                                mainVehicleProvider.select(
-                                  (vehicle) => vehicle.steeringHardwareConfig,
-                                ),
-                              )
-                              .copyWith(pidP: value),
-                        );
-
-                    final configuredVehicle =
-                        ref.watch(configuredVehicleProvider);
-                    ref.read(configuredVehicleProvider.notifier).update(
-                          configuredVehicle.copyWith(
-                            steeringHardwareConfig: configuredVehicle
-                                .steeringHardwareConfig
-                                .copyWith(pidP: value),
-                          ),
-                        );
-                  },
-                  onChangeEnd: (value) =>
-                      onChangeEnd(value, SteeringHardwareConfigKey.pidP, ref),
-                ),
-              ],
-            );
-          },
-        ),
-        // I
-        Consumer(
-          builder: (context, ref, child) {
-            final i = ref.watch(
-              mainVehicleProvider.select((vehicle) => vehicle.pidParameters.i),
-            );
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('I: ${i.toStringAsFixed(3)}'),
-                Text('Error over time', style: theme.textTheme.bodySmall),
-                Slider(
-                  value: i,
-                  max: 2,
-                  divisions: 200,
-                  onChanged: (value) {
-                    ref.read(simInputProvider.notifier).send(
-                          ref
-                              .watch(
-                                mainVehicleProvider.select(
-                                  (vehicle) => vehicle.steeringHardwareConfig,
-                                ),
-                              )
-                              .copyWith(pidI: value),
-                        );
-
-                    final configuredVehicle =
-                        ref.watch(configuredVehicleProvider);
-                    ref.read(configuredVehicleProvider.notifier).update(
-                          configuredVehicle.copyWith(
-                            steeringHardwareConfig: configuredVehicle
-                                .steeringHardwareConfig
-                                .copyWith(pidI: value),
-                          ),
-                        );
-                  },
-                  onChangeEnd: (value) =>
-                      onChangeEnd(value, SteeringHardwareConfigKey.pidI, ref),
-                ),
-              ],
-            );
-          },
-        ),
-        // D
-        Consumer(
-          builder: (context, ref, child) {
-            final d = ref.watch(
-              mainVehicleProvider.select((vehicle) => vehicle.pidParameters.d),
-            );
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('D: ${d.toStringAsFixed(3)}'),
-                Text('Error rate of change', style: theme.textTheme.bodySmall),
-                Slider(
-                  value: d,
-                  max: 0.5,
-                  divisions: 500,
-                  onChanged: (value) {
-                    ref.read(simInputProvider.notifier).send(
-                          ref
-                              .watch(
-                                mainVehicleProvider.select(
-                                  (vehicle) => vehicle.steeringHardwareConfig,
-                                ),
-                              )
-                              .copyWith(pidD: value),
-                        );
-
-                    final configuredVehicle =
-                        ref.watch(configuredVehicleProvider);
-                    ref.read(configuredVehicleProvider.notifier).update(
-                          configuredVehicle.copyWith(
-                            steeringHardwareConfig: configuredVehicle
-                                .steeringHardwareConfig
-                                .copyWith(pidD: value),
-                          ),
-                        );
-                  },
-                  onChangeEnd: (value) =>
-                      onChangeEnd(value, SteeringHardwareConfigKey.pidD, ref),
-                ),
-              ],
-            );
-          },
-        ),
-      ],
-    );
-  }
-}
 
 class _PurePursuitConfigurator extends ConsumerWidget {
   const _PurePursuitConfigurator();

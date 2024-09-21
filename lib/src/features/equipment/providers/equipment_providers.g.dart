@@ -39,25 +39,11 @@ const loadEquipmentFromFileProvider = LoadEquipmentFromFileFamily();
 /// A provider for loading an [Equipment] from a file at [path], if it's valid.
 ///
 /// Copied from [loadEquipmentFromFile].
-class LoadEquipmentFromFileFamily extends Family {
+class LoadEquipmentFromFileFamily extends Family<AsyncValue<Equipment?>> {
   /// A provider for loading an [Equipment] from a file at [path], if it's valid.
   ///
   /// Copied from [loadEquipmentFromFile].
   const LoadEquipmentFromFileFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadEquipmentFromFileProvider';
 
   /// A provider for loading an [Equipment] from a file at [path], if it's valid.
   ///
@@ -70,7 +56,6 @@ class LoadEquipmentFromFileFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   LoadEquipmentFromFileProvider getProviderOverride(
     covariant LoadEquipmentFromFileProvider provider,
@@ -80,27 +65,19 @@ class LoadEquipmentFromFileFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<Equipment?> Function(LoadEquipmentFromFileRef ref) create) {
-    return _$LoadEquipmentFromFileFamilyOverride(this, create);
-  }
-}
-
-class _$LoadEquipmentFromFileFamilyOverride implements FamilyOverride {
-  _$LoadEquipmentFromFileFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<Equipment?> Function(LoadEquipmentFromFileRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final LoadEquipmentFromFileFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  LoadEquipmentFromFileProvider getProviderOverride(
-    covariant LoadEquipmentFromFileProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadEquipmentFromFileProvider';
 }
 
 /// A provider for loading an [Equipment] from a file at [path], if it's valid.
@@ -131,7 +108,7 @@ class LoadEquipmentFromFileProvider
         );
 
   LoadEquipmentFromFileProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -144,7 +121,7 @@ class LoadEquipmentFromFileProvider
 
   @override
   Override overrideWith(
-    FutureOr<Equipment?> Function(LoadEquipmentFromFileRef ref) create,
+    FutureOr<Equipment?> Function(LoadEquipmentFromFileRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -161,27 +138,8 @@ class LoadEquipmentFromFileProvider
   }
 
   @override
-  (String,) get argument {
-    return (path,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<Equipment?> createElement() {
     return _LoadEquipmentFromFileProviderElement(this);
-  }
-
-  LoadEquipmentFromFileProvider _copyWith(
-    FutureOr<Equipment?> Function(LoadEquipmentFromFileRef ref) create,
-  ) {
-    return LoadEquipmentFromFileProvider._internal(
-      (ref) => create(ref as LoadEquipmentFromFileRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      path: path,
-    );
   }
 
   @override
@@ -227,27 +185,13 @@ const saveEquipmentProvider = SaveEquipmentFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveEquipment].
-class SaveEquipmentFamily extends Family {
+class SaveEquipmentFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [equipment] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveEquipment].
   const SaveEquipmentFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveEquipmentProvider';
 
   /// A provider for saving [equipment] to a file in the user file directory.
   ///
@@ -266,7 +210,6 @@ class SaveEquipmentFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   SaveEquipmentProvider getProviderOverride(
     covariant SaveEquipmentProvider provider,
@@ -278,26 +221,19 @@ class SaveEquipmentFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(SaveEquipmentRef ref) create) {
-    return _$SaveEquipmentFamilyOverride(this, create);
-  }
-}
-
-class _$SaveEquipmentFamilyOverride implements FamilyOverride {
-  _$SaveEquipmentFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(SaveEquipmentRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final SaveEquipmentFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  SaveEquipmentProvider getProviderOverride(
-    covariant SaveEquipmentProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveEquipmentProvider';
 }
 
 /// A provider for saving [equipment] to a file in the user file directory.
@@ -337,7 +273,7 @@ class SaveEquipmentProvider extends AutoDisposeFutureProvider<void> {
         );
 
   SaveEquipmentProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -354,7 +290,7 @@ class SaveEquipmentProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveEquipmentRef ref) create,
+    FutureOr<void> Function(SaveEquipmentRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -373,37 +309,8 @@ class SaveEquipmentProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    Equipment, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      equipment,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveEquipmentProviderElement(this);
-  }
-
-  SaveEquipmentProvider _copyWith(
-    FutureOr<void> Function(SaveEquipmentRef ref) create,
-  ) {
-    return SaveEquipmentProvider._internal(
-      (ref) => create(ref as SaveEquipmentRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      equipment: equipment,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -463,27 +370,13 @@ const exportEquipmentProvider = ExportEquipmentFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [exportEquipment].
-class ExportEquipmentFamily extends Family {
+class ExportEquipmentFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting [equipment] to a file.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [exportEquipment].
   const ExportEquipmentFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportEquipmentProvider';
 
   /// A provider for exporting [equipment] to a file.
   ///
@@ -502,7 +395,6 @@ class ExportEquipmentFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportEquipmentProvider getProviderOverride(
     covariant ExportEquipmentProvider provider,
@@ -514,27 +406,19 @@ class ExportEquipmentFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(ExportEquipmentRef ref) create) {
-    return _$ExportEquipmentFamilyOverride(this, create);
-  }
-}
-
-class _$ExportEquipmentFamilyOverride implements FamilyOverride {
-  _$ExportEquipmentFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportEquipmentRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportEquipmentFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportEquipmentProvider getProviderOverride(
-    covariant ExportEquipmentProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportEquipmentProvider';
 }
 
 /// A provider for exporting [equipment] to a file.
@@ -574,7 +458,7 @@ class ExportEquipmentProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportEquipmentProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -591,7 +475,7 @@ class ExportEquipmentProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportEquipmentRef ref) create,
+    FutureOr<void> Function(ExportEquipmentRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -610,37 +494,8 @@ class ExportEquipmentProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    Equipment, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      equipment,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportEquipmentProviderElement(this);
-  }
-
-  ExportEquipmentProvider _copyWith(
-    FutureOr<void> Function(ExportEquipmentRef ref) create,
-  ) {
-    return ExportEquipmentProvider._internal(
-      (ref) => create(ref as ExportEquipmentRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      equipment: equipment,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -718,27 +573,13 @@ const deleteEquipmentProvider = DeleteEquipmentFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [deleteEquipment].
-class DeleteEquipmentFamily extends Family {
+class DeleteEquipmentFamily extends Family<AsyncValue<void>> {
   /// A provider for deleting [equipment] from the user file system.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteEquipment].
   const DeleteEquipmentFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'deleteEquipmentProvider';
 
   /// A provider for deleting [equipment] from the user file system.
   ///
@@ -755,7 +596,6 @@ class DeleteEquipmentFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   DeleteEquipmentProvider getProviderOverride(
     covariant DeleteEquipmentProvider provider,
@@ -766,27 +606,19 @@ class DeleteEquipmentFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(DeleteEquipmentRef ref) create) {
-    return _$DeleteEquipmentFamilyOverride(this, create);
-  }
-}
-
-class _$DeleteEquipmentFamilyOverride implements FamilyOverride {
-  _$DeleteEquipmentFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(DeleteEquipmentRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final DeleteEquipmentFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  DeleteEquipmentProvider getProviderOverride(
-    covariant DeleteEquipmentProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteEquipmentProvider';
 }
 
 /// A provider for deleting [equipment] from the user file system.
@@ -823,7 +655,7 @@ class DeleteEquipmentProvider extends AutoDisposeFutureProvider<void> {
         );
 
   DeleteEquipmentProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -838,7 +670,7 @@ class DeleteEquipmentProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(DeleteEquipmentRef ref) create,
+    FutureOr<void> Function(DeleteEquipmentRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -856,34 +688,8 @@ class DeleteEquipmentProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    Equipment, {
-    String? overrideName,
-  }) get argument {
-    return (
-      equipment,
-      overrideName: overrideName,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _DeleteEquipmentProviderElement(this);
-  }
-
-  DeleteEquipmentProvider _copyWith(
-    FutureOr<void> Function(DeleteEquipmentRef ref) create,
-  ) {
-    return DeleteEquipmentProvider._internal(
-      (ref) => create(ref as DeleteEquipmentRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      equipment: equipment,
-      overrideName: overrideName,
-    );
   }
 
   @override
@@ -950,25 +756,11 @@ const exportEquipmentsProvider = ExportEquipmentsFamily();
 /// A provider for exporting all equipment files.
 ///
 /// Copied from [exportEquipments].
-class ExportEquipmentsFamily extends Family {
+class ExportEquipmentsFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all equipment files.
   ///
   /// Copied from [exportEquipments].
   const ExportEquipmentsFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportEquipmentsProvider';
 
   /// A provider for exporting all equipment files.
   ///
@@ -981,7 +773,6 @@ class ExportEquipmentsFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportEquipmentsProvider getProviderOverride(
     covariant ExportEquipmentsProvider provider,
@@ -991,27 +782,19 @@ class ExportEquipmentsFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(ExportEquipmentsRef ref) create) {
-    return _$ExportEquipmentsFamilyOverride(this, create);
-  }
-}
-
-class _$ExportEquipmentsFamilyOverride implements FamilyOverride {
-  _$ExportEquipmentsFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportEquipmentsRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportEquipmentsFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportEquipmentsProvider getProviderOverride(
-    covariant ExportEquipmentsProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportEquipmentsProvider';
 }
 
 /// A provider for exporting all equipment files.
@@ -1041,7 +824,7 @@ class ExportEquipmentsProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportEquipmentsProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -1054,7 +837,7 @@ class ExportEquipmentsProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportEquipmentsRef ref) create,
+    FutureOr<void> Function(ExportEquipmentsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1071,29 +854,8 @@ class ExportEquipmentsProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  ({
-    bool zip,
-  }) get argument {
-    return (zip: zip,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportEquipmentsProviderElement(this);
-  }
-
-  ExportEquipmentsProvider _copyWith(
-    FutureOr<void> Function(ExportEquipmentsRef ref) create,
-  ) {
-    return ExportEquipmentsProvider._internal(
-      (ref) => create(ref as ExportEquipmentsRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      zip: zip,
-    );
   }
 
   @override
@@ -1124,7 +886,7 @@ class _ExportEquipmentsProviderElement
 }
 
 String _$equipmentRecordPositionFractionHash() =>
-    r'141d41b58a05019f861cf68c7d4aaf0038849c5d';
+    r'2ab56c11b65629fd5821b943bd890e8027858706';
 
 /// A provider for how the [SectionEdgePositions] should be recorded, as the
 /// fraction parameter that goes in [Equipment.sectionEdgePositions].
@@ -1161,7 +923,7 @@ final loadedEquipmentProvider =
 );
 
 typedef _$LoadedEquipment = Notifier<Equipment?>;
-String _$allEquipmentsHash() => r'68433ed44da5d975f1761df5e05474ebdd0c05a7';
+String _$allEquipmentsHash() => r'eb435cbe545b5ccbf55ed8a932cd185c29a32478';
 
 /// A provider that holds all of the equipments.
 ///
@@ -1198,7 +960,7 @@ final equipmentWorkedAreaProvider =
 );
 
 typedef _$EquipmentWorkedArea = Notifier<Map<String, double>>;
-String _$equipmentPathsHash() => r'f2f4b26a006664308c06218d51213fb23a310cad';
+String _$equipmentPathsHash() => r'a0a66e98347524538968c1ec072e24afd168bec3';
 
 abstract class _$EquipmentPaths
     extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {
@@ -1218,25 +980,12 @@ const equipmentPathsProvider = EquipmentPathsFamily();
 /// A provider for tracking the worked paths for the given equipment [uuid].
 ///
 /// Copied from [EquipmentPaths].
-class EquipmentPathsFamily extends Family {
+class EquipmentPathsFamily
+    extends Family<List<Map<int, List<SectionEdgePositions>?>>> {
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
   /// Copied from [EquipmentPaths].
   const EquipmentPathsFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'equipmentPathsProvider';
 
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
@@ -1249,7 +998,6 @@ class EquipmentPathsFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   EquipmentPathsProvider getProviderOverride(
     covariant EquipmentPathsProvider provider,
@@ -1259,26 +1007,19 @@ class EquipmentPathsFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(EquipmentPaths Function() create) {
-    return _$EquipmentPathsFamilyOverride(this, create);
-  }
-}
-
-class _$EquipmentPathsFamilyOverride implements FamilyOverride {
-  _$EquipmentPathsFamilyOverride(this.overriddenFamily, this.create);
-
-  final EquipmentPaths Function() create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final EquipmentPathsFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  EquipmentPathsProvider getProviderOverride(
-    covariant EquipmentPathsProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'equipmentPathsProvider';
 }
 
 /// A provider for tracking the worked paths for the given equipment [uuid].
@@ -1306,7 +1047,7 @@ class EquipmentPathsProvider extends NotifierProviderImpl<EquipmentPaths,
         );
 
   EquipmentPathsProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -1343,28 +1084,9 @@ class EquipmentPathsProvider extends NotifierProviderImpl<EquipmentPaths,
   }
 
   @override
-  (String,) get argument {
-    return (uuid,);
-  }
-
-  @override
   NotifierProviderElement<EquipmentPaths,
       List<Map<int, List<SectionEdgePositions>?>>> createElement() {
     return _EquipmentPathsProviderElement(this);
-  }
-
-  EquipmentPathsProvider _copyWith(
-    EquipmentPaths Function() create,
-  ) {
-    return EquipmentPathsProvider._internal(
-      () => create()..uuid = uuid,
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      uuid: uuid,
-    );
   }
 
   @override
@@ -1397,7 +1119,7 @@ class _EquipmentPathsProviderElement extends NotifierProviderElement<
 }
 
 String _$equipmentLogRecordsHash() =>
-    r'58bb0faed8b3db7b1cced9e13998c0b74f1b5c4c';
+    r'954a54514a9d2823524998e293fcdcd2d8b91ac6';
 
 abstract class _$EquipmentLogRecords
     extends BuildlessNotifier<List<EquipmentLogRecord>?> {
@@ -1419,26 +1141,12 @@ const equipmentLogRecordsProvider = EquipmentLogRecordsFamily();
 /// given UUID.
 ///
 /// Copied from [EquipmentLogRecords].
-class EquipmentLogRecordsFamily extends Family {
+class EquipmentLogRecordsFamily extends Family<List<EquipmentLogRecord>?> {
   /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
   /// given UUID.
   ///
   /// Copied from [EquipmentLogRecords].
   const EquipmentLogRecordsFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'equipmentLogRecordsProvider';
 
   /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
   /// given UUID.
@@ -1452,7 +1160,6 @@ class EquipmentLogRecordsFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   EquipmentLogRecordsProvider getProviderOverride(
     covariant EquipmentLogRecordsProvider provider,
@@ -1462,26 +1169,19 @@ class EquipmentLogRecordsFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(EquipmentLogRecords Function() create) {
-    return _$EquipmentLogRecordsFamilyOverride(this, create);
-  }
-}
-
-class _$EquipmentLogRecordsFamilyOverride implements FamilyOverride {
-  _$EquipmentLogRecordsFamilyOverride(this.overriddenFamily, this.create);
-
-  final EquipmentLogRecords Function() create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final EquipmentLogRecordsFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  EquipmentLogRecordsProvider getProviderOverride(
-    covariant EquipmentLogRecordsProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'equipmentLogRecordsProvider';
 }
 
 /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
@@ -1511,7 +1211,7 @@ class EquipmentLogRecordsProvider extends NotifierProviderImpl<
         );
 
   EquipmentLogRecordsProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -1548,28 +1248,9 @@ class EquipmentLogRecordsProvider extends NotifierProviderImpl<
   }
 
   @override
-  (String,) get argument {
-    return (uuid,);
-  }
-
-  @override
   NotifierProviderElement<EquipmentLogRecords, List<EquipmentLogRecord>?>
       createElement() {
     return _EquipmentLogRecordsProviderElement(this);
-  }
-
-  EquipmentLogRecordsProvider _copyWith(
-    EquipmentLogRecords Function() create,
-  ) {
-    return EquipmentLogRecordsProvider._internal(
-      () => create()..uuid = uuid,
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      uuid: uuid,
-    );
   }
 
   @override
@@ -1600,4 +1281,4 @@ class _EquipmentLogRecordsProviderElement extends NotifierProviderElement<
   String get uuid => (origin as EquipmentLogRecordsProvider).uuid;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

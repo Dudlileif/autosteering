@@ -17,6 +17,7 @@
 
 import 'dart:collection';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
@@ -434,8 +435,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Sets the steering angle of the vehicle by the [was].reading.
   void setSteeringAngleByWasReading() {
     if (was.config.useWas) {
-      steeringAngleInput = (wasReadingNormalizedInRange * steeringAngleMax)
-          .clamp(-steeringAngleMax, steeringAngleMax);
+      steeringAngleInput = clampDouble(
+        wasReadingNormalizedInRange * steeringAngleMax,
+        -steeringAngleMax,
+        steeringAngleMax,
+      );
     }
   }
 
@@ -501,9 +505,11 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The effective look ahead distance for the vehicle.
   ///
   /// The distance is altered according to [purePursuitParameters].
-  double get lookAheadDistance =>
-      (velocity.abs() * purePursuitParameters.lookAheadSeconds)
-          .clamp(purePursuitParameters.lookAheadMinDistance, double.infinity);
+  double get lookAheadDistance => clampDouble(
+        velocity.abs() * purePursuitParameters.lookAheadSeconds,
+        purePursuitParameters.lookAheadMinDistance,
+        double.infinity,
+      );
 
   /// A [WayPoint] for the vehicle in it's current state, i.e. position, bearing
   /// and velocity.

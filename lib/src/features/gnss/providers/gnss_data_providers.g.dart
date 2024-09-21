@@ -7,7 +7,7 @@ part of 'gnss_data_providers.dart';
 // **************************************************************************
 
 String _$gnssCurrentSentenceHash() =>
-    r'6d895c8e9c398461ef1c559e4cdc451cb919a3e4';
+    r'77e032a6481988d38496c1aece366a7627d3ab5f';
 
 /// A provider for the quality of last GNSS position update.
 ///
@@ -66,5 +66,30 @@ final gnssLastUpdateTimeProvider = AutoDisposeNotifierProvider<
 
 typedef _$GnssLastUpdateTime = AutoDisposeNotifier<
     ({DateTime device, DateTime? receiver, Duration? delay})?>;
+String _$gnssPrecisionErrorHash() =>
+    r'f49ee5613da049a6fe1899938e42f8af8df465dc';
+
+/// A provider for the precision error of the last GNSS update.
+///
+/// Copied from [GnssPrecisionError].
+@ProviderFor(GnssPrecisionError)
+final gnssPrecisionErrorProvider = AutoDisposeNotifierProvider<
+    GnssPrecisionError,
+    ({
+      double? latitudeError,
+      double? longitudeError,
+      double? altitudeError
+    })?>.internal(
+  GnssPrecisionError.new,
+  name: r'gnssPrecisionErrorProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$gnssPrecisionErrorHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$GnssPrecisionError = AutoDisposeNotifier<
+    ({double? latitudeError, double? longitudeError, double? altitudeError})?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

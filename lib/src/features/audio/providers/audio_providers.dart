@@ -16,182 +16,74 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:autosteering/src/features/audio/audio.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'audio_providers.g.dart';
 
-/// A provider for playing an audio notification/sound when enabling
-/// autosteering.
-@riverpod
-Future<void> audioAutosteeringEnabled(AudioAutosteeringEnabledRef ref) async {
-  ref.keepAlive();
-  final volume = ref.watch(audioVolumeAutosteeringEnabledProvider);
-  if (volume == 0) {
-    ref.invalidateSelf();
-  }
-  final player = AudioPlayer(playerId: 'autosteering_enabled');
-  await player.setVolume(volume);
-
-  await player.setSourceAsset('audio/autosteering_enabled.ogg');
-  await player.resume();
-  await player.onPlayerComplete.first;
-  await player.dispose();
-  ref.invalidateSelf();
-}
-
-/// A provider for playing an audio notification/sound when disabling
-/// autosteering.
-@riverpod
-Future<void> audioAutosteeringDisabled(AudioAutosteeringDisabledRef ref) async {
-  ref.keepAlive();
-  final volume = ref.watch(audioVolumeAutosteeringDisabledProvider);
-  if (volume == 0) {
-    ref.invalidateSelf();
-  }
-  final player = AudioPlayer(playerId: 'autosteering_disabled');
-  await player.setVolume(volume);
-  await player.setSourceAsset('audio/autosteering_disabled.ogg');
-  await player.resume();
-  await player.onPlayerComplete.first;
-  await player.dispose();
-  ref.invalidateSelf();
-}
-
-/// A provider for playing an audio notification/sound when autosteering is
-/// in standby.
-@riverpod
-Future<void> audioAutosteeringStandby(AudioAutosteeringStandbyRef ref) async {
-  ref.keepAlive();
-  final volume = ref.watch(audioVolumeAutosteeringStandbyProvider);
-  if (volume == 0) {
-    ref.invalidateSelf();
-  }
-  final player = AudioPlayer(playerId: 'autosteering_standby');
-  await player.setVolume(volume);
-  await player.setSourceAsset('audio/autosteering_standby.ogg');
-  await player.resume();
-  await player.onPlayerComplete.first;
-  await player.dispose();
-  ref.invalidateSelf();
-}
-
 /// A provider for playing an audio notification/sound when GNSS RTK fix
 /// accuracy is lost.
 @riverpod
-Future<void> audioRTKLostAlarm(AudioRTKLostAlarmRef ref) async {
+Future<void> audioPlayer(AudioPlayerRef ref, AudioAsset asset) async {
   ref.keepAlive();
-  final volume = ref.watch(audioVolumeRTKLostAlarmProvider);
+  final volume =
+      ref.watch(audioVolumeProvider.select((value) => value[asset])) ?? 1;
   if (volume == 0) {
     ref.invalidateSelf();
   }
-  final player = AudioPlayer(playerId: 'rtk_lost_alarm');
+  final player = AudioPlayer(playerId: asset.path);
   await player.setVolume(volume);
-  await player.setSourceAsset('audio/rtk_lost_alarm.ogg');
+  await player.setSourceAsset('audio/${asset.path}.ogg');
   await player.resume();
   await player.onPlayerComplete.first;
   await player.dispose();
   ref.invalidateSelf();
 }
 
-/// A provider for the audio volume level for [audioAutosteeringEnabled].
-@riverpod
-class AudioVolumeAutosteeringEnabled extends _$AudioVolumeAutosteeringEnabled {
+/// A provider for all the audio volume levels.
+@Riverpod(keepAlive: true)
+class AudioVolume extends _$AudioVolume {
   @override
-  double build() {
-    ref..watch(reloadAllSettingsProvider)..listenSelf((previous, next) {
-      if (previous != null) {
-        ref.read(settingsProvider.notifier).update(
-              SettingsKey.audioVolumeAutosteeringEnabled,
-              next.clamp(0, 1),
-            );
-      }
-    });
-    return ref
-            .read(settingsProvider.notifier)
-            .getDouble(SettingsKey.audioVolumeAutosteeringEnabled)
-            ?.clamp(0, 1) ??
-        1;
-  }
-
-  /// Update [state] to [value].
-  void update(double value) => Future(() => state = value);
-}
-
-/// A provider for the audio volume level for [audioAutosteeringDisabled].
-@riverpod
-class AudioVolumeAutosteeringDisabled
-    extends _$AudioVolumeAutosteeringDisabled {
-  @override
-  double build() {
+  Map<AudioAsset, double> build() {
     ref
       ..watch(reloadAllSettingsProvider)
       ..listenSelf((previous, next) {
-      if (previous != null) {
-        ref.read(settingsProvider.notifier).update(
-              SettingsKey.audioVolumeAutosteeringDisabled,
-              next.clamp(0, 1),
-            );
-      }
-    });
-    return ref
-            .read(settingsProvider.notifier)
-            .getDouble(SettingsKey.audioVolumeAutosteeringDisabled)
-            ?.clamp(0, 1) ??
-        1;
+        if (previous != null &&
+            const MapEquality<AudioAsset, double>().equals(previous, next)) {
+          ref.read(settingsProvider.notifier).update(
+                SettingsKey.audioVolumes,
+                next.map((key, value) => MapEntry(key.path, value)),
+              );
+        }
+      });
+    final map =
+        ref.read(settingsProvider.notifier).getMap(SettingsKey.audioVolumes);
+    if (map != null) {
+      return map.cast<String, double>().map(
+        (key, value) =>
+            MapEntry(AudioAsset.fromPath(key), clampDouble(value, 0, 1)),
+      );
+    }
+    return {for (final asset in AudioAsset.values) asset: 1};
   }
 
-  /// Update [state] to [value].
-  void update(double value) => Future(() => state = value);
-}
+  /// Update the [volume] of the [source].
+  void update(AudioAsset source, double volume) => Future(
+        () => state = state
+          ..update(
+            source,
+            (value) => clampDouble(volume, 0, 1),
+            ifAbsent: () => clampDouble(volume, 0, 1),
+          ),
+      );
 
-/// A provider for the audio volume level for [audioAutosteeringStandby].
-@riverpod
-class AudioVolumeAutosteeringStandby extends _$AudioVolumeAutosteeringStandby {
   @override
-  double build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-      if (previous != null) {
-        ref.read(settingsProvider.notifier).update(
-              SettingsKey.audioVolumeAutosteeringStandby,
-              next.clamp(0, 1),
-            );
-      }
-    });
-    return ref
-            .read(settingsProvider.notifier)
-            .getDouble(SettingsKey.audioVolumeAutosteeringStandby)
-            ?.clamp(0, 1) ??
-        1;
-  }
-
-  /// Update [state] to [value].
-  void update(double value) => Future(() => state = value);
-}
-
-/// A provider for the audio volume level for [audioRTKLostAlarm].
-@riverpod
-class AudioVolumeRTKLostAlarm extends _$AudioVolumeRTKLostAlarm {
-  @override
-  double build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-      if (previous != null) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.audioVolumeRTKLostAlarm, next.clamp(0, 1));
-      }
-    });
-    return ref
-            .read(settingsProvider.notifier)
-            .getDouble(SettingsKey.audioVolumeRTKLostAlarm)
-            ?.clamp(0, 1) ??
-        1;
-  }
-
-  /// Update [state] to [value].
-  void update(double value) => Future(() => state = value);
+  bool updateShouldNotify(
+    Map<AudioAsset, double> previous,
+    Map<AudioAsset, double> next,
+  ) =>
+      const MapEquality<AudioAsset, double>().equals(previous, next);
 }

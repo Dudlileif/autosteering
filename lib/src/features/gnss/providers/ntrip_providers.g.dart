@@ -59,26 +59,13 @@ const ntripSourcetableProvider = NtripSourcetableFamily();
 /// NTRIP caster server.
 ///
 /// Copied from [ntripSourcetable].
-class NtripSourcetableFamily extends Family {
+class NtripSourcetableFamily
+    extends Family<AsyncValue<Iterable<NtripMountPoint>?>> {
   /// A provider for the NTRIP caster sourcetable for the currently selected
   /// NTRIP caster server.
   ///
   /// Copied from [ntripSourcetable].
   const NtripSourcetableFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'ntripSourcetableProvider';
 
   /// A provider for the NTRIP caster sourcetable for the currently selected
   /// NTRIP caster server.
@@ -98,7 +85,6 @@ class NtripSourcetableFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   NtripSourcetableProvider getProviderOverride(
     covariant NtripSourcetableProvider provider,
@@ -111,29 +97,19 @@ class NtripSourcetableFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<Iterable<NtripMountPoint>?> Function(NtripSourcetableRef ref)
-          create) {
-    return _$NtripSourcetableFamilyOverride(this, create);
-  }
-}
-
-class _$NtripSourcetableFamilyOverride implements FamilyOverride {
-  _$NtripSourcetableFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<Iterable<NtripMountPoint>?> Function(NtripSourcetableRef ref)
-      create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final NtripSourcetableFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  NtripSourcetableProvider getProviderOverride(
-    covariant NtripSourcetableProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'ntripSourcetableProvider';
 }
 
 /// A provider for the NTRIP caster sourcetable for the currently selected
@@ -175,7 +151,7 @@ class NtripSourcetableProvider
         );
 
   NtripSourcetableProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -194,7 +170,7 @@ class NtripSourcetableProvider
 
   @override
   Override overrideWith(
-    FutureOr<Iterable<NtripMountPoint>?> Function(NtripSourcetableRef ref)
+    FutureOr<Iterable<NtripMountPoint>?> Function(NtripSourcetableRef provider)
         create,
   ) {
     return ProviderOverride(
@@ -215,41 +191,8 @@ class NtripSourcetableProvider
   }
 
   @override
-  ({
-    String host,
-    int port,
-    String? username,
-    String? password,
-  }) get argument {
-    return (
-      host: host,
-      port: port,
-      username: username,
-      password: password,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<Iterable<NtripMountPoint>?> createElement() {
     return _NtripSourcetableProviderElement(this);
-  }
-
-  NtripSourcetableProvider _copyWith(
-    FutureOr<Iterable<NtripMountPoint>?> Function(NtripSourcetableRef ref)
-        create,
-  ) {
-    return NtripSourcetableProvider._internal(
-      (ref) => create(ref as NtripSourcetableRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      host: host,
-      port: port,
-      username: username,
-      password: password,
-    );
   }
 
   @override
@@ -317,26 +260,13 @@ const ntripMountPointsSortedProvider = NtripMountPointsSortedFamily();
 /// [MainVehicle].
 ///
 /// Copied from [ntripMountPointsSorted].
-class NtripMountPointsSortedFamily extends Family {
+class NtripMountPointsSortedFamily
+    extends Family<AsyncValue<Map<NtripMountPointStream, double?>?>> {
   /// A provider for sorting the [ntripSourcetable] by their distance to
   /// [MainVehicle].
   ///
   /// Copied from [ntripMountPointsSorted].
   const NtripMountPointsSortedFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'ntripMountPointsSortedProvider';
 
   /// A provider for sorting the [ntripSourcetable] by their distance to
   /// [MainVehicle].
@@ -356,7 +286,6 @@ class NtripMountPointsSortedFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   NtripMountPointsSortedProvider getProviderOverride(
     covariant NtripMountPointsSortedProvider provider,
@@ -369,30 +298,19 @@ class NtripMountPointsSortedFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<Map<NtripMountPointStream, double?>?> Function(
-              NtripMountPointsSortedRef ref)
-          create) {
-    return _$NtripMountPointsSortedFamilyOverride(this, create);
-  }
-}
-
-class _$NtripMountPointsSortedFamilyOverride implements FamilyOverride {
-  _$NtripMountPointsSortedFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<Map<NtripMountPointStream, double?>?> Function(
-      NtripMountPointsSortedRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final NtripMountPointsSortedFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  NtripMountPointsSortedProvider getProviderOverride(
-    covariant NtripMountPointsSortedProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'ntripMountPointsSortedProvider';
 }
 
 /// A provider for sorting the [ntripSourcetable] by their distance to
@@ -434,7 +352,7 @@ class NtripMountPointsSortedProvider
         );
 
   NtripMountPointsSortedProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -454,7 +372,7 @@ class NtripMountPointsSortedProvider
   @override
   Override overrideWith(
     FutureOr<Map<NtripMountPointStream, double?>?> Function(
-            NtripMountPointsSortedRef ref)
+            NtripMountPointsSortedRef provider)
         create,
   ) {
     return ProviderOverride(
@@ -475,43 +393,9 @@ class NtripMountPointsSortedProvider
   }
 
   @override
-  ({
-    String host,
-    int port,
-    String? username,
-    String? password,
-  }) get argument {
-    return (
-      host: host,
-      port: port,
-      username: username,
-      password: password,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<Map<NtripMountPointStream, double?>?>
       createElement() {
     return _NtripMountPointsSortedProviderElement(this);
-  }
-
-  NtripMountPointsSortedProvider _copyWith(
-    FutureOr<Map<NtripMountPointStream, double?>?> Function(
-            NtripMountPointsSortedRef ref)
-        create,
-  ) {
-    return NtripMountPointsSortedProvider._internal(
-      (ref) => create(ref as NtripMountPointsSortedRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      host: host,
-      port: port,
-      username: username,
-      password: password,
-    );
   }
 
   @override
@@ -677,4 +561,4 @@ final ntripDataUsageByMonthProvider =
 
 typedef _$NtripDataUsageByMonth = Notifier<Map<String, int>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

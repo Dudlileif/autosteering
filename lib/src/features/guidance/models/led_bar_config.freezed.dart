@@ -67,8 +67,12 @@ mixin _$LedBarConfig {
   /// Whether the LEDs should be hidden when not lit/active.
   bool get showInactiveLeds => throw _privateConstructorUsedError;
 
+  /// Serializes this LedBarConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of LedBarConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LedBarConfigCopyWith<LedBarConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -105,6 +109,8 @@ class _$LedBarConfigCopyWithImpl<$Res, $Val extends LedBarConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of LedBarConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -211,6 +217,8 @@ class __$$LedBarConfigImplCopyWithImpl<$Res>
       _$LedBarConfigImpl _value, $Res Function(_$LedBarConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of LedBarConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -417,7 +425,7 @@ class _$LedBarConfigImpl extends _LedBarConfig {
                 other.showInactiveLeds == showInactiveLeds));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -435,7 +443,9 @@ class _$LedBarConfigImpl extends _LedBarConfig {
       reverseBar,
       showInactiveLeds);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LedBarConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LedBarConfigImplCopyWith<_$LedBarConfigImpl> get copyWith =>
@@ -469,68 +479,70 @@ abstract class _LedBarConfig extends LedBarConfig {
   factory _LedBarConfig.fromJson(Map<String, dynamic> json) =
       _$LedBarConfigImpl.fromJson;
 
-  @override
-
   /// The amount of green LEDs to the side of the center.
-  int get centerCount;
   @override
+  int get centerCount;
 
   /// The amount of yellow LEDs to the left of the center, the i.e. between
   /// the green and yellow leds.
-  int get intermediateCount;
   @override
+  int get intermediateCount;
 
   /// The amount of red LEDs furthest to the left.
-  int get endCount;
   @override
+  int get endCount;
 
   /// Whether there is a singular center diode (not used on the virtual bar
   /// because of the distance gauge).
-  bool get oddCenter;
   @override
+  bool get oddCenter;
 
   /// The increase in cross track distance that will activate the next
   /// led.
-  double get distancePerLed;
   @override
+  double get distancePerLed;
 
   /// If [oddCenter] is false, this will dictate whether the two center-most
   /// LEDs will light up when the cross track distance is smaller than
   /// [distancePerLed].
-  bool get evenCenterSimulateOdd;
   @override
+  bool get evenCenterSimulateOdd;
 
   /// The color of the outermost end LEDs, usually red.
+  @override
   @ColorSerializer()
   Color get endColor;
-  @override
 
   /// The color of the intermediate LEDs, usually yellow.
+  @override
   @ColorSerializer()
   Color get intermediateColor;
-  @override
 
   /// The color of the center LEDs, usually green.
+  @override
   @ColorSerializer()
   Color get centerColor;
-  @override
 
   /// The size of the individual LEDs in their largest state (lit).
-  double get ledSize;
   @override
+  double get ledSize;
 
   /// Width of the whole LED bar.
-  double get barWidth;
   @override
+  double get barWidth;
 
   /// Whether the bar should be reversed/inverted.
-  bool get reverseBar;
   @override
+  bool get reverseBar;
 
   /// Whether the LEDs should be hidden when not lit/active.
-  bool get showInactiveLeds;
   @override
-  @JsonKey(ignore: true)
+  bool get showInactiveLeds;
+
+  /// Create a copy of LedBarConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LedBarConfigImplCopyWith<_$LedBarConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

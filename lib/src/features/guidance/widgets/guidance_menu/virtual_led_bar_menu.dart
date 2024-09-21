@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:ui';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -199,8 +201,11 @@ class VirtualLedBarMenu extends ConsumerWidget {
               final max = config.oneSideCount * config.distancePerLed;
 
               final distance =
-                  -(ref.watch(virtualLedBarTestingDistanceProvider) ?? 0)
-                      .clamp(min, max);
+                  -clampDouble(
+                ref.watch(virtualLedBarTestingDistanceProvider) ?? 0,
+                min,
+                max,
+              );
 
               return Column(
                 mainAxisSize: MainAxisSize.min,

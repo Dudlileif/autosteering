@@ -42,27 +42,13 @@ const saveVehicleProvider = SaveVehicleFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveVehicle].
-class SaveVehicleFamily extends Family {
+class SaveVehicleFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [vehicle] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveVehicle].
   const SaveVehicleFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveVehicleProvider';
 
   /// A provider for saving [vehicle] to a file in the user file directory.
   ///
@@ -81,7 +67,6 @@ class SaveVehicleFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   SaveVehicleProvider getProviderOverride(
     covariant SaveVehicleProvider provider,
@@ -93,26 +78,19 @@ class SaveVehicleFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(SaveVehicleRef ref) create) {
-    return _$SaveVehicleFamilyOverride(this, create);
-  }
-}
-
-class _$SaveVehicleFamilyOverride implements FamilyOverride {
-  _$SaveVehicleFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(SaveVehicleRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final SaveVehicleFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  SaveVehicleProvider getProviderOverride(
-    covariant SaveVehicleProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveVehicleProvider';
 }
 
 /// A provider for saving [vehicle] to a file in the user file directory.
@@ -152,7 +130,7 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
         );
 
   SaveVehicleProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -169,7 +147,7 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveVehicleRef ref) create,
+    FutureOr<void> Function(SaveVehicleRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -188,37 +166,8 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    Vehicle, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      vehicle,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveVehicleProviderElement(this);
-  }
-
-  SaveVehicleProvider _copyWith(
-    FutureOr<void> Function(SaveVehicleRef ref) create,
-  ) {
-    return SaveVehicleProvider._internal(
-      (ref) => create(ref as SaveVehicleRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      vehicle: vehicle,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -278,27 +227,13 @@ const exportVehicleProvider = ExportVehicleFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [exportVehicle].
-class ExportVehicleFamily extends Family {
+class ExportVehicleFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [vehicle] to a file.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [exportVehicle].
   const ExportVehicleFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportVehicleProvider';
 
   /// A provider for saving [vehicle] to a file.
   ///
@@ -317,7 +252,6 @@ class ExportVehicleFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportVehicleProvider getProviderOverride(
     covariant ExportVehicleProvider provider,
@@ -329,26 +263,19 @@ class ExportVehicleFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(ExportVehicleRef ref) create) {
-    return _$ExportVehicleFamilyOverride(this, create);
-  }
-}
-
-class _$ExportVehicleFamilyOverride implements FamilyOverride {
-  _$ExportVehicleFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportVehicleRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportVehicleFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportVehicleProvider getProviderOverride(
-    covariant ExportVehicleProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportVehicleProvider';
 }
 
 /// A provider for saving [vehicle] to a file.
@@ -388,7 +315,7 @@ class ExportVehicleProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportVehicleProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -405,7 +332,7 @@ class ExportVehicleProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportVehicleRef ref) create,
+    FutureOr<void> Function(ExportVehicleRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -424,37 +351,8 @@ class ExportVehicleProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    Vehicle, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      vehicle,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportVehicleProviderElement(this);
-  }
-
-  ExportVehicleProvider _copyWith(
-    FutureOr<void> Function(ExportVehicleRef ref) create,
-  ) {
-    return ExportVehicleProvider._internal(
-      (ref) => create(ref as ExportVehicleRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      vehicle: vehicle,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -532,27 +430,13 @@ const deleteVehicleProvider = DeleteVehicleFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [deleteVehicle].
-class DeleteVehicleFamily extends Family {
+class DeleteVehicleFamily extends Family<AsyncValue<void>> {
   /// A provider for deleting [vehicle] from the user file system.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteVehicle].
   const DeleteVehicleFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'deleteVehicleProvider';
 
   /// A provider for deleting [vehicle] from the user file system.
   ///
@@ -569,7 +453,6 @@ class DeleteVehicleFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   DeleteVehicleProvider getProviderOverride(
     covariant DeleteVehicleProvider provider,
@@ -580,26 +463,19 @@ class DeleteVehicleFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(DeleteVehicleRef ref) create) {
-    return _$DeleteVehicleFamilyOverride(this, create);
-  }
-}
-
-class _$DeleteVehicleFamilyOverride implements FamilyOverride {
-  _$DeleteVehicleFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(DeleteVehicleRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final DeleteVehicleFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  DeleteVehicleProvider getProviderOverride(
-    covariant DeleteVehicleProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteVehicleProvider';
 }
 
 /// A provider for deleting [vehicle] from the user file system.
@@ -636,7 +512,7 @@ class DeleteVehicleProvider extends AutoDisposeFutureProvider<void> {
         );
 
   DeleteVehicleProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -651,7 +527,7 @@ class DeleteVehicleProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(DeleteVehicleRef ref) create,
+    FutureOr<void> Function(DeleteVehicleRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -669,34 +545,8 @@ class DeleteVehicleProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    Vehicle, {
-    String? overrideName,
-  }) get argument {
-    return (
-      vehicle,
-      overrideName: overrideName,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _DeleteVehicleProviderElement(this);
-  }
-
-  DeleteVehicleProvider _copyWith(
-    FutureOr<void> Function(DeleteVehicleRef ref) create,
-  ) {
-    return DeleteVehicleProvider._internal(
-      (ref) => create(ref as DeleteVehicleRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      vehicle: vehicle,
-      overrideName: overrideName,
-    );
   }
 
   @override
@@ -746,25 +596,11 @@ const loadVehicleFromFileProvider = LoadVehicleFromFileFamily();
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 ///
 /// Copied from [loadVehicleFromFile].
-class LoadVehicleFromFileFamily extends Family {
+class LoadVehicleFromFileFamily extends Family<AsyncValue<Vehicle?>> {
   /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
   ///
   /// Copied from [loadVehicleFromFile].
   const LoadVehicleFromFileFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadVehicleFromFileProvider';
 
   /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
   ///
@@ -777,7 +613,6 @@ class LoadVehicleFromFileFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   LoadVehicleFromFileProvider getProviderOverride(
     covariant LoadVehicleFromFileProvider provider,
@@ -787,27 +622,19 @@ class LoadVehicleFromFileFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<Vehicle?> Function(LoadVehicleFromFileRef ref) create) {
-    return _$LoadVehicleFromFileFamilyOverride(this, create);
-  }
-}
-
-class _$LoadVehicleFromFileFamilyOverride implements FamilyOverride {
-  _$LoadVehicleFromFileFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<Vehicle?> Function(LoadVehicleFromFileRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final LoadVehicleFromFileFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  LoadVehicleFromFileProvider getProviderOverride(
-    covariant LoadVehicleFromFileProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadVehicleFromFileProvider';
 }
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
@@ -837,7 +664,7 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
         );
 
   LoadVehicleFromFileProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -850,7 +677,7 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
 
   @override
   Override overrideWith(
-    FutureOr<Vehicle?> Function(LoadVehicleFromFileRef ref) create,
+    FutureOr<Vehicle?> Function(LoadVehicleFromFileRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -867,27 +694,8 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
   }
 
   @override
-  (String,) get argument {
-    return (path,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<Vehicle?> createElement() {
     return _LoadVehicleFromFileProviderElement(this);
-  }
-
-  LoadVehicleFromFileProvider _copyWith(
-    FutureOr<Vehicle?> Function(LoadVehicleFromFileRef ref) create,
-  ) {
-    return LoadVehicleFromFileProvider._internal(
-      (ref) => create(ref as LoadVehicleFromFileRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      path: path,
-    );
   }
 
   @override
@@ -967,25 +775,11 @@ const exportVehiclesProvider = ExportVehiclesFamily();
 /// A provider for exporting all vehicle files.
 ///
 /// Copied from [exportVehicles].
-class ExportVehiclesFamily extends Family {
+class ExportVehiclesFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all vehicle files.
   ///
   /// Copied from [exportVehicles].
   const ExportVehiclesFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportVehiclesProvider';
 
   /// A provider for exporting all vehicle files.
   ///
@@ -998,7 +792,6 @@ class ExportVehiclesFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportVehiclesProvider getProviderOverride(
     covariant ExportVehiclesProvider provider,
@@ -1008,26 +801,19 @@ class ExportVehiclesFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(ExportVehiclesRef ref) create) {
-    return _$ExportVehiclesFamilyOverride(this, create);
-  }
-}
-
-class _$ExportVehiclesFamilyOverride implements FamilyOverride {
-  _$ExportVehiclesFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportVehiclesRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportVehiclesFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportVehiclesProvider getProviderOverride(
-    covariant ExportVehiclesProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportVehiclesProvider';
 }
 
 /// A provider for exporting all vehicle files.
@@ -1057,7 +843,7 @@ class ExportVehiclesProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportVehiclesProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -1070,7 +856,7 @@ class ExportVehiclesProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportVehiclesRef ref) create,
+    FutureOr<void> Function(ExportVehiclesRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1087,29 +873,8 @@ class ExportVehiclesProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  ({
-    bool zip,
-  }) get argument {
-    return (zip: zip,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportVehiclesProviderElement(this);
-  }
-
-  ExportVehiclesProvider _copyWith(
-    FutureOr<void> Function(ExportVehiclesRef ref) create,
-  ) {
-    return ExportVehiclesProvider._internal(
-      (ref) => create(ref as ExportVehiclesRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      zip: zip,
-    );
   }
 
   @override
@@ -1156,7 +921,7 @@ final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
 
 typedef _$MainVehicle = Notifier<Vehicle>;
 String _$activeAutosteeringStateHash() =>
-    r'53f62be630a97e3459a6d47f665abd14f7effcc6';
+    r'179e96f0f4769919800d274e879d27b41dcdcafd';
 
 /// A provider for the active [AutosteeringState] of the vehicle.
 ///
@@ -1271,4 +1036,4 @@ final overrideSteeringAngleProvider =
 
 typedef _$OverrideSteeringAngle = AutoDisposeNotifier<double>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

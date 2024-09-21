@@ -59,27 +59,13 @@ const saveFieldProvider = SaveFieldFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveField].
-class SaveFieldFamily extends Family {
+class SaveFieldFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [field] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveField].
   const SaveFieldFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveFieldProvider';
 
   /// A provider for saving [field] to a file in the user file directory.
   ///
@@ -98,7 +84,6 @@ class SaveFieldFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   SaveFieldProvider getProviderOverride(
     covariant SaveFieldProvider provider,
@@ -110,26 +95,19 @@ class SaveFieldFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(SaveFieldRef ref) create) {
-    return _$SaveFieldFamilyOverride(this, create);
-  }
-}
-
-class _$SaveFieldFamilyOverride implements FamilyOverride {
-  _$SaveFieldFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(SaveFieldRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final SaveFieldFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  SaveFieldProvider getProviderOverride(
-    covariant SaveFieldProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveFieldProvider';
 }
 
 /// A provider for saving [field] to a file in the user file directory.
@@ -168,7 +146,7 @@ class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
         );
 
   SaveFieldProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -185,7 +163,7 @@ class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveFieldRef ref) create,
+    FutureOr<void> Function(SaveFieldRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -204,37 +182,8 @@ class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    Field, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      field,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveFieldProviderElement(this);
-  }
-
-  SaveFieldProvider _copyWith(
-    FutureOr<void> Function(SaveFieldRef ref) create,
-  ) {
-    return SaveFieldProvider._internal(
-      (ref) => create(ref as SaveFieldRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      field: field,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -294,27 +243,13 @@ const exportFieldProvider = ExportFieldFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [exportField].
-class ExportFieldFamily extends Family {
+class ExportFieldFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting [field] to a file.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [exportField].
   const ExportFieldFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportFieldProvider';
 
   /// A provider for exporting [field] to a file.
   ///
@@ -333,7 +268,6 @@ class ExportFieldFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportFieldProvider getProviderOverride(
     covariant ExportFieldProvider provider,
@@ -345,26 +279,19 @@ class ExportFieldFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(ExportFieldRef ref) create) {
-    return _$ExportFieldFamilyOverride(this, create);
-  }
-}
-
-class _$ExportFieldFamilyOverride implements FamilyOverride {
-  _$ExportFieldFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportFieldRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportFieldFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportFieldProvider getProviderOverride(
-    covariant ExportFieldProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportFieldProvider';
 }
 
 /// A provider for exporting [field] to a file.
@@ -404,7 +331,7 @@ class ExportFieldProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportFieldProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -421,7 +348,7 @@ class ExportFieldProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportFieldRef ref) create,
+    FutureOr<void> Function(ExportFieldRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -440,37 +367,8 @@ class ExportFieldProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    Field, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      field,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportFieldProviderElement(this);
-  }
-
-  ExportFieldProvider _copyWith(
-    FutureOr<void> Function(ExportFieldRef ref) create,
-  ) {
-    return ExportFieldProvider._internal(
-      (ref) => create(ref as ExportFieldRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      field: field,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -547,27 +445,13 @@ const deleteFieldProvider = DeleteFieldFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [deleteField].
-class DeleteFieldFamily extends Family {
+class DeleteFieldFamily extends Family<AsyncValue<void>> {
   /// A provider for deleting [field] from the user file system.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteField].
   const DeleteFieldFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'deleteFieldProvider';
 
   /// A provider for deleting [field] from the user file system.
   ///
@@ -584,7 +468,6 @@ class DeleteFieldFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   DeleteFieldProvider getProviderOverride(
     covariant DeleteFieldProvider provider,
@@ -595,26 +478,19 @@ class DeleteFieldFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(DeleteFieldRef ref) create) {
-    return _$DeleteFieldFamilyOverride(this, create);
-  }
-}
-
-class _$DeleteFieldFamilyOverride implements FamilyOverride {
-  _$DeleteFieldFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(DeleteFieldRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final DeleteFieldFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  DeleteFieldProvider getProviderOverride(
-    covariant DeleteFieldProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteFieldProvider';
 }
 
 /// A provider for deleting [field] from the user file system.
@@ -651,7 +527,7 @@ class DeleteFieldProvider extends AutoDisposeFutureProvider<void> {
         );
 
   DeleteFieldProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -666,7 +542,7 @@ class DeleteFieldProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(DeleteFieldRef ref) create,
+    FutureOr<void> Function(DeleteFieldRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -684,34 +560,8 @@ class DeleteFieldProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    Field, {
-    String? overrideName,
-  }) get argument {
-    return (
-      field,
-      overrideName: overrideName,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _DeleteFieldProviderElement(this);
-  }
-
-  DeleteFieldProvider _copyWith(
-    FutureOr<void> Function(DeleteFieldRef ref) create,
-  ) {
-    return DeleteFieldProvider._internal(
-      (ref) => create(ref as DeleteFieldRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      field: field,
-      overrideName: overrideName,
-    );
   }
 
   @override
@@ -760,25 +610,11 @@ const loadFieldFromFileProvider = LoadFieldFromFileFamily();
 /// A provider for loading a [Field] from a file at [path], if it's valid.
 ///
 /// Copied from [loadFieldFromFile].
-class LoadFieldFromFileFamily extends Family {
+class LoadFieldFromFileFamily extends Family<AsyncValue<Field?>> {
   /// A provider for loading a [Field] from a file at [path], if it's valid.
   ///
   /// Copied from [loadFieldFromFile].
   const LoadFieldFromFileFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadFieldFromFileProvider';
 
   /// A provider for loading a [Field] from a file at [path], if it's valid.
   ///
@@ -791,7 +627,6 @@ class LoadFieldFromFileFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   LoadFieldFromFileProvider getProviderOverride(
     covariant LoadFieldFromFileProvider provider,
@@ -801,27 +636,19 @@ class LoadFieldFromFileFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<Field?> Function(LoadFieldFromFileRef ref) create) {
-    return _$LoadFieldFromFileFamilyOverride(this, create);
-  }
-}
-
-class _$LoadFieldFromFileFamilyOverride implements FamilyOverride {
-  _$LoadFieldFromFileFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<Field?> Function(LoadFieldFromFileRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final LoadFieldFromFileFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  LoadFieldFromFileProvider getProviderOverride(
-    covariant LoadFieldFromFileProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadFieldFromFileProvider';
 }
 
 /// A provider for loading a [Field] from a file at [path], if it's valid.
@@ -851,7 +678,7 @@ class LoadFieldFromFileProvider extends AutoDisposeFutureProvider<Field?> {
         );
 
   LoadFieldFromFileProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -864,7 +691,7 @@ class LoadFieldFromFileProvider extends AutoDisposeFutureProvider<Field?> {
 
   @override
   Override overrideWith(
-    FutureOr<Field?> Function(LoadFieldFromFileRef ref) create,
+    FutureOr<Field?> Function(LoadFieldFromFileRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -881,27 +708,8 @@ class LoadFieldFromFileProvider extends AutoDisposeFutureProvider<Field?> {
   }
 
   @override
-  (String,) get argument {
-    return (path,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<Field?> createElement() {
     return _LoadFieldFromFileProviderElement(this);
-  }
-
-  LoadFieldFromFileProvider _copyWith(
-    FutureOr<Field?> Function(LoadFieldFromFileRef ref) create,
-  ) {
-    return LoadFieldFromFileProvider._internal(
-      (ref) => create(ref as LoadFieldFromFileRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      path: path,
-    );
   }
 
   @override
@@ -959,25 +767,11 @@ const exportFieldsProvider = ExportFieldsFamily();
 /// A provider for exporting all field files.
 ///
 /// Copied from [exportFields].
-class ExportFieldsFamily extends Family {
+class ExportFieldsFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all field files.
   ///
   /// Copied from [exportFields].
   const ExportFieldsFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportFieldsProvider';
 
   /// A provider for exporting all field files.
   ///
@@ -990,7 +784,6 @@ class ExportFieldsFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportFieldsProvider getProviderOverride(
     covariant ExportFieldsProvider provider,
@@ -1000,26 +793,19 @@ class ExportFieldsFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(ExportFieldsRef ref) create) {
-    return _$ExportFieldsFamilyOverride(this, create);
-  }
-}
-
-class _$ExportFieldsFamilyOverride implements FamilyOverride {
-  _$ExportFieldsFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportFieldsRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportFieldsFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportFieldsProvider getProviderOverride(
-    covariant ExportFieldsProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportFieldsProvider';
 }
 
 /// A provider for exporting all field files.
@@ -1049,7 +835,7 @@ class ExportFieldsProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportFieldsProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -1062,7 +848,7 @@ class ExportFieldsProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportFieldsRef ref) create,
+    FutureOr<void> Function(ExportFieldsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1079,29 +865,8 @@ class ExportFieldsProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  ({
-    bool zip,
-  }) get argument {
-    return (zip: zip,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportFieldsProviderElement(this);
-  }
-
-  ExportFieldsProvider _copyWith(
-    FutureOr<void> Function(ExportFieldsRef ref) create,
-  ) {
-    return ExportFieldsProvider._internal(
-      (ref) => create(ref as ExportFieldsRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      zip: zip,
-    );
   }
 
   @override
@@ -1413,4 +1178,4 @@ final fieldInteriorRingsProvider =
 
 typedef _$FieldInteriorRings = Notifier<List<List<Geographic>>?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

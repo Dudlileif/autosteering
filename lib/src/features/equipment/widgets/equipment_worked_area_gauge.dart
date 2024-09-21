@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:ui';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
@@ -51,7 +53,7 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
             true =>
               '''
 ${area != null ? (area / 1e4).toStringAsFixed(2) : '-'} / ${(fieldArea! / 1e4).toStringAsFixed(2)} ha
-${area != null ? '${(100 * area / fieldArea).clamp(0, 100).toStringAsFixed(1)}%' : ''}''',
+${area != null ? '${clampDouble(100 * area / fieldArea,0, 100).toStringAsFixed(1)}%' : ''}''',
             false => '${(area! / 1e4).toStringAsFixed(2)} ha',
           },
           style: GoogleFonts.robotoMono(

@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
@@ -370,7 +371,7 @@ class ImuConfigurator extends StatelessWidget {
                           ],
                         ),
                         Slider(
-                          value: pitch.clamp(-25, 25),
+                          value: clampDouble(pitch, -25, 25),
                           onChanged: (value) => ref
                               .read(simInputProvider.notifier)
                               .send((pitch: value)),
@@ -407,7 +408,7 @@ class ImuConfigurator extends StatelessWidget {
                           ],
                         ),
                         Slider(
-                          value: roll.clamp(-25, 25),
+                          value: clampDouble(roll, -25, 25),
                           onChanged: (value) => ref
                               .read(simInputProvider.notifier)
                               .send((roll: value)),

@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:ui';
+
 import 'package:autosteering/src/features/hardware/models/imu/imu_config.dart';
 import 'package:autosteering/src/features/hardware/models/imu/imu_reading.dart';
 import 'package:collection/collection.dart';
@@ -80,26 +82,40 @@ class Imu {
   /// The pitch reading accounted for [config.zeroValues.pitchZero].
   double get pitch =>
       switch (config.swapPitchAndRoll) {
-        false =>
-          (reading.pitch - config.zeroValues.pitchZero).clamp(-90.0, 90.0),
-        true => (reading.roll - config.zeroValues.rollZero).clamp(-180.0, 180.0)
+        false => clampDouble(
+            (reading.pitch - config.zeroValues.pitchZero).toDouble(),
+            -85,
+            85,
+          ),
+        true => clampDouble(
+            (reading.roll - config.zeroValues.rollZero).toDouble(),
+            -85,
+            85,
+          )
       } *
       switch (config.invertPitch) {
-        true => -1.0,
-        false => 1.0,
+        true => -1,
+        false => 1,
       } *
       config.pitchGain;
 
   /// The roll reading accounted for [config.zeroValues.rollZero].
   double get roll =>
       switch (config.swapPitchAndRoll) {
-        false =>
-          (reading.roll - config.zeroValues.rollZero).clamp(-180.0, 180.0),
-        true => (reading.pitch - config.zeroValues.pitchZero).clamp(-90.0, 90.0)
+        false => clampDouble(
+            (reading.roll - config.zeroValues.rollZero).toDouble(),
+            -85,
+            85,
+          ),
+        true => clampDouble(
+            (reading.pitch - config.zeroValues.pitchZero).toDouble(),
+            -85,
+            85,
+          )
       } *
       switch (config.invertRoll) {
-        true => -1.0,
-        false => 1.0,
+        true => -1,
+        false => 1,
       } *
       config.rollGain;
 

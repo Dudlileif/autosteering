@@ -15,6 +15,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-export 'models/models.dart';
-export 'providers/providers.dart';
-export 'widgets/widgets.dart';
+/// An enumerator for all the audio assets.
+enum AudioAsset {
+  /// Audio asset for autosteering disabled.
+  autosteeringDisabled('autosteering_disabled'),
+
+  /// Audio asset for autosteering enabled.
+  autosteeringEnabled('autosteering_enabled'),
+
+  /// Audio asset for autosteering standby.
+  autosteeringStandby('autosteering_standby'),
+
+  /// Audio asset for RTK lost alarm.
+  rtkLostAlarm('rtk_lost_alarm');
+
+  const AudioAsset(this.path);
+
+  /// Create an AudioAsset from the string [s].
+  factory AudioAsset.fromPath(String s) =>
+      values.firstWhere((a) => a.path == s);
+
+  /// The path/name of this.
+  final String path;
+
+  /// Create a JSON compatible representation of this.
+  String toJson() => path;
+}

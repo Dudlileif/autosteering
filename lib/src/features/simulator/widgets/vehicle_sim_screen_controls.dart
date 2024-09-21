@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:ui';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -225,7 +227,11 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
             ),
             child: Slider(
-              value: steeringAngle.clamp(-steeringAngleMax, steeringAngleMax),
+              value: clampDouble(
+                steeringAngle,
+                -steeringAngleMax,
+                steeringAngleMax,
+              ),
               onChangeStart: (value) => ref.watch(
                 simCoreVehicleAutoCenterSteeringProvider,
               )

@@ -26,8 +26,12 @@ mixin _$MapCenterOffset {
   /// Transverse offset in meters from the center point.
   double get y => throw _privateConstructorUsedError;
 
+  /// Serializes this MapCenterOffset to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MapCenterOffset
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MapCenterOffsetCopyWith<MapCenterOffset> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,6 +55,8 @@ class _$MapCenterOffsetCopyWithImpl<$Res, $Val extends MapCenterOffset>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MapCenterOffset
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -89,6 +95,8 @@ class __$$MapCenterOffsetImplCopyWithImpl<$Res>
       _$MapCenterOffsetImpl _value, $Res Function(_$MapCenterOffsetImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of MapCenterOffset
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -140,11 +148,13 @@ class _$MapCenterOffsetImpl implements _MapCenterOffset {
             (identical(other.y, y) || other.y == y));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, x, y);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MapCenterOffset
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MapCenterOffsetImplCopyWith<_$MapCenterOffsetImpl> get copyWith =>
@@ -166,16 +176,18 @@ abstract class _MapCenterOffset implements MapCenterOffset {
   factory _MapCenterOffset.fromJson(Map<String, dynamic> json) =
       _$MapCenterOffsetImpl.fromJson;
 
-  @override
-
   /// Longitudinal offset in meters from the center point.
-  double get x;
   @override
+  double get x;
 
   /// Transverse offset in meters from the center point.
-  double get y;
   @override
-  @JsonKey(ignore: true)
+  double get y;
+
+  /// Create a copy of MapCenterOffset
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MapCenterOffsetImplCopyWith<_$MapCenterOffsetImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

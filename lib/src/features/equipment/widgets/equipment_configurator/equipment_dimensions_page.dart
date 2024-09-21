@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:ui';
+
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -87,11 +89,14 @@ class EquipmentDimensionsPage extends ConsumerWidget {
           ),
         ),
         onFieldSubmitted: (value) {
-          final length = double.tryParse(value.replaceAll(',', '.'))
-              ?.clamp(0.0, equipment.workingAreaLength);
+          final length = clampDouble(
+            double.tryParse(value.replaceAll(',', '.')) ?? 0,
+            0,
+            equipment.workingAreaLength,
+          );
 
           final fraction = equipment.workingAreaLength > 0
-              ? 1 - ((length ?? 0) / equipment.workingAreaLength)
+              ? 1 - (length / equipment.workingAreaLength)
               : 1.0;
           ref.read(configuredEquipmentProvider.notifier).update(
                 equipment.copyWith(recordingPositionFraction: fraction),

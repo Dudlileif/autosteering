@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
@@ -150,18 +151,23 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 var offset = ref.read(imuConfiguratorUiOffsetProvider);
                 return StatefulBuilder(
                   builder: (context, setState) => Positioned(
-                    left: offset.dx.clamp(
+                    left: clampDouble(
+                      offset.dx,
                       0,
                       constraints.maxWidth - 380,
                     ),
-                    top: offset.dy.clamp(0, constraints.maxHeight - 350),
+                    top: clampDouble(offset.dy, 0, constraints.maxHeight - 350),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: SizedBox(
                         height: min(
                           700,
                           constraints.maxHeight -
-                              offset.dy.clamp(0, constraints.maxHeight - 350),
+                              clampDouble(
+                                offset.dy,
+                                0,
+                                constraints.maxHeight - 350,
+                              ),
                         ),
                         child: LongPressDraggable(
                           onDragUpdate: (update) => setState(
@@ -176,12 +182,16 @@ class MapAndGaugeStackView extends ConsumerWidget {
                               )
                               .update(
                                 Offset(
-                                  offset.dx.clamp(
+                                  clampDouble(
+                                    offset.dx,
                                     0,
                                     constraints.maxWidth - 380,
                                   ),
-                                  offset.dy
-                                      .clamp(0, constraints.maxHeight - 350),
+                                  clampDouble(
+                                    offset.dy,
+                                    0,
+                                    constraints.maxHeight - 350,
+                                  ),
                                 ),
                               ),
                           childWhenDragging: const SizedBox.shrink(),
@@ -207,18 +217,23 @@ class MapAndGaugeStackView extends ConsumerWidget {
                     ref.read(steeringHardwareConfiguratorUiOffsetProvider);
                 return StatefulBuilder(
                   builder: (context, setState) => Positioned(
-                    left: offset.dx.clamp(
+                    left: clampDouble(
+                      offset.dx,
                       0,
                       constraints.maxWidth - 405,
                     ),
-                    top: offset.dy.clamp(0, constraints.maxHeight - 350),
+                    top: clampDouble(offset.dy, 0, constraints.maxHeight - 350),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: SizedBox(
                         height: min(
                           700,
                           constraints.maxHeight -
-                              offset.dy.clamp(0, constraints.maxHeight - 350),
+                              clampDouble(
+                                offset.dy,
+                                0,
+                                constraints.maxHeight - 350,
+                              ),
                         ),
                         child: LongPressDraggable(
                           onDragUpdate: (update) => setState(
@@ -234,12 +249,16 @@ class MapAndGaugeStackView extends ConsumerWidget {
                               )
                               .update(
                                 Offset(
-                                  offset.dx.clamp(
+                                  clampDouble(
+                                    offset.dx,
                                     0,
                                     constraints.maxWidth - 405,
                                   ),
-                                  offset.dy
-                                      .clamp(0, constraints.maxHeight - 350),
+                                  clampDouble(
+                                    offset.dy,
+                                    0,
+                                    constraints.maxHeight - 350,
+                                  ),
                                 ),
                               ),
                           childWhenDragging: const SizedBox.shrink(),
@@ -264,18 +283,23 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 var offset = ref.read(autosteeringConfiguratorUiOffsetProvider);
                 return StatefulBuilder(
                   builder: (context, setState) => Positioned(
-                    left: offset.dx.clamp(
+                    left: clampDouble(
+                      offset.dx,
                       0,
                       constraints.maxWidth - 380,
                     ),
-                    top: offset.dy.clamp(0, constraints.maxHeight - 390),
+                    top: clampDouble(offset.dy, 0, constraints.maxHeight - 390),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: SizedBox(
                         height: min(
                           385,
                           constraints.maxHeight -
-                              offset.dy.clamp(0, constraints.maxHeight - 390),
+                              clampDouble(
+                                offset.dy,
+                                0,
+                                constraints.maxHeight - 390,
+                              ),
                         ),
                         child: LongPressDraggable(
                           onDragUpdate: (update) {
@@ -293,12 +317,16 @@ class MapAndGaugeStackView extends ConsumerWidget {
                               )
                               .update(
                                 Offset(
-                                  offset.dx.clamp(
+                                  clampDouble(
+                                    offset.dx,
                                     0,
                                     constraints.maxWidth - 380,
                                   ),
-                                  offset.dy
-                                      .clamp(0, constraints.maxHeight - 390),
+                                  clampDouble(
+                                    offset.dy,
+                                    0,
+                                    constraints.maxHeight - 390,
+                                  ),
                                 ),
                               ),
                           childWhenDragging: const SizedBox.shrink(),
@@ -326,18 +354,23 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 var offset = ref.read(pathRecordingMenuUiOffsetProvider);
                 return StatefulBuilder(
                   builder: (context, setState) => Positioned(
-                    left: offset.dx.clamp(
+                    left: clampDouble(
+                      offset.dx,
                       0,
                       constraints.maxWidth - 380,
                     ),
-                    top: offset.dy.clamp(0, constraints.maxHeight - 350),
+                    top: clampDouble(offset.dy, 0, constraints.maxHeight - 350),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: SizedBox(
                         height: min(
                           700,
                           constraints.maxHeight -
-                              offset.dy.clamp(0, constraints.maxHeight - 350),
+                              clampDouble(
+                                offset.dy,
+                                0,
+                                constraints.maxHeight - 350,
+                              ),
                         ),
                         child: LongPressDraggable(
                           onDragUpdate: (update) => setState(
@@ -352,12 +385,16 @@ class MapAndGaugeStackView extends ConsumerWidget {
                               )
                               .update(
                                 Offset(
-                                  offset.dx.clamp(
+                                  clampDouble(
+                                    offset.dx,
                                     0,
                                     constraints.maxWidth - 380,
                                   ),
-                                  offset.dy
-                                      .clamp(0, constraints.maxHeight - 350),
+                                  clampDouble(
+                                    offset.dy,
+                                    0,
+                                    constraints.maxHeight - 350,
+                                  ),
                                 ),
                               ),
                           childWhenDragging: const SizedBox.shrink(),
@@ -383,19 +420,27 @@ class MapAndGaugeStackView extends ConsumerWidget {
                 var offset = ref.read(nudgingControlsUiOffsetProvider);
                 return StatefulBuilder(
                   builder: (context, setState) => Positioned(
-                    left: offset.dx.clamp(
+                    left: clampDouble(
+                      offset.dx,
                       0,
                       constraints.maxWidth - 380,
                     ),
-                    top: offset.dy.clamp(0, constraints.maxHeight - height),
+                    top: clampDouble(
+                      offset.dy,
+                      0,
+                      constraints.maxHeight - height,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: SizedBox(
                         height: min(
                           height,
                           constraints.maxHeight -
-                              offset.dy
-                                  .clamp(0, constraints.maxHeight - height),
+                              clampDouble(
+                                offset.dy,
+                                0,
+                                constraints.maxHeight - height,
+                              ),
                         ),
                         child: LongPressDraggable(
                           onDragUpdate: (update) {
@@ -412,12 +457,16 @@ class MapAndGaugeStackView extends ConsumerWidget {
                               )
                               .update(
                                 Offset(
-                                  offset.dx.clamp(
+                                  clampDouble(
+                                    offset.dx,
                                     0,
                                     constraints.maxWidth - 380,
                                   ),
-                                  offset.dy
-                                      .clamp(0, constraints.maxHeight - height),
+                                  clampDouble(
+                                    offset.dy,
+                                    0,
+                                    constraints.maxHeight - height,
+                                  ),
                                 ),
                               ),
                           childWhenDragging: const SizedBox.shrink(),
@@ -446,45 +495,52 @@ class MapAndGaugeStackView extends ConsumerWidget {
     return Device.isDesktop || Device.isWeb
         ? KeyboardListener(
             autofocus: true,
-            onKeyEvent: (event) async => switch (event.logicalKey) {
-              LogicalKeyboardKey.shiftLeft => {
-                  if (event is KeyDownEvent)
-                    shiftModifier = true
-                  else if (event is KeyUpEvent)
-                    shiftModifier = false,
-                },
-              LogicalKeyboardKey.altLeft => {
-                  if (event is KeyDownEvent)
-                    altModifier = true
-                  else if (event is KeyUpEvent)
-                    altModifier = false,
-                },
-              LogicalKeyboardKey.minus => {
-                  if (event is KeyUpEvent)
-                    ref.read(zoomTimerControllerProvider.notifier).cancel()
-                  else if (event is KeyDownEvent)
-                    ref.read(zoomTimerControllerProvider.notifier).zoomOut(),
-                },
-              LogicalKeyboardKey.add || LogicalKeyboardKey.equal => {
-                  if (event is KeyUpEvent)
-                    ref.read(zoomTimerControllerProvider.notifier).cancel()
-                  else if (event is KeyDownEvent)
-                    ref.read(zoomTimerControllerProvider.notifier).zoomIn(),
-                },
-              LogicalKeyboardKey.enter => {
-                  if (Device.isDesktop && altModifier)
-                    if (event is KeyDownEvent)
-                      windowManager
-                          .setFullScreen(!await windowManager.isFullScreen()),
-                },
-              LogicalKeyboardKey.f11 => {
-                  if (Device.isDesktop)
-                    if (event is KeyDownEvent)
-                      windowManager
-                          .setFullScreen(!await windowManager.isFullScreen()),
-                },
-              LogicalKeyboardKey.space => {
-                  if (event is KeyDownEvent)
+            onKeyEvent: (event) async {
+              switch (event.logicalKey) {
+                case LogicalKeyboardKey.shiftLeft:
+                  if (event is KeyDownEvent) {
+                    shiftModifier = true;
+                  } else if (event is KeyUpEvent) {
+                    shiftModifier = false;
+                  }
+
+                case LogicalKeyboardKey.altLeft:
+                  if (event is KeyDownEvent) {
+                    altModifier = true;
+                  } else if (event is KeyUpEvent) {
+                    altModifier = false;
+                  }
+
+                case LogicalKeyboardKey.minus:
+                  if (event is KeyUpEvent) {
+                    ref.read(zoomTimerControllerProvider.notifier).cancel();
+                  } else if (event is KeyDownEvent) {
+                    ref.read(zoomTimerControllerProvider.notifier).zoomOut();
+                  }
+
+                case LogicalKeyboardKey.add || LogicalKeyboardKey.equal:
+                  if (event is KeyUpEvent) {
+                    ref.read(zoomTimerControllerProvider.notifier).cancel();
+                  } else if (event is KeyDownEvent) {
+                    ref.read(zoomTimerControllerProvider.notifier).zoomIn();
+                  }
+
+                case LogicalKeyboardKey.enter:
+                  if (Device.isDesktop &&
+                      altModifier &&
+                      event is KeyDownEvent) {
+                    await windowManager
+                        .setFullScreen(!await windowManager.isFullScreen());
+                  }
+
+                case LogicalKeyboardKey.f11:
+                  if (Device.isDesktop && event is KeyDownEvent) {
+                    await windowManager
+                        .setFullScreen(!await windowManager.isFullScreen());
+                  }
+
+                case LogicalKeyboardKey.space:
+                  if (event is KeyDownEvent) {
                     ref.read(simInputProvider.notifier).send(
                           switch (shiftModifier) {
                             false => const (
@@ -492,49 +548,84 @@ class MapAndGaugeStackView extends ConsumerWidget {
                               ),
                             true => const (steeringChange: SimInputChange.reset)
                           },
+                        );
+                  }
+
+                case LogicalKeyboardKey.keyV:
+                  if (event is KeyDownEvent) {
+                    final equipments = ref.read(
+                      allEquipmentsProvider.select(
+                        (value) => value.values
+                            .where((element) => element.sections.isNotEmpty),
+                      ),
+                    );
+                    for (final equipment in equipments) {
+                      ref.read(simInputProvider.notifier).send(
+                        (
+                          uuid: equipment.uuid,
+                          activeSections: (equipment
+                                ..toggleAll(deactivateAllIfAnyActive: true))
+                              .sectionActivationStatus,
                         ),
-                },
-              LogicalKeyboardKey.keyW || LogicalKeyboardKey.arrowUp => {
-                  if (event is KeyDownEvent)
+                      );
+                    }
+                  }
+
+                case LogicalKeyboardKey.keyB:
+                  if (event is KeyDownEvent) {
+                    ref.read(simInputProvider.notifier).send(
+                      (
+                        enableAutoSteer:
+                            ref.read(activeAutosteeringStateProvider) ==
+                                AutosteeringState.disabled
+                      ),
+                    );
+                  }
+
+                case LogicalKeyboardKey.keyW || LogicalKeyboardKey.arrowUp:
+                  if (event is KeyDownEvent) {
                     ref
                         .read(simInputProvider.notifier)
-                        .send((velocityChange: SimInputChange.increase))
-                  else if (event is KeyUpEvent)
+                        .send((velocityChange: SimInputChange.increase));
+                  } else if (event is KeyUpEvent) {
                     ref
                         .read(simInputProvider.notifier)
-                        .send((velocityChange: SimInputChange.hold)),
-                },
-              LogicalKeyboardKey.keyS || LogicalKeyboardKey.arrowDown => {
-                  if (event is KeyDownEvent)
+                        .send((velocityChange: SimInputChange.hold));
+                  }
+
+                case LogicalKeyboardKey.keyS || LogicalKeyboardKey.arrowDown:
+                  if (event is KeyDownEvent) {
                     ref
                         .read(simInputProvider.notifier)
-                        .send((velocityChange: SimInputChange.decrease))
-                  else if (event is KeyUpEvent)
+                        .send((velocityChange: SimInputChange.decrease));
+                  } else if (event is KeyUpEvent) {
                     ref
                         .read(simInputProvider.notifier)
-                        .send((velocityChange: SimInputChange.hold)),
-                },
-              LogicalKeyboardKey.keyA || LogicalKeyboardKey.arrowLeft => {
-                  if (event is KeyDownEvent)
+                        .send((velocityChange: SimInputChange.hold));
+                  }
+
+                case LogicalKeyboardKey.keyA || LogicalKeyboardKey.arrowLeft:
+                  if (event is KeyDownEvent) {
                     ref
                         .read(simInputProvider.notifier)
-                        .send((steeringChange: SimInputChange.decrease))
-                  else if (event is KeyUpEvent)
+                        .send((steeringChange: SimInputChange.decrease));
+                  } else if (event is KeyUpEvent) {
                     ref
                         .read(simInputProvider.notifier)
-                        .send((steeringChange: SimInputChange.hold)),
-                },
-              LogicalKeyboardKey.keyD || LogicalKeyboardKey.arrowRight => {
-                  if (event is KeyDownEvent)
+                        .send((steeringChange: SimInputChange.hold));
+                  }
+
+                case LogicalKeyboardKey.keyD || LogicalKeyboardKey.arrowRight:
+                  if (event is KeyDownEvent) {
                     ref
                         .read(simInputProvider.notifier)
-                        .send((steeringChange: SimInputChange.increase))
-                  else if (event is KeyUpEvent)
+                        .send((steeringChange: SimInputChange.increase));
+                  } else if (event is KeyUpEvent) {
                     ref
                         .read(simInputProvider.notifier)
-                        .send((steeringChange: SimInputChange.hold)),
-                },
-              _ => null
+                        .send((steeringChange: SimInputChange.hold));
+                  }
+              }
             },
             focusNode: FocusNode(
               descendantsAreFocusable: false,

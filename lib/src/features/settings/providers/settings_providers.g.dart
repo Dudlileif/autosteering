@@ -72,25 +72,11 @@ const exportSettingsProvider = ExportSettingsFamily();
 /// A provider for exporting [Settings] to a file.
 ///
 /// Copied from [exportSettings].
-class ExportSettingsFamily extends Family {
+class ExportSettingsFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting [Settings] to a file.
   ///
   /// Copied from [exportSettings].
   const ExportSettingsFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportSettingsProvider';
 
   /// A provider for exporting [Settings] to a file.
   ///
@@ -107,7 +93,6 @@ class ExportSettingsFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportSettingsProvider getProviderOverride(
     covariant ExportSettingsProvider provider,
@@ -119,26 +104,19 @@ class ExportSettingsFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(ExportSettingsRef ref) create) {
-    return _$ExportSettingsFamilyOverride(this, create);
-  }
-}
-
-class _$ExportSettingsFamilyOverride implements FamilyOverride {
-  _$ExportSettingsFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportSettingsRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportSettingsFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportSettingsProvider getProviderOverride(
-    covariant ExportSettingsProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportSettingsProvider';
 }
 
 /// A provider for exporting [Settings] to a file.
@@ -174,7 +152,7 @@ class ExportSettingsProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportSettingsProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -191,7 +169,7 @@ class ExportSettingsProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportSettingsRef ref) create,
+    FutureOr<void> Function(ExportSettingsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -210,37 +188,8 @@ class ExportSettingsProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  ({
-    String? overrideName,
-    bool downloadIfWeb,
-    bool removeSensitiveData,
-  }) get argument {
-    return (
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-      removeSensitiveData: removeSensitiveData,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportSettingsProviderElement(this);
-  }
-
-  ExportSettingsProvider _copyWith(
-    FutureOr<void> Function(ExportSettingsRef ref) create,
-  ) {
-    return ExportSettingsProvider._internal(
-      (ref) => create(ref as ExportSettingsRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-      removeSensitiveData: removeSensitiveData,
-    );
   }
 
   @override
@@ -358,4 +307,4 @@ final enableDebugModeProvider =
 
 typedef _$EnableDebugMode = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

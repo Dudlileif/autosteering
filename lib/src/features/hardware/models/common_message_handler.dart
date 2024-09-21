@@ -79,6 +79,14 @@ class CommonMessageHandler {
             .read(gnssCurrentFrequencyProvider.notifier)
             .update(message.gnssCurrentFrequency);
       }
+    } else if (message is ({
+      double? latitudeError,
+      double? longitudeError,
+      double? altitudeError
+    })) {
+      if (_ref.exists(gnssPrecisionErrorProvider)) {
+        _ref.read(gnssPrecisionErrorProvider.notifier).update(message);
+      }
     } else if (message is ({ImuReading? imuLatestRaw})) {
       if (_ref.exists(imuCurrentReadingProvider)) {
         _ref
@@ -126,9 +134,11 @@ class CommonMessageHandler {
             .update(message.wasTarget);
       }
     } else if (message is ({double? motorActualRPM})) {
-      _ref
-          .read(steeringMotorActualRPMProvider.notifier)
-          .update(message.motorActualRPM);
+      if (_ref.exists(steeringMotorActualRPMProvider)) {
+        _ref
+            .read(steeringMotorActualRPMProvider.notifier)
+            .update(message.motorActualRPM);
+      }
     } else if (message is ({bool motorEnabled})) {
       _ref.read(steeringMotorStatusProvider.notifier).update(
             switch (message.motorEnabled) {

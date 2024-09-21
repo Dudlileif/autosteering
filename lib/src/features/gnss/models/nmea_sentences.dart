@@ -25,6 +25,33 @@ import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:collection/collection.dart';
 import 'package:nmea/nmea.dart';
 
+/// Finds the time from midnight UTC from the NMEA [field] if it exists.
+///
+/// Expects a string of format (HHMMSS.SS):
+/// ```124816.90```
+DateTime? _utcFromNmeaField(String? field) {
+  if (field != null && field.length >= 9) {
+    final hour = int.tryParse(field.substring(0, 2));
+    final minute = int.tryParse(field.substring(2, 4));
+    final second = int.tryParse(field.substring(4, 6));
+    var milliSecond = int.tryParse(field.substring(7, 9));
+    if (milliSecond != null) {
+      milliSecond *= 10;
+    }
+    final now = DateTime.timestamp();
+    return DateTime.utc(
+      now.year,
+      now.month,
+      now.day,
+      hour ?? now.hour,
+      minute ?? now.minute,
+      second ?? now.second,
+      milliSecond ?? now.millisecond,
+    );
+  }
+  return null;
+}
+
 /// This is a mixin version of the [ChecksumSentence] class, so that it can be
 /// used with [ProprietarySentence] objects.
 mixin ChecksumMixin on NmeaSentence {
@@ -106,25 +133,7 @@ mixin GnssPositionCommonSentence on NmeaSentence {
   DateTime? _utcFromField(int field) {
     if (fields.length > field) {
       final string = fields[field];
-      if (string.length >= 9) {
-        final hour = int.tryParse(string.substring(0, 2));
-        final minute = int.tryParse(string.substring(2, 4));
-        final second = int.tryParse(string.substring(4, 6));
-        var milliSecond = int.tryParse(string.substring(7, 9));
-        if (milliSecond != null) {
-          milliSecond *= 10;
-        }
-        final now = DateTime.timestamp();
-        return DateTime.utc(
-          now.year,
-          now.month,
-          now.day,
-          hour ?? now.hour,
-          minute ?? now.minute,
-          second ?? now.second,
-          milliSecond ?? now.millisecond,
-        );
-      }
+      return _utcFromNmeaField(string);
     }
 
     return null;
@@ -368,6 +377,54 @@ class GNSSentence extends TalkerSentence with GnssPositionCommonSentence {
         (a, b) => a < b ? -1 : 1,
       )
       .firstOrNull;
+}
+
+/// An NMEA message for pseudo range error statistics.
+class GSTSentence extends TalkerSentence {
+  /// An NMEA message for pseudo range error statistics parsed from the [raw]
+  /// string.
+  ///
+  /// Example message:
+  /// ```$GNGST,172814.00,0.006,0.023,0.020,273.6,0.023,0.020,0.031*6A```
+  ///
+  /// Type: $GNGST,
+  /// UTC (HHMMSS.SS): 172814.00,
+  /// RMS value of the pseudorange residuals; includes carrier phase residuals
+  ///   during periods of RTK (float) and RTK (fixed) processing: 0.006,
+  /// Error ellipse semi-major axis 1-sigma error (m): 0.023,
+  /// Error ellipse semi-minor axis 1-sigma error (m): 0.020,
+  /// Error ellipse orientation, degrees from true north: 273.6,
+  /// Latitude 1-sigma error (m): 0,023,
+  ///	Longitude 1-sigma error (m): 0.020,
+  ///	Altitude 1-sigma error (m): 0.031,
+  /// Checksum: *6A
+
+  GSTSentence({required super.raw});
+
+  /// The creation time of the message.
+  DateTime? get utc => _utcFromNmeaField(fields.elementAtOrNull(1));
+
+  /// RMS value of the standard deviaiton of the ranges.
+  double? get rangeRMS => fields.length > 2 ? double.tryParse(fields[2]) : null;
+
+  /// Standard deviation of semi-major axis, in meters.
+  double? get stdMajor => fields.length > 3 ? double.tryParse(fields[3]) : null;
+
+  /// Standard deviation of semi-minor axis, in meters.
+  double? get stdMinor => fields.length > 4 ? double.tryParse(fields[4]) : null;
+
+  /// Standard deviation of longitude error, in meters.
+  double? get orient => fields.length > 5 ? double.tryParse(fields[5]) : null;
+
+  /// Standard deviation of latitude error, in meters.
+  double? get stdLat => fields.length > 6 ? double.tryParse(fields[6]) : null;
+
+  /// Standard deviation of longitude error, in meters.
+  double? get stdLon => fields.length > 7 ? double.tryParse(fields[7]) : null;
+
+  /// Standard deviation of altitude error, in meters.
+  double? get stdAltitude =>
+      fields.length > 8 ? double.tryParse(fields[8]) : null;
 }
 
 /// An NMEA message for course over ground and ground velocity data.

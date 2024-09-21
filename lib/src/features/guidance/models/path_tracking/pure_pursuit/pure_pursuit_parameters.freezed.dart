@@ -31,8 +31,12 @@ mixin _$PurePursuitParameters {
   /// set to that.
   double get lookAheadSeconds => throw _privateConstructorUsedError;
 
+  /// Serializes this PurePursuitParameters to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PurePursuitParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PurePursuitParametersCopyWith<PurePursuitParameters> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -57,6 +61,8 @@ class _$PurePursuitParametersCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PurePursuitParameters
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -97,6 +103,8 @@ class __$$PurePursuitParametersImplCopyWithImpl<$Res>
       $Res Function(_$PurePursuitParametersImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PurePursuitParameters
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -155,12 +163,14 @@ class _$PurePursuitParametersImpl implements _PurePursuitParameters {
                 other.lookAheadSeconds == lookAheadSeconds));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, lookAheadMinDistance, lookAheadSeconds);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PurePursuitParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PurePursuitParametersImplCopyWith<_$PurePursuitParametersImpl>
@@ -183,20 +193,22 @@ abstract class _PurePursuitParameters implements PurePursuitParameters {
   factory _PurePursuitParameters.fromJson(Map<String, dynamic> json) =
       _$PurePursuitParametersImpl.fromJson;
 
-  @override
-
   /// The minimum value for the look ahead distance,
   /// having this set increases the stability at low speeds.
-  double get lookAheadMinDistance;
   @override
+  double get lookAheadMinDistance;
 
   /// How many seconds ahead we should multiply the
   /// vehicle's velocity with to get the look ahead distance.
   /// If the distance is shorter that [lookAheadMinDistance] it will be
   /// set to that.
-  double get lookAheadSeconds;
   @override
-  @JsonKey(ignore: true)
+  double get lookAheadSeconds;
+
+  /// Create a copy of PurePursuitParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PurePursuitParametersImplCopyWith<_$PurePursuitParametersImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

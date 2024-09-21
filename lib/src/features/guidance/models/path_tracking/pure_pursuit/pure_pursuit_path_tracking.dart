@@ -110,20 +110,28 @@ final class PurePursuitPathTracking extends PathTracking {
       if (vehicle.isReversing && outsidePoint == path.last) {
         return (
           inside: path.first.moveRhumb(
-            distance: vehicle.lookAheadDistance -
+            distance: clampDouble(
+              vehicle.lookAheadDistance -
                 vehicle.lookAheadStartPosition.rhumb
                     .distanceTo(path.first.position)
-                    .clamp(0, vehicle.lookAheadDistance),
+                    ,
+              0,
+              vehicle.lookAheadDistance,
+            ),
           ),
           outside: null
         );
       } else if (!vehicle.isReversing && outsidePoint == path.first) {
         return (
           inside: path.last.moveRhumb(
-            distance: vehicle.lookAheadDistance -
+            distance: clampDouble(
+              vehicle.lookAheadDistance -
                 vehicle.lookAheadStartPosition.rhumb
                     .distanceTo(path.last.position)
-                    .clamp(0, vehicle.lookAheadDistance),
+                    ,
+              0,
+              vehicle.lookAheadDistance,
+            ),
           ),
           outside: null
         );
@@ -270,7 +278,8 @@ final class PurePursuitPathTracking extends PathTracking {
           vehicle.lookAheadDistance,
     ).toDegrees();
 
-    return steeringAngle.clamp(
+    return clampDouble(
+      steeringAngle,
       -vehicle.steeringAngleMax,
       vehicle.steeringAngleMax,
     );

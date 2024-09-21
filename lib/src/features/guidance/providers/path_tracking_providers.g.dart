@@ -61,26 +61,12 @@ const loadPathTrackingFromFileProvider = LoadPathTrackingFromFileFamily();
 /// valid.
 ///
 /// Copied from [loadPathTrackingFromFile].
-class LoadPathTrackingFromFileFamily extends Family {
+class LoadPathTrackingFromFileFamily extends Family<AsyncValue<PathTracking?>> {
   /// A provider for loading an [PathTracking] from a file at [path], if it's
   /// valid.
   ///
   /// Copied from [loadPathTrackingFromFile].
   const LoadPathTrackingFromFileFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadPathTrackingFromFileProvider';
 
   /// A provider for loading an [PathTracking] from a file at [path], if it's
   /// valid.
@@ -94,7 +80,6 @@ class LoadPathTrackingFromFileFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   LoadPathTrackingFromFileProvider getProviderOverride(
     covariant LoadPathTrackingFromFileProvider provider,
@@ -104,29 +89,19 @@ class LoadPathTrackingFromFileFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<PathTracking?> Function(LoadPathTrackingFromFileRef ref)
-          create) {
-    return _$LoadPathTrackingFromFileFamilyOverride(this, create);
-  }
-}
-
-class _$LoadPathTrackingFromFileFamilyOverride implements FamilyOverride {
-  _$LoadPathTrackingFromFileFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<PathTracking?> Function(LoadPathTrackingFromFileRef ref)
-      create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final LoadPathTrackingFromFileFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  LoadPathTrackingFromFileProvider getProviderOverride(
-    covariant LoadPathTrackingFromFileProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadPathTrackingFromFileProvider';
 }
 
 /// A provider for loading an [PathTracking] from a file at [path], if it's
@@ -159,7 +134,7 @@ class LoadPathTrackingFromFileProvider
         );
 
   LoadPathTrackingFromFileProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -172,7 +147,8 @@ class LoadPathTrackingFromFileProvider
 
   @override
   Override overrideWith(
-    FutureOr<PathTracking?> Function(LoadPathTrackingFromFileRef ref) create,
+    FutureOr<PathTracking?> Function(LoadPathTrackingFromFileRef provider)
+        create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -189,27 +165,8 @@ class LoadPathTrackingFromFileProvider
   }
 
   @override
-  (String,) get argument {
-    return (path,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<PathTracking?> createElement() {
     return _LoadPathTrackingFromFileProviderElement(this);
-  }
-
-  LoadPathTrackingFromFileProvider _copyWith(
-    FutureOr<PathTracking?> Function(LoadPathTrackingFromFileRef ref) create,
-  ) {
-    return LoadPathTrackingFromFileProvider._internal(
-      (ref) => create(ref as LoadPathTrackingFromFileRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      path: path,
-    );
   }
 
   @override
@@ -256,27 +213,13 @@ const savePathTrackingProvider = SavePathTrackingFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [savePathTracking].
-class SavePathTrackingFamily extends Family {
+class SavePathTrackingFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [savePathTracking].
   const SavePathTrackingFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'savePathTrackingProvider';
 
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
@@ -295,7 +238,6 @@ class SavePathTrackingFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   SavePathTrackingProvider getProviderOverride(
     covariant SavePathTrackingProvider provider,
@@ -307,27 +249,19 @@ class SavePathTrackingFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(SavePathTrackingRef ref) create) {
-    return _$SavePathTrackingFamilyOverride(this, create);
-  }
-}
-
-class _$SavePathTrackingFamilyOverride implements FamilyOverride {
-  _$SavePathTrackingFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(SavePathTrackingRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final SavePathTrackingFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  SavePathTrackingProvider getProviderOverride(
-    covariant SavePathTrackingProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'savePathTrackingProvider';
 }
 
 /// A provider for saving [tracking] to a file in the user file directory.
@@ -367,7 +301,7 @@ class SavePathTrackingProvider extends AutoDisposeFutureProvider<void> {
         );
 
   SavePathTrackingProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -384,7 +318,7 @@ class SavePathTrackingProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SavePathTrackingRef ref) create,
+    FutureOr<void> Function(SavePathTrackingRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -403,37 +337,8 @@ class SavePathTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    PathTracking, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _SavePathTrackingProviderElement(this);
-  }
-
-  SavePathTrackingProvider _copyWith(
-    FutureOr<void> Function(SavePathTrackingRef ref) create,
-  ) {
-    return SavePathTrackingProvider._internal(
-      (ref) => create(ref as SavePathTrackingRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      tracking: tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -494,27 +399,13 @@ const exportPathTrackingProvider = ExportPathTrackingFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [exportPathTracking].
-class ExportPathTrackingFamily extends Family {
+class ExportPathTrackingFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [exportPathTracking].
   const ExportPathTrackingFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportPathTrackingProvider';
 
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
@@ -533,7 +424,6 @@ class ExportPathTrackingFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportPathTrackingProvider getProviderOverride(
     covariant ExportPathTrackingProvider provider,
@@ -545,27 +435,19 @@ class ExportPathTrackingFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(ExportPathTrackingRef ref) create) {
-    return _$ExportPathTrackingFamilyOverride(this, create);
-  }
-}
-
-class _$ExportPathTrackingFamilyOverride implements FamilyOverride {
-  _$ExportPathTrackingFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportPathTrackingRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportPathTrackingFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportPathTrackingProvider getProviderOverride(
-    covariant ExportPathTrackingProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportPathTrackingProvider';
 }
 
 /// A provider for saving [tracking] to a file in the user file directory.
@@ -605,7 +487,7 @@ class ExportPathTrackingProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportPathTrackingProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -622,7 +504,7 @@ class ExportPathTrackingProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportPathTrackingRef ref) create,
+    FutureOr<void> Function(ExportPathTrackingRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -641,37 +523,8 @@ class ExportPathTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    PathTracking, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportPathTrackingProviderElement(this);
-  }
-
-  ExportPathTrackingProvider _copyWith(
-    FutureOr<void> Function(ExportPathTrackingRef ref) create,
-  ) {
-    return ExportPathTrackingProvider._internal(
-      (ref) => create(ref as ExportPathTrackingRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      tracking: tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -753,27 +606,13 @@ const deletePathTrackingProvider = DeletePathTrackingFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [deletePathTracking].
-class DeletePathTrackingFamily extends Family {
+class DeletePathTrackingFamily extends Family<AsyncValue<void>> {
   /// A provider for deleting [tracking] from the user file systemm.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deletePathTracking].
   const DeletePathTrackingFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'deletePathTrackingProvider';
 
   /// A provider for deleting [tracking] from the user file systemm.
   ///
@@ -792,7 +631,6 @@ class DeletePathTrackingFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   DeletePathTrackingProvider getProviderOverride(
     covariant DeletePathTrackingProvider provider,
@@ -804,27 +642,19 @@ class DeletePathTrackingFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(DeletePathTrackingRef ref) create) {
-    return _$DeletePathTrackingFamilyOverride(this, create);
-  }
-}
-
-class _$DeletePathTrackingFamilyOverride implements FamilyOverride {
-  _$DeletePathTrackingFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(DeletePathTrackingRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final DeletePathTrackingFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  DeletePathTrackingProvider getProviderOverride(
-    covariant DeletePathTrackingProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deletePathTrackingProvider';
 }
 
 /// A provider for deleting [tracking] from the user file systemm.
@@ -864,7 +694,7 @@ class DeletePathTrackingProvider extends AutoDisposeFutureProvider<void> {
         );
 
   DeletePathTrackingProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -881,7 +711,7 @@ class DeletePathTrackingProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(DeletePathTrackingRef ref) create,
+    FutureOr<void> Function(DeletePathTrackingRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -900,37 +730,8 @@ class DeletePathTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    PathTracking, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _DeletePathTrackingProviderElement(this);
-  }
-
-  DeletePathTrackingProvider _copyWith(
-    FutureOr<void> Function(DeletePathTrackingRef ref) create,
-  ) {
-    return DeletePathTrackingProvider._internal(
-      (ref) => create(ref as DeletePathTrackingRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      tracking: tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -1008,25 +809,11 @@ const exportGuidancesProvider = ExportGuidancesFamily();
 /// A provider for exporting all guidance files.
 ///
 /// Copied from [exportGuidances].
-class ExportGuidancesFamily extends Family {
+class ExportGuidancesFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all guidance files.
   ///
   /// Copied from [exportGuidances].
   const ExportGuidancesFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportGuidancesProvider';
 
   /// A provider for exporting all guidance files.
   ///
@@ -1039,7 +826,6 @@ class ExportGuidancesFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportGuidancesProvider getProviderOverride(
     covariant ExportGuidancesProvider provider,
@@ -1049,27 +835,19 @@ class ExportGuidancesFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(ExportGuidancesRef ref) create) {
-    return _$ExportGuidancesFamilyOverride(this, create);
-  }
-}
-
-class _$ExportGuidancesFamilyOverride implements FamilyOverride {
-  _$ExportGuidancesFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportGuidancesRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportGuidancesFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportGuidancesProvider getProviderOverride(
-    covariant ExportGuidancesProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportGuidancesProvider';
 }
 
 /// A provider for exporting all guidance files.
@@ -1099,7 +877,7 @@ class ExportGuidancesProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportGuidancesProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -1112,7 +890,7 @@ class ExportGuidancesProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportGuidancesRef ref) create,
+    FutureOr<void> Function(ExportGuidancesRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1129,29 +907,8 @@ class ExportGuidancesProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  ({
-    bool zip,
-  }) get argument {
-    return (zip: zip,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportGuidancesProviderElement(this);
-  }
-
-  ExportGuidancesProvider _copyWith(
-    FutureOr<void> Function(ExportGuidancesRef ref) create,
-  ) {
-    return ExportGuidancesProvider._internal(
-      (ref) => create(ref as ExportGuidancesRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      zip: zip,
-    );
   }
 
   @override
@@ -1315,4 +1072,4 @@ final debugPathTrackingProvider =
 
 typedef _$DebugPathTracking = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

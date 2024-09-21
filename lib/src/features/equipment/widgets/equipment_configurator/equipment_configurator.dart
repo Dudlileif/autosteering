@@ -48,7 +48,6 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
     vsync: this,
     initialIndex: ref.read(
       configuredEquipmentProvider.select((value) => isNotBlank(value.name)),
-      
     )
         ? ref.read(equipmentConfiguratorIndexProvider)
         : 0,
@@ -312,11 +311,9 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
         onPressed: ref.watch(
           configuredEquipmentProvider.select(
-            (value) =>
-              isNotBlank(value.name),
+            (value) => isNotBlank(value.name),
           ),
         )
-            
             ? () async {
                 await Future<void>(() async {
                   final equipment = ref.watch(configuredEquipmentProvider)
@@ -359,7 +356,11 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
                     }
                   }
                   ref.read(loadedEquipmentProvider.notifier).update(equipment);
-                }).then((value) => Navigator.of(context).pop());
+                });
+
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
               }
             : null,
         icon: const Icon(Icons.check),

@@ -78,26 +78,12 @@ const loadABTrackingFromFileProvider = LoadABTrackingFromFileFamily();
 /// valid.
 ///
 /// Copied from [loadABTrackingFromFile].
-class LoadABTrackingFromFileFamily extends Family {
+class LoadABTrackingFromFileFamily extends Family<AsyncValue<ABTracking?>> {
   /// A provider for loading an [ABTracking] from a file at [path], if it's
   /// valid.
   ///
   /// Copied from [loadABTrackingFromFile].
   const LoadABTrackingFromFileFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadABTrackingFromFileProvider';
 
   /// A provider for loading an [ABTracking] from a file at [path], if it's
   /// valid.
@@ -111,7 +97,6 @@ class LoadABTrackingFromFileFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   LoadABTrackingFromFileProvider getProviderOverride(
     covariant LoadABTrackingFromFileProvider provider,
@@ -121,27 +106,19 @@ class LoadABTrackingFromFileFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<ABTracking?> Function(LoadABTrackingFromFileRef ref) create) {
-    return _$LoadABTrackingFromFileFamilyOverride(this, create);
-  }
-}
-
-class _$LoadABTrackingFromFileFamilyOverride implements FamilyOverride {
-  _$LoadABTrackingFromFileFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<ABTracking?> Function(LoadABTrackingFromFileRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final LoadABTrackingFromFileFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  LoadABTrackingFromFileProvider getProviderOverride(
-    covariant LoadABTrackingFromFileProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadABTrackingFromFileProvider';
 }
 
 /// A provider for loading an [ABTracking] from a file at [path], if it's
@@ -174,7 +151,7 @@ class LoadABTrackingFromFileProvider
         );
 
   LoadABTrackingFromFileProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -187,7 +164,7 @@ class LoadABTrackingFromFileProvider
 
   @override
   Override overrideWith(
-    FutureOr<ABTracking?> Function(LoadABTrackingFromFileRef ref) create,
+    FutureOr<ABTracking?> Function(LoadABTrackingFromFileRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -204,27 +181,8 @@ class LoadABTrackingFromFileProvider
   }
 
   @override
-  (String,) get argument {
-    return (path,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<ABTracking?> createElement() {
     return _LoadABTrackingFromFileProviderElement(this);
-  }
-
-  LoadABTrackingFromFileProvider _copyWith(
-    FutureOr<ABTracking?> Function(LoadABTrackingFromFileRef ref) create,
-  ) {
-    return LoadABTrackingFromFileProvider._internal(
-      (ref) => create(ref as LoadABTrackingFromFileRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      path: path,
-    );
   }
 
   @override
@@ -270,27 +228,13 @@ const saveABTrackingProvider = SaveABTrackingFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [saveABTracking].
-class SaveABTrackingFamily extends Family {
+class SaveABTrackingFamily extends Family<AsyncValue<void>> {
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [saveABTracking].
   const SaveABTrackingFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveABTrackingProvider';
 
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
@@ -309,7 +253,6 @@ class SaveABTrackingFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   SaveABTrackingProvider getProviderOverride(
     covariant SaveABTrackingProvider provider,
@@ -321,26 +264,19 @@ class SaveABTrackingFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(FutureOr<void> Function(SaveABTrackingRef ref) create) {
-    return _$SaveABTrackingFamilyOverride(this, create);
-  }
-}
-
-class _$SaveABTrackingFamilyOverride implements FamilyOverride {
-  _$SaveABTrackingFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(SaveABTrackingRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final SaveABTrackingFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  SaveABTrackingProvider getProviderOverride(
-    covariant SaveABTrackingProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'saveABTrackingProvider';
 }
 
 /// A provider for saving [tracking] to a file in the user file directory.
@@ -380,7 +316,7 @@ class SaveABTrackingProvider extends AutoDisposeFutureProvider<void> {
         );
 
   SaveABTrackingProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -397,7 +333,7 @@ class SaveABTrackingProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(SaveABTrackingRef ref) create,
+    FutureOr<void> Function(SaveABTrackingRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -416,37 +352,8 @@ class SaveABTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    ABTracking, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _SaveABTrackingProviderElement(this);
-  }
-
-  SaveABTrackingProvider _copyWith(
-    FutureOr<void> Function(SaveABTrackingRef ref) create,
-  ) {
-    return SaveABTrackingProvider._internal(
-      (ref) => create(ref as SaveABTrackingRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      tracking: tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -506,27 +413,13 @@ const exportABTrackingProvider = ExportABTrackingFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [exportABTracking].
-class ExportABTrackingFamily extends Family {
+class ExportABTrackingFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting [tracking] to a file.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [exportABTracking].
   const ExportABTrackingFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportABTrackingProvider';
 
   /// A provider for exporting [tracking] to a file.
   ///
@@ -545,7 +438,6 @@ class ExportABTrackingFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   ExportABTrackingProvider getProviderOverride(
     covariant ExportABTrackingProvider provider,
@@ -557,27 +449,19 @@ class ExportABTrackingFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(ExportABTrackingRef ref) create) {
-    return _$ExportABTrackingFamilyOverride(this, create);
-  }
-}
-
-class _$ExportABTrackingFamilyOverride implements FamilyOverride {
-  _$ExportABTrackingFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(ExportABTrackingRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final ExportABTrackingFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  ExportABTrackingProvider getProviderOverride(
-    covariant ExportABTrackingProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'exportABTrackingProvider';
 }
 
 /// A provider for exporting [tracking] to a file.
@@ -617,7 +501,7 @@ class ExportABTrackingProvider extends AutoDisposeFutureProvider<void> {
         );
 
   ExportABTrackingProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -634,7 +518,7 @@ class ExportABTrackingProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(ExportABTrackingRef ref) create,
+    FutureOr<void> Function(ExportABTrackingRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -653,37 +537,8 @@ class ExportABTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    ABTracking, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _ExportABTrackingProviderElement(this);
-  }
-
-  ExportABTrackingProvider _copyWith(
-    FutureOr<void> Function(ExportABTrackingRef ref) create,
-  ) {
-    return ExportABTrackingProvider._internal(
-      (ref) => create(ref as ExportABTrackingRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      tracking: tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -761,27 +616,13 @@ const deleteABTrackingProvider = DeleteABTrackingFamily();
 /// Override the file name with [overrideName].
 ///
 /// Copied from [deleteABTracking].
-class DeleteABTrackingFamily extends Family {
+class DeleteABTrackingFamily extends Family<AsyncValue<void>> {
   /// A provider for deleting [tracking] from the user file systemm.
   ///
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteABTracking].
   const DeleteABTrackingFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'deleteABTrackingProvider';
 
   /// A provider for deleting [tracking] from the user file systemm.
   ///
@@ -800,7 +641,6 @@ class DeleteABTrackingFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   DeleteABTrackingProvider getProviderOverride(
     covariant DeleteABTrackingProvider provider,
@@ -812,27 +652,19 @@ class DeleteABTrackingFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<void> Function(DeleteABTrackingRef ref) create) {
-    return _$DeleteABTrackingFamilyOverride(this, create);
-  }
-}
-
-class _$DeleteABTrackingFamilyOverride implements FamilyOverride {
-  _$DeleteABTrackingFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<void> Function(DeleteABTrackingRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final DeleteABTrackingFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  DeleteABTrackingProvider getProviderOverride(
-    covariant DeleteABTrackingProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteABTrackingProvider';
 }
 
 /// A provider for deleting [tracking] from the user file systemm.
@@ -872,7 +704,7 @@ class DeleteABTrackingProvider extends AutoDisposeFutureProvider<void> {
         );
 
   DeleteABTrackingProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -889,7 +721,7 @@ class DeleteABTrackingProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(DeleteABTrackingRef ref) create,
+    FutureOr<void> Function(DeleteABTrackingRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -908,37 +740,8 @@ class DeleteABTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 
   @override
-  (
-    ABTracking, {
-    String? overrideName,
-    bool downloadIfWeb,
-  }) get argument {
-    return (
-      tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
   AutoDisposeFutureProviderElement<void> createElement() {
     return _DeleteABTrackingProviderElement(this);
-  }
-
-  DeleteABTrackingProvider _copyWith(
-    FutureOr<void> Function(DeleteABTrackingRef ref) create,
-  ) {
-    return DeleteABTrackingProvider._internal(
-      (ref) => create(ref as DeleteABTrackingRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      tracking: tracking,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
   }
 
   @override
@@ -1383,4 +1186,4 @@ final aBTrackingShowAllLinesProvider =
 
 typedef _$ABTrackingShowAllLines = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -42,8 +42,12 @@ mixin _$ImuReading {
   /// The IMU input acceleration in the Z-axis (vertical).
   num get accelerationZ => throw _privateConstructorUsedError;
 
+  /// Serializes this ImuReading to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ImuReading
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ImuReadingCopyWith<ImuReading> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -74,6 +78,8 @@ class _$ImuReadingCopyWithImpl<$Res, $Val extends ImuReading>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ImuReading
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -144,6 +150,8 @@ class __$$ImuReadingImplCopyWithImpl<$Res>
       _$ImuReadingImpl _value, $Res Function(_$ImuReadingImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ImuReading
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -261,12 +269,14 @@ class _$ImuReadingImpl implements _ImuReading {
                 other.accelerationZ == accelerationZ));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, receiveTime, yaw, pitch, roll,
       accelerationX, accelerationY, accelerationZ);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ImuReading
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ImuReadingImplCopyWith<_$ImuReadingImpl> get copyWith =>
@@ -293,37 +303,39 @@ abstract class _ImuReading implements ImuReading {
   factory _ImuReading.fromJson(Map<String, dynamic> json) =
       _$ImuReadingImpl.fromJson;
 
-  @override
-
   /// The time of the reading being received.
+  @override
   @DateTimeSerializer()
   DateTime get receiveTime;
-  @override
 
   /// The IMU input yaw/bearing from startup.
-  num get yaw;
   @override
+  num get yaw;
 
   /// The IMU input pitch.
-  num get pitch;
   @override
+  num get pitch;
 
   /// The IMU input roll.
-  num get roll;
   @override
+  num get roll;
 
   /// The IMU input acceleration in the X-axis (lateral).
-  num get accelerationX;
   @override
+  num get accelerationX;
 
   /// The IMU input acceleration in the Y-axis (longitudinal).
-  num get accelerationY;
   @override
+  num get accelerationY;
 
   /// The IMU input acceleration in the Z-axis (vertical).
-  num get accelerationZ;
   @override
-  @JsonKey(ignore: true)
+  num get accelerationZ;
+
+  /// Create a copy of ImuReading
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ImuReadingImplCopyWith<_$ImuReadingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

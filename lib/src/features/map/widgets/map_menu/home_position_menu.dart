@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:ui';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -141,8 +143,11 @@ class _EnterHomePositionDialogState
                 initialValue: (lat ?? 0).toStringAsFixed(9),
                 onChanged: (value) {
                   final updated =
-                      (double.tryParse(value.replaceAll(',', '.')) ?? 0)
-                          .clamp(-90.0, 90.0);
+                      clampDouble(
+                    double.tryParse(value.replaceAll(',', '.')) ?? 0,
+                    -90,
+                    90,
+                  );
                   setState(() => lat = updated);
                 },
               );
@@ -170,8 +175,11 @@ class _EnterHomePositionDialogState
                 initialValue: (lon ?? 0).toStringAsFixed(9),
                 onChanged: (value) {
                   final updated =
-                      (double.tryParse(value.replaceAll(',', '.')) ?? 0)
-                          .clamp(-180.0, 180.0);
+                        clampDouble(
+                      double.tryParse(value.replaceAll(',', '.')) ?? 0,
+                      -180,
+                      180,
+                    );
                   setState(() => lon = updated);
                 },
               );

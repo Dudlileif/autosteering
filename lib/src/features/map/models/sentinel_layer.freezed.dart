@@ -29,8 +29,12 @@ mixin _$SentinelLayer {
   /// Which layer type this layer should contain info about.
   SentinelLayerType get layerType => throw _privateConstructorUsedError;
 
+  /// Serializes this SentinelLayer to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SentinelLayer
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SentinelLayerCopyWith<SentinelLayer> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,6 +58,8 @@ class _$SentinelLayerCopyWithImpl<$Res, $Val extends SentinelLayer>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SentinelLayer
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,6 +98,8 @@ class __$$SentinelLayerImplCopyWithImpl<$Res>
       _$SentinelLayerImpl _value, $Res Function(_$SentinelLayerImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SentinelLayer
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -147,11 +155,13 @@ class _$SentinelLayerImpl extends _SentinelLayer {
                 other.layerType == layerType));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, instanceId, layerType);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SentinelLayer
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SentinelLayerImplCopyWith<_$SentinelLayerImpl> get copyWith =>
@@ -174,19 +184,21 @@ abstract class _SentinelLayer extends SentinelLayer {
   factory _SentinelLayer.fromJson(Map<String, dynamic> json) =
       _$SentinelLayerImpl.fromJson;
 
-  @override
-
   /// The Coperincus dataspace instanceId api-key.
   /// Register a user at [https://dataspace.copernicus.eu/],
   /// go to [https://shapps.dataspace.copernicus.eu/dashboard/#/configurations]
   /// and create a new configuration, and copy the Id.
-  String get instanceId;
   @override
+  String get instanceId;
 
   /// Which layer type this layer should contain info about.
-  SentinelLayerType get layerType;
   @override
-  @JsonKey(ignore: true)
+  SentinelLayerType get layerType;
+
+  /// Create a copy of SentinelLayer
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SentinelLayerImplCopyWith<_$SentinelLayerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
