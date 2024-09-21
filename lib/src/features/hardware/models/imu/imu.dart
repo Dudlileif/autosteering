@@ -82,42 +82,40 @@ class Imu {
   /// The pitch reading accounted for [config.zeroValues.pitchZero].
   double get pitch =>
       switch (config.swapPitchAndRoll) {
-        false =>
-          clampDouble(
+        false => clampDouble(
             (reading.pitch - config.zeroValues.pitchZero).toDouble(),
-            -90,
-            90,
+            -85,
+            85,
           ),
         true => clampDouble(
             (reading.roll - config.zeroValues.rollZero).toDouble(),
-            -180,
-            180,
+            -85,
+            85,
           )
       } *
       switch (config.invertPitch) {
-        true => -1.0,
-        false => 1.0,
+        true => -1,
+        false => 1,
       } *
       config.pitchGain;
 
   /// The roll reading accounted for [config.zeroValues.rollZero].
   double get roll =>
       switch (config.swapPitchAndRoll) {
-        false =>
-          clampDouble(
+        false => clampDouble(
             (reading.roll - config.zeroValues.rollZero).toDouble(),
-            -180,
-            180,
+            -85,
+            85,
           ),
         true => clampDouble(
             (reading.pitch - config.zeroValues.pitchZero).toDouble(),
-            -90,
-            90,
+            -85,
+            85,
           )
       } *
       switch (config.invertRoll) {
-        true => -1.0,
-        false => 1.0,
+        true => -1,
+        false => 1,
       } *
       config.rollGain;
 
