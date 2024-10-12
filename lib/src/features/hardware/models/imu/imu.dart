@@ -51,6 +51,9 @@ class Imu {
   /// [config.zeroValues.bearingZero].
   bool bearingIsSet = false;
 
+  /// The last time a GNSS reading was received.
+  DateTime? lastGnssTime;
+
   /// The latest reading from the hardware sensor, accounted for the
   /// [ImuConfig.delayReadings] to match the GNSS fix time.
   ///
@@ -58,7 +61,10 @@ class Imu {
   /// [ImuConfig.delayReadings] milliseconds ago, otherwise the latest reading
   /// is returned.
   ImuReading get reading {
-    final now = DateTime.now();
+    final now = switch (config.useOnlyGnssSyncedReadings) {
+      true => lastGnssTime ?? DateTime.now(),
+      false => DateTime.now()
+    };
     return readings.firstWhereOrNull(
           (element) =>
               now.difference(element.receiveTime).inMilliseconds >

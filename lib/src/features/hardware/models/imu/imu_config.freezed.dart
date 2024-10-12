@@ -52,6 +52,9 @@ mixin _$ImuConfig {
   /// time.
   int get delayReadings => throw _privateConstructorUsedError;
 
+  /// Whether to only use readings that are synced with a GNSS reading.
+  bool get useOnlyGnssSyncedReadings => throw _privateConstructorUsedError;
+
   /// Serializes this ImuConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
@@ -77,7 +80,8 @@ abstract class $ImuConfigCopyWith<$Res> {
       bool invertRoll,
       double pitchGain,
       double rollGain,
-      int delayReadings});
+      int delayReadings,
+      bool useOnlyGnssSyncedReadings});
 
   $ImuZeroValuesCopyWith<$Res> get zeroValues;
 }
@@ -107,6 +111,7 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
     Object? pitchGain = null,
     Object? rollGain = null,
     Object? delayReadings = null,
+    Object? useOnlyGnssSyncedReadings = null,
   }) {
     return _then(_value.copyWith(
       usePitchAndRoll: null == usePitchAndRoll
@@ -149,6 +154,10 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
           ? _value.delayReadings
           : delayReadings // ignore: cast_nullable_to_non_nullable
               as int,
+      useOnlyGnssSyncedReadings: null == useOnlyGnssSyncedReadings
+          ? _value.useOnlyGnssSyncedReadings
+          : useOnlyGnssSyncedReadings // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -181,7 +190,8 @@ abstract class _$$ImuConfigImplCopyWith<$Res>
       bool invertRoll,
       double pitchGain,
       double rollGain,
-      int delayReadings});
+      int delayReadings,
+      bool useOnlyGnssSyncedReadings});
 
   @override
   $ImuZeroValuesCopyWith<$Res> get zeroValues;
@@ -210,6 +220,7 @@ class __$$ImuConfigImplCopyWithImpl<$Res>
     Object? pitchGain = null,
     Object? rollGain = null,
     Object? delayReadings = null,
+    Object? useOnlyGnssSyncedReadings = null,
   }) {
     return _then(_$ImuConfigImpl(
       usePitchAndRoll: null == usePitchAndRoll
@@ -252,6 +263,10 @@ class __$$ImuConfigImplCopyWithImpl<$Res>
           ? _value.delayReadings
           : delayReadings // ignore: cast_nullable_to_non_nullable
               as int,
+      useOnlyGnssSyncedReadings: null == useOnlyGnssSyncedReadings
+          ? _value.useOnlyGnssSyncedReadings
+          : useOnlyGnssSyncedReadings // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -269,7 +284,8 @@ class _$ImuConfigImpl implements _ImuConfig {
       this.invertRoll = false,
       this.pitchGain = 1,
       this.rollGain = 1,
-      this.delayReadings = 30});
+      this.delayReadings = 30,
+      this.useOnlyGnssSyncedReadings = true});
 
   factory _$ImuConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$ImuConfigImplFromJson(json);
@@ -326,9 +342,14 @@ class _$ImuConfigImpl implements _ImuConfig {
   @JsonKey()
   final int delayReadings;
 
+  /// Whether to only use readings that are synced with a GNSS reading.
+  @override
+  @JsonKey()
+  final bool useOnlyGnssSyncedReadings;
+
   @override
   String toString() {
-    return 'ImuConfig(usePitchAndRoll: $usePitchAndRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain, delayReadings: $delayReadings)';
+    return 'ImuConfig(usePitchAndRoll: $usePitchAndRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain, delayReadings: $delayReadings, useOnlyGnssSyncedReadings: $useOnlyGnssSyncedReadings)';
   }
 
   @override
@@ -354,7 +375,10 @@ class _$ImuConfigImpl implements _ImuConfig {
             (identical(other.rollGain, rollGain) ||
                 other.rollGain == rollGain) &&
             (identical(other.delayReadings, delayReadings) ||
-                other.delayReadings == delayReadings));
+                other.delayReadings == delayReadings) &&
+            (identical(other.useOnlyGnssSyncedReadings,
+                    useOnlyGnssSyncedReadings) ||
+                other.useOnlyGnssSyncedReadings == useOnlyGnssSyncedReadings));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -370,7 +394,8 @@ class _$ImuConfigImpl implements _ImuConfig {
       invertRoll,
       pitchGain,
       rollGain,
-      delayReadings);
+      delayReadings,
+      useOnlyGnssSyncedReadings);
 
   /// Create a copy of ImuConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -399,7 +424,8 @@ abstract class _ImuConfig implements ImuConfig {
       final bool invertRoll,
       final double pitchGain,
       final double rollGain,
-      final int delayReadings}) = _$ImuConfigImpl;
+      final int delayReadings,
+      final bool useOnlyGnssSyncedReadings}) = _$ImuConfigImpl;
 
   factory _ImuConfig.fromJson(Map<String, dynamic> json) =
       _$ImuConfigImpl.fromJson;
@@ -445,6 +471,10 @@ abstract class _ImuConfig implements ImuConfig {
   /// time.
   @override
   int get delayReadings;
+
+  /// Whether to only use readings that are synced with a GNSS reading.
+  @override
+  bool get useOnlyGnssSyncedReadings;
 
   /// Create a copy of ImuConfig
   /// with the given fields replaced by the non-null parameter values.

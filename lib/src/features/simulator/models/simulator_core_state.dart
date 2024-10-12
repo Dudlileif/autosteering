@@ -68,14 +68,23 @@ class SimulatorCoreState {
   int gaugesAverageCount = 10;
 
   /// A list of the last [gaugesAverageCount] GNSS updates.
-  List<({Geographic gnssPosition, DateTime time})> prevGnssUpdates = [];
+  List<({Geographic gnssPosition, DateTime gnssTime, DateTime receiveTime})>
+      prevGnssUpdates = [];
 
   /// The current GNSS update position and time.
-  ({Geographic gnssPosition, DateTime time})? gnssUpdate;
+  ({
+    Geographic gnssPosition,
+    DateTime gnssTime,
+    DateTime receiveTime
+  })? gnssUpdate;
 
   /// The GNSS update position and time that was used for updating gauges
   /// (distance).
-  ({Geographic gnssPosition, DateTime time})? prevDistanceCalcGnssUpdate;
+  ({
+    Geographic gnssPosition,
+    DateTime gnssTime,
+    DateTime receiveTime
+  })? prevDistanceCalcGnssUpdate;
 
   /// The quality of the last GNSS fix.
   GnssFixQuality gnssFixQuality = GnssFixQuality.notAvailable;
@@ -218,7 +227,11 @@ class SimulatorCoreState {
       vehicle?.position = message.position;
     }
     // Update the vehicle position from GNSS.
-    else if (message is ({Geographic gnssPosition, DateTime time})) {
+    else if (message is ({
+      Geographic gnssPosition,
+      DateTime gnssTime,
+      DateTime receiveTime
+    })) {
       if (!allowManualSimInput) {
         gnssUpdate = message;
       }
@@ -931,13 +944,15 @@ class SimulatorCoreState {
   void updateGauges() {
     // Update based on the last GNSS updates, if we've received one this tick.
     if (gnssUpdate != null) {
+      vehicle!.imu.lastGnssTime = gnssUpdate!.receiveTime;
       if (gnssUpdate != null && prevGnssUpdates.lastOrNull != null) {
         // Correct for roll and pitch if IMU bearing is set.
         if (vehicle!.imu.bearingIsSet && vehicle!.imu.config.usePitchAndRoll) {
           gnssUpdate = (
             gnssPosition: vehicle!
                 .correctPositionForRollAndPitch(gnssUpdate!.gnssPosition),
-            time: gnssUpdate!.time
+            gnssTime: gnssUpdate!.gnssTime,
+            receiveTime: gnssUpdate!.receiveTime,
           );
         }
 
@@ -962,7 +977,9 @@ class SimulatorCoreState {
         var velocities = prevGnssUpdates.mapIndexed(
           (index, element) =>
               distances.elementAt(index) /
-              ((gnssUpdate!.time.difference(element.time).inMicroseconds) /
+              ((gnssUpdate!.gnssTime
+                      .difference(element.gnssTime)
+                      .inMicroseconds) /
                   1e6),
         );
         var velocityAvg = velocities.average;
@@ -1006,14 +1023,16 @@ class SimulatorCoreState {
             gnssUpdate = (
               gnssPosition: vehicle!
                   .correctPositionForRollAndPitch(gnssUpdate!.gnssPosition),
-              time: gnssUpdate!.time
+              gnssTime: gnssUpdate!.gnssTime,
+              receiveTime: gnssUpdate!.receiveTime,
             );
             prevGnssUpdates = prevGnssUpdates
                 .map(
                   (e) => (
                     gnssPosition:
                         vehicle!.correctPositionForRollAndPitch(e.gnssPosition),
-                    time: e.time
+                    gnssTime: e.gnssTime,
+                    receiveTime: gnssUpdate!.receiveTime,
                   ),
                 )
                 .toList();
@@ -1030,7 +1049,9 @@ class SimulatorCoreState {
             velocities = prevGnssUpdates.mapIndexed(
               (index, element) =>
                   distances.elementAt(index) /
-                  ((gnssUpdate!.time.difference(element.time).inMicroseconds) /
+                  ((gnssUpdate!.gnssTime
+                          .difference(element.gnssTime)
+                          .inMicroseconds) /
                       1e6),
             );
 

@@ -344,6 +344,42 @@ class ImuConfigurator extends StatelessWidget {
                   ),
                 ),
               ),
+              Consumer(
+                child: Text(
+                  'Only use GNSS synced readings',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                builder: (context, ref, child) => CheckboxListTile(
+                  value: ref.watch(
+                    mainVehicleProvider.select(
+                      (value) => value.imu.config.useOnlyGnssSyncedReadings,
+                    ),
+                  ),
+                  subtitle: const Text('DO NOT DISABLE'),
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(simInputProvider.notifier).send(
+                            ref
+                                .read(
+                                  mainVehicleProvider
+                                      .select((value) => value.imu.config),
+                                )
+                                .copyWith(useOnlyGnssSyncedReadings: value),
+                          );
+                      // Wait a short while before saving the hopefully
+                      // updated vehicle.
+                      Timer(const Duration(milliseconds: 100), () {
+                        final vehicle = ref.watch(mainVehicleProvider);
+                        ref.read(saveVehicleProvider(vehicle));
+                        Logger.instance.i(
+                          '''Updated vehicle IMU only use GNSS synced readings: ${!value} -> ${vehicle.imu.config.useOnlyGnssSyncedReadings}''',
+                        );
+                      });
+                    }
+                  },
+                  title: child,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Consumer(

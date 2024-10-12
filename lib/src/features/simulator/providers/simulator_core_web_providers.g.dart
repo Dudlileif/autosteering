@@ -28,7 +28,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreVehicleDrivingHash() =>
-    r'b8aedbefe99deac6cbb4fcbc646408ff75780930';
+    r'1fc03040c3c55c1d47bad8a1a8a81a6d5d74f7b3';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.

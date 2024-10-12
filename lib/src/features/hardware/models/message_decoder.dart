@@ -568,7 +568,8 @@ class MessageDecoder {
                 lat: nmea.latitude!,
                 elev: nmea.altitudeMSL,
               ),
-              time: nmea.utc ?? DateTime.now(),
+              gnssTime: nmea.utc ?? DateTime.now(),
+              receiveTime: nmea.deviceReceiveTime,
             ),
           );
         }

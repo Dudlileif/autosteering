@@ -904,7 +904,7 @@ class _ExportVehiclesProviderElement
   bool get zip => (origin as ExportVehiclesProvider).zip;
 }
 
-String _$mainVehicleHash() => r'dd2c1e60707dd90caeef5e4ac7460333506bf47a';
+String _$mainVehicleHash() => r'0ebe1fa9a4a91073984d25b186bdb3913bbf2e8c';
 
 /// The main provider for the vehicle state.
 ///

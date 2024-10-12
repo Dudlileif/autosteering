@@ -82,6 +82,9 @@ class ImuConfig with _$ImuConfig {
     /// How many milliseconds we should delay the readings to match the GNSS fix
     /// time.
     @Default(30) int delayReadings,
+
+    /// Whether to only use readings that are synced with a GNSS reading.
+    @Default(true) bool useOnlyGnssSyncedReadings,
   }) = _ImuConfig;
 
   /// Creates an [ImuConfig] from the [json] object.

@@ -23,7 +23,7 @@ mixin _$StanleyParameters {
   /// Proportional cross distance gain coefficient.
   double get crossDistanceGain => throw _privateConstructorUsedError;
 
-  /// The coefficient to ensure numerical stability when velocity is close to
+  /// Coefficient to ensure numerical stability when velocity is close to
   /// zero.
   double get softeningGain => throw _privateConstructorUsedError;
 
@@ -149,7 +149,7 @@ class _$StanleyParametersImpl implements _StanleyParameters {
   @JsonKey()
   final double crossDistanceGain;
 
-  /// The coefficient to ensure numerical stability when velocity is close to
+  /// Coefficient to ensure numerical stability when velocity is close to
   /// zero.
   @override
   @JsonKey()
@@ -214,7 +214,7 @@ abstract class _StanleyParameters implements StanleyParameters {
   @override
   double get crossDistanceGain;
 
-  /// The coefficient to ensure numerical stability when velocity is close to
+  /// Coefficient to ensure numerical stability when velocity is close to
   /// zero.
   @override
   double get softeningGain;
