@@ -673,27 +673,76 @@ class ImuConfigurator extends StatelessWidget {
                 ),
                 builder: (context, ref, child) => ListTile(
                   title: child,
-                  onTap: () {
-                    final oldValues = ref.read(
-                      mainVehicleProvider
-                          .select((value) => value.imu.config.zeroValues),
-                    );
-                    ref
-                        .read(simInputProvider.notifier)
-                        .send((setZeroIMUPitchAndRoll: true));
-                    // Wait a short while before saving the hopefully
-                    // updated vehicle.
-                    Timer(
-                      const Duration(milliseconds: 100),
-                      () {
-                        final vehicle = ref.watch(mainVehicleProvider);
-                        ref.read(saveVehicleProvider(vehicle));
-                        Logger.instance.i(
-                          '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imu.config.zeroValues}''',
-                        );
-                      },
-                    );
-                  },
+                  onTap: () => showDialog<void>(
+                    context: context,
+                    builder: (context) => SimpleDialog(
+                      title: const Text('Zero Pitch and Roll?'),
+                      children: [
+                        Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                const Text(
+                                  '''Ensure that you are on a flat and horizontal surface, preferably concrete or asphalt.''',
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: [
+                                      ElevatedButton.icon(
+                                        label: const Text('Cancel'),
+                                        icon: const Icon(Icons.clear),
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                      ),
+                                      FilledButton.icon(
+                                        label: const Text('Confirm'),
+                                        icon: const Icon(Icons.check),
+                                        onPressed: () {
+                                          final oldValues = ref.read(
+                                            mainVehicleProvider.select(
+                                              (value) =>
+                                                  value.imu.config.zeroValues,
+                                            ),
+                                          );
+                                          ref
+                                              .read(simInputProvider.notifier)
+                                              .send(
+                                            (setZeroIMUPitchAndRoll: true),
+                                          );
+                                          // Wait a short while before saving the hopefully
+                                          // updated vehicle.
+                                          Timer(
+                                            const Duration(milliseconds: 100),
+                                            () {
+                                              final vehicle = ref
+                                                  .watch(mainVehicleProvider);
+                                              ref.read(
+                                                saveVehicleProvider(vehicle),
+                                              );
+                                              Logger.instance.i(
+                                                '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imu.config.zeroValues}''',
+                                              );
+                                            },
+                                          );
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               Consumer(
