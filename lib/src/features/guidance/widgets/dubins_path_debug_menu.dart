@@ -187,13 +187,13 @@ class DubinsPathDebugMenu extends StatelessWidget {
                 );
                 ref.read(dubinsPathDebugStartPointProvider.notifier).update(
                       WayPoint(
-                        position: center.gbPosition,
+                        position: center.geoPosition,
                         bearing: 90,
                       ),
                     );
                 ref.read(dubinsPathDebugEndPointProvider.notifier).update(
                       WayPoint(
-                        position: center.gbPosition.rhumb
+                        position: center.geoPosition.rhumb
                             .destinationPoint(distance: 35, bearing: 0),
                         bearing: 210,
                       ),

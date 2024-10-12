@@ -102,7 +102,7 @@ class HomePosition extends _$HomePosition {
           ref.read(simInputProvider.notifier).send((steeringAngle: 0));
 
           ref.read(simInputProvider.notifier).send(
-            (position: next.gbPosition),
+            (position: next.geoPosition),
           );
         }
       });

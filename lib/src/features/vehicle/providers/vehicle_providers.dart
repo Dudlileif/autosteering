@@ -36,7 +36,7 @@ class MainVehicle extends _$MainVehicle {
   @override
   Vehicle build() {
     final vehicle = ref.read(lastUsedVehicleProvider).requireValue
-      ..position = ref.read(homePositionProvider).gbPosition
+      ..position = ref.read(homePositionProvider).geoPosition
       ..lastUsed = DateTime.now();
 
     ref.read(saveVehicleProvider(vehicle));
