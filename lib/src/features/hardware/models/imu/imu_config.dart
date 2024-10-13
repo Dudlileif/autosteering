@@ -76,8 +76,15 @@ class ImuConfig with _$ImuConfig {
     /// A multiplier for how much the pitch reading should be amplified/reduced.
     @Default(1) double pitchGain,
 
-    /// A multiplier for how much the pitch reading should be amplified/reduced.
+    /// A multiplier for how much the roll reading should be amplified/reduced.
+    ///
+    /// If [asymmetricRollGainLeft] is not null, then this becomes the
+    /// asymmectric roll gain for when the right side is lower than the left.
     @Default(1) double rollGain,
+
+    /// A multiplier for how much the roll reading should be amplified/reduced
+    /// when the left side is lower than the right.
+    @Default(null) double? asymmetricRollGainLeft,
 
     /// How many milliseconds we should delay the readings to match the GNSS fix
     /// time.

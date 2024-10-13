@@ -239,108 +239,7 @@ class ImuConfigurator extends StatelessWidget {
                   ),
                   onTap: () => showDialog<void>(
                     context: context,
-                    builder: (context) => Consumer(
-                      builder: (context, ref, child) {
-                        var delayReadings = ref.watch(
-                          mainVehicleProvider.select(
-                            (value) => value.imu.config.delayReadings,
-                          ),
-                        );
-                        return StatefulBuilder(
-                          builder: (context, setState) => SimpleDialog(
-                            contentPadding: const EdgeInsets.only(
-                              left: 24,
-                              top: 12,
-                              right: 24,
-                              bottom: 16,
-                            ),
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Delay readings: $delayReadings ms',
-                                  style: theme.textTheme.bodyLarge,
-                                ),
-                                IconButton(
-                                  onPressed: () => setState(
-                                    () => delayReadings =
-                                        const ImuConfig().delayReadings,
-                                  ),
-                                  icon: const Icon(Icons.refresh),
-                                ),
-                              ],
-                            ),
-                            children: [
-                              Slider(
-                                value: delayReadings.toDouble(),
-                                onChanged: (value) => setState(
-                                  () => delayReadings = value.round(),
-                                ),
-                                max: 100,
-                                divisions: 20,
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: [
-                                    ElevatedButton.icon(
-                                      onPressed: Navigator.of(context).pop,
-                                      icon: const Icon(Icons.clear),
-                                      label: const Text('Cancel'),
-                                    ),
-                                    FilledButton.icon(
-                                      icon: const Icon(Icons.check),
-                                      label: const Text('Apply'),
-                                      onPressed: () {
-                                        final oldValue = ref.read(
-                                          mainVehicleProvider.select(
-                                            (value) =>
-                                                value.imu.config.delayReadings,
-                                          ),
-                                        );
-                                        ref
-                                            .read(simInputProvider.notifier)
-                                            .send(
-                                              ref
-                                                  .read(
-                                                    mainVehicleProvider.select(
-                                                      (value) =>
-                                                          value.imu.config,
-                                                    ),
-                                                  )
-                                                  .copyWith(
-                                                    delayReadings:
-                                                        delayReadings,
-                                                  ),
-                                            );
-                                        // Wait a short while before saving the
-                                        // hopefully updated vehicle.
-                                        Timer(
-                                          const Duration(milliseconds: 100),
-                                          () {
-                                            final vehicle =
-                                                ref.watch(mainVehicleProvider);
-                                            ref.read(
-                                              saveVehicleProvider(vehicle),
-                                            );
-                                            Logger.instance.i(
-                                              '''Updated vehicle IMU delay readings: $oldValue ms -> ${vehicle.imu.config.delayReadings} ms''',
-                                            );
-                                          },
-                                        );
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                    builder: (context) => const _DelayReadingsDialog(),
                   ),
                 ),
               ),
@@ -462,209 +361,35 @@ class ImuConfigurator extends StatelessWidget {
                   ),
                   onTap: () => showDialog<void>(
                     context: context,
-                    builder: (context) => Consumer(
-                      builder: (context, ref, child) {
-                        var pitchGain = ref.watch(
-                          mainVehicleProvider
-                              .select((value) => value.imu.config.pitchGain),
-                        );
-                        return StatefulBuilder(
-                          builder: (context, setState) => SimpleDialog(
-                            contentPadding: const EdgeInsets.only(
-                              left: 24,
-                              top: 12,
-                              right: 24,
-                              bottom: 16,
-                            ),
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Pitch gain: ${pitchGain.toStringAsFixed(2)}',
-                                  style: theme.textTheme.bodyLarge,
-                                ),
-                                IconButton(
-                                  onPressed: () =>
-                                      setState(() => pitchGain = 1),
-                                  icon: const Icon(Icons.refresh),
-                                ),
-                              ],
-                            ),
-                            children: [
-                              Slider(
-                                value: pitchGain,
-                                onChanged: (value) =>
-                                    setState(() => pitchGain = value),
-                                max: 2,
-                                divisions: 20,
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: [
-                                    ElevatedButton.icon(
-                                      onPressed: Navigator.of(context).pop,
-                                      icon: const Icon(Icons.clear),
-                                      label: const Text('Cancel'),
-                                    ),
-                                    FilledButton.icon(
-                                      onPressed: () {
-                                        final oldValue = ref.read(
-                                          mainVehicleProvider.select(
-                                            (value) =>
-                                                value.imu.config.pitchGain,
-                                          ),
-                                        );
-                                        ref
-                                            .read(simInputProvider.notifier)
-                                            .send(
-                                              ref
-                                                  .read(
-                                                    mainVehicleProvider.select(
-                                                      (value) =>
-                                                          value.imu.config,
-                                                    ),
-                                                  )
-                                                  .copyWith(
-                                                    pitchGain: pitchGain,
-                                                  ),
-                                            );
-                                        // Wait a short while before saving the
-                                        // hopefully updated vehicle.
-                                        Timer(
-                                          const Duration(milliseconds: 100),
-                                          () {
-                                            final vehicle =
-                                                ref.watch(mainVehicleProvider);
-                                            ref.read(
-                                              saveVehicleProvider(vehicle),
-                                            );
-                                            Logger.instance.i(
-                                              '''Updated vehicle IMU pitch gain: $oldValue -> ${vehicle.imu.config.pitchGain}''',
-                                            );
-                                          },
-                                        );
-                                        Navigator.of(context).pop();
-                                      },
-                                      icon: const Icon(Icons.check),
-                                      label: const Text('Apply'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                    builder: (context) => const _PitchGainDialog(),
                   ),
                 ),
               ),
               Consumer(
-                builder: (context, ref, child) => ListTile(
-                  title: Text(
-                    '''Roll gain: ${ref.watch(mainVehicleProvider.select((value) => value.imu.config.rollGain)).toStringAsFixed(2)}''',
-                  ),
-                  onTap: () => showDialog<void>(
-                    context: context,
-                    builder: (context) => Consumer(
-                      builder: (context, ref, child) {
-                        var rollGain = ref.watch(
-                          mainVehicleProvider
-                              .select((value) => value.imu.config.rollGain),
-                        );
-                        return StatefulBuilder(
-                          builder: (context, setState) => SimpleDialog(
-                            contentPadding: const EdgeInsets.only(
-                              left: 24,
-                              top: 12,
-                              right: 24,
-                              bottom: 16,
-                            ),
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Roll gain: ${rollGain.toStringAsFixed(2)}',
-                                  style: theme.textTheme.bodyLarge,
-                                ),
-                                IconButton(
-                                  onPressed: () => setState(() => rollGain = 1),
-                                  icon: const Icon(Icons.refresh),
-                                ),
-                              ],
-                            ),
-                            children: [
-                              Slider(
-                                value: rollGain,
-                                onChanged: (value) =>
-                                    setState(() => rollGain = value),
-                                max: 2,
-                                divisions: 20,
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: [
-                                    ElevatedButton.icon(
-                                      onPressed: Navigator.of(context).pop,
-                                      icon: const Icon(Icons.clear),
-                                      label: const Text('Cancel'),
-                                    ),
-                                    FilledButton.icon(
-                                      onPressed: () {
-                                        final oldValue = ref.read(
-                                          mainVehicleProvider.select(
-                                            (value) =>
-                                                value.imu.config.rollGain,
-                                          ),
-                                        );
-                                        ref
-                                            .read(simInputProvider.notifier)
-                                            .send(
-                                              ref
-                                                  .read(
-                                                    mainVehicleProvider.select(
-                                                      (value) =>
-                                                          value.imu.config,
-                                                    ),
-                                                  )
-                                                  .copyWith(rollGain: rollGain),
-                                            );
-                                        // Wait a short while before saving the
-                                        // hopefully updated vehicle.
-                                        Timer(
-                                          const Duration(milliseconds: 100),
-                                          () {
-                                            final vehicle =
-                                                ref.watch(mainVehicleProvider);
-                                            ref.read(
-                                              saveVehicleProvider(vehicle),
-                                            );
-                                            Logger.instance.i(
-                                              '''Updated vehicle IMU roll gain: $oldValue -> ${vehicle.imu.config.rollGain}''',
-                                            );
-                                          },
-                                        );
-                                        Navigator.of(context).pop();
-                                      },
-                                      icon: const Icon(Icons.check),
-                                      label: const Text('Apply'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                builder: (context, ref, child) {
+                  final gain = ref.watch(
+                    mainVehicleProvider
+                        .select((value) => value.imu.config.rollGain),
+                  );
+                  final asymmetricRollGainLeft = ref.watch(
+                    mainVehicleProvider.select(
+                      (value) => value.imu.config.asymmetricRollGainLeft,
                     ),
-                  ),
-                ),
+                  );
+                  return ListTile(
+                    title: Text(
+                      [
+                        '''${asymmetricRollGainLeft != null ? 'Right roll' : 'Roll'} gain: ${gain.toStringAsFixed(2)}''',
+                        if (asymmetricRollGainLeft != null)
+                          '''Left roll gain: ${asymmetricRollGainLeft.toStringAsFixed(2)}''',
+                      ].join('\n'),
+                    ),
+                    onTap: () => showDialog<void>(
+                      context: context,
+                      builder: (context) => const _RollGainDialog(),
+                    ),
+                  );
+                },
               ),
               Consumer(
                 child: Text(
@@ -675,73 +400,7 @@ class ImuConfigurator extends StatelessWidget {
                   title: child,
                   onTap: () => showDialog<void>(
                     context: context,
-                    builder: (context) => SimpleDialog(
-                      title: const Text('Zero Pitch and Roll?'),
-                      children: [
-                        Center(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 300),
-                            child: Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: [
-                                const Text(
-                                  '''Ensure that you are on a flat and horizontal surface, preferably concrete or asphalt.''',
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Wrap(
-                                    spacing: 8,
-                                    runSpacing: 8,
-                                    children: [
-                                      ElevatedButton.icon(
-                                        label: const Text('Cancel'),
-                                        icon: const Icon(Icons.clear),
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                      ),
-                                      FilledButton.icon(
-                                        label: const Text('Confirm'),
-                                        icon: const Icon(Icons.check),
-                                        onPressed: () {
-                                          final oldValues = ref.read(
-                                            mainVehicleProvider.select(
-                                              (value) =>
-                                                  value.imu.config.zeroValues,
-                                            ),
-                                          );
-                                          ref
-                                              .read(simInputProvider.notifier)
-                                              .send(
-                                            (setZeroIMUPitchAndRoll: true),
-                                          );
-                                          // Wait a short while before saving the hopefully
-                                          // updated vehicle.
-                                          Timer(
-                                            const Duration(milliseconds: 100),
-                                            () {
-                                              final vehicle = ref
-                                                  .watch(mainVehicleProvider);
-                                              ref.read(
-                                                saveVehicleProvider(vehicle),
-                                              );
-                                              Logger.instance.i(
-                                                '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imu.config.zeroValues}''',
-                                              );
-                                            },
-                                          );
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    builder: (context) => const _ZeroPitchAndRollDialog(),
                   ),
                 ),
               ),
@@ -858,6 +517,434 @@ class ImuConfigurator extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DelayReadingsDialog extends ConsumerStatefulWidget {
+  const _DelayReadingsDialog();
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      __DelayReadingsDialogState();
+}
+
+class __DelayReadingsDialogState extends ConsumerState<_DelayReadingsDialog> {
+  late int delayReadings = ref.watch(
+    mainVehicleProvider.select(
+      (value) => value.imu.config.delayReadings,
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SimpleDialog(
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        top: 12,
+        right: 24,
+        bottom: 16,
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Delay readings: $delayReadings ms',
+            style: theme.textTheme.bodyLarge,
+          ),
+          IconButton(
+            onPressed: () => setState(
+              () => delayReadings = const ImuConfig().delayReadings,
+            ),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
+      children: [
+        Slider(
+          value: delayReadings.toDouble(),
+          onChanged: (value) => setState(
+            () => delayReadings = value.round(),
+          ),
+          max: 100,
+          divisions: 20,
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ElevatedButton.icon(
+                onPressed: Navigator.of(context).pop,
+                icon: const Icon(Icons.clear),
+                label: const Text('Cancel'),
+              ),
+              FilledButton.icon(
+                icon: const Icon(Icons.check),
+                label: const Text('Apply'),
+                onPressed: () {
+                  final oldValue = ref.read(
+                    mainVehicleProvider.select(
+                      (value) => value.imu.config.delayReadings,
+                    ),
+                  );
+                  ref.read(simInputProvider.notifier).send(
+                        ref
+                            .read(
+                              mainVehicleProvider.select(
+                                (value) => value.imu.config,
+                              ),
+                            )
+                            .copyWith(
+                              delayReadings: delayReadings,
+                            ),
+                      );
+                  // Wait a short while before saving the
+                  // hopefully updated vehicle.
+                  Timer(
+                    const Duration(milliseconds: 100),
+                    () {
+                      final vehicle = ref.watch(mainVehicleProvider);
+                      ref.read(
+                        saveVehicleProvider(vehicle),
+                      );
+                      Logger.instance.i(
+                        '''Updated vehicle IMU delay readings: $oldValue ms -> ${vehicle.imu.config.delayReadings} ms''',
+                      );
+                    },
+                  );
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PitchGainDialog extends ConsumerStatefulWidget {
+  const _PitchGainDialog();
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      __PitchGainDialogState();
+}
+
+class __PitchGainDialogState extends ConsumerState<_PitchGainDialog> {
+  late double pitchGain = ref.watch(
+    mainVehicleProvider.select((value) => value.imu.config.pitchGain),
+  );
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SimpleDialog(
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        top: 12,
+        right: 24,
+        bottom: 16,
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Pitch gain: ${pitchGain.toStringAsFixed(2)}',
+            style: theme.textTheme.bodyLarge,
+          ),
+          IconButton(
+            onPressed: () => setState(() => pitchGain = 1),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
+      children: [
+        Slider(
+          value: pitchGain,
+          onChanged: (value) => setState(() => pitchGain = value),
+          max: 2,
+          divisions: 20,
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ElevatedButton.icon(
+                onPressed: Navigator.of(context).pop,
+                icon: const Icon(Icons.clear),
+                label: const Text('Cancel'),
+              ),
+              FilledButton.icon(
+                onPressed: () {
+                  final oldValue = ref.read(
+                    mainVehicleProvider.select(
+                      (value) => value.imu.config.pitchGain,
+                    ),
+                  );
+                  ref.read(simInputProvider.notifier).send(
+                        ref
+                            .read(
+                              mainVehicleProvider.select(
+                                (value) => value.imu.config,
+                              ),
+                            )
+                            .copyWith(
+                              pitchGain: pitchGain,
+                            ),
+                      );
+                  // Wait a short while before saving the
+                  // hopefully updated vehicle.
+                  Timer(
+                    const Duration(milliseconds: 100),
+                    () {
+                      final vehicle = ref.watch(mainVehicleProvider);
+                      ref.read(
+                        saveVehicleProvider(vehicle),
+                      );
+                      Logger.instance.i(
+                        '''Updated vehicle IMU pitch gain: $oldValue -> ${vehicle.imu.config.pitchGain}''',
+                      );
+                    },
+                  );
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.check),
+                label: const Text('Apply'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RollGainDialog extends ConsumerStatefulWidget {
+  const _RollGainDialog();
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      __RollGainDialogState();
+}
+
+class __RollGainDialogState extends ConsumerState<_RollGainDialog> {
+  late double rollGain = ref.watch(
+    mainVehicleProvider.select((value) => value.imu.config.rollGain),
+  );
+  late double? asymmetricRollGainLeft = ref.watch(
+    mainVehicleProvider.select(
+      (value) => value.imu.config.asymmetricRollGainLeft,
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return SimpleDialog(
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        top: 12,
+        right: 24,
+        bottom: 16,
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '''Roll gain ${asymmetricRollGainLeft != null ? '' : ' ${rollGain.toStringAsFixed(2)}'}''',
+            style: theme.textTheme.bodyLarge,
+          ),
+          IconButton(
+            onPressed: () => setState(() {
+              rollGain = 1;
+              asymmetricRollGainLeft = null;
+            }),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
+      children: [
+        CheckboxListTile(
+          value: asymmetricRollGainLeft != null,
+          onChanged: (value) => setState(
+            () => asymmetricRollGainLeft = switch (value) {
+              true => 1,
+              _ => null,
+            },
+          ),
+          secondary: Text(
+            'Asymmetric roll gain',
+            style: theme.textTheme.bodyLarge,
+          ),
+        ),
+        if (asymmetricRollGainLeft != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Text(
+              'Right gain: ${rollGain.toStringAsFixed(2)}',
+              style: theme.textTheme.bodyLarge,
+            ),
+          ),
+        Slider(
+          value: rollGain,
+          onChanged: (value) => setState(() => rollGain = value),
+          max: 2,
+          divisions: 20,
+        ),
+        if (asymmetricRollGainLeft != null) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Text(
+              'Left gain: ${asymmetricRollGainLeft?.toStringAsFixed(2)}',
+              style: theme.textTheme.bodyLarge,
+            ),
+          ),
+          Slider(
+            value: asymmetricRollGainLeft ?? 1,
+            onChanged: (value) =>
+                setState(() => asymmetricRollGainLeft = value),
+            max: 2,
+            divisions: 20,
+          ),
+        ],
+        Align(
+          alignment: Alignment.centerRight,
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ElevatedButton.icon(
+                onPressed: Navigator.of(context).pop,
+                icon: const Icon(Icons.clear),
+                label: const Text('Cancel'),
+              ),
+              FilledButton.icon(
+                onPressed: () {
+                  final oldValues = ref.read(
+                    mainVehicleProvider.select(
+                      (value) => (
+                        rollGain: value.imu.config.rollGain,
+                        asymmetricRollGainLeft:
+                            value.imu.config.asymmetricRollGainLeft
+                      ),
+                    ),
+                  );
+                  ref.read(simInputProvider.notifier).send(
+                        ref
+                            .read(
+                              mainVehicleProvider.select(
+                                (value) => value.imu.config,
+                              ),
+                            )
+                            .copyWith(
+                              rollGain: rollGain,
+                              asymmetricRollGainLeft: asymmetricRollGainLeft,
+                            ),
+                      );
+                  // Wait a short while before saving the
+                  // hopefully updated vehicle.
+                  Timer(
+                    const Duration(milliseconds: 100),
+                    () {
+                      final vehicle = ref.watch(mainVehicleProvider);
+                      ref.read(
+                        saveVehicleProvider(vehicle),
+                      );
+                      final newValues = (
+                        rollGain: vehicle.imu.config.rollGain,
+                        asymmetricRollGainLeft:
+                            vehicle.imu.config.asymmetricRollGainLeft
+                      );
+                      Logger.instance.i(
+                        '''Updated vehicle IMU roll gain: $oldValues -> $newValues''',
+                      );
+                    },
+                  );
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.check),
+                label: const Text('Apply'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ZeroPitchAndRollDialog extends ConsumerWidget {
+  const _ZeroPitchAndRollDialog();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SimpleDialog(
+      title: const Text('Zero Pitch and Roll?'),
+      children: [
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 300),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                const Text(
+                  '''Ensure that you are on a flat and horizontal surface, preferably concrete or asphalt.''',
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      ElevatedButton.icon(
+                        label: const Text('Cancel'),
+                        icon: const Icon(Icons.clear),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      FilledButton.icon(
+                        label: const Text('Confirm'),
+                        icon: const Icon(Icons.check),
+                        onPressed: () {
+                          final oldValues = ref.read(
+                            mainVehicleProvider.select(
+                              (value) => value.imu.config.zeroValues,
+                            ),
+                          );
+                          ref.read(simInputProvider.notifier).send(
+                            (setZeroIMUPitchAndRoll: true),
+                          );
+                          // Wait a short while before saving the hopefully
+                          // updated vehicle.
+                          Timer(
+                            const Duration(milliseconds: 100),
+                            () {
+                              final vehicle = ref.watch(mainVehicleProvider);
+                              ref.read(
+                                saveVehicleProvider(vehicle),
+                              );
+                              Logger.instance.i(
+                                '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imu.config.zeroValues}''',
+                              );
+                            },
+                          );
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

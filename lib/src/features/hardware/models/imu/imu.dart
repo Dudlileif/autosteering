@@ -102,8 +102,7 @@ class Imu {
       switch (config.invertPitch) {
         true => -1,
         false => 1,
-      } *
-      config.pitchGain;
+      };
 
   /// The roll reading accounted for [config.zeroValues.rollZero].
   double get roll =>
@@ -122,8 +121,7 @@ class Imu {
       switch (config.invertRoll) {
         true => -1,
         false => 1,
-      } *
-      config.rollGain;
+      };
 
   /// Adds the [newReading] to [readings] and removes old readings past the
   /// length of 10.
