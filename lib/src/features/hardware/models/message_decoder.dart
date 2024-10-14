@@ -570,6 +570,7 @@ class MessageDecoder {
               ),
               gnssTime: nmea.utc ?? DateTime.now(),
               receiveTime: nmea.deviceReceiveTime,
+              quality: nmea.fixQuality ?? GnssFixQuality.notAvailable,
             ),
           );
         }
@@ -667,10 +668,10 @@ class MessageDecoder {
           file.createSync(recursive: true);
         }
         file.writeAsStringSync(
-          path.join(
+          [
             '${DateTime.now().toIso8601String()}: $str',
             Platform.lineTerminator,
-          ),
+          ].join(),
           mode: FileMode.append,
         );
       }

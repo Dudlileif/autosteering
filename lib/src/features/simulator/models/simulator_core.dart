@@ -96,15 +96,13 @@ class SimulatorCoreBase {
           message is ({
             Geographic gnssPosition,
             DateTime gnssTime,
-            DateTime receiveTime
+            DateTime receiveTime,
+            GnssFixQuality quality,
           }) ||
           message is WasReading) {
         state.handleMessage(message);
       } else if (message != null) {
         updateMainThreadStream.add(message);
-        if (message is GnssPositionCommonSentence) {
-          state.handleMessage((gnssFixQuality: message.quality ?? 0));
-        }
       }
     }
   }
