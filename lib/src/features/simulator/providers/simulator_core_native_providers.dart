@@ -208,7 +208,7 @@ void simCoreVehicleDriving(SimCoreVehicleDrivingRef ref) {
       );
     }
     final mapController = ref.watch(mainMapControllerProvider);
-    if (vehicle.position != mapController.camera.center.gbPosition &&
+    if (vehicle.position != mapController.camera.center.geoPosition &&
         ref.watch(centerMapOnVehicleProvider)) {
       mapController.moveAndRotate(
         ref.watch(offsetVehiclePositionProvider),

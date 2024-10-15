@@ -22,7 +22,7 @@ import 'package:latlong2/latlong.dart';
 /// packages different classes.
 extension LatLngProjExt on LatLng {
   /// A conversion to the geobase package format.
-  Geographic get gbPosition => Geographic(lon: longitude, lat: latitude);
+  Geographic get geoPosition => Geographic(lon: longitude, lat: latitude);
 }
 
 /// An extension to allow easy swapping between different location/coordinate

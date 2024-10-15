@@ -161,7 +161,9 @@ class LogReplayRecord {
         RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d*Z*').matchAsPrefix(raw);
     final logTime =
         DateTime.parse(raw.substring(timeString?.start ?? 0, timeString?.end));
-    final message = splits.last;
+    final message = splits.last.endsWith('/')
+        ? splits.last.substring(0, splits.last.length - 1)
+        : splits.last;
     return LogReplayRecord._(
       index: index,
       raw: raw,

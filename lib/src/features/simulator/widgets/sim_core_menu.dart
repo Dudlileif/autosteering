@@ -59,22 +59,22 @@ class SimCoreMenu extends ConsumerWidget {
         ),
         if (!manualSimulationMode)
           Consumer(
-          child: Text(
-            'Allow sim interpolation',
-            style: textStyle,
+            child: Text(
+              'Allow sim interpolation',
+              style: textStyle,
+            ),
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: const Icon(Icons.timer_outlined),
+              title: child,
+              subtitle: const Text('Interpolation between GNSS updates'),
+              value: ref.watch(simCoreAllowInterpolationProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                      .read(simCoreAllowInterpolationProvider.notifier)
+                      .update(value: value)
+                  : null,
+            ),
           ),
-          builder: (context, ref, child) => CheckboxListTile(
-            secondary: const Icon(Icons.timer_outlined),
-            title: child,
-            subtitle: const Text('Interpolation between GNSS updates'),
-            value: ref.watch(simCoreAllowInterpolationProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(simCoreAllowInterpolationProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
-        ),
         if (manualSimulationMode) const VehicleSimMenu(),
         Consumer(
           child: Text(
@@ -89,7 +89,7 @@ class SimCoreMenu extends ConsumerWidget {
               ref.read(simInputProvider.notifier).send((steeringAngle: 0));
 
               ref.read(simInputProvider.notifier).send(
-                (position: ref.watch(homePositionProvider).gbPosition),
+                (position: ref.watch(homePositionProvider).geoPosition),
               );
             },
             leading: const Icon(Icons.replay),

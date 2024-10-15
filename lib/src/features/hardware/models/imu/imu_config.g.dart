@@ -20,6 +20,10 @@ _$ImuConfigImpl _$$ImuConfigImplFromJson(Map<String, dynamic> json) =>
       pitchGain: (json['pitchGain'] as num?)?.toDouble() ?? 1,
       rollGain: (json['rollGain'] as num?)?.toDouble() ?? 1,
       delayReadings: (json['delayReadings'] as num?)?.toInt() ?? 30,
+      asymmetricRollGainLeft:
+          (json['asymmetricRollGainLeft'] as num?)?.toDouble() ?? null,
+      useOnlyGnssSyncedReadings:
+          json['useOnlyGnssSyncedReadings'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$ImuConfigImplToJson(_$ImuConfigImpl instance) =>
@@ -34,4 +38,6 @@ Map<String, dynamic> _$$ImuConfigImplToJson(_$ImuConfigImpl instance) =>
       'pitchGain': instance.pitchGain,
       'rollGain': instance.rollGain,
       'delayReadings': instance.delayReadings,
+      'asymmetricRollGainLeft': instance.asymmetricRollGainLeft,
+      'useOnlyGnssSyncedReadings': instance.useOnlyGnssSyncedReadings,
     };

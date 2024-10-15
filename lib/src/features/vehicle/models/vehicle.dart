@@ -260,12 +260,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The width of the vehicle excluding wheels, in meters.
   double width;
 
-  /// The pitch of the vehicle as degrees of inclination around the x-axis
-  /// (across) the vehicle in the forward direction.
+  /// The manually set pitch of the vehicle as degrees of inclination around
+  /// the x-axis (across) the vehicle in the forward direction.
   double _pitch;
 
-  /// The roll of the vehicle as degrees of roll around the y-axis (along) the
-  /// vehicle in the forward direction.
+  /// The manually set roll of the vehicle as degrees of roll around the y-axis
+  /// (along) the vehicle in the forward direction.
   double _roll;
 
   /// Bearing as set from the outside.
@@ -292,22 +292,28 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
 
   /// The lateral offset of the the antenna's true ground position to the
   /// mounted position.
-  double get antennaRollLateralOffset => tan(roll.toRadians()) * antennaHeight;
+  ///
+  /// The result is multiplied by the [ImuConfig.rollGain], or the
+  /// [ImuConfig.asymmetricRollGainLeft] if enabled and rolled to the left.
+  double get antennaRollLateralOffset =>
+      tan(roll.toRadians()) *
+      antennaHeight *
+      switch (roll < 0 && imu.config.asymmetricRollGainLeft != null) {
+        true => imu.config.asymmetricRollGainLeft!,
+        false => imu.config.rollGain,
+      };
 
   /// The longitudinal offset of the the antenna's true ground position to the
   /// mounted position.
+  ///
+  /// The result is multiplied by the [ImuConfig.pitchGain].
   double get antennaPitchLongitudinalOffset =>
-      tan(pitch.toRadians()) * antennaHeight;
+      tan(pitch.toRadians()) * antennaHeight * imu.config.pitchGain;
 
   /// The corrected position of the antenna after accounting for the [pitch]
-  /// and [roll], if enabled by the [imu] config setting
-  /// [ImuConfig.usePitchAndRoll].
-  /// Otherwise the [antennaPosition] is returned.
+  /// and [roll].
   Geographic get correctedAntennaPosition =>
-      switch (imu.config.usePitchAndRoll) {
-        false => antennaPosition,
-        true => correctPositionForRollAndPitch(antennaPosition)
-      };
+      correctPositionForRollAndPitch(antennaPosition);
 
   /// The projected ground position of the centered antenna of this vehicle
   /// accounting for [pitch] and [roll].
@@ -343,24 +349,16 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// Essentially we move the position opposite of the getter for [position],
   /// to end at the correct [antennaPosition].
   void setPositionSim(Geographic value) {
-    final unCentered = value.rhumb.destinationPoint(
-      distance: antennaLateralOffset,
-      bearing: bearing + 90,
-    );
-
-    antennaPosition = switch (imu.config.usePitchAndRoll) {
-      false => unCentered,
-      true => unCentered.rhumb
-          .destinationPoint(
-            distance: -antennaRollLateralOffset,
-            bearing: bearing - 90,
-          )
-          .rhumb
-          .destinationPoint(
-            distance: -antennaPitchLongitudinalOffset,
-            bearing: bearing,
-          )
-    };
+    antennaPosition = value.rhumb
+        .destinationPoint(
+          distance: -antennaRollLateralOffset,
+          bearing: bearing - 90,
+        )
+        .rhumb
+        .destinationPoint(
+          distance: -antennaPitchLongitudinalOffset,
+          bearing: bearing,
+        );
   }
 
   /// The velocity of the vehicle, in m/s, meters per second, in the bearing
@@ -566,12 +564,12 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
   /// The projected trajectory for the moving vehicle.
   ///
   /// [seconds] can be set to change the prediction time from the default 10
-  /// seconds, and [minLength] can force a minimum length of the trajectory 
+  /// seconds, and [minLength] can force a minimum length of the trajectory
   /// line.
-  /// 
+  ///
   /// Based on the current [steeringAngle], [velocity] and
   /// [currentTurningRadius].
-  LineString trajectory({double? seconds, double?minLength});
+  LineString trajectory({double? seconds, double? minLength});
 
   /// Whether the vehicle is reversing or not.
   @override

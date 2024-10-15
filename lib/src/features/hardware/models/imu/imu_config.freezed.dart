@@ -45,12 +45,22 @@ mixin _$ImuConfig {
   /// A multiplier for how much the pitch reading should be amplified/reduced.
   double get pitchGain => throw _privateConstructorUsedError;
 
-  /// A multiplier for how much the pitch reading should be amplified/reduced.
+  /// A multiplier for how much the roll reading should be amplified/reduced.
+  ///
+  /// If [asymmetricRollGainLeft] is not null, then this becomes the
+  /// asymmectric roll gain for when the right side is lower than the left.
   double get rollGain => throw _privateConstructorUsedError;
 
   /// How many milliseconds we should delay the readings to match the GNSS fix
   /// time.
   int get delayReadings => throw _privateConstructorUsedError;
+
+  /// A multiplier for how much the roll reading should be amplified/reduced
+  /// when the left side is lower than the right.
+  double? get asymmetricRollGainLeft => throw _privateConstructorUsedError;
+
+  /// Whether to only use readings that are synced with a GNSS reading.
+  bool get useOnlyGnssSyncedReadings => throw _privateConstructorUsedError;
 
   /// Serializes this ImuConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -77,7 +87,9 @@ abstract class $ImuConfigCopyWith<$Res> {
       bool invertRoll,
       double pitchGain,
       double rollGain,
-      int delayReadings});
+      int delayReadings,
+      double? asymmetricRollGainLeft,
+      bool useOnlyGnssSyncedReadings});
 
   $ImuZeroValuesCopyWith<$Res> get zeroValues;
 }
@@ -107,6 +119,8 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
     Object? pitchGain = null,
     Object? rollGain = null,
     Object? delayReadings = null,
+    Object? asymmetricRollGainLeft = freezed,
+    Object? useOnlyGnssSyncedReadings = null,
   }) {
     return _then(_value.copyWith(
       usePitchAndRoll: null == usePitchAndRoll
@@ -149,6 +163,14 @@ class _$ImuConfigCopyWithImpl<$Res, $Val extends ImuConfig>
           ? _value.delayReadings
           : delayReadings // ignore: cast_nullable_to_non_nullable
               as int,
+      asymmetricRollGainLeft: freezed == asymmetricRollGainLeft
+          ? _value.asymmetricRollGainLeft
+          : asymmetricRollGainLeft // ignore: cast_nullable_to_non_nullable
+              as double?,
+      useOnlyGnssSyncedReadings: null == useOnlyGnssSyncedReadings
+          ? _value.useOnlyGnssSyncedReadings
+          : useOnlyGnssSyncedReadings // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -181,7 +203,9 @@ abstract class _$$ImuConfigImplCopyWith<$Res>
       bool invertRoll,
       double pitchGain,
       double rollGain,
-      int delayReadings});
+      int delayReadings,
+      double? asymmetricRollGainLeft,
+      bool useOnlyGnssSyncedReadings});
 
   @override
   $ImuZeroValuesCopyWith<$Res> get zeroValues;
@@ -210,6 +234,8 @@ class __$$ImuConfigImplCopyWithImpl<$Res>
     Object? pitchGain = null,
     Object? rollGain = null,
     Object? delayReadings = null,
+    Object? asymmetricRollGainLeft = freezed,
+    Object? useOnlyGnssSyncedReadings = null,
   }) {
     return _then(_$ImuConfigImpl(
       usePitchAndRoll: null == usePitchAndRoll
@@ -252,6 +278,14 @@ class __$$ImuConfigImplCopyWithImpl<$Res>
           ? _value.delayReadings
           : delayReadings // ignore: cast_nullable_to_non_nullable
               as int,
+      asymmetricRollGainLeft: freezed == asymmetricRollGainLeft
+          ? _value.asymmetricRollGainLeft
+          : asymmetricRollGainLeft // ignore: cast_nullable_to_non_nullable
+              as double?,
+      useOnlyGnssSyncedReadings: null == useOnlyGnssSyncedReadings
+          ? _value.useOnlyGnssSyncedReadings
+          : useOnlyGnssSyncedReadings // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -269,7 +303,9 @@ class _$ImuConfigImpl implements _ImuConfig {
       this.invertRoll = false,
       this.pitchGain = 1,
       this.rollGain = 1,
-      this.delayReadings = 30});
+      this.delayReadings = 30,
+      this.asymmetricRollGainLeft = null,
+      this.useOnlyGnssSyncedReadings = true});
 
   factory _$ImuConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$ImuConfigImplFromJson(json);
@@ -315,7 +351,10 @@ class _$ImuConfigImpl implements _ImuConfig {
   @JsonKey()
   final double pitchGain;
 
-  /// A multiplier for how much the pitch reading should be amplified/reduced.
+  /// A multiplier for how much the roll reading should be amplified/reduced.
+  ///
+  /// If [asymmetricRollGainLeft] is not null, then this becomes the
+  /// asymmectric roll gain for when the right side is lower than the left.
   @override
   @JsonKey()
   final double rollGain;
@@ -326,9 +365,20 @@ class _$ImuConfigImpl implements _ImuConfig {
   @JsonKey()
   final int delayReadings;
 
+  /// A multiplier for how much the roll reading should be amplified/reduced
+  /// when the left side is lower than the right.
+  @override
+  @JsonKey()
+  final double? asymmetricRollGainLeft;
+
+  /// Whether to only use readings that are synced with a GNSS reading.
+  @override
+  @JsonKey()
+  final bool useOnlyGnssSyncedReadings;
+
   @override
   String toString() {
-    return 'ImuConfig(usePitchAndRoll: $usePitchAndRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain, delayReadings: $delayReadings)';
+    return 'ImuConfig(usePitchAndRoll: $usePitchAndRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain, delayReadings: $delayReadings, asymmetricRollGainLeft: $asymmetricRollGainLeft, useOnlyGnssSyncedReadings: $useOnlyGnssSyncedReadings)';
   }
 
   @override
@@ -354,7 +404,12 @@ class _$ImuConfigImpl implements _ImuConfig {
             (identical(other.rollGain, rollGain) ||
                 other.rollGain == rollGain) &&
             (identical(other.delayReadings, delayReadings) ||
-                other.delayReadings == delayReadings));
+                other.delayReadings == delayReadings) &&
+            (identical(other.asymmetricRollGainLeft, asymmetricRollGainLeft) ||
+                other.asymmetricRollGainLeft == asymmetricRollGainLeft) &&
+            (identical(other.useOnlyGnssSyncedReadings,
+                    useOnlyGnssSyncedReadings) ||
+                other.useOnlyGnssSyncedReadings == useOnlyGnssSyncedReadings));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -370,7 +425,9 @@ class _$ImuConfigImpl implements _ImuConfig {
       invertRoll,
       pitchGain,
       rollGain,
-      delayReadings);
+      delayReadings,
+      asymmetricRollGainLeft,
+      useOnlyGnssSyncedReadings);
 
   /// Create a copy of ImuConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -399,7 +456,9 @@ abstract class _ImuConfig implements ImuConfig {
       final bool invertRoll,
       final double pitchGain,
       final double rollGain,
-      final int delayReadings}) = _$ImuConfigImpl;
+      final int delayReadings,
+      final double? asymmetricRollGainLeft,
+      final bool useOnlyGnssSyncedReadings}) = _$ImuConfigImpl;
 
   factory _ImuConfig.fromJson(Map<String, dynamic> json) =
       _$ImuConfigImpl.fromJson;
@@ -437,7 +496,10 @@ abstract class _ImuConfig implements ImuConfig {
   @override
   double get pitchGain;
 
-  /// A multiplier for how much the pitch reading should be amplified/reduced.
+  /// A multiplier for how much the roll reading should be amplified/reduced.
+  ///
+  /// If [asymmetricRollGainLeft] is not null, then this becomes the
+  /// asymmectric roll gain for when the right side is lower than the left.
   @override
   double get rollGain;
 
@@ -445,6 +507,15 @@ abstract class _ImuConfig implements ImuConfig {
   /// time.
   @override
   int get delayReadings;
+
+  /// A multiplier for how much the roll reading should be amplified/reduced
+  /// when the left side is lower than the right.
+  @override
+  double? get asymmetricRollGainLeft;
+
+  /// Whether to only use readings that are synced with a GNSS reading.
+  @override
+  bool get useOnlyGnssSyncedReadings;
 
   /// Create a copy of ImuConfig
   /// with the given fields replaced by the non-null parameter values.

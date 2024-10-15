@@ -37,7 +37,7 @@ class GridLayer extends ConsumerWidget {
         // ref.watch(
         //       activeFieldProvider.select((value) => value?.boundingBox?.min),
         //     ) ??
-        ref.watch(homePositionProvider).gbPosition;
+        ref.watch(homePositionProvider).geoPosition;
 
     final vertical = Grid.verticalLines(origo, camera);
     final horizontal = Grid.horizontalLines(origo, camera);
@@ -76,8 +76,12 @@ class Grid {
   /// of 10, but not lower that 10, i.e. 10, 20, 50, 100, 200... etc.
   static double _findGridSize(MapCamera camera) {
     final diagonal =
-        camera.pointToLatLng(const Point(0, 0)).gbPosition.spherical.distanceTo(
-              camera.pointToLatLng(camera.nonRotatedSize).gbPosition,
+        camera
+        .pointToLatLng(const Point(0, 0))
+        .geoPosition
+        .spherical
+        .distanceTo(
+          camera.pointToLatLng(camera.nonRotatedSize).geoPosition,
             );
     final exponent = (log(diagonal) / ln10).ceil().clamp(3, 8);
 

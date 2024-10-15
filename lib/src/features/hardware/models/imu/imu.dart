@@ -51,6 +51,9 @@ class Imu {
   /// [config.zeroValues.bearingZero].
   bool bearingIsSet = false;
 
+  /// The last time a GNSS reading was received.
+  DateTime? lastGnssTime;
+
   /// The latest reading from the hardware sensor, accounted for the
   /// [ImuConfig.delayReadings] to match the GNSS fix time.
   ///
@@ -58,7 +61,10 @@ class Imu {
   /// [ImuConfig.delayReadings] milliseconds ago, otherwise the latest reading
   /// is returned.
   ImuReading get reading {
-    final now = DateTime.now();
+    final now = switch (config.useOnlyGnssSyncedReadings) {
+      true => lastGnssTime ?? DateTime.now(),
+      false => DateTime.now()
+    };
     return readings.firstWhereOrNull(
           (element) =>
               now.difference(element.receiveTime).inMilliseconds >
@@ -96,8 +102,7 @@ class Imu {
       switch (config.invertPitch) {
         true => -1,
         false => 1,
-      } *
-      config.pitchGain;
+      };
 
   /// The roll reading accounted for [config.zeroValues.rollZero].
   double get roll =>
@@ -116,8 +121,7 @@ class Imu {
       switch (config.invertRoll) {
         true => -1,
         false => 1,
-      } *
-      config.rollGain;
+      };
 
   /// Adds the [newReading] to [readings] and removes old readings past the
   /// length of 10.

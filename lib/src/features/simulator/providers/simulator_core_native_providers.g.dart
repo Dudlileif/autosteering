@@ -30,7 +30,7 @@ final simCoreIsolateStreamProvider =
 
 typedef SimCoreIsolateStreamRef = AutoDisposeStreamProviderRef<Vehicle>;
 String _$simCoreVehicleDrivingHash() =>
-    r'1e93ef44e9d72033818e379ab89ead115ae29748';
+    r'71f8d02606b80a60de77ecd357954fb9f56dd18a';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.

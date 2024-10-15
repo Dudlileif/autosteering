@@ -68,14 +68,30 @@ class SimulatorCoreState {
   int gaugesAverageCount = 10;
 
   /// A list of the last [gaugesAverageCount] GNSS updates.
-  List<({Geographic gnssPosition, DateTime time})> prevGnssUpdates = [];
+  List<
+      ({
+        Geographic gnssPosition,
+        DateTime gnssTime,
+        DateTime receiveTime,
+        GnssFixQuality quality,
+      })> prevGnssUpdates = [];
 
   /// The current GNSS update position and time.
-  ({Geographic gnssPosition, DateTime time})? gnssUpdate;
+  ({
+    Geographic gnssPosition,
+    DateTime gnssTime,
+    DateTime receiveTime,
+    GnssFixQuality quality,
+  })? gnssUpdate;
 
   /// The GNSS update position and time that was used for updating gauges
   /// (distance).
-  ({Geographic gnssPosition, DateTime time})? prevDistanceCalcGnssUpdate;
+  ({
+    Geographic gnssPosition,
+    DateTime gnssTime,
+    DateTime receiveTime,
+    GnssFixQuality quality,
+  })? prevDistanceCalcGnssUpdate;
 
   /// The quality of the last GNSS fix.
   GnssFixQuality gnssFixQuality = GnssFixQuality.notAvailable;
@@ -218,14 +234,15 @@ class SimulatorCoreState {
       vehicle?.position = message.position;
     }
     // Update the vehicle position from GNSS.
-    else if (message is ({Geographic gnssPosition, DateTime time})) {
+    else if (message is ({
+      Geographic gnssPosition,
+      DateTime gnssTime,
+      DateTime receiveTime,
+      GnssFixQuality quality,
+    })) {
       if (!allowManualSimInput) {
         gnssUpdate = message;
       }
-    }
-    // Update the vehicle GNSS fix quality.
-    else if (message is ({int gnssFixQuality})) {
-      gnssFixQuality = GnssFixQuality.values[message.gnssFixQuality];
     }
     // Update the vehicle velocity
     else if (message is ({num velocity})) {
@@ -931,21 +948,32 @@ class SimulatorCoreState {
   void updateGauges() {
     // Update based on the last GNSS updates, if we've received one this tick.
     if (gnssUpdate != null) {
+      vehicle!.imu.lastGnssTime = gnssUpdate!.receiveTime;
       if (gnssUpdate != null && prevGnssUpdates.lastOrNull != null) {
         // Correct for roll and pitch if IMU bearing is set.
         if (vehicle!.imu.bearingIsSet && vehicle!.imu.config.usePitchAndRoll) {
           gnssUpdate = (
             gnssPosition: vehicle!
                 .correctPositionForRollAndPitch(gnssUpdate!.gnssPosition),
-            time: gnssUpdate!.time
+            gnssTime: gnssUpdate!.gnssTime,
+            receiveTime: gnssUpdate!.receiveTime,
+            quality: gnssUpdate!.quality,
           );
         }
 
-        var distances = prevGnssUpdates
+        final prevGnssUpdatesOfSameQuality = prevGnssUpdates
+            .where((e) => e.quality == gnssUpdate!.quality)
+            .toList();
+
+        var distances = prevGnssUpdatesOfSameQuality
             .map(
               (e) => e.gnssPosition.rhumb.distanceTo(gnssUpdate!.gnssPosition),
             )
             .toList();
+
+        if (prevDistanceCalcGnssUpdate?.quality != gnssUpdate!.quality) {
+          prevDistanceCalcGnssUpdate = null;
+        }
 
         final distanceToLastGaugePoint = prevDistanceCalcGnssUpdate != null
             ? gnssUpdate!.gnssPosition.rhumb
@@ -959,13 +987,15 @@ class SimulatorCoreState {
         }
         prevDistanceCalcGnssUpdate ??= gnssUpdate;
 
-        var velocities = prevGnssUpdates.mapIndexed(
+        var velocities = prevGnssUpdatesOfSameQuality.mapIndexed(
           (index, element) =>
               distances.elementAt(index) /
-              ((gnssUpdate!.time.difference(element.time).inMicroseconds) /
+              ((gnssUpdate!.gnssTime
+                      .difference(element.gnssTime)
+                      .inMicroseconds) /
                   1e6),
         );
-        var velocityAvg = velocities.average;
+        var velocityAvg = velocities.isNotEmpty ? velocities.average : 0.0;
 
         CheckIfUpdateIsUsable:
         // We only set the initial bearing for the IMU if we have a velocity
@@ -977,12 +1007,13 @@ class SimulatorCoreState {
         // be set as forward.
         else if (!vehicle!.imu.bearingIsSet) {
           // We need a few previous points to get a good bearing.
-          if (prevGnssUpdates.length < 2) {
+          if (prevGnssUpdatesOfSameQuality.length < 2) {
             gaugeVelocity = velocityAvg * vehicle!.velocity.sign;
             break CheckIfUpdateIsUsable;
           }
 
-          final bearing = prevGnssUpdates[prevGnssUpdates.length - 2]
+          final bearing = prevGnssUpdatesOfSameQuality[
+                  prevGnssUpdatesOfSameQuality.length - 2]
               .gnssPosition
               .rhumb
               .finalBearingTo(gnssUpdate!.gnssPosition);
@@ -1006,14 +1037,18 @@ class SimulatorCoreState {
             gnssUpdate = (
               gnssPosition: vehicle!
                   .correctPositionForRollAndPitch(gnssUpdate!.gnssPosition),
-              time: gnssUpdate!.time
+              gnssTime: gnssUpdate!.gnssTime,
+              receiveTime: gnssUpdate!.receiveTime,
+              quality: gnssUpdate!.quality,
             );
             prevGnssUpdates = prevGnssUpdates
                 .map(
                   (e) => (
                     gnssPosition:
                         vehicle!.correctPositionForRollAndPitch(e.gnssPosition),
-                    time: e.time
+                    gnssTime: e.gnssTime,
+                    receiveTime: e.receiveTime,
+                    quality: e.quality,
                   ),
                 )
                 .toList();
@@ -1030,11 +1065,13 @@ class SimulatorCoreState {
             velocities = prevGnssUpdates.mapIndexed(
               (index, element) =>
                   distances.elementAt(index) /
-                  ((gnssUpdate!.time.difference(element.time).inMicroseconds) /
+                  ((gnssUpdate!.gnssTime
+                          .difference(element.gnssTime)
+                          .inMicroseconds) /
                       1e6),
             );
 
-            velocityAvg = velocities.average;
+            velocityAvg = velocities.isNotEmpty ? velocities.average : 0.0;
 
             gaugeVelocity = velocityAvg;
             gaugeBearing = bearing;
@@ -1047,7 +1084,7 @@ class SimulatorCoreState {
 
           double? bearing;
           if (prevPositionIndex > -1) {
-            bearing = prevGnssUpdates
+            bearing = prevGnssUpdatesOfSameQuality
                 .elementAt(prevPositionIndex)
                 .gnssPosition
                 .rhumb

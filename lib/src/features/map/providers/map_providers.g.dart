@@ -262,7 +262,7 @@ final mainMapControllerProvider =
 );
 
 typedef _$MainMapController = AutoDisposeNotifier<MapController>;
-String _$homePositionHash() => r'e2185356d1440812f79ec9e598d427c90dd55e7d';
+String _$homePositionHash() => r'b99a9061729a58e761e2b89b939b3fa5be5c4888';
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
 ///
