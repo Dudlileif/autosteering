@@ -76,7 +76,7 @@ class ConfirmationDialog extends StatelessWidget {
 class DeleteDialog extends StatelessWidget {
   /// A dialog asking for confirmation before running [onDelete].
   ///
-  /// The defualt title is 'Delete [name]?', but can be overriden by
+  /// The defualt title is 'Delete [name]?', but can be overidden by
   /// [overrideString].
   const DeleteDialog({
     required this.name,

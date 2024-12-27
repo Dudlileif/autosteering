@@ -44,7 +44,7 @@ class MapControlButtons extends StatelessWidget {
             builder: (context, ref, child) => FloatingActionButton(
               tooltip: 'Lock map on vehicle',
               backgroundColor:
-                  theme.colorScheme.primaryContainer.withOpacity(0.6),
+                  theme.colorScheme.primaryContainer.withValues(alpha: 0.6),
               onPressed: ref.read(centerMapOnVehicleProvider.notifier).invert,
               child: switch (ref.watch(centerMapOnVehicleProvider)) {
                 true => const Icon(Icons.my_location, size: 50),
@@ -59,7 +59,7 @@ class MapControlButtons extends StatelessWidget {
             builder: (context, ref, child) => FloatingActionButton(
               tooltip: 'Always point map north',
               backgroundColor:
-                  theme.colorScheme.primaryContainer.withOpacity(0.6),
+                  theme.colorScheme.primaryContainer.withValues(alpha: 0.6),
               onPressed: ref.read(alwaysPointNorthProvider.notifier).toggle,
               child: Consumer(
                 builder: (context, ref, child) {
@@ -165,7 +165,7 @@ class MapControlButtons extends StatelessWidget {
               return FloatingActionButton(
                 tooltip: 'Zoom in',
                 backgroundColor:
-                    theme.colorScheme.primaryContainer.withOpacity(0.6),
+                    theme.colorScheme.primaryContainer.withValues(alpha: 0.6),
                 onPressed: () => ref
                     .read(mainMapControllerProvider.notifier)
                     .zoomInSnap(0.25),
@@ -184,7 +184,7 @@ class MapControlButtons extends StatelessWidget {
               return FloatingActionButton(
                 tooltip: 'Zoom out',
                 backgroundColor:
-                    theme.colorScheme.primaryContainer.withOpacity(0.6),
+                    theme.colorScheme.primaryContainer.withValues(alpha: 0.6),
                 onPressed: () => ref
                     .read(mainMapControllerProvider.notifier)
                     .zoomOutSnap(0.25),

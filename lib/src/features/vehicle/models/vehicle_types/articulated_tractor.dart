@@ -781,7 +781,7 @@ final class ArticulatedTractor extends Vehicle {
           ...frontLeftSide.map((e) => e.latLng),
           ...frontRightSide.map((e) => e.latLng),
         ],
-        color: Colors.yellow.withOpacity(0.5),
+        color: Colors.yellow.withValues(alpha: 0.5),
       ),
       map.Polygon(
         points: [
@@ -789,8 +789,7 @@ final class ArticulatedTractor extends Vehicle {
           ...rearRightSide.map((e) => e.latLng),
           ...rearLeftSide.map((e) => e.latLng),
         ],
-
-        color: Colors.yellow.withOpacity(0.5),
+        color: Colors.yellow.withValues(alpha: 0.5),
       ),
     ];
   }

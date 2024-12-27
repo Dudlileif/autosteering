@@ -27,14 +27,13 @@ import 'package:autosteering/src/features/vehicle/models/models.dart';
 import 'package:autosteering/src/features/vehicle/models/vehicle.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
 
 /// A class for equipment used for working on the fields.
-class Equipment extends Hitchable with EquatableMixin {
+class Equipment extends Hitchable {
   /// A class for equipment used for working on the fields.
   ///
   /// The required [hitchType] specifies how this equipment connects to a
@@ -527,16 +526,16 @@ class Equipment extends Hitchable with EquatableMixin {
               )
             : null;
 
-        final hitchToParentTurningCircleBase =
-            switch (hitchParent.runtimeType) {
-          Tractor ||
-          Harvester =>
-            (hitchParent! as AxleSteeredVehicle).solidAxleToRearTowbarDistance,
-          ArticulatedTractor =>
-            (hitchParent! as ArticulatedTractor).rearAxleToTowbarDistance,
-          Equipment =>
-            (hitchParent! as Equipment).hitchToChildRearTowbarHitchLength! -
-                (hitchParent! as Equipment).drawbarLength,
+        final hitchToParentTurningCircleBase = switch (hitchParent) {
+          AxleSteeredVehicle(solidAxleToRearTowbarDistance: final distance) =>
+            distance,
+          ArticulatedTractor(rearAxleToTowbarDistance: final distance) =>
+            distance,
+          Equipment(
+            hitchToChildRearTowbarHitchLength: final distance,
+            drawbarLength: final length
+          ) =>
+            distance! - length,
           _ => null,
         };
 
@@ -553,16 +552,20 @@ class Equipment extends Hitchable with EquatableMixin {
               : 0.0;
 
           var y2 = hitchParent!.currentTurningRadius != null
-              ? clampDouble(asin(
-                  drawbarLength /
-                          sqrt(
-                            pow(hitchToParentTurningCircleBase, 2) +
-                                pow(
-                                  hitchParent!.currentTurningRadius!,
-                                  2,
-                                ),
-                          ),
-              ),-1, 1,)
+              ? clampDouble(
+                  asin(
+                    drawbarLength /
+                        sqrt(
+                          pow(hitchToParentTurningCircleBase, 2) +
+                              pow(
+                                hitchParent!.currentTurningRadius!,
+                                2,
+                              ),
+                        ),
+                  ),
+                  -1,
+                  1,
+                )
               : 0.0;
           if (y2.isNaN) {
             y2 = 0;
@@ -579,9 +582,12 @@ class Equipment extends Hitchable with EquatableMixin {
                   0) {
             targetStaticAngle *= -1;
           }
-          hitchAngle = clampDouble(_prevHitchAngle +
-                  (targetStaticAngle - _prevHitchAngle) * a * period
-              ,-90, 90,);
+          hitchAngle = clampDouble(
+            _prevHitchAngle +
+                (targetStaticAngle - _prevHitchAngle) * a * period,
+            -90,
+            90,
+          );
 
           bearing = (position.rhumb.initialBearingTo(hitchParent!.position) +
                   hitchAngle)
@@ -874,8 +880,8 @@ class Equipment extends Hitchable with EquatableMixin {
         false => Colors.grey,
       },
       color: switch (section.active) {
-        true => (section.color ?? Colors.green).withOpacity(0.8),
-        false => Colors.grey.withOpacity(0.2),
+        true => (section.color ?? Colors.green).withValues(alpha: 0.8),
+        false => Colors.grey.withValues(alpha: 0.2),
       },
     );
   }
@@ -894,8 +900,8 @@ class Equipment extends Hitchable with EquatableMixin {
         false => Colors.transparent,
       },
       color: switch (section.active) {
-        true => (section.color ?? Colors.green).withOpacity(0.8),
-        false => Colors.grey.withOpacity(0.2),
+        true => (section.color ?? Colors.green).withValues(alpha: 0.8),
+        false => Colors.grey.withValues(alpha: 0.2),
       },
     );
   }
@@ -1132,7 +1138,7 @@ class Equipment extends Hitchable with EquatableMixin {
 
       return map.Polygon(
         borderStrokeWidth: 3,
-        color: Colors.grey.shade800.withOpacity(0.7),
+        color: Colors.grey.shade800.withValues(alpha: 0.7),
         borderColor: Colors.black,
         points: points.map((e) => e.latLng).toList(),
       );
@@ -1175,7 +1181,7 @@ class Equipment extends Hitchable with EquatableMixin {
           ) <
           0;
 
-      var arcDegrees =clampDouble( time * angularVelocity!.abs(),0, 360);
+      var arcDegrees = clampDouble(time * angularVelocity!.abs(), 0, 360);
 
       if (minLength != null) {
         final centerTurningRadius =
@@ -1272,22 +1278,6 @@ class Equipment extends Hitchable with EquatableMixin {
       )
     );
   }
-
-  /// Properties used to check for equality.
-  @override
-  List<Object?> get props => [
-        uuid,
-        hitchType,
-        sections,
-        workingAreaLength,
-        drawbarLength,
-        position,
-        bearing,
-        velocity,
-        hitchToChildFrontFixedHitchLength,
-        hitchToChildRearFixedHitchLength,
-        hitchToChildRearTowbarHitchLength,
-      ];
 
   /// Returns a new [Equipment] based on this one, but with
   /// parameters/variables altered.

@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -24,7 +25,7 @@ part 'internet_address_providers.g.dart';
 /// has a reachable IP address attached to it.
 @riverpod
 Future<bool> validInternetAddress(
-  ValidInternetAddressRef ref,
+  Ref ref,
   String? address,
 ) async {
   if (address == null) {
@@ -32,7 +33,7 @@ Future<bool> validInternetAddress(
   }
   try {
     return (await InternetAddress.lookup(address)).isNotEmpty;
-  } catch (error) {
+  } on Exception catch (_) {
     return false;
   }
 }

@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -50,20 +51,19 @@ class ShowField extends _$ShowField {
 class ActiveField extends _$ActiveField {
   @override
   Field? build() {
-    ref
-      ..onDispose(() => Logger.instance.i('Closed active field.'))
-      ..listenSelf((previous, next) {
-        if (next != null) {
-          Logger.instance.i('Loaded active field: ${next.name}.');
-          ref.read(fieldBufferEnabledProvider.notifier).update(value: false);
-          if (ref.read(
-            activeWorkSessionProvider
-                .select((value) => value != null && value.field == null),
-          )) {
-            ref.read(activeWorkSessionProvider.notifier).updateField(next);
-          }
+    ref.onDispose(() => Logger.instance.i('Closed active field.'));
+    listenSelf((previous, next) {
+      if (next != null) {
+        Logger.instance.i('Loaded active field: ${next.name}.');
+        ref.read(fieldBufferEnabledProvider.notifier).update(value: false);
+        if (ref.read(
+          activeWorkSessionProvider
+              .select((value) => value != null && value.field == null),
+        )) {
+          ref.read(activeWorkSessionProvider.notifier).updateField(next);
         }
-      });
+      }
+    });
 
     return null;
   }
@@ -210,7 +210,7 @@ class ShowBufferedField extends _$ShowBufferedField {
 
 /// A provider for creating and updating the buffered test field.
 @Riverpod(keepAlive: true)
-Future<Field?> bufferedField(BufferedFieldRef ref) async {
+Future<Field?> bufferedField(Ref ref) async {
   ref.onDispose(() => Logger.instance.i('Closed buffered field.'));
 
   if (!ref.watch(fieldBufferEnabledProvider)) {
@@ -223,30 +223,6 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
     final exteriorJoinType = ref.watch(fieldExteriorBufferJoinProvider);
     final interiorJoinType = ref.watch(fieldInteriorBufferJoinProvider);
     final getRawPoints = ref.watch(fieldBufferGetRawPointsProvider);
-
-    ref.listenSelf((previous, next) {
-      final bufferSpecs = {
-        'exteriorDistance': exteriorDistance,
-        'interiorDistance': interiorDistance,
-        'exteriorJoinType': exteriorJoinType,
-        'interiorJoinType': interiorJoinType,
-        'getRawPoints': getRawPoints,
-      };
-
-      next.when(
-        data: (data) {
-          if (data != null) {
-            Logger.instance.i('Buffered field ${data.name} with $bufferSpecs.');
-          }
-        },
-        error: (error, stackTrace) => Logger.instance.e(
-          'Error when buffering field ${field.name} with $bufferSpecs',
-          error: error,
-          stackTrace: stackTrace,
-        ),
-        loading: () {},
-      );
-    });
 
     late final Polygon bufferedPolygon;
     if (Device.isWeb) {
@@ -270,24 +246,41 @@ Future<Field?> bufferedField(BufferedFieldRef ref) async {
           'get_raw_points': getRawPoints,
         }),
       );
+      final bufferSpecs = {
+        'exteriorDistance': exteriorDistance,
+        'interiorDistance': interiorDistance,
+        'exteriorJoinType': exteriorJoinType,
+        'interiorJoinType': interiorJoinType,
+        'getRawPoints': getRawPoints,
+      };
+      try {
+        bufferedPolygon = Polygon.parse(
+          await compute(
+            PolygonBufferExtension.bufferedPolygonFromJson,
+            json,
+            debugLabel: 'Field Buffering: ${field.name}',
+          ),
+        );
 
-      bufferedPolygon = Polygon.parse(
-        await compute(
-          PolygonBufferExtension.bufferedPolygonFromJson,
-          json,
-          debugLabel: 'Field Buffering: ${field.name}',
-        ),
-      );
-    } 
+        Logger.instance.i('Buffered field ${field.name} with $bufferSpecs.');
 
-    return field.copyWith(
-      polygon: bufferedPolygon,
-      boundingBox: bufferedPolygon.exterior != null &&
-              (!bufferedPolygon.exterior!.isEmptyByGeometry)
-          ? GeoBox.from(bufferedPolygon.exterior!.toGeographicPositions)
-          : null,
-      uuid: const Uuid().v4(),
-    );
+        return field.copyWith(
+          polygon: bufferedPolygon,
+          boundingBox: bufferedPolygon.exterior != null &&
+                  (!bufferedPolygon.exterior!.isEmptyByGeometry)
+              ? GeoBox.from(bufferedPolygon.exterior!.toGeographicPositions)
+              : null,
+          uuid: const Uuid().v4(),
+        );
+      } on Exception catch (error, stackTrace) {
+        Logger.instance.e(
+          'Error when buffering field ${field.name} with $bufferSpecs',
+          error: error,
+          stackTrace: stackTrace,
+        );
+        return null;
+      }
+    }
   }
   return null;
 }
@@ -363,7 +356,7 @@ class FieldInteriorRings extends _$FieldInteriorRings {
 /// Override the file name with [overrideName].
 @riverpod
 Future<void> saveField(
-  SaveFieldRef ref,
+  Ref ref,
   Field field, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -382,7 +375,7 @@ Future<void> saveField(
 /// Override the file name with [overrideName].
 @riverpod
 Future<void> exportField(
-  ExportFieldRef ref,
+  Ref ref,
   Field field, {
   String? overrideName,
   bool downloadIfWeb = true,
@@ -399,7 +392,7 @@ Future<void> exportField(
 /// A provider for reading and holding all the saved [Field]s in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-FutureOr<List<Field>> savedFields(SavedFieldsRef ref) async => await ref
+FutureOr<List<Field>> savedFields(Ref ref) async => await ref
     .watch(
       savedFilesProvider(fromJson: Field.fromJson, folder: 'fields').future,
     )
@@ -410,7 +403,7 @@ FutureOr<List<Field>> savedFields(SavedFieldsRef ref) async => await ref
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> deleteField(
-  DeleteFieldRef ref,
+  Ref ref,
   Field field, {
   String? overrideName,
 }) async =>
@@ -424,7 +417,7 @@ FutureOr<void> deleteField(
 /// A provider for loading a [Field] from a file at [path], if it's valid.
 @riverpod
 FutureOr<Field?> loadFieldFromFile(
-  LoadFieldFromFileRef ref,
+  Ref ref,
   String path,
 ) async {
   final file = File(path);
@@ -432,7 +425,7 @@ FutureOr<Field?> loadFieldFromFile(
     try {
       final json = jsonDecode(await file.readAsString());
       return Field.fromJson(Map<String, dynamic>.from(json as Map));
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.w(
         'Failed to load field from: $path.',
         error: error,
@@ -447,7 +440,7 @@ FutureOr<Field?> loadFieldFromFile(
 /// [ActiveField] provider.
 @riverpod
 FutureOr<Field?> importField(
-  ImportFieldRef ref,
+  Ref ref,
 ) async {
   ref.keepAlive();
   Timer(
@@ -467,7 +460,7 @@ FutureOr<Field?> importField(
       try {
         final json = jsonDecode(String.fromCharCodes(data));
         field = Field.fromJson(Map<String, dynamic>.from(json as Map));
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import field.',
           error: error,
@@ -501,5 +494,5 @@ FutureOr<Field?> importField(
 
 /// A provider for exporting all field files.
 @riverpod
-FutureOr<void> exportFields(ExportFieldsRef ref, {bool zip = true}) async =>
+FutureOr<void> exportFields(Ref ref, {bool zip = true}) async =>
     await ref.watch(exportAllProvider(directory: 'fields').future);

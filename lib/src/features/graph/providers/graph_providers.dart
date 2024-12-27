@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'graph_providers.g.dart';
@@ -104,7 +105,7 @@ class GraphActiveParameters extends _$GraphActiveParameters {
 /// A provider for the currently active [GraphData], derived from
 /// [GraphActiveParameters].
 @riverpod
-Set<GraphData> graphActiveData(GraphActiveDataRef ref) {
+Set<GraphData> graphActiveData(Ref ref) {
   final parameters = ref.watch(graphActiveParametersProvider);
   final vehicle = ref.watch(
     mainVehicleProvider.select(
@@ -282,16 +283,15 @@ class GraphValues extends _$GraphValues {
 class DraggableGraphUiOffset extends _$DraggableGraphUiOffset {
   @override
   Offset build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && next != previous) {
-          ref.read(settingsProvider.notifier).update(
-                SettingsKey.uiDraggableGraphOffset,
-                next.toJson(),
-              );
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && next != previous) {
+        ref.read(settingsProvider.notifier).update(
+              SettingsKey.uiDraggableGraphOffset,
+              next.toJson(),
+            );
+      }
+    });
 
     final setting = ref
         .read(settingsProvider.notifier)

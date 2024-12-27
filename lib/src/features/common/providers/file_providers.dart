@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,7 +35,7 @@ part 'file_providers.g.dart';
 
 /// A provider for the main user file directory for the application.
 @Riverpod(keepAlive: true)
-FutureOr<Directory> fileDirectory(FileDirectoryRef ref) async {
+FutureOr<Directory> fileDirectory(Ref ref) async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
   final dirPath = path.join(documentsDirectory.path, 'Autosteering');
   final directory = Directory(dirPath);
@@ -56,7 +57,7 @@ FutureOr<Directory> fileDirectory(FileDirectoryRef ref) async {
 ///
 /// Returns the size in number of bytes.
 @riverpod
-FutureOr<int?> directorySize(DirectorySizeRef ref, String path) async {
+FutureOr<int?> directorySize(Ref ref, String path) async {
   final directory = Directory(path);
   if (directory.existsSync()) {
     return directory.list(recursive: true).fold(
@@ -72,7 +73,7 @@ FutureOr<int?> directorySize(DirectorySizeRef ref, String path) async {
 ///
 /// Returns true if the directory no longer exists.
 @riverpod
-FutureOr<bool> directoryDelete(DirectoryDeleteRef ref, String path) async {
+FutureOr<bool> directoryDelete(Ref ref, String path) async {
   final directory = Directory(path);
 
   if (directory.existsSync()) {
@@ -97,7 +98,7 @@ FutureOr<bool> directoryDelete(DirectoryDeleteRef ref, String path) async {
 /// Caution: Expects [object] to have a .toJson() method implemented.
 @riverpod
 FutureOr<void> saveJsonToFileDirectory(
-  SaveJsonToFileDirectoryRef ref, {
+  Ref ref, {
   required dynamic object,
   required String fileName,
   required String folder,
@@ -143,7 +144,7 @@ FutureOr<void> saveJsonToFileDirectory(
               true => 'Wrote data to $filePath',
             },
           );
-        } catch (error, stackTrace) {
+        } on Exception catch (error, stackTrace) {
           return LogEvent(
             Level.error,
             'Failed to save json.',
@@ -159,7 +160,7 @@ FutureOr<void> saveJsonToFileDirectory(
           stackTrace: value.stackTrace,
         ),
       );
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.e(
         'Failed to run saving isolate.',
         error: error,
@@ -175,7 +176,7 @@ FutureOr<void> saveJsonToFileDirectory(
 /// Caution: Expects [object] to have a .toJson() method implemented.
 @riverpod
 FutureOr<void> exportJsonToFileDirectory(
-  ExportJsonToFileDirectoryRef ref, {
+  Ref ref, {
   required dynamic object,
   required String fileName,
   String? folder,
@@ -240,7 +241,7 @@ FutureOr<void> exportJsonToFileDirectory(
                 true => 'Wrote data to $filePath',
               },
             );
-          } catch (error, stackTrace) {
+          } on Exception catch (error, stackTrace) {
             return LogEvent(
               Level.error,
               'Failed to export json.',
@@ -259,7 +260,7 @@ FutureOr<void> exportJsonToFileDirectory(
       } else {
         Logger.instance.i('No export folder selected.');
       }
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.e(
         'Failed to run export isolate.',
         error: error,
@@ -273,7 +274,7 @@ FutureOr<void> exportJsonToFileDirectory(
 /// the given type in the in the user file directory.
 @Riverpod(keepAlive: true)
 FutureOr<List<dynamic>> savedFiles(
-  SavedFilesRef ref, {
+  Ref ref, {
   required dynamic Function(Map<String, dynamic> json) fromJson,
   required String folder,
   bool rebuildOnFileModification = true,
@@ -315,7 +316,7 @@ FutureOr<List<dynamic>> savedFiles(
             final json = Map<String, dynamic>.from(decoded as Map);
             final item = fromJson(json);
             savedItems.add(item);
-          } catch (error, stackTrace) {
+          } on Exception catch (error, stackTrace) {
             Logger.instance.w(
               'Failed to parse: ${file.path}',
               error: error,
@@ -335,7 +336,7 @@ FutureOr<List<dynamic>> savedFiles(
 /// the given type in the in the user file directory.
 @Riverpod(keepAlive: true)
 FutureOr<List<dynamic>> savedFilesInSubDirectories(
-  SavedFilesInSubDirectoriesRef ref, {
+  Ref ref, {
   required dynamic Function(Map<String, dynamic> json) fromJson,
   required String folder,
   bool rebuildOnFileModification = true,
@@ -385,7 +386,7 @@ FutureOr<List<dynamic>> savedFilesInSubDirectories(
               final item = fromJson(json);
               savedItems.add(item);
             }
-          } catch (error, stackTrace) {
+          } on Exception catch (error, stackTrace) {
             Logger.instance.w(
               'Failed to parse items in: ${dir.path}',
               error: error,
@@ -404,7 +405,7 @@ FutureOr<List<dynamic>> savedFilesInSubDirectories(
 /// A provider for deleting the [fileName] in [folder] if it exists.
 @riverpod
 FutureOr<void> deleteJsonFromFileDirectory(
-  DeleteJsonFromFileDirectoryRef ref, {
+  Ref ref, {
   required String fileName,
   required String folder,
 }) async {
@@ -434,7 +435,7 @@ FutureOr<void> deleteJsonFromFileDirectory(
 /// A provider for deleting the [directoryName] in [folder] if it exists.
 @riverpod
 FutureOr<void> deleteDirectoryFromFileDirectory(
-  DeleteDirectoryFromFileDirectoryRef ref, {
+  Ref ref, {
   required String directoryName,
   required String folder,
 }) async {
@@ -463,7 +464,7 @@ FutureOr<void> deleteDirectoryFromFileDirectory(
 
 /// A provider for exporting the whole file directory to a ZIP file.
 @riverpod
-FutureOr<void> exportWholeFileDirectory(ExportWholeFileDirectoryRef ref) async {
+FutureOr<void> exportWholeFileDirectory(Ref ref) async {
   ref.keepAlive();
   try {
     if (Device.isNative) {
@@ -511,7 +512,7 @@ FutureOr<void> exportWholeFileDirectory(ExportWholeFileDirectoryRef ref) async {
         await Future.delayed(const Duration(milliseconds: 500), () {});
       }
     }
-  } catch (error, stackTrace) {
+  } on Exception catch (error, stackTrace) {
     Logger.instance.e(
       'Failed exporting whole file directory.',
       error: error,
@@ -537,7 +538,7 @@ class ExportProgress extends _$ExportProgress {
 /// A provider for exporting all files in a [directory].
 @riverpod
 FutureOr<void> exportAll(
-  ExportAllRef ref, {
+  Ref ref, {
   required String directory,
   bool zip = true,
 }) async {
@@ -607,7 +608,7 @@ FutureOr<void> exportAll(
         }
       }
     }
-  } catch (error, stackTrace) {
+  } on Exception catch (error, stackTrace) {
     Logger.instance.e(
       'Failed to export $directory.',
       error: error,
@@ -632,7 +633,7 @@ class ImportProgress extends _$ImportProgress {
 
 /// A provider for importing all directory files from a zip file.
 @riverpod
-FutureOr<void> importWholeFileDirectory(ImportWholeFileDirectoryRef ref) async {
+FutureOr<void> importWholeFileDirectory(Ref ref) async {
   ref.keepAlive();
   try {
     if (Device.isNative) {
@@ -646,8 +647,7 @@ FutureOr<void> importWholeFileDirectory(ImportWholeFileDirectoryRef ref) async {
 
         final inputStream = InputFileStream(importFile.files.first.path!);
 
-        final archive = ZipDecoder().decodeBuffer(inputStream);
-
+        final archive = ZipDecoder().decodeStream(inputStream);
         final files = archive.files.where((f) => f.isFile);
         final numberOfFiles = files.length;
         var processed = 0;
@@ -688,7 +688,7 @@ Reloading all settings and files...''',
         Logger.instance.i('No import all file found.');
       }
     }
-  } catch (error, stackTrace) {
+  } on Exception catch (error, stackTrace) {
     Logger.instance.e(
       'Failed to import all files.',
       error: error,

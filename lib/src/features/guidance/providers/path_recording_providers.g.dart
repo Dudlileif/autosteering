@@ -7,7 +7,7 @@ part of 'path_recording_providers.dart';
 // **************************************************************************
 
 String _$automaticPathRecordingHash() =>
-    r'4b421489b90a2f6878e9bae73b0da410beea45b1';
+    r'3ef9ec5da00b86b8695da396650741aa19994cc7';
 
 /// A provider for watching to keep the automatic path recording going.
 ///
@@ -23,6 +23,8 @@ final automaticPathRecordingProvider = AutoDisposeFutureProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AutomaticPathRecordingRef = AutoDisposeFutureProviderRef<void>;
 String _$showPathRecordingMenuHash() =>
     r'8945b9d595d1413c9decaa11e548adcc0d2acf9f';
@@ -44,7 +46,7 @@ final showPathRecordingMenuProvider =
 
 typedef _$ShowPathRecordingMenu = AutoDisposeNotifier<bool>;
 String _$enablePathRecorderHash() =>
-    r'6fedacb5e80d10808ae682a6f69169af3e3e1323';
+    r'10810689b6ebb98e9a000c21e244d67ed9bbd079';
 
 /// Whether the path recorder is enabled.
 ///
@@ -63,7 +65,7 @@ final enablePathRecorderProvider =
 
 typedef _$EnablePathRecorder = Notifier<bool>;
 String _$enableAutomaticPathRecorderHash() =>
-    r'd9289d46018a08429bc90e7497c5ed0973d2cb4d';
+    r'33d164d9ff8c908f6884498ecd7200c800e686c8';
 
 /// Whether the automatic path recorder is enabled.
 ///
@@ -82,7 +84,7 @@ final enableAutomaticPathRecorderProvider =
 
 typedef _$EnableAutomaticPathRecorder = Notifier<bool>;
 String _$activePathRecordingSettingsHash() =>
-    r'af7d99d95caa8694a64188edd03a92b057032024';
+    r'2695f3505634ee6c903cf851aadd35e978841e2c';
 
 /// A provider for the [PathRecordingSettings] which configures how paths
 /// should be recorded.
@@ -139,7 +141,7 @@ final pathRecordingListProvider =
 
 typedef _$PathRecordingList = Notifier<List<WayPoint>>;
 String _$finishedPathRecordingListHash() =>
-    r'47250939a05d05e337d966a77bf68987e94d3522';
+    r'fe9c4252f89dad4acdc8445b9fa58217b43dde89';
 
 /// A list of path points for the last finished recording.
 ///
@@ -175,7 +177,7 @@ final showFinishedPathProvider =
 );
 
 typedef _$ShowFinishedPath = Notifier<bool>;
-String _$editFinishedPathHash() => r'a29a27f1b18455d4744258a9ed7dba5bd68d2b47';
+String _$editFinishedPathHash() => r'3689d55169c82198e9bd0b1768dbb7046e357f3f';
 
 /// Whether to activate editing of the last finished path recording.
 ///
@@ -194,7 +196,7 @@ final editFinishedPathProvider =
 
 typedef _$EditFinishedPath = Notifier<bool>;
 String _$pathRecordingMenuUiOffsetHash() =>
-    r'bbaf637aa0a398246f00e34b75b7d70f1ced920f';
+    r'1b09707f740e7c957697ffea0bdaf37a129fd9a1';
 
 /// A provider for the UI [Offset] for the path recording configurator.
 ///
@@ -213,4 +215,4 @@ final pathRecordingMenuUiOffsetProvider =
 
 typedef _$PathRecordingMenuUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

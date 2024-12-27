@@ -6,7 +6,7 @@ part of 'simulator_core_web_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$simCoreWebStreamHash() => r'350a25d1fb2561279c32b956f3f49383106aca0b';
+String _$simCoreWebStreamHash() => r'49195f61d91fcc66910d46b237bcd471f68125d4';
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
@@ -26,9 +26,11 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreVehicleDrivingHash() =>
-    r'1fc03040c3c55c1d47bad8a1a8a81a6d5d74f7b3';
+    r'09a4fb85cdf270b1147770a36273f5dd6a0502d6';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -45,9 +47,11 @@ final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SimCoreVehicleDrivingRef = AutoDisposeProviderRef<void>;
 String _$simCoreIsolateStreamHash() =>
-    r'5ffe8cc4ca7532de5a44eb35c6869b2c72304992';
+    r'e31e28aee2c717de9e9db7921cd374d64904e52a';
 
 /// A dummy provider for the web version.
 ///
@@ -63,6 +67,8 @@ final simCoreIsolateStreamProvider = AutoDisposeProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SimCoreIsolateStreamRef = AutoDisposeProviderRef<void>;
 String _$simInputHash() => r'4d390ed2088f9822ccd8b5506a1fe72782489f0e';
 
@@ -80,7 +86,7 @@ final simInputProvider = NotifierProvider<SimInput, void>.internal(
 );
 
 typedef _$SimInput = Notifier<void>;
-String _$simCoreWebInputHash() => r'e321c8dbf06b3976a8e978ad67efc7facd9f8e17';
+String _$simCoreWebInputHash() => r'8f043db7433228bbd0479cd8df8b1aca0e1ddf36';
 
 /// A provider that creates a stream for sending vehicle inputs to the
 /// vehicle simulator when on the web platform.
@@ -100,4 +106,4 @@ final _simCoreWebInputProvider =
 
 typedef _$SimCoreWebInput = Notifier<StreamController<dynamic>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

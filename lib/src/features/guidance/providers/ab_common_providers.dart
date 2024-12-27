@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -168,7 +169,7 @@ class ABOffsetOppositeTurn extends _$ABOffsetOppositeTurn {
 class ABSnapToClosestLine extends _$ABSnapToClosestLine {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send((abSnapToClosestLine: next));
     });
     return false;
@@ -186,7 +187,7 @@ class ABSnapToClosestLine extends _$ABSnapToClosestLine {
 class ConfiguredABTracking extends _$ConfiguredABTracking {
   @override
   ABTracking? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next != null || previous != null) {
         Logger.instance.i('Path tracking set to ${next?.runtimeType}');
         if (next != null) {
@@ -243,7 +244,7 @@ class ConfiguredMenuABTracking extends _$ConfiguredMenuABTracking {
 class DisplayABTracking extends _$DisplayABTracking {
   @override
   ABTracking? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next != null) {
         ref.read(activeWorkSessionProvider.notifier).updateABTracking(next);
       }
@@ -260,7 +261,7 @@ class DisplayABTracking extends _$DisplayABTracking {
 class ABPointA extends _$ABPointA {
   @override
   WayPoint? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next != null) {
         Logger.instance.i('AB point A set to: $next');
       }
@@ -277,7 +278,7 @@ class ABPointA extends _$ABPointA {
 class ABPointB extends _$ABPointB {
   @override
   WayPoint? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next != null) {
         Logger.instance.i('AB point B set to: $next');
       }
@@ -319,7 +320,7 @@ class ShowABPointB extends _$ShowABPointB {
 /// to the [MainVehicle].
 @riverpod
 double? abTrackingPerpendicularDistance(
-  AbTrackingPerpendicularDistanceRef ref,
+  Ref ref,
 ) =>
     ref
         .watch(displayABTrackingProvider)
@@ -329,18 +330,18 @@ double? abTrackingPerpendicularDistance(
 
 /// A provider for the currently active AB configuration.
 @Riverpod(keepAlive: true)
-ABConfig activeABConfig(ActiveABConfigRef ref) {
-  ref.listenSelf((previous, next) {
-    ref.read(simInputProvider.notifier).send(next);
-  });
-
-  return ABConfig(
+ABConfig activeABConfig(Ref ref) {
+  final config = ABConfig(
     turningRadius: ref.watch(aBTurningRadiusProvider),
     turnOffsetMinSkips: ref.watch(aBTurnOffsetMinSkipsProvider),
     snapToClosestLine: ref.watch(aBSnapToClosestLineProvider),
     offsetOppositeTurn: ref.watch(aBOffsetOppositeTurnProvider),
     limitMode: ref.watch(aBTrackingLimitModeProvider),
   );
+
+  ref.read(simInputProvider.notifier).send(config);
+
+  return config;
 }
 
 /// A provider for whether all the calculated lines for the AB tracking should
@@ -358,7 +359,7 @@ class ABTrackingShowAllLines extends _$ABTrackingShowAllLines {
 /// valid.
 @riverpod
 FutureOr<ABTracking?> loadABTrackingFromFile(
-  LoadABTrackingFromFileRef ref,
+  Ref ref,
   String path,
 ) async {
   final file = File(path);
@@ -366,7 +367,7 @@ FutureOr<ABTracking?> loadABTrackingFromFile(
     try {
       final json = jsonDecode(await file.readAsString());
       return ABTracking.fromJson(Map<String, dynamic>.from(json as Map));
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.w(
         'Failed to load AB tracking from: $path.',
         error: error,
@@ -382,7 +383,7 @@ FutureOr<ABTracking?> loadABTrackingFromFile(
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> saveABTracking(
-  SaveABTrackingRef ref,
+  Ref ref,
   ABTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -403,7 +404,7 @@ FutureOr<void> saveABTracking(
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> exportABTracking(
-  ExportABTrackingRef ref,
+  Ref ref,
   ABTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = true,
@@ -422,22 +423,21 @@ FutureOr<void> exportABTracking(
 /// A provider for reading and holding all the saved [ABTracking] in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-FutureOr<List<ABTracking>> savedABTrackings(SavedABTrackingsRef ref) async =>
-    await ref
-        .watch(
-          savedFilesProvider(
-            fromJson: ABTracking.fromJson,
-            folder: 'guidance/ab_tracking',
-          ).future,
-        )
-        .then((data) => data.cast());
+FutureOr<List<ABTracking>> savedABTrackings(Ref ref) async => await ref
+    .watch(
+      savedFilesProvider(
+        fromJson: ABTracking.fromJson,
+        folder: 'guidance/ab_tracking',
+      ).future,
+    )
+    .then((data) => data.cast());
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> deleteABTracking(
-  DeleteABTrackingRef ref,
+  Ref ref,
   ABTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = true,
@@ -455,7 +455,7 @@ FutureOr<void> deleteABTracking(
 /// the [ConfiguredABTracking] provider.
 @riverpod
 FutureOr<ABTracking?> importABTracking(
-  ImportABTrackingRef ref,
+  Ref ref,
 ) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
@@ -474,7 +474,7 @@ FutureOr<ABTracking?> importABTracking(
 
         abTracking =
             ABTracking.fromJson(Map<String, dynamic>.from(json as Map));
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import AB tracking.',
           error: error,

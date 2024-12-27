@@ -29,9 +29,8 @@ part 'sentinel_providers.g.dart';
 class CopernicusInstanceId extends _$CopernicusInstanceId {
   @override
   String? build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != next) {
         ref
             .read(settingsProvider.notifier)
@@ -55,9 +54,8 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
   List<SentinelLayer> build() {
     final instanceId = ref.watch(copernicusInstanceIdProvider);
 
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null && previous != next && instanceId != null) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.mapLayersSentinelSorted,
@@ -122,9 +120,8 @@ class SentinelMaxCloudCoveragePercent
     extends _$SentinelMaxCloudCoveragePercent {
   @override
   double build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
@@ -147,9 +144,8 @@ class SentinelMaxCloudCoveragePercent
 class EnabledSentinelLayers extends _$EnabledSentinelLayers {
   @override
   Set<SentinelLayer> build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.mapLayersSentinelEnabled,
@@ -225,9 +221,8 @@ class SentinelLayerOpacities extends _$SentinelLayerOpacities {
 
   @override
   Map<SentinelLayerType, double> build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null) {
         if (!const DeepCollectionEquality().equals(previous, next)) {
           _saveToSettingsTimer?.cancel();

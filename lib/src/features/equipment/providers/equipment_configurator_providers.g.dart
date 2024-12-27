@@ -46,7 +46,7 @@ final configuredEquipmentProvider =
 
 typedef _$ConfiguredEquipment = Notifier<Equipment>;
 String _$configuredEquipmentEqualWidthsHash() =>
-    r'97bb66816bf1ac7fedec51b4edf0dd504e61f845';
+    r'587d2d05d483ac9fab17d49a6b5433a1d058d73a';
 
 /// A provider for whether the configured equipment sections should have equal
 /// widths.
@@ -66,7 +66,7 @@ final configuredEquipmentEqualWidthsProvider =
 
 typedef _$ConfiguredEquipmentEqualWidths = AutoDisposeNotifier<bool>;
 String _$configuredEquipmentEqualWorkingWidthsHash() =>
-    r'bf903cff7cceae18776df42c40ae3fe822263ce6';
+    r'c3ed65aa2db23fb876a07abedfe86381791fbeee';
 
 /// A provider for whether the configured equipment sections should have equal
 /// working widths.
@@ -87,4 +87,4 @@ final configuredEquipmentEqualWorkingWidthsProvider =
 
 typedef _$ConfiguredEquipmentEqualWorkingWidths = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

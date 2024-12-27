@@ -7,7 +7,7 @@ part of 'equipment_setup_providers.dart';
 // **************************************************************************
 
 String _$saveEquipmentSetupHash() =>
-    r'60228085baafa8ab55445b97b247a866abba5a6a';
+    r'6e0dc61ad3693807604e4b8314aab2ba3ffe4375';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -190,6 +190,8 @@ class SaveEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SaveEquipmentSetupRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `setup` of this provider.
   EquipmentSetup get setup;
@@ -216,7 +218,7 @@ class _SaveEquipmentSetupProviderElement
 }
 
 String _$exportEquipmentSetupHash() =>
-    r'16561377bf27bbe3937bb9a5b221a0f5e9dfdcc8';
+    r'401caa4accd623a0db3cad6119649a4fb14ede92';
 
 /// A provider for exporting [setup] to a file.
 ///
@@ -378,6 +380,8 @@ class ExportEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportEquipmentSetupRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `setup` of this provider.
   EquipmentSetup get setup;
@@ -405,7 +409,7 @@ class _ExportEquipmentSetupProviderElement
 }
 
 String _$savedEquipmentSetupsHash() =>
-    r'85ad01a9ed7a6dc14589ba15d4c22fbcb85a22f4';
+    r'0d6e509cbec5d1f6b1e1bcfdc68053bb39a0fd5e';
 
 /// A provider for reading and holding all the saved [EquipmentSetup]s in the
 /// user file directory.
@@ -423,9 +427,11 @@ final savedEquipmentSetupsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SavedEquipmentSetupsRef = FutureProviderRef<List<EquipmentSetup>>;
 String _$deleteEquipmentSetupHash() =>
-    r'12bb1a7331b50155fb55fb1fb56027cf7dc7fce3';
+    r'02bf2c93100e497d02165324200e0d189ba1f67e';
 
 /// A provider for deleting [setup] form the user file system.
 ///
@@ -587,6 +593,8 @@ class DeleteEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DeleteEquipmentSetupRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `setup` of this provider.
   EquipmentSetup get setup;
@@ -614,7 +622,7 @@ class _DeleteEquipmentSetupProviderElement
 }
 
 String _$loadEquipmentSetupFromFileHash() =>
-    r'd95a6c80af96e1fb13e7513d5edcee46eb72d303';
+    r'a1f1892452fc1a6c7a1b36881a262c3a9307753c';
 
 /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
 /// valid.
@@ -750,6 +758,8 @@ class LoadEquipmentSetupFromFileProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LoadEquipmentSetupFromFileRef
     on AutoDisposeFutureProviderRef<EquipmentSetup?> {
   /// The parameter `path` of this provider.
@@ -766,7 +776,7 @@ class _LoadEquipmentSetupFromFileProviderElement
 }
 
 String _$importEquipmentSetupHash() =>
-    r'a46b4773d058fdc9e18e31eb1cad907da7c8f8c7';
+    r'3c597120b06e5aab721193e82cc1e592443e628f';
 
 /// A provider for importing a equipment setup configuration from the user file
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
@@ -784,9 +794,11 @@ final importEquipmentSetupProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ImportEquipmentSetupRef = AutoDisposeFutureProviderRef<EquipmentSetup?>;
 String _$configuredEquipmentSetupHash() =>
-    r'4f72d22d954ac4e1f0a81208d10ab3bdfd2a225d';
+    r'b39fe174ad64a3c80c6fbf2fdecc6db9da6bbfea';
 
 /// A provider or holding the configured/loaded [EquipmentSetup] in memory.
 ///
@@ -805,4 +817,4 @@ final configuredEquipmentSetupProvider =
 
 typedef _$ConfiguredEquipmentSetup = Notifier<EquipmentSetup?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

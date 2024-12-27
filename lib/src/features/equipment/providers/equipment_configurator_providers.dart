@@ -72,7 +72,7 @@ class ConfiguredEquipment extends _$ConfiguredEquipment {
 class ConfiguredEquipmentEqualWidths extends _$ConfiguredEquipmentEqualWidths {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (previous != null && !previous && next) {
         final equipment = ref.read(configuredEquipmentProvider);
         ref.read(configuredEquipmentProvider.notifier).update(
@@ -111,7 +111,7 @@ class ConfiguredEquipmentEqualWorkingWidths
     extends _$ConfiguredEquipmentEqualWorkingWidths {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (previous != null && !previous && next) {
         final equipment = ref.read(configuredEquipmentProvider);
         ref.read(configuredEquipmentProvider.notifier).update(

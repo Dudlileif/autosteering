@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'theme_providers.g.dart';
@@ -29,15 +30,14 @@ part 'theme_providers.g.dart';
 class ActiveThemeMode extends _$ActiveThemeMode {
   @override
   ThemeMode build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.themeMode, next.name);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.themeMode, next.name);
+      }
+    });
     final name =
         ref.read(settingsProvider.notifier).getString(SettingsKey.themeMode);
 
@@ -65,20 +65,19 @@ class ActiveThemeMode extends _$ActiveThemeMode {
 class Manufacturer extends _$Manufacturer {
   @override
   ManufacturerColors build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.themeColorScheme, next.name);
+        if (next.name == 'Custom') {
           ref
               .read(settingsProvider.notifier)
-              .update(SettingsKey.themeColorScheme, next.name);
-          if (next.name == 'Custom') {
-            ref
-                .read(settingsProvider.notifier)
-                .update(SettingsKey.themeColorSchemeCustom, next.toJson());
-          }
+              .update(SettingsKey.themeColorSchemeCustom, next.toJson());
         }
-      });
+      }
+    });
 
     final name = ref
         .read(settingsProvider.notifier)
@@ -113,15 +112,14 @@ class Manufacturer extends _$Manufacturer {
 class ColorSchemeInheritFromVehicle extends _$ColorSchemeInheritFromVehicle {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.themeColorSchemeInheritFromVehicle, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.themeColorSchemeInheritFromVehicle, next);
+      }
+    });
 
     return ref
             .read(settingsProvider.notifier)
@@ -138,7 +136,7 @@ class ColorSchemeInheritFromVehicle extends _$ColorSchemeInheritFromVehicle {
 /// Updates the [AppTheme] configuration when any of the providers
 /// for the options changes.
 @riverpod
-AppTheme appTheme(AppThemeRef ref) {
+AppTheme appTheme(Ref ref) {
   final manufacturerColors = ref.watch(colorSchemeInheritFromVehicleProvider)
       ? ref.watch(
           configuredVehicleProvider.select((value) => value.manufacturerColors),

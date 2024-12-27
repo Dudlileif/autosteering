@@ -55,7 +55,7 @@ Connection: close\r
         profile: profile,
         socket: socket,
       );
-    } catch (error) {
+    } on Exception catch (error) {
       Logger.instance.e(
         '''Failed to connect to NTRIP server ${profile.hostAddress}:${profile.port} with message: $message''',
         error: error,

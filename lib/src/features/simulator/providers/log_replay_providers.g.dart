@@ -7,7 +7,7 @@ part of 'log_replay_providers.dart';
 // **************************************************************************
 
 String _$loadLogReplayFromFileHash() =>
-    r'6ba5796280dac725327ca7ed4ac0418a92a13373';
+    r'039c5f7116fb6afef9bdce010f1745ac1eba16d3';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -156,6 +156,8 @@ class LoadLogReplayFromFileProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LoadLogReplayFromFileRef on AutoDisposeFutureProviderRef<LogReplay?> {
   /// The parameter `path` of this provider.
   String get path;
@@ -170,7 +172,7 @@ class _LoadLogReplayFromFileProviderElement
   String get path => (origin as LoadLogReplayFromFileProvider).path;
 }
 
-String _$importLogReplayHash() => r'84cfd0d7482681fc37eff87267949565678292e8';
+String _$importLogReplayHash() => r'a6fd83373024d96572cd9a42f3fa561043d90d72';
 
 /// A provider for importing a [LogReplay] from a file.
 ///
@@ -186,8 +188,10 @@ final importLogReplayProvider = AutoDisposeFutureProvider<LogReplay?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ImportLogReplayRef = AutoDisposeFutureProviderRef<LogReplay?>;
-String _$activeLogReplayHash() => r'195f4b2bbb2fc4c9d5dea10337159c26e10b3005';
+String _$activeLogReplayHash() => r'e8d93a42b54febed5a79e8ea7887d983d672640e';
 
 /// A provider for the active [LogReplay].
 ///
@@ -222,7 +226,7 @@ final logReplayIndexProvider = NotifierProvider<LogReplayIndex, int>.internal(
 );
 
 typedef _$LogReplayIndex = Notifier<int>;
-String _$loopLogReplayHash() => r'f36f57fa1b38f4e031ff6d8d77b258e463ca639d';
+String _$loopLogReplayHash() => r'3bec3b6c091b803d78ce49288b328363cab03785';
 
 /// A provider for whether the log replays should loop.
 ///
@@ -240,4 +244,4 @@ final loopLogReplayProvider = NotifierProvider<LoopLogReplay, bool>.internal(
 
 typedef _$LoopLogReplay = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

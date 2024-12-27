@@ -27,6 +27,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -380,7 +381,7 @@ class ActiveWorkSession extends _$ActiveWorkSession {
 /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
 @riverpod
 FutureOr<WorkSession?> loadWorkSessionFromFile(
-  LoadWorkSessionFromFileRef ref,
+  Ref ref,
   String path,
 ) async {
   final file = File(path);
@@ -388,7 +389,7 @@ FutureOr<WorkSession?> loadWorkSessionFromFile(
     try {
       final json = jsonDecode(await file.readAsString());
       return WorkSession.fromJson(Map<String, dynamic>.from(json as Map));
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.w(
         'Failed loading work session from: $path',
         error: error,
@@ -404,7 +405,7 @@ FutureOr<WorkSession?> loadWorkSessionFromFile(
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> saveWorkSession(
-  SaveWorkSessionRef ref,
+  Ref ref,
   WorkSession workSession, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -428,7 +429,7 @@ FutureOr<void> saveWorkSession(
 /// be saved.
 @riverpod
 FutureOr<void> saveWorkSessionEquipmentLogs(
-  SaveWorkSessionEquipmentLogsRef ref,
+  Ref ref,
   WorkSession workSession, {
   bool overwrite = true,
   String? singleUuid,
@@ -479,7 +480,7 @@ FutureOr<void> saveWorkSessionEquipmentLogs(
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> exportWorkSession(
-  ExportWorkSessionRef ref,
+  Ref ref,
   WorkSession workSession, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -500,8 +501,7 @@ FutureOr<void> exportWorkSession(
 /// A provider for reading and holding all the saved [WorkSession]s in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-FutureOr<List<WorkSession>> savedWorkSessions(SavedWorkSessionsRef ref) async =>
-    await ref
+FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
         .watch(
       savedFilesInSubDirectoriesProvider(
         fromJson: WorkSession.fromJson,
@@ -572,7 +572,7 @@ FutureOr<List<WorkSession>> savedWorkSessions(SavedWorkSessionsRef ref) async =>
 /// Override the directory name with [overrideName].
 @riverpod
 FutureOr<void> deleteWorkSession(
-  DeleteWorkSessionRef ref,
+  Ref ref,
   WorkSession workSession, {
   String? overrideName,
 }) async =>
@@ -589,7 +589,7 @@ FutureOr<void> deleteWorkSession(
 /// to the [ActiveWorkSession] provider.
 @riverpod
 FutureOr<WorkSession?> importWorkSession(
-  ImportWorkSessionRef ref,
+  Ref ref,
 ) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
@@ -607,7 +607,7 @@ FutureOr<WorkSession?> importWorkSession(
         final json = jsonDecode(String.fromCharCodes(data));
         workSession =
             WorkSession.fromJson(Map<String, dynamic>.from(json as Map));
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import work session.',
           error: error,
@@ -680,7 +680,7 @@ FutureOr<WorkSession?> importWorkSession(
 /// A provider for exporting all work session files.
 @riverpod
 FutureOr<void> exportWorkSessions(
-  ExportWorkSessionsRef ref, {
+  Ref ref, {
   bool zip = true,
 }) async =>
     await ref.watch(exportAllProvider(directory: 'work_sessions').future);

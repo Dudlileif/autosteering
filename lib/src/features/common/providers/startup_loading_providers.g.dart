@@ -7,7 +7,7 @@ part of 'startup_loading_providers.dart';
 // **************************************************************************
 
 String _$webArtificialStartupDelayHash() =>
-    r'b29b7eca285fb9384eea01ca6e1495a35a880170';
+    r'f831f3a69daa90ccb70513f2f34a719add77ca79';
 
 /// A provider for adding an artificial startup delay on web, as it won't
 /// properly load without it.
@@ -25,8 +25,10 @@ final webArtificialStartupDelayProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef WebArtificialStartupDelayRef = AutoDisposeFutureProviderRef<void>;
-String _$startupLoadingHash() => r'6810817788fa515e4800d07d5cb38d0e4d03b9b5';
+String _$startupLoadingHash() => r'e4c2d53169c4b5d78e458670da14e400a2d7d098';
 
 /// A provider for handling the initial loading of saved user files.
 ///
@@ -44,6 +46,8 @@ final startupLoadingProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef StartupLoadingRef = AutoDisposeProviderRef<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

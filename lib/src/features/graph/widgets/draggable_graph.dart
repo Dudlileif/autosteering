@@ -34,7 +34,7 @@ class GraphWithSelector extends ConsumerWidget {
       child: SizedBox.square(
         dimension: 400,
         child: Scaffold(
-          backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
+          backgroundColor: theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
           appBar: AppBar(
             primary: false,
             title: const Text('Graph'),

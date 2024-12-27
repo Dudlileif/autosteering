@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'startup_loading_providers.g.dart';
@@ -30,7 +31,7 @@ part 'startup_loading_providers.g.dart';
 /// properly load without it.
 @riverpod
 FutureOr<void> webArtificialStartupDelay(
-  WebArtificialStartupDelayRef ref,
+  Ref ref,
 ) async =>
     await Future.delayed(const Duration(milliseconds: 500));
 
@@ -38,7 +39,7 @@ FutureOr<void> webArtificialStartupDelay(
 ///
 /// Returns true whilst loading and false when all files have been loaded.
 @riverpod
-bool startupLoading(StartupLoadingRef ref) {
+bool startupLoading(Ref ref) {
 // Return on web as there is no files to be read.
   if (Device.isWeb) {
     return ref.watch(lastUsedVehicleProvider) is! AsyncData ||

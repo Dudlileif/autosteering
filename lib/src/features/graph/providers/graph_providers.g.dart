@@ -6,7 +6,7 @@ part of 'graph_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$graphActiveDataHash() => r'4dc1387bde463ec79cf4d3eaf3702620ce0e1bee';
+String _$graphActiveDataHash() => r'71410bb4a1062a0af018495a5ee5978e4cd880f8';
 
 /// A provider for the currently active [GraphData], derived from
 /// [GraphActiveParameters].
@@ -23,6 +23,8 @@ final graphActiveDataProvider = AutoDisposeProvider<Set<GraphData>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GraphActiveDataRef = AutoDisposeProviderRef<Set<GraphData>>;
 String _$showDraggableGraphHash() =>
     r'2f4ab960e1e72974e7c25516ff7f36db5051b3d5';
@@ -103,7 +105,7 @@ final graphValuesProvider = AutoDisposeNotifierProvider<GraphValues,
 typedef _$GraphValues = AutoDisposeNotifier<
     Map<GraphData, List<({double normalized, num raw})?>>>;
 String _$draggableGraphUiOffsetHash() =>
-    r'4c527bebd66b861b1a18fd6a26135ceb642127d2';
+    r'dac0b1b9a3737680f5bec07fb93e5e83238211a8';
 
 /// A provider for the UI [Offset] for the path recording configurator.
 ///
@@ -122,4 +124,4 @@ final draggableGraphUiOffsetProvider =
 
 typedef _$DraggableGraphUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

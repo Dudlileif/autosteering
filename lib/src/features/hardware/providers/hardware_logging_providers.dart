@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hardware_logging_providers.g.dart';
@@ -27,17 +28,16 @@ part 'hardware_logging_providers.g.dart';
 class HardwareLogGnss extends _$HardwareLogGnss {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send(
         (logGNSS: next, logIMU: null, logWAS: null, logCombined: null),
       );
       if (previous != null) {
-          Logger.instance.i('GNSS logging ${next ? 'enabled' : 'disabled'}');
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.logHardwareGNSS, next);
+        Logger.instance.i('GNSS logging ${next ? 'enabled' : 'disabled'}');
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.logHardwareGNSS, next);
       }
     });
     return ref
@@ -55,17 +55,16 @@ class HardwareLogGnss extends _$HardwareLogGnss {
 class HardwareLogImu extends _$HardwareLogImu {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send(
         (logGNSS: null, logIMU: next, logWAS: null, logCombined: null),
       );
       if (previous != null) {
-          Logger.instance.i('IMU logging ${next ? 'enabled' : 'disabled'}');
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.logHardwareIMU, next);
+        Logger.instance.i('IMU logging ${next ? 'enabled' : 'disabled'}');
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.logHardwareIMU, next);
       }
     });
     return ref
@@ -83,17 +82,16 @@ class HardwareLogImu extends _$HardwareLogImu {
 class HardwareLogWas extends _$HardwareLogWas {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send(
         (logGNSS: null, logIMU: null, logWAS: next, logCombined: null),
       );
       if (previous != null) {
-          Logger.instance.i('WAS logging ${next ? 'enabled' : 'disabled'}');
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.logHardwareWAS, next);
+        Logger.instance.i('WAS logging ${next ? 'enabled' : 'disabled'}');
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.logHardwareWAS, next);
       }
     });
     return ref
@@ -112,18 +110,17 @@ class HardwareLogWas extends _$HardwareLogWas {
 class HardwareLogCombined extends _$HardwareLogCombined {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send(
         (logGNSS: null, logIMU: null, logWAS: null, logCombined: next),
-        );  
+      );
       if (previous != null) {
         Logger.instance
-              .i('Combined hardware logging ${next ? 'enabled' : 'disabled'}');
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.logHardwareCombined, next);
+            .i('Combined hardware logging ${next ? 'enabled' : 'disabled'}');
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.logHardwareCombined, next);
       }
     });
     return ref
@@ -138,7 +135,7 @@ class HardwareLogCombined extends _$HardwareLogCombined {
 
 /// A provider for whether any hardware logging is taking place.
 @riverpod
-bool hardwareAnyLoggingEnabled(HardwareAnyLoggingEnabledRef ref) =>
+bool hardwareAnyLoggingEnabled(Ref ref) =>
     ref.watch(hardwareLogGnssProvider) ||
     ref.watch(hardwareLogImuProvider) ||
     ref.watch(hardwareLogWasProvider) ||

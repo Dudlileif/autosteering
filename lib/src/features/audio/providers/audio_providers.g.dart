@@ -6,7 +6,7 @@ part of 'audio_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$audioQueueHash() => r'423f546acccca02e1db1c376d583c012ff516307';
+String _$audioQueueHash() => r'c56d27c63a08771a95327aa7bb59c3673289809f';
 
 /// A provider for a set queue of [AudioAsset]s, which also automatically plays
 /// and removes them after they are added.
@@ -24,7 +24,7 @@ final audioQueueProvider =
 );
 
 typedef _$AudioQueue = Notifier<Set<AudioAsset>>;
-String _$audioVolumeHash() => r'fdb8c304e003e7758b1d6251c17d7bbe5a1abb14';
+String _$audioVolumeHash() => r'd91f9400ee21decaf12f8656f5be02f60a65e87f';
 
 /// A provider for all the audio volume levels.
 ///
@@ -42,4 +42,4 @@ final audioVolumeProvider =
 
 typedef _$AudioVolume = Notifier<Map<AudioAsset, double>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

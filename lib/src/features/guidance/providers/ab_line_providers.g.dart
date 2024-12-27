@@ -6,14 +6,14 @@ part of 'ab_line_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$aBLineHash() => r'51071237f5168584efecbb6f7b27c14fd489da24';
+String _$aBLineHash() => r'a613bb0c34f5d9c7a2bc762f81b4495745b983f7';
 
 /// A provider for the AB-line.
 ///
-/// Copied from [aBLine].
-@ProviderFor(aBLine)
-final aBLineProvider = FutureProvider<ABLine?>.internal(
-  aBLine,
+/// Copied from [ABLine].
+@ProviderFor(ABLine)
+final aBLineProvider = AsyncNotifierProvider<ABLine, guidance.ABLine?>.internal(
+  ABLine.new,
   name: r'aBLineProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : _$aBLineHash,
@@ -21,23 +21,7 @@ final aBLineProvider = FutureProvider<ABLine?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef ABLineRef = FutureProviderRef<ABLine?>;
-String _$aPlusLineHash() => r'8e48f68d3b7306a19431f1124ae271f1355b077e';
-
-/// A provider for the A+-line.
-///
-/// Copied from [aPlusLine].
-@ProviderFor(aPlusLine)
-final aPlusLineProvider = FutureProvider<APlusLine?>.internal(
-  aPlusLine,
-  name: r'aPlusLineProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$aPlusLineHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef APlusLineRef = FutureProviderRef<APlusLine?>;
+typedef _$ABLine = AsyncNotifier<guidance.ABLine?>;
 String _$aPlusLineBearingHash() => r'59b6ab1e4921ed1dacf2103e6613059183d6ebae';
 
 /// A provider for the A+-line bearing.
@@ -56,5 +40,22 @@ final aPlusLineBearingProvider =
 );
 
 typedef _$APlusLineBearing = Notifier<double?>;
+String _$aPlusLineHash() => r'9d8fbcbfebf6be06c23a73ab958cc325c49d0d53';
+
+/// A provider for the A+-line.
+///
+/// Copied from [APlusLine].
+@ProviderFor(APlusLine)
+final aPlusLineProvider =
+    AsyncNotifierProvider<APlusLine, guidance.APlusLine?>.internal(
+  APlusLine.new,
+  name: r'aPlusLineProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$aPlusLineHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$APlusLine = AsyncNotifier<guidance.APlusLine?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

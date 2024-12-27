@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/providers/simulator_core_native_providers.dart'
     if (dart.library.js_interop) 'simulator_core_web_providers.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'simulator_core_providers.g.dart';
@@ -33,9 +34,8 @@ part 'simulator_core_providers.g.dart';
 class SimulatorUpdateFrequency extends _$SimulatorUpdateFrequency {
   @override
   int build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null && next != previous) {
         ref
             .read(settingsProvider.notifier)
@@ -56,7 +56,7 @@ class SimulatorUpdateFrequency extends _$SimulatorUpdateFrequency {
 
 /// Sends initial parameters to  the sim core.
 @riverpod
-void initializeSimCore(InitializeSimCoreRef ref) {
+void initializeSimCore(Ref ref) {
   Logger.instance.i('Sending initial data to Simulator Core...');
   ref.read(simInputProvider.notifier)
     ..send(ref.read(mainVehicleProvider))
@@ -89,7 +89,7 @@ void initializeSimCore(InitializeSimCoreRef ref) {
 /// simulation.
 @riverpod
 void commonSimCoreMessageHandler(
-  CommonSimCoreMessageHandlerRef ref,
+  Ref ref,
   ({
     Vehicle? vehicle,
     num velocity,
@@ -130,9 +130,8 @@ class SimCoreDebugAllowLongBreaks extends _$SimCoreDebugAllowLongBreaks {
 class SimCoreAllowManualInput extends _$SimCoreAllowManualInput {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send((allowManualSimInput: next));
 
       if (next != previous) {
@@ -161,9 +160,8 @@ class SimCoreAllowManualInput extends _$SimCoreAllowManualInput {
 class SimCoreAllowInterpolation extends _$SimCoreAllowInterpolation {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send((allowSimInterpolation: next));
 
       if (next != previous) {
@@ -193,9 +191,8 @@ class SimCoreVehicleAutoCenterSteering
     extends _$SimCoreVehicleAutoCenterSteering {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send((autoCenterSteering: next));
 
       if (next != previous) {
@@ -224,9 +221,8 @@ class SimCoreVehicleAutoCenterSteering
 class SimCoreVehicleAutoSlowDown extends _$SimCoreVehicleAutoSlowDown {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send((autoSlowDown: next));
 
       if (next != previous) {

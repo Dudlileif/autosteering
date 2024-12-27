@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -60,7 +61,7 @@ class SelectablePathIndexEnd extends _$SelectablePathIndexEnd {
 class SelectablePathPoints extends _$SelectablePathPoints {
   @override
   Iterable<Geographic>? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next == null) {
         ref
           ..invalidate(selectablePathIndexStartProvider)
@@ -112,7 +113,7 @@ class SelectablePathIndexSegments extends _$SelectablePathIndexSegments {
 /// A provider for the indices of the [SelectablePathPoints] that lie between
 /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
 @riverpod
-Iterable<int>? selectablePathIndices(SelectablePathIndicesRef ref) {
+Iterable<int>? selectablePathIndices(Ref ref) {
   final start = ref.watch(selectablePathIndexStartProvider);
   final end = ref.watch(selectablePathIndexEndProvider);
   final pathLength =
@@ -144,7 +145,7 @@ Iterable<int>? selectablePathIndices(SelectablePathIndicesRef ref) {
 /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
 @riverpod
 Iterable<Geographic>? selectablePathStartToEnd(
-  SelectablePathStartToEndRef ref,
+  Ref ref,
 ) {
   final points = ref.watch(selectablePathPointsProvider);
   final selected = ref.watch(selectablePathIndicesProvider);

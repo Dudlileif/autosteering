@@ -29,7 +29,7 @@ class WasCurrentFrequency extends _$WasCurrentFrequency {
 
   @override
   double? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 350),
@@ -51,7 +51,7 @@ class WasCurrentReading extends _$WasCurrentReading {
 
   @override
   WasReading? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 350),

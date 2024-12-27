@@ -51,7 +51,7 @@ class MapContributionWidget extends ConsumerWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor.withOpacity(0.5),
+        color: Theme.of(context).cardColor.withValues(alpha: 0.5),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(8),
           bottomLeft: Radius.circular(8),

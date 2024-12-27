@@ -17,8 +17,7 @@
 
 import 'dart:ui';
 
-import 'package:autosteering/src/features/hardware/models/imu/imu_config.dart';
-import 'package:autosteering/src/features/hardware/models/imu/imu_reading.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 
@@ -48,7 +47,7 @@ class Imu {
 
   /// Whether the bearing is set for the IMU.
   /// Should be set to true after a GNSS bearing is used to update the
-  /// [config.zeroValues.bearingZero].
+  /// [config.zeroValues][ImuZeroValues.bearingZero].
   bool bearingIsSet = false;
 
   /// The last time a GNSS reading was received.
@@ -74,7 +73,8 @@ class Imu {
         ImuReading(receiveTime: now);
   }
 
-  /// The bearing reading accounted for [config.zeroValues.bearingZero].
+  /// The bearing reading accounted for
+  /// [config.zeroValues][ImuZeroValues.bearingZero].
   double? get bearing => switch (bearingIsSet) {
         true => ((reading.yaw - config.zeroValues.bearingZero) *
                 switch (config.invertYaw) {
@@ -85,7 +85,8 @@ class Imu {
         false => null
       };
 
-  /// The pitch reading accounted for [config.zeroValues.pitchZero].
+  /// The pitch reading accounted for
+  /// [config.zeroValues][ImuZeroValues.pitchZero].
   double get pitch =>
       switch (config.swapPitchAndRoll) {
         false => clampDouble(
@@ -104,7 +105,8 @@ class Imu {
         false => 1,
       };
 
-  /// The roll reading accounted for [config.zeroValues.rollZero].
+  /// The roll reading accounted for
+  /// [config.zeroValues][ImuZeroValues.rollZero].
   double get roll =>
       switch (config.swapPitchAndRoll) {
         false => clampDouble(

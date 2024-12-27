@@ -19,7 +19,7 @@
 ///
 /// See the [u-blox F9P HPG 1.32 Interface Description](https://content.u-blox.com/sites/default/files/documents/u-blox-F9-HPG-1.32_InterfaceDescription_UBX-22008968.pdf), chapter 2
 /// a list of useable NMEA message types.
-library nmea_sentences;
+library;
 
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:collection/collection.dart';
@@ -468,8 +468,9 @@ class VTGSentence extends TalkerSentence {
   String? get posMode => fields.elementAtOrNull(9);
 }
 
-/// An NMEA message for general text, which can be device information/configuration
-/// or errors when something is wrong, i.e. undervoltage.
+/// An NMEA message for general text, which can be device
+/// information/configuration or errors when something is wrong, i.e.
+/// undervoltage.
 class TXTSentence extends TalkerSentence {
   /// An NMEA message for general text parsed from the [raw] string.
   /// The sentence can be device information/configuration or errors when
@@ -497,7 +498,6 @@ class TXTSentence extends TalkerSentence {
 /// An AgOpenGPS compatible $PANDA sentence for a combined sentence with
 /// position, velocity and IMU.
 class PANDASentence extends TalkerSentence with GnssPositionCommonSentence {
-  // ignore: lines_longer_than_80_chars
   /// An AgOpenGPS compatible $PANDA sentence for a combined sentence with
   /// position, velocity and IMU.
   ///

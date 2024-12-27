@@ -20,13 +20,14 @@ import 'dart:typed_data';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hardware_serial_providers_web.g.dart';
 
 /// A provider for the available serial ports.
 @riverpod
-List<Object?> availableSerialPorts(AvailableSerialPortsRef ref) => [];
+List<Object?> availableSerialPorts(Ref ref) => [];
 
 /// A provider for the baud rate for the [HardwareSerial] connection.
 @Riverpod(keepAlive: true)
@@ -43,9 +44,8 @@ class HardwareSerialBaudRate extends _$HardwareSerialBaudRate {
 
   @override
   int build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (next != previous) {
         ref
             .read(settingsProvider.notifier)
@@ -80,7 +80,7 @@ class HardwareSerial extends _$HardwareSerial {
 
 /// A stream of the incoming serial data from the connected hardware.
 @Riverpod(keepAlive: true)
-Stream<String?> hardwareSerialStream(HardwareSerialStreamRef ref) {
+Stream<String?> hardwareSerialStream(Ref ref) {
   final controller = StreamController<String?>();
 
   ref.onDispose(controller.close);
@@ -98,7 +98,7 @@ class HardwareSerialAlive extends _$HardwareSerialAlive {
 
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next) {
         _resetTimer?.cancel();
         _resetTimer = Timer(

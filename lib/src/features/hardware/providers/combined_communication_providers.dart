@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'combined_communication_providers.g.dart';
@@ -25,11 +26,11 @@ part 'combined_communication_providers.g.dart';
 /// A provider for combining the native network providers that need to be
 /// watched.
 @riverpod
-void _combinedNativeNetwork(_CombinedNativeNetworkRef ref) => ref
+void _combinedNativeNetwork(Ref ref) => ref
   ..watch(hardwareCommunicationConfigProvider)
-  ..watch(deviceIPAdressWlanProvider)
-  ..watch(deviceIPAdressAPProvider)
-  ..watch(deviceIPAdressEthernetProvider)
+  ..watch(deviceIPAddressWlanProvider)
+  ..watch(deviceIPAddressAPProvider)
+  ..watch(deviceIPAddressEthernetProvider)
   ..watch(ntripClientProvider)
   ..watch(tcpServerProvider)
   ..watch(ntripDataUsageSessionProvider)
@@ -37,27 +38,25 @@ void _combinedNativeNetwork(_CombinedNativeNetworkRef ref) => ref
 
 /// A provider for combining the serial providers that need to be watched.
 @riverpod
-void _combinedSerial(_CombinedSerialRef ref) =>
-    ref.watch(hardwareSerialStreamProvider);
+void _combinedSerial(Ref ref) => ref.watch(hardwareSerialStreamProvider);
 
 /// A provider for combining all the network and hardware communication
 /// providers that need to be watched.
 @riverpod
-void combinedCommunication(CombinedCommunicationRef ref) {
+void combinedCommunication(Ref ref) {
   if (Device.isNative) {
     ref.watch(_combinedNativeNetworkProvider);
   }
   if (Device.supportsSerial) {
     ref.watch(_combinedSerialProvider);
   }
-  ref
-.watch(sendRemoteControlLedStateProvider);
+  ref.watch(sendRemoteControlLedStateProvider);
 }
 
 /// A provider for whether any hardware is connected and communicating with
 /// us.
 @riverpod
-bool hardwareAlive(HardwareAliveRef ref) {
+bool hardwareAlive(Ref ref) {
   ref.watch(remoteControlHardwareNetworkAliveProvider);
   return ref.watch(hardwareSerialAliveProvider) ||
       ref.watch(steeringHardwareNetworkAliveProvider);

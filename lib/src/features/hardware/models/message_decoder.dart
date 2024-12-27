@@ -513,7 +513,7 @@ class MessageDecoder {
               (buttonStates: List<bool>.from(data['button_states'] as List)),
             );
           }
-        } catch (e) {
+        } on Exception catch (e) {
           messages.add(
             LogEvent(
               Level.error,
@@ -690,7 +690,7 @@ class MessageDecoder {
       for (final str in strings.where((element) => element.isNotEmpty)) {
         messages.addAll(parseString(str));
       }
-    } catch (error) {
+    } on Exception catch (error) {
       messages.add(
         LogEvent(
           Level.error,

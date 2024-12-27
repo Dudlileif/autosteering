@@ -58,25 +58,25 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                       point: dubinsPath.startRightCircleCenter.latLng,
                       radius: minTurningRadius,
                       useRadiusInMeter: true,
-                      color: Colors.pink.withOpacity(0.3),
+                      color: Colors.pink.withValues(alpha: 0.3),
                     ),
                     CircleMarker(
                       point: dubinsPath.startLeftCircleCenter.latLng,
                       radius: minTurningRadius,
                       useRadiusInMeter: true,
-                      color: Colors.grey.withOpacity(0.3),
+                      color: Colors.grey.withValues(alpha: 0.3),
                     ),
                     CircleMarker(
                       point: dubinsPath.endLeftCircleCenter.latLng,
                       radius: minTurningRadius,
                       useRadiusInMeter: true,
-                      color: Colors.grey.withOpacity(0.3),
+                      color: Colors.grey.withValues(alpha: 0.3),
                     ),
                     CircleMarker(
                       point: dubinsPath.endRightCircleCenter.latLng,
                       radius: minTurningRadius,
                       useRadiusInMeter: true,
-                      color: Colors.pink.withOpacity(0.3),
+                      color: Colors.pink.withValues(alpha: 0.3),
                     ),
                     if ([DubinsPathType.lrl, DubinsPathType.rlr]
                         .contains(pathType))
@@ -87,7 +87,7 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                             .latLng,
                         radius: minTurningRadius,
                         useRadiusInMeter: true,
-                        color: Colors.blue.withOpacity(0.3),
+                        color: Colors.blue.withValues(alpha: 0.3),
                       ),
                   ],
                   ...wayPoints.map(

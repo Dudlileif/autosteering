@@ -16,5 +16,5 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 export 'models/models.dart';
-export 'providers/providers.dart';
+export 'providers/providers.dart' hide ABCurve, ABLine, APlusLine;
 export 'widgets/widgets.dart';

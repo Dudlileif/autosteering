@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -34,7 +35,7 @@ class SteeringHardwareNetworkAlive extends _$SteeringHardwareNetworkAlive {
 
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 350),
@@ -57,7 +58,7 @@ class RemoteControlHardwareNetworkAlive
 
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(seconds: 2),
@@ -93,78 +94,85 @@ class NetworkInterfaces extends _$NetworkInterfaces {
 
 /// A provider for the wireless IP address of the device.
 @Riverpod(keepAlive: true)
-String? deviceIPAdressWlan(DeviceIPAdressWlanRef ref) {
-  ref.listenSelf((previous, next) {
-    if (next != previous) {
-      if (next == null) {
-        Logger.instance.i('Lost WLAN connection IP.');
-      } else {
-        Logger.instance.i('Acquired WLAN connection IP: $next');
+class DeviceIPAddressWlan extends _$DeviceIPAddressWlan {
+  @override
+  String? build() {
+    listenSelf((previous, next) {
+      if (next != previous) {
+        if (next == null) {
+          Logger.instance.i('Lost WLAN connection IP.');
+        } else {
+          Logger.instance.i('Acquired WLAN connection IP: $next');
+        }
       }
-    }
-  });
-  return ref
-      .watch(networkInterfacesProvider)
-      .firstWhereOrNull(
-        (element) =>
-            element.name.toLowerCase().startsWith('wlan0') ||
-            element.name
-                .toLowerCase()
-                // Regex for wlp2s0 and similar
-                .contains(RegExp(r'wlp\d{1,}s\d{1,}')),
-      )
-      ?.addresses
-      .first
-      .address;
+    });
+    return ref
+        .watch(networkInterfacesProvider)
+        .firstWhereOrNull(
+          (element) =>
+              element.name.toLowerCase().startsWith('wlan0') ||
+              element.name
+                  .toLowerCase()
+                  // Regex for wlp2s0 and similar
+                  .contains(RegExp(r'wlp\d{1,}s\d{1,}')),
+        )
+        ?.addresses
+        .first
+        .address;
+  }
 }
 
 /// A provider for the access point host IP address of the device.
 @Riverpod(keepAlive: true)
-String? deviceIPAdressAP(DeviceIPAdressAPRef ref) {
-  ref.listenSelf((previous, next) {
-    if (next != previous) {
-      if (next == null) {
-        Logger.instance.i('Lost AP connection IP.');
-      } else {
-        Logger.instance.i('Acquired AP connection IP: $next');
+class DeviceIPAddressAP extends _$DeviceIPAddressAP {
+  @override
+  String? build() {
+    listenSelf((previous, next) {
+      if (next != previous) {
+        if (next == null) {
+          Logger.instance.i('Lost AP connection IP.');
+        } else {
+          Logger.instance.i('Acquired AP connection IP: $next');
+        }
       }
-    }
-  });
-  return ref
-      .watch(networkInterfacesProvider)
-      .firstWhereOrNull(
-        (element) =>
-            element.name.toLowerCase().contains('ap') ||
-            element.name.toLowerCase().contains('wlan2') ||
-            element.name.toLowerCase().contains('swlan'),
-      )
-      ?.addresses
-      .first
-      .address;
+    });
+    return ref
+        .watch(networkInterfacesProvider)
+        .firstWhereOrNull(
+          (element) =>
+              element.name.toLowerCase().contains('ap') ||
+              element.name.toLowerCase().contains('wlan2') ||
+              element.name.toLowerCase().contains('swlan'),
+        )
+        ?.addresses
+        .first
+        .address;
+  }
 }
 
 /// A provider for the ethernet IP address of the device.
 @Riverpod(keepAlive: true)
-String? deviceIPAdressEthernet(
-  DeviceIPAdressEthernetRef ref,
-) {
-  ref.listenSelf((previous, next) {
-    if (next != previous) {
-      if (next == null) {
-        Logger.instance.i('Lost Ethernet connection IP.');
-      } else {
-        Logger.instance.i('Acquired Ethernet connection IP: $next');
+class DeviceIPAddressEthernet extends _$DeviceIPAddressEthernet {
+  @override
+  String? build() {
+    listenSelf((previous, next) {
+      if (next != previous) {
+        if (next == null) {
+          Logger.instance.i('Lost Ethernet connection IP.');
+        } else {
+          Logger.instance.i('Acquired Ethernet connection IP: $next');
+        }
       }
-    }
-  });
-  return ref
-      .watch(networkInterfacesProvider)
-      .firstWhereOrNull(
-        (element) => element.name.toLowerCase().startsWith('e'),
-      )
-      ?.addresses
-      .first
-      .address;
+    });
+    return ref
+        .watch(networkInterfacesProvider)
+        .firstWhereOrNull(
+          (element) => element.name.toLowerCase().startsWith('e'),
+        )
+        ?.addresses
+        .first
+        .address;
+  }
 }
 
 /// A provider for the IP adress of the steering hardware we want to communicate
@@ -173,9 +181,8 @@ String? deviceIPAdressEthernet(
 class SteeringHardwareAddress extends _$SteeringHardwareAddress {
   @override
   String build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
@@ -201,9 +208,8 @@ class SteeringHardwareAddress extends _$SteeringHardwareAddress {
 class RemoteControlHardwareAddress extends _$RemoteControlHardwareAddress {
   @override
   String build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
@@ -228,9 +234,8 @@ class RemoteControlHardwareAddress extends _$RemoteControlHardwareAddress {
 class HardwareUDPReceivePort extends _$HardwareUDPReceivePort {
   @override
   int build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
@@ -264,9 +269,8 @@ class HardwareUDPReceivePort extends _$HardwareUDPReceivePort {
 class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   @override
   int build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
@@ -304,20 +308,16 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   String remoteControlHardwareAddress,
   int hardwareUDPReceivePort,
   int hardwareUDPSendPort
-}) hardwareCommunicationConfig(HardwareCommunicationConfigRef ref) {
-  ref.listenSelf((previous, next) {
-    if (next != previous) {
-      ref.read(simInputProvider.notifier).send(next);
-    }
-  });
-
-  return (
+}) hardwareCommunicationConfig(Ref ref) {
+  final config = (
     steeringHardwareAddress: ref.watch(steeringHardwareAddressProvider),
     remoteControlHardwareAddress:
         ref.watch(remoteControlHardwareAddressProvider),
     hardwareUDPReceivePort: ref.watch(hardwareUDPReceivePortProvider),
     hardwareUDPSendPort: ref.watch(hardwareUDPSendPortProvider)
   );
+  ref.read(simInputProvider.notifier).send(config);
+  return config;
 }
 
 /// A provider for a TCP server for sending/receiving data via TCP.
@@ -326,43 +326,42 @@ class TcpServer extends _$TcpServer {
   Socket? _socket;
   @override
   FutureOr<Socket?> build() async {
-    ref
-      ..listenSelf((previous, next) {
-        next.when(
-          data: (data) {
-            if (data != null) {
-              Logger.instance.i(
-                '''TCP client socket connected to server at ${data.remoteAddress}:${data.remotePort}''',
-              );
-            }
-            _socket = data;
-            _socket?.listen(
-              (event) {},
-              onError: (Object? error, StackTrace? stackTrace) {
-                Logger.instance.e(
-                  'TCP client socket error',
-                  error: error,
-                  stackTrace: stackTrace,
-                );
-                ref.invalidateSelf();
-              },
-              onDone: () {
-                Logger.instance.i('TCP client socket closed.');
-                ref.invalidateSelf();
-              },
+    listenSelf((previous, next) {
+      next.when(
+        data: (data) {
+          if (data != null) {
+            Logger.instance.i(
+              '''TCP client socket connected to server at ${data.remoteAddress}:${data.remotePort}''',
             );
-          },
-          error: (error, stackTrace) => Logger.instance.e(
-            'Failed to create TCP client socket.',
-            error: error,
-            stackTrace: stackTrace,
-          ),
-          loading: () {},
-        );
-      })
-      ..onDispose(() async {
-        await _socket?.close();
-      });
+          }
+          _socket = data;
+          _socket?.listen(
+            (event) {},
+            onError: (Object? error, StackTrace? stackTrace) {
+              Logger.instance.e(
+                'TCP client socket error',
+                error: error,
+                stackTrace: stackTrace,
+              );
+              ref.invalidateSelf();
+            },
+            onDone: () {
+              Logger.instance.i('TCP client socket closed.');
+              ref.invalidateSelf();
+            },
+          );
+        },
+        error: (error, stackTrace) => Logger.instance.e(
+          'Failed to create TCP client socket.',
+          error: error,
+          stackTrace: stackTrace,
+        ),
+        loading: () {},
+      );
+    });
+    ref.onDispose(() async {
+      await _socket?.close();
+    });
 
     return Socket.connect(
       ref.watch(steeringHardwareAddressProvider),
@@ -394,14 +393,17 @@ class TcpServer extends _$TcpServer {
 /// On Android the subnet might change every time the device reboots, so more
 /// subnets should be added to Disallowed IPs.
 @Riverpod(keepAlive: true)
-bool networkAvailable(NetworkAvailableRef ref) {
-  ref.listenSelf((previous, next) {
-    if (previous != next) {
-      ref.read(simInputProvider.notifier).send((networkAvailable: next));
-    }
-  });
+class NetworkAvailable extends _$NetworkAvailable {
+  @override
+  bool build() {
+    listenSelf((previous, next) {
+      if (previous != next) {
+        ref.read(simInputProvider.notifier).send((networkAvailable: next));
+      }
+    });
 
-  return ref.watch(deviceIPAdressWlanProvider) != null ||
-      ref.watch(deviceIPAdressAPProvider) != null ||
-      ref.watch(deviceIPAdressEthernetProvider) != null;
+    return ref.watch(deviceIPAddressWlanProvider) != null ||
+        ref.watch(deviceIPAddressAPProvider) != null ||
+        ref.watch(deviceIPAddressEthernetProvider) != null;
+  }
 }

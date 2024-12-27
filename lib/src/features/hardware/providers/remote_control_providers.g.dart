@@ -7,7 +7,7 @@ part of 'remote_control_providers.dart';
 // **************************************************************************
 
 String _$sendRemoteControlLedStateHash() =>
-    r'b5c8f6359c4d17fda4b86b622382ac724b6551fc';
+    r'0e8a24d9c08d79621e2220e413037f157c304b53';
 
 /// A provider for sending the current state of the features corresponding of
 /// the mapped [RemoteControlButtonActions] to the remote controller.
@@ -24,9 +24,11 @@ final sendRemoteControlLedStateProvider = AutoDisposeProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SendRemoteControlLedStateRef = AutoDisposeProviderRef<void>;
 String _$remoteControlButtonActionsHash() =>
-    r'9a90934dd5a2e7c159ad10538ac76cbdffe432c5';
+    r'86e4683e38deb3f3a02b457f80e789086224c945';
 
 /// A provider for which [RemoteControlButtonAction]s the remote control buttons
 /// shuld map to.
@@ -47,4 +49,4 @@ final remoteControlButtonActionsProvider = NotifierProvider<
 typedef _$RemoteControlButtonActions
     = Notifier<Map<int, RemoteControlButtonAction?>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

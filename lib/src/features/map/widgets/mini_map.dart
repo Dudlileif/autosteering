@@ -148,7 +148,7 @@ class _MiniMapView extends ConsumerWidget {
       mapController: mapController,
       options: MapOptions(
         backgroundColor:
-            Theme.of(context).scaffoldBackgroundColor.withOpacity(0.65),
+            Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.65),
         interactionOptions: const InteractionOptions(
           flags: InteractiveFlag.none,
         ),

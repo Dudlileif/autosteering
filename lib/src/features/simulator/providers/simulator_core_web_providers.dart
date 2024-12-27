@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'simulator_core_web_providers.g.dart';
@@ -48,7 +49,7 @@ class SimInput extends _$SimInput {
 class _SimCoreWebInput extends _$SimCoreWebInput {
   @override
   StreamController<dynamic> build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       ref.read(initializeSimCoreProvider);
     });
     return StreamController<dynamic>();
@@ -64,7 +65,7 @@ class _SimCoreWebInput extends _$SimCoreWebInput {
 /// update the vehicle gauge providers.
 @riverpod
 Stream<Vehicle?> simCoreWebStream(
-  SimCoreWebStreamRef ref,
+  Ref ref,
 ) {
   ref.onDispose(() => Logger.instance.i('Simulator Core shut down.'));
   final commonMessageHandler = CommonMessageHandler(ref);
@@ -95,7 +96,7 @@ Stream<Vehicle?> simCoreWebStream(
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
 @riverpod
-void simCoreVehicleDriving(SimCoreVehicleDrivingRef ref) {
+void simCoreVehicleDriving(Ref ref) {
   if (ref.watch(mapReadyProvider)) {
     if (ref.watch(devicePositionAsVehiclePositionProvider)) {
       ref.watch(updatePositionFromDeviceProvider);
@@ -136,6 +137,6 @@ void simCoreVehicleDriving(SimCoreVehicleDrivingRef ref) {
 
 /// A dummy provider for the web version.
 @riverpod
-void simCoreIsolateStream(SimCoreIsolateStreamRef ref) {
+void simCoreIsolateStream(Ref ref) {
   return;
 }

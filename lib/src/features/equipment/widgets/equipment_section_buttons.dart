@@ -15,6 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+// Some colors are not overidden at the moment.
+// ignore_for_file: unused_element
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
@@ -32,8 +35,7 @@ class EquipmentSectionButtons extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final equipments = ref.watch(
       allEquipmentsProvider.select(
-        (entry) =>
-            entry.values.where(
+        (entry) => entry.values.where(
           (equipment) =>
               equipment.sections.any((element) => element.workingWidth > 0),
         ),
@@ -375,11 +377,8 @@ class __SectionButtonState extends ConsumerState<_SectionButton>
 
 class _CrossPainter extends CustomPainter {
   const _CrossPainter({
-    // ignore: unused_element
     this.fillColor = Colors.red,
-    // ignore: unused_element
     this.strokeColor = Colors.black,
-    // ignore: unused_element
     this.strokeWidth = 10,
   });
 
@@ -415,11 +414,8 @@ class _CrossPainter extends CustomPainter {
 
 class _CheckmarkPainter extends CustomPainter {
   const _CheckmarkPainter({
-    // ignore: unused_element
     this.fillColor = Colors.green,
-    // ignore: unused_element
     this.strokeColor = Colors.black,
-    // ignore: unused_element
     this.strokeWidth = 10,
   });
 

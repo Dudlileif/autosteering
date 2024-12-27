@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'enabled_map_layers_providers.g.dart';
@@ -30,9 +31,8 @@ part 'enabled_map_layers_providers.g.dart';
 class ShowOSMLayer extends _$ShowOSMLayer {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
@@ -55,17 +55,17 @@ class ShowOSMLayer extends _$ShowOSMLayer {
 
 /// Whether the selected country layers should be shown.
 @riverpod
-bool showCountryLayers(ShowCountryLayersRef ref) =>
+bool showCountryLayers(Ref ref) =>
     ref.watch(enabledCountryLayersProvider.select((value) => value.isNotEmpty));
 
 /// Whether the selected Sentinel layers should be shown.
 @riverpod
-bool showSentinelLayers(ShowSentinelLayersRef ref) => ref
+bool showSentinelLayers(Ref ref) => ref
     .watch(enabledSentinelLayersProvider.select((value) => value.isNotEmpty));
 
 /// Whether the finished recorded path should be shown.
 @riverpod
-bool showFinishedPathLayer(ShowFinishedPathLayerRef ref) {
+bool showFinishedPathLayer(Ref ref) {
   final isEditing = ref.watch(editFinishedPathProvider);
   final showFinishedPath = ref.watch(showFinishedPathProvider);
   final finishedPathPoints = ref.watch(finishedPathRecordingListProvider);
@@ -76,12 +76,11 @@ bool showFinishedPathLayer(ShowFinishedPathLayerRef ref) {
 
 /// Whether the currently recording path should be shown.
 @riverpod
-bool showPathRecordingLayer(ShowPathRecordingLayerRef ref) =>
-    ref.watch(enablePathRecorderProvider);
+bool showPathRecordingLayer(Ref ref) => ref.watch(enablePathRecorderProvider);
 
 /// Whether the editable recorded path should be shown.
 @riverpod
-bool showEditablePathLayer(ShowEditablePathLayerRef ref) {
+bool showEditablePathLayer(Ref ref) {
   final isEditing = ref
       .watch(activeEditablePathTypeProvider.select((value) => value != null));
   final pointsNotEmpty =
@@ -106,7 +105,7 @@ class ShowVehicleDrawingLayer extends _$ShowVehicleDrawingLayer {
 
 /// Whether the debugging layer for the vehicle should be shown.
 @riverpod
-bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) => [
+bool showVehicleDebugLayer(Ref ref) => [
       ref.watch(debugVehicleTravelledPathProvider),
       ref.watch(debugVehicleTrajectoryProvider),
       ref.watch(debugVehicleSteeringProvider),
@@ -117,17 +116,16 @@ bool showVehicleDebugLayer(ShowVehicleDebugLayerRef ref) => [
 
 /// Whether the debugging layer for the Dubins path should be shown.
 @riverpod
-bool showDubinsPathDebugLayer(ShowDubinsPathDebugLayerRef ref) =>
+bool showDubinsPathDebugLayer(Ref ref) =>
     ref.watch(enableDubinsPathDebugProvider);
 
 /// Whether the layer for the path tracking should be shown.
 @riverpod
-bool showPathTrackingLayer(ShowPathTrackingLayerRef ref) =>
-    ref.watch(showPathTrackingProvider);
+bool showPathTrackingLayer(Ref ref) => ref.watch(showPathTrackingProvider);
 
 /// Whether the layer for field should be shown.
 @riverpod
-bool showFieldLayer(ShowFieldLayerRef ref) {
+bool showFieldLayer(Ref ref) {
   final showField = ref.watch(showFieldProvider);
   final showBufferedField = ref.watch(showBufferedFieldProvider);
   final fieldExists =
@@ -159,8 +157,7 @@ class ShowEquipmentDrawingLayer extends _$ShowEquipmentDrawingLayer {
 
 /// Whether the debugging layer for the equipment should be shown.
 @riverpod
-bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) =>
-    <bool>[
+bool showEquipmentDebugLayer(Ref ref) => <bool>[
       ref.watch(debugEquipmentTurningProvider),
       ref.watch(debugEquipmentHitchesProvider),
       ref.watch(debugEquipmentTrajectoryProvider),
@@ -169,17 +166,15 @@ bool showEquipmentDebugLayer(ShowEquipmentDebugLayerRef ref) =>
 
 /// Whether the layer for AB-tracking should be shown.
 @riverpod
-bool showABTrackingLayer(ShowABTrackingLayerRef ref) =>
-    ref.watch(showABTrackingProvider);
+bool showABTrackingLayer(Ref ref) => ref.watch(showABTrackingProvider);
 
 /// Whether the map should show grid lines.
 @riverpod
 class ShowGridLayer extends _$ShowGridLayer {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
@@ -204,7 +199,7 @@ class ShowGridLayer extends _$ShowGridLayer {
 
 /// Whether the layer for selectable path should be shown.
 @riverpod
-bool showSelectablePathLayer(ShowSelectablePathLayerRef ref) =>
+bool showSelectablePathLayer(Ref ref) =>
     ref.watch(enableSelectablePathProvider) &&
     ref.watch(
       selectablePathPointsProvider.select(

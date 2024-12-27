@@ -23,6 +23,7 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -30,7 +31,7 @@ part 'hardware_serial_providers.g.dart';
 
 /// A provider for the available serial ports.
 @riverpod
-List<SerialPort> availableSerialPorts(AvailableSerialPortsRef ref) =>
+List<SerialPort> availableSerialPorts(Ref ref) =>
     SerialPort.availablePorts.map(SerialPort.new).toList();
 
 /// A provider for the baud rate for the [HardwareSerial] connection.
@@ -48,9 +49,8 @@ class HardwareSerialBaudRate extends _$HardwareSerialBaudRate {
 
   @override
   int build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (next != previous) {
         ref
             .read(settingsProvider.notifier)
@@ -76,31 +76,30 @@ class HardwareSerial extends _$HardwareSerial {
     final config = SerialPortConfig()
       ..baudRate = ref.watch(hardwareSerialBaudRateProvider);
 
-    ref
-      ..onDispose(() async {
-        ref.invalidate(hardwareSerialAliveProvider);
-        await Future(() {
-          Logger.instance.i(
-            'Closing serial port: ${state?.name ?? state?.address}',
-          );
-          config.dispose();
-          state?.close();
-          state?.dispose();
-        });
-      })
-      ..listenSelf((previous, next) {
-        if (previous != next) {
-          previous?.close();
-          previous?.dispose();
-        }
-        if (next != null) {
-          next.openReadWrite();
-
-          Logger.instance.i(
-            '''Opening serial port: ${next.name ?? next.address} with baud rate: ${config.baudRate}''',
-          );
-        }
+    ref.onDispose(() async {
+      ref.invalidate(hardwareSerialAliveProvider);
+      await Future(() {
+        Logger.instance.i(
+          'Closing serial port: ${state?.name ?? state?.address}',
+        );
+        config.dispose();
+        state?.close();
+        state?.dispose();
       });
+    });
+    listenSelf((previous, next) {
+      if (previous != next) {
+        previous?.close();
+        previous?.dispose();
+      }
+      if (next != null) {
+        next.openReadWrite();
+
+        Logger.instance.i(
+          '''Opening serial port: ${next.name ?? next.address} with baud rate: ${config.baudRate}''',
+        );
+      }
+    });
 
     return null;
   }
@@ -114,7 +113,7 @@ class HardwareSerial extends _$HardwareSerial {
 
 /// A stream of the incoming serial data from the connected hardware.
 @Riverpod(keepAlive: true)
-Stream<String?> hardwareSerialStream(HardwareSerialStreamRef ref) {
+Stream<String?> hardwareSerialStream(Ref ref) {
   Timer? timer;
 
   final controller = StreamController<String?>();
@@ -168,7 +167,7 @@ class HardwareSerialAlive extends _$HardwareSerialAlive {
 
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next) {
         _resetTimer?.cancel();
         _resetTimer = Timer(

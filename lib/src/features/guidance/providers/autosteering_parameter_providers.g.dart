@@ -26,7 +26,7 @@ final showAutosteeringParameterConfigProvider =
 
 typedef _$ShowAutosteeringParameterConfig = AutoDisposeNotifier<bool>;
 String _$autosteeringConfiguratorUiOffsetHash() =>
-    r'a69d7f2df051a604a4a795e7193d2e3d37bb96aa';
+    r'4fe5b223e7d5f4fd3b54e48836bc0bf7bab6e4df';
 
 /// A provider for the UI [Offset] for the autosteering configurator.
 ///
@@ -45,4 +45,4 @@ final autosteeringConfiguratorUiOffsetProvider = AutoDisposeNotifierProvider<
 
 typedef _$AutosteeringConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

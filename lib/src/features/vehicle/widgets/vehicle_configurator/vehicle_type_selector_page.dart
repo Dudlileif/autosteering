@@ -98,9 +98,7 @@ class VehicleTypeSelectorPage extends StatelessWidget {
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.always,
                     validator: (value) =>
-                        isBlank(value)
-                        ? 'No name entered!'
-                        : null,
+                        isBlank(value) ? 'No name entered!' : null,
                   ),
                 ),
               ),
@@ -169,10 +167,10 @@ class _VehicleTypeSelector extends ConsumerWidget {
           onSelectionChanged: (values) {
             ref.read(configuredVehicleProvider.notifier).update(
                   switch (values.first) {
-                    ArticulatedTractor =>
+                    const (ArticulatedTractor) =>
                       PreconfiguredVehicles.articulatedTractor,
-                    Harvester => PreconfiguredVehicles.harvester,
-                    Tractor || _ => PreconfiguredVehicles.tractor,
+                    const (Harvester) => PreconfiguredVehicles.harvester,
+                    const (Tractor) || _ => PreconfiguredVehicles.tractor,
                   },
                 );
             ref.invalidate(configuredVehicleNameTextControllerProvider);
@@ -229,7 +227,6 @@ class _VehicleTypeSelector extends ConsumerWidget {
                         ? 'Harvester\n(or rear axle steering)'
                         : 'Harvester',
                     textAlign: TextAlign.center,
-                  
                   ),
                   // TODO(dudlileif): make Harvester drawing
                   const SizedBox.shrink(),

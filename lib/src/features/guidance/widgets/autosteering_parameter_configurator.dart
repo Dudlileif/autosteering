@@ -46,7 +46,8 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
         child: DefaultTabController(
           length: 2,
           child: Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
+            backgroundColor:
+                theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
             appBar: AppBar(
               primary: false,
               title: const Text('Steering parameters'),

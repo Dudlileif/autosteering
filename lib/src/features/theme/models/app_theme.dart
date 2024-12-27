@@ -66,11 +66,9 @@ class AppTheme {
         tooltipsMatchBackground: true,
         lightIsWhite: lightIsWhite,
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
         useMaterial3ErrorColors: true,
         subThemesData: const FlexSubThemesData(
           blendOnLevel: 10,
-          blendOnColors: false,
           navigationBarHeight: 80,
           unselectedToggleIsColored: true,
         ),
@@ -87,7 +85,6 @@ class AppTheme {
         tooltipsMatchBackground: true,
         darkIsTrueBlack: darkIsTrueBlack,
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
         useMaterial3ErrorColors: true,
         subThemesData: const FlexSubThemesData(
           blendOnLevel: 20,

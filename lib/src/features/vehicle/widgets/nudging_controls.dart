@@ -36,7 +36,7 @@ class NudgingControls extends StatelessWidget {
       child: SizedBox(
         width: 325,
         child: Scaffold(
-          backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
+          backgroundColor: theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
           primary: false,
           appBar: AppBar(
             title: Text(

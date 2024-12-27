@@ -7,7 +7,7 @@ part of 'country_providers.dart';
 // **************************************************************************
 
 String _$sortedCountryLayersHash() =>
-    r'9ce56f5047c67017fcacf0d53ff311f3dc38982c';
+    r'f6a4d6918f88c9d7f664c919e1701b98c8e513fa';
 
 /// The selected country layers sorted by their index in the available layers
 /// list.
@@ -25,8 +25,10 @@ final sortedCountryLayersProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SortedCountryLayersRef = AutoDisposeProviderRef<List<TileLayerData>>;
-String _$currentCountryHash() => r'207641d1c4557a4572d04e158c11447033a25b33';
+String _$currentCountryHash() => r'888e1aa0449805c4a52241f6abc55a7db5e5bc0d';
 
 /// A provider fort showing the country we are currently in, if the country
 /// has defined custom map layers.
@@ -48,7 +50,7 @@ final currentCountryProvider =
 
 typedef _$CurrentCountry = AutoDisposeNotifier<Country?>;
 String _$availableCountryLayersHash() =>
-    r'dfdae2997877cecc2c68512fd91ba055e981d8cb';
+    r'6ba57f2f132153fa6f1e20f2b30d1654a3e80cc3';
 
 /// A provider that contains all the custom layers available for the
 /// [CurrentCountry].
@@ -68,7 +70,7 @@ final availableCountryLayersProvider = AutoDisposeNotifierProvider<
 
 typedef _$AvailableCountryLayers = AutoDisposeNotifier<List<TileLayerData>>;
 String _$enabledCountryLayersHash() =>
-    r'bbede19f900d0a544b34041bffdc34a93d622ff4';
+    r'4316e4576051d9aaad2d8ae4f1928412c885aac2';
 
 /// A set of the current selction of custom layers for the [CurrentCountry].
 ///
@@ -87,7 +89,7 @@ final enabledCountryLayersProvider = AutoDisposeNotifierProvider<
 
 typedef _$EnabledCountryLayers = AutoDisposeNotifier<Set<TileLayerData>>;
 String _$countryLayerOpacitiesHash() =>
-    r'05028fd4a5cd24765006411181fb2a12bf24b2be';
+    r'9167dfad3a889b3782ba872ef1c7815bc3564717';
 
 /// A map of the available country layers and their opacities, which can be
 /// specified.
@@ -107,4 +109,4 @@ final countryLayerOpacitiesProvider = AutoDisposeNotifierProvider<
 
 typedef _$CountryLayerOpacities = AutoDisposeNotifier<Map<String, double>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

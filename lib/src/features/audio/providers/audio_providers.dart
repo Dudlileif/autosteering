@@ -31,7 +31,7 @@ class AudioQueue extends _$AudioQueue {
   AudioPlayer? _player;
   @override
   Set<AudioAsset> build() {
-    ref.listenSelf((previous, next) async {
+    listenSelf((previous, next) async {
       if (next.isNotEmpty) {
         if (_player?.state != PlayerState.playing) {
           _player = AudioPlayer()
@@ -74,17 +74,16 @@ class AudioQueue extends _$AudioQueue {
 class AudioVolume extends _$AudioVolume {
   @override
   Map<AudioAsset, double> build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null &&
-            const MapEquality<AudioAsset, double>().equals(previous, next)) {
-          ref.read(settingsProvider.notifier).update(
-                SettingsKey.audioVolumes,
-                next.map((key, value) => MapEntry(key.path, value)),
-              );
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null &&
+          const MapEquality<AudioAsset, double>().equals(previous, next)) {
+        ref.read(settingsProvider.notifier).update(
+              SettingsKey.audioVolumes,
+              next.map((key, value) => MapEntry(key.path, value)),
+            );
+      }
+    });
     final map =
         ref.read(settingsProvider.notifier).getMap(SettingsKey.audioVolumes);
     if (map != null) {

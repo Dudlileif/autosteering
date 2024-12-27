@@ -7,7 +7,7 @@ part of 'sentinel_providers.dart';
 // **************************************************************************
 
 String _$copernicusInstanceIdHash() =>
-    r'97ddf17211c226eb72fdb080718fb05204cb26fa';
+    r'aa03e8e534f7413e9dc5c9fac7186ef08f6fb305';
 
 /// A provider for the Sentinel Dataspace instance id.
 ///
@@ -26,7 +26,7 @@ final copernicusInstanceIdProvider =
 
 typedef _$CopernicusInstanceId = AutoDisposeNotifier<String?>;
 String _$availableSentinelLayersHash() =>
-    r'db4a46125443ed994b7eb8420afc2ff0d97b3819';
+    r'1d72ab1b896eeadbafba49556b0d711143f0247e';
 
 /// A provider for the available Sentinel layers.
 ///
@@ -45,7 +45,7 @@ final availableSentinelLayersProvider = AutoDisposeNotifierProvider<
 
 typedef _$AvailableSentinelLayers = AutoDisposeNotifier<List<SentinelLayer>>;
 String _$sentinelMaxCloudCoveragePercentHash() =>
-    r'b966dbe264051389c049e0834e0d4cdcb398ab69';
+    r'54b218d65d464f834efaa6dacf6d61ea15343629';
 
 /// A provider for the max level of cloud coverage that the Sentinel layers
 /// should query for.
@@ -65,7 +65,7 @@ final sentinelMaxCloudCoveragePercentProvider = AutoDisposeNotifierProvider<
 
 typedef _$SentinelMaxCloudCoveragePercent = AutoDisposeNotifier<double>;
 String _$enabledSentinelLayersHash() =>
-    r'bee60205b8ed030f2a8146c71d0aeeff7001fd63';
+    r'312babaa81e99bf0139c2631fef29332c06eb66a';
 
 /// A provider for the set of selected Sentinel layers.
 ///
@@ -84,7 +84,7 @@ final enabledSentinelLayersProvider = AutoDisposeNotifierProvider<
 
 typedef _$EnabledSentinelLayers = AutoDisposeNotifier<Set<SentinelLayer>>;
 String _$sentinelLayerOpacitiesHash() =>
-    r'729dfb09620f667171fa36234731ce13f1314033';
+    r'a3a95d29e07074aaeb27f537f2b9895cdb9b007d';
 
 /// A map for the Sentinel layers and their opacities, which can be specified.
 ///
@@ -104,4 +104,4 @@ final sentinelLayerOpacitiesProvider = AutoDisposeNotifierProvider<
 typedef _$SentinelLayerOpacities
     = AutoDisposeNotifier<Map<SentinelLayerType, double>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

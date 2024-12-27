@@ -20,6 +20,7 @@ import 'dart:async';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -30,7 +31,7 @@ part 'log_replay_providers.g.dart';
 class ActiveLogReplay extends _$ActiveLogReplay {
   @override
   LogReplay? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next != null) {
         ref.read(simInputProvider.notifier).send(next);
       }
@@ -58,7 +59,7 @@ class LogReplayIndex extends _$LogReplayIndex {
 class LoopLogReplay extends _$LoopLogReplay {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send((replayLoop: next));
     });
     return false;
@@ -71,7 +72,7 @@ class LoopLogReplay extends _$LoopLogReplay {
 /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
 @riverpod
 FutureOr<LogReplay?> loadLogReplayFromFile(
-  LoadLogReplayFromFileRef ref,
+  Ref ref,
   String path,
 ) async {
   final file = File(path);
@@ -81,7 +82,7 @@ FutureOr<LogReplay?> loadLogReplayFromFile(
         log: await file.readAsString(),
         loop: ref.watch(loopLogReplayProvider),
       );
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.w(
         'Failed to load log replay from: $path.',
         error: error,
@@ -94,7 +95,7 @@ FutureOr<LogReplay?> loadLogReplayFromFile(
 
 /// A provider for importing a [LogReplay] from a file.
 @riverpod
-FutureOr<LogReplay?> importLogReplay(ImportLogReplayRef ref) async {
+FutureOr<LogReplay?> importLogReplay(Ref ref) async {
   ref.keepAlive();
   Timer(
     const Duration(seconds: 5),
@@ -115,7 +116,7 @@ FutureOr<LogReplay?> importLogReplay(ImportLogReplayRef ref) async {
           log: String.fromCharCodes(data),
           loop: ref.watch(loopLogReplayProvider),
         );
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import log replay.',
           error: error,

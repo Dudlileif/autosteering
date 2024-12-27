@@ -40,7 +40,7 @@ class ImuConfigurator extends StatelessWidget {
         width: 300,
         child: Scaffold(
           primary: false,
-          backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
+          backgroundColor: theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
           appBar: AppBar(
             primary: false,
             scrolledUnderElevation: 0,

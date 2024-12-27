@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_html/html.dart' show Storage, window;
 import 'package:universal_io/io.dart';
@@ -33,7 +34,7 @@ part 'settings_providers.g.dart';
 
 /// A provider for the main settings file for the application.
 @Riverpod(keepAlive: true)
-Future<File> settingsFile(SettingsFileRef ref) async {
+Future<File> settingsFile(Ref ref) async {
   final path =
       '${ref.watch(fileDirectoryProvider).requireValue.path}/settings.json';
   final file = File(path);
@@ -51,7 +52,7 @@ Future<File> settingsFile(SettingsFileRef ref) async {
 /// A provider for the local storage data map for the web version of the
 /// application.
 @Riverpod(keepAlive: true)
-Storage webLocalStorage(WebLocalStorageRef ref) {
+Storage webLocalStorage(Ref ref) {
   Logger.instance.i('Loaded web window localStorage');
   return window.localStorage;
 }
@@ -62,7 +63,7 @@ class Settings extends _$Settings {
   bool _saveToRemoveDeprecated = false;
   @override
   SplayTreeMap<String, dynamic> build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if ((previous != null && previous != next) || _saveToRemoveDeprecated) {
         if (Device.isWeb) {
           ref.watch(webLocalStorageProvider)['settings'] = jsonEncode(next);
@@ -199,7 +200,7 @@ class EnableDebugMode extends _$EnableDebugMode {
 /// A provider for exporting [Settings] to a file.
 @riverpod
 FutureOr<void> exportSettings(
-  ExportSettingsRef ref, {
+  Ref ref, {
   String? overrideName,
   bool downloadIfWeb = true,
   bool removeSensitiveData = false,
@@ -222,7 +223,7 @@ FutureOr<void> exportSettings(
 
 /// A provider for importing [Settings] from a file.
 @riverpod
-FutureOr<Map<String, dynamic>?> importSettings(ImportSettingsRef ref) async {
+FutureOr<Map<String, dynamic>?> importSettings(Ref ref) async {
   ref.keepAlive();
   Timer(
     const Duration(seconds: 5),
@@ -241,7 +242,7 @@ FutureOr<Map<String, dynamic>?> importSettings(ImportSettingsRef ref) async {
       try {
         final json = jsonDecode(String.fromCharCodes(data));
         settings = Map<String, dynamic>.from(json as Map);
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import settings.',
           error: error,
@@ -261,7 +262,7 @@ FutureOr<Map<String, dynamic>?> importSettings(ImportSettingsRef ref) async {
         try {
           final json = jsonDecode(await file.readAsString());
           settings = Map<String, dynamic>.from(json as Map);
-        } catch (error, stackTrace) {
+        } on Exception catch (error, stackTrace) {
           Logger.instance.w(
             'Failed to load settings from: $filePath.',
             error: error,
@@ -285,4 +286,4 @@ FutureOr<Map<String, dynamic>?> importSettings(ImportSettingsRef ref) async {
 /// A provider for rebuilding all providers that reads [Settings] during the
 /// build method.
 @Riverpod(keepAlive: true)
-String reloadAllSettings(ReloadAllSettingsRef ref) => const Uuid().v4();
+String reloadAllSettings(Ref ref) => const Uuid().v4();

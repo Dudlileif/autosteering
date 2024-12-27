@@ -6,61 +6,8 @@ part of 'hardware_network_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deviceIPAdressWlanHash() =>
-    r'8e71712cf22af98a29678a6e4b8425f7074a70d5';
-
-/// A provider for the wireless IP address of the device.
-///
-/// Copied from [deviceIPAdressWlan].
-@ProviderFor(deviceIPAdressWlan)
-final deviceIPAdressWlanProvider = Provider<String?>.internal(
-  deviceIPAdressWlan,
-  name: r'deviceIPAdressWlanProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$deviceIPAdressWlanHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef DeviceIPAdressWlanRef = ProviderRef<String?>;
-String _$deviceIPAdressAPHash() => r'43da6ed39ad3f505db37110cb2481d8f5ee6642a';
-
-/// A provider for the access point host IP address of the device.
-///
-/// Copied from [deviceIPAdressAP].
-@ProviderFor(deviceIPAdressAP)
-final deviceIPAdressAPProvider = Provider<String?>.internal(
-  deviceIPAdressAP,
-  name: r'deviceIPAdressAPProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$deviceIPAdressAPHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef DeviceIPAdressAPRef = ProviderRef<String?>;
-String _$deviceIPAdressEthernetHash() =>
-    r'd0b3e493db864ca4b7d683293a50b2722bf627a9';
-
-/// A provider for the ethernet IP address of the device.
-///
-/// Copied from [deviceIPAdressEthernet].
-@ProviderFor(deviceIPAdressEthernet)
-final deviceIPAdressEthernetProvider = Provider<String?>.internal(
-  deviceIPAdressEthernet,
-  name: r'deviceIPAdressEthernetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$deviceIPAdressEthernetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef DeviceIPAdressEthernetRef = ProviderRef<String?>;
 String _$hardwareCommunicationConfigHash() =>
-    r'3633f1b1258bcc18ff12ebf4d4469b438aa22931';
+    r'2b6f034132f0d933e3fc4f5bc0b2a14d33d3e689';
 
 /// A provider for the combined state of the [SteeringHardwareAddress],
 /// [HardwareUDPReceivePort] and [HardwareUDPSendPort].
@@ -85,6 +32,8 @@ final hardwareCommunicationConfigProvider = Provider<
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef HardwareCommunicationConfigRef = ProviderRef<
     ({
       String steeringHardwareAddress,
@@ -92,38 +41,8 @@ typedef HardwareCommunicationConfigRef = ProviderRef<
       int hardwareUDPReceivePort,
       int hardwareUDPSendPort
     })>;
-String _$networkAvailableHash() => r'f5f42aa1be914492fbf0e5a6baad5c6854229ad7';
-
-/// A provider for whether a network connection can be made.
-///
-/// If using VPN while being an access point, communication with hardware
-/// is only possible if the subnet of the access point is disallowed throught
-/// the VPN.
-/// For WireGuard the allowed IPs to put in the client can be calculated
-/// here:
-/// https://www.procustodibus.com/blog/2021/03/wireguard-allowedips-calculator/.
-/// If the access point host has IP 192.168.38.49, then input
-/// Allowed IPs: 0.0.0.0/0,::/0
-/// Disallowed IPs: 192.168.38.0/24
-/// Copy the resulting Allowed IPs to the WireGuard client.
-/// On Android the subnet might change every time the device reboots, so more
-/// subnets should be added to Disallowed IPs.
-///
-/// Copied from [networkAvailable].
-@ProviderFor(networkAvailable)
-final networkAvailableProvider = Provider<bool>.internal(
-  networkAvailable,
-  name: r'networkAvailableProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$networkAvailableHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef NetworkAvailableRef = ProviderRef<bool>;
 String _$steeringHardwareNetworkAliveHash() =>
-    r'349e2d89fd44c884ef2492747c7feec18ab76530';
+    r'e68b0de191f2f1c5cfdd51810d8f36000619e83f';
 
 /// A provider for whether there is a connection with the steering hardware.
 ///
@@ -142,7 +61,7 @@ final steeringHardwareNetworkAliveProvider =
 
 typedef _$SteeringHardwareNetworkAlive = Notifier<bool>;
 String _$remoteControlHardwareNetworkAliveHash() =>
-    r'609957ce4523257f5267104473652f29a7f1735c';
+    r'08ff67c407ee215a57f4d72b6bdaf19d4fb802c6';
 
 /// A provider for whether there is a connection with the remote control
 /// hardware.
@@ -179,8 +98,64 @@ final networkInterfacesProvider =
 );
 
 typedef _$NetworkInterfaces = Notifier<List<NetworkInterface>>;
+String _$deviceIPAddressWlanHash() =>
+    r'92f57b37c3ab7a20c3eee06664e6ac62eaeeb9f7';
+
+/// A provider for the wireless IP address of the device.
+///
+/// Copied from [DeviceIPAddressWlan].
+@ProviderFor(DeviceIPAddressWlan)
+final deviceIPAddressWlanProvider =
+    NotifierProvider<DeviceIPAddressWlan, String?>.internal(
+  DeviceIPAddressWlan.new,
+  name: r'deviceIPAddressWlanProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deviceIPAddressWlanHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DeviceIPAddressWlan = Notifier<String?>;
+String _$deviceIPAddressAPHash() => r'a7b0fefd84c0948459afaa9a39ceae427c240302';
+
+/// A provider for the access point host IP address of the device.
+///
+/// Copied from [DeviceIPAddressAP].
+@ProviderFor(DeviceIPAddressAP)
+final deviceIPAddressAPProvider =
+    NotifierProvider<DeviceIPAddressAP, String?>.internal(
+  DeviceIPAddressAP.new,
+  name: r'deviceIPAddressAPProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deviceIPAddressAPHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DeviceIPAddressAP = Notifier<String?>;
+String _$deviceIPAddressEthernetHash() =>
+    r'edb5f85d5d221815af3c846664dde25a951b847f';
+
+/// A provider for the ethernet IP address of the device.
+///
+/// Copied from [DeviceIPAddressEthernet].
+@ProviderFor(DeviceIPAddressEthernet)
+final deviceIPAddressEthernetProvider =
+    NotifierProvider<DeviceIPAddressEthernet, String?>.internal(
+  DeviceIPAddressEthernet.new,
+  name: r'deviceIPAddressEthernetProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deviceIPAddressEthernetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DeviceIPAddressEthernet = Notifier<String?>;
 String _$steeringHardwareAddressHash() =>
-    r'6997c150b25bf3f17de05bcd365bcbe1bb744234';
+    r'3cb2a5f5c518f59c85623b9cc2213e2bdf494396';
 
 /// A provider for the IP adress of the steering hardware we want to communicate
 /// with.
@@ -200,7 +175,7 @@ final steeringHardwareAddressProvider =
 
 typedef _$SteeringHardwareAddress = Notifier<String>;
 String _$remoteControlHardwareAddressHash() =>
-    r'c4d2e7ae1463b76c1fc62d1defe2b10a4930977b';
+    r'2c9ca0304c21a280e27dc076ad6eb73e20649aca';
 
 /// A provider for the IP adress of the remote control hardware we want to
 /// communicate with.
@@ -220,7 +195,7 @@ final remoteControlHardwareAddressProvider =
 
 typedef _$RemoteControlHardwareAddress = Notifier<String>;
 String _$hardwareUDPReceivePortHash() =>
-    r'9dc859a8609c4fc1e6edfbd8350735f1a57bbbca';
+    r'6aded543234f469b116cb66e8ce6e8bdfd9c1866';
 
 /// A provider for the UDP receive port for the device.
 ///
@@ -239,7 +214,7 @@ final hardwareUDPReceivePortProvider =
 
 typedef _$HardwareUDPReceivePort = Notifier<int>;
 String _$hardwareUDPSendPortHash() =>
-    r'8feeee8cfb37b2d1535a07ca03fa3cf535b5f7c7';
+    r'8176c8651e533059f546c303926cd60e661bfc48';
 
 /// A provider for the UDP send port for the device to send messages to
 /// the hardware in [SteeringHardwareAddress].
@@ -258,7 +233,7 @@ final hardwareUDPSendPortProvider =
 );
 
 typedef _$HardwareUDPSendPort = Notifier<int>;
-String _$tcpServerHash() => r'd6dbfb973642beb24197ba21b9dba07ed1e434af';
+String _$tcpServerHash() => r'c4c536ad4a258a302866626ed31dc30177a1eba9';
 
 /// A provider for a TCP server for sending/receiving data via TCP.
 ///
@@ -274,5 +249,36 @@ final tcpServerProvider = AsyncNotifierProvider<TcpServer, Socket?>.internal(
 );
 
 typedef _$TcpServer = AsyncNotifier<Socket?>;
+String _$networkAvailableHash() => r'7fd62e678e64d2b631a0d3ac8b55880e25c0687d';
+
+/// A provider for whether a network connection can be made.
+///
+/// If using VPN while being an access point, communication with hardware
+/// is only possible if the subnet of the access point is disallowed throught
+/// the VPN.
+/// For WireGuard the allowed IPs to put in the client can be calculated
+/// here:
+/// https://www.procustodibus.com/blog/2021/03/wireguard-allowedips-calculator/.
+/// If the access point host has IP 192.168.38.49, then input
+/// Allowed IPs: 0.0.0.0/0,::/0
+/// Disallowed IPs: 192.168.38.0/24
+/// Copy the resulting Allowed IPs to the WireGuard client.
+/// On Android the subnet might change every time the device reboots, so more
+/// subnets should be added to Disallowed IPs.
+///
+/// Copied from [NetworkAvailable].
+@ProviderFor(NetworkAvailable)
+final networkAvailableProvider =
+    NotifierProvider<NetworkAvailable, bool>.internal(
+  NetworkAvailable.new,
+  name: r'networkAvailableProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$networkAvailableHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NetworkAvailable = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

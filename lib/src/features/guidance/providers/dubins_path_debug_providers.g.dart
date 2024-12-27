@@ -6,7 +6,7 @@ part of 'dubins_path_debug_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$debugDubinsPathHash() => r'd010244d78a859486ca7a083f1cbec36fcf84167';
+String _$debugDubinsPathHash() => r'068a0465a7cf1281bb525158fa27f300d88c13f5';
 
 /// The current [DubinsPath] object that we can debug.
 ///
@@ -22,6 +22,8 @@ final debugDubinsPathProvider = AutoDisposeProvider<DubinsPath?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef DebugDubinsPathRef = AutoDisposeProviderRef<DubinsPath?>;
 String _$enableDubinsPathDebugHash() =>
     r'5bc798c25e032544f6aba25dc9bc2da90f22ec44';
@@ -138,4 +140,4 @@ final dubinsPathDebugStepSizeProvider =
 
 typedef _$DubinsPathDebugStepSize = Notifier<double>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-// ignore_for_file: invalid_annotation_target
-
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hardware/models/models.dart';
 import 'package:collection/collection.dart';
@@ -170,6 +168,9 @@ class SteeringHardwareConfigKeysContainer {
       (other is SteeringHardwareConfigKeysContainer &&
           const SetEquality<String>().equals(keys, other.keys));
 }
+
+// Issue with freezed and JsonKey annotation
+// ignore_for_file: invalid_annotation_target
 
 /// A configuration for a steering wheel motor of a vehicle.
 @Freezed(fromJson: true, toJson: true)

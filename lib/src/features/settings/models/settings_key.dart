@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+// Descriptions for settings keys are pretty straight forward.
 // ignore_for_file: public_member_api_docs
 
 /// An enumerator for all the settings of the program.

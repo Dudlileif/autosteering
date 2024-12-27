@@ -54,14 +54,14 @@ class ShowMiniMap extends _$ShowMiniMap {
             }
           }
         }
-      })
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.miniMapShow, next);
-        }
       });
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.miniMapShow, next);
+      }
+    });
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.miniMapShow) ??
@@ -114,17 +114,17 @@ class MiniMapLockToField extends _$MiniMapLockToField {
         miniMapSizeProvider,
         (previous, next) =>
             Timer(const Duration(milliseconds: 100), updateBounds),
-      )
-      ..listenSelf((previous, next) {
-        if (next) {
-          updateBounds();
-        }
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.miniMapLockToField, next);
-        }
-      });
+      );
+    listenSelf((previous, next) {
+      if (next) {
+        updateBounds();
+      }
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.miniMapLockToField, next);
+      }
+    });
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.miniMapLockToField) ??
@@ -176,26 +176,25 @@ class MiniMapLockToField extends _$MiniMapLockToField {
 class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (ref.read(miniMapReadyProvider)) {
-          if (next) {
-            ref.read(miniMapControllerProvider).rotate(0);
-          } else {
-            ref.read(miniMapControllerProvider).rotate(
-                  ref.read(
-                    mainVehicleProvider.select((value) => -value.bearing),
-                  ),
-                );
-          }
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (ref.read(miniMapReadyProvider)) {
+        if (next) {
+          ref.read(miniMapControllerProvider).rotate(0);
+        } else {
+          ref.read(miniMapControllerProvider).rotate(
+                ref.read(
+                  mainVehicleProvider.select((value) => -value.bearing),
+                ),
+              );
         }
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.miniMapAlwaysPointNorth, next);
-        }
-      });
+      }
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.miniMapAlwaysPointNorth, next);
+      }
+    });
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.miniMapAlwaysPointNorth) ??
@@ -214,15 +213,14 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
 class MiniMapSize extends _$MiniMapSize {
   @override
   double build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.miniMapSize, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.miniMapSize, next);
+      }
+    });
     return ref
             .read(settingsProvider.notifier)
             .getDouble(SettingsKey.miniMapSize) ??

@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'country_providers.g.dart';
@@ -34,9 +35,8 @@ part 'country_providers.g.dart';
 class CurrentCountry extends _$CurrentCountry {
   @override
   Country? build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf(
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf(
       (previous, next) {
         if (next != previous) {
           ref
@@ -111,9 +111,8 @@ class CurrentCountry extends _$CurrentCountry {
 class AvailableCountryLayers extends _$AvailableCountryLayers {
   @override
   List<TileLayerData> build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.mapLayersCountrySorted,
@@ -167,9 +166,8 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
 class EnabledCountryLayers extends _$EnabledCountryLayers {
   @override
   Set<TileLayerData> build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref.read(settingsProvider.notifier).update(
               SettingsKey.mapLayersCountryEnabled,
@@ -237,7 +235,7 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
 /// The selected country layers sorted by their index in the available layers
 /// list.
 @riverpod
-List<TileLayerData> sortedCountryLayers(SortedCountryLayersRef ref) {
+List<TileLayerData> sortedCountryLayers(Ref ref) {
   final availableLayers = ref.watch(availableCountryLayersProvider);
 
   return ref.watch(enabledCountryLayersProvider).sorted(
@@ -255,9 +253,8 @@ class CountryLayerOpacities extends _$CountryLayerOpacities {
 
   @override
   Map<String, double> build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null) {
         if (!const DeepCollectionEquality().equals(previous, next)) {
           _saveToSettingsTimer?.cancel();

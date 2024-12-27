@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -77,7 +78,7 @@ class MainVehicle extends _$MainVehicle {
 class ActiveAutosteeringState extends _$ActiveAutosteeringState {
   @override
   AutosteeringState build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref.read(audioQueueProvider.notifier).add(
               switch (next) {
@@ -100,7 +101,7 @@ class ActiveAutosteeringState extends _$ActiveAutosteeringState {
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> saveVehicle(
-  SaveVehicleRef ref,
+  Ref ref,
   Vehicle vehicle, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -119,7 +120,7 @@ FutureOr<void> saveVehicle(
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> exportVehicle(
-  ExportVehicleRef ref,
+  Ref ref,
   Vehicle vehicle, {
   String? overrideName,
   bool downloadIfWeb = true,
@@ -136,7 +137,7 @@ FutureOr<void> exportVehicle(
 /// A provider for reading and holding all the saved [Vehicle]s in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-FutureOr<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) async => await ref
+FutureOr<List<Vehicle>> savedVehicles(Ref ref) async => await ref
     .watch(
       savedFilesProvider(
         fromJson: Vehicle.fromJson,
@@ -150,7 +151,7 @@ FutureOr<List<Vehicle>> savedVehicles(SavedVehiclesRef ref) async => await ref
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> deleteVehicle(
-  DeleteVehicleRef ref,
+  Ref ref,
   Vehicle vehicle, {
   String? overrideName,
 }) async =>
@@ -164,7 +165,7 @@ FutureOr<void> deleteVehicle(
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 @riverpod
 FutureOr<Vehicle?> loadVehicleFromFile(
-  LoadVehicleFromFileRef ref,
+  Ref ref,
   String path,
 ) async {
   final file = File(path);
@@ -172,7 +173,7 @@ FutureOr<Vehicle?> loadVehicleFromFile(
     try {
       final json = jsonDecode(await file.readAsString());
       return Vehicle.fromJson(Map<String, dynamic>.from(json as Map));
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.w(
         'Failed to load vehicle from: $path.',
         error: error,
@@ -188,7 +189,7 @@ FutureOr<Vehicle?> loadVehicleFromFile(
 /// The vehicle is found by sorting the saved vehicles by their last used
 /// property.
 @Riverpod(keepAlive: true)
-AsyncValue<Vehicle> lastUsedVehicle(LastUsedVehicleRef ref) =>
+AsyncValue<Vehicle> lastUsedVehicle(Ref ref) =>
     ref.watch(savedVehiclesProvider).whenData(
       (data) {
         if (data.isNotEmpty) {
@@ -213,15 +214,14 @@ AsyncValue<Vehicle> lastUsedVehicle(LastUsedVehicleRef ref) =>
 class GaugesAverageCount extends _$GaugesAverageCount {
   @override
   int build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.gaugesAverageCount, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.gaugesAverageCount, next);
+      }
+    });
 
     return ref
             .read(settingsProvider.notifier)
@@ -247,7 +247,7 @@ class VehicleSteeringAngleTarget extends _$VehicleSteeringAngleTarget {
 /// to the [ConfiguredVehicle] provider.
 @riverpod
 FutureOr<Vehicle?> importVehicle(
-  ImportVehicleRef ref,
+  Ref ref,
 ) async {
   ref.keepAlive();
   Timer(
@@ -267,7 +267,7 @@ FutureOr<Vehicle?> importVehicle(
       try {
         final json = jsonDecode(String.fromCharCodes(data));
         vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json as Map));
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import vehicle.',
           error: error,
@@ -314,7 +314,7 @@ FutureOr<Vehicle?> importVehicle(
 class ShowOverrideSteering extends _$ShowOverrideSteering {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (previous != null && previous && !next) {
         ref.invalidate(overrideSteeringProvider);
       }
@@ -336,34 +336,29 @@ class OverrideSteering extends _$OverrideSteering {
   Timer? _timer;
   @override
   bool build() {
-    ref
-      ..listenSelf((previous, next) {
-        if (previous != null && !previous && next) {
-          _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
-            ref.read(simInputProvider.notifier).send(
-              (steeringAngleOverride: ref.read(overrideSteeringAngleProvider)),
-            );
-          });
-          Logger.instance.i('Steering override enabled.');
-        } else if (previous != null && previous && !next && _timer != null) {
-          _timer?.cancel();
-          _timer = null;
-          ref
-              .read(simInputProvider.notifier)
-              .send((steeringAngleOverride: null));
-          Logger.instance.i('Steering override disabled.');
-        }
-      })
-      ..onDispose(() {
-        if (_timer != null) {
-          _timer?.cancel();
-          _timer = null;
-          ref
-              .read(simInputProvider.notifier)
-              .send((steeringAngleOverride: null));
-          Logger.instance.i('Steering override disabled.');
-        }
-      });
+    listenSelf((previous, next) {
+      if (previous != null && !previous && next) {
+        _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+          ref.read(simInputProvider.notifier).send(
+            (steeringAngleOverride: ref.read(overrideSteeringAngleProvider)),
+          );
+        });
+        Logger.instance.i('Steering override enabled.');
+      } else if (previous != null && previous && !next && _timer != null) {
+        _timer?.cancel();
+        _timer = null;
+        ref.read(simInputProvider.notifier).send((steeringAngleOverride: null));
+        Logger.instance.i('Steering override disabled.');
+      }
+    });
+    ref.onDispose(() {
+      if (_timer != null) {
+        _timer?.cancel();
+        _timer = null;
+        ref.read(simInputProvider.notifier).send((steeringAngleOverride: null));
+        Logger.instance.i('Steering override disabled.');
+      }
+    });
     return false;
   }
 
@@ -388,5 +383,5 @@ class OverrideSteeringAngle extends _$OverrideSteeringAngle {
 
 /// A provider for exporting all vehicle files.
 @riverpod
-FutureOr<void> exportVehicles(ExportVehiclesRef ref, {bool zip = true}) async =>
+FutureOr<void> exportVehicles(Ref ref, {bool zip = true}) async =>
     await ref.watch(exportAllProvider(directory: 'vehicles').future);

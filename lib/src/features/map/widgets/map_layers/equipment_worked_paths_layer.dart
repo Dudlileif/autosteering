@@ -15,6 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+// Some color are currently not overidden.
+// ignore_for_file: unused_element
+
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -148,7 +151,7 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
   /// converted to x,y values and concatenated in the float list.
   ///
   /// [color] is the color to draw the paths with.
-  /// The individual section colors can be overriden with [sectionColors].
+  /// The individual section colors can be overidden with [sectionColors].
   ///
   /// [opacity] is the opacity value to apply to the [color]. This will replace
   /// the alpha value of the [color] with the alpha value corresponding to
@@ -159,7 +162,6 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
   _EquipentWorkedPathsPainter({
     required this.points,
     this.color = Colors.green,
-    // ignore: unused_element
     this.opacity = 0.4,
     this.sectionColors,
   });
@@ -171,7 +173,7 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
   final List<Map<int, Float32List>> points;
 
   /// The color to draw the paths with.
-  /// The individual section colors can be overriden with [sectionColors].
+  /// The individual section colors can be overidden with [sectionColors].
   final Color color;
 
   /// The opacity to apply to the [color]. This will replace the alpha value
@@ -199,14 +201,14 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
             canvas.drawVertices(
               Vertices.raw(VertexMode.triangleStrip, element),
               BlendMode.src,
-              Paint()..color = paintColor.withOpacity(opacity),
+              Paint()..color = paintColor.withValues(alpha: opacity),
             );
           }
         } else {
           canvas.drawVertices(
             Vertices.raw(VertexMode.triangleStrip, section),
             BlendMode.src,
-            Paint()..color = paintColor.withOpacity(opacity),
+            Paint()..color = paintColor.withValues(alpha: opacity),
           );
         }
       });
