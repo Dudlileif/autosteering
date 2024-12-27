@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -34,7 +35,7 @@ part 'path_tracking_providers.g.dart';
 class PathInterpolationDistance extends _$PathInterpolationDistance {
   @override
   double build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       ref
           .read(simInputProvider.notifier)
           .send((pathInterpolationDistance: state));
@@ -62,7 +63,7 @@ class PathTrackingPoints extends _$PathTrackingPoints {
 class ConfiguredPathTracking extends _$ConfiguredPathTracking {
   @override
   PathTracking? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next != null || previous != null) {
         Logger.instance.i('Path tracking set to ${next?.runtimeType}');
         if (next != null) {
@@ -117,7 +118,7 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
 class PathTrackingLoop extends _$PathTrackingLoop {
   @override
   PathTrackingLoopMode build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       ref.read(simInputProvider.notifier).send((pathTrackingLoopMode: next));
     });
     return PathTrackingLoopMode.straight;
@@ -133,7 +134,7 @@ class PathTrackingLoop extends _$PathTrackingLoop {
 class DisplayPathTracking extends _$DisplayPathTracking {
   @override
   PathTracking? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next != null) {
         ref.read(activeWorkSessionProvider.notifier).updatePathTracking(next);
       }
@@ -152,7 +153,7 @@ class DisplayPathTracking extends _$DisplayPathTracking {
 /// line to the [MainVehicle].
 @riverpod
 double? pathTrackingPerpendicularDistance(
-  PathTrackingPerpendicularDistanceRef ref,
+  Ref ref,
 ) =>
     ref
         .watch(displayPathTrackingProvider)
@@ -188,7 +189,7 @@ class DebugPathTracking extends _$DebugPathTracking {
 /// valid.
 @riverpod
 FutureOr<PathTracking?> loadPathTrackingFromFile(
-  LoadPathTrackingFromFileRef ref,
+  Ref ref,
   String path,
 ) async {
   final file = File(path);
@@ -196,7 +197,7 @@ FutureOr<PathTracking?> loadPathTrackingFromFile(
     try {
       final json = jsonDecode(await file.readAsString());
       return PathTracking.fromJson(Map<String, dynamic>.from(json as Map));
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.w(
         'Failed to load Path tracking: $path.',
         error: error,
@@ -212,7 +213,7 @@ FutureOr<PathTracking?> loadPathTrackingFromFile(
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> savePathTracking(
-  SavePathTrackingRef ref,
+  Ref ref,
   PathTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -232,7 +233,7 @@ FutureOr<void> savePathTracking(
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> exportPathTracking(
-  ExportPathTrackingRef ref,
+  Ref ref,
   PathTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -251,7 +252,7 @@ FutureOr<void> exportPathTracking(
 /// user file directory.
 @Riverpod(keepAlive: true)
 FutureOr<List<PathTracking>> savedPathTrackings(
-  SavedPathTrackingsRef ref,
+  Ref ref,
 ) async =>
     await ref
         .watch(
@@ -267,7 +268,7 @@ FutureOr<List<PathTracking>> savedPathTrackings(
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> deletePathTracking(
-  DeletePathTrackingRef ref,
+  Ref ref,
   PathTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = true,
@@ -285,7 +286,7 @@ FutureOr<void> deletePathTracking(
 /// the [ConfiguredPathTracking] provider.
 @riverpod
 FutureOr<PathTracking?> importPathTracking(
-  ImportPathTrackingRef ref,
+  Ref ref,
 ) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
@@ -304,7 +305,7 @@ FutureOr<PathTracking?> importPathTracking(
 
         pathTracking =
             PathTracking.fromJson(Map<String, dynamic>.from(json as Map));
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import Path tracking.',
           error: error,
@@ -332,11 +333,10 @@ FutureOr<PathTracking?> importPathTracking(
   return pathTracking;
 }
 
-
 /// A provider for exporting all guidance files.
 @riverpod
 FutureOr<void> exportGuidances(
-  ExportGuidancesRef ref, {
+  Ref ref, {
   bool zip = true,
 }) async =>
     await ref.watch(exportAllProvider(directory: 'guidance').future);

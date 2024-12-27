@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hardware_motor_providers.g.dart';
@@ -46,7 +47,7 @@ class SteeringMotorActualRPM extends _$SteeringMotorActualRPM {
 
   @override
   double? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 350),
@@ -67,7 +68,7 @@ class SteeringMotorStatus extends _$SteeringMotorStatus {
 
   @override
   MotorStatus? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (previous != next) {
         if (ref.read(activeAutosteeringStateProvider) ==
             AutosteeringState.standby) {
@@ -115,7 +116,7 @@ class SteeringMotorCurrentScale extends _$SteeringMotorCurrentScale {
 
   @override
   int? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 5000),
@@ -136,7 +137,7 @@ class SteeringMotorStallguard extends _$SteeringMotorStallguard {
 
   @override
   int? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 5000),
@@ -155,7 +156,7 @@ class SteeringMotorStallguard extends _$SteeringMotorStallguard {
 class SteeringMotorEnableCalibration extends _$SteeringMotorEnableCalibration {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (previous != next) {
         ref
             .read(simInputProvider.notifier)
@@ -176,7 +177,7 @@ class SteeringMotorRotation extends _$SteeringMotorRotation {
 
   @override
   double? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 5000),
@@ -198,7 +199,7 @@ class SteeringMotorTargetRotation extends _$SteeringMotorTargetRotation {
 
   @override
   double? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 5000),
@@ -221,7 +222,7 @@ class SteeringMotorStepsPerWasIncrementMinToCenter
 
   @override
   double? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 5000),
@@ -244,7 +245,7 @@ class SteeringMotorStepsPerWasIncrementCenterToMax
 
   @override
   double? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 5000),
@@ -261,7 +262,7 @@ class SteeringMotorStepsPerWasIncrementCenterToMax
 /// A provider for getting the motor configuration from the hardware.
 @Riverpod(keepAlive: true)
 FutureOr<void> getSteeringHardwareConfig(
-  GetSteeringHardwareConfigRef ref,
+  Ref ref,
 ) async {
   try {
     final url =
@@ -291,7 +292,7 @@ FutureOr<void> getSteeringHardwareConfig(
         'Did not recieve valid motor config response: $response',
       );
     }
-  } catch (error, stackTrace) {
+  } on Exception catch (error, stackTrace) {
     Logger.instance.e(
       'Failed to get motor config from hardware.',
       error: error,
@@ -305,7 +306,7 @@ FutureOr<void> getSteeringHardwareConfig(
 /// parameters corresponding to [keyContainer].
 @Riverpod(keepAlive: true)
 FutureOr<void> updateSteeringHardwareConfig(
-  UpdateSteeringHardwareConfigRef ref,
+  Ref ref,
   SteeringHardwareConfigKeysContainer keyContainer,
 ) async {
   if (ref.watch(networkAvailableProvider) &&
@@ -332,7 +333,7 @@ FutureOr<void> updateSteeringHardwareConfig(
         Logger.instance
             .e('Failed to update motor config on hardware: $response');
       }
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.e(
         'Failed to update motor config on hardware.',
         error: error,
@@ -346,7 +347,7 @@ FutureOr<void> updateSteeringHardwareConfig(
 /// A provider for sending the whole motor configuration to the hardware.
 @Riverpod(keepAlive: true)
 FutureOr<void> sendSteeringHardwareConfig(
-  SendSteeringHardwareConfigRef ref,
+  Ref ref,
 ) async {
   try {
     Logger.instance.i(
@@ -369,7 +370,7 @@ FutureOr<void> sendSteeringHardwareConfig(
     } else {
       Logger.instance.e('Failed to send motor config to hardware: $response');
     }
-  } catch (error, stackTrace) {
+  } on Exception catch (error, stackTrace) {
     Logger.instance.e(
       'Failed to send motor config to hardware.',
       error: error,
@@ -385,16 +386,15 @@ class SteeringHardwareConfiguratorUiOffset
     extends _$SteeringHardwareConfiguratorUiOffset {
   @override
   Offset build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && next != previous) {
-          ref.read(settingsProvider.notifier).update(
-                SettingsKey.uiSteeringHardwareConfiguratorOffset,
-                next.toJson(),
-              );
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && next != previous) {
+        ref.read(settingsProvider.notifier).update(
+              SettingsKey.uiSteeringHardwareConfiguratorOffset,
+              next.toJson(),
+            );
+      }
+    });
 
     final setting = ref
         .read(settingsProvider.notifier)

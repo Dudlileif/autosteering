@@ -29,6 +29,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -54,7 +55,7 @@ class SimInput extends _$SimInput {
 class _SimCoreIsolatePort extends _$SimCoreIsolatePort {
   @override
   SendPort? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       Logger.instance.i('Simulator Core sendport set to: $next');
       if (next != null) {
         ref.read(initializeSimCoreProvider);
@@ -72,7 +73,7 @@ class _SimCoreIsolatePort extends _$SimCoreIsolatePort {
 /// It will update the stream with vehicle updates from the simulator and also
 /// update the vehicle gauge providers.
 @riverpod
-Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
+Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
   final receivePort = ReceivePort('Recieve from sim port');
 
   BackgroundIsolateBinaryMessenger.ensureInitialized(
@@ -188,7 +189,7 @@ Stream<Vehicle> simCoreIsolateStream(SimCoreIsolateStreamRef ref) async* {
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
 @riverpod
-void simCoreVehicleDriving(SimCoreVehicleDrivingRef ref) {
+void simCoreVehicleDriving(Ref ref) {
   if (ref.watch(mapReadyProvider)) {
     if (ref.watch(devicePositionAsVehiclePositionProvider)) {
       ref.watch(updatePositionFromDeviceProvider);

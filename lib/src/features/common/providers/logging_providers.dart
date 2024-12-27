@@ -19,6 +19,7 @@ import 'dart:async';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart' as implementation;
 import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -31,15 +32,14 @@ part 'logging_providers.g.dart';
 class DaysToKeepLogFiles extends _$DaysToKeepLogFiles {
   @override
   int build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (next != previous) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.logDaysToKeep, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.logDaysToKeep, next);
+      }
+    });
 
     return ref
             .read(settingsProvider.notifier)
@@ -53,7 +53,7 @@ class DaysToKeepLogFiles extends _$DaysToKeepLogFiles {
 
 /// A provider for creating a logging file for the session.
 @Riverpod(keepAlive: true)
-Future<File?> loggingFile(LoggingFileRef ref) async {
+Future<File?> loggingFile(Ref ref) async {
   final dirPath = ref.watch(fileDirectoryProvider).when(
         data: (data) => data.path,
         error: (error, stackTrace) {
@@ -182,7 +182,7 @@ Future<File?> loggingFile(LoggingFileRef ref) async {
 /// A provider for the [Logger] that prints the logs to console and a file
 /// if on native platforms.
 @Riverpod(keepAlive: true)
-Logger logging(LoggingRef ref) {
+Logger logging(Ref ref) {
   if (Device.isWeb) {
     return Logger.instance;
   }
@@ -227,5 +227,5 @@ Logger logging(LoggingRef ref) {
 
 /// A provider for exporting all log files.
 @riverpod
-FutureOr<void> exportLogs(ExportLogsRef ref, {bool zip = true}) async =>
+FutureOr<void> exportLogs(Ref ref, {bool zip = true}) async =>
     await ref.watch(exportAllProvider(directory: 'logs').future);

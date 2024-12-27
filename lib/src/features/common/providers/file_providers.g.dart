@@ -6,7 +6,7 @@ part of 'file_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fileDirectoryHash() => r'a034e67b5c3331e8806a3d33434e1f09d6e037ce';
+String _$fileDirectoryHash() => r'de03bf7973f971ec08ab41dca91e128bdf1cde67';
 
 /// A provider for the main user file directory for the application.
 ///
@@ -22,8 +22,10 @@ final fileDirectoryProvider = FutureProvider<Directory>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef FileDirectoryRef = FutureProviderRef<Directory>;
-String _$directorySizeHash() => r'337aa83b96d3e5f675df8befcf5d3ec4f8d021ab';
+String _$directorySizeHash() => r'b90c199175380fd44b557570d59b9d1d5b227d54';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -183,6 +185,8 @@ class DirectorySizeProvider extends AutoDisposeFutureProvider<int?> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DirectorySizeRef on AutoDisposeFutureProviderRef<int?> {
   /// The parameter `path` of this provider.
   String get path;
@@ -196,7 +200,7 @@ class _DirectorySizeProviderElement
   String get path => (origin as DirectorySizeProvider).path;
 }
 
-String _$directoryDeleteHash() => r'9c1a9cb0b2160ab903903f0d0a22cd7fb12de594';
+String _$directoryDeleteHash() => r'90572cbddfc04c88c20660db40dc9e98ce7cd066';
 
 /// A provider for deleting the [Directory] at [path].
 ///
@@ -335,6 +339,8 @@ class DirectoryDeleteProvider extends AutoDisposeFutureProvider<bool> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DirectoryDeleteRef on AutoDisposeFutureProviderRef<bool> {
   /// The parameter `path` of this provider.
   String get path;
@@ -349,7 +355,7 @@ class _DirectoryDeleteProviderElement
 }
 
 String _$saveJsonToFileDirectoryHash() =>
-    r'c00a529bf2247184a81fac33ff5cc708483de69f';
+    r'22edbc7f95aea84ee2427d51b95842b633aa016a';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -539,6 +545,8 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SaveJsonToFileDirectoryRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `object` of this provider.
   dynamic get object;
@@ -576,7 +584,7 @@ class _SaveJsonToFileDirectoryProviderElement
 }
 
 String _$exportJsonToFileDirectoryHash() =>
-    r'f91e5638cf0aa15357b12971cd0dd10dc4c910e9';
+    r'8217681ffeb02d471630e45473c50a8e9cf3976f';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -767,6 +775,8 @@ class ExportJsonToFileDirectoryProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportJsonToFileDirectoryRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `object` of this provider.
   dynamic get object;
@@ -803,7 +813,7 @@ class _ExportJsonToFileDirectoryProviderElement
       (origin as ExportJsonToFileDirectoryProvider).downloadIfWeb;
 }
 
-String _$savedFilesHash() => r'ee1307aa7557caf469ef31d0c26464e93142a95f';
+String _$savedFilesHash() => r'eb4e3905c75aa69754a359c45c84729d2aea5fb3';
 
 /// A provider for reading and holding all the saved objects of
 /// the given type in the in the user file directory.
@@ -970,6 +980,8 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SavedFilesRef on FutureProviderRef<List<dynamic>> {
   /// The parameter `fromJson` of this provider.
   dynamic Function(Map<String, dynamic>) get fromJson;
@@ -1002,7 +1014,7 @@ class _SavedFilesProviderElement extends FutureProviderElement<List<dynamic>>
 }
 
 String _$savedFilesInSubDirectoriesHash() =>
-    r'5f6720f10b68bc50110ea712454c260e156819f9';
+    r'6ce1afc7c614269b7005cceaa77df573e95ff8fa';
 
 /// A provider for reading and holding all the saved objects of
 /// the given type in the in the user file directory.
@@ -1160,6 +1172,8 @@ class SavedFilesInSubDirectoriesProvider extends FutureProvider<List<dynamic>> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SavedFilesInSubDirectoriesRef on FutureProviderRef<List<dynamic>> {
   /// The parameter `fromJson` of this provider.
   dynamic Function(Map<String, dynamic>) get fromJson;
@@ -1187,7 +1201,7 @@ class _SavedFilesInSubDirectoriesProviderElement
 }
 
 String _$deleteJsonFromFileDirectoryHash() =>
-    r'14971d38f576d4a8a613e896c5d72177dd1c3fb0';
+    r'bb71b7567f602978f267b9ccc7583224f87028c7';
 
 /// A provider for deleting the [fileName] in [folder] if it exists.
 ///
@@ -1327,6 +1341,8 @@ class DeleteJsonFromFileDirectoryProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DeleteJsonFromFileDirectoryRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `fileName` of this provider.
   String get fileName;
@@ -1348,7 +1364,7 @@ class _DeleteJsonFromFileDirectoryProviderElement
 }
 
 String _$deleteDirectoryFromFileDirectoryHash() =>
-    r'4f948894f41b1a97fa776aa0aa4ece1cefd72062';
+    r'f5552dab7445ae257cc382d1dffa7a92e293d4ab';
 
 /// A provider for deleting the [directoryName] in [folder] if it exists.
 ///
@@ -1490,6 +1506,8 @@ class DeleteDirectoryFromFileDirectoryProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DeleteDirectoryFromFileDirectoryRef
     on AutoDisposeFutureProviderRef<void> {
   /// The parameter `directoryName` of this provider.
@@ -1513,7 +1531,7 @@ class _DeleteDirectoryFromFileDirectoryProviderElement
 }
 
 String _$exportWholeFileDirectoryHash() =>
-    r'43efc2021f2efd48dbe1da5bc1e2b4c84191d33d';
+    r'c551fb0614e95f45bee216fc46df9893154ac000';
 
 /// A provider for exporting the whole file directory to a ZIP file.
 ///
@@ -1530,8 +1548,10 @@ final exportWholeFileDirectoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ExportWholeFileDirectoryRef = AutoDisposeFutureProviderRef<void>;
-String _$exportAllHash() => r'46c178f81921b781e4f9ef5a891616c3a6021dd8';
+String _$exportAllHash() => r'52fcb32eac1733551cdac9552aacc1a5fd4fbb4a';
 
 /// A provider for exporting all files in a [directory].
 ///
@@ -1669,6 +1689,8 @@ class ExportAllProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportAllRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `directory` of this provider.
   String get directory;
@@ -1688,7 +1710,7 @@ class _ExportAllProviderElement extends AutoDisposeFutureProviderElement<void>
 }
 
 String _$importWholeFileDirectoryHash() =>
-    r'ef147f5607d6e5592284a667e0775c89f1d6846e';
+    r'b68561946747a14bcaaae483264838a3865b70dd';
 
 /// A provider for importing all directory files from a zip file.
 ///
@@ -1705,6 +1727,8 @@ final importWholeFileDirectoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ImportWholeFileDirectoryRef = AutoDisposeFutureProviderRef<void>;
 String _$exportProgressHash() => r'e345b26f7fc97d563c9a80a694913ad2707efa8a';
 
@@ -1745,4 +1769,4 @@ final importProgressProvider =
 
 typedef _$ImportProgress = AutoDisposeNotifier<double?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

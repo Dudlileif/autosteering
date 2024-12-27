@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-// ignore_for_file: unused_element
-
 import 'dart:collection';
 
 import 'package:autosteering/src/features/common/common.dart';

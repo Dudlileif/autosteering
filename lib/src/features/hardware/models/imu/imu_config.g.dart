@@ -19,9 +19,9 @@ _$ImuConfigImpl _$$ImuConfigImplFromJson(Map<String, dynamic> json) =>
       invertRoll: json['invertRoll'] as bool? ?? false,
       pitchGain: (json['pitchGain'] as num?)?.toDouble() ?? 1,
       rollGain: (json['rollGain'] as num?)?.toDouble() ?? 1,
-      delayReadings: (json['delayReadings'] as num?)?.toInt() ?? 30,
       asymmetricRollGainLeft:
           (json['asymmetricRollGainLeft'] as num?)?.toDouble() ?? null,
+      delayReadings: (json['delayReadings'] as num?)?.toInt() ?? 30,
       useOnlyGnssSyncedReadings:
           json['useOnlyGnssSyncedReadings'] as bool? ?? true,
     );
@@ -37,7 +37,7 @@ Map<String, dynamic> _$$ImuConfigImplToJson(_$ImuConfigImpl instance) =>
       'invertRoll': instance.invertRoll,
       'pitchGain': instance.pitchGain,
       'rollGain': instance.rollGain,
-      'delayReadings': instance.delayReadings,
       'asymmetricRollGainLeft': instance.asymmetricRollGainLeft,
+      'delayReadings': instance.delayReadings,
       'useOnlyGnssSyncedReadings': instance.useOnlyGnssSyncedReadings,
     };

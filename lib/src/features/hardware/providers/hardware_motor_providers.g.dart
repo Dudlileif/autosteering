@@ -7,7 +7,7 @@ part of 'hardware_motor_providers.dart';
 // **************************************************************************
 
 String _$getSteeringHardwareConfigHash() =>
-    r'ad554fce6a8b6e94dfc027a1775e13e7e8cbcbf4';
+    r'6fa4a5d48280ae120133fff6b7ad0130d1ded867';
 
 /// A provider for getting the motor configuration from the hardware.
 ///
@@ -23,9 +23,11 @@ final getSteeringHardwareConfigProvider = FutureProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetSteeringHardwareConfigRef = FutureProviderRef<void>;
 String _$updateSteeringHardwareConfigHash() =>
-    r'3fb2b65dcf0114aa981e637fb9fe406c82f843b5';
+    r'6397d7a756a81a2081aaa49abe875b9637b6c1ed';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -181,6 +183,8 @@ class UpdateSteeringHardwareConfigProvider extends FutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin UpdateSteeringHardwareConfigRef on FutureProviderRef<void> {
   /// The parameter `keyContainer` of this provider.
   SteeringHardwareConfigKeysContainer get keyContainer;
@@ -196,7 +200,7 @@ class _UpdateSteeringHardwareConfigProviderElement
 }
 
 String _$sendSteeringHardwareConfigHash() =>
-    r'ccb57be1a1b3f7e52d91705e954410584a14f483';
+    r'5d4163f872056a0781518790e027656e9abb22e8';
 
 /// A provider for sending the whole motor configuration to the hardware.
 ///
@@ -212,6 +216,8 @@ final sendSteeringHardwareConfigProvider = FutureProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SendSteeringHardwareConfigRef = FutureProviderRef<void>;
 String _$steeringMotorWasTargetHash() =>
     r'72bfced1cb682b28c99afc2943d54c3d6564dcbd';
@@ -233,7 +239,7 @@ final steeringMotorWasTargetProvider =
 
 typedef _$SteeringMotorWasTarget = Notifier<int?>;
 String _$steeringMotorActualRPMHash() =>
-    r'd28dc8f5619531c4cee35a05ff99919fbfb6de7e';
+    r'fd0c697e905907f448c1a8f2bedd21117c27cc48';
 
 /// A provider for the actual current steering motor rpm when using guidance.
 ///
@@ -252,7 +258,7 @@ final steeringMotorActualRPMProvider =
 
 typedef _$SteeringMotorActualRPM = AutoDisposeNotifier<double?>;
 String _$steeringMotorStatusHash() =>
-    r'3f5d060c8911540c0b36aecf0f271c317ade9592';
+    r'ffd12cf433fc9fa20a3dd21053adc04a42275c41';
 
 /// A provider for the steering motor is enabled when using guidance.
 ///
@@ -271,7 +277,7 @@ final steeringMotorStatusProvider =
 
 typedef _$SteeringMotorStatus = AutoDisposeNotifier<MotorStatus?>;
 String _$steeringMotorCurrentScaleHash() =>
-    r'c52c0596ac876f4cccc91c963754d01926e29977';
+    r'230eeaca47163718a89ca86d5c0dbae430036ab3';
 
 /// A provider for the steering motor Stallguard reading.
 ///
@@ -290,7 +296,7 @@ final steeringMotorCurrentScaleProvider =
 
 typedef _$SteeringMotorCurrentScale = AutoDisposeNotifier<int?>;
 String _$steeringMotorStallguardHash() =>
-    r'7a84b1dd93fc377020cb3512aaffd8394c3878af';
+    r'e31f31120e10956d54b5eb5551e6c3bb0e9b2c52';
 
 /// A provider for the steering motor Stallguard reading.
 ///
@@ -309,7 +315,7 @@ final steeringMotorStallguardProvider =
 
 typedef _$SteeringMotorStallguard = AutoDisposeNotifier<int?>;
 String _$steeringMotorEnableCalibrationHash() =>
-    r'62ac03a0e427369fe607e45dae029cf7150f9c41';
+    r'bf1927a63cd541f39f26083a5814353d3e6b412a';
 
 /// A provider whether the steering motor should be in calibration mode.
 ///
@@ -328,7 +334,7 @@ final steeringMotorEnableCalibrationProvider =
 
 typedef _$SteeringMotorEnableCalibration = Notifier<bool>;
 String _$steeringMotorRotationHash() =>
-    r'11750d94c0a381b6e1fd0d1e79f96325d479df5a';
+    r'c9287d0e93e6259bf17cbea3a355e62aa1d22cfb';
 
 /// A provider for the current rotational position of the steering motor.
 ///
@@ -347,7 +353,7 @@ final steeringMotorRotationProvider =
 
 typedef _$SteeringMotorRotation = AutoDisposeNotifier<double?>;
 String _$steeringMotorTargetRotationHash() =>
-    r'eedd69cbbcb7501f6885b762dd8d863afedd121c';
+    r'f2b6a3763c3413fbafc36be6322c16e425985446';
 
 /// A provider for target rotational position of the steering motor,
 /// only used in calibration mode.
@@ -367,7 +373,7 @@ final steeringMotorTargetRotationProvider =
 
 typedef _$SteeringMotorTargetRotation = AutoDisposeNotifier<double?>;
 String _$steeringMotorStepsPerWasIncrementMinToCenterHash() =>
-    r'a1f4849d6caaacc84c516944ca07db181f0b641f';
+    r'a4550c9b069a5d02d0891a2d10f65eaaa9a0b897';
 
 /// A provider for the motor steps per WAS increment between WAS min and center
 /// value.
@@ -389,7 +395,7 @@ final steeringMotorStepsPerWasIncrementMinToCenterProvider =
 typedef _$SteeringMotorStepsPerWasIncrementMinToCenter
     = AutoDisposeNotifier<double?>;
 String _$steeringMotorStepsPerWasIncrementCenterToMaxHash() =>
-    r'e933f5c3156df444f449bdb7731ca19e392e5806';
+    r'8cfdf066aa195f80b253d076abf91fcde7e64eef';
 
 /// A provider for the motor steps per WAS increment between WAS center and max
 /// value.
@@ -411,7 +417,7 @@ final steeringMotorStepsPerWasIncrementCenterToMaxProvider =
 typedef _$SteeringMotorStepsPerWasIncrementCenterToMax
     = AutoDisposeNotifier<double?>;
 String _$steeringHardwareConfiguratorUiOffsetHash() =>
-    r'9c45e360205fad3785b54f56feb9e8af2b9d6ce5';
+    r'9b7a72885bfa15595da20455e44c1493d6f03a1d';
 
 /// A provider for the UI [Offset] for the steering hardware configurator.
 ///
@@ -431,4 +437,4 @@ final steeringHardwareConfiguratorUiOffsetProvider =
 
 typedef _$SteeringHardwareConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -7,7 +7,7 @@ part of 'device_position_providers.dart';
 // **************************************************************************
 
 String _$devicePositionPermissionHash() =>
-    r'4ba94c52e62fddd18373ef89c409a44ba8955e37';
+    r'c2d3b5acc7a4414168237e0443c43736f16a4e9e';
 
 /// A provider for the position of the device.
 ///
@@ -24,9 +24,11 @@ final devicePositionPermissionProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef DevicePositionPermissionRef = AutoDisposeFutureProviderRef<bool>;
 String _$rawDevicePositionStreamHash() =>
-    r'63e28abff8784d72cb720afae4aa2b9accdec03e';
+    r'0de5b1ba8d764378d5f523415109b5717191164d';
 
 /// A provider for the raw position stream from the device.
 ///
@@ -43,9 +45,11 @@ final rawDevicePositionStreamProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef RawDevicePositionStreamRef = AutoDisposeStreamProviderRef<Position>;
 String _$updatePositionFromDeviceHash() =>
-    r'e95cba4d58c7281ab513b62b8a3fde35351993c4';
+    r'a40fc236d4bb3a012b051fcc3731888b4632173e';
 
 /// A provider that sends device position updates to the simulation core
 /// if [DevicePositionAsVehiclePosition] and [devicePositionPermission] allow
@@ -63,6 +67,8 @@ final updatePositionFromDeviceProvider = AutoDisposeProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UpdatePositionFromDeviceRef = AutoDisposeProviderRef<void>;
 String _$devicePositionAsVehiclePositionHash() =>
     r'e3451b702e226ec7e1546e0560ebe5ed9c4f720f';
@@ -84,4 +90,4 @@ final devicePositionAsVehiclePositionProvider =
 
 typedef _$DevicePositionAsVehiclePosition = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

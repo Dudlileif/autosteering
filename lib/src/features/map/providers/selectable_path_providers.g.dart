@@ -7,7 +7,7 @@ part of 'selectable_path_providers.dart';
 // **************************************************************************
 
 String _$selectablePathIndicesHash() =>
-    r'3484252b49a7b5023fd930d2c318a78567bde979';
+    r'7debc9c0e2236ff6afded7e6b14d6ad2eecc900f';
 
 /// A provider for the indices of the [SelectablePathPoints] that lie between
 /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
@@ -25,9 +25,11 @@ final selectablePathIndicesProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SelectablePathIndicesRef = AutoDisposeProviderRef<Iterable<int>?>;
 String _$selectablePathStartToEndHash() =>
-    r'85046254670041e7eb04752ad13aeed4c0e8642e';
+    r'1653c2983c4052920b8b85e8a22e137037eb23ac';
 
 /// A provider for the points of the [SelectablePathPoints] that lie between
 /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
@@ -45,6 +47,8 @@ final selectablePathStartToEndProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SelectablePathStartToEndRef
     = AutoDisposeProviderRef<Iterable<Geographic>?>;
 String _$enableSelectablePathHash() =>
@@ -105,7 +109,7 @@ final selectablePathIndexEndProvider =
 
 typedef _$SelectablePathIndexEnd = AutoDisposeNotifier<int?>;
 String _$selectablePathPointsHash() =>
-    r'06f91cf6b0848eaa312ce04e62f0587ac09f2160';
+    r'b445bba8f4f20fd241673998b207f7751fd725d8';
 
 /// A provider for the selectable path to get indices from.
 ///
@@ -144,4 +148,4 @@ final selectablePathIndexSegmentsProvider = AutoDisposeNotifierProvider<
 typedef _$SelectablePathIndexSegments
     = AutoDisposeNotifier<Iterable<Iterable<int>>?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

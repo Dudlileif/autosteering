@@ -6,7 +6,7 @@ part of 'logging_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loggingFileHash() => r'df6962cb87768eef5f6fc60509ef75955899c87f';
+String _$loggingFileHash() => r'c6bcc79f6e4630020bf30c8ce9ac21a9445723ae';
 
 /// A provider for creating a logging file for the session.
 ///
@@ -21,8 +21,10 @@ final loggingFileProvider = FutureProvider<File?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef LoggingFileRef = FutureProviderRef<File?>;
-String _$loggingHash() => r'e89d83725e8bc15b3b4094f7c528dd257520bb0a';
+String _$loggingHash() => r'e7501a1b838141081caeb41f09ad98c3119e6a52';
 
 /// A provider for the [Logger] that prints the logs to console and a file
 /// if on native platforms.
@@ -38,8 +40,10 @@ final loggingProvider = Provider<Logger>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef LoggingRef = ProviderRef<Logger>;
-String _$exportLogsHash() => r'ec0c87deee3c7e3edad23a05a711288cb9160cee';
+String _$exportLogsHash() => r'1a0452517f5ccf79309ad6c8e13cce8434e22cc5';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -187,6 +191,8 @@ class ExportLogsProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportLogsRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `zip` of this provider.
   bool get zip;
@@ -201,7 +207,7 @@ class _ExportLogsProviderElement extends AutoDisposeFutureProviderElement<void>
 }
 
 String _$daysToKeepLogFilesHash() =>
-    r'4e9befa0bc288ecc17ae2d42ac4e89826b8b600b';
+    r'f45016703c854b34f58586a7e5ab8cb8c7562617';
 
 /// A provider for the number of log files to keep in the logs directory.
 ///
@@ -220,4 +226,4 @@ final daysToKeepLogFilesProvider =
 
 typedef _$DaysToKeepLogFiles = Notifier<int>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

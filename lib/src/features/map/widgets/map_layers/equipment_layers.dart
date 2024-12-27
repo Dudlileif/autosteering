@@ -37,9 +37,7 @@ class EquipmentDrawerLayer extends ConsumerWidget {
 
     return PolygonLayer(
       polygons: [
-        for (final equipment in equipments
-          .map((e) => e.mapPolygons)
-          .nonNulls)
+        for (final equipment in equipments.map((e) => e.mapPolygons).nonNulls)
           ...equipment,
       ],
     );
@@ -62,7 +60,6 @@ class EquipmentDebugLayer extends ConsumerWidget {
         ref.watch(debugEquipmentTrajectorySecondsProvider);
     final trajectoryMinLength =
         ref.watch(debugEquipmentTrajectoryMinLengthProvider);
-
 
     final equipments = ref.watch(
       allEquipmentsProvider.select(
@@ -102,39 +99,39 @@ class EquipmentDebugLayer extends ConsumerWidget {
                 ),
                 ...[
                   for (final equipment in equipments.map((equipment) {
-                  if (equipment.sections.isEmpty) {
-                    return <Polyline>[];
-                  }
-                  final leftMost = equipment
-                      .sectionEdgeTrajectories(
-                        0,
-                        seconds: trajectorySeconds,
-                        minLength: trajectoryMinLength,
-                      )
-                      .left;
-                  final rightMost = equipment
-                      .sectionEdgeTrajectories(
-                        equipment.sections.length - 1,
-                        seconds: trajectorySeconds,
-                        minLength: trajectoryMinLength,
-                      )
-                      .right;
-                  return <Polyline>[
-                    Polyline(
-                      points: leftMost.chain.toGeographicPositions
-                          .map((e) => e.latLng)
-                          .toList(),
-                      strokeWidth: 2,
-                      color: Colors.red,
-                    ),
-                    Polyline(
-                      points: rightMost.chain.toGeographicPositions
-                          .map((e) => e.latLng)
-                          .toList(),
-                      strokeWidth: 2,
-                      color: Colors.red,
-                    ),
-                  ];
+                    if (equipment.sections.isEmpty) {
+                      return <Polyline>[];
+                    }
+                    final leftMost = equipment
+                        .sectionEdgeTrajectories(
+                          0,
+                          seconds: trajectorySeconds,
+                          minLength: trajectoryMinLength,
+                        )
+                        .left;
+                    final rightMost = equipment
+                        .sectionEdgeTrajectories(
+                          equipment.sections.length - 1,
+                          seconds: trajectorySeconds,
+                          minLength: trajectoryMinLength,
+                        )
+                        .right;
+                    return <Polyline>[
+                      Polyline(
+                        points: leftMost.chain.toGeographicPositions
+                            .map((e) => e.latLng)
+                            .toList(),
+                        strokeWidth: 2,
+                        color: Colors.red,
+                      ),
+                      Polyline(
+                        points: rightMost.chain.toGeographicPositions
+                            .map((e) => e.latLng)
+                            .toList(),
+                        strokeWidth: 2,
+                        color: Colors.red,
+                      ),
+                    ];
                   }))
                     ...equipment,
                 ],
@@ -156,13 +153,12 @@ class EquipmentDebugLayer extends ConsumerWidget {
                         point: equipment.turningRadiusCenter!.latLng,
                         radius: equipment.currentTurningRadius!,
                         color: darkTheme
-                            ? Colors.white.withOpacity(0.1)
-                            : Colors.black.withOpacity(0.1),
+                            ? Colors.white.withValues(alpha: 0.1)
+                            : Colors.black.withValues(alpha: 0.1),
                         useRadiusInMeter: true,
                       ),
                     ),
-              if (debugHitches)
-                ...[
+              if (debugHitches) ...[
                 ...equipments.map(
                   (equipment) => CircleMarker(
                     point: equipment.position.latLng,
@@ -170,37 +166,34 @@ class EquipmentDebugLayer extends ConsumerWidget {
                     color: Colors.white,
                   ),
                 ),
-                for (final equipment in equipments
-                    .map(
-                      (equipment) => equipment.hitchPoints.mapIndexed(
-                        (index, hitch) => CircleMarker(
-                          point: hitch.latLng,
-                          radius: 5,
-                          color: [Colors.red, Colors.green, Colors.blue][index],
-                        ),
+                for (final equipment in equipments.map(
+                  (equipment) => equipment.hitchPoints.mapIndexed(
+                    (index, hitch) => CircleMarker(
+                      point: hitch.latLng,
+                      radius: 5,
+                      color: [Colors.red, Colors.green, Colors.blue][index],
+                    ),
                   ),
                 ))
                   ...equipment,
               ],
               if (debugTurning)
-              ...equipments.map(
-                (equipment) => CircleMarker(
-                  point: equipment.workingCenter.latLng,
-                  radius: 5,
-                  color: Colors.yellow,
+                ...equipments.map(
+                  (equipment) => CircleMarker(
+                    point: equipment.workingCenter.latLng,
+                    radius: 5,
+                    color: Colors.yellow,
+                  ),
                 ),
-              ),
-              if (debugSections)
-                ...[
-                for (final equipment in equipments
-                    .map(
-                      (equipment) => equipment.sections.map(
-                        (section) => CircleMarker(
-                          point: equipment.sectionCenter(section.index).latLng,
-                          radius: 4,
-                          color: Colors.orange,
-                        ),
-                      ),
+              if (debugSections) ...[
+                for (final equipment in equipments.map(
+                  (equipment) => equipment.sections.map(
+                    (section) => CircleMarker(
+                      point: equipment.sectionCenter(section.index).latLng,
+                      radius: 4,
+                      color: Colors.orange,
+                    ),
+                  ),
                 ))
                   ...equipment,
               ],

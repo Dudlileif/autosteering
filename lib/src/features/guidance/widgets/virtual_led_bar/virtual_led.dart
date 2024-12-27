@@ -53,14 +53,14 @@ class VirtualLed extends StatelessWidget {
         dimension: size,
         child: active || showWhenInactive
             ? ShaderBuilder(
-          (context, shader, child) => CustomPaint(
-            painter: _VirtualLedPainter(
-              active: active,
-              color: color,
-              shader: shader,
-            ),
-          ),
-          assetKey: 'assets/shaders/glow.frag',
+                (context, shader, child) => CustomPaint(
+                  painter: _VirtualLedPainter(
+                    active: active,
+                    color: color,
+                    shader: shader,
+                  ),
+                ),
+                assetKey: 'assets/shaders/glow.frag',
               )
             : null,
       );
@@ -93,10 +93,10 @@ class _VirtualLedPainter extends CustomPainter {
       shader
         ..setFloat(0, size.width)
         ..setFloat(1, size.height)
-        ..setFloat(2, color.red.toDouble() / 255)
-        ..setFloat(3, color.green.toDouble() / 255)
-        ..setFloat(4, color.blue.toDouble() / 255)
-        ..setFloat(5, color.opacity);
+        ..setFloat(2, color.r)
+        ..setFloat(3, color.g)
+        ..setFloat(4, color.b)
+        ..setFloat(5, color.a);
 
       canvas.drawCircle(
         size.center(Offset.zero),

@@ -110,7 +110,7 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
         cursor: SystemMouseCursors.move,
         child: CustomPaint(
           painter: CirclePainter(
-            color: widget.color.withOpacity(0.35),
+            color: widget.color.withValues(alpha: 0.35),
             radius: radiusToUse * 2,
           ),
         ),
@@ -125,7 +125,7 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
               children: [
                 CustomPaint(
                   painter: CirclePainter(
-                    color: widget.color.withOpacity(0.35),
+                    color: widget.color.withValues(alpha: 0.35),
                     radius: radiusToUse * hoverModifier,
                   ),
                 ),

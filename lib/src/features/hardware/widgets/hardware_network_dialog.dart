@@ -41,7 +41,7 @@ class HardwareNetworkDialog extends ConsumerWidget {
       children: [
         if (Device.isNative) ...[
           if (ref.watch(
-            deviceIPAdressWlanProvider.select((value) => value != null),
+            deviceIPAddressWlanProvider.select((value) => value != null),
           ))
             Consumer(
               builder: (context, ref, child) => Row(
@@ -52,15 +52,16 @@ class HardwareNetworkDialog extends ConsumerWidget {
                     child: SelectableText(
                       '''
 This device WLAN:
-${ref.watch(deviceIPAdressWlanProvider)}''',
+${ref.watch(deviceIPAddressWlanProvider)}''',
                       style: textStyle,
                     ),
                   ),
                 ],
               ),
             ),
-          if (ref
-              .watch(deviceIPAdressAPProvider.select((value) => value != null)))
+          if (ref.watch(
+            deviceIPAddressAPProvider.select((value) => value != null),
+          ))
             Consumer(
               builder: (context, ref, child) => Row(
                 children: [
@@ -70,7 +71,7 @@ ${ref.watch(deviceIPAdressWlanProvider)}''',
                     child: Text(
                       '''
 This device AP host:
-${ref.watch(deviceIPAdressAPProvider)}''',
+${ref.watch(deviceIPAddressAPProvider)}''',
                       style: textStyle,
                     ),
                   ),
@@ -78,7 +79,7 @@ ${ref.watch(deviceIPAdressAPProvider)}''',
               ),
             ),
           if (ref.watch(
-            deviceIPAdressEthernetProvider.select((value) => value != null),
+            deviceIPAddressEthernetProvider.select((value) => value != null),
           ))
             Consumer(
               builder: (context, ref, child) => Row(
@@ -89,7 +90,7 @@ ${ref.watch(deviceIPAdressAPProvider)}''',
                     child: Text(
                       '''
 This device Ethernet:
-${ref.watch(deviceIPAdressEthernetProvider)}''',
+${ref.watch(deviceIPAddressEthernetProvider)}''',
                       style: textStyle,
                     ),
                   ),

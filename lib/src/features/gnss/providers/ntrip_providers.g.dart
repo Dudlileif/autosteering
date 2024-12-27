@@ -6,26 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripClientHash() => r'53b9ef1f087bbb1ab59195d548a7605d9acd4d3e';
-
-/// A provider for creating and listening to an [NtripClient].
-///
-/// The received NTRIP messages will be split into parts and sent to the
-/// connected [HardwareSerial] if connected or the [TcpServer].
-///
-/// Copied from [ntripClient].
-@ProviderFor(ntripClient)
-final ntripClientProvider = FutureProvider<NtripClient?>.internal(
-  ntripClient,
-  name: r'ntripClientProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$ntripClientHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef NtripClientRef = FutureProviderRef<NtripClient?>;
-String _$ntripSourcetableHash() => r'4fc1db0b1322f82b1b176094ad7baf9386fedc33';
+String _$ntripSourcetableHash() => r'0dc8131427a51b7173c46f82b12d19d3d892bd46';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -60,7 +41,7 @@ const ntripSourcetableProvider = NtripSourcetableFamily();
 ///
 /// Copied from [ntripSourcetable].
 class NtripSourcetableFamily
-    extends Family<AsyncValue<Iterable<NtripMountPoint>?>> {
+    extends Family<AsyncValue<Iterable<gnss.NtripMountPoint>?>> {
   /// A provider for the NTRIP caster sourcetable for the currently selected
   /// NTRIP caster server.
   ///
@@ -117,7 +98,7 @@ class NtripSourcetableFamily
 ///
 /// Copied from [ntripSourcetable].
 class NtripSourcetableProvider
-    extends AutoDisposeFutureProvider<Iterable<NtripMountPoint>?> {
+    extends AutoDisposeFutureProvider<Iterable<gnss.NtripMountPoint>?> {
   /// A provider for the NTRIP caster sourcetable for the currently selected
   /// NTRIP caster server.
   ///
@@ -170,7 +151,8 @@ class NtripSourcetableProvider
 
   @override
   Override overrideWith(
-    FutureOr<Iterable<NtripMountPoint>?> Function(NtripSourcetableRef provider)
+    FutureOr<Iterable<gnss.NtripMountPoint>?> Function(
+            NtripSourcetableRef provider)
         create,
   ) {
     return ProviderOverride(
@@ -191,7 +173,8 @@ class NtripSourcetableProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<Iterable<NtripMountPoint>?> createElement() {
+  AutoDisposeFutureProviderElement<Iterable<gnss.NtripMountPoint>?>
+      createElement() {
     return _NtripSourcetableProviderElement(this);
   }
 
@@ -216,8 +199,10 @@ class NtripSourcetableProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin NtripSourcetableRef
-    on AutoDisposeFutureProviderRef<Iterable<NtripMountPoint>?> {
+    on AutoDisposeFutureProviderRef<Iterable<gnss.NtripMountPoint>?> {
   /// The parameter `host` of this provider.
   String get host;
 
@@ -232,7 +217,7 @@ mixin NtripSourcetableRef
 }
 
 class _NtripSourcetableProviderElement
-    extends AutoDisposeFutureProviderElement<Iterable<NtripMountPoint>?>
+    extends AutoDisposeFutureProviderElement<Iterable<gnss.NtripMountPoint>?>
     with NtripSourcetableRef {
   _NtripSourcetableProviderElement(super.provider);
 
@@ -247,7 +232,7 @@ class _NtripSourcetableProviderElement
 }
 
 String _$ntripMountPointsSortedHash() =>
-    r'1d11d8cd14a89069242e34c4a5ad3d3b89c4735c';
+    r'12514026e966d7d199baa88f30771de1b279976c';
 
 /// A provider for sorting the [ntripSourcetable] by their distance to
 /// [MainVehicle].
@@ -261,7 +246,7 @@ const ntripMountPointsSortedProvider = NtripMountPointsSortedFamily();
 ///
 /// Copied from [ntripMountPointsSorted].
 class NtripMountPointsSortedFamily
-    extends Family<AsyncValue<Map<NtripMountPointStream, double?>?>> {
+    extends Family<AsyncValue<Map<gnss.NtripMountPointStream, double?>?>> {
   /// A provider for sorting the [ntripSourcetable] by their distance to
   /// [MainVehicle].
   ///
@@ -317,8 +302,8 @@ class NtripMountPointsSortedFamily
 /// [MainVehicle].
 ///
 /// Copied from [ntripMountPointsSorted].
-class NtripMountPointsSortedProvider
-    extends AutoDisposeFutureProvider<Map<NtripMountPointStream, double?>?> {
+class NtripMountPointsSortedProvider extends AutoDisposeFutureProvider<
+    Map<gnss.NtripMountPointStream, double?>?> {
   /// A provider for sorting the [ntripSourcetable] by their distance to
   /// [MainVehicle].
   ///
@@ -371,7 +356,7 @@ class NtripMountPointsSortedProvider
 
   @override
   Override overrideWith(
-    FutureOr<Map<NtripMountPointStream, double?>?> Function(
+    FutureOr<Map<gnss.NtripMountPointStream, double?>?> Function(
             NtripMountPointsSortedRef provider)
         create,
   ) {
@@ -393,7 +378,7 @@ class NtripMountPointsSortedProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<Map<NtripMountPointStream, double?>?>
+  AutoDisposeFutureProviderElement<Map<gnss.NtripMountPointStream, double?>?>
       createElement() {
     return _NtripMountPointsSortedProviderElement(this);
   }
@@ -419,8 +404,10 @@ class NtripMountPointsSortedProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin NtripMountPointsSortedRef
-    on AutoDisposeFutureProviderRef<Map<NtripMountPointStream, double?>?> {
+    on AutoDisposeFutureProviderRef<Map<gnss.NtripMountPointStream, double?>?> {
   /// The parameter `host` of this provider.
   String get host;
 
@@ -436,7 +423,8 @@ mixin NtripMountPointsSortedRef
 
 class _NtripMountPointsSortedProviderElement
     extends AutoDisposeFutureProviderElement<
-        Map<NtripMountPointStream, double?>?> with NtripMountPointsSortedRef {
+        Map<gnss.NtripMountPointStream, double?>?>
+    with NtripMountPointsSortedRef {
   _NtripMountPointsSortedProviderElement(super.provider);
 
   @override
@@ -449,9 +437,9 @@ class _NtripMountPointsSortedProviderElement
   String? get password => (origin as NtripMountPointsSortedProvider).password;
 }
 
-String _$ntripEnabledHash() => r'7db0f1ffa7e40652dcaccbfa3608387db4eafad3';
+String _$ntripEnabledHash() => r'206cb85ab493065d30e12b6e52e6f98271870749';
 
-/// A provider for whether the [ntripClient] provider should run.
+/// A provider for whether the [NtripClient] provider should run.
 ///
 /// Copied from [NtripEnabled].
 @ProviderFor(NtripEnabled)
@@ -465,9 +453,9 @@ final ntripEnabledProvider = NotifierProvider<NtripEnabled, bool>.internal(
 );
 
 typedef _$NtripEnabled = Notifier<bool>;
-String _$ntripProfilesHash() => r'54eca617c65465c369ff273ba2c99bfbbc6bbf33';
+String _$ntripProfilesHash() => r'1bd1d467e9ec0fc4b9065683829301ccd13989df';
 
-/// A provider for the stored [NtripProfile]s.
+/// A provider for the stored [gnss.NtripProfile]s.
 ///
 /// Copied from [NtripProfiles].
 @ProviderFor(NtripProfiles)
@@ -484,9 +472,9 @@ final ntripProfilesProvider =
 
 typedef _$NtripProfiles = Notifier<List<NtripProfile>>;
 String _$activeNtripProfileHash() =>
-    r'e673a2647c82d288d050eae0df456165a43e1603';
+    r'e61525ad00b1ad8b510511056cd35c4801dfb75b';
 
-/// A provider for the active [NtripProfile], if there is one.
+/// A provider for the active [gnss.NtripProfile], if there is one.
 ///
 /// Copied from [ActiveNtripProfile].
 @ProviderFor(ActiveNtripProfile)
@@ -521,12 +509,12 @@ final ntripDataUsageSessionProvider =
 );
 
 typedef _$NtripDataUsageSession = Notifier<int?>;
-String _$ntripAliveHash() => r'a073b2419fdf2a96027eeee50c84ad2610a3fe4b';
+String _$ntripAliveHash() => r'b9e6ac1073b9f2d29c8bc014e5b038f092bc9d7e';
 
-/// A provider for telling whether the [ntripClient] is receiving data.
+/// A provider for telling whether the [NtripClient] is receiving data.
 ///
 /// If not set to true in the last 5 seconds, it will invalidate itself and the
-/// [ntripClient].
+/// [NtripClient].
 ///
 /// Copied from [NtripAlive].
 @ProviderFor(NtripAlive)
@@ -540,8 +528,28 @@ final ntripAliveProvider = NotifierProvider<NtripAlive, bool>.internal(
 );
 
 typedef _$NtripAlive = Notifier<bool>;
+String _$ntripClientHash() => r'a54f76fcb42d72cc74a9b6b17ef79ea3dcf7b52c';
+
+/// A provider for creating and listening to an [NtripClient].
+///
+/// The received NTRIP messages will be split into parts and sent to the
+/// connected [HardwareSerial] if connected or the [TcpServer].
+///
+/// Copied from [NtripClient].
+@ProviderFor(NtripClient)
+final ntripClientProvider =
+    AsyncNotifierProvider<NtripClient, gnss.NtripClient?>.internal(
+  NtripClient.new,
+  name: r'ntripClientProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$ntripClientHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NtripClient = AsyncNotifier<gnss.NtripClient?>;
 String _$ntripDataUsageByMonthHash() =>
-    r'df57fee66524b28d3148555e618e28e8f7214068';
+    r'115cd1c280851c38f5e54a1d0aeadd60f26f5632';
 
 /// A provider for a map of all recorded months with their corresponding
 /// data usage.
@@ -561,4 +569,4 @@ final ntripDataUsageByMonthProvider =
 
 typedef _$NtripDataUsageByMonth = Notifier<Map<String, int>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

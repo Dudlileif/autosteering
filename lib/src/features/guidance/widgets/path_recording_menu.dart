@@ -70,7 +70,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
       child: SizedBox(
         width: 300,
         child: Scaffold(
-          backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
+          backgroundColor: theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
           appBar: AppBar(
             scrolledUnderElevation: 0,
             primary: false,

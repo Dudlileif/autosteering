@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart' show Geographic;
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,7 +26,7 @@ part 'device_position_providers.g.dart';
 
 /// A provider for the position of the device.
 @riverpod
-FutureOr<bool> devicePositionPermission(DevicePositionPermissionRef ref) async {
+FutureOr<bool> devicePositionPermission(Ref ref) async {
   bool serviceEnabled;
   LocationPermission permission;
 
@@ -84,7 +85,7 @@ class DevicePositionAsVehiclePosition
 
 /// A provider for the raw position stream from the device.
 @riverpod
-Stream<Position> rawDevicePositionStream(RawDevicePositionStreamRef ref) =>
+Stream<Position> rawDevicePositionStream(Ref ref) =>
     Geolocator.getPositionStream(
       locationSettings: Platform.isAndroid
           ? AndroidSettings(intervalDuration: const Duration(seconds: 1))
@@ -95,7 +96,7 @@ Stream<Position> rawDevicePositionStream(RawDevicePositionStreamRef ref) =>
 /// if [DevicePositionAsVehiclePosition] and [devicePositionPermission] allow
 /// it.
 @riverpod
-void updatePositionFromDevice(UpdatePositionFromDeviceRef ref) {
+void updatePositionFromDevice(Ref ref) {
   final enabled = ref.watch(devicePositionAsVehiclePositionProvider);
   if (enabled) {
     final permission = ref.watch(devicePositionPermissionProvider).when(

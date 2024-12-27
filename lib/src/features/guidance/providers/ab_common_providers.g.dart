@@ -7,7 +7,7 @@ part of 'ab_common_providers.dart';
 // **************************************************************************
 
 String _$abTrackingPerpendicularDistanceHash() =>
-    r'a51697663b64013ac069b5660ad6af160f4a3160';
+    r'5921e2605443b8d72a236ff8ad777d5749e6f6a8';
 
 /// A provider for the perpendicular distance from the AB tracking line
 /// to the [MainVehicle].
@@ -25,8 +25,10 @@ final abTrackingPerpendicularDistanceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AbTrackingPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
-String _$activeABConfigHash() => r'959ce5eccf18a300b8a44bd4762fcd0216c69cbf';
+String _$activeABConfigHash() => r'a04ac3f20818e3dcb0c4797174bada5f38cfa463';
 
 /// A provider for the currently active AB configuration.
 ///
@@ -42,9 +44,11 @@ final activeABConfigProvider = Provider<ABConfig>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ActiveABConfigRef = ProviderRef<ABConfig>;
 String _$loadABTrackingFromFileHash() =>
-    r'5c5a10841d8aa7cf0bf00cba2b71839bec099e04';
+    r'9c089210d74c10fa43ce0aea577e4c15834bbbce';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -199,6 +203,8 @@ class LoadABTrackingFromFileProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LoadABTrackingFromFileRef on AutoDisposeFutureProviderRef<ABTracking?> {
   /// The parameter `path` of this provider.
   String get path;
@@ -213,7 +219,7 @@ class _LoadABTrackingFromFileProviderElement
   String get path => (origin as LoadABTrackingFromFileProvider).path;
 }
 
-String _$saveABTrackingHash() => r'ff83a3d349702c13606bacfe20f8d43adeaa7eb7';
+String _$saveABTrackingHash() => r'c506e724cb81ab345de1cfd7cbb168f0ffea9238';
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -375,6 +381,8 @@ class SaveABTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SaveABTrackingRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `tracking` of this provider.
   ABTracking get tracking;
@@ -398,7 +406,7 @@ class _SaveABTrackingProviderElement
   bool get downloadIfWeb => (origin as SaveABTrackingProvider).downloadIfWeb;
 }
 
-String _$exportABTrackingHash() => r'233695d00d8c64e058d9daef28aa09bb6cd1a683';
+String _$exportABTrackingHash() => r'b0cc0c89fb932d413c3f4d2a83013a4d44dbbdc5';
 
 /// A provider for exporting [tracking] to a file.
 ///
@@ -560,6 +568,8 @@ class ExportABTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportABTrackingRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `tracking` of this provider.
   ABTracking get tracking;
@@ -583,7 +593,7 @@ class _ExportABTrackingProviderElement
   bool get downloadIfWeb => (origin as ExportABTrackingProvider).downloadIfWeb;
 }
 
-String _$savedABTrackingsHash() => r'344fce88179ee4b2f7899f58055e87b69dfde3b0';
+String _$savedABTrackingsHash() => r'73c08ce1c412310a32bd6feae3f91c9b28d57540';
 
 /// A provider for reading and holding all the saved [ABTracking] in the
 /// user file directory.
@@ -600,8 +610,10 @@ final savedABTrackingsProvider = FutureProvider<List<ABTracking>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SavedABTrackingsRef = FutureProviderRef<List<ABTracking>>;
-String _$deleteABTrackingHash() => r'e2692dd4e93ad4703f4026246d53fc4fd1f2da5d';
+String _$deleteABTrackingHash() => r'7daf5a78617a7c3d266de2346bb852f8ce8bcaef';
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///
@@ -763,6 +775,8 @@ class DeleteABTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DeleteABTrackingRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `tracking` of this provider.
   ABTracking get tracking;
@@ -786,7 +800,7 @@ class _DeleteABTrackingProviderElement
   bool get downloadIfWeb => (origin as DeleteABTrackingProvider).downloadIfWeb;
 }
 
-String _$importABTrackingHash() => r'b24f24d89432558ed32c8968160926bd9844660e';
+String _$importABTrackingHash() => r'e15ecf34fb74dd34dd59edd5229148703df47aff';
 
 /// A provider for importing an [ABTracking] from a file and applying it to
 /// the [ConfiguredABTracking] provider.
@@ -804,6 +818,8 @@ final importABTrackingProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ImportABTrackingRef = AutoDisposeFutureProviderRef<ABTracking?>;
 String _$currentABTrackingTypeHash() =>
     r'6802edd8d8bf0a49686c0f342ef11b30b92d915d';
@@ -1027,7 +1043,7 @@ final aBOffsetOppositeTurnProvider =
 
 typedef _$ABOffsetOppositeTurn = Notifier<bool>;
 String _$aBSnapToClosestLineHash() =>
-    r'87a652e9575093946da539c809072bcbbf4ccfe3';
+    r'6f02dc850fb6546352f016266ba7445aef21c9f0';
 
 /// A provider for whether the AB-tracking should snap to the closest line.
 ///
@@ -1046,7 +1062,7 @@ final aBSnapToClosestLineProvider =
 
 typedef _$ABSnapToClosestLine = Notifier<bool>;
 String _$configuredABTrackingHash() =>
-    r'a527401d61143262c66095bbe8017988f3b2b322';
+    r'5b086ad383e613ff2964c0e97a92c9282bb892f1';
 
 /// A provider for the currently configured [ABTracking].
 ///
@@ -1083,7 +1099,7 @@ final configuredMenuABTrackingProvider =
 );
 
 typedef _$ConfiguredMenuABTracking = AsyncNotifier<ABTracking?>;
-String _$displayABTrackingHash() => r'c87af4669ab69a5d1d63dbfe52b435458b6de676';
+String _$displayABTrackingHash() => r'32b5e8257bbed076839d7d1e065d14572b2d4b2f';
 
 /// A provider for the [ABTracking] to display.
 ///
@@ -1101,7 +1117,7 @@ final displayABTrackingProvider =
 );
 
 typedef _$DisplayABTracking = Notifier<ABTracking?>;
-String _$aBPointAHash() => r'e252191ee1e97e99fda0adb571430f78018385d5';
+String _$aBPointAHash() => r'512153928742a2f485f7f112a57cb15f31979475';
 
 /// A provider for the starting point A of an AB-line.
 ///
@@ -1117,7 +1133,7 @@ final aBPointAProvider = NotifierProvider<ABPointA, WayPoint?>.internal(
 );
 
 typedef _$ABPointA = Notifier<WayPoint?>;
-String _$aBPointBHash() => r'7d313dff3f305bd28b49fdee7268389566b35b42';
+String _$aBPointBHash() => r'b215b17212fbadc46b9f9cdeef89b6808953d719';
 
 /// A provider for the ending point B of an AB-line.
 ///
@@ -1186,4 +1202,4 @@ final aBTrackingShowAllLinesProvider =
 
 typedef _$ABTrackingShowAllLines = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

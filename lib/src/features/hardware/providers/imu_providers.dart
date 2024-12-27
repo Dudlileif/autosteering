@@ -32,7 +32,7 @@ class ImuCurrentFrequency extends _$ImuCurrentFrequency {
 
   @override
   double? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 350),
@@ -54,7 +54,7 @@ class ImuCurrentReading extends _$ImuCurrentReading {
 
   @override
   ImuReading? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
         const Duration(milliseconds: 350),
@@ -87,16 +87,15 @@ class ShowIMUConfig extends _$ShowIMUConfig {
 class ImuConfiguratorUiOffset extends _$ImuConfiguratorUiOffset {
   @override
   Offset build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && next != previous) {
-          ref.read(settingsProvider.notifier).update(
-                SettingsKey.uiImuConfiguratorOffset,
-                next.toJson(),
-              );
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && next != previous) {
+        ref.read(settingsProvider.notifier).update(
+              SettingsKey.uiImuConfiguratorOffset,
+              next.toJson(),
+            );
+      }
+    });
 
     final setting = ref
         .read(settingsProvider.notifier)

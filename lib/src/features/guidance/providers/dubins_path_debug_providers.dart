@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dubins_path_debug_providers.g.dart';
@@ -79,7 +80,7 @@ class DubinsPathDebugPathType extends _$DubinsPathDebugPathType {
 
 /// The current [DubinsPath] object that we can debug.
 @riverpod
-DubinsPath? debugDubinsPath(DebugDubinsPathRef ref) {
+DubinsPath? debugDubinsPath(Ref ref) {
   final start = ref.watch(dubinsPathDebugStartPointProvider);
   final end = ref.watch(dubinsPathDebugEndPointProvider);
 

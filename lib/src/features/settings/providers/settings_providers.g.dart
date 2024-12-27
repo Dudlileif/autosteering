@@ -6,7 +6,7 @@ part of 'settings_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$settingsFileHash() => r'5ae326d6deaa1de3aae96f532d59da0ed6e6106a';
+String _$settingsFileHash() => r'a6f310725b72ef429d2134c232eb973da492a4c3';
 
 /// A provider for the main settings file for the application.
 ///
@@ -21,8 +21,10 @@ final settingsFileProvider = FutureProvider<File>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SettingsFileRef = FutureProviderRef<File>;
-String _$webLocalStorageHash() => r'4539d261f98b68fbd255a7cbbd3a04f3947cc9ad';
+String _$webLocalStorageHash() => r'50d83eb101a9fb85659a1001a54480b4c30a3c85';
 
 /// A provider for the local storage data map for the web version of the
 /// application.
@@ -39,8 +41,10 @@ final webLocalStorageProvider = Provider<Storage>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef WebLocalStorageRef = ProviderRef<Storage>;
-String _$exportSettingsHash() => r'c284b0636834a1ec733c69e5897fd380c7c8320c';
+String _$exportSettingsHash() => r'a30f6a519a4fe93718a98f15d053a84a61ef82d1';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -211,6 +215,8 @@ class ExportSettingsProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportSettingsRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `overrideName` of this provider.
   String? get overrideName;
@@ -235,7 +241,7 @@ class _ExportSettingsProviderElement
       (origin as ExportSettingsProvider).removeSensitiveData;
 }
 
-String _$importSettingsHash() => r'ee37b009651b7a77858532c8e55772093036a790';
+String _$importSettingsHash() => r'7fd98dbc99f40dd856c455a77da9f6794b426f66';
 
 /// A provider for importing [Settings] from a file.
 ///
@@ -252,8 +258,10 @@ final importSettingsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ImportSettingsRef = AutoDisposeFutureProviderRef<Map<String, dynamic>?>;
-String _$reloadAllSettingsHash() => r'f5a7dee5a0a5a6cc8dfcb1a0a1f7fdf76f8787da';
+String _$reloadAllSettingsHash() => r'cda9fc34c9c7c0205dce8fe1dd421b55ecabeb0c';
 
 /// A provider for rebuilding all providers that reads [Settings] during the
 /// build method.
@@ -270,8 +278,10 @@ final reloadAllSettingsProvider = Provider<String>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ReloadAllSettingsRef = ProviderRef<String>;
-String _$settingsHash() => r'2f7ad3b3ff767a50749c52334fb8ef8355c9a1a5';
+String _$settingsHash() => r'f3ac848cd62beea67a4251253bd530c81d2089e8';
 
 /// A provider for the settings map for the application.
 ///
@@ -307,4 +317,4 @@ final enableDebugModeProvider =
 
 typedef _$EnableDebugMode = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

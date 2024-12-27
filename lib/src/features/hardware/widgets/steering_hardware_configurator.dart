@@ -48,7 +48,8 @@ class SteeringHardwareConfigurator extends StatelessWidget {
         child: DefaultTabController(
           length: _tabs.length,
           child: Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor.withOpacity(0.7),
+            backgroundColor:
+                theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
             appBar: AppBar(
               primary: false,
               scrolledUnderElevation: 0,

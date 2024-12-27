@@ -6,7 +6,7 @@ part of 'simulator_core_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$initializeSimCoreHash() => r'699cb4d45e3dafd307104e0b86b081eb9b5d9ca0';
+String _$initializeSimCoreHash() => r'b6782d15711cd9826e18b550b287d5e5d7f6c0c3';
 
 /// Sends initial parameters to  the sim core.
 ///
@@ -22,9 +22,11 @@ final initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef InitializeSimCoreRef = AutoDisposeProviderRef<void>;
 String _$commonSimCoreMessageHandlerHash() =>
-    r'9e3b5d950b5f6f66c06b9af79451a66507e9699c';
+    r'2c49713add585966458e235a78b8ce41b0f480d9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -203,6 +205,8 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin CommonSimCoreMessageHandlerRef on AutoDisposeProviderRef<void> {
   /// The parameter `message` of this provider.
   ({
@@ -234,7 +238,7 @@ class _CommonSimCoreMessageHandlerProviderElement
 }
 
 String _$simulatorUpdateFrequencyHash() =>
-    r'ce52ab296a84403c6d6a1e5b914aa429bfe5263e';
+    r'243ddb12de06609631629d1655e12c7d0b5816f5';
 
 /// A provider for the target simulation update frequency.
 ///
@@ -274,7 +278,7 @@ final simCoreDebugAllowLongBreaksProvider =
 
 typedef _$SimCoreDebugAllowLongBreaks = Notifier<bool>;
 String _$simCoreAllowManualInputHash() =>
-    r'2213c22577fd3ce0573530d148c9587950d0c829';
+    r'2ee429d37ec0314b613ab9c199e5990a6079793e';
 
 /// A provider for whether the sim core should allow manual inputs from the
 /// user, i.e. not only sensors from the vehicle.
@@ -294,7 +298,7 @@ final simCoreAllowManualInputProvider =
 
 typedef _$SimCoreAllowManualInput = Notifier<bool>;
 String _$simCoreAllowInterpolationHash() =>
-    r'531b8b3c7473c663e3c9b2e85cbe7d61d3ac6b5c';
+    r'1aaf9e232d7baa934a060672734142c14272e4c7';
 
 /// A provider for whether the sim core should allow interpolation steps
 /// between the hardware GNSS updates.
@@ -314,7 +318,7 @@ final simCoreAllowInterpolationProvider =
 
 typedef _$SimCoreAllowInterpolation = Notifier<bool>;
 String _$simCoreVehicleAutoCenterSteeringHash() =>
-    r'09878b390fdc62db0b2a203c86e370237a1253db';
+    r'4796bcf08585c70c193cf82df4fb693dc16be643';
 
 /// A provider for whether the steering automatically should recenter when
 /// no input is provided.
@@ -334,7 +338,7 @@ final simCoreVehicleAutoCenterSteeringProvider =
 
 typedef _$SimCoreVehicleAutoCenterSteering = Notifier<bool>;
 String _$simCoreVehicleAutoSlowDownHash() =>
-    r'7f250dcdb91c38cfe35b3255536364ee43014d5d';
+    r'183d2cfaf7042551c3c3b097ee622884f3c2cc46';
 
 /// A provider for whether the vehicle should slow down when no input is
 /// provided.
@@ -354,4 +358,4 @@ final simCoreVehicleAutoSlowDownProvider =
 
 typedef _$SimCoreVehicleAutoSlowDown = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

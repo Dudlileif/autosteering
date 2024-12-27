@@ -31,7 +31,7 @@ class FileHandler {
     required String exportPath,
   }) async* {
     Future<void> worker(SendPort sendPort) async {
-      ZipFileEncoder().zipDirectory(
+      await ZipFileEncoder().zipDirectory(
         Directory(dirPath),
         filename: exportPath,
         onProgress: sendPort.send,

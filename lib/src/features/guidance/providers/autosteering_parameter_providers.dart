@@ -43,16 +43,15 @@ class AutosteeringConfiguratorUiOffset
     extends _$AutosteeringConfiguratorUiOffset {
   @override
   Offset build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && next != previous) {
-          ref.read(settingsProvider.notifier).update(
-                SettingsKey.uiAutosteeringConfiguratorOffset,
-                next.toJson(),
-              );
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && next != previous) {
+        ref.read(settingsProvider.notifier).update(
+              SettingsKey.uiAutosteeringConfiguratorOffset,
+              next.toJson(),
+            );
+      }
+    });
 
     final setting = ref
         .read(settingsProvider.notifier)

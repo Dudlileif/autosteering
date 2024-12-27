@@ -19,7 +19,9 @@ import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/field/field.dart';
-import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/guidance/guidance.dart'
+    hide ABLine, APlusLine;
+import 'package:autosteering/src/features/guidance/guidance.dart' as guidance;
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -28,88 +30,94 @@ part 'ab_line_providers.g.dart';
 
 /// A provider for the AB-line.
 @Riverpod(keepAlive: true)
-Future<ABLine?> aBLine(ABLineRef ref) async {
-  ref.listenSelf((previous, next) {
-    next.when(
-      data: (data) {
-        if (data != null) {
-          ref.listenSelf((previous, next) {
-            Logger.instance.i(
-              '''ABLine created: A:${data.start}, B: ${data.end}, width:${data.width} m, sideways offset: ${data.baseLineSidewaysOffset} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
-            );
-          });
-        } else if (previous?.value != null && data == null) {
-          Logger.instance.i('ABLine deleted.');
-        }
-      },
-      error: (error, stackTrace) => Logger.instance
-          .e('Failed to create ABLine.', error: error, stackTrace: stackTrace),
-      loading: () {},
-    );
-  });
-
-  final a = ref.watch(aBPointAProvider);
-  final b = ref.watch(aBPointBProvider);
-
-  if (a != null && b != null) {
-    final points = [
-      a.copyWith(bearing: a.initialBearingToRhumb(b)),
-      b.copyWith(bearing: a.finalBearingToRhumb(b)),
-    ];
-    final boundary = ref.read(
-          configuredABTrackingProvider.select((value) => value?.boundary),
-        ) ??
-        ref.watch(bufferedFieldProvider).when(
-              data: (data) =>
-                  data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
-              error: (error, stackTrace) => null,
-              loading: () => null,
-            );
-    final width = ref.watch(aBWidthProvider);
-    final sidewaysOffset = ref.watch(aBSidewaysOffsetProvider);
-    final turningRadius = ref.read(aBTurningRadiusProvider);
-    final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);
-    final limitMode = ref.read(aBTrackingLimitModeProvider);
-
-    if (kIsWeb) {
-      return ABLine(
-        baseLine: points,
-        boundary: boundary,
-        width: width,
-        turningRadius: turningRadius,
-        turnOffsetMinSkips: turnOffsetMinSkips,
-        limitMode: limitMode,
-        baseLineSidewaysOffset: sidewaysOffset,
+class ABLine extends _$ABLine {
+  @override
+  Future<guidance.ABLine?> build() async {
+    listenSelf((previous, next) {
+      next.when(
+        data: (data) {
+          if (data != null) {
+            listenSelf((previous, next) {
+              Logger.instance.i(
+                '''ABLine created: A:${data.start}, B: ${data.end}, width:${data.width} m, sideways offset: ${data.baseLineSidewaysOffset} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
+              );
+            });
+          } else if (previous?.value != null && data == null) {
+            Logger.instance.i('ABLine deleted.');
+          }
+        },
+        error: (error, stackTrace) => Logger.instance.e(
+          'Failed to create ABLine.',
+          error: error,
+          stackTrace: stackTrace,
+        ),
+        loading: () {},
       );
+    });
+
+    final a = ref.watch(aBPointAProvider);
+    final b = ref.watch(aBPointBProvider);
+
+    if (a != null && b != null) {
+      final points = [
+        a.copyWith(bearing: a.initialBearingToRhumb(b)),
+        b.copyWith(bearing: a.finalBearingToRhumb(b)),
+      ];
+      final boundary = ref.read(
+            configuredABTrackingProvider.select((value) => value?.boundary),
+          ) ??
+          ref.watch(bufferedFieldProvider).when(
+                data: (data) =>
+                    data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
+                error: (error, stackTrace) => null,
+                loading: () => null,
+              );
+      final width = ref.watch(aBWidthProvider);
+      final sidewaysOffset = ref.watch(aBSidewaysOffsetProvider);
+      final turningRadius = ref.read(aBTurningRadiusProvider);
+      final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);
+      final limitMode = ref.read(aBTrackingLimitModeProvider);
+
+      if (kIsWeb) {
+        return guidance.ABLine(
+          baseLine: points,
+          boundary: boundary,
+          width: width,
+          turningRadius: turningRadius,
+          turnOffsetMinSkips: turnOffsetMinSkips,
+          limitMode: limitMode,
+          baseLineSidewaysOffset: sidewaysOffset,
+        );
+      }
+      final json = await Future(
+        () => jsonEncode({
+          'base_line': points,
+          'boundary': boundary?.toText(),
+          'width': width,
+          'turning_radius': turningRadius,
+          'turn_offset_skips': turnOffsetMinSkips,
+          'limit_mode': limitMode,
+          'calculate_lines': true,
+          'base_line_sideways_offset': sidewaysOffset,
+        }),
+      );
+
+      final creation = await compute(
+        ABTracking.createAndReturnABTrackingString,
+        json,
+        debugLabel: 'ABLine creation isolate',
+      );
+
+      final data = jsonDecode(creation);
+      if (data is Map) {
+        final abLine =
+            guidance.ABLine.fromJson(Map<String, dynamic>.from(data));
+        return abLine;
+      }
     }
-    final json = await Future(
-      () => jsonEncode({
-        'base_line': points,
-        'boundary': boundary?.toText(),
-        'width': width,
-        'turning_radius': turningRadius,
-        'turn_offset_skips': turnOffsetMinSkips,
-        'limit_mode': limitMode,
-        'calculate_lines': true,
-        'base_line_sideways_offset': sidewaysOffset,
 
-      }),
-    );
-
-    final creation = await compute(
-      ABTracking.createAndReturnABTrackingString,
-      json,
-      debugLabel: 'ABLine creation isolate',
-    );
-
-    final data = jsonDecode(creation);
-    if (data is Map) {
-      final abLine = ABLine.fromJson(Map<String, dynamic>.from(data));
-      return abLine;
-    }
+    return null;
   }
-
-  return null;
 }
 
 /// A provider for the A+-line bearing.
@@ -124,83 +132,90 @@ class APlusLineBearing extends _$APlusLineBearing {
 
 /// A provider for the A+-line.
 @Riverpod(keepAlive: true)
-Future<APlusLine?> aPlusLine(APlusLineRef ref) async {
-  ref.listenSelf((previous, next) {
-    next.when(
-      data: (data) {
-        if (data != null) {
-          ref.listenSelf((previous, next) {
-            Logger.instance.i(
-              '''APlusLine created: A:${data.start}, width: ${data.width} m, sideways offset: ${data.baseLineSidewaysOffset} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
-            );
-          });
-        } else if (previous?.value != null && data == null) {
-          Logger.instance.i('APlusLine deleted.');
-        }
-      },
-      error: (error, stackTrace) => Logger.instance
-          .e('Failed to create ABLine.', error: error, stackTrace: stackTrace),
-      loading: () {},
-    );
-  });
-
-  final bearing = ref.watch(aPlusLineBearingProvider) ??
-      ref.read(mainVehicleProvider.select((value) => value.bearing));
-  final start = ref.watch(aBPointAProvider)?.copyWith(bearing: bearing);
-
-  if (start != null) {
-    final boundary = ref.read(
-          configuredABTrackingProvider.select((value) => value?.boundary),
-        ) ??
-        ref.watch(bufferedFieldProvider).when(
-              data: (data) =>
-                  data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
-              error: (error, stackTrace) => null,
-              loading: () => null,
-            );
-    final width = ref.watch(aBWidthProvider);
-    final sidewaysOffset = ref.watch(aBSidewaysOffsetProvider);
-    final turningRadius = ref.read(aBTurningRadiusProvider);
-    final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);
-    final limitMode = ref.read(aBTrackingLimitModeProvider);
-
-    if (kIsWeb) {
-      return APlusLine(
-        start: start,
-        boundary: boundary,
-        width: width,
-        turningRadius: turningRadius,
-        turnOffsetMinSkips: turnOffsetMinSkips,
-        limitMode: limitMode,
-        baseLineSidewaysOffset: sidewaysOffset,
+class APlusLine extends _$APlusLine {
+  @override
+  Future<guidance.APlusLine?> build() async {
+    listenSelf((previous, next) {
+      next.when(
+        data: (data) {
+          if (data != null) {
+            listenSelf((previous, next) {
+              Logger.instance.i(
+                '''APlusLine created: A:${data.start}, width: ${data.width} m, sideways offset: ${data.baseLineSidewaysOffset} m, bounded: ${data.boundary != null}, offsetsInsideBoundary: ${data.offsetsInsideBoundary?.toList()}''',
+              );
+            });
+          } else if (previous?.value != null && data == null) {
+            Logger.instance.i('APlusLine deleted.');
+          }
+        },
+        error: (error, stackTrace) => Logger.instance.e(
+          'Failed to create ABLine.',
+          error: error,
+          stackTrace: stackTrace,
+        ),
+        loading: () {},
       );
-    }
-    final json = await Future(
-      () => jsonEncode({
-        'start': start,
-        'boundary': boundary?.toText(),
-        'width': width,
-        'turning_radius': turningRadius,
-        'turn_offset_skips': turnOffsetMinSkips,
-        'limit_mode': limitMode,
-        'calculate_lines': true,
-        'type': 'A+ Line',
-        'base_line_sideways_offset': sidewaysOffset,
-      }),
-    );
+    });
 
-    final creation = await compute(
-      ABTracking.createAndReturnABTrackingString,
-      json,
-      debugLabel: 'A+ Line creation isolate',
-    );
+    final bearing = ref.watch(aPlusLineBearingProvider) ??
+        ref.read(mainVehicleProvider.select((value) => value.bearing));
+    final start = ref.watch(aBPointAProvider)?.copyWith(bearing: bearing);
 
-    final data = jsonDecode(creation);
-    if (data is Map) {
-      final aPlusLine = APlusLine.fromJson(Map<String, dynamic>.from(data));
-      return aPlusLine;
+    if (start != null) {
+      final boundary = ref.read(
+            configuredABTrackingProvider.select((value) => value?.boundary),
+          ) ??
+          ref.watch(bufferedFieldProvider).when(
+                data: (data) =>
+                    data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
+                error: (error, stackTrace) => null,
+                loading: () => null,
+              );
+      final width = ref.watch(aBWidthProvider);
+      final sidewaysOffset = ref.watch(aBSidewaysOffsetProvider);
+      final turningRadius = ref.read(aBTurningRadiusProvider);
+      final turnOffsetMinSkips = ref.read(aBTurnOffsetMinSkipsProvider);
+      final limitMode = ref.read(aBTrackingLimitModeProvider);
+
+      if (kIsWeb) {
+        return guidance.APlusLine(
+          start: start,
+          boundary: boundary,
+          width: width,
+          turningRadius: turningRadius,
+          turnOffsetMinSkips: turnOffsetMinSkips,
+          limitMode: limitMode,
+          baseLineSidewaysOffset: sidewaysOffset,
+        );
+      }
+      final json = await Future(
+        () => jsonEncode({
+          'start': start,
+          'boundary': boundary?.toText(),
+          'width': width,
+          'turning_radius': turningRadius,
+          'turn_offset_skips': turnOffsetMinSkips,
+          'limit_mode': limitMode,
+          'calculate_lines': true,
+          'type': 'A+ Line',
+          'base_line_sideways_offset': sidewaysOffset,
+        }),
+      );
+
+      final creation = await compute(
+        ABTracking.createAndReturnABTrackingString,
+        json,
+        debugLabel: 'A+ Line creation isolate',
+      );
+
+      final data = jsonDecode(creation);
+      if (data is Map) {
+        final aPlusLine =
+            guidance.APlusLine.fromJson(Map<String, dynamic>.from(data));
+        return aPlusLine;
+      }
     }
+
+    return null;
   }
-
-  return null;
 }

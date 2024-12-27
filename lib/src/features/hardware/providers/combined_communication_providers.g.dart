@@ -7,7 +7,7 @@ part of 'combined_communication_providers.dart';
 // **************************************************************************
 
 String _$combinedNativeNetworkHash() =>
-    r'42aa7b4ca8e5462f3b950bb00975a1424aee0ba0';
+    r'fdf61f1ce741b7a893b7d96cffc2471ce92fcd97';
 
 /// A provider for combining the native network providers that need to be
 /// watched.
@@ -24,8 +24,10 @@ final _combinedNativeNetworkProvider = AutoDisposeProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef _CombinedNativeNetworkRef = AutoDisposeProviderRef<void>;
-String _$combinedSerialHash() => r'1be0dcfb897a650492502310a5db5e310c1d7e33';
+String _$combinedSerialHash() => r'6ec5620fc4b903429782dd75665f56b4584cac2c';
 
 /// A provider for combining the serial providers that need to be watched.
 ///
@@ -41,9 +43,11 @@ final _combinedSerialProvider = AutoDisposeProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef _CombinedSerialRef = AutoDisposeProviderRef<void>;
 String _$combinedCommunicationHash() =>
-    r'd4e8c2dbc907095193a878ab37e3d4e3e68e9967';
+    r'3674c86e1684f5a867aa5868875ecc87dae318fc';
 
 /// A provider for combining all the network and hardware communication
 /// providers that need to be watched.
@@ -60,8 +64,10 @@ final combinedCommunicationProvider = AutoDisposeProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef CombinedCommunicationRef = AutoDisposeProviderRef<void>;
-String _$hardwareAliveHash() => r'c58d527e1450bd5d5de33fb42a5926a54e2afa88';
+String _$hardwareAliveHash() => r'50658d49b282388b8f604df97b9aeedf910341f7';
 
 /// A provider for whether any hardware is connected and communicating with
 /// us.
@@ -78,6 +84,8 @@ final hardwareAliveProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef HardwareAliveRef = AutoDisposeProviderRef<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

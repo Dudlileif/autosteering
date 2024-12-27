@@ -7,7 +7,7 @@ part of 'was_providers.dart';
 // **************************************************************************
 
 String _$wasCurrentFrequencyHash() =>
-    r'c5c45a14fc33f405dc840d21ddeb43c7971cea4d';
+    r'f6b74cd2a414e6274cc3690c8115b96e5ab69e1f';
 
 /// A provider for the frequency of the WAS updates.
 ///
@@ -25,7 +25,7 @@ final wasCurrentFrequencyProvider =
 );
 
 typedef _$WasCurrentFrequency = AutoDisposeNotifier<double?>;
-String _$wasCurrentReadingHash() => r'9307def230e7852695d3854e367308e81b21249d';
+String _$wasCurrentReadingHash() => r'657c28334eb4a6873b3e07cd3ec3c803fd581a4f';
 
 /// A provider for the current raw [WasReading] from the hardware.
 ///
@@ -63,4 +63,4 @@ final showSteeringHardwareConfigProvider =
 
 typedef _$ShowSteeringHardwareConfig = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

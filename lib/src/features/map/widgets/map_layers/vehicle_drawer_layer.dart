@@ -305,11 +305,10 @@ class MapVehicleTopDownPainter extends StatelessWidget {
         transform: Matrix4(a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1),
         filterQuality: FilterQuality.low,
         child: VehicleTopDownPainter(
-          type: switch (vehicle.runtimeType) {
-            Tractor => 'Tractor',
-            Harvester => 'Harvester',
-            ArticulatedTractor => 'ArticulatedTractor',
-            _ => 'Tractor',
+          type: switch (vehicle) {
+            Tractor() => 'Tractor',
+            Harvester() => 'Harvester',
+            ArticulatedTractor() => 'ArticulatedTractor',
           },
           colors: vehicle.manufacturerColors,
           stretch: true,

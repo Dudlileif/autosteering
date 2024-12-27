@@ -7,7 +7,7 @@ part of 'virtual_led_bar_providers.dart';
 // **************************************************************************
 
 String _$virtualLedBarPerpendicularDistanceHash() =>
-    r'944f8bd9c814d79aad936eb8adfb78c89570e68b';
+    r'58efc5e084dec6dc5db0ac1ca95b0ca8c09e337b';
 
 /// A provider for the perpendicular distance to the currently active
 /// guidance, otherwise 0.
@@ -25,9 +25,11 @@ final virtualLedBarPerpendicularDistanceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef VirtualLedBarPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
 String _$virtualLedBarEnabledHash() =>
-    r'7a632335c05cb31df6ccffc883715df48395aa0c';
+    r'2fdc9535a062f326fb448d88d6539c2d62d97a8d';
 
 /// A provider for whether the virtual led bar should be enabled/shown.
 ///
@@ -46,7 +48,7 @@ final virtualLedBarEnabledProvider =
 
 typedef _$VirtualLedBarEnabled = AutoDisposeNotifier<bool>;
 String _$virtualLedBarConfigurationHash() =>
-    r'b78d4a79f2d7d3ee4fe0b7e86d72b5a408008a7e';
+    r'0275de340e9ed384fbb938893114fcb72782de86';
 
 /// A provider for storing the configuration for the virtual led bar.
 ///
@@ -65,7 +67,7 @@ final virtualLedBarConfigurationProvider = AutoDisposeNotifierProvider<
 
 typedef _$VirtualLedBarConfiguration = AutoDisposeNotifier<LedBarConfig>;
 String _$virtualLedBarTestingHash() =>
-    r'f69cdf35b95757c8bd6b2818359b004c292b6193';
+    r'53c1979ff9d5c8abcf6276282e2cda455e4c5be8';
 
 /// A provider for whether we're testing the virtual LED bar with
 /// [VirtualLedBarTestingDistance].
@@ -104,4 +106,4 @@ final virtualLedBarTestingDistanceProvider =
 
 typedef _$VirtualLedBarTestingDistance = AutoDisposeNotifier<double?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

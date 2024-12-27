@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/providers/providers.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path/path.dart' as path;
@@ -91,21 +92,20 @@ class MainMapController extends _$MainMapController {
 class HomePosition extends _$HomePosition {
   @override
   LatLng build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.mapHomePosition, next);
-          ref.read(simInputProvider.notifier).send((velocity: 0));
-          ref.read(simInputProvider.notifier).send((steeringAngle: 0));
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapHomePosition, next);
+        ref.read(simInputProvider.notifier).send((velocity: 0));
+        ref.read(simInputProvider.notifier).send((steeringAngle: 0));
 
-          ref.read(simInputProvider.notifier).send(
-            (position: next.geoPosition),
-          );
-        }
-      });
+        ref.read(simInputProvider.notifier).send(
+          (position: next.geoPosition),
+        );
+      }
+    });
 
     if (ref
         .read(settingsProvider.notifier)
@@ -129,18 +129,17 @@ class HomePosition extends _$HomePosition {
 class CenterMapOnVehicle extends _$CenterMapOnVehicle {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && next) {
-          ref.read(mainMapControllerProvider).rotate(0);
-        }
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.mapCenterMapOnVehicle, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && next) {
+        ref.read(mainMapControllerProvider).rotate(0);
+      }
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapCenterMapOnVehicle, next);
+      }
+    });
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.mapCenterMapOnVehicle) ??
@@ -205,7 +204,7 @@ class ZoomTimerController extends _$ZoomTimerController {
 
 /// How much the map center should be offset from the vehicle.
 @riverpod
-MapCenterOffset mapOffset(MapOffsetRef ref) {
+MapCenterOffset mapOffset(Ref ref) {
   return switch (ref.watch(mapUse3DPerspectiveProvider)) {
     true => ref.watch(mapOffset3DProvider),
     false => ref.watch(mapOffset2DProvider),
@@ -220,20 +219,19 @@ class MapOffset2D extends _$MapOffset2D {
 
   @override
   MapCenterOffset build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          _saveToSettingsTimer?.cancel();
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        _saveToSettingsTimer?.cancel();
 
-          _saveToSettingsTimer = Timer(
-            const Duration(seconds: 1),
-            () => ref
-                .read(settingsProvider.notifier)
-                .update(SettingsKey.mapCenterOffset3D, state),
-          );
-        }
-      });
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.mapCenterOffset3D, state),
+        );
+      }
+    });
 
     if (ref
         .read(settingsProvider.notifier)
@@ -265,20 +263,19 @@ class MapOffset3D extends _$MapOffset3D {
 
   @override
   MapCenterOffset build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          _saveToSettingsTimer?.cancel();
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        _saveToSettingsTimer?.cancel();
 
-          _saveToSettingsTimer = Timer(
-            const Duration(seconds: 1),
-            () => ref
-                .read(settingsProvider.notifier)
-                .update(SettingsKey.mapCenterOffset3D, state),
-          );
-        }
-      });
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.mapCenterOffset3D, state),
+        );
+      }
+    });
 
     if (ref
         .read(settingsProvider.notifier)
@@ -305,7 +302,7 @@ class MapOffset3D extends _$MapOffset3D {
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.
 @riverpod
-LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
+LatLng offsetVehiclePosition(Ref ref) {
   final offset = ref.watch(mapOffsetProvider);
   if (offset == const MapCenterOffset()) {
     return ref.watch(
@@ -338,26 +335,25 @@ LatLng offsetVehiclePosition(OffsetVehiclePositionRef ref) {
 class AlwaysPointNorth extends _$AlwaysPointNorth {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (ref.read(mapReadyProvider)) {
-          if (next) {
-            ref.read(mainMapControllerProvider).rotate(0);
-          } else {
-            ref.read(mainMapControllerProvider).rotate(
-                  ref.read(
-                    mainVehicleProvider.select((value) => -value.bearing),
-                  ),
-                );
-          }
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (ref.read(mapReadyProvider)) {
+        if (next) {
+          ref.read(mainMapControllerProvider).rotate(0);
+        } else {
+          ref.read(mainMapControllerProvider).rotate(
+                ref.read(
+                  mainVehicleProvider.select((value) => -value.bearing),
+                ),
+              );
         }
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.mapAlwaysPointNorth, next);
-        }
-      });
+      }
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapAlwaysPointNorth, next);
+      }
+    });
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.mapAlwaysPointNorth) ??
@@ -377,15 +373,14 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
 class MapUse3DPerspective extends _$MapUse3DPerspective {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.mapEnable3D, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapEnable3D, next);
+      }
+    });
 
     return ref
             .read(settingsProvider.notifier)
@@ -408,20 +403,19 @@ class Map3DPerspectiveAngle extends _$Map3DPerspectiveAngle {
 
   @override
   double build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          _saveToSettingsTimer?.cancel();
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        _saveToSettingsTimer?.cancel();
 
-          _saveToSettingsTimer = Timer(
-            const Duration(seconds: 1),
-            () => ref
-                .read(settingsProvider.notifier)
-                .update(SettingsKey.map3DPerspectiveAngle, next),
-          );
-        }
-      });
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.map3DPerspectiveAngle, next),
+        );
+      }
+    });
 
     return ref
             .read(settingsProvider.notifier)
@@ -440,19 +434,18 @@ class MapZoom extends _$MapZoom {
 
   @override
   double build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          _saveToSettingsTimer?.cancel();
-          _saveToSettingsTimer = Timer(
-            const Duration(seconds: 1),
-            () => ref
-                .read(settingsProvider.notifier)
-                .update(SettingsKey.mapZoom, next),
-          );
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        _saveToSettingsTimer?.cancel();
+        _saveToSettingsTimer = Timer(
+          const Duration(seconds: 1),
+          () => ref
+              .read(settingsProvider.notifier)
+              .update(SettingsKey.mapZoom, next),
+        );
+      }
+    });
 
     return ref.read(settingsProvider.notifier).getDouble(SettingsKey.mapZoom) ??
         19;
@@ -465,7 +458,7 @@ class MapZoom extends _$MapZoom {
 /// A provider for finding the first cache date of the map layer cache
 /// at the given [path].
 @riverpod
-FutureOr<DateTime?> mapCacheDate(MapCacheDateRef ref, String filePath) async {
+FutureOr<DateTime?> mapCacheDate(Ref ref, String filePath) async {
   final file = File(path.join(filePath, 'created'));
 
   if (file.existsSync()) {
@@ -476,8 +469,7 @@ FutureOr<DateTime?> mapCacheDate(MapCacheDateRef ref, String filePath) async {
 
 /// A provider for listing all the map layer cache folders.
 @riverpod
-FutureOr<List<String>> mapCacheDirectories(MapCacheDirectoriesRef ref) async =>
-    await Directory(
+FutureOr<List<String>> mapCacheDirectories(Ref ref) async => await Directory(
       path.join(
         ref.watch(fileDirectoryProvider).requireValue.path,
         'map_image_cache',
@@ -489,15 +481,14 @@ FutureOr<List<String>> mapCacheDirectories(MapCacheDirectoriesRef ref) async =>
 class MapAllowDownload extends _$MapAllowDownload {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.mapAllowDownload, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapAllowDownload, next);
+      }
+    });
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.mapAllowDownload) ??
@@ -526,15 +517,14 @@ class MapGridSize extends _$MapGridSize {
 class ShowGridSizeIndicator extends _$ShowGridSizeIndicator {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.mapShowGridSizeIndicator, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapShowGridSizeIndicator, next);
+      }
+    });
     return ref
             .read(settingsProvider.notifier)
             .getBool(SettingsKey.mapShowGridSizeIndicator) ??

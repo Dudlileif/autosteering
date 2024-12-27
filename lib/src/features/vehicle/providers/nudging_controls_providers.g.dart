@@ -43,7 +43,7 @@ final nudgeStepSizeProvider = NotifierProvider<NudgeStepSize, double>.internal(
 
 typedef _$NudgeStepSize = Notifier<double>;
 String _$nudgingControlsUiOffsetHash() =>
-    r'b0a62ba6a2ac14796c4a4df85c776d24d9f983b8';
+    r'e6b94da9051609b2c71dae0d2d2121c0a1367215';
 
 /// A provider for the UI [Offset] for the nudging controls.
 ///
@@ -62,4 +62,4 @@ final nudgingControlsUiOffsetProvider =
 
 typedef _$NudgingControlsUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

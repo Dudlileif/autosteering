@@ -26,6 +26,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -60,7 +61,7 @@ class LoadedEquipment extends _$LoadedEquipment {
 class AllEquipments extends _$AllEquipments {
   @override
   Map<String, Equipment> build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       final toRemove = <String>[];
       for (final equipment in next.values) {
         if (equipment.hitchParent == null) {
@@ -513,7 +514,6 @@ class EquipmentPaths extends _$EquipmentPaths {
 class EquipmentLogRecords extends _$EquipmentLogRecords {
   @override
   List<EquipmentLogRecord>? build(String uuid) => null;
-  
 
   /// Add [record] to [state].
   void add(EquipmentLogRecord record) => Future(() {
@@ -527,8 +527,6 @@ class EquipmentLogRecords extends _$EquipmentLogRecords {
             .addEquipmentLogRecord(uuid, record);
       });
 
-
-
   @override
   bool updateShouldNotify(
     List<EquipmentLogRecord>? previous,
@@ -540,7 +538,7 @@ class EquipmentLogRecords extends _$EquipmentLogRecords {
 /// A provider for loading an [Equipment] from a file at [path], if it's valid.
 @riverpod
 FutureOr<Equipment?> loadEquipmentFromFile(
-  LoadEquipmentFromFileRef ref,
+  Ref ref,
   String path,
 ) async {
   final file = File(path);
@@ -548,7 +546,7 @@ FutureOr<Equipment?> loadEquipmentFromFile(
     try {
       final json = jsonDecode(await file.readAsString());
       return Equipment.fromJson(Map<String, dynamic>.from(json as Map));
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.w(
         'Failed loading equipment from: $path',
         error: error,
@@ -564,7 +562,7 @@ FutureOr<Equipment?> loadEquipmentFromFile(
 /// Override the file name with [overrideName].
 @riverpod
 Future<void> saveEquipment(
-  SaveEquipmentRef ref,
+  Ref ref,
   Equipment equipment, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -583,7 +581,7 @@ Future<void> saveEquipment(
 /// Override the file name with [overrideName].
 @riverpod
 Future<void> exportEquipment(
-  ExportEquipmentRef ref,
+  Ref ref,
   Equipment equipment, {
   String? overrideName,
   bool downloadIfWeb = true,
@@ -600,22 +598,21 @@ Future<void> exportEquipment(
 /// A provider for reading and holding all the saved [Equipment] in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-FutureOr<List<Equipment>> savedEquipments(SavedEquipmentsRef ref) async =>
-    await ref
-        .watch(
-          savedFilesProvider(
-            fromJson: Equipment.fromJson,
-            folder: 'equipment',
-          ).future,
-        )
-        .then((data) => data.cast());
+FutureOr<List<Equipment>> savedEquipments(Ref ref) async => await ref
+    .watch(
+      savedFilesProvider(
+        fromJson: Equipment.fromJson,
+        folder: 'equipment',
+      ).future,
+    )
+    .then((data) => data.cast());
 
 /// A provider for deleting [equipment] from the user file system.
 ///
 /// Override the file name with [overrideName].
 @riverpod
 Future<void> deleteEquipment(
-  DeleteEquipmentRef ref,
+  Ref ref,
   Equipment equipment, {
   String? overrideName,
 }) async =>
@@ -630,7 +627,7 @@ Future<void> deleteEquipment(
 /// it to the [ConfiguredEquipment] provider.
 @riverpod
 FutureOr<Equipment?> importEquipment(
-  ImportEquipmentRef ref,
+  Ref ref,
 ) async {
   ref.keepAlive();
   Timer(
@@ -650,7 +647,7 @@ FutureOr<Equipment?> importEquipment(
       try {
         final json = jsonDecode(String.fromCharCodes(data));
         equipment = Equipment.fromJson(Map<String, dynamic>.from(json as Map));
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import equipment.',
           error: error,
@@ -686,7 +683,7 @@ FutureOr<Equipment?> importEquipment(
 /// A provider for exporting all equipment files.
 @riverpod
 FutureOr<void> exportEquipments(
-  ExportEquipmentsRef ref, {
+  Ref ref, {
   bool zip = true,
 }) async =>
     await ref.watch(exportAllProvider(directory: 'equipments').future);

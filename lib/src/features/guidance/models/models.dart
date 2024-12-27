@@ -21,3 +21,6 @@ export 'led_bar_config.dart';
 export 'path_recording_settings.dart';
 export 'path_tracking/path_tracking.dart';
 export 'way_point.dart';
+
+// TODO(dudlileif): Try the new elipsoidal calculations in geobase 1.4.0
+// instead of spherical ones.

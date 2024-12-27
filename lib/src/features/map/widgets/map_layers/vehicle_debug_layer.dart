@@ -76,7 +76,7 @@ class VehicleDebugLayer extends ConsumerWidget {
               ...vehicle.wheelPolygons,
               ...vehicle.polygons.map(
                 (polygon) => polygon.copyWith(
-                  color: Theme.of(context).primaryColor.withOpacity(0.5),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
                 ),
               ),
             ],
@@ -97,7 +97,7 @@ class VehicleDebugLayer extends ConsumerWidget {
                 point: vehicle.turningRadiusCenter!.latLng,
                 radius: vehicle.currentTurningRadius!,
                 useRadiusInMeter: true,
-                color: Colors.blue.withOpacity(0.2),
+                color: Colors.blue.withValues(alpha: 0.2),
               ),
             if (debugSteering &&
                 vehicle is ArticulatedTractor &&
@@ -106,7 +106,7 @@ class VehicleDebugLayer extends ConsumerWidget {
                 point: vehicle.turningRadiusCenter!.latLng,
                 radius: vehicle.currentRearTurningRadius!,
                 useRadiusInMeter: true,
-                color: Colors.red.withOpacity(0.2),
+                color: Colors.red.withValues(alpha: 0.2),
               ),
             if (debugAntennaPosition) ...[
               CircleMarker(

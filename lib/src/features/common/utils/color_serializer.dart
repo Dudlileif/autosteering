@@ -33,8 +33,13 @@ class ColorSerializer implements JsonConverter<Color, String> {
   }
 
   @override
-  String toJson(Color object) =>
-      '0x${object.value.toRadixString(16).toUpperCase().padLeft(8, '0')}';
+  String toJson(Color object) {
+    final value = ((object.a * 255).round() << 24) +
+        ((object.r * 255).round() << 16) +
+        ((object.g * 255).round() << 8) +
+        (object.b * 255).round();
+    return '0x${value.toRadixString(16).toUpperCase().padLeft(8, '0')}';
+  }
 }
 
 /// A JSON serializer for nullable [Color] to simplify the usage in freezed
@@ -53,7 +58,14 @@ class ColorSerializerNullable implements JsonConverter<Color?, String> {
   }
 
   @override
-  String toJson(Color? object) => object != null
-      ? '0x${object.value.toRadixString(16).toUpperCase().padLeft(8, '0')}'
-      : 'null';
+  String toJson(Color? object) {
+    if (object == null) {
+      return 'null';
+    }
+    final value = ((object.a * 255).round() << 24) +
+        ((object.r * 255).round() << 16) +
+        ((object.g * 255).round() << 8) +
+        (object.b * 255).round();
+    return '0x${value.toRadixString(16).toUpperCase().padLeft(8, '0')}';
+  }
 }

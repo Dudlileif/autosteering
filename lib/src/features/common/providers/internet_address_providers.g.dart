@@ -7,7 +7,7 @@ part of 'internet_address_providers.dart';
 // **************************************************************************
 
 String _$validInternetAddressHash() =>
-    r'71472083599d64e828b13b05d67a3fb226ca8251';
+    r'cb0d71484ee45f0396cacb74b13b31a34757645b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -161,6 +161,8 @@ class ValidInternetAddressProvider extends AutoDisposeFutureProvider<bool> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ValidInternetAddressRef on AutoDisposeFutureProviderRef<bool> {
   /// The parameter `address` of this provider.
   String? get address;
@@ -175,4 +177,4 @@ class _ValidInternetAddressProviderElement
   String? get address => (origin as ValidInternetAddressProvider).address;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -7,7 +7,7 @@ part of 'work_session_providers.dart';
 // **************************************************************************
 
 String _$loadWorkSessionFromFileHash() =>
-    r'661396b82d26e208b5a2c91f1d6bc9a89c4e34a0';
+    r'f2ed6f4ca655100cc14420f15649553c795e7356';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -156,6 +156,8 @@ class LoadWorkSessionFromFileProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LoadWorkSessionFromFileRef on AutoDisposeFutureProviderRef<WorkSession?> {
   /// The parameter `path` of this provider.
   String get path;
@@ -170,7 +172,7 @@ class _LoadWorkSessionFromFileProviderElement
   String get path => (origin as LoadWorkSessionFromFileProvider).path;
 }
 
-String _$saveWorkSessionHash() => r'947bad0366aa976655c9794c66c35133d03d35a8';
+String _$saveWorkSessionHash() => r'6cdc8d5d6c13a9783b9c331b9972920f30c6a2e0';
 
 /// A provider for saving [workSession] to a file in the user file directory.
 ///
@@ -332,6 +334,8 @@ class SaveWorkSessionProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SaveWorkSessionRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `workSession` of this provider.
   WorkSession get workSession;
@@ -357,7 +361,7 @@ class _SaveWorkSessionProviderElement
 }
 
 String _$saveWorkSessionEquipmentLogsHash() =>
-    r'4010c495126be45d41a75a6f22c38109b36138a6';
+    r'31fc3f81175a127dc06927f536dffd2d7004baa4';
 
 /// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
 /// their respective files.
@@ -539,6 +543,8 @@ class SaveWorkSessionEquipmentLogsProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SaveWorkSessionEquipmentLogsRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `workSession` of this provider.
   WorkSession get workSession;
@@ -566,7 +572,7 @@ class _SaveWorkSessionEquipmentLogsProviderElement
       (origin as SaveWorkSessionEquipmentLogsProvider).singleUuid;
 }
 
-String _$exportWorkSessionHash() => r'fb3ff5314e651b2cc9a65a6c6ec3c4dcb55e246d';
+String _$exportWorkSessionHash() => r'53118d9022733abb20b4a3efaaaeae147232aed4';
 
 /// A provider for exporting [workSession] to a file.
 ///
@@ -739,6 +745,8 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportWorkSessionRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `workSession` of this provider.
   WorkSession get workSession;
@@ -770,7 +778,7 @@ class _ExportWorkSessionProviderElement
       (origin as ExportWorkSessionProvider).withEquipmentLogs;
 }
 
-String _$savedWorkSessionsHash() => r'0a7005b98eef7ecfe11a8031ce10833223609459';
+String _$savedWorkSessionsHash() => r'd7d697d33348282646e7be9a6fdc9a52079b4384';
 
 /// A provider for reading and holding all the saved [WorkSession]s in the
 /// user file directory.
@@ -787,8 +795,10 @@ final savedWorkSessionsProvider = FutureProvider<List<WorkSession>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SavedWorkSessionsRef = FutureProviderRef<List<WorkSession>>;
-String _$deleteWorkSessionHash() => r'65cc4a7123ad600558056f806c8731a44240f0fb';
+String _$deleteWorkSessionHash() => r'0d994726090883228987d0bb6997d2ff376cc418';
 
 /// A provider for deleting [workSession] from the user file system.
 ///
@@ -939,6 +949,8 @@ class DeleteWorkSessionProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DeleteWorkSessionRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `workSession` of this provider.
   WorkSession get workSession;
@@ -959,7 +971,7 @@ class _DeleteWorkSessionProviderElement
       (origin as DeleteWorkSessionProvider).overrideName;
 }
 
-String _$importWorkSessionHash() => r'0541c69f8020d51d79e243dc23cd4fa3d1486429';
+String _$importWorkSessionHash() => r'e5dbb7652642dd8cbcb98e6a03dae4bf1eefcee5';
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
@@ -977,9 +989,11 @@ final importWorkSessionProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ImportWorkSessionRef = AutoDisposeFutureProviderRef<WorkSession?>;
 String _$exportWorkSessionsHash() =>
-    r'53dd47af789709d9c9a52160b8cabb04cbabe472';
+    r'3a8b1b5b889e9f9d2e502fdae910660eb67fe7f9';
 
 /// A provider for exporting all work session files.
 ///
@@ -1106,6 +1120,8 @@ class ExportWorkSessionsProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportWorkSessionsRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `zip` of this provider.
   bool get zip;
@@ -1138,4 +1154,4 @@ final activeWorkSessionProvider =
 
 typedef _$ActiveWorkSession = Notifier<WorkSession?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

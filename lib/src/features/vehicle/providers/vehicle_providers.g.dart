@@ -6,7 +6,7 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveVehicleHash() => r'ce89bba4dcd7af4ce029bcabc1470e2772f92e1b';
+String _$saveVehicleHash() => r'e14dbec81d0ac50650b9dae17e469eae45078661';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -189,6 +189,8 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SaveVehicleRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `vehicle` of this provider.
   Vehicle get vehicle;
@@ -212,7 +214,7 @@ class _SaveVehicleProviderElement extends AutoDisposeFutureProviderElement<void>
   bool get downloadIfWeb => (origin as SaveVehicleProvider).downloadIfWeb;
 }
 
-String _$exportVehicleHash() => r'78a69723b1eb246edb92c4763447b3f540157160';
+String _$exportVehicleHash() => r'cd71215436b2f327671f58007d90e4ae056e3776';
 
 /// A provider for saving [vehicle] to a file.
 ///
@@ -374,6 +376,8 @@ class ExportVehicleProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportVehicleRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `vehicle` of this provider.
   Vehicle get vehicle;
@@ -397,7 +401,7 @@ class _ExportVehicleProviderElement
   bool get downloadIfWeb => (origin as ExportVehicleProvider).downloadIfWeb;
 }
 
-String _$savedVehiclesHash() => r'3ff81606b7f593c2244418ebd77e709960c450b0';
+String _$savedVehiclesHash() => r'3aaba3bb1dcc7019f369f7dc7c79b772728e572f';
 
 /// A provider for reading and holding all the saved [Vehicle]s in the
 /// user file directory.
@@ -414,8 +418,10 @@ final savedVehiclesProvider = FutureProvider<List<Vehicle>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SavedVehiclesRef = FutureProviderRef<List<Vehicle>>;
-String _$deleteVehicleHash() => r'82eb292792c91d1d0690d546469839b4004f50b4';
+String _$deleteVehicleHash() => r'52cc524e4e9958192919a6883fd8e4eb61f628ad';
 
 /// A provider for deleting [vehicle] from the user file system.
 ///
@@ -566,6 +572,8 @@ class DeleteVehicleProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DeleteVehicleRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `vehicle` of this provider.
   Vehicle get vehicle;
@@ -585,7 +593,7 @@ class _DeleteVehicleProviderElement
 }
 
 String _$loadVehicleFromFileHash() =>
-    r'4a7b24c90bd4d07300e5f09c4ffa7cc4794ed325';
+    r'20bcb6de25d3e30735cfbe17ca11ef60943b2105';
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 ///
@@ -712,6 +720,8 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LoadVehicleFromFileRef on AutoDisposeFutureProviderRef<Vehicle?> {
   /// The parameter `path` of this provider.
   String get path;
@@ -726,7 +736,7 @@ class _LoadVehicleFromFileProviderElement
   String get path => (origin as LoadVehicleFromFileProvider).path;
 }
 
-String _$lastUsedVehicleHash() => r'685997d196ec06b072c0af95be50bfc5fe78b202';
+String _$lastUsedVehicleHash() => r'286f2c8f04bb4d0b06c044bd219d21348cd4e3ca';
 
 /// A provider for the most recently used [Vehicle].
 ///
@@ -745,8 +755,10 @@ final lastUsedVehicleProvider = Provider<AsyncValue<Vehicle>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef LastUsedVehicleRef = ProviderRef<AsyncValue<Vehicle>>;
-String _$importVehicleHash() => r'5404b690145aadc0cfe630c1898a0c91c02c6b31';
+String _$importVehicleHash() => r'9424f72c9aa7ec7efc5cbf08fb8a67e3e9e31858';
 
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.
@@ -763,8 +775,10 @@ final importVehicleProvider = AutoDisposeFutureProvider<Vehicle?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ImportVehicleRef = AutoDisposeFutureProviderRef<Vehicle?>;
-String _$exportVehiclesHash() => r'54ec2f0b7430d3f878dad695628af952d99bfadd';
+String _$exportVehiclesHash() => r'1791fa257813e56b8d158ef9b2323726810d183f';
 
 /// A provider for exporting all vehicle files.
 ///
@@ -891,6 +905,8 @@ class ExportVehiclesProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportVehiclesRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `zip` of this provider.
   bool get zip;
@@ -921,7 +937,7 @@ final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
 
 typedef _$MainVehicle = Notifier<Vehicle>;
 String _$activeAutosteeringStateHash() =>
-    r'77101eb07101764904940e61585b146d839d042f';
+    r'b537d59efe69ab2e11126bbb1b9bc70661216fc4';
 
 /// A provider for the active [AutosteeringState] of the vehicle.
 ///
@@ -940,7 +956,7 @@ final activeAutosteeringStateProvider =
 
 typedef _$ActiveAutosteeringState = Notifier<AutosteeringState>;
 String _$gaugesAverageCountHash() =>
-    r'3a61a280ef00f4f7898c45aeabcb6a5fe36b5bff';
+    r'e407f07f9f1334a8aa3816877cf3f391c25a7e48';
 
 /// A provider for the number of previous positions to use for calculating
 /// the gauge velocity and bearing values.
@@ -979,7 +995,7 @@ final vehicleSteeringAngleTargetProvider =
 
 typedef _$VehicleSteeringAngleTarget = Notifier<double?>;
 String _$showOverrideSteeringHash() =>
-    r'589da280c5feee0b9e1f741c7a3e00bc2db71966';
+    r'ac8c0487d367a157a3f04c3a9f5fbb7d63ad9d66';
 
 /// A provider for whether widgets for overriding the steering should be shown.
 ///
@@ -997,7 +1013,7 @@ final showOverrideSteeringProvider =
 );
 
 typedef _$ShowOverrideSteering = AutoDisposeNotifier<bool>;
-String _$overrideSteeringHash() => r'4ced2e608447af433913fbfccd271058deb470d2';
+String _$overrideSteeringHash() => r'967f33baa1640de4ae8e216de5993c018db80eb2';
 
 /// Whether the steering should be overridden. Usually used to test the
 /// steering motor and WAS together.
@@ -1036,4 +1052,4 @@ final overrideSteeringAngleProvider =
 
 typedef _$OverrideSteeringAngle = AutoDisposeNotifier<double>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

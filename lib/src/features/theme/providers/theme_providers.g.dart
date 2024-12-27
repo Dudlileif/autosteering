@@ -6,7 +6,7 @@ part of 'theme_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appThemeHash() => r'57647cd7e5ced15857e8619bdc2b361aa1ac37c6';
+String _$appThemeHash() => r'a0e1e6a557c3982603ada24101684b2e1ea531c1';
 
 /// A provider for the app's theme.
 ///
@@ -24,8 +24,10 @@ final appThemeProvider = AutoDisposeProvider<AppTheme>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AppThemeRef = AutoDisposeProviderRef<AppTheme>;
-String _$activeThemeModeHash() => r'a50229066ec77b1070dff1df8f8beb270a70b2c9';
+String _$activeThemeModeHash() => r'ea842a0d618a46bb40f38dbfe44fb55426150ffe';
 
 /// A provider that contains the current theme mode state.
 ///
@@ -43,7 +45,7 @@ final activeThemeModeProvider =
 );
 
 typedef _$ActiveThemeMode = AutoDisposeNotifier<ThemeMode>;
-String _$manufacturerHash() => r'380fa025686141a51c42eed5030fb3e0a19c84ad';
+String _$manufacturerHash() => r'672980273f9dd5345c817f6bda9fc47dd5aacd5f';
 
 /// A provider that contains theme color state.
 ///
@@ -61,7 +63,7 @@ final manufacturerProvider =
 
 typedef _$Manufacturer = AutoDisposeNotifier<ManufacturerColors>;
 String _$colorSchemeInheritFromVehicleHash() =>
-    r'4c61ca7954dd990aaf6febed62665d514c802a3b';
+    r'27b91c55fc16da1ab629d094e2db9c66ac252f4f';
 
 /// A provider for whether the [appTheme] should use [ManufacturerColors]
 /// inherited from the active vehicle or from a selected one.
@@ -81,4 +83,4 @@ final colorSchemeInheritFromVehicleProvider =
 
 typedef _$ColorSchemeInheritFromVehicle = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

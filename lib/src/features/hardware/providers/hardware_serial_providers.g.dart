@@ -7,7 +7,7 @@ part of 'hardware_serial_providers.dart';
 // **************************************************************************
 
 String _$availableSerialPortsHash() =>
-    r'c8572cd86484a91be1ff9fd0fa5efe702e911172';
+    r'189efc16296b8ddf971ac49d2e4f4b11e28c780a';
 
 /// A provider for the available serial ports.
 ///
@@ -24,9 +24,11 @@ final availableSerialPortsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AvailableSerialPortsRef = AutoDisposeProviderRef<List<SerialPort>>;
 String _$hardwareSerialStreamHash() =>
-    r'804d8147f5d43f52d49f1bad07f88633f8e2ac7e';
+    r'ea0ac81323015198a8e44a2d83e7c834b169294c';
 
 /// A stream of the incoming serial data from the connected hardware.
 ///
@@ -42,9 +44,11 @@ final hardwareSerialStreamProvider = StreamProvider<String?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef HardwareSerialStreamRef = StreamProviderRef<String?>;
 String _$hardwareSerialBaudRateHash() =>
-    r'0d984a20206a95d788d57c3b9223e52bad8d87e5';
+    r'2c397fd6a972584bd3a11441bac56d26184e2964';
 
 /// A provider for the baud rate for the [HardwareSerial] connection.
 ///
@@ -62,7 +66,7 @@ final hardwareSerialBaudRateProvider =
 );
 
 typedef _$HardwareSerialBaudRate = Notifier<int>;
-String _$hardwareSerialHash() => r'74c6cb915d2cf6c5d5eb238a222e9298f88374dd';
+String _$hardwareSerialHash() => r'ddb3d224d585b89828eb87e12a582704311ae8b2';
 
 /// A provider for the hardware serial connection.
 ///
@@ -81,7 +85,7 @@ final hardwareSerialProvider =
 
 typedef _$HardwareSerial = Notifier<SerialPort?>;
 String _$hardwareSerialAliveHash() =>
-    r'6b241bdd065caa0090ff1211560115098e20a838';
+    r'8e130768da3e3c2eaa24d25165f9c07bcae90822';
 
 /// A provider for telling whether the [HardwareSerial] is receiving data.
 ///
@@ -103,4 +107,4 @@ final hardwareSerialAliveProvider =
 
 typedef _$HardwareSerialAlive = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

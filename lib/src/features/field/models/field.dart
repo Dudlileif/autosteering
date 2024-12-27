@@ -17,14 +17,13 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
 import 'package:uuid/uuid.dart';
 
 /// A base class for a field.
-class Field with EquatableMixin {
+class Field {
   /// A class for representing a field in the real world.
   ///
   /// The field needs a [name] for identifying purposes.
@@ -225,16 +224,6 @@ class Field with EquatableMixin {
         lastUsed: lastUsed ?? this.lastUsed,
         uuid: uuid ?? this.uuid,
       );
-
-  /// Properties used for checking for equality.
-  @override
-  List<Object?> get props => [
-        name,
-        polygon,
-        boundingBox,
-        lastUsed,
-        uuid,
-      ];
 
   /// Convert the model to a json compatible map.
   Map<String, dynamic> toJson() {

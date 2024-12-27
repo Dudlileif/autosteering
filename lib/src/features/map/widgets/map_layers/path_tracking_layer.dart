@@ -55,8 +55,7 @@ class PathTrackingLayer extends ConsumerWidget {
                     ],
                     color: Colors.white,
                   ),
-                  if (tracking is PurePursuitPathTracking &&
-                      debug) ...[
+                  if (tracking is PurePursuitPathTracking && debug) ...[
                     Polyline(
                       color: Colors.black,
                       points: [
@@ -210,7 +209,8 @@ class PathTrackingLayer extends ConsumerWidget {
                       point: vehicle.lookAheadStartPosition.latLng,
                       radius: lookAheadDistance,
                       useRadiusInMeter: true,
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
+                      color:
+                          Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     ),
                     if (tracking.lookAheadVehicleToLineProjection(
                           vehicle,

@@ -84,7 +84,7 @@ class SimulatorCore {
             );
           }
         }
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         sendPort.send(
           LogEvent(
             Level.error,
@@ -130,7 +130,7 @@ class SimulatorCore {
         if (sendUdp != null && steeringHardwareEndPoint != null) {
           try {
             await sendUdp!.send(event, steeringHardwareEndPoint!);
-          } catch (error, stackTrace) {
+          } on Exception catch (error, stackTrace) {
             updateMainThreadStream.add(
               LogEvent(
                 Level.error,
@@ -148,7 +148,7 @@ class SimulatorCore {
         if (sendUdp != null && remoteControlEndPoint != null) {
           try {
             await sendUdp!.send(event, remoteControlEndPoint!);
-          } catch (error, stackTrace) {
+          } on Exception catch (error, stackTrace) {
             updateMainThreadStream.add(
               LogEvent(
                 Level.error,
@@ -283,7 +283,7 @@ class SimulatorCore {
             },
           );
         }
-      } catch (error) {
+      } on Exception catch (_) {
         // Continue, as the error is the same as previously.
         steeringAddressLookupRetryTimer?.cancel();
         steeringAddressLookupRetryTimer =
@@ -331,7 +331,7 @@ class SimulatorCore {
             },
           );
         }
-      } catch (error) {
+      } on Exception catch (_) {
         // Continue, as the error is the same as previously.
         remoteControlAddressLookupRetryTimer?.cancel();
         remoteControlAddressLookupRetryTimer =
@@ -526,7 +526,7 @@ class SimulatorCore {
             utf8.encode('Simulator shut down.'),
           ),
         );
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         updateMainThreadStream.add(
           LogEvent(
             Level.error,

@@ -7,7 +7,7 @@ part of 'gnss_data_providers.dart';
 // **************************************************************************
 
 String _$gnssCurrentSentenceHash() =>
-    r'b633b27f2ea1845fbf75433c6c19c90be14d92dd';
+    r'ca68c8fac86fb77318ff5aa0b21f6122afe0d3b9';
 
 /// A provider for the quality of last GNSS position update.
 ///
@@ -27,7 +27,7 @@ final gnssCurrentSentenceProvider = AutoDisposeNotifierProvider<
 typedef _$GnssCurrentSentence
     = AutoDisposeNotifier<GnssPositionCommonSentence?>;
 String _$gnssCurrentFrequencyHash() =>
-    r'a9f9e06836850d0f3029ceaf86e30a0bb6e4dc37';
+    r'a8fc1a0c70aab7c4c84054d15bc0a6ec2959f8c9';
 
 /// A provider for the frequency of the GNSS updates.
 ///
@@ -67,7 +67,7 @@ final gnssLastUpdateTimeProvider = AutoDisposeNotifierProvider<
 typedef _$GnssLastUpdateTime = AutoDisposeNotifier<
     ({DateTime device, DateTime? receiver, Duration? delay})?>;
 String _$gnssPrecisionErrorHash() =>
-    r'f49ee5613da049a6fe1899938e42f8af8df465dc';
+    r'39a03ac359f2b51e31bce7937b8275137ffb483f';
 
 /// A provider for the precision error of the last GNSS update.
 ///
@@ -92,4 +92,4 @@ final gnssPrecisionErrorProvider = AutoDisposeNotifierProvider<
 typedef _$GnssPrecisionError = AutoDisposeNotifier<
     ({double? latitudeError, double? longitudeError, double? altitudeError})?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

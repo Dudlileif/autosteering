@@ -7,7 +7,7 @@ part of 'path_tracking_providers.dart';
 // **************************************************************************
 
 String _$pathTrackingPerpendicularDistanceHash() =>
-    r'84c59cac95e6c209f1abd2aab04b2d1dba6fda3f';
+    r'ab61512d7ccd9748ae77183141f2bb13657d91e9';
 
 /// A provider for the perpendicular distance from the [DisplayPathTracking]
 /// line to the [MainVehicle].
@@ -25,9 +25,11 @@ final pathTrackingPerpendicularDistanceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef PathTrackingPerpendicularDistanceRef = AutoDisposeProviderRef<double?>;
 String _$loadPathTrackingFromFileHash() =>
-    r'be456a58dd91cd51413f56ed289d82119233662e';
+    r'1bd1565ccac6edd0976ed44d73f99a2816ece0e1';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -183,6 +185,8 @@ class LoadPathTrackingFromFileProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LoadPathTrackingFromFileRef
     on AutoDisposeFutureProviderRef<PathTracking?> {
   /// The parameter `path` of this provider.
@@ -198,7 +202,7 @@ class _LoadPathTrackingFromFileProviderElement
   String get path => (origin as LoadPathTrackingFromFileProvider).path;
 }
 
-String _$savePathTrackingHash() => r'26b1d1c135d54f119ae27fca98ba9916c9fe7f03';
+String _$savePathTrackingHash() => r'407164bc901625047357a394ca4b3b3b6489a451';
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -360,6 +364,8 @@ class SavePathTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SavePathTrackingRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `tracking` of this provider.
   PathTracking get tracking;
@@ -384,7 +390,7 @@ class _SavePathTrackingProviderElement
 }
 
 String _$exportPathTrackingHash() =>
-    r'7e5e84fa9ce850e02779f4ac7bc99d871455b017';
+    r'c36fc12cb59e8c5245de721e9b6f5464e0698641';
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -546,6 +552,8 @@ class ExportPathTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportPathTrackingRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `tracking` of this provider.
   PathTracking get tracking;
@@ -572,7 +580,7 @@ class _ExportPathTrackingProviderElement
 }
 
 String _$savedPathTrackingsHash() =>
-    r'33bdc3da0be34077a6d0af5f33320caa5c175741';
+    r'3b7726b6f76eb3799103b81cb3e8e3546db8fa66';
 
 /// A provider for reading and holding all the saved [PathTracking] in the
 /// user file directory.
@@ -589,9 +597,11 @@ final savedPathTrackingsProvider = FutureProvider<List<PathTracking>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SavedPathTrackingsRef = FutureProviderRef<List<PathTracking>>;
 String _$deletePathTrackingHash() =>
-    r'1df82e0b05cbe20dbd51320edb60dbefefbf191b';
+    r'ce4ff8f9cb7ba10b92f1f23ca4a23b2c78a9971c';
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///
@@ -753,6 +763,8 @@ class DeletePathTrackingProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DeletePathTrackingRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `tracking` of this provider.
   PathTracking get tracking;
@@ -779,7 +791,7 @@ class _DeletePathTrackingProviderElement
 }
 
 String _$importPathTrackingHash() =>
-    r'a8be30fa6266eaa6e043d994d1e158353dc1385f';
+    r'268e63b8faf3fc76f311a1ab96dfaa6b4391d2b9';
 
 /// A provider for importing a [PathTracking] from a file and applying it to
 /// the [ConfiguredPathTracking] provider.
@@ -797,8 +809,10 @@ final importPathTrackingProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ImportPathTrackingRef = AutoDisposeFutureProviderRef<PathTracking?>;
-String _$exportGuidancesHash() => r'a60744726b52930c15ed1fd4334b73d45a59c11a';
+String _$exportGuidancesHash() => r'c3a70f44a023ff06985977bc6f6cbf05b7d30e7b';
 
 /// A provider for exporting all guidance files.
 ///
@@ -925,6 +939,8 @@ class ExportGuidancesProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportGuidancesRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `zip` of this provider.
   bool get zip;
@@ -939,7 +955,7 @@ class _ExportGuidancesProviderElement
 }
 
 String _$pathInterpolationDistanceHash() =>
-    r'3838e0d5947ecf47190196f1fa4998a29f429156';
+    r'2f3dd72ebc9b619f2fa786217d2162ccaf6659cf';
 
 /// A provider for the path interpolation distance.
 ///
@@ -977,7 +993,7 @@ final pathTrackingPointsProvider =
 
 typedef _$PathTrackingPoints = Notifier<List<WayPoint>?>;
 String _$configuredPathTrackingHash() =>
-    r'00e84454d1e4b3aa96a0df55fbceb8d8c28ec37e';
+    r'67fef335827c9ce6545ee764535ce808c929dd6d';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.
@@ -996,7 +1012,7 @@ final configuredPathTrackingProvider =
 );
 
 typedef _$ConfiguredPathTracking = Notifier<PathTracking?>;
-String _$pathTrackingLoopHash() => r'51f6c0dd235e7e6abe6aa472772905295ebe9c94';
+String _$pathTrackingLoopHash() => r'9e18bb1af4a02e1301d6d53c7efbae48e92d1cf7';
 
 /// A provider for which looping mode the [ConfiguredPathTracking] should
 /// follow.
@@ -1016,7 +1032,7 @@ final pathTrackingLoopProvider =
 
 typedef _$PathTrackingLoop = Notifier<PathTrackingLoopMode>;
 String _$displayPathTrackingHash() =>
-    r'e7975c05e94f5a05718849e81357757707c67352';
+    r'75006e9bed786d31170be96c14532152b1cd073e';
 
 /// A provider for the activated [ConfiguredPathTracking] model, typically
 /// recieved and updated from the simulator.
@@ -1072,4 +1088,4 @@ final debugPathTrackingProvider =
 
 typedef _$DebugPathTracking = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

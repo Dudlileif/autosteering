@@ -124,6 +124,7 @@ class FileCachedNetworkImageProvider
         await cacheFile?.writeAsBytes(bytes);
 
         return decode(buffer).catchError((dynamic e) {
+          // Allow throwing exceptions
           // ignore: only_throw_errors
           if (useFallback || fallbackUrl == null) throw e as Object;
           return _loadAsync(key, chunkEvents, decode, useFallback: true);

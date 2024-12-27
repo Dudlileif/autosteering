@@ -7,7 +7,7 @@ part of 'hardware_logging_providers.dart';
 // **************************************************************************
 
 String _$hardwareAnyLoggingEnabledHash() =>
-    r'beaaa81e27aac3c9beeefdb66435243fdc38c396';
+    r'f2227e27c297c8ccd3f13f77961cc1be2595df98';
 
 /// A provider for whether any hardware logging is taking place.
 ///
@@ -23,8 +23,10 @@ final hardwareAnyLoggingEnabledProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef HardwareAnyLoggingEnabledRef = AutoDisposeProviderRef<bool>;
-String _$hardwareLogGnssHash() => r'965abb3350f3b1122e85d201e52b03323ce263ec';
+String _$hardwareLogGnssHash() => r'f20b996b10f18fa60de9ebb933c5b4b492283c25';
 
 /// A provider for whether received NMEA messages should be logged.
 ///
@@ -42,7 +44,7 @@ final hardwareLogGnssProvider =
 );
 
 typedef _$HardwareLogGnss = Notifier<bool>;
-String _$hardwareLogImuHash() => r'f7eabfbdc8a756df6f48cc0d891323298eb57d5e';
+String _$hardwareLogImuHash() => r'411ca0416874c21c280b4773b7b4225c6033384e';
 
 /// A provider for whether received IMU messages should be logged.
 ///
@@ -59,7 +61,7 @@ final hardwareLogImuProvider = NotifierProvider<HardwareLogImu, bool>.internal(
 );
 
 typedef _$HardwareLogImu = Notifier<bool>;
-String _$hardwareLogWasHash() => r'f7060d5906277ee9bf396ef312d2a4a0027ea353';
+String _$hardwareLogWasHash() => r'8b2b48bf43260b23f720214db9c933a381db6d8a';
 
 /// A provider for whether received WAS messages should be logged.
 ///
@@ -77,7 +79,7 @@ final hardwareLogWasProvider = NotifierProvider<HardwareLogWas, bool>.internal(
 
 typedef _$HardwareLogWas = Notifier<bool>;
 String _$hardwareLogCombinedHash() =>
-    r'9d881bffe5ef705ef031fab1e1039f2fb2b64efc';
+    r'749635bd24d71d663ab90085c0f1c674b376d9ff';
 
 /// A provider for whether received NMEA, IMU and WAS messages should be logged
 /// in a single file.
@@ -97,4 +99,4 @@ final hardwareLogCombinedProvider =
 
 typedef _$HardwareLogCombined = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

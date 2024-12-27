@@ -21,6 +21,7 @@ import 'dart:convert';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -32,7 +33,7 @@ part 'equipment_setup_providers.g.dart';
 class ConfiguredEquipmentSetup extends _$ConfiguredEquipmentSetup {
   @override
   EquipmentSetup? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next != null && next.allAttached.isNotEmpty) {
         ref.read(loadedEquipmentProvider.notifier).update(
               next.allAttached.cast<Equipment>().reduce(
@@ -54,7 +55,7 @@ class ConfiguredEquipmentSetup extends _$ConfiguredEquipmentSetup {
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> saveEquipmentSetup(
-  SaveEquipmentSetupRef ref,
+  Ref ref,
   EquipmentSetup setup, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -73,7 +74,7 @@ FutureOr<void> saveEquipmentSetup(
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> exportEquipmentSetup(
-  ExportEquipmentSetupRef ref,
+  Ref ref,
   EquipmentSetup setup, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -91,7 +92,7 @@ FutureOr<void> exportEquipmentSetup(
 /// user file directory.
 @Riverpod(keepAlive: true)
 FutureOr<List<EquipmentSetup>> savedEquipmentSetups(
-  SavedEquipmentSetupsRef ref,
+  Ref ref,
 ) async =>
     await ref
         .watch(
@@ -111,7 +112,7 @@ FutureOr<List<EquipmentSetup>> savedEquipmentSetups(
 /// Override the file name with [overrideName].
 @riverpod
 FutureOr<void> deleteEquipmentSetup(
-  DeleteEquipmentSetupRef ref,
+  Ref ref,
   EquipmentSetup setup, {
   String? overrideName,
   bool downloadIfWeb = false,
@@ -127,7 +128,7 @@ FutureOr<void> deleteEquipmentSetup(
 /// valid.
 @riverpod
 FutureOr<EquipmentSetup?> loadEquipmentSetupFromFile(
-  LoadEquipmentSetupFromFileRef ref,
+  Ref ref,
   String path,
 ) async {
   final file = File(path);
@@ -135,7 +136,7 @@ FutureOr<EquipmentSetup?> loadEquipmentSetupFromFile(
     try {
       final json = jsonDecode(await file.readAsString());
       return EquipmentSetup.fromJson(Map<String, dynamic>.from(json as Map));
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       Logger.instance.w(
         'Failed loading equipment setup from: $path',
         error: error,
@@ -150,7 +151,7 @@ FutureOr<EquipmentSetup?> loadEquipmentSetupFromFile(
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
 @riverpod
 FutureOr<EquipmentSetup?> importEquipmentSetup(
-  ImportEquipmentSetupRef ref,
+  Ref ref,
 ) async {
   ref.keepAlive();
   Timer(
@@ -171,7 +172,7 @@ FutureOr<EquipmentSetup?> importEquipmentSetup(
         final json = jsonDecode(String.fromCharCodes(data));
         equipmentSetup =
             EquipmentSetup.fromJson(Map<String, dynamic>.from(json as Map));
-      } catch (error, stackTrace) {
+      } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import equipment setup.',
           error: error,

@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'remote_control_providers.g.dart';
@@ -34,9 +35,8 @@ part 'remote_control_providers.g.dart';
 class RemoteControlButtonActions extends _$RemoteControlButtonActions {
   @override
   Map<int, RemoteControlButtonAction?> build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null) {
         if (const MapEquality<int, RemoteControlButtonAction?>()
             .equals(previous, next)) {
@@ -86,7 +86,7 @@ class RemoteControlButtonActions extends _$RemoteControlButtonActions {
 /// A provider for sending the current state of the features corresponding of
 /// the mapped [RemoteControlButtonActions] to the remote controller.
 @riverpod
-void sendRemoteControlLedState(SendRemoteControlLedStateRef ref) {
+void sendRemoteControlLedState(Ref ref) {
   if (ref.watch(remoteControlHardwareNetworkAliveProvider)) {
     final actions = ref.watch(remoteControlButtonActionsProvider);
 

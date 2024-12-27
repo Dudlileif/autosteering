@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,7 +46,7 @@ class ShowPathRecordingMenu extends _$ShowPathRecordingMenu {
 class EnablePathRecorder extends _$EnablePathRecorder {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next || previous != null) {
         Logger.instance.i('Path recorder ${switch (next) {
           true => 'enabled',
@@ -68,7 +69,7 @@ class EnablePathRecorder extends _$EnablePathRecorder {
 class EnableAutomaticPathRecorder extends _$EnableAutomaticPathRecorder {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (!next && (previous != null && previous)) {
         if (ref.read(pathRecordingListProvider).isNotEmpty) {
           ref.read(pathRecordingListProvider.notifier).add(
@@ -100,15 +101,14 @@ class EnableAutomaticPathRecorder extends _$EnableAutomaticPathRecorder {
 class ActivePathRecordingSettings extends _$ActivePathRecordingSettings {
   @override
   PathRecordingSettings build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.pathRecordingSettings, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.pathRecordingSettings, next);
+      }
+    });
     final json = ref
         .read(settingsProvider.notifier)
         .getMap(SettingsKey.pathRecordingSettings);
@@ -134,7 +134,7 @@ class ActivePathRecordingTarget extends _$ActivePathRecordingTarget {
 
 /// A provider for watching to keep the automatic path recording going.
 @riverpod
-Future<void> automaticPathRecording(AutomaticPathRecordingRef ref) async {
+Future<void> automaticPathRecording(Ref ref) async {
   final doRecord = ref.watch(
     enableAutomaticPathRecorderProvider,
   );
@@ -239,7 +239,7 @@ class PathRecordingList extends _$PathRecordingList {
 class FinishedPathRecordingList extends _$FinishedPathRecordingList {
   @override
   List<WayPoint>? build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next?.length != previous?.length) {
         Logger.instance
             .i('Finished path recording list: ${next?.length} points.');
@@ -304,7 +304,7 @@ class ShowFinishedPath extends _$ShowFinishedPath {
 class EditFinishedPath extends _$EditFinishedPath {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (previous != null) {
         Logger.instance.i('Editing recorded path: $next');
         if (!previous && next) {
@@ -346,16 +346,15 @@ class EditFinishedPath extends _$EditFinishedPath {
 class PathRecordingMenuUiOffset extends _$PathRecordingMenuUiOffset {
   @override
   Offset build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null && next != previous) {
-          ref.read(settingsProvider.notifier).update(
-                SettingsKey.uiPathRecordingMenuOffset,
-                next.toJson(),
-              );
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null && next != previous) {
+        ref.read(settingsProvider.notifier).update(
+              SettingsKey.uiPathRecordingMenuOffset,
+              next.toJson(),
+            );
+      }
+    });
 
     final setting = ref
         .read(settingsProvider.notifier)

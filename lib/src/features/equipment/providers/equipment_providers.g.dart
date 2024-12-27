@@ -7,7 +7,7 @@ part of 'equipment_providers.dart';
 // **************************************************************************
 
 String _$loadEquipmentFromFileHash() =>
-    r'54247c67cc79e90f8773473e3d870d1c79c013c1';
+    r'422adf1b1af74bab6f42d15b35e1f2f3b629ae24';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -156,6 +156,8 @@ class LoadEquipmentFromFileProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LoadEquipmentFromFileRef on AutoDisposeFutureProviderRef<Equipment?> {
   /// The parameter `path` of this provider.
   String get path;
@@ -170,7 +172,7 @@ class _LoadEquipmentFromFileProviderElement
   String get path => (origin as LoadEquipmentFromFileProvider).path;
 }
 
-String _$saveEquipmentHash() => r'40bec08cc39b6d284c749f8de135dbdb159f291c';
+String _$saveEquipmentHash() => r'd9224364098dbad4ab20bc9a5b3696e3a070c848';
 
 /// A provider for saving [equipment] to a file in the user file directory.
 ///
@@ -332,6 +334,8 @@ class SaveEquipmentProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SaveEquipmentRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `equipment` of this provider.
   Equipment get equipment;
@@ -355,7 +359,7 @@ class _SaveEquipmentProviderElement
   bool get downloadIfWeb => (origin as SaveEquipmentProvider).downloadIfWeb;
 }
 
-String _$exportEquipmentHash() => r'f91267effec957ccf5eeeba9d8a55ccca4a7f4a9';
+String _$exportEquipmentHash() => r'339c3a416629bd47b089892f76adf8c4fe1e4a3e';
 
 /// A provider for exporting [equipment] to a file.
 ///
@@ -517,6 +521,8 @@ class ExportEquipmentProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportEquipmentRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `equipment` of this provider.
   Equipment get equipment;
@@ -540,7 +546,7 @@ class _ExportEquipmentProviderElement
   bool get downloadIfWeb => (origin as ExportEquipmentProvider).downloadIfWeb;
 }
 
-String _$savedEquipmentsHash() => r'dede76af366e21da6460816b23f88b3b8c6d31f9';
+String _$savedEquipmentsHash() => r'039b1985239b14fc15ba46f72abf90002a8f5d2b';
 
 /// A provider for reading and holding all the saved [Equipment] in the
 /// user file directory.
@@ -557,8 +563,10 @@ final savedEquipmentsProvider = FutureProvider<List<Equipment>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SavedEquipmentsRef = FutureProviderRef<List<Equipment>>;
-String _$deleteEquipmentHash() => r'340f650d0a0e5f680a1cb62eb3ff94faadd5e20a';
+String _$deleteEquipmentHash() => r'cf2a25bbb6711e813fa5420a1b77140771dc9489';
 
 /// A provider for deleting [equipment] from the user file system.
 ///
@@ -709,6 +717,8 @@ class DeleteEquipmentProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DeleteEquipmentRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `equipment` of this provider.
   Equipment get equipment;
@@ -727,7 +737,7 @@ class _DeleteEquipmentProviderElement
   String? get overrideName => (origin as DeleteEquipmentProvider).overrideName;
 }
 
-String _$importEquipmentHash() => r'949fda77e74d872ecebdea5b7152249b595d7746';
+String _$importEquipmentHash() => r'23788a72e175496df6e300087a244ad146ac2e28';
 
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.
@@ -744,8 +754,10 @@ final importEquipmentProvider = AutoDisposeFutureProvider<Equipment?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ImportEquipmentRef = AutoDisposeFutureProviderRef<Equipment?>;
-String _$exportEquipmentsHash() => r'7489881fdecd927b31b25473dc438cd8d5222300';
+String _$exportEquipmentsHash() => r'b901191f3ac54bfe593d9dadec5e5c17d4c37977';
 
 /// A provider for exporting all equipment files.
 ///
@@ -872,6 +884,8 @@ class ExportEquipmentsProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportEquipmentsRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `zip` of this provider.
   bool get zip;
@@ -923,7 +937,7 @@ final loadedEquipmentProvider =
 );
 
 typedef _$LoadedEquipment = Notifier<Equipment?>;
-String _$allEquipmentsHash() => r'eb435cbe545b5ccbf55ed8a932cd185c29a32478';
+String _$allEquipmentsHash() => r'ed6e2354d60f1b17f19d0cea1df6909f78cbcecc';
 
 /// A provider that holds all of the equipments.
 ///
@@ -1103,6 +1117,8 @@ class EquipmentPathsProvider extends NotifierProviderImpl<EquipmentPaths,
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin EquipmentPathsRef
     on NotifierProviderRef<List<Map<int, List<SectionEdgePositions>?>>> {
   /// The parameter `uuid` of this provider.
@@ -1267,6 +1283,8 @@ class EquipmentLogRecordsProvider extends NotifierProviderImpl<
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin EquipmentLogRecordsRef on NotifierProviderRef<List<EquipmentLogRecord>?> {
   /// The parameter `uuid` of this provider.
   String get uuid;
@@ -1281,4 +1299,4 @@ class _EquipmentLogRecordsProviderElement extends NotifierProviderElement<
   String get uuid => (origin as EquipmentLogRecordsProvider).uuid;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

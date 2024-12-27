@@ -24,6 +24,8 @@ final gamepadInputEventsProvider = StreamProvider<GamepadInput>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GamepadInputEventsRef = StreamProviderRef<GamepadInput>;
 String _$handleGamepadInputHash() =>
     r'69b832ca8a051ec31d231c01d46bdbc36430a23d';
@@ -42,6 +44,8 @@ final handleGamepadInputProvider = Provider<void>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef HandleGamepadInputRef = ProviderRef<void>;
 String _$activeGamepadConfigHash() =>
     r'4e232a598d135b75cf202d6d8b9475241f4b89f2';
@@ -63,4 +67,4 @@ final activeGamepadConfigProvider =
 
 typedef _$ActiveGamepadConfig = Notifier<GamepadConfig>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

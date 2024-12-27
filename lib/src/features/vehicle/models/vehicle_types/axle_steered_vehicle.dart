@@ -618,24 +618,16 @@ sealed class AxleSteeredVehicle extends Vehicle {
             // Turning left
             true => switch (isReversing) {
                 // Reversing
-                true => bearing +
-                    90 +
-                    i / numberOfPoints * arcDegrees,
+                true => bearing + 90 + i / numberOfPoints * arcDegrees,
                 // Forward
-                false => bearing +
-                    90 -
-                    i / numberOfPoints * arcDegrees,
+                false => bearing + 90 - i / numberOfPoints * arcDegrees,
               },
             // Turning right
             false => switch (isReversing) {
                 // Reversing
-                true => bearing -
-                    90 -
-                    i / numberOfPoints * arcDegrees,
+                true => bearing - 90 - i / numberOfPoints * arcDegrees,
                 // Forward
-                false => bearing -
-                    90 +
-                    i / numberOfPoints * arcDegrees,
+                false => bearing - 90 + i / numberOfPoints * arcDegrees,
               },
           };
 
@@ -667,14 +659,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
     return LineString.from(points);
   }
 
-  /// Props used for checking for equality.
-  @override
-  List<Object> get props => super.props
-    ..addAll([
-      wheelBase,
-      antennaToSolidAxleDistance,
-    ]);
-
   /// The max extent/bounds points of the vehicle. The [bearing] is followed.
   List<Geographic> get points {
     final frontRight = topLeftPosition.rhumb.destinationPoint(
@@ -703,7 +687,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
   List<map.Polygon> get polygons => [
         map.Polygon(
           points: points.map((e) => e.latLng).toList(),
-          color: Colors.yellow.withOpacity(0.5),
+          color: Colors.yellow.withValues(alpha: 0.5),
         ),
       ];
 

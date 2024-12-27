@@ -19,34 +19,36 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/gnss/models/models.dart' as gnss;
+import 'package:autosteering/src/features/gnss/models/ntrip_profile.dart';
+import 'package:autosteering/src/features/gnss/providers/gnss_data_providers.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nmea/nmea.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
 part 'ntrip_providers.g.dart';
 
-/// A provider for whether the [ntripClient] provider should run.
+/// A provider for whether the [NtripClient] provider should run.
 @Riverpod(keepAlive: true)
 class NtripEnabled extends _$NtripEnabled {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (next != previous) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.ntripEnabled, next, force: true);
-        }
-        if (!next) {
-          ref.invalidate(ntripAliveProvider);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.ntripEnabled, next, force: true);
+      }
+      if (!next) {
+        ref.invalidate(ntripAliveProvider);
+      }
+    });
 
     return ref
             .read(settingsProvider.notifier)
@@ -61,20 +63,19 @@ class NtripEnabled extends _$NtripEnabled {
   void toggle() => Future(() => state = !state);
 }
 
-/// A provider for the stored [NtripProfile]s.
+/// A provider for the stored [gnss.NtripProfile]s.
 @Riverpod(keepAlive: true)
 class NtripProfiles extends _$NtripProfiles {
   @override
   List<NtripProfile> build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != null) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.ntripProfiles, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.ntripProfiles, next);
+      }
+    });
     final profiles =
         ref.read(settingsProvider.notifier).getList(SettingsKey.ntripProfiles);
     if (profiles != null) {
@@ -108,23 +109,21 @@ class NtripProfiles extends _$NtripProfiles {
     List<NtripProfile> next,
   ) =>
       true;
-  
 }
 
-/// A provider for the active [NtripProfile], if there is one.
+/// A provider for the active [gnss.NtripProfile], if there is one.
 @Riverpod(keepAlive: true)
 class ActiveNtripProfile extends _$ActiveNtripProfile {
   @override
   NtripProfile? build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
-        if (previous != next) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.ntripActiveProfile, next);
-        }
-      });
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (previous != next) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.ntripActiveProfile, next);
+      }
+    });
     final json = ref
         .read(settingsProvider.notifier)
         .getMap(SettingsKey.ntripActiveProfile);
@@ -162,33 +161,32 @@ class NtripDataUsageSession extends _$NtripDataUsageSession {
       });
 }
 
-/// A provider for telling whether the [ntripClient] is receiving data.
+/// A provider for telling whether the [NtripClient] is receiving data.
 ///
 /// If not set to true in the last 5 seconds, it will invalidate itself and the
-/// [ntripClient].
+/// [NtripClient].
 @Riverpod(keepAlive: true)
 class NtripAlive extends _$NtripAlive {
   Timer? _resetTimer;
 
   @override
   bool build() {
-    ref
-      ..listenSelf((previous, next) {
-        if (next) {
-          _resetTimer?.cancel();
-          _resetTimer = Timer(
-            const Duration(seconds: 5),
-            () {
-              Logger.instance.i('NTRIP client disconnected, timed out.');
-              ref.invalidateSelf();
-            },
-          );
-        }
-      })
-      ..onDispose(() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+      ref.invalidate(ntripClientProvider);
+    });
+    listenSelf((previous, next) {
+      if (next) {
         _resetTimer?.cancel();
-        ref.invalidate(ntripClientProvider);
-      });
+        _resetTimer = Timer(
+          const Duration(seconds: 5),
+          () {
+            Logger.instance.i('NTRIP client disconnected, timed out.');
+            ref.invalidateSelf();
+          },
+        );
+      }
+    });
 
     return false;
   }
@@ -202,48 +200,49 @@ class NtripAlive extends _$NtripAlive {
 /// The received NTRIP messages will be split into parts and sent to the
 /// connected [HardwareSerial] if connected or the [TcpServer].
 @Riverpod(keepAlive: true)
-FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
-  Timer? ggaSendingTimer;
+class NtripClient extends _$NtripClient {
+  @override
+  FutureOr<gnss.NtripClient?> build() async {
+    Timer? ggaSendingTimer;
 
-  if (!ref.watch(ntripEnabledProvider)) {
-    return null;
-  }
-
-  GGASentence? createGGASentence() {
-    final position = ref.read(
-      mainVehicleProvider.select((value) => value.position),
-    );
-    final currentSentence = ref.read(gnssCurrentSentenceProvider);
-    GGASentence? ggaSentence;
-
-    if (currentSentence is GGASentence) {
-      if (currentSentence.source == 'GP') {
-        ggaSentence = currentSentence;
-      }
+    if (!ref.watch(ntripEnabledProvider)) {
+      return null;
     }
-    return ggaSentence ??
-        GGASentence.create(
-          latitude: position.lat,
-          longitude: position.lon,
-          numSatellites: currentSentence?.numSatellites,
-          altitudeMSL: currentSentence?.altitudeMSL,
-          quality: currentSentence?.fixQuality,
-          hdop: currentSentence?.hdop ?? 99.99,
-          ageOfDifferentialData: currentSentence?.ageOfDifferentialData,
-          time: currentSentence?.utc,
-          geodialSeparation: currentSentence?.geoidSeparation,
-          source: currentSentence is TalkerSentence
-              ? (currentSentence! as TalkerSentence).source
-              : null,
-        );
-  }
 
-  ref
-    ..onDispose(() {
+    gnss.GGASentence? createGGASentence() {
+      final position = ref.read(
+        mainVehicleProvider.select((value) => value.position),
+      );
+      final currentSentence = ref.read(gnssCurrentSentenceProvider);
+      gnss.GGASentence? ggaSentence;
+
+      if (currentSentence is gnss.GGASentence) {
+        if (currentSentence.source == 'GP') {
+          ggaSentence = currentSentence;
+        }
+      }
+      return ggaSentence ??
+          gnss.GGASentence.create(
+            latitude: position.lat,
+            longitude: position.lon,
+            numSatellites: currentSentence?.numSatellites,
+            altitudeMSL: currentSentence?.altitudeMSL,
+            quality: currentSentence?.fixQuality,
+            hdop: currentSentence?.hdop ?? 99.99,
+            ageOfDifferentialData: currentSentence?.ageOfDifferentialData,
+            time: currentSentence?.utc,
+            geodialSeparation: currentSentence?.geoidSeparation,
+            source: currentSentence is TalkerSentence
+                ? (currentSentence! as TalkerSentence).source
+                : null,
+          );
+    }
+
+    ref.onDispose(() {
       Logger.instance.i('NTRIP client disconnected.');
       ggaSendingTimer?.cancel();
-    })
-    ..listenSelf((previous, next) {
+    });
+    listenSelf((previous, next) {
       next.when(
         data: (client) {
           if (client != null) {
@@ -336,18 +335,19 @@ FutureOr<NtripClient?> ntripClient(NtripClientRef ref) async {
       );
     });
 
-  final ntripProfile = ref.watch(activeNtripProfileProvider);
-  if (ntripProfile != null) {
-    return NtripClient.create(ntripProfile);
+    final ntripProfile = ref.watch(activeNtripProfileProvider);
+    if (ntripProfile != null) {
+      return gnss.NtripClient.create(ntripProfile);
+    }
+    return null;
   }
-  return null;
 }
 
 /// A provider for the NTRIP caster sourcetable for the currently selected
 /// NTRIP caster server.
 @riverpod
-FutureOr<Iterable<NtripMountPoint>?> ntripSourcetable(
-  NtripSourcetableRef ref, {
+FutureOr<Iterable<gnss.NtripMountPoint>?> ntripSourcetable(
+  Ref ref, {
   required String host,
   int port = 2101,
   String? username,
@@ -383,10 +383,10 @@ Connection: close\r
 
     Logger.instance.i('NTRIP sourcetable found with ${lines.length} lines.');
 
-    final table = lines.map(NtripSourcetableEntry.fromString);
+    final table = lines.map(gnss.NtripSourcetableEntry.fromString);
 
-    return table.whereType<NtripMountPoint>();
-  } catch (error, stackTrace) {
+    return table.whereType<gnss.NtripMountPoint>();
+  } on Exception catch (error, stackTrace) {
     Logger.instance.i(
       '''Failed getting the sourcetable for NTRIP caster server: $host:$port.''',
       error: error,
@@ -400,8 +400,8 @@ Connection: close\r
 /// A provider for sorting the [ntripSourcetable] by their distance to
 /// [MainVehicle].
 @riverpod
-FutureOr<Map<NtripMountPointStream, double?>?> ntripMountPointsSorted(
-  NtripMountPointsSortedRef ref, {
+FutureOr<Map<gnss.NtripMountPointStream, double?>?> ntripMountPointsSorted(
+  Ref ref, {
   required String host,
   int port = 2101,
   String? username,
@@ -418,7 +418,7 @@ FutureOr<Map<NtripMountPointStream, double?>?> ntripMountPointsSorted(
 
   final position =
       ref.read(mainVehicleProvider.select((value) => value.position));
-  final sorted = sourcetable?.whereType<NtripMountPointStream>().toList()
+  final sorted = sourcetable?.whereType<gnss.NtripMountPointStream>().toList()
     ?..sortByCompare(
       (element) => element.distanceToPoint(position) ?? double.infinity,
       (a, b) => a.compareTo(b),
@@ -458,7 +458,7 @@ class NtripDataUsageByMonth extends _$NtripDataUsageByMonth {
         'Found data usage file: ${file.path}\n${file.readAsStringSync()}',
       );
     }
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (!file.existsSync()) {
         file.createSync(recursive: true);
         Logger.instance.log(

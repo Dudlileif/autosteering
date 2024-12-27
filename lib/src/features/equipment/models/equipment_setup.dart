@@ -18,11 +18,10 @@
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
 
 /// A class that contains a setup for attached [Equipment]s that
 /// can be saved and applied/attached to [Hitchable]s.
-class EquipmentSetup with EquatableMixin {
+class EquipmentSetup {
   /// A class that contains a setup for attached [Equipment]s that
   /// can be saved and applied/attached to [Hitchable]s.
   EquipmentSetup({
@@ -173,15 +172,6 @@ class EquipmentSetup with EquatableMixin {
         'rear_fixed_child': rearFixedChild?.toJsonWithChildren(),
         'rear_towbar_child': rearTowbarChild?.toJsonWithChildren(),
       };
-
-  @override
-  List<Object?> get props => [
-        name,
-        frontFixedChild,
-        rearFixedChild,
-        rearTowbarChild,
-        lastUsed,
-      ];
 }
 
 /// An extension for getting the [EquipmentSetup] of the attached children

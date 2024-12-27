@@ -6,7 +6,7 @@ part of 'field_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bufferedFieldHash() => r'c774b893846b18dfd12eea404e30e6900961b5a5';
+String _$bufferedFieldHash() => r'b656a524caa62cc5ce4277030d42447c39bbf122';
 
 /// A provider for creating and updating the buffered test field.
 ///
@@ -22,8 +22,10 @@ final bufferedFieldProvider = FutureProvider<Field?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef BufferedFieldRef = FutureProviderRef<Field?>;
-String _$saveFieldHash() => r'1597ca27ab3b1d04585ac7ef64c02cebe733cc1b';
+String _$saveFieldHash() => r'92a779027968bd65be9b235e7e65fee303c85f9c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -205,6 +207,8 @@ class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SaveFieldRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `field` of this provider.
   Field get field;
@@ -228,7 +232,7 @@ class _SaveFieldProviderElement extends AutoDisposeFutureProviderElement<void>
   bool get downloadIfWeb => (origin as SaveFieldProvider).downloadIfWeb;
 }
 
-String _$exportFieldHash() => r'b707b1328302d7bc5842645493ab7c5c1f5e3464';
+String _$exportFieldHash() => r'4c9db7fb3ea45483588c2578e42142f7ca6d8c16';
 
 /// A provider for exporting [field] to a file.
 ///
@@ -390,6 +394,8 @@ class ExportFieldProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportFieldRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `field` of this provider.
   Field get field;
@@ -413,7 +419,7 @@ class _ExportFieldProviderElement extends AutoDisposeFutureProviderElement<void>
   bool get downloadIfWeb => (origin as ExportFieldProvider).downloadIfWeb;
 }
 
-String _$savedFieldsHash() => r'd5bdf7348f531b5ac9ec532e5062d4ea036f6e9b';
+String _$savedFieldsHash() => r'f7493e6ecfac6850213e6f0ce78c1e88e5a4d40b';
 
 /// A provider for reading and holding all the saved [Field]s in the
 /// user file directory.
@@ -429,8 +435,10 @@ final savedFieldsProvider = FutureProvider<List<Field>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SavedFieldsRef = FutureProviderRef<List<Field>>;
-String _$deleteFieldHash() => r'72213ab0d9d868bd948d453674cd94510ea39aa5';
+String _$deleteFieldHash() => r'8902ddd80ed51caa11ba5927c4d3aa1d10cc3b0f';
 
 /// A provider for deleting [field] from the user file system.
 ///
@@ -581,6 +589,8 @@ class DeleteFieldProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin DeleteFieldRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `field` of this provider.
   Field get field;
@@ -599,7 +609,7 @@ class _DeleteFieldProviderElement extends AutoDisposeFutureProviderElement<void>
   String? get overrideName => (origin as DeleteFieldProvider).overrideName;
 }
 
-String _$loadFieldFromFileHash() => r'ceb37971f4a6be7bf87d8c3ed017e061e0bc7001';
+String _$loadFieldFromFileHash() => r'defdf4eda3e6aa375860ecaddb0a99bc3fb1ae46';
 
 /// A provider for loading a [Field] from a file at [path], if it's valid.
 ///
@@ -726,6 +736,8 @@ class LoadFieldFromFileProvider extends AutoDisposeFutureProvider<Field?> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LoadFieldFromFileRef on AutoDisposeFutureProviderRef<Field?> {
   /// The parameter `path` of this provider.
   String get path;
@@ -739,7 +751,7 @@ class _LoadFieldFromFileProviderElement
   String get path => (origin as LoadFieldFromFileProvider).path;
 }
 
-String _$importFieldHash() => r'82c7a0079ee2ffe616a5a7f0231460cddcb5cfa2';
+String _$importFieldHash() => r'9ade62a28510a92e2f6cadd5f48fe28ed07d913b';
 
 /// A provider for importing a field from a file and applying
 /// [ActiveField] provider.
@@ -755,8 +767,10 @@ final importFieldProvider = AutoDisposeFutureProvider<Field?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ImportFieldRef = AutoDisposeFutureProviderRef<Field?>;
-String _$exportFieldsHash() => r'8bdc685459722ae1976f5f68ab21b94e9a17beb0';
+String _$exportFieldsHash() => r'c1d87b9901f7a889082e21769769226e46e4fcd8';
 
 /// A provider for exporting all field files.
 ///
@@ -883,6 +897,8 @@ class ExportFieldsProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ExportFieldsRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `zip` of this provider.
   bool get zip;
@@ -912,7 +928,7 @@ final showFieldProvider = NotifierProvider<ShowField, bool>.internal(
 );
 
 typedef _$ShowField = Notifier<bool>;
-String _$activeFieldHash() => r'cbaa7997f9b8a75fe6a655265918a575e5398dc2';
+String _$activeFieldHash() => r'6b464dec170f5960fb38979160138d08b78346f2';
 
 /// A provider for the active field.
 ///
@@ -1178,4 +1194,4 @@ final fieldInteriorRingsProvider =
 
 typedef _$FieldInteriorRings = Notifier<List<List<Geographic>>?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

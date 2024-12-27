@@ -7,7 +7,7 @@ part of 'hardware_serial_providers_web.dart';
 // **************************************************************************
 
 String _$availableSerialPortsHash() =>
-    r'9cf35c6bf4f99989b7e7975f5834be223cfc1397';
+    r'b3d0d4f16721c51b3385b14cd754b3009dae809e';
 
 /// A provider for the available serial ports.
 ///
@@ -24,9 +24,11 @@ final availableSerialPortsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AvailableSerialPortsRef = AutoDisposeProviderRef<List<Object?>>;
 String _$hardwareSerialStreamHash() =>
-    r'24b7b64ed1cd98f19e874d141110bb7d5b0a2002';
+    r'6e8454698dffa66b756f2bfa565b00c4f821c7e3';
 
 /// A stream of the incoming serial data from the connected hardware.
 ///
@@ -42,9 +44,11 @@ final hardwareSerialStreamProvider = StreamProvider<String?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef HardwareSerialStreamRef = StreamProviderRef<String?>;
 String _$hardwareSerialBaudRateHash() =>
-    r'0d984a20206a95d788d57c3b9223e52bad8d87e5';
+    r'2c397fd6a972584bd3a11441bac56d26184e2964';
 
 /// A provider for the baud rate for the [HardwareSerial] connection.
 ///
@@ -81,7 +85,7 @@ final hardwareSerialProvider =
 
 typedef _$HardwareSerial = Notifier<Object?>;
 String _$hardwareSerialAliveHash() =>
-    r'6b241bdd065caa0090ff1211560115098e20a838';
+    r'8e130768da3e3c2eaa24d25165f9c07bcae90822';
 
 /// A provider for telling whether the [HardwareSerial] is receiving data.
 ///
@@ -103,4 +107,4 @@ final hardwareSerialAliveProvider =
 
 typedef _$HardwareSerialAlive = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

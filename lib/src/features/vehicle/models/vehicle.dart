@@ -26,7 +26,6 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
 import 'package:geobase/geobase.dart';
@@ -39,7 +38,7 @@ part 'vehicle_types/tractor.dart';
 
 /// A base class for vehicles that handles all common parameters/variables
 /// and methods.
-sealed class Vehicle extends Hitchable with EquatableMixin {
+sealed class Vehicle extends Hitchable {
   /// A base class for vehicles that handles all common parameters/variables
   /// and methods.
   Vehicle({
@@ -703,24 +702,6 @@ sealed class Vehicle extends Hitchable with EquatableMixin {
     double period,
     double steeringAngle,
   );
-
-  /// Props used for checking for equality.
-  @override
-  List<Object> get props => [
-        position,
-        antennaHeight,
-        minTurningRadius,
-        steeringAngleMax,
-        trackWidth,
-        velocity,
-        bearing,
-        steeringAngleInput,
-        length,
-        width,
-        was.config,
-        imu.config,
-        steeringHardwareConfig,
-      ];
 
   /// Returns a new [Vehicle] based on this one, but with
   /// parameters/variables altered.

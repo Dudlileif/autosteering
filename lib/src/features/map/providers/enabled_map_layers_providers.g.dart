@@ -6,7 +6,7 @@ part of 'enabled_map_layers_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$showCountryLayersHash() => r'f0dd3c5eea4ae833673d2c9a5a3043c8aae24b7e';
+String _$showCountryLayersHash() => r'693e1e9787f292cdb0dece26cdfa8015415ed2a8';
 
 /// Whether the selected country layers should be shown.
 ///
@@ -22,9 +22,11 @@ final showCountryLayersProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowCountryLayersRef = AutoDisposeProviderRef<bool>;
 String _$showSentinelLayersHash() =>
-    r'faefb6ecfa71a06240cabe6d74dd31abe7fa6629';
+    r'83452dbdc13c80da5ce12ecbea0f17a4cebfd3df';
 
 /// Whether the selected Sentinel layers should be shown.
 ///
@@ -40,9 +42,11 @@ final showSentinelLayersProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowSentinelLayersRef = AutoDisposeProviderRef<bool>;
 String _$showFinishedPathLayerHash() =>
-    r'b3ab3c600695d5323d5c2ecd07bdf4cb2e8350db';
+    r'bb8c6db1efab2d9fe9173cec9be4ae714b038f59';
 
 /// Whether the finished recorded path should be shown.
 ///
@@ -58,9 +62,11 @@ final showFinishedPathLayerProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowFinishedPathLayerRef = AutoDisposeProviderRef<bool>;
 String _$showPathRecordingLayerHash() =>
-    r'fe8dbb6b176c8a1da9831d2cc731b53a2aead36d';
+    r'd7e29a3a921824ae745b2f6fcebd9ce810efdd41';
 
 /// Whether the currently recording path should be shown.
 ///
@@ -76,9 +82,11 @@ final showPathRecordingLayerProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowPathRecordingLayerRef = AutoDisposeProviderRef<bool>;
 String _$showEditablePathLayerHash() =>
-    r'a6eea51803adfdd7e33fb0e61e199871e7ea557e';
+    r'5cf0983bc12c9fd4dafad02cf17de527bd324a46';
 
 /// Whether the editable recorded path should be shown.
 ///
@@ -94,9 +102,11 @@ final showEditablePathLayerProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowEditablePathLayerRef = AutoDisposeProviderRef<bool>;
 String _$showVehicleDebugLayerHash() =>
-    r'e5f5659bcf4c00b8ac0cd7fa3971abe7a30541e0';
+    r'04524f762eda34ef3491f1088fab15356a0fff13';
 
 /// Whether the debugging layer for the vehicle should be shown.
 ///
@@ -112,9 +122,11 @@ final showVehicleDebugLayerProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowVehicleDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showDubinsPathDebugLayerHash() =>
-    r'2c850fa857d6529045c19b6c1c166017e9eb41e6';
+    r'ca9d0d9434fdd33b6a41f81241d9d7949cd9c586';
 
 /// Whether the debugging layer for the Dubins path should be shown.
 ///
@@ -130,9 +142,11 @@ final showDubinsPathDebugLayerProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowDubinsPathDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showPathTrackingLayerHash() =>
-    r'7ba806a3d334bf97dda6be74f54e2b3810b72ef0';
+    r'2517fe913ad66a204c59effd0df9d53e3477b82c';
 
 /// Whether the layer for the path tracking should be shown.
 ///
@@ -148,8 +162,10 @@ final showPathTrackingLayerProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowPathTrackingLayerRef = AutoDisposeProviderRef<bool>;
-String _$showFieldLayerHash() => r'483fd33e6e1f7e6c010a1d85da300700cd37d956';
+String _$showFieldLayerHash() => r'1548f19a2b5051fa1fed449ccb0033d09f71f69b';
 
 /// Whether the layer for field should be shown.
 ///
@@ -165,9 +181,11 @@ final showFieldLayerProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowFieldLayerRef = AutoDisposeProviderRef<bool>;
 String _$showEquipmentDebugLayerHash() =>
-    r'7b0f5d48bd0ef047c83a28213c6455cbb30dab11';
+    r'3448a8370f4e2f15602e23e224fa0d3a21bb7a2e';
 
 /// Whether the debugging layer for the equipment should be shown.
 ///
@@ -183,9 +201,11 @@ final showEquipmentDebugLayerProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowEquipmentDebugLayerRef = AutoDisposeProviderRef<bool>;
 String _$showABTrackingLayerHash() =>
-    r'4dc71619fcc3907a9e4de8e7696c1e93fa00e5ca';
+    r'ebbfe2943c22b990d012d77186fae4b7330e952b';
 
 /// Whether the layer for AB-tracking should be shown.
 ///
@@ -201,9 +221,11 @@ final showABTrackingLayerProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowABTrackingLayerRef = AutoDisposeProviderRef<bool>;
 String _$showSelectablePathLayerHash() =>
-    r'c522b5e23b57229051ffdfc8e63bc9a2a42f374e';
+    r'531d2d5f00726261acfa12203816c95fa9ac8e44';
 
 /// Whether the layer for selectable path should be shown.
 ///
@@ -219,8 +241,10 @@ final showSelectablePathLayerProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShowSelectablePathLayerRef = AutoDisposeProviderRef<bool>;
-String _$showOSMLayerHash() => r'b0a5ae14d55cd882f2456e2786f1e8bffd836a79';
+String _$showOSMLayerHash() => r'b323c7740a070ca00572ab48ed973460a5117698';
 
 /// Whether the OpenStreetMap layer should be shown.
 ///
@@ -275,7 +299,7 @@ final showEquipmentDrawingLayerProvider =
 );
 
 typedef _$ShowEquipmentDrawingLayer = AutoDisposeNotifier<bool>;
-String _$showGridLayerHash() => r'e3607479b6f71e85ea1c15bf80b2d89e45f7ce35';
+String _$showGridLayerHash() => r'de914d52a808bb170bc84287961f3cfcd95a905e';
 
 /// Whether the map should show grid lines.
 ///
@@ -294,4 +318,4 @@ final showGridLayerProvider =
 
 typedef _$ShowGridLayer = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'virtual_led_bar_providers.g.dart';
@@ -26,9 +27,8 @@ part 'virtual_led_bar_providers.g.dart';
 class VirtualLedBarEnabled extends _$VirtualLedBarEnabled {
   @override
   bool build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null && previous != next) {
         ref
             .read(settingsProvider.notifier)
@@ -54,9 +54,8 @@ class VirtualLedBarEnabled extends _$VirtualLedBarEnabled {
 class VirtualLedBarConfiguration extends _$VirtualLedBarConfiguration {
   @override
   LedBarConfig build() {
-    ref
-      ..watch(reloadAllSettingsProvider)
-      ..listenSelf((previous, next) {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
       if (previous != null) {
         ref
             .read(settingsProvider.notifier)
@@ -87,7 +86,7 @@ class VirtualLedBarConfiguration extends _$VirtualLedBarConfiguration {
 class VirtualLedBarTesting extends _$VirtualLedBarTesting {
   @override
   bool build() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next) {
         ref.read(virtualLedBarTestingDistanceProvider.notifier).update(0);
       } else {
@@ -115,7 +114,7 @@ class VirtualLedBarTestingDistance extends _$VirtualLedBarTestingDistance {
 /// guidance, otherwise 0.
 @riverpod
 double? virtualLedBarPerpendicularDistance(
-  VirtualLedBarPerpendicularDistanceRef ref,
+  Ref ref,
 ) =>
     ref.watch(virtualLedBarTestingDistanceProvider) ??
     ref.watch(abTrackingPerpendicularDistanceProvider) ??
