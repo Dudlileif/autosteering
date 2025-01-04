@@ -25,6 +25,7 @@ import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_html/html.dart' show Storage, window;
 import 'package:universal_io/io.dart';
@@ -35,17 +36,20 @@ part 'settings_providers.g.dart';
 /// A provider for the main settings file for the application.
 @Riverpod(keepAlive: true)
 Future<File> settingsFile(Ref ref) async {
-  final path =
-      '${ref.watch(fileDirectoryProvider).requireValue.path}/settings.json';
-  final file = File(path);
+  final file = File(
+    path.join(
+      ref.watch(fileDirectoryProvider).requireValue.path,
+      'settings.json',
+    ),
+  );
 
   if (file.existsSync()) {
-    Logger.instance.i('Settings file found: $path');
+    Logger.instance.i('Settings file found: ${file.path}');
     return file;
   }
 
   await file.create(recursive: true);
-  Logger.instance.i('Settings file created: $path');
+  Logger.instance.i('Settings file created: ${file.path}');
   return file;
 }
 

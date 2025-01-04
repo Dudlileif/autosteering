@@ -202,7 +202,7 @@ class _LoadPathTrackingFromFileProviderElement
   String get path => (origin as LoadPathTrackingFromFileProvider).path;
 }
 
-String _$savePathTrackingHash() => r'407164bc901625047357a394ca4b3b3b6489a451';
+String _$savePathTrackingHash() => r'5f8be03f26d7b23c96ba905ea99d125515453057';
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -390,7 +390,7 @@ class _SavePathTrackingProviderElement
 }
 
 String _$exportPathTrackingHash() =>
-    r'c36fc12cb59e8c5245de721e9b6f5464e0698641';
+    r'db15fe7381f02c1a3312bee2ecd235c8360e7640';
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -580,7 +580,7 @@ class _ExportPathTrackingProviderElement
 }
 
 String _$savedPathTrackingsHash() =>
-    r'3b7726b6f76eb3799103b81cb3e8e3546db8fa66';
+    r'af0113ed05ba71176298ddc62b963c93bb7c40d7';
 
 /// A provider for reading and holding all the saved [PathTracking] in the
 /// user file directory.
@@ -601,7 +601,7 @@ final savedPathTrackingsProvider = FutureProvider<List<PathTracking>>.internal(
 // ignore: unused_element
 typedef SavedPathTrackingsRef = FutureProviderRef<List<PathTracking>>;
 String _$deletePathTrackingHash() =>
-    r'ce4ff8f9cb7ba10b92f1f23ca4a23b2c78a9971c';
+    r'b510007c9f5577e46da70958dd8c88e3bc22fe41';
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///

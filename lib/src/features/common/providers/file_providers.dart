@@ -495,7 +495,7 @@ FutureOr<void> exportWholeFileDirectory(Ref ref) async {
 
         final exportPath = path.join(
           exportDirPath,
-          '''all_files-${DateTime.now().toIso8601String().replaceAll(':', '_')}.zip''',
+          '''all_files-${DateTime.now().toIso8601StringFileName()}.zip''',
         );
 
         final export = FileHandler.exportFileDirectory(
@@ -585,7 +585,7 @@ FutureOr<void> exportAll(
             if (zip) {
               final exportPath = path.join(
                 exportDirPath,
-                '''$directory-${DateTime.now().toIso8601String().replaceAll(':', '_')}.zip''',
+                '''$directory-${DateTime.now().toIso8601StringFileName()}.zip''',
               );
               final export = FileHandler.exportFileDirectory(
                 dirPath: dir.path,

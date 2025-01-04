@@ -26,6 +26,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -394,7 +395,7 @@ FutureOr<void> saveABTracking(
         fileName: overrideName ??
             tracking.name ??
             '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
-        folder: 'guidance/ab_tracking',
+        folder: path.join('guidance', 'ab_tracking'),
         downloadIfWeb: downloadIfWeb,
       ).future,
     );
@@ -415,7 +416,7 @@ FutureOr<void> exportABTracking(
         fileName: overrideName ??
             tracking.name ??
             '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
-        folder: 'guidance/ab_tracking',
+        folder: path.join('guidance', 'ab_tracking'),
         downloadIfWeb: downloadIfWeb,
       ).future,
     );
@@ -427,7 +428,7 @@ FutureOr<List<ABTracking>> savedABTrackings(Ref ref) async => await ref
     .watch(
       savedFilesProvider(
         fromJson: ABTracking.fromJson,
-        folder: 'guidance/ab_tracking',
+        folder: path.join('guidance', 'ab_tracking'),
       ).future,
     )
     .then((data) => data.cast());
@@ -447,7 +448,7 @@ FutureOr<void> deleteABTracking(
         fileName: overrideName ??
             tracking.name ??
             '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
-        folder: 'guidance/ab_tracking',
+        folder: path.join('guidance', 'ab_tracking'),
       ).future,
     );
 

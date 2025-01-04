@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripSourcetableHash() => r'0dc8131427a51b7173c46f82b12d19d3d892bd46';
+String _$ntripSourcetableHash() => r'83ef7184cd10cab831876f2855581b829bc52926';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -549,7 +549,7 @@ final ntripClientProvider =
 
 typedef _$NtripClient = AsyncNotifier<gnss.NtripClient?>;
 String _$ntripDataUsageByMonthHash() =>
-    r'115cd1c280851c38f5e54a1d0aeadd60f26f5632';
+    r'df6bc2919c3ebb6aab19cb9e7ce3365560f6374f';
 
 /// A provider for a map of all recorded months with their corresponding
 /// data usage.
