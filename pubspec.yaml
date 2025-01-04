@@ -20,7 +20,7 @@ dependencies:
     fast_cached_network_image: ^1.2.9
     file_picker: ^8.1.7
     fl_chart: ^0.70.0
-    flex_color_scheme: ^8.0.2
+    flex_color_scheme: ^8.1.0
     flutter:
         sdk: flutter
     flutter_libserialport: ^0.4.0
@@ -38,14 +38,14 @@ dependencies:
     json_annotation: ^4.9.0
     latlong2: ^0.9.1
     logger: ^2.5.0
-    material_symbols_icons: ^4.2801.0
+    material_symbols_icons: ^4.2801.1
     nmea: ^3.3.2
     path: ^1.9.0
     path_provider: ^2.1.5
     permission_handler: ^11.3.1
     quiver: ^3.2.2
     riverpod_annotation: ^2.6.1
-    themed: ^8.0.0
+    themed: ^8.0.2
     udp: ^5.0.3
     universal_html: ^2.2.4
     universal_io: ^2.2.2
