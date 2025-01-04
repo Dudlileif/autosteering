@@ -89,7 +89,7 @@ Future<File?> loggingFile(Ref ref) async {
 
       final removed = <String>[];
       for (final file in files) {
-        final time = DateTime.tryParse(
+        final time = DateTimeFileNameExtension.tryParseIso8601Filename(
           path.split(file.path).last.split('.log').first,
         )?.copyWith(
           hour: 0,
@@ -126,7 +126,7 @@ Future<File?> loggingFile(Ref ref) async {
             .toList();
         final removed = <String>[];
         for (final file in files) {
-          final time = DateTime.tryParse(
+          final time = DateTimeFileNameExtension.tryParseIso8601Filename(
             path.split(file.path).last.split('.log').first,
           )?.copyWith(
             hour: 0,
@@ -153,7 +153,7 @@ Future<File?> loggingFile(Ref ref) async {
     final filePath = path.join(
       dirPath,
       'logs',
-      '${Logger.instance.initializeTime.toIso8601String()}.log',
+      '${Logger.instance.initializeTime.toIso8601StringFileName()}.log',
     );
 
     final file = await File(filePath).create(recursive: true);

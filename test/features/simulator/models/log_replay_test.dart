@@ -5,10 +5,20 @@ import 'dart:io';
 
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:path/path.dart' as path;
+
 
 void main() async {
   final file = File(
-    '${Directory.current.path}/test/features/simulator/models/log/testing_log',
+    path.join(
+      Directory.current.path,
+      'test',
+      'features',
+      'simulator',
+      'models',
+      'log',
+      'testing_log',
+    ),
   );
 
   final logReplay = LogReplay(log: await file.readAsString());

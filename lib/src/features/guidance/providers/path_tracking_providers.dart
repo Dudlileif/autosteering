@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -222,8 +223,10 @@ FutureOr<void> savePathTracking(
       saveJsonToFileDirectoryProvider(
         object: tracking,
         fileName:
-            overrideName ?? tracking.name ?? DateTime.now().toIso8601String(),
-        folder: 'guidance/path_tracking',
+            overrideName ??
+            tracking.name ??
+            DateTime.now().toIso8601StringFileName(),
+        folder: path.join('guidance', 'path_tracking'),
         downloadIfWeb: downloadIfWeb,
       ).future,
     );
@@ -242,8 +245,10 @@ FutureOr<void> exportPathTracking(
       exportJsonToFileDirectoryProvider(
         object: tracking,
         fileName:
-            overrideName ?? tracking.name ?? DateTime.now().toIso8601String(),
-        folder: 'guidance/path_tracking',
+            overrideName ??
+            tracking.name ??
+            DateTime.now().toIso8601StringFileName(),
+        folder: path.join('guidance', 'path_tracking'),
         downloadIfWeb: downloadIfWeb,
       ).future,
     );
@@ -258,7 +263,7 @@ FutureOr<List<PathTracking>> savedPathTrackings(
         .watch(
           savedFilesProvider(
             fromJson: PathTracking.fromJson,
-            folder: 'guidance/path_tracking',
+            folder: path.join('guidance', 'path_tracking'),
           ).future,
         )
         .then((data) => data.cast());
@@ -277,8 +282,8 @@ FutureOr<void> deletePathTracking(
       deleteJsonFromFileDirectoryProvider(
         fileName: overrideName ??
             tracking.name ??
-            '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
-        folder: 'guidance/path_tracking',
+            '''${tracking.runtimeType}-${DateTime.now().toIso8601StringFileName()}''',
+        folder: path.join('guidance', 'path_tracking'),
       ).future,
     );
 

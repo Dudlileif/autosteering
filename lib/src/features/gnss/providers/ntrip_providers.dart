@@ -28,6 +28,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nmea/nmea.dart';
+import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -444,8 +445,8 @@ FutureOr<Map<gnss.NtripMountPointStream, double?>?> ntripMountPointsSorted(
 class NtripDataUsageByMonth extends _$NtripDataUsageByMonth {
   @override
   Map<String, int> build() {
-    final path = ref.watch(fileDirectoryProvider).requireValue.path;
-    final file = File('$path/data_usage_ntrip.json');
+    final dirPath = ref.watch(fileDirectoryProvider).requireValue.path;
+    final file = File(path.join(dirPath, 'data_usage_ntrip.json'));
     if (!file.existsSync()) {
       file.createSync(recursive: true);
       Logger.instance.log(

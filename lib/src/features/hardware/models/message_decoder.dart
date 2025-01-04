@@ -408,13 +408,14 @@ class MessageDecoder {
             ]);
 
             if (Device.isNative) {
+
               if (_logIMU && logDirectoryPath != null) {
                 _imuLogStartTime ??= DateTime.now();
                 final file = File(
                   path.join(
                     logDirectoryPath!,
                     'imu',
-                    '${_imuLogStartTime!.toIso8601String()}.log',
+                    '${_imuLogStartTime!.toIso8601StringFileName()}.log',
                   ),
                 );
                 if (!file.existsSync()) {
@@ -454,7 +455,7 @@ class MessageDecoder {
                   path.join(
                     logDirectoryPath!,
                     'was',
-                    '${_wasLogStartTime!.toIso8601String()}.log',
+                    '${_wasLogStartTime!.toIso8601StringFileName()}.log',
                   ),
                 );
                 if (!file.existsSync()) {
@@ -630,7 +631,7 @@ class MessageDecoder {
             path.join(
               logDirectoryPath!,
               'gnss',
-              '${_gnssLogStartTime!.toIso8601String()}.log',
+              '${_gnssLogStartTime!.toIso8601StringFileName()}.log',
             ),
           );
           if (!file.existsSync()) {
@@ -661,7 +662,7 @@ class MessageDecoder {
           path.join(
             logDirectoryPath!,
             'combined',
-            '${_combinedLogStartTime!.toIso8601String()}.log',
+            '${_combinedLogStartTime!.toIso8601StringFileName()}.log',
           ),
         );
         if (!file.existsSync()) {
@@ -669,7 +670,7 @@ class MessageDecoder {
         }
         file.writeAsStringSync(
           [
-            '${DateTime.now().toIso8601String()}: $str',
+            '${DateTime.now().toIso8601String}: $str',
             Platform.lineTerminator,
           ].join(),
           mode: FileMode.append,
