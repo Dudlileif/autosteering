@@ -99,7 +99,7 @@ final networkInterfacesProvider =
 
 typedef _$NetworkInterfaces = Notifier<List<NetworkInterface>>;
 String _$deviceIPAddressWlanHash() =>
-    r'92f57b37c3ab7a20c3eee06664e6ac62eaeeb9f7';
+    r'ce074c458ebbd164aa678c97b8c31ffb02106929';
 
 /// A provider for the wireless IP address of the device.
 ///
@@ -117,7 +117,7 @@ final deviceIPAddressWlanProvider =
 );
 
 typedef _$DeviceIPAddressWlan = Notifier<String?>;
-String _$deviceIPAddressAPHash() => r'a7b0fefd84c0948459afaa9a39ceae427c240302';
+String _$deviceIPAddressAPHash() => r'ce7a951ff9cdaa646e1f210b77b3ac2eef853f2c';
 
 /// A provider for the access point host IP address of the device.
 ///
@@ -136,7 +136,7 @@ final deviceIPAddressAPProvider =
 
 typedef _$DeviceIPAddressAP = Notifier<String?>;
 String _$deviceIPAddressEthernetHash() =>
-    r'edb5f85d5d221815af3c846664dde25a951b847f';
+    r'ce57e6b22c403d2f60015e7396b2409d9e5570ee';
 
 /// A provider for the ethernet IP address of the device.
 ///
@@ -249,7 +249,7 @@ final tcpServerProvider = AsyncNotifierProvider<TcpServer, Socket?>.internal(
 );
 
 typedef _$TcpServer = AsyncNotifier<Socket?>;
-String _$networkAvailableHash() => r'7fd62e678e64d2b631a0d3ac8b55880e25c0687d';
+String _$networkAvailableHash() => r'aa1e0d7e2aa56f8e74688eec390cade50a4d8e85';
 
 /// A provider for whether a network connection can be made.
 ///

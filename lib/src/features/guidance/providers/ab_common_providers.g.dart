@@ -219,7 +219,7 @@ class _LoadABTrackingFromFileProviderElement
   String get path => (origin as LoadABTrackingFromFileProvider).path;
 }
 
-String _$saveABTrackingHash() => r'c506e724cb81ab345de1cfd7cbb168f0ffea9238';
+String _$saveABTrackingHash() => r'0153ed4815d87f1d7d4cb4916655ba519f83be22';
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -406,7 +406,7 @@ class _SaveABTrackingProviderElement
   bool get downloadIfWeb => (origin as SaveABTrackingProvider).downloadIfWeb;
 }
 
-String _$exportABTrackingHash() => r'b0cc0c89fb932d413c3f4d2a83013a4d44dbbdc5';
+String _$exportABTrackingHash() => r'df3020bdcd032ce61d138a49315c1ae2e2be08c7';
 
 /// A provider for exporting [tracking] to a file.
 ///
@@ -593,7 +593,7 @@ class _ExportABTrackingProviderElement
   bool get downloadIfWeb => (origin as ExportABTrackingProvider).downloadIfWeb;
 }
 
-String _$savedABTrackingsHash() => r'73c08ce1c412310a32bd6feae3f91c9b28d57540';
+String _$savedABTrackingsHash() => r'1e113dca6f21424d1e0c9c56621eb72de77c6121';
 
 /// A provider for reading and holding all the saved [ABTracking] in the
 /// user file directory.
@@ -613,7 +613,7 @@ final savedABTrackingsProvider = FutureProvider<List<ABTracking>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SavedABTrackingsRef = FutureProviderRef<List<ABTracking>>;
-String _$deleteABTrackingHash() => r'7daf5a78617a7c3d266de2346bb852f8ce8bcaef';
+String _$deleteABTrackingHash() => r'70ee2f763ab0cebbce286752a32fb4b0783d0e89';
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///

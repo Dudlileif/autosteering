@@ -1531,7 +1531,7 @@ class _DeleteDirectoryFromFileDirectoryProviderElement
 }
 
 String _$exportWholeFileDirectoryHash() =>
-    r'c551fb0614e95f45bee216fc46df9893154ac000';
+    r'9e02b4510fbb3b3cdce8d132e5eaabb89779a7bc';
 
 /// A provider for exporting the whole file directory to a ZIP file.
 ///
@@ -1551,7 +1551,7 @@ final exportWholeFileDirectoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ExportWholeFileDirectoryRef = AutoDisposeFutureProviderRef<void>;
-String _$exportAllHash() => r'52fcb32eac1733551cdac9552aacc1a5fd4fbb4a';
+String _$exportAllHash() => r'cd62124dcce7c014ca145b5b5734d307beaca35a';
 
 /// A provider for exporting all files in a [directory].
 ///
@@ -1710,7 +1710,7 @@ class _ExportAllProviderElement extends AutoDisposeFutureProviderElement<void>
 }
 
 String _$importWholeFileDirectoryHash() =>
-    r'b68561946747a14bcaaae483264838a3865b70dd';
+    r'649a6ce371c61fd52ea6aca6a9bf4690a32c3985';
 
 /// A provider for importing all directory files from a zip file.
 ///
