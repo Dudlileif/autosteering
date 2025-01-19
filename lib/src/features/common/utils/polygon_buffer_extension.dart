@@ -97,6 +97,7 @@ extension PolygonBufferExtension on Polygon {
   /// A JSON string compatible verison of [bufferedPolygon].
   ///
   /// Primarly used to run the buffer operation in an isolate.
+  @pragma('vm:entry-point')
   static String bufferedPolygonFromJson(String json) {
     final data = Map<String, dynamic>.from(jsonDecode(json) as Map);
     final polygon = Polygon.parse(data['polygon'] as String);

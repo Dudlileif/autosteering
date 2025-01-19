@@ -30,6 +30,7 @@ class FileHandler {
     required String dirPath,
     required String exportPath,
   }) async* {
+    @pragma('vm:entry-point')
     Future<void> worker(SendPort sendPort) async {
       await ZipFileEncoder().zipDirectory(
         Directory(dirPath),

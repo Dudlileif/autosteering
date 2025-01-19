@@ -49,7 +49,7 @@ class SimInput extends _$SimInput {
       );
 }
 
-/// A provider for keeping the isolate [SendPort] for when working on a
+/// A provider for keeping the isolate [SendPort] when working on a
 /// native platform. Vehicle inputs gets directed here from [SimInput].
 @Riverpod(keepAlive: true)
 class _SimCoreIsolatePort extends _$SimCoreIsolatePort {
@@ -105,7 +105,7 @@ Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
     true => 5,
   };
 
-// Use the restart timer if we're not in debug mode or if we're in
+  // Use the restart timer if we're not in debug mode or if we're in
   // debug mode and don't allow long breaks.
   final restartTimer =
       switch (!kDebugMode || !ref.watch(simCoreDebugAllowLongBreaksProvider)) {

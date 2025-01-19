@@ -32,12 +32,14 @@ import 'package:udp/udp.dart';
 
 /// A class for simulating how vehicles should move given their position,
 /// bearing, steering angle and velocity.
+@pragma('vm:entry-point')
 class SimulatorCore {
   /// The time in seconds between attempts to resolve the hardware host/IP
   /// address.
   static const addressLookupRetryPeriod = 5;
 
   /// Used on native platforms since they can easily be multithreaded.
+  @pragma('vm:entry-point')
   static Future<void> isolateWorker(SendPort sendPort) async {
     DartPluginRegistrant.ensureInitialized();
 
