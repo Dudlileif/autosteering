@@ -45,7 +45,7 @@ class AudioQueue extends _$AudioQueue {
               ref.read(audioVolumeProvider.select((value) => value[asset])) ??
                   1;
           await _player?.setVolume(volume);
-          await _player?.setSourceAsset('audio/${asset.path}.ogg');
+          await _player?.setSourceAsset('audio/${asset.path}.mp3');
           await _player?.resume();
         }
       }
