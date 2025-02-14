@@ -241,7 +241,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
 /// the correct position and rotation on the [FlutterMap].
 ///
 /// The method of rotating if copied from [RotatedOverlayImage] from
-/// [FlutterMap], except that [MapCamera.latLngToScreenPoint] is used to get
+/// [FlutterMap], except that [MapCamera.latLngToScreenOffset] is used to get
 /// the bounds points.
 class MapVehicleTopDownPainter extends StatelessWidget {
   /// A dynamic vehicle painter for drawing a top-down view of a [Vehicle] in
@@ -264,26 +264,27 @@ class MapVehicleTopDownPainter extends StatelessWidget {
 
     final points = (vehicle as AxleSteeredVehicle).points;
 
-    final pxTopLeft = camera.latLngToScreenPoint(points.first.latLng);
-    final pxTopRight = camera.latLngToScreenPoint(points[1].latLng);
-    final pxBottomRight = camera.latLngToScreenPoint(points[2].latLng);
-    final pxBottomLeft = camera.latLngToScreenPoint(points[3].latLng);
+    final pxTopLeft = camera.latLngToScreenOffset(points.first.latLng);
+    final pxTopRight = camera.latLngToScreenOffset(points[1].latLng);
+    final pxBottomRight = camera.latLngToScreenOffset(points[2].latLng);
+    final pxBottomLeft = camera.latLngToScreenOffset(points[3].latLng);
 
     /// update/enlarge bounds so the new corner points fit within
-    final bounds = Bounds<double>(pxTopLeft, pxBottomRight)
-        .extend(pxTopRight)
-        .extend(pxBottomLeft);
+    final bounds = Rect.fromPoints(
+      pxTopLeft,
+      pxBottomRight,
+    ).expandToInclude(Rect.fromPoints(pxTopRight, pxBottomLeft));
 
-    final vectorX = (pxTopRight - pxTopLeft) / bounds.size.x;
-    final vectorY = (pxBottomLeft - pxTopLeft) / bounds.size.y;
-    final offset = pxTopLeft - (bounds.topLeft);
+    final vectorX = (pxTopRight - pxTopLeft) / bounds.width;
+    final vectorY = (pxBottomLeft - pxTopLeft) / bounds.size.height;
+    final offset = pxTopLeft - bounds.topLeft;
 
-    final a = vectorX.x;
-    final b = vectorX.y;
-    final c = vectorY.x;
-    final d = vectorY.y;
-    final tx = offset.x;
-    final ty = offset.y;
+    final a = vectorX.dx;
+    final b = vectorX.dy;
+    final c = vectorY.dx;
+    final d = vectorY.dy;
+    final tx = offset.dx;
+    final ty = offset.dy;
 
     final axleLeftPosition = (vehicle as AxleSteeredVehicle)
         .steeringAxlePosition
@@ -297,10 +298,10 @@ class MapVehicleTopDownPainter extends StatelessWidget {
     final steeringAxleWidth = vehicle.trackWidth / vehicle.width;
 
     return Positioned(
-      left: bounds.topLeft.x,
-      top: bounds.topLeft.y,
-      width: bounds.size.x,
-      height: bounds.size.y,
+      left: bounds.topLeft.dx,
+      top: bounds.topLeft.dy,
+      width: bounds.width,
+      height: bounds.height,
       child: Transform(
         transform: Matrix4(a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1),
         filterQuality: FilterQuality.low,

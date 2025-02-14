@@ -69,8 +69,18 @@ class _AutosteeringState extends ConsumerState<Autosteering> {
     }
 
     final app = MaterialApp(
-      theme: appTheme.light,
-      darkTheme: appTheme.dark,
+      theme: appTheme.light.copyWith(
+        sliderTheme: appTheme.light.sliderTheme.copyWith(year2023: false),
+        progressIndicatorTheme: appTheme.light.progressIndicatorTheme.copyWith(
+          year2023: false,
+        ),
+      ),
+      darkTheme: appTheme.dark.copyWith(
+        sliderTheme: appTheme.dark.sliderTheme.copyWith(year2023: false),
+        progressIndicatorTheme: appTheme.dark.progressIndicatorTheme.copyWith(
+          year2023: false,
+        ),
+      ),
       themeMode: themeMode,
       debugShowCheckedModeBanner: false,
       home: const MainScaffold(),

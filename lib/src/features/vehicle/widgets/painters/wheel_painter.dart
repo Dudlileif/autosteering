@@ -98,8 +98,10 @@ class WheelPainter extends StatelessWidget {
     final scaledWidth = numWheels * scaledTyreWidth +
         (numWheels - 1) * meterScale * wheelSpacing;
     final scaledHeight = meterScale * diameter;
-
-    final innerPositionPoint = camera.latLngToScreenPoint(innerPosition.latLng);
+    
+    final innerPositionPoint = camera.latLngToScreenOffset(
+      innerPosition.latLng,
+    );
 
     var angle = 0.0;
     if (camera.rotation == 0) {
@@ -118,8 +120,8 @@ class WheelPainter extends StatelessWidget {
     return Positioned(
       width: scaledWidth,
       height: scaledHeight,
-      left: innerPositionPoint.x - scaledTyreWidth / 2,
-      top: innerPositionPoint.y - scaledHeight / 2,
+      left: innerPositionPoint.dx - scaledTyreWidth / 2,
+      top: innerPositionPoint.dy - scaledHeight / 2,
       child: CustomPaint(
         painter: _WheelPainterImplementation(
           angle: angle,

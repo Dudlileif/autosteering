@@ -77,11 +77,18 @@ class Grid {
   static double _findGridSize(MapCamera camera) {
     final diagonal =
         camera
-        .pointToLatLng(const Point(0, 0))
+        .screenOffsetToLatLng(Offset.zero)
         .geoPosition
         .spherical
         .distanceTo(
-          camera.pointToLatLng(camera.nonRotatedSize).geoPosition,
+          camera
+              .screenOffsetToLatLng(
+                Offset(
+                  camera.nonRotatedSize.width,
+                  camera.nonRotatedSize.height,
+                ),
+              )
+              .geoPosition,
             );
     final exponent = (log(diagonal) / ln10).ceil().clamp(3, 8);
 

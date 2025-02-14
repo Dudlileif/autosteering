@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:math';
-
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -93,12 +91,12 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
       ignoringFeedbackPointer: false,
       dragAnchorStrategy: pointerDragAnchorStrategy,
       onDragUpdate: (details) {
-        final point = Point(
+        final point = Offset(
           details.globalPosition.dx,
           details.globalPosition.dy - kToolbarHeight,
         );
 
-        final position = map.pointToLatLng(point);
+        final position = map.screenOffsetToLatLng(point);
 
         widget.onMoved(position.geoPosition);
       },

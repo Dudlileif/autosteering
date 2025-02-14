@@ -43,7 +43,7 @@ class _EquipmentWorkedPathsLayerState
   @override
   Widget build(BuildContext context) {
     final camera = MapCamera.of(context);
-    final size = Size(camera.size.x, camera.size.y);
+    final size = Size(camera.size.width, camera.size.height);
 
     final equipments = ref.watch(
       allEquipmentsProvider.select(
@@ -67,11 +67,14 @@ class _EquipmentWorkedPathsLayerState
                     for (final offset in points.map(
                       (e) {
                         final offset1 = camera
-                            .latLngToScreenPoint(e.left.latLng)
-                            .toOffset();
+                            .latLngToScreenOffset(
+                              e.left.latLng,
+                            );
                         final offset2 = camera
-                            .latLngToScreenPoint(e.right.latLng)
-                            .toOffset();
+                            .latLngToScreenOffset(
+                              e.right.latLng,
+                            );
+                            
                         return [
                           offset1.dx,
                           offset1.dy,
@@ -89,12 +92,13 @@ class _EquipmentWorkedPathsLayerState
                       section,
                       fraction: recordFraction,
                     );
-                    final offset1 = camera
-                        .latLngToScreenPoint(points!.left.latLng)
-                        .toOffset();
-                    final offset2 = camera
-                        .latLngToScreenPoint(points.right.latLng)
-                        .toOffset();
+                          final offset1 = camera.latLngToScreenOffset(
+                            points!.left.latLng,
+                          );
+                          final offset2 = camera.latLngToScreenOffset(
+                            points.right.latLng,
+                          );
+
                     offsets.addAll([
                       offset1.dx,
                       offset1.dy,
