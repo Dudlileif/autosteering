@@ -206,21 +206,27 @@ class __SteeringHardwareConfigDialogState
         if (widget.setWidget != null)
           widget.setWidget!((value) => setState(() => _value = value)),
         Slider(
-          value: widget.selectionValues != null
-              ? widget.selectionValues!.indexOf(_value.round()).toDouble()
-              : _value,
-          onChanged: (value) => setState(
-            () => _value = widget.selectionValues != null
-                ? widget.selectionValues![value.round()].toDouble()
-                : value,
-          ),
+          value:
+              widget.selectionValues != null
+                  ? widget.selectionValues!.indexOf(_value.round()).toDouble()
+                  : _value,
+          onChanged:
+              (value) => setState(
+                () =>
+                    _value =
+                        widget.selectionValues != null
+                            ? widget.selectionValues![value.round()].toDouble()
+                            : value,
+              ),
           min: widget.min?.toDouble() ?? 0,
-          max: widget.selectionValues != null
-              ? widget.selectionValues!.length - 1
-              : widget.max?.toDouble() ?? 1,
-          divisions: widget.selectionValues != null
-              ? widget.selectionValues!.length - 1
-              : widget.divisions,
+          max:
+              widget.selectionValues != null
+                  ? widget.selectionValues!.length - 1
+                  : widget.max?.toDouble() ?? 1,
+          divisions:
+              widget.selectionValues != null
+                  ? widget.selectionValues!.length - 1
+                  : widget.divisions,
         ),
         Align(
           alignment: Alignment.centerRight,
@@ -443,6 +449,52 @@ class _MotorPage extends ConsumerWidget {
         },
         max: 200,
         divisions: 20,
+      ),
+      // Motor max deceletation RPM/s
+      _SteeringHardwareConfigListTile(
+        initialValue: ref.read(
+          mainVehicleProvider.select(
+            (value) => value.steeringHardwareConfig.maxDeceleration,
+          ),
+        ),
+        resetValue: 160,
+        text: (value) => 'Max Deceleration: ${value.round()} RPM/s',
+        onChangeEnd: (value) {
+          final oldValue = ref.read(
+            mainVehicleProvider.select(
+              (value) => value.steeringHardwareConfig.maxDeceleration,
+            ),
+          );
+          ref
+              .read(simInputProvider.notifier)
+              .send(
+                ref
+                    .read(
+                      mainVehicleProvider.select(
+                        (value) => value.steeringHardwareConfig,
+                      ),
+                    )
+                    .copyWith(maxDeceleration: value),
+              );
+          // Wait a short while before saving the
+          // hopefully updated vehicle.
+          Timer(const Duration(milliseconds: 100), () {
+            ref.read(
+              updateSteeringHardwareConfigProvider(
+                const SteeringHardwareConfigKeysContainer({
+                  SteeringHardwareConfigKey.maxDeceleration,
+                }),
+              ),
+            );
+            final vehicle = ref.watch(mainVehicleProvider);
+            ref.read(saveVehicleProvider(vehicle));
+            Logger.instance.i(
+              '''Updated vehicle motor config max deceleration RPM/s: $oldValue -> ${vehicle.steeringHardwareConfig.maxDeceleration}''',
+            );
+          });
+        },
+        max: 500,
+        divisions: 50,
       ),
       // Micro steps
       _SteeringHardwareConfigListTile(

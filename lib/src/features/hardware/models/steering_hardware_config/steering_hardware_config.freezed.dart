@@ -50,6 +50,10 @@ mixin _$SteeringHardwareConfig {
   @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
   double get maxAcceleration => throw _privateConstructorUsedError;
 
+  /// Maximum deceleration in RPM/s.
+  @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)
+  double get maxDeceleration => throw _privateConstructorUsedError;
+
   /// Maximum RPM
   @JsonKey(name: SteeringHardwareConfigKey.maxRPM)
   double get maxRPM => throw _privateConstructorUsedError;
@@ -191,6 +195,11 @@ mixin _$SteeringHardwareConfig {
   @JsonKey(name: SteeringHardwareConfigKey.wasMax)
   int get wasMax => throw _privateConstructorUsedError;
 
+  /// Whether the system should simulate a symmetric system by limiting motor
+  /// velocity in the shortest range (min-center or center-max) of the WAS.
+  @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)
+  bool get asymmetricVelocity => throw _privateConstructorUsedError;
+
   /// Serializes this SteeringHardwareConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
@@ -220,6 +229,8 @@ abstract class $SteeringHardwareConfigCopyWith<$Res> {
       MotorHoldingMode freeWheel,
       @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
       double maxAcceleration,
+      @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)
+      double maxDeceleration,
       @JsonKey(name: SteeringHardwareConfigKey.maxRPM) double maxRPM,
       @JsonKey(name: SteeringHardwareConfigKey.vStop) int vStop,
       @JsonKey(name: SteeringHardwareConfigKey.vStart) int vStart,
@@ -272,7 +283,9 @@ abstract class $SteeringHardwareConfigCopyWith<$Res> {
       @JsonKey(name: SteeringHardwareConfigKey.pidD) double pidD,
       @JsonKey(name: SteeringHardwareConfigKey.wasMin) int wasMin,
       @JsonKey(name: SteeringHardwareConfigKey.wasCenter) int wasCenter,
-      @JsonKey(name: SteeringHardwareConfigKey.wasMax) int wasMax});
+      @JsonKey(name: SteeringHardwareConfigKey.wasMax) int wasMax,
+      @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)
+      bool asymmetricVelocity});
 }
 
 /// @nodoc
@@ -298,6 +311,7 @@ class _$SteeringHardwareConfigCopyWithImpl<$Res,
     Object? holdMultiplier = null,
     Object? freeWheel = null,
     Object? maxAcceleration = null,
+    Object? maxDeceleration = null,
     Object? maxRPM = null,
     Object? vStop = null,
     Object? vStart = null,
@@ -331,6 +345,7 @@ class _$SteeringHardwareConfigCopyWithImpl<$Res,
     Object? wasMin = null,
     Object? wasCenter = null,
     Object? wasMax = null,
+    Object? asymmetricVelocity = null,
   }) {
     return _then(_value.copyWith(
       reverseDirection: null == reverseDirection
@@ -361,6 +376,10 @@ class _$SteeringHardwareConfigCopyWithImpl<$Res,
           ? _value.maxAcceleration
           : maxAcceleration // ignore: cast_nullable_to_non_nullable
               as double,
+      maxDeceleration: null == maxDeceleration
+          ? _value.maxDeceleration
+          : maxDeceleration // ignore: cast_nullable_to_non_nullable
+              as double,
       maxRPM: null == maxRPM
           ? _value.maxRPM
           : maxRPM // ignore: cast_nullable_to_non_nullable
@@ -495,6 +514,10 @@ class _$SteeringHardwareConfigCopyWithImpl<$Res,
           ? _value.wasMax
           : wasMax // ignore: cast_nullable_to_non_nullable
               as int,
+      asymmetricVelocity: null == asymmetricVelocity
+          ? _value.asymmetricVelocity
+          : asymmetricVelocity // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -521,6 +544,8 @@ abstract class _$$SteeringHardwareConfigImplCopyWith<$Res>
       MotorHoldingMode freeWheel,
       @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
       double maxAcceleration,
+      @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)
+      double maxDeceleration,
       @JsonKey(name: SteeringHardwareConfigKey.maxRPM) double maxRPM,
       @JsonKey(name: SteeringHardwareConfigKey.vStop) int vStop,
       @JsonKey(name: SteeringHardwareConfigKey.vStart) int vStart,
@@ -573,7 +598,9 @@ abstract class _$$SteeringHardwareConfigImplCopyWith<$Res>
       @JsonKey(name: SteeringHardwareConfigKey.pidD) double pidD,
       @JsonKey(name: SteeringHardwareConfigKey.wasMin) int wasMin,
       @JsonKey(name: SteeringHardwareConfigKey.wasCenter) int wasCenter,
-      @JsonKey(name: SteeringHardwareConfigKey.wasMax) int wasMax});
+      @JsonKey(name: SteeringHardwareConfigKey.wasMax) int wasMax,
+      @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)
+      bool asymmetricVelocity});
 }
 
 /// @nodoc
@@ -598,6 +625,7 @@ class __$$SteeringHardwareConfigImplCopyWithImpl<$Res>
     Object? holdMultiplier = null,
     Object? freeWheel = null,
     Object? maxAcceleration = null,
+    Object? maxDeceleration = null,
     Object? maxRPM = null,
     Object? vStop = null,
     Object? vStart = null,
@@ -631,6 +659,7 @@ class __$$SteeringHardwareConfigImplCopyWithImpl<$Res>
     Object? wasMin = null,
     Object? wasCenter = null,
     Object? wasMax = null,
+    Object? asymmetricVelocity = null,
   }) {
     return _then(_$SteeringHardwareConfigImpl(
       reverseDirection: null == reverseDirection
@@ -660,6 +689,10 @@ class __$$SteeringHardwareConfigImplCopyWithImpl<$Res>
       maxAcceleration: null == maxAcceleration
           ? _value.maxAcceleration
           : maxAcceleration // ignore: cast_nullable_to_non_nullable
+              as double,
+      maxDeceleration: null == maxDeceleration
+          ? _value.maxDeceleration
+          : maxDeceleration // ignore: cast_nullable_to_non_nullable
               as double,
       maxRPM: null == maxRPM
           ? _value.maxRPM
@@ -795,6 +828,10 @@ class __$$SteeringHardwareConfigImplCopyWithImpl<$Res>
           ? _value.wasMax
           : wasMax // ignore: cast_nullable_to_non_nullable
               as int,
+      asymmetricVelocity: null == asymmetricVelocity
+          ? _value.asymmetricVelocity
+          : asymmetricVelocity // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -817,6 +854,8 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
       this.freeWheel = MotorHoldingMode.freewheel,
       @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
       this.maxAcceleration = 80,
+      @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)
+      this.maxDeceleration = 160,
       @JsonKey(name: SteeringHardwareConfigKey.maxRPM) this.maxRPM = 150,
       @JsonKey(name: SteeringHardwareConfigKey.vStop) this.vStop = 10,
       @JsonKey(name: SteeringHardwareConfigKey.vStart) this.vStart = 0,
@@ -845,8 +884,7 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
       this.setConstantChopperAtHighVelocities = false,
       @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)
       this.dcStepLoadMeasurementPulseWidth = 64,
-      @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)
-      this.dcStepStallguardSensitivity = 5,
+      @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity) this.dcStepStallguardSensitivity = 5,
       @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart) this.hysteresisStart = 4,
       @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd) this.hysteresisEnd = 1,
       @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay) this.currentHoldDelay = 1,
@@ -861,7 +899,8 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
       @JsonKey(name: SteeringHardwareConfigKey.pidD) this.pidD = 2,
       @JsonKey(name: SteeringHardwareConfigKey.wasMin) this.wasMin = 250,
       @JsonKey(name: SteeringHardwareConfigKey.wasCenter) this.wasCenter = 2000,
-      @JsonKey(name: SteeringHardwareConfigKey.wasMax) this.wasMax = 3750})
+      @JsonKey(name: SteeringHardwareConfigKey.wasMax) this.wasMax = 3750,
+      @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity) this.asymmetricVelocity = false})
       : assert(
             microSteps == 0 ||
                 microSteps == 2 ||
@@ -880,6 +919,7 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
         assert(holdMultiplier >= 0 && holdMultiplier <= 1,
             'holdMultiplier should be in range 0 to 1.'),
         assert(maxAcceleration > 0, 'maxAcceleration should be positive.'),
+        assert(maxDeceleration > 0, 'maxDeceleration should be positive.'),
         assert(maxRPM > 0, 'maxRPM should be positive.'),
         assert(vStop >= 0, 'vStop should be positive.'),
         assert(vStart >= 0, 'vStart should be positive.'),
@@ -962,6 +1002,11 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
   @override
   @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
   final double maxAcceleration;
+
+  /// Maximum deceleration in RPM/s.
+  @override
+  @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)
+  final double maxDeceleration;
 
   /// Maximum RPM
   @override
@@ -1135,9 +1180,15 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
   @JsonKey(name: SteeringHardwareConfigKey.wasMax)
   final int wasMax;
 
+  /// Whether the system should simulate a symmetric system by limiting motor
+  /// velocity in the shortest range (min-center or center-max) of the WAS.
+  @override
+  @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)
+  final bool asymmetricVelocity;
+
   @override
   String toString() {
-    return 'SteeringHardwareConfig(reverseDirection: $reverseDirection, microSteps: $microSteps, stepsPerRotation: $stepsPerRotation, rmsCurrent: $rmsCurrent, holdMultiplier: $holdMultiplier, freeWheel: $freeWheel, maxAcceleration: $maxAcceleration, maxRPM: $maxRPM, vStop: $vStop, vStart: $vStart, tOff: $tOff, stallguardThreshold: $stallguardThreshold, stallguardFiltering: $stallguardFiltering, stallguardStop: $stallguardStop, semin: $semin, semax: $semax, coolstepThresholdRPM: $coolstepThresholdRPM, stealthChopThresholdRPM: $stealthChopThresholdRPM, chopperMode: $chopperMode, highVelocityChopperModeChangeThresholdRPM: $highVelocityChopperModeChangeThresholdRPM, dcStepThresholdRPM: $dcStepThresholdRPM, fullstepAtHighVelocities: $fullstepAtHighVelocities, setConstantChopperAtHighVelocities: $setConstantChopperAtHighVelocities, dcStepLoadMeasurementPulseWidth: $dcStepLoadMeasurementPulseWidth, dcStepStallguardSensitivity: $dcStepStallguardSensitivity, hysteresisStart: $hysteresisStart, hysteresisEnd: $hysteresisEnd, currentHoldDelay: $currentHoldDelay, blankTime: $blankTime, powerDownTime: $powerDownTime, zeroWaitTime: $zeroWaitTime, enableStealthChop: $enableStealthChop, automaticCurrentControl: $automaticCurrentControl, automaticPWMTuning: $automaticPWMTuning, pidP: $pidP, pidI: $pidI, pidD: $pidD, wasMin: $wasMin, wasCenter: $wasCenter, wasMax: $wasMax)';
+    return 'SteeringHardwareConfig(reverseDirection: $reverseDirection, microSteps: $microSteps, stepsPerRotation: $stepsPerRotation, rmsCurrent: $rmsCurrent, holdMultiplier: $holdMultiplier, freeWheel: $freeWheel, maxAcceleration: $maxAcceleration, maxDeceleration: $maxDeceleration, maxRPM: $maxRPM, vStop: $vStop, vStart: $vStart, tOff: $tOff, stallguardThreshold: $stallguardThreshold, stallguardFiltering: $stallguardFiltering, stallguardStop: $stallguardStop, semin: $semin, semax: $semax, coolstepThresholdRPM: $coolstepThresholdRPM, stealthChopThresholdRPM: $stealthChopThresholdRPM, chopperMode: $chopperMode, highVelocityChopperModeChangeThresholdRPM: $highVelocityChopperModeChangeThresholdRPM, dcStepThresholdRPM: $dcStepThresholdRPM, fullstepAtHighVelocities: $fullstepAtHighVelocities, setConstantChopperAtHighVelocities: $setConstantChopperAtHighVelocities, dcStepLoadMeasurementPulseWidth: $dcStepLoadMeasurementPulseWidth, dcStepStallguardSensitivity: $dcStepStallguardSensitivity, hysteresisStart: $hysteresisStart, hysteresisEnd: $hysteresisEnd, currentHoldDelay: $currentHoldDelay, blankTime: $blankTime, powerDownTime: $powerDownTime, zeroWaitTime: $zeroWaitTime, enableStealthChop: $enableStealthChop, automaticCurrentControl: $automaticCurrentControl, automaticPWMTuning: $automaticPWMTuning, pidP: $pidP, pidI: $pidI, pidD: $pidD, wasMin: $wasMin, wasCenter: $wasCenter, wasMax: $wasMax, asymmetricVelocity: $asymmetricVelocity)';
   }
 
   @override
@@ -1159,6 +1210,8 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
                 other.freeWheel == freeWheel) &&
             (identical(other.maxAcceleration, maxAcceleration) ||
                 other.maxAcceleration == maxAcceleration) &&
+            (identical(other.maxDeceleration, maxDeceleration) ||
+                other.maxDeceleration == maxDeceleration) &&
             (identical(other.maxRPM, maxRPM) || other.maxRPM == maxRPM) &&
             (identical(other.vStop, vStop) || other.vStop == vStop) &&
             (identical(other.vStart, vStart) || other.vStart == vStart) &&
@@ -1214,7 +1267,8 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
             (identical(other.pidD, pidD) || other.pidD == pidD) &&
             (identical(other.wasMin, wasMin) || other.wasMin == wasMin) &&
             (identical(other.wasCenter, wasCenter) || other.wasCenter == wasCenter) &&
-            (identical(other.wasMax, wasMax) || other.wasMax == wasMax));
+            (identical(other.wasMax, wasMax) || other.wasMax == wasMax) &&
+            (identical(other.asymmetricVelocity, asymmetricVelocity) || other.asymmetricVelocity == asymmetricVelocity));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1228,6 +1282,7 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
         holdMultiplier,
         freeWheel,
         maxAcceleration,
+        maxDeceleration,
         maxRPM,
         vStop,
         vStart,
@@ -1260,7 +1315,8 @@ class _$SteeringHardwareConfigImpl extends _SteeringHardwareConfig {
         pidD,
         wasMin,
         wasCenter,
-        wasMax
+        wasMax,
+        asymmetricVelocity
       ]);
 
   /// Create a copy of SteeringHardwareConfig
@@ -1294,6 +1350,8 @@ abstract class _SteeringHardwareConfig extends SteeringHardwareConfig {
       final MotorHoldingMode freeWheel,
       @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
       final double maxAcceleration,
+      @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)
+      final double maxDeceleration,
       @JsonKey(name: SteeringHardwareConfigKey.maxRPM) final double maxRPM,
       @JsonKey(name: SteeringHardwareConfigKey.vStop) final int vStop,
       @JsonKey(name: SteeringHardwareConfigKey.vStart) final int vStart,
@@ -1350,8 +1408,9 @@ abstract class _SteeringHardwareConfig extends SteeringHardwareConfig {
       @JsonKey(name: SteeringHardwareConfigKey.pidD) final double pidD,
       @JsonKey(name: SteeringHardwareConfigKey.wasMin) final int wasMin,
       @JsonKey(name: SteeringHardwareConfigKey.wasCenter) final int wasCenter,
-      @JsonKey(name: SteeringHardwareConfigKey.wasMax)
-      final int wasMax}) = _$SteeringHardwareConfigImpl;
+      @JsonKey(name: SteeringHardwareConfigKey.wasMax) final int wasMax,
+      @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)
+      final bool asymmetricVelocity}) = _$SteeringHardwareConfigImpl;
   const _SteeringHardwareConfig._() : super._();
 
   factory _SteeringHardwareConfig.fromJson(Map<String, dynamic> json) =
@@ -1392,6 +1451,11 @@ abstract class _SteeringHardwareConfig extends SteeringHardwareConfig {
   @override
   @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
   double get maxAcceleration;
+
+  /// Maximum deceleration in RPM/s.
+  @override
+  @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)
+  double get maxDeceleration;
 
   /// Maximum RPM
   @override
@@ -1564,6 +1628,12 @@ abstract class _SteeringHardwareConfig extends SteeringHardwareConfig {
   @override
   @JsonKey(name: SteeringHardwareConfigKey.wasMax)
   int get wasMax;
+
+  /// Whether the system should simulate a symmetric system by limiting motor
+  /// velocity in the shortest range (min-center or center-max) of the WAS.
+  @override
+  @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)
+  bool get asymmetricVelocity;
 
   /// Create a copy of SteeringHardwareConfig
   /// with the given fields replaced by the non-null parameter values.

@@ -18,6 +18,7 @@ _$SteeringHardwareConfigImpl _$$SteeringHardwareConfigImplFromJson(
           $enumDecodeNullable(_$MotorHoldingModeEnumMap, json['freewheel']) ??
               MotorHoldingMode.freewheel,
       maxAcceleration: (json['AMAX_RPM_S'] as num?)?.toDouble() ?? 80,
+      maxDeceleration: (json['DMAX_RPM_S'] as num?)?.toDouble() ?? 160,
       maxRPM: (json['VMAX_RPM'] as num?)?.toDouble() ?? 150,
       vStop: (json['VSTOP'] as num?)?.toInt() ?? 10,
       vStart: (json['VSTART'] as num?)?.toInt() ?? 0,
@@ -54,6 +55,7 @@ _$SteeringHardwareConfigImpl _$$SteeringHardwareConfigImplFromJson(
       wasMin: (json['was_min'] as num?)?.toInt() ?? 250,
       wasCenter: (json['was_center'] as num?)?.toInt() ?? 2000,
       wasMax: (json['was_max'] as num?)?.toInt() ?? 3750,
+      asymmetricVelocity: json['asymmetric_velocity'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$SteeringHardwareConfigImplToJson(
@@ -66,6 +68,7 @@ Map<String, dynamic> _$$SteeringHardwareConfigImplToJson(
       'hold_multiplier': instance.holdMultiplier,
       'freewheel': _$MotorHoldingModeEnumMap[instance.freeWheel]!,
       'AMAX_RPM_S': instance.maxAcceleration,
+      'DMAX_RPM_S': instance.maxDeceleration,
       'VMAX_RPM': instance.maxRPM,
       'VSTOP': instance.vStop,
       'VSTART': instance.vStart,
@@ -99,6 +102,7 @@ Map<String, dynamic> _$$SteeringHardwareConfigImplToJson(
       'was_min': instance.wasMin,
       'was_center': instance.wasCenter,
       'was_max': instance.wasMax,
+      'asymmetric_velocity': instance.asymmetricVelocity,
     };
 
 const _$MotorHoldingModeEnumMap = {

@@ -47,6 +47,9 @@ class SteeringHardwareConfigKey {
   /// Key for [SteeringHardwareConfig.maxAcceleration].
   static const maxAcceleration = 'AMAX_RPM_S';
 
+  /// Key for [SteeringHardwareConfig.maxDeceleration].
+  static const maxDeceleration = 'DMAX_RPM_S';
+
   /// Key for [SteeringHardwareConfig.maxRPM].
   static const maxRPM = 'VMAX_RPM';
 
@@ -146,6 +149,9 @@ class SteeringHardwareConfigKey {
 
   /// Key for [SteeringHardwareConfig.wasMax].
   static const wasMax = 'was_max';
+
+  /// Key for [SteeringHardwareConfig.asymmetricVelocity].
+  static const asymmetricVelocity = 'asymmetric_velocity';
 }
 
 /// An immutable container for handling multiple [SteeringHardwareConfigKey]s
@@ -203,6 +209,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     'holdMultiplier should be in range 0 to 1.',
   )
   @Assert('maxAcceleration>0', 'maxAcceleration should be positive.')
+  @Assert('maxDeceleration>0', 'maxDeceleration should be positive.')
   @Assert('maxRPM>0', 'maxRPM should be positive.')
   @Assert('vStop>=0', 'vStop should be positive.')
   @Assert('vStart>=0', 'vStart should be positive.')
@@ -317,6 +324,11 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
     @Default(80)
     double maxAcceleration,
+
+    /// Maximum deceleration in RPM/s.
+    @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)
+    @Default(160)
+    double maxDeceleration,
 
     /// Maximum RPM
     @JsonKey(name: SteeringHardwareConfigKey.maxRPM)
@@ -470,6 +482,12 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
 
     /// Maximum reading value for WAS.
     @JsonKey(name: SteeringHardwareConfigKey.wasMax) @Default(3750) int wasMax,
+
+    /// Whether the system should simulate a symmetric system by limiting motor
+    /// velocity in the shortest range (min-center or center-max) of the WAS.
+    @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)
+    @Default(false)
+    bool asymmetricVelocity,
   }) = _SteeringHardwareConfig;
 
   /// Private constructor to allow use of methods with freezed models.

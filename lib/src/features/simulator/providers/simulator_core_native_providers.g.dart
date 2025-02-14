@@ -71,7 +71,7 @@ typedef _$SimInput = Notifier<void>;
 String _$simCoreIsolatePortHash() =>
     r'64cdd106492ca58082261994da9711b1a9459816';
 
-/// A provider for keeping the isolate [SendPort] for when working on a
+/// A provider for keeping the isolate [SendPort] when working on a
 /// native platform. Vehicle inputs gets directed here from [SimInput].
 ///
 /// Copied from [_SimCoreIsolatePort].

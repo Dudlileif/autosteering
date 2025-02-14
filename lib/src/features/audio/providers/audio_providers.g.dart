@@ -6,7 +6,7 @@ part of 'audio_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$audioQueueHash() => r'c56d27c63a08771a95327aa7bb59c3673289809f';
+String _$audioQueueHash() => r'1cbc8b68a1e886f70b4c47785970712715c55a1b';
 
 /// A provider for a set queue of [AudioAsset]s, which also automatically plays
 /// and removes them after they are added.
