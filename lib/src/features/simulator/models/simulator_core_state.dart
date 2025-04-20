@@ -69,12 +69,14 @@ class SimulatorCoreState {
 
   /// A list of the last [gaugesAverageCount] GNSS updates.
   List<
-      ({
-        Geographic gnssPosition,
-        DateTime gnssTime,
-        DateTime receiveTime,
-        GnssFixQuality quality,
-      })> prevGnssUpdates = [];
+    ({
+      Geographic gnssPosition,
+      DateTime gnssTime,
+      DateTime receiveTime,
+      GnssFixQuality quality,
+    })
+  >
+  prevGnssUpdates = [];
 
   /// The current GNSS update position and time.
   ({
@@ -82,7 +84,8 @@ class SimulatorCoreState {
     DateTime gnssTime,
     DateTime receiveTime,
     GnssFixQuality quality,
-  })? gnssUpdate;
+  })?
+  gnssUpdate;
 
   /// The GNSS update position and time that was used for updating gauges
   /// (distance).
@@ -91,7 +94,8 @@ class SimulatorCoreState {
     DateTime gnssTime,
     DateTime receiveTime,
     GnssFixQuality quality,
-  })? prevDistanceCalcGnssUpdate;
+  })?
+  prevDistanceCalcGnssUpdate;
 
   /// The quality of the last GNSS fix.
   GnssFixQuality gnssFixQuality = GnssFixQuality.notAvailable;
@@ -202,8 +206,10 @@ class SimulatorCoreState {
       vehicle = message.copyWith(
         velocity: vehicle?.velocity,
         bearing: vehicle?.bearing,
-        steeringAngleInput: vehicle?.steeringAngleInput
-            .clamp(-message.steeringAngleMax, message.steeringAngleMax),
+        steeringAngleInput: vehicle?.steeringAngleInput.clamp(
+          -message.steeringAngleMax,
+          message.steeringAngleMax,
+        ),
         hitchFrontFixedChild:
             message.hitchFrontFixedChild ?? vehicle?.hitchFrontFixedChild,
         hitchRearFixedChild:
@@ -228,18 +234,18 @@ class SimulatorCoreState {
     else if (message is ImuConfig) {
       vehicle?.imu.config = message;
     }
-
     // Update the vehicle position.
     else if (message is ({Geographic position})) {
       vehicle?.position = message.position;
     }
     // Update the vehicle position from GNSS.
-    else if (message is ({
-      Geographic gnssPosition,
-      DateTime gnssTime,
-      DateTime receiveTime,
-      GnssFixQuality quality,
-    })) {
+    else if (message
+        is ({
+          Geographic gnssPosition,
+          DateTime gnssTime,
+          DateTime receiveTime,
+          GnssFixQuality quality,
+        })) {
       if (!allowManualSimInput) {
         gnssUpdate = message;
       }
@@ -255,7 +261,6 @@ class SimulatorCoreState {
     else if (message is ImuReading) {
       vehicle?.imu.addReading(message);
     }
-
     // Update the WAS config of the vehicle.
     else if (message is WasConfig) {
       vehicle?.was.config = message;
@@ -264,7 +269,6 @@ class SimulatorCoreState {
     else if (message is SteeringHardwareConfig) {
       vehicle?.steeringHardwareConfig = message;
     }
-
     // Update bearing
     else if (message is ({double bearing})) {
       vehicle?.bearing = message.bearing;
@@ -344,8 +348,9 @@ class SimulatorCoreState {
 
         if (abTracking != null || pathTracking != null) {
           autosteeringState = AutosteeringState.enabled;
-          mainThreadSendStream
-              .add(LogEvent(Level.warning, 'Autosteer enabled!'));
+          mainThreadSendStream.add(
+            LogEvent(Level.warning, 'Autosteer enabled!'),
+          );
         } else {
           autosteeringState = AutosteeringState.disabled;
           mainThreadSendStream.add(
@@ -360,10 +365,7 @@ class SimulatorCoreState {
       else if (autosteeringState != AutosteeringState.disabled) {
         autosteeringState = AutosteeringState.disabled;
         mainThreadSendStream.add(
-          LogEvent(
-            Level.warning,
-            'Autosteer disabled!',
-          ),
+          LogEvent(Level.warning, 'Autosteer disabled!'),
         );
       }
     } else if (message is ({bool enableAutoSteer, bool noCommand})) {
@@ -406,7 +408,6 @@ class SimulatorCoreState {
     else if (message is StanleyParameters) {
       vehicle?.stanleyParameters = message;
     }
-
     // Change pure pursuit mode.
     else if (message is PathTrackingMode) {
       pathTrackingMode = message;
@@ -415,17 +416,16 @@ class SimulatorCoreState {
         final index = pathTracking!.currentIndex;
         pathTracking = switch (pathTrackingMode) {
           PathTrackingMode.purePursuit => PurePursuitPathTracking(
-              wayPoints: pathTracking!.wayPoints,
-              interpolationDistance: pathInterpolationDistance,
-              loopMode: pathTrackingLoopMode,
-            ),
+            wayPoints: pathTracking!.wayPoints,
+            interpolationDistance: pathInterpolationDistance,
+            loopMode: pathTrackingLoopMode,
+          ),
           PathTrackingMode.stanley => StanleyPathTracking(
-              wayPoints: pathTracking!.wayPoints,
-              interpolationDistance: pathInterpolationDistance,
-              loopMode: pathTrackingLoopMode,
-            ),
-        }
-          ..cumulativeIndex = index;
+            wayPoints: pathTracking!.wayPoints,
+            interpolationDistance: pathInterpolationDistance,
+            loopMode: pathTrackingLoopMode,
+          ),
+        }..cumulativeIndex = index;
       }
     } else if (message is ({double pathInterpolationDistance})) {
       pathInterpolationDistance = message.pathInterpolationDistance;
@@ -460,11 +460,8 @@ class SimulatorCoreState {
     }
     // Attach a new equipment. Detach by sending null as the equipment with
     // the same hitch position.
-    else if (message is ({
-      String parentUuid,
-      Equipment child,
-      Hitch position
-    })) {
+    else if (message
+        is ({String parentUuid, Equipment child, Hitch position})) {
       vehicle?.attachChildTo(
         message.parentUuid,
         message.child,
@@ -502,10 +499,8 @@ class SimulatorCoreState {
     }
     // Update whether to automate section activation of the equipment with the
     // given uuid.
-    else if (message is ({
-      String uuid,
-      Map<int, bool> automateActiveSections
-    })) {
+    else if (message
+        is ({String uuid, Map<int, bool> automateActiveSections})) {
       final equipment = vehicle?.findChildRecursive(message.uuid);
       if (equipment != null && equipment is Equipment) {
         message.automateActiveSections.forEach((section, automate) {
@@ -533,8 +528,10 @@ class SimulatorCoreState {
       abTracking?.applyConfig(message);
       if (vehicle != null && abTracking is ABCurve) {
         abTracking?.updateNextOffset(vehicle!);
-        (abTracking! as ABCurve)
-            .updateCurrentPathTracking(vehicle!, force: true);
+        (abTracking! as ABCurve).updateCurrentPathTracking(
+          vehicle!,
+          force: true,
+        );
       }
     }
     // Sets whether the AB-tracking should snap to the closest line.
@@ -564,10 +561,7 @@ class SimulatorCoreState {
       if (abTracking != null && message.abTrackingClearFinishedOffsets) {
         abTracking!.clearFinishedOffsets();
         mainThreadSendStream.add(
-          LogEvent(
-            Level.info,
-            'Cleared ABTracking finished offsets.',
-          ),
+          LogEvent(Level.info, 'Cleared ABTracking finished offsets.'),
         );
       }
     }
@@ -575,17 +569,11 @@ class SimulatorCoreState {
     else if (message is ({bool abTrackingRecalculateLines})) {
       if (abTracking != null && message.abTrackingRecalculateLines) {
         mainThreadSendStream.add(
-          LogEvent(
-            Level.info,
-            'Recalculating ABTracking lines...',
-          ),
+          LogEvent(Level.info, 'Recalculating ABTracking lines...'),
         );
         abTracking!.calculateLinesWithinBoundary();
         mainThreadSendStream.add(
-          LogEvent(
-            Level.info,
-            'Recalculated ABTracking lines.',
-          ),
+          LogEvent(Level.info, 'Recalculated ABTracking lines.'),
         );
       }
     }
@@ -606,25 +594,17 @@ class SimulatorCoreState {
       if (message.steeringAngleOverride != null && vehicle != null) {
         steeringHardwareSendStream?.add(
           const Utf8Encoder().convert(
-            jsonEncode(
-              {
-                'was_target': vehicle!.wasTargetFromSteeringAngle(
-                  message.steeringAngleOverride!,
-                ),
-                'enable_motor': true,
-              },
-            ),
+            jsonEncode({
+              'was_target': vehicle!.wasTargetFromSteeringAngle(
+                message.steeringAngleOverride!,
+              ),
+              'enable_motor': true,
+            }),
           ),
         );
       } else {
         steeringHardwareSendStream?.add(
-          const Utf8Encoder().convert(
-            jsonEncode(
-              {
-                'enable_motor': false,
-              },
-            ),
-          ),
+          const Utf8Encoder().convert(jsonEncode({'enable_motor': false})),
         );
       }
     }
@@ -682,11 +662,12 @@ class SimulatorCoreState {
             const slowingRate = 2;
 
             vehicle!.velocity = switch (vehicle!.velocity.abs() > 0.1) {
-              true => vehicle!.velocity -
-                  period *
-                      slowingRate *
-                      vehicle!.velocity /
-                      vehicle!.velocity.abs(),
+              true =>
+                vehicle!.velocity -
+                    period *
+                        slowingRate *
+                        vehicle!.velocity /
+                        vehicle!.velocity.abs(),
               false => 0,
             };
           }
@@ -698,10 +679,12 @@ class SimulatorCoreState {
       if (!receivingManualInput &&
           steeringAngleTarget != null &&
           autosteeringState == AutosteeringState.enabled) {
-        final pidVelocity =
-            vehicle!.simulatedMotorVelocityPid(steeringAngleTarget!);
+        final pidVelocity = vehicle!.simulatedMotorVelocityPid(
+          steeringAngleTarget!,
+        );
         vehicle!.steeringAngleInput = clampDouble(
-          vehicle!.steeringAngleInput += (clampDouble(
+          vehicle!.steeringAngleInput +=
+              (clampDouble(
                 pidVelocity * steeringRate,
                 -steeringRate,
                 steeringRate,
@@ -741,20 +724,22 @@ class SimulatorCoreState {
                 autosteeringState == AutosteeringState.disabled) {
               // Centering rate deg/s, slow down to not overshoot the min steering
               // angle in the opposite direction
-              final centeringRate =
-                  switch (vehicle!.steeringAngle.abs() < 0.5) {
+              final centeringRate = switch (vehicle!.steeringAngle.abs() <
+                  0.5) {
                 false => 25,
                 true => 5,
               };
 
-              vehicle!.steeringAngleInput = switch (
-                  vehicle!.steeringAngle.abs() < Vehicle.minSteeringAngle) {
+              vehicle!.steeringAngleInput = switch (vehicle!.steeringAngle
+                      .abs() <
+                  Vehicle.minSteeringAngle) {
                 true => 0,
-                false => vehicle!.steeringAngleInput -
-                    period *
-                        centeringRate *
-                        vehicle!.steeringAngleInput.abs() /
-                        vehicle!.steeringAngleInput,
+                false =>
+                  vehicle!.steeringAngleInput -
+                      period *
+                          centeringRate *
+                          vehicle!.steeringAngleInput.abs() /
+                          vehicle!.steeringAngleInput,
               };
             }
         }
@@ -808,7 +793,7 @@ class SimulatorCoreState {
         } else {
           steeringAngleTarget =
               abTracking!.nextSteeringAngle(vehicle!, mode: pathTrackingMode) ??
-                  0;
+              0;
         }
       } else if (pathTracking != null) {
         if (pathTracking!.isCompleted &&
@@ -831,12 +816,7 @@ class SimulatorCoreState {
           wasTarget = vehicle!.wasTargetFromSteeringAngle(steeringAngleTarget!);
           steeringHardwareSendStream?.add(
             const Utf8Encoder().convert(
-              jsonEncode(
-                {
-                  'was_target': wasTarget,
-                  'enable_motor': true,
-                },
-              ),
+              jsonEncode({'was_target': wasTarget, 'enable_motor': true}),
             ),
           );
           autosteeringState = AutosteeringState.enabled;
@@ -844,37 +824,23 @@ class SimulatorCoreState {
           autosteeringState = AutosteeringState.standby;
           wasTarget = null;
           steeringHardwareSendStream?.add(
-            const Utf8Encoder().convert(
-              jsonEncode(
-                {
-                  'enable_motor': false,
-                },
-              ),
-            ),
+            const Utf8Encoder().convert(jsonEncode({'enable_motor': false})),
           );
         }
       } else if (motorCalibrationEnabled) {
         steeringHardwareSendStream?.add(
           const Utf8Encoder().convert(
-            jsonEncode(
-              {
-                'motor_en_cal': motorCalibrationEnabled,
-                'enable_motor': motorCalibrationEnabled,
-              },
-            ),
+            jsonEncode({
+              'motor_en_cal': motorCalibrationEnabled,
+              'enable_motor': motorCalibrationEnabled,
+            }),
           ),
         );
         wasTarget = null;
       } else {
         wasTarget = null;
         steeringHardwareSendStream?.add(
-          const Utf8Encoder().convert(
-            jsonEncode(
-              {
-                'enable_motor': false,
-              },
-            ),
-          ),
+          const Utf8Encoder().convert(jsonEncode({'enable_motor': false})),
         );
       }
 
@@ -898,8 +864,9 @@ class SimulatorCoreState {
     if (vehicle != null && allowManualSimInput) {
       // Distance
       if (prevVehicle != null) {
-        final movedDistance =
-            vehicle!.position.rhumb.distanceTo(prevVehicle!.position);
+        final movedDistance = vehicle!.position.rhumb.distanceTo(
+          prevVehicle!.position,
+        );
 
         // Filter out too large distances
         if (movedDistance < 5) {
@@ -929,8 +896,11 @@ class SimulatorCoreState {
       if (period > 0 && allowManualSimInput) {
         // If the position change bearing is more than 120 deg from the
         // vehicle's bearing, assume we're in reverse.
-        final directionSign = switch (
-            bearingDifference(vehicle!.bearingRaw, gaugeBearing) > 120) {
+        final directionSign = switch (bearingDifference(
+              vehicle!.bearingRaw,
+              gaugeBearing,
+            ) >
+            120) {
           true => -1,
           false => 1,
         };
@@ -953,32 +923,38 @@ class SimulatorCoreState {
         // Correct for roll and pitch if IMU bearing is set.
         if (vehicle!.imu.bearingIsSet && vehicle!.imu.config.usePitchAndRoll) {
           gnssUpdate = (
-            gnssPosition: vehicle!
-                .correctPositionForRollAndPitch(gnssUpdate!.gnssPosition),
+            gnssPosition: vehicle!.correctPositionForRollAndPitch(
+              gnssUpdate!.gnssPosition,
+            ),
             gnssTime: gnssUpdate!.gnssTime,
             receiveTime: gnssUpdate!.receiveTime,
             quality: gnssUpdate!.quality,
           );
         }
 
-        final prevGnssUpdatesOfSameQuality = prevGnssUpdates
-            .where((e) => e.quality == gnssUpdate!.quality)
-            .toList();
+        final prevGnssUpdatesOfSameQuality =
+            prevGnssUpdates
+                .where((e) => e.quality == gnssUpdate!.quality)
+                .toList();
 
-        var distances = prevGnssUpdatesOfSameQuality
-            .map(
-              (e) => e.gnssPosition.rhumb.distanceTo(gnssUpdate!.gnssPosition),
-            )
-            .toList();
+        var distances =
+            prevGnssUpdatesOfSameQuality
+                .map(
+                  (e) =>
+                      e.gnssPosition.rhumb.distanceTo(gnssUpdate!.gnssPosition),
+                )
+                .toList();
 
         if (prevDistanceCalcGnssUpdate?.quality != gnssUpdate!.quality) {
           prevDistanceCalcGnssUpdate = null;
         }
 
-        final distanceToLastGaugePoint = prevDistanceCalcGnssUpdate != null
-            ? gnssUpdate!.gnssPosition.rhumb
-                .distanceTo(prevDistanceCalcGnssUpdate!.gnssPosition)
-            : 0.0;
+        final distanceToLastGaugePoint =
+            prevDistanceCalcGnssUpdate != null
+                ? gnssUpdate!.gnssPosition.rhumb.distanceTo(
+                  prevDistanceCalcGnssUpdate!.gnssPosition,
+                )
+                : 0.0;
         if (distanceToLastGaugePoint > minBearingUpdateDistance / 5) {
           distance = distanceToLastGaugePoint;
           prevDistanceCalcGnssUpdate = gnssUpdate;
@@ -1012,11 +988,12 @@ class SimulatorCoreState {
             break CheckIfUpdateIsUsable;
           }
 
-          final bearing = prevGnssUpdatesOfSameQuality[
-                  prevGnssUpdatesOfSameQuality.length - 2]
-              .gnssPosition
-              .rhumb
-              .finalBearingTo(gnssUpdate!.gnssPosition);
+          final bearing =
+              prevGnssUpdatesOfSameQuality[prevGnssUpdatesOfSameQuality.length -
+                      2]
+                  .gnssPosition
+                  .rhumb
+                  .finalBearingTo(gnssUpdate!.gnssPosition);
 
           if (!bearing.isFinite) {
             gaugeVelocity = velocityAvg * vehicle!.velocity.sign;
@@ -1035,32 +1012,37 @@ class SimulatorCoreState {
           // vehicle pitch and roll.
           if (vehicle!.imu.config.usePitchAndRoll) {
             gnssUpdate = (
-              gnssPosition: vehicle!
-                  .correctPositionForRollAndPitch(gnssUpdate!.gnssPosition),
+              gnssPosition: vehicle!.correctPositionForRollAndPitch(
+                gnssUpdate!.gnssPosition,
+              ),
               gnssTime: gnssUpdate!.gnssTime,
               receiveTime: gnssUpdate!.receiveTime,
               quality: gnssUpdate!.quality,
             );
-            prevGnssUpdates = prevGnssUpdates
-                .map(
-                  (e) => (
-                    gnssPosition:
-                        vehicle!.correctPositionForRollAndPitch(e.gnssPosition),
-                    gnssTime: e.gnssTime,
-                    receiveTime: e.receiveTime,
-                    quality: e.quality,
-                  ),
-                )
-                .toList();
+            prevGnssUpdates =
+                prevGnssUpdates
+                    .map(
+                      (e) => (
+                        gnssPosition: vehicle!.correctPositionForRollAndPitch(
+                          e.gnssPosition,
+                        ),
+                        gnssTime: e.gnssTime,
+                        receiveTime: e.receiveTime,
+                        quality: e.quality,
+                      ),
+                    )
+                    .toList();
 
             // Update the distances and velocities based on the corrected
             // positions.
-            distances = prevGnssUpdates
-                .map(
-                  (e) =>
-                      e.gnssPosition.rhumb.distanceTo(gnssUpdate!.gnssPosition),
-                )
-                .toList();
+            distances =
+                prevGnssUpdates
+                    .map(
+                      (e) => e.gnssPosition.rhumb.distanceTo(
+                        gnssUpdate!.gnssPosition,
+                      ),
+                    )
+                    .toList();
 
             velocities = prevGnssUpdates.mapIndexed(
               (index, element) =>
@@ -1079,8 +1061,9 @@ class SimulatorCoreState {
         } else {
           // Only update bearing if distance to a previous position is larger
           // than [minBearingUpdateDistance].
-          final prevPositionIndex = distances
-              .lastIndexWhere((element) => element > minBearingUpdateDistance);
+          final prevPositionIndex = distances.lastIndexWhere(
+            (element) => element > minBearingUpdateDistance,
+          );
 
           double? bearing;
           if (prevPositionIndex > -1) {
@@ -1102,14 +1085,14 @@ class SimulatorCoreState {
 
           drivingDirectionSign =
               switch (bearingDifference(bearing, bearingReference) > 90) {
-            true => -1,
-            false => 1,
-          };
+                true => -1,
+                false => 1,
+              };
 
-          final directionCorrectedBearing = switch (
-              drivingDirectionSign.isNegative) {
+          final directionCorrectedBearing = switch (drivingDirectionSign
+              .isNegative) {
             true => (bearing + 180).wrap360(),
-            false => bearing
+            false => bearing,
           };
 
           // A moving weighted average for zeroing the IMU bearing to prevent
@@ -1190,10 +1173,7 @@ class SimulatorCoreState {
         }
         // Update by simulation
         else if (allowManualSimInput || allowSimInterpolation) {
-          vehicle!.updatePositionAndBearing(
-            period,
-            turningCircleCenter,
-          );
+          vehicle!.updatePositionAndBearing(period, turningCircleCenter);
           if (allowManualSimInput && gaugeVelocity.sign < 0) {
             gaugeBearing = (gaugeBearing + 180).wrap360();
           }
@@ -1204,13 +1184,15 @@ class SimulatorCoreState {
           vehicle!.velocity = gaugeVelocity;
         }
         gnssUpdate = null;
-        vehicle!.wheelsRolledDistance += distance *
+        vehicle!.wheelsRolledDistance +=
+            distance *
             switch (vehicle!.velocity < 0) {
               true => -1,
               false => 1,
             };
       }
-      didChange = forceChange ||
+      didChange =
+          forceChange ||
           prevVehicle != vehicle ||
           oldGaugeVelocity != gaugeVelocity;
       prevVehicle = vehicle?.copyWith();

@@ -113,9 +113,7 @@ class VirtualLedBarTestingDistance extends _$VirtualLedBarTestingDistance {
 /// A provider for the perpendicular distance to the currently active
 /// guidance, otherwise 0.
 @riverpod
-double? virtualLedBarPerpendicularDistance(
-  Ref ref,
-) =>
+double? virtualLedBarPerpendicularDistance(Ref ref) =>
     ref.watch(virtualLedBarTestingDistanceProvider) ??
     ref.watch(abTrackingPerpendicularDistanceProvider) ??
     ref.watch(pathTrackingPerpendicularDistanceProvider);

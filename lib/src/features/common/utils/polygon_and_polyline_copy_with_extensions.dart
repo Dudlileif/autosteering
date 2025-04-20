@@ -37,23 +37,22 @@ extension PolygonCopyWith on Polygon {
     PolygonLabelPlacement? labelPlacement,
     bool? rotateLabel,
     Object? hitValue,
-  }) =>
-      Polygon(
-        points: points ?? this.points,
-        holePointsList: holePointsList ?? this.holePointsList,
-        color: color ?? this.color,
-        borderStrokeWidth: borderStrokeWidth ?? this.borderStrokeWidth,
-        borderColor: borderColor ?? this.borderColor,
-        disableHolesBorder: disableHolesBorder ?? this.disableHolesBorder,
-        pattern: pattern ?? this.pattern,
-        strokeCap: strokeCap ?? this.strokeCap,
-        strokeJoin: strokeJoin ?? this.strokeJoin,
-        label: label ?? this.label,
-        labelStyle: labelStyle ?? this.labelStyle,
-        labelPlacement: labelPlacement ?? this.labelPlacement,
-        rotateLabel: rotateLabel ?? this.rotateLabel,
-        hitValue: hitValue ?? this.hitValue,
-      );
+  }) => Polygon(
+    points: points ?? this.points,
+    holePointsList: holePointsList ?? this.holePointsList,
+    color: color ?? this.color,
+    borderStrokeWidth: borderStrokeWidth ?? this.borderStrokeWidth,
+    borderColor: borderColor ?? this.borderColor,
+    disableHolesBorder: disableHolesBorder ?? this.disableHolesBorder,
+    pattern: pattern ?? this.pattern,
+    strokeCap: strokeCap ?? this.strokeCap,
+    strokeJoin: strokeJoin ?? this.strokeJoin,
+    label: label ?? this.label,
+    labelStyle: labelStyle ?? this.labelStyle,
+    labelPlacement: labelPlacement ?? this.labelPlacement,
+    rotateLabel: rotateLabel ?? this.rotateLabel,
+    hitValue: hitValue ?? this.hitValue,
+  );
 }
 
 /// An extension to allow for using [copyWith] on [Polyline].
@@ -72,20 +71,18 @@ extension PolylineCopyWith on Polyline {
     StrokeJoin? strokeJoin,
     bool? useStrokeWidthInMeter,
     Object? hitValue,
-  }) =>
-      Polyline(
-        points: points ?? this.points,
-        strokeWidth: strokeWidth ?? this.strokeWidth,
-        color: color ?? this.color,
-        borderStrokeWidth: borderStrokeWidth ?? this.borderStrokeWidth,
-        borderColor: borderColor ?? this.borderColor,
-        gradientColors: gradientColors ?? this.gradientColors,
-        colorsStop: colorsStop ?? this.colorsStop,
-        pattern: pattern ?? this.pattern,
-        strokeCap: strokeCap ?? this.strokeCap,
-        strokeJoin: strokeJoin ?? this.strokeJoin,
-        useStrokeWidthInMeter:
-            useStrokeWidthInMeter ?? this.useStrokeWidthInMeter,
-        hitValue: hitValue ?? this.hitValue,
-      );
+  }) => Polyline(
+    points: points ?? this.points,
+    strokeWidth: strokeWidth ?? this.strokeWidth,
+    color: color ?? this.color,
+    borderStrokeWidth: borderStrokeWidth ?? this.borderStrokeWidth,
+    borderColor: borderColor ?? this.borderColor,
+    gradientColors: gradientColors ?? this.gradientColors,
+    colorsStop: colorsStop ?? this.colorsStop,
+    pattern: pattern ?? this.pattern,
+    strokeCap: strokeCap ?? this.strokeCap,
+    strokeJoin: strokeJoin ?? this.strokeJoin,
+    useStrokeWidthInMeter: useStrokeWidthInMeter ?? this.useStrokeWidthInMeter,
+    hitValue: hitValue ?? this.hitValue,
+  );
 }

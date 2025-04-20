@@ -38,9 +38,13 @@ class RemoteControlButtonActions extends _$RemoteControlButtonActions {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null) {
-        if (const MapEquality<int, RemoteControlButtonAction?>()
-            .equals(previous, next)) {
-          ref.read(settingsProvider.notifier).update(
+        if (const MapEquality<int, RemoteControlButtonAction?>().equals(
+          previous,
+          next,
+        )) {
+          ref
+              .read(settingsProvider.notifier)
+              .update(
                 SettingsKey.remoteControlButtonActions,
                 next.map((key, value) => MapEntry('$key', value?.name)),
               );
@@ -53,8 +57,9 @@ class RemoteControlButtonActions extends _$RemoteControlButtonActions {
             ?.map(
               (key, value) => MapEntry(
                 int.tryParse(key) ?? 0,
-                RemoteControlButtonAction.values
-                    .firstWhereOrNull((element) => element.name == value),
+                RemoteControlButtonAction.values.firstWhereOrNull(
+                  (element) => element.name == value,
+                ),
               ),
             ) ??
         {
@@ -70,17 +75,17 @@ class RemoteControlButtonActions extends _$RemoteControlButtonActions {
 
   /// Updates the [action] for button [i].
   void updateButton(int i, RemoteControlButtonAction? action) => Future(
-        () =>
-            state = state..update(i, (value) => action, ifAbsent: () => action),
-      );
+    () => state = state..update(i, (value) => action, ifAbsent: () => action),
+  );
 
   @override
   bool updateShouldNotify(
     Map<int, RemoteControlButtonAction?> previous,
     Map<int, RemoteControlButtonAction?> next,
-  ) =>
-      const MapEquality<int, RemoteControlButtonAction?>()
-          .equals(previous, next);
+  ) => const MapEquality<int, RemoteControlButtonAction?>().equals(
+    previous,
+    next,
+  );
 }
 
 /// A provider for sending the current state of the features corresponding of
@@ -94,22 +99,23 @@ void sendRemoteControlLedState(Ref ref) {
     for (final action in actions.values) {
       if (action != null) {
         final state = switch (action) {
-          RemoteControlButtonAction.toggleABSnap => ref.watch(
-                displayABTrackingProvider.select((value) => value != null),
-              ) &&
-              ref.watch(aBSnapToClosestLineProvider),
+          RemoteControlButtonAction.toggleABSnap =>
+            ref.watch(
+                  displayABTrackingProvider.select((value) => value != null),
+                ) &&
+                ref.watch(aBSnapToClosestLineProvider),
           RemoteControlButtonAction.toggleAutosteering => ref.watch(
-              activeAutosteeringStateProvider
-                  .select((value) => value != AutosteeringState.disabled),
+            activeAutosteeringStateProvider.select(
+              (value) => value != AutosteeringState.disabled,
             ),
+          ),
           RemoteControlButtonAction.toggleEquipmentSections => ref.watch(
-              allEquipmentsProvider.select(
-                (value) => value.values.any(
-                  (element) =>
-                      element.sections.any((element) => element.active),
-                ),
+            allEquipmentsProvider.select(
+              (value) => value.values.any(
+                (element) => element.sections.any((element) => element.active),
               ),
             ),
+          ),
         };
         states.add(state ? 1 : 0);
       } else {

@@ -48,10 +48,12 @@ class EnablePathRecorder extends _$EnablePathRecorder {
   bool build() {
     listenSelf((previous, next) {
       if (next || previous != null) {
-        Logger.instance.i('Path recorder ${switch (next) {
-          true => 'enabled',
-          false => 'disabled'
-        }}.');
+        Logger.instance.i(
+          'Path recorder ${switch (next) {
+            true => 'enabled',
+            false => 'disabled',
+          }}.',
+        );
       }
     });
     return false;
@@ -72,17 +74,21 @@ class EnableAutomaticPathRecorder extends _$EnableAutomaticPathRecorder {
     listenSelf((previous, next) {
       if (!next && (previous != null && previous)) {
         if (ref.read(pathRecordingListProvider).isNotEmpty) {
-          ref.read(pathRecordingListProvider.notifier).add(
+          ref
+              .read(pathRecordingListProvider.notifier)
+              .add(
                 ref.read(mainVehicleProvider.select((value) => value.wayPoint)),
                 applySettings: true,
               );
         }
       }
       if (next || previous != null) {
-        Logger.instance.i('Automatic path recorder ${switch (next) {
-          true => 'enabled',
-          false => 'disabled'
-        }}.');
+        Logger.instance.i(
+          'Automatic path recorder ${switch (next) {
+            true => 'enabled',
+            false => 'disabled',
+          }}.',
+        );
       }
     });
     return false;
@@ -135,15 +141,14 @@ class ActivePathRecordingTarget extends _$ActivePathRecordingTarget {
 /// A provider for watching to keep the automatic path recording going.
 @riverpod
 Future<void> automaticPathRecording(Ref ref) async {
-  final doRecord = ref.watch(
-    enableAutomaticPathRecorderProvider,
-  );
+  final doRecord = ref.watch(enableAutomaticPathRecorderProvider);
 
   if (doRecord) {
     final points = ref.watch(pathRecordingListProvider);
     final settings = ref.watch(activePathRecordingSettingsProvider);
-    final wayPoint =
-        ref.watch(mainVehicleProvider.select((vehicle) => vehicle.wayPoint));
+    final wayPoint = ref.watch(
+      mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
+    );
     if (wayPoint != points.lastOrNull) {
       var correctedWayPoint = wayPoint;
       if (settings.lateralOffset.abs() > 0) {
@@ -166,10 +171,8 @@ Future<void> automaticPathRecording(Ref ref) async {
               .read(pathRecordingListProvider.notifier)
               .add(correctedWayPoint);
         } else if (distance > settings.minDistance && points.length >= 2) {
-          final prevBearing =
-              points[points.length - 2].position.rhumb.initialBearingTo(
-                    points.last.position,
-                  );
+          final prevBearing = points[points.length - 2].position.rhumb
+              .initialBearingTo(points.last.position);
           final bearing = points.last.position.rhumb.initialBearingTo(
             correctedWayPoint.position,
           );
@@ -208,8 +211,9 @@ class PathRecordingList extends _$PathRecordingList {
         if (applySettings) {
           final settings = ref.read(activePathRecordingSettingsProvider);
           if (settings.longitudinalOffset.abs() > 0) {
-            correctedPoint =
-                correctedPoint.moveRhumb(distance: settings.longitudinalOffset);
+            correctedPoint = correctedPoint.moveRhumb(
+              distance: settings.longitudinalOffset,
+            );
           }
           if (settings.lateralOffset.abs() > 0) {
             correctedPoint = correctedPoint.moveRhumb(
@@ -229,9 +233,9 @@ class PathRecordingList extends _$PathRecordingList {
   /// Finished the recording by sending the points to
   /// [FinishedPathRecordingList] and invalidating itself.
   void finishRecording() => Future(() {
-        ref.read(finishedPathRecordingListProvider.notifier).update(state);
-        ref.invalidateSelf();
-      });
+    ref.read(finishedPathRecordingListProvider.notifier).update(state);
+    ref.invalidateSelf();
+  });
 }
 
 /// A list of path points for the last finished recording.
@@ -241,8 +245,9 @@ class FinishedPathRecordingList extends _$FinishedPathRecordingList {
   List<WayPoint>? build() {
     listenSelf((previous, next) {
       if (next?.length != previous?.length) {
-        Logger.instance
-            .i('Finished path recording list: ${next?.length} points.');
+        Logger.instance.i(
+          'Finished path recording list: ${next?.length} points.',
+        );
       }
     });
     return null;
@@ -252,31 +257,28 @@ class FinishedPathRecordingList extends _$FinishedPathRecordingList {
   void update(List<WayPoint> points) => Future(() => state = points);
 
   /// Move the [point] to [index].
-  void movePoint(int index, WayPoint point) => Future(
-        () {
-          var bearing = point.bearing;
-          if (state != null && state!.length > index + 1) {
-            bearing = point.initialBearingToRhumb(state![index + 1]);
-          } else if (state != null &&
-              state!.length > 1 &&
-              index == state!.length - 1) {
-            bearing = state![index - 1].finalBearingToRhumb(point);
-          }
+  void movePoint(int index, WayPoint point) => Future(() {
+    var bearing = point.bearing;
+    if (state != null && state!.length > index + 1) {
+      bearing = point.initialBearingToRhumb(state![index + 1]);
+    } else if (state != null &&
+        state!.length > 1 &&
+        index == state!.length - 1) {
+      bearing = state![index - 1].finalBearingToRhumb(point);
+    }
 
-          return state = state
-            ?..insert(index, point.copyWith(bearing: bearing))
-            ..removeAt(index + 1);
-        },
-      );
+    return state =
+        state
+          ?..insert(index, point.copyWith(bearing: bearing))
+          ..removeAt(index + 1);
+  });
 
   /// Insert [point] at [index].
   void insert(int index, WayPoint point) =>
       Future(() => state = state?..insert(index, point));
 
   /// Remove point at [index].
-  void remove(int index) => Future(
-        () => state = state?..removeAt(index),
-      );
+  void remove(int index) => Future(() => state = state?..removeAt(index));
 
   /// Set the state to null.
   void clear() => Future(() => state = null);
@@ -311,7 +313,9 @@ class EditFinishedPath extends _$EditFinishedPath {
           ref
               .read(activeEditablePathTypeProvider.notifier)
               .update(EditablePathType.recordedPath);
-          ref.read(editablePathPointsProvider.notifier).update(
+          ref
+              .read(editablePathPointsProvider.notifier)
+              .update(
                 ref.read(
                   finishedPathRecordingListProvider.select(
                     (value) => value?.map((e) => e.position).toList(),
@@ -349,10 +353,9 @@ class PathRecordingMenuUiOffset extends _$PathRecordingMenuUiOffset {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null && next != previous) {
-        ref.read(settingsProvider.notifier).update(
-              SettingsKey.uiPathRecordingMenuOffset,
-              next.toJson(),
-            );
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.uiPathRecordingMenuOffset, next.toJson());
       }
     });
 

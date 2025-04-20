@@ -39,35 +39,33 @@ class DubinsPathDebugMenu extends StatelessWidget {
       text: 'Dubins path',
       menuChildren: [
         Consumer(
-          child: Text(
-            'Debugging',
-            style: textStyle,
-          ),
+          child: Text('Debugging', style: textStyle),
           builder: (context, ref, child) {
             return CheckboxListTile(
               value: ref.watch(enableDubinsPathDebugProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(enableDubinsPathDebugProvider.notifier)
-                      .update(value: value)
-                  : null,
+              onChanged:
+                  (value) =>
+                      value != null
+                          ? ref
+                              .read(enableDubinsPathDebugProvider.notifier)
+                              .update(value: value)
+                          : null,
               secondary: child,
             );
           },
         ),
         Consumer(
-          child: Text(
-            'Turning circles',
-            style: textStyle,
-          ),
+          child: Text('Turning circles', style: textStyle),
           builder: (context, ref, child) {
             return CheckboxListTile(
               value: ref.watch(showDubinsPathDebugCirclesProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(showDubinsPathDebugCirclesProvider.notifier)
-                      .update(value: value)
-                  : null,
+              onChanged:
+                  (value) =>
+                      value != null
+                          ? ref
+                              .read(showDubinsPathDebugCirclesProvider.notifier)
+                              .update(value: value)
+                          : null,
               secondary: const Icon(Icons.circle),
               title: child,
             );
@@ -82,29 +80,36 @@ class DubinsPathDebugMenu extends StatelessWidget {
               icon: Icons.abc,
               text:
                   '''Path type: ${(selectedPathType?.name ?? dubinsPath?.bestPathData?.pathType.name)?.toUpperCase()}\n${(dubinsPath?.pathData(selectedPathType)?.totalLength ?? dubinsPath?.bestPathData?.totalLength)?.round()} m''',
-              menuChildren: DubinsPathType.values
-                  .map(
-                    (pathType) => CheckboxListTile(
-                      value: selectedPathType == pathType,
-                      enabled: dubinsPath?.isPathTypePossible(pathType),
-                      onChanged: (value) => switch (value) {
-                        true => {
-                            ref
-                                .read(dubinsPathDebugPathTypeProvider.notifier)
-                                .update(pathType),
-                          },
-                        false => {
-                            ref.invalidate(dubinsPathDebugPathTypeProvider),
-                          },
-                        _ => null,
-                      },
-                      secondary: Text(
-                        pathType.name.toUpperCase(),
-                        style: textStyle,
-                      ),
-                    ),
-                  )
-                  .toList(),
+              menuChildren:
+                  DubinsPathType.values
+                      .map(
+                        (pathType) => CheckboxListTile(
+                          value: selectedPathType == pathType,
+                          enabled: dubinsPath?.isPathTypePossible(pathType),
+                          onChanged:
+                              (value) => switch (value) {
+                                true => {
+                                  ref
+                                      .read(
+                                        dubinsPathDebugPathTypeProvider
+                                            .notifier,
+                                      )
+                                      .update(pathType),
+                                },
+                                false => {
+                                  ref.invalidate(
+                                    dubinsPathDebugPathTypeProvider,
+                                  ),
+                                },
+                                _ => null,
+                              },
+                          secondary: Text(
+                            pathType.name.toUpperCase(),
+                            style: textStyle,
+                          ),
+                        ),
+                      )
+                      .toList(),
             );
           },
         ),
@@ -121,17 +126,15 @@ class DubinsPathDebugMenu extends StatelessWidget {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        'Start:${start.bearing.round()}',
-                        style: textStyle,
-                      ),
+                      Text('Start:${start.bearing.round()}', style: textStyle),
                       Slider(
                         value: start.bearing,
-                        onChanged: (value) => ref
-                            .read(dubinsPathDebugStartPointProvider.notifier)
-                            .update(
-                              start.copyWith(bearing: value),
-                            ),
+                        onChanged:
+                            (value) => ref
+                                .read(
+                                  dubinsPathDebugStartPointProvider.notifier,
+                                )
+                                .update(start.copyWith(bearing: value)),
                         max: 360,
                       ),
                     ],
@@ -140,17 +143,13 @@ class DubinsPathDebugMenu extends StatelessWidget {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        'End: ${end.bearing.round()}',
-                        style: textStyle,
-                      ),
+                      Text('End: ${end.bearing.round()}', style: textStyle),
                       Slider(
                         value: end.bearing,
-                        onChanged: (value) => ref
-                            .read(dubinsPathDebugEndPointProvider.notifier)
-                            .update(
-                              end.copyWith(bearing: value),
-                            ),
+                        onChanged:
+                            (value) => ref
+                                .read(dubinsPathDebugEndPointProvider.notifier)
+                                .update(end.copyWith(bearing: value)),
                         max: 360,
                       ),
                     ],
@@ -174,27 +173,28 @@ class DubinsPathDebugMenu extends StatelessWidget {
           ],
         ),
         Consumer(
-          child: Text(
-            'Reset points',
-            style: textStyle,
-          ),
+          child: Text('Reset points', style: textStyle),
           builder: (context, ref, child) {
             return ListTile(
               onTap: () {
                 final center = ref.watch(
-                  mainMapControllerProvider
-                      .select((controller) => controller.camera.center),
+                  mainMapControllerProvider.select(
+                    (controller) => controller.camera.center,
+                  ),
                 );
-                ref.read(dubinsPathDebugStartPointProvider.notifier).update(
-                      WayPoint(
-                        position: center.geoPosition,
-                        bearing: 90,
-                      ),
+                ref
+                    .read(dubinsPathDebugStartPointProvider.notifier)
+                    .update(
+                      WayPoint(position: center.geoPosition, bearing: 90),
                     );
-                ref.read(dubinsPathDebugEndPointProvider.notifier).update(
+                ref
+                    .read(dubinsPathDebugEndPointProvider.notifier)
+                    .update(
                       WayPoint(
-                        position: center.geoPosition.rhumb
-                            .destinationPoint(distance: 35, bearing: 0),
+                        position: center.geoPosition.rhumb.destinationPoint(
+                          distance: 35,
+                          bearing: 0,
+                        ),
                         bearing: 210,
                       ),
                     );
@@ -205,15 +205,14 @@ class DubinsPathDebugMenu extends StatelessWidget {
           },
         ),
         Consumer(
-          child: Text(
-            'Clear points',
-            style: textStyle,
-          ),
+          child: Text('Clear points', style: textStyle),
           builder: (context, ref, child) {
             return ListTile(
-              onTap: () => ref
-                ..invalidate(dubinsPathDebugStartPointProvider)
-                ..invalidate(dubinsPathDebugEndPointProvider),
+              onTap:
+                  () =>
+                      ref
+                        ..invalidate(dubinsPathDebugStartPointProvider)
+                        ..invalidate(dubinsPathDebugEndPointProvider),
               leading: const Icon(Icons.clear),
               title: child,
             );
@@ -238,9 +237,10 @@ class StepSizeSlider extends ConsumerWidget {
 
     return Slider(
       value: _values.indexOf(stepSize).toDouble(),
-      onChanged: (index) => ref
-          .read(dubinsPathDebugStepSizeProvider.notifier)
-          .update(_values[index.toInt()]),
+      onChanged:
+          (index) => ref
+              .read(dubinsPathDebugStepSizeProvider.notifier)
+              .update(_values[index.toInt()]),
       max: _values.length - 1,
       divisions: _values.length - 1,
     );

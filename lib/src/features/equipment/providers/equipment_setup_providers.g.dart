@@ -110,25 +110,25 @@ class SaveEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => saveEquipmentSetup(
-            ref as SaveEquipmentSetupRef,
-            setup,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: saveEquipmentSetupProvider,
-          name: r'saveEquipmentSetupProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$saveEquipmentSetupHash,
-          dependencies: SaveEquipmentSetupFamily._dependencies,
-          allTransitiveDependencies:
-              SaveEquipmentSetupFamily._allTransitiveDependencies,
-          setup: setup,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => saveEquipmentSetup(
+           ref as SaveEquipmentSetupRef,
+           setup,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: saveEquipmentSetupProvider,
+         name: r'saveEquipmentSetupProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$saveEquipmentSetupHash,
+         dependencies: SaveEquipmentSetupFamily._dependencies,
+         allTransitiveDependencies:
+             SaveEquipmentSetupFamily._allTransitiveDependencies,
+         setup: setup,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   SaveEquipmentSetupProvider._internal(
     super._createNotifier, {
@@ -204,7 +204,8 @@ mixin SaveEquipmentSetupRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _SaveEquipmentSetupProviderElement
-    extends AutoDisposeFutureProviderElement<void> with SaveEquipmentSetupRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with SaveEquipmentSetupRef {
   _SaveEquipmentSetupProviderElement(super.provider);
 
   @override
@@ -300,25 +301,25 @@ class ExportEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => exportEquipmentSetup(
-            ref as ExportEquipmentSetupRef,
-            setup,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: exportEquipmentSetupProvider,
-          name: r'exportEquipmentSetupProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportEquipmentSetupHash,
-          dependencies: ExportEquipmentSetupFamily._dependencies,
-          allTransitiveDependencies:
-              ExportEquipmentSetupFamily._allTransitiveDependencies,
-          setup: setup,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => exportEquipmentSetup(
+           ref as ExportEquipmentSetupRef,
+           setup,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: exportEquipmentSetupProvider,
+         name: r'exportEquipmentSetupProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$exportEquipmentSetupHash,
+         dependencies: ExportEquipmentSetupFamily._dependencies,
+         allTransitiveDependencies:
+             ExportEquipmentSetupFamily._allTransitiveDependencies,
+         setup: setup,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   ExportEquipmentSetupProvider._internal(
     super._createNotifier, {
@@ -418,14 +419,15 @@ String _$savedEquipmentSetupsHash() =>
 @ProviderFor(savedEquipmentSetups)
 final savedEquipmentSetupsProvider =
     FutureProvider<List<EquipmentSetup>>.internal(
-  savedEquipmentSetups,
-  name: r'savedEquipmentSetupsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$savedEquipmentSetupsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      savedEquipmentSetups,
+      name: r'savedEquipmentSetupsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$savedEquipmentSetupsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -513,25 +515,25 @@ class DeleteEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => deleteEquipmentSetup(
-            ref as DeleteEquipmentSetupRef,
-            setup,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: deleteEquipmentSetupProvider,
-          name: r'deleteEquipmentSetupProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$deleteEquipmentSetupHash,
-          dependencies: DeleteEquipmentSetupFamily._dependencies,
-          allTransitiveDependencies:
-              DeleteEquipmentSetupFamily._allTransitiveDependencies,
-          setup: setup,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => deleteEquipmentSetup(
+           ref as DeleteEquipmentSetupRef,
+           setup,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: deleteEquipmentSetupProvider,
+         name: r'deleteEquipmentSetupProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$deleteEquipmentSetupHash,
+         dependencies: DeleteEquipmentSetupFamily._dependencies,
+         allTransitiveDependencies:
+             DeleteEquipmentSetupFamily._allTransitiveDependencies,
+         setup: setup,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   DeleteEquipmentSetupProvider._internal(
     super._createNotifier, {
@@ -647,21 +649,15 @@ class LoadEquipmentSetupFromFileFamily
   /// valid.
   ///
   /// Copied from [loadEquipmentSetupFromFile].
-  LoadEquipmentSetupFromFileProvider call(
-    String path,
-  ) {
-    return LoadEquipmentSetupFromFileProvider(
-      path,
-    );
+  LoadEquipmentSetupFromFileProvider call(String path) {
+    return LoadEquipmentSetupFromFileProvider(path);
   }
 
   @override
   LoadEquipmentSetupFromFileProvider getProviderOverride(
     covariant LoadEquipmentSetupFromFileProvider provider,
   ) {
-    return call(
-      provider.path,
-    );
+    return call(provider.path);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -689,24 +685,23 @@ class LoadEquipmentSetupFromFileProvider
   /// valid.
   ///
   /// Copied from [loadEquipmentSetupFromFile].
-  LoadEquipmentSetupFromFileProvider(
-    String path,
-  ) : this._internal(
-          (ref) => loadEquipmentSetupFromFile(
-            ref as LoadEquipmentSetupFromFileRef,
-            path,
-          ),
-          from: loadEquipmentSetupFromFileProvider,
-          name: r'loadEquipmentSetupFromFileProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$loadEquipmentSetupFromFileHash,
-          dependencies: LoadEquipmentSetupFromFileFamily._dependencies,
-          allTransitiveDependencies:
-              LoadEquipmentSetupFromFileFamily._allTransitiveDependencies,
-          path: path,
-        );
+  LoadEquipmentSetupFromFileProvider(String path)
+    : this._internal(
+        (ref) => loadEquipmentSetupFromFile(
+          ref as LoadEquipmentSetupFromFileRef,
+          path,
+        ),
+        from: loadEquipmentSetupFromFileProvider,
+        name: r'loadEquipmentSetupFromFileProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$loadEquipmentSetupFromFileHash,
+        dependencies: LoadEquipmentSetupFromFileFamily._dependencies,
+        allTransitiveDependencies:
+            LoadEquipmentSetupFromFileFamily._allTransitiveDependencies,
+        path: path,
+      );
 
   LoadEquipmentSetupFromFileProvider._internal(
     super._createNotifier, {
@@ -723,7 +718,7 @@ class LoadEquipmentSetupFromFileProvider
   @override
   Override overrideWith(
     FutureOr<EquipmentSetup?> Function(LoadEquipmentSetupFromFileRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -785,14 +780,15 @@ String _$importEquipmentSetupHash() =>
 @ProviderFor(importEquipmentSetup)
 final importEquipmentSetupProvider =
     AutoDisposeFutureProvider<EquipmentSetup?>.internal(
-  importEquipmentSetup,
-  name: r'importEquipmentSetupProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$importEquipmentSetupHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      importEquipmentSetup,
+      name: r'importEquipmentSetupProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$importEquipmentSetupHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -806,14 +802,15 @@ String _$configuredEquipmentSetupHash() =>
 @ProviderFor(ConfiguredEquipmentSetup)
 final configuredEquipmentSetupProvider =
     NotifierProvider<ConfiguredEquipmentSetup, EquipmentSetup?>.internal(
-  ConfiguredEquipmentSetup.new,
-  name: r'configuredEquipmentSetupProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$configuredEquipmentSetupHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ConfiguredEquipmentSetup.new,
+      name: r'configuredEquipmentSetupProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$configuredEquipmentSetupHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ConfiguredEquipmentSetup = Notifier<EquipmentSetup?>;
 // ignore_for_file: type=lint

@@ -50,20 +50,21 @@ class VirtualLed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox.square(
-        dimension: size,
-        child: active || showWhenInactive
+    dimension: size,
+    child:
+        active || showWhenInactive
             ? ShaderBuilder(
-                (context, shader, child) => CustomPaint(
-                  painter: _VirtualLedPainter(
-                    active: active,
-                    color: color,
-                    shader: shader,
-                  ),
+              (context, shader, child) => CustomPaint(
+                painter: _VirtualLedPainter(
+                  active: active,
+                  color: color,
+                  shader: shader,
                 ),
-                assetKey: 'assets/shaders/glow.frag',
-              )
+              ),
+              assetKey: 'assets/shaders/glow.frag',
+            )
             : null,
-      );
+  );
 }
 
 class _VirtualLedPainter extends CustomPainter {

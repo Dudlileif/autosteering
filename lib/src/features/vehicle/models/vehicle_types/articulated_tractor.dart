@@ -49,8 +49,9 @@ final class ArticulatedTractor extends Vehicle {
     super.was,
     super.autosteeringThresholdVelocity,
     super.steeringHardwareConfig,
-    super.purePursuitParameters =
-        const PurePursuitParameters(lookAheadMinDistance: 1),
+    super.purePursuitParameters = const PurePursuitParameters(
+      lookAheadMinDistance: 1,
+    ),
     super.stanleyParameters,
     super.antennaPosition,
     super.velocity,
@@ -104,9 +105,12 @@ final class ArticulatedTractor extends Vehicle {
       wheelDiameter: wheels['wheel_diameter'] as double,
       wheelWidth: wheels['wheel_width'] as double,
       wheelSpacing: wheels['wheel_spacing'] as double?,
-      pathTrackingMode: steering.containsKey('path_tracking_mode')
-          ? PathTrackingMode.fromJson(steering['path_tracking_mode'] as String)
-          : PathTrackingMode.purePursuit,
+      pathTrackingMode:
+          steering.containsKey('path_tracking_mode')
+              ? PathTrackingMode.fromJson(
+                steering['path_tracking_mode'] as String,
+              )
+              : PathTrackingMode.purePursuit,
       frontAxleToHitchDistance:
           hitches['front_axle_to_front_hitch_distance'] as double?,
       rearAxleToHitchDistance:
@@ -156,77 +160,75 @@ final class ArticulatedTractor extends Vehicle {
 
   /// The position of the vehicle articulation pivot point.
   Geographic get pivotPosition => position.rhumb.destinationPoint(
-        distance: antennaToPivotDistance,
-        bearing: (bearing - 180 + steeringAngle / 2).wrap360(),
-      );
+    distance: antennaToPivotDistance,
+    bearing: (bearing - 180 + steeringAngle / 2).wrap360(),
+  );
 
   /// Where the look ahead distance calculation should start.
   @override
   Geographic get lookAheadStartPosition => pivotPosition.rhumb.destinationPoint(
-        distance: nudgeDistance,
-        bearing: (bearing - 90).wrap360(),
-      );
+    distance: nudgeDistance,
+    bearing: (bearing - 90).wrap360(),
+  );
 
   /// The angle from the pivot point to the front axle.
   double get frontAxleAngle => (bearing + steeringAngle / 2).wrap360();
 
   /// The position of the front axle center point.
   Geographic get frontAxlePosition => pivotPosition.rhumb.destinationPoint(
-        distance: pivotToFrontAxle,
-        bearing: frontAxleAngle,
-      );
+    distance: pivotToFrontAxle,
+    bearing: frontAxleAngle,
+  );
 
   /// The angle from the pivot point to the rear axle.
   double get rearAxleAngle => (bearing + 180 - steeringAngle / 2).wrap360();
 
   /// The position of the front axle center point.
   Geographic get rearAxlePosition => pivotPosition.rhumb.destinationPoint(
-        distance: pivotToRearAxle,
-        bearing: rearAxleAngle,
-      );
+    distance: pivotToRearAxle,
+    bearing: rearAxleAngle,
+  );
 
   @override
-  Geographic? get hitchFrontFixedPoint =>
-      switch (frontAxleToHitchDistance != null) {
-        true => frontAxlePosition.rhumb.destinationPoint(
-            distance: frontAxleToHitchDistance!,
-            bearing: frontAxleAngle,
-          ),
-        false => null,
-      };
+  Geographic? get hitchFrontFixedPoint => switch (frontAxleToHitchDistance !=
+      null) {
+    true => frontAxlePosition.rhumb.destinationPoint(
+      distance: frontAxleToHitchDistance!,
+      bearing: frontAxleAngle,
+    ),
+    false => null,
+  };
 
   @override
-  Geographic? get hitchRearFixedPoint =>
-      switch (rearAxleToHitchDistance != null) {
-        true => rearAxlePosition.rhumb.destinationPoint(
-            distance: rearAxleToHitchDistance!,
-            bearing: rearAxleAngle,
-          ),
-        false => null,
-      };
+  Geographic? get hitchRearFixedPoint => switch (rearAxleToHitchDistance !=
+      null) {
+    true => rearAxlePosition.rhumb.destinationPoint(
+      distance: rearAxleToHitchDistance!,
+      bearing: rearAxleAngle,
+    ),
+    false => null,
+  };
 
   @override
-  Geographic? get hitchRearTowbarPoint =>
-      switch (rearAxleToTowbarDistance != null) {
-        true => rearAxlePosition.rhumb.destinationPoint(
-            distance: rearAxleToTowbarDistance!,
-            bearing: rearAxleAngle,
-          ),
-        false => null,
-      };
+  Geographic? get hitchRearTowbarPoint => switch (rearAxleToTowbarDistance !=
+      null) {
+    true => rearAxlePosition.rhumb.destinationPoint(
+      distance: rearAxleToTowbarDistance!,
+      bearing: rearAxleAngle,
+    ),
+    false => null,
+  };
 
   /// The position of the Stanley axle in the the vehicle direction. Used when
   /// calculating the Stanley pursuit values.
   @override
   Geographic get stanleyAxlePosition => switch (isReversing) {
-        true => rearAxlePosition,
-        false => frontAxlePosition,
-      }
-          .rhumb
-          .destinationPoint(
-            distance: nudgeDistance,
-            bearing: (bearing - 90).wrap360(),
-          );
+    true => rearAxlePosition,
+    false => frontAxlePosition,
+  }.rhumb.destinationPoint(
+    distance: nudgeDistance,
+    bearing: (bearing - 90).wrap360(),
+  );
 
   @override
   ({Geographic position, double bearing}) updatedPositionAndBearingTurning(
@@ -243,13 +245,13 @@ final class ArticulatedTractor extends Vehicle {
     }
     // The current angle from the turning radius center to the
     // front axle center.
-    final turningCenterToFrontAxleAngle = switch (isTurningLeft) {
-      // Turning left
-      true => frontAxleAngle + 90,
-      // Turning right
-      false => frontAxleAngle - 90,
-    }
-        .wrap360();
+    final turningCenterToFrontAxleAngle =
+        switch (isTurningLeft) {
+          // Turning left
+          true => frontAxleAngle + 90,
+          // Turning right
+          false => frontAxleAngle - 90,
+        }.wrap360();
 
     // The angle from the turning circle center to the projected front
     // axle position.
@@ -291,17 +293,17 @@ final class ArticulatedTractor extends Vehicle {
   ) {
     final currentTurningRadius =
         (pivotToFrontAxle * cos(degToRadian(steeringAngle.abs())) +
-                pivotToRearAxle) /
-            sin(degToRadian(steeringAngle.abs()));
+            pivotToRearAxle) /
+        sin(degToRadian(steeringAngle.abs()));
 
     final turningRadiusCenter = this.frontAxlePosition.rhumb.destinationPoint(
-          distance: currentTurningRadius,
-          bearing: switch (isTurningLeft) {
+      distance: currentTurningRadius,
+      bearing:
+          switch (isTurningLeft) {
             true => frontAxleAngle - 90,
             false => frontAxleAngle + 90,
-          }
-              .wrap360(),
-        );
+          }.wrap360(),
+    );
 
     final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
 
@@ -313,13 +315,13 @@ final class ArticulatedTractor extends Vehicle {
 
     // The current angle from the turning radius center to the
     // front axle center.
-    final turningCenterToFrontAxleAngle = switch (isTurningLeft) {
-      // Turning left
-      true => frontAxleAngle + 90,
-      // Turning right
-      false => frontAxleAngle - 90,
-    }
-        .wrap360();
+    final turningCenterToFrontAxleAngle =
+        switch (isTurningLeft) {
+          // Turning left
+          true => frontAxleAngle + 90,
+          // Turning right
+          false => frontAxleAngle - 90,
+        }.wrap360();
 
     // The angle from the turning circle center to the projected front
     // axle position.
@@ -360,17 +362,17 @@ final class ArticulatedTractor extends Vehicle {
   ) {
     final currentTurningRadius =
         (pivotToFrontAxle * cos(degToRadian(steeringAngle.abs())) +
-                pivotToRearAxle) /
-            sin(degToRadian(steeringAngle.abs()));
+            pivotToRearAxle) /
+        sin(degToRadian(steeringAngle.abs()));
 
     final turningRadiusCenter = this.frontAxlePosition.rhumb.destinationPoint(
-          distance: currentTurningRadius,
-          bearing: switch (isTurningLeft) {
+      distance: currentTurningRadius,
+      bearing:
+          switch (isTurningLeft) {
             true => frontAxleAngle - 90,
             false => frontAxleAngle + 90,
-          }
-              .wrap360(),
-        );
+          }.wrap360(),
+    );
 
     final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
 
@@ -382,13 +384,13 @@ final class ArticulatedTractor extends Vehicle {
 
     // The current angle from the turning radius center to the
     // front axle center.
-    final turningCenterToFrontAxleAngle = switch (isTurningLeft) {
-      // Turning left
-      true => frontAxleAngle + 90,
-      // Turning right
-      false => frontAxleAngle - 90,
-    }
-        .wrap360();
+    final turningCenterToFrontAxleAngle =
+        switch (isTurningLeft) {
+          // Turning left
+          true => frontAxleAngle + 90,
+          // Turning right
+          false => frontAxleAngle - 90,
+        }.wrap360();
 
     // The angle from the turning circle center to the projected front
     // axle position.
@@ -440,60 +442,45 @@ final class ArticulatedTractor extends Vehicle {
   /// points.
   @override
   List<map.CircleMarker> get steeringDebugMarkers => [
-        map.CircleMarker(
-          point: position.latLng,
-          radius: 10,
-        ),
-        map.CircleMarker(
-          point: rearAxlePosition.latLng,
-          radius: 10,
-          color: Colors.red,
-        ),
-        map.CircleMarker(
-          point: frontAxlePosition.latLng,
-          radius: 10,
-          color: Colors.blue,
-        ),
-        map.CircleMarker(
-          point: pivotPosition.latLng,
-          radius: 10,
-          color: Colors.black,
-        ),
-      ];
+    map.CircleMarker(point: position.latLng, radius: 10),
+    map.CircleMarker(
+      point: rearAxlePosition.latLng,
+      radius: 10,
+      color: Colors.red,
+    ),
+    map.CircleMarker(
+      point: frontAxlePosition.latLng,
+      radius: 10,
+      color: Colors.blue,
+    ),
+    map.CircleMarker(
+      point: pivotPosition.latLng,
+      radius: 10,
+      color: Colors.black,
+    ),
+  ];
 
   /// Basic polylines for showing the vehicle's steering related
   /// points.
   @override
   List<map.Polyline> get steeringDebugLines => [
-        map.Polyline(
-          points: [
-            rearAxlePosition.latLng,
-            turningRadiusCenter!.latLng,
-          ],
-          color: Colors.red,
-        ),
-        map.Polyline(
-          points: [
-            frontAxlePosition.latLng,
-            turningRadiusCenter!.latLng,
-          ],
-          color: Colors.blue,
-        ),
-        map.Polyline(
-          points: [
-            position.latLng,
-            turningRadiusCenter!.latLng,
-          ],
-          color: Colors.green,
-        ),
-        map.Polyline(
-          points: [
-            pivotPosition.latLng,
-            turningRadiusCenter!.latLng,
-          ],
-          color: Colors.black,
-        ),
-      ];
+    map.Polyline(
+      points: [rearAxlePosition.latLng, turningRadiusCenter!.latLng],
+      color: Colors.red,
+    ),
+    map.Polyline(
+      points: [frontAxlePosition.latLng, turningRadiusCenter!.latLng],
+      color: Colors.blue,
+    ),
+    map.Polyline(
+      points: [position.latLng, turningRadiusCenter!.latLng],
+      color: Colors.green,
+    ),
+    map.Polyline(
+      points: [pivotPosition.latLng, turningRadiusCenter!.latLng],
+      color: Colors.black,
+    ),
+  ];
 
   /// The turning radius of the front axle corresponding to the current
   /// [steeringAngle].
@@ -520,16 +507,17 @@ final class ArticulatedTractor extends Vehicle {
 
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
-  Geographic? get turningRadiusCenter => currentTurningRadius != null
-      ? frontAxlePosition.rhumb.destinationPoint(
-          distance: currentTurningRadius!,
-          bearing: switch (isTurningLeft) {
-            true => frontAxleAngle - 90,
-            false => frontAxleAngle + 90,
-          }
-              .wrap360(),
-        )
-      : null;
+  Geographic? get turningRadiusCenter =>
+      currentTurningRadius != null
+          ? frontAxlePosition.rhumb.destinationPoint(
+            distance: currentTurningRadius!,
+            bearing:
+                switch (isTurningLeft) {
+                  true => frontAxleAngle - 90,
+                  false => frontAxleAngle + 90,
+                }.wrap360(),
+          )
+          : null;
 
   @override
   Geographic get topLeftPosition => frontAxlePosition.rhumb
@@ -548,15 +536,15 @@ final class ArticulatedTractor extends Vehicle {
 
   /// The left front wheel polygon.
   map.Polygon get leftFrontWheelPolygon => map.Polygon(
-        points: wheelPoints().map((e) => e.latLng).toList(),
-        color: Colors.black,
-      );
+    points: wheelPoints().map((e) => e.latLng).toList(),
+    color: Colors.black,
+  );
 
   /// The right front wheel polygon.
   map.Polygon get rightFrontWheelPolygon => map.Polygon(
-        points: wheelPoints(left: false).map((e) => e.latLng).toList(),
-        color: Colors.black,
-      );
+    points: wheelPoints(left: false).map((e) => e.latLng).toList(),
+    color: Colors.black,
+  );
 
   /// The bounds of any of the specified wheels of the tractor.
   ///
@@ -567,7 +555,7 @@ final class ArticulatedTractor extends Vehicle {
 
     final axleToCenterAngle = switch (rear) {
       true => (rearAxleAngle + 90 * sign).wrap360(),
-      false => (frontAxleAngle - 90 * sign).wrap360()
+      false => (frontAxleAngle - 90 * sign).wrap360(),
     };
 
     final innerCenterToInnerRearAngle =
@@ -585,13 +573,12 @@ final class ArticulatedTractor extends Vehicle {
     final wheelInnerCenter = switch (rear) {
       true => rearAxlePosition,
       false => frontAxlePosition,
-    }
-        .rhumb
-        .destinationPoint(
-          distance: trackWidth / 2 -
-              (wheelWidth * numWheels + (numWheels - 1) * wheelSpacing) / 2,
-          bearing: axleToCenterAngle,
-        );
+    }.rhumb.destinationPoint(
+      distance:
+          trackWidth / 2 -
+          (wheelWidth * numWheels + (numWheels - 1) * wheelSpacing) / 2,
+      bearing: axleToCenterAngle,
+    );
 
     final wheelInnerRear = wheelInnerCenter.rhumb.destinationPoint(
       distance: wheelDiameter / 2,
@@ -610,35 +597,29 @@ final class ArticulatedTractor extends Vehicle {
       bearing: frontOuterToFrontInnerAngle,
     );
 
-    return [
-      wheelInnerRear,
-      wheelOuterRear,
-      wheelOuterFront,
-      wheelInnerFront,
-    ];
+    return [wheelInnerRear, wheelOuterRear, wheelOuterFront, wheelInnerFront];
   }
 
   /// The left rear wheel polygon.
   map.Polygon get leftRearWheelPolygon => map.Polygon(
-        points: wheelPoints(rear: true).map((e) => e.latLng).toList(),
-        color: Colors.black,
-      );
+    points: wheelPoints(rear: true).map((e) => e.latLng).toList(),
+    color: Colors.black,
+  );
 
   /// The right rear wheel polygon.
   map.Polygon get rightRearWheelPolygon => map.Polygon(
-        points:
-            wheelPoints(left: false, rear: true).map((e) => e.latLng).toList(),
-        color: Colors.black,
-      );
+    points: wheelPoints(left: false, rear: true).map((e) => e.latLng).toList(),
+    color: Colors.black,
+  );
 
   /// Polygons for drawing the wheels of the vehicle.
   @override
   List<map.Polygon> get wheelPolygons => [
-        leftFrontWheelPolygon,
-        rightFrontWheelPolygon,
-        leftRearWheelPolygon,
-        rightRearWheelPolygon,
-      ];
+    leftFrontWheelPolygon,
+    rightFrontWheelPolygon,
+    leftRearWheelPolygon,
+    rightRearWheelPolygon,
+  ];
 
   /// The projected trajectory for the moving vehicle.
   ///
@@ -665,18 +646,18 @@ final class ArticulatedTractor extends Vehicle {
           final angle = switch (isTurningLeft) {
             // Turning left
             true => switch (isReversing) {
-                // Reversing
-                true => frontAxleAngle + 90 + i / numberOfPoints * arcDegrees,
-                // Forward
-                false => frontAxleAngle + 90 - i / numberOfPoints * arcDegrees,
-              },
+              // Reversing
+              true => frontAxleAngle + 90 + i / numberOfPoints * arcDegrees,
+              // Forward
+              false => frontAxleAngle + 90 - i / numberOfPoints * arcDegrees,
+            },
             // Turning right
             false => switch (isReversing) {
-                // Reversing
-                true => frontAxleAngle - 90 - i / numberOfPoints * arcDegrees,
-                // Forward
-                false => frontAxleAngle - 90 + i / numberOfPoints * arcDegrees,
-              },
+              // Reversing
+              true => frontAxleAngle - 90 - i / numberOfPoints * arcDegrees,
+              // Forward
+              false => frontAxleAngle - 90 + i / numberOfPoints * arcDegrees,
+            },
           };
 
           points.add(
@@ -690,7 +671,8 @@ final class ArticulatedTractor extends Vehicle {
     } else {
       var distance = time * velocity;
       if (minLength != null && distance.abs() < minLength) {
-        distance = minLength *
+        distance =
+            minLength *
             switch (velocity.isNegative) {
               true => -1,
               false => 1,
@@ -839,67 +821,64 @@ final class ArticulatedTractor extends Vehicle {
     DateTime? lastUsed,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
-  }) =>
-      ArticulatedTractor(
-        antennaPosition: antennaPosition ?? this.antennaPosition,
-        antennaHeight: antennaHeight ?? this.antennaHeight,
-        antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
-        minTurningRadius: minTurningRadius ?? this.minTurningRadius,
-        steeringAngleMax: steeringAngleMax ?? this.steeringAngleMax,
-        trackWidth: trackWidth ?? this.trackWidth,
-        wheelDiameter: wheelDiameter ?? this.wheelDiameter,
-        wheelWidth: wheelWidth ?? this.wheelWidth,
-        wheelSpacing: wheelSpacing ?? this.wheelSpacing,
-        numWheels: numWheels ?? this.numWheels,
-        antennaToPivotDistance:
-            antennaToPivotDistance ?? this.antennaToPivotDistance,
-        pivotToFrontAxle: pivotToFrontAxle ?? this.pivotToFrontAxle,
-        pivotToRearAxle: pivotToRearAxle ?? this.pivotToRearAxle,
-        frontAxleToHitchDistance:
-            frontAxleToHitchDistance ?? this.frontAxleToHitchDistance,
-        rearAxleToHitchDistance:
-            rearAxleToHitchDistance ?? this.rearAxleToHitchDistance,
-        rearAxleToTowbarDistance:
-            rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
-        imu: imu ?? this.imu,
-        was: was ?? this.was,
-        autosteeringThresholdVelocity:
-            autosteeringThresholdVelocity ?? this.autosteeringThresholdVelocity,
-        steeringHardwareConfig:
-            steeringHardwareConfig ?? this.steeringHardwareConfig,
-        pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
-        purePursuitParameters:
-            purePursuitParameters ?? this.purePursuitParameters,
-        stanleyParameters: stanleyParameters ?? this.stanleyParameters,
-        velocity: velocity ?? this.velocity,
-        bearing: bearing ?? _bearing,
-        pitch: pitch ?? _pitch,
-        roll: roll ?? _roll,
-        steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
-        length: length ?? this.length,
-        width: width ?? this.width,
-        nudgeDistance: nudgeDistance ?? this.nudgeDistance,
-        wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
-        hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
-        hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
-        hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
-        name: name ?? this.name,
-        uuid: uuid ?? this.uuid,
-        lastUsed: lastUsed ?? this.lastUsed,
-        manufacturerColors: manufacturerColors ?? this.manufacturerColors,
-        manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
-      )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
+  }) => ArticulatedTractor(
+    antennaPosition: antennaPosition ?? this.antennaPosition,
+    antennaHeight: antennaHeight ?? this.antennaHeight,
+    antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
+    minTurningRadius: minTurningRadius ?? this.minTurningRadius,
+    steeringAngleMax: steeringAngleMax ?? this.steeringAngleMax,
+    trackWidth: trackWidth ?? this.trackWidth,
+    wheelDiameter: wheelDiameter ?? this.wheelDiameter,
+    wheelWidth: wheelWidth ?? this.wheelWidth,
+    wheelSpacing: wheelSpacing ?? this.wheelSpacing,
+    numWheels: numWheels ?? this.numWheels,
+    antennaToPivotDistance:
+        antennaToPivotDistance ?? this.antennaToPivotDistance,
+    pivotToFrontAxle: pivotToFrontAxle ?? this.pivotToFrontAxle,
+    pivotToRearAxle: pivotToRearAxle ?? this.pivotToRearAxle,
+    frontAxleToHitchDistance:
+        frontAxleToHitchDistance ?? this.frontAxleToHitchDistance,
+    rearAxleToHitchDistance:
+        rearAxleToHitchDistance ?? this.rearAxleToHitchDistance,
+    rearAxleToTowbarDistance:
+        rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
+    imu: imu ?? this.imu,
+    was: was ?? this.was,
+    autosteeringThresholdVelocity:
+        autosteeringThresholdVelocity ?? this.autosteeringThresholdVelocity,
+    steeringHardwareConfig:
+        steeringHardwareConfig ?? this.steeringHardwareConfig,
+    pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
+    purePursuitParameters: purePursuitParameters ?? this.purePursuitParameters,
+    stanleyParameters: stanleyParameters ?? this.stanleyParameters,
+    velocity: velocity ?? this.velocity,
+    bearing: bearing ?? _bearing,
+    pitch: pitch ?? _pitch,
+    roll: roll ?? _roll,
+    steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
+    length: length ?? this.length,
+    width: width ?? this.width,
+    nudgeDistance: nudgeDistance ?? this.nudgeDistance,
+    wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
+    hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
+    hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
+    hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
+    name: name ?? this.name,
+    uuid: uuid ?? this.uuid,
+    lastUsed: lastUsed ?? this.lastUsed,
+    manufacturerColors: manufacturerColors ?? this.manufacturerColors,
+    manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
+  )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override
   Map<String, dynamic> toJson() {
     final map = super.toJson();
 
-    map['antenna'] = Map<String, dynamic>.from(map['antenna'] as Map)
-      ..update(
-        'pivot_distance',
-        (value) => antennaToPivotDistance,
-        ifAbsent: () => antennaToPivotDistance,
-      );
+    map['antenna'] = Map<String, dynamic>.from(map['antenna'] as Map)..update(
+      'pivot_distance',
+      (value) => antennaToPivotDistance,
+      ifAbsent: () => antennaToPivotDistance,
+    );
 
     map['info'] = Map<String, dynamic>.from(map['info'] as Map)
       ..addAll({'vehicle_type': 'Articulated tractor'});

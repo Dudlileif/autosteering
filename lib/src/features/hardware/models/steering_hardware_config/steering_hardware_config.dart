@@ -180,10 +180,9 @@ class SteeringHardwareConfigKeysContainer {
 
 /// A configuration for a steering wheel motor of a vehicle.
 @Freezed(fromJson: true, toJson: true)
-class SteeringHardwareConfig with _$SteeringHardwareConfig {
+sealed class SteeringHardwareConfig with _$SteeringHardwareConfig {
   /// A configuration for a steering wheel motor of a vehicle.
-  @Assert(
-    '''
+  @Assert('''
     microSteps == 0 ||
     microSteps == 2 ||
     microSteps == 4 ||
@@ -193,9 +192,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     microSteps == 64 ||
     microSteps == 128 ||
     microSteps == 256
-    ''',
-    'microSteps needs to be 0 or a power of 2 from 2 up to 256.',
-  )
+    ''', 'microSteps needs to be 0 or a power of 2 from 2 up to 256.')
   @Assert(
     'stepsPerRotation==200 || stepsPerRotation==400',
     'stepsPerRotation has to be 200 or 400.',
@@ -220,10 +217,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     'stallguardThreshold should be in range -64 to 63.',
   )
   @Assert('semax>=0 && semax<=15', 'semax should be in range 0 to 15.')
-  @Assert(
-    'coolstepThresholdRPM>=0',
-    'coolstepThresholdRPM should be positive.',
-  )
+  @Assert('coolstepThresholdRPM>=0', 'coolstepThresholdRPM should be positive.')
   @Assert(
     'stealthChopThresholdRPM>=0',
     'stealthChopThresholdRPM should be positive.',
@@ -232,10 +226,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     'highVelocityChopperModeChangeThresholdRPM>=0',
     'highVelocityChopperModeChangeThresholdRPM should be positive.',
   )
-  @Assert(
-    'dcStepThresholdRPM>=0',
-    'dcStepThresholdRPM should be positive.',
-  )
+  @Assert('dcStepThresholdRPM>=0', 'dcStepThresholdRPM should be positive.')
   @Assert(
     '''dcStepLoadMeasurementPulseWidth>=0 && dcStepLoadMeasurementPulseWidth<=1023''',
     'dcStepLoadMeasurementPulseWidth should be in range 0 to 1023.',
@@ -264,22 +255,10 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     'zeroWaitTime>=0 && zeroWaitTime<=65535',
     'zeroWaitTime should be in range 0 to 65535.',
   )
-  @Assert(
-    'pidP>=0',
-    'pidP should be positive.',
-  )
-  @Assert(
-    'pidI>=0',
-    'pidI should be positive.',
-  )
-  @Assert(
-    'pidD>=0',
-    'pidD should be positive.',
-  )
-  @Assert(
-    'wasMin>=0',
-    'wasMin should be positive.',
-  )
+  @Assert('pidP>=0', 'pidP should be positive.')
+  @Assert('pidI>=0', 'pidI should be positive.')
+  @Assert('pidD>=0', 'pidD should be positive.')
+  @Assert('wasMin>=0', 'wasMin should be positive.')
   @Assert(
     'wasCenter>=0 && wasCenter>wasMin',
     'wasCenter should be positive and larger than wasMin.',
@@ -511,22 +490,26 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
   /// request to update the motor config on the hardware.
   String httpHeader(Set<String> keys) {
     final json = toJson()..removeWhere((key, value) => !keys.contains(key));
-    return json.entries.map((entry) {
-      if (entry.value is bool) {
-        return '${entry.key}=${(entry.value as bool) ? 1 : 0}';
-      }
-      return '${entry.key}=${entry.value}';
-    }).join('&');
+    return json.entries
+        .map((entry) {
+          if (entry.value is bool) {
+            return '${entry.key}=${(entry.value as bool) ? 1 : 0}';
+          }
+          return '${entry.key}=${entry.value}';
+        })
+        .join('&');
   }
 
   /// An HTTP header with all parameters for sending a request to update the
   /// motor config on the hardware.
-  String get httpHeaderFull => toJson().entries.map((entry) {
+  String get httpHeaderFull => toJson().entries
+      .map((entry) {
         if (entry.value is bool) {
           return '${entry.key}=${(entry.value as bool) ? 1 : 0}';
         }
         return '${entry.key}=${entry.value}';
-      }).join('&');
+      })
+      .join('&');
 }
 
 /// An enumerator for the choices of motor holdig mode (freewheel).
@@ -545,7 +528,7 @@ enum MotorHoldingMode {
 
   /// Passive braking by coil shorted using HS drivers.
   @JsonValue(3)
-  passiveBrakeCoilShortHSDrivers;
+  passiveBrakeCoilShortHSDrivers,
 }
 
 /// An enumerator for the choices of comparator blank time (TBL).

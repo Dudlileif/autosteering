@@ -46,7 +46,5 @@ class GaugeBearing extends _$GaugeBearing {
   double build() => 0;
 
   /// Update the [state] by adding [value].
-  void update(double value) => Future(
-        () => state = value,
-      );
+  void update(double value) => Future(() => state = value);
 }

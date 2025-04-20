@@ -6,30 +6,36 @@ part of 'gamepad_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$GamepadConfigImpl _$$GamepadConfigImplFromJson(Map<String, dynamic> json) =>
-    _$GamepadConfigImpl(
+_GamepadConfig _$GamepadConfigFromJson(Map<String, dynamic> json) =>
+    _GamepadConfig(
       analogMaxValue: (json['analogMaxValue'] as num?)?.toInt() ?? 65535,
       analogDeadZoneMax:
           (json['analogDeadZoneMax'] as Map<String, dynamic>?)?.map(
-                (k, e) => MapEntry($enumDecode(_$GamepadAnalogInputEnumMap, k),
-                    (e as num).toDouble()),
-              ) ??
-              const {},
+            (k, e) => MapEntry(
+              $enumDecode(_$GamepadAnalogInputEnumMap, k),
+              (e as num).toDouble(),
+            ),
+          ) ??
+          const {},
       analogDeadZoneMin:
           (json['analogDeadZoneMin'] as Map<String, dynamic>?)?.map(
-                (k, e) => MapEntry($enumDecode(_$GamepadAnalogInputEnumMap, k),
-                    (e as num).toDouble()),
-              ) ??
-              const {},
+            (k, e) => MapEntry(
+              $enumDecode(_$GamepadAnalogInputEnumMap, k),
+              (e as num).toDouble(),
+            ),
+          ) ??
+          const {},
     );
 
-Map<String, dynamic> _$$GamepadConfigImplToJson(_$GamepadConfigImpl instance) =>
+Map<String, dynamic> _$GamepadConfigToJson(_GamepadConfig instance) =>
     <String, dynamic>{
       'analogMaxValue': instance.analogMaxValue,
-      'analogDeadZoneMax': instance.analogDeadZoneMax
-          .map((k, e) => MapEntry(_$GamepadAnalogInputEnumMap[k]!, e)),
-      'analogDeadZoneMin': instance.analogDeadZoneMin
-          .map((k, e) => MapEntry(_$GamepadAnalogInputEnumMap[k]!, e)),
+      'analogDeadZoneMax': instance.analogDeadZoneMax.map(
+        (k, e) => MapEntry(_$GamepadAnalogInputEnumMap[k]!, e),
+      ),
+      'analogDeadZoneMin': instance.analogDeadZoneMin.map(
+        (k, e) => MapEntry(_$GamepadAnalogInputEnumMap[k]!, e),
+      ),
     };
 
 const _$GamepadAnalogInputEnumMap = {

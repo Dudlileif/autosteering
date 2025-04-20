@@ -38,17 +38,20 @@ class ABTrackingLayer extends ConsumerWidget {
 
     final debug = ref.watch(debugABTrackingProvider);
 
-    final pointA = ref.watch(showABPointAProvider)
-        ? abTracking?.start ?? ref.watch(aBPointAProvider)
-        : null;
+    final pointA =
+        ref.watch(showABPointAProvider)
+            ? abTracking?.start ?? ref.watch(aBPointAProvider)
+            : null;
 
-    final pointB = ref.watch(showABPointBProvider)
-        ? abTracking?.end ?? ref.watch(aBPointBProvider)
-        : null;
+    final pointB =
+        ref.watch(showABPointBProvider)
+            ? abTracking?.end ?? ref.watch(aBPointBProvider)
+            : null;
 
     final autoSteerEnabled = ref.watch(
-      activeAutosteeringStateProvider
-          .select((value) => value != AutosteeringState.disabled),
+      activeAutosteeringStateProvider.select(
+        (value) => value != AutosteeringState.disabled,
+      ),
     );
 
     final vehicle = ref.watch(mainVehicleProvider);
@@ -81,13 +84,14 @@ class ABTrackingLayer extends ConsumerWidget {
                         index,
                         Polyline(
                           points: line.map((e) => e.position.latLng).toList(),
-                          color: switch (
-                              abTracking.finishedOffsets.contains(index)) {
+                          color: switch (abTracking.finishedOffsets.contains(
+                            index,
+                          )) {
                             true => Colors.red,
                             false => switch (darkMode) {
-                                false => Colors.grey.shade600,
-                                true => Colors.grey.shade400,
-                              }
+                              false => Colors.grey.shade600,
+                              true => Colors.grey.shade400,
+                            },
                           },
                           strokeWidth: 2,
                         ),
@@ -96,15 +100,17 @@ class ABTrackingLayer extends ConsumerWidget {
                     .values,
               if (abTracking.boundary == null)
                 Polyline(
-                  points: abTracking.baseLine
-                      .map((e) => e.position.latLng)
-                      .toList(),
+                  points:
+                      abTracking.baseLine
+                          .map((e) => e.position.latLng)
+                          .toList(),
                 ),
               if (abTracking.currentLine != null)
                 Polyline(
-                  points: abTracking.currentLine!
-                      .map((e) => e.position.latLng)
-                      .toList(),
+                  points:
+                      abTracking.currentLine!
+                          .map((e) => e.position.latLng)
+                          .toList(),
                   strokeWidth: 3,
                 ),
               if (abTracking.limitMode == ABLimitMode.unlimited &&
@@ -123,25 +129,28 @@ class ABTrackingLayer extends ConsumerWidget {
               if (abTracking.limitMode != ABLimitMode.unlimited &&
                   abTracking.nextLine != null)
                 Polyline(
-                  points: abTracking.nextLine!
-                      .map((e) => e.position.latLng)
-                      .toList(),
+                  points:
+                      abTracking.nextLine!
+                          .map((e) => e.position.latLng)
+                          .toList(),
                   color: Colors.blue,
                   strokeWidth: 3,
                 ),
               if (abTracking.upcomingTurn != null)
                 Polyline(
-                  points: abTracking.upcomingTurn!.path
-                      .map((e) => e.position.latLng)
-                      .toList(),
+                  points:
+                      abTracking.upcomingTurn!.path
+                          .map((e) => e.position.latLng)
+                          .toList(),
                   color: Colors.blue,
                   strokeWidth: 2,
                 ),
               if (abTracking.activeTurn != null)
                 Polyline(
-                  points: abTracking.activeTurn!.path
-                      .map((e) => e.position.latLng)
-                      .toList(),
+                  points:
+                      abTracking.activeTurn!.path
+                          .map((e) => e.position.latLng)
+                          .toList(),
                   strokeWidth: 3,
                 ),
               if (currentPerpendicularIntersect != null)
@@ -210,29 +219,32 @@ class ABTrackingLayer extends ConsumerWidget {
                     point: vehicle.lookAheadStartPosition.latLng,
                     radius: vehicle.lookAheadDistance,
                     useRadiusInMeter: true,
-                    color:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    color: Theme.of(
+                      context,
+                    ).primaryColor.withValues(alpha: 0.1),
                   ),
                   if (abTracking.activeTurn != null &&
                       abTracking.activeTurn is PurePursuitPathTracking)
                     CircleMarker(
-                      point: (abTracking.activeTurn! as PurePursuitPathTracking)
-                          .findLookAheadCirclePoints(vehicle)
-                          .best
-                          .position
-                          .latLng,
+                      point:
+                          (abTracking.activeTurn! as PurePursuitPathTracking)
+                              .findLookAheadCirclePoints(vehicle)
+                              .best
+                              .position
+                              .latLng,
                       radius: 5,
                       color: Colors.pink,
                     )
                   else if (abTracking.currentPathTracking
                       is PurePursuitPathTracking)
                     CircleMarker(
-                      point: (abTracking.currentPathTracking!
-                              as PurePursuitPathTracking)
-                          .findLookAheadCirclePoints(vehicle)
-                          .best
-                          .position
-                          .latLng,
+                      point:
+                          (abTracking.currentPathTracking!
+                                  as PurePursuitPathTracking)
+                              .findLookAheadCirclePoints(vehicle)
+                              .best
+                              .position
+                              .latLng,
                       radius: 5,
                       color: Colors.pink,
                     ),

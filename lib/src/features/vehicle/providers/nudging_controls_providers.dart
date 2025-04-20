@@ -54,10 +54,9 @@ class NudgingControlsUiOffset extends _$NudgingControlsUiOffset {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null && next != previous) {
-        ref.read(settingsProvider.notifier).update(
-              SettingsKey.uiNudgningControlsOffset,
-              next.toJson(),
-            );
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.uiNudgningControlsOffset, next.toJson());
       }
     });
 

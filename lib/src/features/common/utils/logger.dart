@@ -36,8 +36,10 @@ class Logger {
   /// The time when the logger was first initialized.
   final DateTime initializeTime;
 
-  final implementation.Logger _consoleLogger =
-      implementation.Logger(filter: ProductionFilter(), level: Level.all);
+  final implementation.Logger _consoleLogger = implementation.Logger(
+    filter: ProductionFilter(),
+    level: Level.all,
+  );
 
   /// The actual [implementation.Logger] to call for doing the logging.
   implementation.Logger? _fileLogger;
@@ -160,12 +162,12 @@ class Logger {
                 level: Level.all,
               ))
           .log(
-        level,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-      );
+            level,
+            message,
+            time: time,
+            error: error,
+            stackTrace: stackTrace,
+          );
     }
   }
 }

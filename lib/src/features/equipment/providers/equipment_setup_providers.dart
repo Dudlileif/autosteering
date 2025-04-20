@@ -35,11 +35,13 @@ class ConfiguredEquipmentSetup extends _$ConfiguredEquipmentSetup {
   EquipmentSetup? build() {
     listenSelf((previous, next) {
       if (next != null && next.allAttached.isNotEmpty) {
-        ref.read(loadedEquipmentProvider.notifier).update(
+        ref
+            .read(loadedEquipmentProvider.notifier)
+            .update(
               next.allAttached.cast<Equipment>().reduce(
-                    (value, element) =>
-                        value.width >= element.width ? value : element,
-                  ),
+                (value, element) =>
+                    value.width >= element.width ? value : element,
+              ),
             );
       }
     });
@@ -59,15 +61,14 @@ FutureOr<void> saveEquipmentSetup(
   EquipmentSetup setup, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async =>
-    await ref.watch(
-      saveJsonToFileDirectoryProvider(
-        object: setup,
-        fileName: overrideName ?? setup.name,
-        folder: path.join('equipment', 'setups'),
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => await ref.watch(
+  saveJsonToFileDirectoryProvider(
+    object: setup,
+    fileName: overrideName ?? setup.name,
+    folder: path.join('equipment', 'setups'),
+    downloadIfWeb: downloadIfWeb,
+  ).future,
+);
 
 /// A provider for exporting [setup] to a file.
 ///
@@ -78,30 +79,26 @@ FutureOr<void> exportEquipmentSetup(
   EquipmentSetup setup, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async =>
-    await ref.watch(
-      exportJsonToFileDirectoryProvider(
-        object: setup,
-        fileName: overrideName ?? setup.name,
-        folder: path.join('equipment', 'setups'),
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => await ref.watch(
+  exportJsonToFileDirectoryProvider(
+    object: setup,
+    fileName: overrideName ?? setup.name,
+    folder: path.join('equipment', 'setups'),
+    downloadIfWeb: downloadIfWeb,
+  ).future,
+);
 
 /// A provider for reading and holding all the saved [EquipmentSetup]s in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-FutureOr<List<EquipmentSetup>> savedEquipmentSetups(
-  Ref ref,
-) async =>
-    await ref
-        .watch(
+FutureOr<List<EquipmentSetup>> savedEquipmentSetups(Ref ref) async => await ref
+    .watch(
       savedFilesProvider(
         fromJson: EquipmentSetup.fromJson,
         folder: path.join('equipment', 'setups'),
       ).future,
     )
-        .then((data) {
+    .then((data) {
       final setups = data.cast<EquipmentSetup>();
 
       return setups;
@@ -116,13 +113,12 @@ FutureOr<void> deleteEquipmentSetup(
   EquipmentSetup setup, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async =>
-    await ref.watch(
-      deleteJsonFromFileDirectoryProvider(
-        fileName: overrideName ?? setup.name,
-        folder: path.join('equipment', 'setups'),
-      ).future,
-    );
+}) async => await ref.watch(
+  deleteJsonFromFileDirectoryProvider(
+    fileName: overrideName ?? setup.name,
+    folder: path.join('equipment', 'setups'),
+  ).future,
+);
 
 /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
 /// valid.
@@ -150,14 +146,9 @@ FutureOr<EquipmentSetup?> loadEquipmentSetupFromFile(
 /// A provider for importing a equipment setup configuration from the user file
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
 @riverpod
-FutureOr<EquipmentSetup?> importEquipmentSetup(
-  Ref ref,
-) async {
+FutureOr<EquipmentSetup?> importEquipmentSetup(Ref ref) async {
   ref.keepAlive();
-  Timer(
-    const Duration(seconds: 5),
-    ref.invalidateSelf,
-  );
+  Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.platform.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
@@ -170,8 +161,9 @@ FutureOr<EquipmentSetup?> importEquipmentSetup(
     if (data != null) {
       try {
         final json = jsonDecode(String.fromCharCodes(data));
-        equipmentSetup =
-            EquipmentSetup.fromJson(Map<String, dynamic>.from(json as Map));
+        equipmentSetup = EquipmentSetup.fromJson(
+          Map<String, dynamic>.from(json as Map),
+        );
       } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import equipment setup.',
@@ -180,23 +172,20 @@ FutureOr<EquipmentSetup?> importEquipmentSetup(
         );
       }
     } else {
-      Logger.instance.w(
-        'Failed to import equipment setup, data is null.',
-      );
+      Logger.instance.w('Failed to import equipment setup, data is null.');
     }
   } else {
     final filePath = pickedFiles?.paths.first;
     if (filePath != null) {
-      equipmentSetup =
-          await ref.watch(loadEquipmentSetupFromFileProvider(filePath).future);
+      equipmentSetup = await ref.watch(
+        loadEquipmentSetupFromFileProvider(filePath).future,
+      );
     } else {
       Logger.instance.w('Failed to import equipment setup: $filePath.');
     }
   }
   if (equipmentSetup != null) {
-    Logger.instance.i(
-      'Imported equipment setup: ${equipmentSetup.name}.',
-    );
+    Logger.instance.i('Imported equipment setup: ${equipmentSetup.name}.');
     equipmentSetup.lastUsed = DateTime.now();
     ref.read(configuredEquipmentSetupProvider.notifier).update(equipmentSetup);
     await ref.watch(saveEquipmentSetupProvider(equipmentSetup).future);

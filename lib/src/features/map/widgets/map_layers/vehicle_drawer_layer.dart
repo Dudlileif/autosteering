@@ -39,17 +39,19 @@ class VehicleDrawerLayer extends ConsumerWidget {
         if (vehicle is AxleSteeredVehicle) ...[
           if (vehicle is Harvester) ...[
             WheelPainter(
-              innerPosition:
-                  vehicle.steeringAxlePosition.rhumb.destinationPoint(
-                distance:
-                    vehicle.trackWidth / 2 - vehicle.steeringAxleWheelWidth / 2,
-                bearing: vehicle.bearing - 90,
-              ),
+              innerPosition: vehicle.steeringAxlePosition.rhumb
+                  .destinationPoint(
+                    distance:
+                        vehicle.trackWidth / 2 -
+                        vehicle.steeringAxleWheelWidth / 2,
+                    bearing: vehicle.bearing - 90,
+                  ),
               vehicleBearing: vehicle.bearing,
               steeringAngle: vehicle.leftSteeringWheelAngle,
               width: vehicle.steeringAxleWheelWidth,
               diameter: vehicle.steeringAxleWheelDiameter,
-              rotation: vehicle.wheelsRolledDistance /
+              rotation:
+                  vehicle.wheelsRolledDistance /
                   (vehicle.steeringAxleWheelDiameter * pi) %
                   1,
               centerMapOnVehicle: centerMapOnVehicle,
@@ -57,17 +59,19 @@ class VehicleDrawerLayer extends ConsumerWidget {
               wheelSpacing: vehicle.wheelSpacing,
             ),
             WheelPainter(
-              innerPosition:
-                  vehicle.steeringAxlePosition.rhumb.destinationPoint(
-                distance:
-                    vehicle.trackWidth / 2 - vehicle.steeringAxleWheelWidth / 2,
-                bearing: vehicle.bearing + 90,
-              ),
+              innerPosition: vehicle.steeringAxlePosition.rhumb
+                  .destinationPoint(
+                    distance:
+                        vehicle.trackWidth / 2 -
+                        vehicle.steeringAxleWheelWidth / 2,
+                    bearing: vehicle.bearing + 90,
+                  ),
               vehicleBearing: vehicle.bearing,
               steeringAngle: vehicle.rightSteeringWheelAngle,
               width: vehicle.steeringAxleWheelWidth,
               diameter: vehicle.steeringAxleWheelDiameter,
-              rotation: vehicle.wheelsRolledDistance /
+              rotation:
+                  vehicle.wheelsRolledDistance /
                   (vehicle.steeringAxleWheelDiameter * pi) %
                   1,
               isRightWheel: true,
@@ -84,7 +88,8 @@ class VehicleDrawerLayer extends ConsumerWidget {
             ),
             vehicleBearing: vehicle.bearing,
             width: vehicle.solidAxleWheelWidth,
-            rotation: vehicle.wheelsRolledDistance /
+            rotation:
+                vehicle.wheelsRolledDistance /
                 (vehicle.solidAxleWheelDiameter * pi) %
                 1,
             diameter: vehicle.solidAxleWheelDiameter,
@@ -101,7 +106,8 @@ class VehicleDrawerLayer extends ConsumerWidget {
             vehicleBearing: vehicle.bearing,
             width: vehicle.solidAxleWheelWidth,
             diameter: vehicle.solidAxleWheelDiameter,
-            rotation: vehicle.wheelsRolledDistance /
+            rotation:
+                vehicle.wheelsRolledDistance /
                 (vehicle.solidAxleWheelDiameter * pi) %
                 1,
             isRightWheel: true,
@@ -120,7 +126,8 @@ class VehicleDrawerLayer extends ConsumerWidget {
                 vehicleBearing: vehicle.frontAxleAngle,
                 width: vehicle.wheelWidth,
                 diameter: vehicle.wheelDiameter,
-                rotation: vehicle.wheelsRolledDistance /
+                rotation:
+                    vehicle.wheelsRolledDistance /
                     (vehicle.wheelDiameter * pi) %
                     1,
                 centerMapOnVehicle: centerMapOnVehicle,
@@ -136,7 +143,8 @@ class VehicleDrawerLayer extends ConsumerWidget {
                 vehicleBearing: vehicle.frontAxleAngle,
                 width: vehicle.wheelWidth,
                 diameter: vehicle.wheelDiameter,
-                rotation: vehicle.wheelsRolledDistance /
+                rotation:
+                    vehicle.wheelsRolledDistance /
                     (vehicle.wheelDiameter * pi) %
                     1,
                 isRightWheel: true,
@@ -153,7 +161,8 @@ class VehicleDrawerLayer extends ConsumerWidget {
                 vehicleBearing: vehicle.rearAxleAngle + 180,
                 width: vehicle.wheelWidth,
                 diameter: vehicle.wheelDiameter,
-                rotation: vehicle.wheelsRolledDistance /
+                rotation:
+                    vehicle.wheelsRolledDistance /
                     (vehicle.wheelDiameter * pi) %
                     1,
                 centerMapOnVehicle: centerMapOnVehicle,
@@ -169,7 +178,8 @@ class VehicleDrawerLayer extends ConsumerWidget {
                 vehicleBearing: vehicle.rearAxleAngle + 180,
                 width: vehicle.wheelWidth,
                 diameter: vehicle.wheelDiameter,
-                rotation: vehicle.wheelsRolledDistance /
+                rotation:
+                    vehicle.wheelsRolledDistance /
                     (vehicle.wheelDiameter * pi) %
                     1,
                 isRightWheel: true,
@@ -180,9 +190,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
               ),
             ],
           ),
-        MapVehicleTopDownPainter(
-          vehicle: vehicle,
-        ),
+        MapVehicleTopDownPainter(vehicle: vehicle),
         if (vehicle is Tractor) ...[
           WheelPainter(
             innerPosition: vehicle.steeringAxlePosition.rhumb.destinationPoint(
@@ -194,7 +202,8 @@ class VehicleDrawerLayer extends ConsumerWidget {
             steeringAngle: vehicle.leftSteeringWheelAngle,
             width: vehicle.steeringAxleWheelWidth,
             diameter: vehicle.steeringAxleWheelDiameter,
-            rotation: vehicle.wheelsRolledDistance /
+            rotation:
+                vehicle.wheelsRolledDistance /
                 (vehicle.steeringAxleWheelDiameter * pi) %
                 1,
             centerMapOnVehicle: centerMapOnVehicle,
@@ -211,7 +220,8 @@ class VehicleDrawerLayer extends ConsumerWidget {
             steeringAngle: vehicle.rightSteeringWheelAngle,
             width: vehicle.steeringAxleWheelWidth,
             diameter: vehicle.steeringAxleWheelDiameter,
-            rotation: vehicle.wheelsRolledDistance /
+            rotation:
+                vehicle.wheelsRolledDistance /
                 (vehicle.steeringAxleWheelDiameter * pi) %
                 1,
             isRightWheel: true,
@@ -246,10 +256,7 @@ class VehicleDrawerLayer extends ConsumerWidget {
 class MapVehicleTopDownPainter extends StatelessWidget {
   /// A dynamic vehicle painter for drawing a top-down view of a [Vehicle] in
   /// the correct position and rotation on the [FlutterMap].
-  const MapVehicleTopDownPainter({
-    required this.vehicle,
-    super.key,
-  });
+  const MapVehicleTopDownPainter({required this.vehicle, super.key});
 
   /// The vehicle to draw.
   final Vehicle vehicle;

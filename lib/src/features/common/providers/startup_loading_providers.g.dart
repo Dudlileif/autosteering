@@ -16,14 +16,15 @@ String _$webArtificialStartupDelayHash() =>
 @ProviderFor(webArtificialStartupDelay)
 final webArtificialStartupDelayProvider =
     AutoDisposeFutureProvider<void>.internal(
-  webArtificialStartupDelay,
-  name: r'webArtificialStartupDelayProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$webArtificialStartupDelayHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      webArtificialStartupDelay,
+      name: r'webArtificialStartupDelayProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$webArtificialStartupDelayHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -39,9 +40,10 @@ String _$startupLoadingHash() => r'e4c2d53169c4b5d78e458670da14e400a2d7d098';
 final startupLoadingProvider = AutoDisposeProvider<bool>.internal(
   startupLoading,
   name: r'startupLoadingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$startupLoadingHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$startupLoadingHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

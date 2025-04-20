@@ -61,11 +61,12 @@ class SimulatorCoreBase {
       final messages = decoder.decode(data);
       for (final message in messages) {
         if (message is ImuReading ||
-            message is ({
-              Geographic gnssPosition,
-              DateTime gnssTime,
-              DateTime receiveTime
-            }) ||
+            message
+                is ({
+                  Geographic gnssPosition,
+                  DateTime gnssTime,
+                  DateTime receiveTime,
+                }) ||
             message is WasReading) {
           state.handleMessage(message);
         } else if (message != null) {
@@ -93,12 +94,13 @@ class SimulatorCoreBase {
   ) {
     for (final message in decoder.parseString(record)) {
       if (message is ImuReading ||
-          message is ({
-            Geographic gnssPosition,
-            DateTime gnssTime,
-            DateTime receiveTime,
-            GnssFixQuality quality,
-          }) ||
+          message
+              is ({
+                Geographic gnssPosition,
+                DateTime gnssTime,
+                DateTime receiveTime,
+                GnssFixQuality quality,
+              }) ||
           message is WasReading) {
         state.handleMessage(message);
       } else if (message != null) {

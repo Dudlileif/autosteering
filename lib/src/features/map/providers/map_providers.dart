@@ -51,40 +51,34 @@ class MainMapController extends _$MainMapController {
   MapController build() => MapController();
 
   /// Increase the zoom value of the [state] by [value].
-  void zoomIn(double value) => Future(
-        () => state.move(state.camera.center, state.camera.zoom + value),
-      );
+  void zoomIn(double value) =>
+      Future(() => state.move(state.camera.center, state.camera.zoom + value));
 
   /// Decrease the zoom value of the [state] by [value].
-  void zoomOut(double value) => Future(
-        () => state.move(state.camera.center, state.camera.zoom - value),
-      );
+  void zoomOut(double value) =>
+      Future(() => state.move(state.camera.center, state.camera.zoom - value));
 
   /// Increase the zoom value of the [state] by [value], and snap the result to
   /// the closest [value] step.
-  void zoomInSnap(double value) => Future(
-        () {
-          final newZoom = state.camera.zoom + value;
-          return state.move(
-            state.camera.center,
-            newZoom.truncateToDouble() +
-                ((newZoom - newZoom.truncate()) ~/ value) * value,
-          );
-        },
-      );
+  void zoomInSnap(double value) => Future(() {
+    final newZoom = state.camera.zoom + value;
+    return state.move(
+      state.camera.center,
+      newZoom.truncateToDouble() +
+          ((newZoom - newZoom.truncate()) ~/ value) * value,
+    );
+  });
 
   /// Decrease the zoom value of the [state] by [value], and snap the result to
   /// the closest [value] step.
-  void zoomOutSnap(double value) => Future(
-        () {
-          final newZoom = state.camera.zoom - value;
-          return state.move(
-            state.camera.center,
-            newZoom.truncateToDouble() +
-                ((newZoom - newZoom.truncate()) ~/ value) * value,
-          );
-        },
-      );
+  void zoomOutSnap(double value) => Future(() {
+    final newZoom = state.camera.zoom - value;
+    return state.move(
+      state.camera.center,
+      newZoom.truncateToDouble() +
+          ((newZoom - newZoom.truncate()) ~/ value) * value,
+    );
+  });
 }
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
@@ -101,9 +95,7 @@ class HomePosition extends _$HomePosition {
         ref.read(simInputProvider.notifier).send((velocity: 0));
         ref.read(simInputProvider.notifier).send((steeringAngle: 0));
 
-        ref.read(simInputProvider.notifier).send(
-          (position: next.geoPosition),
-        );
+        ref.read(simInputProvider.notifier).send((position: next.geoPosition));
       }
     });
 
@@ -151,11 +143,14 @@ class CenterMapOnVehicle extends _$CenterMapOnVehicle {
     Future(() => state = value ?? state);
     if (value != null) {
       if (value) {
-        ref.read(mainMapControllerProvider).move(
+        ref
+            .read(mainMapControllerProvider)
+            .move(
               ref.watch(offsetVehiclePositionProvider),
               ref.watch(
-                mainMapControllerProvider
-                    .select((controller) => controller.camera.zoom),
+                mainMapControllerProvider.select(
+                  (controller) => controller.camera.zoom,
+                ),
               ),
             );
       }
@@ -183,8 +178,10 @@ class ZoomTimerController extends _$ZoomTimerController {
     Future(
       () =>
           state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
-        ref.read(mainMapControllerProvider.notifier).zoomIn(timer.tick * 0.001);
-      }),
+            ref
+                .read(mainMapControllerProvider.notifier)
+                .zoomIn(timer.tick * 0.001);
+          }),
     );
   }
 
@@ -194,10 +191,10 @@ class ZoomTimerController extends _$ZoomTimerController {
     Future(
       () =>
           state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
-        ref
-            .read(mainMapControllerProvider.notifier)
-            .zoomOut(timer.tick * 0.001);
-      }),
+            ref
+                .read(mainMapControllerProvider.notifier)
+                .zoomOut(timer.tick * 0.001);
+          }),
     );
   }
 }
@@ -247,12 +244,8 @@ class MapOffset2D extends _$MapOffset2D {
   }
 
   /// Update the [state] offset with [x] and [y].
-  void update({double? x, double? y}) => Future(
-        () => state = state.copyWith(
-          x: x ?? state.x,
-          y: y ?? state.y,
-        ),
-      );
+  void update({double? x, double? y}) =>
+      Future(() => state = state.copyWith(x: x ?? state.x, y: y ?? state.y));
 }
 
 /// How much the map center should be offset from the vehicle when using
@@ -291,12 +284,8 @@ class MapOffset3D extends _$MapOffset3D {
   }
 
   /// Update the [state] offset with [x] and [y].
-  void update({double? x, double? y}) => Future(
-        () => state = state.copyWith(
-          x: x ?? state.x,
-          y: y ?? state.y,
-        ),
-      );
+  void update({double? x, double? y}) =>
+      Future(() => state = state.copyWith(x: x ?? state.x, y: y ?? state.y));
 }
 
 /// The map center offset applied to the vehicle position, contains the
@@ -341,10 +330,10 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
         if (next) {
           ref.read(mainMapControllerProvider).rotate(0);
         } else {
-          ref.read(mainMapControllerProvider).rotate(
-                ref.read(
-                  mainVehicleProvider.select((value) => -value.bearing),
-                ),
+          ref
+              .read(mainMapControllerProvider)
+              .rotate(
+                ref.read(mainVehicleProvider.select((value) => -value.bearing)),
               );
         }
       }
@@ -469,7 +458,8 @@ FutureOr<DateTime?> mapCacheDate(Ref ref, String filePath) async {
 
 /// A provider for listing all the map layer cache folders.
 @riverpod
-FutureOr<List<String>> mapCacheDirectories(Ref ref) async => await Directory(
+FutureOr<List<String>> mapCacheDirectories(Ref ref) async =>
+    await Directory(
       path.join(
         ref.watch(fileDirectoryProvider).requireValue.path,
         'map_image_cache',

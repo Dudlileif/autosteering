@@ -43,8 +43,9 @@ class SentinelLayerSelector extends ConsumerWidget {
         itemCount: availableLayers.length,
         itemBuilder: (context, index) {
           final layer = availableLayers.elementAt(index);
-          final enabled =
-              selectedLayers.any((element) => layer.name == element.name);
+          final enabled = selectedLayers.any(
+            (element) => layer.name == element.name,
+          );
           return _SentinelLayerMenuItemButton(
             key: ValueKey(layer.layerType),
             index: index,
@@ -58,13 +59,7 @@ class SentinelLayerSelector extends ConsumerWidget {
       return MenuButtonWithChildren(
         icon: Icons.satellite_alt,
         text: 'Sentinel',
-        menuChildren: [
-          SizedBox(
-            height: 3 * 80,
-            width: 300,
-            child: listView,
-          ),
-        ],
+        menuChildren: [SizedBox(height: 3 * 80, width: 300, child: listView)],
       );
     }
     return const SizedBox.shrink();
@@ -96,36 +91,36 @@ class _SentinelLayerMenuItemButton extends StatelessWidget {
               return CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 value: enabled,
-                onChanged: (value) => ref
-                    .read(enabledSentinelLayersProvider.notifier)
-                    .toggle(layer),
+                onChanged:
+                    (value) => ref
+                        .read(enabledSentinelLayersProvider.notifier)
+                        .toggle(layer),
                 title: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      layer.name,
-                      style: theme.menuButtonWithChildrenText,
-                    ),
+                    Text(layer.name, style: theme.menuButtonWithChildrenText),
                     SliderTheme(
                       data: theme.sliderTheme.copyWith(
                         showValueIndicator: ShowValueIndicator.always,
                       ),
                       child: Consumer(
                         builder: (context, ref, child) {
-                          final opacity = ref.watch(
-                            sentinelLayerOpacitiesProvider,
-                          )[layer.layerType]!;
+                          final opacity =
+                              ref.watch(sentinelLayerOpacitiesProvider)[layer
+                                  .layerType]!;
 
                           return Slider(
                             value: opacity,
                             label: 'Opacity: ${opacity.toStringAsFixed(2)}',
-                            onChanged: enabled
-                                ? (value) => ref
-                                    .read(
-                                      sentinelLayerOpacitiesProvider.notifier,
-                                    )
-                                    .update(layer.layerType, value)
-                                : null,
+                            onChanged:
+                                enabled
+                                    ? (value) => ref
+                                        .read(
+                                          sentinelLayerOpacitiesProvider
+                                              .notifier,
+                                        )
+                                        .update(layer.layerType, value)
+                                    : null,
                             divisions: 20,
                           );
                         },
@@ -141,9 +136,7 @@ class _SentinelLayerMenuItemButton extends StatelessWidget {
           padding: const EdgeInsets.only(right: 10),
           child: ReorderableDragStartListener(
             index: index,
-            child: const Card(
-              child: Icon(Icons.drag_handle),
-            ),
+            child: const Card(child: Icon(Icons.drag_handle)),
           ),
         ),
       ],

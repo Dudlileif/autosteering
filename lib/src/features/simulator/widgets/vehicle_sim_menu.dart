@@ -37,34 +37,39 @@ class VehicleSimMenu extends StatelessWidget {
       text: 'Vehicle',
       menuChildren: [
         Consumer(
-          child: Text(
-            'Auto center steering',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            title: child,
-            value: ref.watch(simCoreVehicleAutoCenterSteeringProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(simCoreVehicleAutoCenterSteeringProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
+          child: Text('Auto center steering', style: textStyle),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                title: child,
+                value: ref.watch(simCoreVehicleAutoCenterSteeringProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(
+                                  simCoreVehicleAutoCenterSteeringProvider
+                                      .notifier,
+                                )
+                                .update(value: value)
+                            : null,
+              ),
         ),
         Consumer(
-          child: Text(
-            'Auto slow down',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            title: child,
-            value: ref.watch(simCoreVehicleAutoSlowDownProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(simCoreVehicleAutoSlowDownProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
+          child: Text('Auto slow down', style: textStyle),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                title: child,
+                value: ref.watch(simCoreVehicleAutoSlowDownProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(
+                                  simCoreVehicleAutoSlowDownProvider.notifier,
+                                )
+                                .update(value: value)
+                            : null,
+              ),
         ),
       ],
     );

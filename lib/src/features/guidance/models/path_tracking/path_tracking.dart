@@ -92,27 +92,28 @@ sealed class PathTracking {
 
   factory PathTracking.fromJson(Map<String, dynamic> json) {
     final mode = PathTrackingMode.fromJson(json['mode'] as String);
-    final wayPoints = List<Map<String, dynamic>>.from(json['points'] as List)
-        .map(WayPoint.fromJson)
-        .toList();
+    final wayPoints =
+        List<Map<String, dynamic>>.from(
+          json['points'] as List,
+        ).map(WayPoint.fromJson).toList();
     final interpolationDistance = json['interpolation_distance'] as double;
     final loopMode = PathTrackingLoopMode.fromJson(json['loop_mode'] as String);
 
     return switch (mode) {
       PathTrackingMode.purePursuit => PurePursuitPathTracking(
-          wayPoints: wayPoints,
-          interpolationDistance: interpolationDistance,
-          loopMode: loopMode,
-          name: json['name'] as String?,
-          uuid: json['uuid'] as String?,
-        ),
+        wayPoints: wayPoints,
+        interpolationDistance: interpolationDistance,
+        loopMode: loopMode,
+        name: json['name'] as String?,
+        uuid: json['uuid'] as String?,
+      ),
       PathTrackingMode.stanley => StanleyPathTracking(
-          wayPoints: wayPoints,
-          interpolationDistance: interpolationDistance,
-          loopMode: loopMode,
-          name: json['name'] as String?,
-          uuid: json['uuid'] as String?,
-        ),
+        wayPoints: wayPoints,
+        interpolationDistance: interpolationDistance,
+        loopMode: loopMode,
+        name: json['name'] as String?,
+        uuid: json['uuid'] as String?,
+      ),
     };
   }
 
@@ -143,11 +144,11 @@ sealed class PathTracking {
   late List<double> cumulativePathSegmentLengths;
 
   /// The [path]'s index for the currently tracked point.
-  int get currentIndex => switch (
-          loopMode != PathTrackingLoopMode.none || cumulativeIndex.isNegative) {
-        true => cumulativeIndex % path.length,
-        false => cumulativeIndex
-      };
+  int get currentIndex => switch (loopMode != PathTrackingLoopMode.none ||
+      cumulativeIndex.isNegative) {
+    true => cumulativeIndex % path.length,
+    false => cumulativeIndex,
+  };
 
   /// The cumulative index for the currently tracked point.
   int cumulativeIndex = 0;
@@ -199,11 +200,7 @@ sealed class PathTracking {
         if (prevPoint.distanceToRhumb(point) < (minDistance ?? 0.5)) {
           continue;
         }
-        path.add(
-          point.copyWith(
-            bearing: prevPoint.finalBearingToRhumb(point),
-          ),
-        );
+        path.add(point.copyWith(bearing: prevPoint.finalBearingToRhumb(point)));
       } else {
         path.add(point);
       }
@@ -236,9 +233,7 @@ sealed class PathTracking {
       }
 
       if (loopMode == PathTrackingLoopMode.straight) {
-        while (path.last.distanceToRhumb(
-              path.first,
-            ) >
+        while (path.last.distanceToRhumb(path.first) >
             (interpolationDistance ?? 4)) {
           path.add(
             path.last.copyWith(
@@ -253,12 +248,13 @@ sealed class PathTracking {
     }
 
     if (loopMode == PathTrackingLoopMode.dubins) {
-      final dubinsPath = DubinsPath(
-        start: path.last,
-        end: path.first,
-        turningRadius: 6,
-        stepSize: (interpolationDistance ?? 4) / 3,
-      ).bestDubinsPathPlan?.wayPoints;
+      final dubinsPath =
+          DubinsPath(
+            start: path.last,
+            end: path.first,
+            turningRadius: 6,
+            stepSize: (interpolationDistance ?? 4) / 3,
+          ).bestDubinsPathPlan?.wayPoints;
 
       if (dubinsPath != null) {
         // Skip the first and last point of the dubins path to avoid duplicates
@@ -281,14 +277,14 @@ sealed class PathTracking {
   int nextForwardIndex(Vehicle vehicle) =>
       switch (vehiclePointingInPathDirection(vehicle)) {
         true => cumulativeIndex + 1,
-        false => cumulativeIndex - 1
+        false => cumulativeIndex - 1,
       };
 
   /// The index of the next (previous) waypoint when driving in reverse.
   int nextReversingIndex(Vehicle vehicle) =>
       switch (vehiclePointingInPathDirection(vehicle)) {
         true => cumulativeIndex - 1,
-        false => cumulativeIndex + 1
+        false => cumulativeIndex + 1,
       };
 
   /// The current waypoint.
@@ -316,8 +312,10 @@ sealed class PathTracking {
   /// The next waypoint when driving in reverse.
   WayPoint nextReversingWayPoint(Vehicle vehicle) {
     if (loopMode == PathTrackingLoopMode.none && isCompleted) {
-      return (path.firstOrNull ?? wayPoints.first)
-          .moveRhumb(distance: 100, angleFromBearing: 180);
+      return (path.firstOrNull ?? wayPoints.first).moveRhumb(
+        distance: 100,
+        angleFromBearing: 180,
+      );
     }
     return path[nextReversingIndex(vehicle) % path.length];
   }
@@ -325,15 +323,15 @@ sealed class PathTracking {
   /// The next waypoint index with vehicle driving direction taken into
   /// consideration.
   int nextIndex(Vehicle vehicle) => switch (vehicle.isReversing) {
-        true => nextReversingIndex(vehicle),
-        false => nextForwardIndex(vehicle),
-      };
+    true => nextReversingIndex(vehicle),
+    false => nextForwardIndex(vehicle),
+  };
 
   /// The next waypoint with vehicle driving direction taken into consideration.
   WayPoint nextWayPoint(Vehicle vehicle) => switch (vehicle.isReversing) {
-        true => nextReversingWayPoint(vehicle),
-        false => nextForwardWayPoint(vehicle),
-      };
+    true => nextReversingWayPoint(vehicle),
+    false => nextForwardWayPoint(vehicle),
+  };
 
   /// The intersection point that is projected from the vehicle onto the
   /// line from the current to the next waypoint.
@@ -355,35 +353,36 @@ sealed class PathTracking {
       bearing = currentPoint.bearing;
     }
 
-    final intersect = currentPoint.position.rhumb
-        .destinationPoint(distance: distanceAlong, bearing: bearing);
+    final intersect = currentPoint.position.rhumb.destinationPoint(
+      distance: distanceAlong,
+      bearing: bearing,
+    );
     return intersect;
   }
 
   /// The distance from the vehicle to the [perpendicularIntersect] point.
   ///
   /// The value is negative if the vehicle is to the left of the line.
-  double perpendicularDistance(Vehicle vehicle) =>
-      switch (vehicle.isReversing) {
-        true => vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
-            start: nextReversingWayPoint(vehicle).position,
-            end: currentWayPoint(vehicle).position,
-          ),
-        false => vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
-            start: currentWayPoint(vehicle).position,
-            end: nextForwardWayPoint(vehicle).position,
-          )
-      };
+  double perpendicularDistance(Vehicle vehicle) => switch (vehicle
+      .isReversing) {
+    true => vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
+      start: nextReversingWayPoint(vehicle).position,
+      end: currentWayPoint(vehicle).position,
+    ),
+    false => vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
+      start: currentWayPoint(vehicle).position,
+      end: nextForwardWayPoint(vehicle).position,
+    ),
+  };
 
   /// The waypoint in [path] that is closest to the [vehicle].
   WayPoint closestWayPoint(Vehicle vehicle) => path.reduce(
-        (value, element) => element.position.rhumb.distanceTo(
-                  vehicle.pathTrackingPoint,
-                ) <
+    (value, element) =>
+        element.position.rhumb.distanceTo(vehicle.pathTrackingPoint) <
                 value.position.rhumb.distanceTo(vehicle.pathTrackingPoint)
             ? element
             : value,
-      );
+  );
 
   /// The index of the [closestWayPoint].
   int closestIndex(Vehicle vehicle) => path.indexOf(closestWayPoint(vehicle));
@@ -418,10 +417,10 @@ sealed class PathTracking {
 
   /// Converts the object to a json compatible structure.
   Map<String, dynamic> toJson() => {
-        'points': wayPoints,
-        'loop_mode': loopMode,
-        'interpolation_distance': interpolationDistance,
-        'name': name,
-        'uuid': uuid,
-      };
+    'points': wayPoints,
+    'loop_mode': loopMode,
+    'interpolation_distance': interpolationDistance,
+    'name': name,
+    'uuid': uuid,
+  };
 }

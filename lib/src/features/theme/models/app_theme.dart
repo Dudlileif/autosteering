@@ -58,39 +58,39 @@ class AppTheme {
 
   /// The light theme from this configuration.
   ThemeData get light => FlexThemeData.light(
-        scheme: !useDynamicColors && !useManufacturerColors ? flexScheme : null,
-        colors: useDynamicColors || useManufacturerColors ? lightColors : null,
-        blendLevel: 10,
-        appBarOpacity: 0.90,
-        tabBarStyle: FlexTabBarStyle.forBackground,
-        tooltipsMatchBackground: true,
-        lightIsWhite: lightIsWhite,
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3ErrorColors: true,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 10,
-          navigationBarHeight: 80,
-          unselectedToggleIsColored: true,
-        ),
-        swapLegacyOnMaterial3: true,
-      );
+    scheme: !useDynamicColors && !useManufacturerColors ? flexScheme : null,
+    colors: useDynamicColors || useManufacturerColors ? lightColors : null,
+    blendLevel: 10,
+    appBarOpacity: 0.90,
+    tabBarStyle: FlexTabBarStyle.forBackground,
+    tooltipsMatchBackground: true,
+    lightIsWhite: lightIsWhite,
+    visualDensity: FlexColorScheme.comfortablePlatformDensity,
+    useMaterial3ErrorColors: true,
+    subThemesData: const FlexSubThemesData(
+      blendOnLevel: 10,
+      navigationBarHeight: 80,
+      unselectedToggleIsColored: true,
+    ),
+    swapLegacyOnMaterial3: true,
+  );
 
   /// The dark theme from this configuration.
   ThemeData get dark => FlexThemeData.dark(
-        scheme: !useDynamicColors && !useManufacturerColors ? flexScheme : null,
-        colors: useDynamicColors || useManufacturerColors ? darkColors : null,
-        blendLevel: 15,
-        appBarOpacity: 0.90,
-        tabBarStyle: FlexTabBarStyle.forBackground,
-        tooltipsMatchBackground: true,
-        darkIsTrueBlack: darkIsTrueBlack,
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3ErrorColors: true,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 20,
-          navigationBarHeight: 80,
-          unselectedToggleIsColored: true,
-        ),
-        swapLegacyOnMaterial3: true,
-      );
+    scheme: !useDynamicColors && !useManufacturerColors ? flexScheme : null,
+    colors: useDynamicColors || useManufacturerColors ? darkColors : null,
+    blendLevel: 15,
+    appBarOpacity: 0.90,
+    tabBarStyle: FlexTabBarStyle.forBackground,
+    tooltipsMatchBackground: true,
+    darkIsTrueBlack: darkIsTrueBlack,
+    visualDensity: FlexColorScheme.comfortablePlatformDensity,
+    useMaterial3ErrorColors: true,
+    subThemesData: const FlexSubThemesData(
+      blendOnLevel: 20,
+      navigationBarHeight: 80,
+      unselectedToggleIsColored: true,
+    ),
+    swapLegacyOnMaterial3: true,
+  );
 }

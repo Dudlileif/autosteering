@@ -53,12 +53,9 @@ abstract class Country {
 /// A class for collecting the available countries.
 class Countries {
   /// The list of available countries.
-  static const countries = <Country>[
-    Norway(),
-  ];
+  static const countries = <Country>[Norway()];
 
   /// Finds the country that corresponds to the [name], if there is one defined.
-  static Country? current(String name) => countries.firstWhereOrNull(
-        (element) => element.name == name,
-      );
+  static Country? current(String name) =>
+      countries.firstWhereOrNull((element) => element.name == name);
 }

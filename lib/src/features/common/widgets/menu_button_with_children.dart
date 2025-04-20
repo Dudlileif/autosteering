@@ -66,26 +66,28 @@ class MenuButtonWithChildren extends StatelessWidget {
 
     return SubmenuButton(
       menuChildren: menuChildren,
-      child: icon != null || iconOverrideWidget != null
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: iconRotation != null
-                      ? Transform.rotate(
-                          angle: iconRotation! / 180 * pi,
-                          child: iconOverrideWidget ?? Icon(icon),
-                        )
-                      : iconOverrideWidget ?? Icon(icon),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4),
-                  child: textWidget,
-                ),
-              ],
-            )
-          : textWidget,
+      child:
+          icon != null || iconOverrideWidget != null
+              ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child:
+                        iconRotation != null
+                            ? Transform.rotate(
+                              angle: iconRotation! / 180 * pi,
+                              child: iconOverrideWidget ?? Icon(icon),
+                            )
+                            : iconOverrideWidget ?? Icon(icon),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4),
+                    child: textWidget,
+                  ),
+                ],
+              )
+              : textWidget,
     );
   }
 }

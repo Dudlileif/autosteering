@@ -49,13 +49,14 @@ class SimulatorCore {
     sendPort.send(commandPort.sendPort);
 
     // A stream controller for sending messages to the main thread.
-    final updateMainThreadStream = StreamController<dynamic>()
-      ..stream.listen((event) {
-        sendPort.send(event);
-      })
-      ..add(
-        LogEvent(Level.info, 'Simulator Core isolate spawn confirmation'),
-      );
+    final updateMainThreadStream =
+        StreamController<dynamic>()
+          ..stream.listen((event) {
+            sendPort.send(event);
+          })
+          ..add(
+            LogEvent(Level.info, 'Simulator Core isolate spawn confirmation'),
+          );
 
     // Heartbeat signal to show that the simulator isolate is alive.
     Timer.periodic(const Duration(milliseconds: 250), (timer) {
@@ -73,17 +74,15 @@ class SimulatorCore {
           // If the state has changed we send the new state back to the
           // main/UI isolate.
           if (state.didChange) {
-            sendPort.send(
-              (
-                vehicle: state.vehicle,
-                velocity: state.gaugeVelocity,
-                bearing: state.gaugeBearing,
-                distance: state.distance,
-                pathTracking: state.pathTracking,
-                abTracking: state.abTracking,
-                autosteeringState: state.autosteeringState,
-              ),
-            );
+            sendPort.send((
+              vehicle: state.vehicle,
+              velocity: state.gaugeVelocity,
+              bearing: state.gaugeBearing,
+              distance: state.distance,
+              pathTracking: state.pathTracking,
+              abTracking: state.abTracking,
+              autosteeringState: state.autosteeringState,
+            ));
           }
         }
       } on Exception catch (error, stackTrace) {
@@ -127,54 +126,47 @@ class SimulatorCore {
       ..steeringHardwareSendStream = steeringHardwareUdpSendStream
       ..remoteControlSendStream = remoteControlHardwareUdpSendStream;
 
-    steeringHardwareUdpSendStream.stream.listen(
-      (event) async {
-        if (sendUdp != null && steeringHardwareEndPoint != null) {
-          try {
-            await sendUdp!.send(event, steeringHardwareEndPoint!);
-          } on Exception catch (error, stackTrace) {
-            updateMainThreadStream.add(
-              LogEvent(
-                Level.error,
-                'UDP steering hardware send error.',
-                error: error,
-                stackTrace: stackTrace,
-              ),
-            );
-          }
+    steeringHardwareUdpSendStream.stream.listen((event) async {
+      if (sendUdp != null && steeringHardwareEndPoint != null) {
+        try {
+          await sendUdp!.send(event, steeringHardwareEndPoint!);
+        } on Exception catch (error, stackTrace) {
+          updateMainThreadStream.add(
+            LogEvent(
+              Level.error,
+              'UDP steering hardware send error.',
+              error: error,
+              stackTrace: stackTrace,
+            ),
+          );
         }
-      },
-    );
-    remoteControlHardwareUdpSendStream.stream.listen(
-      (event) async {
-        if (sendUdp != null && remoteControlEndPoint != null) {
-          try {
-            await sendUdp!.send(event, remoteControlEndPoint!);
-          } on Exception catch (error, stackTrace) {
-            updateMainThreadStream.add(
-              LogEvent(
-                Level.error,
-                'UDP remote control send error.',
-                error: error,
-                stackTrace: stackTrace,
-              ),
-            );
-          }
+      }
+    });
+    remoteControlHardwareUdpSendStream.stream.listen((event) async {
+      if (sendUdp != null && remoteControlEndPoint != null) {
+        try {
+          await sendUdp!.send(event, remoteControlEndPoint!);
+        } on Exception catch (error, stackTrace) {
+          updateMainThreadStream.add(
+            LogEvent(
+              Level.error,
+              'UDP remote control send error.',
+              error: error,
+              stackTrace: stackTrace,
+            ),
+          );
         }
-      },
-    );
+      }
+    });
 
     final heartbeatUDPMessage = Uint8List.fromList(
       utf8.encode('${Platform.operatingSystem}: Heartbeat'),
     );
 
-    var udpHeartbeatTimer = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        steeringHardwareUdpSendStream.add(heartbeatUDPMessage);
-        remoteControlHardwareUdpSendStream.add(heartbeatUDPMessage);
-      },
-    );
+    var udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      steeringHardwareUdpSendStream.add(heartbeatUDPMessage);
+      remoteControlHardwareUdpSendStream.add(heartbeatUDPMessage);
+    });
 
     late final MessageDecoder messageDecoder;
     void handleUdpData(Datagram? datagram) {
@@ -189,12 +181,14 @@ class SimulatorCore {
         final string = String.fromCharCodes(datagram!.data);
         if (string.startsWith('Steering hardware') &&
             datagram.address != steeringHardwareEndPoint?.address) {
-          updateMainThreadStream
-              .add((steeringHardwareAddress: datagram.address));
+          updateMainThreadStream.add((
+            steeringHardwareAddress: datagram.address,
+          ));
         } else if (string.startsWith('Remote control')) {
           if (datagram.address != remoteControlEndPoint?.address) {
-            updateMainThreadStream
-                .add((remoteControlHardwareAddress: datagram.address));
+            updateMainThreadStream.add((
+              remoteControlHardwareAddress: datagram.address,
+            ));
           }
           updateMainThreadStream.add((remoteControlHeartbeat: true));
         }
@@ -206,10 +200,7 @@ class SimulatorCore {
       sendUdp?.close();
 
       updateMainThreadStream.add(
-        LogEvent(
-          Level.info,
-          'Closed current UDP send instance and sockets.',
-        ),
+        LogEvent(Level.info, 'Closed current UDP send instance and sockets.'),
       );
       if (sendEndPoint != null) {
         sendUdp = await UDP.bind(sendEndPoint!);
@@ -277,29 +268,31 @@ class SimulatorCore {
             Uint8List.fromList(utf8.encode('Simulator started')),
           );
 
-          udpHeartbeatTimer = Timer.periodic(
-            const Duration(seconds: 1),
-            (timer) {
-              steeringHardwareUdpSendStream.add(heartbeatUDPMessage);
-              remoteControlHardwareUdpSendStream.add(heartbeatUDPMessage);
-            },
-          );
+          udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (
+            timer,
+          ) {
+            steeringHardwareUdpSendStream.add(heartbeatUDPMessage);
+            remoteControlHardwareUdpSendStream.add(heartbeatUDPMessage);
+          });
         }
       } on Exception catch (_) {
         // Continue, as the error is the same as previously.
         steeringAddressLookupRetryTimer?.cancel();
-        steeringAddressLookupRetryTimer =
-            Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-          await setupSteeringSendUdp();
-        });
+        steeringAddressLookupRetryTimer = Timer(
+          const Duration(seconds: addressLookupRetryPeriod),
+          () async {
+            await setupSteeringSendUdp();
+          },
+        );
       }
     }
 
     Future<void> setupRemoteControlSendUdp() async {
       try {
         final remoteControlIp =
-            (await InternetAddress.lookup(remoteControlHardwareAddress))
-                .firstOrNull;
+            (await InternetAddress.lookup(
+              remoteControlHardwareAddress,
+            )).firstOrNull;
         if (remoteControlIp != null) {
           udpHeartbeatTimer.cancel();
 
@@ -325,33 +318,38 @@ class SimulatorCore {
             Uint8List.fromList(utf8.encode('Simulator started')),
           );
 
-          udpHeartbeatTimer = Timer.periodic(
-            const Duration(seconds: 1),
-            (timer) {
-              steeringHardwareUdpSendStream.add(heartbeatUDPMessage);
-              remoteControlHardwareUdpSendStream.add(heartbeatUDPMessage);
-            },
-          );
+          udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (
+            timer,
+          ) {
+            steeringHardwareUdpSendStream.add(heartbeatUDPMessage);
+            remoteControlHardwareUdpSendStream.add(heartbeatUDPMessage);
+          });
         }
       } on Exception catch (_) {
         // Continue, as the error is the same as previously.
         remoteControlAddressLookupRetryTimer?.cancel();
-        remoteControlAddressLookupRetryTimer =
-            Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-          await setupRemoteControlSendUdp();
-        });
+        remoteControlAddressLookupRetryTimer = Timer(
+          const Duration(seconds: addressLookupRetryPeriod),
+          () async {
+            await setupRemoteControlSendUdp();
+          },
+        );
       }
     }
 
-    steeringAddressLookupRetryTimer =
-        Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-      await setupSteeringSendUdp();
-    });
+    steeringAddressLookupRetryTimer = Timer(
+      const Duration(seconds: addressLookupRetryPeriod),
+      () async {
+        await setupSteeringSendUdp();
+      },
+    );
 
-    remoteControlAddressLookupRetryTimer =
-        Timer(const Duration(seconds: addressLookupRetryPeriod), () async {
-      await setupRemoteControlSendUdp();
-    });
+    remoteControlAddressLookupRetryTimer = Timer(
+      const Duration(seconds: addressLookupRetryPeriod),
+      () async {
+        await setupRemoteControlSendUdp();
+      },
+    );
 
     LogReplay? logReplay;
     StreamSubscription<LogReplayRecord>? replayListener;
@@ -392,14 +390,14 @@ class SimulatorCore {
             sendUdp = null;
           }
         }
-
         // Update the udp ip adress for the hardware.
-        else if (message is ({
-          String steeringHardwareAddress,
-          String remoteControlHardwareAddress,
-          int hardwareUDPReceivePort,
-          int hardwareUDPSendPort
-        })) {
+        else if (message
+            is ({
+              String steeringHardwareAddress,
+              String remoteControlHardwareAddress,
+              int hardwareUDPReceivePort,
+              int hardwareUDPSendPort,
+            })) {
           udpReceivePort = message.hardwareUDPReceivePort;
           udpSendPort = message.hardwareUDPSendPort;
           steeringHardwareAddress = message.steeringHardwareAddress;
@@ -415,19 +413,24 @@ class SimulatorCore {
           // Start retrying every 5 seconds in case the hardware gets connected
           // to the network.
           steeringAddressLookupRetryTimer = Timer(
-              const Duration(seconds: addressLookupRetryPeriod), () async {
-            await setupSteeringSendUdp();
-          });
+            const Duration(seconds: addressLookupRetryPeriod),
+            () async {
+              await setupSteeringSendUdp();
+            },
+          );
           remoteControlAddressLookupRetryTimer = Timer(
-              const Duration(seconds: addressLookupRetryPeriod), () async {
-            await setupRemoteControlSendUdp();
-          });
-        } else if (message is ({
-          bool? logGNSS,
-          bool? logIMU,
-          bool? logWAS,
-          bool? logCombined,
-        })) {
+            const Duration(seconds: addressLookupRetryPeriod),
+            () async {
+              await setupRemoteControlSendUdp();
+            },
+          );
+        } else if (message
+            is ({
+              bool? logGNSS,
+              bool? logIMU,
+              bool? logWAS,
+              bool? logCombined,
+            })) {
           messageDecoder.enableLogging(
             gnss: message.logGNSS,
             imu: message.logIMU,
@@ -436,17 +439,15 @@ class SimulatorCore {
           );
         } else if (message is LogReplay) {
           logReplay = message;
-          replayListener = logReplay.replay.listen(
-            (record) {
-              SimulatorCoreBase.replayListener(
-                record.message,
-                messageDecoder,
-                state,
-                updateMainThreadStream,
-              );
-              updateMainThreadStream.add((logReplayIndex: record.index));
-            },
-          )..pause();
+          replayListener = logReplay.replay.listen((record) {
+            SimulatorCoreBase.replayListener(
+              record.message,
+              messageDecoder,
+              state,
+              updateMainThreadStream,
+            );
+            updateMainThreadStream.add((logReplayIndex: record.index));
+          })..pause();
         } else if (message is ({bool replayPause})) {
           replayListener?.pause();
           logReplay?.stopTimer();
@@ -458,17 +459,15 @@ class SimulatorCore {
           logReplay?.stopTimer();
         } else if (message is ({bool replayRestart})) {
           await replayListener?.cancel();
-          replayListener = logReplay?.replay.listen(
-            (record) {
-              SimulatorCoreBase.replayListener(
-                record.message,
-                messageDecoder,
-                state,
-                updateMainThreadStream,
-              );
-              updateMainThreadStream.add((logReplayIndex: record.index));
-            },
-          );
+          replayListener = logReplay?.replay.listen((record) {
+            SimulatorCoreBase.replayListener(
+              record.message,
+              messageDecoder,
+              state,
+              updateMainThreadStream,
+            );
+            updateMainThreadStream.add((logReplayIndex: record.index));
+          });
           logReplay?.startTimer();
         } else if (message is ({bool replayLoop})) {
           logReplay?.loop = message.replayLoop;
@@ -481,8 +480,9 @@ class SimulatorCore {
               state,
               updateMainThreadStream,
             );
-            updateMainThreadStream
-                .add((logReplayIndex: message.replayScrubIndex));
+            updateMainThreadStream.add((
+              logReplayIndex: message.replayScrubIndex,
+            ));
           }
         } else if (message is ({int simulationTargetHz})) {
           if (message.simulationTargetHz > 0) {
@@ -503,8 +503,9 @@ class SimulatorCore {
         } else if (message is ({List<int> remoteControlLedState})) {
           remoteControlHardwareUdpSendStream.add(
             Uint8List.fromList(
-              jsonEncode({'remote_states': message.remoteControlLedState})
-                  .codeUnits,
+              jsonEncode({
+                'remote_states': message.remoteControlLedState,
+              }).codeUnits,
             ),
           );
         }
@@ -519,14 +520,10 @@ class SimulatorCore {
 
         // Isolate shut down procedure
         steeringHardwareUdpSendStream.add(
-          Uint8List.fromList(
-            utf8.encode('Simulator shut down.'),
-          ),
+          Uint8List.fromList(utf8.encode('Simulator shut down.')),
         ); // Isolate shut down procedure
         remoteControlHardwareUdpSendStream.add(
-          Uint8List.fromList(
-            utf8.encode('Simulator shut down.'),
-          ),
+          Uint8List.fromList(utf8.encode('Simulator shut down.')),
         );
       } on Exception catch (error, stackTrace) {
         updateMainThreadStream.add(

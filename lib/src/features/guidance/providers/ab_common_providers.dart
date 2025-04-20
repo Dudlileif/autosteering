@@ -101,10 +101,7 @@ class ABDebugNumPointsBehind extends _$ABDebugNumPointsBehind {
 class ABWidth extends _$ABWidth {
   @override
   double build() =>
-      ref.read(
-        loadedEquipmentProvider.select((value) => value?.width),
-      ) ??
-      15;
+      ref.read(loadedEquipmentProvider.select((value) => value?.width)) ?? 15;
 
   /// Updates [state] to [value].
   void update(double value) => Future(() => state = value);
@@ -125,8 +122,8 @@ class ABSidewaysOffset extends _$ABSidewaysOffset {
 class ABTurningRadius extends _$ABTurningRadius {
   @override
   double build() => ref.read(
-        mainVehicleProvider.select((value) => 1.25 * value.minTurningRadius),
-      );
+    mainVehicleProvider.select((value) => 1.25 * value.minTurningRadius),
+  );
 
   /// Updates [state] to [value].
   void update(double value) => Future(() => state = value);
@@ -224,12 +221,13 @@ class ConfiguredABTracking extends _$ConfiguredABTracking {
 @Riverpod(keepAlive: true)
 class ConfiguredMenuABTracking extends _$ConfiguredMenuABTracking {
   @override
-  FutureOr<ABTracking?> build() async =>
-      await switch (ref.watch(currentABTrackingTypeProvider)) {
-        ABTrackingType.aPlusLine => ref.watch(aPlusLineProvider.future),
-        ABTrackingType.abLine => ref.watch(aBLineProvider.future),
-        ABTrackingType.abCurve => ref.watch(aBCurveProvider.future),
-      };
+  FutureOr<ABTracking?> build() async => await switch (ref.watch(
+    currentABTrackingTypeProvider,
+  )) {
+    ABTrackingType.aPlusLine => ref.watch(aPlusLineProvider.future),
+    ABTrackingType.abLine => ref.watch(aBLineProvider.future),
+    ABTrackingType.abCurve => ref.watch(aBCurveProvider.future),
+  };
 
   /// Send the [state] to the simulator.
   void sendToSim() =>
@@ -320,14 +318,9 @@ class ShowABPointB extends _$ShowABPointB {
 /// A provider for the perpendicular distance from the AB tracking line
 /// to the [MainVehicle].
 @riverpod
-double? abTrackingPerpendicularDistance(
-  Ref ref,
-) =>
-    ref
-        .watch(displayABTrackingProvider)
-        ?.signedPerpendicularDistanceToCurrentLine(
-          ref.watch(mainVehicleProvider),
-        );
+double? abTrackingPerpendicularDistance(Ref ref) => ref
+    .watch(displayABTrackingProvider)
+    ?.signedPerpendicularDistanceToCurrentLine(ref.watch(mainVehicleProvider));
 
 /// A provider for the currently active AB configuration.
 @Riverpod(keepAlive: true)
@@ -359,10 +352,7 @@ class ABTrackingShowAllLines extends _$ABTrackingShowAllLines {
 /// A provider for loading an [ABTracking] from a file at [path], if it's
 /// valid.
 @riverpod
-FutureOr<ABTracking?> loadABTrackingFromFile(
-  Ref ref,
-  String path,
-) async {
+FutureOr<ABTracking?> loadABTrackingFromFile(Ref ref, String path) async {
   final file = File(path);
   if (file.existsSync()) {
     try {
@@ -388,17 +378,17 @@ FutureOr<void> saveABTracking(
   ABTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async =>
-    await ref.watch(
-      saveJsonToFileDirectoryProvider(
-        object: tracking,
-        fileName: overrideName ??
-            tracking.name ??
-            '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
-        folder: path.join('guidance', 'ab_tracking'),
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => await ref.watch(
+  saveJsonToFileDirectoryProvider(
+    object: tracking,
+    fileName:
+        overrideName ??
+        tracking.name ??
+        '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
+    folder: path.join('guidance', 'ab_tracking'),
+    downloadIfWeb: downloadIfWeb,
+  ).future,
+);
 
 /// A provider for exporting [tracking] to a file.
 ///
@@ -409,17 +399,17 @@ FutureOr<void> exportABTracking(
   ABTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = true,
-}) async =>
-    await ref.watch(
-      exportJsonToFileDirectoryProvider(
-        object: tracking,
-        fileName: overrideName ??
-            tracking.name ??
-            '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
-        folder: path.join('guidance', 'ab_tracking'),
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => await ref.watch(
+  exportJsonToFileDirectoryProvider(
+    object: tracking,
+    fileName:
+        overrideName ??
+        tracking.name ??
+        '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
+    folder: path.join('guidance', 'ab_tracking'),
+    downloadIfWeb: downloadIfWeb,
+  ).future,
+);
 
 /// A provider for reading and holding all the saved [ABTracking] in the
 /// user file directory.
@@ -442,22 +432,20 @@ FutureOr<void> deleteABTracking(
   ABTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = true,
-}) async =>
-    await ref.watch(
-      deleteJsonFromFileDirectoryProvider(
-        fileName: overrideName ??
-            tracking.name ??
-            '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
-        folder: path.join('guidance', 'ab_tracking'),
-      ).future,
-    );
+}) async => await ref.watch(
+  deleteJsonFromFileDirectoryProvider(
+    fileName:
+        overrideName ??
+        tracking.name ??
+        '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
+    folder: path.join('guidance', 'ab_tracking'),
+  ).future,
+);
 
 /// A provider for importing an [ABTracking] from a file and applying it to
 /// the [ConfiguredABTracking] provider.
 @riverpod
-FutureOr<ABTracking?> importABTracking(
-  Ref ref,
-) async {
+FutureOr<ABTracking?> importABTracking(Ref ref) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
 
@@ -473,8 +461,9 @@ FutureOr<ABTracking?> importABTracking(
       try {
         final json = jsonDecode(String.fromCharCodes(data));
 
-        abTracking =
-            ABTracking.fromJson(Map<String, dynamic>.from(json as Map));
+        abTracking = ABTracking.fromJson(
+          Map<String, dynamic>.from(json as Map),
+        );
       } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import AB tracking.',
@@ -488,15 +477,17 @@ FutureOr<ABTracking?> importABTracking(
   } else {
     final filePath = pickedFiles?.paths.first;
     if (filePath != null) {
-      abTracking =
-          await ref.watch(loadABTrackingFromFileProvider(filePath).future);
+      abTracking = await ref.watch(
+        loadABTrackingFromFileProvider(filePath).future,
+      );
     } else {
       Logger.instance.w('Failed to import AB tracking: $filePath');
     }
   }
   if (abTracking != null) {
-    Logger.instance
-        .i('Imported AB tracking: ${abTracking.name ?? abTracking.uuid}');
+    Logger.instance.i(
+      'Imported AB tracking: ${abTracking.name ?? abTracking.uuid}',
+    );
     ref.read(configuredABTrackingProvider.notifier).update(abTracking);
     ref.read(showABTrackingProvider.notifier).update(value: true);
   }

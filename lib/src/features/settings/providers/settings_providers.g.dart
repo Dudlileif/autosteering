@@ -34,9 +34,10 @@ String _$webLocalStorageHash() => r'50d83eb101a9fb85659a1001a54480b4c30a3c85';
 final webLocalStorageProvider = Provider<Storage>.internal(
   webLocalStorage,
   name: r'webLocalStorageProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$webLocalStorageHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$webLocalStorageHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -135,25 +136,25 @@ class ExportSettingsProvider extends AutoDisposeFutureProvider<void> {
     bool downloadIfWeb = true,
     bool removeSensitiveData = false,
   }) : this._internal(
-          (ref) => exportSettings(
-            ref as ExportSettingsRef,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-            removeSensitiveData: removeSensitiveData,
-          ),
-          from: exportSettingsProvider,
-          name: r'exportSettingsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportSettingsHash,
-          dependencies: ExportSettingsFamily._dependencies,
-          allTransitiveDependencies:
-              ExportSettingsFamily._allTransitiveDependencies,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-          removeSensitiveData: removeSensitiveData,
-        );
+         (ref) => exportSettings(
+           ref as ExportSettingsRef,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+           removeSensitiveData: removeSensitiveData,
+         ),
+         from: exportSettingsProvider,
+         name: r'exportSettingsProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$exportSettingsHash,
+         dependencies: ExportSettingsFamily._dependencies,
+         allTransitiveDependencies:
+             ExportSettingsFamily._allTransitiveDependencies,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+         removeSensitiveData: removeSensitiveData,
+       );
 
   ExportSettingsProvider._internal(
     super._createNotifier, {
@@ -229,7 +230,8 @@ mixin ExportSettingsRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportSettingsProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportSettingsRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportSettingsRef {
   _ExportSettingsProviderElement(super.provider);
 
   @override
@@ -249,14 +251,15 @@ String _$importSettingsHash() => r'7fd98dbc99f40dd856c455a77da9f6794b426f66';
 @ProviderFor(importSettings)
 final importSettingsProvider =
     AutoDisposeFutureProvider<Map<String, dynamic>?>.internal(
-  importSettings,
-  name: r'importSettingsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$importSettingsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      importSettings,
+      name: r'importSettingsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$importSettingsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -271,9 +274,10 @@ String _$reloadAllSettingsHash() => r'cda9fc34c9c7c0205dce8fe1dd421b55ecabeb0c';
 final reloadAllSettingsProvider = Provider<String>.internal(
   reloadAllSettings,
   name: r'reloadAllSettingsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$reloadAllSettingsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$reloadAllSettingsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -289,13 +293,13 @@ String _$settingsHash() => r'f3ac848cd62beea67a4251253bd530c81d2089e8';
 @ProviderFor(Settings)
 final settingsProvider =
     NotifierProvider<Settings, SplayTreeMap<String, dynamic>>.internal(
-  Settings.new,
-  name: r'settingsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$settingsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      Settings.new,
+      name: r'settingsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product') ? null : _$settingsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$Settings = Notifier<SplayTreeMap<String, dynamic>>;
 String _$enableDebugModeHash() => r'2620409a83bf2fc27eb9fe765a5d4e982543ca47';
@@ -306,14 +310,15 @@ String _$enableDebugModeHash() => r'2620409a83bf2fc27eb9fe765a5d4e982543ca47';
 @ProviderFor(EnableDebugMode)
 final enableDebugModeProvider =
     NotifierProvider<EnableDebugMode, bool>.internal(
-  EnableDebugMode.new,
-  name: r'enableDebugModeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$enableDebugModeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EnableDebugMode.new,
+      name: r'enableDebugModeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$enableDebugModeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EnableDebugMode = Notifier<bool>;
 // ignore_for_file: type=lint

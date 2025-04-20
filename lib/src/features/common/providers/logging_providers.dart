@@ -54,7 +54,9 @@ class DaysToKeepLogFiles extends _$DaysToKeepLogFiles {
 /// A provider for creating a logging file for the session.
 @Riverpod(keepAlive: true)
 Future<File?> loggingFile(Ref ref) async {
-  final dirPath = ref.watch(fileDirectoryProvider).when(
+  final dirPath = ref
+      .watch(fileDirectoryProvider)
+      .when(
         data: (data) => data.path,
         error: (error, stackTrace) {
           Logger.instance.e(
@@ -78,14 +80,15 @@ Future<File?> loggingFile(Ref ref) async {
 
     final logsDir = Directory(path.join(dirPath, 'logs'));
     if (logsDir.existsSync()) {
-      final files = logsDir
-          .listSync()
-          .where(
-            (element) =>
-                FileSystemEntity.typeSync(element.path) ==
-                FileSystemEntityType.file,
-          )
-          .toList();
+      final files =
+          logsDir
+              .listSync()
+              .where(
+                (element) =>
+                    FileSystemEntity.typeSync(element.path) ==
+                    FileSystemEntityType.file,
+              )
+              .toList();
 
       final removed = <String>[];
       for (final file in files) {
@@ -116,14 +119,15 @@ Future<File?> loggingFile(Ref ref) async {
         path.join(dirPath, 'logs', 'hardware', hardware),
       );
       if (hardwareLogsDir.existsSync()) {
-        final files = hardwareLogsDir
-            .listSync()
-            .where(
-              (element) =>
-                  FileSystemEntity.typeSync(element.path) ==
-                  FileSystemEntityType.file,
-            )
-            .toList();
+        final files =
+            hardwareLogsDir
+                .listSync()
+                .where(
+                  (element) =>
+                      FileSystemEntity.typeSync(element.path) ==
+                      FileSystemEntityType.file,
+                )
+                .toList();
         final removed = <String>[];
         for (final file in files) {
           final time = DateTimeFileNameExtension.tryParseIso8601Filename(
@@ -144,8 +148,9 @@ Future<File?> loggingFile(Ref ref) async {
           }
         }
         if (removed.isNotEmpty) {
-          Logger.instance
-              .i('Deleted old hardware $hardware log files: $removed');
+          Logger.instance.i(
+            'Deleted old hardware $hardware log files: $removed',
+          );
         }
       }
     }
@@ -188,7 +193,9 @@ Logger logging(Ref ref) {
   }
   var fileReady = false;
 
-  final file = ref.watch(loggingFileProvider).when(
+  final file = ref
+      .watch(loggingFileProvider)
+      .when(
         data: (data) {
           fileReady = true;
           return data;

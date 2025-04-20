@@ -15,9 +15,10 @@ String _$debugDubinsPathHash() => r'068a0465a7cf1281bb525158fa27f300d88c13f5';
 final debugDubinsPathProvider = AutoDisposeProvider<DubinsPath?>.internal(
   debugDubinsPath,
   name: r'debugDubinsPathProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugDubinsPathHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$debugDubinsPathHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -34,14 +35,15 @@ String _$enableDubinsPathDebugHash() =>
 @ProviderFor(EnableDubinsPathDebug)
 final enableDubinsPathDebugProvider =
     NotifierProvider<EnableDubinsPathDebug, bool>.internal(
-  EnableDubinsPathDebug.new,
-  name: r'enableDubinsPathDebugProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$enableDubinsPathDebugHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EnableDubinsPathDebug.new,
+      name: r'enableDubinsPathDebugProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$enableDubinsPathDebugHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EnableDubinsPathDebug = Notifier<bool>;
 String _$showDubinsPathDebugCirclesHash() =>
@@ -53,14 +55,15 @@ String _$showDubinsPathDebugCirclesHash() =>
 @ProviderFor(ShowDubinsPathDebugCircles)
 final showDubinsPathDebugCirclesProvider =
     NotifierProvider<ShowDubinsPathDebugCircles, bool>.internal(
-  ShowDubinsPathDebugCircles.new,
-  name: r'showDubinsPathDebugCirclesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showDubinsPathDebugCirclesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowDubinsPathDebugCircles.new,
+      name: r'showDubinsPathDebugCirclesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showDubinsPathDebugCirclesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowDubinsPathDebugCircles = Notifier<bool>;
 String _$dubinsPathDebugStartPointHash() =>
@@ -72,14 +75,15 @@ String _$dubinsPathDebugStartPointHash() =>
 @ProviderFor(DubinsPathDebugStartPoint)
 final dubinsPathDebugStartPointProvider =
     NotifierProvider<DubinsPathDebugStartPoint, WayPoint?>.internal(
-  DubinsPathDebugStartPoint.new,
-  name: r'dubinsPathDebugStartPointProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$dubinsPathDebugStartPointHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DubinsPathDebugStartPoint.new,
+      name: r'dubinsPathDebugStartPointProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$dubinsPathDebugStartPointHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DubinsPathDebugStartPoint = Notifier<WayPoint?>;
 String _$dubinsPathDebugEndPointHash() =>
@@ -91,14 +95,15 @@ String _$dubinsPathDebugEndPointHash() =>
 @ProviderFor(DubinsPathDebugEndPoint)
 final dubinsPathDebugEndPointProvider =
     NotifierProvider<DubinsPathDebugEndPoint, WayPoint?>.internal(
-  DubinsPathDebugEndPoint.new,
-  name: r'dubinsPathDebugEndPointProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$dubinsPathDebugEndPointHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DubinsPathDebugEndPoint.new,
+      name: r'dubinsPathDebugEndPointProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$dubinsPathDebugEndPointHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DubinsPathDebugEndPoint = Notifier<WayPoint?>;
 String _$dubinsPathDebugPathTypeHash() =>
@@ -109,12 +114,15 @@ String _$dubinsPathDebugPathTypeHash() =>
 /// Copied from [DubinsPathDebugPathType].
 @ProviderFor(DubinsPathDebugPathType)
 final dubinsPathDebugPathTypeProvider = AutoDisposeNotifierProvider<
-    DubinsPathDebugPathType, DubinsPathType?>.internal(
+  DubinsPathDebugPathType,
+  DubinsPathType?
+>.internal(
   DubinsPathDebugPathType.new,
   name: r'dubinsPathDebugPathTypeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$dubinsPathDebugPathTypeHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$dubinsPathDebugPathTypeHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -129,14 +137,15 @@ String _$dubinsPathDebugStepSizeHash() =>
 @ProviderFor(DubinsPathDebugStepSize)
 final dubinsPathDebugStepSizeProvider =
     NotifierProvider<DubinsPathDebugStepSize, double>.internal(
-  DubinsPathDebugStepSize.new,
-  name: r'dubinsPathDebugStepSizeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$dubinsPathDebugStepSizeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DubinsPathDebugStepSize.new,
+      name: r'dubinsPathDebugStepSizeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$dubinsPathDebugStepSizeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DubinsPathDebugStepSize = Notifier<double>;
 // ignore_for_file: type=lint

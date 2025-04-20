@@ -48,10 +48,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
               children: [
                 const Align(
                   heightFactor: 1.1,
-                  child: Icon(
-                    Icons.stop_circle,
-                    size: 36,
-                  ),
+                  child: Icon(Icons.stop_circle, size: 36),
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -66,15 +63,17 @@ class SimVehicleVelocityControls extends StatelessWidget {
                 ),
               ],
             ),
-            builder: (context, ref, child) => FloatingActionButton(
-              onPressed: () => ref.read(simInputProvider.notifier).send(
-                (velocity: 0),
-              ),
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              tooltip: 'Stop the vehicle',
-              child: child,
-            ),
+            builder:
+                (context, ref, child) => FloatingActionButton(
+                  onPressed:
+                      () => ref.read(simInputProvider.notifier).send((
+                        velocity: 0,
+                      )),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  tooltip: 'Stop the vehicle',
+                  child: child,
+                ),
           ),
         ),
         ClipRRect(
@@ -105,8 +104,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
                       ),
                       TextWithStroke(
                         '${velocity.toStringAsFixed(1).padLeft(5)} m/s',
-                        style:
-                          GoogleFonts.robotoMono(
+                        style: GoogleFonts.robotoMono(
                           color: Colors.white,
                           textStyle: theme.textTheme.titleMedium,
                         ),
@@ -128,23 +126,28 @@ class SimVehicleVelocityControls extends StatelessWidget {
                             ),
                             child: Slider(
                               value: velocity,
-                              onChangeStart: (value) => ref.watch(
-                                simCoreVehicleAutoSlowDownProvider,
-                              )
-                                  ? ref
+                              onChangeStart:
+                                  (value) =>
+                                      ref.watch(
+                                            simCoreVehicleAutoSlowDownProvider,
+                                          )
+                                          ? ref
+                                              .read(simInputProvider.notifier)
+                                              .send((autoSlowDown: false))
+                                          : null,
+                              onChangeEnd:
+                                  (value) =>
+                                      ref.watch(
+                                            simCoreVehicleAutoSlowDownProvider,
+                                          )
+                                          ? ref
+                                              .read(simInputProvider.notifier)
+                                              .send((autoSlowDown: true))
+                                          : null,
+                              onChanged:
+                                  (value) => ref
                                       .read(simInputProvider.notifier)
-                                      .send((autoSlowDown: false))
-                                  : null,
-                              onChangeEnd: (value) => ref.watch(
-                                simCoreVehicleAutoSlowDownProvider,
-                              )
-                                  ? ref
-                                      .read(simInputProvider.notifier)
-                                      .send((autoSlowDown: true))
-                                  : null,
-                              onChanged: (value) => ref
-                                  .read(simInputProvider.notifier)
-                                  .send((velocity: value)),
+                                      .send((velocity: value)),
                               min: -12,
                               max: 12,
                             ),
@@ -170,28 +173,26 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
   /// Basic on screen controls for the simulated vehicle.
   ///
   /// Contains controls for the steering angle.
-  const SimVehicleSteeringSlider({
-    super.key,
-  });
+  const SimVehicleSteeringSlider({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final showOverrideToggle = ref.watch(showOverrideSteeringProvider);
     final overrideEnabled = ref.watch(overrideSteeringProvider);
-    final steeringAngle = overrideEnabled
-        ? ref.watch(overrideSteeringAngleProvider)
-        : ref.watch(
-            mainVehicleProvider.select(
-              (vehicle) => vehicle is AxleSteeredVehicle
-                  ? vehicle.ackermannSteering.innerAngle
-                  : vehicle.steeringAngle,
-            ),
-          );
+    final steeringAngle =
+        overrideEnabled
+            ? ref.watch(overrideSteeringAngleProvider)
+            : ref.watch(
+              mainVehicleProvider.select(
+                (vehicle) =>
+                    vehicle is AxleSteeredVehicle
+                        ? vehicle.ackermannSteering.innerAngle
+                        : vehicle.steeringAngle,
+              ),
+            );
 
     final steeringAngleMax = ref.watch(
-      mainVehicleProvider.select(
-        (vehicle) => vehicle.steeringAngleMax,
-      ),
+      mainVehicleProvider.select((vehicle) => vehicle.steeringAngleMax),
     );
     final theme = Theme.of(context);
     return Column(
@@ -204,11 +205,13 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
               style: theme.textTheme.titleMedium,
             ),
             value: overrideEnabled,
-            onChanged: (value) => value != null
-                ? ref
-                    .read(overrideSteeringProvider.notifier)
-                    .update(value: value)
-                : null,
+            onChanged:
+                (value) =>
+                    value != null
+                        ? ref
+                            .read(overrideSteeringProvider.notifier)
+                            .update(value: value)
+                        : null,
           ),
         TextWithStroke(
           '''Steering:${steeringAngle.toStringAsFixed(1).padLeft(6)}°''',
@@ -232,31 +235,29 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
                 -steeringAngleMax,
                 steeringAngleMax,
               ),
-              onChangeStart: (value) => ref.watch(
-                simCoreVehicleAutoCenterSteeringProvider,
-              )
-                  ? ref
-                      .read(
-                      simInputProvider.notifier,
-                    )
-                      .send((autoCenterSteering: false))
-                  : null,
-              onChangeEnd: (value) => ref.watch(
-                simCoreVehicleAutoCenterSteeringProvider,
-              )
-                  ? ref
-                      .read(
-                      simInputProvider.notifier,
-                    )
-                      .send((autoCenterSteering: true))
-                  : null,
-              onChanged: (value) => overrideEnabled
-                  ? ref
-                      .read(overrideSteeringAngleProvider.notifier)
-                      .update(value)
-                  : ref.read(simInputProvider.notifier).send(
-                      (steeringAngle: value),
-                    ),
+              onChangeStart:
+                  (value) =>
+                      ref.watch(simCoreVehicleAutoCenterSteeringProvider)
+                          ? ref.read(simInputProvider.notifier).send((
+                            autoCenterSteering: false,
+                          ))
+                          : null,
+              onChangeEnd:
+                  (value) =>
+                      ref.watch(simCoreVehicleAutoCenterSteeringProvider)
+                          ? ref.read(simInputProvider.notifier).send((
+                            autoCenterSteering: true,
+                          ))
+                          : null,
+              onChanged:
+                  (value) =>
+                      overrideEnabled
+                          ? ref
+                              .read(overrideSteeringAngleProvider.notifier)
+                              .update(value)
+                          : ref.read(simInputProvider.notifier).send((
+                            steeringAngle: value,
+                          )),
               min: -steeringAngleMax,
               max: steeringAngleMax,
             ),

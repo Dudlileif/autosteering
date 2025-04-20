@@ -58,7 +58,8 @@ class DegreeConverter {
     if (minuteString.length < 2) {
       minuteString = '0$minuteString';
     }
-    minuteString = minuteString +
+    minuteString =
+        minuteString +
         minutes
             .toStringAsFixed(numDecimals)
             .substring(minutes.toStringAsFixed(numDecimals).indexOf('.'));

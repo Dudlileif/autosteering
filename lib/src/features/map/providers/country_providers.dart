@@ -36,15 +36,13 @@ class CurrentCountry extends _$CurrentCountry {
   @override
   Country? build() {
     ref.watch(reloadAllSettingsProvider);
-    listenSelf(
-      (previous, next) {
-        if (next != previous) {
-          ref
-              .read(settingsProvider.notifier)
-              .update(SettingsKey.mapCurrentCountry, next?.name);
-        }
-      },
-    );
+    listenSelf((previous, next) {
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.mapCurrentCountry, next?.name);
+      }
+    });
     if (ref
         .read(settingsProvider.notifier)
         .containsKey(SettingsKey.mapCurrentCountry)) {
@@ -63,46 +61,48 @@ class CurrentCountry extends _$CurrentCountry {
 
   /// Attempt to find a country for the current map center position.
   Future<void> update() async => Future(() async {
-        if (ref.watch(mapReadyProvider)) {
-          if (state == null) {
-            final dio = Dio(
-              BaseOptions(
-                connectTimeout: const Duration(seconds: 5),
-                receiveTimeout: const Duration(seconds: 5),
-              ),
-            );
-            final position = ref.watch(
-              mainMapControllerProvider
-                  .select((controller) => controller.camera.center),
-            );
-            final response = await dio.get<String>(
-              'https://nominatim.openstreetmap.org/reverse.php',
-              queryParameters: {
-                'lat': position.latitude,
-                'lon': position.longitude,
-                'zoom': 3,
-                'accept-language': 'en',
-                'format': 'jsonv2',
-              },
-            );
+    if (ref.watch(mapReadyProvider)) {
+      if (state == null) {
+        final dio = Dio(
+          BaseOptions(
+            connectTimeout: const Duration(seconds: 5),
+            receiveTimeout: const Duration(seconds: 5),
+          ),
+        );
+        final position = ref.watch(
+          mainMapControllerProvider.select(
+            (controller) => controller.camera.center,
+          ),
+        );
+        final response = await dio.get<String>(
+          'https://nominatim.openstreetmap.org/reverse.php',
+          queryParameters: {
+            'lat': position.latitude,
+            'lon': position.longitude,
+            'zoom': 3,
+            'accept-language': 'en',
+            'format': 'jsonv2',
+          },
+        );
 
-            if (response.data != null) {
-              final data =
-                  Map<String, dynamic>.from(jsonDecode(response.data!) as Map);
-              if (data.containsKey('name')) {
-                final name = data['name'] as String;
-                state = Countries.current(name);
-                if (state == null) {
-                  ref.read(showOSMLayerProvider.notifier).update(value: true);
-                  ref.read(enabledCountryLayersProvider.notifier).clear();
-                }
-              } else if (data.containsKey('error')) {
-                await update();
-              }
+        if (response.data != null) {
+          final data = Map<String, dynamic>.from(
+            jsonDecode(response.data!) as Map,
+          );
+          if (data.containsKey('name')) {
+            final name = data['name'] as String;
+            state = Countries.current(name);
+            if (state == null) {
+              ref.read(showOSMLayerProvider.notifier).update(value: true);
+              ref.read(enabledCountryLayersProvider.notifier).clear();
             }
+          } else if (data.containsKey('error')) {
+            await update();
           }
         }
-      });
+      }
+    }
+  });
 }
 
 /// A provider that contains all the custom layers available for the
@@ -114,7 +114,9 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref.read(settingsProvider.notifier).update(
+        ref
+            .read(settingsProvider.notifier)
+            .update(
               SettingsKey.mapLayersCountrySorted,
               next.map((e) => e.name).toList(),
             );
@@ -126,14 +128,16 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
       if (ref
           .read(settingsProvider.notifier)
           .containsKey(SettingsKey.mapLayersCountrySorted)) {
-        final layerList = ref
-            .read(settingsProvider.notifier)
-            .getList(SettingsKey.mapLayersCountrySorted)!;
+        final layerList =
+            ref
+                .read(settingsProvider.notifier)
+                .getList(SettingsKey.mapLayersCountrySorted)!;
 
         return List<String>.from(layerList)
             .map(
-              (layerName) => country.availableLayers
-                  .firstWhere((element) => element.name == layerName),
+              (layerName) => country.availableLayers.firstWhere(
+                (element) => element.name == layerName,
+              ),
             )
             .toList();
       }
@@ -145,20 +149,19 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
 
   /// Reorder the item at [oldIndex] to [newIndex].
   void reorder(int oldIndex, int newIndex) => Future(() {
-        var moveTo = newIndex;
-        if (oldIndex < newIndex) {
-          moveTo -= 1;
-        }
-        final layer = state.removeAt(oldIndex);
-        state = List<TileLayerData>.from(state)..insert(moveTo, layer);
-      });
+    var moveTo = newIndex;
+    if (oldIndex < newIndex) {
+      moveTo -= 1;
+    }
+    final layer = state.removeAt(oldIndex);
+    state = List<TileLayerData>.from(state)..insert(moveTo, layer);
+  });
 
   @override
   bool updateShouldNotify(
     List<TileLayerData> previous,
     List<TileLayerData> next,
-  ) =>
-      true;
+  ) => true;
 }
 
 /// A set of the current selction of custom layers for the [CurrentCountry].
@@ -169,7 +172,9 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref.read(settingsProvider.notifier).update(
+        ref
+            .read(settingsProvider.notifier)
+            .update(
               SettingsKey.mapLayersCountryEnabled,
               next.map((e) => e.name).toList(),
             );
@@ -183,9 +188,10 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
       if (ref
           .read(settingsProvider.notifier)
           .containsKey(SettingsKey.mapLayersCountryEnabled)) {
-        final countryList = ref
-            .read(settingsProvider.notifier)
-            .getList(SettingsKey.mapLayersCountryEnabled)!;
+        final countryList =
+            ref
+                .read(settingsProvider.notifier)
+                .getList(SettingsKey.mapLayersCountryEnabled)!;
 
         for (final name in List<String>.from(countryList)) {
           final layer = country.layer(name);
@@ -200,15 +206,15 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
   }
 
   /// Add the [layer] to the [state]-
-  void add(TileLayerData layer) => Future(
-        () => state = Set<TileLayerData>.from(state)..add(layer),
-      );
+  void add(TileLayerData layer) =>
+      Future(() => state = Set<TileLayerData>.from(state)..add(layer));
 
   /// Remvoe the [layer] from the [state].
   void remove(TileLayerData layer) => Future(
-        () => state = Set<TileLayerData>.from(state)
+    () =>
+        state = Set<TileLayerData>.from(state)
           ..removeWhere((element) => element.name == layer.name),
-      );
+  );
 
   /// Add the [layer] to the [state] if it's missing or remove it if it's
   /// already in the [state].
@@ -228,8 +234,7 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
   bool updateShouldNotify(
     Set<TileLayerData> previous,
     Set<TileLayerData> next,
-  ) =>
-      true;
+  ) => true;
 }
 
 /// The selected country layers sorted by their index in the available layers
@@ -238,7 +243,9 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
 List<TileLayerData> sortedCountryLayers(Ref ref) {
   final availableLayers = ref.watch(availableCountryLayersProvider);
 
-  return ref.watch(enabledCountryLayersProvider).sorted(
+  return ref
+      .watch(enabledCountryLayersProvider)
+      .sorted(
         (key1, key2) => availableLayers
             .indexOf(key2)
             .compareTo(availableLayers.indexOf(key1)),
@@ -260,7 +267,9 @@ class CountryLayerOpacities extends _$CountryLayerOpacities {
           _saveToSettingsTimer?.cancel();
           _saveToSettingsTimer = Timer(
             const Duration(seconds: 1),
-            () => ref.read(settingsProvider.notifier).update(
+            () => ref
+                .read(settingsProvider.notifier)
+                .update(
                   SettingsKey.mapLayersCountryOpacities,
                   Map<String, double>.from(next)
                     ..removeWhere((key, value) => value == 0.5),
@@ -279,9 +288,10 @@ class CountryLayerOpacities extends _$CountryLayerOpacities {
       if (ref
           .read(settingsProvider.notifier)
           .containsKey(SettingsKey.mapLayersCountryOpacities)) {
-        final countryMap = ref
-            .read(settingsProvider.notifier)
-            .getMap(SettingsKey.mapLayersCountryOpacities)!;
+        final countryMap =
+            ref
+                .read(settingsProvider.notifier)
+                .getMap(SettingsKey.mapLayersCountryOpacities)!;
 
         Map<String, double>.from(countryMap).forEach((name, opacity) {
           final layer = country.layer(name);
@@ -297,9 +307,10 @@ class CountryLayerOpacities extends _$CountryLayerOpacities {
 
   /// Update the [opacity] for the given [layer].
   void update(TileLayerData layer, double opacity) => Future(
-        () => state = Map<String, double>.from(state)
+    () =>
+        state = Map<String, double>.from(state)
           ..update(layer.name, (value) => opacity),
-      );
+  );
 
   /// Reset the [state] to the initial value by recreating it.
   void reset() => ref.invalidateSelf();
@@ -308,6 +319,5 @@ class CountryLayerOpacities extends _$CountryLayerOpacities {
   bool updateShouldNotify(
     Map<String, double> previous,
     Map<String, double> next,
-  ) =>
-      !const DeepCollectionEquality().equals(previous, next);
+  ) => !const DeepCollectionEquality().equals(previous, next);
 }

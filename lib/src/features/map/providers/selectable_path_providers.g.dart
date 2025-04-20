@@ -16,14 +16,15 @@ String _$selectablePathIndicesHash() =>
 @ProviderFor(selectablePathIndices)
 final selectablePathIndicesProvider =
     AutoDisposeProvider<Iterable<int>?>.internal(
-  selectablePathIndices,
-  name: r'selectablePathIndicesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$selectablePathIndicesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      selectablePathIndices,
+      name: r'selectablePathIndicesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$selectablePathIndicesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -38,19 +39,20 @@ String _$selectablePathStartToEndHash() =>
 @ProviderFor(selectablePathStartToEnd)
 final selectablePathStartToEndProvider =
     AutoDisposeProvider<Iterable<Geographic>?>.internal(
-  selectablePathStartToEnd,
-  name: r'selectablePathStartToEndProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$selectablePathStartToEndHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      selectablePathStartToEnd,
+      name: r'selectablePathStartToEndProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$selectablePathStartToEndHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef SelectablePathStartToEndRef
-    = AutoDisposeProviderRef<Iterable<Geographic>?>;
+typedef SelectablePathStartToEndRef =
+    AutoDisposeProviderRef<Iterable<Geographic>?>;
 String _$enableSelectablePathHash() =>
     r'0caf521f93cf07d64674307c5308a790c169164d';
 
@@ -60,14 +62,15 @@ String _$enableSelectablePathHash() =>
 @ProviderFor(EnableSelectablePath)
 final enableSelectablePathProvider =
     NotifierProvider<EnableSelectablePath, bool>.internal(
-  EnableSelectablePath.new,
-  name: r'enableSelectablePathProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$enableSelectablePathHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EnableSelectablePath.new,
+      name: r'enableSelectablePathProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$enableSelectablePathHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EnableSelectablePath = Notifier<bool>;
 String _$selectablePathIndexStartHash() =>
@@ -79,14 +82,15 @@ String _$selectablePathIndexStartHash() =>
 @ProviderFor(SelectablePathIndexStart)
 final selectablePathIndexStartProvider =
     AutoDisposeNotifierProvider<SelectablePathIndexStart, int?>.internal(
-  SelectablePathIndexStart.new,
-  name: r'selectablePathIndexStartProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$selectablePathIndexStartHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SelectablePathIndexStart.new,
+      name: r'selectablePathIndexStartProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$selectablePathIndexStartHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SelectablePathIndexStart = AutoDisposeNotifier<int?>;
 String _$selectablePathIndexEndHash() =>
@@ -98,14 +102,15 @@ String _$selectablePathIndexEndHash() =>
 @ProviderFor(SelectablePathIndexEnd)
 final selectablePathIndexEndProvider =
     AutoDisposeNotifierProvider<SelectablePathIndexEnd, int?>.internal(
-  SelectablePathIndexEnd.new,
-  name: r'selectablePathIndexEndProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$selectablePathIndexEndHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SelectablePathIndexEnd.new,
+      name: r'selectablePathIndexEndProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$selectablePathIndexEndHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SelectablePathIndexEnd = AutoDisposeNotifier<int?>;
 String _$selectablePathPointsHash() =>
@@ -116,12 +121,15 @@ String _$selectablePathPointsHash() =>
 /// Copied from [SelectablePathPoints].
 @ProviderFor(SelectablePathPoints)
 final selectablePathPointsProvider = AutoDisposeNotifierProvider<
-    SelectablePathPoints, Iterable<Geographic>?>.internal(
+  SelectablePathPoints,
+  Iterable<Geographic>?
+>.internal(
   SelectablePathPoints.new,
   name: r'selectablePathPointsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$selectablePathPointsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$selectablePathPointsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -135,17 +143,20 @@ String _$selectablePathIndexSegmentsHash() =>
 /// Copied from [SelectablePathIndexSegments].
 @ProviderFor(SelectablePathIndexSegments)
 final selectablePathIndexSegmentsProvider = AutoDisposeNotifierProvider<
-    SelectablePathIndexSegments, Iterable<Iterable<int>>?>.internal(
+  SelectablePathIndexSegments,
+  Iterable<Iterable<int>>?
+>.internal(
   SelectablePathIndexSegments.new,
   name: r'selectablePathIndexSegmentsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$selectablePathIndexSegmentsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$selectablePathIndexSegmentsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SelectablePathIndexSegments
-    = AutoDisposeNotifier<Iterable<Iterable<int>>?>;
+typedef _$SelectablePathIndexSegments =
+    AutoDisposeNotifier<Iterable<Iterable<int>>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

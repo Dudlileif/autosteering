@@ -62,9 +62,9 @@ void initializeSimCore(Ref ref) {
     ..send(ref.read(mainVehicleProvider))
     ..send((simulationTargetHz: ref.read(simulatorUpdateFrequencyProvider)))
     ..send((autoSlowDown: ref.read(simCoreVehicleAutoSlowDownProvider)))
-    ..send(
-      (autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider)),
-    )
+    ..send((
+      autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider),
+    ))
     ..send((allowManualSimInput: ref.read(simCoreAllowManualInputProvider)))
     ..send((allowSimInterpolation: ref.read(simCoreAllowInterpolationProvider)))
     ..send(ref.read(activeABConfigProvider))
@@ -74,14 +74,12 @@ void initializeSimCore(Ref ref) {
     ref.read(simInputProvider.notifier)
       ..send(ref.read(hardwareCommunicationConfigProvider))
       ..send((networkAvailable: ref.read(networkAvailableProvider)))
-      ..send(
-        (
-          logGNSS: ref.read(hardwareLogGnssProvider),
-          logIMU: ref.read(hardwareLogImuProvider),
-          logWAS: ref.read(hardwareLogWasProvider),
-          logCombined: ref.read(hardwareLogCombinedProvider)
-        ),
-      );
+      ..send((
+        logGNSS: ref.read(hardwareLogGnssProvider),
+        logIMU: ref.read(hardwareLogImuProvider),
+        logWAS: ref.read(hardwareLogWasProvider),
+        logCombined: ref.read(hardwareLogCombinedProvider),
+      ));
   }
 }
 
@@ -98,7 +96,8 @@ void commonSimCoreMessageHandler(
     PathTracking? pathTracking,
     ABTracking? abTracking,
     AutosteeringState autosteeringState,
-  }) message,
+  })
+  message,
 ) {
   ref.read(gaugeVelocityProvider.notifier).update(message.velocity.toDouble());
   ref.read(gaugeBearingProvider.notifier).update(message.bearing.toDouble());

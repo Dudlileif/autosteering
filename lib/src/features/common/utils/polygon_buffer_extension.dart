@@ -35,15 +35,14 @@ extension PolygonBufferExtension on Polygon {
     required double distance,
     BufferJoin joinType = BufferJoin.round,
     bool getRawPoints = false,
-  }) =>
-      PositionSeries.from(
-        RingBuffer.bufferCircular(
-          ring: ring.toGeographicPositions,
-          distance: distance,
-          joinType: joinType,
-          getRawPoints: getRawPoints,
-        ),
-      );
+  }) => PositionSeries.from(
+    RingBuffer.bufferCircular(
+      ring: ring.toGeographicPositions,
+      distance: distance,
+      joinType: joinType,
+      getRawPoints: getRawPoints,
+    ),
+  );
 
   /// The buffered [PositionSeries] for a polygon's holes that has been inset or
   /// extended by [distance] meters. Insetting requires negative [distance],
@@ -52,15 +51,14 @@ extension PolygonBufferExtension on Polygon {
     required double distance,
     BufferJoin joinType = BufferJoin.round,
     bool getRawPoints = false,
-  }) =>
-      interior.map(
-        (hole) => bufferedPoints(
-          ring: hole,
-          distance: distance,
-          joinType: joinType,
-          getRawPoints: getRawPoints,
-        ),
-      );
+  }) => interior.map(
+    (hole) => bufferedPoints(
+      ring: hole,
+      distance: distance,
+      joinType: joinType,
+      getRawPoints: getRawPoints,
+    ),
+  );
 
   /// An inset or extended polygon that has been extended or inset by
   /// [exteriorDistance] meters. Insetting requires negative
@@ -73,26 +71,25 @@ extension PolygonBufferExtension on Polygon {
     BufferJoin exteriorJoinType = BufferJoin.round,
     BufferJoin interiorJoinType = BufferJoin.round,
     bool getRawPoints = false,
-  }) =>
-      Polygon([
-        if (exteriorDistance != null && exterior != null)
-          bufferedPoints(
-            ring: exterior!,
-            distance: exteriorDistance,
-            joinType: exteriorJoinType,
-            getRawPoints: getRawPoints,
-          )
-        else if (exterior != null)
-          exterior!,
-        if (interiorDistance != null)
-          ...bufferedInterior(
-            distance: interiorDistance,
-            joinType: interiorJoinType,
-            getRawPoints: getRawPoints,
-          )
-        else
-          ...interior,
-      ]);
+  }) => Polygon([
+    if (exteriorDistance != null && exterior != null)
+      bufferedPoints(
+        ring: exterior!,
+        distance: exteriorDistance,
+        joinType: exteriorJoinType,
+        getRawPoints: getRawPoints,
+      )
+    else if (exterior != null)
+      exterior!,
+    if (interiorDistance != null)
+      ...bufferedInterior(
+        distance: interiorDistance,
+        joinType: interiorJoinType,
+        getRawPoints: getRawPoints,
+      )
+    else
+      ...interior,
+  ]);
 
   /// A JSON string compatible verison of [bufferedPolygon].
   ///
@@ -118,9 +115,10 @@ extension PolygonBufferExtension on Polygon {
   }
 
   /// Area of the polygon in square meters.
-  double get area => exterior != null
-      ? computeArea(exterior!.toGeographicPositions).toDouble()
-      : 0;
+  double get area =>
+      exterior != null
+          ? computeArea(exterior!.toGeographicPositions).toDouble()
+          : 0;
 
   /// Area of the polygon with the area of the holes deducted.
   double get areaWithoutHoles => area - holesArea;
@@ -129,9 +127,11 @@ extension PolygonBufferExtension on Polygon {
   double get holesArea =>
       interior.fold(
         0,
-        (previousValue, hole) => previousValue != null
-            ? previousValue + computeArea(hole.toGeographicPositions).toDouble()
-            : computeArea(hole.toGeographicPositions).toDouble(),
+        (previousValue, hole) =>
+            previousValue != null
+                ? previousValue +
+                    computeArea(hole.toGeographicPositions).toDouble()
+                : computeArea(hole.toGeographicPositions).toDouble(),
       ) ??
       0;
 
@@ -144,14 +144,16 @@ extension PolygonBufferExtension on Polygon {
     if (exterior == null) {
       return false;
     }
-    final exteriorContains =
-        point.isWithinRing(exterior!.toGeographicPositions);
+    final exteriorContains = point.isWithinRing(
+      exterior!.toGeographicPositions,
+    );
     return switch (onlyExteriorBounds || interior.isEmpty) {
       true => exteriorContains,
-      false => exteriorContains &&
-          !interior
-              .map((hole) => point.isWithinRing(hole.toGeographicPositions))
-              .any((element) => element == true)
+      false =>
+        exteriorContains &&
+            !interior
+                .map((hole) => point.isWithinRing(hole.toGeographicPositions))
+                .any((element) => element == true),
     };
   }
 
@@ -217,7 +219,7 @@ extension PolygonBufferExtension on Polygon {
   map.Polygon mapPolygon({
     bool withExterior = true,
     bool withInteriorHoles = true,
-    Color color =Colors.transparent,
+    Color color = Colors.transparent,
     double borderStrokeWidth = 0.0,
     Color borderColor = const Color(0xFFFFFF00),
     bool disableHolesBorder = false,
@@ -229,32 +231,33 @@ extension PolygonBufferExtension on Polygon {
     map.PolygonLabelPlacement labelPlacement =
         map.PolygonLabelPlacement.centroid,
     bool rotateLabel = false,
-  }) =>
-      map.Polygon(
-        points: switch (withExterior && exterior != null) {
-          true => exterior!.toGeographicPositions.map((e) => e.latLng).toList(),
-          false => []
-        },
-        holePointsList: switch (withInteriorHoles) {
-          true => interior
-              .map(
-                (hole) => hole.toGeographicPositions
-                    .map((point) => point.latLng)
-                    .toList(),
-              )
-              .toList(),
-          false => []
-        },
-        color: color,
-        borderStrokeWidth: borderStrokeWidth,
-        borderColor: borderColor,
-        disableHolesBorder: disableHolesBorder,
-        pattern: pattern ?? const map.StrokePattern.solid(),
-        strokeCap: strokeCap,
-        strokeJoin: strokeJoin,
-        label: label,
-        labelStyle: labelStyle,
-        labelPlacement: labelPlacement,
-        rotateLabel: rotateLabel,
-      );
+  }) => map.Polygon(
+    points: switch (withExterior && exterior != null) {
+      true => exterior!.toGeographicPositions.map((e) => e.latLng).toList(),
+      false => [],
+    },
+    holePointsList: switch (withInteriorHoles) {
+      true =>
+        interior
+            .map(
+              (hole) =>
+                  hole.toGeographicPositions
+                      .map((point) => point.latLng)
+                      .toList(),
+            )
+            .toList(),
+      false => [],
+    },
+    color: color,
+    borderStrokeWidth: borderStrokeWidth,
+    borderColor: borderColor,
+    disableHolesBorder: disableHolesBorder,
+    pattern: pattern ?? const map.StrokePattern.solid(),
+    strokeCap: strokeCap,
+    strokeJoin: strokeJoin,
+    label: label,
+    labelStyle: labelStyle,
+    labelPlacement: labelPlacement,
+    rotateLabel: rotateLabel,
+  );
 }

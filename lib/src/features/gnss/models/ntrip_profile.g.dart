@@ -6,8 +6,8 @@ part of 'ntrip_profile.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$NtripProfileImpl _$$NtripProfileImplFromJson(Map<String, dynamic> json) =>
-    _$NtripProfileImpl(
+_NtripProfile _$NtripProfileFromJson(Map<String, dynamic> json) =>
+    _NtripProfile(
       name: json['name'] as String,
       hostAddress: json['hostAddress'] as String,
       mountPoint: json['mountPoint'] as String,
@@ -17,7 +17,7 @@ _$NtripProfileImpl _$$NtripProfileImplFromJson(Map<String, dynamic> json) =>
       ggaSendingInterval: (json['ggaSendingInterval'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$$NtripProfileImplToJson(_$NtripProfileImpl instance) =>
+Map<String, dynamic> _$NtripProfileToJson(_NtripProfile instance) =>
     <String, dynamic>{
       'name': instance.name,
       'hostAddress': instance.hostAddress,

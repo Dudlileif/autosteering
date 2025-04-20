@@ -22,7 +22,7 @@ part 'map_center_offset.g.dart';
 
 /// An offset mainly used to keep the map center moved relative to the vehicle.
 @freezed
-class MapCenterOffset with _$MapCenterOffset {
+sealed class MapCenterOffset with _$MapCenterOffset {
   /// An offset mainly used to keep the map center moved relative to the
   /// vehicle.
   ///

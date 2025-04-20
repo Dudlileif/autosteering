@@ -93,14 +93,12 @@ class MiniMapController extends _$MiniMapController {
   MapController build() => MapController();
 
   /// Increase the zoom value of the [state] by [value].
-  void zoomIn(double value) => Future(
-        () => state.move(state.camera.center, state.camera.zoom + value),
-      );
+  void zoomIn(double value) =>
+      Future(() => state.move(state.camera.center, state.camera.zoom + value));
 
   /// Decrease the zoom value of the [state] by [value].
-  void zoomOut(double value) => Future(
-        () => state.move(state.camera.center, state.camera.zoom - value),
-      );
+  void zoomOut(double value) =>
+      Future(() => state.move(state.camera.center, state.camera.zoom - value));
 }
 
 /// Whether the mini map always should point to the north and not rotate.
@@ -182,10 +180,10 @@ class MiniMapAlwaysPointNorth extends _$MiniMapAlwaysPointNorth {
         if (next) {
           ref.read(miniMapControllerProvider).rotate(0);
         } else {
-          ref.read(miniMapControllerProvider).rotate(
-                ref.read(
-                  mainVehicleProvider.select((value) => -value.bearing),
-                ),
+          ref
+              .read(miniMapControllerProvider)
+              .rotate(
+                ref.read(mainVehicleProvider.select((value) => -value.bearing)),
               );
         }
       }

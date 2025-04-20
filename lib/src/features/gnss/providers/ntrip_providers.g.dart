@@ -6,7 +6,7 @@ part of 'ntrip_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntripSourcetableHash() => r'83ef7184cd10cab831876f2855581b829bc52926';
+String _$ntripSourcetableHash() => r'0dc8131427a51b7173c46f82b12d19d3d892bd46';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -109,27 +109,27 @@ class NtripSourcetableProvider
     String? username,
     String? password,
   }) : this._internal(
-          (ref) => ntripSourcetable(
-            ref as NtripSourcetableRef,
-            host: host,
-            port: port,
-            username: username,
-            password: password,
-          ),
-          from: ntripSourcetableProvider,
-          name: r'ntripSourcetableProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$ntripSourcetableHash,
-          dependencies: NtripSourcetableFamily._dependencies,
-          allTransitiveDependencies:
-              NtripSourcetableFamily._allTransitiveDependencies,
-          host: host,
-          port: port,
-          username: username,
-          password: password,
-        );
+         (ref) => ntripSourcetable(
+           ref as NtripSourcetableRef,
+           host: host,
+           port: port,
+           username: username,
+           password: password,
+         ),
+         from: ntripSourcetableProvider,
+         name: r'ntripSourcetableProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$ntripSourcetableHash,
+         dependencies: NtripSourcetableFamily._dependencies,
+         allTransitiveDependencies:
+             NtripSourcetableFamily._allTransitiveDependencies,
+         host: host,
+         port: port,
+         username: username,
+         password: password,
+       );
 
   NtripSourcetableProvider._internal(
     super._createNotifier, {
@@ -152,8 +152,9 @@ class NtripSourcetableProvider
   @override
   Override overrideWith(
     FutureOr<Iterable<gnss.NtripMountPoint>?> Function(
-            NtripSourcetableRef provider)
-        create,
+      NtripSourcetableRef provider,
+    )
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -174,7 +175,7 @@ class NtripSourcetableProvider
 
   @override
   AutoDisposeFutureProviderElement<Iterable<gnss.NtripMountPoint>?>
-      createElement() {
+  createElement() {
     return _NtripSourcetableProviderElement(this);
   }
 
@@ -302,8 +303,9 @@ class NtripMountPointsSortedFamily
 /// [MainVehicle].
 ///
 /// Copied from [ntripMountPointsSorted].
-class NtripMountPointsSortedProvider extends AutoDisposeFutureProvider<
-    Map<gnss.NtripMountPointStream, double?>?> {
+class NtripMountPointsSortedProvider
+    extends
+        AutoDisposeFutureProvider<Map<gnss.NtripMountPointStream, double?>?> {
   /// A provider for sorting the [ntripSourcetable] by their distance to
   /// [MainVehicle].
   ///
@@ -314,27 +316,27 @@ class NtripMountPointsSortedProvider extends AutoDisposeFutureProvider<
     String? username,
     String? password,
   }) : this._internal(
-          (ref) => ntripMountPointsSorted(
-            ref as NtripMountPointsSortedRef,
-            host: host,
-            port: port,
-            username: username,
-            password: password,
-          ),
-          from: ntripMountPointsSortedProvider,
-          name: r'ntripMountPointsSortedProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$ntripMountPointsSortedHash,
-          dependencies: NtripMountPointsSortedFamily._dependencies,
-          allTransitiveDependencies:
-              NtripMountPointsSortedFamily._allTransitiveDependencies,
-          host: host,
-          port: port,
-          username: username,
-          password: password,
-        );
+         (ref) => ntripMountPointsSorted(
+           ref as NtripMountPointsSortedRef,
+           host: host,
+           port: port,
+           username: username,
+           password: password,
+         ),
+         from: ntripMountPointsSortedProvider,
+         name: r'ntripMountPointsSortedProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$ntripMountPointsSortedHash,
+         dependencies: NtripMountPointsSortedFamily._dependencies,
+         allTransitiveDependencies:
+             NtripMountPointsSortedFamily._allTransitiveDependencies,
+         host: host,
+         port: port,
+         username: username,
+         password: password,
+       );
 
   NtripMountPointsSortedProvider._internal(
     super._createNotifier, {
@@ -357,8 +359,9 @@ class NtripMountPointsSortedProvider extends AutoDisposeFutureProvider<
   @override
   Override overrideWith(
     FutureOr<Map<gnss.NtripMountPointStream, double?>?> Function(
-            NtripMountPointsSortedRef provider)
-        create,
+      NtripMountPointsSortedRef provider,
+    )
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -379,7 +382,7 @@ class NtripMountPointsSortedProvider extends AutoDisposeFutureProvider<
 
   @override
   AutoDisposeFutureProviderElement<Map<gnss.NtripMountPointStream, double?>?>
-      createElement() {
+  createElement() {
     return _NtripMountPointsSortedProviderElement(this);
   }
 
@@ -422,8 +425,10 @@ mixin NtripMountPointsSortedRef
 }
 
 class _NtripMountPointsSortedProviderElement
-    extends AutoDisposeFutureProviderElement<
-        Map<gnss.NtripMountPointStream, double?>?>
+    extends
+        AutoDisposeFutureProviderElement<
+          Map<gnss.NtripMountPointStream, double?>?
+        >
     with NtripMountPointsSortedRef {
   _NtripMountPointsSortedProviderElement(super.provider);
 
@@ -461,14 +466,15 @@ String _$ntripProfilesHash() => r'1bd1d467e9ec0fc4b9065683829301ccd13989df';
 @ProviderFor(NtripProfiles)
 final ntripProfilesProvider =
     NotifierProvider<NtripProfiles, List<NtripProfile>>.internal(
-  NtripProfiles.new,
-  name: r'ntripProfilesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$ntripProfilesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      NtripProfiles.new,
+      name: r'ntripProfilesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$ntripProfilesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$NtripProfiles = Notifier<List<NtripProfile>>;
 String _$activeNtripProfileHash() =>
@@ -480,14 +486,15 @@ String _$activeNtripProfileHash() =>
 @ProviderFor(ActiveNtripProfile)
 final activeNtripProfileProvider =
     NotifierProvider<ActiveNtripProfile, NtripProfile?>.internal(
-  ActiveNtripProfile.new,
-  name: r'activeNtripProfileProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeNtripProfileHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ActiveNtripProfile.new,
+      name: r'activeNtripProfileProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$activeNtripProfileHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ActiveNtripProfile = Notifier<NtripProfile?>;
 String _$ntripDataUsageSessionHash() =>
@@ -499,14 +506,15 @@ String _$ntripDataUsageSessionHash() =>
 @ProviderFor(NtripDataUsageSession)
 final ntripDataUsageSessionProvider =
     NotifierProvider<NtripDataUsageSession, int?>.internal(
-  NtripDataUsageSession.new,
-  name: r'ntripDataUsageSessionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$ntripDataUsageSessionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      NtripDataUsageSession.new,
+      name: r'ntripDataUsageSessionProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$ntripDataUsageSessionHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$NtripDataUsageSession = Notifier<int?>;
 String _$ntripAliveHash() => r'b9e6ac1073b9f2d29c8bc014e5b038f092bc9d7e';
@@ -539,13 +547,15 @@ String _$ntripClientHash() => r'a54f76fcb42d72cc74a9b6b17ef79ea3dcf7b52c';
 @ProviderFor(NtripClient)
 final ntripClientProvider =
     AsyncNotifierProvider<NtripClient, gnss.NtripClient?>.internal(
-  NtripClient.new,
-  name: r'ntripClientProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$ntripClientHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      NtripClient.new,
+      name: r'ntripClientProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$ntripClientHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$NtripClient = AsyncNotifier<gnss.NtripClient?>;
 String _$ntripDataUsageByMonthHash() =>
@@ -558,14 +568,15 @@ String _$ntripDataUsageByMonthHash() =>
 @ProviderFor(NtripDataUsageByMonth)
 final ntripDataUsageByMonthProvider =
     NotifierProvider<NtripDataUsageByMonth, Map<String, int>>.internal(
-  NtripDataUsageByMonth.new,
-  name: r'ntripDataUsageByMonthProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$ntripDataUsageByMonthHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      NtripDataUsageByMonth.new,
+      name: r'ntripDataUsageByMonthProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$ntripDataUsageByMonthHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$NtripDataUsageByMonth = Notifier<Map<String, int>>;
 // ignore_for_file: type=lint

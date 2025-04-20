@@ -60,7 +60,9 @@ FutureOr<Directory> fileDirectory(Ref ref) async {
 FutureOr<int?> directorySize(Ref ref, String path) async {
   final directory = Directory(path);
   if (directory.existsSync()) {
-    return directory.list(recursive: true).fold(
+    return directory
+        .list(recursive: true)
+        .fold(
           0,
           (previous, element) => (previous ?? 0) + element.statSync().size,
         );
@@ -78,17 +80,21 @@ FutureOr<bool> directoryDelete(Ref ref, String path) async {
 
   if (directory.existsSync()) {
     final wasDeleted = !(await directory.delete(recursive: true)).existsSync();
-    Logger.instance.i('${switch (wasDeleted) {
-      true => 'Deleted',
-      false => 'Failed to delete'
-    }} directory: $path');
+    Logger.instance.i(
+      '${switch (wasDeleted) {
+        true => 'Deleted',
+        false => 'Failed to delete',
+      }} directory: $path',
+    );
     return wasDeleted;
   }
   final deleted = !directory.existsSync();
-  Logger.instance.i('${switch (deleted) {
-    true => 'Attempted to delete already deleted',
-    false => 'Attempted to delete, but failed for'
-  }} directory: $path');
+  Logger.instance.i(
+    '${switch (deleted) {
+      true => 'Attempted to delete already deleted',
+      false => 'Attempted to delete, but failed for',
+    }} directory: $path',
+  );
   return deleted;
 }
 
@@ -110,11 +116,8 @@ FutureOr<void> saveJsonToFileDirectory(
       final dataString = const JsonEncoder.withIndent('    ').convert(object);
 
       html.AnchorElement()
-        ..href = '${Uri.dataFromString(
-          dataString,
-          mimeType: 'text/plain',
-          encoding: utf8,
-        )}'
+        ..href =
+            '''${Uri.dataFromString(dataString, mimeType: 'text/plain', encoding: utf8)}'''
         ..download = '$fileName.json'
         ..style.display = 'none'
         ..click();
@@ -129,21 +132,19 @@ FutureOr<void> saveJsonToFileDirectory(
       ]);
       await Isolate.run<LogEvent>(() async {
         try {
-          final dataString =
-              const JsonEncoder.withIndent('    ').convert(object);
+          final dataString = const JsonEncoder.withIndent(
+            '    ',
+          ).convert(object);
           final file = File(filePath);
           final exists = file.existsSync();
           if (!exists) {
             await file.create(recursive: true);
           }
           await file.writeAsString(dataString);
-          return LogEvent(
-            Level.info,
-            switch (exists) {
-              false => 'Created and wrote data to $filePath',
-              true => 'Wrote data to $filePath',
-            },
-          );
+          return LogEvent(Level.info, switch (exists) {
+            false => 'Created and wrote data to $filePath',
+            true => 'Wrote data to $filePath',
+          });
         } on Exception catch (error, stackTrace) {
           return LogEvent(
             Level.error,
@@ -187,29 +188,29 @@ FutureOr<void> exportJsonToFileDirectory(
     if (downloadIfWeb) {
       final dataString = const JsonEncoder.withIndent('    ').convert(object);
       html.AnchorElement()
-        ..href = '${Uri.dataFromString(
-          dataString,
-          mimeType: 'text/plain',
-          encoding: utf8,
-        )}'
+        ..href =
+            '''${Uri.dataFromString(dataString, mimeType: 'text/plain', encoding: utf8)}'''
         ..download = '$fileName.json'
         ..style.display = 'none'
         ..click();
     }
   } else {
     try {
-      final exportFolder = await FilePicker.platform
-          .getDirectoryPath(dialogTitle: 'Select export folder');
+      final exportFolder = await FilePicker.platform.getDirectoryPath(
+        dialogTitle: 'Select export folder',
+      );
       if (exportFolder != null) {
         await Isolate.run<LogEvent>(() async {
           try {
-            final dataString =
-                const JsonEncoder.withIndent('    ').convert(object);
+            final dataString = const JsonEncoder.withIndent(
+              '    ',
+            ).convert(object);
             var filePath = '';
             if (exportFolder.endsWith('autosteering_export')) {
-              filePath = folder != null
-                  ? path.join(exportFolder, folder, '$fileName.json')
-                  : path.join(exportFolder, '$fileName.json');
+              filePath =
+                  folder != null
+                      ? path.join(exportFolder, folder, '$fileName.json')
+                      : path.join(exportFolder, '$fileName.json');
             } else if (exportFolder.contains('autosteering_export')) {
               filePath = path.joinAll([
                 exportFolder.substring(
@@ -234,13 +235,10 @@ FutureOr<void> exportJsonToFileDirectory(
               await file.create(recursive: true);
             }
             await file.writeAsString(dataString);
-            return LogEvent(
-              Level.info,
-              switch (exists) {
-                false => 'Created and wrote data to $filePath',
-                true => 'Wrote data to $filePath',
-              },
-            );
+            return LogEvent(Level.info, switch (exists) {
+              false => 'Created and wrote data to $filePath',
+              true => 'Wrote data to $filePath',
+            });
           } on Exception catch (error, stackTrace) {
             return LogEvent(
               Level.error,
@@ -327,8 +325,9 @@ FutureOr<List<dynamic>> savedFiles(
       }
     }
   }
-  Logger.instance
-      .i('Directory found with ${savedItems.length} items: $dirPath');
+  Logger.instance.i(
+    'Directory found with ${savedItems.length} items: $dirPath',
+  );
   return savedItems;
 }
 
@@ -350,8 +349,9 @@ FutureOr<List<dynamic>> savedFilesInSubDirectories(
     folder,
   );
 
-  Logger.instance
-      .i('Attempting to read saved files from directories in: $dirPath');
+  Logger.instance.i(
+    'Attempting to read saved files from directories in: $dirPath',
+  );
   final dir = Directory(dirPath);
   if (!dir.existsSync()) {
     Logger.instance.i('Directory not found: $dirPath');
@@ -376,9 +376,10 @@ FutureOr<List<dynamic>> savedFilesInSubDirectories(
             final dir = Directory.fromUri(fileEntity.uri);
             final files = dir.listSync();
             final file = files.firstWhereOrNull(
-              (file) => path.split(file.path).last.startsWith(
-                    path.split(fileEntity.path).last,
-                  ),
+              (file) => path
+                  .split(file.path)
+                  .last
+                  .startsWith(path.split(fileEntity.path).last),
             );
             if (file is File) {
               final decoded = jsonDecode(await file.readAsString());
@@ -397,8 +398,9 @@ FutureOr<List<dynamic>> savedFilesInSubDirectories(
       }
     }
   }
-  Logger.instance
-      .i('Directory found with ${savedItems.length} items: $dirPath');
+  Logger.instance.i(
+    'Directory found with ${savedItems.length} items: $dirPath',
+  );
   return savedItems;
 }
 
@@ -420,12 +422,10 @@ FutureOr<void> deleteJsonFromFileDirectory(
     if (exists) {
       await file.delete(recursive: true);
       exists = file.existsSync();
-      Logger.instance.i(
-        switch (exists) {
-          false => 'Deleted file: $filePath',
-          true => 'Failed to delete file: $filePath',
-        },
-      );
+      Logger.instance.i(switch (exists) {
+        false => 'Deleted file: $filePath',
+        true => 'Failed to delete file: $filePath',
+      });
     } else {
       Logger.instance.i('File already deleted/does not exist: $filePath');
     }
@@ -450,12 +450,10 @@ FutureOr<void> deleteDirectoryFromFileDirectory(
     if (exists) {
       await dir.delete(recursive: true);
       exists = dir.existsSync();
-      Logger.instance.i(
-        switch (exists) {
-          false => 'Deleted directory: $dirPath',
-          true => 'Failed to delete dircetory: $dirPath',
-        },
-      );
+      Logger.instance.i(switch (exists) {
+        false => 'Deleted directory: $dirPath',
+        true => 'Failed to delete dircetory: $dirPath',
+      });
     } else {
       Logger.instance.i('Directory already deleted/does not exist: $dirPath');
     }
@@ -468,8 +466,9 @@ FutureOr<void> exportWholeFileDirectory(Ref ref) async {
   ref.keepAlive();
   try {
     if (Device.isNative) {
-      final exportFolder = await FilePicker.platform
-          .getDirectoryPath(dialogTitle: 'Select export folder');
+      final exportFolder = await FilePicker.platform.getDirectoryPath(
+        dialogTitle: 'Select export folder',
+      );
       if (exportFolder != null) {
         ref.read(exportProgressProvider.notifier).update(0);
 
@@ -545,21 +544,23 @@ FutureOr<void> exportAll(
   ref.keepAlive();
   try {
     if (Device.isNative) {
-      final exportFolder = await FilePicker.platform
-          .getDirectoryPath(dialogTitle: 'Select export folder');
+      final exportFolder = await FilePicker.platform.getDirectoryPath(
+        dialogTitle: 'Select export folder',
+      );
       if (exportFolder != null) {
         final dirPath = ref.watch(fileDirectoryProvider).requireValue.path;
 
         final dir = Directory(path.join(dirPath, directory));
         if (dir.existsSync()) {
-          final files = dir
-              .listSync(recursive: true)
-              .where(
-                (element) =>
-                    FileSystemEntity.typeSync(element.path) ==
-                    FileSystemEntityType.file,
-              )
-              .toList();
+          final files =
+              dir
+                  .listSync(recursive: true)
+                  .where(
+                    (element) =>
+                        FileSystemEntity.typeSync(element.path) ==
+                        FileSystemEntityType.file,
+                  )
+                  .toList();
           if (files.isNotEmpty) {
             var exportDirPath = '';
             if (exportFolder.endsWith('autosteering_export')) {
@@ -574,8 +575,11 @@ FutureOr<void> exportAll(
                 directory,
               );
             } else {
-              exportDirPath =
-                  path.join(exportFolder, 'autosteering_export', directory);
+              exportDirPath = path.join(
+                exportFolder,
+                'autosteering_export',
+                directory,
+              );
             }
             final exportDir = Directory(exportDirPath);
             if (!exportDir.existsSync()) {
@@ -673,11 +677,9 @@ FutureOr<void> importWholeFileDirectory(Ref ref) async {
         }
         ref.read(importProgressProvider.notifier).update(1);
 
-        Logger.instance.i(
-          '''
+        Logger.instance.i('''
 Imported whole file directory from ${importFile.files.first.path}.'
-Reloading all settings and files...''',
-        );
+Reloading all settings and files...''');
         ref
           ..invalidate(startupLoadingProvider)
           ..invalidate(fileDirectoryProvider)

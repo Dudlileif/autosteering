@@ -36,66 +36,64 @@ class HardwareNetworkDialog extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [Text('Network'), CloseButton()],
       ),
-      contentPadding:
-          const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        top: 12,
+        right: 24,
+        bottom: 16,
+      ),
       children: [
         if (Device.isNative) ...[
           if (ref.watch(
             deviceIPAddressWlanProvider.select((value) => value != null),
           ))
             Consumer(
-              builder: (context, ref, child) => Row(
-                children: [
-                  const Icon(Icons.wifi),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 28),
-                    child: SelectableText(
-                      '''
+              builder:
+                  (context, ref, child) => Row(
+                    children: [
+                      const Icon(Icons.wifi),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 28),
+                        child: SelectableText('''
 This device WLAN:
-${ref.watch(deviceIPAddressWlanProvider)}''',
-                      style: textStyle,
-                    ),
+${ref.watch(deviceIPAddressWlanProvider)}''', style: textStyle),
+                      ),
+                    ],
                   ),
-                ],
-              ),
             ),
           if (ref.watch(
             deviceIPAddressAPProvider.select((value) => value != null),
           ))
             Consumer(
-              builder: (context, ref, child) => Row(
-                children: [
-                  const Icon(Icons.router),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 28),
-                    child: Text(
-                      '''
+              builder:
+                  (context, ref, child) => Row(
+                    children: [
+                      const Icon(Icons.router),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 28),
+                        child: Text('''
 This device AP host:
-${ref.watch(deviceIPAddressAPProvider)}''',
-                      style: textStyle,
-                    ),
+${ref.watch(deviceIPAddressAPProvider)}''', style: textStyle),
+                      ),
+                    ],
                   ),
-                ],
-              ),
             ),
           if (ref.watch(
             deviceIPAddressEthernetProvider.select((value) => value != null),
           ))
             Consumer(
-              builder: (context, ref, child) => Row(
-                children: [
-                  const Icon(Icons.cable),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 28),
-                    child: Text(
-                      '''
+              builder:
+                  (context, ref, child) => Row(
+                    children: [
+                      const Icon(Icons.cable),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 28),
+                        child: Text('''
 This device Ethernet:
-${ref.watch(deviceIPAddressEthernetProvider)}''',
-                      style: textStyle,
-                    ),
+${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
+                      ),
+                    ],
                   ),
-                ],
-              ),
             ),
         ],
         Padding(
@@ -114,36 +112,57 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''',
                       children: [
                         ListenableBuilder(
                           listenable: controller,
-                          builder: (context, child) => Consumer(
-                            builder: (context, ref, child) => ref
-                                .watch(
-                                  validInternetAddressProvider(controller.text),
-                                )
-                                .when(
-                                  data: (data) => data
-                                      ? Text(
-                                          'Valid IP found',
-                                          style: theme.textTheme.bodySmall
-                                              ?.copyWith(
-                                            color: Colors.green.shade600,
+                          builder:
+                              (context, child) => Consumer(
+                                builder:
+                                    (context, ref, child) => ref
+                                        .watch(
+                                          validInternetAddressProvider(
+                                            controller.text,
                                           ),
                                         )
-                                      : Text(
-                                          'No valid IP found',
-                                          style: theme.textTheme.bodySmall
-                                              ?.copyWith(
-                                            color: theme.colorScheme.error,
-                                          ),
+                                        .when(
+                                          data:
+                                              (data) => switch (data) {
+                                                true => Text(
+                                                  'Valid IP found',
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color:
+                                                            Colors
+                                                                .green
+                                                                .shade600,
+                                                      ),
+                                                ),
+                                                _ => Text(
+                                                  'No valid IP found',
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color:
+                                                            theme
+                                                                .colorScheme
+                                                                .error,
+                                                      ),
+                                                ),
+                                              },
+                                          error:
+                                              (error, stackTrace) => Text(
+                                                'No valid IP found',
+                                                style: theme.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                      color:
+                                                          theme
+                                                              .colorScheme
+                                                              .error,
+                                                    ),
+                                              ),
+                                          loading: LinearProgressIndicator.new,
                                         ),
-                                  error: (error, stackTrace) => Text(
-                                    'No valid IP found',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.error,
-                                    ),
-                                  ),
-                                  loading: LinearProgressIndicator.new,
-                                ),
-                          ),
+                              ),
                         ),
                         const Expanded(child: SizedBox.shrink()),
                       ],
@@ -152,10 +171,17 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''',
                   icon: Column(
                     children: [
                       Consumer(
-                        builder: (context, ref, child) =>
-                            ref.watch(steeringHardwareNetworkAliveProvider)
-                                ? const Icon(Icons.check, color: Colors.green)
-                                : const Icon(Icons.clear, color: Colors.red),
+                        builder:
+                            (context, ref, child) =>
+                                ref.watch(steeringHardwareNetworkAliveProvider)
+                                    ? const Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                    )
+                                    : const Icon(
+                                      Icons.clear,
+                                      color: Colors.red,
+                                    ),
                       ),
                       const Icon(Icons.router),
                     ],
@@ -184,36 +210,57 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''',
                       children: [
                         ListenableBuilder(
                           listenable: controller,
-                          builder: (context, child) => Consumer(
-                            builder: (context, ref, child) => ref
-                                .watch(
-                                  validInternetAddressProvider(controller.text),
-                                )
-                                .when(
-                                  data: (data) => data
-                                      ? Text(
-                                          'Valid IP found',
-                                          style: theme.textTheme.bodySmall
-                                              ?.copyWith(
-                                            color: Colors.green.shade600,
+                          builder:
+                              (context, child) => Consumer(
+                                builder:
+                                    (context, ref, child) => ref
+                                        .watch(
+                                          validInternetAddressProvider(
+                                            controller.text,
                                           ),
                                         )
-                                      : Text(
-                                          'No valid IP found',
-                                          style: theme.textTheme.bodySmall
-                                              ?.copyWith(
-                                            color: theme.colorScheme.error,
-                                          ),
+                                        .when(
+                                          data:
+                                              (data) => switch (data) {
+                                                true => Text(
+                                                  'Valid IP found',
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color:
+                                                            Colors
+                                                                .green
+                                                                .shade600,
+                                                      ),
+                                                ),
+                                                _ => Text(
+                                                  'No valid IP found',
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color:
+                                                            theme
+                                                                .colorScheme
+                                                                .error,
+                                                      ),
+                                                ),
+                                              },
+                                          error:
+                                              (error, stackTrace) => Text(
+                                                'No valid IP found',
+                                                style: theme.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                      color:
+                                                          theme
+                                                              .colorScheme
+                                                              .error,
+                                                    ),
+                                              ),
+                                          loading: LinearProgressIndicator.new,
                                         ),
-                                  error: (error, stackTrace) => Text(
-                                    'No valid IP found',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.error,
-                                    ),
-                                  ),
-                                  loading: LinearProgressIndicator.new,
-                                ),
-                          ),
+                              ),
                         ),
                         const Expanded(child: SizedBox.shrink()),
                       ],
@@ -222,19 +269,29 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''',
                   icon: Column(
                     children: [
                       Consumer(
-                        builder: (context, ref, child) =>
-                            ref.watch(remoteControlHardwareNetworkAliveProvider)
-                                ? const Icon(Icons.check, color: Colors.green)
-                                : const Icon(Icons.clear, color: Colors.red),
+                        builder:
+                            (context, ref, child) =>
+                                ref.watch(
+                                      remoteControlHardwareNetworkAliveProvider,
+                                    )
+                                    ? const Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                    )
+                                    : const Icon(
+                                      Icons.clear,
+                                      color: Colors.red,
+                                    ),
                       ),
                       const Icon(Icons.settings_remote),
                     ],
                   ),
                 ),
                 controller: controller,
-                onFieldSubmitted: ref
-                    .read(remoteControlHardwareAddressProvider.notifier)
-                    .update,
+                onFieldSubmitted:
+                    ref
+                        .read(remoteControlHardwareAddressProvider.notifier)
+                        .update,
               );
             },
           ),
@@ -243,59 +300,63 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''',
           Padding(
             padding: const EdgeInsets.only(top: 16),
             child: Consumer(
-              builder: (context, ref, child) => TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Receive port',
-                  labelStyle: textStyle,
-                  floatingLabelStyle: textStyle,
-                  icon: const Icon(Icons.call_received),
-                ),
-                keyboardType: TextInputType.number,
-                maxLength: 5,
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  final port = value != null ? int.tryParse(value) : null;
+              builder:
+                  (context, ref, child) => TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Receive port',
+                      labelStyle: textStyle,
+                      floatingLabelStyle: textStyle,
+                      icon: const Icon(Icons.call_received),
+                    ),
+                    keyboardType: TextInputType.number,
+                    maxLength: 5,
+                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      final port = value != null ? int.tryParse(value) : null;
 
-                  return port != null && port >= 1000 && port <= 65535
-                      ? 'Valid Port'
-                      : 'Invalid Port';
-                },
-                controller: TextEditingController(
-                  text: ref.read(hardwareUDPReceivePortProvider).toString(),
-                ),
-                onChanged: ref
-                    .read(hardwareUDPReceivePortProvider.notifier)
-                    .updateFromString,
-              ),
+                      return port != null && port >= 1000 && port <= 65535
+                          ? 'Valid Port'
+                          : 'Invalid Port';
+                    },
+                    controller: TextEditingController(
+                      text: ref.read(hardwareUDPReceivePortProvider).toString(),
+                    ),
+                    onChanged:
+                        ref
+                            .read(hardwareUDPReceivePortProvider.notifier)
+                            .updateFromString,
+                  ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16),
             child: Consumer(
-              builder: (context, ref, child) => TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Send port',
-                  icon: Icon(Icons.send),
-                ),
-                keyboardType: TextInputType.number,
-                maxLength: 5,
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  final port = value != null ? int.tryParse(value) : null;
+              builder:
+                  (context, ref, child) => TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Send port',
+                      icon: Icon(Icons.send),
+                    ),
+                    keyboardType: TextInputType.number,
+                    maxLength: 5,
+                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      final port = value != null ? int.tryParse(value) : null;
 
-                  return port != null && port >= 1000 && port <= 65535
-                      ? 'Valid Port'
-                      : 'Invalid Port';
-                },
-                controller: TextEditingController(
-                  text: ref.read(hardwareUDPSendPortProvider).toString(),
-                ),
-                onChanged: ref
-                    .read(hardwareUDPSendPortProvider.notifier)
-                    .updateFromString,
-              ),
+                      return port != null && port >= 1000 && port <= 65535
+                          ? 'Valid Port'
+                          : 'Invalid Port';
+                    },
+                    controller: TextEditingController(
+                      text: ref.read(hardwareUDPSendPortProvider).toString(),
+                    ),
+                    onChanged:
+                        ref
+                            .read(hardwareUDPSendPortProvider.notifier)
+                            .updateFromString,
+                  ),
             ),
           ),
         ],

@@ -156,10 +156,11 @@ class TextWithStroke extends StatelessWidget {
         Text(
           text,
           style: style?.copyWith(
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..color = strokeColor
-              ..strokeWidth = strokeWidth,
+            foreground:
+                Paint()
+                  ..style = PaintingStyle.stroke
+                  ..color = strokeColor
+                  ..strokeWidth = strokeWidth,
           ),
           strutStyle: strutStyle,
           textAlign: textAlign,

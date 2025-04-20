@@ -22,21 +22,17 @@ import 'package:themed/themed.dart';
 Widget themedTileLayerBuilder(
   BuildContext context,
   Widget tileLayer,
-) =>
-    switch (Theme.of(context).brightness) {
-      Brightness.dark => // Rotate hue by 180 deg, lower saturation
-        ChangeColors(
-          hue: 1,
-          saturation: -0.2,
+) => switch (Theme.of(context).brightness) {
+  Brightness.dark => // Rotate hue by 180 deg, lower saturation
+  ChangeColors(
+    hue: 1,
+    saturation: -0.2,
 
-          // Invert colors
-          child: ColorFiltered(
-            colorFilter: const ColorFilter.mode(
-              Colors.white,
-              BlendMode.difference,
-            ),
-            child: tileLayer,
-          ),
-        ),
-      Brightness.light => tileLayer,
-    };
+    // Invert colors
+    child: ColorFiltered(
+      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.difference),
+      child: tileLayer,
+    ),
+  ),
+  Brightness.light => tileLayer,
+};

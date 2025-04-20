@@ -48,21 +48,15 @@ class LoadEquipmentFromFileFamily extends Family<AsyncValue<Equipment?>> {
   /// A provider for loading an [Equipment] from a file at [path], if it's valid.
   ///
   /// Copied from [loadEquipmentFromFile].
-  LoadEquipmentFromFileProvider call(
-    String path,
-  ) {
-    return LoadEquipmentFromFileProvider(
-      path,
-    );
+  LoadEquipmentFromFileProvider call(String path) {
+    return LoadEquipmentFromFileProvider(path);
   }
 
   @override
   LoadEquipmentFromFileProvider getProviderOverride(
     covariant LoadEquipmentFromFileProvider provider,
   ) {
-    return call(
-      provider.path,
-    );
+    return call(provider.path);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -88,24 +82,20 @@ class LoadEquipmentFromFileProvider
   /// A provider for loading an [Equipment] from a file at [path], if it's valid.
   ///
   /// Copied from [loadEquipmentFromFile].
-  LoadEquipmentFromFileProvider(
-    String path,
-  ) : this._internal(
-          (ref) => loadEquipmentFromFile(
-            ref as LoadEquipmentFromFileRef,
-            path,
-          ),
-          from: loadEquipmentFromFileProvider,
-          name: r'loadEquipmentFromFileProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$loadEquipmentFromFileHash,
-          dependencies: LoadEquipmentFromFileFamily._dependencies,
-          allTransitiveDependencies:
-              LoadEquipmentFromFileFamily._allTransitiveDependencies,
-          path: path,
-        );
+  LoadEquipmentFromFileProvider(String path)
+    : this._internal(
+        (ref) => loadEquipmentFromFile(ref as LoadEquipmentFromFileRef, path),
+        from: loadEquipmentFromFileProvider,
+        name: r'loadEquipmentFromFileProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$loadEquipmentFromFileHash,
+        dependencies: LoadEquipmentFromFileFamily._dependencies,
+        allTransitiveDependencies:
+            LoadEquipmentFromFileFamily._allTransitiveDependencies,
+        path: path,
+      );
 
   LoadEquipmentFromFileProvider._internal(
     super._createNotifier, {
@@ -254,25 +244,25 @@ class SaveEquipmentProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => saveEquipment(
-            ref as SaveEquipmentRef,
-            equipment,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: saveEquipmentProvider,
-          name: r'saveEquipmentProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$saveEquipmentHash,
-          dependencies: SaveEquipmentFamily._dependencies,
-          allTransitiveDependencies:
-              SaveEquipmentFamily._allTransitiveDependencies,
-          equipment: equipment,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => saveEquipment(
+           ref as SaveEquipmentRef,
+           equipment,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: saveEquipmentProvider,
+         name: r'saveEquipmentProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$saveEquipmentHash,
+         dependencies: SaveEquipmentFamily._dependencies,
+         allTransitiveDependencies:
+             SaveEquipmentFamily._allTransitiveDependencies,
+         equipment: equipment,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   SaveEquipmentProvider._internal(
     super._createNotifier, {
@@ -348,7 +338,8 @@ mixin SaveEquipmentRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _SaveEquipmentProviderElement
-    extends AutoDisposeFutureProviderElement<void> with SaveEquipmentRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with SaveEquipmentRef {
   _SaveEquipmentProviderElement(super.provider);
 
   @override
@@ -441,25 +432,25 @@ class ExportEquipmentProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = true,
   }) : this._internal(
-          (ref) => exportEquipment(
-            ref as ExportEquipmentRef,
-            equipment,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: exportEquipmentProvider,
-          name: r'exportEquipmentProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportEquipmentHash,
-          dependencies: ExportEquipmentFamily._dependencies,
-          allTransitiveDependencies:
-              ExportEquipmentFamily._allTransitiveDependencies,
-          equipment: equipment,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => exportEquipment(
+           ref as ExportEquipmentRef,
+           equipment,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: exportEquipmentProvider,
+         name: r'exportEquipmentProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$exportEquipmentHash,
+         dependencies: ExportEquipmentFamily._dependencies,
+         allTransitiveDependencies:
+             ExportEquipmentFamily._allTransitiveDependencies,
+         equipment: equipment,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   ExportEquipmentProvider._internal(
     super._createNotifier, {
@@ -535,7 +526,8 @@ mixin ExportEquipmentRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportEquipmentProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportEquipmentRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportEquipmentRef {
   _ExportEquipmentProviderElement(super.provider);
 
   @override
@@ -556,9 +548,10 @@ String _$savedEquipmentsHash() => r'039b1985239b14fc15ba46f72abf90002a8f5d2b';
 final savedEquipmentsProvider = FutureProvider<List<Equipment>>.internal(
   savedEquipments,
   name: r'savedEquipmentsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$savedEquipmentsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$savedEquipmentsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -594,24 +587,15 @@ class DeleteEquipmentFamily extends Family<AsyncValue<void>> {
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteEquipment].
-  DeleteEquipmentProvider call(
-    Equipment equipment, {
-    String? overrideName,
-  }) {
-    return DeleteEquipmentProvider(
-      equipment,
-      overrideName: overrideName,
-    );
+  DeleteEquipmentProvider call(Equipment equipment, {String? overrideName}) {
+    return DeleteEquipmentProvider(equipment, overrideName: overrideName);
   }
 
   @override
   DeleteEquipmentProvider getProviderOverride(
     covariant DeleteEquipmentProvider provider,
   ) {
-    return call(
-      provider.equipment,
-      overrideName: provider.overrideName,
-    );
+    return call(provider.equipment, overrideName: provider.overrideName);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -640,27 +624,25 @@ class DeleteEquipmentProvider extends AutoDisposeFutureProvider<void> {
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteEquipment].
-  DeleteEquipmentProvider(
-    Equipment equipment, {
-    String? overrideName,
-  }) : this._internal(
-          (ref) => deleteEquipment(
-            ref as DeleteEquipmentRef,
-            equipment,
-            overrideName: overrideName,
-          ),
-          from: deleteEquipmentProvider,
-          name: r'deleteEquipmentProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$deleteEquipmentHash,
-          dependencies: DeleteEquipmentFamily._dependencies,
-          allTransitiveDependencies:
-              DeleteEquipmentFamily._allTransitiveDependencies,
-          equipment: equipment,
+  DeleteEquipmentProvider(Equipment equipment, {String? overrideName})
+    : this._internal(
+        (ref) => deleteEquipment(
+          ref as DeleteEquipmentRef,
+          equipment,
           overrideName: overrideName,
-        );
+        ),
+        from: deleteEquipmentProvider,
+        name: r'deleteEquipmentProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$deleteEquipmentHash,
+        dependencies: DeleteEquipmentFamily._dependencies,
+        allTransitiveDependencies:
+            DeleteEquipmentFamily._allTransitiveDependencies,
+        equipment: equipment,
+        overrideName: overrideName,
+      );
 
   DeleteEquipmentProvider._internal(
     super._createNotifier, {
@@ -728,7 +710,8 @@ mixin DeleteEquipmentRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _DeleteEquipmentProviderElement
-    extends AutoDisposeFutureProviderElement<void> with DeleteEquipmentRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with DeleteEquipmentRef {
   _DeleteEquipmentProviderElement(super.provider);
 
   @override
@@ -747,9 +730,10 @@ String _$importEquipmentHash() => r'23788a72e175496df6e300087a244ad146ac2e28';
 final importEquipmentProvider = AutoDisposeFutureProvider<Equipment?>.internal(
   importEquipment,
   name: r'importEquipmentProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$importEquipmentHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$importEquipmentHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -777,21 +761,15 @@ class ExportEquipmentsFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all equipment files.
   ///
   /// Copied from [exportEquipments].
-  ExportEquipmentsProvider call({
-    bool zip = true,
-  }) {
-    return ExportEquipmentsProvider(
-      zip: zip,
-    );
+  ExportEquipmentsProvider call({bool zip = true}) {
+    return ExportEquipmentsProvider(zip: zip);
   }
 
   @override
   ExportEquipmentsProvider getProviderOverride(
     covariant ExportEquipmentsProvider provider,
   ) {
-    return call(
-      zip: provider.zip,
-    );
+    return call(zip: provider.zip);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -816,24 +794,20 @@ class ExportEquipmentsProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for exporting all equipment files.
   ///
   /// Copied from [exportEquipments].
-  ExportEquipmentsProvider({
-    bool zip = true,
-  }) : this._internal(
-          (ref) => exportEquipments(
-            ref as ExportEquipmentsRef,
-            zip: zip,
-          ),
-          from: exportEquipmentsProvider,
-          name: r'exportEquipmentsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportEquipmentsHash,
-          dependencies: ExportEquipmentsFamily._dependencies,
-          allTransitiveDependencies:
-              ExportEquipmentsFamily._allTransitiveDependencies,
-          zip: zip,
-        );
+  ExportEquipmentsProvider({bool zip = true})
+    : this._internal(
+        (ref) => exportEquipments(ref as ExportEquipmentsRef, zip: zip),
+        from: exportEquipmentsProvider,
+        name: r'exportEquipmentsProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$exportEquipmentsHash,
+        dependencies: ExportEquipmentsFamily._dependencies,
+        allTransitiveDependencies:
+            ExportEquipmentsFamily._allTransitiveDependencies,
+        zip: zip,
+      );
 
   ExportEquipmentsProvider._internal(
     super._createNotifier, {
@@ -892,7 +866,8 @@ mixin ExportEquipmentsRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportEquipmentsProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportEquipmentsRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportEquipmentsRef {
   _ExportEquipmentsProviderElement(super.provider);
 
   @override
@@ -909,14 +884,15 @@ String _$equipmentRecordPositionFractionHash() =>
 @ProviderFor(EquipmentRecordPositionFraction)
 final equipmentRecordPositionFractionProvider =
     NotifierProvider<EquipmentRecordPositionFraction, double?>.internal(
-  EquipmentRecordPositionFraction.new,
-  name: r'equipmentRecordPositionFractionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$equipmentRecordPositionFractionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EquipmentRecordPositionFraction.new,
+      name: r'equipmentRecordPositionFractionProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$equipmentRecordPositionFractionHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EquipmentRecordPositionFraction = Notifier<double?>;
 String _$loadedEquipmentHash() => r'ab5df27cb509589b4b9c2a0836d6b50a8cde3c6f';
@@ -927,14 +903,15 @@ String _$loadedEquipmentHash() => r'ab5df27cb509589b4b9c2a0836d6b50a8cde3c6f';
 @ProviderFor(LoadedEquipment)
 final loadedEquipmentProvider =
     NotifierProvider<LoadedEquipment, Equipment?>.internal(
-  LoadedEquipment.new,
-  name: r'loadedEquipmentProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$loadedEquipmentHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      LoadedEquipment.new,
+      name: r'loadedEquipmentProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$loadedEquipmentHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$LoadedEquipment = Notifier<Equipment?>;
 String _$allEquipmentsHash() => r'ed6e2354d60f1b17f19d0cea1df6909f78cbcecc';
@@ -945,14 +922,15 @@ String _$allEquipmentsHash() => r'ed6e2354d60f1b17f19d0cea1df6909f78cbcecc';
 @ProviderFor(AllEquipments)
 final allEquipmentsProvider =
     NotifierProvider<AllEquipments, Map<String, Equipment>>.internal(
-  AllEquipments.new,
-  name: r'allEquipmentsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$allEquipmentsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      AllEquipments.new,
+      name: r'allEquipmentsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$allEquipmentsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$AllEquipments = Notifier<Map<String, Equipment>>;
 String _$equipmentWorkedAreaHash() =>
@@ -964,14 +942,15 @@ String _$equipmentWorkedAreaHash() =>
 @ProviderFor(EquipmentWorkedArea)
 final equipmentWorkedAreaProvider =
     NotifierProvider<EquipmentWorkedArea, Map<String, double>>.internal(
-  EquipmentWorkedArea.new,
-  name: r'equipmentWorkedAreaProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$equipmentWorkedAreaHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EquipmentWorkedArea.new,
+      name: r'equipmentWorkedAreaProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$equipmentWorkedAreaHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EquipmentWorkedArea = Notifier<Map<String, double>>;
 String _$equipmentPathsHash() => r'a0a66e98347524538968c1ec072e24afd168bec3';
@@ -980,9 +959,7 @@ abstract class _$EquipmentPaths
     extends BuildlessNotifier<List<Map<int, List<SectionEdgePositions>?>>> {
   late final String uuid;
 
-  List<Map<int, List<SectionEdgePositions>?>> build(
-    String uuid,
-  );
+  List<Map<int, List<SectionEdgePositions>?>> build(String uuid);
 }
 
 /// A provider for tracking the worked paths for the given equipment [uuid].
@@ -1004,21 +981,15 @@ class EquipmentPathsFamily
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
   /// Copied from [EquipmentPaths].
-  EquipmentPathsProvider call(
-    String uuid,
-  ) {
-    return EquipmentPathsProvider(
-      uuid,
-    );
+  EquipmentPathsProvider call(String uuid) {
+    return EquipmentPathsProvider(uuid);
   }
 
   @override
   EquipmentPathsProvider getProviderOverride(
     covariant EquipmentPathsProvider provider,
   ) {
-    return call(
-      provider.uuid,
-    );
+    return call(provider.uuid);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1039,26 +1010,29 @@ class EquipmentPathsFamily
 /// A provider for tracking the worked paths for the given equipment [uuid].
 ///
 /// Copied from [EquipmentPaths].
-class EquipmentPathsProvider extends NotifierProviderImpl<EquipmentPaths,
-    List<Map<int, List<SectionEdgePositions>?>>> {
+class EquipmentPathsProvider
+    extends
+        NotifierProviderImpl<
+          EquipmentPaths,
+          List<Map<int, List<SectionEdgePositions>?>>
+        > {
   /// A provider for tracking the worked paths for the given equipment [uuid].
   ///
   /// Copied from [EquipmentPaths].
-  EquipmentPathsProvider(
-    String uuid,
-  ) : this._internal(
-          () => EquipmentPaths()..uuid = uuid,
-          from: equipmentPathsProvider,
-          name: r'equipmentPathsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$equipmentPathsHash,
-          dependencies: EquipmentPathsFamily._dependencies,
-          allTransitiveDependencies:
-              EquipmentPathsFamily._allTransitiveDependencies,
-          uuid: uuid,
-        );
+  EquipmentPathsProvider(String uuid)
+    : this._internal(
+        () => EquipmentPaths()..uuid = uuid,
+        from: equipmentPathsProvider,
+        name: r'equipmentPathsProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$equipmentPathsHash,
+        dependencies: EquipmentPathsFamily._dependencies,
+        allTransitiveDependencies:
+            EquipmentPathsFamily._allTransitiveDependencies,
+        uuid: uuid,
+      );
 
   EquipmentPathsProvider._internal(
     super._createNotifier, {
@@ -1076,9 +1050,7 @@ class EquipmentPathsProvider extends NotifierProviderImpl<EquipmentPaths,
   List<Map<int, List<SectionEdgePositions>?>> runNotifierBuild(
     covariant EquipmentPaths notifier,
   ) {
-    return notifier.build(
-      uuid,
-    );
+    return notifier.build(uuid);
   }
 
   @override
@@ -1098,8 +1070,11 @@ class EquipmentPathsProvider extends NotifierProviderImpl<EquipmentPaths,
   }
 
   @override
-  NotifierProviderElement<EquipmentPaths,
-      List<Map<int, List<SectionEdgePositions>?>>> createElement() {
+  NotifierProviderElement<
+    EquipmentPaths,
+    List<Map<int, List<SectionEdgePositions>?>>
+  >
+  createElement() {
     return _EquipmentPathsProviderElement(this);
   }
 
@@ -1125,9 +1100,13 @@ mixin EquipmentPathsRef
   String get uuid;
 }
 
-class _EquipmentPathsProviderElement extends NotifierProviderElement<
-    EquipmentPaths,
-    List<Map<int, List<SectionEdgePositions>?>>> with EquipmentPathsRef {
+class _EquipmentPathsProviderElement
+    extends
+        NotifierProviderElement<
+          EquipmentPaths,
+          List<Map<int, List<SectionEdgePositions>?>>
+        >
+    with EquipmentPathsRef {
   _EquipmentPathsProviderElement(super.provider);
 
   @override
@@ -1141,9 +1120,7 @@ abstract class _$EquipmentLogRecords
     extends BuildlessNotifier<List<EquipmentLogRecord>?> {
   late final String uuid;
 
-  List<EquipmentLogRecord>? build(
-    String uuid,
-  );
+  List<EquipmentLogRecord>? build(String uuid);
 }
 
 /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
@@ -1168,21 +1145,15 @@ class EquipmentLogRecordsFamily extends Family<List<EquipmentLogRecord>?> {
   /// given UUID.
   ///
   /// Copied from [EquipmentLogRecords].
-  EquipmentLogRecordsProvider call(
-    String uuid,
-  ) {
-    return EquipmentLogRecordsProvider(
-      uuid,
-    );
+  EquipmentLogRecordsProvider call(String uuid) {
+    return EquipmentLogRecordsProvider(uuid);
   }
 
   @override
   EquipmentLogRecordsProvider getProviderOverride(
     covariant EquipmentLogRecordsProvider provider,
   ) {
-    return call(
-      provider.uuid,
-    );
+    return call(provider.uuid);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1204,27 +1175,27 @@ class EquipmentLogRecordsFamily extends Family<List<EquipmentLogRecord>?> {
 /// given UUID.
 ///
 /// Copied from [EquipmentLogRecords].
-class EquipmentLogRecordsProvider extends NotifierProviderImpl<
-    EquipmentLogRecords, List<EquipmentLogRecord>?> {
+class EquipmentLogRecordsProvider
+    extends
+        NotifierProviderImpl<EquipmentLogRecords, List<EquipmentLogRecord>?> {
   /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
   /// given UUID.
   ///
   /// Copied from [EquipmentLogRecords].
-  EquipmentLogRecordsProvider(
-    String uuid,
-  ) : this._internal(
-          () => EquipmentLogRecords()..uuid = uuid,
-          from: equipmentLogRecordsProvider,
-          name: r'equipmentLogRecordsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$equipmentLogRecordsHash,
-          dependencies: EquipmentLogRecordsFamily._dependencies,
-          allTransitiveDependencies:
-              EquipmentLogRecordsFamily._allTransitiveDependencies,
-          uuid: uuid,
-        );
+  EquipmentLogRecordsProvider(String uuid)
+    : this._internal(
+        () => EquipmentLogRecords()..uuid = uuid,
+        from: equipmentLogRecordsProvider,
+        name: r'equipmentLogRecordsProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$equipmentLogRecordsHash,
+        dependencies: EquipmentLogRecordsFamily._dependencies,
+        allTransitiveDependencies:
+            EquipmentLogRecordsFamily._allTransitiveDependencies,
+        uuid: uuid,
+      );
 
   EquipmentLogRecordsProvider._internal(
     super._createNotifier, {
@@ -1242,9 +1213,7 @@ class EquipmentLogRecordsProvider extends NotifierProviderImpl<
   List<EquipmentLogRecord>? runNotifierBuild(
     covariant EquipmentLogRecords notifier,
   ) {
-    return notifier.build(
-      uuid,
-    );
+    return notifier.build(uuid);
   }
 
   @override
@@ -1265,7 +1234,7 @@ class EquipmentLogRecordsProvider extends NotifierProviderImpl<
 
   @override
   NotifierProviderElement<EquipmentLogRecords, List<EquipmentLogRecord>?>
-      createElement() {
+  createElement() {
     return _EquipmentLogRecordsProviderElement(this);
   }
 
@@ -1290,13 +1259,15 @@ mixin EquipmentLogRecordsRef on NotifierProviderRef<List<EquipmentLogRecord>?> {
   String get uuid;
 }
 
-class _EquipmentLogRecordsProviderElement extends NotifierProviderElement<
-    EquipmentLogRecords,
-    List<EquipmentLogRecord>?> with EquipmentLogRecordsRef {
+class _EquipmentLogRecordsProviderElement
+    extends
+        NotifierProviderElement<EquipmentLogRecords, List<EquipmentLogRecord>?>
+    with EquipmentLogRecordsRef {
   _EquipmentLogRecordsProviderElement(super.provider);
 
   @override
   String get uuid => (origin as EquipmentLogRecordsProvider).uuid;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

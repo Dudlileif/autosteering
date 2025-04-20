@@ -92,14 +92,14 @@ class DebugEquipmentTravelledPathList
 
   /// Add the [point] to the travelled path.
   void add(String uuid, LatLng point) => Future(() {
-        if (state[uuid] != null) {
-          while (state[uuid]!.length >
-              ref.watch(debugEquipmentTravelledPathSizeProvider)) {
-            state[uuid] = state[uuid]!..removeLast();
-          }
-        }
-        state[uuid] = [point, ...state[uuid] ?? []];
-      });
+    if (state[uuid] != null) {
+      while (state[uuid]!.length >
+          ref.watch(debugEquipmentTravelledPathSizeProvider)) {
+        state[uuid] = state[uuid]!..removeLast();
+      }
+    }
+    state[uuid] = [point, ...state[uuid] ?? []];
+  });
 }
 
 /// Whether to show equipment hitches debug.

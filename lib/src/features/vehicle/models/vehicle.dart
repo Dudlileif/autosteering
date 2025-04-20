@@ -74,19 +74,19 @@ sealed class Vehicle extends Hitchable {
     double velocity = 0,
     this.nudgeDistance = 0,
     this.manualSimulationMode = false,
-  })  : numWheels = numWheels ?? 1,
-        wheelSpacing = wheelSpacing ?? 0.05,
-        _bearing = bearing,
-        _pitch = pitch,
-        _roll = roll,
-        _velocity = velocity,
-        imu = imu ?? Imu(),
-        was = was ?? Was(),
-        steeringHardwareConfig =
-            steeringHardwareConfig ?? const SteeringHardwareConfig(),
-        stanleyParameters = stanleyParameters ?? const StanleyParameters(),
-        purePursuitParameters =
-            purePursuitParameters ?? const PurePursuitParameters();
+  }) : numWheels = numWheels ?? 1,
+       wheelSpacing = wheelSpacing ?? 0.05,
+       _bearing = bearing,
+       _pitch = pitch,
+       _roll = roll,
+       _velocity = velocity,
+       imu = imu ?? Imu(),
+       was = was ?? Was(),
+       steeringHardwareConfig =
+           steeringHardwareConfig ?? const SteeringHardwareConfig(),
+       stanleyParameters = stanleyParameters ?? const StanleyParameters(),
+       purePursuitParameters =
+           purePursuitParameters ?? const PurePursuitParameters();
 
   /// Creates the appropriate [Vehicle] subclass from the [json] object.
   ///
@@ -106,27 +106,29 @@ sealed class Vehicle extends Hitchable {
       _ => Tractor.fromJson(json),
     };
 
-    final children = json['children'] != null
-        ? Map<String, Map<String, dynamic>?>.from(
-            json['children'] as Map,
-          )
-        : null;
+    final children =
+        json['children'] != null
+            ? Map<String, Map<String, dynamic>?>.from(json['children'] as Map)
+            : null;
 
-    final hitchFrontFixedChild = children?['front_fixed'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['front_fixed']!),
-          )
-        : null;
-    final hitchRearFixedChild = children?['rear_fixed'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['rear_fixed']!),
-          )
-        : null;
-    final hitchRearTowbarChild = children?['rear_towbar'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['rear_towbar']!),
-          )
-        : null;
+    final hitchFrontFixedChild =
+        children?['front_fixed'] != null
+            ? Equipment.fromJson(
+              Map<String, dynamic>.from(children!['front_fixed']!),
+            )
+            : null;
+    final hitchRearFixedChild =
+        children?['rear_fixed'] != null
+            ? Equipment.fromJson(
+              Map<String, dynamic>.from(children!['rear_fixed']!),
+            )
+            : null;
+    final hitchRearTowbarChild =
+        children?['rear_towbar'] != null
+            ? Equipment.fromJson(
+              Map<String, dynamic>.from(children!['rear_towbar']!),
+            )
+            : null;
 
     if (hitchFrontFixedChild != null) {
       vehicle.attachChild(hitchFrontFixedChild, Hitch.frontFixed);
@@ -140,47 +142,52 @@ sealed class Vehicle extends Hitchable {
 
     final steering = Map<String, dynamic>.from(json['steering'] as Map);
 
-    final imu = json.containsKey('imu_config')
-        ? Imu(
-            config: ImuConfig.fromJson(
-              Map<String, dynamic>.from(json['imu_config'] as Map),
-            ),
-          )
-        : Imu();
+    final imu =
+        json.containsKey('imu_config')
+            ? Imu(
+              config: ImuConfig.fromJson(
+                Map<String, dynamic>.from(json['imu_config'] as Map),
+              ),
+            )
+            : Imu();
 
-    final was = steering.containsKey('was_config')
-        ? Was(
-            config: WasConfig.fromJson(
-              Map<String, dynamic>.from(steering['was_config'] as Map),
-            ),
-          )
-        : Was();
-    final steeringHardwareConfig = steering.containsKey('hardware_config')
-        ? SteeringHardwareConfig.fromJson(
-            Map<String, dynamic>.from(steering['hardware_config'] as Map),
-          )
-        : const SteeringHardwareConfig();
+    final was =
+        steering.containsKey('was_config')
+            ? Was(
+              config: WasConfig.fromJson(
+                Map<String, dynamic>.from(steering['was_config'] as Map),
+              ),
+            )
+            : Was();
+    final steeringHardwareConfig =
+        steering.containsKey('hardware_config')
+            ? SteeringHardwareConfig.fromJson(
+              Map<String, dynamic>.from(steering['hardware_config'] as Map),
+            )
+            : const SteeringHardwareConfig();
 
     final purePursuitParameters =
         steering.containsKey('pure_pursuit_parameters')
             ? PurePursuitParameters.fromJson(
-                Map<String, dynamic>.from(
-                  steering['pure_pursuit_parameters'] as Map,
-                ),
-              )
+              Map<String, dynamic>.from(
+                steering['pure_pursuit_parameters'] as Map,
+              ),
+            )
             : null;
 
-    final stanleyParameters = steering.containsKey('stanley_parameters')
-        ? StanleyParameters.fromJson(
-            Map<String, dynamic>.from(steering['stanley_parameters'] as Map),
-          )
-        : null;
+    final stanleyParameters =
+        steering.containsKey('stanley_parameters')
+            ? StanleyParameters.fromJson(
+              Map<String, dynamic>.from(steering['stanley_parameters'] as Map),
+            )
+            : null;
 
-    final manufacturerColors = json.containsKey('manufacturer_colors')
-        ? ManufacturerColors.fromJson(
-            Map<String, dynamic>.from(json['manufacturer_colors'] as Map),
-          )
-        : null;
+    final manufacturerColors =
+        json.containsKey('manufacturer_colors')
+            ? ManufacturerColors.fromJson(
+              Map<String, dynamic>.from(json['manufacturer_colors'] as Map),
+            )
+            : null;
 
     return vehicle.copyWith(
       imu: imu,
@@ -318,9 +325,9 @@ sealed class Vehicle extends Hitchable {
   /// accounting for [pitch] and [roll].
   @override
   Geographic get position => correctedAntennaPosition.rhumb.destinationPoint(
-        distance: antennaLateralOffset,
-        bearing: bearing - 90,
-      );
+    distance: antennaLateralOffset,
+    bearing: bearing - 90,
+  );
 
   /// Updates the [antennaPosition] of the vehicle, as the ground [position] is
   /// derived from it.
@@ -329,17 +336,17 @@ sealed class Vehicle extends Hitchable {
 
   /// Moves the input [position] to a position corrected for [pitch] and [roll]
   /// with [antennaPitchLongitudinalOffset] and [antennaRollLateralOffset].
-  Geographic correctPositionForRollAndPitch(Geographic position) =>
-      position.rhumb
-          .destinationPoint(
-            distance: antennaRollLateralOffset,
-            bearing: bearing - 90,
-          )
-          .rhumb
-          .destinationPoint(
-            distance: antennaPitchLongitudinalOffset,
-            bearing: bearing,
-          );
+  Geographic correctPositionForRollAndPitch(Geographic position) => position
+      .rhumb
+      .destinationPoint(
+        distance: antennaRollLateralOffset,
+        bearing: bearing - 90,
+      )
+      .rhumb
+      .destinationPoint(
+        distance: antennaPitchLongitudinalOffset,
+        bearing: bearing,
+      );
 
   /// A method for setting the [position] correctly when not directly
   /// inputting the [antennaPosition] from hardware. The [value] is the new
@@ -372,12 +379,12 @@ sealed class Vehicle extends Hitchable {
   /// The bearing of the vehicle, in degrees.
   @override
   double get bearing => switch (manualSimulationMode) {
-        true => _bearing,
-        false => switch (imu.config.useYaw) {
-            true => imu.bearing ?? 0,
-            false => _bearing
-          }
-      };
+    true => _bearing,
+    false => switch (imu.config.useYaw) {
+      true => imu.bearing ?? 0,
+      false => _bearing,
+    },
+  };
 
   /// The raw outside set bearing of the vehicle, typically from
   /// GNSS point to point bearing.
@@ -390,16 +397,18 @@ sealed class Vehicle extends Hitchable {
   /// The pitch of the vehicle as degrees of inclination around the x-axis
   /// (across) the vehicle in the forward direction.
   double get pitch => switch (imu.config.usePitchAndRoll) {
-        true => imu.pitch,
-        false => _pitch
-      };
+    true => imu.pitch,
+    false => _pitch,
+  };
 
   set pitch(double value) => _pitch = value;
 
   /// The roll of the vehicle as degrees of roll around the y-axis (along) the
   /// vehicle in the forward direction.
-  double get roll =>
-      switch (imu.config.usePitchAndRoll) { true => imu.roll, false => _roll };
+  double get roll => switch (imu.config.usePitchAndRoll) {
+    true => imu.roll,
+    false => _roll,
+  };
 
   set roll(double value) => _roll = value;
 
@@ -416,16 +425,18 @@ sealed class Vehicle extends Hitchable {
   /// [SteeringHardwareConfig.wasMin], [SteeringHardwareConfig.wasCenter] and
   /// [SteeringHardwareConfig.wasMax].
   double get wasReadingNormalizedInRange {
-    final normalized =
-        switch (was.reading.value < steeringHardwareConfig.wasCenter) {
-      true => (was.reading.value - steeringHardwareConfig.wasCenter) /
-          (steeringHardwareConfig.wasCenter - steeringHardwareConfig.wasMin),
-      false => (was.reading.value - steeringHardwareConfig.wasCenter) /
-          (steeringHardwareConfig.wasMax - steeringHardwareConfig.wasCenter)
+    final normalized = switch (was.reading.value <
+        steeringHardwareConfig.wasCenter) {
+      true =>
+        (was.reading.value - steeringHardwareConfig.wasCenter) /
+            (steeringHardwareConfig.wasCenter - steeringHardwareConfig.wasMin),
+      false =>
+        (was.reading.value - steeringHardwareConfig.wasCenter) /
+            (steeringHardwareConfig.wasMax - steeringHardwareConfig.wasCenter),
     };
     return switch (was.config.invertInput) {
       true => -normalized,
-      false => normalized
+      false => normalized,
     };
   }
 
@@ -454,9 +465,9 @@ sealed class Vehicle extends Hitchable {
                         steeringAngleMax)
                     .round())
             .clamp(
-          steeringHardwareConfig.wasCenter,
-          steeringHardwareConfig.wasMax,
-        );
+              steeringHardwareConfig.wasCenter,
+              steeringHardwareConfig.wasMax,
+            );
       } else {
         return (steeringHardwareConfig.wasCenter -
                 ((steeringHardwareConfig.wasCenter -
@@ -465,9 +476,9 @@ sealed class Vehicle extends Hitchable {
                         steeringAngleMax)
                     .round())
             .clamp(
-          steeringHardwareConfig.wasMin,
-          steeringHardwareConfig.wasCenter,
-        );
+              steeringHardwareConfig.wasMin,
+              steeringHardwareConfig.wasCenter,
+            );
       }
     } else {
       if (was.config.invertInput) {
@@ -478,9 +489,9 @@ sealed class Vehicle extends Hitchable {
                         steeringAngleMax)
                     .round())
             .clamp(
-          steeringHardwareConfig.wasMin,
-          steeringHardwareConfig.wasCenter,
-        );
+              steeringHardwareConfig.wasMin,
+              steeringHardwareConfig.wasCenter,
+            );
       } else {
         return (steeringHardwareConfig.wasCenter +
                 ((steeringHardwareConfig.wasMax -
@@ -489,9 +500,9 @@ sealed class Vehicle extends Hitchable {
                         steeringAngleMax)
                     .round())
             .clamp(
-          steeringHardwareConfig.wasCenter,
-          steeringHardwareConfig.wasMax,
-        );
+              steeringHardwareConfig.wasCenter,
+              steeringHardwareConfig.wasMax,
+            );
       }
     }
   }
@@ -503,28 +514,25 @@ sealed class Vehicle extends Hitchable {
   ///
   /// The distance is altered according to [purePursuitParameters].
   double get lookAheadDistance => clampDouble(
-        velocity.abs() * purePursuitParameters.lookAheadSeconds,
-        purePursuitParameters.lookAheadMinDistance,
-        double.infinity,
-      );
+    velocity.abs() * purePursuitParameters.lookAheadSeconds,
+    purePursuitParameters.lookAheadMinDistance,
+    double.infinity,
+  );
 
   /// A [WayPoint] for the vehicle in it's current state, i.e. position, bearing
   /// and velocity.
-  WayPoint get wayPoint => WayPoint(
-        position: position,
-        bearing: bearing,
-        velocity: velocity,
-      );
+  WayPoint get wayPoint =>
+      WayPoint(position: position, bearing: bearing, velocity: velocity);
 
   /// Reqiure wheel angle above 0.01 deg.
   static const double minSteeringAngle = 0.01;
 
   /// The [steeringAngleInput] accounted for [minSteeringAngle].
-  double get steeringAngle =>
-      switch (steeringAngleInput.abs() > minSteeringAngle) {
-        true => steeringAngleInput,
-        false => 0,
-      };
+  double get steeringAngle => switch (steeringAngleInput.abs() >
+      minSteeringAngle) {
+    true => steeringAngleInput,
+    false => 0,
+  };
 
   /// The position of the Stanley axle in the vehicle direction. Used when
   /// calculating Stanley path tracking values.
@@ -532,9 +540,9 @@ sealed class Vehicle extends Hitchable {
 
   /// Finds the point position corresponding to the [pathTrackingMode].
   Geographic get pathTrackingPoint => switch (pathTrackingMode) {
-        PathTrackingMode.purePursuit => lookAheadStartPosition,
-        PathTrackingMode.stanley => stanleyAxlePosition,
-      };
+    PathTrackingMode.purePursuit => lookAheadStartPosition,
+    PathTrackingMode.stanley => stanleyAxlePosition,
+  };
 
   /// Basic circle markers for showing the vehicle's steering related
   /// points.
@@ -598,8 +606,10 @@ sealed class Vehicle extends Hitchable {
   }) {
     if (period > 0) {
       if (angularVelocity != null && turningCircleCenter != null) {
-        final updated =
-            updatedPositionAndBearingTurning(period, turningCircleCenter);
+        final updated = updatedPositionAndBearingTurning(
+          period,
+          turningCircleCenter,
+        );
         setPositionSim(updated.position);
         bearing = updated.bearing;
       } else if (velocity.abs() > 0 || force) {
@@ -618,11 +628,8 @@ sealed class Vehicle extends Hitchable {
   );
 
   /// Updates the [position] for the next [period] seconds when going straight.
-  Geographic updatedPositionStraight(double period) =>
-      position.rhumb.destinationPoint(
-        distance: velocity * period,
-        bearing: bearing,
-      );
+  Geographic updatedPositionStraight(double period) => position.rhumb
+      .destinationPoint(distance: velocity * period, bearing: bearing);
 
   /// Calculates a motor velocity multiplier to reach [steeringAngleTarget] from
   /// [steeringAngleInput] by using the [pidController].
@@ -657,12 +664,14 @@ sealed class Vehicle extends Hitchable {
       }
 
       // Straight
-      final newPoint = lookAheadStartPosition.rhumb
-          .destinationPoint(distance: velocity * period, bearing: bearing);
+      final newPoint = lookAheadStartPosition.rhumb.destinationPoint(
+        distance: velocity * period,
+        bearing: bearing,
+      );
       final newBearing = lookAheadStartPosition.rhumb.finalBearingTo(newPoint);
       return (
         position: newPoint,
-        bearing: newBearing.isFinite ? newBearing : bearing
+        bearing: newBearing.isFinite ? newBearing : bearing,
       );
     }
     return (position: lookAheadStartPosition, bearing: bearing);
@@ -688,8 +697,10 @@ sealed class Vehicle extends Hitchable {
         return predictedStanleyPositionTurning(period, steeringAngle);
       }
       // Straight
-      final newPoint = stanleyAxlePosition.rhumb
-          .destinationPoint(distance: velocity * period, bearing: bearing);
+      final newPoint = stanleyAxlePosition.rhumb.destinationPoint(
+        distance: velocity * period,
+        bearing: bearing,
+      );
       return (position: newPoint, bearing: bearing);
     }
     return (position: stanleyAxlePosition, bearing: bearing);

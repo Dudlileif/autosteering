@@ -19,20 +19,21 @@ String _$simCoreIsolateStreamHash() =>
 @ProviderFor(simCoreIsolateStream)
 final simCoreIsolateStreamProvider =
     AutoDisposeStreamProvider<Vehicle>.internal(
-  simCoreIsolateStream,
-  name: r'simCoreIsolateStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreIsolateStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      simCoreIsolateStream,
+      name: r'simCoreIsolateStreamProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$simCoreIsolateStreamHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SimCoreIsolateStreamRef = AutoDisposeStreamProviderRef<Vehicle>;
 String _$simCoreVehicleDrivingHash() =>
-    r'33219d6271685c8add546919087ea383c7cfd0b0';
+    r'089e9e7c6957288ceb48a1a954bab796974e1809';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -42,9 +43,10 @@ String _$simCoreVehicleDrivingHash() =>
 final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
   simCoreVehicleDriving,
   name: r'simCoreVehicleDrivingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreVehicleDrivingHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$simCoreVehicleDrivingHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -78,14 +80,15 @@ String _$simCoreIsolatePortHash() =>
 @ProviderFor(_SimCoreIsolatePort)
 final _simCoreIsolatePortProvider =
     NotifierProvider<_SimCoreIsolatePort, SendPort?>.internal(
-  _SimCoreIsolatePort.new,
-  name: r'_simCoreIsolatePortProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreIsolatePortHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      _SimCoreIsolatePort.new,
+      name: r'_simCoreIsolatePortProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$simCoreIsolatePortHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SimCoreIsolatePort = Notifier<SendPort?>;
 // ignore_for_file: type=lint

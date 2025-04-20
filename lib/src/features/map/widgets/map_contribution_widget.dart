@@ -28,10 +28,7 @@ class MapContributionWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final items = <Widget>[
       if (ref.watch(showOSMLayerProvider))
-        const Padding(
-          padding: EdgeInsets.all(2),
-          child: OSMContribution(),
-        ),
+        const Padding(padding: EdgeInsets.all(2), child: OSMContribution()),
       if (ref.watch(enabledCountryLayersProvider).isNotEmpty)
         Padding(
           padding: const EdgeInsets.all(2),
@@ -58,10 +55,7 @@ class MapContributionWidget extends ConsumerWidget {
         ),
       ),
       child: IntrinsicHeight(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: items,
-        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: items),
       ),
     );
   }

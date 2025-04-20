@@ -15,14 +15,15 @@ String _$showNudgingControlsHash() =>
 @ProviderFor(ShowNudgingControls)
 final showNudgingControlsProvider =
     AutoDisposeNotifierProvider<ShowNudgingControls, bool>.internal(
-  ShowNudgingControls.new,
-  name: r'showNudgingControlsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showNudgingControlsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowNudgingControls.new,
+      name: r'showNudgingControlsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showNudgingControlsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowNudgingControls = AutoDisposeNotifier<bool>;
 String _$nudgeStepSizeHash() => r'06bea33605b68c695136fa207893bf5d12e29463';
@@ -34,9 +35,10 @@ String _$nudgeStepSizeHash() => r'06bea33605b68c695136fa207893bf5d12e29463';
 final nudgeStepSizeProvider = NotifierProvider<NudgeStepSize, double>.internal(
   NudgeStepSize.new,
   name: r'nudgeStepSizeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$nudgeStepSizeHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$nudgeStepSizeHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -51,14 +53,15 @@ String _$nudgingControlsUiOffsetHash() =>
 @ProviderFor(NudgingControlsUiOffset)
 final nudgingControlsUiOffsetProvider =
     AutoDisposeNotifierProvider<NudgingControlsUiOffset, Offset>.internal(
-  NudgingControlsUiOffset.new,
-  name: r'nudgingControlsUiOffsetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$nudgingControlsUiOffsetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      NudgingControlsUiOffset.new,
+      name: r'nudgingControlsUiOffsetProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$nudgingControlsUiOffsetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$NudgingControlsUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint

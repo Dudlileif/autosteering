@@ -43,9 +43,10 @@ class MainMap extends ConsumerWidget {
         minZoom: 4,
         maxZoom: 22,
         interactionOptions: InteractionOptions(
-          flags: ref.watch(centerMapOnVehicleProvider)
-              ? InteractiveFlag.pinchZoom | InteractiveFlag.doubleTapZoom
-              : InteractiveFlag.all,
+          flags:
+              ref.watch(centerMapOnVehicleProvider)
+                  ? InteractiveFlag.pinchZoom | InteractiveFlag.doubleTapZoom
+                  : InteractiveFlag.all,
         ),
         onMapEvent: (event) {
           // Force scrolling zoom events to keep position when the map
@@ -75,8 +76,8 @@ class MainMap extends ConsumerWidget {
         initialRotation: switch (ref.watch(alwaysPointNorthProvider)) {
           true => 0,
           false => ref.watch(
-              mainVehicleProvider.select((value) => value.bearing),
-            )
+            mainVehicleProvider.select((value) => value.bearing),
+          ),
         },
         onMapReady: ref.read(mapReadyProvider.notifier).ready,
       ),
@@ -108,12 +109,14 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showSelectablePathLayerProvider))
           SelectablePathLayer(
             highlightSelectedPath: ref.watch(
-              currentABTrackingTypeProvider
-                  .select((value) => value == ABTrackingType.abCurve),
+              currentABTrackingTypeProvider.select(
+                (value) => value == ABTrackingType.abCurve,
+              ),
             ),
             showStraightLine: ref.watch(
-              currentABTrackingTypeProvider
-                  .select((value) => value != ABTrackingType.abCurve),
+              currentABTrackingTypeProvider.select(
+                (value) => value != ABTrackingType.abCurve,
+              ),
             ),
           ),
         if (ref.watch(virtualLedBarTestingProvider))

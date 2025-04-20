@@ -26,15 +26,16 @@ part 'combined_communication_providers.g.dart';
 /// A provider for combining the native network providers that need to be
 /// watched.
 @riverpod
-void _combinedNativeNetwork(Ref ref) => ref
-  ..watch(hardwareCommunicationConfigProvider)
-  ..watch(deviceIPAddressWlanProvider)
-  ..watch(deviceIPAddressAPProvider)
-  ..watch(deviceIPAddressEthernetProvider)
-  ..watch(ntripClientProvider)
-  ..watch(tcpServerProvider)
-  ..watch(ntripDataUsageSessionProvider)
-  ..watch(ntripDataUsageByMonthProvider);
+void _combinedNativeNetwork(Ref ref) =>
+    ref
+      ..watch(hardwareCommunicationConfigProvider)
+      ..watch(deviceIPAddressWlanProvider)
+      ..watch(deviceIPAddressAPProvider)
+      ..watch(deviceIPAddressEthernetProvider)
+      ..watch(ntripClientProvider)
+      ..watch(tcpServerProvider)
+      ..watch(ntripDataUsageSessionProvider)
+      ..watch(ntripDataUsageByMonthProvider);
 
 /// A provider for combining the serial providers that need to be watched.
 @riverpod

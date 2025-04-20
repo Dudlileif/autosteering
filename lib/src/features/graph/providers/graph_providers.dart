@@ -75,12 +75,12 @@ class GraphActiveParameters extends _$GraphActiveParameters {
 
   /// Toggles [parameter] by removing from or adding it to state.
   void toggle(GraphParameter parameter) => Future(() {
-        if (state.contains(parameter)) {
-          remove(parameter);
-        } else {
-          add(parameter);
-        }
-      });
+    if (state.contains(parameter)) {
+      remove(parameter);
+    } else {
+      add(parameter);
+    }
+  });
 
   /// Updates whether [parameter] is in state by [value].
   void updateParameter(GraphParameter parameter, {required bool? value}) =>
@@ -98,8 +98,7 @@ class GraphActiveParameters extends _$GraphActiveParameters {
   bool updateShouldNotify(
     Set<GraphParameter> previous,
     Set<GraphParameter> next,
-  ) =>
-      const SetEquality<GraphParameter>().equals(previous, next);
+  ) => const SetEquality<GraphParameter>().equals(previous, next);
 }
 
 /// A provider for the currently active [GraphData], derived from
@@ -111,82 +110,83 @@ Set<GraphData> graphActiveData(Ref ref) {
     mainVehicleProvider.select(
       (value) => (
         steeringAngleMax: value.steeringAngleMax,
-        hardware: value.steeringHardwareConfig
+        hardware: value.steeringHardwareConfig,
       ),
     ),
   );
-  final graphData = parameters
-      .map(
-        (parameter) => switch (parameter) {
-          GraphParameter.imuBearing => const GraphData(
-              min: 0,
-              max: 360,
-              parameter: GraphParameter.imuBearing,
-            ),
-          GraphParameter.imuPitch => const GraphData(
-              min: -180,
-              max: 180,
-              parameter: GraphParameter.imuPitch,
-            ),
-          GraphParameter.imuRoll => const GraphData(
-              min: -180,
-              max: 180,
-              parameter: GraphParameter.imuRoll,
-            ),
-          GraphParameter.imuLongitudinalCorrection => const GraphData(
-              min: -2,
-              max: 2,
-              parameter: GraphParameter.imuLongitudinalCorrection,
-            ),
-          GraphParameter.imuLateralCorrection => const GraphData(
-              min: -2,
-              max: 2,
-              parameter: GraphParameter.imuLateralCorrection,
-            ),
-          GraphParameter.imuAccelerationX => const GraphData(
-              min: 0,
-              max: 10,
-              parameter: GraphParameter.imuAccelerationX,
-            ),
-          GraphParameter.imuAccelerationY => const GraphData(
-              min: 0,
-              max: 10,
-              parameter: GraphParameter.imuAccelerationY,
-            ),
-          GraphParameter.imuAccelerationZ => const GraphData(
-              min: 0,
-              max: 10,
-              parameter: GraphParameter.imuAccelerationZ,
-            ),
-          GraphParameter.steeringAngle => GraphData(
-              min: -vehicle.steeringAngleMax,
-              max: vehicle.steeringAngleMax,
-              parameter: parameter,
-            ),
-          GraphParameter.steeringAngleTarget => GraphData(
-              min: -vehicle.steeringAngleMax,
-              max: vehicle.steeringAngleMax,
-              parameter: parameter,
-            ),
-          GraphParameter.steeringWas => GraphData(
-              min: vehicle.hardware.wasMin,
-              max: vehicle.hardware.wasMax,
-              parameter: parameter,
-            ),
-          GraphParameter.steeringWasTarget => GraphData(
-              min: vehicle.hardware.wasMin,
-              max: vehicle.hardware.wasMax,
-              parameter: parameter,
-            ),
-          GraphParameter.perpendicularDistance => GraphData(
-              min: -1,
-              max: 1,
-              parameter: parameter,
-            ),
-        },
-      )
-      .nonNulls
-      .toSet();
+  final graphData =
+      parameters
+          .map(
+            (parameter) => switch (parameter) {
+              GraphParameter.imuBearing => const GraphData(
+                min: 0,
+                max: 360,
+                parameter: GraphParameter.imuBearing,
+              ),
+              GraphParameter.imuPitch => const GraphData(
+                min: -180,
+                max: 180,
+                parameter: GraphParameter.imuPitch,
+              ),
+              GraphParameter.imuRoll => const GraphData(
+                min: -180,
+                max: 180,
+                parameter: GraphParameter.imuRoll,
+              ),
+              GraphParameter.imuLongitudinalCorrection => const GraphData(
+                min: -2,
+                max: 2,
+                parameter: GraphParameter.imuLongitudinalCorrection,
+              ),
+              GraphParameter.imuLateralCorrection => const GraphData(
+                min: -2,
+                max: 2,
+                parameter: GraphParameter.imuLateralCorrection,
+              ),
+              GraphParameter.imuAccelerationX => const GraphData(
+                min: 0,
+                max: 10,
+                parameter: GraphParameter.imuAccelerationX,
+              ),
+              GraphParameter.imuAccelerationY => const GraphData(
+                min: 0,
+                max: 10,
+                parameter: GraphParameter.imuAccelerationY,
+              ),
+              GraphParameter.imuAccelerationZ => const GraphData(
+                min: 0,
+                max: 10,
+                parameter: GraphParameter.imuAccelerationZ,
+              ),
+              GraphParameter.steeringAngle => GraphData(
+                min: -vehicle.steeringAngleMax,
+                max: vehicle.steeringAngleMax,
+                parameter: parameter,
+              ),
+              GraphParameter.steeringAngleTarget => GraphData(
+                min: -vehicle.steeringAngleMax,
+                max: vehicle.steeringAngleMax,
+                parameter: parameter,
+              ),
+              GraphParameter.steeringWas => GraphData(
+                min: vehicle.hardware.wasMin,
+                max: vehicle.hardware.wasMax,
+                parameter: parameter,
+              ),
+              GraphParameter.steeringWasTarget => GraphData(
+                min: vehicle.hardware.wasMin,
+                max: vehicle.hardware.wasMax,
+                parameter: parameter,
+              ),
+              GraphParameter.perpendicularDistance => GraphData(
+                min: -1,
+                max: 1,
+                parameter: parameter,
+              ),
+            },
+          )
+          .nonNulls
+          .toSet();
   return graphData;
 }
 
@@ -210,45 +210,55 @@ class GraphValues extends _$GraphValues {
         }
 
         final raw = switch (parameter.parameter) {
-          GraphParameter.imuBearing =>
-            ref.read(mainVehicleProvider.select((value) => value.imu.bearing)),
-          GraphParameter.imuPitch =>
-            ref.read(mainVehicleProvider.select((value) => value.imu.pitch)),
-          GraphParameter.imuRoll =>
-            ref.read(mainVehicleProvider.select((value) => value.imu.roll)),
+          GraphParameter.imuBearing => ref.read(
+            mainVehicleProvider.select((value) => value.imu.bearing),
+          ),
+          GraphParameter.imuPitch => ref.read(
+            mainVehicleProvider.select((value) => value.imu.pitch),
+          ),
+          GraphParameter.imuRoll => ref.read(
+            mainVehicleProvider.select((value) => value.imu.roll),
+          ),
           GraphParameter.imuLongitudinalCorrection => ref.read(
-              mainVehicleProvider
-                  .select((value) => value.antennaPitchLongitudinalOffset),
+            mainVehicleProvider.select(
+              (value) => value.antennaPitchLongitudinalOffset,
             ),
+          ),
           GraphParameter.imuLateralCorrection => ref.read(
-              mainVehicleProvider
-                  .select((value) => value.antennaRollLateralOffset),
+            mainVehicleProvider.select(
+              (value) => value.antennaRollLateralOffset,
             ),
+          ),
           GraphParameter.imuAccelerationX => ref.read(
-              mainVehicleProvider
-                  .select((value) => value.imu.reading.accelerationX),
+            mainVehicleProvider.select(
+              (value) => value.imu.reading.accelerationX,
             ),
+          ),
           GraphParameter.imuAccelerationY => ref.read(
-              mainVehicleProvider
-                  .select((value) => value.imu.reading.accelerationY),
+            mainVehicleProvider.select(
+              (value) => value.imu.reading.accelerationY,
             ),
+          ),
           GraphParameter.imuAccelerationZ => ref.read(
-              mainVehicleProvider
-                  .select((value) => value.imu.reading.accelerationZ),
+            mainVehicleProvider.select(
+              (value) => value.imu.reading.accelerationZ,
             ),
+          ),
           GraphParameter.perpendicularDistance =>
             ref.read(abTrackingPerpendicularDistanceProvider) ??
                 ref.read(pathTrackingPerpendicularDistanceProvider),
           GraphParameter.steeringAngle => ref.read(
-              mainVehicleProvider.select((value) => value.steeringAngle),
-            ),
-          GraphParameter.steeringAngleTarget =>
-            ref.read(vehicleSteeringAngleTargetProvider),
+            mainVehicleProvider.select((value) => value.steeringAngle),
+          ),
+          GraphParameter.steeringAngleTarget => ref.read(
+            vehicleSteeringAngleTargetProvider,
+          ),
           GraphParameter.steeringWas => ref.read(
-              mainVehicleProvider.select((value) => value.was.reading.value),
-            ),
-          GraphParameter.steeringWasTarget =>
-            ref.read(steeringMotorWasTargetProvider),
+            mainVehicleProvider.select((value) => value.was.reading.value),
+          ),
+          GraphParameter.steeringWasTarget => ref.read(
+            steeringMotorWasTargetProvider,
+          ),
         };
         final normalized = parameter.valueNormalized(raw);
         if (values[parameter] != null) {
@@ -286,10 +296,9 @@ class DraggableGraphUiOffset extends _$DraggableGraphUiOffset {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null && next != previous) {
-        ref.read(settingsProvider.notifier).update(
-              SettingsKey.uiDraggableGraphOffset,
-              next.toJson(),
-            );
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.uiDraggableGraphOffset, next.toJson());
       }
     });
 

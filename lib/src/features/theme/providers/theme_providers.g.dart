@@ -35,14 +35,15 @@ String _$activeThemeModeHash() => r'ea842a0d618a46bb40f38dbfe44fb55426150ffe';
 @ProviderFor(ActiveThemeMode)
 final activeThemeModeProvider =
     AutoDisposeNotifierProvider<ActiveThemeMode, ThemeMode>.internal(
-  ActiveThemeMode.new,
-  name: r'activeThemeModeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeThemeModeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ActiveThemeMode.new,
+      name: r'activeThemeModeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$activeThemeModeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ActiveThemeMode = AutoDisposeNotifier<ThemeMode>;
 String _$manufacturerHash() => r'672980273f9dd5345c817f6bda9fc47dd5aacd5f';
@@ -53,13 +54,15 @@ String _$manufacturerHash() => r'672980273f9dd5345c817f6bda9fc47dd5aacd5f';
 @ProviderFor(Manufacturer)
 final manufacturerProvider =
     AutoDisposeNotifierProvider<Manufacturer, ManufacturerColors>.internal(
-  Manufacturer.new,
-  name: r'manufacturerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$manufacturerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      Manufacturer.new,
+      name: r'manufacturerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$manufacturerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$Manufacturer = AutoDisposeNotifier<ManufacturerColors>;
 String _$colorSchemeInheritFromVehicleHash() =>
@@ -72,14 +75,15 @@ String _$colorSchemeInheritFromVehicleHash() =>
 @ProviderFor(ColorSchemeInheritFromVehicle)
 final colorSchemeInheritFromVehicleProvider =
     AutoDisposeNotifierProvider<ColorSchemeInheritFromVehicle, bool>.internal(
-  ColorSchemeInheritFromVehicle.new,
-  name: r'colorSchemeInheritFromVehicleProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$colorSchemeInheritFromVehicleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ColorSchemeInheritFromVehicle.new,
+      name: r'colorSchemeInheritFromVehicleProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$colorSchemeInheritFromVehicleHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ColorSchemeInheritFromVehicle = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint

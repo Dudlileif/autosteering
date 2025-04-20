@@ -90,10 +90,9 @@ class ImuConfiguratorUiOffset extends _$ImuConfiguratorUiOffset {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null && next != previous) {
-        ref.read(settingsProvider.notifier).update(
-              SettingsKey.uiImuConfiguratorOffset,
-              next.toJson(),
-            );
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.uiImuConfiguratorOffset, next.toJson());
       }
     });
 

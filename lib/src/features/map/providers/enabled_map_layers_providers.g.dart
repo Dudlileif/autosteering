@@ -15,9 +15,10 @@ String _$showCountryLayersHash() => r'693e1e9787f292cdb0dece26cdfa8015415ed2a8';
 final showCountryLayersProvider = AutoDisposeProvider<bool>.internal(
   showCountryLayers,
   name: r'showCountryLayersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showCountryLayersHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showCountryLayersHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -35,9 +36,10 @@ String _$showSentinelLayersHash() =>
 final showSentinelLayersProvider = AutoDisposeProvider<bool>.internal(
   showSentinelLayers,
   name: r'showSentinelLayersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showSentinelLayersHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showSentinelLayersHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -55,9 +57,10 @@ String _$showFinishedPathLayerHash() =>
 final showFinishedPathLayerProvider = AutoDisposeProvider<bool>.internal(
   showFinishedPathLayer,
   name: r'showFinishedPathLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showFinishedPathLayerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showFinishedPathLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -75,9 +78,10 @@ String _$showPathRecordingLayerHash() =>
 final showPathRecordingLayerProvider = AutoDisposeProvider<bool>.internal(
   showPathRecordingLayer,
   name: r'showPathRecordingLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showPathRecordingLayerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showPathRecordingLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -95,9 +99,10 @@ String _$showEditablePathLayerHash() =>
 final showEditablePathLayerProvider = AutoDisposeProvider<bool>.internal(
   showEditablePathLayer,
   name: r'showEditablePathLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showEditablePathLayerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showEditablePathLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -115,9 +120,10 @@ String _$showVehicleDebugLayerHash() =>
 final showVehicleDebugLayerProvider = AutoDisposeProvider<bool>.internal(
   showVehicleDebugLayer,
   name: r'showVehicleDebugLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showVehicleDebugLayerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showVehicleDebugLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -135,9 +141,10 @@ String _$showDubinsPathDebugLayerHash() =>
 final showDubinsPathDebugLayerProvider = AutoDisposeProvider<bool>.internal(
   showDubinsPathDebugLayer,
   name: r'showDubinsPathDebugLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showDubinsPathDebugLayerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showDubinsPathDebugLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -155,9 +162,10 @@ String _$showPathTrackingLayerHash() =>
 final showPathTrackingLayerProvider = AutoDisposeProvider<bool>.internal(
   showPathTrackingLayer,
   name: r'showPathTrackingLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showPathTrackingLayerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showPathTrackingLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -174,9 +182,10 @@ String _$showFieldLayerHash() => r'1548f19a2b5051fa1fed449ccb0033d09f71f69b';
 final showFieldLayerProvider = AutoDisposeProvider<bool>.internal(
   showFieldLayer,
   name: r'showFieldLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showFieldLayerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showFieldLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -194,9 +203,10 @@ String _$showEquipmentDebugLayerHash() =>
 final showEquipmentDebugLayerProvider = AutoDisposeProvider<bool>.internal(
   showEquipmentDebugLayer,
   name: r'showEquipmentDebugLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showEquipmentDebugLayerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showEquipmentDebugLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -214,9 +224,10 @@ String _$showABTrackingLayerHash() =>
 final showABTrackingLayerProvider = AutoDisposeProvider<bool>.internal(
   showABTrackingLayer,
   name: r'showABTrackingLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showABTrackingLayerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showABTrackingLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -234,9 +245,10 @@ String _$showSelectablePathLayerHash() =>
 final showSelectablePathLayerProvider = AutoDisposeProvider<bool>.internal(
   showSelectablePathLayer,
   name: r'showSelectablePathLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showSelectablePathLayerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showSelectablePathLayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -252,13 +264,15 @@ String _$showOSMLayerHash() => r'b323c7740a070ca00572ab48ed973460a5117698';
 @ProviderFor(ShowOSMLayer)
 final showOSMLayerProvider =
     AutoDisposeNotifierProvider<ShowOSMLayer, bool>.internal(
-  ShowOSMLayer.new,
-  name: r'showOSMLayerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$showOSMLayerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowOSMLayer.new,
+      name: r'showOSMLayerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showOSMLayerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowOSMLayer = AutoDisposeNotifier<bool>;
 String _$showVehicleDrawingLayerHash() =>
@@ -270,14 +284,15 @@ String _$showVehicleDrawingLayerHash() =>
 @ProviderFor(ShowVehicleDrawingLayer)
 final showVehicleDrawingLayerProvider =
     AutoDisposeNotifierProvider<ShowVehicleDrawingLayer, bool>.internal(
-  ShowVehicleDrawingLayer.new,
-  name: r'showVehicleDrawingLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showVehicleDrawingLayerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowVehicleDrawingLayer.new,
+      name: r'showVehicleDrawingLayerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showVehicleDrawingLayerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowVehicleDrawingLayer = AutoDisposeNotifier<bool>;
 String _$showEquipmentDrawingLayerHash() =>
@@ -289,14 +304,15 @@ String _$showEquipmentDrawingLayerHash() =>
 @ProviderFor(ShowEquipmentDrawingLayer)
 final showEquipmentDrawingLayerProvider =
     AutoDisposeNotifierProvider<ShowEquipmentDrawingLayer, bool>.internal(
-  ShowEquipmentDrawingLayer.new,
-  name: r'showEquipmentDrawingLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showEquipmentDrawingLayerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowEquipmentDrawingLayer.new,
+      name: r'showEquipmentDrawingLayerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showEquipmentDrawingLayerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowEquipmentDrawingLayer = AutoDisposeNotifier<bool>;
 String _$showGridLayerHash() => r'de914d52a808bb170bc84287961f3cfcd95a905e';
@@ -307,14 +323,15 @@ String _$showGridLayerHash() => r'de914d52a808bb170bc84287961f3cfcd95a905e';
 @ProviderFor(ShowGridLayer)
 final showGridLayerProvider =
     AutoDisposeNotifierProvider<ShowGridLayer, bool>.internal(
-  ShowGridLayer.new,
-  name: r'showGridLayerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showGridLayerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowGridLayer.new,
+      name: r'showGridLayerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showGridLayerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowGridLayer = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint

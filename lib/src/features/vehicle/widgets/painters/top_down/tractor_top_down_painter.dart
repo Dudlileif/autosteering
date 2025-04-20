@@ -60,13 +60,12 @@ class _TractorTopDownPainter extends CustomPainter {
     return (x: scaleX, y: scaleY, min: scaleX < scaleY ? scaleX : scaleY);
   }
 
-  void drawSteeringAxle(
-    Canvas canvas, {
-    bool withStroke = true,
-  }) {
+  void drawSteeringAxle(Canvas canvas, {bool withStroke = true}) {
     final rect = Rect.fromCenter(
-      center:
-          Offset(sourceWidth / 2, (steeringAxleOffset ?? 0.15) * sourceHeight),
+      center: Offset(
+        sourceWidth / 2,
+        (steeringAxleOffset ?? 0.15) * sourceHeight,
+      ),
       width: (steeringAxleWidth ?? 0.7) * sourceWidth,
       height: 6,
     );

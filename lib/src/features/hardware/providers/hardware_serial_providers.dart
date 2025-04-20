@@ -38,14 +38,7 @@ Future<List<SerialPort>> availableSerialPorts(Ref ref) async =>
 @Riverpod(keepAlive: true)
 class HardwareSerialBaudRate extends _$HardwareSerialBaudRate {
   /// The available baud rates.
-  static const rates = [
-    38400,
-    57600,
-    115200,
-    230400,
-    460800,
-    921600,
-  ];
+  static const rates = [38400, 57600, 115200, 230400, 460800, 921600];
 
   @override
   int build() {
@@ -73,8 +66,9 @@ class HardwareSerialBaudRate extends _$HardwareSerialBaudRate {
 class HardwareSerial extends _$HardwareSerial {
   @override
   SerialPort? build() {
-    final config = SerialPortConfig()
-      ..baudRate = ref.watch(hardwareSerialBaudRateProvider);
+    final config =
+        SerialPortConfig()
+          ..baudRate = ref.watch(hardwareSerialBaudRateProvider);
 
     ref.onDispose(() async {
       ref.invalidate(hardwareSerialAliveProvider);
@@ -170,10 +164,7 @@ class HardwareSerialAlive extends _$HardwareSerialAlive {
     listenSelf((previous, next) {
       if (next) {
         _resetTimer?.cancel();
-        _resetTimer = Timer(
-          const Duration(seconds: 1),
-          ref.invalidateSelf,
-        );
+        _resetTimer = Timer(const Duration(seconds: 1), ref.invalidateSelf);
       } else if (previous != null && previous != next) {
         Logger.instance.i('Hardware serial data not being received.');
       }

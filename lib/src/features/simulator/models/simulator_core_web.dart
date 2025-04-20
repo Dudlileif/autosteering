@@ -32,15 +32,17 @@ class SimulatorCore {
   /// This takes in the stream [incomingEvents] to get events/messages
   /// from the UI.
   static Stream<
-      ({
-        Vehicle? vehicle,
-        num velocity,
-        num bearing,
-        num distance,
-        PathTracking? pathTracking,
-        ABTracking? abTracking,
-        AutosteeringState autosteeringState,
-      })> webWorker(
+    ({
+      Vehicle? vehicle,
+      num velocity,
+      num bearing,
+      num distance,
+      PathTracking? pathTracking,
+      ABTracking? abTracking,
+      AutosteeringState autosteeringState,
+    })
+  >
+  webWorker(
     Stream<dynamic> incomingEvents,
     StreamController<dynamic> updateMainStream,
   ) {
@@ -51,33 +53,33 @@ class SimulatorCore {
 
     final messageDecoder = MessageDecoder();
 
-    final streamController = StreamController<
-        ({
-          Vehicle? vehicle,
-          num velocity,
-          num bearing,
-          num distance,
-          PathTracking? pathTracking,
-          ABTracking? abTracking,
-          AutosteeringState autosteeringState,
-        })>();
+    final streamController =
+        StreamController<
+          ({
+            Vehicle? vehicle,
+            num velocity,
+            num bearing,
+            num distance,
+            PathTracking? pathTracking,
+            ABTracking? abTracking,
+            AutosteeringState autosteeringState,
+          })
+        >();
 
     void simulationStep() {
       state.update();
       if (streamController.hasListener) {
         // If the state has changed we add the new state to the stream.
         if (state.didChange) {
-          streamController.add(
-            (
-              vehicle: state.vehicle,
-              velocity: state.gaugeVelocity,
-              bearing: state.gaugeBearing,
-              distance: state.distance,
-              pathTracking: state.pathTracking,
-              abTracking: state.abTracking,
-              autosteeringState: state.autosteeringState,
-            ),
-          );
+          streamController.add((
+            vehicle: state.vehicle,
+            velocity: state.gaugeVelocity,
+            bearing: state.gaugeBearing,
+            distance: state.distance,
+            pathTracking: state.pathTracking,
+            abTracking: state.abTracking,
+            autosteeringState: state.autosteeringState,
+          ));
         }
       }
     }
@@ -98,17 +100,15 @@ class SimulatorCore {
     incomingEvents.listen((message) async {
       if (message is LogReplay) {
         logReplay = message;
-        replayListener = logReplay?.replay.listen(
-          (record) {
-            SimulatorCoreBase.replayListener(
-              record.message,
-              messageDecoder,
-              state,
-              updateMainStream,
-            );
-            updateMainStream.add((logReplayIndex: record.index));
-          },
-        )?..pause();
+        replayListener = logReplay?.replay.listen((record) {
+          SimulatorCoreBase.replayListener(
+            record.message,
+            messageDecoder,
+            state,
+            updateMainStream,
+          );
+          updateMainStream.add((logReplayIndex: record.index));
+        })?..pause();
       } else if (message is ({bool replayPause})) {
         replayListener?.pause();
       } else if (message is ({bool replayResume})) {
@@ -117,17 +117,15 @@ class SimulatorCore {
         await replayListener?.cancel();
       } else if (message is ({bool replayRestart})) {
         await replayListener?.cancel();
-        replayListener = logReplay?.replay.listen(
-          (record) {
-            SimulatorCoreBase.replayListener(
-              record.message,
-              messageDecoder,
-              state,
-              updateMainStream,
-            );
-            updateMainStream.add((logReplayIndex: record.index));
-          },
-        );
+        replayListener = logReplay?.replay.listen((record) {
+          SimulatorCoreBase.replayListener(
+            record.message,
+            messageDecoder,
+            state,
+            updateMainStream,
+          );
+          updateMainStream.add((logReplayIndex: record.index));
+        });
       } else if (message is ({bool replayLoop})) {
         logReplay?.loop = message.replayLoop;
       } else if (message is ({int replayScrubIndex})) {

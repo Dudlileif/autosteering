@@ -83,36 +83,22 @@ class _MiniMapAlwaysNorthButton extends ConsumerWidget {
         ),
         child: const Stack(
           children: [
-            Icon(
-              Icons.navigation_outlined,
-              color: Colors.red,
-            ),
+            Icon(Icons.navigation_outlined, color: Colors.red),
             Positioned(
               left: 4,
               top: 4,
-              child: Icon(
-                Icons.navigation,
-                size: 16,
-                color: Colors.white,
-              ),
+              child: Icon(Icons.navigation, size: 16, color: Colors.white),
             ),
           ],
         ),
       ),
       selectedIcon: const Stack(
         children: [
-          Icon(
-            Icons.navigation_outlined,
-            color: Colors.white,
-          ),
+          Icon(Icons.navigation_outlined, color: Colors.white),
           Positioned(
             left: 4,
             top: 4,
-            child: Icon(
-              Icons.navigation,
-              size: 16,
-              color: Colors.red,
-            ),
+            child: Icon(Icons.navigation, size: 16, color: Colors.red),
           ),
         ],
       ),
@@ -129,26 +115,29 @@ class _MiniMapView extends ConsumerWidget {
     final mapController = ref.watch(miniMapControllerProvider);
 
     ref.listen(
-        mainVehicleProvider.select(
-          (value) => (position: value.position, bearing: value.bearing),
-        ), (previous, next) {
-      if (!ref.watch(miniMapLockToFieldProvider) ||
-          ref.watch(activeFieldProvider) == null) {
-        mapController.moveAndRotate(
-          next.position.latLng,
-          mapController.camera.zoom,
-          -next.bearing,
-        );
-      } else {
-        mapController.rotate(-next.bearing);
-      }
-    });
+      mainVehicleProvider.select(
+        (value) => (position: value.position, bearing: value.bearing),
+      ),
+      (previous, next) {
+        if (!ref.watch(miniMapLockToFieldProvider) ||
+            ref.watch(activeFieldProvider) == null) {
+          mapController.moveAndRotate(
+            next.position.latLng,
+            mapController.camera.zoom,
+            -next.bearing,
+          );
+        } else {
+          mapController.rotate(-next.bearing);
+        }
+      },
+    );
     return FlutterMap(
       key: const Key('Field mini map'),
       mapController: mapController,
       options: MapOptions(
-        backgroundColor:
-            Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.65),
+        backgroundColor: Theme.of(
+          context,
+        ).scaffoldBackgroundColor.withValues(alpha: 0.65),
         interactionOptions: const InteractionOptions(
           flags: InteractiveFlag.none,
         ),
@@ -162,10 +151,7 @@ class _MiniMapView extends ConsumerWidget {
         onMapReady: ref.read(miniMapReadyProvider.notifier).ready,
         onMapEvent: (event) {
           if (event is MapEventScrollWheelZoom) {
-            mapController.move(
-              event.camera.center,
-              event.camera.zoom,
-            );
+            mapController.move(event.camera.center, event.camera.zoom);
           }
 
           // Force map to not allow rotation when it should always
@@ -195,15 +181,14 @@ class _MiniMapView extends ConsumerWidget {
               ),
               child: Transform.rotate(
                 angle: ref.watch(
-                  mainVehicleProvider
-                      .select((value) => value.bearing.toRadians()),
+                  mainVehicleProvider.select(
+                    (value) => value.bearing.toRadians(),
+                  ),
                 ),
                 child: const Icon(
                   Icons.navigation,
                   color: Colors.white,
-                  shadows: [
-                    Shadow(offset: Offset(2, 2), blurRadius: 0.5),
-                  ],
+                  shadows: [Shadow(offset: Offset(2, 2), blurRadius: 0.5)],
                 ),
               ),
             ),

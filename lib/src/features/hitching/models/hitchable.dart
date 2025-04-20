@@ -69,8 +69,8 @@ abstract class Hitchable {
     this.hitchRearTowbarChild,
     String? uuid,
     DateTime? lastUsed,
-  })  : uuid = uuid ?? const Uuid().v4(),
-        lastUsed = lastUsed ?? DateTime.now();
+  }) : uuid = uuid ?? const Uuid().v4(),
+       lastUsed = lastUsed ?? DateTime.now();
 
   /// A unique identifier for every [Hitchable].
   final String uuid;
@@ -135,10 +135,7 @@ abstract class Hitchable {
   }
 
   /// Attach a [child] hitchable (equipment) to this at the given [position].
-  void attachChild(
-    Hitchable child, [
-    Hitch position = Hitch.rearFixed,
-  ]) {
+  void attachChild(Hitchable child, [Hitch position = Hitch.rearFixed]) {
     child.runFunctionRecursively((hitchable) => hitchable.bearing = bearing);
     var childToAttach = child;
 
@@ -149,9 +146,10 @@ abstract class Hitchable {
       final newSections = childToAttach.sections;
       for (final (index, section) in newSections.indexed) {
         newSections[index] = section.copyWith(
-          active: uuidAlreadyAttached.sections
-              .firstWhereOrNull((element) => element.index == section.index)
-              ?.active,
+          active:
+              uuidAlreadyAttached.sections
+                  .firstWhereOrNull((element) => element.index == section.index)
+                  ?.active,
         );
       }
 
@@ -198,9 +196,10 @@ abstract class Hitchable {
       final newSections = childToAttach.sections;
       for (final (index, section) in newSections.indexed) {
         newSections[index] = section.copyWith(
-          active: uuidAlreadyAttached.sections
-              .firstWhereOrNull((element) => element.index == section.index)
-              ?.active,
+          active:
+              uuidAlreadyAttached.sections
+                  .firstWhereOrNull((element) => element.index == section.index)
+                  ?.active,
         );
       }
 
@@ -290,26 +289,26 @@ abstract class Hitchable {
 
   /// A list of the directly attached children.
   List<Hitchable> get hitchChildren => [
-        if (hitchFrontFixedChild != null) hitchFrontFixedChild!,
-        if (hitchRearFixedChild != null) hitchRearFixedChild!,
-        if (hitchRearTowbarChild != null) hitchRearTowbarChild!,
-      ];
+    if (hitchFrontFixedChild != null) hitchFrontFixedChild!,
+    if (hitchRearFixedChild != null) hitchRearFixedChild!,
+    if (hitchRearTowbarChild != null) hitchRearTowbarChild!,
+  ];
 
   /// A list of the all the recursively attached children.
   List<Hitchable> get hitchChildrenRecursively => [
-        if (hitchFrontFixedChild != null) ...[
-          hitchFrontFixedChild!,
-          ...hitchFrontFixedChild!.hitchChildrenRecursively,
-        ],
-        if (hitchRearFixedChild != null) ...[
-          hitchRearFixedChild!,
-          ...hitchRearFixedChild!.hitchChildrenRecursively,
-        ],
-        if (hitchRearTowbarChild != null) ...[
-          hitchRearTowbarChild!,
-          ...hitchRearTowbarChild!.hitchChildrenRecursively,
-        ],
-      ];
+    if (hitchFrontFixedChild != null) ...[
+      hitchFrontFixedChild!,
+      ...hitchFrontFixedChild!.hitchChildrenRecursively,
+    ],
+    if (hitchRearFixedChild != null) ...[
+      hitchRearFixedChild!,
+      ...hitchRearFixedChild!.hitchChildrenRecursively,
+    ],
+    if (hitchRearTowbarChild != null) ...[
+      hitchRearTowbarChild!,
+      ...hitchRearTowbarChild!.hitchChildrenRecursively,
+    ],
+  ];
 
   /// The position of the front fixed hitch point, if there is one.
   Geographic? get hitchFrontFixedPoint;
@@ -321,7 +320,8 @@ abstract class Hitchable {
   Geographic? get hitchRearTowbarPoint;
 
   /// The hitch positions of this that are not null.
-  Iterable<Geographic> get hitchPoints => [
+  Iterable<Geographic> get hitchPoints =>
+      [
         hitchFrontFixedPoint,
         hitchRearFixedPoint,
         hitchRearTowbarPoint,
@@ -329,9 +329,9 @@ abstract class Hitchable {
 
   /// The number of children recursively attached to this.
   int get numAttachedChildren => hitchChildren.fold(
-        hitchChildren.length,
-        (previousValue, element) => previousValue + element.numAttachedChildren,
-      );
+    hitchChildren.length,
+    (previousValue, element) => previousValue + element.numAttachedChildren,
+  );
 
   /// Update the children connected to this.
   void updateChildren(double period) {

@@ -15,14 +15,15 @@ String _$debugEquipmentTurningHash() =>
 @ProviderFor(DebugEquipmentTurning)
 final debugEquipmentTurningProvider =
     AutoDisposeNotifierProvider<DebugEquipmentTurning, bool>.internal(
-  DebugEquipmentTurning.new,
-  name: r'debugEquipmentTurningProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugEquipmentTurningHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DebugEquipmentTurning.new,
+      name: r'debugEquipmentTurningProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$debugEquipmentTurningHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DebugEquipmentTurning = AutoDisposeNotifier<bool>;
 String _$debugEquipmentTrajectoryHash() =>
@@ -34,14 +35,15 @@ String _$debugEquipmentTrajectoryHash() =>
 @ProviderFor(DebugEquipmentTrajectory)
 final debugEquipmentTrajectoryProvider =
     AutoDisposeNotifierProvider<DebugEquipmentTrajectory, bool>.internal(
-  DebugEquipmentTrajectory.new,
-  name: r'debugEquipmentTrajectoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugEquipmentTrajectoryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DebugEquipmentTrajectory.new,
+      name: r'debugEquipmentTrajectoryProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$debugEquipmentTrajectoryHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DebugEquipmentTrajectory = AutoDisposeNotifier<bool>;
 String _$debugEquipmentTravelledPathHash() =>
@@ -53,14 +55,15 @@ String _$debugEquipmentTravelledPathHash() =>
 @ProviderFor(DebugEquipmentTravelledPath)
 final debugEquipmentTravelledPathProvider =
     AutoDisposeNotifierProvider<DebugEquipmentTravelledPath, bool>.internal(
-  DebugEquipmentTravelledPath.new,
-  name: r'debugEquipmentTravelledPathProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugEquipmentTravelledPathHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DebugEquipmentTravelledPath.new,
+      name: r'debugEquipmentTravelledPathProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$debugEquipmentTravelledPathHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DebugEquipmentTravelledPath = AutoDisposeNotifier<bool>;
 String _$debugEquipmentTravelledPathSizeHash() =>
@@ -72,14 +75,15 @@ String _$debugEquipmentTravelledPathSizeHash() =>
 @ProviderFor(DebugEquipmentTravelledPathSize)
 final debugEquipmentTravelledPathSizeProvider =
     NotifierProvider<DebugEquipmentTravelledPathSize, int>.internal(
-  DebugEquipmentTravelledPathSize.new,
-  name: r'debugEquipmentTravelledPathSizeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugEquipmentTravelledPathSizeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DebugEquipmentTravelledPathSize.new,
+      name: r'debugEquipmentTravelledPathSizeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$debugEquipmentTravelledPathSizeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DebugEquipmentTravelledPathSize = Notifier<int>;
 String _$debugEquipmentTravelledPathListHash() =>
@@ -91,18 +95,21 @@ String _$debugEquipmentTravelledPathListHash() =>
 /// Copied from [DebugEquipmentTravelledPathList].
 @ProviderFor(DebugEquipmentTravelledPathList)
 final debugEquipmentTravelledPathListProvider = AutoDisposeNotifierProvider<
-    DebugEquipmentTravelledPathList, Map<String, List<LatLng>>>.internal(
+  DebugEquipmentTravelledPathList,
+  Map<String, List<LatLng>>
+>.internal(
   DebugEquipmentTravelledPathList.new,
   name: r'debugEquipmentTravelledPathListProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugEquipmentTravelledPathListHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$debugEquipmentTravelledPathListHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugEquipmentTravelledPathList
-    = AutoDisposeNotifier<Map<String, List<LatLng>>>;
+typedef _$DebugEquipmentTravelledPathList =
+    AutoDisposeNotifier<Map<String, List<LatLng>>>;
 String _$debugEquipmentHitchesHash() =>
     r'c5cd8ff4bacc9eaae3279a59e8aabdc0788a0900';
 
@@ -112,14 +119,15 @@ String _$debugEquipmentHitchesHash() =>
 @ProviderFor(DebugEquipmentHitches)
 final debugEquipmentHitchesProvider =
     AutoDisposeNotifierProvider<DebugEquipmentHitches, bool>.internal(
-  DebugEquipmentHitches.new,
-  name: r'debugEquipmentHitchesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugEquipmentHitchesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DebugEquipmentHitches.new,
+      name: r'debugEquipmentHitchesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$debugEquipmentHitchesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DebugEquipmentHitches = AutoDisposeNotifier<bool>;
 String _$debugEquipmentSectionsHash() =>
@@ -131,14 +139,15 @@ String _$debugEquipmentSectionsHash() =>
 @ProviderFor(DebugEquipmentSections)
 final debugEquipmentSectionsProvider =
     AutoDisposeNotifierProvider<DebugEquipmentSections, bool>.internal(
-  DebugEquipmentSections.new,
-  name: r'debugEquipmentSectionsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugEquipmentSectionsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DebugEquipmentSections.new,
+      name: r'debugEquipmentSectionsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$debugEquipmentSectionsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DebugEquipmentSections = AutoDisposeNotifier<bool>;
 String _$debugEquipmentTrajectorySecondsHash() =>
@@ -150,14 +159,15 @@ String _$debugEquipmentTrajectorySecondsHash() =>
 @ProviderFor(DebugEquipmentTrajectorySeconds)
 final debugEquipmentTrajectorySecondsProvider =
     NotifierProvider<DebugEquipmentTrajectorySeconds, double>.internal(
-  DebugEquipmentTrajectorySeconds.new,
-  name: r'debugEquipmentTrajectorySecondsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugEquipmentTrajectorySecondsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DebugEquipmentTrajectorySeconds.new,
+      name: r'debugEquipmentTrajectorySecondsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$debugEquipmentTrajectorySecondsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DebugEquipmentTrajectorySeconds = Notifier<double>;
 String _$debugEquipmentTrajectoryMinLengthHash() =>
@@ -169,14 +179,15 @@ String _$debugEquipmentTrajectoryMinLengthHash() =>
 @ProviderFor(DebugEquipmentTrajectoryMinLength)
 final debugEquipmentTrajectoryMinLengthProvider =
     NotifierProvider<DebugEquipmentTrajectoryMinLength, double>.internal(
-  DebugEquipmentTrajectoryMinLength.new,
-  name: r'debugEquipmentTrajectoryMinLengthProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugEquipmentTrajectoryMinLengthHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DebugEquipmentTrajectoryMinLength.new,
+      name: r'debugEquipmentTrajectoryMinLengthProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$debugEquipmentTrajectoryMinLengthHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DebugEquipmentTrajectoryMinLength = Notifier<double>;
 // ignore_for_file: type=lint

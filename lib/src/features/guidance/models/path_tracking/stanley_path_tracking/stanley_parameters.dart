@@ -24,7 +24,7 @@ part 'stanley_parameters.g.dart';
 /// A class for encompassing the gains for [StanleyPathTracking].
 
 @freezed
-class StanleyParameters with _$StanleyParameters {
+sealed class StanleyParameters with _$StanleyParameters {
   /// A class for encompassing the gains for [StanleyPathTracking].
   ///
   /// [crossDistanceGain] is the cross distance gain gain.

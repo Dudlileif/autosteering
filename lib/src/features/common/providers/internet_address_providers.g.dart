@@ -52,21 +52,15 @@ class ValidInternetAddressFamily extends Family<AsyncValue<bool>> {
   /// has a reachable IP address attached to it.
   ///
   /// Copied from [validInternetAddress].
-  ValidInternetAddressProvider call(
-    String? address,
-  ) {
-    return ValidInternetAddressProvider(
-      address,
-    );
+  ValidInternetAddressProvider call(String? address) {
+    return ValidInternetAddressProvider(address);
   }
 
   @override
   ValidInternetAddressProvider getProviderOverride(
     covariant ValidInternetAddressProvider provider,
   ) {
-    return call(
-      provider.address,
-    );
+    return call(provider.address);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -93,24 +87,20 @@ class ValidInternetAddressProvider extends AutoDisposeFutureProvider<bool> {
   /// has a reachable IP address attached to it.
   ///
   /// Copied from [validInternetAddress].
-  ValidInternetAddressProvider(
-    String? address,
-  ) : this._internal(
-          (ref) => validInternetAddress(
-            ref as ValidInternetAddressRef,
-            address,
-          ),
-          from: validInternetAddressProvider,
-          name: r'validInternetAddressProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$validInternetAddressHash,
-          dependencies: ValidInternetAddressFamily._dependencies,
-          allTransitiveDependencies:
-              ValidInternetAddressFamily._allTransitiveDependencies,
-          address: address,
-        );
+  ValidInternetAddressProvider(String? address)
+    : this._internal(
+        (ref) => validInternetAddress(ref as ValidInternetAddressRef, address),
+        from: validInternetAddressProvider,
+        name: r'validInternetAddressProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$validInternetAddressHash,
+        dependencies: ValidInternetAddressFamily._dependencies,
+        allTransitiveDependencies:
+            ValidInternetAddressFamily._allTransitiveDependencies,
+        address: address,
+      );
 
   ValidInternetAddressProvider._internal(
     super._createNotifier, {
@@ -176,5 +166,6 @@ class _ValidInternetAddressProviderElement
   @override
   String? get address => (origin as ValidInternetAddressProvider).address;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

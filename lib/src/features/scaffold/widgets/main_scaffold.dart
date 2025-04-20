@@ -50,43 +50,44 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
           showDialog<void>(
             barrierDismissible: false,
             context: context,
-            builder: (context) => SimpleDialog(
-              title: Consumer(
-                builder: (context, ref, child) {
-                  final value = ref.watch(exportProgressProvider);
-                  return Text(
-                    value == 0 ? 'Preparing export...' : 'Exporting...',
-                  );
-                },
-              ),
-              contentPadding: const EdgeInsets.only(
-                left: 24,
-                top: 12,
-                right: 24,
-                bottom: 16,
-              ),
-              children: [
-                Consumer(
-                  builder: (context, ref, child) {
-                    final value = ref.watch(exportProgressProvider);
-                    if (value == null) {
-                      exportInProgress = false;
-                      Navigator.of(context).pop();
-                    }
-                    return Column(
-                      children: [
-                        SizedBox.square(
-                          dimension: 50,
-                          child: CircularProgressIndicator(
-                            value: value == 0 ? null : value,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+            builder:
+                (context) => SimpleDialog(
+                  title: Consumer(
+                    builder: (context, ref, child) {
+                      final value = ref.watch(exportProgressProvider);
+                      return Text(
+                        value == 0 ? 'Preparing export...' : 'Exporting...',
+                      );
+                    },
+                  ),
+                  contentPadding: const EdgeInsets.only(
+                    left: 24,
+                    top: 12,
+                    right: 24,
+                    bottom: 16,
+                  ),
+                  children: [
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final value = ref.watch(exportProgressProvider);
+                        if (value == null) {
+                          exportInProgress = false;
+                          Navigator.of(context).pop();
+                        }
+                        return Column(
+                          children: [
+                            SizedBox.square(
+                              dimension: 50,
+                              child: CircularProgressIndicator(
+                                value: value == 0 ? null : value,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
           );
         }
       })
@@ -96,43 +97,44 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
           showDialog<void>(
             barrierDismissible: false,
             context: context,
-            builder: (context) => SimpleDialog(
-              title: Consumer(
-                builder: (context, ref, child) {
-                  final value = ref.watch(importProgressProvider);
-                  return Text(
-                    value == 0 ? 'Preparing import...' : 'Importing...',
-                  );
-                },
-              ),
-              contentPadding: const EdgeInsets.only(
-                left: 24,
-                top: 12,
-                right: 24,
-                bottom: 16,
-              ),
-              children: [
-                Consumer(
-                  builder: (context, ref, child) {
-                    final value = ref.watch(importProgressProvider);
-                    if (value == null) {
-                      importInProgress = false;
-                      Navigator.of(context).pop();
-                    }
-                    return Column(
-                      children: [
-                        SizedBox.square(
-                          dimension: 50,
-                          child: CircularProgressIndicator(
-                            value: value == 0 ? null : value,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+            builder:
+                (context) => SimpleDialog(
+                  title: Consumer(
+                    builder: (context, ref, child) {
+                      final value = ref.watch(importProgressProvider);
+                      return Text(
+                        value == 0 ? 'Preparing import...' : 'Importing...',
+                      );
+                    },
+                  ),
+                  contentPadding: const EdgeInsets.only(
+                    left: 24,
+                    top: 12,
+                    right: 24,
+                    bottom: 16,
+                  ),
+                  children: [
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final value = ref.watch(importProgressProvider);
+                        if (value == null) {
+                          importInProgress = false;
+                          Navigator.of(context).pop();
+                        }
+                        return Column(
+                          children: [
+                            SizedBox.square(
+                              dimension: 50,
+                              child: CircularProgressIndicator(
+                                value: value == 0 ? null : value,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
           );
         }
       });
@@ -141,37 +143,37 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         elevation: 20,
         scrolledUnderElevation: 20,
         title: LayoutBuilder(
-          builder: (context, constraints) =>
-              switch (constraints.maxWidth < 300) {
-            true => MenuBar(
-                children: [
-                  MenuButtonWithChildren(
-                    text: 'Menu',
-                    icon: Icons.menu,
-                    menuChildren: [
-                      const SettingsMenu(),
-                      const WorkSessionMenu(),
-                      const FieldMenu(),
-                      const GuidanceMenu(),
-                      const VehicleMenu(),
-                      const EquipmentMenu(),
-                      if (Device.isNative) const HardwareMenu(),
-                    ],
-                  ),
-                ],
-              ),
-            false => MenuBar(
-                children: [
-                  const SettingsMenu(),
-                  const WorkSessionMenu(),
-                  const FieldMenu(),
-                  const GuidanceMenu(),
-                  const VehicleMenu(),
-                  const EquipmentMenu(),
-                  if (Device.isNative) const HardwareMenu(),
-                ],
-              )
-          },
+          builder:
+              (context, constraints) => switch (constraints.maxWidth < 300) {
+                true => MenuBar(
+                  children: [
+                    MenuButtonWithChildren(
+                      text: 'Menu',
+                      icon: Icons.menu,
+                      menuChildren: [
+                        const SettingsMenu(),
+                        const WorkSessionMenu(),
+                        const FieldMenu(),
+                        const GuidanceMenu(),
+                        const VehicleMenu(),
+                        const EquipmentMenu(),
+                        if (Device.isNative) const HardwareMenu(),
+                      ],
+                    ),
+                  ],
+                ),
+                false => MenuBar(
+                  children: [
+                    const SettingsMenu(),
+                    const WorkSessionMenu(),
+                    const FieldMenu(),
+                    const GuidanceMenu(),
+                    const VehicleMenu(),
+                    const EquipmentMenu(),
+                    if (Device.isNative) const HardwareMenu(),
+                  ],
+                ),
+              },
         ),
         actions: [
           // Grid size indicator
@@ -183,7 +185,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                   if (size != null) {
                     final text = switch (size >= 1000) {
                       true => '${(size / 1000).round()} km',
-                      false => '${size.round()} m'
+                      false => '${size.round()} m',
                     };
                     return Row(
                       mainAxisSize: MainAxisSize.min,

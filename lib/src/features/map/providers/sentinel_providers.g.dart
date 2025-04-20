@@ -15,14 +15,15 @@ String _$copernicusInstanceIdHash() =>
 @ProviderFor(CopernicusInstanceId)
 final copernicusInstanceIdProvider =
     AutoDisposeNotifierProvider<CopernicusInstanceId, String?>.internal(
-  CopernicusInstanceId.new,
-  name: r'copernicusInstanceIdProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$copernicusInstanceIdHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      CopernicusInstanceId.new,
+      name: r'copernicusInstanceIdProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$copernicusInstanceIdHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$CopernicusInstanceId = AutoDisposeNotifier<String?>;
 String _$availableSentinelLayersHash() =>
@@ -33,12 +34,15 @@ String _$availableSentinelLayersHash() =>
 /// Copied from [AvailableSentinelLayers].
 @ProviderFor(AvailableSentinelLayers)
 final availableSentinelLayersProvider = AutoDisposeNotifierProvider<
-    AvailableSentinelLayers, List<SentinelLayer>>.internal(
+  AvailableSentinelLayers,
+  List<SentinelLayer>
+>.internal(
   AvailableSentinelLayers.new,
   name: r'availableSentinelLayersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$availableSentinelLayersHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$availableSentinelLayersHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -53,12 +57,15 @@ String _$sentinelMaxCloudCoveragePercentHash() =>
 /// Copied from [SentinelMaxCloudCoveragePercent].
 @ProviderFor(SentinelMaxCloudCoveragePercent)
 final sentinelMaxCloudCoveragePercentProvider = AutoDisposeNotifierProvider<
-    SentinelMaxCloudCoveragePercent, double>.internal(
+  SentinelMaxCloudCoveragePercent,
+  double
+>.internal(
   SentinelMaxCloudCoveragePercent.new,
   name: r'sentinelMaxCloudCoveragePercentProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$sentinelMaxCloudCoveragePercentHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$sentinelMaxCloudCoveragePercentHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -72,12 +79,15 @@ String _$enabledSentinelLayersHash() =>
 /// Copied from [EnabledSentinelLayers].
 @ProviderFor(EnabledSentinelLayers)
 final enabledSentinelLayersProvider = AutoDisposeNotifierProvider<
-    EnabledSentinelLayers, Set<SentinelLayer>>.internal(
+  EnabledSentinelLayers,
+  Set<SentinelLayer>
+>.internal(
   EnabledSentinelLayers.new,
   name: r'enabledSentinelLayersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$enabledSentinelLayersHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$enabledSentinelLayersHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -91,17 +101,20 @@ String _$sentinelLayerOpacitiesHash() =>
 /// Copied from [SentinelLayerOpacities].
 @ProviderFor(SentinelLayerOpacities)
 final sentinelLayerOpacitiesProvider = AutoDisposeNotifierProvider<
-    SentinelLayerOpacities, Map<SentinelLayerType, double>>.internal(
+  SentinelLayerOpacities,
+  Map<SentinelLayerType, double>
+>.internal(
   SentinelLayerOpacities.new,
   name: r'sentinelLayerOpacitiesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$sentinelLayerOpacitiesHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$sentinelLayerOpacitiesHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SentinelLayerOpacities
-    = AutoDisposeNotifier<Map<SentinelLayerType, double>>;
+typedef _$SentinelLayerOpacities =
+    AutoDisposeNotifier<Map<SentinelLayerType, double>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

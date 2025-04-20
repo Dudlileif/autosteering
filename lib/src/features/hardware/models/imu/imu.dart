@@ -33,11 +33,9 @@ class Imu {
   /// An object representing an IMU (Intertial measurement unit) in a vehicle.
   ///
   /// [config] describes how to use the [reading] from the sensor.
-  Imu({
-    ImuConfig? config,
-    List<ImuReading>? readings,
-  })  : config = config ?? const ImuConfig(),
-        readings = readings ?? [ImuReading(receiveTime: DateTime.now())];
+  Imu({ImuConfig? config, List<ImuReading>? readings})
+    : config = config ?? const ImuConfig(),
+      readings = readings ?? [ImuReading(receiveTime: DateTime.now())];
 
   /// The configuration for the IMU sensor.
   ImuConfig config;
@@ -62,7 +60,7 @@ class Imu {
   ImuReading get reading {
     final now = switch (config.useOnlyGnssSyncedReadings) {
       true => lastGnssTime ?? DateTime.now(),
-      false => DateTime.now()
+      false => DateTime.now(),
     };
     return readings.firstWhereOrNull(
           (element) =>
@@ -76,29 +74,30 @@ class Imu {
   /// The bearing reading accounted for
   /// [config.zeroValues][ImuZeroValues.bearingZero].
   double? get bearing => switch (bearingIsSet) {
-        true => ((reading.yaw - config.zeroValues.bearingZero) *
-                switch (config.invertYaw) {
-                  true => -1.0,
-                  false => 1.0,
-                })
-            .wrap360(),
-        false => null
-      };
+    true =>
+      ((reading.yaw - config.zeroValues.bearingZero) *
+              switch (config.invertYaw) {
+                true => -1.0,
+                false => 1.0,
+              })
+          .wrap360(),
+    false => null,
+  };
 
   /// The pitch reading accounted for
   /// [config.zeroValues][ImuZeroValues.pitchZero].
   double get pitch =>
       switch (config.swapPitchAndRoll) {
         false => clampDouble(
-            (reading.pitch - config.zeroValues.pitchZero).toDouble(),
-            -85,
-            85,
-          ),
+          (reading.pitch - config.zeroValues.pitchZero).toDouble(),
+          -85,
+          85,
+        ),
         true => clampDouble(
-            (reading.roll - config.zeroValues.rollZero).toDouble(),
-            -85,
-            85,
-          )
+          (reading.roll - config.zeroValues.rollZero).toDouble(),
+          -85,
+          85,
+        ),
       } *
       switch (config.invertPitch) {
         true => -1,
@@ -110,15 +109,15 @@ class Imu {
   double get roll =>
       switch (config.swapPitchAndRoll) {
         false => clampDouble(
-            (reading.roll - config.zeroValues.rollZero).toDouble(),
-            -85,
-            85,
-          ),
+          (reading.roll - config.zeroValues.rollZero).toDouble(),
+          -85,
+          85,
+        ),
         true => clampDouble(
-            (reading.pitch - config.zeroValues.pitchZero).toDouble(),
-            -85,
-            85,
-          )
+          (reading.pitch - config.zeroValues.pitchZero).toDouble(),
+          -85,
+          85,
+        ),
       } *
       switch (config.invertRoll) {
         true => -1,
@@ -145,7 +144,8 @@ class Imu {
       );
 
   /// Sets the [config] zero value for bearing to [bearingZero].
-  void setBearingZeroTo(num bearingZero) => config = config.copyWith(
+  void setBearingZeroTo(num bearingZero) =>
+      config = config.copyWith(
         zeroValues: config.zeroValues.copyWith(bearingZero: bearingZero),
       );
 

@@ -54,28 +54,25 @@ class EditablePathPoints extends _$EditablePathPoints {
 
   /// Move the point at [index] by replacing it with [point].
   void movePoint(int index, Geographic point) => Future(
-        () => state = state
-          ?..insert(index, point)
-          ..removeAt(index + 1),
-      );
+    () =>
+        state =
+            state
+              ?..insert(index, point)
+              ..removeAt(index + 1),
+  );
 
   /// Insert [point] at [index].
   void insert(int index, Geographic point) =>
       Future(() => state = state?..insert(index, point));
 
   /// Remove point at [index].
-  void remove(int index) => Future(
-        () => state = state?..removeAt(index),
-      );
+  void remove(int index) => Future(() => state = state?..removeAt(index));
 
   /// Set the state to null.
   void clear() => Future(() => state = null);
 
   @override
-  bool updateShouldNotify(
-    List<Geographic>? previous,
-    List<Geographic>? next,
-  ) =>
+  bool updateShouldNotify(List<Geographic>? previous, List<Geographic>? next) =>
       true;
 }
 

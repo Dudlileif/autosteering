@@ -16,14 +16,15 @@ String _$equipmentConfiguratorIndexHash() =>
 @ProviderFor(EquipmentConfiguratorIndex)
 final equipmentConfiguratorIndexProvider =
     NotifierProvider<EquipmentConfiguratorIndex, int>.internal(
-  EquipmentConfiguratorIndex.new,
-  name: r'equipmentConfiguratorIndexProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$equipmentConfiguratorIndexHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EquipmentConfiguratorIndex.new,
+      name: r'equipmentConfiguratorIndexProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$equipmentConfiguratorIndexHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EquipmentConfiguratorIndex = Notifier<int>;
 String _$configuredEquipmentHash() =>
@@ -35,14 +36,15 @@ String _$configuredEquipmentHash() =>
 @ProviderFor(ConfiguredEquipment)
 final configuredEquipmentProvider =
     NotifierProvider<ConfiguredEquipment, Equipment>.internal(
-  ConfiguredEquipment.new,
-  name: r'configuredEquipmentProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$configuredEquipmentHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ConfiguredEquipment.new,
+      name: r'configuredEquipmentProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$configuredEquipmentHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ConfiguredEquipment = Notifier<Equipment>;
 String _$configuredEquipmentEqualWidthsHash() =>
@@ -55,14 +57,15 @@ String _$configuredEquipmentEqualWidthsHash() =>
 @ProviderFor(ConfiguredEquipmentEqualWidths)
 final configuredEquipmentEqualWidthsProvider =
     AutoDisposeNotifierProvider<ConfiguredEquipmentEqualWidths, bool>.internal(
-  ConfiguredEquipmentEqualWidths.new,
-  name: r'configuredEquipmentEqualWidthsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$configuredEquipmentEqualWidthsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ConfiguredEquipmentEqualWidths.new,
+      name: r'configuredEquipmentEqualWidthsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$configuredEquipmentEqualWidthsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ConfiguredEquipmentEqualWidths = AutoDisposeNotifier<bool>;
 String _$configuredEquipmentEqualWorkingWidthsHash() =>
@@ -74,16 +77,19 @@ String _$configuredEquipmentEqualWorkingWidthsHash() =>
 /// Copied from [ConfiguredEquipmentEqualWorkingWidths].
 @ProviderFor(ConfiguredEquipmentEqualWorkingWidths)
 final configuredEquipmentEqualWorkingWidthsProvider =
-    AutoDisposeNotifierProvider<ConfiguredEquipmentEqualWorkingWidths,
-        bool>.internal(
-  ConfiguredEquipmentEqualWorkingWidths.new,
-  name: r'configuredEquipmentEqualWorkingWidthsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$configuredEquipmentEqualWorkingWidthsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+    AutoDisposeNotifierProvider<
+      ConfiguredEquipmentEqualWorkingWidths,
+      bool
+    >.internal(
+      ConfiguredEquipmentEqualWorkingWidths.new,
+      name: r'configuredEquipmentEqualWorkingWidthsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$configuredEquipmentEqualWorkingWidthsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ConfiguredEquipmentEqualWorkingWidths = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint

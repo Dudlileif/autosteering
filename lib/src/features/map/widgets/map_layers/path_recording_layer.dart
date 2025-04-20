@@ -33,8 +33,9 @@ class PathRecordingLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final points = ref.watch(pathRecordingListProvider);
     final settings = ref.watch(activePathRecordingSettingsProvider);
-    var vehicleWayPoint =
-        ref.watch(mainVehicleProvider.select((vehicle) => vehicle.wayPoint));
+    var vehicleWayPoint = ref.watch(
+      mainVehicleProvider.select((vehicle) => vehicle.wayPoint),
+    );
     if (settings.lateralOffset.abs() > 0) {
       vehicleWayPoint = vehicleWayPoint.moveRhumb(
         distance: settings.lateralOffset,
@@ -42,37 +43,36 @@ class PathRecordingLayer extends ConsumerWidget {
       );
     }
     if (settings.longitudinalOffset.abs() > 0) {
-      vehicleWayPoint =
-          vehicleWayPoint.moveRhumb(distance: settings.longitudinalOffset);
+      vehicleWayPoint = vehicleWayPoint.moveRhumb(
+        distance: settings.longitudinalOffset,
+      );
     }
     return Stack(
       children: [
         PolylineLayer(
-                polylines: [
-                  Polyline(
-                    points: [
-                      ...points.map((point) => point.position.latLng),
-                      vehicleWayPoint.position.latLng,
-                    ],
-                  ),
-                ],
+          polylines: [
+            Polyline(
+              points: [
+                ...points.map((point) => point.position.latLng),
+                vehicleWayPoint.position.latLng,
+              ],
+            ),
+          ],
+        ),
+        CircleLayer(
+          circles: [
+            if (points.isNotEmpty)
+              ...points.map(
+                (point) =>
+                    CircleMarker(point: point.position.latLng, radius: 5),
               ),
-              CircleLayer(
-                circles: [
-                  if (points.isNotEmpty)
-                    ...points.map(
-                      (point) => CircleMarker(
-                        point: point.position.latLng,
-                        radius: 5,
-                      ),
-                    ),
             CircleMarker(
               point: vehicleWayPoint.position.latLng,
               radius: 5,
               color: Colors.blue,
             ),
-                ],
-              ),
+          ],
+        ),
       ],
     );
   }

@@ -84,21 +84,15 @@ class ExportLogsFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all log files.
   ///
   /// Copied from [exportLogs].
-  ExportLogsProvider call({
-    bool zip = true,
-  }) {
-    return ExportLogsProvider(
-      zip: zip,
-    );
+  ExportLogsProvider call({bool zip = true}) {
+    return ExportLogsProvider(zip: zip);
   }
 
   @override
   ExportLogsProvider getProviderOverride(
     covariant ExportLogsProvider provider,
   ) {
-    return call(
-      zip: provider.zip,
-    );
+    return call(zip: provider.zip);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -123,24 +117,19 @@ class ExportLogsProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for exporting all log files.
   ///
   /// Copied from [exportLogs].
-  ExportLogsProvider({
-    bool zip = true,
-  }) : this._internal(
-          (ref) => exportLogs(
-            ref as ExportLogsRef,
-            zip: zip,
-          ),
-          from: exportLogsProvider,
-          name: r'exportLogsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportLogsHash,
-          dependencies: ExportLogsFamily._dependencies,
-          allTransitiveDependencies:
-              ExportLogsFamily._allTransitiveDependencies,
-          zip: zip,
-        );
+  ExportLogsProvider({bool zip = true})
+    : this._internal(
+        (ref) => exportLogs(ref as ExportLogsRef, zip: zip),
+        from: exportLogsProvider,
+        name: r'exportLogsProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$exportLogsHash,
+        dependencies: ExportLogsFamily._dependencies,
+        allTransitiveDependencies: ExportLogsFamily._allTransitiveDependencies,
+        zip: zip,
+      );
 
   ExportLogsProvider._internal(
     super._createNotifier, {
@@ -215,14 +204,15 @@ String _$daysToKeepLogFilesHash() =>
 @ProviderFor(DaysToKeepLogFiles)
 final daysToKeepLogFilesProvider =
     NotifierProvider<DaysToKeepLogFiles, int>.internal(
-  DaysToKeepLogFiles.new,
-  name: r'daysToKeepLogFilesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$daysToKeepLogFilesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DaysToKeepLogFiles.new,
+      name: r'daysToKeepLogFilesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$daysToKeepLogFilesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DaysToKeepLogFiles = Notifier<int>;
 // ignore_for_file: type=lint

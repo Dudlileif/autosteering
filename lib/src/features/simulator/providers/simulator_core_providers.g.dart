@@ -15,9 +15,10 @@ String _$initializeSimCoreHash() => r'b6782d15711cd9826e18b550b287d5e5d7f6c0c3';
 final initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
   initializeSimCore,
   name: r'initializeSimCoreProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$initializeSimCoreHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$initializeSimCoreHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -79,21 +80,18 @@ class CommonSimCoreMessageHandlerFamily extends Family<void> {
       num distance,
       PathTracking? pathTracking,
       Vehicle? vehicle,
-      num velocity
-    }) message,
+      num velocity,
+    })
+    message,
   ) {
-    return CommonSimCoreMessageHandlerProvider(
-      message,
-    );
+    return CommonSimCoreMessageHandlerProvider(message);
   }
 
   @override
   CommonSimCoreMessageHandlerProvider getProviderOverride(
     covariant CommonSimCoreMessageHandlerProvider provider,
   ) {
-    return call(
-      provider.message,
-    );
+    return call(provider.message);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -128,24 +126,25 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
       num distance,
       PathTracking? pathTracking,
       Vehicle? vehicle,
-      num velocity
-    }) message,
+      num velocity,
+    })
+    message,
   ) : this._internal(
-          (ref) => commonSimCoreMessageHandler(
-            ref as CommonSimCoreMessageHandlerRef,
-            message,
-          ),
-          from: commonSimCoreMessageHandlerProvider,
-          name: r'commonSimCoreMessageHandlerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$commonSimCoreMessageHandlerHash,
-          dependencies: CommonSimCoreMessageHandlerFamily._dependencies,
-          allTransitiveDependencies:
-              CommonSimCoreMessageHandlerFamily._allTransitiveDependencies,
-          message: message,
-        );
+        (ref) => commonSimCoreMessageHandler(
+          ref as CommonSimCoreMessageHandlerRef,
+          message,
+        ),
+        from: commonSimCoreMessageHandlerProvider,
+        name: r'commonSimCoreMessageHandlerProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$commonSimCoreMessageHandlerHash,
+        dependencies: CommonSimCoreMessageHandlerFamily._dependencies,
+        allTransitiveDependencies:
+            CommonSimCoreMessageHandlerFamily._allTransitiveDependencies,
+        message: message,
+      );
 
   CommonSimCoreMessageHandlerProvider._internal(
     super._createNotifier, {
@@ -164,8 +163,9 @@ class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
     num distance,
     PathTracking? pathTracking,
     Vehicle? vehicle,
-    num velocity
-  }) message;
+    num velocity,
+  })
+  message;
 
   @override
   Override overrideWith(
@@ -216,8 +216,9 @@ mixin CommonSimCoreMessageHandlerRef on AutoDisposeProviderRef<void> {
     num distance,
     PathTracking? pathTracking,
     Vehicle? vehicle,
-    num velocity
-  }) get message;
+    num velocity,
+  })
+  get message;
 }
 
 class _CommonSimCoreMessageHandlerProviderElement
@@ -233,8 +234,9 @@ class _CommonSimCoreMessageHandlerProviderElement
     num distance,
     PathTracking? pathTracking,
     Vehicle? vehicle,
-    num velocity
-  }) get message => (origin as CommonSimCoreMessageHandlerProvider).message;
+    num velocity,
+  })
+  get message => (origin as CommonSimCoreMessageHandlerProvider).message;
 }
 
 String _$simulatorUpdateFrequencyHash() =>
@@ -246,14 +248,15 @@ String _$simulatorUpdateFrequencyHash() =>
 @ProviderFor(SimulatorUpdateFrequency)
 final simulatorUpdateFrequencyProvider =
     NotifierProvider<SimulatorUpdateFrequency, int>.internal(
-  SimulatorUpdateFrequency.new,
-  name: r'simulatorUpdateFrequencyProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simulatorUpdateFrequencyHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SimulatorUpdateFrequency.new,
+      name: r'simulatorUpdateFrequencyProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$simulatorUpdateFrequencyHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SimulatorUpdateFrequency = Notifier<int>;
 String _$simCoreDebugAllowLongBreaksHash() =>
@@ -267,14 +270,15 @@ String _$simCoreDebugAllowLongBreaksHash() =>
 @ProviderFor(SimCoreDebugAllowLongBreaks)
 final simCoreDebugAllowLongBreaksProvider =
     NotifierProvider<SimCoreDebugAllowLongBreaks, bool>.internal(
-  SimCoreDebugAllowLongBreaks.new,
-  name: r'simCoreDebugAllowLongBreaksProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreDebugAllowLongBreaksHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SimCoreDebugAllowLongBreaks.new,
+      name: r'simCoreDebugAllowLongBreaksProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$simCoreDebugAllowLongBreaksHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SimCoreDebugAllowLongBreaks = Notifier<bool>;
 String _$simCoreAllowManualInputHash() =>
@@ -287,14 +291,15 @@ String _$simCoreAllowManualInputHash() =>
 @ProviderFor(SimCoreAllowManualInput)
 final simCoreAllowManualInputProvider =
     NotifierProvider<SimCoreAllowManualInput, bool>.internal(
-  SimCoreAllowManualInput.new,
-  name: r'simCoreAllowManualInputProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreAllowManualInputHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SimCoreAllowManualInput.new,
+      name: r'simCoreAllowManualInputProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$simCoreAllowManualInputHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SimCoreAllowManualInput = Notifier<bool>;
 String _$simCoreAllowInterpolationHash() =>
@@ -307,14 +312,15 @@ String _$simCoreAllowInterpolationHash() =>
 @ProviderFor(SimCoreAllowInterpolation)
 final simCoreAllowInterpolationProvider =
     NotifierProvider<SimCoreAllowInterpolation, bool>.internal(
-  SimCoreAllowInterpolation.new,
-  name: r'simCoreAllowInterpolationProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreAllowInterpolationHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SimCoreAllowInterpolation.new,
+      name: r'simCoreAllowInterpolationProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$simCoreAllowInterpolationHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SimCoreAllowInterpolation = Notifier<bool>;
 String _$simCoreVehicleAutoCenterSteeringHash() =>
@@ -327,14 +333,15 @@ String _$simCoreVehicleAutoCenterSteeringHash() =>
 @ProviderFor(SimCoreVehicleAutoCenterSteering)
 final simCoreVehicleAutoCenterSteeringProvider =
     NotifierProvider<SimCoreVehicleAutoCenterSteering, bool>.internal(
-  SimCoreVehicleAutoCenterSteering.new,
-  name: r'simCoreVehicleAutoCenterSteeringProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreVehicleAutoCenterSteeringHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SimCoreVehicleAutoCenterSteering.new,
+      name: r'simCoreVehicleAutoCenterSteeringProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$simCoreVehicleAutoCenterSteeringHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SimCoreVehicleAutoCenterSteering = Notifier<bool>;
 String _$simCoreVehicleAutoSlowDownHash() =>
@@ -347,14 +354,15 @@ String _$simCoreVehicleAutoSlowDownHash() =>
 @ProviderFor(SimCoreVehicleAutoSlowDown)
 final simCoreVehicleAutoSlowDownProvider =
     NotifierProvider<SimCoreVehicleAutoSlowDown, bool>.internal(
-  SimCoreVehicleAutoSlowDown.new,
-  name: r'simCoreVehicleAutoSlowDownProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreVehicleAutoSlowDownHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SimCoreVehicleAutoSlowDown.new,
+      name: r'simCoreVehicleAutoSlowDownProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$simCoreVehicleAutoSlowDownHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SimCoreVehicleAutoSlowDown = Notifier<bool>;
 // ignore_for_file: type=lint

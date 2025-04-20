@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,189 +10,146 @@ part of 'was_reading.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-WasReading _$WasReadingFromJson(Map<String, dynamic> json) {
-  return _WasReading.fromJson(json);
-}
 
 /// @nodoc
 mixin _$WasReading {
-  /// The time of the reading being received.
-  @DateTimeSerializer()
-  DateTime get receiveTime => throw _privateConstructorUsedError;
 
-  /// The discrete value of the sensor reading.
-  int get value => throw _privateConstructorUsedError;
+/// The time of the reading being received.
+@DateTimeSerializer() DateTime get receiveTime;/// The discrete value of the sensor reading.
+ int get value;
+/// Create a copy of WasReading
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$WasReadingCopyWith<WasReading> get copyWith => _$WasReadingCopyWithImpl<WasReading>(this as WasReading, _$identity);
 
   /// Serializes this WasReading to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of WasReading
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $WasReadingCopyWith<WasReading> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WasReading&&(identical(other.receiveTime, receiveTime) || other.receiveTime == receiveTime)&&(identical(other.value, value) || other.value == value));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,receiveTime,value);
+
+@override
+String toString() {
+  return 'WasReading(receiveTime: $receiveTime, value: $value)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $WasReadingCopyWith<$Res> {
-  factory $WasReadingCopyWith(
-          WasReading value, $Res Function(WasReading) then) =
-      _$WasReadingCopyWithImpl<$Res, WasReading>;
-  @useResult
-  $Res call({@DateTimeSerializer() DateTime receiveTime, int value});
-}
+abstract mixin class $WasReadingCopyWith<$Res>  {
+  factory $WasReadingCopyWith(WasReading value, $Res Function(WasReading) _then) = _$WasReadingCopyWithImpl;
+@useResult
+$Res call({
+@DateTimeSerializer() DateTime receiveTime, int value
+});
 
+
+
+
+}
 /// @nodoc
-class _$WasReadingCopyWithImpl<$Res, $Val extends WasReading>
+class _$WasReadingCopyWithImpl<$Res>
     implements $WasReadingCopyWith<$Res> {
-  _$WasReadingCopyWithImpl(this._value, this._then);
+  _$WasReadingCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final WasReading _self;
+  final $Res Function(WasReading) _then;
 
-  /// Create a copy of WasReading
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? receiveTime = null,
-    Object? value = null,
-  }) {
-    return _then(_value.copyWith(
-      receiveTime: null == receiveTime
-          ? _value.receiveTime
-          : receiveTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
+/// Create a copy of WasReading
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? receiveTime = null,Object? value = null,}) {
+  return _then(_self.copyWith(
+receiveTime: null == receiveTime ? _self.receiveTime : receiveTime // ignore: cast_nullable_to_non_nullable
+as DateTime,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$WasReadingImplCopyWith<$Res>
-    implements $WasReadingCopyWith<$Res> {
-  factory _$$WasReadingImplCopyWith(
-          _$WasReadingImpl value, $Res Function(_$WasReadingImpl) then) =
-      __$$WasReadingImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({@DateTimeSerializer() DateTime receiveTime, int value});
 }
 
-/// @nodoc
-class __$$WasReadingImplCopyWithImpl<$Res>
-    extends _$WasReadingCopyWithImpl<$Res, _$WasReadingImpl>
-    implements _$$WasReadingImplCopyWith<$Res> {
-  __$$WasReadingImplCopyWithImpl(
-      _$WasReadingImpl _value, $Res Function(_$WasReadingImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of WasReading
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? receiveTime = null,
-    Object? value = null,
-  }) {
-    return _then(_$WasReadingImpl(
-      receiveTime: null == receiveTime
-          ? _value.receiveTime
-          : receiveTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$WasReadingImpl implements _WasReading {
-  const _$WasReadingImpl(
-      {@DateTimeSerializer() required this.receiveTime, this.value = 0});
 
-  factory _$WasReadingImpl.fromJson(Map<String, dynamic> json) =>
-      _$$WasReadingImplFromJson(json);
+class _WasReading implements WasReading {
+  const _WasReading({@DateTimeSerializer() required this.receiveTime, this.value = 0});
+  factory _WasReading.fromJson(Map<String, dynamic> json) => _$WasReadingFromJson(json);
 
-  /// The time of the reading being received.
-  @override
-  @DateTimeSerializer()
-  final DateTime receiveTime;
+/// The time of the reading being received.
+@override@DateTimeSerializer() final  DateTime receiveTime;
+/// The discrete value of the sensor reading.
+@override@JsonKey() final  int value;
 
-  /// The discrete value of the sensor reading.
-  @override
-  @JsonKey()
-  final int value;
+/// Create a copy of WasReading
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$WasReadingCopyWith<_WasReading> get copyWith => __$WasReadingCopyWithImpl<_WasReading>(this, _$identity);
 
-  @override
-  String toString() {
-    return 'WasReading(receiveTime: $receiveTime, value: $value)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$WasReadingImpl &&
-            (identical(other.receiveTime, receiveTime) ||
-                other.receiveTime == receiveTime) &&
-            (identical(other.value, value) || other.value == value));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, receiveTime, value);
-
-  /// Create a copy of WasReading
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$WasReadingImplCopyWith<_$WasReadingImpl> get copyWith =>
-      __$$WasReadingImplCopyWithImpl<_$WasReadingImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$WasReadingImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$WasReadingToJson(this, );
 }
 
-abstract class _WasReading implements WasReading {
-  const factory _WasReading(
-      {@DateTimeSerializer() required final DateTime receiveTime,
-      final int value}) = _$WasReadingImpl;
-
-  factory _WasReading.fromJson(Map<String, dynamic> json) =
-      _$WasReadingImpl.fromJson;
-
-  /// The time of the reading being received.
-  @override
-  @DateTimeSerializer()
-  DateTime get receiveTime;
-
-  /// The discrete value of the sensor reading.
-  @override
-  int get value;
-
-  /// Create a copy of WasReading
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$WasReadingImplCopyWith<_$WasReadingImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WasReading&&(identical(other.receiveTime, receiveTime) || other.receiveTime == receiveTime)&&(identical(other.value, value) || other.value == value));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,receiveTime,value);
+
+@override
+String toString() {
+  return 'WasReading(receiveTime: $receiveTime, value: $value)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$WasReadingCopyWith<$Res> implements $WasReadingCopyWith<$Res> {
+  factory _$WasReadingCopyWith(_WasReading value, $Res Function(_WasReading) _then) = __$WasReadingCopyWithImpl;
+@override @useResult
+$Res call({
+@DateTimeSerializer() DateTime receiveTime, int value
+});
+
+
+
+
+}
+/// @nodoc
+class __$WasReadingCopyWithImpl<$Res>
+    implements _$WasReadingCopyWith<$Res> {
+  __$WasReadingCopyWithImpl(this._self, this._then);
+
+  final _WasReading _self;
+  final $Res Function(_WasReading) _then;
+
+/// Create a copy of WasReading
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? receiveTime = null,Object? value = null,}) {
+  return _then(_WasReading(
+receiveTime: null == receiveTime ? _self.receiveTime : receiveTime // ignore: cast_nullable_to_non_nullable
+as DateTime,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+// dart format on

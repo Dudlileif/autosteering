@@ -87,9 +87,10 @@ class DevicePositionAsVehiclePosition
 @riverpod
 Stream<Position> rawDevicePositionStream(Ref ref) =>
     Geolocator.getPositionStream(
-      locationSettings: Platform.isAndroid
-          ? AndroidSettings(intervalDuration: const Duration(seconds: 1))
-          : null,
+      locationSettings:
+          Platform.isAndroid
+              ? AndroidSettings(intervalDuration: const Duration(seconds: 1))
+              : null,
     );
 
 /// A provider that sends device position updates to the simulation core
@@ -99,27 +100,24 @@ Stream<Position> rawDevicePositionStream(Ref ref) =>
 void updatePositionFromDevice(Ref ref) {
   final enabled = ref.watch(devicePositionAsVehiclePositionProvider);
   if (enabled) {
-    final permission = ref.watch(devicePositionPermissionProvider).when(
-          data: (data) => data,
-          error: (error, stackTrace) => false,
-          loading: () => false,
-        );
+    final permission = ref
+        .watch(devicePositionPermissionProvider)
+        .maybeWhen(data: (data) => data, orElse: () => false);
     if (permission) {
-      ref.watch(rawDevicePositionStreamProvider).when(
+      ref
+          .watch(rawDevicePositionStreamProvider)
+          .maybeWhen(
             data: (data) {
-              ref.read(simInputProvider.notifier).send(
-                (
-                  gnssPosition: Geographic(
-                    lon: data.longitude,
-                    lat: data.latitude,
-                    elev: data.altitude,
-                  ),
-                  time: data.timestamp
+              ref.read(simInputProvider.notifier).send((
+                gnssPosition: Geographic(
+                  lon: data.longitude,
+                  lat: data.latitude,
+                  elev: data.altitude,
                 ),
-              );
+                time: data.timestamp,
+              ));
             },
-            error: (error, stackTrace) => null,
-            loading: () => null,
+            orElse: () => null,
           );
     }
   }

@@ -37,10 +37,7 @@ class VehicleDimensionsPage extends ConsumerWidget {
       ),
       TextFormField(
         decoration: const InputDecoration(
-          icon: RotatedBox(
-            quarterTurns: 1,
-            child: Icon(Icons.expand),
-          ),
+          icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
           labelText: 'Vehicle body width, excluding wheels',
           suffixText: 'm',
         ),
@@ -76,22 +73,20 @@ class VehicleDimensionsPage extends ConsumerWidget {
       ),
       TextFormField(
         decoration: InputDecoration(
-          icon: const RotatedBox(
-            quarterTurns: 1,
-            child: Icon(Icons.expand),
-          ),
+          icon: const RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
           labelText:
               'Track width, between the centers of the ${switch (vehicle) {
-            Tractor() => 'rear wheels',
-            ArticulatedTractor() => 'rear wheels',
-            Harvester() => 'front wheels'
-          }}',
+                Tractor() => 'rear wheels',
+                ArticulatedTractor() => 'rear wheels',
+                Harvester() => 'front wheels',
+              }}',
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
-          configuredVehicleProvider
-              .select((value) => value.trackWidth.toString()),
+          configuredVehicleProvider.select(
+            (value) => value.trackWidth.toString(),
+          ),
         ),
         onChanged: (value) {
           final width = double.tryParse(value.replaceAll(',', '.'));
@@ -172,14 +167,15 @@ class VehicleDimensionsPage extends ConsumerWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children: children
-              .map(
-              (widget) => Padding(
-                padding: const EdgeInsets.all(8),
-                child: SizedBox(width: 400, child: widget),
-              ),
-              )
-              .toList(),
+          children:
+              children
+                  .map(
+                    (widget) => Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(width: 400, child: widget),
+                    ),
+                  )
+                  .toList(),
         ),
       ),
     );

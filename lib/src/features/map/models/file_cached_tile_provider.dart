@@ -80,12 +80,7 @@ class FileCachedTileProvider extends TileProvider {
       if (!layerDirectory.existsSync()) {
         layerDirectory.createSync(recursive: true);
         final time = DateTime.now();
-        File(
-          path.join(
-            layerDirectory.path,
-            'created',
-          ),
-        )
+        File(path.join(layerDirectory.path, 'created'))
           ..createSync(recursive: true)
           ..writeAsStringSync(time.toIso8601String());
       }
@@ -96,16 +91,17 @@ class FileCachedTileProvider extends TileProvider {
       fallbackUrl: getTileFallbackUrl(coordinates, options),
       headers: headers,
       httpClient: httpClient,
-      cacheFile: layerDirectory != null
-          ? File(
-              path.join(
-                layerDirectory.path,
-                '${coordinates.z}',
-                '${coordinates.y}',
-                '${coordinates.x}.png',
-              ),
-            )
-          : null,
+      cacheFile:
+          layerDirectory != null
+              ? File(
+                path.join(
+                  layerDirectory.path,
+                  '${coordinates.z}',
+                  '${coordinates.y}',
+                  '${coordinates.x}.png',
+                ),
+              )
+              : null,
       allowDownload: allowDownloads,
     );
   }

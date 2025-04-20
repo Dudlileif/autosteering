@@ -74,10 +74,7 @@ class FieldMenu extends ConsumerWidget {
             child: Text('Close', style: textStyle),
           ),
           Consumer(
-            child: Text(
-              'Save field',
-              style: textStyle,
-            ),
+            child: Text('Save field', style: textStyle),
             builder: (context, ref, child) {
               final field = ref.watch(activeFieldProvider);
 
@@ -87,14 +84,15 @@ class FieldMenu extends ConsumerWidget {
                   child: Icon(Icons.save),
                 ),
                 closeOnActivate: false,
-                onPressed: field != null
-                    ? () => ref.watch(
+                onPressed:
+                    field != null
+                        ? () => ref.watch(
                           saveFieldProvider(
                             field..lastUsed = DateTime.now(),
                             downloadIfWeb: true,
                           ),
                         )
-                    : null,
+                        : null,
                 child: child,
               );
             },
@@ -106,10 +104,9 @@ class FieldMenu extends ConsumerWidget {
           const _CreateFieldButton(),
           if (ref.watch(
             savedFieldsProvider.select(
-              (value) => value.when(
+              (value) => value.maybeWhen(
                 data: (data) => data.isNotEmpty,
-                error: (error, stackTrace) => false,
-                loading: () => false,
+                orElse: () => false,
               ),
             ),
           ))
@@ -118,8 +115,9 @@ class FieldMenu extends ConsumerWidget {
             ),
           const _ImportButton(),
           if (ref.watch(
-            displayPathTrackingProvider
-                .select((value) => value != null && value.wayPoints.length > 2),
+            displayPathTrackingProvider.select(
+              (value) => value != null && value.wayPoints.length > 2,
+            ),
           ))
             const _CreateFieldFromPathTracking(),
         ],
@@ -127,118 +125,130 @@ class FieldMenu extends ConsumerWidget {
           const _RenameFieldButton(),
           const _EditFieldBorderButton(),
           Consumer(
-            child: Text(
-              'Show field',
-              style: textStyle,
-            ),
-            builder: (context, ref, child) => CheckboxListTile(
-              secondary: switch (ref.watch(showFieldProvider)) {
-                true => const Icon(Icons.visibility),
-                false => const Icon(Icons.visibility_off),
-              },
-              title: child,
-              value: ref.watch(showFieldProvider),
-              onChanged: (value) => value != null
-                  ? ref.read(showFieldProvider.notifier).update(value: value)
-                  : null,
-            ),
-          ),
-          if (ref.watch(showFieldProvider) ||
-              ref.watch(showBufferedFieldProvider))
-            Consumer(
-              child: Text(
-                'Show border points',
-                style: textStyle,
-              ),
-              builder: (context, ref, child) => CheckboxListTile(
-                secondary: switch (ref.watch(showFieldBorderPointsProvider)) {
-                  true => const Icon(Icons.visibility),
-                  false => const Icon(Icons.visibility_off),
-                },
-                title: child,
-                value: ref.watch(showFieldBorderPointsProvider),
-                onChanged: (value) => value != null
-                    ? ref
-                        .read(showFieldBorderPointsProvider.notifier)
-                        .update(value: value)
-                    : null,
-              ),
-            ),
-          if (ref.watch(showFieldProvider))
-            Consumer(
-              child: Text(
-                'Show bounding box',
-                style: textStyle,
-              ),
-              builder: (context, ref, child) => CheckboxListTile(
-                secondary: switch (ref.watch(showFieldBoundingBoxProvider)) {
-                  true => const Icon(Icons.visibility),
-                  false => const Icon(Icons.visibility_off),
-                },
-                title: child,
-                value: ref.watch(showFieldBoundingBoxProvider),
-                onChanged: (value) => value != null
-                    ? ref
-                        .read(showFieldBoundingBoxProvider.notifier)
-                        .update(value: value)
-                    : null,
-              ),
-            ),
-          Consumer(
-            child: Text(
-              'Enable field buffer',
-              style: textStyle,
-            ),
-            builder: (context, ref, child) => CheckboxListTile(
-              secondary: child,
-              value: ref.watch(fieldBufferEnabledProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(fieldBufferEnabledProvider.notifier)
-                      .update(value: value)
-                  : null,
-            ),
-          ),
-          if (ref.watch(fieldBufferEnabledProvider)) ...[
-            Consumer(
-              child: Text(
-                'Show buffered field',
-                style: textStyle,
-              ),
-              builder: (context, ref, child) => CheckboxListTile(
-                secondary: switch (ref.watch(showBufferedFieldProvider)) {
-                  true => const Icon(Icons.visibility),
-                  false => const Icon(Icons.visibility_off),
-                },
-                title: child,
-                value: ref.watch(showBufferedFieldProvider),
-                onChanged: (value) => value != null
-                    ? ref
-                        .read(showBufferedFieldProvider.notifier)
-                        .update(value: value)
-                    : null,
-              ),
-            ),
-            if (ref.watch(showFieldProvider)) ...[
-              Consumer(
-                child: Text(
-                  'Show buffered bounding box',
-                  style: textStyle,
-                ),
-                builder: (context, ref, child) => CheckboxListTile(
-                  secondary: switch (
-                      ref.watch(showBufferedFieldBoundingBoxProvider)) {
+            child: Text('Show field', style: textStyle),
+            builder:
+                (context, ref, child) => CheckboxListTile(
+                  secondary: switch (ref.watch(showFieldProvider)) {
                     true => const Icon(Icons.visibility),
                     false => const Icon(Icons.visibility_off),
                   },
                   title: child,
-                  value: ref.watch(showBufferedFieldBoundingBoxProvider),
-                  onChanged: (value) => value != null
-                      ? ref
-                          .read(showBufferedFieldBoundingBoxProvider.notifier)
-                          .update(value: value)
-                      : null,
+                  value: ref.watch(showFieldProvider),
+                  onChanged:
+                      (value) =>
+                          value != null
+                              ? ref
+                                  .read(showFieldProvider.notifier)
+                                  .update(value: value)
+                              : null,
                 ),
+          ),
+          if (ref.watch(showFieldProvider) ||
+              ref.watch(showBufferedFieldProvider))
+            Consumer(
+              child: Text('Show border points', style: textStyle),
+              builder:
+                  (context, ref, child) => CheckboxListTile(
+                    secondary: switch (ref.watch(
+                      showFieldBorderPointsProvider,
+                    )) {
+                      true => const Icon(Icons.visibility),
+                      false => const Icon(Icons.visibility_off),
+                    },
+                    title: child,
+                    value: ref.watch(showFieldBorderPointsProvider),
+                    onChanged:
+                        (value) =>
+                            value != null
+                                ? ref
+                                    .read(
+                                      showFieldBorderPointsProvider.notifier,
+                                    )
+                                    .update(value: value)
+                                : null,
+                  ),
+            ),
+          if (ref.watch(showFieldProvider))
+            Consumer(
+              child: Text('Show bounding box', style: textStyle),
+              builder:
+                  (context, ref, child) => CheckboxListTile(
+                    secondary: switch (ref.watch(
+                      showFieldBoundingBoxProvider,
+                    )) {
+                      true => const Icon(Icons.visibility),
+                      false => const Icon(Icons.visibility_off),
+                    },
+                    title: child,
+                    value: ref.watch(showFieldBoundingBoxProvider),
+                    onChanged:
+                        (value) =>
+                            value != null
+                                ? ref
+                                    .read(showFieldBoundingBoxProvider.notifier)
+                                    .update(value: value)
+                                : null,
+                  ),
+            ),
+          Consumer(
+            child: Text('Enable field buffer', style: textStyle),
+            builder:
+                (context, ref, child) => CheckboxListTile(
+                  secondary: child,
+                  value: ref.watch(fieldBufferEnabledProvider),
+                  onChanged:
+                      (value) =>
+                          value != null
+                              ? ref
+                                  .read(fieldBufferEnabledProvider.notifier)
+                                  .update(value: value)
+                              : null,
+                ),
+          ),
+          if (ref.watch(fieldBufferEnabledProvider)) ...[
+            Consumer(
+              child: Text('Show buffered field', style: textStyle),
+              builder:
+                  (context, ref, child) => CheckboxListTile(
+                    secondary: switch (ref.watch(showBufferedFieldProvider)) {
+                      true => const Icon(Icons.visibility),
+                      false => const Icon(Icons.visibility_off),
+                    },
+                    title: child,
+                    value: ref.watch(showBufferedFieldProvider),
+                    onChanged:
+                        (value) =>
+                            value != null
+                                ? ref
+                                    .read(showBufferedFieldProvider.notifier)
+                                    .update(value: value)
+                                : null,
+                  ),
+            ),
+            if (ref.watch(showFieldProvider)) ...[
+              Consumer(
+                child: Text('Show buffered bounding box', style: textStyle),
+                builder:
+                    (context, ref, child) => CheckboxListTile(
+                      secondary: switch (ref.watch(
+                        showBufferedFieldBoundingBoxProvider,
+                      )) {
+                        true => const Icon(Icons.visibility),
+                        false => const Icon(Icons.visibility_off),
+                      },
+                      title: child,
+                      value: ref.watch(showBufferedFieldBoundingBoxProvider),
+                      onChanged:
+                          (value) =>
+                              value != null
+                                  ? ref
+                                      .read(
+                                        showBufferedFieldBoundingBoxProvider
+                                            .notifier,
+                                      )
+                                      .update(value: value)
+                                  : null,
+                    ),
               ),
               MenuItemButton(
                 leadingIcon: const Padding(
@@ -246,37 +256,44 @@ class FieldMenu extends ConsumerWidget {
                   child: Icon(Icons.straighten),
                 ),
                 closeOnActivate: false,
-                onPressed: () => showDialog<void>(
-                  context: context,
-                  builder: (context) => const _BufferDistancesDialog(),
-                ),
+                onPressed:
+                    () => showDialog<void>(
+                      context: context,
+                      builder: (context) => const _BufferDistancesDialog(),
+                    ),
                 child: Text('Buffer distances', style: textStyle),
               ),
               if (ref.watch(showBufferedFieldProvider))
                 Consumer(
                   builder: (context, ref, child) {
-                    final activeMode =
-                        ref.watch(fieldExteriorBufferJoinProvider);
+                    final activeMode = ref.watch(
+                      fieldExteriorBufferJoinProvider,
+                    );
                     return MenuButtonWithChildren(
                       text: 'Exterior buffer join mode',
                       icon: Icons.rounded_corner,
-                      menuChildren: BufferJoin.values
-                          .map(
-                            (mode) => CheckboxListTile(
-                              secondary:
-                                  Text(mode.name.capitalize, style: textStyle),
-                              value: mode == activeMode,
-                              onChanged: (value) => value != null && value
-                                  ? ref
-                                      .read(
-                                        fieldExteriorBufferJoinProvider
-                                            .notifier,
-                                      )
-                                      .update(mode)
-                                  : null,
-                            ),
-                          )
-                          .toList(),
+                      menuChildren:
+                          BufferJoin.values
+                              .map(
+                                (mode) => CheckboxListTile(
+                                  secondary: Text(
+                                    mode.name.capitalize,
+                                    style: textStyle,
+                                  ),
+                                  value: mode == activeMode,
+                                  onChanged:
+                                      (value) => switch (value) {
+                                        true => ref
+                                            .read(
+                                              fieldExteriorBufferJoinProvider
+                                                  .notifier,
+                                            )
+                                            .update(mode),
+                                        _ => null,
+                                      },
+                                ),
+                              )
+                              .toList(),
                     );
                   },
                 ),
@@ -289,45 +306,54 @@ class FieldMenu extends ConsumerWidget {
                       false))
                 Consumer(
                   builder: (context, ref, child) {
-                    final activeMode =
-                        ref.watch(fieldInteriorBufferJoinProvider);
+                    final activeMode = ref.watch(
+                      fieldInteriorBufferJoinProvider,
+                    );
                     return MenuButtonWithChildren(
                       text: 'Interior buffer join mode',
                       icon: Icons.rounded_corner,
-                      menuChildren: BufferJoin.values
-                          .map(
-                            (mode) => CheckboxListTile(
-                              secondary:
-                                  Text(mode.name.capitalize, style: textStyle),
-                              value: mode == activeMode,
-                              onChanged: (value) => value != null && value
-                                  ? ref
-                                      .read(
-                                        fieldInteriorBufferJoinProvider
-                                            .notifier,
-                                      )
-                                      .update(mode)
-                                  : null,
-                            ),
-                          )
-                          .toList(),
+                      menuChildren:
+                          BufferJoin.values
+                              .map(
+                                (mode) => CheckboxListTile(
+                                  secondary: Text(
+                                    mode.name.capitalize,
+                                    style: textStyle,
+                                  ),
+                                  value: mode == activeMode,
+                                  onChanged:
+                                      (value) => switch (value) {
+                                        true => ref
+                                            .read(
+                                              fieldInteriorBufferJoinProvider
+                                                  .notifier,
+                                            )
+                                            .update(mode),
+                                        _ => null,
+                                      },
+                                ),
+                              )
+                              .toList(),
                     );
                   },
                 ),
               Consumer(
-                child: Text(
-                  'Raw buffer points',
-                  style: textStyle,
-                ),
-                builder: (context, ref, child) => CheckboxListTile(
-                  secondary: child,
-                  value: ref.watch(fieldBufferGetRawPointsProvider),
-                  onChanged: (value) => value != null
-                      ? ref
-                          .read(fieldBufferGetRawPointsProvider.notifier)
-                          .update(value: value)
-                      : null,
-                ),
+                child: Text('Raw buffer points', style: textStyle),
+                builder:
+                    (context, ref, child) => CheckboxListTile(
+                      secondary: child,
+                      value: ref.watch(fieldBufferGetRawPointsProvider),
+                      onChanged:
+                          (value) =>
+                              value != null
+                                  ? ref
+                                      .read(
+                                        fieldBufferGetRawPointsProvider
+                                            .notifier,
+                                      )
+                                      .update(value: value)
+                                  : null,
+                    ),
               ),
             ],
           ],
@@ -348,11 +374,10 @@ class _LoadFieldMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final fields = ref.watch(savedFieldsProvider).when(
-          data: (data) => data,
-          error: (error, stackTrace) => <Field>[],
-          loading: () => <Field>[],
-        )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+    final fields = ref
+        .watch(savedFieldsProvider)
+        .maybeWhen(data: (data) => data, orElse: () => <Field>[])
+      ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
     if (fields.isEmpty) {
       return const SizedBox.shrink();
@@ -363,46 +388,53 @@ class _LoadFieldMenu extends ConsumerWidget {
     return MenuButtonWithChildren(
       text: 'Load',
       icon: Icons.history,
-      menuChildren: fields
-          .map(
-            (field) => ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 200),
-              child: ListTile(
-                onTap: () {
-                  field.lastUsed = DateTime.now();
+      menuChildren:
+          fields
+              .map(
+                (field) => ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 200),
+                  child: ListTile(
+                    onTap: () {
+                      field.lastUsed = DateTime.now();
 
-                  ref.read(activeFieldProvider.notifier).update(field);
+                      ref.read(activeFieldProvider.notifier).update(field);
 
-                  ref.read(saveFieldProvider(field));
-                },
-                trailing: Device.isNative
-                    ? IconButton(
-                        onPressed: () async {
-                          await showDialog<bool>(
-                            context: context,
-                            builder: (context) => Consumer(
-                              builder: (context, ref, child) => DeleteDialog(
-                                name: field.name,
-                                onDelete: () async => await ref.watch(
-                                  deleteFieldProvider(
-                                    field,
-                                  ).future,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.delete),
-                      )
-                    : null,
-                title: Text(field.name, style: textStyle),
-                subtitle: Text(
-                  '''${(field.areaWithoutHoles / 1e4).toStringAsFixed(2)} ha''',
+                      ref.read(saveFieldProvider(field));
+                    },
+                    trailing:
+                        Device.isNative
+                            ? IconButton(
+                              onPressed: () async {
+                                await showDialog<bool>(
+                                  context: context,
+                                  builder:
+                                      (context) => Consumer(
+                                        builder:
+                                            (context, ref, child) =>
+                                                DeleteDialog(
+                                                  name: field.name,
+                                                  onDelete:
+                                                      () async =>
+                                                          await ref.watch(
+                                                            deleteFieldProvider(
+                                                              field,
+                                                            ).future,
+                                                          ),
+                                                ),
+                                      ),
+                                );
+                              },
+                              icon: const Icon(Icons.delete),
+                            )
+                            : null,
+                    title: Text(field.name, style: textStyle),
+                    subtitle: Text(
+                      '''${(field.areaWithoutHoles / 1e4).toStringAsFixed(2)} ha''',
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          )
-          .toList(),
+              )
+              .toList(),
     );
   }
 }
@@ -438,17 +470,16 @@ class _ExportButton extends ConsumerWidget {
         child: Icon(Icons.save_alt),
       ),
       closeOnActivate: false,
-      onPressed: ref.watch(
-        activeFieldProvider.select(
-          (value) => value != null && value.name.isNotEmpty,
-        ),
-      )
-          ? () => ref.watch(
-                exportFieldProvider(
-                  ref.watch(activeFieldProvider)!,
+      onPressed:
+          ref.watch(
+                activeFieldProvider.select(
+                  (value) => value != null && value.name.isNotEmpty,
                 ),
               )
-          : null,
+              ? () => ref.watch(
+                exportFieldProvider(ref.watch(activeFieldProvider)!),
+              )
+              : null,
       child: Text('Export', style: textStyle),
     );
   }
@@ -476,10 +507,7 @@ class _CreateFieldButton extends ConsumerWidget {
             .update(PathRecordingTarget.field);
         ref.read(showPathRecordingMenuProvider.notifier).update(value: true);
       },
-      child: Text(
-        'Create field from recording',
-        style: textStyle,
-      ),
+      child: Text('Create field from recording', style: textStyle),
     );
   }
 }
@@ -497,79 +525,99 @@ class _CreateFieldFromPathTracking extends ConsumerWidget {
       ),
       closeOnActivate: false,
       child: Text('Create from path tracking', style: textStyle),
-      onPressed: () => showDialog<void>(
-        context: context,
-        builder: (context) => Consumer(
-          builder: (context, ref, child) {
-            final controller = TextEditingController();
-            return SimpleDialog(
-              title: const Text('Create field from path tracking'),
-              contentPadding: const EdgeInsets.only(
-                left: 24,
-                top: 12,
-                right: 24,
-                bottom: 16,
-              ),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.label_outline),
-                      labelText: 'Name',
-                    ),
-                    controller: controller,
-                    keyboardType: TextInputType.text,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => isBlank(value)
-                        ? '''No name entered! Please enter a name so that the field can be saved!'''
-                        : null,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Consumer(
-                    builder: (context, ref, child) => ListenableBuilder(
-                      listenable: controller,
-                      builder: (context, child) => FilledButton(
-                        onPressed: controller.text.isNotEmpty
-                            ? () async {
-                                final points = ref.watch(
-                                  displayPathTrackingProvider.select(
-                                    (value) =>
-                                        value!.wayPoints.map((e) => e.position),
-                                  ),
-                                );
-                                final field = Field(
-                                  name: controller.text,
-                                  polygon: Polygon.from([points]),
-                                  boundingBox: GeoBox.from(points),
-                                );
-
-                                await ref.read(
-                                  saveFieldProvider(field).future,
-                                );
-                                ref
-                                    .read(
-                                      activeFieldProvider.notifier,
-                                    )
-                                    .update(field);
-
-                                if (context.mounted) {
-                                  Navigator.of(context).pop();
-                                }
-                              }
-                            : null,
-                        child: const Text('Save field'),
+      onPressed:
+          () => showDialog<void>(
+            context: context,
+            builder:
+                (context) => Consumer(
+                  builder: (context, ref, child) {
+                    final controller = TextEditingController();
+                    return SimpleDialog(
+                      title: const Text('Create field from path tracking'),
+                      contentPadding: const EdgeInsets.only(
+                        left: 24,
+                        top: 12,
+                        right: 24,
+                        bottom: 16,
                       ),
-                    ),
-                  ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.label_outline),
+                              labelText: 'Name',
+                            ),
+                            controller: controller,
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator:
+                                (value) =>
+                                    isBlank(value)
+                                        ? '''No name entered! Please enter a name so that the field can be saved!'''
+                                        : null,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Consumer(
+                            builder:
+                                (context, ref, child) => ListenableBuilder(
+                                  listenable: controller,
+                                  builder:
+                                      (context, child) => FilledButton(
+                                        onPressed:
+                                            controller.text.isNotEmpty
+                                                ? () async {
+                                                  final points = ref.watch(
+                                                    displayPathTrackingProvider
+                                                        .select(
+                                                          (value) => value!
+                                                              .wayPoints
+                                                              .map(
+                                                                (e) =>
+                                                                    e.position,
+                                                              ),
+                                                        ),
+                                                  );
+                                                  final field = Field(
+                                                    name: controller.text,
+                                                    polygon: Polygon.from([
+                                                      points,
+                                                    ]),
+                                                    boundingBox: GeoBox.from(
+                                                      points,
+                                                    ),
+                                                  );
+
+                                                  await ref.read(
+                                                    saveFieldProvider(
+                                                      field,
+                                                    ).future,
+                                                  );
+                                                  ref
+                                                      .read(
+                                                        activeFieldProvider
+                                                            .notifier,
+                                                      )
+                                                      .update(field);
+
+                                                  if (context.mounted) {
+                                                    Navigator.of(context).pop();
+                                                  }
+                                                }
+                                                : null,
+                                        child: const Text('Save field'),
+                                      ),
+                                ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
-              ],
-            );
-          },
-        ),
-      ),
+          ),
     );
   }
 }
@@ -586,68 +634,82 @@ class _RenameFieldButton extends ConsumerWidget {
         padding: EdgeInsets.only(left: 8),
         child: Icon(Icons.edit),
       ),
-      onPressed: () => showDialog<void>(
-        context: context,
-        builder: (context) {
-          final field = ref.watch(activeFieldProvider);
-          var name = field?.name ?? '';
-          return StatefulBuilder(
-            builder: (context, setState) => SimpleDialog(
-              title: const Text('Name the field'),
-              contentPadding: const EdgeInsets.only(
-                left: 24,
-                top: 12,
-                right: 24,
-                bottom: 16,
-              ),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.label_outline),
-                      labelText: 'Name',
-                    ),
-                    initialValue: name,
-                    onChanged: (value) => setState(() => name = value),
-                    onFieldSubmitted: (value) => setState(() => name = value),
-                    keyboardType: TextInputType.text,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => isBlank(value)
-                        ? '''No name entered! Please enter a name so that the field can be saved!'''
-                        : null,
-                  ),
-                ),
-                if (field != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Consumer(
-                      builder: (context, ref, child) => FilledButton(
-                        onPressed: () {
-                          if (field.name != name && name.isNotEmpty) {
-                            Timer(const Duration(milliseconds: 100), () {
-                              ref
-                                ..read(deleteFieldProvider(field))
-                                ..read(
-                                  saveFieldProvider(
-                                    field.copyWith(
-                                      name: name.isNotEmpty ? name : null,
-                                    ),
-                                  ),
-                                );
-                            });
-                          }
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Save field'),
+      onPressed:
+          () => showDialog<void>(
+            context: context,
+            builder: (context) {
+              final field = ref.watch(activeFieldProvider);
+              var name = field?.name ?? '';
+              return StatefulBuilder(
+                builder:
+                    (context, setState) => SimpleDialog(
+                      title: const Text('Name the field'),
+                      contentPadding: const EdgeInsets.only(
+                        left: 24,
+                        top: 12,
+                        right: 24,
+                        bottom: 16,
                       ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.label_outline),
+                              labelText: 'Name',
+                            ),
+                            initialValue: name,
+                            onChanged: (value) => setState(() => name = value),
+                            onFieldSubmitted:
+                                (value) => setState(() => name = value),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator:
+                                (value) =>
+                                    isBlank(value)
+                                        ? '''No name entered! Please enter a name so that the field can be saved!'''
+                                        : null,
+                          ),
+                        ),
+                        if (field != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Consumer(
+                              builder:
+                                  (context, ref, child) => FilledButton(
+                                    onPressed: () {
+                                      if (field.name != name &&
+                                          name.isNotEmpty) {
+                                        Timer(
+                                          const Duration(milliseconds: 100),
+                                          () {
+                                            ref
+                                              ..read(deleteFieldProvider(field))
+                                              ..read(
+                                                saveFieldProvider(
+                                                  field.copyWith(
+                                                    name:
+                                                        name.isNotEmpty
+                                                            ? name
+                                                            : null,
+                                                  ),
+                                                ),
+                                              );
+                                          },
+                                        );
+                                      }
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Save field'),
+                                  ),
+                            ),
+                          ),
+                      ],
                     ),
-                  ),
-              ],
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
       child: Text('Rename', style: textStyle),
     );
   }
@@ -696,8 +758,9 @@ class _EditFieldBorderButton extends ConsumerWidget {
         child: Text('Edit border', style: textStyle),
         onPressed: () {
           ref
-            ..read(activeEditablePathTypeProvider.notifier)
-                .update(EditablePathType.fieldExterior)
+            ..read(
+              activeEditablePathTypeProvider.notifier,
+            ).update(EditablePathType.fieldExterior)
             ..read(editablePathPointsProvider.notifier).update(
               activeField?.polygon.exterior?.toGeographicPositions.toList(),
             );
@@ -720,10 +783,7 @@ class _BufferDistancesDialog extends ConsumerWidget {
     return SimpleDialog(
       title: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Buffer distances'),
-          CloseButton(),
-        ],
+        children: [Text('Buffer distances'), CloseButton()],
       ),
       contentPadding: const EdgeInsets.only(
         left: 24,
@@ -737,21 +797,21 @@ class _BufferDistancesDialog extends ConsumerWidget {
             visualDensity: VisualDensity.compact,
           ),
           selected: {distanceType},
-          onSelectionChanged: (values) => ref
-              .read(
-                activeFieldBufferDistanceTypeProvider.notifier,
-              )
-              .update(values.first),
-          segments: FieldBufferDistanceType.values
-              .map(
-                (type) => ButtonSegment(
-                  value: type,
-                  icon: Icon(type.icon),
-                  label: Text(type.tooltip),
-                  tooltip: type.tooltip,
-                ),
-              )
-              .toList(),
+          onSelectionChanged:
+              (values) => ref
+                  .read(activeFieldBufferDistanceTypeProvider.notifier)
+                  .update(values.first),
+          segments:
+              FieldBufferDistanceType.values
+                  .map(
+                    (type) => ButtonSegment(
+                      value: type,
+                      icon: Icon(type.icon),
+                      label: Text(type.tooltip),
+                      tooltip: type.tooltip,
+                    ),
+                  )
+                  .toList(),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16),
@@ -759,43 +819,45 @@ class _BufferDistancesDialog extends ConsumerWidget {
             builder: (context, ref, child) {
               final equipmentWidth = ref.read(
                 allEquipmentsProvider.select(
-                  (value) => value.values
-                      .firstWhereOrNull((element) => element.width > 0)
-                      ?.width,
+                  (value) =>
+                      value.values
+                          .firstWhereOrNull((element) => element.width > 0)
+                          ?.width,
                 ),
               );
               final controller = TextEditingController(
-                text: equipmentWidth != null &&
-                        distanceType == FieldBufferDistanceType.equipmentWidths
-                    ? (ref.read(fieldExteriorBufferDistanceProvider) /
-                            equipmentWidth)
-                        .toStringAsFixed(2)
-                    : ref.read(fieldExteriorBufferDistanceProvider).toString(),
+                text:
+                    equipmentWidth != null &&
+                            distanceType ==
+                                FieldBufferDistanceType.equipmentWidths
+                        ? (ref.read(fieldExteriorBufferDistanceProvider) /
+                                equipmentWidth)
+                            .toStringAsFixed(2)
+                        : ref
+                            .read(fieldExteriorBufferDistanceProvider)
+                            .toString(),
               );
-              final startProcess =
-                  RestartableTimer(const Duration(seconds: 1), () {
-                final value = double.tryParse(controller.text);
-                {
-                  if (value != null) {
-                    if (distanceType ==
-                            FieldBufferDistanceType.equipmentWidths &&
-                        equipmentWidth != null) {
-                      ref
-                          .read(
-                            fieldExteriorBufferDistanceProvider.notifier,
-                          )
-                          .update(value * equipmentWidth);
-                    } else {
-                      ref
-                          .read(
-                            fieldExteriorBufferDistanceProvider.notifier,
-                          )
-                          .update(value);
+              final startProcess = RestartableTimer(
+                const Duration(seconds: 1),
+                () {
+                  final value = double.tryParse(controller.text);
+                  {
+                    if (value != null) {
+                      if (distanceType ==
+                              FieldBufferDistanceType.equipmentWidths &&
+                          equipmentWidth != null) {
+                        ref
+                            .read(fieldExteriorBufferDistanceProvider.notifier)
+                            .update(value * equipmentWidth);
+                      } else {
+                        ref
+                            .read(fieldExteriorBufferDistanceProvider.notifier)
+                            .update(value);
+                      }
                     }
                   }
-                }
-              })
-                    ..cancel();
+                },
+              )..cancel();
               controller.addListener(startProcess.reset);
 
               return TextFormField(
@@ -803,13 +865,14 @@ class _BufferDistancesDialog extends ConsumerWidget {
                   labelText: 'Border buffer distance',
                   suffix: ListenableBuilder(
                     listenable: controller,
-                    builder: (context, child) => Text(
-                      equipmentWidth != null &&
-                              distanceType ==
-                                  FieldBufferDistanceType.equipmentWidths
-                          ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
-                          : 'm',
-                    ),
+                    builder:
+                        (context, child) => Text(
+                          equipmentWidth != null &&
+                                  distanceType ==
+                                      FieldBufferDistanceType.equipmentWidths
+                              ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
+                              : 'm',
+                        ),
                   ),
                 ),
                 keyboardType: const TextInputType.numberWithOptions(
@@ -828,46 +891,49 @@ class _BufferDistancesDialog extends ConsumerWidget {
               builder: (context, ref, child) {
                 final equipmentWidth = ref.read(
                   allEquipmentsProvider.select(
-                    (value) => value.values
-                        .firstWhereOrNull((element) => element.width > 0)
-                        ?.width,
+                    (value) =>
+                        value.values
+                            .firstWhereOrNull((element) => element.width > 0)
+                            ?.width,
                   ),
                 );
                 final controller = TextEditingController(
-                  text: equipmentWidth != null &&
-                          distanceType ==
-                              FieldBufferDistanceType.equipmentWidths
-                      ? (ref.read(fieldInteriorBufferDistanceProvider) /
-                              equipmentWidth)
-                          .toStringAsFixed(2)
-                      : ref
-                          .read(fieldInteriorBufferDistanceProvider)
-                          .toString(),
+                  text:
+                      equipmentWidth != null &&
+                              distanceType ==
+                                  FieldBufferDistanceType.equipmentWidths
+                          ? (ref.read(fieldInteriorBufferDistanceProvider) /
+                                  equipmentWidth)
+                              .toStringAsFixed(2)
+                          : ref
+                              .read(fieldInteriorBufferDistanceProvider)
+                              .toString(),
                 );
-                final startProcess =
-                    RestartableTimer(const Duration(seconds: 1), () {
-                  final value = double.tryParse(controller.text);
-                  {
-                    if (value != null) {
-                      if (distanceType ==
-                              FieldBufferDistanceType.equipmentWidths &&
-                          equipmentWidth != null) {
-                        ref
-                            .read(
-                              fieldInteriorBufferDistanceProvider.notifier,
-                            )
-                            .update(value * equipmentWidth);
-                      } else {
-                        ref
-                            .read(
-                              fieldInteriorBufferDistanceProvider.notifier,
-                            )
-                            .update(value);
+                final startProcess = RestartableTimer(
+                  const Duration(seconds: 1),
+                  () {
+                    final value = double.tryParse(controller.text);
+                    {
+                      if (value != null) {
+                        if (distanceType ==
+                                FieldBufferDistanceType.equipmentWidths &&
+                            equipmentWidth != null) {
+                          ref
+                              .read(
+                                fieldInteriorBufferDistanceProvider.notifier,
+                              )
+                              .update(value * equipmentWidth);
+                        } else {
+                          ref
+                              .read(
+                                fieldInteriorBufferDistanceProvider.notifier,
+                              )
+                              .update(value);
+                        }
                       }
                     }
-                  }
-                })
-                      ..cancel();
+                  },
+                )..cancel();
                 controller.addListener(startProcess.reset);
 
                 return TextFormField(
@@ -875,13 +941,14 @@ class _BufferDistancesDialog extends ConsumerWidget {
                     labelText: 'Interior border (holes) buffer distance',
                     suffix: ListenableBuilder(
                       listenable: controller,
-                      builder: (context, child) => Text(
-                        equipmentWidth != null &&
-                                distanceType ==
-                                    FieldBufferDistanceType.equipmentWidths
-                            ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
-                            : 'm',
-                      ),
+                      builder:
+                          (context, child) => Text(
+                            equipmentWidth != null &&
+                                    distanceType ==
+                                        FieldBufferDistanceType.equipmentWidths
+                                ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
+                                : 'm',
+                          ),
                     ),
                   ),
                   keyboardType: const TextInputType.numberWithOptions(
@@ -905,11 +972,9 @@ class _SaveBufferedFieldButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
-    final field = ref.watch(bufferedFieldProvider).when(
-          data: (data) => data,
-          error: (error, stackTrace) => null,
-          loading: () => null,
-        );
+    final field = ref
+        .watch(bufferedFieldProvider)
+        .maybeWhen(data: (data) => data, orElse: () => null);
 
     return MenuItemButton(
       leadingIcon: const Padding(
@@ -917,76 +982,82 @@ class _SaveBufferedFieldButton extends ConsumerWidget {
         child: Icon(Icons.save),
       ),
       closeOnActivate: false,
-      onPressed: field != null
-          ? () {
-              showDialog<void>(
-                context: context,
-                builder: (context) {
-                  var name = '';
-                  return StatefulBuilder(
-                    builder: (context, setState) => SimpleDialog(
-                      title: const Text('Name the bufferd field'),
-                      contentPadding: const EdgeInsets.only(
-                        left: 24,
-                        top: 12,
-                        right: 24,
-                        bottom: 16,
-                      ),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.label_outline),
-                              labelText: 'Name',
+      onPressed:
+          field != null
+              ? () {
+                showDialog<void>(
+                  context: context,
+                  builder: (context) {
+                    var name = '';
+                    return StatefulBuilder(
+                      builder:
+                          (context, setState) => SimpleDialog(
+                            title: const Text('Name the bufferd field'),
+                            contentPadding: const EdgeInsets.only(
+                              left: 24,
+                              top: 12,
+                              right: 24,
+                              bottom: 16,
                             ),
-                            initialValue: name,
-                            onChanged: (value) => setState(() => name = value),
-                            onFieldSubmitted: (value) =>
-                                setState(() => name = value),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) => isBlank(value)
-                                ? '''No name entered! Please enter a name so that the field can be saved!'''
-                                : null,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Consumer(
-                            builder: (context, ref, child) => FilledButton(
-                              onPressed: () {
-                                Timer(
-                                    const Duration(
-                                      milliseconds: 100,
-                                    ), () {
-                                  ref.read(
-                                    saveFieldProvider(
-                                      field.copyWith(
-                                        name: name.isNotEmpty ? name : null,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    icon: Icon(Icons.label_outline),
+                                    labelText: 'Name',
+                                  ),
+                                  initialValue: name,
+                                  onChanged:
+                                      (value) => setState(() => name = value),
+                                  onFieldSubmitted:
+                                      (value) => setState(() => name = value),
+                                  keyboardType: TextInputType.text,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator:
+                                      (value) =>
+                                          isBlank(value)
+                                              ? '''No name entered! Please enter a name so that the field can be saved!'''
+                                              : null,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: Consumer(
+                                  builder:
+                                      (context, ref, child) => FilledButton(
+                                        onPressed: () {
+                                          Timer(
+                                            const Duration(milliseconds: 100),
+                                            () {
+                                              ref.read(
+                                                saveFieldProvider(
+                                                  field.copyWith(
+                                                    name:
+                                                        name.isNotEmpty
+                                                            ? name
+                                                            : null,
+                                                  ),
+                                                  downloadIfWeb: true,
+                                                ),
+                                              );
+                                            },
+                                          );
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Save bufferd field'),
                                       ),
-                                      downloadIfWeb: true,
-                                    ),
-                                  );
-                                });
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Save bufferd field'),
-                            ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            }
-          : null,
-      child: Text(
-        'Save buffered field',
-        style: textStyle,
-      ),
+                    );
+                  },
+                );
+              }
+              : null,
+      child: Text('Save buffered field', style: textStyle),
     );
   }
 }
@@ -999,15 +1070,18 @@ class _CreatePathTrackingFromBufferedFieldExteriorButton
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
-    final wayPoints = ref.watch(bufferedFieldProvider).when(
+    final wayPoints = ref
+        .watch(bufferedFieldProvider)
+        .maybeWhen(
           data: (data) {
             final points = <WayPoint>[];
             final positions = data?.polygon.exterior?.toGeographicPositions;
             if (positions != null && positions.length >= 2) {
               for (var i = 0; i < positions.length; i++) {
                 final point = positions.elementAt(i);
-                final nextPoint =
-                    positions.elementAt((i + 1) % positions.length);
+                final nextPoint = positions.elementAt(
+                  (i + 1) % positions.length,
+                );
                 points.add(
                   WayPoint(
                     position: point,
@@ -1020,8 +1094,7 @@ class _CreatePathTrackingFromBufferedFieldExteriorButton
 
             return null;
           },
-          error: (error, stackTrace) => null,
-          loading: () => null,
+          orElse: () => null,
         );
 
     return MenuItemButton(
@@ -1030,11 +1103,12 @@ class _CreatePathTrackingFromBufferedFieldExteriorButton
         child: Icon(Icons.route),
       ),
       closeOnActivate: false,
-      onPressed: wayPoints != null
-          ? () {
-              ref.read(pathTrackingPointsProvider.notifier).update(wayPoints);
-            }
-          : null,
+      onPressed:
+          wayPoints != null
+              ? () {
+                ref.read(pathTrackingPointsProvider.notifier).update(wayPoints);
+              }
+              : null,
       child: Text(
         'Create path tracking from buffered field exterior',
         style: textStyle,

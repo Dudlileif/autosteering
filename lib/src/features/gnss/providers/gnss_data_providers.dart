@@ -103,21 +103,12 @@ class GnssCurrentFrequency extends _$GnssCurrentFrequency {
 @riverpod
 class GnssLastUpdateTime extends _$GnssLastUpdateTime {
   @override
-  ({
-    DateTime device,
-    DateTime? receiver,
-    Duration? delay,
-  })? build() => null;
+  ({DateTime device, DateTime? receiver, Duration? delay})? build() => null;
 
   /// Updates [state] to [value].
   void update(
-    ({
-      DateTime device,
-      DateTime? receiver,
-      Duration? delay,
-    })? value,
-  ) =>
-      Future(() => state = value);
+    ({DateTime device, DateTime? receiver, Duration? delay})? value,
+  ) => Future(() => state = value);
 }
 
 /// A provider for the precision error of the last GNSS update.
@@ -126,11 +117,8 @@ class GnssPrecisionError extends _$GnssPrecisionError {
   Timer? _resetTimer;
 
   @override
-  ({
-    double? latitudeError,
-    double? longitudeError,
-    double? altitudeError,
-  })? build() {
+  ({double? latitudeError, double? longitudeError, double? altitudeError})?
+  build() {
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -143,11 +131,7 @@ class GnssPrecisionError extends _$GnssPrecisionError {
 
   /// Updates [state] to [value].
   void update(
-    ({
-      double? latitudeError,
-      double? longitudeError,
-      double? altitudeError,
-    })? value,
-  ) =>
-      Future(() => state = value);
+    ({double? latitudeError, double? longitudeError, double? altitudeError})?
+    value,
+  ) => Future(() => state = value);
 }

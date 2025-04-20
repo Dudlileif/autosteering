@@ -15,13 +15,15 @@ String _$audioQueueHash() => r'1cbc8b68a1e886f70b4c47785970712715c55a1b';
 @ProviderFor(AudioQueue)
 final audioQueueProvider =
     NotifierProvider<AudioQueue, Set<AudioAsset>>.internal(
-  AudioQueue.new,
-  name: r'audioQueueProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$audioQueueHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      AudioQueue.new,
+      name: r'audioQueueProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$audioQueueHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$AudioQueue = Notifier<Set<AudioAsset>>;
 String _$audioVolumeHash() => r'd91f9400ee21decaf12f8656f5be02f60a65e87f';
@@ -32,13 +34,15 @@ String _$audioVolumeHash() => r'd91f9400ee21decaf12f8656f5be02f60a65e87f';
 @ProviderFor(AudioVolume)
 final audioVolumeProvider =
     NotifierProvider<AudioVolume, Map<AudioAsset, double>>.internal(
-  AudioVolume.new,
-  name: r'audioVolumeProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$audioVolumeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      AudioVolume.new,
+      name: r'audioVolumeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$audioVolumeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$AudioVolume = Notifier<Map<AudioAsset, double>>;
 // ignore_for_file: type=lint

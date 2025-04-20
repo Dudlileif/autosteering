@@ -70,15 +70,15 @@ class _EquipmentTypeSelectorPageState
                           labelText: 'Name',
                         ),
                         controller: nameController,
-                        onFieldSubmitted: ref
-                            .read(configuredEquipmentProvider.notifier)
-                            .updateName,
+                        onFieldSubmitted:
+                            ref
+                                .read(configuredEquipmentProvider.notifier)
+                                .updateName,
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.always,
-                        validator: (value) =>
-                            isBlank(value)
-                            ? 'No name entered!'
-                            : null,
+                        validator:
+                            (value) =>
+                                isBlank(value) ? 'No name entered!' : null,
                       );
                     },
                   ),
@@ -87,19 +87,20 @@ class _EquipmentTypeSelectorPageState
             ),
           ),
           Consumer(
-            builder: (context, ref, child) => switch (ref.watch(
-              configuredEquipmentProvider.select(
-                (value) =>
-                    isBlank(value.name),
-              ),
-            )) {
-              true => child ?? const SizedBox.shrink(),
-              false => const SizedBox.shrink(),
-            },
+            builder:
+                (context, ref, child) => switch (ref.watch(
+                  configuredEquipmentProvider.select(
+                    (value) => isBlank(value.name),
+                  ),
+                )) {
+                  true => child ?? const SizedBox.shrink(),
+                  false => const SizedBox.shrink(),
+                },
             child: Text(
               'Please enter a name so that the equipment can be saved!',
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.error),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.error,
+              ),
             ),
           ),
         ],
@@ -122,81 +123,73 @@ class _EquipmentTypeSelector extends ConsumerWidget {
     final equipment = ref.watch(configuredEquipmentProvider);
 
     return LayoutBuilder(
-      builder: (context, constraints) => SegmentedButton<HitchType>(
-        showSelectedIcon: false,
-        style: theme.segmentedButtonTheme.style?.copyWith(
-          shape: const WidgetStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16)),
-            ),
-          ),
-          padding: const WidgetStatePropertyAll(EdgeInsets.all(8)),
-          iconSize: WidgetStatePropertyAll(
-            min(
-              100,
-              constraints.biggest.shortestSide / 4,
-            ),
-          ),
-          iconColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
-              return theme.primaryColor;
-            }
-            return null;
-          }),
-          textStyle: WidgetStatePropertyAll(
-            theme.textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        onSelectionChanged: (values) {
-          ref.read(configuredEquipmentProvider.notifier).update(
-                Equipment(hitchType: values.first),
-              );
-          clearName?.call();
-        },
-        selected: {equipment.hitchType},
-        segments: [
-          const ButtonSegment(
-            value: HitchType.fixed,
-            label: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Fixed hitch',
-                  textAlign: TextAlign.center,
+      builder:
+          (context, constraints) => SegmentedButton<HitchType>(
+            showSelectedIcon: false,
+            style: theme.segmentedButtonTheme.style?.copyWith(
+              shape: const WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
                 ),
-                // TODO(dudlileif): Make three point hitch drawing
-                Icon(
-                  Icons.workspaces,
+              ),
+              padding: const WidgetStatePropertyAll(EdgeInsets.all(8)),
+              iconSize: WidgetStatePropertyAll(
+                min(100, constraints.biggest.shortestSide / 4),
+              ),
+              iconColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return theme.primaryColor;
+                }
+                return null;
+              }),
+              textStyle: WidgetStatePropertyAll(
+                theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
+              ),
             ),
-          ),
-          ButtonSegment(
-            value: HitchType.towbar,
-            label: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Towbar hitch',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                  ),
+            onSelectionChanged: (values) {
+              ref
+                  .read(configuredEquipmentProvider.notifier)
+                  .update(Equipment(hitchType: values.first));
+              clearName?.call();
+            },
+            selected: {equipment.hitchType},
+            segments: [
+              const ButtonSegment(
+                value: HitchType.fixed,
+                label: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Fixed hitch', textAlign: TextAlign.center),
+                    // TODO(dudlileif): Make three point hitch drawing
+                    Icon(Icons.workspaces),
+                  ],
                 ),
-                // TODO(dudlileif): Make towbar drawing
-                const Icon(
-                  Icons.commit,
+              ),
+              ButtonSegment(
+                value: HitchType.towbar,
+                label: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Towbar hitch',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color:
+                            theme.brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                      ),
+                    ),
+                    // TODO(dudlileif): Make towbar drawing
+                    const Icon(Icons.commit),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 }

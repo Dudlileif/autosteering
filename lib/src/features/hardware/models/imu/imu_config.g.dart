@@ -6,27 +6,26 @@ part of 'imu_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ImuConfigImpl _$$ImuConfigImplFromJson(Map<String, dynamic> json) =>
-    _$ImuConfigImpl(
-      usePitchAndRoll: json['usePitchAndRoll'] as bool? ?? true,
-      swapPitchAndRoll: json['swapPitchAndRoll'] as bool? ?? false,
-      zeroValues: json['zeroValues'] == null
+_ImuConfig _$ImuConfigFromJson(Map<String, dynamic> json) => _ImuConfig(
+  usePitchAndRoll: json['usePitchAndRoll'] as bool? ?? true,
+  swapPitchAndRoll: json['swapPitchAndRoll'] as bool? ?? false,
+  zeroValues:
+      json['zeroValues'] == null
           ? const ImuZeroValues()
           : ImuZeroValues.fromJson(json['zeroValues'] as Map<String, dynamic>),
-      useYaw: json['useYaw'] as bool? ?? false,
-      invertYaw: json['invertYaw'] as bool? ?? false,
-      invertPitch: json['invertPitch'] as bool? ?? false,
-      invertRoll: json['invertRoll'] as bool? ?? false,
-      pitchGain: (json['pitchGain'] as num?)?.toDouble() ?? 1,
-      rollGain: (json['rollGain'] as num?)?.toDouble() ?? 1,
-      asymmetricRollGainLeft:
-          (json['asymmetricRollGainLeft'] as num?)?.toDouble() ?? null,
-      delayReadings: (json['delayReadings'] as num?)?.toInt() ?? 30,
-      useOnlyGnssSyncedReadings:
-          json['useOnlyGnssSyncedReadings'] as bool? ?? true,
-    );
+  useYaw: json['useYaw'] as bool? ?? false,
+  invertYaw: json['invertYaw'] as bool? ?? false,
+  invertPitch: json['invertPitch'] as bool? ?? false,
+  invertRoll: json['invertRoll'] as bool? ?? false,
+  pitchGain: (json['pitchGain'] as num?)?.toDouble() ?? 1,
+  rollGain: (json['rollGain'] as num?)?.toDouble() ?? 1,
+  asymmetricRollGainLeft:
+      (json['asymmetricRollGainLeft'] as num?)?.toDouble() ?? null,
+  delayReadings: (json['delayReadings'] as num?)?.toInt() ?? 30,
+  useOnlyGnssSyncedReadings: json['useOnlyGnssSyncedReadings'] as bool? ?? true,
+);
 
-Map<String, dynamic> _$$ImuConfigImplToJson(_$ImuConfigImpl instance) =>
+Map<String, dynamic> _$ImuConfigToJson(_ImuConfig instance) =>
     <String, dynamic>{
       'usePitchAndRoll': instance.usePitchAndRoll,
       'swapPitchAndRoll': instance.swapPitchAndRoll,

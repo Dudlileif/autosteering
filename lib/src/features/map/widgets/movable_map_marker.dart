@@ -74,17 +74,16 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
 
     if (widget.useRadiusInMeter) {
       final offset = map.getOffsetFromOrigin(widget.point.latLng);
-      final r = widget.point.rhumb
-          .destinationPoint(distance: widget.radius, bearing: 180);
+      final r = widget.point.rhumb.destinationPoint(
+        distance: widget.radius,
+        bearing: 180,
+      );
       final delta = offset - map.getOffsetFromOrigin(r.latLng);
       radiusToUse = delta.distance;
     }
 
     final baseChild = CustomPaint(
-      painter: CirclePainter(
-        color: widget.color,
-        radius: radiusToUse,
-      ),
+      painter: CirclePainter(color: widget.color, radius: radiusToUse),
     );
 
     return Draggable(
@@ -100,10 +99,7 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
 
         widget.onMoved(position.geoPosition);
       },
-      feedback: MouseRegion(
-        cursor: SystemMouseCursors.move,
-        child: baseChild,
-      ),
+      feedback: MouseRegion(cursor: SystemMouseCursors.move, child: baseChild),
       childWhenDragging: MouseRegion(
         cursor: SystemMouseCursors.move,
         child: CustomPaint(
@@ -119,18 +115,18 @@ class _MovableMapMarkerState extends State<MovableMapMarker> {
         cursor: SystemMouseCursors.click,
         child: switch (hoverModifier > 1) {
           true => Stack(
-              alignment: Alignment.center,
-              children: [
-                CustomPaint(
-                  painter: CirclePainter(
-                    color: widget.color.withValues(alpha: 0.35),
-                    radius: radiusToUse * hoverModifier,
-                  ),
+            alignment: Alignment.center,
+            children: [
+              CustomPaint(
+                painter: CirclePainter(
+                  color: widget.color.withValues(alpha: 0.35),
+                  radius: radiusToUse * hoverModifier,
                 ),
-                baseChild,
-              ],
-            ),
-          false => baseChild
+              ),
+              baseChild,
+            ],
+          ),
+          false => baseChild,
         },
       ),
     );
@@ -143,10 +139,7 @@ class CirclePainter extends CustomPainter {
   ///
   /// [color] is the color of the circle to paint.
   /// [radius] is the radius of the circle to paint.
-  const CirclePainter({
-    required this.color,
-    required this.radius,
-  });
+  const CirclePainter({required this.color, required this.radius});
 
   /// The color of the circle to paint.
   final Color color;
@@ -155,11 +148,7 @@ class CirclePainter extends CustomPainter {
   final double radius;
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawCircle(
-      size.center(Offset.zero),
-      radius,
-      Paint()..color = color,
-    );
+    canvas.drawCircle(size.center(Offset.zero), radius, Paint()..color = color);
   }
 
   @override

@@ -48,9 +48,10 @@ class VehicleMenu extends ConsumerWidget {
               child: Icon(Icons.navigation),
             ),
             child: Text('Reset bearing', style: textStyle),
-            onPressed: () => ref
-                .read(simInputProvider.notifier)
-                .send((setZeroIMUBearingToNextGNSSBearing: true)),
+            onPressed:
+                () => ref.read(simInputProvider.notifier).send((
+                  setZeroIMUBearingToNextGNSSBearing: true,
+                )),
           ),
         MenuItemButton(
           closeOnActivate: false,
@@ -58,14 +59,12 @@ class VehicleMenu extends ConsumerWidget {
             padding: EdgeInsets.only(left: 8),
             child: Icon(Icons.settings),
           ),
-          child: Text(
-            'Configure',
-            style: textStyle,
-          ),
-          onPressed: () => showDialog<void>(
-            context: context,
-            builder: (context) => const VehicleConfigurator(),
-          ),
+          child: Text('Configure', style: textStyle),
+          onPressed:
+              () => showDialog<void>(
+                context: context,
+                builder: (context) => const VehicleConfigurator(),
+              ),
         ),
         Consumer(
           child: Padding(
@@ -76,23 +75,23 @@ class VehicleMenu extends ConsumerWidget {
                 const Icon(Icons.memory),
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                    'IMU Configurator',
-                    style: textStyle,
-                  ),
+                  child: Text('IMU Configurator', style: textStyle),
                 ),
               ],
             ),
           ),
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(showIMUConfigProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(showIMUConfigProvider.notifier)
-                    .update(value: value)
-                : null,
-            secondary: child,
-          ),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                value: ref.watch(showIMUConfigProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(showIMUConfigProvider.notifier)
+                                .update(value: value)
+                            : null,
+                secondary: child,
+              ),
         ),
         Consumer(
           child: Padding(
@@ -103,25 +102,25 @@ class VehicleMenu extends ConsumerWidget {
                 const Icon(Icons.electric_meter),
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                    'WAS & Motor Configurator',
-                    style: textStyle,
-                  ),
+                  child: Text('WAS & Motor Configurator', style: textStyle),
                 ),
               ],
             ),
           ),
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(showSteeringHardwareConfigProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(
-                      showSteeringHardwareConfigProvider.notifier,
-                    )
-                    .update(value: value)
-                : null,
-            secondary: child,
-          ),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                value: ref.watch(showSteeringHardwareConfigProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(
+                                  showSteeringHardwareConfigProvider.notifier,
+                                )
+                                .update(value: value)
+                            : null,
+                secondary: child,
+              ),
         ),
         Consumer(
           child: Padding(
@@ -132,68 +131,69 @@ class VehicleMenu extends ConsumerWidget {
                 const Icon(Icons.abc),
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                    'Autosteering Parameters',
-                    style: textStyle,
-                  ),
+                  child: Text('Autosteering Parameters', style: textStyle),
                 ),
               ],
             ),
           ),
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(showAutosteeringParameterConfigProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(
-                      showAutosteeringParameterConfigProvider.notifier,
-                    )
-                    .update(value: value)
-                : null,
-            secondary: child,
-          ),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                value: ref.watch(showAutosteeringParameterConfigProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(
+                                  showAutosteeringParameterConfigProvider
+                                      .notifier,
+                                )
+                                .update(value: value)
+                            : null,
+                secondary: child,
+              ),
         ),
         Consumer(
-          builder: (context, ref, child) => CheckboxListTile(
-            title: Text(
-              'Show nudging controls',
-              style: textStyle,
-            ),
-            secondary: const Padding(
-              padding: EdgeInsets.only(left: 4),
-              child: RotatedBox(
-                quarterTurns: 1,
-                child: Icon(Icons.vertical_align_center),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                title: Text('Show nudging controls', style: textStyle),
+                secondary: const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: RotatedBox(
+                    quarterTurns: 1,
+                    child: Icon(Icons.vertical_align_center),
+                  ),
+                ),
+                value: ref.watch(showNudgingControlsProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(showNudgingControlsProvider.notifier)
+                                .update(value: value)
+                            : null,
               ),
-            ),
-            value: ref.watch(showNudgingControlsProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(showNudgingControlsProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
         ),
         if (ref.watch(enableDebugModeProvider))
           const VehicleDebugMenu()
         else
           const VehicleTrajectoryButton(),
         Consumer(
-          builder: (context, ref, child) => CheckboxListTile(
-            title: Text(
-              'Show motor target override',
-              style: textStyle,
-            ),
-            secondary: const Padding(
-              padding: EdgeInsets.only(left: 4),
-              child: Icon(Icons.warning_rounded),
-            ),
-            value: ref.watch(showOverrideSteeringProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(showOverrideSteeringProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                title: Text('Show motor target override', style: textStyle),
+                secondary: const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Icon(Icons.warning_rounded),
+                ),
+                value: ref.watch(showOverrideSteeringProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(showOverrideSteeringProvider.notifier)
+                                .update(value: value)
+                            : null,
+              ),
         ),
       ],
     );
@@ -205,11 +205,10 @@ class _LoadVehicleMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vehicles = ref.watch(savedVehiclesProvider).when(
-          data: (data) => data,
-          error: (error, stackTrace) => <Vehicle>[],
-          loading: () => <Vehicle>[],
-        )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+    final vehicles = ref
+        .watch(savedVehiclesProvider)
+        .maybeWhen(data: (data) => data, orElse: () => <Vehicle>[])
+      ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
     if (vehicles.isEmpty) {
       return const SizedBox.shrink();
@@ -220,58 +219,72 @@ class _LoadVehicleMenu extends ConsumerWidget {
     return MenuButtonWithChildren(
       text: 'Load',
       icon: Icons.history,
-      menuChildren: vehicles
-          .map(
-            (vehicle) => ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 200),
-              child: ListTile(
-                title: Text(vehicle.name ?? vehicle.uuid, style: textStyle),
-                subtitle: Text(vehicle.runtimeType.toString()),
-                onTap: () {
-                  final position = ref.watch(
-                    mainVehicleProvider.select((value) => value.position),
-                  );
-                  final bearing = ref.watch(
-                    mainVehicleProvider.select((value) => value.bearing),
-                  );
-                  vehicle
-                    ..position = position
-                    ..bearing = bearing
-                    ..lastUsed = DateTime.now();
+      menuChildren:
+          vehicles
+              .map(
+                (vehicle) => ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 200),
+                  child: ListTile(
+                    title: Text(vehicle.name ?? vehicle.uuid, style: textStyle),
+                    subtitle: Text(vehicle.runtimeType.toString()),
+                    onTap: () {
+                      final position = ref.watch(
+                        mainVehicleProvider.select((value) => value.position),
+                      );
+                      final bearing = ref.watch(
+                        mainVehicleProvider.select((value) => value.bearing),
+                      );
+                      vehicle
+                        ..position = position
+                        ..bearing = bearing
+                        ..lastUsed = DateTime.now();
 
-                  ref.read(mainVehicleProvider.notifier).update(vehicle);
+                      ref.read(mainVehicleProvider.notifier).update(vehicle);
 
-                  ref.read(simInputProvider.notifier).send(vehicle);
+                      ref.read(simInputProvider.notifier).send(vehicle);
 
-                  ref.read(saveVehicleProvider(vehicle));
+                      ref.read(saveVehicleProvider(vehicle));
 
-                  ref.read(configuredVehicleProvider.notifier).update(vehicle);
-                  ref.invalidate(configuredVehicleNameTextControllerProvider);
-                },
-                trailing: Device.isNative
-                    ? IconButton(
-                        onPressed: () async {
-                          await showDialog<bool>(
-                            context: context,
-                            builder: (context) => Consumer(
-                              builder: (context, ref, child) => DeleteDialog(
-                                name: vehicle.name ?? vehicle.uuid,
-                                onDelete: () async => await ref.watch(
-                                  deleteVehicleProvider(
-                                    vehicle,
-                                  ).future,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.delete),
-                      )
-                    : null,
-              ),
-            ),
-          )
-          .toList(),
+                      ref
+                          .read(configuredVehicleProvider.notifier)
+                          .update(vehicle);
+                      ref.invalidate(
+                        configuredVehicleNameTextControllerProvider,
+                      );
+                    },
+                    trailing:
+                        Device.isNative
+                            ? IconButton(
+                              onPressed: () async {
+                                await showDialog<bool>(
+                                  context: context,
+                                  builder:
+                                      (context) => Consumer(
+                                        builder:
+                                            (
+                                              context,
+                                              ref,
+                                              child,
+                                            ) => DeleteDialog(
+                                              name:
+                                                  vehicle.name ?? vehicle.uuid,
+                                              onDelete:
+                                                  () async => await ref.watch(
+                                                    deleteVehicleProvider(
+                                                      vehicle,
+                                                    ).future,
+                                                  ),
+                                            ),
+                                      ),
+                                );
+                              },
+                              icon: const Icon(Icons.delete),
+                            )
+                            : null,
+                  ),
+                ),
+              )
+              .toList(),
     );
   }
 }
@@ -304,18 +317,20 @@ class _ImportExportMenu extends StatelessWidget {
           builder: (context, ref, child) {
             return MenuItemButton(
               closeOnActivate: false,
-              onPressed: ref.watch(
-                configuredVehicleProvider.select(
-                  (value) =>
-                      value.name != null && (value.name ?? '').isNotEmpty,
-                ),
-              )
-                  ? () => ref.watch(
+              onPressed:
+                  ref.watch(
+                        configuredVehicleProvider.select(
+                          (value) =>
+                              value.name != null &&
+                              (value.name ?? '').isNotEmpty,
+                        ),
+                      )
+                      ? () => ref.watch(
                         exportVehicleProvider(
                           ref.watch(configuredVehicleProvider),
                         ),
                       )
-                  : null,
+                      : null,
               leadingIcon: const Padding(
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.save_alt),
@@ -325,9 +340,11 @@ class _ImportExportMenu extends StatelessWidget {
           },
         ),
         Consumer(
-          builder: (context, ref, child) => ExportAllMenuButton(
-            onPressed: () => ref.read(exportAllProvider(directory: 'vehicles')),
-          ),
+          builder:
+              (context, ref, child) => ExportAllMenuButton(
+                onPressed:
+                    () => ref.read(exportAllProvider(directory: 'vehicles')),
+              ),
         ),
       ],
     );

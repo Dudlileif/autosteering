@@ -57,7 +57,9 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null && previous != next && instanceId != null) {
-        ref.read(settingsProvider.notifier).update(
+        ref
+            .read(settingsProvider.notifier)
+            .update(
               SettingsKey.mapLayersSentinelSorted,
               next.map((e) => e.layerType.id).toList(),
             );
@@ -68,16 +70,18 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
       if (ref
           .read(settingsProvider.notifier)
           .containsKey(SettingsKey.mapLayersSentinelSorted)) {
-        final layerList = ref
-            .read(settingsProvider.notifier)
-            .getList(SettingsKey.mapLayersSentinelSorted)!;
+        final layerList =
+            ref
+                .read(settingsProvider.notifier)
+                .getList(SettingsKey.mapLayersSentinelSorted)!;
 
         return List<String>.from(layerList)
             .map(
               (layerId) => SentinelLayer(
                 instanceId: instanceId,
-                layerType: SentinelLayerType.values
-                    .firstWhere((element) => element.id == layerId),
+                layerType: SentinelLayerType.values.firstWhere(
+                  (element) => element.id == layerId,
+                ),
               ),
             )
             .toList();
@@ -85,10 +89,8 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
 
       return SentinelLayerType.values
           .map(
-            (layerType) => SentinelLayer(
-              instanceId: instanceId,
-              layerType: layerType,
-            ),
+            (layerType) =>
+                SentinelLayer(instanceId: instanceId, layerType: layerType),
           )
           .toList();
     }
@@ -97,20 +99,19 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
 
   /// Reorders the item at [oldIndex] to [newIndex].
   void reorder(int oldIndex, int newIndex) => Future(() {
-        var moveTo = newIndex;
-        if (oldIndex < newIndex) {
-          moveTo -= 1;
-        }
-        final layer = state.removeAt(oldIndex);
-        state = List<SentinelLayer>.from(state)..insert(moveTo, layer);
-      });
+    var moveTo = newIndex;
+    if (oldIndex < newIndex) {
+      moveTo -= 1;
+    }
+    final layer = state.removeAt(oldIndex);
+    state = List<SentinelLayer>.from(state)..insert(moveTo, layer);
+  });
 
   @override
   bool updateShouldNotify(
     List<SentinelLayer> previous,
     List<SentinelLayer> next,
-  ) =>
-      true;
+  ) => true;
 }
 
 /// A provider for the max level of cloud coverage that the Sentinel layers
@@ -147,7 +148,9 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref.read(settingsProvider.notifier).update(
+        ref
+            .read(settingsProvider.notifier)
+            .update(
               SettingsKey.mapLayersSentinelEnabled,
               next.map((e) => e.layerType.id).toList(),
             );
@@ -161,13 +164,15 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
       if (ref
           .read(settingsProvider.notifier)
           .containsKey(SettingsKey.mapLayersSentinelEnabled)) {
-        final layerList = ref
-            .read(settingsProvider.notifier)
-            .getList(SettingsKey.mapLayersSentinelEnabled)!;
+        final layerList =
+            ref
+                .read(settingsProvider.notifier)
+                .getList(SettingsKey.mapLayersSentinelEnabled)!;
 
         for (final layerId in List<String>.from(layerList)) {
-          final layerType = SentinelLayerType.values
-              .firstWhereOrNull((element) => element.id == layerId);
+          final layerType = SentinelLayerType.values.firstWhereOrNull(
+            (element) => element.id == layerId,
+          );
           if (layerType != null) {
             layers.add(
               SentinelLayer(instanceId: instanceId, layerType: layerType),
@@ -181,21 +186,22 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
   }
 
   /// Add the [layer] to the [state].
-  void add(SentinelLayer layer) => Future(
-        () => state = Set<SentinelLayer>.from(state)..add(layer),
-      );
+  void add(SentinelLayer layer) =>
+      Future(() => state = Set<SentinelLayer>.from(state)..add(layer));
 
   /// Remove the [layer] from the [state].
   void remove(SentinelLayer layer) => Future(
-        () => state = Set<SentinelLayer>.from(state)
+    () =>
+        state = Set<SentinelLayer>.from(state)
           ..removeWhere((element) => element.layerType == layer.layerType),
-      );
+  );
 
   /// Add the [layer] to the [state] if it's missing or remove it if it's
   /// already in the [state].
   void toggle(SentinelLayer layer) {
-    final layerExists =
-        state.any((element) => element.layerType == layer.layerType);
+    final layerExists = state.any(
+      (element) => element.layerType == layer.layerType,
+    );
     if (layerExists) {
       remove(layer);
     } else {
@@ -210,8 +216,7 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
   bool updateShouldNotify(
     Set<SentinelLayer> previous,
     Set<SentinelLayer> next,
-  ) =>
-      true;
+  ) => true;
 }
 
 /// A map for the Sentinel layers and their opacities, which can be specified.
@@ -228,7 +233,9 @@ class SentinelLayerOpacities extends _$SentinelLayerOpacities {
           _saveToSettingsTimer?.cancel();
           _saveToSettingsTimer = Timer(
             const Duration(seconds: 1),
-            () => ref.read(settingsProvider.notifier).update(
+            () => ref
+                .read(settingsProvider.notifier)
+                .update(
                   SettingsKey.mapLayersSentinelOpacities,
                   next.map<String, double>(
                     (key, value) => MapEntry(key.id, value),
@@ -244,12 +251,14 @@ class SentinelLayerOpacities extends _$SentinelLayerOpacities {
     if (ref
         .read(settingsProvider.notifier)
         .containsKey(SettingsKey.mapLayersSentinelOpacities)) {
-      final layerMap = ref
-          .read(settingsProvider.notifier)
-          .getMap(SettingsKey.mapLayersSentinelOpacities)!;
+      final layerMap =
+          ref
+              .read(settingsProvider.notifier)
+              .getMap(SettingsKey.mapLayersSentinelOpacities)!;
       Map<String, double>.from(layerMap).forEach((key, value) {
-        final layerType = SentinelLayerType.values
-            .firstWhereOrNull((element) => element.id == key);
+        final layerType = SentinelLayerType.values.firstWhereOrNull(
+          (element) => element.id == key,
+        );
         if (layerType != null) {
           layers[layerType] = value;
         }
@@ -261,9 +270,10 @@ class SentinelLayerOpacities extends _$SentinelLayerOpacities {
 
   /// Update the [opacity] for the given [layer].
   void update(SentinelLayerType layer, double opacity) => Future(
-        () => state = Map<SentinelLayerType, double>.from(state)
+    () =>
+        state = Map<SentinelLayerType, double>.from(state)
           ..update(layer, (value) => opacity),
-      );
+  );
 
   /// Reset the [state] to the initial value by recreating it.
   void reset() => ref.invalidateSelf();
@@ -272,6 +282,5 @@ class SentinelLayerOpacities extends _$SentinelLayerOpacities {
   bool updateShouldNotify(
     Map<SentinelLayerType, double> previous,
     Map<SentinelLayerType, double> next,
-  ) =>
-      true;
+  ) => true;
 }

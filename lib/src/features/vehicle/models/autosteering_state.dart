@@ -25,5 +25,5 @@ enum AutosteeringState {
 
   /// The autosteering will automatically re-enable when the vehicle passes
   /// the minimum threshold velocity.
-  standby;
+  standby,
 }

@@ -34,16 +34,17 @@ class AudioQueue extends _$AudioQueue {
     listenSelf((previous, next) async {
       if (next.isNotEmpty) {
         if (_player?.state != PlayerState.playing) {
-          _player = AudioPlayer()
-            ..onPlayerComplete.listen((event) {
-              _player?.dispose();
-              _player = null;
-              removeFirst();
-            });
+          _player =
+              AudioPlayer()
+                ..onPlayerComplete.listen((event) {
+                  _player?.dispose();
+                  _player = null;
+                  removeFirst();
+                });
           final asset = next.first;
           final volume =
               ref.read(audioVolumeProvider.select((value) => value[asset])) ??
-                  1;
+              1;
           await _player?.setVolume(volume);
           await _player?.setSourceAsset('audio/${asset.path}.mp3');
           await _player?.resume();
@@ -59,10 +60,10 @@ class AudioQueue extends _$AudioQueue {
 
   /// Removes the first asset of the [state] queue.
   void removeFirst() => Future(() {
-        if (state.isNotEmpty) {
-          state = state..remove(state.first);
-        }
-      });
+    if (state.isNotEmpty) {
+      state = state..remove(state.first);
+    }
+  });
 
   @override
   bool updateShouldNotify(Set<AudioAsset> previous, Set<AudioAsset> next) =>
@@ -78,37 +79,40 @@ class AudioVolume extends _$AudioVolume {
     listenSelf((previous, next) {
       if (previous != null &&
           const MapEquality<AudioAsset, double>().equals(previous, next)) {
-        ref.read(settingsProvider.notifier).update(
+        ref
+            .read(settingsProvider.notifier)
+            .update(
               SettingsKey.audioVolumes,
               next.map((key, value) => MapEntry(key.path, value)),
             );
       }
     });
-    final map =
-        ref.read(settingsProvider.notifier).getMap(SettingsKey.audioVolumes);
+    final map = ref
+        .read(settingsProvider.notifier)
+        .getMap(SettingsKey.audioVolumes);
     if (map != null) {
       return map.cast<String, double>().map(
-            (key, value) =>
-                MapEntry(AudioAsset.fromPath(key), clampDouble(value, 0, 1)),
-          );
+        (key, value) =>
+            MapEntry(AudioAsset.fromPath(key), clampDouble(value, 0, 1)),
+      );
     }
     return {for (final asset in AudioAsset.values) asset: 1};
   }
 
   /// Update the [volume] of the [source].
   void update(AudioAsset source, double volume) => Future(
-        () => state = state
-          ..update(
-            source,
-            (value) => clampDouble(volume, 0, 1),
-            ifAbsent: () => clampDouble(volume, 0, 1),
-          ),
-      );
+    () =>
+        state =
+            state..update(
+              source,
+              (value) => clampDouble(volume, 0, 1),
+              ifAbsent: () => clampDouble(volume, 0, 1),
+            ),
+  );
 
   @override
   bool updateShouldNotify(
     Map<AudioAsset, double> previous,
     Map<AudioAsset, double> next,
-  ) =>
-      const MapEquality<AudioAsset, double>().equals(previous, next);
+  ) => const MapEquality<AudioAsset, double>().equals(previous, next);
 }

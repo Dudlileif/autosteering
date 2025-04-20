@@ -46,8 +46,9 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
         child: DefaultTabController(
           length: 2,
           child: Scaffold(
-            backgroundColor:
-                theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
+            backgroundColor: theme.scaffoldBackgroundColor.withValues(
+              alpha: 0.7,
+            ),
             appBar: AppBar(
               primary: false,
               title: const Text('Steering parameters'),
@@ -57,11 +58,13 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
                   child: Consumer(
                     builder: (context, ref, child) {
                       return CloseButton(
-                        onPressed: () => ref
-                            .read(
-                              showAutosteeringParameterConfigProvider.notifier,
-                            )
-                            .update(value: false),
+                        onPressed:
+                            () => ref
+                                .read(
+                                  showAutosteeringParameterConfigProvider
+                                      .notifier,
+                                )
+                                .update(value: false),
                       );
                     },
                   ),
@@ -71,10 +74,12 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
             body: Column(
               children: [
                 TabBar(
-                  labelStyle: theme.textTheme.bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w900),
-                  unselectedLabelStyle: theme.textTheme.bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w300),
+                  labelStyle: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                  unselectedLabelStyle: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w300,
+                  ),
                   tabs: _tabs,
                 ),
                 const Expanded(
@@ -136,7 +141,9 @@ class _PurePursuitConfigurator extends ConsumerWidget {
                   max: 10,
                   divisions: 100,
                   onChanged: (value) {
-                    ref.read(simInputProvider.notifier).send(
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send(
                           ref
                               .watch(
                                 mainVehicleProvider.select(
@@ -146,9 +153,12 @@ class _PurePursuitConfigurator extends ConsumerWidget {
                               .copyWith(lookAheadMinDistance: value),
                         );
 
-                    final configuredVehicle =
-                        ref.watch(configuredVehicleProvider);
-                    ref.read(configuredVehicleProvider.notifier).update(
+                    final configuredVehicle = ref.watch(
+                      configuredVehicleProvider,
+                    );
+                    ref
+                        .read(configuredVehicleProvider.notifier)
+                        .update(
                           configuredVehicle.copyWith(
                             purePursuitParameters: configuredVehicle
                                 .purePursuitParameters
@@ -173,15 +183,15 @@ class _PurePursuitConfigurator extends ConsumerWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Look ahead time: ${velocityGain.toStringAsFixed(1)} s',
-                ),
+                Text('Look ahead time: ${velocityGain.toStringAsFixed(1)} s'),
                 Slider(
                   value: velocityGain,
                   max: 5,
                   divisions: 50,
                   onChanged: (value) {
-                    ref.read(simInputProvider.notifier).send(
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send(
                           ref
                               .watch(
                                 mainVehicleProvider.select(
@@ -191,9 +201,12 @@ class _PurePursuitConfigurator extends ConsumerWidget {
                               .copyWith(lookAheadSeconds: value),
                         );
 
-                    final configuredVehicle =
-                        ref.watch(configuredVehicleProvider);
-                    ref.read(configuredVehicleProvider.notifier).update(
+                    final configuredVehicle = ref.watch(
+                      configuredVehicleProvider,
+                    );
+                    ref
+                        .read(configuredVehicleProvider.notifier)
+                        .update(
                           configuredVehicle.copyWith(
                             purePursuitParameters: configuredVehicle
                                 .purePursuitParameters
@@ -249,7 +262,9 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                   max: 3,
                   divisions: 30,
                   onChanged: (value) {
-                    ref.read(simInputProvider.notifier).send(
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send(
                           ref
                               .watch(
                                 mainVehicleProvider.select(
@@ -259,9 +274,12 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                               .copyWith(crossDistanceGain: value),
                         );
 
-                    final configuredVehicle =
-                        ref.watch(configuredVehicleProvider);
-                    ref.read(configuredVehicleProvider.notifier).update(
+                    final configuredVehicle = ref.watch(
+                      configuredVehicleProvider,
+                    );
+                    ref
+                        .read(configuredVehicleProvider.notifier)
+                        .update(
                           configuredVehicle.copyWith(
                             stanleyParameters: configuredVehicle
                                 .stanleyParameters
@@ -279,8 +297,9 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
         Consumer(
           builder: (context, ref, child) {
             final softeningGain = ref.watch(
-              mainVehicleProvider
-                  .select((vehicle) => vehicle.stanleyParameters.softeningGain),
+              mainVehicleProvider.select(
+                (vehicle) => vehicle.stanleyParameters.softeningGain,
+              ),
             );
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -293,7 +312,9 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                   max: 10e-5,
                   divisions: 100,
                   onChanged: (value) {
-                    ref.read(simInputProvider.notifier).send(
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send(
                           ref
                               .watch(
                                 mainVehicleProvider.select(
@@ -303,9 +324,12 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                               .copyWith(softeningGain: value),
                         );
 
-                    final configuredVehicle =
-                        ref.watch(configuredVehicleProvider);
-                    ref.read(configuredVehicleProvider.notifier).update(
+                    final configuredVehicle = ref.watch(
+                      configuredVehicleProvider,
+                    );
+                    ref
+                        .read(configuredVehicleProvider.notifier)
+                        .update(
                           configuredVehicle.copyWith(
                             stanleyParameters: configuredVehicle
                                 .stanleyParameters
@@ -323,8 +347,9 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
         Consumer(
           builder: (context, ref, child) {
             final velocityGain = ref.watch(
-              mainVehicleProvider
-                  .select((vehicle) => vehicle.stanleyParameters.velocityGain),
+              mainVehicleProvider.select(
+                (vehicle) => vehicle.stanleyParameters.velocityGain,
+              ),
             );
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -335,7 +360,9 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                   max: 3,
                   divisions: 30,
                   onChanged: (value) {
-                    ref.read(simInputProvider.notifier).send(
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send(
                           ref
                               .watch(
                                 mainVehicleProvider.select(
@@ -345,9 +372,12 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                               .copyWith(velocityGain: value),
                         );
 
-                    final configuredVehicle =
-                        ref.watch(configuredVehicleProvider);
-                    ref.read(configuredVehicleProvider.notifier).update(
+                    final configuredVehicle = ref.watch(
+                      configuredVehicleProvider,
+                    );
+                    ref
+                        .read(configuredVehicleProvider.notifier)
+                        .update(
                           configuredVehicle.copyWith(
                             stanleyParameters: configuredVehicle
                                 .stanleyParameters
@@ -384,14 +414,14 @@ class DraggableAutosteeringParameterConfigurator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => DynamicDraggableWidget(
-        offset: ref.watch(autosteeringConfiguratorUiOffsetProvider),
-        constraints: constraints,
-        maxWidth: 400,
-        maxHeight: 350,
-        maxWidthFraction: 0.7,
-        maxHeightFraction: 1,
-        onDragEnd:
-            ref.read(autosteeringConfiguratorUiOffsetProvider.notifier).update,
-        child: const AutosteeringParameterConfigurator(),
-      );
+    offset: ref.watch(autosteeringConfiguratorUiOffsetProvider),
+    constraints: constraints,
+    maxWidth: 400,
+    maxHeight: 350,
+    maxWidthFraction: 0.7,
+    maxHeightFraction: 1,
+    onDragEnd:
+        ref.read(autosteeringConfiguratorUiOffsetProvider.notifier).update,
+    child: const AutosteeringParameterConfigurator(),
+  );
 }

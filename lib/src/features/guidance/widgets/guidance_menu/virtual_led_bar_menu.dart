@@ -40,74 +40,94 @@ class VirtualLedBarMenu extends ConsumerWidget {
       icon: Icons.light_mode,
       menuChildren: [
         Consumer(
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(virtualLedBarEnabledProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(virtualLedBarEnabledProvider.notifier)
-                    .update(value: value)
-                : null,
-            secondary: Text('Enabled', style: textStyle),
-          ),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                value: ref.watch(virtualLedBarEnabledProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(virtualLedBarEnabledProvider.notifier)
+                                .update(value: value)
+                            : null,
+                secondary: Text('Enabled', style: textStyle),
+              ),
         ),
         _LedCountSelector(
           text: 'Center LEDs',
           count: config.centerCount,
-          onChanged: (value) => ref
-              .read(virtualLedBarConfigurationProvider.notifier)
-              .update(config.copyWith(centerCount: value)),
+          onChanged:
+              (value) => ref
+                  .read(virtualLedBarConfigurationProvider.notifier)
+                  .update(config.copyWith(centerCount: value)),
         ),
         if (config.centerCount.isEven && config.centerCount > 0)
           Consumer(
-            builder: (context, ref, child) => CheckboxListTile(
-              value: config.evenCenterSimulateOdd,
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(virtualLedBarConfigurationProvider.notifier)
-                      .update(config.copyWith(evenCenterSimulateOdd: value))
-                  : null,
-              secondary: Text('Active center', style: textStyle),
-            ),
+            builder:
+                (context, ref, child) => CheckboxListTile(
+                  value: config.evenCenterSimulateOdd,
+                  onChanged:
+                      (value) =>
+                          value != null
+                              ? ref
+                                  .read(
+                                    virtualLedBarConfigurationProvider.notifier,
+                                  )
+                                  .update(
+                                    config.copyWith(
+                                      evenCenterSimulateOdd: value,
+                                    ),
+                                  )
+                              : null,
+                  secondary: Text('Active center', style: textStyle),
+                ),
           ),
         _LedCountSelector(
           text: 'Intermediate LEDs',
           count: config.intermediateCount,
-          onChanged: (value) =>
-              ref.read(virtualLedBarConfigurationProvider.notifier).update(
-                    config.copyWith(intermediateCount: value),
-                  ),
+          onChanged:
+              (value) => ref
+                  .read(virtualLedBarConfigurationProvider.notifier)
+                  .update(config.copyWith(intermediateCount: value)),
         ),
         _LedCountSelector(
           text: 'End LEDs',
           count: config.endCount,
-          onChanged: (value) =>
-              ref.read(virtualLedBarConfigurationProvider.notifier).update(
-                    config.copyWith(endCount: value),
-                  ),
+          onChanged:
+              (value) => ref
+                  .read(virtualLedBarConfigurationProvider.notifier)
+                  .update(config.copyWith(endCount: value)),
         ),
         Builder(
           builder: (context) {
             var distancePerLed = config.distancePerLed;
             return StatefulBuilder(
-              builder: (context, setState) => Column(
-                children: [
-                  Text(
-                    'Distance / LED: ${(distancePerLed * 100).round()} cm',
-                    style: textStyle,
+              builder:
+                  (context, setState) => Column(
+                    children: [
+                      Text(
+                        'Distance / LED: ${(distancePerLed * 100).round()} cm',
+                        style: textStyle,
+                      ),
+                      Slider(
+                        value: distancePerLed * 100,
+                        onChanged:
+                            (value) =>
+                                setState(() => distancePerLed = value / 100),
+                        onChangeEnd:
+                            (value) => ref
+                                .read(
+                                  virtualLedBarConfigurationProvider.notifier,
+                                )
+                                .update(
+                                  config.copyWith(distancePerLed: value / 100),
+                                ),
+                        min: 1,
+                        max: 20,
+                        divisions: 19,
+                      ),
+                    ],
                   ),
-                  Slider(
-                    value: distancePerLed * 100,
-                    onChanged: (value) =>
-                        setState(() => distancePerLed = value / 100),
-                    onChangeEnd: (value) => ref
-                        .read(virtualLedBarConfigurationProvider.notifier)
-                        .update(config.copyWith(distancePerLed: value / 100)),
-                    min: 1,
-                    max: 20,
-                    divisions: 19,
-                  ),
-                ],
-              ),
             );
           },
         ),
@@ -115,24 +135,25 @@ class VirtualLedBarMenu extends ConsumerWidget {
           builder: (context) {
             var size = config.ledSize;
             return StatefulBuilder(
-              builder: (context, setState) => Column(
-                children: [
-                  Text(
-                    'LED Size: ${size.round()}',
-                    style: textStyle,
+              builder:
+                  (context, setState) => Column(
+                    children: [
+                      Text('LED Size: ${size.round()}', style: textStyle),
+                      Slider(
+                        value: size,
+                        onChanged: (value) => setState(() => size = value),
+                        onChangeEnd:
+                            (value) => ref
+                                .read(
+                                  virtualLedBarConfigurationProvider.notifier,
+                                )
+                                .update(config.copyWith(ledSize: value)),
+                        min: 10,
+                        max: 40,
+                        divisions: 30,
+                      ),
+                    ],
                   ),
-                  Slider(
-                    value: size,
-                    onChanged: (value) => setState(() => size = value),
-                    onChangeEnd: (value) => ref
-                        .read(virtualLedBarConfigurationProvider.notifier)
-                        .update(config.copyWith(ledSize: value)),
-                    min: 10,
-                    max: 40,
-                    divisions: 30,
-                  ),
-                ],
-              ),
             );
           },
         ),
@@ -140,59 +161,75 @@ class VirtualLedBarMenu extends ConsumerWidget {
           builder: (context) {
             var width = config.barWidth;
             return StatefulBuilder(
-              builder: (context, setState) => Column(
-                children: [
-                  Text(
-                    'Bar width: ${width.round()}',
-                    style: textStyle,
+              builder:
+                  (context, setState) => Column(
+                    children: [
+                      Text('Bar width: ${width.round()}', style: textStyle),
+                      Slider(
+                        value: width,
+                        onChanged: (value) => setState(() => width = value),
+                        onChangeEnd:
+                            (value) => ref
+                                .read(
+                                  virtualLedBarConfigurationProvider.notifier,
+                                )
+                                .update(config.copyWith(barWidth: value)),
+                        min: 200,
+                        max: 1200,
+                        divisions: 10,
+                      ),
+                    ],
                   ),
-                  Slider(
-                    value: width,
-                    onChanged: (value) => setState(() => width = value),
-                    onChangeEnd: (value) => ref
-                        .read(virtualLedBarConfigurationProvider.notifier)
-                        .update(config.copyWith(barWidth: value)),
-                    min: 200,
-                    max: 1200,
-                    divisions: 10,
-                  ),
-                ],
-              ),
             );
           },
         ),
         Consumer(
-          builder: (context, ref, child) => CheckboxListTile(
-            value: !config.showInactiveLeds,
-            onChanged: (value) => value != null
-                ? ref
-                    .read(virtualLedBarConfigurationProvider.notifier)
-                    .update(config.copyWith(showInactiveLeds: !value))
-                : null,
-            secondary: Text('Hide unlit LEDs', style: textStyle),
-          ),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                value: !config.showInactiveLeds,
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(
+                                  virtualLedBarConfigurationProvider.notifier,
+                                )
+                                .update(
+                                  config.copyWith(showInactiveLeds: !value),
+                                )
+                            : null,
+                secondary: Text('Hide unlit LEDs', style: textStyle),
+              ),
         ),
         Consumer(
-          builder: (context, ref, child) => CheckboxListTile(
-            value: config.reverseBar,
-            onChanged: (value) => value != null
-                ? ref
-                    .read(virtualLedBarConfigurationProvider.notifier)
-                    .update(config.copyWith(reverseBar: value))
-                : null,
-            secondary: Text('Reverse bar', style: textStyle),
-          ),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                value: config.reverseBar,
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(
+                                  virtualLedBarConfigurationProvider.notifier,
+                                )
+                                .update(config.copyWith(reverseBar: value))
+                            : null,
+                secondary: Text('Reverse bar', style: textStyle),
+              ),
         ),
         Consumer(
-          builder: (context, ref, child) => CheckboxListTile(
-            value: ref.watch(virtualLedBarTestingProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(virtualLedBarTestingProvider.notifier)
-                    .update(value: value)
-                : null,
-            secondary: Text('Test', style: textStyle),
-          ),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                value: ref.watch(virtualLedBarTestingProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(virtualLedBarTestingProvider.notifier)
+                                .update(value: value)
+                            : null,
+                secondary: Text('Test', style: textStyle),
+              ),
         ),
         Consumer(
           builder: (context, ref, child) {
@@ -202,10 +239,10 @@ class VirtualLedBarMenu extends ConsumerWidget {
 
               final distance =
                   -clampDouble(
-                ref.watch(virtualLedBarTestingDistanceProvider) ?? 0,
-                min,
-                max,
-              );
+                    ref.watch(virtualLedBarTestingDistanceProvider) ?? 0,
+                    min,
+                    max,
+                  );
 
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -216,9 +253,10 @@ class VirtualLedBarMenu extends ConsumerWidget {
                   ),
                   Slider.adaptive(
                     value: distance,
-                    onChanged: (value) => ref
-                        .read(virtualLedBarTestingDistanceProvider.notifier)
-                        .update(-value),
+                    onChanged:
+                        (value) => ref
+                            .read(virtualLedBarTestingDistanceProvider.notifier)
+                            .update(-value),
                     min: min,
                     max: max,
                   ),
@@ -257,10 +295,7 @@ class _LedCountSelectorState extends State<_LedCountSelector> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          '${widget.text}: $count',
-          style: textStyle,
-        ),
+        Text('${widget.text}: $count', style: textStyle),
         Slider.adaptive(
           value: count.toDouble(),
           onChanged: (value) => setState(() => count = value.toInt()),

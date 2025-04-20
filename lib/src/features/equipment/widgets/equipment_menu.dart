@@ -52,10 +52,11 @@ class EquipmentMenu extends ConsumerWidget {
             child: Icon(Icons.settings),
           ),
           child: Text('Configure', style: textStyle),
-          onPressed: () => showDialog<void>(
-            context: context,
-            builder: (context) => const EquipmentConfigurator(),
-          ),
+          onPressed:
+              () => showDialog<void>(
+                context: context,
+                builder: (context) => const EquipmentConfigurator(),
+              ),
         ),
         const _SaveEquipmentSetup(),
         const _AttachEquipmentMenu(),
@@ -66,35 +67,34 @@ class EquipmentMenu extends ConsumerWidget {
         else
           const _EquipmentTrajectoryButton(),
         Consumer(
-          child: Text(
-            'Clear unused',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => MenuItemButton(
-            closeOnActivate: false,
-            leadingIcon: const Padding(
-              padding: EdgeInsets.only(left: 8),
-              child: Icon(Icons.clear),
-            ),
-            onPressed: ref.read(allEquipmentsProvider.notifier).clear,
-            child: child,
-          ),
+          child: Text('Clear unused', style: textStyle),
+          builder:
+              (context, ref, child) => MenuItemButton(
+                closeOnActivate: false,
+                leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.clear),
+                ),
+                onPressed: ref.read(allEquipmentsProvider.notifier).clear,
+                child: child,
+              ),
         ),
         Consumer(
-          child: Text(
-            'Clear worked area',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => MenuItemButton(
-            closeOnActivate: false,
-            leadingIcon: const Padding(
-              padding: EdgeInsets.only(left: 8),
-              child: Icon(Icons.clear),
-            ),
-            onPressed: () =>
-                ref.read(allEquipmentsProvider.notifier).clearPaintedArea(),
-            child: child,
-          ),
+          child: Text('Clear worked area', style: textStyle),
+          builder:
+              (context, ref, child) => MenuItemButton(
+                closeOnActivate: false,
+                leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.clear),
+                ),
+                onPressed:
+                    () =>
+                        ref
+                            .read(allEquipmentsProvider.notifier)
+                            .clearPaintedArea(),
+                child: child,
+              ),
         ),
         Consumer(
           builder: (context, ref, child) {
@@ -103,10 +103,7 @@ class EquipmentMenu extends ConsumerWidget {
               title: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'Recording position',
-                    style: textStyle,
-                  ),
+                  Text('Recording position', style: textStyle),
                   SegmentedButton<double?>(
                     style: theme.segmentedButtonTheme.style?.copyWith(
                       visualDensity: VisualDensity.compact,
@@ -114,26 +111,17 @@ class EquipmentMenu extends ConsumerWidget {
                     showSelectedIcon: false,
                     selected: {fraction},
                     segments: const [
-                      ButtonSegment(
-                        value: null,
-                        label: Text('Default'),
-                      ),
-                      ButtonSegment(
-                        value: 1,
-                        label: Text('Front'),
-                      ),
-                      ButtonSegment(
-                        value: 0.5,
-                        label: Text('Center'),
-                      ),
-                      ButtonSegment(
-                        value: 0,
-                        label: Text('Rear'),
-                      ),
+                      ButtonSegment(value: null, label: Text('Default')),
+                      ButtonSegment(value: 1, label: Text('Front')),
+                      ButtonSegment(value: 0.5, label: Text('Center')),
+                      ButtonSegment(value: 0, label: Text('Rear')),
                     ],
-                    onSelectionChanged: (values) => ref
-                        .read(equipmentRecordPositionFractionProvider.notifier)
-                        .update(values.first),
+                    onSelectionChanged:
+                        (values) => ref
+                            .read(
+                              equipmentRecordPositionFractionProvider.notifier,
+                            )
+                            .update(values.first),
                   ),
                 ],
               ),
@@ -153,10 +141,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return Consumer(
-      child: Text(
-        'Save setup',
-        style: textStyle,
-      ),
+      child: Text('Save setup', style: textStyle),
       builder: (context, ref, child) {
         if (ref.watch(
           mainVehicleProvider.select((value) => value.numAttachedChildren > 0),
@@ -168,80 +153,92 @@ class _SaveEquipmentSetup extends StatelessWidget {
               child: Icon(Icons.save),
             ),
             child: child,
-            onPressed: () => showDialog<void>(
-              context: context,
-              builder: (context) {
-                var name = '';
-                return StatefulBuilder(
-                  builder: (context, setState) => SimpleDialog(
-                    title: const Text('Save equipment setup'),
-                    contentPadding: const EdgeInsets.only(
-                      left: 24,
-                      top: 12,
-                      right: 24,
-                      bottom: 16,
-                    ),
-                    children: [
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.label_outline),
-                          labelText: 'Name',
-                        ),
-                        initialValue: name,
-                        onChanged: (value) => setState(() => name = value),
-                        onFieldSubmitted: (value) =>
-                            setState(() => name = value),
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) => isBlank(value)
-                            ? '''No name entered! Please enter a name so that the setup can be saved!'''
-                            : null,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
+            onPressed:
+                () => showDialog<void>(
+                  context: context,
+                  builder: (context) {
+                    var name = '';
+                    return StatefulBuilder(
+                      builder:
+                          (context, setState) => SimpleDialog(
+                            title: const Text('Save equipment setup'),
+                            contentPadding: const EdgeInsets.only(
+                              left: 24,
+                              top: 12,
+                              right: 24,
+                              bottom: 16,
+                            ),
                             children: [
-                              ElevatedButton.icon(
-                                onPressed: Navigator.of(context).pop,
-                                icon: const Icon(Icons.clear),
-                                label: const Text('Cancel'),
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                  icon: Icon(Icons.label_outline),
+                                  labelText: 'Name',
+                                ),
+                                initialValue: name,
+                                onChanged:
+                                    (value) => setState(() => name = value),
+                                onFieldSubmitted:
+                                    (value) => setState(() => name = value),
+                                keyboardType: TextInputType.text,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator:
+                                    (value) =>
+                                        isBlank(value)
+                                            ? '''No name entered! Please enter a name so that the setup can be saved!'''
+                                            : null,
                               ),
-                              Consumer(
-                                builder: (context, ref, child) =>
-                                    FilledButton.icon(
-                                  onPressed: name.isNotEmpty
-                                      ? () {
-                                          ref.read(
-                                            saveEquipmentSetupProvider(
-                                              ref.read(
-                                                mainVehicleProvider.select(
-                                                  (value) => value
-                                                      .equipmentSetup(name),
-                                                ),
-                                              ),
-                                              downloadIfWeb: true,
-                                            ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: [
+                                      ElevatedButton.icon(
+                                        onPressed: Navigator.of(context).pop,
+                                        icon: const Icon(Icons.clear),
+                                        label: const Text('Cancel'),
+                                      ),
+                                      Consumer(
+                                        builder: (context, ref, child) {
+                                          return FilledButton.icon(
+                                            onPressed: switch (name
+                                                .isNotEmpty) {
+                                              true => () {
+                                                ref.read(
+                                                  saveEquipmentSetupProvider(
+                                                    ref.read(
+                                                      mainVehicleProvider
+                                                          .select(
+                                                            (value) => value
+                                                                .equipmentSetup(
+                                                                  name,
+                                                                ),
+                                                          ),
+                                                    ),
+                                                    downloadIfWeb: true,
+                                                  ),
+                                                );
+                                                Navigator.of(context).pop();
+                                              },
+                                              _ => null,
+                                            },
+                                            icon: const Icon(Icons.check),
+                                            label: const Text('Save'),
                                           );
-                                          Navigator.of(context).pop();
-                                        }
-                                      : null,
-                                  icon: const Icon(Icons.check),
-                                  label: const Text('Save'),
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
           );
         }
         return const SizedBox.shrink();
@@ -257,11 +254,10 @@ class _LoadEquipmentMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final equipments = ref.watch(savedEquipmentsProvider).when(
-          data: (data) => data,
-          error: (error, stackTrace) => <Equipment>[],
-          loading: () => <Equipment>[],
-        )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+    final equipments = ref
+        .watch(savedEquipmentsProvider)
+        .maybeWhen(data: (data) => data, orElse: () => <Equipment>[])
+      ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
     if (equipments.isEmpty) {
       return const SizedBox.shrink();
@@ -272,46 +268,62 @@ class _LoadEquipmentMenu extends ConsumerWidget {
     return MenuButtonWithChildren(
       text: 'Load',
       icon: Icons.history,
-      menuChildren: equipments
-          .map(
-            (equipment) => ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 300),
-              child: ListTile(
-                onTap: () {
-                  equipment.lastUsed = DateTime.now();
+      menuChildren:
+          equipments
+              .map(
+                (equipment) => ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 300),
+                  child: ListTile(
+                    onTap: () {
+                      equipment.lastUsed = DateTime.now();
 
-                  ref
-                    ..read(loadedEquipmentProvider.notifier).update(equipment)
-                    ..read(saveEquipmentProvider(equipment));
-                },
-                title: Text(equipment.name ?? equipment.uuid, style: textStyle),
-                subtitle: Text(
-                  '''${equipment.hitchType.name.capitalize} | ${equipment.width} m${equipment.sections.length > 1 ? ' | ${equipment.sections.length} sections' : ''}''',
+                      ref
+                        ..read(
+                          loadedEquipmentProvider.notifier,
+                        ).update(equipment)
+                        ..read(saveEquipmentProvider(equipment));
+                    },
+                    title: Text(
+                      equipment.name ?? equipment.uuid,
+                      style: textStyle,
+                    ),
+                    subtitle: Text(
+                      '''${equipment.hitchType.name.capitalize} | ${equipment.width} m${equipment.sections.length > 1 ? ' | ${equipment.sections.length} sections' : ''}''',
+                    ),
+                    trailing:
+                        Device.isNative
+                            ? IconButton(
+                              onPressed: () async {
+                                await showDialog<bool>(
+                                  context: context,
+                                  builder:
+                                      (context) => Consumer(
+                                        builder:
+                                            (
+                                              context,
+                                              ref,
+                                              child,
+                                            ) => DeleteDialog(
+                                              name:
+                                                  equipment.name ??
+                                                  equipment.uuid,
+                                              onDelete:
+                                                  () async => await ref.watch(
+                                                    deleteEquipmentProvider(
+                                                      equipment,
+                                                    ).future,
+                                                  ),
+                                            ),
+                                      ),
+                                );
+                              },
+                              icon: const Icon(Icons.delete),
+                            )
+                            : null,
+                  ),
                 ),
-                trailing: Device.isNative
-                    ? IconButton(
-                        onPressed: () async {
-                          await showDialog<bool>(
-                            context: context,
-                            builder: (context) => Consumer(
-                              builder: (context, ref, child) => DeleteDialog(
-                                name: equipment.name ?? equipment.uuid,
-                                onDelete: () async => await ref.watch(
-                                  deleteEquipmentProvider(
-                                    equipment,
-                                  ).future,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.delete),
-                      )
-                    : null,
-              ),
-            ),
-          )
-          .toList(),
+              )
+              .toList(),
     );
   }
 }
@@ -333,7 +345,7 @@ class _ImportExportMenu extends ConsumerWidget {
               closeOnActivate: false,
               onPressed: () => ref.read(importEquipmentProvider),
               leadingIcon: const Padding(
-                  padding: EdgeInsets.only(left: 8),
+                padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.file_open),
               ),
               child: Text('Import', style: textStyle),
@@ -344,20 +356,22 @@ class _ImportExportMenu extends ConsumerWidget {
           builder: (context, ref, child) {
             return MenuItemButton(
               closeOnActivate: false,
-              onPressed: ref.watch(
-                loadedEquipmentProvider.select(
-                  (value) =>
-                      value?.name != null && (value?.name ?? '').isNotEmpty,
-                ),
-              )
-                  ? () => ref.watch(
+              onPressed:
+                  ref.watch(
+                        loadedEquipmentProvider.select(
+                          (value) =>
+                              value?.name != null &&
+                              (value?.name ?? '').isNotEmpty,
+                        ),
+                      )
+                      ? () => ref.watch(
                         exportEquipmentProvider(
                           ref.watch(loadedEquipmentProvider)!,
                         ),
                       )
-                  : null,
+                      : null,
               leadingIcon: const Padding(
-                  padding: EdgeInsets.only(left: 8),
+                padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.save_alt),
               ),
               child: Text('Export', style: textStyle),
@@ -370,7 +384,7 @@ class _ImportExportMenu extends ConsumerWidget {
               closeOnActivate: false,
               onPressed: () => ref.read(importEquipmentSetupProvider),
               leadingIcon: const Padding(
-                  padding: EdgeInsets.only(left: 8),
+                padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.file_open),
               ),
               child: Text('Import setup', style: textStyle),
@@ -384,19 +398,20 @@ class _ImportExportMenu extends ConsumerWidget {
             builder: (context, ref, child) {
               return MenuItemButton(
                 closeOnActivate: false,
-                onPressed: ref.watch(
-                  configuredEquipmentSetupProvider.select(
-                    (value) => value != null && value.name.isNotEmpty,
-                  ),
-                )
-                    ? () => ref.watch(
+                onPressed:
+                    ref.watch(
+                          configuredEquipmentSetupProvider.select(
+                            (value) => value != null && value.name.isNotEmpty,
+                          ),
+                        )
+                        ? () => ref.watch(
                           exportEquipmentSetupProvider(
                             ref.watch(configuredEquipmentSetupProvider)!,
                           ),
                         )
-                    : null,
+                        : null,
                 leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
+                  padding: EdgeInsets.only(left: 8),
                   child: Icon(Icons.save_alt),
                 ),
                 child: Text('Export setup', style: textStyle),
@@ -404,10 +419,11 @@ class _ImportExportMenu extends ConsumerWidget {
             },
           ),
         Consumer(
-          builder: (context, ref, child) => ExportAllMenuButton(
-            onPressed: () =>
-                ref.read(exportAllProvider(directory: 'equipment')),
-          ),
+          builder:
+              (context, ref, child) => ExportAllMenuButton(
+                onPressed:
+                    () => ref.read(exportAllProvider(directory: 'equipment')),
+              ),
         ),
       ],
     );
@@ -421,11 +437,10 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final setups = ref.watch(savedEquipmentSetupsProvider).when(
-          data: (data) => data,
-          error: (error, stackTrace) => <EquipmentSetup>[],
-          loading: () => <EquipmentSetup>[],
-        )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+    final setups = ref
+        .watch(savedEquipmentSetupsProvider)
+        .maybeWhen(data: (data) => data, orElse: () => <EquipmentSetup>[])
+      ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
     if (setups.isEmpty) {
       return const SizedBox.shrink();
@@ -436,44 +451,51 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
     return MenuButtonWithChildren(
       text: 'Load setup',
       icon: Icons.history,
-      menuChildren: setups
-          .map(
-            (setup) => ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 200),
-              child: ListTile(
-                onTap: () {
-                  setup.lastUsed = DateTime.now();
+      menuChildren:
+          setups
+              .map(
+                (setup) => ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 200),
+                  child: ListTile(
+                    onTap: () {
+                      setup.lastUsed = DateTime.now();
 
-                  ref.read(saveEquipmentSetupProvider(setup));
-                  ref
-                      .read(configuredEquipmentSetupProvider.notifier)
-                      .update(setup);
-                },
-                title: Text(setup.name, style: textStyle),
-                trailing: Device.isNative
-                    ? IconButton(
-                        onPressed: () async {
-                          await showDialog<bool>(
-                            context: context,
-                            builder: (context) => Consumer(
-                              builder: (context, ref, child) => DeleteDialog(
-                                name: setup.name,
-                                onDelete: () async => await ref.watch(
-                                  deleteEquipmentSetupProvider(
-                                    setup,
-                                  ).future,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.delete),
-                      )
-                    : null,
-              ),
-            ),
-          )
-          .toList(),
+                      ref.read(saveEquipmentSetupProvider(setup));
+                      ref
+                          .read(configuredEquipmentSetupProvider.notifier)
+                          .update(setup);
+                    },
+                    title: Text(setup.name, style: textStyle),
+                    trailing:
+                        Device.isNative
+                            ? IconButton(
+                              onPressed: () async {
+                                await showDialog<bool>(
+                                  context: context,
+                                  builder: (context) {
+                                    return Consumer(
+                                      builder: (context, ref, child) {
+                                        return DeleteDialog(
+                                          name: setup.name,
+                                          onDelete:
+                                              () async => await ref.watch(
+                                                deleteEquipmentSetupProvider(
+                                                  setup,
+                                                ).future,
+                                              ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                              icon: const Icon(Icons.delete),
+                            )
+                            : null,
+                  ),
+                ),
+              )
+              .toList(),
     );
   }
 }
@@ -501,15 +523,15 @@ class _AttachEquipmentMenu extends ConsumerWidget {
 
     return equipmentName?.isNotEmpty ?? false
         ? MenuButtonWithChildren(
-            text: 'Attach\n$equipmentName',
-            icon: Icons.commit,
-            menuChildren: [
-              _RecursiveAttachEquipmentMenu(
-                parent: ref.watch(mainVehicleProvider),
-                child: ref.watch(loadedEquipmentProvider)!,
-              ),
-            ],
-          )
+          text: 'Attach\n$equipmentName',
+          icon: Icons.commit,
+          menuChildren: [
+            _RecursiveAttachEquipmentMenu(
+              parent: ref.watch(mainVehicleProvider),
+              child: ref.watch(loadedEquipmentProvider)!,
+            ),
+          ],
+        )
         : const SizedBox.shrink();
   }
 }
@@ -539,9 +561,7 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     if (parent.hitchPoints.isEmpty) {
-      return MenuItemButton(
-        child: Text(text, style: textStyle),
-      );
+      return MenuItemButton(child: Text(text, style: textStyle));
     }
 
     return MenuButtonWithChildren(
@@ -555,15 +575,14 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
           )
         else if (parent.hitchFrontFixedPoint != null)
           MenuItemButton(
-            onPressed: child.hitchType == HitchType.fixed
-                ? () => ref.read(simInputProvider.notifier).send(
-                      (
-                        parentUuid: parent.uuid,
-                        child: child,
-                        position: Hitch.frontFixed
-                      ),
-                    )
-                : null,
+            onPressed:
+                child.hitchType == HitchType.fixed
+                    ? () => ref.read(simInputProvider.notifier).send((
+                      parentUuid: parent.uuid,
+                      child: child,
+                      position: Hitch.frontFixed,
+                    ))
+                    : null,
             closeOnActivate: false,
             child: Text('Front fixed', style: textStyle),
           ),
@@ -575,15 +594,14 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
         else if (parent.hitchRearFixedPoint != null &&
             child.hitchType == HitchType.fixed)
           MenuItemButton(
-            onPressed: child.hitchType == HitchType.fixed
-                ? () => ref.read(simInputProvider.notifier).send(
-                      (
-                        parentUuid: parent.uuid,
-                        child: child,
-                        position: Hitch.rearFixed
-                      ),
-                    )
-                : null,
+            onPressed:
+                child.hitchType == HitchType.fixed
+                    ? () => ref.read(simInputProvider.notifier).send((
+                      parentUuid: parent.uuid,
+                      child: child,
+                      position: Hitch.rearFixed,
+                    ))
+                    : null,
             closeOnActivate: false,
             child: Text('Rear fixed', style: textStyle),
           ),
@@ -595,15 +613,14 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
         else if (parent.hitchRearTowbarPoint != null &&
             child.hitchType == HitchType.towbar)
           MenuItemButton(
-            onPressed: child.hitchType == HitchType.towbar
-                ? () => ref.read(simInputProvider.notifier).send(
-                      (
-                        parentUuid: parent.uuid,
-                        child: child,
-                        position: Hitch.rearTowbar
-                      ),
-                    )
-                : null,
+            onPressed:
+                child.hitchType == HitchType.towbar
+                    ? () => ref.read(simInputProvider.notifier).send((
+                      parentUuid: parent.uuid,
+                      child: child,
+                      position: Hitch.rearTowbar,
+                    ))
+                    : null,
             closeOnActivate: false,
             child: Text('Tow bar', style: textStyle),
           ),
@@ -669,18 +686,17 @@ class _RecursiveAttachEquipmentSetupMenu extends ConsumerWidget {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     if (parent.hitchPoints.isEmpty) {
-      return MenuItemButton(
-        child: Text(text, style: textStyle),
-      );
+      return MenuItemButton(child: Text(text, style: textStyle));
     }
 
     if (parent.hitchPoints.isNotEmpty && parent.hitchChildren.isEmpty) {
       return MenuItemButton(
         closeOnActivate: false,
         onPressed: () {
-          ref
-              .read(simInputProvider.notifier)
-              .send((equipmentSetup: setup, parentUuid: parent.uuid));
+          ref.read(simInputProvider.notifier).send((
+            equipmentSetup: setup,
+            parentUuid: parent.uuid,
+          ));
         },
         child: Text(text, style: textStyle),
       );
@@ -731,12 +747,12 @@ class _DetachMenu extends ConsumerWidget {
       menuChildren: [
         MenuItemButton(
           closeOnActivate: false,
-          onPressed: () => ref.read(simInputProvider.notifier).send(
-            (
-              detachAllFromUuid:
-                  ref.read(mainVehicleProvider.select((value) => value.uuid))
-            ),
-          ),
+          onPressed:
+              () => ref.read(simInputProvider.notifier).send((
+                detachAllFromUuid: ref.read(
+                  mainVehicleProvider.select((value) => value.uuid),
+                ),
+              )),
           child: Text(
             'Detach all',
             style: Theme.of(context).menuButtonWithChildrenText,
@@ -771,18 +787,19 @@ class _RecursiveDetachMenu extends ConsumerWidget {
       return MenuItemButton(
         closeOnActivate: false,
         child: Text(text, style: textStyle),
-        onPressed: () =>
-            ref.read(simInputProvider.notifier).send((detachUuid: parent.uuid)),
+        onPressed:
+            () => ref.read(simInputProvider.notifier).send((
+              detachUuid: parent.uuid,
+            )),
       );
     }
 
     return MenuButtonWithChildren(
       text: text,
-      menuChildren: parent.hitchChildren
-          .map(
-            (child) => _RecursiveDetachMenu(parent: child),
-          )
-          .toList(),
+      menuChildren:
+          parent.hitchChildren
+              .map((child) => _RecursiveDetachMenu(parent: child))
+              .toList(),
     );
   }
 }
@@ -800,66 +817,71 @@ class _EquipmentTrajectoryButton extends StatelessWidget {
         ConstrainedBox(
           constraints: const BoxConstraints(minWidth: 320),
           child: Consumer(
-            child: Text(
-              'Trajectory',
-              style: textStyle,
-            ),
-            builder: (context, ref, child) => CheckboxListTile(
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  child ?? const SizedBox.shrink(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Text('Trajectory', style: textStyle),
+            builder:
+                (context, ref, child) => CheckboxListTile(
+                  title: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('Time'),
-                      Slider.adaptive(
-                        value: ref.watch(
-                          debugEquipmentTrajectorySecondsProvider,
-                        ),
-                        onChanged: ref
-                            .read(
-                              debugEquipmentTrajectorySecondsProvider.notifier,
-                            )
-                            .update,
-                        min: 1,
-                        max: 20,
-                        divisions: 19,
-                        label:
-                            '''${ref.watch(debugEquipmentTrajectorySecondsProvider).round()} s''',
+                      child ?? const SizedBox.shrink(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Time'),
+                          Slider.adaptive(
+                            value: ref.watch(
+                              debugEquipmentTrajectorySecondsProvider,
+                            ),
+                            onChanged:
+                                ref
+                                    .read(
+                                      debugEquipmentTrajectorySecondsProvider
+                                          .notifier,
+                                    )
+                                    .update,
+                            min: 1,
+                            max: 20,
+                            divisions: 19,
+                            label:
+                                '''${ref.watch(debugEquipmentTrajectorySecondsProvider).round()} s''',
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Min'),
+                          Slider.adaptive(
+                            value: ref.watch(
+                              debugEquipmentTrajectoryMinLengthProvider,
+                            ),
+                            onChanged:
+                                ref
+                                    .read(
+                                      debugEquipmentTrajectoryMinLengthProvider
+                                          .notifier,
+                                    )
+                                    .update,
+                            max: 20,
+                            divisions: 20,
+                            label:
+                                '''${ref.watch(debugEquipmentTrajectoryMinLengthProvider).round()} m''',
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Min'),
-                      Slider.adaptive(
-                        value: ref.watch(
-                          debugEquipmentTrajectoryMinLengthProvider,
-                        ),
-                        onChanged: ref
-                            .read(
-                              debugEquipmentTrajectoryMinLengthProvider
-                                  .notifier,
-                            )
-                            .update,
-                        max: 20,
-                        divisions: 20,
-                        label:
-                            '''${ref.watch(debugEquipmentTrajectoryMinLengthProvider).round()} m''',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              value: ref.watch(debugEquipmentTrajectoryProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(debugEquipmentTrajectoryProvider.notifier)
-                      .update(value: value)
-                  : null,
-            ),
+                  value: ref.watch(debugEquipmentTrajectoryProvider),
+                  onChanged:
+                      (value) =>
+                          value != null
+                              ? ref
+                                  .read(
+                                    debugEquipmentTrajectoryProvider.notifier,
+                                  )
+                                  .update(value: value)
+                              : null,
+                ),
           ),
         ),
       ],
@@ -878,98 +900,105 @@ class _EqiupmentDebugMenu extends StatelessWidget {
       icon: Icons.bug_report,
       menuChildren: [
         Consumer(
-          child: Text(
-            'Draw equipment',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            title: child,
-            value: ref.watch(showEquipmentDrawingLayerProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(showEquipmentDrawingLayerProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
+          child: Text('Draw equipment', style: textStyle),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                title: child,
+                value: ref.watch(showEquipmentDrawingLayerProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(
+                                  showEquipmentDrawingLayerProvider.notifier,
+                                )
+                                .update(value: value)
+                            : null,
+              ),
         ),
         Consumer(
-          child: Text(
-            'Sections',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            title: child,
-            value: ref.watch(debugEquipmentSectionsProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(debugEquipmentSectionsProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
+          child: Text('Sections', style: textStyle),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                title: child,
+                value: ref.watch(debugEquipmentSectionsProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(debugEquipmentSectionsProvider.notifier)
+                                .update(value: value)
+                            : null,
+              ),
         ),
         Consumer(
-          child: Text(
-            'Turning',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            title: child,
-            value: ref.watch(debugEquipmentTurningProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(debugEquipmentTurningProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
+          child: Text('Turning', style: textStyle),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                title: child,
+                value: ref.watch(debugEquipmentTurningProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(debugEquipmentTurningProvider.notifier)
+                                .update(value: value)
+                            : null,
+              ),
         ),
         Consumer(
-          child: Text(
-            'Hitches',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            title: child,
-            value: ref.watch(debugEquipmentHitchesProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(debugEquipmentHitchesProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
+          child: Text('Hitches', style: textStyle),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                title: child,
+                value: ref.watch(debugEquipmentHitchesProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(debugEquipmentHitchesProvider.notifier)
+                                .update(value: value)
+                            : null,
+              ),
         ),
         const _EquipmentTrajectoryButton(),
         Consumer(
-          child: Text(
-            'Travelled path',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => CheckboxListTile(
-            title: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                child ?? const SizedBox.shrink(),
-                Slider.adaptive(
-                  value: ref
-                      .watch(debugEquipmentTravelledPathSizeProvider)
-                      .toDouble(),
-                  onChanged: (value) => ref
-                      .read(
-                        debugEquipmentTravelledPathSizeProvider.notifier,
-                      )
-                      .update(value.toInt()),
-                  min: 1,
-                  max: 1000,
-                  divisions: 10,
+          child: Text('Travelled path', style: textStyle),
+          builder:
+              (context, ref, child) => CheckboxListTile(
+                title: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    child ?? const SizedBox.shrink(),
+                    Slider.adaptive(
+                      value:
+                          ref
+                              .watch(debugEquipmentTravelledPathSizeProvider)
+                              .toDouble(),
+                      onChanged:
+                          (value) => ref
+                              .read(
+                                debugEquipmentTravelledPathSizeProvider
+                                    .notifier,
+                              )
+                              .update(value.toInt()),
+                      min: 1,
+                      max: 1000,
+                      divisions: 10,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            value: ref.watch(debugEquipmentTravelledPathProvider),
-            onChanged: (value) => value != null
-                ? ref
-                    .read(debugEquipmentTravelledPathProvider.notifier)
-                    .update(value: value)
-                : null,
-          ),
+                value: ref.watch(debugEquipmentTravelledPathProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(
+                                  debugEquipmentTravelledPathProvider.notifier,
+                                )
+                                .update(value: value)
+                            : null,
+              ),
         ),
       ],
     );

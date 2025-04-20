@@ -31,28 +31,26 @@ class LogReplay {
   /// [loop] is whehter the log should restart when reaching the end.
   factory LogReplay({required String log, bool loop = false}) {
     DateTime? firstRecordTime;
-    final records = const LineSplitter()
-        .convert(log)
-        .where((element) => element.isNotEmpty && element.contains(':'))
-        .mapIndexed((index, raw) {
-      final record = LogReplayRecord(
-        index: index,
-        raw: raw,
-        firstRecordTime: firstRecordTime,
-      );
-      firstRecordTime ??= record.logTime;
-      return record;
-    }).toList();
+    final records =
+        const LineSplitter()
+            .convert(log)
+            .where((element) => element.isNotEmpty && element.contains(':'))
+            .mapIndexed((index, raw) {
+              final record = LogReplayRecord(
+                index: index,
+                raw: raw,
+                firstRecordTime: firstRecordTime,
+              );
+              firstRecordTime ??= record.logTime;
+              return record;
+            })
+            .toList();
 
     return LogReplay._(log: log, records: records, loop: loop);
   }
 
   /// Default constructor
-  LogReplay._({
-    required this.log,
-    required this.records,
-    this.loop = false,
-  });
+  LogReplay._({required this.log, required this.records, this.loop = false});
 
   /// Whether the replay should loop.
   bool loop;
@@ -155,23 +153,28 @@ class LogReplayRecord {
     DateTime? firstRecordTime,
   }) {
     // Regex for basic ISO 8601 datetime.
-    final splits =
-        raw.split(RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d*Z*: '));
-    final timeString =
-        RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d*Z*').matchAsPrefix(raw);
-    final logTime =
-        DateTime.parse(raw.substring(timeString?.start ?? 0, timeString?.end));
-    final message = splits.last.endsWith('/')
-        ? splits.last.substring(0, splits.last.length - 1)
-        : splits.last;
+    final splits = raw.split(
+      RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d*Z*: '),
+    );
+    final timeString = RegExp(
+      r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d*Z*',
+    ).matchAsPrefix(raw);
+    final logTime = DateTime.parse(
+      raw.substring(timeString?.start ?? 0, timeString?.end),
+    );
+    final message =
+        splits.last.endsWith('/')
+            ? splits.last.substring(0, splits.last.length - 1)
+            : splits.last;
     return LogReplayRecord._(
       index: index,
       raw: raw,
       message: message,
       logTime: logTime,
-      replayTime: firstRecordTime != null
-          ? logTime.difference(firstRecordTime)
-          : Duration.zero,
+      replayTime:
+          firstRecordTime != null
+              ? logTime.difference(firstRecordTime)
+              : Duration.zero,
     );
   }
 

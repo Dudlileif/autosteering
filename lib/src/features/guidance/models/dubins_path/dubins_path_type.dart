@@ -27,53 +27,29 @@ enum DubinsSection {
   s,
 
   /// Right turn
-  r;
+  r,
 }
 
 /// An enumerator class for distinguishing between the different types of
 /// Dubins paths.
 enum DubinsPathType {
   /// Right - Straight - Right
-  rsr(
-    DubinsSection.r,
-    DubinsSection.s,
-    DubinsSection.r,
-  ),
+  rsr(DubinsSection.r, DubinsSection.s, DubinsSection.r),
 
   /// Right - Straight - Left
-  rsl(
-    DubinsSection.r,
-    DubinsSection.s,
-    DubinsSection.l,
-  ),
+  rsl(DubinsSection.r, DubinsSection.s, DubinsSection.l),
 
   /// Right - Left - Right
-  rlr(
-    DubinsSection.r,
-    DubinsSection.l,
-    DubinsSection.r,
-  ),
+  rlr(DubinsSection.r, DubinsSection.l, DubinsSection.r),
 
   /// Left - Straight - Right
-  lsr(
-    DubinsSection.l,
-    DubinsSection.s,
-    DubinsSection.r,
-  ),
+  lsr(DubinsSection.l, DubinsSection.s, DubinsSection.r),
 
   /// Left - Straight - Left
-  lsl(
-    DubinsSection.l,
-    DubinsSection.s,
-    DubinsSection.l,
-  ),
+  lsl(DubinsSection.l, DubinsSection.s, DubinsSection.l),
 
   /// Left - Right - Left
-  lrl(
-    DubinsSection.l,
-    DubinsSection.r,
-    DubinsSection.l,
-  );
+  lrl(DubinsSection.l, DubinsSection.r, DubinsSection.l);
 
   const DubinsPathType(this.start, this.mid, this.end);
 

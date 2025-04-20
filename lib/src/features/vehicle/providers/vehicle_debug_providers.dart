@@ -103,11 +103,11 @@ class DebugVehicleTravelledPathList extends _$DebugVehicleTravelledPathList {
 
   /// Add the [point] to the travelled path.
   void add(LatLng point) => Future(() {
-        if (state.length == ref.watch(debugVehicleTravelledPathSizeProvider)) {
-          state.removeLast();
-        }
-        state = [point, ...state];
-      });
+    if (state.length == ref.watch(debugVehicleTravelledPathSizeProvider)) {
+      state.removeLast();
+    }
+    state = [point, ...state];
+  });
 }
 
 /// Whether to show vehicle hitches debug.

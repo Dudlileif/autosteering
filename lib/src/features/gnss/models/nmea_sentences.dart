@@ -75,9 +75,10 @@ mixin ChecksumMixin on NmeaSentence {
 
   /// Reads the checksum contained in the raw string source. If the sentence
   /// does not contain a checksum, an empty string is returned.
-  String get checksum => hasChecksum
-      ? _checksum ??= raw.split(nmeaChecksumSeparator).last
-      : ''; // MAYBE: uppercase the checksum even if it was not uppercase
+  String get checksum =>
+      hasChecksum
+          ? _checksum ??= raw.split(nmeaChecksumSeparator).last
+          : ''; // MAYBE: uppercase the checksum even if it was not uppercase
 
   String? _actualChecksum;
 
@@ -100,9 +101,12 @@ mixin ChecksumMixin on NmeaSentence {
   /// This is the actual sentence, without any fixtures, which is used to
   /// calculate the checksum.
   @override
-  String get rawWithoutFixtures => _rawWithoutFixtures ??= (hasChecksum
-      ? super.rawWithoutFixtures.split(nmeaChecksumSeparator).first
-      : super.rawWithoutFixtures); // remove the checksum + separator character
+  String get rawWithoutFixtures =>
+      _rawWithoutFixtures ??=
+          (hasChecksum
+              // remove the checksum + separator character
+              ? super.rawWithoutFixtures.split(nmeaChecksumSeparator).first
+              : super.rawWithoutFixtures);
 }
 
 /// An abstract implementation class for an interface to interchangeably use the
@@ -221,9 +225,9 @@ mixin GnssPositionCommonSentence on NmeaSentence {
   /// The time delta from the message was created to it was received by this
   /// device.
   Duration? get deviceReceiveDelay => switch (utc != null) {
-        true => deviceReceiveTime.difference(utc!.toLocal()),
-        false => null,
-      };
+    true => deviceReceiveTime.difference(utc!.toLocal()),
+    false => null,
+  };
 
   /// The interpreted GNSS fix quality of this sentence.
   GnssFixQuality? get fixQuality;
@@ -322,8 +326,9 @@ class GGASentence extends TalkerSentence with GnssPositionCommonSentence {
   double? get ageOfDifferentialData => _doubleFromField(13);
 
   @override
-  GnssFixQuality? get fixQuality => GnssFixQuality.values
-      .firstWhereOrNull((element) => element.nmeaGGAQuality == quality);
+  GnssFixQuality? get fixQuality => GnssFixQuality.values.firstWhereOrNull(
+    (element) => element.nmeaGGAQuality == quality,
+  );
 }
 
 /// An NMEA message for multi-GNSS position data.
@@ -367,16 +372,18 @@ class GNSSentence extends TalkerSentence with GnssPositionCommonSentence {
   String? get navStatus => fields.elementAtOrNull(13);
 
   @override
-  GnssFixQuality? get fixQuality => (posMode?.split('') ?? [])
-      .map(
-        (e) => GnssFixQuality.values
-            .firstWhereOrNull((element) => element.nmeaGNSPosMode == e),
-      )
-      .sortedByCompare(
-        (element) => element?.index ?? 100,
-        (a, b) => a < b ? -1 : 1,
-      )
-      .firstOrNull;
+  GnssFixQuality? get fixQuality =>
+      (posMode?.split('') ?? [])
+          .map(
+            (e) => GnssFixQuality.values.firstWhereOrNull(
+              (element) => element.nmeaGNSPosMode == e,
+            ),
+          )
+          .sortedByCompare(
+            (element) => element?.index ?? 100,
+            (a, b) => a < b ? -1 : 1,
+          )
+          .firstOrNull;
 }
 
 /// An NMEA message for pseudo range error statistics.
@@ -548,8 +555,9 @@ class PANDASentence extends TalkerSentence with GnssPositionCommonSentence {
   double? get imuYawRate => _doubleFromField(15);
 
   @override
-  GnssFixQuality? get fixQuality => GnssFixQuality.values
-      .firstWhereOrNull((element) => element.nmeaGGAQuality == quality);
+  GnssFixQuality? get fixQuality => GnssFixQuality.values.firstWhereOrNull(
+    (element) => element.nmeaGGAQuality == quality,
+  );
 }
 
 /// A u-blox proprietary position and course NMEA message.
@@ -563,8 +571,9 @@ class PUBXSentence extends ProprietarySentence
   }
 
   @override
-  String get rawWithoutFixtures => _rawWithoutFixtures ??=
-      raw.replaceFirst(r'$', '').split(nmeaChecksumSeparator).first;
+  String get rawWithoutFixtures =>
+      _rawWithoutFixtures ??=
+          raw.replaceFirst(r'$', '').split(nmeaChecksumSeparator).first;
 
   /// An identifier for which type of message this is.
   String? get messageIdentifier => fields.elementAtOrNull(1);
@@ -615,8 +624,9 @@ class PUBXSentence extends ProprietarySentence
   int? get numSatellites => _intFromField(18);
 
   @override
-  GnssFixQuality? get fixQuality => GnssFixQuality.values
-      .firstWhereOrNull((element) => element.ubxNavStatus == ubxNavStatus);
+  GnssFixQuality? get fixQuality => GnssFixQuality.values.firstWhereOrNull(
+    (element) => element.ubxNavStatus == ubxNavStatus,
+  );
 
   @override
   double? get altitudeMSL => null;

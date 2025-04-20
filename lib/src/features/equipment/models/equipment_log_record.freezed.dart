@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,230 +10,158 @@ part of 'equipment_log_record.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-EquipmentLogRecord _$EquipmentLogRecordFromJson(Map<String, dynamic> json) {
-  return _EquipmentLogRecord.fromJson(json);
-}
 
 /// @nodoc
 mixin _$EquipmentLogRecord {
-  /// Time stamp of this.
-  @DateTimeSerializer()
-  DateTime get time => throw _privateConstructorUsedError;
 
-  /// List of the section indices for the active sections only.
-  List<int> get activeSections => throw _privateConstructorUsedError;
-
-  /// [WayPoint] for position and bearing of the equipment.
-  WayPoint get wayPoint => throw _privateConstructorUsedError;
+/// Time stamp of this.
+@DateTimeSerializer() DateTime get time;/// List of the section indices for the active sections only.
+ List<int> get activeSections;/// [WayPoint] for position and bearing of the equipment.
+ WayPoint get wayPoint;
+/// Create a copy of EquipmentLogRecord
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EquipmentLogRecordCopyWith<EquipmentLogRecord> get copyWith => _$EquipmentLogRecordCopyWithImpl<EquipmentLogRecord>(this as EquipmentLogRecord, _$identity);
 
   /// Serializes this EquipmentLogRecord to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of EquipmentLogRecord
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $EquipmentLogRecordCopyWith<EquipmentLogRecord> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EquipmentLogRecord&&(identical(other.time, time) || other.time == time)&&const DeepCollectionEquality().equals(other.activeSections, activeSections)&&(identical(other.wayPoint, wayPoint) || other.wayPoint == wayPoint));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,time,const DeepCollectionEquality().hash(activeSections),wayPoint);
+
+@override
+String toString() {
+  return 'EquipmentLogRecord(time: $time, activeSections: $activeSections, wayPoint: $wayPoint)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $EquipmentLogRecordCopyWith<$Res> {
-  factory $EquipmentLogRecordCopyWith(
-          EquipmentLogRecord value, $Res Function(EquipmentLogRecord) then) =
-      _$EquipmentLogRecordCopyWithImpl<$Res, EquipmentLogRecord>;
-  @useResult
-  $Res call(
-      {@DateTimeSerializer() DateTime time,
-      List<int> activeSections,
-      WayPoint wayPoint});
-}
+abstract mixin class $EquipmentLogRecordCopyWith<$Res>  {
+  factory $EquipmentLogRecordCopyWith(EquipmentLogRecord value, $Res Function(EquipmentLogRecord) _then) = _$EquipmentLogRecordCopyWithImpl;
+@useResult
+$Res call({
+@DateTimeSerializer() DateTime time, List<int> activeSections, WayPoint wayPoint
+});
 
+
+
+
+}
 /// @nodoc
-class _$EquipmentLogRecordCopyWithImpl<$Res, $Val extends EquipmentLogRecord>
+class _$EquipmentLogRecordCopyWithImpl<$Res>
     implements $EquipmentLogRecordCopyWith<$Res> {
-  _$EquipmentLogRecordCopyWithImpl(this._value, this._then);
+  _$EquipmentLogRecordCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final EquipmentLogRecord _self;
+  final $Res Function(EquipmentLogRecord) _then;
 
-  /// Create a copy of EquipmentLogRecord
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? time = null,
-    Object? activeSections = null,
-    Object? wayPoint = null,
-  }) {
-    return _then(_value.copyWith(
-      time: null == time
-          ? _value.time
-          : time // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      activeSections: null == activeSections
-          ? _value.activeSections
-          : activeSections // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      wayPoint: null == wayPoint
-          ? _value.wayPoint
-          : wayPoint // ignore: cast_nullable_to_non_nullable
-              as WayPoint,
-    ) as $Val);
-  }
+/// Create a copy of EquipmentLogRecord
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? time = null,Object? activeSections = null,Object? wayPoint = null,}) {
+  return _then(_self.copyWith(
+time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,activeSections: null == activeSections ? _self.activeSections : activeSections // ignore: cast_nullable_to_non_nullable
+as List<int>,wayPoint: null == wayPoint ? _self.wayPoint : wayPoint // ignore: cast_nullable_to_non_nullable
+as WayPoint,
+  ));
 }
 
-/// @nodoc
-abstract class _$$EquipmentLogRecordImplCopyWith<$Res>
-    implements $EquipmentLogRecordCopyWith<$Res> {
-  factory _$$EquipmentLogRecordImplCopyWith(_$EquipmentLogRecordImpl value,
-          $Res Function(_$EquipmentLogRecordImpl) then) =
-      __$$EquipmentLogRecordImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@DateTimeSerializer() DateTime time,
-      List<int> activeSections,
-      WayPoint wayPoint});
 }
 
-/// @nodoc
-class __$$EquipmentLogRecordImplCopyWithImpl<$Res>
-    extends _$EquipmentLogRecordCopyWithImpl<$Res, _$EquipmentLogRecordImpl>
-    implements _$$EquipmentLogRecordImplCopyWith<$Res> {
-  __$$EquipmentLogRecordImplCopyWithImpl(_$EquipmentLogRecordImpl _value,
-      $Res Function(_$EquipmentLogRecordImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of EquipmentLogRecord
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? time = null,
-    Object? activeSections = null,
-    Object? wayPoint = null,
-  }) {
-    return _then(_$EquipmentLogRecordImpl(
-      time: null == time
-          ? _value.time
-          : time // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      activeSections: null == activeSections
-          ? _value._activeSections
-          : activeSections // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      wayPoint: null == wayPoint
-          ? _value.wayPoint
-          : wayPoint // ignore: cast_nullable_to_non_nullable
-              as WayPoint,
-    ));
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$EquipmentLogRecordImpl implements _EquipmentLogRecord {
-  const _$EquipmentLogRecordImpl(
-      {@DateTimeSerializer() required this.time,
-      required final List<int> activeSections,
-      required this.wayPoint})
-      : _activeSections = activeSections;
 
-  factory _$EquipmentLogRecordImpl.fromJson(Map<String, dynamic> json) =>
-      _$$EquipmentLogRecordImplFromJson(json);
+class _EquipmentLogRecord implements EquipmentLogRecord {
+  const _EquipmentLogRecord({@DateTimeSerializer() required this.time, required final  List<int> activeSections, required this.wayPoint}): _activeSections = activeSections;
+  factory _EquipmentLogRecord.fromJson(Map<String, dynamic> json) => _$EquipmentLogRecordFromJson(json);
 
-  /// Time stamp of this.
-  @override
-  @DateTimeSerializer()
-  final DateTime time;
-
-  /// List of the section indices for the active sections only.
-  final List<int> _activeSections;
-
-  /// List of the section indices for the active sections only.
-  @override
-  List<int> get activeSections {
-    if (_activeSections is EqualUnmodifiableListView) return _activeSections;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_activeSections);
-  }
-
-  /// [WayPoint] for position and bearing of the equipment.
-  @override
-  final WayPoint wayPoint;
-
-  @override
-  String toString() {
-    return 'EquipmentLogRecord(time: $time, activeSections: $activeSections, wayPoint: $wayPoint)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$EquipmentLogRecordImpl &&
-            (identical(other.time, time) || other.time == time) &&
-            const DeepCollectionEquality()
-                .equals(other._activeSections, _activeSections) &&
-            (identical(other.wayPoint, wayPoint) ||
-                other.wayPoint == wayPoint));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, time,
-      const DeepCollectionEquality().hash(_activeSections), wayPoint);
-
-  /// Create a copy of EquipmentLogRecord
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$EquipmentLogRecordImplCopyWith<_$EquipmentLogRecordImpl> get copyWith =>
-      __$$EquipmentLogRecordImplCopyWithImpl<_$EquipmentLogRecordImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$EquipmentLogRecordImplToJson(
-      this,
-    );
-  }
+/// Time stamp of this.
+@override@DateTimeSerializer() final  DateTime time;
+/// List of the section indices for the active sections only.
+ final  List<int> _activeSections;
+/// List of the section indices for the active sections only.
+@override List<int> get activeSections {
+  if (_activeSections is EqualUnmodifiableListView) return _activeSections;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_activeSections);
 }
 
-abstract class _EquipmentLogRecord implements EquipmentLogRecord {
-  const factory _EquipmentLogRecord(
-      {@DateTimeSerializer() required final DateTime time,
-      required final List<int> activeSections,
-      required final WayPoint wayPoint}) = _$EquipmentLogRecordImpl;
+/// [WayPoint] for position and bearing of the equipment.
+@override final  WayPoint wayPoint;
 
-  factory _EquipmentLogRecord.fromJson(Map<String, dynamic> json) =
-      _$EquipmentLogRecordImpl.fromJson;
+/// Create a copy of EquipmentLogRecord
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EquipmentLogRecordCopyWith<_EquipmentLogRecord> get copyWith => __$EquipmentLogRecordCopyWithImpl<_EquipmentLogRecord>(this, _$identity);
 
-  /// Time stamp of this.
-  @override
-  @DateTimeSerializer()
-  DateTime get time;
-
-  /// List of the section indices for the active sections only.
-  @override
-  List<int> get activeSections;
-
-  /// [WayPoint] for position and bearing of the equipment.
-  @override
-  WayPoint get wayPoint;
-
-  /// Create a copy of EquipmentLogRecord
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EquipmentLogRecordImplCopyWith<_$EquipmentLogRecordImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$EquipmentLogRecordToJson(this, );
 }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EquipmentLogRecord&&(identical(other.time, time) || other.time == time)&&const DeepCollectionEquality().equals(other._activeSections, _activeSections)&&(identical(other.wayPoint, wayPoint) || other.wayPoint == wayPoint));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,time,const DeepCollectionEquality().hash(_activeSections),wayPoint);
+
+@override
+String toString() {
+  return 'EquipmentLogRecord(time: $time, activeSections: $activeSections, wayPoint: $wayPoint)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EquipmentLogRecordCopyWith<$Res> implements $EquipmentLogRecordCopyWith<$Res> {
+  factory _$EquipmentLogRecordCopyWith(_EquipmentLogRecord value, $Res Function(_EquipmentLogRecord) _then) = __$EquipmentLogRecordCopyWithImpl;
+@override @useResult
+$Res call({
+@DateTimeSerializer() DateTime time, List<int> activeSections, WayPoint wayPoint
+});
+
+
+
+
+}
+/// @nodoc
+class __$EquipmentLogRecordCopyWithImpl<$Res>
+    implements _$EquipmentLogRecordCopyWith<$Res> {
+  __$EquipmentLogRecordCopyWithImpl(this._self, this._then);
+
+  final _EquipmentLogRecord _self;
+  final $Res Function(_EquipmentLogRecord) _then;
+
+/// Create a copy of EquipmentLogRecord
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? time = null,Object? activeSections = null,Object? wayPoint = null,}) {
+  return _then(_EquipmentLogRecord(
+time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,activeSections: null == activeSections ? _self._activeSections : activeSections // ignore: cast_nullable_to_non_nullable
+as List<int>,wayPoint: null == wayPoint ? _self.wayPoint : wayPoint // ignore: cast_nullable_to_non_nullable
+as WayPoint,
+  ));
+}
+
+
+}
+
+// dart format on

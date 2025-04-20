@@ -30,27 +30,24 @@ part 'manufacturer_schemes.g.dart';
 class ManufacturerSchemes {
   /// An iterable of the available color schemes with the [brightness] applied.
   static Iterable<FlexSchemeColor> schemes(Brightness brightness) =>
-      ManufacturerColors.values.map(
-        (value) => scheme(value, brightness),
-      );
+      ManufacturerColors.values.map((value) => scheme(value, brightness));
 
   /// A function for getting the appropriate color scheme for the manufacturer
   /// [colors], depending on the theme mode [brightness].
   static FlexSchemeColor scheme(
     ManufacturerColors colors,
     Brightness brightness,
-  ) =>
-      FlexSchemeColor.from(
-        primary: colors.primary,
-        tertiary: colors.tertiary,
-        brightness: brightness,
-      );
+  ) => FlexSchemeColor.from(
+    primary: colors.primary,
+    tertiary: colors.tertiary,
+    brightness: brightness,
+  );
 }
 
 /// A class that holds information about a vehicle manufacturer's color
 /// scheme.
 @freezed
-class ManufacturerColors with _$ManufacturerColors {
+sealed class ManufacturerColors with _$ManufacturerColors {
   const factory ManufacturerColors({
     /// The name of the manufacturer.
     required String name,

@@ -22,7 +22,7 @@ part 'imu_zero_values.g.dart';
 
 /// A class for the zero values for the IMU in a vehicle.
 @freezed
-class ImuZeroValues with _$ImuZeroValues {
+sealed class ImuZeroValues with _$ImuZeroValues {
   /// A class for the zero values for the IMU in a vehicle.
   ///
   /// [bearingZero] should be set when the vehicle is pointing towards north.

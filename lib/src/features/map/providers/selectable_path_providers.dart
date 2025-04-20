@@ -70,8 +70,9 @@ class SelectablePathPoints extends _$SelectablePathPoints {
     });
 
     return ref.watch(
-          displayPathTrackingProvider
-              .select((value) => value?.wayPoints.map((e) => e.position)),
+          displayPathTrackingProvider.select(
+            (value) => value?.wayPoints.map((e) => e.position),
+          ),
         ) ??
         ref.watch(
           activeFieldProvider.select(
@@ -87,8 +88,7 @@ class SelectablePathPoints extends _$SelectablePathPoints {
   bool updateShouldNotify(
     Iterable<Geographic>? previous,
     Iterable<Geographic>? next,
-  ) =>
-      true;
+  ) => true;
 }
 
 /// A provider for several segment selections on the selectable path.
@@ -106,8 +106,7 @@ class SelectablePathIndexSegments extends _$SelectablePathIndexSegments {
   bool updateShouldNotify(
     Iterable<Iterable<int>>? previous,
     Iterable<Iterable<int>>? next,
-  ) =>
-      true;
+  ) => true;
 }
 
 /// A provider for the indices of the [SelectablePathPoints] that lie between
@@ -116,8 +115,9 @@ class SelectablePathIndexSegments extends _$SelectablePathIndexSegments {
 Iterable<int>? selectablePathIndices(Ref ref) {
   final start = ref.watch(selectablePathIndexStartProvider);
   final end = ref.watch(selectablePathIndexEndProvider);
-  final pathLength =
-      ref.watch(selectablePathPointsProvider.select((value) => value?.length));
+  final pathLength = ref.watch(
+    selectablePathPointsProvider.select((value) => value?.length),
+  );
   if (start != null && end != null && pathLength != null) {
     if (start < pathLength && end < pathLength) {
       final selected = <int>{start};
@@ -144,9 +144,7 @@ Iterable<int>? selectablePathIndices(Ref ref) {
 /// A provider for the points of the [SelectablePathPoints] that lie between
 /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
 @riverpod
-Iterable<Geographic>? selectablePathStartToEnd(
-  Ref ref,
-) {
+Iterable<Geographic>? selectablePathStartToEnd(Ref ref) {
   final points = ref.watch(selectablePathPointsProvider);
   final selected = ref.watch(selectablePathIndicesProvider);
   if (points != null && selected != null) {

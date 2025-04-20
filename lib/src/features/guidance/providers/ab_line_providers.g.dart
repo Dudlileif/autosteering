@@ -6,7 +6,7 @@ part of 'ab_line_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$aBLineHash() => r'a613bb0c34f5d9c7a2bc762f81b4495745b983f7';
+String _$aBLineHash() => r'89bf16cd284574737b546967390070cb6b1d6d1d';
 
 /// A provider for the AB-line.
 ///
@@ -30,17 +30,18 @@ String _$aPlusLineBearingHash() => r'59b6ab1e4921ed1dacf2103e6613059183d6ebae';
 @ProviderFor(APlusLineBearing)
 final aPlusLineBearingProvider =
     NotifierProvider<APlusLineBearing, double?>.internal(
-  APlusLineBearing.new,
-  name: r'aPlusLineBearingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aPlusLineBearingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      APlusLineBearing.new,
+      name: r'aPlusLineBearingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aPlusLineBearingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$APlusLineBearing = Notifier<double?>;
-String _$aPlusLineHash() => r'9d8fbcbfebf6be06c23a73ab958cc325c49d0d53';
+String _$aPlusLineHash() => r'8c67312daf006935e172b3e4e2d7752b611b3501';
 
 /// A provider for the A+-line.
 ///
@@ -48,13 +49,15 @@ String _$aPlusLineHash() => r'9d8fbcbfebf6be06c23a73ab958cc325c49d0d53';
 @ProviderFor(APlusLine)
 final aPlusLineProvider =
     AsyncNotifierProvider<APlusLine, guidance.APlusLine?>.internal(
-  APlusLine.new,
-  name: r'aPlusLineProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$aPlusLineHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      APlusLine.new,
+      name: r'aPlusLineProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aPlusLineHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$APlusLine = AsyncNotifier<guidance.APlusLine?>;
 // ignore_for_file: type=lint

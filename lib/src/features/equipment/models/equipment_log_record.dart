@@ -25,7 +25,7 @@ part 'equipment_log_record.g.dart';
 /// A log record for logging the equipment's position  and active state at the
 /// given time.
 @freezed
-class EquipmentLogRecord with _$EquipmentLogRecord {
+sealed class EquipmentLogRecord with _$EquipmentLogRecord {
   /// A log record for logging the equipment's position [wayPoint] and active
   /// state [activeSections] at the given [time] stamp.
   const factory EquipmentLogRecord({

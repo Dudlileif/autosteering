@@ -33,11 +33,7 @@ class HiveCachedTileProvider extends TileProvider {
   /// Additional [layer] data can be supplied which get shown int the debug log,
   /// mainly the name of the [layer], to easier distinguish between layers when
   /// several layers are active.
-  HiveCachedTileProvider({
-    this.layer,
-    this.debugPrint = false,
-    super.headers,
-  });
+  HiveCachedTileProvider({this.layer, this.debugPrint = false, super.headers});
 
   /// Whether the urls for the tiles should be printed to the console as they
   /// are requested.
@@ -51,19 +47,14 @@ class HiveCachedTileProvider extends TileProvider {
   ImageProvider getImage(TileCoordinates coordinates, TileLayer options) {
     final url = getTileUrl(coordinates, options);
     if (debugPrint) {
-      Logger.instance.i(
-        '''
+      Logger.instance.i('''
 HiveCachedTileProvider getting tile: 
 Layer: ${layer?.name}
 $coordinates
 Url: $url
-''',
-      );
+''');
     }
 
-    return FastCachedImageProvider(
-      url,
-      headers: headers,
-    );
+    return FastCachedImageProvider(url, headers: headers);
   }
 }

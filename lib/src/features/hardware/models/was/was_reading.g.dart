@@ -6,14 +6,14 @@ part of 'was_reading.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$WasReadingImpl _$$WasReadingImplFromJson(Map<String, dynamic> json) =>
-    _$WasReadingImpl(
-      receiveTime:
-          const DateTimeSerializer().fromJson(json['receiveTime'] as String),
-      value: (json['value'] as num?)?.toInt() ?? 0,
-    );
+_WasReading _$WasReadingFromJson(Map<String, dynamic> json) => _WasReading(
+  receiveTime: const DateTimeSerializer().fromJson(
+    json['receiveTime'] as String,
+  ),
+  value: (json['value'] as num?)?.toInt() ?? 0,
+);
 
-Map<String, dynamic> _$$WasReadingImplToJson(_$WasReadingImpl instance) =>
+Map<String, dynamic> _$WasReadingToJson(_WasReading instance) =>
     <String, dynamic>{
       'receiveTime': const DateTimeSerializer().toJson(instance.receiveTime),
       'value': instance.value,

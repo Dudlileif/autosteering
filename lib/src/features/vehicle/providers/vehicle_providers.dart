@@ -36,9 +36,10 @@ part 'vehicle_providers.g.dart';
 class MainVehicle extends _$MainVehicle {
   @override
   Vehicle build() {
-    final vehicle = ref.read(lastUsedVehicleProvider).requireValue
-      ..position = ref.read(homePositionProvider).geoPosition
-      ..lastUsed = DateTime.now();
+    final vehicle =
+        ref.read(lastUsedVehicleProvider).requireValue
+          ..position = ref.read(homePositionProvider).geoPosition
+          ..lastUsed = DateTime.now();
 
     ref.read(saveVehicleProvider(vehicle));
 
@@ -52,22 +53,23 @@ class MainVehicle extends _$MainVehicle {
   /// Update the [state] with only the position, velocity, bearing and
   /// steering input angle from [vehicle].
   void updateStateOnly(Vehicle vehicle) => Future(() {
-        state = state.copyWith(
-          velocity: vehicle.velocity,
-          bearing: vehicle.bearing,
-          steeringAngleInput: vehicle.steeringAngleInput,
-          antennaPosition: vehicle.position,
-        )..lastUsed = DateTime.now();
-      });
+    state = state.copyWith(
+      velocity: vehicle.velocity,
+      bearing: vehicle.bearing,
+      steeringAngleInput: vehicle.steeringAngleInput,
+      antennaPosition: vehicle.position,
+    )..lastUsed = DateTime.now();
+  });
 
   /// Update the [state] to a new [vehicle] configuration, but keep the
   /// position and bearing.
   void updateConfig(Vehicle vehicle) => Future(
-        () => state = vehicle.copyWith(
+    () =>
+        state = vehicle.copyWith(
           antennaPosition: state.position,
           bearing: state.bearing,
         )..lastUsed = DateTime.now(),
-      );
+  );
 
   /// Reset the [state] to the initial value by recreating the [state].
   void reset() => ref.invalidateSelf();
@@ -80,13 +82,11 @@ class ActiveAutosteeringState extends _$ActiveAutosteeringState {
   AutosteeringState build() {
     listenSelf((previous, next) {
       if (previous != null && previous != next) {
-        ref.read(audioQueueProvider.notifier).add(
-              switch (next) {
-                AutosteeringState.enabled => AudioAsset.autosteeringEnabled,
-                AutosteeringState.disabled => AudioAsset.autosteeringDisabled,
-                AutosteeringState.standby => AudioAsset.autosteeringStandby
-              },
-            );
+        ref.read(audioQueueProvider.notifier).add(switch (next) {
+          AutosteeringState.enabled => AudioAsset.autosteeringEnabled,
+          AutosteeringState.disabled => AudioAsset.autosteeringDisabled,
+          AutosteeringState.standby => AudioAsset.autosteeringStandby,
+        });
       }
     });
     return AutosteeringState.disabled;
@@ -105,15 +105,14 @@ FutureOr<void> saveVehicle(
   Vehicle vehicle, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async =>
-    ref.watch(
-      saveJsonToFileDirectoryProvider(
-        object: vehicle,
-        fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
-        folder: 'vehicles',
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => ref.watch(
+  saveJsonToFileDirectoryProvider(
+    object: vehicle,
+    fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
+    folder: 'vehicles',
+    downloadIfWeb: downloadIfWeb,
+  ).future,
+);
 
 /// A provider for saving [vehicle] to a file.
 ///
@@ -124,25 +123,21 @@ FutureOr<void> exportVehicle(
   Vehicle vehicle, {
   String? overrideName,
   bool downloadIfWeb = true,
-}) async =>
-    ref.watch(
-      exportJsonToFileDirectoryProvider(
-        object: vehicle,
-        fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
-        folder: 'vehicles',
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => ref.watch(
+  exportJsonToFileDirectoryProvider(
+    object: vehicle,
+    fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
+    folder: 'vehicles',
+    downloadIfWeb: downloadIfWeb,
+  ).future,
+);
 
 /// A provider for reading and holding all the saved [Vehicle]s in the
 /// user file directory.
 @Riverpod(keepAlive: true)
 FutureOr<List<Vehicle>> savedVehicles(Ref ref) async => await ref
     .watch(
-      savedFilesProvider(
-        fromJson: Vehicle.fromJson,
-        folder: 'vehicles',
-      ).future,
+      savedFilesProvider(fromJson: Vehicle.fromJson, folder: 'vehicles').future,
     )
     .then((data) => data.cast());
 
@@ -154,20 +149,16 @@ FutureOr<void> deleteVehicle(
   Ref ref,
   Vehicle vehicle, {
   String? overrideName,
-}) async =>
-    ref.watch(
-      deleteJsonFromFileDirectoryProvider(
-        fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
-        folder: 'vehicles',
-      ).future,
-    );
+}) async => ref.watch(
+  deleteJsonFromFileDirectoryProvider(
+    fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
+    folder: 'vehicles',
+  ).future,
+);
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 @riverpod
-FutureOr<Vehicle?> loadVehicleFromFile(
-  Ref ref,
-  String path,
-) async {
+FutureOr<Vehicle?> loadVehicleFromFile(Ref ref, String path) async {
   final file = File(path);
   if (file.existsSync()) {
     try {
@@ -190,23 +181,21 @@ FutureOr<Vehicle?> loadVehicleFromFile(
 /// property.
 @Riverpod(keepAlive: true)
 AsyncValue<Vehicle> lastUsedVehicle(Ref ref) =>
-    ref.watch(savedVehiclesProvider).whenData(
-      (data) {
-        if (data.isNotEmpty) {
-          final sorted = data..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+    ref.watch(savedVehiclesProvider).whenData((data) {
+      if (data.isNotEmpty) {
+        final sorted = data..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
-          final vehicle = sorted.first;
-          Logger.instance.i(
-            'Last used vehicle found: ${vehicle.name} | uuid: ${vehicle.uuid}.',
-          );
+        final vehicle = sorted.first;
+        Logger.instance.i(
+          'Last used vehicle found: ${vehicle.name} | uuid: ${vehicle.uuid}.',
+        );
 
-          return vehicle;
-        }
-        Logger.instance.i('Last used vehicle not found, creating new.');
+        return vehicle;
+      }
+      Logger.instance.i('Last used vehicle not found, creating new.');
 
-        return PreconfiguredVehicles.tractor;
-      },
-    );
+      return PreconfiguredVehicles.tractor;
+    });
 
 /// A provider for the number of previous positions to use for calculating
 /// the gauge velocity and bearing values.
@@ -246,14 +235,9 @@ class VehicleSteeringAngleTarget extends _$VehicleSteeringAngleTarget {
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.
 @riverpod
-FutureOr<Vehicle?> importVehicle(
-  Ref ref,
-) async {
+FutureOr<Vehicle?> importVehicle(Ref ref) async {
   ref.keepAlive();
-  Timer(
-    const Duration(seconds: 5),
-    ref.invalidateSelf,
-  );
+  Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.platform.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
@@ -275,9 +259,7 @@ FutureOr<Vehicle?> importVehicle(
         );
       }
     } else {
-      Logger.instance.w(
-        'Failed to import vehicle, data is null.',
-      );
+      Logger.instance.w('Failed to import vehicle, data is null.');
     }
   } else {
     final filePath = pickedFiles?.paths.first;
@@ -339,9 +321,9 @@ class OverrideSteering extends _$OverrideSteering {
     listenSelf((previous, next) {
       if (previous != null && !previous && next) {
         _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
-          ref.read(simInputProvider.notifier).send(
-            (steeringAngleOverride: ref.read(overrideSteeringAngleProvider)),
-          );
+          ref.read(simInputProvider.notifier).send((
+            steeringAngleOverride: ref.read(overrideSteeringAngleProvider),
+          ));
         });
         Logger.instance.i('Steering override enabled.');
       } else if (previous != null && previous && !next && _timer != null) {

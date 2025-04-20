@@ -34,20 +34,18 @@ class DubinsPathDebugLayer extends ConsumerWidget {
     final dubinsPath = ref.watch(debugDubinsPathProvider);
 
     if (dubinsPath != null) {
-      final pathType = ref.watch(dubinsPathDebugPathTypeProvider) ??
+      final pathType =
+          ref.watch(dubinsPathDebugPathTypeProvider) ??
           dubinsPath.bestPathData?.pathType;
       if (pathType != null) {
         if (dubinsPath.isPathTypePossible(pathType)) {
-          final showTurningCricles =
-              ref.watch(showDubinsPathDebugCirclesProvider);
+          final showTurningCricles = ref.watch(
+            showDubinsPathDebugCirclesProvider,
+          );
           final minTurningRadius = ref.watch(
             mainVehicleProvider.select((vehicle) => vehicle.minTurningRadius),
           );
-          final wayPoints = dubinsPath
-              .dubinsPathPlan(
-                pathType,
-              )!
-              .wayPoints!;
+          final wayPoints = dubinsPath.dubinsPathPlan(pathType)!.wayPoints!;
 
           return Stack(
             children: [
@@ -78,13 +76,16 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                       useRadiusInMeter: true,
                       color: Colors.pink.withValues(alpha: 0.3),
                     ),
-                    if ([DubinsPathType.lrl, DubinsPathType.rlr]
-                        .contains(pathType))
+                    if ([
+                      DubinsPathType.lrl,
+                      DubinsPathType.rlr,
+                    ].contains(pathType))
                       CircleMarker(
-                        point: dubinsPath
-                            .pathData(pathType)!
-                            .middleCircleCenter!
-                            .latLng,
+                        point:
+                            dubinsPath
+                                .pathData(pathType)!
+                                .middleCircleCenter!
+                                .latLng,
                         radius: minTurningRadius,
                         useRadiusInMeter: true,
                         color: Colors.blue.withValues(alpha: 0.3),
@@ -94,20 +95,22 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                     (e) => CircleMarker(point: e.position.latLng, radius: 5),
                   ),
                   CircleMarker(
-                    point: dubinsPath
-                        .pathData(pathType)!
-                        .tangentStart
-                        .position
-                        .latLng,
+                    point:
+                        dubinsPath
+                            .pathData(pathType)!
+                            .tangentStart
+                            .position
+                            .latLng,
                     radius: 3,
                     color: Colors.black,
                   ),
                   CircleMarker(
-                    point: dubinsPath
-                        .pathData(pathType)!
-                        .tangentEnd
-                        .position
-                        .latLng,
+                    point:
+                        dubinsPath
+                            .pathData(pathType)!
+                            .tangentEnd
+                            .position
+                            .latLng,
                     radius: 3,
                     color: Colors.black,
                   ),
@@ -160,11 +163,12 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                     point: dubinsPath.start.position.latLng,
                     child: MovableMapMarker(
                       point: dubinsPath.start.position,
-                      onMoved: (position) => ref
-                          .read(dubinsPathDebugStartPointProvider.notifier)
-                          .update(
-                            dubinsPath.start.copyWith(position: position),
-                          ),
+                      onMoved:
+                          (position) => ref
+                              .read(dubinsPathDebugStartPointProvider.notifier)
+                              .update(
+                                dubinsPath.start.copyWith(position: position),
+                              ),
                       radius: 5,
                       color: Colors.blue,
                     ),
@@ -173,11 +177,12 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                     point: dubinsPath.end.position.latLng,
                     child: MovableMapMarker(
                       point: dubinsPath.end.position,
-                      onMoved: (position) => ref
-                          .read(dubinsPathDebugEndPointProvider.notifier)
-                          .update(
-                            dubinsPath.end.copyWith(position: position),
-                          ),
+                      onMoved:
+                          (position) => ref
+                              .read(dubinsPathDebugEndPointProvider.notifier)
+                              .update(
+                                dubinsPath.end.copyWith(position: position),
+                              ),
                       radius: 5,
                       color: Colors.red,
                     ),
@@ -202,9 +207,10 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                 point: start.position.latLng,
                 child: MovableMapMarker(
                   point: start.position,
-                  onMoved: (position) => ref
-                      .read(dubinsPathDebugStartPointProvider.notifier)
-                      .update(start.copyWith(position: position)),
+                  onMoved:
+                      (position) => ref
+                          .read(dubinsPathDebugStartPointProvider.notifier)
+                          .update(start.copyWith(position: position)),
                   radius: 5,
                   color: Colors.blue,
                 ),
@@ -214,9 +220,10 @@ class DubinsPathDebugLayer extends ConsumerWidget {
                 point: end.position.latLng,
                 child: MovableMapMarker(
                   point: end.position,
-                  onMoved: (position) => ref
-                      .read(dubinsPathDebugEndPointProvider.notifier)
-                      .update(end.copyWith(position: position)),
+                  onMoved:
+                      (position) => ref
+                          .read(dubinsPathDebugEndPointProvider.notifier)
+                          .update(end.copyWith(position: position)),
                   radius: 5,
                   color: Colors.red,
                 ),

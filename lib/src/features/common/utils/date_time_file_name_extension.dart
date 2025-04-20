@@ -29,14 +29,12 @@ extension DateTimeFileNameExtension on DateTime {
   static DateTime? tryParseIso8601Filename(
     String value, {
     String colonReplacement = '_',
-  }) =>
-      DateTime.tryParse(value.replaceAll(colonReplacement, ':'));
+  }) => DateTime.tryParse(value.replaceAll(colonReplacement, ':'));
 
   /// Parses a [DateTime] object from the [value]. Expects an
   /// ISO 8601, but where colons are replaced with [colonReplacement].
   static DateTime parseIso8601Filename(
     String value, {
     String colonReplacement = '_',
-  }) =>
-      DateTime.parse(value.replaceAll(colonReplacement, ':'));
+  }) => DateTime.parse(value.replaceAll(colonReplacement, ':'));
 }

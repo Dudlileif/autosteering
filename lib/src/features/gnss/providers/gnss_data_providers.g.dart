@@ -14,18 +14,21 @@ String _$gnssCurrentSentenceHash() =>
 /// Copied from [GnssCurrentSentence].
 @ProviderFor(GnssCurrentSentence)
 final gnssCurrentSentenceProvider = AutoDisposeNotifierProvider<
-    GnssCurrentSentence, GnssPositionCommonSentence?>.internal(
+  GnssCurrentSentence,
+  GnssPositionCommonSentence?
+>.internal(
   GnssCurrentSentence.new,
   name: r'gnssCurrentSentenceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gnssCurrentSentenceHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$gnssCurrentSentenceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GnssCurrentSentence
-    = AutoDisposeNotifier<GnssPositionCommonSentence?>;
+typedef _$GnssCurrentSentence =
+    AutoDisposeNotifier<GnssPositionCommonSentence?>;
 String _$gnssCurrentFrequencyHash() =>
     r'a8fc1a0c70aab7c4c84054d15bc0a6ec2959f8c9';
 
@@ -35,14 +38,15 @@ String _$gnssCurrentFrequencyHash() =>
 @ProviderFor(GnssCurrentFrequency)
 final gnssCurrentFrequencyProvider =
     AutoDisposeNotifierProvider<GnssCurrentFrequency, double?>.internal(
-  GnssCurrentFrequency.new,
-  name: r'gnssCurrentFrequencyProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gnssCurrentFrequencyHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      GnssCurrentFrequency.new,
+      name: r'gnssCurrentFrequencyProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$gnssCurrentFrequencyHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$GnssCurrentFrequency = AutoDisposeNotifier<double?>;
 String _$gnssLastUpdateTimeHash() =>
@@ -53,19 +57,23 @@ String _$gnssLastUpdateTimeHash() =>
 /// Copied from [GnssLastUpdateTime].
 @ProviderFor(GnssLastUpdateTime)
 final gnssLastUpdateTimeProvider = AutoDisposeNotifierProvider<
-    GnssLastUpdateTime,
-    ({DateTime device, DateTime? receiver, Duration? delay})?>.internal(
+  GnssLastUpdateTime,
+  ({DateTime device, DateTime? receiver, Duration? delay})?
+>.internal(
   GnssLastUpdateTime.new,
   name: r'gnssLastUpdateTimeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gnssLastUpdateTimeHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$gnssLastUpdateTimeHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GnssLastUpdateTime = AutoDisposeNotifier<
-    ({DateTime device, DateTime? receiver, Duration? delay})?>;
+typedef _$GnssLastUpdateTime =
+    AutoDisposeNotifier<
+      ({DateTime device, DateTime? receiver, Duration? delay})?
+    >;
 String _$gnssPrecisionErrorHash() =>
     r'39a03ac359f2b51e31bce7937b8275137ffb483f';
 
@@ -74,22 +82,22 @@ String _$gnssPrecisionErrorHash() =>
 /// Copied from [GnssPrecisionError].
 @ProviderFor(GnssPrecisionError)
 final gnssPrecisionErrorProvider = AutoDisposeNotifierProvider<
-    GnssPrecisionError,
-    ({
-      double? latitudeError,
-      double? longitudeError,
-      double? altitudeError
-    })?>.internal(
+  GnssPrecisionError,
+  ({double? latitudeError, double? longitudeError, double? altitudeError})?
+>.internal(
   GnssPrecisionError.new,
   name: r'gnssPrecisionErrorProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gnssPrecisionErrorHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$gnssPrecisionErrorHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GnssPrecisionError = AutoDisposeNotifier<
-    ({double? latitudeError, double? longitudeError, double? altitudeError})?>;
+typedef _$GnssPrecisionError =
+    AutoDisposeNotifier<
+      ({double? latitudeError, double? longitudeError, double? altitudeError})?
+    >;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

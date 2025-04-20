@@ -44,9 +44,8 @@ class SimInput extends _$SimInput {
   }
 
   /// Send some [input] to the simulator.
-  void send(dynamic input) => Future(
-        () => ref.read(_simCoreIsolatePortProvider)?.send(input),
-      );
+  void send(dynamic input) =>
+      Future(() => ref.read(_simCoreIsolatePortProvider)?.send(input));
 }
 
 /// A provider for keeping the isolate [SendPort] when working on a
@@ -91,8 +90,9 @@ Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
 
   final simCoreReceiveStream = StreamQueue<dynamic>(receivePort);
 
-  final sendPort = (await simCoreReceiveStream.next as SendPort)
-    ..send(ServicesBinding.rootIsolateToken);
+  final sendPort =
+      (await simCoreReceiveStream.next as SendPort)
+        ..send(ServicesBinding.rootIsolateToken);
 
   ref.read(_simCoreIsolatePortProvider.notifier).update(sendPort);
 
@@ -107,16 +107,19 @@ Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
 
   // Use the restart timer if we're not in debug mode or if we're in
   // debug mode and don't allow long breaks.
-  final restartTimer =
-      switch (!kDebugMode || !ref.watch(simCoreDebugAllowLongBreaksProvider)) {
+  final restartTimer = switch (!kDebugMode ||
+      !ref.watch(simCoreDebugAllowLongBreaksProvider)) {
     true => RestartableTimer(
-          Duration(milliseconds: (heartbeatThreshold * 1000).round()), () {
-        Logger.instance
-            .w('Simulator Core isolate unresponsive/died... Restarting...');
+      Duration(milliseconds: (heartbeatThreshold * 1000).round()),
+      () {
+        Logger.instance.w(
+          'Simulator Core isolate unresponsive/died... Restarting...',
+        );
 
         ref.invalidateSelf();
-      }),
-    false => null
+      },
+    ),
+    false => null,
   };
 
   // Exit isolate when provider is disposed.
@@ -134,15 +137,16 @@ Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
     final message = await simCoreReceiveStream.next;
     restartTimer?.reset();
 
-    if (message is ({
-      Vehicle vehicle,
-      num velocity,
-      num bearing,
-      num distance,
-      PathTracking? pathTracking,
-      ABTracking? abTracking,
-      AutosteeringState autosteeringState,
-    })) {
+    if (message
+        is ({
+          Vehicle vehicle,
+          num velocity,
+          num bearing,
+          num distance,
+          PathTracking? pathTracking,
+          ABTracking? abTracking,
+          AutosteeringState autosteeringState,
+        })) {
       ref.read(commonSimCoreMessageHandlerProvider(message));
       yield message.vehicle;
     } else if (commonMessageHandler.attemptToHandleMessage(message)) {
@@ -173,9 +177,7 @@ Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
       }
     } else if (message is List) {
       if (message.any((element) => element is Exception)) {
-        Logger.instance.e(
-          'Simulator Core hit error, restarting...: $message',
-        );
+        Logger.instance.e('Simulator Core hit error, restarting...: $message');
         ref.invalidateSelf();
       }
     } else {
@@ -195,10 +197,11 @@ void simCoreVehicleDriving(Ref ref) {
       ref.watch(updatePositionFromDeviceProvider);
     }
 
-    final vehicle = ref.watch(simCoreIsolateStreamProvider).when(
+    final vehicle = ref
+        .watch(simCoreIsolateStreamProvider)
+        .maybeWhen(
           data: (data) => data,
-          error: (error, stackTrace) => ref.watch(mainVehicleProvider),
-          loading: () => ref.watch(mainVehicleProvider),
+          orElse: () => ref.watch(mainVehicleProvider),
         );
 
     ref.read(mainVehicleProvider.notifier).update(vehicle);

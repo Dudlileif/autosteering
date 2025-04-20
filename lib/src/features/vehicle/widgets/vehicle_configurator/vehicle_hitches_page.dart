@@ -30,163 +30,163 @@ class VehicleHitchesPage extends ConsumerWidget {
 
     final children = [
       Center(
-        child: Text(
-          'Hitches',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        child: Text('Hitches', style: Theme.of(context).textTheme.titleLarge),
       ),
       ...switch (vehicle) {
         AxleSteeredVehicle() => [
-            TextFormField(
-              decoration: InputDecoration(
-                icon: const Icon(Icons.expand),
-                labelText: '${switch (vehicle) {
-                  Tractor() => 'Rear',
-                  Harvester() => 'Front'
-                }} axle to front hitch distance',
-                suffixText: 'm',
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as AxleSteeredVehicle)
-                      .solidAxleToFrontHitchDistance
-                      ?.toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final distance = double.tryParse(value.replaceAll(',', '.'));
-
-                ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle..solidAxleToFrontHitchDistance = distance?.abs(),
-                    );
-              },
+          TextFormField(
+            decoration: InputDecoration(
+              icon: const Icon(Icons.expand),
+              labelText:
+                  '${switch (vehicle) {
+                    Tractor() => 'Rear',
+                    Harvester() => 'Front',
+                  }} axle to front hitch distance',
+              suffixText: 'm',
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                icon: const Icon(Icons.expand),
-                labelText: '${switch (vehicle) {
-                  Tractor() => 'Rear',
-                  Harvester() => 'Front'
-                }} axle to rear hitch distance',
-                suffixText: 'm',
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as AxleSteeredVehicle).solidAxleToFrontHitchDistance
+                        ?.toString(),
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as AxleSteeredVehicle)
-                      .solidAxleToRearHitchDistance
-                      ?.toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final distance = double.tryParse(value.replaceAll(',', '.'));
-
-                ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle..solidAxleToRearHitchDistance = distance?.abs(),
-                    );
-              },
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                icon: const Icon(Icons.expand),
-                labelText: '${switch (vehicle) {
-                  Tractor() => 'Rear',
-                  Harvester() => 'Front'
-                }} axle to rear towbar distance',
-                suffixText: 'm',
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as AxleSteeredVehicle)
-                      .solidAxleToRearTowbarDistance
-                      ?.toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final distance = double.tryParse(value.replaceAll(',', '.'));
+            onChanged: (value) {
+              final distance = double.tryParse(value.replaceAll(',', '.'));
 
-                ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle..solidAxleToRearTowbarDistance = distance?.abs(),
-                    );
-              },
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(
+                    vehicle..solidAxleToFrontHitchDistance = distance?.abs(),
+                  );
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              icon: const Icon(Icons.expand),
+              labelText:
+                  '${switch (vehicle) {
+                    Tractor() => 'Rear',
+                    Harvester() => 'Front',
+                  }} axle to rear hitch distance',
+              suffixText: 'm',
             ),
-          ],
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as AxleSteeredVehicle).solidAxleToRearHitchDistance
+                        ?.toString(),
+              ),
+            ),
+            onChanged: (value) {
+              final distance = double.tryParse(value.replaceAll(',', '.'));
+
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(
+                    vehicle..solidAxleToRearHitchDistance = distance?.abs(),
+                  );
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              icon: const Icon(Icons.expand),
+              labelText:
+                  '${switch (vehicle) {
+                    Tractor() => 'Rear',
+                    Harvester() => 'Front',
+                  }} axle to rear towbar distance',
+              suffixText: 'm',
+            ),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as AxleSteeredVehicle).solidAxleToRearTowbarDistance
+                        ?.toString(),
+              ),
+            ),
+            onChanged: (value) {
+              final distance = double.tryParse(value.replaceAll(',', '.'));
+
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(
+                    vehicle..solidAxleToRearTowbarDistance = distance?.abs(),
+                  );
+            },
+          ),
+        ],
         ArticulatedTractor() => [
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: Icon(Icons.expand),
-                labelText: 'Front axle to front hitch distance',
-                suffixText: 'm',
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as ArticulatedTractor)
-                      .frontAxleToHitchDistance
-                      ?.toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final distance = double.tryParse(value.replaceAll(',', '.'));
-
-                ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle..frontAxleToHitchDistance = distance?.abs(),
-                    );
-              },
+          TextFormField(
+            decoration: const InputDecoration(
+              icon: Icon(Icons.expand),
+              labelText: 'Front axle to front hitch distance',
+              suffixText: 'm',
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: Icon(Icons.expand),
-                labelText: 'Rear axle to rear hitch distance',
-                suffixText: 'm',
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as ArticulatedTractor).frontAxleToHitchDistance
+                        ?.toString(),
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as ArticulatedTractor)
-                      .rearAxleToHitchDistance
-                      ?.toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final distance = double.tryParse(value.replaceAll(',', '.'));
-
-                ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle..rearAxleToHitchDistance = distance?.abs(),
-                    );
-              },
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: Icon(Icons.expand),
-                labelText: 'Rear axle to rear towbar distance',
-                suffixText: 'm',
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as ArticulatedTractor)
-                      .rearAxleToTowbarDistance
-                      ?.toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final distance = double.tryParse(value.replaceAll(',', '.'));
+            onChanged: (value) {
+              final distance = double.tryParse(value.replaceAll(',', '.'));
 
-                ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle..rearAxleToTowbarDistance = distance?.abs(),
-                    );
-              },
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(vehicle..frontAxleToHitchDistance = distance?.abs());
+            },
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              icon: Icon(Icons.expand),
+              labelText: 'Rear axle to rear hitch distance',
+              suffixText: 'm',
             ),
-          ],
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as ArticulatedTractor).rearAxleToHitchDistance
+                        ?.toString(),
+              ),
+            ),
+            onChanged: (value) {
+              final distance = double.tryParse(value.replaceAll(',', '.'));
+
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(vehicle..rearAxleToHitchDistance = distance?.abs());
+            },
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              icon: Icon(Icons.expand),
+              labelText: 'Rear axle to rear towbar distance',
+              suffixText: 'm',
+            ),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as ArticulatedTractor).rearAxleToTowbarDistance
+                        ?.toString(),
+              ),
+            ),
+            onChanged: (value) {
+              final distance = double.tryParse(value.replaceAll(',', '.'));
+
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(vehicle..rearAxleToTowbarDistance = distance?.abs());
+            },
+          ),
+        ],
       },
     ];
 
@@ -194,14 +194,15 @@ class VehicleHitchesPage extends ConsumerWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children: children
-              .map(
-              (widget) => Padding(
-                padding: const EdgeInsets.all(8),
-                child: SizedBox(width: 400, child: widget),
-              ),
-              )
-              .toList(),
+          children:
+              children
+                  .map(
+                    (widget) => Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(width: 400, child: widget),
+                    ),
+                  )
+                  .toList(),
         ),
       ),
     );

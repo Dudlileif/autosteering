@@ -29,10 +29,7 @@ class EquipmentHitchesPage extends ConsumerWidget {
     final equipment = ref.watch(configuredEquipmentProvider);
 
     final children = [
-      Text(
-        'Child hitches',
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
+      Text('Child hitches', style: Theme.of(context).textTheme.titleLarge),
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),
@@ -48,7 +45,9 @@ class EquipmentHitchesPage extends ConsumerWidget {
         onFieldSubmitted: (value) {
           final distance = double.tryParse(value.replaceAll(',', '.'));
 
-          ref.read(configuredEquipmentProvider.notifier).update(
+          ref
+              .read(configuredEquipmentProvider.notifier)
+              .update(
                 equipment..hitchToChildFrontFixedHitchLength = distance?.abs(),
               );
         },
@@ -68,7 +67,9 @@ class EquipmentHitchesPage extends ConsumerWidget {
         onFieldSubmitted: (value) {
           final distance = double.tryParse(value.replaceAll(',', '.'));
 
-          ref.read(configuredEquipmentProvider.notifier).update(
+          ref
+              .read(configuredEquipmentProvider.notifier)
+              .update(
                 equipment..hitchToChildRearFixedHitchLength = distance?.abs(),
               );
         },
@@ -88,7 +89,9 @@ class EquipmentHitchesPage extends ConsumerWidget {
         onFieldSubmitted: (value) {
           final distance = double.tryParse(value.replaceAll(',', '.'));
 
-          ref.read(configuredEquipmentProvider.notifier).update(
+          ref
+              .read(configuredEquipmentProvider.notifier)
+              .update(
                 equipment..hitchToChildRearTowbarHitchLength = distance?.abs(),
               );
         },
@@ -97,17 +100,18 @@ class EquipmentHitchesPage extends ConsumerWidget {
 
     return SingleChildScrollView(
       child: Column(
-        children: children
-            .map(
-              (widget) => ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: widget,
-                ),
-              ),
-            )
-            .toList(),
+        children:
+            children
+                .map(
+                  (widget) => ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: widget,
+                    ),
+                  ),
+                )
+                .toList(),
       ),
     );
   }

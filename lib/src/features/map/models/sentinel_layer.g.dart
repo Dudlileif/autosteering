@@ -6,13 +6,13 @@ part of 'sentinel_layer.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SentinelLayerImpl _$$SentinelLayerImplFromJson(Map<String, dynamic> json) =>
-    _$SentinelLayerImpl(
+_SentinelLayer _$SentinelLayerFromJson(Map<String, dynamic> json) =>
+    _SentinelLayer(
       instanceId: json['instanceId'] as String,
       layerType: $enumDecode(_$SentinelLayerTypeEnumMap, json['layerType']),
     );
 
-Map<String, dynamic> _$$SentinelLayerImplToJson(_$SentinelLayerImpl instance) =>
+Map<String, dynamic> _$SentinelLayerToJson(_SentinelLayer instance) =>
     <String, dynamic>{
       'instanceId': instance.instanceId,
       'layerType': _$SentinelLayerTypeEnumMap[instance.layerType]!,

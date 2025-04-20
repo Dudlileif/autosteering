@@ -38,11 +38,13 @@ class ActiveThemeMode extends _$ActiveThemeMode {
             .update(SettingsKey.themeMode, next.name);
       }
     });
-    final name =
-        ref.read(settingsProvider.notifier).getString(SettingsKey.themeMode);
+    final name = ref
+        .read(settingsProvider.notifier)
+        .getString(SettingsKey.themeMode);
 
-    return ThemeMode.values
-            .firstWhereOrNull((element) => element.name == name) ??
+    return ThemeMode.values.firstWhereOrNull(
+          (element) => element.name == name,
+        ) ??
         ThemeMode.system;
   }
 
@@ -52,12 +54,13 @@ class ActiveThemeMode extends _$ActiveThemeMode {
   /// Cycle throught the available states by going to the next one after the
   /// current [state].
   void cycle() => Future(
-        () => state = switch (state) {
+    () =>
+        state = switch (state) {
           ThemeMode.light => ThemeMode.system,
           ThemeMode.system => ThemeMode.dark,
           ThemeMode.dark => ThemeMode.light,
         },
-      );
+  );
 }
 
 /// A provider that contains theme color state.
@@ -92,8 +95,9 @@ class Manufacturer extends _$Manufacturer {
       }
     }
 
-    return ManufacturerColors.values
-            .firstWhereOrNull((element) => element.name == name) ??
+    return ManufacturerColors.values.firstWhereOrNull(
+          (element) => element.name == name,
+        ) ??
         ManufacturerColors.masseyFerguson;
   }
 
@@ -137,21 +141,21 @@ class ColorSchemeInheritFromVehicle extends _$ColorSchemeInheritFromVehicle {
 /// for the options changes.
 @riverpod
 AppTheme appTheme(Ref ref) {
-  final manufacturerColors = ref.watch(colorSchemeInheritFromVehicleProvider)
-      ? ref.watch(
-          configuredVehicleProvider.select((value) => value.manufacturerColors),
-        )
-      : ref.watch(manufacturerProvider);
+  final manufacturerColors =
+      ref.watch(colorSchemeInheritFromVehicleProvider)
+          ? ref.watch(
+            configuredVehicleProvider.select(
+              (value) => value.manufacturerColors,
+            ),
+          )
+          : ref.watch(manufacturerProvider);
 
   return AppTheme(
     lightColors: ManufacturerSchemes.scheme(
       manufacturerColors,
       Brightness.light,
     ),
-    darkColors: ManufacturerSchemes.scheme(
-      manufacturerColors,
-      Brightness.dark,
-    ),
+    darkColors: ManufacturerSchemes.scheme(manufacturerColors, Brightness.dark),
     darkIsTrueBlack: true,
   );
 }
