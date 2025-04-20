@@ -31,8 +31,8 @@ part 'hardware_serial_providers.g.dart';
 
 /// A provider for the available serial ports.
 @riverpod
-List<SerialPort> availableSerialPorts(Ref ref) =>
-    SerialPort.availablePorts.map(SerialPort.new).toList();
+Future<List<SerialPort>> availableSerialPorts(Ref ref) async =>
+    (await SerialPort.availablePorts).map(SerialPort.new).toList();
 
 /// A provider for the baud rate for the [HardwareSerial] connection.
 @Riverpod(keepAlive: true)
@@ -108,7 +108,7 @@ class HardwareSerial extends _$HardwareSerial {
   void update(SerialPort? value) => Future(() => state = value);
 
   /// Writes [bytes] to the [state] serial port.
-  int? write(Uint8List bytes) => state?.write(bytes);
+  Future<int?> write(Uint8List bytes) async => state?.write(bytes);
 }
 
 /// A stream of the incoming serial data from the connected hardware.
@@ -130,12 +130,12 @@ Stream<String?> hardwareSerialStream(Ref ref) {
   final decoder = MessageDecoder();
 
   if (serial != null) {
-    timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
       final bytesSize = serial.bytesAvailable;
       if (bytesSize > 0) {
         ref.read(hardwareSerialAliveProvider.notifier).update(value: true);
 
-        final bytes = serial.read(bytesSize);
+        final bytes = await serial.read(bytesSize);
         final messages = decoder.decode(bytes);
 
         for (final message in messages) {

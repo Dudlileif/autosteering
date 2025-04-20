@@ -15,14 +15,15 @@ String _$wasCurrentFrequencyHash() =>
 @ProviderFor(WasCurrentFrequency)
 final wasCurrentFrequencyProvider =
     AutoDisposeNotifierProvider<WasCurrentFrequency, double?>.internal(
-  WasCurrentFrequency.new,
-  name: r'wasCurrentFrequencyProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$wasCurrentFrequencyHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      WasCurrentFrequency.new,
+      name: r'wasCurrentFrequencyProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$wasCurrentFrequencyHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$WasCurrentFrequency = AutoDisposeNotifier<double?>;
 String _$wasCurrentReadingHash() => r'657c28334eb4a6873b3e07cd3ec3c803fd581a4f';
@@ -33,14 +34,15 @@ String _$wasCurrentReadingHash() => r'657c28334eb4a6873b3e07cd3ec3c803fd581a4f';
 @ProviderFor(WasCurrentReading)
 final wasCurrentReadingProvider =
     AutoDisposeNotifierProvider<WasCurrentReading, WasReading?>.internal(
-  WasCurrentReading.new,
-  name: r'wasCurrentReadingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$wasCurrentReadingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      WasCurrentReading.new,
+      name: r'wasCurrentReadingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$wasCurrentReadingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$WasCurrentReading = AutoDisposeNotifier<WasReading?>;
 String _$showSteeringHardwareConfigHash() =>
@@ -52,14 +54,15 @@ String _$showSteeringHardwareConfigHash() =>
 @ProviderFor(ShowSteeringHardwareConfig)
 final showSteeringHardwareConfigProvider =
     AutoDisposeNotifierProvider<ShowSteeringHardwareConfig, bool>.internal(
-  ShowSteeringHardwareConfig.new,
-  name: r'showSteeringHardwareConfigProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showSteeringHardwareConfigHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowSteeringHardwareConfig.new,
+      name: r'showSteeringHardwareConfigProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showSteeringHardwareConfigHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowSteeringHardwareConfig = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint

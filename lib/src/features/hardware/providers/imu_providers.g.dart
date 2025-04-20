@@ -15,14 +15,15 @@ String _$imuCurrentFrequencyHash() =>
 @ProviderFor(ImuCurrentFrequency)
 final imuCurrentFrequencyProvider =
     AutoDisposeNotifierProvider<ImuCurrentFrequency, double?>.internal(
-  ImuCurrentFrequency.new,
-  name: r'imuCurrentFrequencyProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$imuCurrentFrequencyHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ImuCurrentFrequency.new,
+      name: r'imuCurrentFrequencyProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$imuCurrentFrequencyHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ImuCurrentFrequency = AutoDisposeNotifier<double?>;
 String _$imuCurrentReadingHash() => r'e1948ef2417c3db42821de475076825d7b40d762';
@@ -33,14 +34,15 @@ String _$imuCurrentReadingHash() => r'e1948ef2417c3db42821de475076825d7b40d762';
 @ProviderFor(ImuCurrentReading)
 final imuCurrentReadingProvider =
     AutoDisposeNotifierProvider<ImuCurrentReading, ImuReading?>.internal(
-  ImuCurrentReading.new,
-  name: r'imuCurrentReadingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$imuCurrentReadingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ImuCurrentReading.new,
+      name: r'imuCurrentReadingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$imuCurrentReadingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ImuCurrentReading = AutoDisposeNotifier<ImuReading?>;
 String _$showIMUConfigHash() => r'8ed9c315e024cd86397dfe71703d6d3a7685ddba';
@@ -51,14 +53,15 @@ String _$showIMUConfigHash() => r'8ed9c315e024cd86397dfe71703d6d3a7685ddba';
 @ProviderFor(ShowIMUConfig)
 final showIMUConfigProvider =
     AutoDisposeNotifierProvider<ShowIMUConfig, bool>.internal(
-  ShowIMUConfig.new,
-  name: r'showIMUConfigProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showIMUConfigHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowIMUConfig.new,
+      name: r'showIMUConfigProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showIMUConfigHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowIMUConfig = AutoDisposeNotifier<bool>;
 String _$imuConfiguratorUiOffsetHash() =>
@@ -70,14 +73,15 @@ String _$imuConfiguratorUiOffsetHash() =>
 @ProviderFor(ImuConfiguratorUiOffset)
 final imuConfiguratorUiOffsetProvider =
     AutoDisposeNotifierProvider<ImuConfiguratorUiOffset, Offset>.internal(
-  ImuConfiguratorUiOffset.new,
-  name: r'imuConfiguratorUiOffsetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$imuConfiguratorUiOffsetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ImuConfiguratorUiOffset.new,
+      name: r'imuConfiguratorUiOffsetProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$imuConfiguratorUiOffsetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ImuConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint

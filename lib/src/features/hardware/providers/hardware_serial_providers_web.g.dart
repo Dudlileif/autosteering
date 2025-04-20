@@ -15,14 +15,15 @@ String _$availableSerialPortsHash() =>
 @ProviderFor(availableSerialPorts)
 final availableSerialPortsProvider =
     AutoDisposeProvider<List<Object?>>.internal(
-  availableSerialPorts,
-  name: r'availableSerialPortsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$availableSerialPortsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      availableSerialPorts,
+      name: r'availableSerialPortsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$availableSerialPortsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -37,9 +38,10 @@ String _$hardwareSerialStreamHash() =>
 final hardwareSerialStreamProvider = StreamProvider<String?>.internal(
   hardwareSerialStream,
   name: r'hardwareSerialStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareSerialStreamHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$hardwareSerialStreamHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -56,14 +58,15 @@ String _$hardwareSerialBaudRateHash() =>
 @ProviderFor(HardwareSerialBaudRate)
 final hardwareSerialBaudRateProvider =
     NotifierProvider<HardwareSerialBaudRate, int>.internal(
-  HardwareSerialBaudRate.new,
-  name: r'hardwareSerialBaudRateProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareSerialBaudRateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      HardwareSerialBaudRate.new,
+      name: r'hardwareSerialBaudRateProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$hardwareSerialBaudRateHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$HardwareSerialBaudRate = Notifier<int>;
 String _$hardwareSerialHash() => r'94a5a704dd8ae3206030a39d1ef3008a8a442317';
@@ -74,14 +77,15 @@ String _$hardwareSerialHash() => r'94a5a704dd8ae3206030a39d1ef3008a8a442317';
 @ProviderFor(HardwareSerial)
 final hardwareSerialProvider =
     NotifierProvider<HardwareSerial, Object?>.internal(
-  HardwareSerial.new,
-  name: r'hardwareSerialProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareSerialHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      HardwareSerial.new,
+      name: r'hardwareSerialProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$hardwareSerialHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$HardwareSerial = Notifier<Object?>;
 String _$hardwareSerialAliveHash() =>
@@ -96,14 +100,15 @@ String _$hardwareSerialAliveHash() =>
 @ProviderFor(HardwareSerialAlive)
 final hardwareSerialAliveProvider =
     NotifierProvider<HardwareSerialAlive, bool>.internal(
-  HardwareSerialAlive.new,
-  name: r'hardwareSerialAliveProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareSerialAliveHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      HardwareSerialAlive.new,
+      name: r'hardwareSerialAliveProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$hardwareSerialAliveHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$HardwareSerialAlive = Notifier<bool>;
 // ignore_for_file: type=lint

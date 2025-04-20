@@ -16,9 +16,10 @@ String _$getSteeringHardwareConfigHash() =>
 final getSteeringHardwareConfigProvider = FutureProvider<void>.internal(
   getSteeringHardwareConfig,
   name: r'getSteeringHardwareConfigProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getSteeringHardwareConfigHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$getSteeringHardwareConfigHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -76,18 +77,14 @@ class UpdateSteeringHardwareConfigFamily extends Family<AsyncValue<void>> {
   UpdateSteeringHardwareConfigProvider call(
     SteeringHardwareConfigKeysContainer keyContainer,
   ) {
-    return UpdateSteeringHardwareConfigProvider(
-      keyContainer,
-    );
+    return UpdateSteeringHardwareConfigProvider(keyContainer);
   }
 
   @override
   UpdateSteeringHardwareConfigProvider getProviderOverride(
     covariant UpdateSteeringHardwareConfigProvider provider,
   ) {
-    return call(
-      provider.keyContainer,
-    );
+    return call(provider.keyContainer);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -117,21 +114,21 @@ class UpdateSteeringHardwareConfigProvider extends FutureProvider<void> {
   UpdateSteeringHardwareConfigProvider(
     SteeringHardwareConfigKeysContainer keyContainer,
   ) : this._internal(
-          (ref) => updateSteeringHardwareConfig(
-            ref as UpdateSteeringHardwareConfigRef,
-            keyContainer,
-          ),
-          from: updateSteeringHardwareConfigProvider,
-          name: r'updateSteeringHardwareConfigProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$updateSteeringHardwareConfigHash,
-          dependencies: UpdateSteeringHardwareConfigFamily._dependencies,
-          allTransitiveDependencies:
-              UpdateSteeringHardwareConfigFamily._allTransitiveDependencies,
-          keyContainer: keyContainer,
-        );
+        (ref) => updateSteeringHardwareConfig(
+          ref as UpdateSteeringHardwareConfigRef,
+          keyContainer,
+        ),
+        from: updateSteeringHardwareConfigProvider,
+        name: r'updateSteeringHardwareConfigProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$updateSteeringHardwareConfigHash,
+        dependencies: UpdateSteeringHardwareConfigFamily._dependencies,
+        allTransitiveDependencies:
+            UpdateSteeringHardwareConfigFamily._allTransitiveDependencies,
+        keyContainer: keyContainer,
+      );
 
   UpdateSteeringHardwareConfigProvider._internal(
     super._createNotifier, {
@@ -191,7 +188,8 @@ mixin UpdateSteeringHardwareConfigRef on FutureProviderRef<void> {
 }
 
 class _UpdateSteeringHardwareConfigProviderElement
-    extends FutureProviderElement<void> with UpdateSteeringHardwareConfigRef {
+    extends FutureProviderElement<void>
+    with UpdateSteeringHardwareConfigRef {
   _UpdateSteeringHardwareConfigProviderElement(super.provider);
 
   @override
@@ -209,9 +207,10 @@ String _$sendSteeringHardwareConfigHash() =>
 final sendSteeringHardwareConfigProvider = FutureProvider<void>.internal(
   sendSteeringHardwareConfig,
   name: r'sendSteeringHardwareConfigProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$sendSteeringHardwareConfigHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$sendSteeringHardwareConfigHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -228,14 +227,15 @@ String _$steeringMotorWasTargetHash() =>
 @ProviderFor(SteeringMotorWasTarget)
 final steeringMotorWasTargetProvider =
     NotifierProvider<SteeringMotorWasTarget, int?>.internal(
-  SteeringMotorWasTarget.new,
-  name: r'steeringMotorWasTargetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringMotorWasTargetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SteeringMotorWasTarget.new,
+      name: r'steeringMotorWasTargetProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringMotorWasTargetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringMotorWasTarget = Notifier<int?>;
 String _$steeringMotorActualRPMHash() =>
@@ -247,14 +247,15 @@ String _$steeringMotorActualRPMHash() =>
 @ProviderFor(SteeringMotorActualRPM)
 final steeringMotorActualRPMProvider =
     AutoDisposeNotifierProvider<SteeringMotorActualRPM, double?>.internal(
-  SteeringMotorActualRPM.new,
-  name: r'steeringMotorActualRPMProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringMotorActualRPMHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SteeringMotorActualRPM.new,
+      name: r'steeringMotorActualRPMProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringMotorActualRPMHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringMotorActualRPM = AutoDisposeNotifier<double?>;
 String _$steeringMotorStatusHash() =>
@@ -266,14 +267,15 @@ String _$steeringMotorStatusHash() =>
 @ProviderFor(SteeringMotorStatus)
 final steeringMotorStatusProvider =
     AutoDisposeNotifierProvider<SteeringMotorStatus, MotorStatus?>.internal(
-  SteeringMotorStatus.new,
-  name: r'steeringMotorStatusProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringMotorStatusHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SteeringMotorStatus.new,
+      name: r'steeringMotorStatusProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringMotorStatusHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringMotorStatus = AutoDisposeNotifier<MotorStatus?>;
 String _$steeringMotorCurrentScaleHash() =>
@@ -285,14 +287,15 @@ String _$steeringMotorCurrentScaleHash() =>
 @ProviderFor(SteeringMotorCurrentScale)
 final steeringMotorCurrentScaleProvider =
     AutoDisposeNotifierProvider<SteeringMotorCurrentScale, int?>.internal(
-  SteeringMotorCurrentScale.new,
-  name: r'steeringMotorCurrentScaleProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringMotorCurrentScaleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SteeringMotorCurrentScale.new,
+      name: r'steeringMotorCurrentScaleProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringMotorCurrentScaleHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringMotorCurrentScale = AutoDisposeNotifier<int?>;
 String _$steeringMotorStallguardHash() =>
@@ -304,14 +307,15 @@ String _$steeringMotorStallguardHash() =>
 @ProviderFor(SteeringMotorStallguard)
 final steeringMotorStallguardProvider =
     AutoDisposeNotifierProvider<SteeringMotorStallguard, int?>.internal(
-  SteeringMotorStallguard.new,
-  name: r'steeringMotorStallguardProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringMotorStallguardHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SteeringMotorStallguard.new,
+      name: r'steeringMotorStallguardProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringMotorStallguardHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringMotorStallguard = AutoDisposeNotifier<int?>;
 String _$steeringMotorEnableCalibrationHash() =>
@@ -323,14 +327,15 @@ String _$steeringMotorEnableCalibrationHash() =>
 @ProviderFor(SteeringMotorEnableCalibration)
 final steeringMotorEnableCalibrationProvider =
     NotifierProvider<SteeringMotorEnableCalibration, bool>.internal(
-  SteeringMotorEnableCalibration.new,
-  name: r'steeringMotorEnableCalibrationProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringMotorEnableCalibrationHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SteeringMotorEnableCalibration.new,
+      name: r'steeringMotorEnableCalibrationProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringMotorEnableCalibrationHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringMotorEnableCalibration = Notifier<bool>;
 String _$steeringMotorRotationHash() =>
@@ -342,14 +347,15 @@ String _$steeringMotorRotationHash() =>
 @ProviderFor(SteeringMotorRotation)
 final steeringMotorRotationProvider =
     AutoDisposeNotifierProvider<SteeringMotorRotation, double?>.internal(
-  SteeringMotorRotation.new,
-  name: r'steeringMotorRotationProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringMotorRotationHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SteeringMotorRotation.new,
+      name: r'steeringMotorRotationProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringMotorRotationHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringMotorRotation = AutoDisposeNotifier<double?>;
 String _$steeringMotorTargetRotationHash() =>
@@ -362,14 +368,15 @@ String _$steeringMotorTargetRotationHash() =>
 @ProviderFor(SteeringMotorTargetRotation)
 final steeringMotorTargetRotationProvider =
     AutoDisposeNotifierProvider<SteeringMotorTargetRotation, double?>.internal(
-  SteeringMotorTargetRotation.new,
-  name: r'steeringMotorTargetRotationProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringMotorTargetRotationHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SteeringMotorTargetRotation.new,
+      name: r'steeringMotorTargetRotationProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringMotorTargetRotationHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringMotorTargetRotation = AutoDisposeNotifier<double?>;
 String _$steeringMotorStepsPerWasIncrementMinToCenterHash() =>
@@ -381,19 +388,22 @@ String _$steeringMotorStepsPerWasIncrementMinToCenterHash() =>
 /// Copied from [SteeringMotorStepsPerWasIncrementMinToCenter].
 @ProviderFor(SteeringMotorStepsPerWasIncrementMinToCenter)
 final steeringMotorStepsPerWasIncrementMinToCenterProvider =
-    AutoDisposeNotifierProvider<SteeringMotorStepsPerWasIncrementMinToCenter,
-        double?>.internal(
-  SteeringMotorStepsPerWasIncrementMinToCenter.new,
-  name: r'steeringMotorStepsPerWasIncrementMinToCenterProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringMotorStepsPerWasIncrementMinToCenterHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+    AutoDisposeNotifierProvider<
+      SteeringMotorStepsPerWasIncrementMinToCenter,
+      double?
+    >.internal(
+      SteeringMotorStepsPerWasIncrementMinToCenter.new,
+      name: r'steeringMotorStepsPerWasIncrementMinToCenterProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringMotorStepsPerWasIncrementMinToCenterHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
-typedef _$SteeringMotorStepsPerWasIncrementMinToCenter
-    = AutoDisposeNotifier<double?>;
+typedef _$SteeringMotorStepsPerWasIncrementMinToCenter =
+    AutoDisposeNotifier<double?>;
 String _$steeringMotorStepsPerWasIncrementCenterToMaxHash() =>
     r'8cfdf066aa195f80b253d076abf91fcde7e64eef';
 
@@ -403,19 +413,22 @@ String _$steeringMotorStepsPerWasIncrementCenterToMaxHash() =>
 /// Copied from [SteeringMotorStepsPerWasIncrementCenterToMax].
 @ProviderFor(SteeringMotorStepsPerWasIncrementCenterToMax)
 final steeringMotorStepsPerWasIncrementCenterToMaxProvider =
-    AutoDisposeNotifierProvider<SteeringMotorStepsPerWasIncrementCenterToMax,
-        double?>.internal(
-  SteeringMotorStepsPerWasIncrementCenterToMax.new,
-  name: r'steeringMotorStepsPerWasIncrementCenterToMaxProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringMotorStepsPerWasIncrementCenterToMaxHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+    AutoDisposeNotifierProvider<
+      SteeringMotorStepsPerWasIncrementCenterToMax,
+      double?
+    >.internal(
+      SteeringMotorStepsPerWasIncrementCenterToMax.new,
+      name: r'steeringMotorStepsPerWasIncrementCenterToMaxProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringMotorStepsPerWasIncrementCenterToMaxHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
-typedef _$SteeringMotorStepsPerWasIncrementCenterToMax
-    = AutoDisposeNotifier<double?>;
+typedef _$SteeringMotorStepsPerWasIncrementCenterToMax =
+    AutoDisposeNotifier<double?>;
 String _$steeringHardwareConfiguratorUiOffsetHash() =>
     r'9b7a72885bfa15595da20455e44c1493d6f03a1d';
 
@@ -424,16 +437,19 @@ String _$steeringHardwareConfiguratorUiOffsetHash() =>
 /// Copied from [SteeringHardwareConfiguratorUiOffset].
 @ProviderFor(SteeringHardwareConfiguratorUiOffset)
 final steeringHardwareConfiguratorUiOffsetProvider =
-    AutoDisposeNotifierProvider<SteeringHardwareConfiguratorUiOffset,
-        Offset>.internal(
-  SteeringHardwareConfiguratorUiOffset.new,
-  name: r'steeringHardwareConfiguratorUiOffsetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringHardwareConfiguratorUiOffsetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+    AutoDisposeNotifierProvider<
+      SteeringHardwareConfiguratorUiOffset,
+      Offset
+    >.internal(
+      SteeringHardwareConfiguratorUiOffset.new,
+      name: r'steeringHardwareConfiguratorUiOffsetProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringHardwareConfiguratorUiOffsetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringHardwareConfiguratorUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint

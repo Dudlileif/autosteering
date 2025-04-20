@@ -57,9 +57,18 @@ dependencies:
     xml: ^6.5.0
 
 dependency_overrides:
+    flutter_libserialport:
+        git:
+            url: https://github.com/jpnurmi/flutter_libserialport.git
+            ref: 557d5d5865d073ed0532254243f396a6c2b0390b
+    libserialport:
+        git:
+            url: https://github.com/jpnurmi/libserialport.dart
+            ref: d591cb49b128a52f2e88a59da770ea2d73a0e570
+
     universal_io:
-        git: 
-            url: https://github.com/dint-dev/universal_io.git   
+        git:
+            url: https://github.com/dint-dev/universal_io.git
             ref: 41df5f997ffb8e177a06e1be2b539227dbc860ac
 
 dev_dependencies:
