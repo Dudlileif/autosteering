@@ -66,14 +66,13 @@ class SimulatorCoreBase {
                   Geographic gnssPosition,
                   DateTime gnssTime,
                   DateTime receiveTime,
+                  GnssFixQuality quality,
                 }) ||
             message is WasReading) {
           state.handleMessage(message);
         } else if (message != null) {
           updateMainThreadStream.add(message);
-          if (message is GnssPositionCommonSentence) {
-            state.handleMessage((gnssFixQuality: message.quality ?? 0));
-          } else if (message is ({List<bool> buttonStates})) {
+          if (message is ({List<bool> buttonStates})) {
             state.remoteControlSendStream?.add(
               Uint8List.fromList(
                 jsonEncode({'button_states': message.buttonStates}).codeUnits,

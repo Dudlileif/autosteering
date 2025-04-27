@@ -97,9 +97,6 @@ class SimulatorCoreState {
   })?
   prevDistanceCalcGnssUpdate;
 
-  /// The quality of the last GNSS fix.
-  GnssFixQuality gnssFixQuality = GnssFixQuality.notAvailable;
-
   /// The minimum distance between GNSS updates for updating the bearing
   /// gauge.
   static const minBearingUpdateDistance = 0.1;
