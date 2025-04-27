@@ -87,12 +87,12 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
           (precisionError!.latitudeError! + precisionError.longitudeError!) / 2;
     }
     if (horizontalAccuracy != null) {
-      textLines.add('Pos. Acc: $horizontalAccuracy m');
+      textLines.add('Pos. Acc: ${horizontalAccuracy.toStringAsPrecision(3)} m');
     }
     final verticalAccuracy =
         nmea?.verticalAccuracy ?? precisionError?.altitudeError;
     if (verticalAccuracy != null) {
-      textLines.add('Alt. Acc: $verticalAccuracy m');
+      textLines.add('Alt. Acc: ${verticalAccuracy.toStringAsPrecision(3)} m');
     }
     final altitude = nmea?.altitudeMSL;
     if (altitude != null) {
