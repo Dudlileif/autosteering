@@ -71,15 +71,19 @@ void initializeSimCore(Ref ref) {
     ..send((pathTracking: ref.read(displayPathTrackingProvider)))
     ..send((abTracking: ref.read(displayABTrackingProvider)));
   if (Device.isNative) {
-    ref.read(simInputProvider.notifier)
-      ..send(ref.read(hardwareCommunicationConfigProvider))
-      ..send((networkAvailable: ref.read(networkAvailableProvider)))
-      ..send((
-        logGNSS: ref.read(hardwareLogGnssProvider),
-        logIMU: ref.read(hardwareLogImuProvider),
-        logWAS: ref.read(hardwareLogWasProvider),
-        logCombined: ref.read(hardwareLogCombinedProvider),
-      ));
+    // Delay sending of network info to make sure startup is not too fast in
+    // profile and release mode.
+    Future.delayed(const Duration(milliseconds: 500), () {
+      ref.read(simInputProvider.notifier)
+        ..send(ref.read(hardwareCommunicationConfigProvider))
+        ..send((networkAvailable: ref.read(networkAvailableProvider)))
+        ..send((
+          logGNSS: ref.read(hardwareLogGnssProvider),
+          logIMU: ref.read(hardwareLogImuProvider),
+          logWAS: ref.read(hardwareLogWasProvider),
+          logCombined: ref.read(hardwareLogCombinedProvider),
+        ));
+    });
   }
 }
 
