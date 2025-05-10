@@ -47,34 +47,40 @@ class ThemeMenu extends StatelessWidget {
               },
               menuChildren: [
                 Consumer(
-                  builder: (context, ref, child) => ListTile(
-                    leading: const Icon(Icons.light_mode),
-                    title: const Text('Light mode'),
-                    onTap: () => ref
-                        .read(activeThemeModeProvider.notifier)
-                        .update(ThemeMode.light),
-                    selected: themeMode == ThemeMode.light,
-                  ),
+                  builder:
+                      (context, ref, child) => ListTile(
+                        leading: const Icon(Icons.light_mode),
+                        title: const Text('Light mode'),
+                        onTap:
+                            () => ref
+                                .read(activeThemeModeProvider.notifier)
+                                .update(ThemeMode.light),
+                        selected: themeMode == ThemeMode.light,
+                      ),
                 ),
                 Consumer(
-                  builder: (context, ref, child) => ListTile(
-                    leading: const Icon(Icons.dark_mode),
-                    title: const Text('Dark mode'),
-                    onTap: () => ref
-                        .read(activeThemeModeProvider.notifier)
-                        .update(ThemeMode.dark),
-                    selected: themeMode == ThemeMode.dark,
-                  ),
+                  builder:
+                      (context, ref, child) => ListTile(
+                        leading: const Icon(Icons.dark_mode),
+                        title: const Text('Dark mode'),
+                        onTap:
+                            () => ref
+                                .read(activeThemeModeProvider.notifier)
+                                .update(ThemeMode.dark),
+                        selected: themeMode == ThemeMode.dark,
+                      ),
                 ),
                 Consumer(
-                  builder: (context, ref, child) => ListTile(
-                    leading: const Icon(Icons.settings_brightness),
-                    title: const Text('Auto mode'),
-                    onTap: () => ref
-                        .read(activeThemeModeProvider.notifier)
-                        .update(ThemeMode.system),
-                    selected: themeMode == ThemeMode.system,
-                  ),
+                  builder:
+                      (context, ref, child) => ListTile(
+                        leading: const Icon(Icons.settings_brightness),
+                        title: const Text('Auto mode'),
+                        onTap:
+                            () => ref
+                                .read(activeThemeModeProvider.notifier)
+                                .update(ThemeMode.system),
+                        selected: themeMode == ThemeMode.system,
+                      ),
                 ),
               ],
             );
@@ -82,20 +88,22 @@ class ThemeMenu extends StatelessWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final inheritFromVehicle =
-                ref.watch(colorSchemeInheritFromVehicleProvider);
+            final inheritFromVehicle = ref.watch(
+              colorSchemeInheritFromVehicleProvider,
+            );
 
             final listTile = CheckboxListTile(
-              title: Text(
-                'Inherit colors from vehicle',
-                style: textStyle,
-              ),
+              title: Text('Inherit colors from vehicle', style: textStyle),
               value: inheritFromVehicle,
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(colorSchemeInheritFromVehicleProvider.notifier)
-                      .update(value: value)
-                  : null,
+              onChanged:
+                  (value) =>
+                      value != null
+                          ? ref
+                              .read(
+                                colorSchemeInheritFromVehicleProvider.notifier,
+                              )
+                              .update(value: value)
+                          : null,
             );
 
             if (!inheritFromVehicle) {
@@ -113,21 +121,23 @@ class ThemeMenu extends StatelessWidget {
                           Icons.palette,
                           color: colorTheme.primary,
                         ),
-                        menuChildren: ManufacturerColors.values
-                            .map(
-                              (scheme) => ListTile(
-                                leading: Icon(
-                                  Icons.palette,
-                                  color: scheme.primary,
-                                ),
-                                title: Text(scheme.name),
-                                selected: colorTheme == scheme,
-                                onTap: () => ref
-                                    .read(manufacturerProvider.notifier)
-                                    .update(scheme),
-                              ),
-                            )
-                            .toList(),
+                        menuChildren:
+                            ManufacturerColors.values
+                                .map(
+                                  (scheme) => ListTile(
+                                    leading: Icon(
+                                      Icons.palette,
+                                      color: scheme.primary,
+                                    ),
+                                    title: Text(scheme.name),
+                                    selected: colorTheme == scheme,
+                                    onTap:
+                                        () => ref
+                                            .read(manufacturerProvider.notifier)
+                                            .update(scheme),
+                                  ),
+                                )
+                                .toList(),
                       );
                     },
                   ),

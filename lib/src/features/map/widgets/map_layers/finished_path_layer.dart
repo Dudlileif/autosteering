@@ -32,28 +32,27 @@ class FinishedPathLayer extends ConsumerWidget {
     final points = ref.watch(finishedPathRecordingListProvider) ?? const [];
 
     return Stack(
-      children: points.isNotEmpty
-          ? [
-              PolylineLayer(
-                polylines: [
-                  Polyline(
-                    points:
-                        points.map((point) => point.position.latLng).toList(),
-                  ),
-                ],
-              ),
-              CircleLayer(
-                circles: [
-                  ...points.map(
-                    (point) => CircleMarker(
-                      point: point.position.latLng,
-                      radius: 5,
+      children:
+          points.isNotEmpty
+              ? [
+                PolylineLayer(
+                  polylines: [
+                    Polyline(
+                      points:
+                          points.map((point) => point.position.latLng).toList(),
                     ),
-                  ),
-                ],
-              ),
-            ]
-          : const [],
+                  ],
+                ),
+                CircleLayer(
+                  circles: [
+                    ...points.map(
+                      (point) =>
+                          CircleMarker(point: point.position.latLng, radius: 5),
+                    ),
+                  ],
+                ),
+              ]
+              : const [],
     );
   }
 }

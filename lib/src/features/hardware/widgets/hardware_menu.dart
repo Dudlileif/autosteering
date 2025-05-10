@@ -46,10 +46,11 @@ class HardwareMenu extends ConsumerWidget {
             child: Icon(Icons.settings_ethernet),
           ),
           closeOnActivate: false,
-          onPressed: () => showDialog<void>(
-            context: context,
-            builder: (context) => const HardwareNetworkDialog(),
-          ),
+          onPressed:
+              () => showDialog<void>(
+                context: context,
+                builder: (context) => const HardwareNetworkDialog(),
+              ),
           child: Text('Network', style: textStyle),
         ),
         if (Device.isNative) const NtripMenu(),
@@ -62,14 +63,12 @@ class HardwareMenu extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.settings_remote),
             ),
-            onPressed: () => showDialog<void>(
-              context: context,
-              builder: (context) => const RemoteControlConfigurator(),
-            ),
-            child: Text(
-              'Remote control',
-              style: textStyle,
-            ),
+            onPressed:
+                () => showDialog<void>(
+                  context: context,
+                  builder: (context) => const RemoteControlConfigurator(),
+                ),
+            child: Text('Remote control', style: textStyle),
           ),
         if (Device.isNative)
           MenuItemButton(
@@ -78,18 +77,18 @@ class HardwareMenu extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.download),
             ),
-            child: Text(
-              'Get hardware config',
-              style: textStyle,
-            ),
-            onPressed: () => showDialog<void>(
-              context: context,
-              builder: (context) => ConfirmationDialog(
-                title: 'Get hardware config?',
-                onConfirmation: () async =>
-                    ref.read(getSteeringHardwareConfigProvider),
-              ),
-            ),
+            child: Text('Get hardware config', style: textStyle),
+            onPressed:
+                () => showDialog<void>(
+                  context: context,
+                  builder:
+                      (context) => ConfirmationDialog(
+                        title: 'Get hardware config?',
+                        onConfirmation:
+                            () async =>
+                                ref.read(getSteeringHardwareConfigProvider),
+                      ),
+                ),
           ),
         if (Device.isNative)
           MenuItemButton(
@@ -98,33 +97,34 @@ class HardwareMenu extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.upload),
             ),
-            child: Text(
-              'Send hardware config',
-              style: textStyle,
-            ),
-            onPressed: () => showDialog<void>(
-              context: context,
-              builder: (context) => ConfirmationDialog(
-                title: 'Send hardware config?',
-                onConfirmation: () async =>
-                    ref.read(sendSteeringHardwareConfigProvider),
-              ),
-            ),
+            child: Text('Send hardware config', style: textStyle),
+            onPressed:
+                () => showDialog<void>(
+                  context: context,
+                  builder:
+                      (context) => ConfirmationDialog(
+                        title: 'Send hardware config?',
+                        onConfirmation:
+                            () async =>
+                                ref.read(sendSteeringHardwareConfigProvider),
+                      ),
+                ),
           ),
         Consumer(
-          child: Text(
-            'Calibrate motor',
-            style: textStyle,
-          ),
+          child: Text('Calibrate motor', style: textStyle),
           builder: (context, ref, child) {
             return CheckboxListTile(
               secondary: child,
               value: ref.watch(steeringMotorEnableCalibrationProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(steeringMotorEnableCalibrationProvider.notifier)
-                      .update(value: value)
-                  : null,
+              onChanged:
+                  (value) =>
+                      value != null
+                          ? ref
+                              .read(
+                                steeringMotorEnableCalibrationProvider.notifier,
+                              )
+                              .update(value: value)
+                          : null,
             );
           },
         ),

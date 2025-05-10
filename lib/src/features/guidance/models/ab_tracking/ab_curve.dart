@@ -39,9 +39,10 @@ class ABCurve extends ABTracking {
     super.name,
     super.uuid,
   }) : assert(
-          baseLine.length >= 2,
-          'Base curve has to have at least two points',
-        ),super(type:ABTrackingType.abCurve);
+         baseLine.length >= 2,
+         'Base curve has to have at least two points',
+       ),
+       super(type: ABTrackingType.abCurve);
 
   /// Creates an ABCurve
   ABCurve.preCalculated({
@@ -60,7 +61,7 @@ class ABCurve extends ABTracking {
     super.correctedBaseLine,
     super.name,
     super.uuid,
-  }):super(type:ABTrackingType.abCurve) {
+  }) : super(type: ABTrackingType.abCurve) {
     this.lines.addAll(lines ?? {});
     this.finishedOffsets.addAll(finishedOffsets ?? []);
     if (boundary != null && offsetsInsideBoundary != null) {
@@ -70,46 +71,56 @@ class ABCurve extends ABTracking {
 
   /// Creates an [ABCurve] from the [json] object.
   factory ABCurve.fromJson(Map<String, dynamic> json) {
-    final baseLine = List<Map<String, dynamic>>.from(json['base_line'] as List)
-        .map(WayPoint.fromJson)
-        .toList();
+    final baseLine =
+        List<Map<String, dynamic>>.from(
+          json['base_line'] as List,
+        ).map(WayPoint.fromJson).toList();
 
-    final correctedBaseLine = json['corrected_base_line'] != null
-        ? List<Map<String, dynamic>>.from(json['corrected_base_line'] as List)
-            .map(WayPoint.fromJson)
-            .toList()
-        : null;
+    final correctedBaseLine =
+        json['corrected_base_line'] != null
+            ? List<Map<String, dynamic>>.from(
+              json['corrected_base_line'] as List,
+            ).map(WayPoint.fromJson).toList()
+            : null;
 
-    final boundary = json['boundary'] != null
-        ? Polygon.parse(json['boundary'] as String)
-        : null;
+    final boundary =
+        json['boundary'] != null
+            ? Polygon.parse(json['boundary'] as String)
+            : null;
 
     Map<int, List<WayPoint>> getLinesFromMap(Map<String, dynamic> map) {
       final offsets = List<int>.from(map['offsets'] as List);
       final rawPaths = List<List<dynamic>>.from(map['paths'] as List);
-      final paths = rawPaths
-          .map(
-            (path) => path
-                .map(
-                  (e) => WayPoint.fromJson(Map<String, dynamic>.from(e as Map)),
-                )
-                .toList(),
-          )
-          .toList();
+      final paths =
+          rawPaths
+              .map(
+                (path) =>
+                    path
+                        .map(
+                          (e) => WayPoint.fromJson(
+                            Map<String, dynamic>.from(e as Map),
+                          ),
+                        )
+                        .toList(),
+              )
+              .toList();
       return Map.fromIterables(offsets, paths);
     }
 
-    final lines = json['lines'] != null
-        ? getLinesFromMap(Map<String, dynamic>.from(json['lines'] as Map))
-        : null;
+    final lines =
+        json['lines'] != null
+            ? getLinesFromMap(Map<String, dynamic>.from(json['lines'] as Map))
+            : null;
 
-    final finishedOffsets = json['finished_offsets'] != null
-        ? Set<int>.from(json['finished_offsets'] as Iterable)
-        : null;
+    final finishedOffsets =
+        json['finished_offsets'] != null
+            ? Set<int>.from(json['finished_offsets'] as Iterable)
+            : null;
 
-    final offsetsInsideBoundary = json['offsets_inside_boundary'] != null
-        ? Set<int>.from(json['offsets_inside_boundary'] as Iterable)
-        : null;
+    final offsetsInsideBoundary =
+        json['offsets_inside_boundary'] != null
+            ? Set<int>.from(json['offsets_inside_boundary'] as Iterable)
+            : null;
 
     return ABCurve.preCalculated(
       baseLine: baseLine,

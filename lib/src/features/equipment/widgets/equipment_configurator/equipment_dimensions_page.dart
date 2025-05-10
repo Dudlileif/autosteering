@@ -31,10 +31,7 @@ class EquipmentDimensionsPage extends ConsumerWidget {
     final equipment = ref.watch(configuredEquipmentProvider);
 
     final children = [
-      Text(
-        'Dimensions',
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
+      Text('Dimensions', style: Theme.of(context).textTheme.titleLarge),
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),
@@ -43,8 +40,9 @@ class EquipmentDimensionsPage extends ConsumerWidget {
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
-          configuredEquipmentProvider
-              .select((value) => value.drawbarLength.toString()),
+          configuredEquipmentProvider.select(
+            (value) => value.drawbarLength.toString(),
+          ),
         ),
         onFieldSubmitted: (value) {
           final length = double.tryParse(value.replaceAll(',', '.'));
@@ -62,8 +60,9 @@ class EquipmentDimensionsPage extends ConsumerWidget {
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
-          configuredEquipmentProvider
-              .select((value) => value.workingAreaLength.toString()),
+          configuredEquipmentProvider.select(
+            (value) => value.workingAreaLength.toString(),
+          ),
         ),
         onFieldSubmitted: (value) {
           final width = double.tryParse(value.replaceAll(',', '.'));
@@ -73,7 +72,7 @@ class EquipmentDimensionsPage extends ConsumerWidget {
               .update(equipment.copyWith(workingAreaLength: width?.abs()));
         },
       ),
-    
+
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),
@@ -83,9 +82,10 @@ class EquipmentDimensionsPage extends ConsumerWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredEquipmentProvider.select(
-            (value) => ((1 - value.recordingPositionFraction) *
-                    value.workingAreaLength)
-                .toString(),
+            (value) =>
+                ((1 - value.recordingPositionFraction) *
+                        value.workingAreaLength)
+                    .toString(),
           ),
         ),
         onFieldSubmitted: (value) {
@@ -95,12 +95,13 @@ class EquipmentDimensionsPage extends ConsumerWidget {
             equipment.workingAreaLength,
           );
 
-          final fraction = equipment.workingAreaLength > 0
-              ? 1 - (length / equipment.workingAreaLength)
-              : 1.0;
-          ref.read(configuredEquipmentProvider.notifier).update(
-                equipment.copyWith(recordingPositionFraction: fraction),
-              );
+          final fraction =
+              equipment.workingAreaLength > 0
+                  ? 1 - (length / equipment.workingAreaLength)
+                  : 1.0;
+          ref
+              .read(configuredEquipmentProvider.notifier)
+              .update(equipment.copyWith(recordingPositionFraction: fraction));
         },
       ),
       TextFormField(
@@ -109,11 +110,14 @@ class EquipmentDimensionsPage extends ConsumerWidget {
           labelText: 'Sideways offset (-left / +right)',
           suffixText: 'm',
         ),
-        keyboardType:
-            const TextInputType.numberWithOptions(decimal: true, signed: true),
+        keyboardType: const TextInputType.numberWithOptions(
+          decimal: true,
+          signed: true,
+        ),
         initialValue: ref.read(
-          configuredEquipmentProvider
-              .select((value) => value.sidewaysOffset.toString()),
+          configuredEquipmentProvider.select(
+            (value) => value.sidewaysOffset.toString(),
+          ),
         ),
         onFieldSubmitted: (value) {
           final offset = double.tryParse(value.replaceAll(',', '.'));
@@ -122,25 +126,23 @@ class EquipmentDimensionsPage extends ConsumerWidget {
               .read(configuredEquipmentProvider.notifier)
               .update(equipment.copyWith(sidewaysOffset: offset));
         },
-
-
       ),
     ];
 
     return SingleChildScrollView(
       child: Column(
-        children: children
-            .map(
-              (widget) => ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: widget,
-                ),
-              ),
-            )
-            .toList(),
-        
+        children:
+            children
+                .map(
+                  (widget) => ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: widget,
+                    ),
+                  ),
+                )
+                .toList(),
       ),
     );
   }

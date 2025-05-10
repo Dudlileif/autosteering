@@ -104,16 +104,18 @@ class GamepadInput {
 
     // Set all values in deadzone to deadzone values.
     // -1...0...1 -> -deadZoneMax...-deadZoneMin|+deadZoneMin...deadZoneMax
-    final deadZoneAdjusted = normalized.abs() < deadZoneMin
-        ? sign * deadZoneMin
-        : normalized.abs() > deadZoneMax
+    final deadZoneAdjusted =
+        normalized.abs() < deadZoneMin
+            ? sign * deadZoneMin
+            : normalized.abs() > deadZoneMax
             ? sign * deadZoneMax
             : normalized;
 
     // Normalize to the full range again so that we start at 0 when
     // passing deadZoneMin and end at +/- 1 when passing deadZoneMax.
     // -deadZoneMax...-deadZoneMin|+deadZoneMin...deadZoneMax -> -1...0...1
-    final deadZoneNormalized = sign *
+    final deadZoneNormalized =
+        sign *
         (deadZoneAdjusted.abs() - deadZoneMin) /
         (deadZoneMax - deadZoneMin);
 
@@ -141,9 +143,10 @@ class GamepadInput {
 
     // Set all values in deadzone to deadzone values.
     // 0...1 -> deadZoneMin...deadZoneMax
-    final deadZoneAdjusted = normalized < deadZoneMin
-        ? deadZoneMin
-        : normalized > deadZoneMax
+    final deadZoneAdjusted =
+        normalized < deadZoneMin
+            ? deadZoneMin
+            : normalized > deadZoneMax
             ? deadZoneMax
             : normalized;
 
@@ -183,10 +186,8 @@ enum GamepadButtonInput {
 
   /// Map an input [key] to the corresponding [GamepadButtonInput]
   /// button action.
-  static GamepadButtonInput map(String? key) => values.where(
-        (element) => element.id == key,
-        orElse: () => unknown,
-      );
+  static GamepadButtonInput map(String? key) =>
+      values.where((element) => element.id == key, orElse: () => unknown);
 }
 
 /// An enumerator for mapping analog axis to their corresponding
@@ -207,10 +208,8 @@ enum GamepadAnalogInput {
   final String? id;
 
   /// Map an input [key] to the corresponding [GamepadAnalogInput] analog axis.
-  static GamepadAnalogInput map(String? key) => values.firstWhere(
-        (element) => element.id == key,
-        orElse: () => unknown,
-      );
+  static GamepadAnalogInput map(String? key) =>
+      values.firstWhere((element) => element.id == key, orElse: () => unknown);
 }
 
 /// An enumerator for mapping POV button presses to their corresponding
@@ -236,7 +235,7 @@ enum GamepadPovInput {
 
   /// Map an input [value] to the corresponding [GamepadPovInput] button action.
   static GamepadPovInput map(double value) => values.firstWhere(
-        (element) => element.value == value.round(),
-        orElse: () => released,
-      );
+    (element) => element.value == value.round(),
+    orElse: () => released,
+  );
 }

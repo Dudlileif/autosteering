@@ -90,14 +90,18 @@ class ABCurve extends _$ABCurve {
 
     if (points != null) {
       if ((points.length) >= 2) {
-        final boundary = ref.read(
+        final boundary =
+            ref.read(
               configuredABTrackingProvider.select((value) => value?.boundary),
             ) ??
-            ref.watch(bufferedFieldProvider).when(
-                  data: (data) =>
-                      data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
-                  error: (error, stackTrace) => null,
-                  loading: () => null,
+            ref
+                .watch(bufferedFieldProvider)
+                .maybeWhen(
+                  data:
+                      (data) =>
+                          data?.polygon ??
+                          ref.watch(activeFieldProvider)?.polygon,
+                  orElse: () => null,
                 );
         final width = ref.watch(aBWidthProvider);
         final sidewaysOffset = ref.watch(aBSidewaysOffsetProvider);
@@ -138,8 +142,9 @@ class ABCurve extends _$ABCurve {
 
         final data = jsonDecode(creation);
         if (data is Map) {
-          final abCurve =
-              guidance.ABCurve.fromJson(Map<String, dynamic>.from(data));
+          final abCurve = guidance.ABCurve.fromJson(
+            Map<String, dynamic>.from(data),
+          );
           return abCurve;
         }
       }

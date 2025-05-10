@@ -29,17 +29,17 @@ class GridLayerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return Consumer(
-      child: Text(
-        'Show grid',
-        softWrap: false,
-        style: textStyle,
-      ),
+      child: Text('Show grid', softWrap: false, style: textStyle),
       builder: (context, ref, child) {
         final showLayerButton = CheckboxListTile(
           value: ref.watch(showGridLayerProvider),
-          onChanged: (value) => value != null
-              ? ref.read(showGridLayerProvider.notifier).update(value: value)
-              : null,
+          onChanged:
+              (value) =>
+                  value != null
+                      ? ref
+                          .read(showGridLayerProvider.notifier)
+                          .update(value: value)
+                      : null,
           title: child,
           secondary: const Icon(Icons.grid_3x3),
         );
@@ -50,15 +50,14 @@ class GridLayerButton extends StatelessWidget {
               showLayerButton,
               CheckboxListTile(
                 value: ref.watch(showGridSizeIndicatorProvider),
-                onChanged: (value) => value != null
-                    ? ref
-                        .read(showGridSizeIndicatorProvider.notifier)
-                        .update(value: value)
-                    : null,
-                title: Text(
-                  'Show size indicator',
-                  style: textStyle,
-                ),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(showGridSizeIndicatorProvider.notifier)
+                                .update(value: value)
+                            : null,
+                title: Text('Show size indicator', style: textStyle),
                 secondary: const Icon(Icons.grid_3x3),
               ),
             ],

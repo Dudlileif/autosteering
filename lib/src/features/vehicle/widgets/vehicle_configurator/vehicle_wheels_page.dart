@@ -31,189 +31,172 @@ class VehicleWheelsPage extends ConsumerWidget {
 
     final children = [
       Center(
-        child: Text(
-          'Wheels',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        child: Text('Wheels', style: Theme.of(context).textTheme.titleLarge),
       ),
       ...switch (vehicle) {
         AxleSteeredVehicle() => [
-            TextFormField(
-              decoration: InputDecoration(
-                icon: const RotatedBox(
-                  quarterTurns: 1,
-                  child: Icon(Icons.expand),
-                ),
-                labelText: '${switch (vehicle) {
-                  Tractor() => 'Front',
-                  Harvester() => 'Rear'
-                }} wheel width',
-                suffixText: 'm',
+          TextFormField(
+            decoration: InputDecoration(
+              icon: const RotatedBox(
+                quarterTurns: 1,
+                child: Icon(Icons.expand),
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as AxleSteeredVehicle)
-                      .steeringAxleWheelWidth
-                      .toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final width = double.tryParse(value.replaceAll(',', '.'));
-
-                ref
-                    .read(configuredVehicleProvider.notifier)
-                    .update(vehicle.copyWith(steeringAxleWheelWidth: width));
-              },
+              labelText:
+                  '${switch (vehicle) {
+                    Tractor() => 'Front',
+                    Harvester() => 'Rear',
+                  }} wheel width',
+              suffixText: 'm',
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                icon: const RotatedBox(
-                  quarterTurns: 1,
-                  child: Icon(Icons.expand),
-                ),
-                labelText: '${switch (vehicle) {
-                  Tractor() => 'Rear',
-                  Harvester() => 'Front'
-                }} wheel width',
-                suffixText: 'm',
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as AxleSteeredVehicle).steeringAxleWheelWidth
+                        .toString(),
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as AxleSteeredVehicle)
-                      .solidAxleWheelWidth
-                      .toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final width = double.tryParse(value.replaceAll(',', '.'));
-
-                ref
-                    .read(configuredVehicleProvider.notifier)
-                    .update(vehicle.copyWith(solidAxleWheelWidth: width));
-              },
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                icon: const Stack(
-                  children: [
-                    Icon(Icons.expand),
-                    Icon(Icons.circle_outlined),
-                  ],
-                ),
-                labelText: '${switch (vehicle) {
-                  Tractor() => 'Front',
-                  Harvester() => 'Rear'
-                }} wheel diameter',
-                suffixText: 'm',
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as AxleSteeredVehicle)
-                      .steeringAxleWheelDiameter
-                      .toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final diameter = double.tryParse(value.replaceAll(',', '.'));
+            onChanged: (value) {
+              final width = double.tryParse(value.replaceAll(',', '.'));
 
-                ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle.copyWith(steeringAxleWheelDiameter: diameter),
-                    );
-              },
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(vehicle.copyWith(steeringAxleWheelWidth: width));
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              icon: const RotatedBox(
+                quarterTurns: 1,
+                child: Icon(Icons.expand),
+              ),
+              labelText:
+                  '${switch (vehicle) {
+                    Tractor() => 'Rear',
+                    Harvester() => 'Front',
+                  }} wheel width',
+              suffixText: 'm',
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                icon: const Stack(
-                  children: [
-                    Icon(Icons.expand),
-                    Icon(Icons.circle_outlined),
-                  ],
-                ),
-                labelText: '${switch (vehicle) {
-                  Tractor() => 'Rear',
-                  Harvester() => 'Front'
-                }} wheel diameter',
-                suffixText: 'm',
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as AxleSteeredVehicle).solidAxleWheelWidth
+                        .toString(),
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as AxleSteeredVehicle)
-                      .solidAxleWheelDiameter
-                      .toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final diameter = double.tryParse(value.replaceAll(',', '.'));
+            ),
+            onChanged: (value) {
+              final width = double.tryParse(value.replaceAll(',', '.'));
 
-                ref
-                    .read(configuredVehicleProvider.notifier)
-                    .update(vehicle.copyWith(solidAxleWheelDiameter: diameter));
-              },
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(vehicle.copyWith(solidAxleWheelWidth: width));
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              icon: const Stack(
+                children: [Icon(Icons.expand), Icon(Icons.circle_outlined)],
+              ),
+              labelText:
+                  '${switch (vehicle) {
+                    Tractor() => 'Front',
+                    Harvester() => 'Rear',
+                  }} wheel diameter',
+              suffixText: 'm',
             ),
-          ],
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as AxleSteeredVehicle).steeringAxleWheelDiameter
+                        .toString(),
+              ),
+            ),
+            onChanged: (value) {
+              final diameter = double.tryParse(value.replaceAll(',', '.'));
+
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(
+                    vehicle.copyWith(steeringAxleWheelDiameter: diameter),
+                  );
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              icon: const Stack(
+                children: [Icon(Icons.expand), Icon(Icons.circle_outlined)],
+              ),
+              labelText:
+                  '${switch (vehicle) {
+                    Tractor() => 'Rear',
+                    Harvester() => 'Front',
+                  }} wheel diameter',
+              suffixText: 'm',
+            ),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as AxleSteeredVehicle).solidAxleWheelDiameter
+                        .toString(),
+              ),
+            ),
+            onChanged: (value) {
+              final diameter = double.tryParse(value.replaceAll(',', '.'));
+
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(vehicle.copyWith(solidAxleWheelDiameter: diameter));
+            },
+          ),
+        ],
         ArticulatedTractor() => [
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: RotatedBox(
-                  quarterTurns: 1,
-                  child: Icon(Icons.expand),
-                ),
-                labelText: 'Wheel width',
-                suffixText: 'm',
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) =>
-                      (value as ArticulatedTractor).wheelWidth.toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final width = double.tryParse(value.replaceAll(',', '.'));
-
-                ref
-                    .read(configuredVehicleProvider.notifier)
-                    .update(vehicle.copyWith(wheelWidth: width));
-              },
+          TextFormField(
+            decoration: const InputDecoration(
+              icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+              labelText: 'Wheel width',
+              suffixText: 'm',
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: Stack(
-                  children: [
-                    Icon(Icons.expand),
-                    Icon(Icons.circle_outlined),
-                  ],
-                ),
-                labelText: 'Wheel diameter',
-                suffixText: 'm',
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) => (value as ArticulatedTractor).wheelWidth.toString(),
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) =>
-                      (value as ArticulatedTractor).wheelDiameter.toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final diameter = double.tryParse(value.replaceAll(',', '.'));
-
-                ref
-                    .read(configuredVehicleProvider.notifier)
-                    .update(vehicle.copyWith(wheelDiameter: diameter));
-              },
             ),
-          
-          ],
+            onChanged: (value) {
+              final width = double.tryParse(value.replaceAll(',', '.'));
+
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(vehicle.copyWith(wheelWidth: width));
+            },
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              icon: Stack(
+                children: [Icon(Icons.expand), Icon(Icons.circle_outlined)],
+              ),
+              labelText: 'Wheel diameter',
+              suffixText: 'm',
+            ),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as ArticulatedTractor).wheelDiameter.toString(),
+              ),
+            ),
+            onChanged: (value) {
+              final diameter = double.tryParse(value.replaceAll(',', '.'));
+
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(vehicle.copyWith(wheelDiameter: diameter));
+            },
+          ),
+        ],
       },
       Wrap(
         spacing: 8,
@@ -230,26 +213,25 @@ or triple wheels'''),
             ),
             showSelectedIcon: false,
             selected: {vehicle.numWheels},
-            segments: List.generate(
-              3,
-              (index) => ButtonSegment(
-                value: index + 1,
-                label: Text('${index + 1}'),
-              ),
-            ).toList(),
-            onSelectionChanged: (values) => ref
-                .read(configuredVehicleProvider.notifier)
-                .update(vehicle.copyWith(numWheels: values.first)),
+            segments:
+                List.generate(
+                  3,
+                  (index) => ButtonSegment(
+                    value: index + 1,
+                    label: Text('${index + 1}'),
+                  ),
+                ).toList(),
+            onSelectionChanged:
+                (values) => ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(vehicle.copyWith(numWheels: values.first)),
           ),
         ],
       ),
       if (vehicle.numWheels > 1)
         TextFormField(
           decoration: const InputDecoration(
-            icon: RotatedBox(
-              quarterTurns: 1,
-              child: Icon(Icons.expand),
-            ),
+            icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
             labelText: 'Wheel spacing',
             suffixText: 'm',
           ),
@@ -273,15 +255,15 @@ or triple wheels'''),
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children: children
-              .map(
-              (widget) => Padding(
-                padding: const EdgeInsets.all(8),
-                child: SizedBox(width: 400, child: widget),
-              ),
-              )
-              .toList(),
-          
+          children:
+              children
+                  .map(
+                    (widget) => Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(width: 400, child: widget),
+                    ),
+                  )
+                  .toList(),
         ),
       ),
     );

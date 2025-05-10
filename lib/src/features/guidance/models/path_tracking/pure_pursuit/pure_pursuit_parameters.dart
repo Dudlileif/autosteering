@@ -29,7 +29,7 @@ part 'pure_pursuit_parameters.g.dart';
 /// multiplied with to get the look ahead distance. If the distance is shorter
 /// than [lookAheadMinDistance], it will be set to that.
 @freezed
-class PurePursuitParameters with _$PurePursuitParameters {
+sealed class PurePursuitParameters with _$PurePursuitParameters {
   /// A class for encompassing the coefficients for [PurePursuitPathTracking].
   ///
   /// [lookAheadMinDistance] is the minimum value for the look ahead distance,

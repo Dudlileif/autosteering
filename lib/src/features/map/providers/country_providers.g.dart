@@ -16,14 +16,15 @@ String _$sortedCountryLayersHash() =>
 @ProviderFor(sortedCountryLayers)
 final sortedCountryLayersProvider =
     AutoDisposeProvider<List<TileLayerData>>.internal(
-  sortedCountryLayers,
-  name: r'sortedCountryLayersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$sortedCountryLayersHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      sortedCountryLayers,
+      name: r'sortedCountryLayersProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$sortedCountryLayersHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -39,14 +40,15 @@ String _$currentCountryHash() => r'888e1aa0449805c4a52241f6abc55a7db5e5bc0d';
 @ProviderFor(CurrentCountry)
 final currentCountryProvider =
     AutoDisposeNotifierProvider<CurrentCountry, Country?>.internal(
-  CurrentCountry.new,
-  name: r'currentCountryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentCountryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      CurrentCountry.new,
+      name: r'currentCountryProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$currentCountryHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$CurrentCountry = AutoDisposeNotifier<Country?>;
 String _$availableCountryLayersHash() =>
@@ -58,12 +60,15 @@ String _$availableCountryLayersHash() =>
 /// Copied from [AvailableCountryLayers].
 @ProviderFor(AvailableCountryLayers)
 final availableCountryLayersProvider = AutoDisposeNotifierProvider<
-    AvailableCountryLayers, List<TileLayerData>>.internal(
+  AvailableCountryLayers,
+  List<TileLayerData>
+>.internal(
   AvailableCountryLayers.new,
   name: r'availableCountryLayersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$availableCountryLayersHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$availableCountryLayersHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -77,12 +82,15 @@ String _$enabledCountryLayersHash() =>
 /// Copied from [EnabledCountryLayers].
 @ProviderFor(EnabledCountryLayers)
 final enabledCountryLayersProvider = AutoDisposeNotifierProvider<
-    EnabledCountryLayers, Set<TileLayerData>>.internal(
+  EnabledCountryLayers,
+  Set<TileLayerData>
+>.internal(
   EnabledCountryLayers.new,
   name: r'enabledCountryLayersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$enabledCountryLayersHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$enabledCountryLayersHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -97,12 +105,15 @@ String _$countryLayerOpacitiesHash() =>
 /// Copied from [CountryLayerOpacities].
 @ProviderFor(CountryLayerOpacities)
 final countryLayerOpacitiesProvider = AutoDisposeNotifierProvider<
-    CountryLayerOpacities, Map<String, double>>.internal(
+  CountryLayerOpacities,
+  Map<String, double>
+>.internal(
   CountryLayerOpacities.new,
   name: r'countryLayerOpacitiesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$countryLayerOpacitiesHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$countryLayerOpacitiesHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

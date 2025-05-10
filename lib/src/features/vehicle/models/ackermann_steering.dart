@@ -70,14 +70,16 @@ class AckermannSteering {
   double get ackermannAngleDegrees => ackermannAngle.toDegrees();
 
   /// Degrees
-  double get idealLeftAngle => atan(
+  double get idealLeftAngle =>
+      atan(
         wheelBase *
             tan(ackermannAngle) /
             (wheelBase + 0.5 * trackWidth * tan(ackermannAngle)),
       ).toDegrees();
 
   /// Degrees
-  double get idealRightAngle => atan(
+  double get idealRightAngle =>
+      atan(
         wheelBase *
             tan(ackermannAngle) /
             (wheelBase - 0.5 * trackWidth * tan(ackermannAngle)),
@@ -97,15 +99,15 @@ class AckermannSteering {
 
   /// Degrees
   double get leftAngle => switch (ackermannAngle < 0) {
-        true => innerAngle,
-        false => outerAngle,
-      };
+    true => innerAngle,
+    false => outerAngle,
+  };
 
   /// Degrees
   double get rightAngle => switch (ackermannAngle < 0) {
-        true => outerAngle,
-        false => innerAngle,
-      };
+    true => outerAngle,
+    false => innerAngle,
+  };
 
   @override
   String toString() => '''
@@ -166,15 +168,15 @@ class WheelAngleToAckermann {
   /// Radians, the angle of an envisioned steering wheel at the center of the
   /// steering axle.
   double get ackermannAngle => switch (wheelAngle < 0) {
-        true => atan(
-            (wheelBase * tan(wheelAngle.toRadians())) /
-                (wheelBase - 0.5 * trackWidth * tan(wheelAngle.toRadians())),
-          ),
-        false => atan(
-            (wheelBase * tan(wheelAngle.toRadians())) /
-                (wheelBase + 0.5 * trackWidth * tan(wheelAngle.toRadians())),
-          )
-      };
+    true => atan(
+      (wheelBase * tan(wheelAngle.toRadians())) /
+          (wheelBase - 0.5 * trackWidth * tan(wheelAngle.toRadians())),
+    ),
+    false => atan(
+      (wheelBase * tan(wheelAngle.toRadians())) /
+          (wheelBase + 0.5 * trackWidth * tan(wheelAngle.toRadians())),
+    ),
+  };
 
   /// Degrees, angle of the outside wheel.
   double get oppositeAngle =>

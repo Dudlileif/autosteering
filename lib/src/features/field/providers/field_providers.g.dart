@@ -15,9 +15,10 @@ String _$bufferedFieldHash() => r'b656a524caa62cc5ce4277030d42447c39bbf122';
 final bufferedFieldProvider = FutureProvider<Field?>.internal(
   bufferedField,
   name: r'bufferedFieldProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$bufferedFieldHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$bufferedFieldHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -87,9 +88,7 @@ class SaveFieldFamily extends Family<AsyncValue<void>> {
   }
 
   @override
-  SaveFieldProvider getProviderOverride(
-    covariant SaveFieldProvider provider,
-  ) {
+  SaveFieldProvider getProviderOverride(covariant SaveFieldProvider provider) {
     return call(
       provider.field,
       overrideName: provider.overrideName,
@@ -128,24 +127,24 @@ class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => saveField(
-            ref as SaveFieldRef,
-            field,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: saveFieldProvider,
-          name: r'saveFieldProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$saveFieldHash,
-          dependencies: SaveFieldFamily._dependencies,
-          allTransitiveDependencies: SaveFieldFamily._allTransitiveDependencies,
-          field: field,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => saveField(
+           ref as SaveFieldRef,
+           field,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: saveFieldProvider,
+         name: r'saveFieldProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$saveFieldHash,
+         dependencies: SaveFieldFamily._dependencies,
+         allTransitiveDependencies: SaveFieldFamily._allTransitiveDependencies,
+         field: field,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   SaveFieldProvider._internal(
     super._createNotifier, {
@@ -164,9 +163,7 @@ class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
   final bool downloadIfWeb;
 
   @override
-  Override overrideWith(
-    FutureOr<void> Function(SaveFieldRef provider) create,
-  ) {
+  Override overrideWith(FutureOr<void> Function(SaveFieldRef provider) create) {
     return ProviderOverride(
       origin: this,
       override: SaveFieldProvider._internal(
@@ -314,25 +311,25 @@ class ExportFieldProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = true,
   }) : this._internal(
-          (ref) => exportField(
-            ref as ExportFieldRef,
-            field,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: exportFieldProvider,
-          name: r'exportFieldProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportFieldHash,
-          dependencies: ExportFieldFamily._dependencies,
-          allTransitiveDependencies:
-              ExportFieldFamily._allTransitiveDependencies,
-          field: field,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => exportField(
+           ref as ExportFieldRef,
+           field,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: exportFieldProvider,
+         name: r'exportFieldProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$exportFieldHash,
+         dependencies: ExportFieldFamily._dependencies,
+         allTransitiveDependencies:
+             ExportFieldFamily._allTransitiveDependencies,
+         field: field,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   ExportFieldProvider._internal(
     super._createNotifier, {
@@ -466,24 +463,15 @@ class DeleteFieldFamily extends Family<AsyncValue<void>> {
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteField].
-  DeleteFieldProvider call(
-    Field field, {
-    String? overrideName,
-  }) {
-    return DeleteFieldProvider(
-      field,
-      overrideName: overrideName,
-    );
+  DeleteFieldProvider call(Field field, {String? overrideName}) {
+    return DeleteFieldProvider(field, overrideName: overrideName);
   }
 
   @override
   DeleteFieldProvider getProviderOverride(
     covariant DeleteFieldProvider provider,
   ) {
-    return call(
-      provider.field,
-      overrideName: provider.overrideName,
-    );
+    return call(provider.field, overrideName: provider.overrideName);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -512,27 +500,24 @@ class DeleteFieldProvider extends AutoDisposeFutureProvider<void> {
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteField].
-  DeleteFieldProvider(
-    Field field, {
-    String? overrideName,
-  }) : this._internal(
-          (ref) => deleteField(
-            ref as DeleteFieldRef,
-            field,
-            overrideName: overrideName,
-          ),
-          from: deleteFieldProvider,
-          name: r'deleteFieldProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$deleteFieldHash,
-          dependencies: DeleteFieldFamily._dependencies,
-          allTransitiveDependencies:
-              DeleteFieldFamily._allTransitiveDependencies,
-          field: field,
+  DeleteFieldProvider(Field field, {String? overrideName})
+    : this._internal(
+        (ref) => deleteField(
+          ref as DeleteFieldRef,
+          field,
           overrideName: overrideName,
-        );
+        ),
+        from: deleteFieldProvider,
+        name: r'deleteFieldProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$deleteFieldHash,
+        dependencies: DeleteFieldFamily._dependencies,
+        allTransitiveDependencies: DeleteFieldFamily._allTransitiveDependencies,
+        field: field,
+        overrideName: overrideName,
+      );
 
   DeleteFieldProvider._internal(
     super._createNotifier, {
@@ -629,21 +614,15 @@ class LoadFieldFromFileFamily extends Family<AsyncValue<Field?>> {
   /// A provider for loading a [Field] from a file at [path], if it's valid.
   ///
   /// Copied from [loadFieldFromFile].
-  LoadFieldFromFileProvider call(
-    String path,
-  ) {
-    return LoadFieldFromFileProvider(
-      path,
-    );
+  LoadFieldFromFileProvider call(String path) {
+    return LoadFieldFromFileProvider(path);
   }
 
   @override
   LoadFieldFromFileProvider getProviderOverride(
     covariant LoadFieldFromFileProvider provider,
   ) {
-    return call(
-      provider.path,
-    );
+    return call(provider.path);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -668,24 +647,20 @@ class LoadFieldFromFileProvider extends AutoDisposeFutureProvider<Field?> {
   /// A provider for loading a [Field] from a file at [path], if it's valid.
   ///
   /// Copied from [loadFieldFromFile].
-  LoadFieldFromFileProvider(
-    String path,
-  ) : this._internal(
-          (ref) => loadFieldFromFile(
-            ref as LoadFieldFromFileRef,
-            path,
-          ),
-          from: loadFieldFromFileProvider,
-          name: r'loadFieldFromFileProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$loadFieldFromFileHash,
-          dependencies: LoadFieldFromFileFamily._dependencies,
-          allTransitiveDependencies:
-              LoadFieldFromFileFamily._allTransitiveDependencies,
-          path: path,
-        );
+  LoadFieldFromFileProvider(String path)
+    : this._internal(
+        (ref) => loadFieldFromFile(ref as LoadFieldFromFileRef, path),
+        from: loadFieldFromFileProvider,
+        name: r'loadFieldFromFileProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$loadFieldFromFileHash,
+        dependencies: LoadFieldFromFileFamily._dependencies,
+        allTransitiveDependencies:
+            LoadFieldFromFileFamily._allTransitiveDependencies,
+        path: path,
+      );
 
   LoadFieldFromFileProvider._internal(
     super._createNotifier, {
@@ -744,7 +719,8 @@ mixin LoadFieldFromFileRef on AutoDisposeFutureProviderRef<Field?> {
 }
 
 class _LoadFieldFromFileProviderElement
-    extends AutoDisposeFutureProviderElement<Field?> with LoadFieldFromFileRef {
+    extends AutoDisposeFutureProviderElement<Field?>
+    with LoadFieldFromFileRef {
   _LoadFieldFromFileProviderElement(super.provider);
 
   @override
@@ -790,21 +766,15 @@ class ExportFieldsFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all field files.
   ///
   /// Copied from [exportFields].
-  ExportFieldsProvider call({
-    bool zip = true,
-  }) {
-    return ExportFieldsProvider(
-      zip: zip,
-    );
+  ExportFieldsProvider call({bool zip = true}) {
+    return ExportFieldsProvider(zip: zip);
   }
 
   @override
   ExportFieldsProvider getProviderOverride(
     covariant ExportFieldsProvider provider,
   ) {
-    return call(
-      zip: provider.zip,
-    );
+    return call(zip: provider.zip);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -829,24 +799,20 @@ class ExportFieldsProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for exporting all field files.
   ///
   /// Copied from [exportFields].
-  ExportFieldsProvider({
-    bool zip = true,
-  }) : this._internal(
-          (ref) => exportFields(
-            ref as ExportFieldsRef,
-            zip: zip,
-          ),
-          from: exportFieldsProvider,
-          name: r'exportFieldsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportFieldsHash,
-          dependencies: ExportFieldsFamily._dependencies,
-          allTransitiveDependencies:
-              ExportFieldsFamily._allTransitiveDependencies,
-          zip: zip,
-        );
+  ExportFieldsProvider({bool zip = true})
+    : this._internal(
+        (ref) => exportFields(ref as ExportFieldsRef, zip: zip),
+        from: exportFieldsProvider,
+        name: r'exportFieldsProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$exportFieldsHash,
+        dependencies: ExportFieldsFamily._dependencies,
+        allTransitiveDependencies:
+            ExportFieldsFamily._allTransitiveDependencies,
+        zip: zip,
+      );
 
   ExportFieldsProvider._internal(
     super._createNotifier, {
@@ -905,7 +871,8 @@ mixin ExportFieldsRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportFieldsProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportFieldsRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportFieldsRef {
   _ExportFieldsProviderElement(super.provider);
 
   @override
@@ -953,14 +920,15 @@ String _$showFieldBorderPointsHash() =>
 @ProviderFor(ShowFieldBorderPoints)
 final showFieldBorderPointsProvider =
     NotifierProvider<ShowFieldBorderPoints, bool>.internal(
-  ShowFieldBorderPoints.new,
-  name: r'showFieldBorderPointsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showFieldBorderPointsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowFieldBorderPoints.new,
+      name: r'showFieldBorderPointsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showFieldBorderPointsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowFieldBorderPoints = Notifier<bool>;
 String _$showFieldBoundingBoxHash() =>
@@ -972,14 +940,15 @@ String _$showFieldBoundingBoxHash() =>
 @ProviderFor(ShowFieldBoundingBox)
 final showFieldBoundingBoxProvider =
     NotifierProvider<ShowFieldBoundingBox, bool>.internal(
-  ShowFieldBoundingBox.new,
-  name: r'showFieldBoundingBoxProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showFieldBoundingBoxHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowFieldBoundingBox.new,
+      name: r'showFieldBoundingBoxProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showFieldBoundingBoxHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowFieldBoundingBox = Notifier<bool>;
 String _$fieldExteriorBufferJoinHash() =>
@@ -992,14 +961,15 @@ String _$fieldExteriorBufferJoinHash() =>
 @ProviderFor(FieldExteriorBufferJoin)
 final fieldExteriorBufferJoinProvider =
     NotifierProvider<FieldExteriorBufferJoin, BufferJoin>.internal(
-  FieldExteriorBufferJoin.new,
-  name: r'fieldExteriorBufferJoinProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fieldExteriorBufferJoinHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FieldExteriorBufferJoin.new,
+      name: r'fieldExteriorBufferJoinProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fieldExteriorBufferJoinHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FieldExteriorBufferJoin = Notifier<BufferJoin>;
 String _$fieldInteriorBufferJoinHash() =>
@@ -1012,14 +982,15 @@ String _$fieldInteriorBufferJoinHash() =>
 @ProviderFor(FieldInteriorBufferJoin)
 final fieldInteriorBufferJoinProvider =
     NotifierProvider<FieldInteriorBufferJoin, BufferJoin>.internal(
-  FieldInteriorBufferJoin.new,
-  name: r'fieldInteriorBufferJoinProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fieldInteriorBufferJoinHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FieldInteriorBufferJoin.new,
+      name: r'fieldInteriorBufferJoinProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fieldInteriorBufferJoinHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FieldInteriorBufferJoin = Notifier<BufferJoin>;
 String _$fieldBufferEnabledHash() =>
@@ -1031,14 +1002,15 @@ String _$fieldBufferEnabledHash() =>
 @ProviderFor(FieldBufferEnabled)
 final fieldBufferEnabledProvider =
     NotifierProvider<FieldBufferEnabled, bool>.internal(
-  FieldBufferEnabled.new,
-  name: r'fieldBufferEnabledProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fieldBufferEnabledHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FieldBufferEnabled.new,
+      name: r'fieldBufferEnabledProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fieldBufferEnabledHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FieldBufferEnabled = Notifier<bool>;
 String _$activeFieldBufferDistanceTypeHash() =>
@@ -1049,12 +1021,15 @@ String _$activeFieldBufferDistanceTypeHash() =>
 /// Copied from [ActiveFieldBufferDistanceType].
 @ProviderFor(ActiveFieldBufferDistanceType)
 final activeFieldBufferDistanceTypeProvider = NotifierProvider<
-    ActiveFieldBufferDistanceType, FieldBufferDistanceType>.internal(
+  ActiveFieldBufferDistanceType,
+  FieldBufferDistanceType
+>.internal(
   ActiveFieldBufferDistanceType.new,
   name: r'activeFieldBufferDistanceTypeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeFieldBufferDistanceTypeHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$activeFieldBufferDistanceTypeHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -1070,14 +1045,15 @@ String _$fieldExteriorBufferDistanceHash() =>
 @ProviderFor(FieldExteriorBufferDistance)
 final fieldExteriorBufferDistanceProvider =
     NotifierProvider<FieldExteriorBufferDistance, double>.internal(
-  FieldExteriorBufferDistance.new,
-  name: r'fieldExteriorBufferDistanceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fieldExteriorBufferDistanceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FieldExteriorBufferDistance.new,
+      name: r'fieldExteriorBufferDistanceProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fieldExteriorBufferDistanceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FieldExteriorBufferDistance = Notifier<double>;
 String _$fieldInteriorBufferDistanceHash() =>
@@ -1090,14 +1066,15 @@ String _$fieldInteriorBufferDistanceHash() =>
 @ProviderFor(FieldInteriorBufferDistance)
 final fieldInteriorBufferDistanceProvider =
     NotifierProvider<FieldInteriorBufferDistance, double>.internal(
-  FieldInteriorBufferDistance.new,
-  name: r'fieldInteriorBufferDistanceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fieldInteriorBufferDistanceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FieldInteriorBufferDistance.new,
+      name: r'fieldInteriorBufferDistanceProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fieldInteriorBufferDistanceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FieldInteriorBufferDistance = Notifier<double>;
 String _$showBufferedFieldHash() => r'8557480be302964bd7b38ea41bbd394f51362e80';
@@ -1108,14 +1085,15 @@ String _$showBufferedFieldHash() => r'8557480be302964bd7b38ea41bbd394f51362e80';
 @ProviderFor(ShowBufferedField)
 final showBufferedFieldProvider =
     NotifierProvider<ShowBufferedField, bool>.internal(
-  ShowBufferedField.new,
-  name: r'showBufferedFieldProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showBufferedFieldHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowBufferedField.new,
+      name: r'showBufferedFieldProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showBufferedFieldHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowBufferedField = Notifier<bool>;
 String _$showBufferedFieldBoundingBoxHash() =>
@@ -1127,14 +1105,15 @@ String _$showBufferedFieldBoundingBoxHash() =>
 @ProviderFor(ShowBufferedFieldBoundingBox)
 final showBufferedFieldBoundingBoxProvider =
     NotifierProvider<ShowBufferedFieldBoundingBox, bool>.internal(
-  ShowBufferedFieldBoundingBox.new,
-  name: r'showBufferedFieldBoundingBoxProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showBufferedFieldBoundingBoxHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowBufferedFieldBoundingBox.new,
+      name: r'showBufferedFieldBoundingBoxProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showBufferedFieldBoundingBoxHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowBufferedFieldBoundingBox = Notifier<bool>;
 String _$fieldBufferGetRawPointsHash() =>
@@ -1146,14 +1125,15 @@ String _$fieldBufferGetRawPointsHash() =>
 @ProviderFor(FieldBufferGetRawPoints)
 final fieldBufferGetRawPointsProvider =
     NotifierProvider<FieldBufferGetRawPoints, bool>.internal(
-  FieldBufferGetRawPoints.new,
-  name: r'fieldBufferGetRawPointsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fieldBufferGetRawPointsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FieldBufferGetRawPoints.new,
+      name: r'fieldBufferGetRawPointsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fieldBufferGetRawPointsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FieldBufferGetRawPoints = Notifier<bool>;
 String _$fieldExteriorRingHash() => r'fa5543b11982dc3d28fcd1fed939870033c3c355';
@@ -1164,14 +1144,15 @@ String _$fieldExteriorRingHash() => r'fa5543b11982dc3d28fcd1fed939870033c3c355';
 @ProviderFor(FieldExteriorRing)
 final fieldExteriorRingProvider =
     NotifierProvider<FieldExteriorRing, List<Geographic>?>.internal(
-  FieldExteriorRing.new,
-  name: r'fieldExteriorRingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fieldExteriorRingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FieldExteriorRing.new,
+      name: r'fieldExteriorRingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fieldExteriorRingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FieldExteriorRing = Notifier<List<Geographic>?>;
 String _$fieldInteriorRingsHash() =>
@@ -1183,14 +1164,15 @@ String _$fieldInteriorRingsHash() =>
 @ProviderFor(FieldInteriorRings)
 final fieldInteriorRingsProvider =
     NotifierProvider<FieldInteriorRings, List<List<Geographic>>?>.internal(
-  FieldInteriorRings.new,
-  name: r'fieldInteriorRingsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fieldInteriorRingsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FieldInteriorRings.new,
+      name: r'fieldInteriorRingsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fieldInteriorRingsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FieldInteriorRings = Notifier<List<List<Geographic>>?>;
 // ignore_for_file: type=lint

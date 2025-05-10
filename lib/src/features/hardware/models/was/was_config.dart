@@ -22,7 +22,7 @@ part 'was_config.g.dart';
 
 /// A configuration for the Wheel Angle Sensor of a vehicle.
 @freezed
-class WasConfig with _$WasConfig {
+sealed class WasConfig with _$WasConfig {
   /// A configuration for the Wheel Angle Sensor of a vehicle.
   const factory WasConfig({
     @Default(true) bool useWas,

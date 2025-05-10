@@ -56,10 +56,12 @@ class EquipmentDebugLayer extends ConsumerWidget {
     final debugTravelledPath = ref.watch(debugEquipmentTravelledPathProvider);
     final debugHitches = ref.watch(debugEquipmentHitchesProvider);
     final debugSections = ref.watch(debugEquipmentSectionsProvider);
-    final trajectorySeconds =
-        ref.watch(debugEquipmentTrajectorySecondsProvider);
-    final trajectoryMinLength =
-        ref.watch(debugEquipmentTrajectoryMinLengthProvider);
+    final trajectorySeconds = ref.watch(
+      debugEquipmentTrajectorySecondsProvider,
+    );
+    final trajectoryMinLength = ref.watch(
+      debugEquipmentTrajectoryMinLengthProvider,
+    );
 
     final equipments = ref.watch(
       allEquipmentsProvider.select(
@@ -76,23 +78,25 @@ class EquipmentDebugLayer extends ConsumerWidget {
                 ...equipments.map(
                   (equipment) => Polyline(
                     points: ref.watch(
-                      debugEquipmentTravelledPathListProvider
-                          .select((value) => value[equipment.uuid] ?? []),
+                      debugEquipmentTravelledPathListProvider.select(
+                        (value) => value[equipment.uuid] ?? [],
+                      ),
                     ),
                   ),
                 ),
               if (debugTrajectory) ...[
                 ...equipments.map(
                   (e) => Polyline(
-                    points: e
-                        .trajectory(
-                          seconds: trajectorySeconds,
-                          minLength: trajectoryMinLength,
-                        )
-                        .chain
-                        .toGeographicPositions
-                        .map((e) => e.latLng)
-                        .toList(),
+                    points:
+                        e
+                            .trajectory(
+                              seconds: trajectorySeconds,
+                              minLength: trajectoryMinLength,
+                            )
+                            .chain
+                            .toGeographicPositions
+                            .map((e) => e.latLng)
+                            .toList(),
                     strokeWidth: 2,
                     color: Colors.orange,
                   ),
@@ -102,32 +106,36 @@ class EquipmentDebugLayer extends ConsumerWidget {
                     if (equipment.sections.isEmpty) {
                       return <Polyline>[];
                     }
-                    final leftMost = equipment
-                        .sectionEdgeTrajectories(
-                          0,
-                          seconds: trajectorySeconds,
-                          minLength: trajectoryMinLength,
-                        )
-                        .left;
-                    final rightMost = equipment
-                        .sectionEdgeTrajectories(
-                          equipment.sections.length - 1,
-                          seconds: trajectorySeconds,
-                          minLength: trajectoryMinLength,
-                        )
-                        .right;
+                    final leftMost =
+                        equipment
+                            .sectionEdgeTrajectories(
+                              0,
+                              seconds: trajectorySeconds,
+                              minLength: trajectoryMinLength,
+                            )
+                            .left;
+                    final rightMost =
+                        equipment
+                            .sectionEdgeTrajectories(
+                              equipment.sections.length - 1,
+                              seconds: trajectorySeconds,
+                              minLength: trajectoryMinLength,
+                            )
+                            .right;
                     return <Polyline>[
                       Polyline(
-                        points: leftMost.chain.toGeographicPositions
-                            .map((e) => e.latLng)
-                            .toList(),
+                        points:
+                            leftMost.chain.toGeographicPositions
+                                .map((e) => e.latLng)
+                                .toList(),
                         strokeWidth: 2,
                         color: Colors.red,
                       ),
                       Polyline(
-                        points: rightMost.chain.toGeographicPositions
-                            .map((e) => e.latLng)
-                            .toList(),
+                        points:
+                            rightMost.chain.toGeographicPositions
+                                .map((e) => e.latLng)
+                                .toList(),
                         strokeWidth: 2,
                         color: Colors.red,
                       ),
@@ -152,9 +160,10 @@ class EquipmentDebugLayer extends ConsumerWidget {
                       (equipment) => CircleMarker(
                         point: equipment.turningRadiusCenter!.latLng,
                         radius: equipment.currentTurningRadius!,
-                        color: darkTheme
-                            ? Colors.white.withValues(alpha: 0.1)
-                            : Colors.black.withValues(alpha: 0.1),
+                        color:
+                            darkTheme
+                                ? Colors.white.withValues(alpha: 0.1)
+                                : Colors.black.withValues(alpha: 0.1),
                         useRadiusInMeter: true,
                       ),
                     ),

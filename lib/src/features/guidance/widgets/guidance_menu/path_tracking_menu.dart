@@ -42,33 +42,43 @@ class PathTrackingMenu extends ConsumerWidget {
       menuChildren: [
         MenuItemButton(
           closeOnActivate: false,
-          onPressed: ref.watch(
-            configuredPathTrackingProvider.select((value) => value != null),
-          )
-              ? () {
-                  if (ref.watch(
-                    displayABTrackingProvider.select((value) => value != null),
-                  )) {
-                    showDialog<void>(
-                      context: context,
-                      builder: (context) => Consumer(
-                        builder: (context, ref, child) => ConfirmationDialog(
-                          title: 'Close active AB tracking?',
-                          onConfirmation: () async => ref
-                              .read(
-                                configuredPathTrackingProvider.notifier,
-                              )
-                              .sendToSim(),
-                        ),
+          onPressed:
+              ref.watch(
+                    configuredPathTrackingProvider.select(
+                      (value) => value != null,
+                    ),
+                  )
+                  ? () {
+                    if (ref.watch(
+                      displayABTrackingProvider.select(
+                        (value) => value != null,
                       ),
-                    );
-                  } else {
-                    ref
-                        .read(configuredPathTrackingProvider.notifier)
-                        .sendToSim();
+                    )) {
+                      showDialog<void>(
+                        context: context,
+                        builder:
+                            (context) => Consumer(
+                              builder:
+                                  (context, ref, child) => ConfirmationDialog(
+                                    title: 'Close active AB tracking?',
+                                    onConfirmation:
+                                        () async =>
+                                            ref
+                                                .read(
+                                                  configuredPathTrackingProvider
+                                                      .notifier,
+                                                )
+                                                .sendToSim(),
+                                  ),
+                            ),
+                      );
+                    } else {
+                      ref
+                          .read(configuredPathTrackingProvider.notifier)
+                          .sendToSim();
+                    }
                   }
-                }
-              : null,
+                  : null,
           leadingIcon: const Padding(
             padding: EdgeInsets.only(left: 8),
             child: Icon(Icons.check),
@@ -79,74 +89,64 @@ class PathTrackingMenu extends ConsumerWidget {
           displayPathTrackingProvider.select((value) => value != null),
         )) {
           true => switch (ref.watch(activeEditablePathTypeProvider)) {
-              null => MenuItemButton(
-                  closeOnActivate: false,
-                  leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Icon(Icons.edit),
-                  ),
-                  onPressed: () {
-                    ref
-                        .read(activeEditablePathTypeProvider.notifier)
-                        .update(EditablePathType.pathTracking);
-                    ref.read(editablePathPointsProvider.notifier).update(
-                          ref.read(
-                            displayPathTrackingProvider.select(
-                              (value) => value?.wayPoints
-                                  .map((e) => e.position)
-                                  .toList(),
-                            ),
-                          ),
-                        );
-                  },
-                  child: Text('Edit path', style: textStyle),
-                ),
-              EditablePathType.pathTracking => MenuItemButton(
-                  closeOnActivate: false,
-                  leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Icon(Icons.edit),
-                  ),
-                  onPressed: () {
-                    final wayPoints =
-                        ref.watch(editablePathAsWayPointsProvider);
-                    ref
-                        .read(pathTrackingPointsProvider.notifier)
-                        .update(wayPoints);
-                    ref
-                        .read(activeEditablePathTypeProvider.notifier)
-                        .update(null);
-                  },
-                  child: Text('Finish editing', style: textStyle),
-                ),
-              _ => const SizedBox.shrink()
-            },
-          false =>
-            MenuItemButton(
+            null => MenuItemButton(
               closeOnActivate: false,
               leadingIcon: const Padding(
                 padding: EdgeInsets.only(left: 8),
-                child: Icon(Icons.voicemail),
+                child: Icon(Icons.edit),
               ),
               onPressed: () {
                 ref
-                    .read(enablePathRecorderProvider.notifier)
-                    .update(value: true);
+                    .read(activeEditablePathTypeProvider.notifier)
+                    .update(EditablePathType.pathTracking);
                 ref
-                    .read(activePathRecordingTargetProvider.notifier)
-                    .update(PathRecordingTarget.pathTracking);
-                ref
-                    .read(showPathRecordingMenuProvider.notifier)
-                    .update(value: true);
+                    .read(editablePathPointsProvider.notifier)
+                    .update(
+                      ref.read(
+                        displayPathTrackingProvider.select(
+                          (value) =>
+                              value?.wayPoints.map((e) => e.position).toList(),
+                        ),
+                      ),
+                    );
               },
-              child: Text('Path recording', style: textStyle),
+              child: Text('Edit path', style: textStyle),
             ),
+            EditablePathType.pathTracking => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.edit),
+              ),
+              onPressed: () {
+                final wayPoints = ref.watch(editablePathAsWayPointsProvider);
+                ref.read(pathTrackingPointsProvider.notifier).update(wayPoints);
+                ref.read(activeEditablePathTypeProvider.notifier).update(null);
+              },
+              child: Text('Finish editing', style: textStyle),
+            ),
+            _ => const SizedBox.shrink(),
+          },
+          false => MenuItemButton(
+            closeOnActivate: false,
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.voicemail),
+            ),
+            onPressed: () {
+              ref.read(enablePathRecorderProvider.notifier).update(value: true);
+              ref
+                  .read(activePathRecordingTargetProvider.notifier)
+                  .update(PathRecordingTarget.pathTracking);
+              ref
+                  .read(showPathRecordingMenuProvider.notifier)
+                  .update(value: true);
+            },
+            child: Text('Path recording', style: textStyle),
+          ),
         },
         Consumer(
-          child: Text(
-            'Show',
-            style: textStyle,
-          ),
+          child: Text('Show', style: textStyle),
           builder: (context, ref, child) {
             return CheckboxListTile(
               secondary: switch (ref.watch(showPathTrackingProvider)) {
@@ -155,19 +155,18 @@ class PathTrackingMenu extends ConsumerWidget {
               },
               title: child,
               value: ref.watch(showPathTrackingProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(showPathTrackingProvider.notifier)
-                      .update(value: value)
-                  : null,
+              onChanged:
+                  (value) =>
+                      value != null
+                          ? ref
+                              .read(showPathTrackingProvider.notifier)
+                              .update(value: value)
+                          : null,
             );
           },
         ),
         ListTile(
-          leading: Text(
-            'Loop',
-            style: textStyle,
-          ),
+          leading: Text('Loop', style: textStyle),
           title: Consumer(
             builder: (context, ref, child) {
               final loopMode = ref.watch(pathTrackingLoopProvider);
@@ -178,17 +177,19 @@ class PathTrackingMenu extends ConsumerWidget {
                 ),
                 showSelectedIcon: false,
                 selected: {loopMode},
-                onSelectionChanged: (values) => ref
-                    .read(pathTrackingLoopProvider.notifier)
-                    .update(values.first),
-                segments: PathTrackingLoopMode.values
-                    .map(
-                      (mode) => ButtonSegment(
-                        value: mode,
-                        label: Text(mode.name.capitalize),
-                      ),
-                    )
-                    .toList(),
+                onSelectionChanged:
+                    (values) => ref
+                        .read(pathTrackingLoopProvider.notifier)
+                        .update(values.first),
+                segments:
+                    PathTrackingLoopMode.values
+                        .map(
+                          (mode) => ButtonSegment(
+                            value: mode,
+                            label: Text(mode.name.capitalize),
+                          ),
+                        )
+                        .toList(),
               );
             },
           ),
@@ -201,15 +202,13 @@ class PathTrackingMenu extends ConsumerWidget {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'Interpolation distance: $distance m',
-                    style: textStyle,
-                  ),
+                  Text('Interpolation distance: $distance m', style: textStyle),
                   Slider(
                     value: distance,
-                    onChanged: ref
-                        .read(pathInterpolationDistanceProvider.notifier)
-                        .update,
+                    onChanged:
+                        ref
+                            .read(pathInterpolationDistanceProvider.notifier)
+                            .update,
                     max: 20,
                     min: 1,
                     divisions: 19,
@@ -221,19 +220,19 @@ class PathTrackingMenu extends ConsumerWidget {
         ),
         if (ref.watch(enableDebugModeProvider))
           Consumer(
-            builder: (context, ref, child) => CheckboxListTile(
-              secondary: const Icon(Icons.bug_report),
-              title: Text(
-                'Debug',
-                style: textStyle,
-              ),
-              value: ref.watch(debugPathTrackingProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(debugPathTrackingProvider.notifier)
-                      .update(value: value)
-                  : null,
-            ),
+            builder:
+                (context, ref, child) => CheckboxListTile(
+                  secondary: const Icon(Icons.bug_report),
+                  title: Text('Debug', style: textStyle),
+                  value: ref.watch(debugPathTrackingProvider),
+                  onChanged:
+                      (value) =>
+                          value != null
+                              ? ref
+                                  .read(debugPathTrackingProvider.notifier)
+                                  .update(value: value)
+                              : null,
+                ),
           ),
       ],
     );

@@ -46,11 +46,12 @@ class ABLine extends _$ABLine {
             Logger.instance.i('ABLine deleted.');
           }
         },
-        error: (error, stackTrace) => Logger.instance.e(
-          'Failed to create ABLine.',
-          error: error,
-          stackTrace: stackTrace,
-        ),
+        error:
+            (error, stackTrace) => Logger.instance.e(
+              'Failed to create ABLine.',
+              error: error,
+              stackTrace: stackTrace,
+            ),
         loading: () {},
       );
     });
@@ -63,14 +64,18 @@ class ABLine extends _$ABLine {
         a.copyWith(bearing: a.initialBearingToRhumb(b)),
         b.copyWith(bearing: a.finalBearingToRhumb(b)),
       ];
-      final boundary = ref.read(
+      final boundary =
+          ref.read(
             configuredABTrackingProvider.select((value) => value?.boundary),
           ) ??
-          ref.watch(bufferedFieldProvider).when(
-                data: (data) =>
-                    data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
-                error: (error, stackTrace) => null,
-                loading: () => null,
+          ref
+              .watch(bufferedFieldProvider)
+              .maybeWhen(
+                data:
+                    (data) =>
+                        data?.polygon ??
+                        ref.watch(activeFieldProvider)?.polygon,
+                orElse: () => null,
               );
       final width = ref.watch(aBWidthProvider);
       final sidewaysOffset = ref.watch(aBSidewaysOffsetProvider);
@@ -110,8 +115,9 @@ class ABLine extends _$ABLine {
 
       final data = jsonDecode(creation);
       if (data is Map) {
-        final abLine =
-            guidance.ABLine.fromJson(Map<String, dynamic>.from(data));
+        final abLine = guidance.ABLine.fromJson(
+          Map<String, dynamic>.from(data),
+        );
         return abLine;
       }
     }
@@ -148,28 +154,34 @@ class APlusLine extends _$APlusLine {
             Logger.instance.i('APlusLine deleted.');
           }
         },
-        error: (error, stackTrace) => Logger.instance.e(
-          'Failed to create ABLine.',
-          error: error,
-          stackTrace: stackTrace,
-        ),
+        error:
+            (error, stackTrace) => Logger.instance.e(
+              'Failed to create ABLine.',
+              error: error,
+              stackTrace: stackTrace,
+            ),
         loading: () {},
       );
     });
 
-    final bearing = ref.watch(aPlusLineBearingProvider) ??
+    final bearing =
+        ref.watch(aPlusLineBearingProvider) ??
         ref.read(mainVehicleProvider.select((value) => value.bearing));
     final start = ref.watch(aBPointAProvider)?.copyWith(bearing: bearing);
 
     if (start != null) {
-      final boundary = ref.read(
+      final boundary =
+          ref.read(
             configuredABTrackingProvider.select((value) => value?.boundary),
           ) ??
-          ref.watch(bufferedFieldProvider).when(
-                data: (data) =>
-                    data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
-                error: (error, stackTrace) => null,
-                loading: () => null,
+          ref
+              .watch(bufferedFieldProvider)
+              .maybeWhen(
+                data:
+                    (data) =>
+                        data?.polygon ??
+                        ref.watch(activeFieldProvider)?.polygon,
+                orElse: () => null,
               );
       final width = ref.watch(aBWidthProvider);
       final sidewaysOffset = ref.watch(aBSidewaysOffsetProvider);
@@ -210,8 +222,9 @@ class APlusLine extends _$APlusLine {
 
       final data = jsonDecode(creation);
       if (data is Map) {
-        final aPlusLine =
-            guidance.APlusLine.fromJson(Map<String, dynamic>.from(data));
+        final aPlusLine = guidance.APlusLine.fromJson(
+          Map<String, dynamic>.from(data),
+        );
         return aPlusLine;
       }
     }

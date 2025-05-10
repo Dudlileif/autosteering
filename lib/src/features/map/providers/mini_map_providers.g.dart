@@ -14,13 +14,15 @@ String _$showMiniMapHash() => r'513352096bf01f8d799c4a05c054c2930695d6e2';
 @ProviderFor(ShowMiniMap)
 final showMiniMapProvider =
     AutoDisposeNotifierProvider<ShowMiniMap, bool>.internal(
-  ShowMiniMap.new,
-  name: r'showMiniMapProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$showMiniMapHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowMiniMap.new,
+      name: r'showMiniMapProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showMiniMapHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowMiniMap = AutoDisposeNotifier<bool>;
 String _$miniMapReadyHash() => r'757d08346738862dd344aafe5891c9c290001ef0';
@@ -31,13 +33,15 @@ String _$miniMapReadyHash() => r'757d08346738862dd344aafe5891c9c290001ef0';
 @ProviderFor(MiniMapReady)
 final miniMapReadyProvider =
     AutoDisposeNotifierProvider<MiniMapReady, bool>.internal(
-  MiniMapReady.new,
-  name: r'miniMapReadyProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$miniMapReadyHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MiniMapReady.new,
+      name: r'miniMapReadyProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$miniMapReadyHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MiniMapReady = AutoDisposeNotifier<bool>;
 String _$miniMapControllerHash() => r'dce494710268299011edddb8eecc7ab7f9c2e84a';
@@ -49,14 +53,15 @@ String _$miniMapControllerHash() => r'dce494710268299011edddb8eecc7ab7f9c2e84a';
 @ProviderFor(MiniMapController)
 final miniMapControllerProvider =
     AutoDisposeNotifierProvider<MiniMapController, MapController>.internal(
-  MiniMapController.new,
-  name: r'miniMapControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$miniMapControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MiniMapController.new,
+      name: r'miniMapControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$miniMapControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MiniMapController = AutoDisposeNotifier<MapController>;
 String _$miniMapLockToFieldHash() =>
@@ -68,14 +73,15 @@ String _$miniMapLockToFieldHash() =>
 @ProviderFor(MiniMapLockToField)
 final miniMapLockToFieldProvider =
     AutoDisposeNotifierProvider<MiniMapLockToField, bool>.internal(
-  MiniMapLockToField.new,
-  name: r'miniMapLockToFieldProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$miniMapLockToFieldHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MiniMapLockToField.new,
+      name: r'miniMapLockToFieldProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$miniMapLockToFieldHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MiniMapLockToField = AutoDisposeNotifier<bool>;
 String _$miniMapAlwaysPointNorthHash() =>
@@ -87,14 +93,15 @@ String _$miniMapAlwaysPointNorthHash() =>
 @ProviderFor(MiniMapAlwaysPointNorth)
 final miniMapAlwaysPointNorthProvider =
     NotifierProvider<MiniMapAlwaysPointNorth, bool>.internal(
-  MiniMapAlwaysPointNorth.new,
-  name: r'miniMapAlwaysPointNorthProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$miniMapAlwaysPointNorthHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MiniMapAlwaysPointNorth.new,
+      name: r'miniMapAlwaysPointNorthProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$miniMapAlwaysPointNorthHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MiniMapAlwaysPointNorth = Notifier<bool>;
 String _$miniMapSizeHash() => r'2d209cd72ad7be46bd686724ae49229b4c1fb906';
@@ -105,13 +112,15 @@ String _$miniMapSizeHash() => r'2d209cd72ad7be46bd686724ae49229b4c1fb906';
 @ProviderFor(MiniMapSize)
 final miniMapSizeProvider =
     AutoDisposeNotifierProvider<MiniMapSize, double>.internal(
-  MiniMapSize.new,
-  name: r'miniMapSizeProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$miniMapSizeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MiniMapSize.new,
+      name: r'miniMapSizeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$miniMapSizeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MiniMapSize = AutoDisposeNotifier<double>;
 // ignore_for_file: type=lint

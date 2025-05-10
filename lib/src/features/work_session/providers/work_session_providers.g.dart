@@ -48,21 +48,15 @@ class LoadWorkSessionFromFileFamily extends Family<AsyncValue<WorkSession?>> {
   /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
   ///
   /// Copied from [loadWorkSessionFromFile].
-  LoadWorkSessionFromFileProvider call(
-    String path,
-  ) {
-    return LoadWorkSessionFromFileProvider(
-      path,
-    );
+  LoadWorkSessionFromFileProvider call(String path) {
+    return LoadWorkSessionFromFileProvider(path);
   }
 
   @override
   LoadWorkSessionFromFileProvider getProviderOverride(
     covariant LoadWorkSessionFromFileProvider provider,
   ) {
-    return call(
-      provider.path,
-    );
+    return call(provider.path);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -88,24 +82,21 @@ class LoadWorkSessionFromFileProvider
   /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
   ///
   /// Copied from [loadWorkSessionFromFile].
-  LoadWorkSessionFromFileProvider(
-    String path,
-  ) : this._internal(
-          (ref) => loadWorkSessionFromFile(
-            ref as LoadWorkSessionFromFileRef,
-            path,
-          ),
-          from: loadWorkSessionFromFileProvider,
-          name: r'loadWorkSessionFromFileProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$loadWorkSessionFromFileHash,
-          dependencies: LoadWorkSessionFromFileFamily._dependencies,
-          allTransitiveDependencies:
-              LoadWorkSessionFromFileFamily._allTransitiveDependencies,
-          path: path,
-        );
+  LoadWorkSessionFromFileProvider(String path)
+    : this._internal(
+        (ref) =>
+            loadWorkSessionFromFile(ref as LoadWorkSessionFromFileRef, path),
+        from: loadWorkSessionFromFileProvider,
+        name: r'loadWorkSessionFromFileProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$loadWorkSessionFromFileHash,
+        dependencies: LoadWorkSessionFromFileFamily._dependencies,
+        allTransitiveDependencies:
+            LoadWorkSessionFromFileFamily._allTransitiveDependencies,
+        path: path,
+      );
 
   LoadWorkSessionFromFileProvider._internal(
     super._createNotifier, {
@@ -254,25 +245,25 @@ class SaveWorkSessionProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => saveWorkSession(
-            ref as SaveWorkSessionRef,
-            workSession,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: saveWorkSessionProvider,
-          name: r'saveWorkSessionProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$saveWorkSessionHash,
-          dependencies: SaveWorkSessionFamily._dependencies,
-          allTransitiveDependencies:
-              SaveWorkSessionFamily._allTransitiveDependencies,
-          workSession: workSession,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => saveWorkSession(
+           ref as SaveWorkSessionRef,
+           workSession,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: saveWorkSessionProvider,
+         name: r'saveWorkSessionProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$saveWorkSessionHash,
+         dependencies: SaveWorkSessionFamily._dependencies,
+         allTransitiveDependencies:
+             SaveWorkSessionFamily._allTransitiveDependencies,
+         workSession: workSession,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   SaveWorkSessionProvider._internal(
     super._createNotifier, {
@@ -348,7 +339,8 @@ mixin SaveWorkSessionRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _SaveWorkSessionProviderElement
-    extends AutoDisposeFutureProviderElement<void> with SaveWorkSessionRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with SaveWorkSessionRef {
   _SaveWorkSessionProviderElement(super.provider);
 
   @override
@@ -463,25 +455,25 @@ class SaveWorkSessionEquipmentLogsProvider
     bool overwrite = true,
     String? singleUuid,
   }) : this._internal(
-          (ref) => saveWorkSessionEquipmentLogs(
-            ref as SaveWorkSessionEquipmentLogsRef,
-            workSession,
-            overwrite: overwrite,
-            singleUuid: singleUuid,
-          ),
-          from: saveWorkSessionEquipmentLogsProvider,
-          name: r'saveWorkSessionEquipmentLogsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$saveWorkSessionEquipmentLogsHash,
-          dependencies: SaveWorkSessionEquipmentLogsFamily._dependencies,
-          allTransitiveDependencies:
-              SaveWorkSessionEquipmentLogsFamily._allTransitiveDependencies,
-          workSession: workSession,
-          overwrite: overwrite,
-          singleUuid: singleUuid,
-        );
+         (ref) => saveWorkSessionEquipmentLogs(
+           ref as SaveWorkSessionEquipmentLogsRef,
+           workSession,
+           overwrite: overwrite,
+           singleUuid: singleUuid,
+         ),
+         from: saveWorkSessionEquipmentLogsProvider,
+         name: r'saveWorkSessionEquipmentLogsProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$saveWorkSessionEquipmentLogsHash,
+         dependencies: SaveWorkSessionEquipmentLogsFamily._dependencies,
+         allTransitiveDependencies:
+             SaveWorkSessionEquipmentLogsFamily._allTransitiveDependencies,
+         workSession: workSession,
+         overwrite: overwrite,
+         singleUuid: singleUuid,
+       );
 
   SaveWorkSessionEquipmentLogsProvider._internal(
     super._createNotifier, {
@@ -658,27 +650,27 @@ class ExportWorkSessionProvider extends AutoDisposeFutureProvider<void> {
     bool downloadIfWeb = false,
     bool withEquipmentLogs = true,
   }) : this._internal(
-          (ref) => exportWorkSession(
-            ref as ExportWorkSessionRef,
-            workSession,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-            withEquipmentLogs: withEquipmentLogs,
-          ),
-          from: exportWorkSessionProvider,
-          name: r'exportWorkSessionProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportWorkSessionHash,
-          dependencies: ExportWorkSessionFamily._dependencies,
-          allTransitiveDependencies:
-              ExportWorkSessionFamily._allTransitiveDependencies,
-          workSession: workSession,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-          withEquipmentLogs: withEquipmentLogs,
-        );
+         (ref) => exportWorkSession(
+           ref as ExportWorkSessionRef,
+           workSession,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+           withEquipmentLogs: withEquipmentLogs,
+         ),
+         from: exportWorkSessionProvider,
+         name: r'exportWorkSessionProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$exportWorkSessionHash,
+         dependencies: ExportWorkSessionFamily._dependencies,
+         allTransitiveDependencies:
+             ExportWorkSessionFamily._allTransitiveDependencies,
+         workSession: workSession,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+         withEquipmentLogs: withEquipmentLogs,
+       );
 
   ExportWorkSessionProvider._internal(
     super._createNotifier, {
@@ -762,7 +754,8 @@ mixin ExportWorkSessionRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportWorkSessionProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportWorkSessionRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportWorkSessionRef {
   _ExportWorkSessionProviderElement(super.provider);
 
   @override
@@ -788,9 +781,10 @@ String _$savedWorkSessionsHash() => r'd7d697d33348282646e7be9a6fdc9a52079b4384';
 final savedWorkSessionsProvider = FutureProvider<List<WorkSession>>.internal(
   savedWorkSessions,
   name: r'savedWorkSessionsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$savedWorkSessionsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$savedWorkSessionsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -830,20 +824,14 @@ class DeleteWorkSessionFamily extends Family<AsyncValue<void>> {
     WorkSession workSession, {
     String? overrideName,
   }) {
-    return DeleteWorkSessionProvider(
-      workSession,
-      overrideName: overrideName,
-    );
+    return DeleteWorkSessionProvider(workSession, overrideName: overrideName);
   }
 
   @override
   DeleteWorkSessionProvider getProviderOverride(
     covariant DeleteWorkSessionProvider provider,
   ) {
-    return call(
-      provider.workSession,
-      overrideName: provider.overrideName,
-    );
+    return call(provider.workSession, overrideName: provider.overrideName);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -872,27 +860,25 @@ class DeleteWorkSessionProvider extends AutoDisposeFutureProvider<void> {
   /// Override the directory name with [overrideName].
   ///
   /// Copied from [deleteWorkSession].
-  DeleteWorkSessionProvider(
-    WorkSession workSession, {
-    String? overrideName,
-  }) : this._internal(
-          (ref) => deleteWorkSession(
-            ref as DeleteWorkSessionRef,
-            workSession,
-            overrideName: overrideName,
-          ),
-          from: deleteWorkSessionProvider,
-          name: r'deleteWorkSessionProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$deleteWorkSessionHash,
-          dependencies: DeleteWorkSessionFamily._dependencies,
-          allTransitiveDependencies:
-              DeleteWorkSessionFamily._allTransitiveDependencies,
-          workSession: workSession,
+  DeleteWorkSessionProvider(WorkSession workSession, {String? overrideName})
+    : this._internal(
+        (ref) => deleteWorkSession(
+          ref as DeleteWorkSessionRef,
+          workSession,
           overrideName: overrideName,
-        );
+        ),
+        from: deleteWorkSessionProvider,
+        name: r'deleteWorkSessionProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$deleteWorkSessionHash,
+        dependencies: DeleteWorkSessionFamily._dependencies,
+        allTransitiveDependencies:
+            DeleteWorkSessionFamily._allTransitiveDependencies,
+        workSession: workSession,
+        overrideName: overrideName,
+      );
 
   DeleteWorkSessionProvider._internal(
     super._createNotifier, {
@@ -960,7 +946,8 @@ mixin DeleteWorkSessionRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _DeleteWorkSessionProviderElement
-    extends AutoDisposeFutureProviderElement<void> with DeleteWorkSessionRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with DeleteWorkSessionRef {
   _DeleteWorkSessionProviderElement(super.provider);
 
   @override
@@ -980,14 +967,15 @@ String _$importWorkSessionHash() => r'e5dbb7652642dd8cbcb98e6a03dae4bf1eefcee5';
 @ProviderFor(importWorkSession)
 final importWorkSessionProvider =
     AutoDisposeFutureProvider<WorkSession?>.internal(
-  importWorkSession,
-  name: r'importWorkSessionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$importWorkSessionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      importWorkSession,
+      name: r'importWorkSessionProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$importWorkSessionHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -1013,21 +1001,15 @@ class ExportWorkSessionsFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all work session files.
   ///
   /// Copied from [exportWorkSessions].
-  ExportWorkSessionsProvider call({
-    bool zip = true,
-  }) {
-    return ExportWorkSessionsProvider(
-      zip: zip,
-    );
+  ExportWorkSessionsProvider call({bool zip = true}) {
+    return ExportWorkSessionsProvider(zip: zip);
   }
 
   @override
   ExportWorkSessionsProvider getProviderOverride(
     covariant ExportWorkSessionsProvider provider,
   ) {
-    return call(
-      zip: provider.zip,
-    );
+    return call(zip: provider.zip);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1052,24 +1034,20 @@ class ExportWorkSessionsProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for exporting all work session files.
   ///
   /// Copied from [exportWorkSessions].
-  ExportWorkSessionsProvider({
-    bool zip = true,
-  }) : this._internal(
-          (ref) => exportWorkSessions(
-            ref as ExportWorkSessionsRef,
-            zip: zip,
-          ),
-          from: exportWorkSessionsProvider,
-          name: r'exportWorkSessionsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportWorkSessionsHash,
-          dependencies: ExportWorkSessionsFamily._dependencies,
-          allTransitiveDependencies:
-              ExportWorkSessionsFamily._allTransitiveDependencies,
-          zip: zip,
-        );
+  ExportWorkSessionsProvider({bool zip = true})
+    : this._internal(
+        (ref) => exportWorkSessions(ref as ExportWorkSessionsRef, zip: zip),
+        from: exportWorkSessionsProvider,
+        name: r'exportWorkSessionsProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$exportWorkSessionsHash,
+        dependencies: ExportWorkSessionsFamily._dependencies,
+        allTransitiveDependencies:
+            ExportWorkSessionsFamily._allTransitiveDependencies,
+        zip: zip,
+      );
 
   ExportWorkSessionsProvider._internal(
     super._createNotifier, {
@@ -1128,7 +1106,8 @@ mixin ExportWorkSessionsRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportWorkSessionsProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportWorkSessionsRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportWorkSessionsRef {
   _ExportWorkSessionsProviderElement(super.provider);
 
   @override
@@ -1143,14 +1122,15 @@ String _$activeWorkSessionHash() => r'a5e99f946bd356990b9246d165eb7604dccecf0d';
 @ProviderFor(ActiveWorkSession)
 final activeWorkSessionProvider =
     NotifierProvider<ActiveWorkSession, WorkSession?>.internal(
-  ActiveWorkSession.new,
-  name: r'activeWorkSessionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeWorkSessionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ActiveWorkSession.new,
+      name: r'activeWorkSessionProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$activeWorkSessionHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ActiveWorkSession = Notifier<WorkSession?>;
 // ignore_for_file: type=lint

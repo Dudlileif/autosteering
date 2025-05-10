@@ -44,20 +44,21 @@ class MessageDecoder {
   final int messagesToKeep;
 
   /// The NMEA message decoder.
-  final nmeaDecoder = NmeaDecoder(
-    onUnknownSentence: (line) {
-      if (line.startsWith(r'$PANDA')) {
-        return PANDASentence(raw: line);
-      }
-      return null;
-    },
-  )
-    ..registerTalkerSentence('GGA', (line) => GGASentence(raw: line))
-    ..registerTalkerSentence('GNS', (line) => GNSSentence(raw: line))
-    ..registerTalkerSentence('GST', (line) => GSTSentence(raw: line))
-    ..registerTalkerSentence('VTG', (line) => VTGSentence(raw: line))
-    ..registerTalkerSentence('TXT', (line) => TXTSentence(raw: line))
-    ..registerProprietarySentence('UBX', (line) => PUBXSentence(raw: line));
+  final nmeaDecoder =
+      NmeaDecoder(
+          onUnknownSentence: (line) {
+            if (line.startsWith(r'$PANDA')) {
+              return PANDASentence(raw: line);
+            }
+            return null;
+          },
+        )
+        ..registerTalkerSentence('GGA', (line) => GGASentence(raw: line))
+        ..registerTalkerSentence('GNS', (line) => GNSSentence(raw: line))
+        ..registerTalkerSentence('GST', (line) => GSTSentence(raw: line))
+        ..registerTalkerSentence('VTG', (line) => VTGSentence(raw: line))
+        ..registerTalkerSentence('TXT', (line) => TXTSentence(raw: line))
+        ..registerProprietarySentence('UBX', (line) => PUBXSentence(raw: line));
 
   /// Start time of the current NMEA_log, if there is one.
   DateTime? _gnssLogStartTime;
@@ -112,33 +113,36 @@ class MessageDecoder {
   /// It will look for the [gnssSentences] first, and if that is empty it will
   /// look for [gnssSentences].
   double? get gnssFrequency => switch (gnssSentences.isNotEmpty) {
-        true => gnssSentences.length /
-            (DateTime.now()
-                    .difference(gnssSentences.first.deviceReceiveTime)
-                    .inMicroseconds /
-                1e6),
-        false => null,
-      };
+    true =>
+      gnssSentences.length /
+          (DateTime.now()
+                  .difference(gnssSentences.first.deviceReceiveTime)
+                  .inMicroseconds /
+              1e6),
+    false => null,
+  };
 
   /// The frequency of [ImuReading] updates being decoded in [decode].
   double? get imuFrequency => switch (imuReadings.isNotEmpty) {
-        true => imuReadings.length /
-            (DateTime.now()
-                    .difference(imuReadings.first.receiveTime)
-                    .inMicroseconds /
-                1e6),
-        false => null
-      };
+    true =>
+      imuReadings.length /
+          (DateTime.now()
+                  .difference(imuReadings.first.receiveTime)
+                  .inMicroseconds /
+              1e6),
+    false => null,
+  };
 
   /// The frequency of [WasReading] updates being decoded in [decode].
   double? get wasFrequency => switch (wasReadings.isNotEmpty) {
-        true => wasReadings.length /
-            (DateTime.now()
-                    .difference(wasReadings.first.receiveTime)
-                    .inMicroseconds /
-                1e6),
-        false => null
-      };
+    true =>
+      wasReadings.length /
+          (DateTime.now()
+                  .difference(wasReadings.first.receiveTime)
+                  .inMicroseconds /
+              1e6),
+    false => null,
+  };
 
   /// The delay in micro seconds from the creation of the GNSS sentence to now.
   int get gnssDelayMicroseconds =>
@@ -152,8 +156,10 @@ class MessageDecoder {
     }
     final countToCheck = min(30, imuReadings.length);
     final startIndex = imuReadings.length - countToCheck;
-    final closeReadings =
-        imuReadings.getRange(startIndex, startIndex + countToCheck);
+    final closeReadings = imuReadings.getRange(
+      startIndex,
+      startIndex + countToCheck,
+    );
 
     final now = DateTime.now();
 
@@ -170,12 +176,7 @@ class MessageDecoder {
   }
 
   /// Enable or disable_logging of the different hardware messages.
-  void enableLogging({
-    bool? gnss,
-    bool? imu,
-    bool? was,
-    bool? combined,
-  }) {
+  void enableLogging({bool? gnss, bool? imu, bool? was, bool? combined}) {
     if (gnss != null) {
       if (!_logGNSS && gnss) {
         _gnssLogStartTime = DateTime.now();
@@ -215,8 +216,9 @@ class MessageDecoder {
 
   /// Decodes the [data] to raw strings ready to be parsed in [decode].
   List<String> rawStrings(Uint8List data) {
-    final decoded =
-        String.fromCharCodes(data).replaceAll('\n', '').replaceAll('\r', '');
+    final decoded = String.fromCharCodes(
+      data,
+    ).replaceAll('\n', '').replaceAll('\r', '');
 
     final characters = <String>[...unfinishedMessage, ...decoded.split('')];
 
@@ -252,18 +254,20 @@ class MessageDecoder {
               if (nmeaEndIndices.elementAt(j) <
                   nmeaStartIndices.elementAt(i + 1)) {
                 // Add message start and end.
-                nmeaMessages.add(
-                  (start: nmeaStartIndices[i], end: nmeaEndIndices[j]),
-                );
+                nmeaMessages.add((
+                  start: nmeaStartIndices[i],
+                  end: nmeaEndIndices[j],
+                ));
                 nmeaEndIndices.removeAt(j);
                 break;
               }
             }
             // Not more starts, the end has to match.
             else {
-              nmeaMessages.add(
-                (start: nmeaStartIndices[i], end: nmeaEndIndices[j]),
-              );
+              nmeaMessages.add((
+                start: nmeaStartIndices[i],
+                end: nmeaEndIndices[j],
+              ));
               nmeaEndIndices.removeAt(j);
               break;
             }
@@ -305,18 +309,20 @@ class MessageDecoder {
               if (jsonEndIndices.elementAt(j) <
                   jsonStartIndices.elementAt(i + 1)) {
                 // Add message start and end.
-                jsonMessages.add(
-                  (start: jsonStartIndices[i], end: jsonEndIndices[j]),
-                );
+                jsonMessages.add((
+                  start: jsonStartIndices[i],
+                  end: jsonEndIndices[j],
+                ));
                 jsonEndIndices.removeAt(j);
                 break;
               }
             }
             // Not more starts, the end has to match.
             else {
-              jsonMessages.add(
-                (start: jsonStartIndices[i], end: jsonEndIndices[j]),
-              );
+              jsonMessages.add((
+                start: jsonStartIndices[i],
+                end: jsonEndIndices[j],
+              ));
               jsonEndIndices.removeAt(j);
               break;
             }
@@ -354,8 +360,10 @@ class MessageDecoder {
     // message.
     if (jsonStartIndices.length != jsonMessages.length ||
         nmeaStartIndices.length != nmeaMessages.length &&
-            !const DeepCollectionEquality()
-                .equals(unfinishedMessage, characters)) {
+            !const DeepCollectionEquality().equals(
+              unfinishedMessage,
+              characters,
+            )) {
       unfinishedMessage = characters;
       if (messages.isEmpty) {
         messages.add('Message unfinished: ${characters.join()}');
@@ -408,7 +416,6 @@ class MessageDecoder {
             ]);
 
             if (Device.isNative) {
-
               if (_logIMU && logDirectoryPath != null) {
                 _imuLogStartTime ??= DateTime.now();
                 final file = File(
@@ -422,10 +429,7 @@ class MessageDecoder {
                   file.createSync(recursive: true);
                 }
                 file.writeAsStringSync(
-                  [
-                    reading,
-                    Platform.lineTerminator,
-                  ].join(),
+                  [reading, Platform.lineTerminator].join(),
                   mode: FileMode.append,
                 );
               }
@@ -462,10 +466,7 @@ class MessageDecoder {
                   file.createSync(recursive: true);
                 }
                 file.writeAsStringSync(
-                  [
-                    reading,
-                    Platform.lineTerminator,
-                  ].join(),
+                  [reading, Platform.lineTerminator].join(),
                   mode: FileMode.append,
                 );
               }
@@ -473,15 +474,15 @@ class MessageDecoder {
           }
 
           if (data['steps_min_center'] is double) {
-            messages.add(
-              (stepsPerWasIncrementMinToCenter: data['steps_min_center']),
-            );
+            messages.add((
+              stepsPerWasIncrementMinToCenter: data['steps_min_center'],
+            ));
           }
 
           if (data['steps_center_max'] is double) {
-            messages.add(
-              (stepsPerWasIncrementCenterToMax: data['steps_center_max']),
-            );
+            messages.add((
+              stepsPerWasIncrementCenterToMax: data['steps_center_max'],
+            ));
           }
 
           // Motor info
@@ -510,9 +511,9 @@ class MessageDecoder {
             messages.add((motorTargetRotation: data['motor_target'] as double));
           }
           if (data['button_states'] is List) {
-            messages.add(
-              (buttonStates: List<bool>.from(data['button_states'] as List)),
-            );
+            messages.add((
+              buttonStates: List<bool>.from(data['button_states'] as List),
+            ));
           }
         } on Exception catch (e) {
           messages.add(
@@ -541,13 +542,11 @@ class MessageDecoder {
         }
         messages.add(null);
       } else if (nmea is GSTSentence) {
-        messages.add(
-          (
-            latitudeError: nmea.stdLat,
-            longitudeError: nmea.stdLon,
-            altitudeError: nmea.stdAltitude
-          ),
-        );
+        messages.add((
+          latitudeError: nmea.stdLat,
+          longitudeError: nmea.stdLon,
+          altitudeError: nmea.stdAltitude,
+        ));
         gstSentences.add(nmea);
         while (gstSentences.length > messagesToKeep) {
           gstSentences.removeAt(0);
@@ -562,27 +561,23 @@ class MessageDecoder {
         );
       } else if (nmea is GnssPositionCommonSentence && nmea.valid) {
         if (nmea.longitude != null && nmea.latitude != null) {
-          messages.add(
-            (
-              gnssPosition: Geographic(
-                lon: nmea.longitude!,
-                lat: nmea.latitude!,
-                elev: nmea.altitudeMSL,
-              ),
-              gnssTime: nmea.utc ?? DateTime.now(),
-              receiveTime: nmea.deviceReceiveTime,
-              quality: nmea.fixQuality ?? GnssFixQuality.notAvailable,
+          messages.add((
+            gnssPosition: Geographic(
+              lon: nmea.longitude!,
+              lat: nmea.latitude!,
+              elev: nmea.altitudeMSL,
             ),
-          );
+            gnssTime: nmea.utc ?? DateTime.now(),
+            receiveTime: nmea.deviceReceiveTime,
+            quality: nmea.fixQuality ?? GnssFixQuality.notAvailable,
+          ));
         }
         messages
-          ..add(
-            (
-              gnssUpdateTimeDevice: nmea.deviceReceiveTime,
-              gnssUpdateTimeReceiver: nmea.utc?.toLocal(),
-              gnssUpdateDelay: nmea.deviceReceiveDelay,
-            ),
-          )
+          ..add((
+            gnssUpdateTimeDevice: nmea.deviceReceiveTime,
+            gnssUpdateTimeReceiver: nmea.utc?.toLocal(),
+            gnssUpdateDelay: nmea.deviceReceiveDelay,
+          ))
           ..add(nmea);
         gnssSentences.add(nmea);
 
@@ -619,9 +614,7 @@ class MessageDecoder {
       } else if (str.startsWith('Message unfinished')) {
         messages.add(LogEvent(Level.trace, str));
       } else {
-        messages.add(
-          LogEvent(Level.warning, 'Unknown message received: $str'),
-        );
+        messages.add(LogEvent(Level.warning, 'Unknown message received: $str'));
       }
 
       if (Device.isNative) {
@@ -648,12 +641,7 @@ class MessageDecoder {
       }
     }
     if (messages.isEmpty) {
-      messages.add(
-        LogEvent(
-          Level.warning,
-          'Garbled message: $str',
-        ),
-      );
+      messages.add(LogEvent(Level.warning, 'Garbled message: $str'));
     }
     if (Device.isNative) {
       if (_logCombined && logDirectoryPath != null) {

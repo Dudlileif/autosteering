@@ -15,14 +15,15 @@ String _$showAutosteeringParameterConfigHash() =>
 @ProviderFor(ShowAutosteeringParameterConfig)
 final showAutosteeringParameterConfigProvider =
     AutoDisposeNotifierProvider<ShowAutosteeringParameterConfig, bool>.internal(
-  ShowAutosteeringParameterConfig.new,
-  name: r'showAutosteeringParameterConfigProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showAutosteeringParameterConfigHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowAutosteeringParameterConfig.new,
+      name: r'showAutosteeringParameterConfigProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showAutosteeringParameterConfigHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowAutosteeringParameterConfig = AutoDisposeNotifier<bool>;
 String _$autosteeringConfiguratorUiOffsetHash() =>
@@ -33,12 +34,15 @@ String _$autosteeringConfiguratorUiOffsetHash() =>
 /// Copied from [AutosteeringConfiguratorUiOffset].
 @ProviderFor(AutosteeringConfiguratorUiOffset)
 final autosteeringConfiguratorUiOffsetProvider = AutoDisposeNotifierProvider<
-    AutosteeringConfiguratorUiOffset, Offset>.internal(
+  AutosteeringConfiguratorUiOffset,
+  Offset
+>.internal(
   AutosteeringConfiguratorUiOffset.new,
   name: r'autosteeringConfiguratorUiOffsetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$autosteeringConfiguratorUiOffsetHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$autosteeringConfiguratorUiOffsetHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

@@ -33,10 +33,7 @@ class VirtualLedBar extends ConsumerStatefulWidget {
   ///
   /// [showEvenIfNoTrackingAvailable] can be used to always show the
   /// virtual led bar, typically used to test the bar.
-  const VirtualLedBar({
-    super.key,
-    this.showEvenIfNoTrackingAvailable = false,
-  });
+  const VirtualLedBar({super.key, this.showEvenIfNoTrackingAvailable = false});
 
   /// Whether the led bar should be shown even when there is no active tracking
   /// or testing distance set.
@@ -59,8 +56,9 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
     final config = ref.read(virtualLedBarConfigurationProvider);
     initAnimationFrame = 0;
     initAnimationMap = {};
-    initAnimationTimer =
-        Timer.periodic(const Duration(milliseconds: 25), (timer) {
+    initAnimationTimer = Timer.periodic(const Duration(milliseconds: 25), (
+      timer,
+    ) {
       if (timer.tick > config.totalCount * 2.5) {
         setState(() {
           initAnimationTimer?.cancel();
@@ -75,7 +73,8 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
         // 3. Split from center to edges, then come back to center.
         if (initAnimationFrame! >= config.totalCount * 1.5) {
           for (var i = 0; i < config.totalCount; i++) {
-            initAnimationMap![i] = (timer.tick % config.totalCount) == i ||
+            initAnimationMap![i] =
+                (timer.tick % config.totalCount) == i ||
                 (-(timer.tick + 1) % config.totalCount) == i;
           }
         }
@@ -100,8 +99,9 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
   Widget build(BuildContext context) {
     final config = ref.watch(virtualLedBarConfigurationProvider);
 
-    var perpendicularDistance =
-        ref.watch(virtualLedBarPerpendicularDistanceProvider);
+    var perpendicularDistance = ref.watch(
+      virtualLedBarPerpendicularDistanceProvider,
+    );
 
     if (!widget.showEvenIfNoTrackingAvailable &&
         perpendicularDistance == null) {
@@ -204,16 +204,18 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
             child: Center(
               child: Consumer(
                 builder: (context, ref, child) {
-                  var distance = (config.reverseBar ? 1 : -1) *
+                  var distance =
+                      (config.reverseBar ? 1 : -1) *
                       (perpendicularDistance ?? 0);
                   if (!distance.isFinite) {
                     distance = 0;
                   }
 
-                  var number = (distance.abs() * 100)
-                      .truncate()
-                      .clamp(-99, 99)
-                      .toString();
+                  var number =
+                      (distance.abs() * 100)
+                          .truncate()
+                          .clamp(-99, 99)
+                          .toString();
                   if (distance.abs() >= 1) {
                     number = distance.abs().clamp(0, 99).toStringAsFixed(1);
                   }

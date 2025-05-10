@@ -77,12 +77,13 @@ class NtripProfiles extends _$NtripProfiles {
             .update(SettingsKey.ntripProfiles, next);
       }
     });
-    final profiles =
-        ref.read(settingsProvider.notifier).getList(SettingsKey.ntripProfiles);
+    final profiles = ref
+        .read(settingsProvider.notifier)
+        .getList(SettingsKey.ntripProfiles);
     if (profiles != null) {
-      return List<Map<String, dynamic>>.from(profiles)
-          .map(NtripProfile.fromJson)
-          .toList();
+      return List<Map<String, dynamic>>.from(
+        profiles,
+      ).map(NtripProfile.fromJson).toList();
     }
     return [];
   }
@@ -96,9 +97,9 @@ class NtripProfiles extends _$NtripProfiles {
   /// Replaces the item in [state] that has a matching name with [profile].
   /// If no item was replaced the [profile] will still be added.
   void replace(NtripProfile profile) => Future(() {
-        state.removeWhere((element) => element.name == profile.name);
-        state = state..add(profile);
-      });
+    state.removeWhere((element) => element.name == profile.name);
+    state = state..add(profile);
+  });
 
   /// Removes [profile] from [state].
   void remove(NtripProfile profile) =>
@@ -108,8 +109,7 @@ class NtripProfiles extends _$NtripProfiles {
   bool updateShouldNotify(
     List<NtripProfile> previous,
     List<NtripProfile> next,
-  ) =>
-      true;
+  ) => true;
 }
 
 /// A provider for the active [gnss.NtripProfile], if there is one.
@@ -151,15 +151,14 @@ class NtripDataUsageSession extends _$NtripDataUsageSession {
 
   /// Updates [state] by [value].
   void updateBy(int value) => Future(() {
-        if (Device.isNative) {
-          ref.read(ntripDataUsageByMonthProvider.notifier).updateBy(
-                date: DateTime.now(),
-                value: value,
-              );
-        }
+    if (Device.isNative) {
+      ref
+          .read(ntripDataUsageByMonthProvider.notifier)
+          .updateBy(date: DateTime.now(), value: value);
+    }
 
-        return state = (state ?? 0) + value;
-      });
+    return state = (state ?? 0) + value;
+  });
 }
 
 /// A provider for telling whether the [NtripClient] is receiving data.
@@ -179,13 +178,10 @@ class NtripAlive extends _$NtripAlive {
     listenSelf((previous, next) {
       if (next) {
         _resetTimer?.cancel();
-        _resetTimer = Timer(
-          const Duration(seconds: 5),
-          () {
-            Logger.instance.i('NTRIP client disconnected, timed out.');
-            ref.invalidateSelf();
-          },
-        );
+        _resetTimer = Timer(const Duration(seconds: 5), () {
+          Logger.instance.i('NTRIP client disconnected, timed out.');
+          ref.invalidateSelf();
+        });
       }
     });
 
@@ -233,9 +229,10 @@ class NtripClient extends _$NtripClient {
             ageOfDifferentialData: currentSentence?.ageOfDifferentialData,
             time: currentSentence?.utc,
             geodialSeparation: currentSentence?.geoidSeparation,
-            source: currentSentence is TalkerSentence
-                ? (currentSentence! as TalkerSentence).source
-                : null,
+            source:
+                currentSentence is TalkerSentence
+                    ? (currentSentence! as TalkerSentence).source
+                    : null,
           );
     }
 
@@ -327,11 +324,12 @@ class NtripClient extends _$NtripClient {
             });
           }
         },
-        error: (error, stackTrace) => Logger.instance.e(
-          'Failed to create NTRIP client.',
-          error: error,
-          stackTrace: stackTrace,
-        ),
+        error:
+            (error, stackTrace) => Logger.instance.e(
+              'Failed to create NTRIP client.',
+              error: error,
+              stackTrace: stackTrace,
+            ),
         loading: () {},
       );
     });
@@ -417,13 +415,15 @@ FutureOr<Map<gnss.NtripMountPointStream, double?>?> ntripMountPointsSorted(
     ).future,
   );
 
-  final position =
-      ref.read(mainVehicleProvider.select((value) => value.position));
-  final sorted = sourcetable?.whereType<gnss.NtripMountPointStream>().toList()
-    ?..sortByCompare(
-      (element) => element.distanceToPoint(position) ?? double.infinity,
-      (a, b) => a.compareTo(b),
-    );
+  final position = ref.read(
+    mainVehicleProvider.select((value) => value.position),
+  );
+  final sorted =
+      sourcetable?.whereType<gnss.NtripMountPointStream>().toList()
+        ?..sortByCompare(
+          (element) => element.distanceToPoint(position) ?? double.infinity,
+          (a, b) => a.compareTo(b),
+        );
 
   if (sorted != null) {
     final closestDistance = sorted.first.distanceToPoint(position);
@@ -449,10 +449,7 @@ class NtripDataUsageByMonth extends _$NtripDataUsageByMonth {
     final file = File(path.join(dirPath, 'data_usage_ntrip.json'));
     if (!file.existsSync()) {
       file.createSync(recursive: true);
-      Logger.instance.log(
-        Level.info,
-        'Created data usage file: ${file.path}',
-      );
+      Logger.instance.log(Level.info, 'Created data usage file: ${file.path}');
     } else {
       Logger.instance.log(
         Level.info,
@@ -488,13 +485,13 @@ class NtripDataUsageByMonth extends _$NtripDataUsageByMonth {
 
   /// Updates [state] field from [date] by [value].
   void updateBy({required DateTime date, required int value}) => Future(
-        () => state = Map.from(state)
-          ..update(
-            date.toIso8601String().substring(0, 7),
-            (old) => old + value,
-            ifAbsent: () => value,
-          ),
-      );
+    () =>
+        state = Map.from(state)..update(
+          date.toIso8601String().substring(0, 7),
+          (old) => old + value,
+          ifAbsent: () => value,
+        ),
+  );
 
   @override
   bool updateShouldNotify(Map<String, int> previous, Map<String, int> next) {

@@ -109,25 +109,25 @@ class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => saveVehicle(
-            ref as SaveVehicleRef,
-            vehicle,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: saveVehicleProvider,
-          name: r'saveVehicleProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$saveVehicleHash,
-          dependencies: SaveVehicleFamily._dependencies,
-          allTransitiveDependencies:
-              SaveVehicleFamily._allTransitiveDependencies,
-          vehicle: vehicle,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => saveVehicle(
+           ref as SaveVehicleRef,
+           vehicle,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: saveVehicleProvider,
+         name: r'saveVehicleProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$saveVehicleHash,
+         dependencies: SaveVehicleFamily._dependencies,
+         allTransitiveDependencies:
+             SaveVehicleFamily._allTransitiveDependencies,
+         vehicle: vehicle,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   SaveVehicleProvider._internal(
     super._createNotifier, {
@@ -296,25 +296,25 @@ class ExportVehicleProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = true,
   }) : this._internal(
-          (ref) => exportVehicle(
-            ref as ExportVehicleRef,
-            vehicle,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: exportVehicleProvider,
-          name: r'exportVehicleProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportVehicleHash,
-          dependencies: ExportVehicleFamily._dependencies,
-          allTransitiveDependencies:
-              ExportVehicleFamily._allTransitiveDependencies,
-          vehicle: vehicle,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => exportVehicle(
+           ref as ExportVehicleRef,
+           vehicle,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: exportVehicleProvider,
+         name: r'exportVehicleProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$exportVehicleHash,
+         dependencies: ExportVehicleFamily._dependencies,
+         allTransitiveDependencies:
+             ExportVehicleFamily._allTransitiveDependencies,
+         vehicle: vehicle,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   ExportVehicleProvider._internal(
     super._createNotifier, {
@@ -390,7 +390,8 @@ mixin ExportVehicleRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportVehicleProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportVehicleRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportVehicleRef {
   _ExportVehicleProviderElement(super.provider);
 
   @override
@@ -411,9 +412,10 @@ String _$savedVehiclesHash() => r'3aaba3bb1dcc7019f369f7dc7c79b772728e572f';
 final savedVehiclesProvider = FutureProvider<List<Vehicle>>.internal(
   savedVehicles,
   name: r'savedVehiclesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$savedVehiclesHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$savedVehiclesHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -449,24 +451,15 @@ class DeleteVehicleFamily extends Family<AsyncValue<void>> {
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteVehicle].
-  DeleteVehicleProvider call(
-    Vehicle vehicle, {
-    String? overrideName,
-  }) {
-    return DeleteVehicleProvider(
-      vehicle,
-      overrideName: overrideName,
-    );
+  DeleteVehicleProvider call(Vehicle vehicle, {String? overrideName}) {
+    return DeleteVehicleProvider(vehicle, overrideName: overrideName);
   }
 
   @override
   DeleteVehicleProvider getProviderOverride(
     covariant DeleteVehicleProvider provider,
   ) {
-    return call(
-      provider.vehicle,
-      overrideName: provider.overrideName,
-    );
+    return call(provider.vehicle, overrideName: provider.overrideName);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -495,27 +488,25 @@ class DeleteVehicleProvider extends AutoDisposeFutureProvider<void> {
   /// Override the file name with [overrideName].
   ///
   /// Copied from [deleteVehicle].
-  DeleteVehicleProvider(
-    Vehicle vehicle, {
-    String? overrideName,
-  }) : this._internal(
-          (ref) => deleteVehicle(
-            ref as DeleteVehicleRef,
-            vehicle,
-            overrideName: overrideName,
-          ),
-          from: deleteVehicleProvider,
-          name: r'deleteVehicleProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$deleteVehicleHash,
-          dependencies: DeleteVehicleFamily._dependencies,
-          allTransitiveDependencies:
-              DeleteVehicleFamily._allTransitiveDependencies,
-          vehicle: vehicle,
+  DeleteVehicleProvider(Vehicle vehicle, {String? overrideName})
+    : this._internal(
+        (ref) => deleteVehicle(
+          ref as DeleteVehicleRef,
+          vehicle,
           overrideName: overrideName,
-        );
+        ),
+        from: deleteVehicleProvider,
+        name: r'deleteVehicleProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$deleteVehicleHash,
+        dependencies: DeleteVehicleFamily._dependencies,
+        allTransitiveDependencies:
+            DeleteVehicleFamily._allTransitiveDependencies,
+        vehicle: vehicle,
+        overrideName: overrideName,
+      );
 
   DeleteVehicleProvider._internal(
     super._createNotifier, {
@@ -583,7 +574,8 @@ mixin DeleteVehicleRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _DeleteVehicleProviderElement
-    extends AutoDisposeFutureProviderElement<void> with DeleteVehicleRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with DeleteVehicleRef {
   _DeleteVehicleProviderElement(super.provider);
 
   @override
@@ -613,21 +605,15 @@ class LoadVehicleFromFileFamily extends Family<AsyncValue<Vehicle?>> {
   /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
   ///
   /// Copied from [loadVehicleFromFile].
-  LoadVehicleFromFileProvider call(
-    String path,
-  ) {
-    return LoadVehicleFromFileProvider(
-      path,
-    );
+  LoadVehicleFromFileProvider call(String path) {
+    return LoadVehicleFromFileProvider(path);
   }
 
   @override
   LoadVehicleFromFileProvider getProviderOverride(
     covariant LoadVehicleFromFileProvider provider,
   ) {
-    return call(
-      provider.path,
-    );
+    return call(provider.path);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -652,24 +638,20 @@ class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
   /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
   ///
   /// Copied from [loadVehicleFromFile].
-  LoadVehicleFromFileProvider(
-    String path,
-  ) : this._internal(
-          (ref) => loadVehicleFromFile(
-            ref as LoadVehicleFromFileRef,
-            path,
-          ),
-          from: loadVehicleFromFileProvider,
-          name: r'loadVehicleFromFileProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$loadVehicleFromFileHash,
-          dependencies: LoadVehicleFromFileFamily._dependencies,
-          allTransitiveDependencies:
-              LoadVehicleFromFileFamily._allTransitiveDependencies,
-          path: path,
-        );
+  LoadVehicleFromFileProvider(String path)
+    : this._internal(
+        (ref) => loadVehicleFromFile(ref as LoadVehicleFromFileRef, path),
+        from: loadVehicleFromFileProvider,
+        name: r'loadVehicleFromFileProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$loadVehicleFromFileHash,
+        dependencies: LoadVehicleFromFileFamily._dependencies,
+        allTransitiveDependencies:
+            LoadVehicleFromFileFamily._allTransitiveDependencies,
+        path: path,
+      );
 
   LoadVehicleFromFileProvider._internal(
     super._createNotifier, {
@@ -748,9 +730,10 @@ String _$lastUsedVehicleHash() => r'286f2c8f04bb4d0b06c044bd219d21348cd4e3ca';
 final lastUsedVehicleProvider = Provider<AsyncValue<Vehicle>>.internal(
   lastUsedVehicle,
   name: r'lastUsedVehicleProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$lastUsedVehicleHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$lastUsedVehicleHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -768,9 +751,10 @@ String _$importVehicleHash() => r'9424f72c9aa7ec7efc5cbf08fb8a67e3e9e31858';
 final importVehicleProvider = AutoDisposeFutureProvider<Vehicle?>.internal(
   importVehicle,
   name: r'importVehicleProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$importVehicleHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$importVehicleHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -798,21 +782,15 @@ class ExportVehiclesFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all vehicle files.
   ///
   /// Copied from [exportVehicles].
-  ExportVehiclesProvider call({
-    bool zip = true,
-  }) {
-    return ExportVehiclesProvider(
-      zip: zip,
-    );
+  ExportVehiclesProvider call({bool zip = true}) {
+    return ExportVehiclesProvider(zip: zip);
   }
 
   @override
   ExportVehiclesProvider getProviderOverride(
     covariant ExportVehiclesProvider provider,
   ) {
-    return call(
-      zip: provider.zip,
-    );
+    return call(zip: provider.zip);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -837,24 +815,20 @@ class ExportVehiclesProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for exporting all vehicle files.
   ///
   /// Copied from [exportVehicles].
-  ExportVehiclesProvider({
-    bool zip = true,
-  }) : this._internal(
-          (ref) => exportVehicles(
-            ref as ExportVehiclesRef,
-            zip: zip,
-          ),
-          from: exportVehiclesProvider,
-          name: r'exportVehiclesProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportVehiclesHash,
-          dependencies: ExportVehiclesFamily._dependencies,
-          allTransitiveDependencies:
-              ExportVehiclesFamily._allTransitiveDependencies,
-          zip: zip,
-        );
+  ExportVehiclesProvider({bool zip = true})
+    : this._internal(
+        (ref) => exportVehicles(ref as ExportVehiclesRef, zip: zip),
+        from: exportVehiclesProvider,
+        name: r'exportVehiclesProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$exportVehiclesHash,
+        dependencies: ExportVehiclesFamily._dependencies,
+        allTransitiveDependencies:
+            ExportVehiclesFamily._allTransitiveDependencies,
+        zip: zip,
+      );
 
   ExportVehiclesProvider._internal(
     super._createNotifier, {
@@ -913,7 +887,8 @@ mixin ExportVehiclesRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportVehiclesProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportVehiclesRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportVehiclesRef {
   _ExportVehiclesProviderElement(super.provider);
 
   @override
@@ -945,14 +920,15 @@ String _$activeAutosteeringStateHash() =>
 @ProviderFor(ActiveAutosteeringState)
 final activeAutosteeringStateProvider =
     NotifierProvider<ActiveAutosteeringState, AutosteeringState>.internal(
-  ActiveAutosteeringState.new,
-  name: r'activeAutosteeringStateProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeAutosteeringStateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ActiveAutosteeringState.new,
+      name: r'activeAutosteeringStateProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$activeAutosteeringStateHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ActiveAutosteeringState = Notifier<AutosteeringState>;
 String _$gaugesAverageCountHash() =>
@@ -965,14 +941,15 @@ String _$gaugesAverageCountHash() =>
 @ProviderFor(GaugesAverageCount)
 final gaugesAverageCountProvider =
     NotifierProvider<GaugesAverageCount, int>.internal(
-  GaugesAverageCount.new,
-  name: r'gaugesAverageCountProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gaugesAverageCountHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      GaugesAverageCount.new,
+      name: r'gaugesAverageCountProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$gaugesAverageCountHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$GaugesAverageCount = Notifier<int>;
 String _$vehicleSteeringAngleTargetHash() =>
@@ -984,14 +961,15 @@ String _$vehicleSteeringAngleTargetHash() =>
 @ProviderFor(VehicleSteeringAngleTarget)
 final vehicleSteeringAngleTargetProvider =
     NotifierProvider<VehicleSteeringAngleTarget, double?>.internal(
-  VehicleSteeringAngleTarget.new,
-  name: r'vehicleSteeringAngleTargetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$vehicleSteeringAngleTargetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      VehicleSteeringAngleTarget.new,
+      name: r'vehicleSteeringAngleTargetProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$vehicleSteeringAngleTargetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$VehicleSteeringAngleTarget = Notifier<double?>;
 String _$showOverrideSteeringHash() =>
@@ -1003,14 +981,15 @@ String _$showOverrideSteeringHash() =>
 @ProviderFor(ShowOverrideSteering)
 final showOverrideSteeringProvider =
     AutoDisposeNotifierProvider<ShowOverrideSteering, bool>.internal(
-  ShowOverrideSteering.new,
-  name: r'showOverrideSteeringProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showOverrideSteeringHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowOverrideSteering.new,
+      name: r'showOverrideSteeringProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showOverrideSteeringHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowOverrideSteering = AutoDisposeNotifier<bool>;
 String _$overrideSteeringHash() => r'967f33baa1640de4ae8e216de5993c018db80eb2';
@@ -1022,14 +1001,15 @@ String _$overrideSteeringHash() => r'967f33baa1640de4ae8e216de5993c018db80eb2';
 @ProviderFor(OverrideSteering)
 final overrideSteeringProvider =
     AutoDisposeNotifierProvider<OverrideSteering, bool>.internal(
-  OverrideSteering.new,
-  name: r'overrideSteeringProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$overrideSteeringHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      OverrideSteering.new,
+      name: r'overrideSteeringProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$overrideSteeringHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$OverrideSteering = AutoDisposeNotifier<bool>;
 String _$overrideSteeringAngleHash() =>
@@ -1041,14 +1021,15 @@ String _$overrideSteeringAngleHash() =>
 @ProviderFor(OverrideSteeringAngle)
 final overrideSteeringAngleProvider =
     AutoDisposeNotifierProvider<OverrideSteeringAngle, double>.internal(
-  OverrideSteeringAngle.new,
-  name: r'overrideSteeringAngleProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$overrideSteeringAngleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      OverrideSteeringAngle.new,
+      name: r'overrideSteeringAngleProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$overrideSteeringAngleHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$OverrideSteeringAngle = AutoDisposeNotifier<double>;
 // ignore_for_file: type=lint

@@ -47,6 +47,9 @@ class SteeringHardwareConfigKey {
   /// Key for [SteeringHardwareConfig.maxAcceleration].
   static const maxAcceleration = 'AMAX_RPM_S';
 
+  /// Key for [SteeringHardwareConfig.maxDeceleration].
+  static const maxDeceleration = 'DMAX_RPM_S';
+
   /// Key for [SteeringHardwareConfig.maxRPM].
   static const maxRPM = 'VMAX_RPM';
 
@@ -146,6 +149,9 @@ class SteeringHardwareConfigKey {
 
   /// Key for [SteeringHardwareConfig.wasMax].
   static const wasMax = 'was_max';
+
+  /// Key for [SteeringHardwareConfig.asymmetricVelocity].
+  static const asymmetricVelocity = 'asymmetric_velocity';
 }
 
 /// An immutable container for handling multiple [SteeringHardwareConfigKey]s
@@ -174,10 +180,9 @@ class SteeringHardwareConfigKeysContainer {
 
 /// A configuration for a steering wheel motor of a vehicle.
 @Freezed(fromJson: true, toJson: true)
-class SteeringHardwareConfig with _$SteeringHardwareConfig {
+sealed class SteeringHardwareConfig with _$SteeringHardwareConfig {
   /// A configuration for a steering wheel motor of a vehicle.
-  @Assert(
-    '''
+  @Assert('''
     microSteps == 0 ||
     microSteps == 2 ||
     microSteps == 4 ||
@@ -187,9 +192,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     microSteps == 64 ||
     microSteps == 128 ||
     microSteps == 256
-    ''',
-    'microSteps needs to be 0 or a power of 2 from 2 up to 256.',
-  )
+    ''', 'microSteps needs to be 0 or a power of 2 from 2 up to 256.')
   @Assert(
     'stepsPerRotation==200 || stepsPerRotation==400',
     'stepsPerRotation has to be 200 or 400.',
@@ -203,6 +206,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     'holdMultiplier should be in range 0 to 1.',
   )
   @Assert('maxAcceleration>0', 'maxAcceleration should be positive.')
+  @Assert('maxDeceleration>0', 'maxDeceleration should be positive.')
   @Assert('maxRPM>0', 'maxRPM should be positive.')
   @Assert('vStop>=0', 'vStop should be positive.')
   @Assert('vStart>=0', 'vStart should be positive.')
@@ -213,10 +217,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     'stallguardThreshold should be in range -64 to 63.',
   )
   @Assert('semax>=0 && semax<=15', 'semax should be in range 0 to 15.')
-  @Assert(
-    'coolstepThresholdRPM>=0',
-    'coolstepThresholdRPM should be positive.',
-  )
+  @Assert('coolstepThresholdRPM>=0', 'coolstepThresholdRPM should be positive.')
   @Assert(
     'stealthChopThresholdRPM>=0',
     'stealthChopThresholdRPM should be positive.',
@@ -225,10 +226,7 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     'highVelocityChopperModeChangeThresholdRPM>=0',
     'highVelocityChopperModeChangeThresholdRPM should be positive.',
   )
-  @Assert(
-    'dcStepThresholdRPM>=0',
-    'dcStepThresholdRPM should be positive.',
-  )
+  @Assert('dcStepThresholdRPM>=0', 'dcStepThresholdRPM should be positive.')
   @Assert(
     '''dcStepLoadMeasurementPulseWidth>=0 && dcStepLoadMeasurementPulseWidth<=1023''',
     'dcStepLoadMeasurementPulseWidth should be in range 0 to 1023.',
@@ -257,22 +255,10 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     'zeroWaitTime>=0 && zeroWaitTime<=65535',
     'zeroWaitTime should be in range 0 to 65535.',
   )
-  @Assert(
-    'pidP>=0',
-    'pidP should be positive.',
-  )
-  @Assert(
-    'pidI>=0',
-    'pidI should be positive.',
-  )
-  @Assert(
-    'pidD>=0',
-    'pidD should be positive.',
-  )
-  @Assert(
-    'wasMin>=0',
-    'wasMin should be positive.',
-  )
+  @Assert('pidP>=0', 'pidP should be positive.')
+  @Assert('pidI>=0', 'pidI should be positive.')
+  @Assert('pidD>=0', 'pidD should be positive.')
+  @Assert('wasMin>=0', 'wasMin should be positive.')
   @Assert(
     'wasCenter>=0 && wasCenter>wasMin',
     'wasCenter should be positive and larger than wasMin.',
@@ -317,6 +303,11 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
     @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)
     @Default(80)
     double maxAcceleration,
+
+    /// Maximum deceleration in RPM/s.
+    @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)
+    @Default(160)
+    double maxDeceleration,
 
     /// Maximum RPM
     @JsonKey(name: SteeringHardwareConfigKey.maxRPM)
@@ -470,6 +461,12 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
 
     /// Maximum reading value for WAS.
     @JsonKey(name: SteeringHardwareConfigKey.wasMax) @Default(3750) int wasMax,
+
+    /// Whether the system should simulate a symmetric system by limiting motor
+    /// velocity in the shortest range (min-center or center-max) of the WAS.
+    @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)
+    @Default(false)
+    bool asymmetricVelocity,
   }) = _SteeringHardwareConfig;
 
   /// Private constructor to allow use of methods with freezed models.
@@ -493,22 +490,26 @@ class SteeringHardwareConfig with _$SteeringHardwareConfig {
   /// request to update the motor config on the hardware.
   String httpHeader(Set<String> keys) {
     final json = toJson()..removeWhere((key, value) => !keys.contains(key));
-    return json.entries.map((entry) {
-      if (entry.value is bool) {
-        return '${entry.key}=${(entry.value as bool) ? 1 : 0}';
-      }
-      return '${entry.key}=${entry.value}';
-    }).join('&');
+    return json.entries
+        .map((entry) {
+          if (entry.value is bool) {
+            return '${entry.key}=${(entry.value as bool) ? 1 : 0}';
+          }
+          return '${entry.key}=${entry.value}';
+        })
+        .join('&');
   }
 
   /// An HTTP header with all parameters for sending a request to update the
   /// motor config on the hardware.
-  String get httpHeaderFull => toJson().entries.map((entry) {
+  String get httpHeaderFull => toJson().entries
+      .map((entry) {
         if (entry.value is bool) {
           return '${entry.key}=${(entry.value as bool) ? 1 : 0}';
         }
         return '${entry.key}=${entry.value}';
-      }).join('&');
+      })
+      .join('&');
 }
 
 /// An enumerator for the choices of motor holdig mode (freewheel).
@@ -527,7 +528,7 @@ enum MotorHoldingMode {
 
   /// Passive braking by coil shorted using HS drivers.
   @JsonValue(3)
-  passiveBrakeCoilShortHSDrivers;
+  passiveBrakeCoilShortHSDrivers,
 }
 
 /// An enumerator for the choices of comparator blank time (TBL).

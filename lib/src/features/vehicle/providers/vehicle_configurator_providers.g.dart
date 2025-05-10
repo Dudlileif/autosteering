@@ -16,14 +16,15 @@ String _$vehicleConfiguratorIndexHash() =>
 @ProviderFor(VehicleConfiguratorIndex)
 final vehicleConfiguratorIndexProvider =
     NotifierProvider<VehicleConfiguratorIndex, int>.internal(
-  VehicleConfiguratorIndex.new,
-  name: r'vehicleConfiguratorIndexProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$vehicleConfiguratorIndexHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      VehicleConfiguratorIndex.new,
+      name: r'vehicleConfiguratorIndexProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$vehicleConfiguratorIndexHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$VehicleConfiguratorIndex = Notifier<int>;
 String _$configuredVehicleHash() => r'eb1f64783782544db4e453b41900d68d6c47a02f';
@@ -34,14 +35,15 @@ String _$configuredVehicleHash() => r'eb1f64783782544db4e453b41900d68d6c47a02f';
 @ProviderFor(ConfiguredVehicle)
 final configuredVehicleProvider =
     NotifierProvider<ConfiguredVehicle, Vehicle>.internal(
-  ConfiguredVehicle.new,
-  name: r'configuredVehicleProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$configuredVehicleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ConfiguredVehicle.new,
+      name: r'configuredVehicleProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$configuredVehicleHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ConfiguredVehicle = Notifier<Vehicle>;
 String _$configuredVehicleNameTextControllerHash() =>
@@ -53,17 +55,20 @@ String _$configuredVehicleNameTextControllerHash() =>
 /// Copied from [ConfiguredVehicleNameTextController].
 @ProviderFor(ConfiguredVehicleNameTextController)
 final configuredVehicleNameTextControllerProvider = NotifierProvider<
-    ConfiguredVehicleNameTextController, Raw<TextEditingController>>.internal(
+  ConfiguredVehicleNameTextController,
+  Raw<TextEditingController>
+>.internal(
   ConfiguredVehicleNameTextController.new,
   name: r'configuredVehicleNameTextControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$configuredVehicleNameTextControllerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$configuredVehicleNameTextControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ConfiguredVehicleNameTextController
-    = Notifier<Raw<TextEditingController>>;
+typedef _$ConfiguredVehicleNameTextController =
+    Notifier<Raw<TextEditingController>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

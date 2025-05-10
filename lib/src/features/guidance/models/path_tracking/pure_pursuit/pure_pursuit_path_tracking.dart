@@ -70,8 +70,9 @@ final class PurePursuitPathTracking extends PathTracking {
         inside: insidePoint.copyWith(
           position: vehicle.lookAheadStartPosition.rhumb.destinationPoint(
             distance: lookAheadDistance ?? vehicle.lookAheadDistance,
-            bearing: vehicle.lookAheadStartPosition.rhumb
-                .initialBearingTo(insidePoint.position),
+            bearing: vehicle.lookAheadStartPosition.rhumb.initialBearingTo(
+              insidePoint.position,
+            ),
           ),
         ),
         outside: null,
@@ -83,20 +84,22 @@ final class PurePursuitPathTracking extends PathTracking {
     final vehiclePointingAlongPath = vehiclePointingInPathDirection(vehicle);
 
     for (var i = 1; i < path.length; i++) {
-      final index = nextIndex(vehicle) +
+      final index =
+          nextIndex(vehicle) +
           switch (vehiclePointingAlongPath) {
             true => switch (vehicle.isReversing) {
-                true => -i,
-                false => i,
-              },
+              true => -i,
+              false => i,
+            },
             false => switch (vehicle.isReversing) {
-                true => i,
-                false => -i,
-              }
+              true => i,
+              false => -i,
+            },
           };
       final point = path[index % path.length];
-      final distance =
-          vehicle.lookAheadStartPosition.rhumb.distanceTo(point.position);
+      final distance = vehicle.lookAheadStartPosition.rhumb.distanceTo(
+        point.position,
+      );
       if (distance <= (lookAheadDistance ?? vehicle.lookAheadDistance)) {
         insidePoint = point;
         insideDistance = distance;
@@ -112,28 +115,28 @@ final class PurePursuitPathTracking extends PathTracking {
           inside: path.first.moveRhumb(
             distance: clampDouble(
               vehicle.lookAheadDistance -
-                vehicle.lookAheadStartPosition.rhumb
-                    .distanceTo(path.first.position)
-                    ,
+                  vehicle.lookAheadStartPosition.rhumb.distanceTo(
+                    path.first.position,
+                  ),
               0,
               vehicle.lookAheadDistance,
             ),
           ),
-          outside: null
+          outside: null,
         );
       } else if (!vehicle.isReversing && outsidePoint == path.first) {
         return (
           inside: path.last.moveRhumb(
             distance: clampDouble(
               vehicle.lookAheadDistance -
-                vehicle.lookAheadStartPosition.rhumb
-                    .distanceTo(path.last.position)
-                    ,
+                  vehicle.lookAheadStartPosition.rhumb.distanceTo(
+                    path.last.position,
+                  ),
               0,
               vehicle.lookAheadDistance,
             ),
           ),
-          outside: null
+          outside: null,
         );
       }
     }
@@ -153,14 +156,15 @@ final class PurePursuitPathTracking extends PathTracking {
       return null;
     }
 
-    final crossDistance =
-        vehicle.lookAheadStartPosition.spherical.crossTrackDistanceTo(
-      start: points.inside.position,
-      end: points.outside!.position,
-    );
+    final crossDistance = vehicle.lookAheadStartPosition.spherical
+        .crossTrackDistanceTo(
+          start: points.inside.position,
+          end: points.outside!.position,
+        );
 
-    final secantBearing =
-        points.inside.position.rhumb.initialBearingTo(points.outside!.position);
+    final secantBearing = points.inside.position.rhumb.initialBearingTo(
+      points.outside!.position,
+    );
 
     return vehicle.lookAheadStartPosition.rhumb.destinationPoint(
       distance: crossDistance,
@@ -191,34 +195,36 @@ final class PurePursuitPathTracking extends PathTracking {
       return (best: points.inside, worst: null);
     }
 
-    final vehicleAlongDistance =
-        vehicle.lookAheadStartPosition.spherical.alongTrackDistanceTo(
-      start: points.inside.position,
-      end: points.outside!.position,
-    );
+    final vehicleAlongDistance = vehicle.lookAheadStartPosition.spherical
+        .alongTrackDistanceTo(
+          start: points.inside.position,
+          end: points.outside!.position,
+        );
 
-    final vehicleToLineDistance =
-        vehicle.lookAheadStartPosition.spherical.crossTrackDistanceTo(
-      start: points.inside.position,
-      end: points.outside!.position,
-    );
+    final vehicleToLineDistance = vehicle.lookAheadStartPosition.spherical
+        .crossTrackDistanceTo(
+          start: points.inside.position,
+          end: points.outside!.position,
+        );
 
     final projectionToCircleDistance = sqrt(
       pow(lookAheadDistance ?? vehicle.lookAheadDistance, 2) -
           pow(vehicleToLineDistance, 2),
     );
 
-    final secantBearing =
-        points.inside.position.rhumb.initialBearingTo(points.outside!.position);
-
-    final vehicleToLineProjection =
-        points.inside.position.rhumb.destinationPoint(
-      distance: vehicleAlongDistance,
-      bearing: secantBearing,
+    final secantBearing = points.inside.position.rhumb.initialBearingTo(
+      points.outside!.position,
     );
 
-    var vehicleLineProjectionToInsidePointBearing =
-        vehicleToLineProjection.rhumb.initialBearingTo(points.inside.position);
+    final vehicleToLineProjection = points.inside.position.rhumb
+        .destinationPoint(
+          distance: vehicleAlongDistance,
+          bearing: secantBearing,
+        );
+
+    var vehicleLineProjectionToInsidePointBearing = vehicleToLineProjection
+        .rhumb
+        .initialBearingTo(points.inside.position);
     if (vehicleLineProjectionToInsidePointBearing.isNaN) {
       vehicleLineProjectionToInsidePointBearing = secantBearing;
     }
@@ -259,24 +265,23 @@ final class PurePursuitPathTracking extends PathTracking {
   /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
   double _nextSteeringAngleLookAhead(Vehicle vehicle) {
     final lookAheadPoint =
-        findLookAheadCirclePoints(vehicle, vehicle.lookAheadDistance)
-            .best
-            .position;
-
-    final bearingToPoint =
-        vehicle.lookAheadStartPosition.rhumb.initialBearingTo(lookAheadPoint);
-
-    final angle = signedBearingDifference(
-      vehicle.bearing,
-      bearingToPoint,
-    );
-
-    final steeringAngle = atan(
-      2 *
-          vehicle.wheelBase *
-          sin(angle.toRadians()) /
+        findLookAheadCirclePoints(
+          vehicle,
           vehicle.lookAheadDistance,
-    ).toDegrees();
+        ).best.position;
+
+    final bearingToPoint = vehicle.lookAheadStartPosition.rhumb
+        .initialBearingTo(lookAheadPoint);
+
+    final angle = signedBearingDifference(vehicle.bearing, bearingToPoint);
+
+    final steeringAngle =
+        atan(
+          2 *
+              vehicle.wheelBase *
+              sin(angle.toRadians()) /
+              vehicle.lookAheadDistance,
+        ).toDegrees();
 
     return clampDouble(
       steeringAngle,

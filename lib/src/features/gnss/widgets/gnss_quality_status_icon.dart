@@ -87,12 +87,12 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
           (precisionError!.latitudeError! + precisionError.longitudeError!) / 2;
     }
     if (horizontalAccuracy != null) {
-      textLines.add('Pos. Acc: $horizontalAccuracy m');
+      textLines.add('Pos. Acc: ${horizontalAccuracy.toStringAsPrecision(3)} m');
     }
     final verticalAccuracy =
         nmea?.verticalAccuracy ?? precisionError?.altitudeError;
     if (verticalAccuracy != null) {
-      textLines.add('Alt. Acc: $verticalAccuracy m');
+      textLines.add('Alt. Acc: ${verticalAccuracy.toStringAsPrecision(3)} m');
     }
     final altitude = nmea?.altitudeMSL;
     if (altitude != null) {
@@ -128,71 +128,72 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
 
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: () => switch (portalController.isShowing) {
+    onTap:
+        () => switch (portalController.isShowing) {
           true => portalController.hide(),
           false => portalController.show(),
         },
-        child: OverlayPortal(
-          controller: portalController,
-          overlayChildBuilder: (context) {
-            // The render box of the InkWell/icon widget. Use this to position
-            // the tooltip.
-            final box = this.context.findRenderObject()! as RenderBox;
-            final target = box.localToGlobal(box.size.center(Offset.zero));
-            return Positioned(
-              top: target.dy + box.size.height / 2 + 8,
-              right: 0,
-              child: DecoratedBox(
-                decoration: Theme.of(context).tooltipTheme.decoration ??
-                    const BoxDecoration(),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    message,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
+    child: OverlayPortal(
+      controller: portalController,
+      overlayChildBuilder: (context) {
+        // The render box of the InkWell/icon widget. Use this to position
+        // the tooltip.
+        final box = this.context.findRenderObject()! as RenderBox;
+        final target = box.localToGlobal(box.size.center(Offset.zero));
+        return Positioned(
+          top: target.dy + box.size.height / 2 + 8,
+          right: 0,
+          child: DecoratedBox(
+            decoration:
+                Theme.of(context).tooltipTheme.decoration ??
+                const BoxDecoration(),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                message,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
-            );
-          },
-          child: Consumer(
-            builder: (context, ref, child) {
-              final nmea = ref.watch(gnssCurrentSentenceProvider);
-              final fixQuality =
-                  nmea?.fixQuality ?? GnssFixQuality.notAvailable;
-              final numSatellites = nmea?.numSatellites ?? 0;
-              final color = switch (fixQuality) {
-                GnssFixQuality.rtk => Colors.green,
-                GnssFixQuality.floatRTK || GnssFixQuality.ppsFix => Colors.lime,
-                GnssFixQuality.differentialFix => Colors.yellow,
-                GnssFixQuality.fix => Colors.orange,
-                GnssFixQuality.notAvailable => Colors.red,
-                GnssFixQuality.manualInput => Colors.purple,
-                GnssFixQuality.simulation => Colors.blue,
-                GnssFixQuality.estimated => Colors.blueGrey,
-              };
-              return Badge.count(
-                count: numSatellites,
-                backgroundColor: color,
-                textColor: ThemeData.estimateBrightnessForColor(color) ==
-                        Brightness.dark
+            ),
+          ),
+        );
+      },
+      child: Consumer(
+        builder: (context, ref, child) {
+          final nmea = ref.watch(gnssCurrentSentenceProvider);
+          final fixQuality = nmea?.fixQuality ?? GnssFixQuality.notAvailable;
+          final numSatellites = nmea?.numSatellites ?? 0;
+          final color = switch (fixQuality) {
+            GnssFixQuality.rtk => Colors.green,
+            GnssFixQuality.floatRTK || GnssFixQuality.ppsFix => Colors.lime,
+            GnssFixQuality.differentialFix => Colors.yellow,
+            GnssFixQuality.fix => Colors.orange,
+            GnssFixQuality.notAvailable => Colors.red,
+            GnssFixQuality.manualInput => Colors.purple,
+            GnssFixQuality.simulation => Colors.blue,
+            GnssFixQuality.estimated => Colors.blueGrey,
+          };
+          return Badge.count(
+            count: numSatellites,
+            backgroundColor: color,
+            textColor:
+                ThemeData.estimateBrightnessForColor(color) == Brightness.dark
                     ? Colors.white
                     : Colors.black,
-                child: Transform.flip(
-                  flipX: true,
-                  child: Icon(
-                    Icons.satellite_alt,
-                    size: widget.size,
-                    color: color,
-                    shadows: const [
-                      Shadow(offset: Offset(1, 0)),
-                      Shadow(offset: Offset(0, 1)),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      );
+            child: Transform.flip(
+              flipX: true,
+              child: Icon(
+                Icons.satellite_alt,
+                size: widget.size,
+                color: color,
+                shadows: const [
+                  Shadow(offset: Offset(1, 0)),
+                  Shadow(offset: Offset(0, 1)),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+  );
 }

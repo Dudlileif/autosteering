@@ -88,7 +88,8 @@ DubinsPath? debugDubinsPath(Ref ref) {
     return DubinsPath(
       start: start,
       end: end,
-      turningRadius: 1.2 *
+      turningRadius:
+          1.2 *
           ref.watch(
             mainVehicleProvider.select((vehicle) => vehicle.minTurningRadius),
           ),

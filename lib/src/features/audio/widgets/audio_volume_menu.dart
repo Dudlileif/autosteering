@@ -55,10 +55,7 @@ class AudioVolumeMenu extends StatelessWidget {
 }
 
 class _AudioVolumeTile extends ConsumerWidget {
-  const _AudioVolumeTile({
-    required this.title,
-    required this.audioAsset,
-  });
+  const _AudioVolumeTile({required this.title, required this.audioAsset});
 
   final String title;
   final AudioAsset audioAsset;
@@ -74,9 +71,10 @@ class _AudioVolumeTile extends ConsumerWidget {
           return Slider(
             value: volume,
             onChanged: (value) => setState(() => volume = value),
-            onChangeEnd: (value) => ref
-                .read(audioVolumeProvider.notifier)
-                .update(audioAsset, value),
+            onChangeEnd:
+                (value) => ref
+                    .read(audioVolumeProvider.notifier)
+                    .update(audioAsset, value),
             divisions: 10,
           );
         },

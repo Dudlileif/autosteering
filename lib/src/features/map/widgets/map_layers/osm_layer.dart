@@ -32,24 +32,24 @@ class OSMLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => themedTileLayerBuilder(
-        context,
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          subdomains: const ['x', 'y', 'z'],
-          tileProvider: switch (Device.isWeb) {
-            true => HiveCachedTileProvider(
-                layer: const TileLayerData(name: 'OpenStreetMap'),
-              ),
-            false => FileCachedTileProvider(
-                layer: const TileLayerData(name: 'OpenStreetMap'),
-                fileDirectory: ref.watch(fileDirectoryProvider).requireValue,
-                allowDownloads: ref.watch(mapAllowDownloadProvider),
-              )
-          },
-          userAgentPackageName: 'autosteering',
-          maxZoom: 22,
+    context,
+    TileLayer(
+      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      subdomains: const ['x', 'y', 'z'],
+      tileProvider: switch (Device.isWeb) {
+        true => HiveCachedTileProvider(
+          layer: const TileLayerData(name: 'OpenStreetMap'),
         ),
-      );
+        false => FileCachedTileProvider(
+          layer: const TileLayerData(name: 'OpenStreetMap'),
+          fileDirectory: ref.watch(fileDirectoryProvider).requireValue,
+          allowDownloads: ref.watch(mapAllowDownloadProvider),
+        ),
+      },
+      userAgentPackageName: 'autosteering',
+      maxZoom: 22,
+    ),
+  );
 }
 
 /// A small OpenStreetMap contribution widget, to use in corner of the map.
@@ -64,15 +64,12 @@ class OSMContribution extends StatelessWidget {
     return RichText(
       text: TextSpan(
         children: [
-          TextSpan(
-            text: '© ',
-            style: textTheme.bodySmall,
-          ),
+          TextSpan(text: '© ', style: textTheme.bodySmall),
           TextSpan(
             text: 'OpenStreetMap',
             style: textTheme.bodySmall?.copyWith(
-                // decoration: TextDecoration.underline,
-                ),
+              // decoration: TextDecoration.underline,
+            ),
             // recognizer: TapGestureRecognizer()
             //   ..onTap = () async {
             //     final url =
@@ -82,10 +79,7 @@ class OSMContribution extends StatelessWidget {
             //     }
             //   },
           ),
-          TextSpan(
-            text: ' contributors',
-            style: textTheme.bodySmall,
-          ),
+          TextSpan(text: ' contributors', style: textTheme.bodySmall),
         ],
       ),
     );

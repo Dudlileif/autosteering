@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,196 +10,152 @@ part of 'sentinel_layer.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-SentinelLayer _$SentinelLayerFromJson(Map<String, dynamic> json) {
-  return _SentinelLayer.fromJson(json);
-}
 
 /// @nodoc
 mixin _$SentinelLayer {
-  /// The Coperincus dataspace instanceId api-key.
-  /// Register a user at [https://dataspace.copernicus.eu/],
-  /// go to [https://shapps.dataspace.copernicus.eu/dashboard/#/configurations]
-  /// and create a new configuration, and copy the Id.
-  String get instanceId => throw _privateConstructorUsedError;
 
-  /// Which layer type this layer should contain info about.
-  SentinelLayerType get layerType => throw _privateConstructorUsedError;
+/// The Coperincus dataspace instanceId api-key.
+/// Register a user at [https://dataspace.copernicus.eu/],
+/// go to [https://shapps.dataspace.copernicus.eu/dashboard/#/configurations]
+/// and create a new configuration, and copy the Id.
+ String get instanceId;/// Which layer type this layer should contain info about.
+ SentinelLayerType get layerType;
+/// Create a copy of SentinelLayer
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SentinelLayerCopyWith<SentinelLayer> get copyWith => _$SentinelLayerCopyWithImpl<SentinelLayer>(this as SentinelLayer, _$identity);
 
   /// Serializes this SentinelLayer to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of SentinelLayer
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $SentinelLayerCopyWith<SentinelLayer> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SentinelLayer&&(identical(other.instanceId, instanceId) || other.instanceId == instanceId)&&(identical(other.layerType, layerType) || other.layerType == layerType));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,instanceId,layerType);
+
+@override
+String toString() {
+  return 'SentinelLayer(instanceId: $instanceId, layerType: $layerType)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $SentinelLayerCopyWith<$Res> {
-  factory $SentinelLayerCopyWith(
-          SentinelLayer value, $Res Function(SentinelLayer) then) =
-      _$SentinelLayerCopyWithImpl<$Res, SentinelLayer>;
-  @useResult
-  $Res call({String instanceId, SentinelLayerType layerType});
-}
+abstract mixin class $SentinelLayerCopyWith<$Res>  {
+  factory $SentinelLayerCopyWith(SentinelLayer value, $Res Function(SentinelLayer) _then) = _$SentinelLayerCopyWithImpl;
+@useResult
+$Res call({
+ String instanceId, SentinelLayerType layerType
+});
 
+
+
+
+}
 /// @nodoc
-class _$SentinelLayerCopyWithImpl<$Res, $Val extends SentinelLayer>
+class _$SentinelLayerCopyWithImpl<$Res>
     implements $SentinelLayerCopyWith<$Res> {
-  _$SentinelLayerCopyWithImpl(this._value, this._then);
+  _$SentinelLayerCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final SentinelLayer _self;
+  final $Res Function(SentinelLayer) _then;
 
-  /// Create a copy of SentinelLayer
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? instanceId = null,
-    Object? layerType = null,
-  }) {
-    return _then(_value.copyWith(
-      instanceId: null == instanceId
-          ? _value.instanceId
-          : instanceId // ignore: cast_nullable_to_non_nullable
-              as String,
-      layerType: null == layerType
-          ? _value.layerType
-          : layerType // ignore: cast_nullable_to_non_nullable
-              as SentinelLayerType,
-    ) as $Val);
-  }
+/// Create a copy of SentinelLayer
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? instanceId = null,Object? layerType = null,}) {
+  return _then(_self.copyWith(
+instanceId: null == instanceId ? _self.instanceId : instanceId // ignore: cast_nullable_to_non_nullable
+as String,layerType: null == layerType ? _self.layerType : layerType // ignore: cast_nullable_to_non_nullable
+as SentinelLayerType,
+  ));
 }
 
-/// @nodoc
-abstract class _$$SentinelLayerImplCopyWith<$Res>
-    implements $SentinelLayerCopyWith<$Res> {
-  factory _$$SentinelLayerImplCopyWith(
-          _$SentinelLayerImpl value, $Res Function(_$SentinelLayerImpl) then) =
-      __$$SentinelLayerImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String instanceId, SentinelLayerType layerType});
 }
 
-/// @nodoc
-class __$$SentinelLayerImplCopyWithImpl<$Res>
-    extends _$SentinelLayerCopyWithImpl<$Res, _$SentinelLayerImpl>
-    implements _$$SentinelLayerImplCopyWith<$Res> {
-  __$$SentinelLayerImplCopyWithImpl(
-      _$SentinelLayerImpl _value, $Res Function(_$SentinelLayerImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of SentinelLayer
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? instanceId = null,
-    Object? layerType = null,
-  }) {
-    return _then(_$SentinelLayerImpl(
-      instanceId: null == instanceId
-          ? _value.instanceId
-          : instanceId // ignore: cast_nullable_to_non_nullable
-              as String,
-      layerType: null == layerType
-          ? _value.layerType
-          : layerType // ignore: cast_nullable_to_non_nullable
-              as SentinelLayerType,
-    ));
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$SentinelLayerImpl extends _SentinelLayer {
-  const _$SentinelLayerImpl({required this.instanceId, required this.layerType})
-      : super._();
 
-  factory _$SentinelLayerImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SentinelLayerImplFromJson(json);
+class _SentinelLayer extends SentinelLayer {
+  const _SentinelLayer({required this.instanceId, required this.layerType}): super._();
+  factory _SentinelLayer.fromJson(Map<String, dynamic> json) => _$SentinelLayerFromJson(json);
 
-  /// The Coperincus dataspace instanceId api-key.
-  /// Register a user at [https://dataspace.copernicus.eu/],
-  /// go to [https://shapps.dataspace.copernicus.eu/dashboard/#/configurations]
-  /// and create a new configuration, and copy the Id.
-  @override
-  final String instanceId;
+/// The Coperincus dataspace instanceId api-key.
+/// Register a user at [https://dataspace.copernicus.eu/],
+/// go to [https://shapps.dataspace.copernicus.eu/dashboard/#/configurations]
+/// and create a new configuration, and copy the Id.
+@override final  String instanceId;
+/// Which layer type this layer should contain info about.
+@override final  SentinelLayerType layerType;
 
-  /// Which layer type this layer should contain info about.
-  @override
-  final SentinelLayerType layerType;
+/// Create a copy of SentinelLayer
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SentinelLayerCopyWith<_SentinelLayer> get copyWith => __$SentinelLayerCopyWithImpl<_SentinelLayer>(this, _$identity);
 
-  @override
-  String toString() {
-    return 'SentinelLayer(instanceId: $instanceId, layerType: $layerType)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SentinelLayerImpl &&
-            (identical(other.instanceId, instanceId) ||
-                other.instanceId == instanceId) &&
-            (identical(other.layerType, layerType) ||
-                other.layerType == layerType));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, instanceId, layerType);
-
-  /// Create a copy of SentinelLayer
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SentinelLayerImplCopyWith<_$SentinelLayerImpl> get copyWith =>
-      __$$SentinelLayerImplCopyWithImpl<_$SentinelLayerImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$SentinelLayerImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$SentinelLayerToJson(this, );
 }
 
-abstract class _SentinelLayer extends SentinelLayer {
-  const factory _SentinelLayer(
-      {required final String instanceId,
-      required final SentinelLayerType layerType}) = _$SentinelLayerImpl;
-  const _SentinelLayer._() : super._();
-
-  factory _SentinelLayer.fromJson(Map<String, dynamic> json) =
-      _$SentinelLayerImpl.fromJson;
-
-  /// The Coperincus dataspace instanceId api-key.
-  /// Register a user at [https://dataspace.copernicus.eu/],
-  /// go to [https://shapps.dataspace.copernicus.eu/dashboard/#/configurations]
-  /// and create a new configuration, and copy the Id.
-  @override
-  String get instanceId;
-
-  /// Which layer type this layer should contain info about.
-  @override
-  SentinelLayerType get layerType;
-
-  /// Create a copy of SentinelLayer
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SentinelLayerImplCopyWith<_$SentinelLayerImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SentinelLayer&&(identical(other.instanceId, instanceId) || other.instanceId == instanceId)&&(identical(other.layerType, layerType) || other.layerType == layerType));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,instanceId,layerType);
+
+@override
+String toString() {
+  return 'SentinelLayer(instanceId: $instanceId, layerType: $layerType)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SentinelLayerCopyWith<$Res> implements $SentinelLayerCopyWith<$Res> {
+  factory _$SentinelLayerCopyWith(_SentinelLayer value, $Res Function(_SentinelLayer) _then) = __$SentinelLayerCopyWithImpl;
+@override @useResult
+$Res call({
+ String instanceId, SentinelLayerType layerType
+});
+
+
+
+
+}
+/// @nodoc
+class __$SentinelLayerCopyWithImpl<$Res>
+    implements _$SentinelLayerCopyWith<$Res> {
+  __$SentinelLayerCopyWithImpl(this._self, this._then);
+
+  final _SentinelLayer _self;
+  final $Res Function(_SentinelLayer) _then;
+
+/// Create a copy of SentinelLayer
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? instanceId = null,Object? layerType = null,}) {
+  return _then(_SentinelLayer(
+instanceId: null == instanceId ? _self.instanceId : instanceId // ignore: cast_nullable_to_non_nullable
+as String,layerType: null == layerType ? _self.layerType : layerType // ignore: cast_nullable_to_non_nullable
+as SentinelLayerType,
+  ));
+}
+
+
+}
+
+// dart format on

@@ -52,17 +52,20 @@ class VehicleDebugLayer extends ConsumerWidget {
                 ),
               if (debugTrajectory)
                 Polyline(
-                  points: vehicle
-                      .trajectory(
-                        seconds:
-                            ref.watch(debugVehicleTrajectorySecondsProvider),
-                        minLength:
-                            ref.watch(debugVehicleTrajectoryMinLengthProvider),
-                      )
-                      .chain
-                      .toGeographicPositions
-                      .map((e) => e.latLng)
-                      .toList(),
+                  points:
+                      vehicle
+                          .trajectory(
+                            seconds: ref.watch(
+                              debugVehicleTrajectorySecondsProvider,
+                            ),
+                            minLength: ref.watch(
+                              debugVehicleTrajectoryMinLengthProvider,
+                            ),
+                          )
+                          .chain
+                          .toGeographicPositions
+                          .map((e) => e.latLng)
+                          .toList(),
                   strokeWidth: 2,
                   color: Colors.blue,
                 ),

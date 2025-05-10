@@ -56,16 +56,18 @@ class SelectablePathLayer extends ConsumerWidget {
               path.elementAt(i).latLng,
               path.elementAt((i + 1) % path.length).latLng,
             ],
-            color: selected.contains(i) &&
-                    selected.contains((i + 1) % path.length) &&
-                    highlightSelectedPath
-                ? Colors.green
-                : Colors.black,
-            strokeWidth: selected.contains(i) &&
-                    selected.contains((i + 1) % path.length) &&
-                    highlightSelectedPath
-                ? 6
-                : 3,
+            color:
+                selected.contains(i) &&
+                        selected.contains((i + 1) % path.length) &&
+                        highlightSelectedPath
+                    ? Colors.green
+                    : Colors.black,
+            strokeWidth:
+                selected.contains(i) &&
+                        selected.contains((i + 1) % path.length) &&
+                        highlightSelectedPath
+                    ? 6
+                    : 3,
           ),
         );
       }
@@ -101,7 +103,7 @@ class SelectablePathLayer extends ConsumerWidget {
                         .mapIndexed(
                           (index, point) => (
                             index: index,
-                            distance: position.rhumb.distanceTo(point)
+                            distance: position.rhumb.distanceTo(point),
                           ),
                         )
                         .sorted((a, b) => a.distance.compareTo(b.distance));
@@ -122,7 +124,7 @@ class SelectablePathLayer extends ConsumerWidget {
                         .mapIndexed(
                           (index, point) => (
                             index: index,
-                            distance: position.rhumb.distanceTo(point)
+                            distance: position.rhumb.distanceTo(point),
                           ),
                         )
                         .sorted((a, b) => a.distance.compareTo(b.distance));
@@ -138,8 +140,9 @@ class SelectablePathLayer extends ConsumerWidget {
                 child: TextWithStroke(
                   'A',
                   strokeWidth: 3.5,
-                  style: theme.menuButtonWithChildrenText
-                      ?.copyWith(color: Colors.white),
+                  style: theme.menuButtonWithChildrenText?.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
                 rotate: true,
               ),
@@ -149,8 +152,9 @@ class SelectablePathLayer extends ConsumerWidget {
                 child: TextWithStroke(
                   'B',
                   strokeWidth: 3.5,
-                  style: theme.menuButtonWithChildrenText
-                      ?.copyWith(color: Colors.white),
+                  style: theme.menuButtonWithChildrenText?.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
                 rotate: true,
               ),

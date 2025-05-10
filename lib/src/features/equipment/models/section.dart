@@ -61,7 +61,6 @@ class Section {
     final workingWidth = json['working_width'] as double?;
     final active = json['active'] as bool?;
     final automateActivation = json['automate_activation'] as bool?;
-    
 
     return Section(
       index: index ?? 0,
@@ -69,10 +68,12 @@ class Section {
       workingWidth: workingWidth ?? 3,
       active: active ?? false,
       automateActivation: automateActivation ?? false,
-      color: const ColorSerializerNullable()
-          .fromJson((json['color'] as String?) ?? ''),
-      workedPathColor: const ColorSerializerNullable()
-          .fromJson((json['worked_path_color'] as String?) ?? ''),
+      color: const ColorSerializerNullable().fromJson(
+        (json['color'] as String?) ?? '',
+      ),
+      workedPathColor: const ColorSerializerNullable().fromJson(
+        (json['worked_path_color'] as String?) ?? '',
+      ),
     );
   }
 
@@ -109,16 +110,15 @@ class Section {
     bool? automateActivation,
     Color? color,
     Color? workedPathColor,
-  }) =>
-      Section(
-        index: index ?? this.index,
-        width: width ?? this.width,
-        workingWidth: workingWidth ?? this.workingWidth,
-        active: active ?? this.active,
-        automateActivation: automateActivation ?? this.automateActivation,
-        color: color ?? this.color,
-        workedPathColor: workedPathColor ?? this.workedPathColor,
-      );
+  }) => Section(
+    index: index ?? this.index,
+    width: width ?? this.width,
+    workingWidth: workingWidth ?? this.workingWidth,
+    active: active ?? this.active,
+    automateActivation: automateActivation ?? this.automateActivation,
+    color: color ?? this.color,
+    workedPathColor: workedPathColor ?? this.workedPathColor,
+  );
 
   /// Converts the object to a json compatible structure.
   Map<String, dynamic> toJson() {
@@ -129,8 +129,9 @@ class Section {
     // map['active'] = active;
     map['automate_activation'] = automateActivation;
     map['color'] = const ColorSerializerNullable().toJson(color);
-    map['worked_path_color'] =
-        const ColorSerializerNullable().toJson(workedPathColor);
+    map['worked_path_color'] = const ColorSerializerNullable().toJson(
+      workedPathColor,
+    );
 
     return map;
   }

@@ -60,8 +60,9 @@ bool showCountryLayers(Ref ref) =>
 
 /// Whether the selected Sentinel layers should be shown.
 @riverpod
-bool showSentinelLayers(Ref ref) => ref
-    .watch(enabledSentinelLayersProvider.select((value) => value.isNotEmpty));
+bool showSentinelLayers(Ref ref) => ref.watch(
+  enabledSentinelLayersProvider.select((value) => value.isNotEmpty),
+);
 
 /// Whether the finished recorded path should be shown.
 @riverpod
@@ -81,10 +82,12 @@ bool showPathRecordingLayer(Ref ref) => ref.watch(enablePathRecorderProvider);
 /// Whether the editable recorded path should be shown.
 @riverpod
 bool showEditablePathLayer(Ref ref) {
-  final isEditing = ref
-      .watch(activeEditablePathTypeProvider.select((value) => value != null));
-  final pointsNotEmpty =
-      ref.watch(editablePathPointsProvider.select((value) => value != null));
+  final isEditing = ref.watch(
+    activeEditablePathTypeProvider.select((value) => value != null),
+  );
+  final pointsNotEmpty = ref.watch(
+    editablePathPointsProvider.select((value) => value != null),
+  );
 
   final enabled = isEditing && pointsNotEmpty;
   return enabled;
@@ -106,13 +109,13 @@ class ShowVehicleDrawingLayer extends _$ShowVehicleDrawingLayer {
 /// Whether the debugging layer for the vehicle should be shown.
 @riverpod
 bool showVehicleDebugLayer(Ref ref) => [
-      ref.watch(debugVehicleTravelledPathProvider),
-      ref.watch(debugVehicleTrajectoryProvider),
-      ref.watch(debugVehicleSteeringProvider),
-      ref.watch(debugVehiclePolygonsProvider),
-      ref.watch(debugVehicleHitchesProvider),
-      ref.watch(debugVehicleAntennaPositionProvider),
-    ].any((element) => element);
+  ref.watch(debugVehicleTravelledPathProvider),
+  ref.watch(debugVehicleTrajectoryProvider),
+  ref.watch(debugVehicleSteeringProvider),
+  ref.watch(debugVehiclePolygonsProvider),
+  ref.watch(debugVehicleHitchesProvider),
+  ref.watch(debugVehicleAntennaPositionProvider),
+].any((element) => element);
 
 /// Whether the debugging layer for the Dubins path should be shown.
 @riverpod
@@ -128,13 +131,16 @@ bool showPathTrackingLayer(Ref ref) => ref.watch(showPathTrackingProvider);
 bool showFieldLayer(Ref ref) {
   final showField = ref.watch(showFieldProvider);
   final showBufferedField = ref.watch(showBufferedFieldProvider);
-  final fieldExists =
-      ref.watch(activeFieldProvider.select((value) => value != null));
+  final fieldExists = ref.watch(
+    activeFieldProvider.select((value) => value != null),
+  );
 
-  final showRecordedRings = ref.watch(showPathRecordingMenuProvider) &&
+  final showRecordedRings =
+      ref.watch(showPathRecordingMenuProvider) &&
       ref.watch(
-        activePathRecordingTargetProvider
-            .select((value) => value == PathRecordingTarget.field),
+        activePathRecordingTargetProvider.select(
+          (value) => value == PathRecordingTarget.field,
+        ),
       );
 
   final enabled =
@@ -158,11 +164,11 @@ class ShowEquipmentDrawingLayer extends _$ShowEquipmentDrawingLayer {
 /// Whether the debugging layer for the equipment should be shown.
 @riverpod
 bool showEquipmentDebugLayer(Ref ref) => <bool>[
-      ref.watch(debugEquipmentTurningProvider),
-      ref.watch(debugEquipmentHitchesProvider),
-      ref.watch(debugEquipmentTrajectoryProvider),
-      ref.watch(debugEquipmentTravelledPathProvider),
-    ].any((element) => element);
+  ref.watch(debugEquipmentTurningProvider),
+  ref.watch(debugEquipmentHitchesProvider),
+  ref.watch(debugEquipmentTrajectoryProvider),
+  ref.watch(debugEquipmentTravelledPathProvider),
+].any((element) => element);
 
 /// Whether the layer for AB-tracking should be shown.
 @riverpod

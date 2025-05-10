@@ -17,9 +17,10 @@ String _$sendRemoteControlLedStateHash() =>
 final sendRemoteControlLedStateProvider = AutoDisposeProvider<void>.internal(
   sendRemoteControlLedState,
   name: r'sendRemoteControlLedStateProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$sendRemoteControlLedStateHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$sendRemoteControlLedStateHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -36,17 +37,20 @@ String _$remoteControlButtonActionsHash() =>
 /// Copied from [RemoteControlButtonActions].
 @ProviderFor(RemoteControlButtonActions)
 final remoteControlButtonActionsProvider = NotifierProvider<
-    RemoteControlButtonActions, Map<int, RemoteControlButtonAction?>>.internal(
+  RemoteControlButtonActions,
+  Map<int, RemoteControlButtonAction?>
+>.internal(
   RemoteControlButtonActions.new,
   name: r'remoteControlButtonActionsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$remoteControlButtonActionsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$remoteControlButtonActionsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$RemoteControlButtonActions
-    = Notifier<Map<int, RemoteControlButtonAction?>>;
+typedef _$RemoteControlButtonActions =
+    Notifier<Map<int, RemoteControlButtonAction?>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

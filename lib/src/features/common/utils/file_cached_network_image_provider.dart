@@ -86,19 +86,19 @@ class FileCachedNetworkImageProvider
       chunkEvents: chunkEvents.stream,
       scale: 1,
       debugLabel: url,
-      informationCollector: () => [
-        DiagnosticsProperty('URL', url),
-        DiagnosticsProperty('Fallback URL', fallbackUrl),
-        DiagnosticsProperty('Current provider', key),
-      ],
+      informationCollector:
+          () => [
+            DiagnosticsProperty('URL', url),
+            DiagnosticsProperty('Fallback URL', fallbackUrl),
+            DiagnosticsProperty('Current provider', key),
+          ],
     );
   }
 
   @override
   Future<FileCachedNetworkImageProvider> obtainKey(
     ImageConfiguration configuration,
-  ) =>
-      SynchronousFuture<FileCachedNetworkImageProvider>(this);
+  ) => SynchronousFuture<FileCachedNetworkImageProvider>(this);
 
   Future<Codec> _loadAsync(
     FileCachedNetworkImageProvider key,

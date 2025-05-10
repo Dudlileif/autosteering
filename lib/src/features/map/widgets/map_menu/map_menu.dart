@@ -61,16 +61,20 @@ class _MapAllowDownloadTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => CheckboxListTile(
-        secondary: const Icon(Icons.download),
-        title: Text(
-          'Allow download',
-          style: Theme.of(context).menuButtonWithChildrenText,
-        ),
-        value: ref.watch(mapAllowDownloadProvider),
-        onChanged: (value) => value != null
-            ? ref.read(mapAllowDownloadProvider.notifier).update(value: value)
-            : null,
-      );
+    secondary: const Icon(Icons.download),
+    title: Text(
+      'Allow download',
+      style: Theme.of(context).menuButtonWithChildrenText,
+    ),
+    value: ref.watch(mapAllowDownloadProvider),
+    onChanged:
+        (value) =>
+            value != null
+                ? ref
+                    .read(mapAllowDownloadProvider.notifier)
+                    .update(value: value)
+                : null,
+  );
 }
 
 class _CopernicusIDButton extends ConsumerWidget {
@@ -93,12 +97,11 @@ class _CopernicusIDButton extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.clear),
             ),
-            child: Text(
-              'Reset',
-              style: textStyle,
-            ),
-            onPressed: () =>
-                ref.read(copernicusInstanceIdProvider.notifier).update(null),
+            child: Text('Reset', style: textStyle),
+            onPressed:
+                () => ref
+                    .read(copernicusInstanceIdProvider.notifier)
+                    .update(null),
           ),
         ],
       );
@@ -109,76 +112,81 @@ class _CopernicusIDButton extends ConsumerWidget {
         padding: EdgeInsets.only(left: 8),
         child: Icon(Icons.satellite_alt),
       ),
-      child: Text(
-        'Enter Copernicus ID',
-        style: textStyle,
-      ),
-      onPressed: () => showDialog<void>(
-        context: context,
-        builder: (context) {
-          var id = '';
-          return StatefulBuilder(
-            builder: (context, setState) => SimpleDialog(
-              title: const Text('Enter Copernicus ID'),
-              contentPadding: const EdgeInsets.only(
-                left: 24,
-                top: 12,
-                right: 24,
-                bottom: 16,
-              ),
-              children: [
-                TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.label_outline),
-                      labelText: 'Copernicus ID',
-                    ),
-                    initialValue: id,
-                    onChanged: (value) => setState(() => id = value),
-                    onFieldSubmitted: (value) => setState(() => id = value),
-                    keyboardType: TextInputType.text,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) =>
-                        value != null && Uuid.isValidUUID(fromString: value)
-                            ? null
-                            : '''The entered ID must be a valid UUID.''',
-                  ),
-                
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+      child: Text('Enter Copernicus ID', style: textStyle),
+      onPressed:
+          () => showDialog<void>(
+            context: context,
+            builder: (context) {
+              var id = '';
+              return StatefulBuilder(
+                builder:
+                    (context, setState) => SimpleDialog(
+                      title: const Text('Enter Copernicus ID'),
+                      contentPadding: const EdgeInsets.only(
+                        left: 24,
+                        top: 12,
+                        right: 24,
+                        bottom: 16,
+                      ),
                       children: [
-                        ElevatedButton.icon(
-                          onPressed: () => Navigator.of(context).pop(),
-                          icon: const Icon(Icons.clear),
-                          label: const Text('Cancel'),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.label_outline),
+                            labelText: 'Copernicus ID',
+                          ),
+                          initialValue: id,
+                          onChanged: (value) => setState(() => id = value),
+                          onFieldSubmitted:
+                              (value) => setState(() => id = value),
+                          keyboardType: TextInputType.text,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator:
+                              (value) =>
+                                  value != null &&
+                                          Uuid.isValidUUID(fromString: value)
+                                      ? null
+                                      : '''The entered ID must be a valid UUID.''',
                         ),
-                        Consumer(
-                          builder: (context, ref, child) => FilledButton.icon(
-                            onPressed: () {
-                              ref
-                                  .read(
-                                    copernicusInstanceIdProvider.notifier,
-                                  )
-                                  .update(id);
-                              Navigator.of(context).pop();
-                            },
-                            icon: const Icon(Icons.check),
-                            label: const Text('Save ID'),
+
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  icon: const Icon(Icons.clear),
+                                  label: const Text('Cancel'),
+                                ),
+                                Consumer(
+                                  builder:
+                                      (context, ref, child) =>
+                                          FilledButton.icon(
+                                            onPressed: () {
+                                              ref
+                                                  .read(
+                                                    copernicusInstanceIdProvider
+                                                        .notifier,
+                                                  )
+                                                  .update(id);
+                                              Navigator.of(context).pop();
+                                            },
+                                            icon: const Icon(Icons.check),
+                                            label: const Text('Save ID'),
+                                          ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
     );
   }
 }

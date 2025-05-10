@@ -70,36 +70,35 @@ class HomePositionMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text(
-            'Set to screen center',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => MenuItemButton(
-            closeOnActivate: false,
-            leadingIcon: const Icon(Icons.map),
-            onPressed: () {
-              ref.read(homePositionProvider.notifier).update(
-                    ref.watch(
-                      mainMapControllerProvider
-                          .select((value) => value.camera.center),
-                    ),
-                  );
-              ref.read(currentCountryProvider.notifier).update();
-            },
-            child: child,
-          ),
+          child: Text('Set to screen center', style: textStyle),
+          builder:
+              (context, ref, child) => MenuItemButton(
+                closeOnActivate: false,
+                leadingIcon: const Icon(Icons.map),
+                onPressed: () {
+                  ref
+                      .read(homePositionProvider.notifier)
+                      .update(
+                        ref.watch(
+                          mainMapControllerProvider.select(
+                            (value) => value.camera.center,
+                          ),
+                        ),
+                      );
+                  ref.read(currentCountryProvider.notifier).update();
+                },
+                child: child,
+              ),
         ),
         MenuItemButton(
           closeOnActivate: false,
           leadingIcon: const Icon(Icons.edit),
-          onPressed: () => showDialog<void>(
-            context: context,
-            builder: (context) => const _EnterHomePositionDialog(),
-          ),
-          child: Text(
-            'Enter home position',
-            style: textStyle,
-          ),
+          onPressed:
+              () => showDialog<void>(
+                context: context,
+                builder: (context) => const _EnterHomePositionDialog(),
+              ),
+          child: Text('Enter home position', style: textStyle),
         ),
       ],
     );
@@ -116,109 +115,113 @@ class _EnterHomePositionDialog extends ConsumerStatefulWidget {
 
 class _EnterHomePositionDialogState
     extends ConsumerState<_EnterHomePositionDialog> {
-  late double? lat =
-      ref.watch(homePositionProvider.select((value) => value.latitude));
-  late double? lon =
-      ref.watch(homePositionProvider.select((value) => value.longitude));
+  late double? lat = ref.watch(
+    homePositionProvider.select((value) => value.latitude),
+  );
+  late double? lon = ref.watch(
+    homePositionProvider.select((value) => value.longitude),
+  );
 
   @override
   Widget build(BuildContext context) => SimpleDialog(
-      title: const Text('Enter home position'),
-      contentPadding:
-          const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 16),
-      children: [
-        Consumer(
-            builder: (context, ref, child) {
-              return TextFormField(
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.navigation),
-                  labelText: 'Latitude (N/S)',
-                  suffixText: '°',
-                ),
-                keyboardType:
-                    const TextInputType.numberWithOptions(
-                  decimal: true,
-                  signed: true,
-                ),
-                initialValue: (lat ?? 0).toStringAsFixed(9),
-                onChanged: (value) {
-                  final updated =
-                      clampDouble(
-                    double.tryParse(value.replaceAll(',', '.')) ?? 0,
-                    -90,
-                    90,
-                  );
-                  setState(() => lat = updated);
-                },
+    title: const Text('Enter home position'),
+    contentPadding: const EdgeInsets.only(
+      left: 24,
+      top: 12,
+      right: 24,
+      bottom: 16,
+    ),
+    children: [
+      Consumer(
+        builder: (context, ref, child) {
+          return TextFormField(
+            decoration: const InputDecoration(
+              icon: Icon(Icons.navigation),
+              labelText: 'Latitude (N/S)',
+              suffixText: '°',
+            ),
+            keyboardType: const TextInputType.numberWithOptions(
+              decimal: true,
+              signed: true,
+            ),
+            initialValue: (lat ?? 0).toStringAsFixed(9),
+            onChanged: (value) {
+              final updated = clampDouble(
+                double.tryParse(value.replaceAll(',', '.')) ?? 0,
+                -90,
+                90,
               );
+              setState(() => lat = updated);
             },
-          ),
-        
-        Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Consumer(
-            builder: (context, ref, child) {
-              return TextFormField(
-                decoration: const InputDecoration(
-                  icon: RotatedBox(
-                    quarterTurns: 1,
-                    child: Icon(Icons.navigation),
-                  ),
-                  labelText: 'Longitude (E/W)',
-                  suffixText: '°',
+          );
+        },
+      ),
+
+      Padding(
+        padding: const EdgeInsets.only(top: 16),
+        child: Consumer(
+          builder: (context, ref, child) {
+            return TextFormField(
+              decoration: const InputDecoration(
+                icon: RotatedBox(
+                  quarterTurns: 1,
+                  child: Icon(Icons.navigation),
                 ),
-                keyboardType:
-                    const TextInputType.numberWithOptions(
-                    decimal: true,
-                    signed: true,
-                  ),
-                initialValue: (lon ?? 0).toStringAsFixed(9),
-                onChanged: (value) {
-                  final updated =
-                        clampDouble(
-                      double.tryParse(value.replaceAll(',', '.')) ?? 0,
-                      -180,
-                      180,
-                    );
-                  setState(() => lon = updated);
-                },
-              );
-            },
-          ),
+                labelText: 'Longitude (E/W)',
+                suffixText: '°',
+              ),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
+              initialValue: (lon ?? 0).toStringAsFixed(9),
+              onChanged: (value) {
+                final updated = clampDouble(
+                  double.tryParse(value.replaceAll(',', '.')) ?? 0,
+                  -180,
+                  180,
+                );
+                setState(() => lon = updated);
+              },
+            );
+          },
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 16),
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: [
-                ElevatedButton.icon(
+              ElevatedButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.clear),
-                  label: const Text('Cancel'),
+                icon: const Icon(Icons.clear),
+                label: const Text('Cancel'),
               ),
               Consumer(
-                  builder: (context, ref, child) => FilledButton.icon(
-                  onPressed: lat != null && lon != null
-                      ? () {
-                          if (lat != null && lon != null) {
-                            ref
-                                .read(homePositionProvider.notifier)
-                                .update(LatLng(lat!, lon!));
-                          }
-                          Navigator.of(context).pop();
-                        }
-                      : null,
-                    icon: const Icon(Icons.check),
-                    label: const Text('Use entered position'),
-                  ),
-                ),
-              ],
-            ),
+                builder:
+                    (context, ref, child) => FilledButton.icon(
+                      onPressed:
+                          lat != null && lon != null
+                              ? () {
+                                if (lat != null && lon != null) {
+                                  ref
+                                      .read(homePositionProvider.notifier)
+                                      .update(LatLng(lat!, lon!));
+                                }
+                                Navigator.of(context).pop();
+                              }
+                              : null,
+                      icon: const Icon(Icons.check),
+                      label: const Text('Use entered position'),
+                    ),
+              ),
+            ],
           ),
         ),
-      ],
-      );
+      ),
+    ],
+  );
 }

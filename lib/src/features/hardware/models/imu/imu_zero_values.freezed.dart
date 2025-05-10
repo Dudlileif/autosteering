@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,214 +10,151 @@ part of 'imu_zero_values.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-ImuZeroValues _$ImuZeroValuesFromJson(Map<String, dynamic> json) {
-  return _ImuZeroValues.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ImuZeroValues {
-  /// The zero (North) value for the bearing.
-  num get bearingZero => throw _privateConstructorUsedError;
 
-  /// The zero level for the pitch.
-  num get pitchZero => throw _privateConstructorUsedError;
-
-  /// The zero level for the roll.
-  num get rollZero => throw _privateConstructorUsedError;
+/// The zero (North) value for the bearing.
+ num get bearingZero;/// The zero level for the pitch.
+ num get pitchZero;/// The zero level for the roll.
+ num get rollZero;
+/// Create a copy of ImuZeroValues
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ImuZeroValuesCopyWith<ImuZeroValues> get copyWith => _$ImuZeroValuesCopyWithImpl<ImuZeroValues>(this as ImuZeroValues, _$identity);
 
   /// Serializes this ImuZeroValues to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of ImuZeroValues
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $ImuZeroValuesCopyWith<ImuZeroValues> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ImuZeroValues&&(identical(other.bearingZero, bearingZero) || other.bearingZero == bearingZero)&&(identical(other.pitchZero, pitchZero) || other.pitchZero == pitchZero)&&(identical(other.rollZero, rollZero) || other.rollZero == rollZero));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,bearingZero,pitchZero,rollZero);
+
+@override
+String toString() {
+  return 'ImuZeroValues(bearingZero: $bearingZero, pitchZero: $pitchZero, rollZero: $rollZero)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ImuZeroValuesCopyWith<$Res> {
-  factory $ImuZeroValuesCopyWith(
-          ImuZeroValues value, $Res Function(ImuZeroValues) then) =
-      _$ImuZeroValuesCopyWithImpl<$Res, ImuZeroValues>;
-  @useResult
-  $Res call({num bearingZero, num pitchZero, num rollZero});
-}
+abstract mixin class $ImuZeroValuesCopyWith<$Res>  {
+  factory $ImuZeroValuesCopyWith(ImuZeroValues value, $Res Function(ImuZeroValues) _then) = _$ImuZeroValuesCopyWithImpl;
+@useResult
+$Res call({
+ num bearingZero, num pitchZero, num rollZero
+});
 
+
+
+
+}
 /// @nodoc
-class _$ImuZeroValuesCopyWithImpl<$Res, $Val extends ImuZeroValues>
+class _$ImuZeroValuesCopyWithImpl<$Res>
     implements $ImuZeroValuesCopyWith<$Res> {
-  _$ImuZeroValuesCopyWithImpl(this._value, this._then);
+  _$ImuZeroValuesCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ImuZeroValues _self;
+  final $Res Function(ImuZeroValues) _then;
 
-  /// Create a copy of ImuZeroValues
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bearingZero = null,
-    Object? pitchZero = null,
-    Object? rollZero = null,
-  }) {
-    return _then(_value.copyWith(
-      bearingZero: null == bearingZero
-          ? _value.bearingZero
-          : bearingZero // ignore: cast_nullable_to_non_nullable
-              as num,
-      pitchZero: null == pitchZero
-          ? _value.pitchZero
-          : pitchZero // ignore: cast_nullable_to_non_nullable
-              as num,
-      rollZero: null == rollZero
-          ? _value.rollZero
-          : rollZero // ignore: cast_nullable_to_non_nullable
-              as num,
-    ) as $Val);
-  }
+/// Create a copy of ImuZeroValues
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? bearingZero = null,Object? pitchZero = null,Object? rollZero = null,}) {
+  return _then(_self.copyWith(
+bearingZero: null == bearingZero ? _self.bearingZero : bearingZero // ignore: cast_nullable_to_non_nullable
+as num,pitchZero: null == pitchZero ? _self.pitchZero : pitchZero // ignore: cast_nullable_to_non_nullable
+as num,rollZero: null == rollZero ? _self.rollZero : rollZero // ignore: cast_nullable_to_non_nullable
+as num,
+  ));
 }
 
-/// @nodoc
-abstract class _$$ImuZeroValuesImplCopyWith<$Res>
-    implements $ImuZeroValuesCopyWith<$Res> {
-  factory _$$ImuZeroValuesImplCopyWith(
-          _$ImuZeroValuesImpl value, $Res Function(_$ImuZeroValuesImpl) then) =
-      __$$ImuZeroValuesImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({num bearingZero, num pitchZero, num rollZero});
 }
 
-/// @nodoc
-class __$$ImuZeroValuesImplCopyWithImpl<$Res>
-    extends _$ImuZeroValuesCopyWithImpl<$Res, _$ImuZeroValuesImpl>
-    implements _$$ImuZeroValuesImplCopyWith<$Res> {
-  __$$ImuZeroValuesImplCopyWithImpl(
-      _$ImuZeroValuesImpl _value, $Res Function(_$ImuZeroValuesImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of ImuZeroValues
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bearingZero = null,
-    Object? pitchZero = null,
-    Object? rollZero = null,
-  }) {
-    return _then(_$ImuZeroValuesImpl(
-      bearingZero: null == bearingZero
-          ? _value.bearingZero
-          : bearingZero // ignore: cast_nullable_to_non_nullable
-              as num,
-      pitchZero: null == pitchZero
-          ? _value.pitchZero
-          : pitchZero // ignore: cast_nullable_to_non_nullable
-              as num,
-      rollZero: null == rollZero
-          ? _value.rollZero
-          : rollZero // ignore: cast_nullable_to_non_nullable
-              as num,
-    ));
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$ImuZeroValuesImpl implements _ImuZeroValues {
-  const _$ImuZeroValuesImpl(
-      {this.bearingZero = 0, this.pitchZero = 0, this.rollZero = 0});
 
-  factory _$ImuZeroValuesImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ImuZeroValuesImplFromJson(json);
+class _ImuZeroValues implements ImuZeroValues {
+  const _ImuZeroValues({this.bearingZero = 0, this.pitchZero = 0, this.rollZero = 0});
+  factory _ImuZeroValues.fromJson(Map<String, dynamic> json) => _$ImuZeroValuesFromJson(json);
 
-  /// The zero (North) value for the bearing.
-  @override
-  @JsonKey()
-  final num bearingZero;
+/// The zero (North) value for the bearing.
+@override@JsonKey() final  num bearingZero;
+/// The zero level for the pitch.
+@override@JsonKey() final  num pitchZero;
+/// The zero level for the roll.
+@override@JsonKey() final  num rollZero;
 
-  /// The zero level for the pitch.
-  @override
-  @JsonKey()
-  final num pitchZero;
+/// Create a copy of ImuZeroValues
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ImuZeroValuesCopyWith<_ImuZeroValues> get copyWith => __$ImuZeroValuesCopyWithImpl<_ImuZeroValues>(this, _$identity);
 
-  /// The zero level for the roll.
-  @override
-  @JsonKey()
-  final num rollZero;
-
-  @override
-  String toString() {
-    return 'ImuZeroValues(bearingZero: $bearingZero, pitchZero: $pitchZero, rollZero: $rollZero)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ImuZeroValuesImpl &&
-            (identical(other.bearingZero, bearingZero) ||
-                other.bearingZero == bearingZero) &&
-            (identical(other.pitchZero, pitchZero) ||
-                other.pitchZero == pitchZero) &&
-            (identical(other.rollZero, rollZero) ||
-                other.rollZero == rollZero));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, bearingZero, pitchZero, rollZero);
-
-  /// Create a copy of ImuZeroValues
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ImuZeroValuesImplCopyWith<_$ImuZeroValuesImpl> get copyWith =>
-      __$$ImuZeroValuesImplCopyWithImpl<_$ImuZeroValuesImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ImuZeroValuesImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$ImuZeroValuesToJson(this, );
 }
 
-abstract class _ImuZeroValues implements ImuZeroValues {
-  const factory _ImuZeroValues(
-      {final num bearingZero,
-      final num pitchZero,
-      final num rollZero}) = _$ImuZeroValuesImpl;
-
-  factory _ImuZeroValues.fromJson(Map<String, dynamic> json) =
-      _$ImuZeroValuesImpl.fromJson;
-
-  /// The zero (North) value for the bearing.
-  @override
-  num get bearingZero;
-
-  /// The zero level for the pitch.
-  @override
-  num get pitchZero;
-
-  /// The zero level for the roll.
-  @override
-  num get rollZero;
-
-  /// Create a copy of ImuZeroValues
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ImuZeroValuesImplCopyWith<_$ImuZeroValuesImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ImuZeroValues&&(identical(other.bearingZero, bearingZero) || other.bearingZero == bearingZero)&&(identical(other.pitchZero, pitchZero) || other.pitchZero == pitchZero)&&(identical(other.rollZero, rollZero) || other.rollZero == rollZero));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,bearingZero,pitchZero,rollZero);
+
+@override
+String toString() {
+  return 'ImuZeroValues(bearingZero: $bearingZero, pitchZero: $pitchZero, rollZero: $rollZero)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ImuZeroValuesCopyWith<$Res> implements $ImuZeroValuesCopyWith<$Res> {
+  factory _$ImuZeroValuesCopyWith(_ImuZeroValues value, $Res Function(_ImuZeroValues) _then) = __$ImuZeroValuesCopyWithImpl;
+@override @useResult
+$Res call({
+ num bearingZero, num pitchZero, num rollZero
+});
+
+
+
+
+}
+/// @nodoc
+class __$ImuZeroValuesCopyWithImpl<$Res>
+    implements _$ImuZeroValuesCopyWith<$Res> {
+  __$ImuZeroValuesCopyWithImpl(this._self, this._then);
+
+  final _ImuZeroValues _self;
+  final $Res Function(_ImuZeroValues) _then;
+
+/// Create a copy of ImuZeroValues
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bearingZero = null,Object? pitchZero = null,Object? rollZero = null,}) {
+  return _then(_ImuZeroValues(
+bearingZero: null == bearingZero ? _self.bearingZero : bearingZero // ignore: cast_nullable_to_non_nullable
+as num,pitchZero: null == pitchZero ? _self.pitchZero : pitchZero // ignore: cast_nullable_to_non_nullable
+as num,rollZero: null == rollZero ? _self.rollZero : rollZero // ignore: cast_nullable_to_non_nullable
+as num,
+  ));
+}
+
+
+}
+
+// dart format on

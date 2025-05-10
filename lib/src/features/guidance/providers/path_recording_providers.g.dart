@@ -16,9 +16,10 @@ String _$automaticPathRecordingHash() =>
 final automaticPathRecordingProvider = AutoDisposeFutureProvider<void>.internal(
   automaticPathRecording,
   name: r'automaticPathRecordingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$automaticPathRecordingHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$automaticPathRecordingHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -35,14 +36,15 @@ String _$showPathRecordingMenuHash() =>
 @ProviderFor(ShowPathRecordingMenu)
 final showPathRecordingMenuProvider =
     AutoDisposeNotifierProvider<ShowPathRecordingMenu, bool>.internal(
-  ShowPathRecordingMenu.new,
-  name: r'showPathRecordingMenuProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showPathRecordingMenuHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowPathRecordingMenu.new,
+      name: r'showPathRecordingMenuProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showPathRecordingMenuHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowPathRecordingMenu = AutoDisposeNotifier<bool>;
 String _$enablePathRecorderHash() =>
@@ -54,14 +56,15 @@ String _$enablePathRecorderHash() =>
 @ProviderFor(EnablePathRecorder)
 final enablePathRecorderProvider =
     NotifierProvider<EnablePathRecorder, bool>.internal(
-  EnablePathRecorder.new,
-  name: r'enablePathRecorderProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$enablePathRecorderHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EnablePathRecorder.new,
+      name: r'enablePathRecorderProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$enablePathRecorderHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EnablePathRecorder = Notifier<bool>;
 String _$enableAutomaticPathRecorderHash() =>
@@ -73,14 +76,15 @@ String _$enableAutomaticPathRecorderHash() =>
 @ProviderFor(EnableAutomaticPathRecorder)
 final enableAutomaticPathRecorderProvider =
     NotifierProvider<EnableAutomaticPathRecorder, bool>.internal(
-  EnableAutomaticPathRecorder.new,
-  name: r'enableAutomaticPathRecorderProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$enableAutomaticPathRecorderHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EnableAutomaticPathRecorder.new,
+      name: r'enableAutomaticPathRecorderProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$enableAutomaticPathRecorderHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EnableAutomaticPathRecorder = Notifier<bool>;
 String _$activePathRecordingSettingsHash() =>
@@ -92,12 +96,15 @@ String _$activePathRecordingSettingsHash() =>
 /// Copied from [ActivePathRecordingSettings].
 @ProviderFor(ActivePathRecordingSettings)
 final activePathRecordingSettingsProvider = NotifierProvider<
-    ActivePathRecordingSettings, PathRecordingSettings>.internal(
+  ActivePathRecordingSettings,
+  PathRecordingSettings
+>.internal(
   ActivePathRecordingSettings.new,
   name: r'activePathRecordingSettingsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activePathRecordingSettingsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$activePathRecordingSettingsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -112,14 +119,15 @@ String _$activePathRecordingTargetHash() =>
 @ProviderFor(ActivePathRecordingTarget)
 final activePathRecordingTargetProvider =
     NotifierProvider<ActivePathRecordingTarget, PathRecordingTarget>.internal(
-  ActivePathRecordingTarget.new,
-  name: r'activePathRecordingTargetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activePathRecordingTargetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ActivePathRecordingTarget.new,
+      name: r'activePathRecordingTargetProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$activePathRecordingTargetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ActivePathRecordingTarget = Notifier<PathRecordingTarget>;
 String _$pathRecordingListHash() => r'df9f9af6fa8e3a554a985bb5c6eada577019814e';
@@ -130,14 +138,15 @@ String _$pathRecordingListHash() => r'df9f9af6fa8e3a554a985bb5c6eada577019814e';
 @ProviderFor(PathRecordingList)
 final pathRecordingListProvider =
     NotifierProvider<PathRecordingList, List<WayPoint>>.internal(
-  PathRecordingList.new,
-  name: r'pathRecordingListProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$pathRecordingListHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      PathRecordingList.new,
+      name: r'pathRecordingListProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$pathRecordingListHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$PathRecordingList = Notifier<List<WayPoint>>;
 String _$finishedPathRecordingListHash() =>
@@ -149,14 +158,15 @@ String _$finishedPathRecordingListHash() =>
 @ProviderFor(FinishedPathRecordingList)
 final finishedPathRecordingListProvider =
     NotifierProvider<FinishedPathRecordingList, List<WayPoint>?>.internal(
-  FinishedPathRecordingList.new,
-  name: r'finishedPathRecordingListProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$finishedPathRecordingListHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FinishedPathRecordingList.new,
+      name: r'finishedPathRecordingListProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$finishedPathRecordingListHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FinishedPathRecordingList = Notifier<List<WayPoint>?>;
 String _$showFinishedPathHash() => r'7053947b87b868ba73bc65e72d1e9d50f768d58a';
@@ -167,14 +177,15 @@ String _$showFinishedPathHash() => r'7053947b87b868ba73bc65e72d1e9d50f768d58a';
 @ProviderFor(ShowFinishedPath)
 final showFinishedPathProvider =
     NotifierProvider<ShowFinishedPath, bool>.internal(
-  ShowFinishedPath.new,
-  name: r'showFinishedPathProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showFinishedPathHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowFinishedPath.new,
+      name: r'showFinishedPathProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showFinishedPathHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowFinishedPath = Notifier<bool>;
 String _$editFinishedPathHash() => r'3689d55169c82198e9bd0b1768dbb7046e357f3f';
@@ -185,14 +196,15 @@ String _$editFinishedPathHash() => r'3689d55169c82198e9bd0b1768dbb7046e357f3f';
 @ProviderFor(EditFinishedPath)
 final editFinishedPathProvider =
     NotifierProvider<EditFinishedPath, bool>.internal(
-  EditFinishedPath.new,
-  name: r'editFinishedPathProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$editFinishedPathHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EditFinishedPath.new,
+      name: r'editFinishedPathProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$editFinishedPathHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EditFinishedPath = Notifier<bool>;
 String _$pathRecordingMenuUiOffsetHash() =>
@@ -204,14 +216,15 @@ String _$pathRecordingMenuUiOffsetHash() =>
 @ProviderFor(PathRecordingMenuUiOffset)
 final pathRecordingMenuUiOffsetProvider =
     AutoDisposeNotifierProvider<PathRecordingMenuUiOffset, Offset>.internal(
-  PathRecordingMenuUiOffset.new,
-  name: r'pathRecordingMenuUiOffsetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$pathRecordingMenuUiOffsetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      PathRecordingMenuUiOffset.new,
+      name: r'pathRecordingMenuUiOffsetProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$pathRecordingMenuUiOffsetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$PathRecordingMenuUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint

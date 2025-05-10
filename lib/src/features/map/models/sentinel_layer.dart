@@ -23,7 +23,7 @@ part 'sentinel_layer.g.dart';
 
 /// A class that stores information for a Copernicus Sentinel-2 map layer.
 @freezed
-class SentinelLayer with _$SentinelLayer {
+sealed class SentinelLayer with _$SentinelLayer {
   /// A class that stores information for a Copernicus Sentinel-2 map layer.
   ///
   /// Enter a Coperincus dataspace [instanceId] api-key.
@@ -57,9 +57,9 @@ class SentinelLayer with _$SentinelLayer {
 
   /// The url template for getting map tiles for this layer.
   String urlTemplate(double maxCloudCoveragePercent) => layerType.urlTemplate(
-        instanceId: instanceId,
-        maxCloudCoveragePercent: maxCloudCoveragePercent,
-      );
+    instanceId: instanceId,
+    maxCloudCoveragePercent: maxCloudCoveragePercent,
+  );
 }
 
 /// An enumeration class for useful Copernicus Sentinel-2 layers.

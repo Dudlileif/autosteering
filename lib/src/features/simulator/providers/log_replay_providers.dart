@@ -71,10 +71,7 @@ class LoopLogReplay extends _$LoopLogReplay {
 
 /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
 @riverpod
-FutureOr<LogReplay?> loadLogReplayFromFile(
-  Ref ref,
-  String path,
-) async {
+FutureOr<LogReplay?> loadLogReplayFromFile(Ref ref, String path) async {
   final file = File(path);
   if (file.existsSync()) {
     try {
@@ -97,10 +94,7 @@ FutureOr<LogReplay?> loadLogReplayFromFile(
 @riverpod
 FutureOr<LogReplay?> importLogReplay(Ref ref) async {
   ref.keepAlive();
-  Timer(
-    const Duration(seconds: 5),
-    ref.invalidateSelf,
-  );
+  Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.platform.pickFiles(
     allowedExtensions: ['log'],
     type: FileType.custom,
@@ -124,9 +118,7 @@ FutureOr<LogReplay?> importLogReplay(Ref ref) async {
         );
       }
     } else {
-      Logger.instance.w(
-        'Failed to import log replay, data is null.',
-      );
+      Logger.instance.w('Failed to import log replay, data is null.');
     }
   } else {
     final filePath = pickedFiles?.paths.first;

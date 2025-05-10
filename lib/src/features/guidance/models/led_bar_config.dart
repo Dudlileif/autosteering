@@ -26,7 +26,7 @@ part 'led_bar_config.g.dart';
 
 /// A configuration class for configuring the virtual LED bar.
 @freezed
-class LedBarConfig with _$LedBarConfig {
+sealed class LedBarConfig with _$LedBarConfig {
   /// A configuration class for configuring the virtual LED bar.
   ///
   /// [centerCount] is the amount of center LEDs on one side, usually green.

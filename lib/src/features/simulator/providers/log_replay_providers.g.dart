@@ -48,21 +48,15 @@ class LoadLogReplayFromFileFamily extends Family<AsyncValue<LogReplay?>> {
   /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
   ///
   /// Copied from [loadLogReplayFromFile].
-  LoadLogReplayFromFileProvider call(
-    String path,
-  ) {
-    return LoadLogReplayFromFileProvider(
-      path,
-    );
+  LoadLogReplayFromFileProvider call(String path) {
+    return LoadLogReplayFromFileProvider(path);
   }
 
   @override
   LoadLogReplayFromFileProvider getProviderOverride(
     covariant LoadLogReplayFromFileProvider provider,
   ) {
-    return call(
-      provider.path,
-    );
+    return call(provider.path);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -88,24 +82,20 @@ class LoadLogReplayFromFileProvider
   /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
   ///
   /// Copied from [loadLogReplayFromFile].
-  LoadLogReplayFromFileProvider(
-    String path,
-  ) : this._internal(
-          (ref) => loadLogReplayFromFile(
-            ref as LoadLogReplayFromFileRef,
-            path,
-          ),
-          from: loadLogReplayFromFileProvider,
-          name: r'loadLogReplayFromFileProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$loadLogReplayFromFileHash,
-          dependencies: LoadLogReplayFromFileFamily._dependencies,
-          allTransitiveDependencies:
-              LoadLogReplayFromFileFamily._allTransitiveDependencies,
-          path: path,
-        );
+  LoadLogReplayFromFileProvider(String path)
+    : this._internal(
+        (ref) => loadLogReplayFromFile(ref as LoadLogReplayFromFileRef, path),
+        from: loadLogReplayFromFileProvider,
+        name: r'loadLogReplayFromFileProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$loadLogReplayFromFileHash,
+        dependencies: LoadLogReplayFromFileFamily._dependencies,
+        allTransitiveDependencies:
+            LoadLogReplayFromFileFamily._allTransitiveDependencies,
+        path: path,
+      );
 
   LoadLogReplayFromFileProvider._internal(
     super._createNotifier, {
@@ -181,9 +171,10 @@ String _$importLogReplayHash() => r'a6fd83373024d96572cd9a42f3fa561043d90d72';
 final importLogReplayProvider = AutoDisposeFutureProvider<LogReplay?>.internal(
   importLogReplay,
   name: r'importLogReplayProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$importLogReplayHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$importLogReplayHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -199,14 +190,15 @@ String _$activeLogReplayHash() => r'e8d93a42b54febed5a79e8ea7887d983d672640e';
 @ProviderFor(ActiveLogReplay)
 final activeLogReplayProvider =
     NotifierProvider<ActiveLogReplay, LogReplay?>.internal(
-  ActiveLogReplay.new,
-  name: r'activeLogReplayProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeLogReplayHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ActiveLogReplay.new,
+      name: r'activeLogReplayProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$activeLogReplayHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ActiveLogReplay = Notifier<LogReplay?>;
 String _$logReplayIndexHash() => r'dc32309208b056c60eaad78b57186e6a104098c4';
@@ -218,9 +210,10 @@ String _$logReplayIndexHash() => r'dc32309208b056c60eaad78b57186e6a104098c4';
 final logReplayIndexProvider = NotifierProvider<LogReplayIndex, int>.internal(
   LogReplayIndex.new,
   name: r'logReplayIndexProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$logReplayIndexHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$logReplayIndexHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -235,9 +228,10 @@ String _$loopLogReplayHash() => r'3bec3b6c091b803d78ce49288b328363cab03785';
 final loopLogReplayProvider = NotifierProvider<LoopLogReplay, bool>.internal(
   LoopLogReplay.new,
   name: r'loopLogReplayProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$loopLogReplayHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$loopLogReplayHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

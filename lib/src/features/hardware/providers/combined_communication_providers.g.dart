@@ -17,9 +17,10 @@ String _$combinedNativeNetworkHash() =>
 final _combinedNativeNetworkProvider = AutoDisposeProvider<void>.internal(
   _combinedNativeNetwork,
   name: r'_combinedNativeNetworkProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$combinedNativeNetworkHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$combinedNativeNetworkHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -36,9 +37,10 @@ String _$combinedSerialHash() => r'6ec5620fc4b903429782dd75665f56b4584cac2c';
 final _combinedSerialProvider = AutoDisposeProvider<void>.internal(
   _combinedSerial,
   name: r'_combinedSerialProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$combinedSerialHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$combinedSerialHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -57,9 +59,10 @@ String _$combinedCommunicationHash() =>
 final combinedCommunicationProvider = AutoDisposeProvider<void>.internal(
   combinedCommunication,
   name: r'combinedCommunicationProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$combinedCommunicationHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$combinedCommunicationHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -77,9 +80,10 @@ String _$hardwareAliveHash() => r'50658d49b282388b8f604df97b9aeedf910341f7';
 final hardwareAliveProvider = AutoDisposeProvider<bool>.internal(
   hardwareAlive,
   name: r'hardwareAliveProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareAliveHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$hardwareAliveHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

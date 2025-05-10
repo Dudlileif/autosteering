@@ -16,7 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 // Some colors are currently not overridden.
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unused_element_parameter
 
 import 'dart:math';
 
@@ -86,19 +86,27 @@ class WheelPainter extends StatelessWidget {
 
     final centerPosition = innerPosition.rhumb.destinationPoint(
       distance: width / 2,
-      bearing: bearing + switch (isRightWheel) { true => -1, false => 1 } * 90,
+      bearing:
+          bearing +
+          switch (isRightWheel) {
+                true => -1,
+                false => 1,
+              } *
+              90,
     );
 
-    final meterScale = (camera.getOffsetFromOrigin(innerPosition.latLng) -
+    final meterScale =
+        (camera.getOffsetFromOrigin(innerPosition.latLng) -
                 camera.getOffsetFromOrigin(centerPosition.latLng))
             .distance /
         (width / 2);
 
     final scaledTyreWidth = meterScale * width;
-    final scaledWidth = numWheels * scaledTyreWidth +
+    final scaledWidth =
+        numWheels * scaledTyreWidth +
         (numWheels - 1) * meterScale * wheelSpacing;
     final scaledHeight = meterScale * diameter;
-    
+
     final innerPositionPoint = camera.latLngToScreenOffset(
       innerPosition.latLng,
     );
@@ -194,9 +202,10 @@ class _WheelPainterImplementation extends CustomPainter {
   void paintWheel(Canvas canvas, Size size, [int index = 0]) {
     final basePaint = Paint()..color = baseColor;
 
-    final ribPaint = Paint()
-      ..color = ribColor
-      ..strokeWidth = tyreWidth / 5;
+    final ribPaint =
+        Paint()
+          ..color = ribColor
+          ..strokeWidth = tyreWidth / 5;
 
     final innerCenterPosition = Offset(
       tyreWidth / 2 - index * (wheelSpacing + tyreWidth),
@@ -211,13 +220,21 @@ class _WheelPainterImplementation extends CustomPainter {
       ..translate(-firstInnerPosition!.dx, -firstInnerPosition!.dy);
 
     final outerCenterPosition = Offset(
-      switch (isRightWheel) { true => 3, false => -1 } * tyreWidth / 2 -
+      switch (isRightWheel) {
+                true => 3,
+                false => -1,
+              } *
+              tyreWidth /
+              2 -
           index * (wheelSpacing + tyreWidth),
       height / 2,
     );
 
     final centerPosition = Offset(
-      switch (isRightWheel) { true => tyreWidth, false => 0 } -
+      switch (isRightWheel) {
+            true => tyreWidth,
+            false => 0,
+          } -
           index * (wheelSpacing + tyreWidth),
       height / 2,
     );
@@ -231,20 +248,19 @@ class _WheelPainterImplementation extends CustomPainter {
 
     canvas
       ..drawRRect(
-        RRect.fromRectAndRadius(
-          baseRect,
-          Radius.circular(tyreWidth * 0.4),
-        ),
+        RRect.fromRectAndRadius(baseRect, Radius.circular(tyreWidth * 0.4)),
         basePaint,
       )
-
       // Translate the long track of ribs to show rotation
       ..translate(0, -rotation * height * pi);
 
     // Clip the long track of ribs to the base wheel.
     final clipRect = Rect.fromCenter(
       center: Offset(
-        switch (isRightWheel) { true => tyreWidth, false => 0 } -
+        switch (isRightWheel) {
+              true => tyreWidth,
+              false => 0,
+            } -
             index * (wheelSpacing + tyreWidth),
         rotation * height * pi + height / 2,
       ),
@@ -264,17 +280,10 @@ class _WheelPainterImplementation extends CustomPainter {
         -height / 2 + (i * height * pi) / ribs,
       );
 
-      final edge = Offset(
-        0,
-        -height / 2 + ((i + 1) * height * pi) / ribs,
-      );
+      final edge = Offset(0, -height / 2 + ((i + 1) * height * pi) / ribs);
 
       canvas
-        ..drawLine(
-          center,
-          innerCenterPosition + edge,
-          ribPaint,
-        )
+        ..drawLine(center, innerCenterPosition + edge, ribPaint)
         ..drawLine(
           center.translate(0, -0.5 * height * pi / ribs),
           (outerCenterPosition + edge).translate(0, -0.5 * height * pi / ribs),
@@ -287,14 +296,10 @@ class _WheelPainterImplementation extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (var i = 0; i < numWheels; i++) {
       canvas.save();
-      paintWheel(
-        canvas,
-        size,
-        switch (isRightWheel) {
-          true => -i,
-          false => i,
-        },
-      );
+      paintWheel(canvas, size, switch (isRightWheel) {
+        true => -i,
+        false => i,
+      });
       canvas.restore();
     }
   }

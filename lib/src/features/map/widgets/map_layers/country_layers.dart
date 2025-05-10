@@ -36,31 +36,33 @@ class CountryLayers extends ConsumerWidget {
     final opacities = ref.watch(countryLayerOpacitiesProvider);
 
     return Stack(
-      children: layers.map((layer) {
-        final tileLayer = Opacity(
-          opacity: opacities[layer.name] ?? 0.5,
-          child: TileLayer(
-            urlTemplate: layer.urlTemplate,
-            wmsOptions: layer.wmsOptions,
-            minNativeZoom: layer.minNativeZoom ?? 0,
-            maxNativeZoom: layer.maxNativeZoom ?? 19,
-            subdomains: layer.subdomains,
-            tileProvider: switch (Device.isWeb) {
-              true => HiveCachedTileProvider(layer: layer),
-              false => FileCachedTileProvider(
-                  layer: layer,
-                  fileDirectory: ref.watch(fileDirectoryProvider).requireValue,
-                  allowDownloads: ref.watch(mapAllowDownloadProvider),
-                )
-            },
-            maxZoom: 22,
-            userAgentPackageName: 'autosteering',
-          ),
-        );
-        return layer.themedTileLayerBuilder != null
-            ? layer.themedTileLayerBuilder!(context, tileLayer)
-            : tileLayer;
-      }).toList(),
+      children:
+          layers.map((layer) {
+            final tileLayer = Opacity(
+              opacity: opacities[layer.name] ?? 0.5,
+              child: TileLayer(
+                urlTemplate: layer.urlTemplate,
+                wmsOptions: layer.wmsOptions,
+                minNativeZoom: layer.minNativeZoom ?? 0,
+                maxNativeZoom: layer.maxNativeZoom ?? 19,
+                subdomains: layer.subdomains,
+                tileProvider: switch (Device.isWeb) {
+                  true => HiveCachedTileProvider(layer: layer),
+                  false => FileCachedTileProvider(
+                    layer: layer,
+                    fileDirectory:
+                        ref.watch(fileDirectoryProvider).requireValue,
+                    allowDownloads: ref.watch(mapAllowDownloadProvider),
+                  ),
+                },
+                maxZoom: 22,
+                userAgentPackageName: 'autosteering',
+              ),
+            );
+            return layer.themedTileLayerBuilder != null
+                ? layer.themedTileLayerBuilder!(context, tileLayer)
+                : tileLayer;
+          }).toList(),
     );
   }
 }

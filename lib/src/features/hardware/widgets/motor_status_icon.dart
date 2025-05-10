@@ -61,8 +61,9 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
       );
     }
 
-    final actualSteeringAngle =
-        ref.watch(mainVehicleProvider.select((value) => value.steeringAngle));
+    final actualSteeringAngle = ref.watch(
+      mainVehicleProvider.select((value) => value.steeringAngle),
+    );
     textLines.add(
       'Steering actual: ${actualSteeringAngle.toStringAsFixed(1)}°',
     );
@@ -73,11 +74,10 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
       );
     }
 
-    final wasReading = ref
-        .watch(mainVehicleProvider.select((value) => value.was.reading.value));
-    textLines.add(
-      'WAS reading: $wasReading',
+    final wasReading = ref.watch(
+      mainVehicleProvider.select((value) => value.was.reading.value),
     );
+    textLines.add('WAS reading: $wasReading');
     final wasTarget = ref.watch(steeringMotorWasTargetProvider);
     if (wasTarget != null) {
       textLines.add('WAS target: $wasTarget');
@@ -108,11 +108,13 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
       textLines.add('Rotation: $rotation');
     }
 
-    final stepsMinCenter =
-        ref.watch(steeringMotorStepsPerWasIncrementMinToCenterProvider);
+    final stepsMinCenter = ref.watch(
+      steeringMotorStepsPerWasIncrementMinToCenterProvider,
+    );
 
-    final stepsCenterMax =
-        ref.watch(steeringMotorStepsPerWasIncrementCenterToMaxProvider);
+    final stepsCenterMax = ref.watch(
+      steeringMotorStepsPerWasIncrementCenterToMaxProvider,
+    );
 
     if (stepsMinCenter != null || stepsCenterMax != null) {
       textLines.add('Steps / increment');
@@ -130,10 +132,11 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => switch (portalController.isShowing) {
-        true => portalController.hide(),
-        false => portalController.show(),
-      },
+      onTap:
+          () => switch (portalController.isShowing) {
+            true => portalController.hide(),
+            false => portalController.show(),
+          },
       child: OverlayPortal(
         controller: portalController,
         overlayChildBuilder: (context) {
@@ -145,7 +148,8 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
             top: target.dy + box.size.height / 2 + 8,
             right: 0,
             child: DecoratedBox(
-              decoration: Theme.of(context).tooltipTheme.decoration ??
+              decoration:
+                  Theme.of(context).tooltipTheme.decoration ??
                   const BoxDecoration(),
               child: Padding(
                 padding: const EdgeInsets.all(8),
@@ -160,7 +164,8 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
         child: Consumer(
           builder: (context, ref, child) {
             final motorStatus = ref.watch(steeringMotorStatusProvider);
-            final motorRotationAngle = ref.watch(
+            final motorRotationAngle =
+                ref.watch(
                   mainVehicleProvider.select(
                     (value) => value.steeringAngle / value.steeringAngleMax,
                   ),

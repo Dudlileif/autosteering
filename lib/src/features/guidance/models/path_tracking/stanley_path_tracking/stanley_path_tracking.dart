@@ -58,7 +58,7 @@ final class StanleyPathTracking extends PathTracking {
       vehicle.bearing,
       switch (vehiclePointingInPathDirection(vehicle)) {
         true => currentWayPoint(vehicle).bearing,
-        false => (currentWayPoint(vehicle).bearing + 180).wrap360()
+        false => (currentWayPoint(vehicle).bearing + 180).wrap360(),
       },
     );
 
@@ -67,7 +67,8 @@ final class StanleyPathTracking extends PathTracking {
       false => 1,
     };
 
-    final steeringAngle = sign * headingError +
+    final steeringAngle =
+        sign * headingError +
         atan(
           parameters.crossDistanceGain *
               -perpendicularDistance(vehicle) /

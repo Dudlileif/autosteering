@@ -72,15 +72,9 @@ class SteeringMotorStatus extends _$SteeringMotorStatus {
       if (previous != next) {
         if (ref.read(activeAutosteeringStateProvider) ==
             AutosteeringState.standby) {
-          Logger.instance.log(
-            Level.warning,
-            'Motor status: standby',
-          );
+          Logger.instance.log(Level.warning, 'Motor status: standby');
         } else {
-          Logger.instance.log(
-            Level.warning,
-            'Motor status: $next',
-          );
+          Logger.instance.log(Level.warning, 'Motor status: $next');
         }
       }
 
@@ -158,9 +152,9 @@ class SteeringMotorEnableCalibration extends _$SteeringMotorEnableCalibration {
   bool build() {
     listenSelf((previous, next) {
       if (previous != next) {
-        ref
-            .read(simInputProvider.notifier)
-            .send((enableMotorCalibration: next));
+        ref.read(simInputProvider.notifier).send((
+          enableMotorCalibration: next,
+        ));
       }
     });
     return false;
@@ -261,9 +255,7 @@ class SteeringMotorStepsPerWasIncrementCenterToMax
 
 /// A provider for getting the motor configuration from the hardware.
 @Riverpod(keepAlive: true)
-FutureOr<void> getSteeringHardwareConfig(
-  Ref ref,
-) async {
+FutureOr<void> getSteeringHardwareConfig(Ref ref) async {
   try {
     final url =
         'http://${ref.watch(steeringHardwareAddressProvider)}/motor_config.json';
@@ -275,10 +267,12 @@ FutureOr<void> getSteeringHardwareConfig(
       ),
     ).get<Map<String, dynamic>>(url);
     if (response.data != null && response.statusCode == 200) {
-      final steeringHardwareConfig =
-          SteeringHardwareConfig.fromJson(response.data!);
-      Logger.instance
-          .i('Retrieved motor config from hardware: $steeringHardwareConfig');
+      final steeringHardwareConfig = SteeringHardwareConfig.fromJson(
+        response.data!,
+      );
+      Logger.instance.i(
+        'Retrieved motor config from hardware: $steeringHardwareConfig',
+      );
       ref.read(simInputProvider.notifier).send(steeringHardwareConfig);
       Timer(const Duration(milliseconds: 100), () {
         final vehicle = ref.read(mainVehicleProvider);
@@ -330,8 +324,9 @@ FutureOr<void> updateSteeringHardwareConfig(
           '''Successfully updated motor config on hardware for parameters: ${keyContainer.keys}.''',
         );
       } else {
-        Logger.instance
-            .e('Failed to update motor config on hardware: $response');
+        Logger.instance.e(
+          'Failed to update motor config on hardware: $response',
+        );
       }
     } on Exception catch (error, stackTrace) {
       Logger.instance.e(
@@ -346,9 +341,7 @@ FutureOr<void> updateSteeringHardwareConfig(
 
 /// A provider for sending the whole motor configuration to the hardware.
 @Riverpod(keepAlive: true)
-FutureOr<void> sendSteeringHardwareConfig(
-  Ref ref,
-) async {
+FutureOr<void> sendSteeringHardwareConfig(Ref ref) async {
   try {
     Logger.instance.i(
       'Sending motor config to: http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config',
@@ -389,7 +382,9 @@ class SteeringHardwareConfiguratorUiOffset
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null && next != previous) {
-        ref.read(settingsProvider.notifier).update(
+        ref
+            .read(settingsProvider.notifier)
+            .update(
               SettingsKey.uiSteeringHardwareConfiguratorOffset,
               next.toJson(),
             );

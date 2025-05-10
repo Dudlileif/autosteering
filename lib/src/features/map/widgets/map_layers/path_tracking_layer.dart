@@ -38,88 +38,69 @@ class PathTrackingLayer extends ConsumerWidget {
     final debug = ref.watch(debugPathTrackingProvider);
     final theme = Theme.of(context);
     return Stack(
-      children: tracking != null
-          ? [
-              PolylineLayer(
-                polylines: [
-                  Polyline(
-                    points: tracking.path
-                        .map((point) => point.position.latLng)
-                        .toList(),
-                    strokeWidth: 2,
-                  ),
-                  Polyline(
-                    points: [
-                      vehicle.pathTrackingPoint.latLng,
-                      tracking.perpendicularIntersect(vehicle).latLng,
-                    ],
-                    color: Colors.white,
-                  ),
-                  if (tracking is PurePursuitPathTracking && debug) ...[
+      children:
+          tracking != null
+              ? [
+                PolylineLayer(
+                  polylines: [
                     Polyline(
-                      color: Colors.black,
+                      points:
+                          tracking.path
+                              .map((point) => point.position.latLng)
+                              .toList(),
+                      strokeWidth: 2,
+                    ),
+                    Polyline(
                       points: [
-                        vehicle.lookAheadStartPosition.latLng,
-                        if (tracking.lookAheadVehicleToLineProjection(
-                              vehicle,
-                              lookAheadDistance,
-                            ) !=
-                            null)
-                          tracking
-                              .lookAheadVehicleToLineProjection(
+                        vehicle.pathTrackingPoint.latLng,
+                        tracking.perpendicularIntersect(vehicle).latLng,
+                      ],
+                      color: Colors.white,
+                    ),
+                    if (tracking is PurePursuitPathTracking && debug) ...[
+                      Polyline(
+                        color: Colors.black,
+                        points: [
+                          vehicle.lookAheadStartPosition.latLng,
+                          if (tracking.lookAheadVehicleToLineProjection(
                                 vehicle,
                                 lookAheadDistance,
-                              )!
-                              .latLng,
-                        tracking
-                            .findLookAheadLinePoints(vehicle, lookAheadDistance)
-                            .inside
-                            .position
-                            .latLng,
-                        if (tracking
-                                .findLookAheadLinePoints(
+                              ) !=
+                              null)
+                            tracking
+                                .lookAheadVehicleToLineProjection(
                                   vehicle,
                                   lookAheadDistance,
-                                )
-                                .outside !=
-                            null)
+                                )!
+                                .latLng,
                           tracking
                               .findLookAheadLinePoints(
                                 vehicle,
                                 lookAheadDistance,
                               )
-                              .outside!
+                              .inside
                               .position
                               .latLng,
-                      ],
-                    ),
-                    Polyline(
-                      points: [
-                        vehicle.lookAheadStartPosition.latLng,
-                        tracking
-                            .findLookAheadCirclePoints(
-                              vehicle,
-                              lookAheadDistance,
-                            )
-                            .best
-                            .position
-                            .latLng,
-                      ],
-                      color: Colors.pink,
-                    ),
-                    if (tracking.lookAheadVehicleToLineProjection(
-                          vehicle,
-                          lookAheadDistance,
-                        ) !=
-                        null)
+                          if (tracking
+                                  .findLookAheadLinePoints(
+                                    vehicle,
+                                    lookAheadDistance,
+                                  )
+                                  .outside !=
+                              null)
+                            tracking
+                                .findLookAheadLinePoints(
+                                  vehicle,
+                                  lookAheadDistance,
+                                )
+                                .outside!
+                                .position
+                                .latLng,
+                        ],
+                      ),
                       Polyline(
                         points: [
-                          tracking
-                              .lookAheadVehicleToLineProjection(
-                                vehicle,
-                                lookAheadDistance,
-                              )!
-                              .latLng,
+                          vehicle.lookAheadStartPosition.latLng,
                           tracking
                               .findLookAheadCirclePoints(
                                 vehicle,
@@ -130,27 +111,6 @@ class PathTrackingLayer extends ConsumerWidget {
                               .latLng,
                         ],
                         color: Colors.pink,
-                      ),
-                    if (tracking
-                            .findLookAheadCirclePoints(
-                              vehicle,
-                              lookAheadDistance,
-                            )
-                            .worst !=
-                        null) ...[
-                      Polyline(
-                        points: [
-                          vehicle.lookAheadStartPosition.latLng,
-                          tracking
-                              .findLookAheadCirclePoints(
-                                vehicle,
-                                lookAheadDistance,
-                              )
-                              .worst!
-                              .position
-                              .latLng,
-                        ],
-                        color: Colors.blue,
                       ),
                       if (tracking.lookAheadVehicleToLineProjection(
                             vehicle,
@@ -170,102 +130,11 @@ class PathTrackingLayer extends ConsumerWidget {
                                   vehicle,
                                   lookAheadDistance,
                                 )
-                                .worst!
+                                .best
                                 .position
                                 .latLng,
                           ],
-                          color: Colors.blue,
-                        ),
-                    ],
-                  ],
-                  if (debug)
-                    ...tracking.path.mapIndexed(
-                      (index, point) => Polyline(
-                        color: Colors.orange,
-                        strokeWidth: 1.5,
-                        points: [
-                          point.position.latLng,
-                          point.moveRhumb(distance: 2).position.latLng,
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-              CircleLayer(
-                circles: [
-                  if (tracking.path.length >= 2) ...[
-                    CircleMarker(
-                      point: tracking.path.first.position.latLng,
-                      radius: 5,
-                    ),
-                    CircleMarker(
-                      point: tracking.path.last.position.latLng,
-                      radius: 5,
-                      color: Colors.red,
-                    ),
-                  ],
-                  if (tracking is PurePursuitPathTracking) ...[
-                    CircleMarker(
-                      point: vehicle.lookAheadStartPosition.latLng,
-                      radius: lookAheadDistance,
-                      useRadiusInMeter: true,
-                      color:
-                          Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                    ),
-                    if (tracking.lookAheadVehicleToLineProjection(
-                          vehicle,
-                          lookAheadDistance,
-                        ) !=
-                        null)
-                      CircleMarker(
-                        point: tracking
-                            .findLookAheadCirclePoints(
-                              vehicle,
-                              lookAheadDistance,
-                            )
-                            .best
-                            .position
-                            .latLng,
-                        radius: 5,
-                        color: Colors.pink,
-                      ),
-                    if (debug) ...[
-                      ...tracking.path.map(
-                        (point) => CircleMarker(
-                          point: point.position.latLng,
-                          radius: 2,
-                        ),
-                      ),
-                      CircleMarker(
-                        point: tracking
-                            .findLookAheadLinePoints(
-                              vehicle,
-                              lookAheadDistance,
-                            )
-                            .inside
-                            .position
-                            .latLng,
-                        radius: 3,
-                        color: Colors.white,
-                      ),
-                      if (tracking
-                              .findLookAheadLinePoints(
-                                vehicle,
-                                lookAheadDistance,
-                              )
-                              .outside !=
-                          null)
-                        CircleMarker(
-                          point: tracking
-                              .findLookAheadLinePoints(
-                                vehicle,
-                                lookAheadDistance,
-                              )
-                              .outside!
-                              .position
-                              .latLng,
-                          radius: 3,
-                          color: Colors.white,
+                          color: Colors.pink,
                         ),
                       if (tracking
                               .findLookAheadCirclePoints(
@@ -273,47 +142,189 @@ class PathTrackingLayer extends ConsumerWidget {
                                 lookAheadDistance,
                               )
                               .worst !=
-                          null)
-                        CircleMarker(
-                          point: tracking
-                              .findLookAheadCirclePoints(
-                                vehicle,
-                                lookAheadDistance,
-                              )
-                              .worst!
-                              .position
-                              .latLng,
-                          radius: 5,
+                          null) ...[
+                        Polyline(
+                          points: [
+                            vehicle.lookAheadStartPosition.latLng,
+                            tracking
+                                .findLookAheadCirclePoints(
+                                  vehicle,
+                                  lookAheadDistance,
+                                )
+                                .worst!
+                                .position
+                                .latLng,
+                          ],
                           color: Colors.blue,
                         ),
+                        if (tracking.lookAheadVehicleToLineProjection(
+                              vehicle,
+                              lookAheadDistance,
+                            ) !=
+                            null)
+                          Polyline(
+                            points: [
+                              tracking
+                                  .lookAheadVehicleToLineProjection(
+                                    vehicle,
+                                    lookAheadDistance,
+                                  )!
+                                  .latLng,
+                              tracking
+                                  .findLookAheadCirclePoints(
+                                    vehicle,
+                                    lookAheadDistance,
+                                  )
+                                  .worst!
+                                  .position
+                                  .latLng,
+                            ],
+                            color: Colors.blue,
+                          ),
+                      ],
                     ],
+                    if (debug)
+                      ...tracking.path.mapIndexed(
+                        (index, point) => Polyline(
+                          color: Colors.orange,
+                          strokeWidth: 1.5,
+                          points: [
+                            point.position.latLng,
+                            point.moveRhumb(distance: 2).position.latLng,
+                          ],
+                        ),
+                      ),
                   ],
-                  CircleMarker(
-                    point: tracking.perpendicularIntersect(vehicle).latLng,
-                    radius: 5,
-                    color: Colors.red,
-                  ),
-                ],
-              ),
-              if (debug)
-                MarkerLayer(
-                  markers: tracking.path
-                      .mapIndexed(
-                        (index, e) => Marker(
-                          rotate: true,
-                          point: e.position.latLng,
-                          child: TextWithStroke(
-                            '$index',
-                            strokeWidth: 3,
-                            style: theme.menuButtonWithChildrenText
-                                ?.copyWith(color: Colors.white),
+                ),
+                CircleLayer(
+                  circles: [
+                    if (tracking.path.length >= 2) ...[
+                      CircleMarker(
+                        point: tracking.path.first.position.latLng,
+                        radius: 5,
+                      ),
+                      CircleMarker(
+                        point: tracking.path.last.position.latLng,
+                        radius: 5,
+                        color: Colors.red,
+                      ),
+                    ],
+                    if (tracking is PurePursuitPathTracking) ...[
+                      CircleMarker(
+                        point: vehicle.lookAheadStartPosition.latLng,
+                        radius: lookAheadDistance,
+                        useRadiusInMeter: true,
+                        color: Theme.of(
+                          context,
+                        ).primaryColor.withValues(alpha: 0.1),
+                      ),
+                      if (tracking.lookAheadVehicleToLineProjection(
+                            vehicle,
+                            lookAheadDistance,
+                          ) !=
+                          null)
+                        CircleMarker(
+                          point:
+                              tracking
+                                  .findLookAheadCirclePoints(
+                                    vehicle,
+                                    lookAheadDistance,
+                                  )
+                                  .best
+                                  .position
+                                  .latLng,
+                          radius: 5,
+                          color: Colors.pink,
+                        ),
+                      if (debug) ...[
+                        ...tracking.path.map(
+                          (point) => CircleMarker(
+                            point: point.position.latLng,
+                            radius: 2,
                           ),
                         ),
-                      )
-                      .toList(),
+                        CircleMarker(
+                          point:
+                              tracking
+                                  .findLookAheadLinePoints(
+                                    vehicle,
+                                    lookAheadDistance,
+                                  )
+                                  .inside
+                                  .position
+                                  .latLng,
+                          radius: 3,
+                          color: Colors.white,
+                        ),
+                        if (tracking
+                                .findLookAheadLinePoints(
+                                  vehicle,
+                                  lookAheadDistance,
+                                )
+                                .outside !=
+                            null)
+                          CircleMarker(
+                            point:
+                                tracking
+                                    .findLookAheadLinePoints(
+                                      vehicle,
+                                      lookAheadDistance,
+                                    )
+                                    .outside!
+                                    .position
+                                    .latLng,
+                            radius: 3,
+                            color: Colors.white,
+                          ),
+                        if (tracking
+                                .findLookAheadCirclePoints(
+                                  vehicle,
+                                  lookAheadDistance,
+                                )
+                                .worst !=
+                            null)
+                          CircleMarker(
+                            point:
+                                tracking
+                                    .findLookAheadCirclePoints(
+                                      vehicle,
+                                      lookAheadDistance,
+                                    )
+                                    .worst!
+                                    .position
+                                    .latLng,
+                            radius: 5,
+                            color: Colors.blue,
+                          ),
+                      ],
+                    ],
+                    CircleMarker(
+                      point: tracking.perpendicularIntersect(vehicle).latLng,
+                      radius: 5,
+                      color: Colors.red,
+                    ),
+                  ],
                 ),
-            ]
-          : const [],
+                if (debug)
+                  MarkerLayer(
+                    markers:
+                        tracking.path
+                            .mapIndexed(
+                              (index, e) => Marker(
+                                rotate: true,
+                                point: e.position.latLng,
+                                child: TextWithStroke(
+                                  '$index',
+                                  strokeWidth: 3,
+                                  style: theme.menuButtonWithChildrenText
+                                      ?.copyWith(color: Colors.white),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                  ),
+              ]
+              : const [],
     );
   }
 }

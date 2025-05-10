@@ -32,13 +32,11 @@ class ThemeModeButton extends ConsumerWidget {
       padding: const EdgeInsets.all(8),
       tooltip: 'Cycle Light/System/Dark mode',
       onPressed: ref.read(activeThemeModeProvider.notifier).cycle,
-      icon: Icon(
-        switch (themeMode) {
-          ThemeMode.light => Icons.light_mode,
-          ThemeMode.system => Icons.settings_brightness,
-          ThemeMode.dark => Icons.dark_mode,
-        },
-      ),
+      icon: Icon(switch (themeMode) {
+        ThemeMode.light => Icons.light_mode,
+        ThemeMode.system => Icons.settings_brightness,
+        ThemeMode.dark => Icons.dark_mode,
+      }),
     );
   }
 }

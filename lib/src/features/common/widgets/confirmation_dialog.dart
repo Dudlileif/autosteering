@@ -34,38 +34,23 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
+    return AlertDialog(
       title: Text(title),
-      contentPadding: const EdgeInsets.only(
-        left: 24,
-        top: 12,
-        right: 24,
-        bottom: 16,
-      ),
-      children: [
-        Align(
-          alignment: Alignment.centerRight,
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () => Navigator.of(context).pop(false),
-                icon: const Icon(Icons.clear),
-                label: const Text('Cancel'),
-              ),
-              FilledButton.icon(
-                onPressed: () async {
-                  await onConfirmation();
-                  if (context.mounted) {
-                    Navigator.of(context).pop(true);
-                  }
-                },
-                icon: const Icon(Icons.check),
-                label: const Text('Confirm'),
-              ),
-            ],
-          ),
+      actions: [
+        ElevatedButton.icon(
+          onPressed: () => Navigator.of(context).pop(false),
+          icon: const Icon(Icons.clear),
+          label: const Text('Cancel'),
+        ),
+        FilledButton.icon(
+          onPressed: () async {
+            await onConfirmation();
+            if (context.mounted) {
+              Navigator.of(context).pop(true);
+            }
+          },
+          icon: const Icon(Icons.check),
+          label: const Text('Confirm'),
         ),
       ],
     );

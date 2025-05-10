@@ -76,12 +76,8 @@ class Settings extends _$Settings {
           ref
               .watch(settingsFileProvider)
               .requireValue
-              .writeAsString(
-                const JsonEncoder.withIndent('    ').convert(next),
-              )
-              .then(
-                (value) => Logger.instance.i('Saved settings to file.'),
-              );
+              .writeAsString(const JsonEncoder.withIndent('    ').convert(next))
+              .then((value) => Logger.instance.i('Saved settings to file.'));
         }
       }
       _saveToRemoveDeprecated = false;
@@ -120,30 +116,25 @@ class Settings extends _$Settings {
   }
 
   /// Update the setting [key] to [value].
-  void update(SettingsKey key, dynamic value, {bool force = false}) => Future(
-        () {
-          final oldValue = state[key.name];
-          // Skip if value is not new.
-          if (!force) {
-            if (oldValue is Iterable) {
-              if (const DeepCollectionEquality().equals(oldValue, value)) {
-                return;
-              }
-            } else if (oldValue == value) {
+  void update(SettingsKey key, dynamic value, {bool force = false}) =>
+      Future(() {
+        final oldValue = state[key.name];
+        // Skip if value is not new.
+        if (!force) {
+          if (oldValue is Iterable) {
+            if (const DeepCollectionEquality().equals(oldValue, value)) {
               return;
             }
+          } else if (oldValue == value) {
+            return;
           }
+        }
 
-          state = SplayTreeMap.from(state)
-            ..update(
-              key.name,
-              (oldValue) => value,
-              ifAbsent: () => value,
-            );
+        state = SplayTreeMap.from(state)
+          ..update(key.name, (oldValue) => value, ifAbsent: () => value);
 
-          Logger.instance.i('Updated setting ${key.name}: $oldValue => $value');
-        },
-      );
+        Logger.instance.i('Updated setting ${key.name}: $oldValue => $value');
+      });
 
   /// Sets [state] to [value].
   void set(SplayTreeMap<String, dynamic> value) => Future(() => state = value);
@@ -156,9 +147,10 @@ class Settings extends _$Settings {
       state.containsKey(key.name) ? state[key.name] as bool? : null;
 
   /// Get the value of type [double] for the setting [key], if it exists.
-  double? getDouble(SettingsKey key) => state.containsKey(key.name)
-      ? (state[key.name] as num?)?.toDouble()
-      : null;
+  double? getDouble(SettingsKey key) =>
+      state.containsKey(key.name)
+          ? (state[key.name] as num?)?.toDouble()
+          : null;
 
   /// Get the value of type [int] for the setting [key], if it exists.
   int? getInt(SettingsKey key) =>
@@ -229,10 +221,7 @@ FutureOr<void> exportSettings(
 @riverpod
 FutureOr<Map<String, dynamic>?> importSettings(Ref ref) async {
   ref.keepAlive();
-  Timer(
-    const Duration(seconds: 5),
-    ref.invalidateSelf,
-  );
+  Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.platform.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
@@ -254,9 +243,7 @@ FutureOr<Map<String, dynamic>?> importSettings(Ref ref) async {
         );
       }
     } else {
-      Logger.instance.w(
-        'Failed to import settings, data is null.',
-      );
+      Logger.instance.w('Failed to import settings, data is null.');
     }
   } else {
     final filePath = pickedFiles?.paths.first;

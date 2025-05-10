@@ -59,19 +59,18 @@ class CommonMessageHandler {
       _ref
           .read(steeringHardwareNetworkAliveProvider.notifier)
           .update(value: true);
-    } else if (message is ({
-      DateTime gnssUpdateTimeDevice,
-      DateTime? gnssUpdateTimeReceiver,
-      Duration? gnssUpdateDelay,
-    })) {
+    } else if (message
+        is ({
+          DateTime gnssUpdateTimeDevice,
+          DateTime? gnssUpdateTimeReceiver,
+          Duration? gnssUpdateDelay,
+        })) {
       if (_ref.exists(gnssLastUpdateTimeProvider)) {
-        _ref.read(gnssLastUpdateTimeProvider.notifier).update(
-          (
-            device: message.gnssUpdateTimeDevice,
-            receiver: message.gnssUpdateTimeReceiver,
-            delay: message.gnssUpdateDelay,
-          ),
-        );
+        _ref.read(gnssLastUpdateTimeProvider.notifier).update((
+          device: message.gnssUpdateTimeDevice,
+          receiver: message.gnssUpdateTimeReceiver,
+          delay: message.gnssUpdateDelay,
+        ));
       }
     } else if (message is ({double? gnssCurrentFrequency})) {
       if (_ref.exists(gnssCurrentFrequencyProvider)) {
@@ -79,11 +78,12 @@ class CommonMessageHandler {
             .read(gnssCurrentFrequencyProvider.notifier)
             .update(message.gnssCurrentFrequency);
       }
-    } else if (message is ({
-      double? latitudeError,
-      double? longitudeError,
-      double? altitudeError
-    })) {
+    } else if (message
+        is ({
+          double? latitudeError,
+          double? longitudeError,
+          double? altitudeError,
+        })) {
       if (_ref.exists(gnssPrecisionErrorProvider)) {
         _ref.read(gnssPrecisionErrorProvider.notifier).update(message);
       }
@@ -140,26 +140,27 @@ class CommonMessageHandler {
             .update(message.motorActualRPM);
       }
     } else if (message is ({bool motorEnabled})) {
-      _ref.read(steeringMotorStatusProvider.notifier).update(
-            switch (message.motorEnabled) {
-              true => MotorStatus.running,
-              false => MotorStatus.disabled,
-            },
-          );
+      _ref.read(steeringMotorStatusProvider.notifier).update(switch (message
+          .motorEnabled) {
+        true => MotorStatus.running,
+        false => MotorStatus.disabled,
+      });
     } else if (message is ({bool motorStalled})) {
       if (message.motorStalled) {
-        _ref
-            .read(simInputProvider.notifier)
-            .send((enableAutoSteer: false, stalled: true));
+        _ref.read(simInputProvider.notifier).send((
+          enableAutoSteer: false,
+          stalled: true,
+        ));
         _ref
             .read(steeringMotorStatusProvider.notifier)
             .update(MotorStatus.stalled);
       }
     } else if (message is ({bool motorNoCommand})) {
       if (message.motorNoCommand) {
-        _ref
-            .read(simInputProvider.notifier)
-            .send((enableAutoSteer: false, noCommand: true));
+        _ref.read(simInputProvider.notifier).send((
+          enableAutoSteer: false,
+          noCommand: true,
+        ));
         _ref
             .read(steeringMotorStatusProvider.notifier)
             .update(MotorStatus.noCommand);
@@ -191,17 +192,13 @@ class CommonMessageHandler {
     } else if (message is ({double? stepsPerWasIncrementMinToCenter})) {
       if (_ref.exists(steeringMotorStepsPerWasIncrementMinToCenterProvider)) {
         _ref
-            .read(
-              steeringMotorStepsPerWasIncrementMinToCenterProvider.notifier,
-            )
+            .read(steeringMotorStepsPerWasIncrementMinToCenterProvider.notifier)
             .update(message.stepsPerWasIncrementMinToCenter);
       }
     } else if (message is ({double? stepsPerWasIncrementCenterToMax})) {
       if (_ref.exists(steeringMotorStepsPerWasIncrementCenterToMaxProvider)) {
         _ref
-            .read(
-              steeringMotorStepsPerWasIncrementCenterToMaxProvider.notifier,
-            )
+            .read(steeringMotorStepsPerWasIncrementCenterToMaxProvider.notifier)
             .update(message.stepsPerWasIncrementCenterToMax);
       }
     } else if (message is LogEvent) {
@@ -236,8 +233,9 @@ class CommonMessageHandler {
             });
             _buttonHandler(i);
           } else {
-            Logger.instance
-                .i('Remote control button pressed too soon: ${i + 1}');
+            Logger.instance.i(
+              'Remote control button pressed too soon: ${i + 1}',
+            );
           }
         }
       }
@@ -261,18 +259,14 @@ class CommonMessageHandler {
           ),
         );
         for (final equipment in equipments) {
-          _ref.read(simInputProvider.notifier).send(
-            (
-              uuid: equipment.uuid,
-              activeSections: (equipment
-                    ..toggleAll(deactivateAllIfAnyActive: true))
-                  .sectionActivationStatus,
-            ),
-          );
+          _ref.read(simInputProvider.notifier).send((
+            uuid: equipment.uuid,
+            activeSections:
+                (equipment..toggleAll(deactivateAllIfAnyActive: true))
+                    .sectionActivationStatus,
+          ));
         }
-        Logger.instance.i(
-          '''Remote control active sections toggled.''',
-        );
+        Logger.instance.i('''Remote control active sections toggled.''');
 
       case RemoteControlButtonAction.toggleABSnap:
         _ref.read(aBSnapToClosestLineProvider.notifier).toggle();
@@ -282,12 +276,10 @@ class CommonMessageHandler {
 
       case RemoteControlButtonAction.toggleAutosteering:
         final state = _ref.read(activeAutosteeringStateProvider);
-        _ref
-            .read(simInputProvider.notifier)
-            .send((enableAutoSteer: state == AutosteeringState.disabled));
-        Logger.instance.i(
-          '''Remote control autosteering toggled.''',
-        );
+        _ref.read(simInputProvider.notifier).send((
+          enableAutoSteer: state == AutosteeringState.disabled,
+        ));
+        Logger.instance.i('''Remote control autosteering toggled.''');
 
       case null:
         Logger.instance.i(

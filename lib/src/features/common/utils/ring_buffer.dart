@@ -122,8 +122,9 @@ class RingBuffer {
       final joinPoints = <Geographic>{};
 
       if (joinType != BufferJoin.bevel) {
-        final circleSecantLength =
-            bufferCircleStart.rhumb.distanceTo(bufferCircleEnd);
+        final circleSecantLength = bufferCircleStart.rhumb.distanceTo(
+          bufferCircleEnd,
+        );
 
         final numSmoothingPoints =
             (smoothingFactor * circleSecantLength / distance.abs()).floor();
@@ -132,7 +133,8 @@ class RingBuffer {
           // Find and add points on the circle arc from start to end at
           // numSmoothingPoints equal intervals according.
           if (joinType == BufferJoin.round) {
-            final arcAngle = sign *
+            final arcAngle =
+                sign *
                 signedBearingDifference(
                   point.rhumb.initialBearingTo(bufferCircleStart),
                   point.rhumb.initialBearingTo(bufferCircleEnd),
@@ -144,7 +146,8 @@ class RingBuffer {
               joinPoints.add(
                 point.rhumb.destinationPoint(
                   distance: distance,
-                  bearing: point.rhumb.initialBearingTo(bufferCircleStart) +
+                  bearing:
+                      point.rhumb.initialBearingTo(bufferCircleStart) +
                       sign * i * angleSection +
                       switch (distance.isNegative) {
                         false => 0,
@@ -183,27 +186,25 @@ class RingBuffer {
         }
       }
 
-      resultRing.addAll(
-        [
-          prevBuffer,
-          bufferCircleStart,
-          ...joinPoints,
-          bufferCircleEnd,
-          nextBuffer,
-        ],
-      );
+      resultRing.addAll([
+        prevBuffer,
+        bufferCircleStart,
+        ...joinPoints,
+        bufferCircleEnd,
+        nextBuffer,
+      ]);
     }
     return getRawPoints
         ? resultRing
         : findAndInsertIntersections(
-            originalRing: ring,
-            bufferedRing: resultRing,
-            distance: distance,
-            joinType: joinType,
-            extendEnds: extendEnds,
-            filtered: filteredIntersections,
-            getIntersectionsOnly: getIntersectionsOnly,
-          );
+          originalRing: ring,
+          bufferedRing: resultRing,
+          distance: distance,
+          joinType: joinType,
+          extendEnds: extendEnds,
+          filtered: filteredIntersections,
+          getIntersectionsOnly: getIntersectionsOnly,
+        );
   }
 
   /// Finds all the intersections in [bufferedRing].
@@ -211,7 +212,7 @@ class RingBuffer {
   /// By using the [originalRing] and buffer [distance] we can skip
   /// intersections that are too close to the original ring.
   static List<({int begin, int end, Geographic intersection})>
-      findIntersections({
+  findIntersections({
     required Iterable<Geographic> originalRing,
     required List<Geographic> bufferedRing,
     required double distance,
@@ -273,20 +274,26 @@ class RingBuffer {
             }
           }
 
-          final along1 = intersection.spherical
-              .alongTrackDistanceTo(start: start1, end: end1);
+          final along1 = intersection.spherical.alongTrackDistanceTo(
+            start: start1,
+            end: end1,
+          );
 
-          final along2 = intersection.spherical
-              .alongTrackDistanceTo(start: start2, end: end2);
+          final along2 = intersection.spherical.alongTrackDistanceTo(
+            start: start2,
+            end: end2,
+          );
 
           // If the intersection is between the points for both
           // the lines, i.e. on the actual line segments, not past them in
           // either direction, we add it to the list.
           if (along1 < start1.rhumb.distanceTo(end1) &&
               along2 < start2.rhumb.distanceTo(end2)) {
-            intersectionList.add(
-              (begin: startIndex, end: endIndex, intersection: intersection),
-            );
+            intersectionList.add((
+              begin: startIndex,
+              end: endIndex,
+              intersection: intersection,
+            ));
           }
         }
       }
@@ -312,17 +319,15 @@ class RingBuffer {
     if (filteredIntersections.isNotEmpty) {
       // Sort by how many points the intersections will replace.
       // From few to many.
-      filteredIntersections.sortByCompare(
-        (element) {
-          final length = element.end - element.begin;
-          final lengthAroundStart = includeEnds
-              ? bufferedRing.length - element.end + element.begin
-              : double.maxFinite.floor();
-          final min = [length, lengthAroundStart].min;
-          return min;
-        },
-        (a, b) => a.compareTo(b),
-      );
+      filteredIntersections.sortByCompare((element) {
+        final length = element.end - element.begin;
+        final lengthAroundStart =
+            includeEnds
+                ? bufferedRing.length - element.end + element.begin
+                : double.maxFinite.floor();
+        final min = [length, lengthAroundStart].min;
+        return min;
+      }, (a, b) => a.compareTo(b));
     }
     return filteredIntersections;
   }
@@ -361,17 +366,18 @@ class RingBuffer {
     // number of indices from begin to end.
     for (final replacement in intersectionList) {
       final length = replacement.end - replacement.begin;
-      final lengthAroundStart = extendEnds
-          ? resultRing.length - replacement.end + replacement.begin
-          : double.maxFinite.floor();
+      final lengthAroundStart =
+          extendEnds
+              ? resultRing.length - replacement.end + replacement.begin
+              : double.maxFinite.floor();
 
       // Wraps around the end of the ring
       if (lengthAroundStart < length) {
         // From end to last index.
         final indices = List.generate(
-          lengthAroundStart - replacement.begin,
-          (index) => replacement.end + index,
-        )
+            lengthAroundStart - replacement.begin,
+            (index) => replacement.end + index,
+          )
           // From 0 to begin.
           ..addAll(List.generate(replacement.begin, (index) => index));
 

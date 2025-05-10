@@ -46,10 +46,10 @@ class ABConfig extends Equatable {
 
   @override
   List<Object?> get props => [
-        turningRadius,
-        turnOffsetMinSkips,
-        snapToClosestLine,
-        offsetOppositeTurn,
-        limitMode,
-      ];
+    turningRadius,
+    turnOffsetMinSkips,
+    snapToClosestLine,
+    offsetOppositeTurn,
+    limitMode,
+  ];
 }

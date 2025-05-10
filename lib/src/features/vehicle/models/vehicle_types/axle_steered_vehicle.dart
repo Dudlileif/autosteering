@@ -94,7 +94,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// The Ackermann max steering angle of a theoretical central wheel.
   @override
-  double get steeringAngleMax => WheelAngleToAckermann(
+  double get steeringAngleMax =>
+      WheelAngleToAckermann(
         wheelAngle: steeringAngleMaxRaw,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
@@ -158,29 +159,29 @@ sealed class AxleSteeredVehicle extends Vehicle {
   Geographic? get hitchFrontFixedPoint =>
       switch (solidAxleToFrontHitchDistance != null) {
         true => solidAxlePosition.rhumb.destinationPoint(
-            distance: solidAxleToFrontHitchDistance!,
-            bearing: bearing,
-          ),
+          distance: solidAxleToFrontHitchDistance!,
+          bearing: bearing,
+        ),
         false => null,
       };
 
   @override
-  Geographic? get hitchRearFixedPoint =>
-      switch (solidAxleToRearHitchDistance != null) {
-        true => solidAxlePosition.rhumb.destinationPoint(
-            distance: solidAxleToRearHitchDistance!,
-            bearing: bearing + 180,
-          ),
-        false => null,
-      };
+  Geographic? get hitchRearFixedPoint => switch (solidAxleToRearHitchDistance !=
+      null) {
+    true => solidAxlePosition.rhumb.destinationPoint(
+      distance: solidAxleToRearHitchDistance!,
+      bearing: bearing + 180,
+    ),
+    false => null,
+  };
 
   @override
   Geographic? get hitchRearTowbarPoint =>
       switch (solidAxleToRearTowbarDistance != null) {
         true => solidAxlePosition.rhumb.destinationPoint(
-            distance: solidAxleToRearTowbarDistance!,
-            bearing: bearing + 180,
-          ),
+          distance: solidAxleToRearTowbarDistance!,
+          bearing: bearing + 180,
+        ),
         false => null,
       };
 
@@ -196,48 +197,36 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// points.
   @override
   List<map.CircleMarker> get steeringDebugMarkers => [
-        map.CircleMarker(
-          point: position.latLng,
-          radius: 10,
-        ),
-        map.CircleMarker(
-          point: solidAxlePosition.latLng,
-          radius: 10,
-          color: Colors.red,
-        ),
-        map.CircleMarker(
-          point: steeringAxlePosition.latLng,
-          radius: 10,
-          color: Colors.blue,
-        ),
-      ];
+    map.CircleMarker(point: position.latLng, radius: 10),
+    map.CircleMarker(
+      point: solidAxlePosition.latLng,
+      radius: 10,
+      color: Colors.red,
+    ),
+    map.CircleMarker(
+      point: steeringAxlePosition.latLng,
+      radius: 10,
+      color: Colors.blue,
+    ),
+  ];
 
   /// Basic polylines for showing the vehicle's steering related
   /// points.
   @override
   List<map.Polyline> get steeringDebugLines => [
-        map.Polyline(
-          points: [
-            solidAxlePosition.latLng,
-            turningRadiusCenter!.latLng,
-          ],
-          color: Colors.red,
-        ),
-        map.Polyline(
-          points: [
-            steeringAxlePosition.latLng,
-            turningRadiusCenter!.latLng,
-          ],
-          color: Colors.blue,
-        ),
-        map.Polyline(
-          points: [
-            position.latLng,
-            turningRadiusCenter!.latLng,
-          ],
-          color: Colors.green,
-        ),
-      ];
+    map.Polyline(
+      points: [solidAxlePosition.latLng, turningRadiusCenter!.latLng],
+      color: Colors.red,
+    ),
+    map.Polyline(
+      points: [steeringAxlePosition.latLng, turningRadiusCenter!.latLng],
+      color: Colors.blue,
+    ),
+    map.Polyline(
+      points: [position.latLng, turningRadiusCenter!.latLng],
+      color: Colors.green,
+    ),
+  ];
 
   /// Sets the steeringInputAngle by using the [WheelAngleToAckermann] class
   /// for figuring out the Ackermann angle for the given wheel angle input.
@@ -248,34 +237,35 @@ sealed class AxleSteeredVehicle extends Vehicle {
   void setSteeringAngleByWasReading() {
     final innerWheelAngle = switch (wasReadingNormalizedInRange < 0) {
       true => clampDouble(
-          wasReadingNormalizedInRange * steeringAngleMaxRaw,
-          -steeringAngleMaxRaw,
-          0,
-        ),
+        wasReadingNormalizedInRange * steeringAngleMaxRaw,
+        -steeringAngleMaxRaw,
+        0,
+      ),
       false => clampDouble(
-          wasReadingNormalizedInRange * steeringAngleMaxRaw,
-          0,
-          steeringAngleMaxRaw,
-        )
+        wasReadingNormalizedInRange * steeringAngleMaxRaw,
+        0,
+        steeringAngleMaxRaw,
+      ),
     };
 
-    steeringAngleInput = WheelAngleToAckermann(
-      wheelAngle: innerWheelAngle,
-      wheelBase: wheelBase,
-      trackWidth: trackWidth,
-      steeringRatio: ackermannSteeringRatio,
-      ackermannPercentage: ackermannPercentage,
-    ).ackermannAngle.toDegrees();
+    steeringAngleInput =
+        WheelAngleToAckermann(
+          wheelAngle: innerWheelAngle,
+          wheelBase: wheelBase,
+          trackWidth: trackWidth,
+          steeringRatio: ackermannSteeringRatio,
+          ackermannPercentage: ackermannPercentage,
+        ).ackermannAngle.toDegrees();
   }
 
   /// The Ackermann steering geometry of the vehicle.
   AckermannSteering get ackermannSteering => AckermannSteering(
-        steeringAngle: steeringAngle,
-        wheelBase: wheelBase,
-        trackWidth: trackWidth,
-        steeringRatio: ackermannSteeringRatio,
-        ackermannPercentage: ackermannPercentage,
-      );
+    steeringAngle: steeringAngle,
+    wheelBase: wheelBase,
+    trackWidth: trackWidth,
+    steeringRatio: ackermannSteeringRatio,
+    ackermannPercentage: ackermannPercentage,
+  );
 
   /// The angle of the left steering wheel when using Ackermann steering.
   double get leftSteeringWheelAngle;
@@ -285,7 +275,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// The max opposite steering angle for the wheel the angle sensor is
   /// mounted to. I.e. the angle to the right for a front left steering wheel.
-  double get maxOppositeSteeringAngle => WheelAngleToAckermann(
+  double get maxOppositeSteeringAngle =>
+      WheelAngleToAckermann(
         wheelAngle: steeringAngleMaxRaw,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
@@ -302,7 +293,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// The minimum achieveable turning radius for the vehicle with
   /// [steeringAngleMaxRaw].
-  double get minTurningRadiusTheoretic => WheelAngleToAckermann(
+  double get minTurningRadiusTheoretic =>
+      WheelAngleToAckermann(
         wheelAngle: steeringAngleMaxRaw,
         wheelBase: wheelBase,
         trackWidth: trackWidth,
@@ -312,16 +304,17 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
-  Geographic? get turningRadiusCenter => currentTurningRadius != null
-      ? solidAxlePosition.rhumb.destinationPoint(
-          distance: currentTurningRadius!,
-          bearing: switch (isTurningLeft) {
-            true => bearing - 90,
-            false => bearing + 90
-          }
-              .wrap360(),
-        )
-      : null;
+  Geographic? get turningRadiusCenter =>
+      currentTurningRadius != null
+          ? solidAxlePosition.rhumb.destinationPoint(
+            distance: currentTurningRadius!,
+            bearing:
+                switch (isTurningLeft) {
+                  true => bearing - 90,
+                  false => bearing + 90,
+                }.wrap360(),
+          )
+          : null;
 
   @override
   ({Geographic position, double bearing}) updatedPositionAndBearingTurning(
@@ -353,11 +346,11 @@ sealed class AxleSteeredVehicle extends Vehicle {
     );
 
     // The bearing of the vehicle at the projected position.
-    final projectedBearing = switch (isTurningLeft) {
-      true => bearing - turningCircleAngle,
-      false => bearing + turningCircleAngle,
-    }
-        .wrap360();
+    final projectedBearing =
+        switch (isTurningLeft) {
+          true => bearing - turningCircleAngle,
+          false => bearing + turningCircleAngle,
+        }.wrap360();
 
     // The vehicle center position, which is offset from the solid
     // axle position.
@@ -377,21 +370,22 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double period,
     double steeringAngle,
   ) {
-    final currentTurningRadius = AckermannSteering(
-      steeringAngle: steeringAngle,
-      wheelBase: wheelBase,
-      trackWidth: trackWidth,
-      steeringRatio: ackermannSteeringRatio,
-    ).turningRadius;
+    final currentTurningRadius =
+        AckermannSteering(
+          steeringAngle: steeringAngle,
+          wheelBase: wheelBase,
+          trackWidth: trackWidth,
+          steeringRatio: ackermannSteeringRatio,
+        ).turningRadius;
 
     final turningRadiusCenter = this.solidAxlePosition.rhumb.destinationPoint(
-          distance: currentTurningRadius,
-          bearing: switch (isTurningLeft) {
+      distance: currentTurningRadius,
+      bearing:
+          switch (isTurningLeft) {
             true => bearing - 90,
-            false => bearing + 90
-          }
-              .wrap360(),
-        );
+            false => bearing + 90,
+          }.wrap360(),
+    );
 
     final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
 
@@ -417,11 +411,11 @@ sealed class AxleSteeredVehicle extends Vehicle {
     );
 
     // The bearing of the vehicle at the projected position.
-    final projectedBearing = switch (isTurningLeft) {
-      true => bearing - turningCircleAngle,
-      false => bearing + turningCircleAngle,
-    }
-        .wrap360();
+    final projectedBearing =
+        switch (isTurningLeft) {
+          true => bearing - turningCircleAngle,
+          false => bearing + turningCircleAngle,
+        }.wrap360();
 
     return (position: solidAxlePosition, bearing: projectedBearing);
   }
@@ -431,21 +425,22 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double period,
     double steeringAngle,
   ) {
-    final currentTurningRadius = AckermannSteering(
-      steeringAngle: steeringAngle,
-      wheelBase: wheelBase,
-      trackWidth: trackWidth,
-      steeringRatio: ackermannSteeringRatio,
-    ).turningRadius;
+    final currentTurningRadius =
+        AckermannSteering(
+          steeringAngle: steeringAngle,
+          wheelBase: wheelBase,
+          trackWidth: trackWidth,
+          steeringRatio: ackermannSteeringRatio,
+        ).turningRadius;
 
     final turningRadiusCenter = this.solidAxlePosition.rhumb.destinationPoint(
-          distance: currentTurningRadius,
-          bearing: switch (isTurningLeft) {
+      distance: currentTurningRadius,
+      bearing:
+          switch (isTurningLeft) {
             true => bearing - 90,
-            false => bearing + 90
-          }
-              .wrap360(),
-        );
+            false => bearing + 90,
+          }.wrap360(),
+    );
 
     final angularVelocity = (velocity / (2 * pi * currentTurningRadius)) * 360;
 
@@ -471,17 +466,17 @@ sealed class AxleSteeredVehicle extends Vehicle {
     );
 
     // The bearing of the vehicle at the projected position.
-    final projectedBearing = switch (isTurningLeft) {
-      true => bearing - turningCircleAngle,
-      false => bearing + turningCircleAngle,
-    }
-        .wrap360();
+    final projectedBearing =
+        switch (isTurningLeft) {
+          true => bearing - turningCircleAngle,
+          false => bearing + turningCircleAngle,
+        }.wrap360();
 
     final stanleyAxlePosition = solidAxlePosition.rhumb.destinationPoint(
       distance: wheelBase,
       bearing: switch (isReversing) {
         false => projectedBearing,
-        true => projectedBearing + 180
+        true => projectedBearing + 180,
       },
     );
 
@@ -507,11 +502,11 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
     final axleToCenterAngle = (bearing - (90 * sign)).wrap360();
 
-    final innerCenterToInnerRearAngle = switch (steering) {
-      true => axleToCenterAngle + steeringWheelAngle - 90 * sign,
-      false => axleToCenterAngle - 90 * sign,
-    }
-        .wrap360();
+    final innerCenterToInnerRearAngle =
+        switch (steering) {
+          true => axleToCenterAngle + steeringWheelAngle - 90 * sign,
+          false => axleToCenterAngle - 90 * sign,
+        }.wrap360();
 
     final innerRearToOuterRearAngle =
         (innerCenterToInnerRearAngle + (90 * sign)).wrap360();
@@ -525,12 +520,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
     final wheelInnerCenter = switch (steering) {
       true => steeringAxlePosition,
       false => solidAxlePosition,
-    }
-        .rhumb
-        .destinationPoint(
-          distance: trackWidth / 2 - wheelWidth / 2,
-          bearing: axleToCenterAngle,
-        );
+    }.rhumb.destinationPoint(
+      distance: trackWidth / 2 - wheelWidth / 2,
+      bearing: axleToCenterAngle,
+    );
 
     final wheelInnerRear = wheelInnerCenter.rhumb.destinationPoint(
       distance: wheelDiameter / 2,
@@ -549,48 +542,42 @@ sealed class AxleSteeredVehicle extends Vehicle {
       bearing: outerFrontToInnerFrontAngle,
     );
 
-    return [
-      wheelInnerRear,
-      wheelOuterRear,
-      wheelOuterFront,
-      wheelInnerFront,
-    ];
+    return [wheelInnerRear, wheelOuterRear, wheelOuterFront, wheelInnerFront];
   }
 
   /// The left steering wheel polygon.
   map.Polygon get leftSteeringWheelPolygon => map.Polygon(
-        points: wheelPoints().map((e) => e.latLng).toList(),
-        color: Colors.black,
-      );
+    points: wheelPoints().map((e) => e.latLng).toList(),
+    color: Colors.black,
+  );
 
   /// The right steering wheel polygon.
   map.Polygon get rightSteeringWheelPolygon => map.Polygon(
-        points: wheelPoints(left: false).map((e) => e.latLng).toList(),
-        color: Colors.black,
-      );
+    points: wheelPoints(left: false).map((e) => e.latLng).toList(),
+    color: Colors.black,
+  );
 
   /// The left solid axle wheel polygon.
   map.Polygon get leftSolidAxleWheelPolygon => map.Polygon(
-        points: wheelPoints(steering: false).map((e) => e.latLng).toList(),
-        color: Colors.black,
-      );
+    points: wheelPoints(steering: false).map((e) => e.latLng).toList(),
+    color: Colors.black,
+  );
 
   /// The right solid axle wheel polygon.
   map.Polygon get rightSolidAxleWheelPolygon => map.Polygon(
-        points: wheelPoints(left: false, steering: false)
-            .map((e) => e.latLng)
-            .toList(),
-        color: Colors.black,
-      );
+    points:
+        wheelPoints(left: false, steering: false).map((e) => e.latLng).toList(),
+    color: Colors.black,
+  );
 
   /// Polygons for drawing the wheels of the vehicle.
   @override
   List<map.Polygon> get wheelPolygons => [
-        leftSteeringWheelPolygon,
-        rightSteeringWheelPolygon,
-        leftSolidAxleWheelPolygon,
-        rightSolidAxleWheelPolygon,
-      ];
+    leftSteeringWheelPolygon,
+    rightSteeringWheelPolygon,
+    leftSolidAxleWheelPolygon,
+    rightSolidAxleWheelPolygon,
+  ];
 
   /// The projected trajectory for the moving vehicle.
   ///
@@ -617,18 +604,18 @@ sealed class AxleSteeredVehicle extends Vehicle {
           final angle = switch (isTurningLeft) {
             // Turning left
             true => switch (isReversing) {
-                // Reversing
-                true => bearing + 90 + i / numberOfPoints * arcDegrees,
-                // Forward
-                false => bearing + 90 - i / numberOfPoints * arcDegrees,
-              },
+              // Reversing
+              true => bearing + 90 + i / numberOfPoints * arcDegrees,
+              // Forward
+              false => bearing + 90 - i / numberOfPoints * arcDegrees,
+            },
             // Turning right
             false => switch (isReversing) {
-                // Reversing
-                true => bearing - 90 - i / numberOfPoints * arcDegrees,
-                // Forward
-                false => bearing - 90 + i / numberOfPoints * arcDegrees,
-              },
+              // Reversing
+              true => bearing - 90 - i / numberOfPoints * arcDegrees,
+              // Forward
+              false => bearing - 90 + i / numberOfPoints * arcDegrees,
+            },
           };
 
           points.add(
@@ -642,7 +629,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
     } else {
       var distance = time * velocity;
       if (minLength != null && distance.abs() < minLength) {
-        distance = minLength *
+        distance =
+            minLength *
             switch (velocity.isNegative) {
               true => -1,
               false => 1,
@@ -674,22 +662,17 @@ sealed class AxleSteeredVehicle extends Vehicle {
       bearing: bearing + 180,
     );
 
-    return [
-      topLeftPosition,
-      frontRight,
-      rearRight,
-      rearLeft,
-    ];
+    return [topLeftPosition, frontRight, rearRight, rearLeft];
   }
 
   /// Polygons for visualizing the extent of the vehicle.
   @override
   List<map.Polygon> get polygons => [
-        map.Polygon(
-          points: points.map((e) => e.latLng).toList(),
-          color: Colors.yellow.withValues(alpha: 0.5),
-        ),
-      ];
+    map.Polygon(
+      points: points.map((e) => e.latLng).toList(),
+      color: Colors.yellow.withValues(alpha: 0.5),
+    ),
+  ];
 
   /// Returns a new [AxleSteeredVehicle] based on this one, but with
   /// parameters/variables altered.
@@ -745,38 +728,36 @@ sealed class AxleSteeredVehicle extends Vehicle {
   Map<String, dynamic> toJson() {
     final map = super.toJson();
 
-    map['antenna'] = Map<String, dynamic>.from(map['antenna'] as Map)
-      ..update(
-        'solid_axle_distance',
-        (value) => antennaToSolidAxleDistance,
-        ifAbsent: () => antennaToSolidAxleDistance,
-      );
+    map['antenna'] = Map<String, dynamic>.from(map['antenna'] as Map)..update(
+      'solid_axle_distance',
+      (value) => antennaToSolidAxleDistance,
+      ifAbsent: () => antennaToSolidAxleDistance,
+    );
 
     map['dimensions'] = Map<String, dynamic>.from(map['dimensions'] as Map)
-      ..addAll(
-        {
-          'wheel_base': wheelBase,
-          'wheels': {
-            'steering_axle_wheel_diameter': steeringAxleWheelDiameter,
-            'solid_axle_wheel_diameter': solidAxleWheelDiameter,
-            'steering_axle_wheel_width': steeringAxleWheelWidth,
-            'solid_axle_wheel_width': solidAxleWheelWidth,
-            'num_wheels': numWheels,
-            'wheel_spacing': wheelSpacing,
-          },
-        },
-      );
-
-    map['steering'] = Map<String, dynamic>.from(map['steering'] as Map)
       ..addAll({
-        'ackermann_steering_ratio': ackermannSteeringRatio,
-        'ackermann_percentage': ackermannPercentage,
-      })
-      ..update(
-        'steering_angle_max',
-        (value) => steeringAngleMaxRaw,
-        ifAbsent: () => steeringAngleMaxRaw,
-      );
+        'wheel_base': wheelBase,
+        'wheels': {
+          'steering_axle_wheel_diameter': steeringAxleWheelDiameter,
+          'solid_axle_wheel_diameter': solidAxleWheelDiameter,
+          'steering_axle_wheel_width': steeringAxleWheelWidth,
+          'solid_axle_wheel_width': solidAxleWheelWidth,
+          'num_wheels': numWheels,
+          'wheel_spacing': wheelSpacing,
+        },
+      });
+
+    map['steering'] =
+        Map<String, dynamic>.from(map['steering'] as Map)
+          ..addAll({
+            'ackermann_steering_ratio': ackermannSteeringRatio,
+            'ackermann_percentage': ackermannPercentage,
+          })
+          ..update(
+            'steering_angle_max',
+            (value) => steeringAngleMaxRaw,
+            ifAbsent: () => steeringAngleMaxRaw,
+          );
 
     map['hitches'] = {
       'solid_axle_to_front_hitch_distance': solidAxleToFrontHitchDistance,

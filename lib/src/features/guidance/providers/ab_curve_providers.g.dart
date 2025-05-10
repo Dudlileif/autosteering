@@ -14,17 +14,18 @@ String _$aBCurvePointsHash() => r'7cbb02c6b77cd8ebc2801d8313be67efbf64bb60';
 @ProviderFor(ABCurvePoints)
 final aBCurvePointsProvider =
     NotifierProvider<ABCurvePoints, List<WayPoint>?>.internal(
-  ABCurvePoints.new,
-  name: r'aBCurvePointsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBCurvePointsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABCurvePoints.new,
+      name: r'aBCurvePointsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBCurvePointsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABCurvePoints = Notifier<List<WayPoint>?>;
-String _$aBCurveHash() => r'a1e7fac1b911dcf5861e7c7d23c2d508f81f608a';
+String _$aBCurveHash() => r'be12162470875036a0462ffe78234f34a90d8535';
 
 /// A provider for the AB-curve.
 ///
@@ -32,13 +33,13 @@ String _$aBCurveHash() => r'a1e7fac1b911dcf5861e7c7d23c2d508f81f608a';
 @ProviderFor(ABCurve)
 final aBCurveProvider =
     AsyncNotifierProvider<ABCurve, guidance.ABCurve?>.internal(
-  ABCurve.new,
-  name: r'aBCurveProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$aBCurveHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABCurve.new,
+      name: r'aBCurveProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product') ? null : _$aBCurveHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABCurve = AsyncNotifier<guidance.ABCurve?>;
 // ignore_for_file: type=lint

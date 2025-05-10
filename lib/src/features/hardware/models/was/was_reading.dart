@@ -23,7 +23,7 @@ part 'was_reading.g.dart';
 
 /// A class for storing WAS input values.
 @freezed
-class WasReading with _$WasReading {
+sealed class WasReading with _$WasReading {
   /// A class for storing WAS input values.
 
   const factory WasReading({

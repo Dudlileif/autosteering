@@ -33,42 +33,38 @@ class ManufacturerThemeSelector extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return PopupMenuButton<ManufacturerColors>(
-      onSelected: (ManufacturerColors scheme) =>
-          ref.read(manufacturerProvider.notifier).update(scheme),
+      onSelected:
+          (ManufacturerColors scheme) =>
+              ref.read(manufacturerProvider.notifier).update(scheme),
       initialValue: ref.read(manufacturerProvider),
-      itemBuilder: (BuildContext context) => ManufacturerColors.values
-          .map(
-            (scheme) => PopupMenuItem<ManufacturerColors>(
-              value: scheme,
-              child: ListTile(
-                leading: Icon(
-                  Icons.lens,
-                  color: ManufacturerSchemes.scheme(
-                    scheme,
-                    theme.brightness,
-                  ).primary,
-                  size: 35,
-                ),
-                title: Text(scheme.name),
-              ),
-            ),
-          )
-          .toList(),
+      itemBuilder:
+          (BuildContext context) =>
+              ManufacturerColors.values
+                  .map(
+                    (scheme) => PopupMenuItem<ManufacturerColors>(
+                      value: scheme,
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.lens,
+                          color:
+                              ManufacturerSchemes.scheme(
+                                scheme,
+                                theme.brightness,
+                              ).primary,
+                          size: 35,
+                        ),
+                        title: Text(scheme.name),
+                      ),
+                    ),
+                  )
+                  .toList(),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Icon(
-              Icons.lens,
-              color: theme.colorScheme.secondary,
-              size: 40,
-            ),
-            Icon(
-              Icons.color_lens,
-              color: theme.primaryColor,
-              size: 30,
-            ),
+            Icon(Icons.lens, color: theme.colorScheme.secondary, size: 40),
+            Icon(Icons.color_lens, color: theme.primaryColor, size: 30),
           ],
         ),
       ),

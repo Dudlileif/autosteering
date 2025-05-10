@@ -16,14 +16,15 @@ String _$abTrackingPerpendicularDistanceHash() =>
 @ProviderFor(abTrackingPerpendicularDistance)
 final abTrackingPerpendicularDistanceProvider =
     AutoDisposeProvider<double?>.internal(
-  abTrackingPerpendicularDistance,
-  name: r'abTrackingPerpendicularDistanceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$abTrackingPerpendicularDistanceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      abTrackingPerpendicularDistance,
+      name: r'abTrackingPerpendicularDistanceProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$abTrackingPerpendicularDistanceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -37,9 +38,10 @@ String _$activeABConfigHash() => r'a04ac3f20818e3dcb0c4797174bada5f38cfa463';
 final activeABConfigProvider = Provider<ABConfig>.internal(
   activeABConfig,
   name: r'activeABConfigProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeABConfigHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$activeABConfigHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -93,21 +95,15 @@ class LoadABTrackingFromFileFamily extends Family<AsyncValue<ABTracking?>> {
   /// valid.
   ///
   /// Copied from [loadABTrackingFromFile].
-  LoadABTrackingFromFileProvider call(
-    String path,
-  ) {
-    return LoadABTrackingFromFileProvider(
-      path,
-    );
+  LoadABTrackingFromFileProvider call(String path) {
+    return LoadABTrackingFromFileProvider(path);
   }
 
   @override
   LoadABTrackingFromFileProvider getProviderOverride(
     covariant LoadABTrackingFromFileProvider provider,
   ) {
-    return call(
-      provider.path,
-    );
+    return call(provider.path);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -135,24 +131,20 @@ class LoadABTrackingFromFileProvider
   /// valid.
   ///
   /// Copied from [loadABTrackingFromFile].
-  LoadABTrackingFromFileProvider(
-    String path,
-  ) : this._internal(
-          (ref) => loadABTrackingFromFile(
-            ref as LoadABTrackingFromFileRef,
-            path,
-          ),
-          from: loadABTrackingFromFileProvider,
-          name: r'loadABTrackingFromFileProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$loadABTrackingFromFileHash,
-          dependencies: LoadABTrackingFromFileFamily._dependencies,
-          allTransitiveDependencies:
-              LoadABTrackingFromFileFamily._allTransitiveDependencies,
-          path: path,
-        );
+  LoadABTrackingFromFileProvider(String path)
+    : this._internal(
+        (ref) => loadABTrackingFromFile(ref as LoadABTrackingFromFileRef, path),
+        from: loadABTrackingFromFileProvider,
+        name: r'loadABTrackingFromFileProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$loadABTrackingFromFileHash,
+        dependencies: LoadABTrackingFromFileFamily._dependencies,
+        allTransitiveDependencies:
+            LoadABTrackingFromFileFamily._allTransitiveDependencies,
+        path: path,
+      );
 
   LoadABTrackingFromFileProvider._internal(
     super._createNotifier, {
@@ -301,25 +293,25 @@ class SaveABTrackingProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => saveABTracking(
-            ref as SaveABTrackingRef,
-            tracking,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: saveABTrackingProvider,
-          name: r'saveABTrackingProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$saveABTrackingHash,
-          dependencies: SaveABTrackingFamily._dependencies,
-          allTransitiveDependencies:
-              SaveABTrackingFamily._allTransitiveDependencies,
-          tracking: tracking,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => saveABTracking(
+           ref as SaveABTrackingRef,
+           tracking,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: saveABTrackingProvider,
+         name: r'saveABTrackingProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$saveABTrackingHash,
+         dependencies: SaveABTrackingFamily._dependencies,
+         allTransitiveDependencies:
+             SaveABTrackingFamily._allTransitiveDependencies,
+         tracking: tracking,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   SaveABTrackingProvider._internal(
     super._createNotifier, {
@@ -395,7 +387,8 @@ mixin SaveABTrackingRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _SaveABTrackingProviderElement
-    extends AutoDisposeFutureProviderElement<void> with SaveABTrackingRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with SaveABTrackingRef {
   _SaveABTrackingProviderElement(super.provider);
 
   @override
@@ -488,25 +481,25 @@ class ExportABTrackingProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = true,
   }) : this._internal(
-          (ref) => exportABTracking(
-            ref as ExportABTrackingRef,
-            tracking,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: exportABTrackingProvider,
-          name: r'exportABTrackingProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportABTrackingHash,
-          dependencies: ExportABTrackingFamily._dependencies,
-          allTransitiveDependencies:
-              ExportABTrackingFamily._allTransitiveDependencies,
-          tracking: tracking,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => exportABTracking(
+           ref as ExportABTrackingRef,
+           tracking,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: exportABTrackingProvider,
+         name: r'exportABTrackingProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$exportABTrackingHash,
+         dependencies: ExportABTrackingFamily._dependencies,
+         allTransitiveDependencies:
+             ExportABTrackingFamily._allTransitiveDependencies,
+         tracking: tracking,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   ExportABTrackingProvider._internal(
     super._createNotifier, {
@@ -582,7 +575,8 @@ mixin ExportABTrackingRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportABTrackingProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportABTrackingRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportABTrackingRef {
   _ExportABTrackingProviderElement(super.provider);
 
   @override
@@ -603,9 +597,10 @@ String _$savedABTrackingsHash() => r'1e113dca6f21424d1e0c9c56621eb72de77c6121';
 final savedABTrackingsProvider = FutureProvider<List<ABTracking>>.internal(
   savedABTrackings,
   name: r'savedABTrackingsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$savedABTrackingsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$savedABTrackingsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -695,25 +690,25 @@ class DeleteABTrackingProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = true,
   }) : this._internal(
-          (ref) => deleteABTracking(
-            ref as DeleteABTrackingRef,
-            tracking,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: deleteABTrackingProvider,
-          name: r'deleteABTrackingProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$deleteABTrackingHash,
-          dependencies: DeleteABTrackingFamily._dependencies,
-          allTransitiveDependencies:
-              DeleteABTrackingFamily._allTransitiveDependencies,
-          tracking: tracking,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => deleteABTracking(
+           ref as DeleteABTrackingRef,
+           tracking,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: deleteABTrackingProvider,
+         name: r'deleteABTrackingProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$deleteABTrackingHash,
+         dependencies: DeleteABTrackingFamily._dependencies,
+         allTransitiveDependencies:
+             DeleteABTrackingFamily._allTransitiveDependencies,
+         tracking: tracking,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   DeleteABTrackingProvider._internal(
     super._createNotifier, {
@@ -789,7 +784,8 @@ mixin DeleteABTrackingRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _DeleteABTrackingProviderElement
-    extends AutoDisposeFutureProviderElement<void> with DeleteABTrackingRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with DeleteABTrackingRef {
   _DeleteABTrackingProviderElement(super.provider);
 
   @override
@@ -809,14 +805,15 @@ String _$importABTrackingHash() => r'e15ecf34fb74dd34dd59edd5229148703df47aff';
 @ProviderFor(importABTracking)
 final importABTrackingProvider =
     AutoDisposeFutureProvider<ABTracking?>.internal(
-  importABTracking,
-  name: r'importABTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$importABTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      importABTracking,
+      name: r'importABTrackingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$importABTrackingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -830,14 +827,15 @@ String _$currentABTrackingTypeHash() =>
 @ProviderFor(CurrentABTrackingType)
 final currentABTrackingTypeProvider =
     NotifierProvider<CurrentABTrackingType, ABTrackingType>.internal(
-  CurrentABTrackingType.new,
-  name: r'currentABTrackingTypeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentABTrackingTypeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      CurrentABTrackingType.new,
+      name: r'currentABTrackingTypeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$currentABTrackingTypeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$CurrentABTrackingType = Notifier<ABTrackingType>;
 String _$showABTrackingHash() => r'9025fd2e2aef2696692f439fd53d1b512ae84958';
@@ -849,9 +847,10 @@ String _$showABTrackingHash() => r'9025fd2e2aef2696692f439fd53d1b512ae84958';
 final showABTrackingProvider = NotifierProvider<ShowABTracking, bool>.internal(
   ShowABTracking.new,
   name: r'showABTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showABTrackingHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$showABTrackingHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -865,14 +864,15 @@ String _$debugABTrackingHash() => r'4b7ddb864844d94c5bc11ff2114f8cdb0bf3e484';
 @ProviderFor(DebugABTracking)
 final debugABTrackingProvider =
     NotifierProvider<DebugABTracking, bool>.internal(
-  DebugABTracking.new,
-  name: r'debugABTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugABTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DebugABTracking.new,
+      name: r'debugABTrackingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$debugABTrackingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DebugABTracking = Notifier<bool>;
 String _$aBDebugStepSizeHash() => r'9758a5466afb606e1e296ec4d9f2ee6b298d33fb';
@@ -883,14 +883,15 @@ String _$aBDebugStepSizeHash() => r'9758a5466afb606e1e296ec4d9f2ee6b298d33fb';
 @ProviderFor(ABDebugStepSize)
 final aBDebugStepSizeProvider =
     NotifierProvider<ABDebugStepSize, double>.internal(
-  ABDebugStepSize.new,
-  name: r'aBDebugStepSizeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBDebugStepSizeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABDebugStepSize.new,
+      name: r'aBDebugStepSizeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBDebugStepSizeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABDebugStepSize = Notifier<double>;
 String _$aBDebugNumPointsAheadHash() =>
@@ -903,14 +904,15 @@ String _$aBDebugNumPointsAheadHash() =>
 @ProviderFor(ABDebugNumPointsAhead)
 final aBDebugNumPointsAheadProvider =
     NotifierProvider<ABDebugNumPointsAhead, int>.internal(
-  ABDebugNumPointsAhead.new,
-  name: r'aBDebugNumPointsAheadProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBDebugNumPointsAheadHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABDebugNumPointsAhead.new,
+      name: r'aBDebugNumPointsAheadProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBDebugNumPointsAheadHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABDebugNumPointsAhead = Notifier<int>;
 String _$aBDebugNumPointsBehindHash() =>
@@ -923,14 +925,15 @@ String _$aBDebugNumPointsBehindHash() =>
 @ProviderFor(ABDebugNumPointsBehind)
 final aBDebugNumPointsBehindProvider =
     NotifierProvider<ABDebugNumPointsBehind, int>.internal(
-  ABDebugNumPointsBehind.new,
-  name: r'aBDebugNumPointsBehindProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBDebugNumPointsBehindHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABDebugNumPointsBehind.new,
+      name: r'aBDebugNumPointsBehindProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBDebugNumPointsBehindHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABDebugNumPointsBehind = Notifier<int>;
 String _$aBWidthHash() => r'fc2b4b68f975bbd6163b0f9bb1176a198d415f4e';
@@ -957,14 +960,15 @@ String _$aBSidewaysOffsetHash() => r'b1fd3bf03e7b556ba796993d2946c2dc7f1a9ffb';
 @ProviderFor(ABSidewaysOffset)
 final aBSidewaysOffsetProvider =
     NotifierProvider<ABSidewaysOffset, double>.internal(
-  ABSidewaysOffset.new,
-  name: r'aBSidewaysOffsetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBSidewaysOffsetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABSidewaysOffset.new,
+      name: r'aBSidewaysOffsetProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBSidewaysOffsetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABSidewaysOffset = Notifier<double>;
 String _$aBTurningRadiusHash() => r'615d6433b0ca314298f69339c19208d00ceb5df9';
@@ -975,14 +979,15 @@ String _$aBTurningRadiusHash() => r'615d6433b0ca314298f69339c19208d00ceb5df9';
 @ProviderFor(ABTurningRadius)
 final aBTurningRadiusProvider =
     NotifierProvider<ABTurningRadius, double>.internal(
-  ABTurningRadius.new,
-  name: r'aBTurningRadiusProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBTurningRadiusHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABTurningRadius.new,
+      name: r'aBTurningRadiusProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBTurningRadiusHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABTurningRadius = Notifier<double>;
 String _$aBTurnOffsetMinSkipsHash() =>
@@ -994,14 +999,15 @@ String _$aBTurnOffsetMinSkipsHash() =>
 @ProviderFor(ABTurnOffsetMinSkips)
 final aBTurnOffsetMinSkipsProvider =
     NotifierProvider<ABTurnOffsetMinSkips, int>.internal(
-  ABTurnOffsetMinSkips.new,
-  name: r'aBTurnOffsetMinSkipsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBTurnOffsetMinSkipsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABTurnOffsetMinSkips.new,
+      name: r'aBTurnOffsetMinSkipsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBTurnOffsetMinSkipsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABTurnOffsetMinSkips = Notifier<int>;
 String _$aBTrackingLimitModeHash() =>
@@ -1013,14 +1019,15 @@ String _$aBTrackingLimitModeHash() =>
 @ProviderFor(ABTrackingLimitMode)
 final aBTrackingLimitModeProvider =
     NotifierProvider<ABTrackingLimitMode, ABLimitMode>.internal(
-  ABTrackingLimitMode.new,
-  name: r'aBTrackingLimitModeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBTrackingLimitModeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABTrackingLimitMode.new,
+      name: r'aBTrackingLimitModeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBTrackingLimitModeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABTrackingLimitMode = Notifier<ABLimitMode>;
 String _$aBOffsetOppositeTurnHash() =>
@@ -1032,14 +1039,15 @@ String _$aBOffsetOppositeTurnHash() =>
 @ProviderFor(ABOffsetOppositeTurn)
 final aBOffsetOppositeTurnProvider =
     NotifierProvider<ABOffsetOppositeTurn, bool>.internal(
-  ABOffsetOppositeTurn.new,
-  name: r'aBOffsetOppositeTurnProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBOffsetOppositeTurnHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABOffsetOppositeTurn.new,
+      name: r'aBOffsetOppositeTurnProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBOffsetOppositeTurnHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABOffsetOppositeTurn = Notifier<bool>;
 String _$aBSnapToClosestLineHash() =>
@@ -1051,14 +1059,15 @@ String _$aBSnapToClosestLineHash() =>
 @ProviderFor(ABSnapToClosestLine)
 final aBSnapToClosestLineProvider =
     NotifierProvider<ABSnapToClosestLine, bool>.internal(
-  ABSnapToClosestLine.new,
-  name: r'aBSnapToClosestLineProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBSnapToClosestLineHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABSnapToClosestLine.new,
+      name: r'aBSnapToClosestLineProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBSnapToClosestLineHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABSnapToClosestLine = Notifier<bool>;
 String _$configuredABTrackingHash() =>
@@ -1070,14 +1079,15 @@ String _$configuredABTrackingHash() =>
 @ProviderFor(ConfiguredABTracking)
 final configuredABTrackingProvider =
     NotifierProvider<ConfiguredABTracking, ABTracking?>.internal(
-  ConfiguredABTracking.new,
-  name: r'configuredABTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$configuredABTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ConfiguredABTracking.new,
+      name: r'configuredABTrackingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$configuredABTrackingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ConfiguredABTracking = Notifier<ABTracking?>;
 String _$configuredMenuABTrackingHash() =>
@@ -1089,14 +1099,15 @@ String _$configuredMenuABTrackingHash() =>
 @ProviderFor(ConfiguredMenuABTracking)
 final configuredMenuABTrackingProvider =
     AsyncNotifierProvider<ConfiguredMenuABTracking, ABTracking?>.internal(
-  ConfiguredMenuABTracking.new,
-  name: r'configuredMenuABTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$configuredMenuABTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ConfiguredMenuABTracking.new,
+      name: r'configuredMenuABTrackingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$configuredMenuABTrackingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ConfiguredMenuABTracking = AsyncNotifier<ABTracking?>;
 String _$displayABTrackingHash() => r'32b5e8257bbed076839d7d1e065d14572b2d4b2f';
@@ -1107,14 +1118,15 @@ String _$displayABTrackingHash() => r'32b5e8257bbed076839d7d1e065d14572b2d4b2f';
 @ProviderFor(DisplayABTracking)
 final displayABTrackingProvider =
     NotifierProvider<DisplayABTracking, ABTracking?>.internal(
-  DisplayABTracking.new,
-  name: r'displayABTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$displayABTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DisplayABTracking.new,
+      name: r'displayABTrackingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$displayABTrackingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DisplayABTracking = Notifier<ABTracking?>;
 String _$aBPointAHash() => r'512153928742a2f485f7f112a57cb15f31979475';
@@ -1191,14 +1203,15 @@ String _$aBTrackingShowAllLinesHash() =>
 @ProviderFor(ABTrackingShowAllLines)
 final aBTrackingShowAllLinesProvider =
     NotifierProvider<ABTrackingShowAllLines, bool>.internal(
-  ABTrackingShowAllLines.new,
-  name: r'aBTrackingShowAllLinesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$aBTrackingShowAllLinesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ABTrackingShowAllLines.new,
+      name: r'aBTrackingShowAllLinesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$aBTrackingShowAllLinesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ABTrackingShowAllLines = Notifier<bool>;
 // ignore_for_file: type=lint

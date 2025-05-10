@@ -29,10 +29,7 @@ class EquipmentDecorationPage extends ConsumerWidget {
     final equipment = ref.watch(configuredEquipmentProvider);
 
     final children = [
-      Text(
-        'Decoration',
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
+      Text('Decoration', style: Theme.of(context).textTheme.titleLarge),
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),
@@ -48,14 +45,12 @@ class EquipmentDecorationPage extends ConsumerWidget {
         onFieldSubmitted: (value) {
           final length = double.tryParse(value.replaceAll(',', '.'));
 
-          ref.read(configuredEquipmentProvider.notifier).update(
-                equipment..hitchToDecorationStartLength = length,
-              );
+          ref
+              .read(configuredEquipmentProvider.notifier)
+              .update(equipment..hitchToDecorationStartLength = length);
         },
-          
-        
       ),
-    
+
       TextFormField(
         decoration: const InputDecoration(
           icon: Icon(Icons.expand),
@@ -64,8 +59,9 @@ class EquipmentDecorationPage extends ConsumerWidget {
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
-          configuredEquipmentProvider
-              .select((value) => value.decorationLength?.toString()),
+          configuredEquipmentProvider.select(
+            (value) => value.decorationLength?.toString(),
+          ),
         ),
         onFieldSubmitted: (value) {
           final length = double.tryParse(value.replaceAll(',', '.'));
@@ -83,8 +79,9 @@ class EquipmentDecorationPage extends ConsumerWidget {
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
-          configuredEquipmentProvider
-              .select((value) => value.decorationWidth?.toString()),
+          configuredEquipmentProvider.select(
+            (value) => value.decorationWidth?.toString(),
+          ),
         ),
         onFieldSubmitted: (value) {
           final length = double.tryParse(value.replaceAll(',', '.'));
@@ -100,11 +97,14 @@ class EquipmentDecorationPage extends ConsumerWidget {
           labelText: 'Decoration sideways offset (-left / +right)',
           suffixText: 'm',
         ),
-        keyboardType:
-            const TextInputType.numberWithOptions(decimal: true, signed: true),
+        keyboardType: const TextInputType.numberWithOptions(
+          decimal: true,
+          signed: true,
+        ),
         initialValue: ref.read(
-          configuredEquipmentProvider
-              .select((value) => value.decorationSidewaysOffset?.toString()),
+          configuredEquipmentProvider.select(
+            (value) => value.decorationSidewaysOffset?.toString(),
+          ),
         ),
         onFieldSubmitted: (value) {
           final offset = double.tryParse(value.replaceAll(',', '.'));
@@ -118,19 +118,18 @@ class EquipmentDecorationPage extends ConsumerWidget {
 
     return SingleChildScrollView(
       child: Column(
-        children: children
-            .map(
-              (widget) => ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: widget,
-                ),
-              ),
-            )
-            .toList(),
-          
-        
+        children:
+            children
+                .map(
+                  (widget) => ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: widget,
+                    ),
+                  ),
+                )
+                .toList(),
       ),
     );
   }

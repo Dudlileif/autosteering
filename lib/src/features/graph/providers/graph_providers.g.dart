@@ -16,9 +16,10 @@ String _$graphActiveDataHash() => r'71410bb4a1062a0af018495a5ee5978e4cd880f8';
 final graphActiveDataProvider = AutoDisposeProvider<Set<GraphData>>.internal(
   graphActiveData,
   name: r'graphActiveDataProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$graphActiveDataHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$graphActiveDataHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -35,14 +36,15 @@ String _$showDraggableGraphHash() =>
 @ProviderFor(ShowDraggableGraph)
 final showDraggableGraphProvider =
     AutoDisposeNotifierProvider<ShowDraggableGraph, bool>.internal(
-  ShowDraggableGraph.new,
-  name: r'showDraggableGraphProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showDraggableGraphHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowDraggableGraph.new,
+      name: r'showDraggableGraphProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showDraggableGraphHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowDraggableGraph = AutoDisposeNotifier<bool>;
 String _$graphRetainTimeSecondsHash() =>
@@ -54,14 +56,15 @@ String _$graphRetainTimeSecondsHash() =>
 @ProviderFor(GraphRetainTimeSeconds)
 final graphRetainTimeSecondsProvider =
     NotifierProvider<GraphRetainTimeSeconds, double>.internal(
-  GraphRetainTimeSeconds.new,
-  name: r'graphRetainTimeSecondsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$graphRetainTimeSecondsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      GraphRetainTimeSeconds.new,
+      name: r'graphRetainTimeSecondsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$graphRetainTimeSecondsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$GraphRetainTimeSeconds = Notifier<double>;
 String _$graphActiveParametersHash() =>
@@ -74,14 +77,15 @@ String _$graphActiveParametersHash() =>
 @ProviderFor(GraphActiveParameters)
 final graphActiveParametersProvider =
     NotifierProvider<GraphActiveParameters, Set<GraphParameter>>.internal(
-  GraphActiveParameters.new,
-  name: r'graphActiveParametersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$graphActiveParametersHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      GraphActiveParameters.new,
+      name: r'graphActiveParametersProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$graphActiveParametersHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$GraphActiveParameters = Notifier<Set<GraphParameter>>;
 String _$graphValuesHash() => r'51660a35a3c9353505c69c31949c6838554d42c2';
@@ -92,8 +96,10 @@ String _$graphValuesHash() => r'51660a35a3c9353505c69c31949c6838554d42c2';
 ///
 /// Copied from [GraphValues].
 @ProviderFor(GraphValues)
-final graphValuesProvider = AutoDisposeNotifierProvider<GraphValues,
-    Map<GraphData, List<({double normalized, num raw})?>>>.internal(
+final graphValuesProvider = AutoDisposeNotifierProvider<
+  GraphValues,
+  Map<GraphData, List<({double normalized, num raw})?>>
+>.internal(
   GraphValues.new,
   name: r'graphValuesProvider',
   debugGetCreateSourceHash:
@@ -102,8 +108,8 @@ final graphValuesProvider = AutoDisposeNotifierProvider<GraphValues,
   allTransitiveDependencies: null,
 );
 
-typedef _$GraphValues = AutoDisposeNotifier<
-    Map<GraphData, List<({double normalized, num raw})?>>>;
+typedef _$GraphValues =
+    AutoDisposeNotifier<Map<GraphData, List<({double normalized, num raw})?>>>;
 String _$draggableGraphUiOffsetHash() =>
     r'dac0b1b9a3737680f5bec07fb93e5e83238211a8';
 
@@ -113,14 +119,15 @@ String _$draggableGraphUiOffsetHash() =>
 @ProviderFor(DraggableGraphUiOffset)
 final draggableGraphUiOffsetProvider =
     AutoDisposeNotifierProvider<DraggableGraphUiOffset, Offset>.internal(
-  DraggableGraphUiOffset.new,
-  name: r'draggableGraphUiOffsetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$draggableGraphUiOffsetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DraggableGraphUiOffset.new,
+      name: r'draggableGraphUiOffsetProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$draggableGraphUiOffsetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DraggableGraphUiOffset = AutoDisposeNotifier<Offset>;
 // ignore_for_file: type=lint

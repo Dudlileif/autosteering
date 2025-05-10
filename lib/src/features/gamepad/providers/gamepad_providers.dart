@@ -33,43 +33,43 @@ part 'gamepad_providers.g.dart';
 class ActiveGamepadConfig extends _$ActiveGamepadConfig {
   @override
   GamepadConfig build() => GamepadConfig(
-        analogMaxValue: pow(2, 16).toInt() - 1,
-        analogDeadZoneMin: {
-          GamepadAnalogInput.leftStickX: 0.2,
-          GamepadAnalogInput.leftStickY: 0.2,
-          GamepadAnalogInput.rightStickX: 0.2,
-          GamepadAnalogInput.rightStickY: 0.2,
-          GamepadAnalogInput.leftTrigger: 0.1,
-          GamepadAnalogInput.rightTrigger: 0.1,
-        },
-        analogDeadZoneMax: {
-          GamepadAnalogInput.leftStickX: 0.8,
-          GamepadAnalogInput.leftTrigger: 0.9,
-          GamepadAnalogInput.rightTrigger: 0.9,
-        },
-      );
+    analogMaxValue: pow(2, 16).toInt() - 1,
+    analogDeadZoneMin: {
+      GamepadAnalogInput.leftStickX: 0.2,
+      GamepadAnalogInput.leftStickY: 0.2,
+      GamepadAnalogInput.rightStickX: 0.2,
+      GamepadAnalogInput.rightStickY: 0.2,
+      GamepadAnalogInput.leftTrigger: 0.1,
+      GamepadAnalogInput.rightTrigger: 0.1,
+    },
+    analogDeadZoneMax: {
+      GamepadAnalogInput.leftStickX: 0.8,
+      GamepadAnalogInput.leftTrigger: 0.9,
+      GamepadAnalogInput.rightTrigger: 0.9,
+    },
+  );
 }
 
 /// A stream of the input events from the gamepad mapped to a more friendly
 /// input interface.
 @Riverpod(keepAlive: true)
 Stream<GamepadInput> gamepadInputEvents(GamepadInputEventsRef ref) =>
-    Gamepads.events.map(
-      (event) {
-        dev.log(
-          'id: ${event.gamepadId}\tkey: ${event.key}\tvalue: ${event.value}',
-        );
-        return GamepadInput(
-          event: event,
-          config: ref.watch(activeGamepadConfigProvider),
-        );
-      },
-    );
+    Gamepads.events.map((event) {
+      dev.log(
+        'id: ${event.gamepadId}\tkey: ${event.key}\tvalue: ${event.value}',
+      );
+      return GamepadInput(
+        event: event,
+        config: ref.watch(activeGamepadConfigProvider),
+      );
+    });
 
 /// A provider for handling the inputs from the gamepad.
 @Riverpod(keepAlive: true)
 void handleGamepadInput(HandleGamepadInputRef ref) {
-  ref.watch(gamepadInputEventsProvider).when(
+  ref
+      .watch(gamepadInputEventsProvider)
+      .maybeWhen(
         data: (event) {
           if (event.povInput != null) {
             handlePovInput(event, ref);
@@ -79,8 +79,7 @@ void handleGamepadInput(HandleGamepadInputRef ref) {
             handleButtonInput(event, ref);
           }
         },
-        error: (error, stackTrace) {},
-        loading: () {},
+        orElse: null,
       );
 }
 
@@ -99,46 +98,44 @@ void handlePovInput(GamepadInput event, ProviderRef<void> ref) {
 void handleAnalogInput(GamepadInput event, ProviderRef<void> ref) {
   // Forward/backward
   if (event.analogInput == GamepadAnalogInput.rightTrigger) {
-    final velocity = Tween<double>(begin: 0, end: 12)
-        .transform(event.triggerValueDeadZoneAdjusted);
+    final velocity = Tween<double>(
+      begin: 0,
+      end: 12,
+    ).transform(event.triggerValueDeadZoneAdjusted);
     ref.read(simInputProvider.notifier).send(VehicleInput(velocity: velocity));
   }
   if (event.analogInput == GamepadAnalogInput.leftTrigger) {
-    final velocity = Tween<double>(begin: 0, end: -12)
-        .transform(event.triggerValueDeadZoneAdjusted);
+    final velocity = Tween<double>(
+      begin: 0,
+      end: -12,
+    ).transform(event.triggerValueDeadZoneAdjusted);
     ref.read(simInputProvider.notifier).send(VehicleInput(velocity: velocity));
   }
   // Steering
   else if (event.analogInput == GamepadAnalogInput.leftStickX) {
     final maxAngle = ref.watch(
-        mainVehicleProvider.select((vehicle) => vehicle.steeringAngleMax));
+      mainVehicleProvider.select((vehicle) => vehicle.steeringAngleMax),
+    );
 
     final angle = Tween<double>(
       begin: -maxAngle,
       end: maxAngle,
-    ).transform(
-      event.joystickValueDeadZoneAdjusted,
-    );
-    ref.read(simInputProvider.notifier).send(
-          VehicleInput(steeringAngle: angle),
-        );
+    ).transform(event.joystickValueDeadZoneAdjusted);
+    ref
+        .read(simInputProvider.notifier)
+        .send(VehicleInput(steeringAngle: angle));
   }
 }
 
 /// How to handle button presses.
 void handleButtonInput(GamepadInput event, ProviderRef<void> ref) {
   if (event.buttonInput == GamepadButtonInput.home) {
-    ref.read(simInputProvider.notifier).send(
-          VehicleInput(
-            position: ref.watch(homePositionProvider),
-            velocity: 0,
-          ),
+    ref
+        .read(simInputProvider.notifier)
+        .send(
+          VehicleInput(position: ref.watch(homePositionProvider), velocity: 0),
         );
   } else if (event.buttonInput == GamepadButtonInput.start) {
-    ref.read(simInputProvider.notifier).send(
-          const VehicleInput(
-            velocity: 0,
-          ),
-        );
+    ref.read(simInputProvider.notifier).send(const VehicleInput(velocity: 0));
   }
 }

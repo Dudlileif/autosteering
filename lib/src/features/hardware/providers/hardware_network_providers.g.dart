@@ -17,30 +17,34 @@ String _$hardwareCommunicationConfigHash() =>
 /// Copied from [hardwareCommunicationConfig].
 @ProviderFor(hardwareCommunicationConfig)
 final hardwareCommunicationConfigProvider = Provider<
-    ({
-      String steeringHardwareAddress,
-      String remoteControlHardwareAddress,
-      int hardwareUDPReceivePort,
-      int hardwareUDPSendPort
-    })>.internal(
+  ({
+    String steeringHardwareAddress,
+    String remoteControlHardwareAddress,
+    int hardwareUDPReceivePort,
+    int hardwareUDPSendPort,
+  })
+>.internal(
   hardwareCommunicationConfig,
   name: r'hardwareCommunicationConfigProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareCommunicationConfigHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$hardwareCommunicationConfigHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef HardwareCommunicationConfigRef = ProviderRef<
-    ({
-      String steeringHardwareAddress,
-      String remoteControlHardwareAddress,
-      int hardwareUDPReceivePort,
-      int hardwareUDPSendPort
-    })>;
+typedef HardwareCommunicationConfigRef =
+    ProviderRef<
+      ({
+        String steeringHardwareAddress,
+        String remoteControlHardwareAddress,
+        int hardwareUDPReceivePort,
+        int hardwareUDPSendPort,
+      })
+    >;
 String _$steeringHardwareNetworkAliveHash() =>
     r'e68b0de191f2f1c5cfdd51810d8f36000619e83f';
 
@@ -50,14 +54,15 @@ String _$steeringHardwareNetworkAliveHash() =>
 @ProviderFor(SteeringHardwareNetworkAlive)
 final steeringHardwareNetworkAliveProvider =
     NotifierProvider<SteeringHardwareNetworkAlive, bool>.internal(
-  SteeringHardwareNetworkAlive.new,
-  name: r'steeringHardwareNetworkAliveProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringHardwareNetworkAliveHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SteeringHardwareNetworkAlive.new,
+      name: r'steeringHardwareNetworkAliveProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringHardwareNetworkAliveHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringHardwareNetworkAlive = Notifier<bool>;
 String _$remoteControlHardwareNetworkAliveHash() =>
@@ -70,14 +75,15 @@ String _$remoteControlHardwareNetworkAliveHash() =>
 @ProviderFor(RemoteControlHardwareNetworkAlive)
 final remoteControlHardwareNetworkAliveProvider =
     NotifierProvider<RemoteControlHardwareNetworkAlive, bool>.internal(
-  RemoteControlHardwareNetworkAlive.new,
-  name: r'remoteControlHardwareNetworkAliveProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$remoteControlHardwareNetworkAliveHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      RemoteControlHardwareNetworkAlive.new,
+      name: r'remoteControlHardwareNetworkAliveProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$remoteControlHardwareNetworkAliveHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$RemoteControlHardwareNetworkAlive = Notifier<bool>;
 String _$networkInterfacesHash() => r'266036be313e3b83042620c5dde1da749893a17a';
@@ -88,14 +94,15 @@ String _$networkInterfacesHash() => r'266036be313e3b83042620c5dde1da749893a17a';
 @ProviderFor(NetworkInterfaces)
 final networkInterfacesProvider =
     NotifierProvider<NetworkInterfaces, List<NetworkInterface>>.internal(
-  NetworkInterfaces.new,
-  name: r'networkInterfacesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$networkInterfacesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      NetworkInterfaces.new,
+      name: r'networkInterfacesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$networkInterfacesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$NetworkInterfaces = Notifier<List<NetworkInterface>>;
 String _$deviceIPAddressWlanHash() =>
@@ -107,14 +114,15 @@ String _$deviceIPAddressWlanHash() =>
 @ProviderFor(DeviceIPAddressWlan)
 final deviceIPAddressWlanProvider =
     NotifierProvider<DeviceIPAddressWlan, String?>.internal(
-  DeviceIPAddressWlan.new,
-  name: r'deviceIPAddressWlanProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$deviceIPAddressWlanHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DeviceIPAddressWlan.new,
+      name: r'deviceIPAddressWlanProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$deviceIPAddressWlanHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DeviceIPAddressWlan = Notifier<String?>;
 String _$deviceIPAddressAPHash() => r'ce7a951ff9cdaa646e1f210b77b3ac2eef853f2c';
@@ -125,14 +133,15 @@ String _$deviceIPAddressAPHash() => r'ce7a951ff9cdaa646e1f210b77b3ac2eef853f2c';
 @ProviderFor(DeviceIPAddressAP)
 final deviceIPAddressAPProvider =
     NotifierProvider<DeviceIPAddressAP, String?>.internal(
-  DeviceIPAddressAP.new,
-  name: r'deviceIPAddressAPProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$deviceIPAddressAPHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DeviceIPAddressAP.new,
+      name: r'deviceIPAddressAPProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$deviceIPAddressAPHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DeviceIPAddressAP = Notifier<String?>;
 String _$deviceIPAddressEthernetHash() =>
@@ -144,14 +153,15 @@ String _$deviceIPAddressEthernetHash() =>
 @ProviderFor(DeviceIPAddressEthernet)
 final deviceIPAddressEthernetProvider =
     NotifierProvider<DeviceIPAddressEthernet, String?>.internal(
-  DeviceIPAddressEthernet.new,
-  name: r'deviceIPAddressEthernetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$deviceIPAddressEthernetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DeviceIPAddressEthernet.new,
+      name: r'deviceIPAddressEthernetProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$deviceIPAddressEthernetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DeviceIPAddressEthernet = Notifier<String?>;
 String _$steeringHardwareAddressHash() =>
@@ -164,14 +174,15 @@ String _$steeringHardwareAddressHash() =>
 @ProviderFor(SteeringHardwareAddress)
 final steeringHardwareAddressProvider =
     NotifierProvider<SteeringHardwareAddress, String>.internal(
-  SteeringHardwareAddress.new,
-  name: r'steeringHardwareAddressProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$steeringHardwareAddressHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SteeringHardwareAddress.new,
+      name: r'steeringHardwareAddressProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$steeringHardwareAddressHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SteeringHardwareAddress = Notifier<String>;
 String _$remoteControlHardwareAddressHash() =>
@@ -184,14 +195,15 @@ String _$remoteControlHardwareAddressHash() =>
 @ProviderFor(RemoteControlHardwareAddress)
 final remoteControlHardwareAddressProvider =
     NotifierProvider<RemoteControlHardwareAddress, String>.internal(
-  RemoteControlHardwareAddress.new,
-  name: r'remoteControlHardwareAddressProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$remoteControlHardwareAddressHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      RemoteControlHardwareAddress.new,
+      name: r'remoteControlHardwareAddressProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$remoteControlHardwareAddressHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$RemoteControlHardwareAddress = Notifier<String>;
 String _$hardwareUDPReceivePortHash() =>
@@ -203,14 +215,15 @@ String _$hardwareUDPReceivePortHash() =>
 @ProviderFor(HardwareUDPReceivePort)
 final hardwareUDPReceivePortProvider =
     NotifierProvider<HardwareUDPReceivePort, int>.internal(
-  HardwareUDPReceivePort.new,
-  name: r'hardwareUDPReceivePortProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareUDPReceivePortHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      HardwareUDPReceivePort.new,
+      name: r'hardwareUDPReceivePortProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$hardwareUDPReceivePortHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$HardwareUDPReceivePort = Notifier<int>;
 String _$hardwareUDPSendPortHash() =>
@@ -223,14 +236,15 @@ String _$hardwareUDPSendPortHash() =>
 @ProviderFor(HardwareUDPSendPort)
 final hardwareUDPSendPortProvider =
     NotifierProvider<HardwareUDPSendPort, int>.internal(
-  HardwareUDPSendPort.new,
-  name: r'hardwareUDPSendPortProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareUDPSendPortHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      HardwareUDPSendPort.new,
+      name: r'hardwareUDPSendPortProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$hardwareUDPSendPortHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$HardwareUDPSendPort = Notifier<int>;
 String _$tcpServerHash() => r'c4c536ad4a258a302866626ed31dc30177a1eba9';
@@ -270,14 +284,15 @@ String _$networkAvailableHash() => r'aa1e0d7e2aa56f8e74688eec390cade50a4d8e85';
 @ProviderFor(NetworkAvailable)
 final networkAvailableProvider =
     NotifierProvider<NetworkAvailable, bool>.internal(
-  NetworkAvailable.new,
-  name: r'networkAvailableProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$networkAvailableHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      NetworkAvailable.new,
+      name: r'networkAvailableProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$networkAvailableHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$NetworkAvailable = Notifier<bool>;
 // ignore_for_file: type=lint

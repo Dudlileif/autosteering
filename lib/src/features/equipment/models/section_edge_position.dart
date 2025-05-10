@@ -32,12 +32,7 @@ class SectionEdgePositions {
   factory SectionEdgePositions.now({
     required Geographic left,
     required Geographic right,
-  }) =>
-      SectionEdgePositions(
-        left: left,
-        right: right,
-        time: DateTime.now(),
-      );
+  }) => SectionEdgePositions(left: left, right: right, time: DateTime.now());
 
   /// Creates a [SectionEdgePositions] object from the [json] object.
   factory SectionEdgePositions.fromJson(Map<String, dynamic> json) {

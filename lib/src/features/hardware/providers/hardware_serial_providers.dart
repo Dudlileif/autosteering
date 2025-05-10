@@ -31,21 +31,14 @@ part 'hardware_serial_providers.g.dart';
 
 /// A provider for the available serial ports.
 @riverpod
-List<SerialPort> availableSerialPorts(Ref ref) =>
-    SerialPort.availablePorts.map(SerialPort.new).toList();
+Future<List<SerialPort>> availableSerialPorts(Ref ref) async =>
+    (await SerialPort.availablePorts).map(SerialPort.new).toList();
 
 /// A provider for the baud rate for the [HardwareSerial] connection.
 @Riverpod(keepAlive: true)
 class HardwareSerialBaudRate extends _$HardwareSerialBaudRate {
   /// The available baud rates.
-  static const rates = [
-    38400,
-    57600,
-    115200,
-    230400,
-    460800,
-    921600,
-  ];
+  static const rates = [38400, 57600, 115200, 230400, 460800, 921600];
 
   @override
   int build() {
@@ -73,8 +66,9 @@ class HardwareSerialBaudRate extends _$HardwareSerialBaudRate {
 class HardwareSerial extends _$HardwareSerial {
   @override
   SerialPort? build() {
-    final config = SerialPortConfig()
-      ..baudRate = ref.watch(hardwareSerialBaudRateProvider);
+    final config =
+        SerialPortConfig()
+          ..baudRate = ref.watch(hardwareSerialBaudRateProvider);
 
     ref.onDispose(() async {
       ref.invalidate(hardwareSerialAliveProvider);
@@ -108,7 +102,7 @@ class HardwareSerial extends _$HardwareSerial {
   void update(SerialPort? value) => Future(() => state = value);
 
   /// Writes [bytes] to the [state] serial port.
-  int? write(Uint8List bytes) => state?.write(bytes);
+  Future<int?> write(Uint8List bytes) async => state?.write(bytes);
 }
 
 /// A stream of the incoming serial data from the connected hardware.
@@ -130,12 +124,12 @@ Stream<String?> hardwareSerialStream(Ref ref) {
   final decoder = MessageDecoder();
 
   if (serial != null) {
-    timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
       final bytesSize = serial.bytesAvailable;
       if (bytesSize > 0) {
         ref.read(hardwareSerialAliveProvider.notifier).update(value: true);
 
-        final bytes = serial.read(bytesSize);
+        final bytes = await serial.read(bytesSize);
         final messages = decoder.decode(bytes);
 
         for (final message in messages) {
@@ -170,10 +164,7 @@ class HardwareSerialAlive extends _$HardwareSerialAlive {
     listenSelf((previous, next) {
       if (next) {
         _resetTimer?.cancel();
-        _resetTimer = Timer(
-          const Duration(seconds: 1),
-          ref.invalidateSelf,
-        );
+        _resetTimer = Timer(const Duration(seconds: 1), ref.invalidateSelf);
       } else if (previous != null && previous != next) {
         Logger.instance.i('Hardware serial data not being received.');
       }

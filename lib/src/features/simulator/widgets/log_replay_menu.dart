@@ -48,82 +48,79 @@ class LogReplayMenu extends ConsumerWidget {
       text: 'Log replay',
       menuChildren: [
         Consumer(
-          child: Text(
-            'Choose log',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.folder_open),
-            title: child,
-            onTap: () => ref.read(importLogReplayProvider),
-          ),
-        ),
-        Consumer(
-          builder: (context, ref, child) => ConstrainedBox(
-            constraints: const BoxConstraints(minWidth: 175),
-            child: CheckboxListTile(
-              title: const Text(
-                'Loop',
-                maxLines: 1,
-                softWrap: false,
+          child: Text('Choose log', style: textStyle),
+          builder:
+              (context, ref, child) => ListTile(
+                leading: const Icon(Icons.folder_open),
+                title: child,
+                onTap: () => ref.read(importLogReplayProvider),
               ),
-              secondary: const Icon(Icons.loop),
-              value: ref.watch(loopLogReplayProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(loopLogReplayProvider.notifier)
-                      .update(value: value)
-                  : null,
-            ),
-          ),
         ),
         Consumer(
-          child: Text(
-            'Resume',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.play_arrow),
-            title: child,
-            onTap: () =>
-                ref.read(simInputProvider.notifier).send((replayResume: true)),
-          ),
+          builder:
+              (context, ref, child) => ConstrainedBox(
+                constraints: const BoxConstraints(minWidth: 175),
+                child: CheckboxListTile(
+                  title: const Text('Loop', maxLines: 1, softWrap: false),
+                  secondary: const Icon(Icons.loop),
+                  value: ref.watch(loopLogReplayProvider),
+                  onChanged:
+                      (value) =>
+                          value != null
+                              ? ref
+                                  .read(loopLogReplayProvider.notifier)
+                                  .update(value: value)
+                              : null,
+                ),
+              ),
         ),
         Consumer(
-          child: Text(
-            'Pause',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.pause),
-            title: child,
-            onTap: () =>
-                ref.read(simInputProvider.notifier).send((replayPause: true)),
-          ),
+          child: Text('Resume', style: textStyle),
+          builder:
+              (context, ref, child) => ListTile(
+                leading: const Icon(Icons.play_arrow),
+                title: child,
+                onTap:
+                    () => ref.read(simInputProvider.notifier).send((
+                      replayResume: true,
+                    )),
+              ),
         ),
         Consumer(
-          child: Text(
-            'Cancel',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.clear),
-            title: child,
-            onTap: () =>
-                ref.read(simInputProvider.notifier).send((replayCancel: true)),
-          ),
+          child: Text('Pause', style: textStyle),
+          builder:
+              (context, ref, child) => ListTile(
+                leading: const Icon(Icons.pause),
+                title: child,
+                onTap:
+                    () => ref.read(simInputProvider.notifier).send((
+                      replayPause: true,
+                    )),
+              ),
         ),
         Consumer(
-          child: Text(
-            'Restart',
-            style: textStyle,
-          ),
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(Icons.refresh),
-            title: child,
-            onTap: () =>
-                ref.read(simInputProvider.notifier).send((replayRestart: true)),
-          ),
+          child: Text('Cancel', style: textStyle),
+          builder:
+              (context, ref, child) => ListTile(
+                leading: const Icon(Icons.clear),
+                title: child,
+                onTap:
+                    () => ref.read(simInputProvider.notifier).send((
+                      replayCancel: true,
+                    )),
+              ),
+        ),
+        Consumer(
+          child: Text('Restart', style: textStyle),
+          builder:
+              (context, ref, child) => ListTile(
+                leading: const Icon(Icons.refresh),
+                title: child,
+                onTap:
+                    () => ref.read(simInputProvider.notifier).send((
+                      replayRestart: true,
+                    )),
+              ),
         ),
         if (ref.watch(activeLogReplayProvider.select((value) => value != null)))
           Builder(
@@ -131,73 +128,86 @@ class LogReplayMenu extends ConsumerWidget {
               var changing = false;
               var changingIndex = 0.0;
               return StatefulBuilder(
-                builder: (context, setState) => Consumer(
-                  builder: (context, ref, child) {
-                    final index = changing
-                        ? changingIndex
-                        : ref.watch(logReplayIndexProvider).toDouble();
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                _durationToHMS(
-                                  ref.watch(
-                                    activeLogReplayProvider.select(
-                                      (value) => value?.records
-                                          .elementAtOrNull(index.round())
-                                          ?.replayTime,
+                builder:
+                    (context, setState) => Consumer(
+                      builder: (context, ref, child) {
+                        final index =
+                            changing
+                                ? changingIndex
+                                : ref.watch(logReplayIndexProvider).toDouble();
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _durationToHMS(
+                                      ref.watch(
+                                        activeLogReplayProvider.select(
+                                          (value) =>
+                                              value?.records
+                                                  .elementAtOrNull(
+                                                    index.round(),
+                                                  )
+                                                  ?.replayTime,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              Text(
-                                _durationToHMS(
-                                  ref.watch(
-                                    activeLogReplayProvider.select(
-                                      (value) =>
-                                          value?.records.lastOrNull?.replayTime,
+                                  Text(
+                                    _durationToHMS(
+                                      ref.watch(
+                                        activeLogReplayProvider.select(
+                                          (value) =>
+                                              value
+                                                  ?.records
+                                                  .lastOrNull
+                                                  ?.replayTime,
+                                        ),
+                                      ),
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            Slider(
+                              value: index,
+                              max: clampDouble(
+                                ref.watch(
+                                  activeLogReplayProvider.select(
+                                    (value) =>
+                                        (value?.records.length ?? 0) - 1.0,
+                                  ),
+                                ),
+                                0,
+                                double.infinity,
+                              ),
+                              divisions: ref.watch(
+                                activeLogReplayProvider.select(
+                                  (value) => value?.records.length,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        Slider(
-                          value: index,
-                          max: clampDouble(
-                            ref.watch(
-                              activeLogReplayProvider.select(
-                                (value) => (value?.records.length ?? 0) - 1.0,
-                              ),
+                              onChangeStart:
+                                  (value) => setState(() => changing = true),
+                              onChanged:
+                                  (value) =>
+                                      setState(() => changingIndex = value),
+                              onChangeEnd: (value) {
+                                ref.read(simInputProvider.notifier).send((
+                                  replayScrubIndex: value.round(),
+                                ));
+                                setState(() => changing = false);
+                              },
                             ),
-                            0,
-                            double.infinity,
-                          ),
-                          divisions: ref.watch(
-                            activeLogReplayProvider.select(
-                              (value) => value?.records.length,
-                            ),
-                          ),
-                          onChangeStart: (value) =>
-                              setState(() => changing = true),
-                          onChanged: (value) =>
-                              setState(() => changingIndex = value),
-                          onChangeEnd: (value) {
-                            ref
-                                .read(simInputProvider.notifier)
-                                .send((replayScrubIndex: value.round()));
-                            setState(() => changing = false);
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                          ],
+                        );
+                      },
+                    ),
               );
             },
           ),

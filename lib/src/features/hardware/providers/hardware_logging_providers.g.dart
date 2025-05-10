@@ -16,9 +16,10 @@ String _$hardwareAnyLoggingEnabledHash() =>
 final hardwareAnyLoggingEnabledProvider = AutoDisposeProvider<bool>.internal(
   hardwareAnyLoggingEnabled,
   name: r'hardwareAnyLoggingEnabledProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareAnyLoggingEnabledHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$hardwareAnyLoggingEnabledHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -34,14 +35,15 @@ String _$hardwareLogGnssHash() => r'f20b996b10f18fa60de9ebb933c5b4b492283c25';
 @ProviderFor(HardwareLogGnss)
 final hardwareLogGnssProvider =
     NotifierProvider<HardwareLogGnss, bool>.internal(
-  HardwareLogGnss.new,
-  name: r'hardwareLogGnssProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareLogGnssHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      HardwareLogGnss.new,
+      name: r'hardwareLogGnssProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$hardwareLogGnssHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$HardwareLogGnss = Notifier<bool>;
 String _$hardwareLogImuHash() => r'411ca0416874c21c280b4773b7b4225c6033384e';
@@ -53,9 +55,10 @@ String _$hardwareLogImuHash() => r'411ca0416874c21c280b4773b7b4225c6033384e';
 final hardwareLogImuProvider = NotifierProvider<HardwareLogImu, bool>.internal(
   HardwareLogImu.new,
   name: r'hardwareLogImuProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareLogImuHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$hardwareLogImuHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -70,9 +73,10 @@ String _$hardwareLogWasHash() => r'8b2b48bf43260b23f720214db9c933a381db6d8a';
 final hardwareLogWasProvider = NotifierProvider<HardwareLogWas, bool>.internal(
   HardwareLogWas.new,
   name: r'hardwareLogWasProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareLogWasHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$hardwareLogWasHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -88,14 +92,15 @@ String _$hardwareLogCombinedHash() =>
 @ProviderFor(HardwareLogCombined)
 final hardwareLogCombinedProvider =
     NotifierProvider<HardwareLogCombined, bool>.internal(
-  HardwareLogCombined.new,
-  name: r'hardwareLogCombinedProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hardwareLogCombinedHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      HardwareLogCombined.new,
+      name: r'hardwareLogCombinedProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$hardwareLogCombinedHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$HardwareLogCombined = Notifier<bool>;
 // ignore_for_file: type=lint

@@ -39,19 +39,18 @@ class NudgingControls extends StatelessWidget {
           backgroundColor: theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
           primary: false,
           appBar: AppBar(
-            title: Text(
-              'Nudge controls',
-              style: theme.textTheme.titleLarge,
-            ),
+            title: Text('Nudge controls', style: theme.textTheme.titleLarge),
             scrolledUnderElevation: 0,
             primary: false,
             actions: [
               Consumer(
-                builder: (context, ref, child) => CloseButton(
-                  onPressed: () => ref
-                      .read(showNudgingControlsProvider.notifier)
-                      .update(value: false),
-                ),
+                builder:
+                    (context, ref, child) => CloseButton(
+                      onPressed:
+                          () => ref
+                              .read(showNudgingControlsProvider.notifier)
+                              .update(value: false),
+                    ),
               ),
             ],
           ),
@@ -67,8 +66,9 @@ class NudgingControls extends StatelessWidget {
                       Consumer(
                         builder: (context, ref, child) {
                           final distance = ref.watch(
-                            mainVehicleProvider
-                                .select((value) => value.nudgeDistance),
+                            mainVehicleProvider.select(
+                              (value) => value.nudgeDistance,
+                            ),
                           );
                           var text = 'Current: ';
                           if (distance.abs() > 1) {
@@ -88,19 +88,21 @@ class NudgingControls extends StatelessWidget {
                         },
                       ),
                       Consumer(
-                        builder: (context, ref, child) => FilledButton(
-                          onPressed: () => ref
-                              .read(simInputProvider.notifier)
-                              .send((nudgeDistance: 0)),
-                          child: TextWithStroke(
-                            'Reset',
-                            style: GoogleFonts.robotoMono(
-                              color: Colors.white,
-                              textStyle: theme.textTheme.titleMedium,
+                        builder:
+                            (context, ref, child) => FilledButton(
+                              onPressed:
+                                  () => ref
+                                      .read(simInputProvider.notifier)
+                                      .send((nudgeDistance: 0)),
+                              child: TextWithStroke(
+                                'Reset',
+                                style: GoogleFonts.robotoMono(
+                                  color: Colors.white,
+                                  textStyle: theme.textTheme.titleMedium,
+                                ),
+                                strokeWidth: 3.5,
+                              ),
                             ),
-                            strokeWidth: 3.5,
-                          ),
-                        ),
                       ),
                     ],
                   ),
@@ -119,50 +121,49 @@ class NudgingControls extends StatelessWidget {
                         strokeWidth: 3.5,
                       ),
                       Consumer(
-                        builder: (context, ref, child) =>
-                            SegmentedButton<double>(
-                          segments: [
-                            ButtonSegment(
-                              value: 0.01,
-                              label: TextWithStroke(
-                                '1'.padLeft(2),
-                                style: GoogleFonts.robotoMono(
-                                  color: Colors.white,
-                                  textStyle: theme.textTheme.titleMedium,
+                        builder:
+                            (context, ref, child) => SegmentedButton<double>(
+                              segments: [
+                                ButtonSegment(
+                                  value: 0.01,
+                                  label: TextWithStroke(
+                                    '1'.padLeft(2),
+                                    style: GoogleFonts.robotoMono(
+                                      color: Colors.white,
+                                      textStyle: theme.textTheme.titleMedium,
+                                    ),
+                                    strokeWidth: 3.5,
+                                  ),
                                 ),
-                                strokeWidth: 3.5,
-                              ),
-                            ),
-                            ButtonSegment(
-                              value: 0.05,
-                              label: TextWithStroke(
-                                '5'.padLeft(2),
-                                style: GoogleFonts.robotoMono(
-                                  color: Colors.white,
-                                  textStyle: theme.textTheme.titleMedium,
+                                ButtonSegment(
+                                  value: 0.05,
+                                  label: TextWithStroke(
+                                    '5'.padLeft(2),
+                                    style: GoogleFonts.robotoMono(
+                                      color: Colors.white,
+                                      textStyle: theme.textTheme.titleMedium,
+                                    ),
+                                    strokeWidth: 3.5,
+                                  ),
                                 ),
-                                strokeWidth: 3.5,
-                              ),
-                            ),
-                            ButtonSegment(
-                              value: 0.10,
-                              label: TextWithStroke(
-                                '10',
-                                style: GoogleFonts.robotoMono(
-                                  color: Colors.white,
-                                  textStyle: theme.textTheme.titleMedium,
+                                ButtonSegment(
+                                  value: 0.10,
+                                  label: TextWithStroke(
+                                    '10',
+                                    style: GoogleFonts.robotoMono(
+                                      color: Colors.white,
+                                      textStyle: theme.textTheme.titleMedium,
+                                    ),
+                                    strokeWidth: 3.5,
+                                  ),
                                 ),
-                                strokeWidth: 3.5,
-                              ),
+                              ],
+                              selected: {ref.watch(nudgeStepSizeProvider)},
+                              onSelectionChanged:
+                                  (values) => ref
+                                      .read(nudgeStepSizeProvider.notifier)
+                                      .update(values.first),
                             ),
-                          ],
-                          selected: {
-                            ref.watch(nudgeStepSizeProvider),
-                          },
-                          onSelectionChanged: (values) => ref
-                              .read(nudgeStepSizeProvider.notifier)
-                              .update(values.first),
-                        ),
                       ),
                     ],
                   ),
@@ -173,73 +174,89 @@ class NudgingControls extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Consumer(
-                        builder: (context, ref, child) => IconButton.filled(
-                          icon: const Icon(Icons.keyboard_double_arrow_left),
-                          onPressed: () =>
-                              ref.read(simInputProvider.notifier).send(
-                            (
-                              nudgeIncrement:
-                                  2 * -ref.watch(nudgeStepSizeProvider)
+                        builder:
+                            (context, ref, child) => IconButton.filled(
+                              icon: const Icon(
+                                Icons.keyboard_double_arrow_left,
+                              ),
+                              onPressed:
+                                  () =>
+                                      ref.read(simInputProvider.notifier).send((
+                                        nudgeIncrement:
+                                            2 *
+                                            -ref.watch(nudgeStepSizeProvider),
+                                      )),
                             ),
-                          ),
-                        ),
                       ),
                       Consumer(
-                        builder: (context, ref, child) => IconButton.filled(
-                          icon: const Icon(Icons.keyboard_arrow_left),
-                          onPressed: () =>
-                              ref.read(simInputProvider.notifier).send(
-                            (nudgeIncrement: -ref.watch(nudgeStepSizeProvider)),
-                          ),
-                        ),
-                      ),
-                      Consumer(
-                        builder: (context, ref, child) => IconButton.filled(
-                          icon: const Icon(Icons.keyboard_arrow_right),
-                          onPressed: () =>
-                              ref.read(simInputProvider.notifier).send(
-                            (nudgeIncrement: ref.watch(nudgeStepSizeProvider)),
-                          ),
-                        ),
-                      ),
-                      Consumer(
-                        builder: (context, ref, child) => IconButton.filled(
-                          icon: const Icon(Icons.keyboard_double_arrow_right),
-                          onPressed: () =>
-                              ref.read(simInputProvider.notifier).send(
-                            (
-                              nudgeIncrement:
-                                  2 * ref.watch(nudgeStepSizeProvider)
+                        builder:
+                            (context, ref, child) => IconButton.filled(
+                              icon: const Icon(Icons.keyboard_arrow_left),
+                              onPressed:
+                                  () =>
+                                      ref.read(simInputProvider.notifier).send((
+                                        nudgeIncrement:
+                                            -ref.watch(nudgeStepSizeProvider),
+                                      )),
                             ),
-                          ),
-                        ),
+                      ),
+                      Consumer(
+                        builder:
+                            (context, ref, child) => IconButton.filled(
+                              icon: const Icon(Icons.keyboard_arrow_right),
+                              onPressed:
+                                  () =>
+                                      ref.read(simInputProvider.notifier).send((
+                                        nudgeIncrement: ref.watch(
+                                          nudgeStepSizeProvider,
+                                        ),
+                                      )),
+                            ),
+                      ),
+                      Consumer(
+                        builder:
+                            (context, ref, child) => IconButton.filled(
+                              icon: const Icon(
+                                Icons.keyboard_double_arrow_right,
+                              ),
+                              onPressed:
+                                  () =>
+                                      ref.read(simInputProvider.notifier).send((
+                                        nudgeIncrement:
+                                            2 *
+                                            ref.watch(nudgeStepSizeProvider),
+                                      )),
+                            ),
                       ),
                     ],
                   ),
                 ),
                 Consumer(
                   builder: (context, ref, child) {
-                    var currentDistance = ref
-                            .watch(abTrackingPerpendicularDistanceProvider) ??
+                    var currentDistance =
+                        ref.watch(abTrackingPerpendicularDistanceProvider) ??
                         ref.watch(pathTrackingPerpendicularDistanceProvider);
                     if (currentDistance != null && currentDistance.isFinite) {
                       currentDistance += ref.watch(
-                        mainVehicleProvider
-                            .select((value) => value.nudgeDistance),
+                        mainVehicleProvider.select(
+                          (value) => value.nudgeDistance,
+                        ),
                       );
                       var text = 'To line: ';
                       if (currentDistance.abs() > 1) {
                         text += '${currentDistance.toStringAsPrecision(3)} m'
                             .padLeft(7);
                       } else {
-                        text +=
-                            '${(currentDistance * 100).round()} cm'.padLeft(7);
+                        text += '${(currentDistance * 100).round()} cm'.padLeft(
+                          7,
+                        );
                       }
 
                       return FilledButton(
-                        onPressed: () => ref
-                            .read(simInputProvider.notifier)
-                            .send((nudgeDistance: currentDistance!)),
+                        onPressed:
+                            () => ref.read(simInputProvider.notifier).send((
+                              nudgeDistance: currentDistance!,
+                            )),
                         child: TextWithStroke(
                           text,
                           style: GoogleFonts.robotoMono(
@@ -276,12 +293,12 @@ class DraggableNudgingControls extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => DynamicDraggableWidget(
-        offset: ref.watch(nudgingControlsUiOffsetProvider),
-        constraints: constraints,
-        maxWidth: 400,
-        maxHeight: 325,
-        maxWidthFraction: 1,
-        onDragEnd: ref.read(nudgingControlsUiOffsetProvider.notifier).update,
-        child: const NudgingControls(),
-      );
+    offset: ref.watch(nudgingControlsUiOffsetProvider),
+    constraints: constraints,
+    maxWidth: 400,
+    maxHeight: 325,
+    maxWidthFraction: 1,
+    onDragEnd: ref.read(nudgingControlsUiOffsetProvider.notifier).update,
+    child: const NudgingControls(),
+  );
 }

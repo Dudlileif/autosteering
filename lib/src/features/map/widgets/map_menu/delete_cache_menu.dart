@@ -44,24 +44,19 @@ class DeleteCacheMenu extends ConsumerWidget {
           child: Icon(Icons.delete),
         ),
         onPressed: FastCachedImageConfig.clearAllCachedImages,
-        child: Text(
-          'Delete cache',
-          style: textStyle,
-        ),
+        child: Text('Delete cache', style: textStyle),
       );
     }
-    final directories = ref.watch(mapCacheDirectoriesProvider).when(
-          data: (data) => data,
-          error: (error, stackTrace) => <String>[],
-          loading: () => <String>[],
-        );
+    final directories = ref
+        .watch(mapCacheDirectoriesProvider)
+        .maybeWhen(data: (data) => data, orElse: () => <String>[]);
 
     return directories.isNotEmpty
         ? MenuButtonWithChildren(
-            text: 'Delete cache',
-            icon: Icons.delete,
-            menuChildren: directories.map(_CacheDeleter.new).toList(),
-          )
+          text: 'Delete cache',
+          icon: Icons.delete,
+          menuChildren: directories.map(_CacheDeleter.new).toList(),
+        )
         : const SizedBox.shrink();
   }
 }
@@ -80,6 +75,18 @@ class _CacheDeleter extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pathSplit = path_handler.split(path).reversed;
+    final size = ref
+        .watch(directorySizeProvider(path))
+        .maybeWhen(
+          data: (data) => data != null ? fileEntitySize(data) : null,
+          orElse: () => '-',
+        );
+    final created = ref
+        .watch(mapCacheDateProvider(path))
+        .maybeWhen(
+          data: (data) => data?.toIso8601String().substring(0, 10),
+          orElse: () => '-',
+        );
 
     return MenuItemButton(
       closeOnActivate: false,
@@ -87,26 +94,16 @@ class _CacheDeleter extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Text(switch (pathSplit.first == 'OpenStreetMap') {
+            true => pathSplit.first,
+            false => '${pathSplit.elementAt(1)} - ${pathSplit.first}',
+          }),
           Text(
-            switch (pathSplit.first == 'OpenStreetMap') {
-              true => pathSplit.first,
-              false => '${pathSplit.elementAt(1)} - ${pathSplit.first}',
-            },
-          ),
-          Text(
-            'Size: ${ref.watch(directorySizeProvider(path)).when(
-                  data: (data) => data != null ? fileEntitySize(data) : null,
-                  error: (error, stackTrace) => '-',
-                  loading: () => '-',
-                )}',
+            'Size: $size',
             style: const TextStyle(fontWeight: FontWeight.w300),
           ),
           Text(
-            'Created: ${ref.watch(mapCacheDateProvider(path)).when(
-                  data: (data) => data?.toIso8601String().substring(0, 10),
-                  error: (error, stackTrace) => '-',
-                  loading: () => '-',
-                )}',
+            'Created: $created',
             style: const TextStyle(fontWeight: FontWeight.w300),
           ),
         ],

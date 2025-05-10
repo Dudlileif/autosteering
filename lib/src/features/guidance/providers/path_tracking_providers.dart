@@ -37,9 +37,9 @@ class PathInterpolationDistance extends _$PathInterpolationDistance {
   @override
   double build() {
     listenSelf((previous, next) {
-      ref
-          .read(simInputProvider.notifier)
-          .send((pathInterpolationDistance: state));
+      ref.read(simInputProvider.notifier).send((
+        pathInterpolationDistance: state,
+      ));
     });
     return 4;
   }
@@ -91,15 +91,15 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
         mainVehicleProvider.select((vehicle) => vehicle.pathTrackingMode),
       )) {
         PathTrackingMode.purePursuit => PurePursuitPathTracking(
-            wayPoints: wayPoints,
-            interpolationDistance: ref.read(pathInterpolationDistanceProvider),
-            loopMode: ref.read(pathTrackingLoopProvider),
-          ),
+          wayPoints: wayPoints,
+          interpolationDistance: ref.read(pathInterpolationDistanceProvider),
+          loopMode: ref.read(pathTrackingLoopProvider),
+        ),
         PathTrackingMode.stanley => StanleyPathTracking(
-            wayPoints: wayPoints,
-            interpolationDistance: ref.read(pathInterpolationDistanceProvider),
-            loopMode: ref.read(pathTrackingLoopProvider),
-          )
+          wayPoints: wayPoints,
+          interpolationDistance: ref.read(pathInterpolationDistanceProvider),
+          loopMode: ref.read(pathTrackingLoopProvider),
+        ),
       };
     }
     return null;
@@ -153,12 +153,9 @@ class DisplayPathTracking extends _$DisplayPathTracking {
 /// A provider for the perpendicular distance from the [DisplayPathTracking]
 /// line to the [MainVehicle].
 @riverpod
-double? pathTrackingPerpendicularDistance(
-  Ref ref,
-) =>
-    ref
-        .watch(displayPathTrackingProvider)
-        ?.perpendicularDistance(ref.watch(mainVehicleProvider));
+double? pathTrackingPerpendicularDistance(Ref ref) => ref
+    .watch(displayPathTrackingProvider)
+    ?.perpendicularDistance(ref.watch(mainVehicleProvider));
 
 /// A provider for whether or not the path tracking should be shown.
 @Riverpod(keepAlive: true)
@@ -189,10 +186,7 @@ class DebugPathTracking extends _$DebugPathTracking {
 /// A provider for loading an [PathTracking] from a file at [path], if it's
 /// valid.
 @riverpod
-FutureOr<PathTracking?> loadPathTrackingFromFile(
-  Ref ref,
-  String path,
-) async {
+FutureOr<PathTracking?> loadPathTrackingFromFile(Ref ref, String path) async {
   final file = File(path);
   if (file.existsSync()) {
     try {
@@ -218,18 +212,17 @@ FutureOr<void> savePathTracking(
   PathTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async =>
-    await ref.watch(
-      saveJsonToFileDirectoryProvider(
-        object: tracking,
-        fileName:
-            overrideName ??
-            tracking.name ??
-            DateTime.now().toIso8601StringFileName(),
-        folder: path.join('guidance', 'path_tracking'),
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => await ref.watch(
+  saveJsonToFileDirectoryProvider(
+    object: tracking,
+    fileName:
+        overrideName ??
+        tracking.name ??
+        DateTime.now().toIso8601StringFileName(),
+    folder: path.join('guidance', 'path_tracking'),
+    downloadIfWeb: downloadIfWeb,
+  ).future,
+);
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -240,33 +233,29 @@ FutureOr<void> exportPathTracking(
   PathTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async =>
-    await ref.watch(
-      exportJsonToFileDirectoryProvider(
-        object: tracking,
-        fileName:
-            overrideName ??
-            tracking.name ??
-            DateTime.now().toIso8601StringFileName(),
-        folder: path.join('guidance', 'path_tracking'),
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => await ref.watch(
+  exportJsonToFileDirectoryProvider(
+    object: tracking,
+    fileName:
+        overrideName ??
+        tracking.name ??
+        DateTime.now().toIso8601StringFileName(),
+    folder: path.join('guidance', 'path_tracking'),
+    downloadIfWeb: downloadIfWeb,
+  ).future,
+);
 
 /// A provider for reading and holding all the saved [PathTracking] in the
 /// user file directory.
 @Riverpod(keepAlive: true)
-FutureOr<List<PathTracking>> savedPathTrackings(
-  Ref ref,
-) async =>
-    await ref
-        .watch(
-          savedFilesProvider(
-            fromJson: PathTracking.fromJson,
-            folder: path.join('guidance', 'path_tracking'),
-          ).future,
-        )
-        .then((data) => data.cast());
+FutureOr<List<PathTracking>> savedPathTrackings(Ref ref) async => await ref
+    .watch(
+      savedFilesProvider(
+        fromJson: PathTracking.fromJson,
+        folder: path.join('guidance', 'path_tracking'),
+      ).future,
+    )
+    .then((data) => data.cast());
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///
@@ -277,22 +266,20 @@ FutureOr<void> deletePathTracking(
   PathTracking tracking, {
   String? overrideName,
   bool downloadIfWeb = true,
-}) async =>
-    await ref.watch(
-      deleteJsonFromFileDirectoryProvider(
-        fileName: overrideName ??
-            tracking.name ??
-            '''${tracking.runtimeType}-${DateTime.now().toIso8601StringFileName()}''',
-        folder: path.join('guidance', 'path_tracking'),
-      ).future,
-    );
+}) async => await ref.watch(
+  deleteJsonFromFileDirectoryProvider(
+    fileName:
+        overrideName ??
+        tracking.name ??
+        '''${tracking.runtimeType}-${DateTime.now().toIso8601StringFileName()}''',
+    folder: path.join('guidance', 'path_tracking'),
+  ).future,
+);
 
 /// A provider for importing a [PathTracking] from a file and applying it to
 /// the [ConfiguredPathTracking] provider.
 @riverpod
-FutureOr<PathTracking?> importPathTracking(
-  Ref ref,
-) async {
+FutureOr<PathTracking?> importPathTracking(Ref ref) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.platform.pickFiles(
@@ -308,8 +295,9 @@ FutureOr<PathTracking?> importPathTracking(
       try {
         final json = jsonDecode(String.fromCharCodes(data));
 
-        pathTracking =
-            PathTracking.fromJson(Map<String, dynamic>.from(json as Map));
+        pathTracking = PathTracking.fromJson(
+          Map<String, dynamic>.from(json as Map),
+        );
       } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import Path tracking.',
@@ -323,15 +311,17 @@ FutureOr<PathTracking?> importPathTracking(
   } else {
     final filePath = pickedFiles?.paths.first;
     if (filePath != null) {
-      pathTracking =
-          await ref.watch(loadPathTrackingFromFileProvider(filePath).future);
+      pathTracking = await ref.watch(
+        loadPathTrackingFromFileProvider(filePath).future,
+      );
     } else {
       Logger.instance.w('Failed to import Path tracking: $filePath');
     }
   }
   if (pathTracking != null) {
-    Logger.instance
-        .i('Imported Path tracking: ${pathTracking.name ?? pathTracking.uuid}');
+    Logger.instance.i(
+      'Imported Path tracking: ${pathTracking.name ?? pathTracking.uuid}',
+    );
     ref.read(configuredPathTrackingProvider.notifier).update(pathTracking);
     ref.read(showPathTrackingProvider.notifier).update(value: true);
   }
@@ -340,8 +330,5 @@ FutureOr<PathTracking?> importPathTracking(
 
 /// A provider for exporting all guidance files.
 @riverpod
-FutureOr<void> exportGuidances(
-  Ref ref, {
-  bool zip = true,
-}) async =>
+FutureOr<void> exportGuidances(Ref ref, {bool zip = true}) async =>
     await ref.watch(exportAllProvider(directory: 'guidance').future);

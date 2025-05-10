@@ -49,16 +49,16 @@ final class DubinsPathData {
     required this.middleLength,
     required this.endLength,
     this.middleCircleCenter,
-  })  : totalLength = startLength + middleLength + endLength,
-        assert(
-          DubinsPathType.withStraight.contains(pathType) ||
-              (DubinsPathType.onlyCircles.contains(pathType) &&
-                  middleCircleCenter != null),
-          '''
+  }) : totalLength = startLength + middleLength + endLength,
+       assert(
+         DubinsPathType.withStraight.contains(pathType) ||
+             (DubinsPathType.onlyCircles.contains(pathType) &&
+                 middleCircleCenter != null),
+         '''
 The Dubins path data must contain a middle circle center point if the path type
 is made of three circles (lrl or rlr). 
           ''',
-        );
+       );
 
   /// Which path type this is.
   final DubinsPathType pathType;
@@ -132,31 +132,28 @@ class DubinsPath {
     );
 
     // Set the data for all the path types.
-    _pathDataIterable = DubinsPathType.values.map(
-      pathData,
-    );
+    _pathDataIterable = DubinsPathType.values.map(pathData);
 
     // Find the best path
-    bestPathData = _pathDataIterable.reduce(
-      (value, element) {
-        if (!allowCrossingDirectLine) {
-          final isCrossing = element?.tangentStart
-                  .crossTrackDistanceToSpherical(start: start, end: end)
-                  .sign !=
-              element?.tangentEnd
-                  .crossTrackDistanceToSpherical(start: start, end: end)
-                  .sign;
-          if (isCrossing) {
-            return value;
-          }
+    bestPathData = _pathDataIterable.reduce((value, element) {
+      if (!allowCrossingDirectLine) {
+        final isCrossing =
+            element?.tangentStart
+                .crossTrackDistanceToSpherical(start: start, end: end)
+                .sign !=
+            element?.tangentEnd
+                .crossTrackDistanceToSpherical(start: start, end: end)
+                .sign;
+        if (isCrossing) {
+          return value;
         }
+      }
 
-        return (element?.totalLength ?? double.infinity) <
-                (value?.totalLength ?? double.infinity)
-            ? element
-            : value;
-      },
-    );
+      return (element?.totalLength ?? double.infinity) <
+              (value?.totalLength ?? double.infinity)
+          ? element
+          : value;
+    });
   }
 
   /// The starting point of the path.
@@ -200,9 +197,7 @@ class DubinsPath {
 
   /// The path data for the [pathType], can be null if the path is invalid or
   /// not possible.
-  DubinsPathData? pathData(
-    DubinsPathType? pathType,
-  ) {
+  DubinsPathData? pathData(DubinsPathType? pathType) {
     // Allow null pathType for easier testing with ui.
     if (pathType == null) {
       return null;
@@ -223,12 +218,14 @@ class DubinsPath {
     };
 
     // The bearing from the starting to the ending circle.
-    final startToEndCircleBearing =
-        startingCircle.rhumb.initialBearingTo(endingCircle);
+    final startToEndCircleBearing = startingCircle.rhumb.initialBearingTo(
+      endingCircle,
+    );
 
     // The distance from the starting to the ending circle.
-    final startToEndCircleDistance =
-        startingCircle.rhumb.distanceTo(endingCircle);
+    final startToEndCircleDistance = startingCircle.rhumb.distanceTo(
+      endingCircle,
+    );
 
     // Invalidate paths that can't physically exist.
     if (pathType == DubinsPathType.lsr || pathType == DubinsPathType.rsl) {
@@ -248,22 +245,18 @@ class DubinsPath {
     final theta = switch (pathType) {
       DubinsPathType.lsl => startToEndCircleBearing + 90,
       DubinsPathType.rsr => startToEndCircleBearing - 90,
-      DubinsPathType.lsr => radianToDeg(
-            acos(2 * turningRadius / startToEndCircleDistance),
-          ) +
-          startToEndCircleBearing,
-      DubinsPathType.rsl => radianToDeg(
-            -acos(2 * turningRadius / startToEndCircleDistance),
-          ) +
-          startToEndCircleBearing,
-      DubinsPathType.lrl => radianToDeg(
-            -acos(startToEndCircleDistance / (4 * turningRadius)),
-          ) +
-          startToEndCircleBearing,
-      DubinsPathType.rlr => radianToDeg(
-            acos(startToEndCircleDistance / (4 * turningRadius)),
-          ) +
-          startToEndCircleBearing,
+      DubinsPathType.lsr =>
+        radianToDeg(acos(2 * turningRadius / startToEndCircleDistance)) +
+            startToEndCircleBearing,
+      DubinsPathType.rsl =>
+        radianToDeg(-acos(2 * turningRadius / startToEndCircleDistance)) +
+            startToEndCircleBearing,
+      DubinsPathType.lrl =>
+        radianToDeg(-acos(startToEndCircleDistance / (4 * turningRadius))) +
+            startToEndCircleBearing,
+      DubinsPathType.rlr =>
+        radianToDeg(acos(startToEndCircleDistance / (4 * turningRadius))) +
+            startToEndCircleBearing,
     };
 
     // The starting point of the tangent.
@@ -300,8 +293,9 @@ class DubinsPath {
       );
 
       // The bearing from the end circle to the end tangent.
-      final endCircleToTangentEndBearing =
-          endingCircle.rhumb.initialBearingTo(tangentEndBearingPoint);
+      final endCircleToTangentEndBearing = endingCircle.rhumb.initialBearingTo(
+        tangentEndBearingPoint,
+      );
 
       // The end tangent point calculated from the end circle center.
       tangentEnd = endingCircle.rhumb.destinationPoint(
@@ -323,8 +317,9 @@ class DubinsPath {
       );
 
       // The bearing from the offset starting circle to the ending circle.
-      tangentStartBearing =
-          offsetStartingCircle.rhumb.initialBearingTo(endingCircle);
+      tangentStartBearing = offsetStartingCircle.rhumb.initialBearingTo(
+        endingCircle,
+      );
 
       // The bearing is the same since the tangent is straight.
       tangentEndBearing = tangentStartBearing;
@@ -342,8 +337,9 @@ class DubinsPath {
       );
 
       // The bearing from the end circle to the end tangent.
-      final endCircleToTangentEndBearing =
-          endingCircle.rhumb.initialBearingTo(tangentEndBearingPoint);
+      final endCircleToTangentEndBearing = endingCircle.rhumb.initialBearingTo(
+        tangentEndBearingPoint,
+      );
 
       // The end tangent point calculated from the end circle center.
       tangentEnd = endingCircle.rhumb.destinationPoint(
@@ -369,8 +365,9 @@ class DubinsPath {
       );
 
       // The angle/bearing from the middle circle to the ending circle.
-      final middleToEndBearing =
-          middleCircleCenter.rhumb.initialBearingTo(endingCircle);
+      final middleToEndBearing = middleCircleCenter.rhumb.initialBearingTo(
+        endingCircle,
+      );
 
       // Turn by 90 degrees since the vehicle drives orthogonal to the radius.
       tangentEndBearing = middleToEndBearing + middleTurnSign * 90;
@@ -384,12 +381,8 @@ class DubinsPath {
       final middleTurnAngle = mod2pi(
         middleTurnSign *
             degToRadian(
-              middleCircleCenter.rhumb.initialBearingTo(
-                    tangentEnd,
-                  ) -
-                  middleCircleCenter.rhumb.initialBearingTo(
-                    tangentStart,
-                  ),
+              middleCircleCenter.rhumb.initialBearingTo(tangentEnd) -
+                  middleCircleCenter.rhumb.initialBearingTo(tangentStart),
             ),
       );
 
@@ -405,9 +398,7 @@ class DubinsPath {
     final startTurnAngle = mod2pi(
       startTurnSign *
           degToRadian(
-            startingCircle.rhumb.initialBearingTo(
-                  tangentStart,
-                ) -
+            startingCircle.rhumb.initialBearingTo(tangentStart) -
                 startingCircle.rhumb.initialBearingTo(start.position),
           ),
     );
@@ -438,10 +429,7 @@ class DubinsPath {
         position: tangentStart,
         bearing: tangentStartBearing,
       ),
-      tangentEnd: WayPoint(
-        position: tangentEnd,
-        bearing: tangentEndBearing,
-      ),
+      tangentEnd: WayPoint(position: tangentEnd, bearing: tangentEndBearing),
       middleCircleCenter: middleCircleCenter,
       startLength: startLength,
       middleLength: middleLength,
@@ -527,11 +515,9 @@ class DubinsPath {
         bearing: origin.bearing,
       );
 
-      bearing = pathData(pathType)!
-          .tangentStart
-          .position
-          .rhumb
-          .finalBearingTo(nextPoint);
+      bearing = pathData(
+        pathType,
+      )!.tangentStart.position.rhumb.finalBearingTo(nextPoint);
     }
 
     return WayPoint(
@@ -586,13 +572,11 @@ class DubinsPath {
         currentLength += stepSize;
       }
       // Add the ending point of the correct section
-      wayPoints.add(
-        switch (index) {
-          0 => path.tangentStart.copyWith(velocity: wayPoints.last.velocity),
-          1 => path.tangentEnd.copyWith(velocity: wayPoints.last.velocity),
-          _ => end,
-        },
-      );
+      wayPoints.add(switch (index) {
+        0 => path.tangentStart.copyWith(velocity: wayPoints.last.velocity),
+        1 => path.tangentEnd.copyWith(velocity: wayPoints.last.velocity),
+        _ => end,
+      });
     });
 
     return wayPoints;
@@ -602,28 +586,22 @@ class DubinsPath {
   ///
   /// This will also return info about the length of the sections of the path
   /// as well as the total length.
-  ({
-    List<WayPoint>? wayPoints,
-    DubinsPathData pathData,
-  })? dubinsPathPlan(DubinsPathType pathType) {
+  ({List<WayPoint>? wayPoints, DubinsPathData pathData})? dubinsPathPlan(
+    DubinsPathType pathType,
+  ) {
     final data = pathData(pathType);
 
     if (data == null) {
       return null;
     }
 
-    return (
-      wayPoints: _generateLocalPath(pathType),
-      pathData: data,
-    );
+    return (wayPoints: _generateLocalPath(pathType), pathData: data);
   }
 
   /// The best Dubins path planned out.
   ///
   /// This will also return info about the length of the sections of the path
   /// as well as the total length.
-  ({
-    List<WayPoint>? wayPoints,
-    DubinsPathData pathData,
-  })? get bestDubinsPathPlan => dubinsPathPlan(bestPathData!.pathType);
+  ({List<WayPoint>? wayPoints, DubinsPathData pathData})?
+  get bestDubinsPathPlan => dubinsPathPlan(bestPathData!.pathType);
 }

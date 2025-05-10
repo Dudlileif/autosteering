@@ -17,9 +17,10 @@ String _$gamepadInputEventsHash() =>
 final gamepadInputEventsProvider = StreamProvider<GamepadInput>.internal(
   gamepadInputEvents,
   name: r'gamepadInputEventsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gamepadInputEventsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$gamepadInputEventsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -28,7 +29,7 @@ final gamepadInputEventsProvider = StreamProvider<GamepadInput>.internal(
 // ignore: unused_element
 typedef GamepadInputEventsRef = StreamProviderRef<GamepadInput>;
 String _$handleGamepadInputHash() =>
-    r'69b832ca8a051ec31d231c01d46bdbc36430a23d';
+    r'cf25de09f5847baac06904baf347acd9be578b60';
 
 /// A provider for handling the inputs from the gamepad.
 ///
@@ -37,9 +38,10 @@ String _$handleGamepadInputHash() =>
 final handleGamepadInputProvider = Provider<void>.internal(
   handleGamepadInput,
   name: r'handleGamepadInputProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$handleGamepadInputHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$handleGamepadInputHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -56,14 +58,15 @@ String _$activeGamepadConfigHash() =>
 @ProviderFor(ActiveGamepadConfig)
 final activeGamepadConfigProvider =
     NotifierProvider<ActiveGamepadConfig, GamepadConfig>.internal(
-  ActiveGamepadConfig.new,
-  name: r'activeGamepadConfigProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeGamepadConfigHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ActiveGamepadConfig.new,
+      name: r'activeGamepadConfigProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$activeGamepadConfigHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ActiveGamepadConfig = Notifier<GamepadConfig>;
 // ignore_for_file: type=lint

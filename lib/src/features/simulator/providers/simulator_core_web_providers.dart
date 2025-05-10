@@ -38,9 +38,8 @@ class SimInput extends _$SimInput {
   }
 
   /// Send some [input] to the simulator.
-  void send(dynamic input) => Future(
-        () => ref.read(_simCoreWebInputProvider).add(input),
-      );
+  void send(dynamic input) =>
+      Future(() => ref.read(_simCoreWebInputProvider).add(input));
 }
 
 /// A provider that creates a stream for sending vehicle inputs to the
@@ -64,23 +63,22 @@ class _SimCoreWebInput extends _$SimCoreWebInput {
 /// It will update the stream with vehicle updates from the simulator and also
 /// update the vehicle gauge providers.
 @riverpod
-Stream<Vehicle?> simCoreWebStream(
-  Ref ref,
-) {
+Stream<Vehicle?> simCoreWebStream(Ref ref) {
   ref.onDispose(() => Logger.instance.i('Simulator Core shut down.'));
   final commonMessageHandler = CommonMessageHandler(ref);
-  final updateMainStreamController = StreamController<dynamic>()
-    ..stream.listen((event) {
-      if (!commonMessageHandler.attemptToHandleMessage(event)) {
-        if (event is ({int logReplayIndex})) {
-          if (ref.exists(logReplayIndexProvider)) {
-            ref
-                .read(logReplayIndexProvider.notifier)
-                .update(event.logReplayIndex);
+  final updateMainStreamController =
+      StreamController<dynamic>()
+        ..stream.listen((event) {
+          if (!commonMessageHandler.attemptToHandleMessage(event)) {
+            if (event is ({int logReplayIndex})) {
+              if (ref.exists(logReplayIndexProvider)) {
+                ref
+                    .read(logReplayIndexProvider.notifier)
+                    .update(event.logReplayIndex);
+              }
+            }
           }
-        }
-      }
-    });
+        });
 
   final stream = SimulatorCore.webWorker(
     ref.watch(_simCoreWebInputProvider.notifier).stream(),
@@ -102,10 +100,11 @@ void simCoreVehicleDriving(Ref ref) {
       ref.watch(updatePositionFromDeviceProvider);
     }
 
-    final vehicle = ref.watch(simCoreWebStreamProvider).when(
+    final vehicle = ref
+        .watch(simCoreWebStreamProvider)
+        .maybeWhen(
           data: (data) => data,
-          error: (error, stackTrace) => ref.watch(mainVehicleProvider),
-          loading: () => ref.watch(mainVehicleProvider),
+          orElse: () => ref.watch(mainVehicleProvider),
         );
 
     if (vehicle == null) {

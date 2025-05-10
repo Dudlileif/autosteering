@@ -87,27 +87,29 @@ class _VehiclePainterState extends State<VehicleTopDownPainter> {
     rootBundle
         .loadString('assets/images/vehicle_types/top_view/tractor_top_view.svg')
         .then((value) async {
-      final svg = XmlDocument.parse(value);
+          final svg = XmlDocument.parse(value);
 
-      sourceWidth = double.tryParse(
-            svg.rootElement.getAttribute('width')?.split('mm').first ?? '',
-          ) ??
-          sourceWidth;
-      sourceHeight = double.tryParse(
-            svg.rootElement.getAttribute('height')?.split('mm').first ?? '',
-          ) ??
-          sourceHeight;
+          sourceWidth =
+              double.tryParse(
+                svg.rootElement.getAttribute('width')?.split('mm').first ?? '',
+              ) ??
+              sourceWidth;
+          sourceHeight =
+              double.tryParse(
+                svg.rootElement.getAttribute('height')?.split('mm').first ?? '',
+              ) ??
+              sourceHeight;
 
-      await vg
-          .loadPicture(
-            SvgAssetLoader(
-              'assets/images/vehicle_types/top_view/tractor_top_view.svg',
-              colorMapper: _VehicleTopColorMapper(widget.colors),
-            ),
-            context.mounted ? context : null,
-          )
-          .then((value) => svgPicture.value = value.picture);
-    });
+          await vg
+              .loadPicture(
+                SvgAssetLoader(
+                  'assets/images/vehicle_types/top_view/tractor_top_view.svg',
+                  colorMapper: _VehicleTopColorMapper(widget.colors),
+                ),
+                context.mounted ? context : null,
+              )
+              .then((value) => svgPicture.value = value.picture);
+        });
   }
 
   @override
@@ -129,24 +131,26 @@ class _VehiclePainterState extends State<VehicleTopDownPainter> {
 
     return ValueListenableBuilder(
       valueListenable: svgPicture,
-      builder: (context, value, child) => svgPicture.value != null
-          ? CustomPaint(
-              painter: switch (widget.type) {
-                'Tractor' => _TractorTopDownPainter(
-                    svgPicture: svgPicture.value!,
-                    sourceWidth: sourceWidth,
-                    sourceHeight: sourceHeight,
-                    colors: widget.colors,
-                    stretch: widget.stretch,
-                    steeringAxleOffset: widget.steeringAxleOffset,
-                    steeringAxleWidth: widget.steeringAxleWidth,
-                  ),
-                _ => null
-              },
-              size: widget.size,
-              child: widget.child,
-            )
-          : const SizedBox.shrink(),
+      builder:
+          (context, value, child) =>
+              svgPicture.value != null
+                  ? CustomPaint(
+                    painter: switch (widget.type) {
+                      'Tractor' => _TractorTopDownPainter(
+                        svgPicture: svgPicture.value!,
+                        sourceWidth: sourceWidth,
+                        sourceHeight: sourceHeight,
+                        colors: widget.colors,
+                        stretch: widget.stretch,
+                        steeringAxleOffset: widget.steeringAxleOffset,
+                        steeringAxleWidth: widget.steeringAxleWidth,
+                      ),
+                      _ => null,
+                    },
+                    size: widget.size,
+                    child: widget.child,
+                  )
+                  : const SizedBox.shrink(),
     );
   }
 }

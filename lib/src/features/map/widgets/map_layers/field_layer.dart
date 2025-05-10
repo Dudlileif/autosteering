@@ -36,11 +36,9 @@ class FieldLayer extends ConsumerWidget {
     if (field != null) {
       final enabled = ref.watch(showFieldLayerProvider);
       if (enabled) {
-        final bufferedField = ref.watch(bufferedFieldProvider).when(
-              data: (data) => data,
-              error: (error, stackTrace) => null,
-              loading: () => null,
-            );
+        final bufferedField = ref
+            .watch(bufferedFieldProvider)
+            .maybeWhen(data: (data) => data, orElse: () => null);
 
         final showField = ref.watch(showFieldProvider);
 
@@ -52,10 +50,10 @@ class FieldLayer extends ConsumerWidget {
 
         final showBufferedFieldBoundingBox =
             ref.watch(showBufferedFieldBoundingBoxProvider) &&
-                bufferedField != null;
+            bufferedField != null;
 
         final showBorderPoints = ref.watch(showFieldBorderPointsProvider);
-        
+
         return Stack(
           children: [
             PolygonLayer(
@@ -80,9 +78,10 @@ class FieldLayer extends ConsumerWidget {
                   ),
                 if (showBufferedFieldBoundingBox)
                   Polygon(
-                    points: bufferedField
-                        .mapBoundingBox((point) => point.latLng)
-                        .toList(),
+                    points:
+                        bufferedField
+                            .mapBoundingBox((point) => point.latLng)
+                            .toList(),
                     borderStrokeWidth: 1,
                     color: Colors.transparent,
                     borderColor: Colors.red,
@@ -97,10 +96,8 @@ class FieldLayer extends ConsumerWidget {
                       (point) => CircleMarker(point: point.latLng, radius: 2),
                     ),
                     ...[
-                      for (final ring in field
-                        .mapInteriorPoints(
-                          (point) =>
-                              CircleMarker(point: point.latLng, radius: 2),
+                      for (final ring in field.mapInteriorPoints(
+                        (point) => CircleMarker(point: point.latLng, radius: 2),
                       ))
                         ...ring,
                     ],
@@ -109,12 +106,12 @@ class FieldLayer extends ConsumerWidget {
                     ...bufferedField.mapExteriorPoints(
                       (point) => CircleMarker(point: point.latLng, radius: 2),
                     ),
-                    ...[for (final ring in bufferedField
-                        .mapInteriorPoints(
-                          (point) =>
-                              CircleMarker(point: point.latLng, radius: 2),
-                        ))
-                        ...ring,],
+                    ...[
+                      for (final ring in bufferedField.mapInteriorPoints(
+                        (point) => CircleMarker(point: point.latLng, radius: 2),
+                      ))
+                        ...ring,
+                    ],
                   ],
                 ],
               ),
@@ -126,8 +123,9 @@ class FieldLayer extends ConsumerWidget {
     final recordingInteriorRings = ref.watch(fieldInteriorRingsProvider);
     if (ref.watch(showPathRecordingMenuProvider) &&
         ref.watch(
-          activePathRecordingTargetProvider
-              .select((value) => value == PathRecordingTarget.field),
+          activePathRecordingTargetProvider.select(
+            (value) => value == PathRecordingTarget.field,
+          ),
         ) &&
         (recordingInteriorRings != null || recordingExteriorRing != null)) {
       return Stack(
@@ -136,9 +134,10 @@ class FieldLayer extends ConsumerWidget {
             polygons: [
               if (recordingExteriorRing != null)
                 Polygon(
-                  points: recordingExteriorRing
-                      .map((point) => point.latLng)
-                      .toList(),
+                  points:
+                      recordingExteriorRing
+                          .map((point) => point.latLng)
+                          .toList(),
                   borderStrokeWidth: 1,
                   borderColor: darkModeEnabled ? Colors.white : Colors.black,
                 ),

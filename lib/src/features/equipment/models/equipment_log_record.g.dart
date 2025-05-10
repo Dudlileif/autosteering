@@ -6,18 +6,17 @@ part of 'equipment_log_record.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EquipmentLogRecordImpl _$$EquipmentLogRecordImplFromJson(
-        Map<String, dynamic> json) =>
-    _$EquipmentLogRecordImpl(
+_EquipmentLogRecord _$EquipmentLogRecordFromJson(Map<String, dynamic> json) =>
+    _EquipmentLogRecord(
       time: const DateTimeSerializer().fromJson(json['time'] as String),
-      activeSections: (json['activeSections'] as List<dynamic>)
-          .map((e) => (e as num).toInt())
-          .toList(),
+      activeSections:
+          (json['activeSections'] as List<dynamic>)
+              .map((e) => (e as num).toInt())
+              .toList(),
       wayPoint: WayPoint.fromJson(json['wayPoint'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$EquipmentLogRecordImplToJson(
-        _$EquipmentLogRecordImpl instance) =>
+Map<String, dynamic> _$EquipmentLogRecordToJson(_EquipmentLogRecord instance) =>
     <String, dynamic>{
       'time': const DateTimeSerializer().toJson(instance.time),
       'activeSections': instance.activeSections,

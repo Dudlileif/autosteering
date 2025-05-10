@@ -33,8 +33,8 @@ class Field {
     required this.boundingBox,
     DateTime? lastUsed,
     String? uuid,
-  })  : lastUsed = lastUsed ?? DateTime.now(),
-        uuid = uuid ?? const Uuid().v4();
+  }) : lastUsed = lastUsed ?? DateTime.now(),
+       uuid = uuid ?? const Uuid().v4();
 
   /// Creates a [Field] from a json map object.
   ///
@@ -54,9 +54,10 @@ class Field {
     final uuid = json['uuid'] as String?;
     final lastUsed = DateTime.tryParse(json['last_used'] as String);
     final polygon = Polygon.parse(json['polygon'] as String);
-    final boundingBox = polygon.exterior != null
-        ? GeoBox.from(polygon.exterior!.toGeographicPositions)
-        : null;
+    final boundingBox =
+        polygon.exterior != null
+            ? GeoBox.from(polygon.exterior!.toGeographicPositions)
+            : null;
     return Field(
       name: name,
       uuid: uuid,
@@ -87,26 +88,27 @@ class Field {
 
   /// A map-ready polygon for the field
   map.Polygon get mapPolygon => map.Polygon(
-        points: polygon.exterior != null
+    points:
+        polygon.exterior != null
             ? polygon.exterior!.toGeographicPositions
                 .map((point) => point.latLng)
                 .toList()
             : [],
-        holePointsList: polygon.interior
+    holePointsList:
+        polygon.interior
             .map(
-              (hole) => hole.toGeographicPositions
-                  .map((point) => point.latLng)
-                  .toList(),
+              (hole) =>
+                  hole.toGeographicPositions
+                      .map((point) => point.latLng)
+                      .toList(),
             )
             .toList(),
-        borderStrokeWidth: 1,
-        color: Colors.transparent,
-      );
+    borderStrokeWidth: 1,
+    color: Colors.transparent,
+  );
 
   /// Map the [polygon]'s exterior ring points with [map].
-  Iterable<T> mapExteriorPoints<T>(
-    T Function(Geographic point) map,
-  ) =>
+  Iterable<T> mapExteriorPoints<T>(T Function(Geographic point) map) =>
       polygon.exterior != null
           ? polygon.exterior!.toGeographicPositions.map((point) => map(point))
           : [];
@@ -114,15 +116,12 @@ class Field {
   /// Map the [polygon]'s interior rings' points with [map].
   Iterable<Iterable<T>> mapInteriorPoints<T>(
     T Function(Geographic point) map,
-  ) =>
-      polygon.interior.map(
-        (interior) => interior.toGeographicPositions.map((point) => map(point)),
-      );
+  ) => polygon.interior.map(
+    (interior) => interior.toGeographicPositions.map((point) => map(point)),
+  );
 
   /// Map the [boundingBox] corner points with [map].
-  Iterable<T> mapBoundingBox<T>(
-    T Function(Geographic point) map,
-  ) =>
+  Iterable<T> mapBoundingBox<T>(T Function(Geographic point) map) =>
       boundingBox != null
           ? boundingBox!.corners2D.map((point) => map(point))
           : [];
@@ -132,26 +131,28 @@ class Field {
     T Function(int index, Geographic point) map,
   ) =>
       polygon.exterior != null
-          ? polygon.exterior!.toGeographicPositions
-              .mapIndexed((index, point) => map(index, point))
+          ? polygon.exterior!.toGeographicPositions.mapIndexed(
+            (index, point) => map(index, point),
+          )
           : [];
 
   /// Map the [polygon]'s interior rings' points and their index with [map].
   Iterable<Iterable<T>> mapIndexedInteriorPoints<T>(
     T Function(int index, Geographic point) map,
-  ) =>
-      polygon.interior.map(
-        (interior) => interior.toGeographicPositions
-            .mapIndexed((index, point) => map(index, point)),
-      );
+  ) => polygon.interior.map(
+    (interior) => interior.toGeographicPositions.mapIndexed(
+      (index, point) => map(index, point),
+    ),
+  );
 
   /// Map the [boundingBox] corner points and their index with [map].
   Iterable<T> mapIndexedBoundingBox<T>(
     T Function(int index, Geographic point) map,
   ) =>
       boundingBox != null
-          ? boundingBox!.corners2D
-              .mapIndexed((index, point) => map(index, point))
+          ? boundingBox!.corners2D.mapIndexed(
+            (index, point) => map(index, point),
+          )
           : [];
 
   /// The area of the whole field.
@@ -174,8 +175,10 @@ class Field {
   /// rotated without cutting off any parts of the field.
   GeoBox? get squaredByDiagonalBoundingBox {
     if (boundingBox != null) {
-      final center = boundingBox!.min.spherical
-          .intermediatePointTo(boundingBox!.max, fraction: 0.5);
+      final center = boundingBox!.min.spherical.intermediatePointTo(
+        boundingBox!.max,
+        fraction: 0.5,
+      );
 
       final diagonal = boundingBox!.min.rhumb.distanceTo(boundingBox!.max) / 2;
 
@@ -193,8 +196,10 @@ class Field {
   /// inside while rotating the field in place.
   GeoBox? get rotationCenteredSquaredByDiagonalBoundingBox {
     if (boundingBox != null) {
-      final center = boundingBox!.min.spherical
-          .intermediatePointTo(boundingBox!.max, fraction: 0.5);
+      final center = boundingBox!.min.spherical.intermediatePointTo(
+        boundingBox!.max,
+        fraction: 0.5,
+      );
 
       final diagonal = boundingBox!.min.rhumb.distanceTo(boundingBox!.max) / 2;
 
@@ -216,14 +221,13 @@ class Field {
     GeoBox? boundingBox,
     DateTime? lastUsed,
     String? uuid,
-  }) =>
-      Field(
-        name: name ?? this.name,
-        polygon: polygon ?? this.polygon,
-        boundingBox: boundingBox ?? this.boundingBox,
-        lastUsed: lastUsed ?? this.lastUsed,
-        uuid: uuid ?? this.uuid,
-      );
+  }) => Field(
+    name: name ?? this.name,
+    polygon: polygon ?? this.polygon,
+    boundingBox: boundingBox ?? this.boundingBox,
+    lastUsed: lastUsed ?? this.lastUsed,
+    uuid: uuid ?? this.uuid,
+  );
 
   /// Convert the model to a json compatible map.
   Map<String, dynamic> toJson() {

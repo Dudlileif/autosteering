@@ -82,18 +82,15 @@ class TileLayerData {
 
   /// A themed version of the map layer tiles, if defined. Typically used
   /// to get dark mode tiles for non-satellite maps.
-  final Widget Function(
-    BuildContext,
-    Widget,
-  )? themedTileLayerBuilder;
+  final Widget Function(BuildContext, Widget)? themedTileLayerBuilder;
 
   /// The folder which the cached image tiles of this layer is stored in.
   Directory cacheDirectory(String userFolder) => Directory(
-        path.joinAll([
-          userFolder,
-          'map_image_cache',
-          if (folderName != null) folderName!,
-          name,
-        ]),
-      );
+    path.joinAll([
+      userFolder,
+      'map_image_cache',
+      if (folderName != null) folderName!,
+      name,
+    ]),
+  );
 }

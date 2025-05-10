@@ -24,10 +24,7 @@ import 'package:universal_io/io.dart';
 /// A client for receiving NTRIP messages from an NTRIP caster.
 class NtripClient {
   /// A client for receiving NTRIP messages from an NTRIP caster.
-  const NtripClient._({
-    required this.profile,
-    required this.socket,
-  });
+  const NtripClient._({required this.profile, required this.socket});
 
   /// Attempts to create an [NtripClient], but will only succeed if
   /// [socket] is given or it manages to create and connect to one with the
@@ -36,8 +33,9 @@ class NtripClient {
     NtripProfile profile, {
     Socket? connectedSocket,
   }) async {
-    final auth = const Base64Encoder()
-        .convert('${profile.username}:${profile.password}'.codeUnits);
+    final auth = const Base64Encoder().convert(
+      '${profile.username}:${profile.password}'.codeUnits,
+    );
     final message = '''
 GET /${profile.mountPoint} HTTP/1.1\r
 User-Agent: NTRIP NTRIPClient/0.1\r
@@ -47,14 +45,12 @@ Connection: close\r
 \r
       ''';
     try {
-      final socket = (connectedSocket ??
-          await Socket.connect(profile.hostAddress, profile.port))
-        ..add(message.codeUnits);
+      final socket =
+          (connectedSocket ??
+                await Socket.connect(profile.hostAddress, profile.port))
+            ..add(message.codeUnits);
 
-      return NtripClient._(
-        profile: profile,
-        socket: socket,
-      );
+      return NtripClient._(profile: profile, socket: socket);
     } on Exception catch (error) {
       Logger.instance.e(
         '''Failed to connect to NTRIP server ${profile.hostAddress}:${profile.port} with message: $message''',

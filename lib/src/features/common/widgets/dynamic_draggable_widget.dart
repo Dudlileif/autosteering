@@ -72,9 +72,11 @@ class DynamicDraggableWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var spareWidth = constraints.maxWidth -
+    var spareWidth =
+        constraints.maxWidth -
         clampDouble(maxWidth, 0, constraints.maxWidth / 2);
-    var spareHeight = constraints.maxHeight -
+    var spareHeight =
+        constraints.maxHeight -
         clampDouble(maxHeight, 0, constraints.maxHeight / 2);
 
     if (spareWidth <= 0) {
@@ -85,16 +87,8 @@ class DynamicDraggableWidget extends ConsumerWidget {
     }
 
     return Positioned(
-      left: clampDouble(
-        offset.dx,
-        0,
-        spareWidth,
-      ),
-      top: clampDouble(
-        offset.dy,
-        0,
-        spareHeight,
-      ),
+      left: clampDouble(offset.dx, 0, spareWidth),
+      top: clampDouble(offset.dy, 0, spareHeight),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: SizedBox(

@@ -37,23 +37,26 @@ class EquipmentSetup {
     final name = json['name'] as String;
     final lastUsed = DateTime.tryParse(json['last_used'] as String);
 
-    final frontFixedChild = json['front_fixed_child'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(json['front_fixed_child'] as Map),
-          )
-        : null;
+    final frontFixedChild =
+        json['front_fixed_child'] != null
+            ? Equipment.fromJson(
+              Map<String, dynamic>.from(json['front_fixed_child'] as Map),
+            )
+            : null;
 
-    final rearFixedChild = json['rear_fixed_child'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(json['rear_fixed_child'] as Map),
-          )
-        : null;
+    final rearFixedChild =
+        json['rear_fixed_child'] != null
+            ? Equipment.fromJson(
+              Map<String, dynamic>.from(json['rear_fixed_child'] as Map),
+            )
+            : null;
 
-    final rearTowbarChild = json['rear_towbar_child'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(json['rear_towbar_child'] as Map),
-          )
-        : null;
+    final rearTowbarChild =
+        json['rear_towbar_child'] != null
+            ? Equipment.fromJson(
+              Map<String, dynamic>.from(json['rear_towbar_child'] as Map),
+            )
+            : null;
 
     return EquipmentSetup(
       name: name,
@@ -96,31 +99,32 @@ class EquipmentSetup {
   bool updateChild(Hitchable child) {
     var updated = false;
     if (frontFixedChild?.uuid == child.uuid) {
-      frontFixedChild = child
-        ..copyWith(
-          hitchFrontFixedChild: frontFixedChild!.hitchFrontFixedChild,
-          hitchRearFixedChild: frontFixedChild!.hitchRearFixedChild,
-          hitchRearTowbarChild: frontFixedChild!.hitchRearTowbarChild,
-        );
+      frontFixedChild =
+          child..copyWith(
+            hitchFrontFixedChild: frontFixedChild!.hitchFrontFixedChild,
+            hitchRearFixedChild: frontFixedChild!.hitchRearFixedChild,
+            hitchRearTowbarChild: frontFixedChild!.hitchRearTowbarChild,
+          );
       updated = true;
     } else if (rearFixedChild?.uuid == child.uuid) {
-      rearFixedChild = child
-        ..copyWith(
-          hitchFrontFixedChild: rearFixedChild!.hitchFrontFixedChild,
-          hitchRearFixedChild: rearFixedChild!.hitchRearFixedChild,
-          hitchRearTowbarChild: rearFixedChild!.hitchRearTowbarChild,
-        );
+      rearFixedChild =
+          child..copyWith(
+            hitchFrontFixedChild: rearFixedChild!.hitchFrontFixedChild,
+            hitchRearFixedChild: rearFixedChild!.hitchRearFixedChild,
+            hitchRearTowbarChild: rearFixedChild!.hitchRearTowbarChild,
+          );
       updated = true;
     } else if (rearTowbarChild?.uuid == child.uuid) {
-      rearTowbarChild = child
-        ..copyWith(
-          hitchFrontFixedChild: rearTowbarChild!.hitchFrontFixedChild,
-          hitchRearFixedChild: rearTowbarChild!.hitchRearFixedChild,
-          hitchRearTowbarChild: rearTowbarChild!.hitchRearTowbarChild,
-        );
+      rearTowbarChild =
+          child..copyWith(
+            hitchFrontFixedChild: rearTowbarChild!.hitchFrontFixedChild,
+            hitchRearFixedChild: rearTowbarChild!.hitchRearFixedChild,
+            hitchRearTowbarChild: rearTowbarChild!.hitchRearTowbarChild,
+          );
       updated = true;
     } else {
-      updated = (frontFixedChild?.updateChild(child) ?? false) ||
+      updated =
+          (frontFixedChild?.updateChild(child) ?? false) ||
           (rearFixedChild?.updateChild(child) ?? false) ||
           (rearTowbarChild?.updateChild(child) ?? false);
     }
@@ -159,19 +163,20 @@ class EquipmentSetup {
     if (child.uuid == rearTowbarChild?.uuid) {
       return Hitch.rearTowbar;
     }
-    final recursiveChild =
-        allAttached.firstWhereOrNull((element) => element.uuid == child.uuid);
+    final recursiveChild = allAttached.firstWhereOrNull(
+      (element) => element.uuid == child.uuid,
+    );
     return recursiveChild?.parentHitch;
   }
 
   /// Converts the object to a json compatible structure.
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'last_used': lastUsed.toIso8601String(),
-        'front_fixed_child': frontFixedChild?.toJsonWithChildren(),
-        'rear_fixed_child': rearFixedChild?.toJsonWithChildren(),
-        'rear_towbar_child': rearTowbarChild?.toJsonWithChildren(),
-      };
+    'name': name,
+    'last_used': lastUsed.toIso8601String(),
+    'front_fixed_child': frontFixedChild?.toJsonWithChildren(),
+    'rear_fixed_child': rearFixedChild?.toJsonWithChildren(),
+    'rear_towbar_child': rearTowbarChild?.toJsonWithChildren(),
+  };
 }
 
 /// An extension for getting the [EquipmentSetup] of the attached children
@@ -181,9 +186,9 @@ extension EquipmentSetupOfHitchable on Hitchable {
   ///
   /// The setup requires a [name].
   EquipmentSetup equipmentSetup(String name) => EquipmentSetup(
-        name: name,
-        frontFixedChild: hitchFrontFixedChild,
-        rearFixedChild: hitchRearFixedChild,
-        rearTowbarChild: hitchRearTowbarChild,
-      );
+    name: name,
+    frontFixedChild: hitchFrontFixedChild,
+    rearFixedChild: hitchRearFixedChild,
+    rearTowbarChild: hitchRearTowbarChild,
+  );
 }

@@ -25,7 +25,7 @@ part 'gamepad_config.g.dart';
 ///
 /// Deadzones and max discrete analog value can be configured.
 @freezed
-class GamepadConfig with _$GamepadConfig {
+sealed class GamepadConfig with _$GamepadConfig {
   const factory GamepadConfig({
     /// The maximum discrete analog value. Typically 2^16-1=65535, 16 bits.
     @Default(65535) int analogMaxValue,

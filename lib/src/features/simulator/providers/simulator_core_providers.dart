@@ -62,26 +62,28 @@ void initializeSimCore(Ref ref) {
     ..send(ref.read(mainVehicleProvider))
     ..send((simulationTargetHz: ref.read(simulatorUpdateFrequencyProvider)))
     ..send((autoSlowDown: ref.read(simCoreVehicleAutoSlowDownProvider)))
-    ..send(
-      (autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider)),
-    )
+    ..send((
+      autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider),
+    ))
     ..send((allowManualSimInput: ref.read(simCoreAllowManualInputProvider)))
     ..send((allowSimInterpolation: ref.read(simCoreAllowInterpolationProvider)))
     ..send(ref.read(activeABConfigProvider))
     ..send((pathTracking: ref.read(displayPathTrackingProvider)))
     ..send((abTracking: ref.read(displayABTrackingProvider)));
   if (Device.isNative) {
-    ref.read(simInputProvider.notifier)
-      ..send(ref.read(hardwareCommunicationConfigProvider))
-      ..send((networkAvailable: ref.read(networkAvailableProvider)))
-      ..send(
-        (
+    // Delay sending of network info to make sure startup is not too fast in
+    // profile and release mode.
+    Future.delayed(const Duration(milliseconds: 500), () {
+      ref.read(simInputProvider.notifier)
+        ..send(ref.read(hardwareCommunicationConfigProvider))
+        ..send((networkAvailable: ref.read(networkAvailableProvider)))
+        ..send((
           logGNSS: ref.read(hardwareLogGnssProvider),
           logIMU: ref.read(hardwareLogImuProvider),
           logWAS: ref.read(hardwareLogWasProvider),
-          logCombined: ref.read(hardwareLogCombinedProvider)
-        ),
-      );
+          logCombined: ref.read(hardwareLogCombinedProvider),
+        ));
+    });
   }
 }
 
@@ -98,7 +100,8 @@ void commonSimCoreMessageHandler(
     PathTracking? pathTracking,
     ABTracking? abTracking,
     AutosteeringState autosteeringState,
-  }) message,
+  })
+  message,
 ) {
   ref.read(gaugeVelocityProvider.notifier).update(message.velocity.toDouble());
   ref.read(gaugeBearingProvider.notifier).update(message.bearing.toDouble());

@@ -33,17 +33,18 @@ class SimulatorCore {
   /// This takes in the stream [incomingEvents] to get events/messages
   /// from the UI.
   static Stream<
-      ({
-        Vehicle? vehicle,
-        num velocity,
-        num bearing,
-        num distance,
-        PathTracking? pathTracking,
-        ABTracking? abTracking,
-        AutosteeringState autosteeringState,
-      })> webWorker(
+    ({
+      Vehicle? vehicle,
+      num velocity,
+      num bearing,
+      num distance,
+      PathTracking? pathTracking,
+      ABTracking? abTracking,
+      AutosteeringState autosteeringState,
+    })
+  >
+  webWorker(
     Stream<dynamic> incomingEvents,
     StreamController<dynamic> updateMainStream,
-  ) =>
-      throw UnimplementedError();
+  ) => throw UnimplementedError();
 }

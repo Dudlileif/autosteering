@@ -29,10 +29,9 @@ class Was {
   /// An object representing the Wheel Angle Sensor of a vehicle.
   ///
   /// [config] is a configuration for limits and resolution of the sensor.
-  Was({
-    WasConfig? config,
-  })  : config = config ?? const WasConfig(),
-        reading = WasReading(receiveTime: DateTime.now());
+  Was({WasConfig? config})
+    : config = config ?? const WasConfig(),
+      reading = WasReading(receiveTime: DateTime.now());
 
   /// The configuration for how to read the output from the sensor.
   WasConfig config;

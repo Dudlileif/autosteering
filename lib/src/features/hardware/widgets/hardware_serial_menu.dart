@@ -33,17 +33,19 @@ class HardwareSerialMenu extends StatelessWidget {
     return MenuButtonWithChildren(
       text: 'USB / Serial',
       iconOverrideWidget: Consumer(
-        builder: (context, ref, child) => Icon(
-          Icons.usb,
-          color: switch (ref
-              .watch(hardwareSerialProvider.select((value) => value != null))) {
-            true => switch (ref.watch(hardwareSerialAliveProvider)) {
-                true => Colors.green,
-                false => Colors.orange,
+        builder:
+            (context, ref, child) => Icon(
+              Icons.usb,
+              color: switch (ref.watch(
+                hardwareSerialProvider.select((value) => value != null),
+              )) {
+                true => switch (ref.watch(hardwareSerialAliveProvider)) {
+                  true => Colors.green,
+                  false => Colors.orange,
+                },
+                false => null,
               },
-            false => null
-          },
-        ),
+            ),
       ),
       menuChildren: [
         Consumer(
@@ -55,37 +57,45 @@ class HardwareSerialMenu extends StatelessWidget {
                 closeOnActivate: false,
                 leadingIcon: const Icon(Icons.clear),
                 onPressed: () => ref.invalidate(hardwareSerialProvider),
-                child: Text(
-                  'Close',
-                  style: textStyle,
-                ),
+                child: Text('Close', style: textStyle),
               );
             }
             return const SizedBox.shrink();
           },
         ),
         Consumer(
-          builder: (context, ref, child) => MenuButtonWithChildren(
-            icon: Icons.usb,
-            text: 'Serial port',
-            menuChildren: ref
-                .watch(availableSerialPortsProvider)
-                .map(
-                  (port) => MenuItemButton(
-                    closeOnActivate: false,
-                    onPressed: port.isOpen
-                        ? null
-                        : () => ref
-                            .read(hardwareSerialProvider.notifier)
-                            .update(port),
-                    child: Text(
-                      '${port.name ?? port.address}: ${port.manufacturer}',
-                      style: textStyle,
+          builder:
+              (context, ref, child) => MenuButtonWithChildren(
+                icon: Icons.usb,
+                text: 'Serial port',
+                menuChildren: ref
+                    .watch(availableSerialPortsProvider)
+                    .maybeWhen(
+                      data:
+                          (data) =>
+                              data
+                                  .map(
+                                    (port) => MenuItemButton(
+                                      closeOnActivate: false,
+                                      onPressed:
+                                          port.isOpen
+                                              ? null
+                                              : () => ref
+                                                  .read(
+                                                    hardwareSerialProvider
+                                                        .notifier,
+                                                  )
+                                                  .update(port),
+                                      child: Text(
+                                        '''${port.name ?? port.address}: ${port.manufacturer}''',
+                                        style: textStyle,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                      orElse: () => [],
                     ),
-                  ),
-                )
-                .toList(),
-          ),
+              ),
         ),
         Consumer(
           builder: (context, ref, child) {
@@ -94,19 +104,31 @@ class HardwareSerialMenu extends StatelessWidget {
             return MenuButtonWithChildren(
               icon: Icons.speed,
               text: 'Baud rate',
-              menuChildren: HardwareSerialBaudRate.rates
-                  .map(
-                    (baudRate) => MenuItemButton(
-                      closeOnActivate: false,
-                      onPressed: activeBaudRate == baudRate
-                          ? null
-                          : () => ref
-                              .read(hardwareSerialBaudRateProvider.notifier)
-                              .update(baudRate),
-                      child: Text('$baudRate', style: textStyle),
-                    ),
-                  )
-                  .toList(),
+              menuChildren:
+                  HardwareSerialBaudRate.rates
+                      .map(
+                        (baudRate) => MenuItemButton(
+                          closeOnActivate: false,
+                          style:
+                              activeBaudRate == baudRate
+                                  ? ButtonStyle(
+                                    backgroundColor: WidgetStatePropertyAll(
+                                      Theme.of(context).splashColor,
+                                    ),
+                                  )
+                                  : null,
+                          onPressed:
+                              activeBaudRate == baudRate
+                                  ? null
+                                  : () => ref
+                                      .read(
+                                        hardwareSerialBaudRateProvider.notifier,
+                                      )
+                                      .update(baudRate),
+                          child: Text('$baudRate', style: textStyle),
+                        ),
+                      )
+                      .toList(),
             );
           },
         ),

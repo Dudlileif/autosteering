@@ -22,7 +22,7 @@ part 'ntrip_profile.g.dart';
 
 /// A class for storing an NTRIP data connection profile.
 @freezed
-class NtripProfile with _$NtripProfile {
+sealed class NtripProfile with _$NtripProfile {
   /// A class for storing an NTRIP data connection profile.
   const factory NtripProfile({
     /// The name of this profile.

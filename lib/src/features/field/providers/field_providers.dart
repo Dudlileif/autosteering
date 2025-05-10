@@ -57,8 +57,9 @@ class ActiveField extends _$ActiveField {
         Logger.instance.i('Loaded active field: ${next.name}.');
         ref.read(fieldBufferEnabledProvider.notifier).update(value: false);
         if (ref.read(
-          activeWorkSessionProvider
-              .select((value) => value != null && value.field == null),
+          activeWorkSessionProvider.select(
+            (value) => value != null && value.field == null,
+          ),
         )) {
           ref.read(activeWorkSessionProvider.notifier).updateField(next);
         }
@@ -110,9 +111,11 @@ class FieldExteriorBufferJoin extends _$FieldExteriorBufferJoin {
 
   /// Go to the next value of [BufferJoin.values].
   void toggle() => Future(
-        () => state = BufferJoin.values[
-            (BufferJoin.values.indexOf(state) + 1) % BufferJoin.values.length],
-      );
+    () =>
+        state =
+            BufferJoin.values[(BufferJoin.values.indexOf(state) + 1) %
+                BufferJoin.values.length],
+  );
 }
 
 /// A provider for which type of join should be used when buffering the
@@ -127,9 +130,11 @@ class FieldInteriorBufferJoin extends _$FieldInteriorBufferJoin {
 
   /// Go to the next value of [BufferJoin.values].
   void toggle() => Future(
-        () => state = BufferJoin.values[
-            (BufferJoin.values.indexOf(state) + 1) % BufferJoin.values.length],
-      );
+    () =>
+        state =
+            BufferJoin.values[(BufferJoin.values.indexOf(state) + 1) %
+                BufferJoin.values.length],
+  );
 }
 
 /// Whether the field buffer functionality should be enabled.
@@ -164,9 +169,10 @@ class FieldExteriorBufferDistance extends _$FieldExteriorBufferDistance {
       -0.5 *
       (ref.read(
             allEquipmentsProvider.select(
-              (value) => value.values
-                  .firstWhereOrNull((element) => element.width > 0)
-                  ?.width,
+              (value) =>
+                  value.values
+                      .firstWhereOrNull((element) => element.width > 0)
+                      ?.width,
             ),
           ) ??
           10);
@@ -184,9 +190,10 @@ class FieldInteriorBufferDistance extends _$FieldInteriorBufferDistance {
       0.5 *
       (ref.read(
             allEquipmentsProvider.select(
-              (value) => value.values
-                  .firstWhereOrNull((element) => element.width > 0)
-                  ?.width,
+              (value) =>
+                  value.values
+                      .firstWhereOrNull((element) => element.width > 0)
+                      ?.width,
             ),
           ) ??
           10);
@@ -266,10 +273,11 @@ Future<Field?> bufferedField(Ref ref) async {
 
         return field.copyWith(
           polygon: bufferedPolygon,
-          boundingBox: bufferedPolygon.exterior != null &&
-                  (!bufferedPolygon.exterior!.isEmptyByGeometry)
-              ? GeoBox.from(bufferedPolygon.exterior!.toGeographicPositions)
-              : null,
+          boundingBox:
+              bufferedPolygon.exterior != null &&
+                      (!bufferedPolygon.exterior!.isEmptyByGeometry)
+                  ? GeoBox.from(bufferedPolygon.exterior!.toGeographicPositions)
+                  : null,
           uuid: const Uuid().v4(),
         );
       } on Exception catch (error, stackTrace) {
@@ -333,22 +341,22 @@ class FieldInteriorRings extends _$FieldInteriorRings {
   /// Adds an interior [ring] to the [state], will be skipped if it already
   /// is in list of rings.
   void addRing(List<Geographic>? ring) => Future(() {
-        if (ring != null) {
-          if (state == null) {
-            state = [ring];
-          } else if (state != null) {
-            var exists = false;
-            for (final other in state!) {
-              if (const DeepCollectionEquality().equals(ring, other)) {
-                exists = true;
-              }
-            }
-            if (!exists) {
-              state = [...?state, ring];
-            }
+    if (ring != null) {
+      if (state == null) {
+        state = [ring];
+      } else if (state != null) {
+        var exists = false;
+        for (final other in state!) {
+          if (const DeepCollectionEquality().equals(ring, other)) {
+            exists = true;
           }
         }
-      });
+        if (!exists) {
+          state = [...?state, ring];
+        }
+      }
+    }
+  });
 }
 
 /// A provider for saving [field] to a file in the user file directory.
@@ -360,15 +368,14 @@ Future<void> saveField(
   Field field, {
   String? overrideName,
   bool downloadIfWeb = false,
-}) async =>
-    ref.watch(
-      saveJsonToFileDirectoryProvider(
-        object: field,
-        fileName: overrideName ?? field.name,
-        folder: 'fields',
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => ref.watch(
+  saveJsonToFileDirectoryProvider(
+    object: field,
+    fileName: overrideName ?? field.name,
+    folder: 'fields',
+    downloadIfWeb: downloadIfWeb,
+  ).future,
+);
 
 /// A provider for exporting [field] to a file.
 ///
@@ -379,15 +386,14 @@ Future<void> exportField(
   Field field, {
   String? overrideName,
   bool downloadIfWeb = true,
-}) async =>
-    await ref.watch(
-      exportJsonToFileDirectoryProvider(
-        object: field,
-        fileName: overrideName ?? field.name,
-        folder: 'fields',
-        downloadIfWeb: downloadIfWeb,
-      ).future,
-    );
+}) async => await ref.watch(
+  exportJsonToFileDirectoryProvider(
+    object: field,
+    fileName: overrideName ?? field.name,
+    folder: 'fields',
+    downloadIfWeb: downloadIfWeb,
+  ).future,
+);
 
 /// A provider for reading and holding all the saved [Field]s in the
 /// user file directory.
@@ -406,20 +412,16 @@ FutureOr<void> deleteField(
   Ref ref,
   Field field, {
   String? overrideName,
-}) async =>
-    ref.watch(
-      deleteJsonFromFileDirectoryProvider(
-        fileName: overrideName ?? field.name,
-        folder: 'fields',
-      ).future,
-    );
+}) async => ref.watch(
+  deleteJsonFromFileDirectoryProvider(
+    fileName: overrideName ?? field.name,
+    folder: 'fields',
+  ).future,
+);
 
 /// A provider for loading a [Field] from a file at [path], if it's valid.
 @riverpod
-FutureOr<Field?> loadFieldFromFile(
-  Ref ref,
-  String path,
-) async {
+FutureOr<Field?> loadFieldFromFile(Ref ref, String path) async {
   final file = File(path);
   if (file.existsSync()) {
     try {
@@ -439,14 +441,9 @@ FutureOr<Field?> loadFieldFromFile(
 /// A provider for importing a field from a file and applying
 /// [ActiveField] provider.
 @riverpod
-FutureOr<Field?> importField(
-  Ref ref,
-) async {
+FutureOr<Field?> importField(Ref ref) async {
   ref.keepAlive();
-  Timer(
-    const Duration(seconds: 5),
-    ref.invalidateSelf,
-  );
+  Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.platform.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
@@ -468,9 +465,7 @@ FutureOr<Field?> importField(
         );
       }
     } else {
-      Logger.instance.w(
-        'Failed to import field, data is null.',
-      );
+      Logger.instance.w('Failed to import field, data is null.');
     }
   } else {
     final filePath = pickedFiles?.paths.first;
@@ -481,9 +476,7 @@ FutureOr<Field?> importField(
     }
   }
   if (field != null) {
-    Logger.instance.i(
-      'Imported field: ${field.name}.',
-    );
+    Logger.instance.i('Imported field: ${field.name}.');
     field.lastUsed = DateTime.now();
     ref.read(activeFieldProvider.notifier).update(field);
     await ref.watch(saveFieldProvider(field).future);

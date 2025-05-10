@@ -37,10 +37,10 @@ class WayPoint extends Equatable {
 
   /// Creates a [WayPoint] object from the [json] object.
   factory WayPoint.fromJson(Map<String, dynamic> json) => WayPoint(
-        position: Geographic.parse(json['position'] as String),
-        bearing: json['bearing'] as double,
-        velocity: json['velocity'] as double?,
-      );
+    position: Geographic.parse(json['position'] as String),
+    bearing: json['bearing'] as double,
+    velocity: json['velocity'] as double?,
+  );
 
   /// The position of the waypoint.
   final Geographic position;
@@ -56,12 +56,11 @@ class WayPoint extends Equatable {
     Geographic? position,
     double? bearing,
     double? velocity,
-  }) =>
-      WayPoint(
-        position: position ?? this.position,
-        bearing: bearing ?? this.bearing,
-        velocity: velocity ?? this.velocity,
-      );
+  }) => WayPoint(
+    position: position ?? this.position,
+    bearing: bearing ?? this.bearing,
+    velocity: velocity ?? this.velocity,
+  );
 
   /// Whether this way point has valid properties.
   bool get isValid =>
@@ -72,10 +71,7 @@ class WayPoint extends Equatable {
   ///
   /// The updated bearing will be calculated at the new point as the
   /// bearing from old position to new minus the [angleFromBearing].
-  WayPoint moveRhumb({
-    required double distance,
-    double angleFromBearing = 0,
-  }) {
+  WayPoint moveRhumb({required double distance, double angleFromBearing = 0}) {
     if (distance == 0) {
       return this;
     }
@@ -86,7 +82,8 @@ class WayPoint extends Equatable {
 
     return copyWith(
       position: newPos,
-      bearing: position.rhumb.finalBearingTo(newPos) -
+      bearing:
+          position.rhumb.finalBearingTo(newPos) -
           angleFromBearing * distance.sign,
     );
   }
@@ -110,7 +107,8 @@ class WayPoint extends Equatable {
 
     return copyWith(
       position: newPos,
-      bearing: position.spherical.finalBearingTo(newPos) -
+      bearing:
+          position.spherical.finalBearingTo(newPos) -
           angleFromBearing * distance.sign,
     );
   }
@@ -177,18 +175,20 @@ class WayPoint extends Equatable {
   double alongTrackDistanceToSpherical({
     required WayPoint start,
     required WayPoint end,
-  }) =>
-      position.spherical
-          .alongTrackDistanceTo(start: start.position, end: end.position);
+  }) => position.spherical.alongTrackDistanceTo(
+    start: start.position,
+    end: end.position,
+  );
 
   /// The cross track distance from this way point to the line from [start]
   /// to [end].
   double crossTrackDistanceToSpherical({
     required WayPoint start,
     required WayPoint end,
-  }) =>
-      position.spherical
-          .crossTrackDistanceTo(start: start.position, end: end.position);
+  }) => position.spherical.crossTrackDistanceTo(
+    start: start.position,
+    end: end.position,
+  );
 
   /// Finds a way point along the line from this to [other] at the [fraction]
   /// of the length of the line.
@@ -196,8 +196,10 @@ class WayPoint extends Equatable {
     WayPoint other, {
     required double fraction,
   }) {
-    final newPos = position.spherical
-        .intermediatePointTo(other.position, fraction: fraction);
+    final newPos = position.spherical.intermediatePointTo(
+      other.position,
+      fraction: fraction,
+    );
 
     return WayPoint(
       position: newPos,
@@ -212,8 +214,10 @@ class WayPoint extends Equatable {
     WayPoint other, {
     required double fraction,
   }) {
-    final newPos = position.spherical
-        .intermediatePointTo(other.position, fraction: fraction);
+    final newPos = position.spherical.intermediatePointTo(
+      other.position,
+      fraction: fraction,
+    );
 
     return WayPoint(
       position: newPos,
@@ -348,8 +352,10 @@ class WayPoint extends Equatable {
     Iterable<Geographic> ring, {
     bool oppositeOfBearing = false,
   }) {
-    final intersections =
-        intersectionsWithRhumb(ring, oppositeOfBearing: oppositeOfBearing);
+    final intersections = intersectionsWithRhumb(
+      ring,
+      oppositeOfBearing: oppositeOfBearing,
+    );
     if (intersections.isNotEmpty) {
       intersections.sortByCompare<double>(
         (element) => position.rhumb.distanceTo(element.position),
@@ -369,8 +375,10 @@ class WayPoint extends Equatable {
     Iterable<Geographic> ring, {
     bool oppositeOfBearing = false,
   }) {
-    final intersections =
-        intersectionsWithSpherical(ring, oppositeOfBearing: oppositeOfBearing);
+    final intersections = intersectionsWithSpherical(
+      ring,
+      oppositeOfBearing: oppositeOfBearing,
+    );
     if (intersections.isNotEmpty) {
       intersections.sortByCompare<double>(
         (element) => position.spherical.distanceTo(element.position),
@@ -384,18 +392,11 @@ class WayPoint extends Equatable {
 
   /// Properties used to compare with [Equatable].
   @override
-  List<Object> get props => [
-        position,
-        bearing,
-        velocity,
-      ];
+  List<Object> get props => [position, bearing, velocity];
 
   /// Converts the object to a json compatible structure.
   Map<String, dynamic> toJson() {
-    final map = {
-      'position': position.toString(),
-      'bearing': bearing,
-    };
+    final map = {'position': position.toString(), 'bearing': bearing};
     if (velocity.abs() > 0) {
       map['velocity'] = velocity;
     }
@@ -429,14 +430,16 @@ class WayPointTween extends Tween<WayPoint> {
   @override
   WayPoint lerp(double t) {
     final position = switch (begin != null && end != null) {
-      true => begin?.position.spherical
-          .intermediatePointTo(end!.position, fraction: t),
-      false => null
+      true => begin?.position.spherical.intermediatePointTo(
+        end!.position,
+        fraction: t,
+      ),
+      false => null,
     };
 
     final bearing = switch (begin != null && position != null) {
       true => begin!.position.spherical.finalBearingTo(position!),
-      false => null
+      false => null,
     };
 
     final velocity = Tween<double>(
@@ -445,7 +448,8 @@ class WayPointTween extends Tween<WayPoint> {
     ).lerp(t);
 
     return WayPoint(
-      position: position ??
+      position:
+          position ??
           begin?.position ??
           end?.position ??
           const Geographic(lon: 0, lat: 0),

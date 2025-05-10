@@ -19,9 +19,10 @@ String _$simCoreWebStreamHash() => r'49195f61d91fcc66910d46b237bcd471f68125d4';
 final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
   simCoreWebStream,
   name: r'simCoreWebStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreWebStreamHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$simCoreWebStreamHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -30,7 +31,7 @@ final simCoreWebStreamProvider = AutoDisposeStreamProvider<Vehicle?>.internal(
 // ignore: unused_element
 typedef SimCoreWebStreamRef = AutoDisposeStreamProviderRef<Vehicle?>;
 String _$simCoreVehicleDrivingHash() =>
-    r'09a4fb85cdf270b1147770a36273f5dd6a0502d6';
+    r'c24576f0246161bdfa198f7ff9095467d80094b7';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -40,9 +41,10 @@ String _$simCoreVehicleDrivingHash() =>
 final simCoreVehicleDrivingProvider = AutoDisposeProvider<void>.internal(
   simCoreVehicleDriving,
   name: r'simCoreVehicleDrivingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreVehicleDrivingHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$simCoreVehicleDrivingHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -60,9 +62,10 @@ String _$simCoreIsolateStreamHash() =>
 final simCoreIsolateStreamProvider = AutoDisposeProvider<void>.internal(
   simCoreIsolateStream,
   name: r'simCoreIsolateStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreIsolateStreamHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$simCoreIsolateStreamHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -95,14 +98,15 @@ String _$simCoreWebInputHash() => r'8f043db7433228bbd0479cd8df8b1aca0e1ddf36';
 @ProviderFor(_SimCoreWebInput)
 final _simCoreWebInputProvider =
     NotifierProvider<_SimCoreWebInput, StreamController<dynamic>>.internal(
-  _SimCoreWebInput.new,
-  name: r'_simCoreWebInputProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$simCoreWebInputHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      _SimCoreWebInput.new,
+      name: r'_simCoreWebInputProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$simCoreWebInputHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SimCoreWebInput = Notifier<StreamController<dynamic>>;
 // ignore_for_file: type=lint

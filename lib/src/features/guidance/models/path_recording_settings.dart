@@ -24,7 +24,7 @@ part 'path_recording_settings.g.dart';
 
 /// A configuration class for how paths should be recorded.
 @freezed
-class PathRecordingSettings with _$PathRecordingSettings {
+sealed class PathRecordingSettings with _$PathRecordingSettings {
   /// A configuration class for how paths should be recorded.
   ///
   /// [minDistance] and [maxDistance] is the minimum and maximum distance
@@ -72,5 +72,5 @@ enum PathRecordingTarget {
   field,
 
   /// Path recording for a [PathTracking].
-  pathTracking;
+  pathTracking,
 }

@@ -35,9 +35,10 @@ String _$offsetVehiclePositionHash() =>
 final offsetVehiclePositionProvider = AutoDisposeProvider<LatLng>.internal(
   offsetVehiclePosition,
   name: r'offsetVehiclePositionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$offsetVehiclePositionHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$offsetVehiclePositionHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -90,21 +91,15 @@ class MapCacheDateFamily extends Family<AsyncValue<DateTime?>> {
   /// at the given [path].
   ///
   /// Copied from [mapCacheDate].
-  MapCacheDateProvider call(
-    String filePath,
-  ) {
-    return MapCacheDateProvider(
-      filePath,
-    );
+  MapCacheDateProvider call(String filePath) {
+    return MapCacheDateProvider(filePath);
   }
 
   @override
   MapCacheDateProvider getProviderOverride(
     covariant MapCacheDateProvider provider,
   ) {
-    return call(
-      provider.filePath,
-    );
+    return call(provider.filePath);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -131,24 +126,20 @@ class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
   /// at the given [path].
   ///
   /// Copied from [mapCacheDate].
-  MapCacheDateProvider(
-    String filePath,
-  ) : this._internal(
-          (ref) => mapCacheDate(
-            ref as MapCacheDateRef,
-            filePath,
-          ),
-          from: mapCacheDateProvider,
-          name: r'mapCacheDateProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$mapCacheDateHash,
-          dependencies: MapCacheDateFamily._dependencies,
-          allTransitiveDependencies:
-              MapCacheDateFamily._allTransitiveDependencies,
-          filePath: filePath,
-        );
+  MapCacheDateProvider(String filePath)
+    : this._internal(
+        (ref) => mapCacheDate(ref as MapCacheDateRef, filePath),
+        from: mapCacheDateProvider,
+        name: r'mapCacheDateProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$mapCacheDateHash,
+        dependencies: MapCacheDateFamily._dependencies,
+        allTransitiveDependencies:
+            MapCacheDateFamily._allTransitiveDependencies,
+        filePath: filePath,
+      );
 
   MapCacheDateProvider._internal(
     super._createNotifier, {
@@ -207,7 +198,8 @@ mixin MapCacheDateRef on AutoDisposeFutureProviderRef<DateTime?> {
 }
 
 class _MapCacheDateProviderElement
-    extends AutoDisposeFutureProviderElement<DateTime?> with MapCacheDateRef {
+    extends AutoDisposeFutureProviderElement<DateTime?>
+    with MapCacheDateRef {
   _MapCacheDateProviderElement(super.provider);
 
   @override
@@ -223,14 +215,15 @@ String _$mapCacheDirectoriesHash() =>
 @ProviderFor(mapCacheDirectories)
 final mapCacheDirectoriesProvider =
     AutoDisposeFutureProvider<List<String>>.internal(
-  mapCacheDirectories,
-  name: r'mapCacheDirectoriesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mapCacheDirectoriesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      mapCacheDirectories,
+      name: r'mapCacheDirectoriesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mapCacheDirectoriesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -260,14 +253,15 @@ String _$mainMapControllerHash() => r'd86c68d7c52e5619b02fb085cedf0d871848bdb8';
 @ProviderFor(MainMapController)
 final mainMapControllerProvider =
     AutoDisposeNotifierProvider<MainMapController, MapController>.internal(
-  MainMapController.new,
-  name: r'mainMapControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mainMapControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MainMapController.new,
+      name: r'mainMapControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mainMapControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MainMapController = AutoDisposeNotifier<MapController>;
 String _$homePositionHash() => r'dc5c6a2620e680e82f5ee31284bcb1fe5da601ef';
@@ -278,13 +272,15 @@ String _$homePositionHash() => r'dc5c6a2620e680e82f5ee31284bcb1fe5da601ef';
 @ProviderFor(HomePosition)
 final homePositionProvider =
     AutoDisposeNotifierProvider<HomePosition, LatLng>.internal(
-  HomePosition.new,
-  name: r'homePositionProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$homePositionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      HomePosition.new,
+      name: r'homePositionProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$homePositionHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$HomePosition = AutoDisposeNotifier<LatLng>;
 String _$centerMapOnVehicleHash() =>
@@ -296,14 +292,15 @@ String _$centerMapOnVehicleHash() =>
 @ProviderFor(CenterMapOnVehicle)
 final centerMapOnVehicleProvider =
     AutoDisposeNotifierProvider<CenterMapOnVehicle, bool>.internal(
-  CenterMapOnVehicle.new,
-  name: r'centerMapOnVehicleProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$centerMapOnVehicleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      CenterMapOnVehicle.new,
+      name: r'centerMapOnVehicleProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$centerMapOnVehicleHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$CenterMapOnVehicle = AutoDisposeNotifier<bool>;
 String _$zoomTimerControllerHash() =>
@@ -317,14 +314,15 @@ String _$zoomTimerControllerHash() =>
 @ProviderFor(ZoomTimerController)
 final zoomTimerControllerProvider =
     AutoDisposeNotifierProvider<ZoomTimerController, Timer?>.internal(
-  ZoomTimerController.new,
-  name: r'zoomTimerControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$zoomTimerControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ZoomTimerController.new,
+      name: r'zoomTimerControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$zoomTimerControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ZoomTimerController = AutoDisposeNotifier<Timer?>;
 String _$mapOffset2DHash() => r'61edf217771e62a642a6839ef2f09369edcb5054';
@@ -336,13 +334,15 @@ String _$mapOffset2DHash() => r'61edf217771e62a642a6839ef2f09369edcb5054';
 @ProviderFor(MapOffset2D)
 final mapOffset2DProvider =
     AutoDisposeNotifierProvider<MapOffset2D, MapCenterOffset>.internal(
-  MapOffset2D.new,
-  name: r'mapOffset2DProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$mapOffset2DHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MapOffset2D.new,
+      name: r'mapOffset2DProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mapOffset2DHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MapOffset2D = AutoDisposeNotifier<MapCenterOffset>;
 String _$mapOffset3DHash() => r'5cf6b59d77109e1b658a050688c679d4195c212a';
@@ -354,13 +354,15 @@ String _$mapOffset3DHash() => r'5cf6b59d77109e1b658a050688c679d4195c212a';
 @ProviderFor(MapOffset3D)
 final mapOffset3DProvider =
     AutoDisposeNotifierProvider<MapOffset3D, MapCenterOffset>.internal(
-  MapOffset3D.new,
-  name: r'mapOffset3DProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$mapOffset3DHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MapOffset3D.new,
+      name: r'mapOffset3DProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mapOffset3DHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MapOffset3D = AutoDisposeNotifier<MapCenterOffset>;
 String _$alwaysPointNorthHash() => r'34219ed8614164321d8799ffdd299d8f460ff0ad';
@@ -371,14 +373,15 @@ String _$alwaysPointNorthHash() => r'34219ed8614164321d8799ffdd299d8f460ff0ad';
 @ProviderFor(AlwaysPointNorth)
 final alwaysPointNorthProvider =
     AutoDisposeNotifierProvider<AlwaysPointNorth, bool>.internal(
-  AlwaysPointNorth.new,
-  name: r'alwaysPointNorthProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$alwaysPointNorthHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      AlwaysPointNorth.new,
+      name: r'alwaysPointNorthProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$alwaysPointNorthHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$AlwaysPointNorth = AutoDisposeNotifier<bool>;
 String _$mapUse3DPerspectiveHash() =>
@@ -391,14 +394,15 @@ String _$mapUse3DPerspectiveHash() =>
 @ProviderFor(MapUse3DPerspective)
 final mapUse3DPerspectiveProvider =
     AutoDisposeNotifierProvider<MapUse3DPerspective, bool>.internal(
-  MapUse3DPerspective.new,
-  name: r'mapUse3DPerspectiveProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mapUse3DPerspectiveHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MapUse3DPerspective.new,
+      name: r'mapUse3DPerspectiveProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mapUse3DPerspectiveHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MapUse3DPerspective = AutoDisposeNotifier<bool>;
 String _$map3DPerspectiveAngleHash() =>
@@ -411,14 +415,15 @@ String _$map3DPerspectiveAngleHash() =>
 @ProviderFor(Map3DPerspectiveAngle)
 final map3DPerspectiveAngleProvider =
     AutoDisposeNotifierProvider<Map3DPerspectiveAngle, double>.internal(
-  Map3DPerspectiveAngle.new,
-  name: r'map3DPerspectiveAngleProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$map3DPerspectiveAngleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      Map3DPerspectiveAngle.new,
+      name: r'map3DPerspectiveAngleProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$map3DPerspectiveAngleHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$Map3DPerspectiveAngle = AutoDisposeNotifier<double>;
 String _$mapZoomHash() => r'9b86aaf1b7c0bb8e07ed467ebfb892e0336f0514';
@@ -445,14 +450,15 @@ String _$mapAllowDownloadHash() => r'1ced70a153678e5415176206bf4f38a06024352d';
 @ProviderFor(MapAllowDownload)
 final mapAllowDownloadProvider =
     AutoDisposeNotifierProvider<MapAllowDownload, bool>.internal(
-  MapAllowDownload.new,
-  name: r'mapAllowDownloadProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mapAllowDownloadHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MapAllowDownload.new,
+      name: r'mapAllowDownloadProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mapAllowDownloadHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MapAllowDownload = AutoDisposeNotifier<bool>;
 String _$mapGridSizeHash() => r'724dc6e828b687e501539db9f96fdf664cc54683';
@@ -463,13 +469,15 @@ String _$mapGridSizeHash() => r'724dc6e828b687e501539db9f96fdf664cc54683';
 @ProviderFor(MapGridSize)
 final mapGridSizeProvider =
     AutoDisposeNotifierProvider<MapGridSize, double?>.internal(
-  MapGridSize.new,
-  name: r'mapGridSizeProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$mapGridSizeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MapGridSize.new,
+      name: r'mapGridSizeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mapGridSizeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MapGridSize = AutoDisposeNotifier<double?>;
 String _$showGridSizeIndicatorHash() =>
@@ -481,14 +489,15 @@ String _$showGridSizeIndicatorHash() =>
 @ProviderFor(ShowGridSizeIndicator)
 final showGridSizeIndicatorProvider =
     AutoDisposeNotifierProvider<ShowGridSizeIndicator, bool>.internal(
-  ShowGridSizeIndicator.new,
-  name: r'showGridSizeIndicatorProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showGridSizeIndicatorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowGridSizeIndicator.new,
+      name: r'showGridSizeIndicatorProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showGridSizeIndicatorHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowGridSizeIndicator = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint

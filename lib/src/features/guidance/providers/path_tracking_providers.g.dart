@@ -16,14 +16,15 @@ String _$pathTrackingPerpendicularDistanceHash() =>
 @ProviderFor(pathTrackingPerpendicularDistance)
 final pathTrackingPerpendicularDistanceProvider =
     AutoDisposeProvider<double?>.internal(
-  pathTrackingPerpendicularDistance,
-  name: r'pathTrackingPerpendicularDistanceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$pathTrackingPerpendicularDistanceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      pathTrackingPerpendicularDistance,
+      name: r'pathTrackingPerpendicularDistanceProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$pathTrackingPerpendicularDistanceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -74,21 +75,15 @@ class LoadPathTrackingFromFileFamily extends Family<AsyncValue<PathTracking?>> {
   /// valid.
   ///
   /// Copied from [loadPathTrackingFromFile].
-  LoadPathTrackingFromFileProvider call(
-    String path,
-  ) {
-    return LoadPathTrackingFromFileProvider(
-      path,
-    );
+  LoadPathTrackingFromFileProvider call(String path) {
+    return LoadPathTrackingFromFileProvider(path);
   }
 
   @override
   LoadPathTrackingFromFileProvider getProviderOverride(
     covariant LoadPathTrackingFromFileProvider provider,
   ) {
-    return call(
-      provider.path,
-    );
+    return call(provider.path);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -116,24 +111,21 @@ class LoadPathTrackingFromFileProvider
   /// valid.
   ///
   /// Copied from [loadPathTrackingFromFile].
-  LoadPathTrackingFromFileProvider(
-    String path,
-  ) : this._internal(
-          (ref) => loadPathTrackingFromFile(
-            ref as LoadPathTrackingFromFileRef,
-            path,
-          ),
-          from: loadPathTrackingFromFileProvider,
-          name: r'loadPathTrackingFromFileProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$loadPathTrackingFromFileHash,
-          dependencies: LoadPathTrackingFromFileFamily._dependencies,
-          allTransitiveDependencies:
-              LoadPathTrackingFromFileFamily._allTransitiveDependencies,
-          path: path,
-        );
+  LoadPathTrackingFromFileProvider(String path)
+    : this._internal(
+        (ref) =>
+            loadPathTrackingFromFile(ref as LoadPathTrackingFromFileRef, path),
+        from: loadPathTrackingFromFileProvider,
+        name: r'loadPathTrackingFromFileProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$loadPathTrackingFromFileHash,
+        dependencies: LoadPathTrackingFromFileFamily._dependencies,
+        allTransitiveDependencies:
+            LoadPathTrackingFromFileFamily._allTransitiveDependencies,
+        path: path,
+      );
 
   LoadPathTrackingFromFileProvider._internal(
     super._createNotifier, {
@@ -150,7 +142,7 @@ class LoadPathTrackingFromFileProvider
   @override
   Override overrideWith(
     FutureOr<PathTracking?> Function(LoadPathTrackingFromFileRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -284,25 +276,25 @@ class SavePathTrackingProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => savePathTracking(
-            ref as SavePathTrackingRef,
-            tracking,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: savePathTrackingProvider,
-          name: r'savePathTrackingProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$savePathTrackingHash,
-          dependencies: SavePathTrackingFamily._dependencies,
-          allTransitiveDependencies:
-              SavePathTrackingFamily._allTransitiveDependencies,
-          tracking: tracking,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => savePathTracking(
+           ref as SavePathTrackingRef,
+           tracking,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: savePathTrackingProvider,
+         name: r'savePathTrackingProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$savePathTrackingHash,
+         dependencies: SavePathTrackingFamily._dependencies,
+         allTransitiveDependencies:
+             SavePathTrackingFamily._allTransitiveDependencies,
+         tracking: tracking,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   SavePathTrackingProvider._internal(
     super._createNotifier, {
@@ -378,7 +370,8 @@ mixin SavePathTrackingRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _SavePathTrackingProviderElement
-    extends AutoDisposeFutureProviderElement<void> with SavePathTrackingRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with SavePathTrackingRef {
   _SavePathTrackingProviderElement(super.provider);
 
   @override
@@ -472,25 +465,25 @@ class ExportPathTrackingProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => exportPathTracking(
-            ref as ExportPathTrackingRef,
-            tracking,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: exportPathTrackingProvider,
-          name: r'exportPathTrackingProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportPathTrackingHash,
-          dependencies: ExportPathTrackingFamily._dependencies,
-          allTransitiveDependencies:
-              ExportPathTrackingFamily._allTransitiveDependencies,
-          tracking: tracking,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => exportPathTracking(
+           ref as ExportPathTrackingRef,
+           tracking,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: exportPathTrackingProvider,
+         name: r'exportPathTrackingProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$exportPathTrackingHash,
+         dependencies: ExportPathTrackingFamily._dependencies,
+         allTransitiveDependencies:
+             ExportPathTrackingFamily._allTransitiveDependencies,
+         tracking: tracking,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   ExportPathTrackingProvider._internal(
     super._createNotifier, {
@@ -566,7 +559,8 @@ mixin ExportPathTrackingRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportPathTrackingProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportPathTrackingRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportPathTrackingRef {
   _ExportPathTrackingProviderElement(super.provider);
 
   @override
@@ -590,9 +584,10 @@ String _$savedPathTrackingsHash() =>
 final savedPathTrackingsProvider = FutureProvider<List<PathTracking>>.internal(
   savedPathTrackings,
   name: r'savedPathTrackingsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$savedPathTrackingsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$savedPathTrackingsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -683,25 +678,25 @@ class DeletePathTrackingProvider extends AutoDisposeFutureProvider<void> {
     String? overrideName,
     bool downloadIfWeb = true,
   }) : this._internal(
-          (ref) => deletePathTracking(
-            ref as DeletePathTrackingRef,
-            tracking,
-            overrideName: overrideName,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: deletePathTrackingProvider,
-          name: r'deletePathTrackingProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$deletePathTrackingHash,
-          dependencies: DeletePathTrackingFamily._dependencies,
-          allTransitiveDependencies:
-              DeletePathTrackingFamily._allTransitiveDependencies,
-          tracking: tracking,
-          overrideName: overrideName,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => deletePathTracking(
+           ref as DeletePathTrackingRef,
+           tracking,
+           overrideName: overrideName,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: deletePathTrackingProvider,
+         name: r'deletePathTrackingProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$deletePathTrackingHash,
+         dependencies: DeletePathTrackingFamily._dependencies,
+         allTransitiveDependencies:
+             DeletePathTrackingFamily._allTransitiveDependencies,
+         tracking: tracking,
+         overrideName: overrideName,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   DeletePathTrackingProvider._internal(
     super._createNotifier, {
@@ -777,7 +772,8 @@ mixin DeletePathTrackingRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _DeletePathTrackingProviderElement
-    extends AutoDisposeFutureProviderElement<void> with DeletePathTrackingRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with DeletePathTrackingRef {
   _DeletePathTrackingProviderElement(super.provider);
 
   @override
@@ -800,14 +796,15 @@ String _$importPathTrackingHash() =>
 @ProviderFor(importPathTracking)
 final importPathTrackingProvider =
     AutoDisposeFutureProvider<PathTracking?>.internal(
-  importPathTracking,
-  name: r'importPathTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$importPathTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      importPathTracking,
+      name: r'importPathTrackingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$importPathTrackingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -832,21 +829,15 @@ class ExportGuidancesFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all guidance files.
   ///
   /// Copied from [exportGuidances].
-  ExportGuidancesProvider call({
-    bool zip = true,
-  }) {
-    return ExportGuidancesProvider(
-      zip: zip,
-    );
+  ExportGuidancesProvider call({bool zip = true}) {
+    return ExportGuidancesProvider(zip: zip);
   }
 
   @override
   ExportGuidancesProvider getProviderOverride(
     covariant ExportGuidancesProvider provider,
   ) {
-    return call(
-      zip: provider.zip,
-    );
+    return call(zip: provider.zip);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -871,24 +862,20 @@ class ExportGuidancesProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for exporting all guidance files.
   ///
   /// Copied from [exportGuidances].
-  ExportGuidancesProvider({
-    bool zip = true,
-  }) : this._internal(
-          (ref) => exportGuidances(
-            ref as ExportGuidancesRef,
-            zip: zip,
-          ),
-          from: exportGuidancesProvider,
-          name: r'exportGuidancesProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportGuidancesHash,
-          dependencies: ExportGuidancesFamily._dependencies,
-          allTransitiveDependencies:
-              ExportGuidancesFamily._allTransitiveDependencies,
-          zip: zip,
-        );
+  ExportGuidancesProvider({bool zip = true})
+    : this._internal(
+        (ref) => exportGuidances(ref as ExportGuidancesRef, zip: zip),
+        from: exportGuidancesProvider,
+        name: r'exportGuidancesProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$exportGuidancesHash,
+        dependencies: ExportGuidancesFamily._dependencies,
+        allTransitiveDependencies:
+            ExportGuidancesFamily._allTransitiveDependencies,
+        zip: zip,
+      );
 
   ExportGuidancesProvider._internal(
     super._createNotifier, {
@@ -947,7 +934,8 @@ mixin ExportGuidancesRef on AutoDisposeFutureProviderRef<void> {
 }
 
 class _ExportGuidancesProviderElement
-    extends AutoDisposeFutureProviderElement<void> with ExportGuidancesRef {
+    extends AutoDisposeFutureProviderElement<void>
+    with ExportGuidancesRef {
   _ExportGuidancesProviderElement(super.provider);
 
   @override
@@ -963,14 +951,15 @@ String _$pathInterpolationDistanceHash() =>
 @ProviderFor(PathInterpolationDistance)
 final pathInterpolationDistanceProvider =
     NotifierProvider<PathInterpolationDistance, double>.internal(
-  PathInterpolationDistance.new,
-  name: r'pathInterpolationDistanceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$pathInterpolationDistanceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      PathInterpolationDistance.new,
+      name: r'pathInterpolationDistanceProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$pathInterpolationDistanceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$PathInterpolationDistance = Notifier<double>;
 String _$pathTrackingPointsHash() =>
@@ -982,14 +971,15 @@ String _$pathTrackingPointsHash() =>
 @ProviderFor(PathTrackingPoints)
 final pathTrackingPointsProvider =
     NotifierProvider<PathTrackingPoints, List<WayPoint>?>.internal(
-  PathTrackingPoints.new,
-  name: r'pathTrackingPointsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$pathTrackingPointsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      PathTrackingPoints.new,
+      name: r'pathTrackingPointsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$pathTrackingPointsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$PathTrackingPoints = Notifier<List<WayPoint>?>;
 String _$configuredPathTrackingHash() =>
@@ -1002,14 +992,15 @@ String _$configuredPathTrackingHash() =>
 @ProviderFor(ConfiguredPathTracking)
 final configuredPathTrackingProvider =
     NotifierProvider<ConfiguredPathTracking, PathTracking?>.internal(
-  ConfiguredPathTracking.new,
-  name: r'configuredPathTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$configuredPathTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ConfiguredPathTracking.new,
+      name: r'configuredPathTrackingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$configuredPathTrackingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ConfiguredPathTracking = Notifier<PathTracking?>;
 String _$pathTrackingLoopHash() => r'9e18bb1af4a02e1301d6d53c7efbae48e92d1cf7';
@@ -1021,14 +1012,15 @@ String _$pathTrackingLoopHash() => r'9e18bb1af4a02e1301d6d53c7efbae48e92d1cf7';
 @ProviderFor(PathTrackingLoop)
 final pathTrackingLoopProvider =
     NotifierProvider<PathTrackingLoop, PathTrackingLoopMode>.internal(
-  PathTrackingLoop.new,
-  name: r'pathTrackingLoopProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$pathTrackingLoopHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      PathTrackingLoop.new,
+      name: r'pathTrackingLoopProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$pathTrackingLoopHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$PathTrackingLoop = Notifier<PathTrackingLoopMode>;
 String _$displayPathTrackingHash() =>
@@ -1041,14 +1033,15 @@ String _$displayPathTrackingHash() =>
 @ProviderFor(DisplayPathTracking)
 final displayPathTrackingProvider =
     NotifierProvider<DisplayPathTracking, PathTracking?>.internal(
-  DisplayPathTracking.new,
-  name: r'displayPathTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$displayPathTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DisplayPathTracking.new,
+      name: r'displayPathTrackingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$displayPathTrackingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DisplayPathTracking = Notifier<PathTracking?>;
 String _$showPathTrackingHash() => r'4aaabec2c84ce508eef43de33976367de2f6079f';
@@ -1059,14 +1052,15 @@ String _$showPathTrackingHash() => r'4aaabec2c84ce508eef43de33976367de2f6079f';
 @ProviderFor(ShowPathTracking)
 final showPathTrackingProvider =
     NotifierProvider<ShowPathTracking, bool>.internal(
-  ShowPathTracking.new,
-  name: r'showPathTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$showPathTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ShowPathTracking.new,
+      name: r'showPathTrackingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$showPathTrackingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ShowPathTracking = Notifier<bool>;
 String _$debugPathTrackingHash() => r'db41c00fa0d4a921e7251aea9fce8d341463b4c9';
@@ -1077,14 +1071,15 @@ String _$debugPathTrackingHash() => r'db41c00fa0d4a921e7251aea9fce8d341463b4c9';
 @ProviderFor(DebugPathTracking)
 final debugPathTrackingProvider =
     NotifierProvider<DebugPathTracking, bool>.internal(
-  DebugPathTracking.new,
-  name: r'debugPathTrackingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugPathTrackingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DebugPathTracking.new,
+      name: r'debugPathTrackingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$debugPathTrackingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DebugPathTracking = Notifier<bool>;
 // ignore_for_file: type=lint

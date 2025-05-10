@@ -15,9 +15,10 @@ String _$fileDirectoryHash() => r'de03bf7973f971ec08ab41dca91e128bdf1cde67';
 final fileDirectoryProvider = FutureProvider<Directory>.internal(
   fileDirectory,
   name: r'fileDirectoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fileDirectoryHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$fileDirectoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -74,21 +75,15 @@ class DirectorySizeFamily extends Family<AsyncValue<int?>> {
   /// Returns the size in number of bytes.
   ///
   /// Copied from [directorySize].
-  DirectorySizeProvider call(
-    String path,
-  ) {
-    return DirectorySizeProvider(
-      path,
-    );
+  DirectorySizeProvider call(String path) {
+    return DirectorySizeProvider(path);
   }
 
   @override
   DirectorySizeProvider getProviderOverride(
     covariant DirectorySizeProvider provider,
   ) {
-    return call(
-      provider.path,
-    );
+    return call(provider.path);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -117,24 +112,20 @@ class DirectorySizeProvider extends AutoDisposeFutureProvider<int?> {
   /// Returns the size in number of bytes.
   ///
   /// Copied from [directorySize].
-  DirectorySizeProvider(
-    String path,
-  ) : this._internal(
-          (ref) => directorySize(
-            ref as DirectorySizeRef,
-            path,
-          ),
-          from: directorySizeProvider,
-          name: r'directorySizeProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$directorySizeHash,
-          dependencies: DirectorySizeFamily._dependencies,
-          allTransitiveDependencies:
-              DirectorySizeFamily._allTransitiveDependencies,
-          path: path,
-        );
+  DirectorySizeProvider(String path)
+    : this._internal(
+        (ref) => directorySize(ref as DirectorySizeRef, path),
+        from: directorySizeProvider,
+        name: r'directorySizeProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$directorySizeHash,
+        dependencies: DirectorySizeFamily._dependencies,
+        allTransitiveDependencies:
+            DirectorySizeFamily._allTransitiveDependencies,
+        path: path,
+      );
 
   DirectorySizeProvider._internal(
     super._createNotifier, {
@@ -193,7 +184,8 @@ mixin DirectorySizeRef on AutoDisposeFutureProviderRef<int?> {
 }
 
 class _DirectorySizeProviderElement
-    extends AutoDisposeFutureProviderElement<int?> with DirectorySizeRef {
+    extends AutoDisposeFutureProviderElement<int?>
+    with DirectorySizeRef {
   _DirectorySizeProviderElement(super.provider);
 
   @override
@@ -228,21 +220,15 @@ class DirectoryDeleteFamily extends Family<AsyncValue<bool>> {
   /// Returns true if the directory no longer exists.
   ///
   /// Copied from [directoryDelete].
-  DirectoryDeleteProvider call(
-    String path,
-  ) {
-    return DirectoryDeleteProvider(
-      path,
-    );
+  DirectoryDeleteProvider call(String path) {
+    return DirectoryDeleteProvider(path);
   }
 
   @override
   DirectoryDeleteProvider getProviderOverride(
     covariant DirectoryDeleteProvider provider,
   ) {
-    return call(
-      provider.path,
-    );
+    return call(provider.path);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -271,24 +257,20 @@ class DirectoryDeleteProvider extends AutoDisposeFutureProvider<bool> {
   /// Returns true if the directory no longer exists.
   ///
   /// Copied from [directoryDelete].
-  DirectoryDeleteProvider(
-    String path,
-  ) : this._internal(
-          (ref) => directoryDelete(
-            ref as DirectoryDeleteRef,
-            path,
-          ),
-          from: directoryDeleteProvider,
-          name: r'directoryDeleteProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$directoryDeleteHash,
-          dependencies: DirectoryDeleteFamily._dependencies,
-          allTransitiveDependencies:
-              DirectoryDeleteFamily._allTransitiveDependencies,
-          path: path,
-        );
+  DirectoryDeleteProvider(String path)
+    : this._internal(
+        (ref) => directoryDelete(ref as DirectoryDeleteRef, path),
+        from: directoryDeleteProvider,
+        name: r'directoryDeleteProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$directoryDeleteHash,
+        dependencies: DirectoryDeleteFamily._dependencies,
+        allTransitiveDependencies:
+            DirectoryDeleteFamily._allTransitiveDependencies,
+        path: path,
+      );
 
   DirectoryDeleteProvider._internal(
     super._createNotifier, {
@@ -347,7 +329,8 @@ mixin DirectoryDeleteRef on AutoDisposeFutureProviderRef<bool> {
 }
 
 class _DirectoryDeleteProviderElement
-    extends AutoDisposeFutureProviderElement<bool> with DirectoryDeleteRef {
+    extends AutoDisposeFutureProviderElement<bool>
+    with DirectoryDeleteRef {
   _DirectoryDeleteProviderElement(super.provider);
 
   @override
@@ -451,29 +434,29 @@ class SaveJsonToFileDirectoryProvider extends AutoDisposeFutureProvider<void> {
     String? subFolder,
     bool downloadIfWeb = false,
   }) : this._internal(
-          (ref) => saveJsonToFileDirectory(
-            ref as SaveJsonToFileDirectoryRef,
-            object: object,
-            fileName: fileName,
-            folder: folder,
-            subFolder: subFolder,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: saveJsonToFileDirectoryProvider,
-          name: r'saveJsonToFileDirectoryProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$saveJsonToFileDirectoryHash,
-          dependencies: SaveJsonToFileDirectoryFamily._dependencies,
-          allTransitiveDependencies:
-              SaveJsonToFileDirectoryFamily._allTransitiveDependencies,
-          object: object,
-          fileName: fileName,
-          folder: folder,
-          subFolder: subFolder,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => saveJsonToFileDirectory(
+           ref as SaveJsonToFileDirectoryRef,
+           object: object,
+           fileName: fileName,
+           folder: folder,
+           subFolder: subFolder,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: saveJsonToFileDirectoryProvider,
+         name: r'saveJsonToFileDirectoryProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$saveJsonToFileDirectoryHash,
+         dependencies: SaveJsonToFileDirectoryFamily._dependencies,
+         allTransitiveDependencies:
+             SaveJsonToFileDirectoryFamily._allTransitiveDependencies,
+         object: object,
+         fileName: fileName,
+         folder: folder,
+         subFolder: subFolder,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   SaveJsonToFileDirectoryProvider._internal(
     super._createNotifier, {
@@ -681,29 +664,29 @@ class ExportJsonToFileDirectoryProvider
     String? subFolder,
     bool downloadIfWeb = true,
   }) : this._internal(
-          (ref) => exportJsonToFileDirectory(
-            ref as ExportJsonToFileDirectoryRef,
-            object: object,
-            fileName: fileName,
-            folder: folder,
-            subFolder: subFolder,
-            downloadIfWeb: downloadIfWeb,
-          ),
-          from: exportJsonToFileDirectoryProvider,
-          name: r'exportJsonToFileDirectoryProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportJsonToFileDirectoryHash,
-          dependencies: ExportJsonToFileDirectoryFamily._dependencies,
-          allTransitiveDependencies:
-              ExportJsonToFileDirectoryFamily._allTransitiveDependencies,
-          object: object,
-          fileName: fileName,
-          folder: folder,
-          subFolder: subFolder,
-          downloadIfWeb: downloadIfWeb,
-        );
+         (ref) => exportJsonToFileDirectory(
+           ref as ExportJsonToFileDirectoryRef,
+           object: object,
+           fileName: fileName,
+           folder: folder,
+           subFolder: subFolder,
+           downloadIfWeb: downloadIfWeb,
+         ),
+         from: exportJsonToFileDirectoryProvider,
+         name: r'exportJsonToFileDirectoryProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$exportJsonToFileDirectoryHash,
+         dependencies: ExportJsonToFileDirectoryFamily._dependencies,
+         allTransitiveDependencies:
+             ExportJsonToFileDirectoryFamily._allTransitiveDependencies,
+         object: object,
+         fileName: fileName,
+         folder: folder,
+         subFolder: subFolder,
+         downloadIfWeb: downloadIfWeb,
+       );
 
   ExportJsonToFileDirectoryProvider._internal(
     super._createNotifier, {
@@ -893,27 +876,26 @@ class SavedFilesProvider extends FutureProvider<List<dynamic>> {
     bool rebuildOnFileModification = true,
     bool elementsInSubFolders = false,
   }) : this._internal(
-          (ref) => savedFiles(
-            ref as SavedFilesRef,
-            fromJson: fromJson,
-            folder: folder,
-            rebuildOnFileModification: rebuildOnFileModification,
-            elementsInSubFolders: elementsInSubFolders,
-          ),
-          from: savedFilesProvider,
-          name: r'savedFilesProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$savedFilesHash,
-          dependencies: SavedFilesFamily._dependencies,
-          allTransitiveDependencies:
-              SavedFilesFamily._allTransitiveDependencies,
-          fromJson: fromJson,
-          folder: folder,
-          rebuildOnFileModification: rebuildOnFileModification,
-          elementsInSubFolders: elementsInSubFolders,
-        );
+         (ref) => savedFiles(
+           ref as SavedFilesRef,
+           fromJson: fromJson,
+           folder: folder,
+           rebuildOnFileModification: rebuildOnFileModification,
+           elementsInSubFolders: elementsInSubFolders,
+         ),
+         from: savedFilesProvider,
+         name: r'savedFilesProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$savedFilesHash,
+         dependencies: SavedFilesFamily._dependencies,
+         allTransitiveDependencies: SavedFilesFamily._allTransitiveDependencies,
+         fromJson: fromJson,
+         folder: folder,
+         rebuildOnFileModification: rebuildOnFileModification,
+         elementsInSubFolders: elementsInSubFolders,
+       );
 
   SavedFilesProvider._internal(
     super._createNotifier, {
@@ -1091,25 +1073,25 @@ class SavedFilesInSubDirectoriesProvider extends FutureProvider<List<dynamic>> {
     required String folder,
     bool rebuildOnFileModification = true,
   }) : this._internal(
-          (ref) => savedFilesInSubDirectories(
-            ref as SavedFilesInSubDirectoriesRef,
-            fromJson: fromJson,
-            folder: folder,
-            rebuildOnFileModification: rebuildOnFileModification,
-          ),
-          from: savedFilesInSubDirectoriesProvider,
-          name: r'savedFilesInSubDirectoriesProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$savedFilesInSubDirectoriesHash,
-          dependencies: SavedFilesInSubDirectoriesFamily._dependencies,
-          allTransitiveDependencies:
-              SavedFilesInSubDirectoriesFamily._allTransitiveDependencies,
-          fromJson: fromJson,
-          folder: folder,
-          rebuildOnFileModification: rebuildOnFileModification,
-        );
+         (ref) => savedFilesInSubDirectories(
+           ref as SavedFilesInSubDirectoriesRef,
+           fromJson: fromJson,
+           folder: folder,
+           rebuildOnFileModification: rebuildOnFileModification,
+         ),
+         from: savedFilesInSubDirectoriesProvider,
+         name: r'savedFilesInSubDirectoriesProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$savedFilesInSubDirectoriesHash,
+         dependencies: SavedFilesInSubDirectoriesFamily._dependencies,
+         allTransitiveDependencies:
+             SavedFilesInSubDirectoriesFamily._allTransitiveDependencies,
+         fromJson: fromJson,
+         folder: folder,
+         rebuildOnFileModification: rebuildOnFileModification,
+       );
 
   SavedFilesInSubDirectoriesProvider._internal(
     super._createNotifier, {
@@ -1130,7 +1112,7 @@ class SavedFilesInSubDirectoriesProvider extends FutureProvider<List<dynamic>> {
   @override
   Override overrideWith(
     FutureOr<List<dynamic>> Function(SavedFilesInSubDirectoriesRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1235,10 +1217,7 @@ class DeleteJsonFromFileDirectoryFamily extends Family<AsyncValue<void>> {
   DeleteJsonFromFileDirectoryProvider getProviderOverride(
     covariant DeleteJsonFromFileDirectoryProvider provider,
   ) {
-    return call(
-      fileName: provider.fileName,
-      folder: provider.folder,
-    );
+    return call(fileName: provider.fileName, folder: provider.folder);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1268,23 +1247,23 @@ class DeleteJsonFromFileDirectoryProvider
     required String fileName,
     required String folder,
   }) : this._internal(
-          (ref) => deleteJsonFromFileDirectory(
-            ref as DeleteJsonFromFileDirectoryRef,
-            fileName: fileName,
-            folder: folder,
-          ),
-          from: deleteJsonFromFileDirectoryProvider,
-          name: r'deleteJsonFromFileDirectoryProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$deleteJsonFromFileDirectoryHash,
-          dependencies: DeleteJsonFromFileDirectoryFamily._dependencies,
-          allTransitiveDependencies:
-              DeleteJsonFromFileDirectoryFamily._allTransitiveDependencies,
-          fileName: fileName,
-          folder: folder,
-        );
+         (ref) => deleteJsonFromFileDirectory(
+           ref as DeleteJsonFromFileDirectoryRef,
+           fileName: fileName,
+           folder: folder,
+         ),
+         from: deleteJsonFromFileDirectoryProvider,
+         name: r'deleteJsonFromFileDirectoryProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$deleteJsonFromFileDirectoryHash,
+         dependencies: DeleteJsonFromFileDirectoryFamily._dependencies,
+         allTransitiveDependencies:
+             DeleteJsonFromFileDirectoryFamily._allTransitiveDependencies,
+         fileName: fileName,
+         folder: folder,
+       );
 
   DeleteJsonFromFileDirectoryProvider._internal(
     super._createNotifier, {
@@ -1399,10 +1378,7 @@ class DeleteDirectoryFromFileDirectoryFamily extends Family<AsyncValue<void>> {
   DeleteDirectoryFromFileDirectoryProvider getProviderOverride(
     covariant DeleteDirectoryFromFileDirectoryProvider provider,
   ) {
-    return call(
-      directoryName: provider.directoryName,
-      folder: provider.folder,
-    );
+    return call(directoryName: provider.directoryName, folder: provider.folder);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1432,23 +1408,23 @@ class DeleteDirectoryFromFileDirectoryProvider
     required String directoryName,
     required String folder,
   }) : this._internal(
-          (ref) => deleteDirectoryFromFileDirectory(
-            ref as DeleteDirectoryFromFileDirectoryRef,
-            directoryName: directoryName,
-            folder: folder,
-          ),
-          from: deleteDirectoryFromFileDirectoryProvider,
-          name: r'deleteDirectoryFromFileDirectoryProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$deleteDirectoryFromFileDirectoryHash,
-          dependencies: DeleteDirectoryFromFileDirectoryFamily._dependencies,
-          allTransitiveDependencies:
-              DeleteDirectoryFromFileDirectoryFamily._allTransitiveDependencies,
-          directoryName: directoryName,
-          folder: folder,
-        );
+         (ref) => deleteDirectoryFromFileDirectory(
+           ref as DeleteDirectoryFromFileDirectoryRef,
+           directoryName: directoryName,
+           folder: folder,
+         ),
+         from: deleteDirectoryFromFileDirectoryProvider,
+         name: r'deleteDirectoryFromFileDirectoryProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$deleteDirectoryFromFileDirectoryHash,
+         dependencies: DeleteDirectoryFromFileDirectoryFamily._dependencies,
+         allTransitiveDependencies:
+             DeleteDirectoryFromFileDirectoryFamily._allTransitiveDependencies,
+         directoryName: directoryName,
+         folder: folder,
+       );
 
   DeleteDirectoryFromFileDirectoryProvider._internal(
     super._createNotifier, {
@@ -1467,7 +1443,7 @@ class DeleteDirectoryFromFileDirectoryProvider
   @override
   Override overrideWith(
     FutureOr<void> Function(DeleteDirectoryFromFileDirectoryRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1539,14 +1515,15 @@ String _$exportWholeFileDirectoryHash() =>
 @ProviderFor(exportWholeFileDirectory)
 final exportWholeFileDirectoryProvider =
     AutoDisposeFutureProvider<void>.internal(
-  exportWholeFileDirectory,
-  name: r'exportWholeFileDirectoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$exportWholeFileDirectoryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      exportWholeFileDirectory,
+      name: r'exportWholeFileDirectoryProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$exportWholeFileDirectoryHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -1571,24 +1548,13 @@ class ExportAllFamily extends Family<AsyncValue<void>> {
   /// A provider for exporting all files in a [directory].
   ///
   /// Copied from [exportAll].
-  ExportAllProvider call({
-    required String directory,
-    bool zip = true,
-  }) {
-    return ExportAllProvider(
-      directory: directory,
-      zip: zip,
-    );
+  ExportAllProvider call({required String directory, bool zip = true}) {
+    return ExportAllProvider(directory: directory, zip: zip);
   }
 
   @override
-  ExportAllProvider getProviderOverride(
-    covariant ExportAllProvider provider,
-  ) {
-    return call(
-      directory: provider.directory,
-      zip: provider.zip,
-    );
+  ExportAllProvider getProviderOverride(covariant ExportAllProvider provider) {
+    return call(directory: provider.directory, zip: provider.zip);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1613,26 +1579,20 @@ class ExportAllProvider extends AutoDisposeFutureProvider<void> {
   /// A provider for exporting all files in a [directory].
   ///
   /// Copied from [exportAll].
-  ExportAllProvider({
-    required String directory,
-    bool zip = true,
-  }) : this._internal(
-          (ref) => exportAll(
-            ref as ExportAllRef,
-            directory: directory,
-            zip: zip,
-          ),
-          from: exportAllProvider,
-          name: r'exportAllProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$exportAllHash,
-          dependencies: ExportAllFamily._dependencies,
-          allTransitiveDependencies: ExportAllFamily._allTransitiveDependencies,
-          directory: directory,
-          zip: zip,
-        );
+  ExportAllProvider({required String directory, bool zip = true})
+    : this._internal(
+        (ref) => exportAll(ref as ExportAllRef, directory: directory, zip: zip),
+        from: exportAllProvider,
+        name: r'exportAllProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$exportAllHash,
+        dependencies: ExportAllFamily._dependencies,
+        allTransitiveDependencies: ExportAllFamily._allTransitiveDependencies,
+        directory: directory,
+        zip: zip,
+      );
 
   ExportAllProvider._internal(
     super._createNotifier, {
@@ -1649,9 +1609,7 @@ class ExportAllProvider extends AutoDisposeFutureProvider<void> {
   final bool zip;
 
   @override
-  Override overrideWith(
-    FutureOr<void> Function(ExportAllRef provider) create,
-  ) {
+  Override overrideWith(FutureOr<void> Function(ExportAllRef provider) create) {
     return ProviderOverride(
       origin: this,
       override: ExportAllProvider._internal(
@@ -1710,7 +1668,7 @@ class _ExportAllProviderElement extends AutoDisposeFutureProviderElement<void>
 }
 
 String _$importWholeFileDirectoryHash() =>
-    r'649a6ce371c61fd52ea6aca6a9bf4690a32c3985';
+    r'b68561946747a14bcaaae483264838a3865b70dd';
 
 /// A provider for importing all directory files from a zip file.
 ///
@@ -1718,14 +1676,15 @@ String _$importWholeFileDirectoryHash() =>
 @ProviderFor(importWholeFileDirectory)
 final importWholeFileDirectoryProvider =
     AutoDisposeFutureProvider<void>.internal(
-  importWholeFileDirectory,
-  name: r'importWholeFileDirectoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$importWholeFileDirectoryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      importWholeFileDirectory,
+      name: r'importWholeFileDirectoryProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$importWholeFileDirectoryHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -1739,14 +1698,15 @@ String _$exportProgressHash() => r'e345b26f7fc97d563c9a80a694913ad2707efa8a';
 @ProviderFor(ExportProgress)
 final exportProgressProvider =
     AutoDisposeNotifierProvider<ExportProgress, double?>.internal(
-  ExportProgress.new,
-  name: r'exportProgressProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$exportProgressHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ExportProgress.new,
+      name: r'exportProgressProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$exportProgressHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ExportProgress = AutoDisposeNotifier<double?>;
 String _$importProgressHash() => r'1449469df452e916f31da19b9df8d26ac2ffbf09';
@@ -1758,14 +1718,15 @@ String _$importProgressHash() => r'1449469df452e916f31da19b9df8d26ac2ffbf09';
 @ProviderFor(ImportProgress)
 final importProgressProvider =
     AutoDisposeNotifierProvider<ImportProgress, double?>.internal(
-  ImportProgress.new,
-  name: r'importProgressProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$importProgressHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ImportProgress.new,
+      name: r'importProgressProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$importProgressHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ImportProgress = AutoDisposeNotifier<double?>;
 // ignore_for_file: type=lint

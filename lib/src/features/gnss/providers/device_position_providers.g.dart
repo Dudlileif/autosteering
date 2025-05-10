@@ -15,14 +15,15 @@ String _$devicePositionPermissionHash() =>
 @ProviderFor(devicePositionPermission)
 final devicePositionPermissionProvider =
     AutoDisposeFutureProvider<bool>.internal(
-  devicePositionPermission,
-  name: r'devicePositionPermissionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$devicePositionPermissionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      devicePositionPermission,
+      name: r'devicePositionPermissionProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$devicePositionPermissionHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -36,20 +37,21 @@ String _$rawDevicePositionStreamHash() =>
 @ProviderFor(rawDevicePositionStream)
 final rawDevicePositionStreamProvider =
     AutoDisposeStreamProvider<Position>.internal(
-  rawDevicePositionStream,
-  name: r'rawDevicePositionStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$rawDevicePositionStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      rawDevicePositionStream,
+      name: r'rawDevicePositionStreamProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$rawDevicePositionStreamHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef RawDevicePositionStreamRef = AutoDisposeStreamProviderRef<Position>;
 String _$updatePositionFromDeviceHash() =>
-    r'a40fc236d4bb3a012b051fcc3731888b4632173e';
+    r'2b91e5346ffc93502f3d7185171e8bf00b44866a';
 
 /// A provider that sends device position updates to the simulation core
 /// if [DevicePositionAsVehiclePosition] and [devicePositionPermission] allow
@@ -60,9 +62,10 @@ String _$updatePositionFromDeviceHash() =>
 final updatePositionFromDeviceProvider = AutoDisposeProvider<void>.internal(
   updatePositionFromDevice,
   name: r'updatePositionFromDeviceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$updatePositionFromDeviceHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$updatePositionFromDeviceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -79,14 +82,15 @@ String _$devicePositionAsVehiclePositionHash() =>
 @ProviderFor(DevicePositionAsVehiclePosition)
 final devicePositionAsVehiclePositionProvider =
     NotifierProvider<DevicePositionAsVehiclePosition, bool>.internal(
-  DevicePositionAsVehiclePosition.new,
-  name: r'devicePositionAsVehiclePositionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$devicePositionAsVehiclePositionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      DevicePositionAsVehiclePosition.new,
+      name: r'devicePositionAsVehiclePositionProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$devicePositionAsVehiclePositionHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$DevicePositionAsVehiclePosition = Notifier<bool>;
 // ignore_for_file: type=lint

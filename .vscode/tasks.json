@@ -16,6 +16,22 @@
 			"group": "build",
 			"label": "dart: Run build_runner in watch mode",
 			"detail": "Starts a build_runner which builds continually when changes occur."
-		}
+		},
+		{
+			"type": "dart",
+			"command": "dart",
+			"args": [
+				"run",
+				"build_runner",
+				"build",
+				"--delete-conflicting-outputs"
+			],
+			"problemMatcher": [
+				"$dart-build_runner"
+			],
+			"group": "build",
+			"label": "dart: Run build_runner in build mode",
+			"detail": "Starts a build_runner that will build once."
+			}
 	]
 }

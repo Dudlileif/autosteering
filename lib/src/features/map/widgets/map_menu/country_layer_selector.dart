@@ -48,8 +48,9 @@ class CountryLayerSelector extends ConsumerWidget {
         itemCount: availableLayers.length,
         itemBuilder: (context, index) {
           final layer = availableLayers.elementAt(index);
-          final enabled =
-              selectedLayers.any((element) => layer.name == element.name);
+          final enabled = selectedLayers.any(
+            (element) => layer.name == element.name,
+          );
           return _CountryLayerMenuItemButton(
             key: ValueKey(layer.name),
             index: index,
@@ -63,13 +64,7 @@ class CountryLayerSelector extends ConsumerWidget {
       return MenuButtonWithChildren(
         text: country.name,
         icon: Icons.map,
-        menuChildren: [
-          SizedBox(
-            height: 240,
-            width: 300,
-            child: listView,
-          ),
-        ],
+        menuChildren: [SizedBox(height: 240, width: 300, child: listView)],
       );
     }
     return const SizedBox.shrink();
@@ -97,59 +92,66 @@ class _CountryLayerMenuItemButton extends StatelessWidget {
       children: [
         Expanded(
           child: Consumer(
-            builder: (context, ref, child) => CheckboxListTile(
-              controlAffinity: ListTileControlAffinity.leading,
-              value: enabled,
-              onChanged: (value) => value != null
-                  ? value
-                      ? ref
-                          .read(enabledCountryLayersProvider.notifier)
-                          .add(layer)
-                      : ref
-                          .read(enabledCountryLayersProvider.notifier)
-                          .remove(layer)
-                  : null,
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    layer.name,
-                    style: theme.menuButtonWithChildrenText,
-                  ),
-                  SliderTheme(
-                    data: theme.sliderTheme.copyWith(
-                      showValueIndicator: ShowValueIndicator.always,
-                    ),
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        final opacity = ref
-                            .watch(countryLayerOpacitiesProvider)[layer.name]!;
-
-                        return Slider(
-                          value: opacity,
-                          label: 'Opacity: ${opacity.toStringAsFixed(2)}',
-                          onChanged: enabled
-                              ? (value) => ref
-                                  .read(countryLayerOpacitiesProvider.notifier)
-                                  .update(layer, value)
+            builder:
+                (context, ref, child) => CheckboxListTile(
+                  controlAffinity: ListTileControlAffinity.leading,
+                  value: enabled,
+                  onChanged:
+                      (value) =>
+                          value != null
+                              ? value
+                                  ? ref
+                                      .read(
+                                        enabledCountryLayersProvider.notifier,
+                                      )
+                                      .add(layer)
+                                  : ref
+                                      .read(
+                                        enabledCountryLayersProvider.notifier,
+                                      )
+                                      .remove(layer)
                               : null,
-                          divisions: 20,
-                        );
-                      },
-                    ),
+                  title: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(layer.name, style: theme.menuButtonWithChildrenText),
+                      SliderTheme(
+                        data: theme.sliderTheme.copyWith(
+                          showValueIndicator: ShowValueIndicator.always,
+                        ),
+                        child: Consumer(
+                          builder: (context, ref, child) {
+                            final opacity =
+                                ref.watch(countryLayerOpacitiesProvider)[layer
+                                    .name]!;
+
+                            return Slider(
+                              value: opacity,
+                              label: 'Opacity: ${opacity.toStringAsFixed(2)}',
+                              onChanged:
+                                  enabled
+                                      ? (value) => ref
+                                          .read(
+                                            countryLayerOpacitiesProvider
+                                                .notifier,
+                                          )
+                                          .update(layer, value)
+                                      : null,
+                              divisions: 20,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(right: 10),
           child: ReorderableDragStartListener(
             index: index,
-            child: const Card(
-              child: Icon(Icons.drag_handle),
-            ),
+            child: const Card(child: Icon(Icons.drag_handle)),
           ),
         ),
       ],

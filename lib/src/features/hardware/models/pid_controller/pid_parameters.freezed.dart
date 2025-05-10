@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,207 +10,151 @@ part of 'pid_parameters.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-PidParameters _$PidParametersFromJson(Map<String, dynamic> json) {
-  return _PidParameters.fromJson(json);
-}
 
 /// @nodoc
 mixin _$PidParameters {
-  /// Proportional gain.
-  double get p => throw _privateConstructorUsedError;
 
-  /// Integral gain.
-  double get i => throw _privateConstructorUsedError;
-
-  /// Derivative gain.
-  double get d => throw _privateConstructorUsedError;
+/// Proportional gain.
+ double get p;/// Integral gain.
+ double get i;/// Derivative gain.
+ double get d;
+/// Create a copy of PidParameters
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PidParametersCopyWith<PidParameters> get copyWith => _$PidParametersCopyWithImpl<PidParameters>(this as PidParameters, _$identity);
 
   /// Serializes this PidParameters to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of PidParameters
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $PidParametersCopyWith<PidParameters> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PidParameters&&(identical(other.p, p) || other.p == p)&&(identical(other.i, i) || other.i == i)&&(identical(other.d, d) || other.d == d));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,p,i,d);
+
+@override
+String toString() {
+  return 'PidParameters(p: $p, i: $i, d: $d)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $PidParametersCopyWith<$Res> {
-  factory $PidParametersCopyWith(
-          PidParameters value, $Res Function(PidParameters) then) =
-      _$PidParametersCopyWithImpl<$Res, PidParameters>;
-  @useResult
-  $Res call({double p, double i, double d});
-}
+abstract mixin class $PidParametersCopyWith<$Res>  {
+  factory $PidParametersCopyWith(PidParameters value, $Res Function(PidParameters) _then) = _$PidParametersCopyWithImpl;
+@useResult
+$Res call({
+ double p, double i, double d
+});
 
+
+
+
+}
 /// @nodoc
-class _$PidParametersCopyWithImpl<$Res, $Val extends PidParameters>
+class _$PidParametersCopyWithImpl<$Res>
     implements $PidParametersCopyWith<$Res> {
-  _$PidParametersCopyWithImpl(this._value, this._then);
+  _$PidParametersCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final PidParameters _self;
+  final $Res Function(PidParameters) _then;
 
-  /// Create a copy of PidParameters
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? p = null,
-    Object? i = null,
-    Object? d = null,
-  }) {
-    return _then(_value.copyWith(
-      p: null == p
-          ? _value.p
-          : p // ignore: cast_nullable_to_non_nullable
-              as double,
-      i: null == i
-          ? _value.i
-          : i // ignore: cast_nullable_to_non_nullable
-              as double,
-      d: null == d
-          ? _value.d
-          : d // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
-  }
+/// Create a copy of PidParameters
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? p = null,Object? i = null,Object? d = null,}) {
+  return _then(_self.copyWith(
+p: null == p ? _self.p : p // ignore: cast_nullable_to_non_nullable
+as double,i: null == i ? _self.i : i // ignore: cast_nullable_to_non_nullable
+as double,d: null == d ? _self.d : d // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
 }
 
-/// @nodoc
-abstract class _$$PidParametersImplCopyWith<$Res>
-    implements $PidParametersCopyWith<$Res> {
-  factory _$$PidParametersImplCopyWith(
-          _$PidParametersImpl value, $Res Function(_$PidParametersImpl) then) =
-      __$$PidParametersImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({double p, double i, double d});
 }
 
-/// @nodoc
-class __$$PidParametersImplCopyWithImpl<$Res>
-    extends _$PidParametersCopyWithImpl<$Res, _$PidParametersImpl>
-    implements _$$PidParametersImplCopyWith<$Res> {
-  __$$PidParametersImplCopyWithImpl(
-      _$PidParametersImpl _value, $Res Function(_$PidParametersImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of PidParameters
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? p = null,
-    Object? i = null,
-    Object? d = null,
-  }) {
-    return _then(_$PidParametersImpl(
-      p: null == p
-          ? _value.p
-          : p // ignore: cast_nullable_to_non_nullable
-              as double,
-      i: null == i
-          ? _value.i
-          : i // ignore: cast_nullable_to_non_nullable
-              as double,
-      d: null == d
-          ? _value.d
-          : d // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$PidParametersImpl implements _PidParameters {
-  const _$PidParametersImpl({this.p = 20, this.i = 0.130, this.d = 0.063});
 
-  factory _$PidParametersImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PidParametersImplFromJson(json);
+class _PidParameters implements PidParameters {
+  const _PidParameters({this.p = 20, this.i = 0.130, this.d = 0.063});
+  factory _PidParameters.fromJson(Map<String, dynamic> json) => _$PidParametersFromJson(json);
 
-  /// Proportional gain.
-  @override
-  @JsonKey()
-  final double p;
+/// Proportional gain.
+@override@JsonKey() final  double p;
+/// Integral gain.
+@override@JsonKey() final  double i;
+/// Derivative gain.
+@override@JsonKey() final  double d;
 
-  /// Integral gain.
-  @override
-  @JsonKey()
-  final double i;
+/// Create a copy of PidParameters
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PidParametersCopyWith<_PidParameters> get copyWith => __$PidParametersCopyWithImpl<_PidParameters>(this, _$identity);
 
-  /// Derivative gain.
-  @override
-  @JsonKey()
-  final double d;
-
-  @override
-  String toString() {
-    return 'PidParameters(p: $p, i: $i, d: $d)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PidParametersImpl &&
-            (identical(other.p, p) || other.p == p) &&
-            (identical(other.i, i) || other.i == i) &&
-            (identical(other.d, d) || other.d == d));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, p, i, d);
-
-  /// Create a copy of PidParameters
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PidParametersImplCopyWith<_$PidParametersImpl> get copyWith =>
-      __$$PidParametersImplCopyWithImpl<_$PidParametersImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$PidParametersImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$PidParametersToJson(this, );
 }
 
-abstract class _PidParameters implements PidParameters {
-  const factory _PidParameters(
-      {final double p, final double i, final double d}) = _$PidParametersImpl;
-
-  factory _PidParameters.fromJson(Map<String, dynamic> json) =
-      _$PidParametersImpl.fromJson;
-
-  /// Proportional gain.
-  @override
-  double get p;
-
-  /// Integral gain.
-  @override
-  double get i;
-
-  /// Derivative gain.
-  @override
-  double get d;
-
-  /// Create a copy of PidParameters
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PidParametersImplCopyWith<_$PidParametersImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PidParameters&&(identical(other.p, p) || other.p == p)&&(identical(other.i, i) || other.i == i)&&(identical(other.d, d) || other.d == d));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,p,i,d);
+
+@override
+String toString() {
+  return 'PidParameters(p: $p, i: $i, d: $d)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PidParametersCopyWith<$Res> implements $PidParametersCopyWith<$Res> {
+  factory _$PidParametersCopyWith(_PidParameters value, $Res Function(_PidParameters) _then) = __$PidParametersCopyWithImpl;
+@override @useResult
+$Res call({
+ double p, double i, double d
+});
+
+
+
+
+}
+/// @nodoc
+class __$PidParametersCopyWithImpl<$Res>
+    implements _$PidParametersCopyWith<$Res> {
+  __$PidParametersCopyWithImpl(this._self, this._then);
+
+  final _PidParameters _self;
+  final $Res Function(_PidParameters) _then;
+
+/// Create a copy of PidParameters
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? p = null,Object? i = null,Object? d = null,}) {
+  return _then(_PidParameters(
+p: null == p ? _self.p : p // ignore: cast_nullable_to_non_nullable
+as double,i: null == i ? _self.i : i // ignore: cast_nullable_to_non_nullable
+as double,d: null == d ? _self.d : d // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+
+}
+
+// dart format on

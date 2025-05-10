@@ -34,7 +34,8 @@ class ColorSerializer implements JsonConverter<Color, String> {
 
   @override
   String toJson(Color object) {
-    final value = ((object.a * 255).round() << 24) +
+    final value =
+        ((object.a * 255).round() << 24) +
         ((object.r * 255).round() << 16) +
         ((object.g * 255).round() << 8) +
         (object.b * 255).round();
@@ -62,7 +63,8 @@ class ColorSerializerNullable implements JsonConverter<Color?, String> {
     if (object == null) {
       return 'null';
     }
-    final value = ((object.a * 255).round() << 24) +
+    final value =
+        ((object.a * 255).round() << 24) +
         ((object.r * 255).round() << 16) +
         ((object.g * 255).round() << 8) +
         (object.b * 255).round();

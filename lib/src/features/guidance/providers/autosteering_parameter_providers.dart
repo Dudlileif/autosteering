@@ -46,7 +46,9 @@ class AutosteeringConfiguratorUiOffset
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (previous != null && next != previous) {
-        ref.read(settingsProvider.notifier).update(
+        ref
+            .read(settingsProvider.notifier)
+            .update(
               SettingsKey.uiAutosteeringConfiguratorOffset,
               next.toJson(),
             );

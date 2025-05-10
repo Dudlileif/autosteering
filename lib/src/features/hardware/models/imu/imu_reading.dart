@@ -23,7 +23,7 @@ part 'imu_reading.g.dart';
 
 /// A class for storing IMU input values.
 @freezed
-class ImuReading with _$ImuReading {
+sealed class ImuReading with _$ImuReading {
   /// A class for storing IMU input values.
   const factory ImuReading({
     /// The time of the reading being received.

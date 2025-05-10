@@ -55,15 +55,13 @@ class ConfiguredEquipment extends _$ConfiguredEquipment {
 
   /// Updates the equipment's [section].
   void updateSection(Section section) => Future(
-        () => state = state.copyWith(
-          sections: state.sections
-            ..replaceRange(
-              section.index,
-              section.index + 1,
-              [section],
-            ),
+    () =>
+        state = state.copyWith(
+          sections:
+              state.sections
+                ..replaceRange(section.index, section.index + 1, [section]),
         ),
-      );
+  );
 }
 
 /// A provider for whether the configured equipment sections should have equal
@@ -75,15 +73,18 @@ class ConfiguredEquipmentEqualWidths extends _$ConfiguredEquipmentEqualWidths {
     listenSelf((previous, next) {
       if (previous != null && !previous && next) {
         final equipment = ref.read(configuredEquipmentProvider);
-        ref.read(configuredEquipmentProvider.notifier).update(
+        ref
+            .read(configuredEquipmentProvider.notifier)
+            .update(
               equipment.copyWith(
-                sections: equipment.sections
-                    .map(
-                      (section) => section.copyWith(
-                        width: equipment.sections.first.width,
-                      ),
-                    )
-                    .toList(),
+                sections:
+                    equipment.sections
+                        .map(
+                          (section) => section.copyWith(
+                            width: equipment.sections.first.width,
+                          ),
+                        )
+                        .toList(),
               ),
             );
       }
@@ -114,15 +115,18 @@ class ConfiguredEquipmentEqualWorkingWidths
     listenSelf((previous, next) {
       if (previous != null && !previous && next) {
         final equipment = ref.read(configuredEquipmentProvider);
-        ref.read(configuredEquipmentProvider.notifier).update(
+        ref
+            .read(configuredEquipmentProvider.notifier)
+            .update(
               equipment.copyWith(
-                sections: equipment.sections
-                    .map(
-                      (section) => section.copyWith(
-                        workingWidth: equipment.sections.first.workingWidth,
-                      ),
-                    )
-                    .toList(),
+                sections:
+                    equipment.sections
+                        .map(
+                          (section) => section.copyWith(
+                            workingWidth: equipment.sections.first.workingWidth,
+                          ),
+                        )
+                        .toList(),
               ),
             );
       }

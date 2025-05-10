@@ -15,14 +15,15 @@ String _$editablePathAsWayPointsHash() =>
 @ProviderFor(editablePathAsWayPoints)
 final editablePathAsWayPointsProvider =
     AutoDisposeProvider<List<WayPoint>?>.internal(
-  editablePathAsWayPoints,
-  name: r'editablePathAsWayPointsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$editablePathAsWayPointsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      editablePathAsWayPoints,
+      name: r'editablePathAsWayPointsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$editablePathAsWayPointsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -36,14 +37,15 @@ String _$activeEditablePathTypeHash() =>
 @ProviderFor(ActiveEditablePathType)
 final activeEditablePathTypeProvider =
     NotifierProvider<ActiveEditablePathType, EditablePathType?>.internal(
-  ActiveEditablePathType.new,
-  name: r'activeEditablePathTypeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeEditablePathTypeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ActiveEditablePathType.new,
+      name: r'activeEditablePathTypeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$activeEditablePathTypeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ActiveEditablePathType = Notifier<EditablePathType?>;
 String _$editablePathPointsHash() =>
@@ -55,14 +57,15 @@ String _$editablePathPointsHash() =>
 @ProviderFor(EditablePathPoints)
 final editablePathPointsProvider =
     AutoDisposeNotifierProvider<EditablePathPoints, List<Geographic>?>.internal(
-  EditablePathPoints.new,
-  name: r'editablePathPointsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$editablePathPointsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EditablePathPoints.new,
+      name: r'editablePathPointsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$editablePathPointsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EditablePathPoints = AutoDisposeNotifier<List<Geographic>?>;
 // ignore_for_file: type=lint

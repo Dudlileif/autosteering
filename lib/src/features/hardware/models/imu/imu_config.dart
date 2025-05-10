@@ -24,7 +24,7 @@ part 'imu_config.g.dart';
 /// A configuration class fro how the vehicle should use the IMU and
 /// zero values for the axes.
 @freezed
-class ImuConfig with _$ImuConfig {
+sealed class ImuConfig with _$ImuConfig {
   /// A configuration class fro how the vehicle should use the IMU and
   /// zero values for the axes.
   ///

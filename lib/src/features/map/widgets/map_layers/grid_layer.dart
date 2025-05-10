@@ -43,7 +43,7 @@ class GridLayer extends ConsumerWidget {
     final horizontal = Grid.horizontalLines(origo, camera);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     if (ref.watch(showGridSizeIndicatorProvider)) {
-    ref.read(mapGridSizeProvider.notifier).update(vertical.size);
+      ref.read(mapGridSizeProvider.notifier).update(vertical.size);
     }
     return PolylineLayer(
       polylines: [
@@ -75,8 +75,7 @@ class Grid {
   /// opposite screen corners. The size will always be 1, 2 or 5 times a power
   /// of 10, but not lower that 10, i.e. 10, 20, 50, 100, 200... etc.
   static double _findGridSize(MapCamera camera) {
-    final diagonal =
-        camera
+    final diagonal = camera
         .screenOffsetToLatLng(Offset.zero)
         .geoPosition
         .spherical
@@ -89,16 +88,16 @@ class Grid {
                 ),
               )
               .geoPosition,
-            );
+        );
     final exponent = (log(diagonal) / ln10).ceil().clamp(3, 8);
 
     final leading = diagonal.truncate() ~/ pow(10, exponent - 1);
-    final multiplier = switch (leading) {
-      > 5 => 5,
-      > 2 => 2,
-      _ => 1,
-    }
-        .toDouble();
+    final multiplier =
+        switch (leading) {
+          > 5 => 5,
+          > 2 => 2,
+          _ => 1,
+        }.toDouble();
 
     final spacing = multiplier * pow(10, exponent - 2);
     return spacing;
@@ -118,20 +117,16 @@ class Grid {
       north: camera.visibleBounds.north,
     );
 
-    final eastExtensionPoint =
-        origo.spherical.destinationPoint(distance: 100, bearing: 90);
-
-    final origoToCameraBoxMinDistance =
-        geoBox.min.spherical.alongTrackDistanceTo(
-      start: origo,
-      end: eastExtensionPoint,
+    final eastExtensionPoint = origo.spherical.destinationPoint(
+      distance: 100,
+      bearing: 90,
     );
 
-    final origoToCameraBoxMaxDistance =
-        geoBox.max.spherical.alongTrackDistanceTo(
-      start: origo,
-      end: eastExtensionPoint,
-    );
+    final origoToCameraBoxMinDistance = geoBox.min.spherical
+        .alongTrackDistanceTo(start: origo, end: eastExtensionPoint);
+
+    final origoToCameraBoxMaxDistance = geoBox.max.spherical
+        .alongTrackDistanceTo(start: origo, end: eastExtensionPoint);
 
     final spacing = _findGridSize(camera);
 
@@ -139,8 +134,10 @@ class Grid {
 
     var offset = (origoToCameraBoxMinDistance ~/ spacing) * spacing;
     while (offset < origoToCameraBoxMaxDistance) {
-      final offsetPoint =
-          origo.rhumb.destinationPoint(distance: offset, bearing: 90);
+      final offsetPoint = origo.rhumb.destinationPoint(
+        distance: offset,
+        bearing: 90,
+      );
       lines.add([
         offsetPoint.copyWith(y: camera.visibleBounds.south).latLng,
         offsetPoint.copyWith(y: camera.visibleBounds.north).latLng,
@@ -165,20 +162,16 @@ class Grid {
       north: camera.visibleBounds.north,
     );
 
-    final northExtensionPoint =
-        origo.spherical.destinationPoint(distance: 100, bearing: 0);
-
-    final origoToCameraBoxMinDistance =
-        geoBox.min.spherical.alongTrackDistanceTo(
-      start: origo,
-      end: northExtensionPoint,
+    final northExtensionPoint = origo.spherical.destinationPoint(
+      distance: 100,
+      bearing: 0,
     );
 
-    final origoToCameraBoxMaxDistance =
-        geoBox.max.spherical.alongTrackDistanceTo(
-      start: origo,
-      end: northExtensionPoint,
-    );
+    final origoToCameraBoxMinDistance = geoBox.min.spherical
+        .alongTrackDistanceTo(start: origo, end: northExtensionPoint);
+
+    final origoToCameraBoxMaxDistance = geoBox.max.spherical
+        .alongTrackDistanceTo(start: origo, end: northExtensionPoint);
 
     final spacing = _findGridSize(camera);
 
@@ -186,8 +179,10 @@ class Grid {
 
     var offset = (origoToCameraBoxMinDistance ~/ spacing) * spacing;
     while (offset < origoToCameraBoxMaxDistance) {
-      final offsetPoint =
-          origo.rhumb.destinationPoint(distance: offset, bearing: 0);
+      final offsetPoint = origo.rhumb.destinationPoint(
+        distance: offset,
+        bearing: 0,
+      );
       lines.add([
         offsetPoint.copyWith(x: camera.visibleBounds.west).latLng,
         offsetPoint.copyWith(x: camera.visibleBounds.east).latLng,

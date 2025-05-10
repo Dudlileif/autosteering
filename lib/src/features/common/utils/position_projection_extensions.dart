@@ -19,14 +19,14 @@ import 'package:geobase/geobase.dart';
 import 'package:latlong2/latlong.dart';
 
 /// An extension to allow easy swapping between different location/coordinate
-/// packages different classes.
+/// package classes.
 extension LatLngProjExt on LatLng {
   /// A conversion to the geobase package format.
   Geographic get geoPosition => Geographic(lon: longitude, lat: latitude);
 }
 
 /// An extension to allow easy swapping between different location/coordinate
-/// packages different classes.
+/// package classes.
 extension GeographicProjExt on Geographic {
   /// A conversion to the latlong2 package format, used by the flutter_map
   /// package.
@@ -41,7 +41,7 @@ extension GeographicProjExt on Geographic {
   bool isWithinRing(Iterable<Geographic> ring) {
     final boundary = GeoBox.from(ring);
 
-    var intersects = 0;
+    var intersections = 0;
 
     for (var i = 0; i < ring.length; i++) {
       final start = ring.elementAt(i);
@@ -65,13 +65,13 @@ extension GeographicProjExt on Geographic {
           // Is the intersection on the actual line segment?
           if (distanceAlongLine >= 0 &&
               distanceAlongLine <= start.rhumb.distanceTo(end)) {
-            intersects++;
+            intersections++;
           }
         }
       }
     }
 
-    return intersects.isOdd;
+    return intersections.isOdd;
   }
 }
 

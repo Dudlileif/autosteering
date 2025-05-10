@@ -30,17 +30,11 @@ class VehicleAntennaPage extends ConsumerWidget {
 
     final children = [
       Center(
-        child: Text(
-          'Antenna',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        child: Text('Antenna', style: Theme.of(context).textTheme.titleLarge),
       ),
       TextFormField(
         decoration: const InputDecoration(
-          icon: RotatedBox(
-            quarterTurns: 1,
-            child: Icon(Icons.expand),
-          ),
+          icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
           labelText: 'Antenna lateral offset (-left / +right)',
           suffixText: 'm',
         ),
@@ -49,8 +43,9 @@ class VehicleAntennaPage extends ConsumerWidget {
           signed: true,
         ),
         initialValue: ref.read(
-          configuredVehicleProvider
-              .select((value) => value.antennaLateralOffset.toString()),
+          configuredVehicleProvider.select(
+            (value) => value.antennaLateralOffset.toString(),
+          ),
         ),
         onChanged: (value) {
           final offset = double.tryParse(value.replaceAll(',', '.'));
@@ -68,8 +63,9 @@ class VehicleAntennaPage extends ConsumerWidget {
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
-          configuredVehicleProvider
-              .select((value) => value.antennaHeight.toString()),
+          configuredVehicleProvider.select(
+            (value) => value.antennaHeight.toString(),
+          ),
         ),
         onChanged: (value) {
           final height = double.tryParse(value.replaceAll(',', '.'));
@@ -81,75 +77,73 @@ class VehicleAntennaPage extends ConsumerWidget {
       ),
       ...switch (vehicle) {
         AxleSteeredVehicle() => [
-            TextFormField(
-              decoration: InputDecoration(
-                icon: const Icon(Icons.expand),
-                labelText: 'Antenna to ${switch (vehicle) {
-                  Tractor() => 'rear axle',
-                  Harvester() => 'front axle'
-                }}',
-                suffixText: 'm',
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(
-                decimal: true,
-                signed: true,
-              ),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) {
-                    if (value is Harvester) {
-                      return (-value.antennaToSolidAxleDistance).toString();
-                    }
-                    return (value as AxleSteeredVehicle)
-                        .antennaToSolidAxleDistance
-                        .toString();
-                  },
-                ),
-              ),
-              onChanged: (value) {
-                final distance = double.tryParse(value.replaceAll(',', '.'));
-
-                if (distance != null) {
-                  ref.read(configuredVehicleProvider.notifier).update(
-                        vehicle.copyWith(
-                          antennaToSolidAxleDistance:
-                              (vehicle is Harvester) ? -distance : distance,
-                        ),
-                      );
+          TextFormField(
+            decoration: InputDecoration(
+              icon: const Icon(Icons.expand),
+              labelText:
+                  'Antenna to ${switch (vehicle) {
+                    Tractor() => 'rear axle',
+                    Harvester() => 'front axle',
+                  }}',
+              suffixText: 'm',
+            ),
+            keyboardType: const TextInputType.numberWithOptions(
+              decimal: true,
+              signed: true,
+            ),
+            initialValue: ref.read(
+              configuredVehicleProvider.select((value) {
+                if (value is Harvester) {
+                  return (-value.antennaToSolidAxleDistance).toString();
                 }
-              },
+                return (value as AxleSteeredVehicle).antennaToSolidAxleDistance
+                    .toString();
+              }),
             ),
-          ],
-        ArticulatedTractor() => [
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: Icon(Icons.expand),
-                labelText: 'Antenna to pivot center',
-                suffixText: 'm',
-                helperText: 'Antenna MUST be on the front body of the vehicle!',
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(
-                decimal: true,
-                signed: true,
-              ),
-              initialValue: ref.read(
-                configuredVehicleProvider.select(
-                  (value) => (value as ArticulatedTractor)
-                      .antennaToPivotDistance
-                      .toString(),
-                ),
-              ),
-              onChanged: (value) {
-                final distance = double.tryParse(value.replaceAll(',', '.'));
+            onChanged: (value) {
+              final distance = double.tryParse(value.replaceAll(',', '.'));
 
-                ref.read(configuredVehicleProvider.notifier).update(
-                      vehicle.copyWith(antennaToPivotDistance: distance),
+              if (distance != null) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        antennaToSolidAxleDistance:
+                            (vehicle is Harvester) ? -distance : distance,
+                      ),
                     );
-              },
+              }
+            },
+          ),
+        ],
+        ArticulatedTractor() => [
+          TextFormField(
+            decoration: const InputDecoration(
+              icon: Icon(Icons.expand),
+              labelText: 'Antenna to pivot center',
+              suffixText: 'm',
+              helperText: 'Antenna MUST be on the front body of the vehicle!',
             ),
-          ]
+            keyboardType: const TextInputType.numberWithOptions(
+              decimal: true,
+              signed: true,
+            ),
+            initialValue: ref.read(
+              configuredVehicleProvider.select(
+                (value) =>
+                    (value as ArticulatedTractor).antennaToPivotDistance
+                        .toString(),
+              ),
+            ),
+            onChanged: (value) {
+              final distance = double.tryParse(value.replaceAll(',', '.'));
+
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(vehicle.copyWith(antennaToPivotDistance: distance));
+            },
+          ),
+        ],
       },
     ];
 
@@ -157,14 +151,15 @@ class VehicleAntennaPage extends ConsumerWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children: children
-              .map(
-              (widget) => Padding(
-                padding: const EdgeInsets.all(8),
-                child: SizedBox(width: 400, child: widget),
-              ),
-              )
-              .toList(),
+          children:
+              children
+                  .map(
+                    (widget) => Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(width: 400, child: widget),
+                    ),
+                  )
+                  .toList(),
         ),
       ),
     );

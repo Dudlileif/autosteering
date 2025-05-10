@@ -60,10 +60,7 @@ class RemoteControlHardwareNetworkAlive
   bool build() {
     listenSelf((previous, next) {
       _resetTimer?.cancel();
-      _resetTimer = Timer(
-        const Duration(seconds: 2),
-        ref.invalidateSelf,
-      );
+      _resetTimer = Timer(const Duration(seconds: 2), ref.invalidateSelf);
     });
 
     return false;
@@ -88,8 +85,7 @@ class NetworkInterfaces extends _$NetworkInterfaces {
   bool updateShouldNotify(
     List<NetworkInterface> previous,
     List<NetworkInterface> next,
-  ) =>
-      !const DeepCollectionEquality.unordered().equals(previous, next);
+  ) => !const DeepCollectionEquality.unordered().equals(previous, next);
 }
 
 /// A provider for the wireless IP address of the device.
@@ -111,10 +107,9 @@ class DeviceIPAddressWlan extends _$DeviceIPAddressWlan {
         .firstWhereOrNull(
           (element) =>
               element.name.toLowerCase().startsWith('wlan0') ||
-              element.name
-                  .toLowerCase()
-                  // Regex for wlp2s0 and similar
-                  .contains(RegExp(r'wlp\d{1,}s\d{1,}')),
+              element.name.toLowerCase()
+              // Regex for wlp2s0 and similar
+              .contains(RegExp(r'wlp\d{1,}s\d{1,}')),
         )
         ?.addresses
         .first
@@ -198,8 +193,8 @@ class SteeringHardwareAddress extends _$SteeringHardwareAddress {
 
   /// Update the [state] to [value] if it's a valid IP adress.
   void update(String value) => Future(() {
-        state = value;
-      });
+    state = value;
+  });
 }
 
 /// A provider for the IP adress of the remote control hardware we want to
@@ -225,8 +220,8 @@ class RemoteControlHardwareAddress extends _$RemoteControlHardwareAddress {
 
   /// Update the [state] to [value] if it's a valid IP adress.
   void update(String value) => Future(() {
-        state = value;
-      });
+    state = value;
+  });
 }
 
 /// A provider for the UDP receive port for the device.
@@ -254,13 +249,13 @@ class HardwareUDPReceivePort extends _$HardwareUDPReceivePort {
 
   /// Update the [state] to [value] if it's a valid integer.
   void updateFromString(String value) => Future(() {
-        final port = int.tryParse(value);
-        if (port != null) {
-          if (port >= 1000 && port <= 65535) {
-            state = port;
-          }
-        }
-      });
+    final port = int.tryParse(value);
+    if (port != null) {
+      if (port >= 1000 && port <= 65535) {
+        state = port;
+      }
+    }
+  });
 }
 
 /// A provider for the UDP send port for the device to send messages to
@@ -289,13 +284,13 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
 
   /// Update the [state] to [value] if it's a valid integer.
   void updateFromString(String value) => Future(() {
-        final port = int.tryParse(value);
-        if (port != null) {
-          if (port >= 1000 && port <= 65535) {
-            state = port;
-          }
-        }
-      });
+    final port = int.tryParse(value);
+    if (port != null) {
+      if (port >= 1000 && port <= 65535) {
+        state = port;
+      }
+    }
+  });
 }
 
 /// A provider for the combined state of the [SteeringHardwareAddress],
@@ -307,14 +302,16 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
   String steeringHardwareAddress,
   String remoteControlHardwareAddress,
   int hardwareUDPReceivePort,
-  int hardwareUDPSendPort
-}) hardwareCommunicationConfig(Ref ref) {
+  int hardwareUDPSendPort,
+})
+hardwareCommunicationConfig(Ref ref) {
   final config = (
     steeringHardwareAddress: ref.watch(steeringHardwareAddressProvider),
-    remoteControlHardwareAddress:
-        ref.watch(remoteControlHardwareAddressProvider),
+    remoteControlHardwareAddress: ref.watch(
+      remoteControlHardwareAddressProvider,
+    ),
     hardwareUDPReceivePort: ref.watch(hardwareUDPReceivePortProvider),
-    hardwareUDPSendPort: ref.watch(hardwareUDPSendPortProvider)
+    hardwareUDPSendPort: ref.watch(hardwareUDPSendPortProvider),
   );
   ref.read(simInputProvider.notifier).send(config);
   return config;
@@ -351,11 +348,12 @@ class TcpServer extends _$TcpServer {
             },
           );
         },
-        error: (error, stackTrace) => Logger.instance.e(
-          'Failed to create TCP client socket.',
-          error: error,
-          stackTrace: stackTrace,
-        ),
+        error:
+            (error, stackTrace) => Logger.instance.e(
+              'Failed to create TCP client socket.',
+              error: error,
+              stackTrace: stackTrace,
+            ),
         loading: () {},
       );
     });

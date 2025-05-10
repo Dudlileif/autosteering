@@ -30,9 +30,12 @@ class HardwareLogGnss extends _$HardwareLogGnss {
   bool build() {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send(
-        (logGNSS: next, logIMU: null, logWAS: null, logCombined: null),
-      );
+      ref.read(simInputProvider.notifier).send((
+        logGNSS: next,
+        logIMU: null,
+        logWAS: null,
+        logCombined: null,
+      ));
       if (previous != null) {
         Logger.instance.i('GNSS logging ${next ? 'enabled' : 'disabled'}');
         ref
@@ -57,9 +60,12 @@ class HardwareLogImu extends _$HardwareLogImu {
   bool build() {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send(
-        (logGNSS: null, logIMU: next, logWAS: null, logCombined: null),
-      );
+      ref.read(simInputProvider.notifier).send((
+        logGNSS: null,
+        logIMU: next,
+        logWAS: null,
+        logCombined: null,
+      ));
       if (previous != null) {
         Logger.instance.i('IMU logging ${next ? 'enabled' : 'disabled'}');
         ref
@@ -84,9 +90,12 @@ class HardwareLogWas extends _$HardwareLogWas {
   bool build() {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send(
-        (logGNSS: null, logIMU: null, logWAS: next, logCombined: null),
-      );
+      ref.read(simInputProvider.notifier).send((
+        logGNSS: null,
+        logIMU: null,
+        logWAS: next,
+        logCombined: null,
+      ));
       if (previous != null) {
         Logger.instance.i('WAS logging ${next ? 'enabled' : 'disabled'}');
         ref
@@ -112,12 +121,16 @@ class HardwareLogCombined extends _$HardwareLogCombined {
   bool build() {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
-      ref.read(simInputProvider.notifier).send(
-        (logGNSS: null, logIMU: null, logWAS: null, logCombined: next),
-      );
+      ref.read(simInputProvider.notifier).send((
+        logGNSS: null,
+        logIMU: null,
+        logWAS: null,
+        logCombined: next,
+      ));
       if (previous != null) {
-        Logger.instance
-            .i('Combined hardware logging ${next ? 'enabled' : 'disabled'}');
+        Logger.instance.i(
+          'Combined hardware logging ${next ? 'enabled' : 'disabled'}',
+        );
         ref
             .read(settingsProvider.notifier)
             .update(SettingsKey.logHardwareCombined, next);

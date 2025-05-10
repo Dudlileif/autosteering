@@ -33,8 +33,9 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final fieldArea = ref
-        .watch(activeFieldProvider.select((value) => value?.areaWithoutHoles));
+    final fieldArea = ref.watch(
+      activeFieldProvider.select((value) => value?.areaWithoutHoles),
+    );
 
     final area = ref.watch(
       equipmentWorkedAreaProvider.select(
@@ -50,10 +51,9 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
         ),
         title: TextWithStroke(
           switch (fieldArea != null) {
-            true =>
-              '''
+            true => '''
 ${area != null ? (area / 1e4).toStringAsFixed(2) : '-'} / ${(fieldArea! / 1e4).toStringAsFixed(2)} ha
-${area != null ? '${clampDouble(100 * area / fieldArea,0, 100).toStringAsFixed(1)}%' : ''}''',
+${area != null ? '${clampDouble(100 * area / fieldArea, 0, 100).toStringAsFixed(1)}%' : ''}''',
             false => '${(area! / 1e4).toStringAsFixed(2)} ha',
           },
           style: GoogleFonts.robotoMono(

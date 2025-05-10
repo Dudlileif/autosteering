@@ -43,8 +43,9 @@ Future<void> main() async {
       SystemUiMode.manual,
       overlays: [SystemUiOverlay.top],
     );
-    await SystemChrome.setSystemUIChangeCallback(
-        (systemOverlaysAreVisible) async {
+    await SystemChrome.setSystemUIChangeCallback((
+      systemOverlaysAreVisible,
+    ) async {
       if (systemOverlaysAreVisible) {
         Timer(const Duration(milliseconds: 1500), () async {
           await SystemChrome.setEnabledSystemUIMode(
@@ -79,14 +80,12 @@ Future<void> main() async {
 
   Logger.instance.i('Starting main application...');
 
-  runApp(
-    const ProviderScope(
-      child: Autosteering(),
-    ),
-  );
+  runApp(const ProviderScope(child: Autosteering()));
 
   LicenseRegistry.addLicense(() async* {
-    yield const LicenseEntryWithLineBreaks(['autosteering'], '''
+    yield const LicenseEntryWithLineBreaks(
+      ['autosteering'],
+      '''
 Copyright (C) 2024 Gaute Hagen
 
 Autosteering is free software: you can redistribute it and/or modify
@@ -101,6 +100,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with Autosteering. If not, see https://www.gnu.org/licenses/.
-''');
+''',
+    );
   });
 }

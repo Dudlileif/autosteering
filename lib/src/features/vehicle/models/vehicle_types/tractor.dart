@@ -91,7 +91,7 @@ final class Tractor extends AxleSteeredVehicle {
       length: dimensions['length'] as double,
       wheelBase: dimensions['wheel_base'] as double,
       trackWidth: dimensions['track_width'] as double,
-      
+
       minTurningRadius: steering['min_turning_radius'] as double,
       steeringAngleMax: steering['steering_angle_max'] as double,
       ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
@@ -118,16 +118,16 @@ final class Tractor extends AxleSteeredVehicle {
   /// The position of the center of the rear axle.
   @override
   Geographic get solidAxlePosition => position.rhumb.destinationPoint(
-        distance: antennaToSolidAxleDistance,
-        bearing: (bearing - 180).wrap360(),
-      );
+    distance: antennaToSolidAxleDistance,
+    bearing: (bearing - 180).wrap360(),
+  );
 
   /// The position of the center of the front axle.
   @override
   Geographic get steeringAxlePosition => position.rhumb.destinationPoint(
-        distance: wheelBase - antennaToSolidAxleDistance,
-        bearing: bearing.wrap360(),
-      );
+    distance: wheelBase - antennaToSolidAxleDistance,
+    bearing: bearing.wrap360(),
+  );
 
   /// The position of the Stanley axle in the the vehicle direction. Used when
   /// calculating the Stanley pursuit values.
@@ -136,15 +136,15 @@ final class Tractor extends AxleSteeredVehicle {
   /// when the tractor is reversing.
   @override
   Geographic get stanleyAxlePosition => switch (isReversing) {
-        true => solidAxlePosition.rhumb
-            .destinationPoint(distance: wheelBase, bearing: bearing + 180),
-        false => steeringAxlePosition,
-      }
-          .rhumb
-          .destinationPoint(
-            distance: nudgeDistance,
-            bearing: (bearing - 90).wrap360(),
-          );
+    true => solidAxlePosition.rhumb.destinationPoint(
+      distance: wheelBase,
+      bearing: bearing + 180,
+    ),
+    false => steeringAxlePosition,
+  }.rhumb.destinationPoint(
+    distance: nudgeDistance,
+    bearing: (bearing - 90).wrap360(),
+  );
 
   /// The angle of the left steering wheel when using Ackermann steering.
   @override
@@ -203,63 +203,61 @@ final class Tractor extends AxleSteeredVehicle {
     DateTime? lastUsed,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
-  }) =>
-      Tractor(
-        antennaPosition: antennaPosition ?? this.antennaPosition,
-        antennaHeight: antennaHeight ?? this.antennaHeight,
-        antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
-        minTurningRadius: minTurningRadius ?? this.minTurningRadius,
-        steeringAngleMax: steeringAngleMax ?? steeringAngleMaxRaw,
-        trackWidth: trackWidth ?? this.trackWidth,
-        wheelBase: wheelBase ?? this.wheelBase,
-        antennaToSolidAxleDistance:
-            antennaToSolidAxleDistance ?? this.antennaToSolidAxleDistance,
-        solidAxleToFrontHitchDistance:
-            solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
-        solidAxleToRearHitchDistance:
-            solidAxleToRearHitchDistance ?? this.solidAxleToRearHitchDistance,
-        solidAxleToRearTowbarDistance:
-            solidAxleToRearTowbarDistance ?? this.solidAxleToRearTowbarDistance,
-        ackermannSteeringRatio:
-            ackermannSteeringRatio ?? this.ackermannSteeringRatio,
-        ackermannPercentage: ackermannPercentage ?? this.ackermannPercentage,
-        steeringAxleWheelDiameter:
-            steeringAxleWheelDiameter ?? this.steeringAxleWheelDiameter,
-        solidAxleWheelDiameter:
-            solidAxleWheelDiameter ?? this.solidAxleWheelDiameter,
-        steeringAxleWheelWidth:
-            steeringAxleWheelWidth ?? this.steeringAxleWheelWidth,
-        solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
-        numWheels: numWheels ?? this.numWheels,
-        wheelSpacing: wheelSpacing ?? this.wheelSpacing,
-        imu: imu ?? this.imu,
-        was: was ?? this.was,
-        autosteeringThresholdVelocity:
-            autosteeringThresholdVelocity ?? this.autosteeringThresholdVelocity,
-        steeringHardwareConfig:
-            steeringHardwareConfig ?? this.steeringHardwareConfig,
-        pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
-        purePursuitParameters:
-            purePursuitParameters ?? this.purePursuitParameters,
-        stanleyParameters: stanleyParameters ?? this.stanleyParameters,
-        velocity: velocity ?? this.velocity,
-        bearing: bearing ?? _bearing,
-        pitch: pitch ?? _pitch,
-        roll: roll ?? _roll,
-        steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
-        length: length ?? this.length,
-        width: width ?? this.width,
-        nudgeDistance: nudgeDistance ?? this.nudgeDistance,
-        wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
-        hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
-        hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
-        hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
-        name: name ?? this.name,
-        uuid: uuid ?? this.uuid,
-        lastUsed: lastUsed ?? this.lastUsed,
-        manufacturerColors: manufacturerColors ?? this.manufacturerColors,
-        manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
-      )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
+  }) => Tractor(
+    antennaPosition: antennaPosition ?? this.antennaPosition,
+    antennaHeight: antennaHeight ?? this.antennaHeight,
+    antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
+    minTurningRadius: minTurningRadius ?? this.minTurningRadius,
+    steeringAngleMax: steeringAngleMax ?? steeringAngleMaxRaw,
+    trackWidth: trackWidth ?? this.trackWidth,
+    wheelBase: wheelBase ?? this.wheelBase,
+    antennaToSolidAxleDistance:
+        antennaToSolidAxleDistance ?? this.antennaToSolidAxleDistance,
+    solidAxleToFrontHitchDistance:
+        solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
+    solidAxleToRearHitchDistance:
+        solidAxleToRearHitchDistance ?? this.solidAxleToRearHitchDistance,
+    solidAxleToRearTowbarDistance:
+        solidAxleToRearTowbarDistance ?? this.solidAxleToRearTowbarDistance,
+    ackermannSteeringRatio:
+        ackermannSteeringRatio ?? this.ackermannSteeringRatio,
+    ackermannPercentage: ackermannPercentage ?? this.ackermannPercentage,
+    steeringAxleWheelDiameter:
+        steeringAxleWheelDiameter ?? this.steeringAxleWheelDiameter,
+    solidAxleWheelDiameter:
+        solidAxleWheelDiameter ?? this.solidAxleWheelDiameter,
+    steeringAxleWheelWidth:
+        steeringAxleWheelWidth ?? this.steeringAxleWheelWidth,
+    solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
+    numWheels: numWheels ?? this.numWheels,
+    wheelSpacing: wheelSpacing ?? this.wheelSpacing,
+    imu: imu ?? this.imu,
+    was: was ?? this.was,
+    autosteeringThresholdVelocity:
+        autosteeringThresholdVelocity ?? this.autosteeringThresholdVelocity,
+    steeringHardwareConfig:
+        steeringHardwareConfig ?? this.steeringHardwareConfig,
+    pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
+    purePursuitParameters: purePursuitParameters ?? this.purePursuitParameters,
+    stanleyParameters: stanleyParameters ?? this.stanleyParameters,
+    velocity: velocity ?? this.velocity,
+    bearing: bearing ?? _bearing,
+    pitch: pitch ?? _pitch,
+    roll: roll ?? _roll,
+    steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
+    length: length ?? this.length,
+    width: width ?? this.width,
+    nudgeDistance: nudgeDistance ?? this.nudgeDistance,
+    wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
+    hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
+    hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
+    hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
+    name: name ?? this.name,
+    uuid: uuid ?? this.uuid,
+    lastUsed: lastUsed ?? this.lastUsed,
+    manufacturerColors: manufacturerColors ?? this.manufacturerColors,
+    manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
+  )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override
   Map<String, dynamic> toJson() {

@@ -30,37 +30,34 @@ class VehicleSteeringPage extends ConsumerWidget {
 
     final children = [
       Center(
-        child: Text(
-          'Steering',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        child: Text('Steering', style: Theme.of(context).textTheme.titleLarge),
       ),
       TextFormField(
         decoration: InputDecoration(
           icon: const Icon(Icons.looks),
           labelText: 'Minimum turning radius',
           suffixText: 'm',
-          counter: vehicle is AxleSteeredVehicle
-              ? Consumer(
-                  builder: (context, ref, child) {
-                    final value = ref.watch(
-                      configuredVehicleProvider.select(
-                        (value) => (value as AxleSteeredVehicle)
-                            .minTurningRadiusTheoretic
-                            .toStringAsFixed(2),
-                      ),
-                    );
-                    return Text(
-                      '''Theoretical: $value m''',
-                    );
-                  },
-                )
-              : null,
+          counter:
+              vehicle is AxleSteeredVehicle
+                  ? Consumer(
+                    builder: (context, ref, child) {
+                      final value = ref.watch(
+                        configuredVehicleProvider.select(
+                          (value) => (value as AxleSteeredVehicle)
+                              .minTurningRadiusTheoretic
+                              .toStringAsFixed(2),
+                        ),
+                      );
+                      return Text('''Theoretical: $value m''');
+                    },
+                  )
+                  : null,
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
-          configuredVehicleProvider
-              .select((value) => value.minTurningRadius.toString()),
+          configuredVehicleProvider.select(
+            (value) => value.minTurningRadius.toString(),
+          ),
         ),
         onFieldSubmitted: (value) {
           final radius = double.tryParse(value.replaceAll(',', '.'));
@@ -79,17 +76,19 @@ class VehicleSteeringPage extends ConsumerWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredVehicleProvider.select(
-            (value) => switch (value is AxleSteeredVehicle) {
-              true => (value as AxleSteeredVehicle).steeringAngleMaxRaw,
-              false => value.steeringAngleMax
-            }
-                .toString(),
+            (value) =>
+                switch (value is AxleSteeredVehicle) {
+                  true => (value as AxleSteeredVehicle).steeringAngleMaxRaw,
+                  false => value.steeringAngleMax,
+                }.toString(),
           ),
         ),
         onFieldSubmitted: (value) {
           final steeringAngleMax = double.tryParse(value.replaceAll(',', '.'));
 
-          ref.read(configuredVehicleProvider.notifier).update(
+          ref
+              .read(configuredVehicleProvider.notifier)
+              .update(
                 vehicle.copyWith(steeringAngleMax: steeringAngleMax?.abs()),
               );
         },
@@ -103,6 +102,13 @@ class VehicleSteeringPage extends ConsumerWidget {
               builder: (context, ref, child) {
                 final vehicle =
                     ref.watch(configuredVehicleProvider) as AxleSteeredVehicle;
+                final ackermann = WheelAngleToAckermann(
+                  wheelAngle: vehicle.steeringAngleMaxRaw,
+                  wheelBase: vehicle.wheelBase,
+                  trackWidth: vehicle.trackWidth,
+                  steeringRatio: vehicle.ackermannSteeringRatio,
+                  ackermannPercentage: vehicle.ackermannPercentage,
+                );
                 return Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -110,13 +116,9 @@ class VehicleSteeringPage extends ConsumerWidget {
                     Text(
                       '''Inner: ${vehicle.steeringAngleMaxRaw.toStringAsFixed(1)}°''',
                     ),
-                    Text('Outer: ${WheelAngleToAckermann(
-                      wheelAngle: vehicle.steeringAngleMaxRaw,
-                      wheelBase: vehicle.wheelBase,
-                      trackWidth: vehicle.trackWidth,
-                      steeringRatio: vehicle.ackermannSteeringRatio,
-                      ackermannPercentage: vehicle.ackermannPercentage,
-                    ).oppositeAngle.toStringAsFixed(1)}°'),
+                    Text(
+                      'Outer: ${ackermann.oppositeAngle.toStringAsFixed(1)}°',
+                    ),
                   ],
                 );
               },
@@ -124,17 +126,19 @@ class VehicleSteeringPage extends ConsumerWidget {
           ),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) => (value as AxleSteeredVehicle)
-                  .ackermannPercentage
-                  .round()
-                  .toString(),
+              (value) =>
+                  (value as AxleSteeredVehicle).ackermannPercentage
+                      .round()
+                      .toString(),
             ),
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onFieldSubmitted: (value) {
             final percentage = double.tryParse(value.replaceAll(',', '.'));
-        
-            ref.read(configuredVehicleProvider.notifier).update(
+
+            ref
+                .read(configuredVehicleProvider.notifier)
+                .update(
                   vehicle.copyWith(ackermannPercentage: percentage?.abs()),
                 );
           },
@@ -145,14 +149,15 @@ class VehicleSteeringPage extends ConsumerWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children: children
-              .map(
-              (widget) => Padding(
-                padding: const EdgeInsets.all(8),
-                child: SizedBox(width: 400, child: widget),
-              ),
-              )
-              .toList(),
+          children:
+              children
+                  .map(
+                    (widget) => Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(width: 400, child: widget),
+                    ),
+                  )
+                  .toList(),
         ),
       ),
     );

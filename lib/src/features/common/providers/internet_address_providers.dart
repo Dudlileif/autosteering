@@ -24,10 +24,7 @@ part 'internet_address_providers.g.dart';
 /// A provider for figuring out whether an internet [address] is valid, i.e.
 /// has a reachable IP address attached to it.
 @riverpod
-Future<bool> validInternetAddress(
-  Ref ref,
-  String? address,
-) async {
+Future<bool> validInternetAddress(Ref ref, String? address) async {
   if (address == null) {
     return false;
   }

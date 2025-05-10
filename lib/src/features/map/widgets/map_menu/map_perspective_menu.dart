@@ -40,11 +40,13 @@ class MapPerspectiveMenu extends StatelessWidget {
           builder: (context, ref, child) {
             return CheckboxListTile(
               value: ref.watch(mapUse3DPerspectiveProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                      .read(mapUse3DPerspectiveProvider.notifier)
-                      .update(value: value)
-                  : null,
+              onChanged:
+                  (value) =>
+                      value != null
+                          ? ref
+                              .read(mapUse3DPerspectiveProvider.notifier)
+                              .update(value: value)
+                          : null,
               secondary: child,
             );
           },

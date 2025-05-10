@@ -61,18 +61,18 @@ class SimulatorCoreBase {
       final messages = decoder.decode(data);
       for (final message in messages) {
         if (message is ImuReading ||
-            message is ({
-              Geographic gnssPosition,
-              DateTime gnssTime,
-              DateTime receiveTime
-            }) ||
+            message
+                is ({
+                  Geographic gnssPosition,
+                  DateTime gnssTime,
+                  DateTime receiveTime,
+                  GnssFixQuality quality,
+                }) ||
             message is WasReading) {
           state.handleMessage(message);
         } else if (message != null) {
           updateMainThreadStream.add(message);
-          if (message is GnssPositionCommonSentence) {
-            state.handleMessage((gnssFixQuality: message.quality ?? 0));
-          } else if (message is ({List<bool> buttonStates})) {
+          if (message is ({List<bool> buttonStates})) {
             state.remoteControlSendStream?.add(
               Uint8List.fromList(
                 jsonEncode({'button_states': message.buttonStates}).codeUnits,
@@ -93,12 +93,13 @@ class SimulatorCoreBase {
   ) {
     for (final message in decoder.parseString(record)) {
       if (message is ImuReading ||
-          message is ({
-            Geographic gnssPosition,
-            DateTime gnssTime,
-            DateTime receiveTime,
-            GnssFixQuality quality,
-          }) ||
+          message
+              is ({
+                Geographic gnssPosition,
+                DateTime gnssTime,
+                DateTime receiveTime,
+                GnssFixQuality quality,
+              }) ||
           message is WasReading) {
         state.handleMessage(message);
       } else if (message != null) {

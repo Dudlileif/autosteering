@@ -36,9 +36,13 @@ class OSMLayerButton extends StatelessWidget {
       builder: (context, ref, child) {
         return CheckboxListTile(
           value: ref.watch(showOSMLayerProvider),
-          onChanged: (value) => value != null
-              ? ref.read(showOSMLayerProvider.notifier).update(value: value)
-              : null,
+          onChanged:
+              (value) =>
+                  value != null
+                      ? ref
+                          .read(showOSMLayerProvider.notifier)
+                          .update(value: value)
+                      : null,
           secondary: child,
         );
       },

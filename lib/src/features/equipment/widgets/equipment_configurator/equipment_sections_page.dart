@@ -39,10 +39,7 @@ class EquipmentSectionsPage extends ConsumerWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: Text(
-                  'Sections',
-                  style: theme.textTheme.titleLarge,
-                ),
+                child: Text('Sections', style: theme.textTheme.titleLarge),
               ),
               Center(
                 child: ConstrainedBox(
@@ -64,7 +61,9 @@ class EquipmentSectionsPage extends ConsumerWidget {
                       final sections =
                           int.tryParse(value.replaceAll(',', '.')) ?? 1;
 
-                      ref.read(configuredEquipmentProvider.notifier).update(
+                      ref
+                          .read(configuredEquipmentProvider.notifier)
+                          .update(
                             equipment.copyWith(
                               sections: List.generate(
                                 sections,
@@ -136,9 +135,7 @@ class _SectionWidthExpansionTileState
       builder: (context, ref, child) {
         final equipment = ref.watch(configuredEquipmentProvider);
         return TextFormField(
-          enabled: ref.watch(
-            configuredEquipmentEqualWidthsProvider,
-          ),
+          enabled: ref.watch(configuredEquipmentEqualWidthsProvider),
           controller: TextEditingController(
             text: '${equipment.sections.first.width}',
           ),
@@ -146,26 +143,19 @@ class _SectionWidthExpansionTileState
             labelText: 'Section width',
             suffixText: 'm',
           ),
-          keyboardType: const TextInputType.numberWithOptions(
-            decimal: true,
-          ),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onFieldSubmitted: (value) {
-            final newWidth = double.tryParse(
-              value.replaceAll(',', '.'),
-            )?.abs();
+            final newWidth = double.tryParse(value.replaceAll(',', '.'))?.abs();
 
             if (newWidth != null) {
               ref
-                  .read(
-                    configuredEquipmentProvider.notifier,
-                  )
+                  .read(configuredEquipmentProvider.notifier)
                   .update(
                     equipment.copyWith(
-                      sections: equipment.sections
-                          .map(
-                            (section) => section..width = newWidth,
-                          )
-                          .toList(),
+                      sections:
+                          equipment.sections
+                              .map((section) => section..width = newWidth)
+                              .toList(),
                     ),
                   );
             }
@@ -177,19 +167,25 @@ class _SectionWidthExpansionTileState
 
   late final widgets = [
     Consumer(
-      builder: (context, ref, child) => CheckboxListTile(
-        enabled: ref.watch(
-          configuredEquipmentProvider
-              .select((value) => value.sections.length >= 2),
-        ),
-        title: const Text('Equal widths'),
-        value: ref.watch(configuredEquipmentEqualWidthsProvider),
-        onChanged: (value) => value != null
-            ? ref
-                .read(configuredEquipmentEqualWidthsProvider.notifier)
-                .update(value: value)
-            : null,
-      ),
+      builder:
+          (context, ref, child) => CheckboxListTile(
+            enabled: ref.watch(
+              configuredEquipmentProvider.select(
+                (value) => value.sections.length >= 2,
+              ),
+            ),
+            title: const Text('Equal widths'),
+            value: ref.watch(configuredEquipmentEqualWidthsProvider),
+            onChanged:
+                (value) =>
+                    value != null
+                        ? ref
+                            .read(
+                              configuredEquipmentEqualWidthsProvider.notifier,
+                            )
+                            .update(value: value)
+                        : null,
+          ),
     ),
     if (ref.read(configuredEquipmentEqualWidthsProvider)) textField,
   ];
@@ -206,10 +202,8 @@ class _SectionWidthExpansionTileState
           widgets.removeLast();
           state.removeItem(
             1,
-            (context, animation) => SizeTransition(
-              sizeFactor: animation,
-              child: textField,
-            ),
+            (context, animation) =>
+                SizeTransition(sizeFactor: animation, child: textField),
           );
         }
       }
@@ -221,13 +215,14 @@ class _SectionWidthExpansionTileState
       child: AnimatedList(
         key: key,
         initialItemCount: widgets.length,
-        itemBuilder: (context, index, animation) => SizeTransition(
-          sizeFactor: CurvedAnimation(
-            parent: animation,
-            curve: Easing.emphasizedAccelerate,
-          ),
-          child: widgets[index],
-        ),
+        itemBuilder:
+            (context, index, animation) => SizeTransition(
+              sizeFactor: CurvedAnimation(
+                parent: animation,
+                curve: Easing.emphasizedAccelerate,
+              ),
+              child: widgets[index],
+            ),
       ),
     );
   }
@@ -251,9 +246,7 @@ class _SectionWorkingWidthExpansionTileState
       builder: (context, ref, child) {
         final equipment = ref.watch(configuredEquipmentProvider);
         return TextFormField(
-          enabled: ref.watch(
-            configuredEquipmentEqualWorkingWidthsProvider,
-          ),
+          enabled: ref.watch(configuredEquipmentEqualWorkingWidthsProvider),
           controller: TextEditingController(
             text: '${equipment.sections.first.workingWidth}',
           ),
@@ -261,26 +254,21 @@ class _SectionWorkingWidthExpansionTileState
             labelText: 'Section working width',
             suffixText: 'm',
           ),
-          keyboardType: const TextInputType.numberWithOptions(
-            decimal: true,
-          ),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onFieldSubmitted: (value) {
-            final newWidth = double.tryParse(
-              value.replaceAll(',', '.'),
-            )?.abs();
+            final newWidth = double.tryParse(value.replaceAll(',', '.'))?.abs();
 
             if (newWidth != null) {
               ref
-                  .read(
-                    configuredEquipmentProvider.notifier,
-                  )
+                  .read(configuredEquipmentProvider.notifier)
                   .update(
                     equipment.copyWith(
-                      sections: equipment.sections
-                          .map(
-                            (section) => section..workingWidth = newWidth,
-                          )
-                          .toList(),
+                      sections:
+                          equipment.sections
+                              .map(
+                                (section) => section..workingWidth = newWidth,
+                              )
+                              .toList(),
                     ),
                   );
             }
@@ -292,19 +280,26 @@ class _SectionWorkingWidthExpansionTileState
 
   late final widgets = [
     Consumer(
-      builder: (context, ref, child) => CheckboxListTile(
-        enabled: ref.watch(
-          configuredEquipmentProvider
-              .select((value) => value.sections.length >= 2),
-        ),
-        title: const Text('Equal working widths'),
-        value: ref.watch(configuredEquipmentEqualWorkingWidthsProvider),
-        onChanged: (value) => value != null
-            ? ref
-                .read(configuredEquipmentEqualWorkingWidthsProvider.notifier)
-                .update(value: value)
-            : null,
-      ),
+      builder:
+          (context, ref, child) => CheckboxListTile(
+            enabled: ref.watch(
+              configuredEquipmentProvider.select(
+                (value) => value.sections.length >= 2,
+              ),
+            ),
+            title: const Text('Equal working widths'),
+            value: ref.watch(configuredEquipmentEqualWorkingWidthsProvider),
+            onChanged:
+                (value) =>
+                    value != null
+                        ? ref
+                            .read(
+                              configuredEquipmentEqualWorkingWidthsProvider
+                                  .notifier,
+                            )
+                            .update(value: value)
+                        : null,
+          ),
     ),
     if (ref.read(configuredEquipmentEqualWorkingWidthsProvider)) textField,
   ];
@@ -321,10 +316,8 @@ class _SectionWorkingWidthExpansionTileState
           widgets.removeLast();
           state.removeItem(
             1,
-            (context, animation) => SizeTransition(
-              sizeFactor: animation,
-              child: textField,
-            ),
+            (context, animation) =>
+                SizeTransition(sizeFactor: animation, child: textField),
           );
         }
       }
@@ -332,18 +325,20 @@ class _SectionWorkingWidthExpansionTileState
 
     return AnimatedContainer(
       duration: Durations.medium1,
-      height: 80 +
+      height:
+          80 +
           (ref.watch(configuredEquipmentEqualWorkingWidthsProvider) ? 80 : 0),
       child: AnimatedList(
         key: key,
         initialItemCount: widgets.length,
-        itemBuilder: (context, index, animation) => SizeTransition(
-          sizeFactor: CurvedAnimation(
-            parent: animation,
-            curve: Easing.emphasizedAccelerate,
-          ),
-          child: widgets[index],
-        ),
+        itemBuilder:
+            (context, index, animation) => SizeTransition(
+              sizeFactor: CurvedAnimation(
+                parent: animation,
+                curve: Easing.emphasizedAccelerate,
+              ),
+              child: widgets[index],
+            ),
       ),
     );
   }
@@ -365,8 +360,9 @@ class _SectionConfiguratorState extends ConsumerState<_SectionConfigurator> {
   final widgets = <Widget>[];
 
   late bool equalWidth = ref.read(configuredEquipmentEqualWidthsProvider);
-  late bool equalWorkingWidth =
-      ref.read(configuredEquipmentEqualWorkingWidthsProvider);
+  late bool equalWorkingWidth = ref.read(
+    configuredEquipmentEqualWorkingWidthsProvider,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -439,16 +435,17 @@ class _SectionConfiguratorState extends ConsumerState<_SectionConfigurator> {
         padding: const EdgeInsets.only(top: 8),
         key: _listKey,
         initialItemCount: widgets.length,
-        itemBuilder: (context, index, animation) => SizeTransition(
-          sizeFactor: CurvedAnimation(
-            parent: animation,
-            curve: Easing.emphasizedAccelerate,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8, left: 4, right: 4),
-            child: widgets[index],
-          ),
-        ),
+        itemBuilder:
+            (context, index, animation) => SizeTransition(
+              sizeFactor: CurvedAnimation(
+                parent: animation,
+                curve: Easing.emphasizedAccelerate,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8, left: 4, right: 4),
+                child: widgets[index],
+              ),
+            ),
       ),
     );
   }
@@ -462,8 +459,9 @@ class _SectionWidth extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final section = ref.watch(
-      configuredEquipmentProvider
-          .select((value) => value.sections.elementAtOrNull(index)),
+      configuredEquipmentProvider.select(
+        (value) => value.sections.elementAtOrNull(index),
+      ),
     );
     if (section == null) {
       return const SizedBox.shrink();
@@ -474,21 +472,13 @@ class _SectionWidth extends ConsumerWidget {
         labelText: 'Section ${section.index + 1} width',
         suffixText: 'm',
       ),
-      keyboardType: const TextInputType.numberWithOptions(
-        decimal: true,
-      ),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       onFieldSubmitted: (value) {
         final newWidth = double.tryParse(value.replaceAll(',', '.'));
 
         if (newWidth != null) {
           section.width = newWidth;
-          ref
-              .read(
-                configuredEquipmentProvider.notifier,
-              )
-              .updateSection(
-                section,
-              );
+          ref.read(configuredEquipmentProvider.notifier).updateSection(section);
         }
       },
     );
@@ -502,8 +492,9 @@ class _SectionWorkingWidth extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final section = ref.watch(
-      configuredEquipmentProvider
-          .select((value) => value.sections.elementAtOrNull(index)),
+      configuredEquipmentProvider.select(
+        (value) => value.sections.elementAtOrNull(index),
+      ),
     );
     if (section == null) {
       return const SizedBox.shrink();
@@ -515,23 +506,13 @@ class _SectionWorkingWidth extends ConsumerWidget {
         labelText: 'Section ${section.index + 1} working width',
         suffixText: 'm',
       ),
-      keyboardType: const TextInputType.numberWithOptions(
-        decimal: true,
-      ),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       onFieldSubmitted: (value) {
-        final newWidth = double.tryParse(
-          value.replaceAll(',', '.'),
-        );
+        final newWidth = double.tryParse(value.replaceAll(',', '.'));
 
         if (newWidth != null) {
           section.workingWidth = newWidth;
-          ref
-              .read(
-                configuredEquipmentProvider.notifier,
-              )
-              .updateSection(
-                section,
-              );
+          ref.read(configuredEquipmentProvider.notifier).updateSection(section);
         }
       },
     );
@@ -553,48 +534,28 @@ class _SectionButtonColorSelector extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     return DropdownMenu(
-      label: Text(
-        'Section ${section.index + 1} button color',
-      ),
-      leadingIcon: Icon(
-        Icons.color_lens,
-        color: section.color ?? Colors.green,
-      ),
+      label: Text('Section ${section.index + 1} button color'),
+      leadingIcon: Icon(Icons.color_lens, color: section.color ?? Colors.green),
       initialSelection: section.color,
       onSelected: (color) {
         section.color = color;
-        ref
-            .read(
-              configuredEquipmentProvider.notifier,
-            )
-            .updateSection(
-              section,
-            );
+        ref.read(configuredEquipmentProvider.notifier).updateSection(section);
       },
       menuStyle: const MenuStyle(alignment: Alignment.topCenter),
       dropdownMenuEntries: [
         DropdownMenuEntry(
           value: null,
           label: 'Default',
-          leadingIcon: const Icon(
-            Icons.color_lens,
-            color: Colors.green,
-          ),
+          leadingIcon: const Icon(Icons.color_lens, color: Colors.green),
           trailingIcon: section.color == null ? const Icon(Icons.check) : null,
         ),
         ...Colors.primaries.mapIndexed(
           (index, color) => DropdownMenuEntry(
             value: color.shade500,
             label: PrimaryColorNamesExtension.primaryColorNames[index],
-            leadingIcon: Icon(
-              Icons.color_lens,
-              color: color,
-            ),
-            trailingIcon: section.color == color
-                ? const Icon(
-                    Icons.check,
-                  )
-                : null,
+            leadingIcon: Icon(Icons.color_lens, color: color),
+            trailingIcon:
+                section.color == color ? const Icon(Icons.check) : null,
           ),
         ),
       ],
@@ -618,9 +579,7 @@ class _SectionWorkedPathColorSelector extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     return DropdownMenu(
-      label: Text(
-        'Section ${section.index + 1} path color',
-      ),
+      label: Text('Section ${section.index + 1} path color'),
       leadingIcon: Icon(
         Icons.color_lens,
         color: section.workedPathColor ?? theme.primaryColor,
@@ -628,41 +587,25 @@ class _SectionWorkedPathColorSelector extends ConsumerWidget {
       initialSelection: section.workedPathColor,
       onSelected: (color) {
         section.workedPathColor = color;
-        ref
-            .read(
-              configuredEquipmentProvider.notifier,
-            )
-            .updateSection(
-              section,
-            );
+        ref.read(configuredEquipmentProvider.notifier).updateSection(section);
       },
       dropdownMenuEntries: [
         DropdownMenuEntry(
           value: null,
           label: 'Default',
-          leadingIcon: Icon(
-            Icons.color_lens,
-            color: theme.primaryColor,
-          ),
-          trailingIcon: section.workedPathColor == null
-              ? const Icon(
-                  Icons.check,
-                )
-              : null,
+          leadingIcon: Icon(Icons.color_lens, color: theme.primaryColor),
+          trailingIcon:
+              section.workedPathColor == null ? const Icon(Icons.check) : null,
         ),
         ...Colors.primaries.mapIndexed(
           (index, color) => DropdownMenuEntry(
             value: color.shade500,
             label: PrimaryColorNamesExtension.primaryColorNames[index],
-            leadingIcon: Icon(
-              Icons.color_lens,
-              color: color,
-            ),
-            trailingIcon: section.workedPathColor == color
-                ? const Icon(
-                    Icons.check,
-                  )
-                : null,
+            leadingIcon: Icon(Icons.color_lens, color: color),
+            trailingIcon:
+                section.workedPathColor == color
+                    ? const Icon(Icons.check)
+                    : null,
           ),
         ),
       ],
@@ -681,44 +624,49 @@ class _Sections extends StatelessWidget {
       children: [
         ListenableBuilder(
           listenable: controller,
-          builder: (context, child) => switch (
-              (controller.positions.firstOrNull?.maxScrollExtent ?? 0) > 0 ||
+          builder:
+              (context, child) => switch ((controller
+                              .positions
+                              .firstOrNull
+                              ?.maxScrollExtent ??
+                          0) >
+                      0 ||
                   sections.length >= 5) {
-            true => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () => controller.animateTo(
-                      0,
-                      duration: Durations.long4,
-                      curve: Curves.easeInOutCubicEmphasized,
+                true => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed:
+                          () => controller.animateTo(
+                            0,
+                            duration: Durations.long4,
+                            curve: Curves.easeInOutCubicEmphasized,
+                          ),
+                      child: const Text('1'),
                     ),
-                    child: const Text('1'),
-                  ),
-                  TextButton(
-                    onPressed: () => controller.animateTo(
-                      controller.positions.first.maxScrollExtent / 2,
-                      duration: Durations.long4,
-                      curve: Curves.easeInOutCubicEmphasized,
+                    TextButton(
+                      onPressed:
+                          () => controller.animateTo(
+                            controller.positions.first.maxScrollExtent / 2,
+                            duration: Durations.long4,
+                            curve: Curves.easeInOutCubicEmphasized,
+                          ),
+                      child: Text('''${(sections.length / 2).ceil()}'''),
                     ),
-                    child: Text(
-                      '''${(sections.length / 2).ceil()}''',
+                    TextButton(
+                      onPressed: () {
+                        controller.animateTo(
+                          controller.positions.first.maxScrollExtent,
+                          duration: Durations.long4,
+                          curve: Curves.easeInOutCubicEmphasized,
+                        );
+                      },
+                      child: Text('${sections.length}'),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      controller.animateTo(
-                        controller.positions.first.maxScrollExtent,
-                        duration: Durations.long4,
-                        curve: Curves.easeInOutCubicEmphasized,
-                      );
-                    },
-                    child: Text('${sections.length}'),
-                  ),
-                ],
-              ),
-            false => const SizedBox.shrink(),
-          },
+                  ],
+                ),
+                false => const SizedBox.shrink(),
+              },
         ),
         Scrollbar(
           scrollbarOrientation: ScrollbarOrientation.top,
@@ -731,16 +679,12 @@ class _Sections extends StatelessWidget {
             builder: (context, ref, child) {
               var heightModifier = 0.0;
               if (sections.length > 1) {
-                heightModifier += ref.watch(
-                  configuredEquipmentEqualWidthsProvider,
-                )
-                    ? 1
-                    : 0;
-                heightModifier += ref.watch(
-                  configuredEquipmentEqualWorkingWidthsProvider,
-                )
-                    ? 1
-                    : 0;
+                heightModifier +=
+                    ref.watch(configuredEquipmentEqualWidthsProvider) ? 1 : 0;
+                heightModifier +=
+                    ref.watch(configuredEquipmentEqualWorkingWidthsProvider)
+                        ? 1
+                        : 0;
               }
 
               return AnimatedContainer(
