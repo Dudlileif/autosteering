@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 /// A settings menu for map, sim core and theme settings.
 class SettingsMenu extends StatelessWidget {
@@ -224,13 +225,16 @@ class _LicenseButton extends StatelessWidget {
       child: Icon(Symbols.info),
     ),
     child: Text('About', style: Theme.of(context).menuButtonWithChildrenText),
-    onPressed:
-        () => showAboutDialog(
+    onPressed: () async {
+      final packageInfo = await PackageInfo.fromPlatform();
+      if (context.mounted) {
+        showAboutDialog(
           context: context,
           applicationName: 'Autosteering',
-          applicationVersion: '0.1.0',
+          applicationVersion:
+              '${packageInfo.version}+${packageInfo.buildNumber}',
           applicationLegalese: '''
-Copyright (C) 2024 Gaute Hagen
+Copyright (C) 2025 Gaute Hagen
 
 Autosteering is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -245,7 +249,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Autosteering. If not, see https://www.gnu.org/licenses/.
 ''',
-        ),
+        );
+      }
+    },
   );
 }
 
