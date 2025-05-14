@@ -49,21 +49,23 @@ class VirtualLed extends StatelessWidget {
   final double? size;
 
   @override
-  Widget build(BuildContext context) => SizedBox.square(
-    dimension: size,
-    child:
-        active || showWhenInactive
-            ? ShaderBuilder(
-              (context, shader, child) => CustomPaint(
-                painter: _VirtualLedPainter(
-                  active: active,
-                  color: color,
-                  shader: shader,
-                ),
-              ),
-              assetKey: 'assets/shaders/glow.frag',
-            )
-            : null,
+  Widget build(BuildContext context) => ShaderBuilder(
+    (context, shader, child) => CustomPaint(
+      painter: _VirtualLedPainter(active: active, color: color, shader: shader),
+      child: AnimatedSize(
+        duration: Durations.short2,
+        curve: Curves.easeInOutSine,
+        child: SizedBox.square(
+          dimension:
+              active
+                  ? size
+                  : showWhenInactive
+                  ? 12
+                  : 0,
+        ),
+      ),
+    ),
+    assetKey: 'assets/shaders/glow.frag',
   );
 }
 

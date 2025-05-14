@@ -194,11 +194,19 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
         maxHeight: config.ledSize + 22,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ...leftEndLeds,
-          ...leftIntermediateLeds,
-          ...leftCenterLeds,
+          Expanded(
+            child: Row(
+              spacing: 8,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ...leftEndLeds,
+                ...leftIntermediateLeds,
+                ...leftCenterLeds,
+              ],
+            ),
+          ),
           SizedBox(
             width: 110,
             child: Center(
@@ -265,9 +273,17 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
               ),
             ),
           ),
-          ...rightCenterLeds,
-          ...rightIntermediateLeds,
-          ...rightEndLeds,
+          Expanded(
+            child: Row(
+              spacing: 8,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ...rightCenterLeds,
+                ...rightIntermediateLeds,
+                ...rightEndLeds,
+              ],
+            ),
+          ),
         ],
       ),
     );
