@@ -32,6 +32,6 @@
 			"group": "build",
 			"label": "dart: Run build_runner in build mode",
 			"detail": "Starts a build_runner that will build once."
-			}
+		}
 	]
 }
