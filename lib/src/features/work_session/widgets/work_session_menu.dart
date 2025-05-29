@@ -158,6 +158,7 @@ class __RenameDialogState extends ConsumerState<_RenameDialog> {
               (data) =>
                   data.where((e) => e.uuid != session?.uuid).map((e) => e.name),
           orElse: () => <String?>[],
+          skipLoadingOnRefresh: false,
         ),
       ),
     );
@@ -552,21 +553,32 @@ class _CreateWorkSessionDialogState
   @override
   Widget build(BuildContext context) {
     final workSessions = ref
-      .watch(savedWorkSessionsProvider)
-      .maybeWhen(data: (data) => data, orElse: () => <WorkSession>[])..sort(
-      (a, b) =>
-          (b.start ?? DateTime.now()).compareTo(a.start ?? DateTime.now()),
-    );
+        .watch(savedWorkSessionsProvider)
+        .maybeWhen(
+          data:
+              (data) => data.sorted(
+                (a, b) => (b.start ?? DateTime.now()).compareTo(
+                  a.start ?? DateTime.now(),
+                ),
+              ),
+          orElse: () => <WorkSession>[],
+        );
 
     final fields = ref
-        .watch(savedFieldsProvider)
-        .maybeWhen(data: (data) => data, orElse: () => <Field>[])
-      ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+      .watch(savedFieldsProvider)
+      .maybeWhen(
+        data: (data) => data,
+        orElse: () => <Field>[],
+        skipLoadingOnRefresh: false,
+      )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
     final equipmentSetups = ref
-        .watch(savedEquipmentSetupsProvider)
-        .maybeWhen(data: (data) => data, orElse: () => <EquipmentSetup>[])
-      ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+      .watch(savedEquipmentSetupsProvider)
+      .maybeWhen(
+        data: (data) => data,
+        orElse: () => <EquipmentSetup>[],
+        skipLoadingOnRefresh: false,
+      )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
     final theme = Theme.of(context);
 
@@ -780,7 +792,11 @@ class _LoadWorkSessionMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final workSessionYears = ref
         .watch(savedWorkSessionsProvider)
-        .maybeWhen(data: (data) => data, orElse: () => <WorkSession>[])
+        .maybeWhen(
+          data: (data) => data,
+          orElse: () => <WorkSession>[],
+          skipLoadingOnRefresh: false,
+        )
         .sorted(
           (a, b) =>
               (b.start ?? DateTime.now()).compareTo(a.start ?? DateTime.now()),

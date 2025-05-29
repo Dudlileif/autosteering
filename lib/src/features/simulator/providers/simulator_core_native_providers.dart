@@ -202,6 +202,7 @@ void simCoreVehicleDriving(Ref ref) {
         .maybeWhen(
           data: (data) => data,
           orElse: () => ref.watch(mainVehicleProvider),
+          skipLoadingOnRefresh: false,
         );
 
     ref.read(mainVehicleProvider.notifier).update(vehicle);

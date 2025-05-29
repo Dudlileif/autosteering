@@ -49,7 +49,11 @@ class DeleteCacheMenu extends ConsumerWidget {
     }
     final directories = ref
         .watch(mapCacheDirectoriesProvider)
-        .maybeWhen(data: (data) => data, orElse: () => <String>[]);
+        .maybeWhen(
+          data: (data) => data,
+          orElse: () => <String>[],
+          skipLoadingOnRefresh: false,
+        );
 
     return directories.isNotEmpty
         ? MenuButtonWithChildren(
@@ -80,12 +84,14 @@ class _CacheDeleter extends ConsumerWidget {
         .maybeWhen(
           data: (data) => data != null ? fileEntitySize(data) : null,
           orElse: () => '-',
+          skipLoadingOnRefresh: false,
         );
     final created = ref
         .watch(mapCacheDateProvider(path))
         .maybeWhen(
           data: (data) => data?.toIso8601String().substring(0, 10),
           orElse: () => '-',
+          skipLoadingOnRefresh: false,
         );
 
     return MenuItemButton(

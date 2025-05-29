@@ -38,7 +38,11 @@ class FieldLayer extends ConsumerWidget {
       if (enabled) {
         final bufferedField = ref
             .watch(bufferedFieldProvider)
-            .maybeWhen(data: (data) => data, orElse: () => null);
+            .maybeWhen(
+              data: (data) => data,
+              orElse: () => null,
+              skipLoadingOnRefresh: false,
+            );
 
         final showField = ref.watch(showFieldProvider);
 

@@ -29,6 +29,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
 // TODO(dudlileif): Make app icon
+// TODO(dudlileif): Come up with better app name
 
 Future<void> main() async {
   Logger.instance.i('Application startup initiated...');

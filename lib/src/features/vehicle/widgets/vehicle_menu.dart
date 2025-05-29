@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -207,8 +208,12 @@ class _LoadVehicleMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final vehicles = ref
         .watch(savedVehiclesProvider)
-        .maybeWhen(data: (data) => data, orElse: () => <Vehicle>[])
-      ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+        .maybeWhen(
+          data:
+              (data) => data.sorted((a, b) => b.lastUsed.compareTo(a.lastUsed)),
+          orElse: () => <Vehicle>[],
+          skipLoadingOnRefresh: false,
+        );
 
     if (vehicles.isEmpty) {
       return const SizedBox.shrink();

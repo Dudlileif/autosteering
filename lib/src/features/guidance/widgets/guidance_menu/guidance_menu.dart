@@ -181,9 +181,13 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pathTrackings = ref
         .watch(savedPathTrackingsProvider)
-        .maybeWhen(data: (data) => data, orElse: () => <PathTracking>[])
-    // ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed))
-    ;
+        .maybeWhen(
+          data:
+              (data) =>
+                  data, // .sorted((a, b) => b.lastUsed.compareTo(a.lastUsed))
+          orElse: () => <PathTracking>[],
+          skipLoadingOnRefresh: false,
+        );
 
     if (pathTrackings.isEmpty) {
       return const SizedBox.shrink();
@@ -275,9 +279,13 @@ class _LoadABTrackingMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final abTrackings = ref
         .watch(savedABTrackingsProvider)
-        .maybeWhen(data: (data) => data, orElse: () => <ABTracking>[])
-    // ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed))
-    ;
+        .maybeWhen(
+          data:
+              (data) =>
+                  data, // .sorted((a, b) => b.lastUsed.compareTo(a.lastUsed))
+          orElse: () => <ABTracking>[],
+          skipLoadingOnRefresh: false,
+        );
 
     if (abTrackings.isEmpty) {
       return const SizedBox.shrink();

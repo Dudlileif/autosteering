@@ -376,9 +376,12 @@ class _LoadFieldMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final fields = ref
         .watch(savedFieldsProvider)
-        .maybeWhen(data: (data) => data, orElse: () => <Field>[])
-      ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
-
+        .maybeWhen(
+          data:
+              (data) => data.sorted((a, b) => b.lastUsed.compareTo(a.lastUsed)),
+          orElse: () => <Field>[],
+          skipLoadingOnRefresh: false,
+        );
     if (fields.isEmpty) {
       return const SizedBox.shrink();
     }
