@@ -29,7 +29,7 @@ final sortedCountryLayersProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SortedCountryLayersRef = AutoDisposeProviderRef<List<TileLayerData>>;
-String _$currentCountryHash() => r'888e1aa0449805c4a52241f6abc55a7db5e5bc0d';
+String _$currentCountryHash() => r'768b302f600f35d999c12371c2c7c8f2a8b2a170';
 
 /// A provider fort showing the country we are currently in, if the country
 /// has defined custom map layers.

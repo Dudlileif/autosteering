@@ -18,6 +18,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
@@ -63,42 +64,46 @@ class CurrentCountry extends _$CurrentCountry {
   Future<void> update() async => Future(() async {
     if (ref.watch(mapReadyProvider)) {
       if (state == null) {
-        final dio = Dio(
-          BaseOptions(
-            connectTimeout: const Duration(seconds: 5),
-            receiveTimeout: const Duration(seconds: 5),
-          ),
-        );
-        final position = ref.watch(
-          mainMapControllerProvider.select(
-            (controller) => controller.camera.center,
-          ),
-        );
-        final response = await dio.get<String>(
-          'https://nominatim.openstreetmap.org/reverse.php',
-          queryParameters: {
-            'lat': position.latitude,
-            'lon': position.longitude,
-            'zoom': 3,
-            'accept-language': 'en',
-            'format': 'jsonv2',
-          },
-        );
-
-        if (response.data != null) {
-          final data = Map<String, dynamic>.from(
-            jsonDecode(response.data!) as Map,
+        try {
+          final dio = Dio(
+            BaseOptions(
+              connectTimeout: const Duration(seconds: 5),
+              receiveTimeout: const Duration(seconds: 5),
+            ),
           );
-          if (data.containsKey('name')) {
-            final name = data['name'] as String;
-            state = Countries.current(name);
-            if (state == null) {
-              ref.read(showOSMLayerProvider.notifier).update(value: true);
-              ref.read(enabledCountryLayersProvider.notifier).clear();
+          final position = ref.watch(
+            mainMapControllerProvider.select(
+              (controller) => controller.camera.center,
+            ),
+          );
+          final response = await dio.get<String>(
+            'https://nominatim.openstreetmap.org/reverse.php',
+            queryParameters: {
+              'lat': position.latitude,
+              'lon': position.longitude,
+              'zoom': 3,
+              'accept-language': 'en',
+              'format': 'jsonv2',
+            },
+          );
+
+          if (response.data != null) {
+            final data = Map<String, dynamic>.from(
+              jsonDecode(response.data!) as Map,
+            );
+            if (data.containsKey('name')) {
+              final name = data['name'] as String;
+              state = Countries.current(name);
+              if (state == null) {
+                ref.read(showOSMLayerProvider.notifier).update(value: true);
+                ref.read(enabledCountryLayersProvider.notifier).clear();
+              }
+            } else if (data.containsKey('error')) {
+              await update();
             }
-          } else if (data.containsKey('error')) {
-            await update();
           }
+        } on Exception {
+          Logger.instance.e('Could not find user country');
         }
       }
     }
