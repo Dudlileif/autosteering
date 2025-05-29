@@ -71,6 +71,7 @@
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.expand": false,
     "conventionalCommits.scopes": [
+        "Dad mode",
         "Remote control"
     ],
 }

@@ -57,6 +57,7 @@ class DeleteCacheMenu extends ConsumerWidget {
 
     return directories.isNotEmpty
         ? MenuButtonWithChildren(
+          hideInDadMode: true,
           text: 'Delete cache',
           icon: Icons.delete,
           menuChildren: directories.map(_CacheDeleter.new).toList(),

@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
@@ -52,6 +53,7 @@ class ABTrackingMenu extends ConsumerWidget {
       false => menuConfiguredTracking.maybeWhen(
         data: (data) => data,
         orElse: () => null,
+        skipLoadingOnRefresh: false,
       ),
     };
 
@@ -696,28 +698,35 @@ class _ABCommonMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    final dadMode = ref.watch(enableDadModeProvider);
+    final limitModeActive = ref.watch(
+      aBTrackingLimitModeProvider.select(
+        (value) => value != ABLimitMode.unlimited,
+      ),
+    );
 
     return Column(
       children: [
-        Consumer(
-          child: Text('Show', style: textStyle),
-          builder:
-              (context, ref, child) => CheckboxListTile(
-                secondary: switch (ref.watch(showABTrackingProvider)) {
-                  true => const Icon(Icons.visibility),
-                  false => const Icon(Icons.visibility_off),
-                },
-                title: child,
-                value: ref.watch(showABTrackingProvider),
-                onChanged:
-                    (value) =>
-                        value != null
-                            ? ref
-                                .read(showABTrackingProvider.notifier)
-                                .update(value: value)
-                            : null,
-              ),
-        ),
+        if (!dadMode)
+          Consumer(
+            child: Text('Show', style: textStyle),
+            builder:
+                (context, ref, child) => CheckboxListTile(
+                  secondary: switch (ref.watch(showABTrackingProvider)) {
+                    true => const Icon(Icons.visibility),
+                    false => const Icon(Icons.visibility_off),
+                  },
+                  title: child,
+                  value: ref.watch(showABTrackingProvider),
+                  onChanged:
+                      (value) =>
+                          value != null
+                              ? ref
+                                  .read(showABTrackingProvider.notifier)
+                                  .update(value: value)
+                              : null,
+                ),
+          ),
         Consumer(
           child: Text('Show all lines', style: textStyle),
           builder:
@@ -790,64 +799,7 @@ class _ABCommonMenu extends ConsumerWidget {
                 onPressed:
                     () => showDialog<void>(
                       context: context,
-                      builder:
-                          (context) => SimpleDialog(
-                            title: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('AB spacing/width'),
-                                CloseButton(),
-                              ],
-                            ),
-                            contentPadding: const EdgeInsets.only(
-                              left: 24,
-                              top: 12,
-                              right: 24,
-                              bottom: 16,
-                            ),
-                            children: [
-                              Consumer(
-                                builder:
-                                    (context, ref, child) => TextFormField(
-                                      controller: TextEditingController(
-                                        text:
-                                            ref
-                                                .watch(aBWidthProvider)
-                                                .toString(),
-                                      ),
-                                      decoration: const InputDecoration(
-                                        labelText: 'Spacing/width',
-                                        suffixText: 'm',
-                                      ),
-                                      keyboardType: TextInputType.number,
-                                      onFieldSubmitted: (value) {
-                                        final spacing = double.tryParse(value);
-                                        if (spacing != null && spacing >= 0) {
-                                          ref
-                                              .read(aBWidthProvider.notifier)
-                                              .update(spacing);
-                                        }
-                                      },
-                                    ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 16),
-                                child: Consumer(
-                                  builder:
-                                      (context, ref, child) =>
-                                          ElevatedButton.icon(
-                                            onPressed: () {
-                                              ref.invalidate(aBWidthProvider);
-                                            },
-                                            icon: const Icon(Icons.handyman),
-                                            label: const Text(
-                                              'Set to equipment width',
-                                            ),
-                                          ),
-                                ),
-                              ),
-                            ],
-                          ),
+                      builder: (context) => const _ABSpacingDialog(),
                     ),
                 leadingIcon: const Padding(
                   padding: EdgeInsets.only(left: 8),
@@ -926,105 +878,117 @@ class _ABCommonMenu extends ConsumerWidget {
                 ),
               ),
         ),
-        Consumer(
-          builder:
-              (context, ref, child) => MenuItemButton(
-                closeOnActivate: false,
-                onPressed:
-                    () => showDialog<void>(
-                      context: context,
-                      builder:
-                          (context) => SimpleDialog(
-                            title: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        if (limitModeActive)
+          Consumer(
+            builder:
+                (context, ref, child) => MenuItemButton(
+                  closeOnActivate: false,
+                  onPressed:
+                      () => showDialog<void>(
+                        context: context,
+                        builder:
+                            (context) => SimpleDialog(
+                              title: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('AB turning radius'),
+                                  CloseButton(),
+                                ],
+                              ),
+                              contentPadding: const EdgeInsets.only(
+                                left: 24,
+                                top: 12,
+                                right: 24,
+                                bottom: 16,
+                              ),
                               children: [
-                                Text('AB turning radius'),
-                                CloseButton(),
+                                Consumer(
+                                  builder:
+                                      (context, ref, child) => TextFormField(
+                                        decoration: const InputDecoration(
+                                          labelText: 'Turning radius',
+                                          suffixText: 'm',
+                                        ),
+                                        keyboardType: TextInputType.number,
+                                        controller: TextEditingController(
+                                          text:
+                                              ref
+                                                  .watch(
+                                                    aBTurningRadiusProvider,
+                                                  )
+                                                  .toString(),
+                                        ),
+                                        onFieldSubmitted: (value) {
+                                          final radius = double.tryParse(value);
+                                          if (radius != null && radius >= 0) {
+                                            ref
+                                                .read(
+                                                  aBTurningRadiusProvider
+                                                      .notifier,
+                                                )
+                                                .update(radius);
+                                          }
+                                        },
+                                      ),
+                                ),
+                                Consumer(
+                                  builder: (context, ref, child) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 16),
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {
+                                          ref.invalidate(
+                                            aBTurningRadiusProvider,
+                                          );
+                                        },
+                                        icon: const Icon(Icons.agriculture),
+                                        label: const Text(
+                                          '''Set to 1.25 x vehicle turning radius''',
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ],
                             ),
-                            contentPadding: const EdgeInsets.only(
-                              left: 24,
-                              top: 12,
-                              right: 24,
-                              bottom: 16,
-                            ),
-                            children: [
-                              Consumer(
-                                builder:
-                                    (context, ref, child) => TextFormField(
-                                      decoration: const InputDecoration(
-                                        labelText: 'Turning radius',
-                                        suffixText: 'm',
-                                      ),
-                                      keyboardType: TextInputType.number,
-                                      controller: TextEditingController(
-                                        text:
-                                            ref
-                                                .watch(aBTurningRadiusProvider)
-                                                .toString(),
-                                      ),
-                                      onFieldSubmitted: (value) {
-                                        final radius = double.tryParse(value);
-                                        if (radius != null && radius >= 0) {
-                                          ref
-                                              .read(
-                                                aBTurningRadiusProvider
-                                                    .notifier,
-                                              )
-                                              .update(radius);
-                                        }
-                                      },
-                                    ),
-                              ),
-                              Consumer(
-                                builder: (context, ref, child) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 16),
-                                    child: ElevatedButton.icon(
-                                      onPressed: () {
-                                        ref.invalidate(aBTurningRadiusProvider);
-                                      },
-                                      icon: const Icon(Icons.agriculture),
-                                      label: const Text(
-                                        'Set to 1.25 x vehicle turning radius',
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                    ),
-                leadingIcon: const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Icon(Icons.looks),
+                      ),
+                  leadingIcon: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Icon(Icons.looks),
+                  ),
+                  child: Text(
+                    '''Turning radius: ${ref.watch(aBTurningRadiusProvider).toStringAsFixed(1)} m''',
+                    style: textStyle,
+                  ),
                 ),
-                child: Text(
-                  '''Turning radius: ${ref.watch(aBTurningRadiusProvider).toStringAsFixed(1)} m''',
-                  style: textStyle,
-                ),
-              ),
-        ),
-        Consumer(
-          builder: (context, ref, child) {
-            final turnOffsetMinSkips = ref.watch(aBTurnOffsetMinSkipsProvider);
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Min offset skips: $turnOffsetMinSkips', style: textStyle),
-                Slider.adaptive(
-                  value: turnOffsetMinSkips.toDouble(),
-                  onChanged:
-                      (value) => ref
-                          .read(aBTurnOffsetMinSkipsProvider.notifier)
-                          .update(value.round()),
-                  max: 10,
-                  divisions: 10,
-                ),
-              ],
-            );
-          },
-        ),
+          ),
+        if (limitModeActive)
+          Consumer(
+            builder: (context, ref, child) {
+              final turnOffsetMinSkips = ref.watch(
+                aBTurnOffsetMinSkipsProvider,
+              );
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Min offset skips: $turnOffsetMinSkips',
+                    style: textStyle,
+                  ),
+                  Slider.adaptive(
+                    value: turnOffsetMinSkips.toDouble(),
+                    onChanged:
+                        (value) => ref
+                            .read(aBTurnOffsetMinSkipsProvider.notifier)
+                            .update(value.round()),
+                    max: 10,
+                    divisions: 10,
+                  ),
+                ],
+              );
+            },
+          ),
         if (ref.watch(enableDebugModeProvider)) ...[
           Consumer(
             builder:
@@ -1110,4 +1074,87 @@ class _ABCommonMenu extends ConsumerWidget {
       ],
     );
   }
+}
+
+class _ABSpacingDialog extends ConsumerStatefulWidget {
+  const _ABSpacingDialog();
+
+  @override
+  ConsumerState<_ABSpacingDialog> createState() => __ABSpacingDialogState();
+}
+
+class __ABSpacingDialogState extends ConsumerState<_ABSpacingDialog> {
+  late double spacing = ref.read(aBWidthProvider);
+
+  @override
+  Widget build(BuildContext context) => SimpleDialog(
+    title: const Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [Text('AB spacing/width'), CloseButton()],
+    ),
+    contentPadding: const EdgeInsets.only(
+      left: 24,
+      top: 12,
+      right: 24,
+      bottom: 16,
+    ),
+    children: [
+      Column(
+        spacing: 16,
+        children: [
+          TextFormField(
+            controller: TextEditingController(text: spacing.toString()),
+            decoration: const InputDecoration(
+              labelText: 'Spacing/width',
+              suffixText: 'm',
+            ),
+            keyboardType: TextInputType.number,
+            onFieldSubmitted: (value) {
+              final newSpacing = double.tryParse(value);
+              if (newSpacing != null && newSpacing >= 0) {
+                setState(() => spacing = newSpacing);
+              }
+            },
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              setState(
+                () =>
+                    spacing =
+                        ref.read(
+                          loadedEquipmentProvider.select(
+                            (value) => value?.width,
+                          ),
+                        ) ??
+                        15,
+              );
+            },
+            icon: const Icon(Icons.handyman),
+            label: const Text('Set to equipment width'),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 8,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.clear),
+                label: const Text('Cancel'),
+              ),
+              FilledButton.icon(
+                onPressed: () {
+                  ref.read(aBWidthProvider.notifier).update(spacing);
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.check),
+                label: const Text('Confirm'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
 }

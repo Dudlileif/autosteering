@@ -243,7 +243,7 @@ class _ExportSettingsProviderElement
       (origin as ExportSettingsProvider).removeSensitiveData;
 }
 
-String _$importSettingsHash() => r'7fd98dbc99f40dd856c455a77da9f6794b426f66';
+String _$importSettingsHash() => r'915992cf797b53b2cbe104e37e9c16f4b51ef9d2';
 
 /// A provider for importing [Settings] from a file.
 ///
@@ -285,7 +285,7 @@ final reloadAllSettingsProvider = Provider<String>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ReloadAllSettingsRef = ProviderRef<String>;
-String _$settingsHash() => r'f3ac848cd62beea67a4251253bd530c81d2089e8';
+String _$settingsHash() => r'415b61b560ee364b255d2cf01eff91fc2e1581c9';
 
 /// A provider for the settings map for the application.
 ///
@@ -321,5 +321,24 @@ final enableDebugModeProvider =
     );
 
 typedef _$EnableDebugMode = Notifier<bool>;
+String _$enableDadModeHash() => r'40bbbc264e26c5d883c805eaaf8c45bef03a3283';
+
+/// A provider for whether dad mode should be active. This will hide a lot
+/// of advanced features that might be confusing.
+///
+/// Copied from [EnableDadMode].
+@ProviderFor(EnableDadMode)
+final enableDadModeProvider = NotifierProvider<EnableDadMode, bool>.internal(
+  EnableDadMode.new,
+  name: r'enableDadModeProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$enableDadModeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$EnableDadMode = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

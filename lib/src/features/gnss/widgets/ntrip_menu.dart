@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +32,7 @@ class NtripMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
       text: 'NTRIP (RTK)',
@@ -67,28 +69,30 @@ class NtripMenu extends ConsumerWidget {
               style: textStyle,
             ),
           ),
+          if (!dadMode)
+            ListTile(
+              title: Text('Edit profile', style: textStyle),
+              leading: const Icon(Icons.edit),
+              onTap:
+                  () => showDialog<void>(
+                    context: context,
+                    builder:
+                        (context) => _NtripProfileDialog(
+                          profile: ref.watch(activeNtripProfileProvider),
+                        ),
+                  ),
+            ),
+        ],
+        if (!dadMode)
           ListTile(
-            title: Text('Edit profile', style: textStyle),
-            leading: const Icon(Icons.edit),
+            title: Text('Add profile', style: textStyle),
+            leading: const Icon(Icons.add),
             onTap:
                 () => showDialog<void>(
                   context: context,
-                  builder:
-                      (context) => _NtripProfileDialog(
-                        profile: ref.watch(activeNtripProfileProvider),
-                      ),
+                  builder: (context) => const _NtripProfileDialog(),
                 ),
           ),
-        ],
-        ListTile(
-          title: Text('Add profile', style: textStyle),
-          leading: const Icon(Icons.add),
-          onTap:
-              () => showDialog<void>(
-                context: context,
-                builder: (context) => const _NtripProfileDialog(),
-              ),
-        ),
         if (ref.watch(
           ntripProfilesProvider.select((value) => value.isNotEmpty),
         ))
@@ -119,7 +123,7 @@ class NtripMenu extends ConsumerWidget {
                                           activeNtripProfileProvider.notifier,
                                         )
                                         .update(profile),
-                                trailing: switch (Device.isNative) {
+                                trailing: switch (Device.isNative && !dadMode) {
                                   true => IconButton(
                                     onPressed: () async {
                                       await showDialog<bool>(

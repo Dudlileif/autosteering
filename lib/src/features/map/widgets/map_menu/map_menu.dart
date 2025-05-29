@@ -89,6 +89,7 @@ class _CopernicusIDButton extends ConsumerWidget {
     if (id != null && id.length == 36) {
       return MenuButtonWithChildren(
         icon: Icons.check,
+        hideInDadMode: true,
         text: 'Copernicus ID',
         menuChildren: [
           MenuItemButton(

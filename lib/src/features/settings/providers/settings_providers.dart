@@ -76,8 +76,10 @@ class Settings extends _$Settings {
           ref
               .watch(settingsFileProvider)
               .requireValue
-              .writeAsString(const JsonEncoder.withIndent('    ').convert(next))
-              .then((value) => Logger.instance.i('Saved settings to file.'));
+              .writeAsStringSync(
+                const JsonEncoder.withIndent('    ').convert(next),
+              );
+          Logger.instance.i('Saved settings to file.');
         }
       }
       _saveToRemoveDeprecated = false;
@@ -111,7 +113,6 @@ class Settings extends _$Settings {
         '''Removed ${settingsToRemove.length} deprecated settings: $settingsToRemove.''',
       );
     }
-
     return SplayTreeMap<String, dynamic>.from(settings);
   }
 
@@ -193,6 +194,30 @@ class EnableDebugMode extends _$EnableDebugMode {
   void update({required bool value}) => Future(() => state = value);
 }
 
+/// A provider for whether dad mode should be active. This will hide a lot
+/// of advanced features that might be confusing.
+@Riverpod(keepAlive: true)
+class EnableDadMode extends _$EnableDadMode {
+  @override
+  bool build() {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (next != previous) {
+        ref.read(settingsProvider.notifier).update(SettingsKey.dadMode, next);
+      }
+      if (next) {
+        ref.read(enableDebugModeProvider.notifier).update(value: false);
+      }
+    });
+
+    return ref.read(settingsProvider.notifier).getBool(SettingsKey.dadMode) ??
+        false;
+  }
+
+  /// Update [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+}
+
 /// A provider for exporting [Settings] to a file.
 @riverpod
 FutureOr<void> exportSettings(
@@ -251,7 +276,7 @@ FutureOr<Map<String, dynamic>?> importSettings(Ref ref) async {
       final file = File(filePath);
       if (file.existsSync()) {
         try {
-          final json = jsonDecode(await file.readAsString());
+          final json = jsonDecode(file.readAsStringSync());
           settings = Map<String, dynamic>.from(json as Map);
         } on Exception catch (error, stackTrace) {
           Logger.instance.w(

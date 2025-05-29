@@ -38,6 +38,7 @@ class EquipmentMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
+    final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
       text: 'Equipment',
@@ -65,7 +66,7 @@ class EquipmentMenu extends ConsumerWidget {
         const _DetachMenu(),
         if (ref.watch(enableDebugModeProvider))
           const _EqiupmentDebugMenu()
-        else
+        else if (!dadMode)
           const _EquipmentTrajectoryButton(),
         Consumer(
           child: Text('Clear unused', style: textStyle),
@@ -97,38 +98,42 @@ class EquipmentMenu extends ConsumerWidget {
                 child: child,
               ),
         ),
-        Consumer(
-          builder: (context, ref, child) {
-            final fraction = ref.watch(equipmentRecordPositionFractionProvider);
-            return ListTile(
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Recording position', style: textStyle),
-                  SegmentedButton<double?>(
-                    style: theme.segmentedButtonTheme.style?.copyWith(
-                      visualDensity: VisualDensity.compact,
+        if (!dadMode)
+          Consumer(
+            builder: (context, ref, child) {
+              final fraction = ref.watch(
+                equipmentRecordPositionFractionProvider,
+              );
+              return ListTile(
+                title: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Recording position', style: textStyle),
+                    SegmentedButton<double?>(
+                      style: theme.segmentedButtonTheme.style?.copyWith(
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      showSelectedIcon: false,
+                      selected: {fraction},
+                      segments: const [
+                        ButtonSegment(value: null, label: Text('Default')),
+                        ButtonSegment(value: 1, label: Text('Front')),
+                        ButtonSegment(value: 0.5, label: Text('Center')),
+                        ButtonSegment(value: 0, label: Text('Rear')),
+                      ],
+                      onSelectionChanged:
+                          (values) => ref
+                              .read(
+                                equipmentRecordPositionFractionProvider
+                                    .notifier,
+                              )
+                              .update(values.first),
                     ),
-                    showSelectedIcon: false,
-                    selected: {fraction},
-                    segments: const [
-                      ButtonSegment(value: null, label: Text('Default')),
-                      ButtonSegment(value: 1, label: Text('Front')),
-                      ButtonSegment(value: 0.5, label: Text('Center')),
-                      ButtonSegment(value: 0, label: Text('Rear')),
-                    ],
-                    onSelectionChanged:
-                        (values) => ref
-                            .read(
-                              equipmentRecordPositionFractionProvider.notifier,
-                            )
-                            .update(values.first),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+                  ],
+                ),
+              );
+            },
+          ),
       ],
     );
   }
@@ -256,12 +261,13 @@ class _LoadEquipmentMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final equipments = ref
-      .watch(savedEquipmentsProvider)
-      .maybeWhen(
-        data: (data) => data.sorted((a, b) => b.lastUsed.compareTo(a.lastUsed)),
-        orElse: () => <Equipment>[],
-        skipLoadingOnRefresh: false,
-      );
+        .watch(savedEquipmentsProvider)
+        .maybeWhen(
+          data:
+              (data) => data.sorted((a, b) => b.lastUsed.compareTo(a.lastUsed)),
+          orElse: () => <Equipment>[],
+          skipLoadingOnRefresh: false,
+        );
 
     if (equipments.isEmpty) {
       return const SizedBox.shrink();
@@ -442,9 +448,12 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final setups = ref
-        .watch(savedEquipmentSetupsProvider)
-        .maybeWhen(data: (data) => data, orElse: () => <EquipmentSetup>[])
-      ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+      .watch(savedEquipmentSetupsProvider)
+      .maybeWhen(
+        data: (data) => data,
+        orElse: () => <EquipmentSetup>[],
+        skipLoadingOnRefresh: false,
+      )..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
     if (setups.isEmpty) {
       return const SizedBox.shrink();

@@ -23,6 +23,7 @@ import 'package:autosteering/src/features/guidance/widgets/guidance_menu/ab_trac
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/path_tracking_menu.dart';
 import 'package:autosteering/src/features/guidance/widgets/guidance_menu/virtual_led_bar_menu.dart';
 import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -37,60 +38,63 @@ class GuidanceMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final dadMode = ref.watch(enableDadModeProvider);
+
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
     return MenuButtonWithChildren(
       text: 'Guidance',
       icon: Icons.navigation_outlined,
       menuChildren: [
-        ListTile(
-          title: Text('Tracking mode', style: textStyle),
-          trailing: Consumer(
-            builder: (context, ref, child) {
-              final trackingMode = ref.watch(
-                mainVehicleProvider.select(
-                  (vehicle) => vehicle.pathTrackingMode,
-                ),
-              );
-              return SegmentedButton<PathTrackingMode>(
-                style: theme.segmentedButtonTheme.style?.copyWith(
-                  visualDensity: VisualDensity.compact,
-                ),
-                showSelectedIcon: false,
-                onSelectionChanged: (values) {
-                  final oldValue = ref.read(
-                    mainVehicleProvider.select(
-                      (value) => value.pathTrackingMode,
-                    ),
-                  );
-
-                  ref.read(simInputProvider.notifier).send(values.first);
-
-                  // Wait a short while before saving the hopefully
-                  // updated vehicle.
-                  Timer(const Duration(milliseconds: 250), () {
-                    final vehicle = ref.read(mainVehicleProvider);
-                    ref.read(saveVehicleProvider(vehicle));
-                    Logger.instance.i(
-                      '''Updated vehicle path tracking mode: $oldValue -> ${vehicle.pathTrackingMode}''',
+        if (!dadMode)
+          ListTile(
+            title: Text('Tracking mode', style: textStyle),
+            trailing: Consumer(
+              builder: (context, ref, child) {
+                final trackingMode = ref.watch(
+                  mainVehicleProvider.select(
+                    (vehicle) => vehicle.pathTrackingMode,
+                  ),
+                );
+                return SegmentedButton<PathTrackingMode>(
+                  style: theme.segmentedButtonTheme.style?.copyWith(
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  showSelectedIcon: false,
+                  onSelectionChanged: (values) {
+                    final oldValue = ref.read(
+                      mainVehicleProvider.select(
+                        (value) => value.pathTrackingMode,
+                      ),
                     );
-                  });
-                },
-                selected: {trackingMode},
-                segments: const [
-                  ButtonSegment(
-                    value: PathTrackingMode.purePursuit,
-                    label: Text('Pure pursuit'),
-                  ),
-                  ButtonSegment(
-                    value: PathTrackingMode.stanley,
-                    label: Text('Stanley'),
-                  ),
-                ],
-              );
-            },
+
+                    ref.read(simInputProvider.notifier).send(values.first);
+
+                    // Wait a short while before saving the hopefully
+                    // updated vehicle.
+                    Timer(const Duration(milliseconds: 250), () {
+                      final vehicle = ref.read(mainVehicleProvider);
+                      ref.read(saveVehicleProvider(vehicle));
+                      Logger.instance.i(
+                        '''Updated vehicle path tracking mode: $oldValue -> ${vehicle.pathTrackingMode}''',
+                      );
+                    });
+                  },
+                  selected: {trackingMode},
+                  segments: const [
+                    ButtonSegment(
+                      value: PathTrackingMode.purePursuit,
+                      label: Text('Pure pursuit'),
+                    ),
+                    ButtonSegment(
+                      value: PathTrackingMode.stanley,
+                      label: Text('Stanley'),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
-        ),
         if (ref.watch(
               displayABTrackingProvider.select((value) => value != null),
             ) ||
@@ -142,7 +146,7 @@ class GuidanceMenu extends ConsumerWidget {
               onPressed:
                   () => ref.read(exportAllProvider(directory: 'guidance')),
             ),
-          const _ImportMenu(),
+          if (!dadMode) const _ImportMenu(),
         ],
         if (ref.watch(
           displayABTrackingProvider.select((value) => value != null),
@@ -166,7 +170,7 @@ class GuidanceMenu extends ConsumerWidget {
         ],
         const ABTrackingMenu(),
         const PathTrackingMenu(),
-        const VirtualLedBarMenu(),
+        if (!dadMode) const VirtualLedBarMenu(),
       ],
     );
   }

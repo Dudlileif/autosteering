@@ -36,6 +36,7 @@ class MapOffsetMenu extends ConsumerWidget {
 
     return MenuButtonWithChildren(
       icon: Icons.zoom_out_map_sharp,
+      hideInDadMode: true,
       iconRotation: 45,
       text: using3D ? 'Center offset 3D' : 'Center offset 2D',
       menuChildren: [

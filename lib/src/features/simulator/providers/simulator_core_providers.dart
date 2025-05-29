@@ -174,10 +174,11 @@ class SimCoreAllowInterpolation extends _$SimCoreAllowInterpolation {
       }
     });
 
-    return ref
-            .read(settingsProvider.notifier)
-            .getBool(SettingsKey.simAllowInterpolation) ??
-        true;
+    return !ref.watch(enableDadModeProvider) &&
+        (ref
+                .read(settingsProvider.notifier)
+                .getBool(SettingsKey.simAllowInterpolation) ??
+            false);
   }
 
   /// Update the [state] to [value].

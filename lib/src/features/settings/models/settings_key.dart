@@ -21,6 +21,7 @@
 /// An enumerator for all the settings of the program.
 enum SettingsKey {
   audioVolumes('audio.volumes'),
+  dadMode('dad_mode'),
   gaugesAverageCount('gauges.average_count'),
   hardwareAdress('hardware.network.address'),
   hardwareUDPReceivePort('hardware.network.udp.receive_port'),

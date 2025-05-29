@@ -17,12 +17,14 @@
 
 import 'dart:math';
 
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A standardized menu button useful for keeping consistent styling of
 /// menus.
-class MenuButtonWithChildren extends StatelessWidget {
+class MenuButtonWithChildren extends ConsumerWidget {
   /// A standardized menu button useful for keeping consistent styling of
   /// menus.
   ///
@@ -37,6 +39,7 @@ class MenuButtonWithChildren extends StatelessWidget {
     this.icon,
     this.iconRotation,
     this.iconOverrideWidget,
+    this.hideInDadMode = false,
     super.key,
   });
 
@@ -57,8 +60,14 @@ class MenuButtonWithChildren extends StatelessWidget {
   /// The text to show on the button.
   final String text;
 
+  /// Whether this should be hidden in dad mode.
+  final bool hideInDadMode;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (hideInDadMode && ref.watch(enableDadModeProvider)) {
+      return const SizedBox.shrink();
+    }
     final textWidget = Text(
       text,
       style: Theme.of(context).menuButtonWithChildrenText,

@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/hardware/widgets/hardware_logging_menu
 import 'package:autosteering/src/features/hardware/widgets/hardware_network_dialog.dart';
 import 'package:autosteering/src/features/hardware/widgets/hardware_serial_menu.dart'
     if (dart.library.js_interop) 'hardware_serial_menu_web.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,27 +36,29 @@ class HardwareMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     ref.watch(combinedCommunicationProvider);
+    final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
       text: 'Hardware',
       icon: Icons.router,
       menuChildren: [
-        MenuItemButton(
-          leadingIcon: const Padding(
-            padding: EdgeInsets.only(left: 8),
-            child: Icon(Icons.settings_ethernet),
+        if (!dadMode)
+          MenuItemButton(
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.settings_ethernet),
+            ),
+            closeOnActivate: false,
+            onPressed:
+                () => showDialog<void>(
+                  context: context,
+                  builder: (context) => const HardwareNetworkDialog(),
+                ),
+            child: Text('Network', style: textStyle),
           ),
-          closeOnActivate: false,
-          onPressed:
-              () => showDialog<void>(
-                context: context,
-                builder: (context) => const HardwareNetworkDialog(),
-              ),
-          child: Text('Network', style: textStyle),
-        ),
         if (Device.isNative) const NtripMenu(),
         if (Device.supportsSerial) const HardwareSerialMenu(),
-        if (Device.isNative) const HardwareLoggingMenu(),
+        if (Device.isNative && !dadMode) const HardwareLoggingMenu(),
         if (Device.isNative)
           MenuItemButton(
             closeOnActivate: false,
@@ -70,7 +73,7 @@ class HardwareMenu extends ConsumerWidget {
                 ),
             child: Text('Remote control', style: textStyle),
           ),
-        if (Device.isNative)
+        if (Device.isNative && !dadMode)
           MenuItemButton(
             closeOnActivate: false,
             leadingIcon: const Padding(
@@ -90,7 +93,7 @@ class HardwareMenu extends ConsumerWidget {
                       ),
                 ),
           ),
-        if (Device.isNative)
+        if (Device.isNative && !dadMode)
           MenuItemButton(
             closeOnActivate: false,
             leadingIcon: const Padding(
@@ -110,24 +113,26 @@ class HardwareMenu extends ConsumerWidget {
                       ),
                 ),
           ),
-        Consumer(
-          child: Text('Calibrate motor', style: textStyle),
-          builder: (context, ref, child) {
-            return CheckboxListTile(
-              secondary: child,
-              value: ref.watch(steeringMotorEnableCalibrationProvider),
-              onChanged:
-                  (value) =>
-                      value != null
-                          ? ref
-                              .read(
-                                steeringMotorEnableCalibrationProvider.notifier,
-                              )
-                              .update(value: value)
-                          : null,
-            );
-          },
-        ),
+        if (!dadMode)
+          Consumer(
+            child: Text('Calibrate motor', style: textStyle),
+            builder: (context, ref, child) {
+              return CheckboxListTile(
+                secondary: child,
+                value: ref.watch(steeringMotorEnableCalibrationProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(
+                                  steeringMotorEnableCalibrationProvider
+                                      .notifier,
+                                )
+                                .update(value: value)
+                            : null,
+              );
+            },
+          ),
       ],
     );
   }

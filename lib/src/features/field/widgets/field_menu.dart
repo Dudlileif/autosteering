@@ -23,6 +23,7 @@ import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
@@ -41,6 +42,7 @@ class FieldMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
+    final dadMode = ref.watch(enableDadModeProvider);
 
     final activeField = ref.watch(activeFieldProvider);
 
@@ -113,7 +115,7 @@ class FieldMenu extends ConsumerWidget {
             ExportAllMenuButton(
               onPressed: () => ref.read(exportAllProvider(directory: 'fields')),
             ),
-          const _ImportButton(),
+          if (!dadMode) const _ImportButton(),
           if (ref.watch(
             displayPathTrackingProvider.select(
               (value) => value != null && value.wayPoints.length > 2,
@@ -123,28 +125,31 @@ class FieldMenu extends ConsumerWidget {
         ],
         if (activeField != null) ...[
           const _RenameFieldButton(),
-          const _EditFieldBorderButton(),
-          Consumer(
-            child: Text('Show field', style: textStyle),
-            builder:
-                (context, ref, child) => CheckboxListTile(
-                  secondary: switch (ref.watch(showFieldProvider)) {
-                    true => const Icon(Icons.visibility),
-                    false => const Icon(Icons.visibility_off),
-                  },
-                  title: child,
-                  value: ref.watch(showFieldProvider),
-                  onChanged:
-                      (value) =>
-                          value != null
-                              ? ref
-                                  .read(showFieldProvider.notifier)
-                                  .update(value: value)
-                              : null,
-                ),
-          ),
-          if (ref.watch(showFieldProvider) ||
-              ref.watch(showBufferedFieldProvider))
+          if (!dadMode) ...[
+            const _EditFieldBorderButton(),
+            Consumer(
+              child: Text('Show field', style: textStyle),
+              builder:
+                  (context, ref, child) => CheckboxListTile(
+                    secondary: switch (ref.watch(showFieldProvider)) {
+                      true => const Icon(Icons.visibility),
+                      false => const Icon(Icons.visibility_off),
+                    },
+                    title: child,
+                    value: ref.watch(showFieldProvider),
+                    onChanged:
+                        (value) =>
+                            value != null
+                                ? ref
+                                    .read(showFieldProvider.notifier)
+                                    .update(value: value)
+                                : null,
+                  ),
+            ),
+          ],
+          if ((ref.watch(showFieldProvider) ||
+                  ref.watch(showBufferedFieldProvider)) &&
+              !dadMode)
             Consumer(
               child: Text('Show border points', style: textStyle),
               builder:
@@ -168,7 +173,7 @@ class FieldMenu extends ConsumerWidget {
                                 : null,
                   ),
             ),
-          if (ref.watch(showFieldProvider))
+          if (ref.watch(showFieldProvider) && !dadMode)
             Consumer(
               child: Text('Show bounding box', style: textStyle),
               builder:
@@ -226,30 +231,31 @@ class FieldMenu extends ConsumerWidget {
                   ),
             ),
             if (ref.watch(showFieldProvider)) ...[
-              Consumer(
-                child: Text('Show buffered bounding box', style: textStyle),
-                builder:
-                    (context, ref, child) => CheckboxListTile(
-                      secondary: switch (ref.watch(
-                        showBufferedFieldBoundingBoxProvider,
-                      )) {
-                        true => const Icon(Icons.visibility),
-                        false => const Icon(Icons.visibility_off),
-                      },
-                      title: child,
-                      value: ref.watch(showBufferedFieldBoundingBoxProvider),
-                      onChanged:
-                          (value) =>
-                              value != null
-                                  ? ref
-                                      .read(
-                                        showBufferedFieldBoundingBoxProvider
-                                            .notifier,
-                                      )
-                                      .update(value: value)
-                                  : null,
-                    ),
-              ),
+              if (!dadMode)
+                Consumer(
+                  child: Text('Show buffered bounding box', style: textStyle),
+                  builder:
+                      (context, ref, child) => CheckboxListTile(
+                        secondary: switch (ref.watch(
+                          showBufferedFieldBoundingBoxProvider,
+                        )) {
+                          true => const Icon(Icons.visibility),
+                          false => const Icon(Icons.visibility_off),
+                        },
+                        title: child,
+                        value: ref.watch(showBufferedFieldBoundingBoxProvider),
+                        onChanged:
+                            (value) =>
+                                value != null
+                                    ? ref
+                                        .read(
+                                          showBufferedFieldBoundingBoxProvider
+                                              .notifier,
+                                        )
+                                        .update(value: value)
+                                    : null,
+                      ),
+                ),
               MenuItemButton(
                 leadingIcon: const Padding(
                   padding: EdgeInsets.only(left: 8),
@@ -263,7 +269,7 @@ class FieldMenu extends ConsumerWidget {
                     ),
                 child: Text('Buffer distances', style: textStyle),
               ),
-              if (ref.watch(showBufferedFieldProvider))
+              if (ref.watch(showBufferedFieldProvider) && !dadMode)
                 Consumer(
                   builder: (context, ref, child) {
                     final activeMode = ref.watch(
@@ -303,7 +309,8 @@ class FieldMenu extends ConsumerWidget {
                           ?.polygon
                           .interior
                           .isNotEmpty ??
-                      false))
+                      false) &&
+                  !dadMode)
                 Consumer(
                   builder: (context, ref, child) {
                     final activeMode = ref.watch(
@@ -337,24 +344,25 @@ class FieldMenu extends ConsumerWidget {
                     );
                   },
                 ),
-              Consumer(
-                child: Text('Raw buffer points', style: textStyle),
-                builder:
-                    (context, ref, child) => CheckboxListTile(
-                      secondary: child,
-                      value: ref.watch(fieldBufferGetRawPointsProvider),
-                      onChanged:
-                          (value) =>
-                              value != null
-                                  ? ref
-                                      .read(
-                                        fieldBufferGetRawPointsProvider
-                                            .notifier,
-                                      )
-                                      .update(value: value)
-                                  : null,
-                    ),
-              ),
+              if (!dadMode)
+                Consumer(
+                  child: Text('Raw buffer points', style: textStyle),
+                  builder:
+                      (context, ref, child) => CheckboxListTile(
+                        secondary: child,
+                        value: ref.watch(fieldBufferGetRawPointsProvider),
+                        onChanged:
+                            (value) =>
+                                value != null
+                                    ? ref
+                                        .read(
+                                          fieldBufferGetRawPointsProvider
+                                              .notifier,
+                                        )
+                                        .update(value: value)
+                                    : null,
+                      ),
+                ),
             ],
           ],
           if (ref.watch(fieldBufferEnabledProvider))
@@ -786,7 +794,7 @@ class _BufferDistancesDialog extends ConsumerWidget {
     return SimpleDialog(
       title: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text('Buffer distances'), CloseButton()],
+        children: [Text('Buffer distance'), CloseButton()],
       ),
       contentPadding: const EdgeInsets.only(
         left: 24,

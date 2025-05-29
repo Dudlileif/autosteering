@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
@@ -42,6 +43,7 @@ class WorkSessionMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final dadMode = ref.watch(enableDadModeProvider);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
     return MenuButtonWithChildren(
@@ -131,7 +133,7 @@ class WorkSessionMenu extends ConsumerWidget {
             onPressed:
                 () => ref.read(exportAllProvider(directory: 'work_sessions')),
           ),
-          const _ImportButton(),
+          if (!dadMode) const _ImportButton(),
         ],
       ],
     );
@@ -654,6 +656,27 @@ class _CreateWorkSessionDialogState
               .map(
                 (session) => DropdownMenuEntry(
                   label: session.name ?? 'No name',
+                  labelWidget: ListTile(
+                    title: Text(session.name ?? 'No name'),
+                    subtitle: Builder(
+                      builder: (context) {
+                        var text = '';
+                        if (session.field?.name != null) {
+                          text += session.field!.name;
+                          if (session.start != null) {
+                            text += ' - ';
+                          }
+                        }
+                        if (session.start != null) {
+                          text +=
+                              session.start!.toIso8601String().split('T').first;
+                        }
+                        return text.isNotEmpty
+                            ? Text(text)
+                            : const SizedBox.shrink();
+                      },
+                    ),
+                  ),
                   value: session,
                 ),
               )

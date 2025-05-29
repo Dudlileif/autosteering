@@ -28,24 +28,25 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 /// A settings menu for map, sim core and theme settings.
-class SettingsMenu extends StatelessWidget {
+class SettingsMenu extends ConsumerWidget {
   /// A settings menu for map, sim core and theme settings.
   const SettingsMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MenuButtonWithChildren(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dadMode = ref.watch(enableDadModeProvider);
+    return MenuButtonWithChildren(
       icon: Icons.settings,
       text: 'Settings',
       menuChildren: [
-        MapMenu(),
-        SimCoreMenu(),
-        ThemeMenu(),
-        AudioVolumeMenu(),
-        _ImportExportMenu(),
-        _DebugModeButton(),
-        _GraphButton(),
-        _LicenseButton(),
+        const MapMenu(),
+        const SimCoreMenu(),
+        const ThemeMenu(),
+        const AudioVolumeMenu(),
+        const _ImportExportMenu(),
+        const _DadModeButton(),
+        if (!dadMode) ...[const _DebugModeButton(), const _GraphButton()],
+        const _LicenseButton(),
       ],
     );
   }
@@ -191,6 +192,25 @@ class _ImportExportSettingsButton extends ConsumerWidget {
       ],
     );
   }
+}
+
+class _DadModeButton extends ConsumerWidget {
+  const _DadModeButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => CheckboxListTile(
+    value: ref.watch(enableDadModeProvider),
+    onChanged:
+        (value) =>
+            value != null
+                ? ref.read(enableDadModeProvider.notifier).update(value: value)
+                : null,
+    title: Text(
+      'Dad mode',
+      style: Theme.of(context).menuButtonWithChildrenText,
+    ),
+    secondary: const Icon(Icons.elderly),
+  );
 }
 
 class _DebugModeButton extends ConsumerWidget {

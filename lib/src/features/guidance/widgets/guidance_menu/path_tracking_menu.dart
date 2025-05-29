@@ -35,6 +35,7 @@ class PathTrackingMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
+    final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
       text: 'Path tracking',
@@ -145,26 +146,27 @@ class PathTrackingMenu extends ConsumerWidget {
             child: Text('Path recording', style: textStyle),
           ),
         },
-        Consumer(
-          child: Text('Show', style: textStyle),
-          builder: (context, ref, child) {
-            return CheckboxListTile(
-              secondary: switch (ref.watch(showPathTrackingProvider)) {
-                true => const Icon(Icons.visibility),
-                false => const Icon(Icons.visibility_off),
-              },
-              title: child,
-              value: ref.watch(showPathTrackingProvider),
-              onChanged:
-                  (value) =>
-                      value != null
-                          ? ref
-                              .read(showPathTrackingProvider.notifier)
-                              .update(value: value)
-                          : null,
-            );
-          },
-        ),
+        if (!dadMode)
+          Consumer(
+            child: Text('Show', style: textStyle),
+            builder: (context, ref, child) {
+              return CheckboxListTile(
+                secondary: switch (ref.watch(showPathTrackingProvider)) {
+                  true => const Icon(Icons.visibility),
+                  false => const Icon(Icons.visibility_off),
+                },
+                title: child,
+                value: ref.watch(showPathTrackingProvider),
+                onChanged:
+                    (value) =>
+                        value != null
+                            ? ref
+                                .read(showPathTrackingProvider.notifier)
+                                .update(value: value)
+                            : null,
+              );
+            },
+          ),
         ListTile(
           leading: Text('Loop', style: textStyle),
           title: Consumer(

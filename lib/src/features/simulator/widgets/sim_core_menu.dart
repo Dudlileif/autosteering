@@ -19,6 +19,7 @@ import 'dart:async';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/simulator/widgets/log_replay_menu.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
@@ -34,30 +35,33 @@ class SimCoreMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final manualSimulationMode = ref.watch(simCoreAllowManualInputProvider);
-
+    final dadMode = ref.watch(enableDadModeProvider);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       text: 'Sim core',
       icon: Icons.memory,
       menuChildren: [
-        Consumer(
-          child: Text('Manual simulation mode', style: textStyle),
-          builder:
-              (context, ref, child) => CheckboxListTile(
-                secondary: const Icon(Icons.gamepad),
-                title: child,
-                value: ref.watch(simCoreAllowManualInputProvider),
-                onChanged:
-                    (value) =>
-                        value != null
-                            ? ref
-                                .read(simCoreAllowManualInputProvider.notifier)
-                                .update(value: value)
-                            : null,
-              ),
-        ),
-        if (!manualSimulationMode)
+        if (!dadMode)
+          Consumer(
+            child: Text('Manual simulation mode', style: textStyle),
+            builder:
+                (context, ref, child) => CheckboxListTile(
+                  secondary: const Icon(Icons.gamepad),
+                  title: child,
+                  value: ref.watch(simCoreAllowManualInputProvider),
+                  onChanged:
+                      (value) =>
+                          value != null
+                              ? ref
+                                  .read(
+                                    simCoreAllowManualInputProvider.notifier,
+                                  )
+                                  .update(value: value)
+                              : null,
+                ),
+          ),
+        if (!manualSimulationMode && !dadMode)
           Consumer(
             child: Text('Allow sim interpolation', style: textStyle),
             builder:
@@ -153,8 +157,12 @@ class SimCoreMenu extends ConsumerWidget {
                       ),
                       Slider(
                         value: index.toDouble(),
+
                         onChanged:
-                            (value) => setState(() => index = value.round()),
+                            dadMode
+                                ? null
+                                : (value) =>
+                                    setState(() => index = value.round()),
                         onChangeEnd: (value) {
                           final oldValue = ref.read(
                             simulatorUpdateFrequencyProvider,
@@ -200,8 +208,10 @@ class SimCoreMenu extends ConsumerWidget {
                       Slider(
                         value: value.toDouble(),
                         onChanged:
-                            (newValue) =>
-                                setState(() => value = newValue.round()),
+                            dadMode
+                                ? null
+                                : (newValue) =>
+                                    setState(() => value = newValue.round()),
                         min: 1,
                         max: 30,
                         divisions: 29,

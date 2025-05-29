@@ -34,6 +34,7 @@ class HomePositionMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuButtonWithChildren(
+      hideInDadMode: true,
       icon: Icons.home,
       text: 'Home',
       menuChildren: [

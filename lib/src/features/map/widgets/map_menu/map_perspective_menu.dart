@@ -29,6 +29,7 @@ class MapPerspectiveMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MenuButtonWithChildren(
+      hideInDadMode: true,
       icon: Icons.threed_rotation,
       text: 'Perspective',
       menuChildren: [

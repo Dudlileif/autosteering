@@ -6,7 +6,7 @@ part of 'simulator_core_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$initializeSimCoreHash() => r'b6782d15711cd9826e18b550b287d5e5d7f6c0c3';
+String _$initializeSimCoreHash() => r'ac5f9c7e44265519f7f31123e887b6ea68242e76';
 
 /// Sends initial parameters to  the sim core.
 ///
@@ -303,7 +303,7 @@ final simCoreAllowManualInputProvider =
 
 typedef _$SimCoreAllowManualInput = Notifier<bool>;
 String _$simCoreAllowInterpolationHash() =>
-    r'1aaf9e232d7baa934a060672734142c14272e4c7';
+    r'a44091c788f2ebfc7487dc11bb8cad2b9a526772';
 
 /// A provider for whether the sim core should allow interpolation steps
 /// between the hardware GNSS updates.

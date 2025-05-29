@@ -45,6 +45,7 @@ class LogReplayMenu extends ConsumerWidget {
 
     return MenuButtonWithChildren(
       icon: Icons.history,
+      hideInDadMode: true,
       text: 'Log replay',
       menuChildren: [
         Consumer(

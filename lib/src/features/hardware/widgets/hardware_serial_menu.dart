@@ -31,6 +31,7 @@ class HardwareSerialMenu extends StatelessWidget {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
+      hideInDadMode: true,
       text: 'USB / Serial',
       iconOverrideWidget: Consumer(
         builder:
