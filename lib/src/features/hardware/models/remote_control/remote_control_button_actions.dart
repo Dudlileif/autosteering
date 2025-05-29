@@ -30,7 +30,10 @@ enum RemoteControlButtonAction {
   toggleABSnap(
     'Toggle AB-line snap to closest line',
     Symbols.format_letter_spacing,
-  );
+  ),
+
+  /// Reset nudge distance to 0.
+  resetNudgeDistance('Reset nudge distance to 0', Symbols.exposure_zero);
 
   const RemoteControlButtonAction(this.description, [this.icon]);
 

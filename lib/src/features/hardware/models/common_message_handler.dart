@@ -281,6 +281,10 @@ class CommonMessageHandler {
         ));
         Logger.instance.i('''Remote control autosteering toggled.''');
 
+      case RemoteControlButtonAction.resetNudgeDistance:
+        _ref.read(simInputProvider.notifier).send((nudgeDistance: 0));
+        Logger.instance.i('''Remote control reset nudge distance.''');
+
       case null:
         Logger.instance.i(
           'Remote control button pressed with no action assigned: ${i + 1}.',

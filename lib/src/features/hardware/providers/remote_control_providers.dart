@@ -116,6 +116,9 @@ void sendRemoteControlLedState(Ref ref) {
               ),
             ),
           ),
+          RemoteControlButtonAction.resetNudgeDistance => ref.watch(
+            mainVehicleProvider.select((value) => value.nudgeDistance != 0),
+          ),
         };
         states.add(state ? 1 : 0);
       } else {
