@@ -127,7 +127,7 @@ class _SectionWidthExpansionTile extends ConsumerStatefulWidget {
 
 class _SectionWidthExpansionTileState
     extends ConsumerState<_SectionWidthExpansionTile> {
-  final key = GlobalKey();
+  final key = GlobalKey<AnimatedListState>();
 
   final textField = Padding(
     padding: const EdgeInsets.only(top: 8),
@@ -152,10 +152,9 @@ class _SectionWidthExpansionTileState
                   .read(configuredEquipmentProvider.notifier)
                   .update(
                     equipment.copyWith(
-                      sections:
-                          equipment.sections
-                              .map((section) => section..width = newWidth)
-                              .toList(),
+                      sections: equipment.sections
+                          .map((section) => section..width = newWidth)
+                          .toList(),
                     ),
                   );
             }
@@ -165,27 +164,22 @@ class _SectionWidthExpansionTileState
     ),
   );
 
-  late final widgets = [
+  late final widgets = <Widget>[
     Consumer(
-      builder:
-          (context, ref, child) => CheckboxListTile(
-            enabled: ref.watch(
-              configuredEquipmentProvider.select(
-                (value) => value.sections.length >= 2,
-              ),
-            ),
-            title: const Text('Equal widths'),
-            value: ref.watch(configuredEquipmentEqualWidthsProvider),
-            onChanged:
-                (value) =>
-                    value != null
-                        ? ref
-                            .read(
-                              configuredEquipmentEqualWidthsProvider.notifier,
-                            )
-                            .update(value: value)
-                        : null,
+      builder: (context, ref, child) => CheckboxListTile(
+        enabled: ref.watch(
+          configuredEquipmentProvider.select(
+            (value) => value.sections.length >= 2,
           ),
+        ),
+        title: const Text('Equal widths'),
+        value: ref.watch(configuredEquipmentEqualWidthsProvider),
+        onChanged: (value) => value != null
+            ? ref
+                  .read(configuredEquipmentEqualWidthsProvider.notifier)
+                  .update(value: value)
+            : null,
+      ),
     ),
     if (ref.read(configuredEquipmentEqualWidthsProvider)) textField,
   ];
@@ -215,14 +209,13 @@ class _SectionWidthExpansionTileState
       child: AnimatedList(
         key: key,
         initialItemCount: widgets.length,
-        itemBuilder:
-            (context, index, animation) => SizeTransition(
-              sizeFactor: CurvedAnimation(
-                parent: animation,
-                curve: Easing.emphasizedAccelerate,
-              ),
-              child: widgets[index],
-            ),
+        itemBuilder: (context, index, animation) => SizeTransition(
+          sizeFactor: CurvedAnimation(
+            parent: animation,
+            curve: Easing.emphasizedAccelerate,
+          ),
+          child: widgets[index],
+        ),
       ),
     );
   }
@@ -238,7 +231,7 @@ class _SectionWorkingWidthExpansionTile extends ConsumerStatefulWidget {
 
 class _SectionWorkingWidthExpansionTileState
     extends ConsumerState<_SectionWorkingWidthExpansionTile> {
-  final key = GlobalKey();
+  final key = GlobalKey<AnimatedListState>();
 
   final textField = Padding(
     padding: const EdgeInsets.only(top: 8),
@@ -263,12 +256,9 @@ class _SectionWorkingWidthExpansionTileState
                   .read(configuredEquipmentProvider.notifier)
                   .update(
                     equipment.copyWith(
-                      sections:
-                          equipment.sections
-                              .map(
-                                (section) => section..workingWidth = newWidth,
-                              )
-                              .toList(),
+                      sections: equipment.sections
+                          .map((section) => section..workingWidth = newWidth)
+                          .toList(),
                     ),
                   );
             }
@@ -278,28 +268,22 @@ class _SectionWorkingWidthExpansionTileState
     ),
   );
 
-  late final widgets = [
+  late final widgets = <Widget>[
     Consumer(
-      builder:
-          (context, ref, child) => CheckboxListTile(
-            enabled: ref.watch(
-              configuredEquipmentProvider.select(
-                (value) => value.sections.length >= 2,
-              ),
-            ),
-            title: const Text('Equal working widths'),
-            value: ref.watch(configuredEquipmentEqualWorkingWidthsProvider),
-            onChanged:
-                (value) =>
-                    value != null
-                        ? ref
-                            .read(
-                              configuredEquipmentEqualWorkingWidthsProvider
-                                  .notifier,
-                            )
-                            .update(value: value)
-                        : null,
+      builder: (context, ref, child) => CheckboxListTile(
+        enabled: ref.watch(
+          configuredEquipmentProvider.select(
+            (value) => value.sections.length >= 2,
           ),
+        ),
+        title: const Text('Equal working widths'),
+        value: ref.watch(configuredEquipmentEqualWorkingWidthsProvider),
+        onChanged: (value) => value != null
+            ? ref
+                  .read(configuredEquipmentEqualWorkingWidthsProvider.notifier)
+                  .update(value: value)
+            : null,
+      ),
     ),
     if (ref.read(configuredEquipmentEqualWorkingWidthsProvider)) textField,
   ];
@@ -331,14 +315,13 @@ class _SectionWorkingWidthExpansionTileState
       child: AnimatedList(
         key: key,
         initialItemCount: widgets.length,
-        itemBuilder:
-            (context, index, animation) => SizeTransition(
-              sizeFactor: CurvedAnimation(
-                parent: animation,
-                curve: Easing.emphasizedAccelerate,
-              ),
-              child: widgets[index],
-            ),
+        itemBuilder: (context, index, animation) => SizeTransition(
+          sizeFactor: CurvedAnimation(
+            parent: animation,
+            curve: Easing.emphasizedAccelerate,
+          ),
+          child: widgets[index],
+        ),
       ),
     );
   }
@@ -435,17 +418,16 @@ class _SectionConfiguratorState extends ConsumerState<_SectionConfigurator> {
         padding: const EdgeInsets.only(top: 8),
         key: _listKey,
         initialItemCount: widgets.length,
-        itemBuilder:
-            (context, index, animation) => SizeTransition(
-              sizeFactor: CurvedAnimation(
-                parent: animation,
-                curve: Easing.emphasizedAccelerate,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8, left: 4, right: 4),
-                child: widgets[index],
-              ),
-            ),
+        itemBuilder: (context, index, animation) => SizeTransition(
+          sizeFactor: CurvedAnimation(
+            parent: animation,
+            curve: Easing.emphasizedAccelerate,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8, left: 4, right: 4),
+            child: widgets[index],
+          ),
+        ),
       ),
     );
   }
@@ -554,8 +536,9 @@ class _SectionButtonColorSelector extends ConsumerWidget {
             value: color.shade500,
             label: PrimaryColorNamesExtension.primaryColorNames[index],
             leadingIcon: Icon(Icons.color_lens, color: color),
-            trailingIcon:
-                section.color == color ? const Icon(Icons.check) : null,
+            trailingIcon: section.color == color
+                ? const Icon(Icons.check)
+                : null,
           ),
         ),
       ],
@@ -594,18 +577,18 @@ class _SectionWorkedPathColorSelector extends ConsumerWidget {
           value: null,
           label: 'Default',
           leadingIcon: Icon(Icons.color_lens, color: theme.primaryColor),
-          trailingIcon:
-              section.workedPathColor == null ? const Icon(Icons.check) : null,
+          trailingIcon: section.workedPathColor == null
+              ? const Icon(Icons.check)
+              : null,
         ),
         ...Colors.primaries.mapIndexed(
           (index, color) => DropdownMenuEntry(
             value: color.shade500,
             label: PrimaryColorNamesExtension.primaryColorNames[index],
             leadingIcon: Icon(Icons.color_lens, color: color),
-            trailingIcon:
-                section.workedPathColor == color
-                    ? const Icon(Icons.check)
-                    : null,
+            trailingIcon: section.workedPathColor == color
+                ? const Icon(Icons.check)
+                : null,
           ),
         ),
       ],
@@ -624,33 +607,27 @@ class _Sections extends StatelessWidget {
       children: [
         ListenableBuilder(
           listenable: controller,
-          builder:
-              (context, child) => switch ((controller
-                              .positions
-                              .firstOrNull
-                              ?.maxScrollExtent ??
-                          0) >
-                      0 ||
-                  sections.length >= 5) {
+          builder: (context, child) =>
+              switch ((controller.positions.firstOrNull?.maxScrollExtent ?? 0) >
+                  0 ||
+              sections.length >= 5) {
                 true => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                      onPressed:
-                          () => controller.animateTo(
-                            0,
-                            duration: Durations.long4,
-                            curve: Curves.easeInOutCubicEmphasized,
-                          ),
+                      onPressed: () => controller.animateTo(
+                        0,
+                        duration: Durations.long4,
+                        curve: Curves.easeInOutCubicEmphasized,
+                      ),
                       child: const Text('1'),
                     ),
                     TextButton(
-                      onPressed:
-                          () => controller.animateTo(
-                            controller.positions.first.maxScrollExtent / 2,
-                            duration: Durations.long4,
-                            curve: Curves.easeInOutCubicEmphasized,
-                          ),
+                      onPressed: () => controller.animateTo(
+                        controller.positions.first.maxScrollExtent / 2,
+                        duration: Durations.long4,
+                        curve: Curves.easeInOutCubicEmphasized,
+                      ),
                       child: Text('''${(sections.length / 2).ceil()}'''),
                     ),
                     TextButton(
@@ -683,8 +660,8 @@ class _Sections extends StatelessWidget {
                     ref.watch(configuredEquipmentEqualWidthsProvider) ? 1 : 0;
                 heightModifier +=
                     ref.watch(configuredEquipmentEqualWorkingWidthsProvider)
-                        ? 1
-                        : 0;
+                    ? 1
+                    : 0;
               }
 
               return AnimatedContainer(

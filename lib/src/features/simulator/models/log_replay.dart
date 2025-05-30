@@ -31,20 +31,19 @@ class LogReplay {
   /// [loop] is whehter the log should restart when reaching the end.
   factory LogReplay({required String log, bool loop = false}) {
     DateTime? firstRecordTime;
-    final records =
-        const LineSplitter()
-            .convert(log)
-            .where((element) => element.isNotEmpty && element.contains(':'))
-            .mapIndexed((index, raw) {
-              final record = LogReplayRecord(
-                index: index,
-                raw: raw,
-                firstRecordTime: firstRecordTime,
-              );
-              firstRecordTime ??= record.logTime;
-              return record;
-            })
-            .toList();
+    final records = const LineSplitter()
+        .convert(log)
+        .where((element) => element.isNotEmpty && element.contains(':'))
+        .mapIndexed((index, raw) {
+          final record = LogReplayRecord(
+            index: index,
+            raw: raw,
+            firstRecordTime: firstRecordTime,
+          );
+          firstRecordTime ??= record.logTime;
+          return record;
+        })
+        .toList();
 
     return LogReplay._(log: log, records: records, loop: loop);
   }
@@ -82,7 +81,7 @@ class LogReplay {
     return null;
   }
 
-  late final _readyRecords = [...records];
+  late final _readyRecords = <LogReplayRecord>[...records];
   Timer? _recordTimer;
   var _ticks = 0;
 
@@ -162,19 +161,17 @@ class LogReplayRecord {
     final logTime = DateTime.parse(
       raw.substring(timeString?.start ?? 0, timeString?.end),
     );
-    final message =
-        splits.last.endsWith('/')
-            ? splits.last.substring(0, splits.last.length - 1)
-            : splits.last;
+    final message = splits.last.endsWith('/')
+        ? splits.last.substring(0, splits.last.length - 1)
+        : splits.last;
     return LogReplayRecord._(
       index: index,
       raw: raw,
       message: message,
       logTime: logTime,
-      replayTime:
-          firstRecordTime != null
-              ? logTime.difference(firstRecordTime)
-              : Duration.zero,
+      replayTime: firstRecordTime != null
+          ? logTime.difference(firstRecordTime)
+          : Duration.zero,
     );
   }
 

@@ -43,7 +43,7 @@ class PathRecordingMenu extends ConsumerStatefulWidget {
 }
 
 class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
-  var _recordingMode = _RecordingMode.automatic;
+  _RecordingMode _recordingMode = _RecordingMode.automatic;
 
   @override
   void initState() {
@@ -84,17 +84,16 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
             ),
             actions: [
               Consumer(
-                builder:
-                    (context, ref, child) => CloseButton(
-                      onPressed: () {
-                        ref
-                            .read(showPathRecordingMenuProvider.notifier)
-                            .update(value: false);
-                        ref
-                            .read(enablePathRecorderProvider.notifier)
-                            .update(value: false);
-                      },
-                    ),
+                builder: (context, ref, child) => CloseButton(
+                  onPressed: () {
+                    ref
+                        .read(showPathRecordingMenuProvider.notifier)
+                        .update(value: false);
+                    ref
+                        .read(enablePathRecorderProvider.notifier)
+                        .update(value: false);
+                  },
+                ),
               ),
             ],
           ),
@@ -108,15 +107,12 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       visualDensity: VisualDensity.compact,
                     ),
                     showSelectedIcon: false,
-                    onSelectionChanged:
-                        (values) => setState(() {
-                          _recordingMode = values.first;
-                          ref
-                              .read(
-                                enableAutomaticPathRecorderProvider.notifier,
-                              )
-                              .update(value: false);
-                        }),
+                    onSelectionChanged: (values) => setState(() {
+                      _recordingMode = values.first;
+                      ref
+                          .read(enableAutomaticPathRecorderProvider.notifier)
+                          .update(value: false);
+                    }),
                     selected: {_recordingMode},
                     segments: const [
                       ButtonSegment(
@@ -142,13 +138,12 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                         closeOnActivate: false,
                         leadingIcon: Padding(
                           padding: const EdgeInsets.only(left: 8),
-                          child:
-                              enabled
-                                  ? const SizedBox.square(
-                                    dimension: 24,
-                                    child: CircularProgressIndicator(),
-                                  )
-                                  : const Icon(Icons.play_arrow),
+                          child: enabled
+                              ? const SizedBox.square(
+                                  dimension: 24,
+                                  child: CircularProgressIndicator(),
+                                )
+                              : const Icon(Icons.play_arrow),
                         ),
                         onPressed: () {
                           ref
@@ -177,25 +172,24 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                     ),
                     onPressed:
                         ref.watch(
-                              pathRecordingListProvider.select(
-                                (value) => value.isNotEmpty,
-                              ),
-                            )
-                            ? () {
-                              ref
-                                  .read(
-                                    enableAutomaticPathRecorderProvider
-                                        .notifier,
-                                  )
-                                  .update(value: false);
-                              ref
-                                  .read(pathRecordingListProvider.notifier)
-                                  .finishRecording();
-                              ref
-                                  .read(showFinishedPathProvider.notifier)
-                                  .update(value: true);
-                            }
-                            : null,
+                          pathRecordingListProvider.select(
+                            (value) => value.isNotEmpty,
+                          ),
+                        )
+                        ? () {
+                            ref
+                                .read(
+                                  enableAutomaticPathRecorderProvider.notifier,
+                                )
+                                .update(value: false);
+                            ref
+                                .read(pathRecordingListProvider.notifier)
+                                .finishRecording();
+                            ref
+                                .read(showFinishedPathProvider.notifier)
+                                .update(value: true);
+                          }
+                        : null,
                     child: Text('Finish recording', style: textStyle),
                   ),
                 ],
@@ -208,17 +202,16 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                           padding: EdgeInsets.only(left: 8),
                           child: Icon(Icons.add),
                         ),
-                        onPressed:
-                            () => ref
-                                .read(pathRecordingListProvider.notifier)
-                                .add(
-                                  ref.read(
-                                    mainVehicleProvider.select(
-                                      (value) => value.wayPoint,
-                                    ),
-                                  ),
-                                  applySettings: true,
+                        onPressed: () => ref
+                            .read(pathRecordingListProvider.notifier)
+                            .add(
+                              ref.read(
+                                mainVehicleProvider.select(
+                                  (value) => value.wayPoint,
                                 ),
+                              ),
+                              applySettings: true,
+                            ),
                         child: Text('Add point', style: textStyle),
                       );
                     },
@@ -233,19 +226,19 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                         ),
                         onPressed:
                             ref.watch(
-                                  pathRecordingListProvider.select(
-                                    (value) => value.isNotEmpty,
-                                  ),
-                                )
-                                ? () {
-                                  ref
-                                      .read(pathRecordingListProvider.notifier)
-                                      .finishRecording();
-                                  ref
-                                      .read(showFinishedPathProvider.notifier)
-                                      .update(value: true);
-                                }
-                                : null,
+                              pathRecordingListProvider.select(
+                                (value) => value.isNotEmpty,
+                              ),
+                            )
+                            ? () {
+                                ref
+                                    .read(pathRecordingListProvider.notifier)
+                                    .finishRecording();
+                                ref
+                                    .read(showFinishedPathProvider.notifier)
+                                    .update(value: true);
+                              }
+                            : null,
                         child: Text('Finish recording', style: textStyle),
                       );
                     },
@@ -324,18 +317,14 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       padding: EdgeInsets.only(left: 8),
                       child: Icon(Icons.add),
                     ),
-                    onPressed:
-                        () =>
-                            ref
-                              ..read(
-                                fieldInteriorRingsProvider.notifier,
-                              ).addRing(
-                                ref
-                                    .read(finishedPathRecordingListProvider)
-                                    ?.map((e) => e.position)
-                                    .toList(),
-                              )
-                              ..invalidate(finishedPathRecordingListProvider),
+                    onPressed: () => ref
+                      ..read(fieldInteriorRingsProvider.notifier).addRing(
+                        ref
+                            .read(finishedPathRecordingListProvider)
+                            ?.map((e) => e.position)
+                            .toList(),
+                      )
+                      ..invalidate(finishedPathRecordingListProvider),
                     child: Text('Add interior boundary', style: textStyle),
                   ),
                 ],
@@ -359,14 +348,9 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       ),
                       Slider.adaptive(
                         value: distance,
-                        onChanged:
-                            (value) => ref
-                                .read(
-                                  activePathRecordingSettingsProvider.notifier,
-                                )
-                                .update(
-                                  settings.copyWith(lateralOffset: value),
-                                ),
+                        onChanged: (value) => ref
+                            .read(activePathRecordingSettingsProvider.notifier)
+                            .update(settings.copyWith(lateralOffset: value)),
                         min: -5,
                         max: 5,
                         divisions: 20,
@@ -387,14 +371,11 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       ),
                       Slider.adaptive(
                         value: distance,
-                        onChanged:
-                            (value) => ref
-                                .read(
-                                  activePathRecordingSettingsProvider.notifier,
-                                )
-                                .update(
-                                  settings.copyWith(longitudinalOffset: value),
-                                ),
+                        onChanged: (value) => ref
+                            .read(activePathRecordingSettingsProvider.notifier)
+                            .update(
+                              settings.copyWith(longitudinalOffset: value),
+                            ),
                         min: -5,
                         max: 5,
                         divisions: 20,
@@ -416,15 +397,11 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                         ),
                         Slider.adaptive(
                           value: distance,
-                          onChanged:
-                              (value) => ref
-                                  .read(
-                                    activePathRecordingSettingsProvider
-                                        .notifier,
-                                  )
-                                  .update(
-                                    settings.copyWith(maxDistance: value),
-                                  ),
+                          onChanged: (value) => ref
+                              .read(
+                                activePathRecordingSettingsProvider.notifier,
+                              )
+                              .update(settings.copyWith(maxDistance: value)),
                           min: 1,
                           max: 100,
                           divisions: 99,
@@ -445,15 +422,11 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                         ),
                         Slider.adaptive(
                           value: distance,
-                          onChanged:
-                              (value) => ref
-                                  .read(
-                                    activePathRecordingSettingsProvider
-                                        .notifier,
-                                  )
-                                  .update(
-                                    settings.copyWith(minDistance: value),
-                                  ),
+                          onChanged: (value) => ref
+                              .read(
+                                activePathRecordingSettingsProvider.notifier,
+                              )
+                              .update(settings.copyWith(minDistance: value)),
                           min: 0.1,
                           max: 2,
                           divisions: 19,
@@ -474,17 +447,13 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                         ),
                         Slider.adaptive(
                           value: angle,
-                          onChanged:
-                              (value) => ref
-                                  .read(
-                                    activePathRecordingSettingsProvider
-                                        .notifier,
-                                  )
-                                  .update(
-                                    settings.copyWith(
-                                      maxBearingDifference: value,
-                                    ),
-                                  ),
+                          onChanged: (value) => ref
+                              .read(
+                                activePathRecordingSettingsProvider.notifier,
+                              )
+                              .update(
+                                settings.copyWith(maxBearingDifference: value),
+                              ),
                           min: 0.1,
                           max: 2,
                           divisions: 19,
@@ -501,62 +470,55 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
               )) ...[
                 Consumer(
                   child: Text('Show last recorded path', style: textStyle),
-                  builder:
-                      (context, ref, child) => CheckboxListTile(
-                        title: child,
-                        secondary: const Icon(Icons.route),
-                        value: ref.watch(showFinishedPathProvider),
-                        onChanged:
-                            (value) =>
-                                value != null
-                                    ? ref
-                                        .read(showFinishedPathProvider.notifier)
-                                        .update(value: value)
-                                    : null,
-                      ),
+                  builder: (context, ref, child) => CheckboxListTile(
+                    title: child,
+                    secondary: const Icon(Icons.route),
+                    value: ref.watch(showFinishedPathProvider),
+                    onChanged: (value) => value != null
+                        ? ref
+                              .read(showFinishedPathProvider.notifier)
+                              .update(value: value)
+                        : null,
+                  ),
                 ),
                 Consumer(
                   child: Text('Edit recorded path', style: textStyle),
-                  builder:
-                      (context, ref, child) => CheckboxListTile(
-                        title: child,
-                        secondary: const Icon(Icons.edit),
-                        value: ref.watch(editFinishedPathProvider),
-                        onChanged:
-                            (value) =>
-                                value != null
-                                    ? ref
-                                        .read(editFinishedPathProvider.notifier)
-                                        .update(value: value)
-                                    : null,
-                      ),
+                  builder: (context, ref, child) => CheckboxListTile(
+                    title: child,
+                    secondary: const Icon(Icons.edit),
+                    value: ref.watch(editFinishedPathProvider),
+                    onChanged: (value) => value != null
+                        ? ref
+                              .read(editFinishedPathProvider.notifier)
+                              .update(value: value)
+                        : null,
+                  ),
                 ),
                 Consumer(
-                  builder:
-                      (context, ref, child) => MenuItemButton(
-                        leadingIcon: const Padding(
-                          padding: EdgeInsets.only(left: 8),
-                          child: Icon(Icons.clear),
+                  builder: (context, ref, child) => MenuItemButton(
+                    leadingIcon: const Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Icon(Icons.clear),
+                    ),
+                    onPressed: () {
+                      ref
+                          .read(finishedPathRecordingListProvider.notifier)
+                          .clear();
+                      if (ref.watch(
+                        activeEditablePathTypeProvider.select(
+                          (value) => value == EditablePathType.recordedPath,
                         ),
-                        onPressed: () {
-                          ref
-                              .read(finishedPathRecordingListProvider.notifier)
-                              .clear();
-                          if (ref.watch(
-                            activeEditablePathTypeProvider.select(
-                              (value) => value == EditablePathType.recordedPath,
-                            ),
-                          )) {
-                            ref
-                              ..invalidate(editablePathPointsProvider)
-                              ..read(
-                                activeEditablePathTypeProvider.notifier,
-                              ).update(null)
-                              ..invalidate(editFinishedPathProvider);
-                          }
-                        },
-                        child: Text('Clear recorded path', style: textStyle),
-                      ),
+                      )) {
+                        ref
+                          ..invalidate(editablePathPointsProvider)
+                          ..read(
+                            activeEditablePathTypeProvider.notifier,
+                          ).update(null)
+                          ..invalidate(editFinishedPathProvider);
+                      }
+                    },
+                    child: Text('Clear recorded path', style: textStyle),
+                  ),
                 ),
               ],
             ],
@@ -587,99 +549,78 @@ class _CreateFieldButton extends ConsumerWidget {
             builder: (context) {
               var name = '';
               return StatefulBuilder(
-                builder:
-                    (context, setState) => SimpleDialog(
-                      title: const Text('Name the field'),
-                      contentPadding: const EdgeInsets.only(
-                        left: 24,
-                        top: 12,
-                        right: 24,
-                        bottom: 16,
+                builder: (context, setState) => SimpleDialog(
+                  title: const Text('Name the field'),
+                  contentPadding: const EdgeInsets.only(
+                    left: 24,
+                    top: 12,
+                    right: 24,
+                    bottom: 16,
+                  ),
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.label_outline),
+                        labelText: 'Name',
                       ),
-                      children: [
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.label_outline),
-                            labelText: 'Name',
-                          ),
-                          initialValue: name,
-                          onChanged: (value) => setState(() => name = value),
-                          onFieldSubmitted:
-                              (value) => setState(() => name = value),
-                          keyboardType: TextInputType.text,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator:
-                              (value) =>
-                                  isBlank(value)
-                                      ? '''No name entered! Please enter a name so that the field can be saved!'''
-                                      : null,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Consumer(
-                            builder:
-                                (context, ref, child) => FilledButton(
-                                  onPressed: () {
-                                    Timer(
-                                      const Duration(milliseconds: 100),
-                                      () {
-                                        final exteriorRing = ref.read(
-                                          fieldExteriorRingProvider,
-                                        );
-                                        final interiorRings =
-                                            ref.read(
-                                              fieldInteriorRingsProvider,
-                                            ) ??
-                                            [];
-                                        if (exteriorRing != null) {
-                                          final field = Field(
-                                            name: name,
-                                            polygon: Polygon([
-                                              PositionSeries.from(exteriorRing),
-                                              ...interiorRings.map(
-                                                PositionSeries.from,
-                                              ),
-                                            ]),
-                                            boundingBox: GeoBox.from(
-                                              exteriorRing,
-                                            ),
-                                          );
-                                          ref
-                                            ..read(saveFieldProvider(field))
-                                            ..read(
-                                              activeFieldProvider.notifier,
-                                            ).update(field)
-                                            ..read(
-                                              showFieldProvider.notifier,
-                                            ).update(value: true)
-                                            ..read(
-                                              showPathRecordingMenuProvider
-                                                  .notifier,
-                                            ).update(value: false)
-                                            ..read(
-                                              enablePathRecorderProvider
-                                                  .notifier,
-                                            ).update(value: false)
-                                            ..read(
-                                              showFinishedPathProvider.notifier,
-                                            ).update(value: false)
-                                            ..invalidate(
-                                              fieldExteriorRingProvider,
-                                            )
-                                            ..invalidate(
-                                              fieldInteriorRingsProvider,
-                                            );
-                                        }
-                                      },
-                                    );
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Save field'),
-                                ),
-                          ),
-                        ),
-                      ],
+                      initialValue: name,
+                      onChanged: (value) => setState(() => name = value),
+                      onFieldSubmitted: (value) => setState(() => name = value),
+                      keyboardType: TextInputType.text,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) => isBlank(value)
+                          ? '''No name entered! Please enter a name so that the field can be saved!'''
+                          : null,
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Consumer(
+                        builder: (context, ref, child) => FilledButton(
+                          onPressed: () {
+                            Timer(const Duration(milliseconds: 100), () {
+                              final exteriorRing = ref.read(
+                                fieldExteriorRingProvider,
+                              );
+                              final interiorRings =
+                                  ref.read(fieldInteriorRingsProvider) ?? [];
+                              if (exteriorRing != null) {
+                                final field = Field(
+                                  name: name,
+                                  polygon: Polygon([
+                                    PositionSeries.from(exteriorRing),
+                                    ...interiorRings.map(PositionSeries.from),
+                                  ]),
+                                  boundingBox: GeoBox.from(exteriorRing),
+                                );
+                                ref
+                                  ..read(saveFieldProvider(field))
+                                  ..read(
+                                    activeFieldProvider.notifier,
+                                  ).update(field)
+                                  ..read(
+                                    showFieldProvider.notifier,
+                                  ).update(value: true)
+                                  ..read(
+                                    showPathRecordingMenuProvider.notifier,
+                                  ).update(value: false)
+                                  ..read(
+                                    enablePathRecorderProvider.notifier,
+                                  ).update(value: false)
+                                  ..read(
+                                    showFinishedPathProvider.notifier,
+                                  ).update(value: false)
+                                  ..invalidate(fieldExteriorRingProvider)
+                                  ..invalidate(fieldInteriorRingsProvider);
+                              }
+                            });
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Save field'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           ),

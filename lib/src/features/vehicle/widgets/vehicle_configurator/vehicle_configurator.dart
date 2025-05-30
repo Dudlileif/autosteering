@@ -47,14 +47,12 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
     vsync: this,
     initialIndex:
         ref.read(
-              configuredVehicleProvider.select(
-                (value) => isNotBlank(value.name),
-              ),
-            )
-            ? ref.read(vehicleConfiguratorIndexProvider)
-            : 0,
+          configuredVehicleProvider.select((value) => isNotBlank(value.name)),
+        )
+        ? ref.read(vehicleConfiguratorIndexProvider)
+        : 0,
   );
-  static const pages = [
+  static const pages = <Widget>[
     VehicleTypeSelectorPage(),
     VehicleDimensionsPage(),
     VehicleAntennaPage(),
@@ -139,10 +137,9 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
                     Consumer(
                       builder: (context, ref, child) {
                         final tabBar = TabBar(
-                          tabAlignment:
-                              constraints.maxWidth < 500
-                                  ? TabAlignment.center
-                                  : TabAlignment.fill,
+                          tabAlignment: constraints.maxWidth < 500
+                              ? TabAlignment.center
+                              : TabAlignment.fill,
                           isScrollable: constraints.maxWidth < 500,
                           padding: const EdgeInsets.all(8),
                           dividerHeight: 1,
@@ -165,10 +162,9 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TabBarView(
                           controller: tabController,
-                          physics:
-                              disabled
-                                  ? const NeverScrollableScrollPhysics()
-                                  : null,
+                          physics: disabled
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
                           children: pages,
                         ),
                       ),
@@ -214,16 +210,15 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
                   SingleChildScrollView(
                     child: IntrinsicHeight(
                       child: Consumer(
-                        builder:
-                            (context, ref, child) => NavigationRail(
-                              backgroundColor: Colors.transparent,
-                              labelType: NavigationRailLabelType.all,
-                              destinations: destinations,
-                              selectedIndex: ref.watch(
-                                vehicleConfiguratorIndexProvider,
-                              ),
-                              onDestinationSelected: tabController.animateTo,
-                            ),
+                        builder: (context, ref, child) => NavigationRail(
+                          backgroundColor: Colors.transparent,
+                          labelType: NavigationRailLabelType.all,
+                          destinations: destinations,
+                          selectedIndex: ref.watch(
+                            vehicleConfiguratorIndexProvider,
+                          ),
+                          onDestinationSelected: tabController.animateTo,
+                        ),
                       ),
                     ),
                   ),
@@ -234,59 +229,54 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
                       children: [
                         ListenableBuilder(
                           listenable: tabController,
-                          builder:
-                              (context, child) => AnimatedOpacity(
-                                opacity: tabController.index > 0 ? 1 : 0,
-                                duration: Durations.medium1,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: IconButton.filled(
-                                    icon: const Icon(Icons.arrow_left),
-                                    onPressed:
-                                        tabController.index > 0
-                                            ? () => tabController.animateTo(
-                                              tabController.index - 1,
-                                            )
-                                            : null,
-                                  ),
-                                ),
+                          builder: (context, child) => AnimatedOpacity(
+                            opacity: tabController.index > 0 ? 1 : 0,
+                            duration: Durations.medium1,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: IconButton.filled(
+                                icon: const Icon(Icons.arrow_left),
+                                onPressed: tabController.index > 0
+                                    ? () => tabController.animateTo(
+                                        tabController.index - 1,
+                                      )
+                                    : null,
                               ),
+                            ),
+                          ),
                         ),
                         Expanded(
                           child: TabBarView(
                             controller: tabController,
-                            physics:
-                                disabled
-                                    ? const NeverScrollableScrollPhysics()
-                                    : null,
+                            physics: disabled
+                                ? const NeverScrollableScrollPhysics()
+                                : null,
                             children: pages,
                           ),
                         ),
                         ListenableBuilder(
                           listenable: tabController,
-                          builder:
-                              (context, child) => AnimatedOpacity(
-                                opacity:
+                          builder: (context, child) => AnimatedOpacity(
+                            opacity:
+                                tabController.index < pages.length - 1 &&
+                                    !disabled
+                                ? 1
+                                : 0,
+                            duration: Durations.medium1,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: IconButton.filled(
+                                onPressed:
                                     tabController.index < pages.length - 1 &&
-                                            !disabled
-                                        ? 1
-                                        : 0,
-                                duration: Durations.medium1,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: IconButton.filled(
-                                    onPressed:
-                                        tabController.index <
-                                                    pages.length - 1 &&
-                                                !disabled
-                                            ? () => tabController.animateTo(
-                                              tabController.index + 1,
-                                            )
-                                            : null,
-                                    icon: const Icon(Icons.arrow_right),
-                                  ),
-                                ),
+                                        !disabled
+                                    ? () => tabController.animateTo(
+                                        tabController.index + 1,
+                                      )
+                                    : null,
+                                icon: const Icon(Icons.arrow_right),
                               ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -312,33 +302,32 @@ class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
     onPressed:
         ref.watch(
-              configuredVehicleProvider.select(
-                (value) => value.name?.isNotEmpty ?? false,
-              ),
-            )
-            ? () {
-              final position = ref.watch(
-                mainVehicleProvider.select((value) => value.position),
-              );
-              final bearing = ref.watch(
-                mainVehicleProvider.select((value) => value.bearing),
-              );
+          configuredVehicleProvider.select(
+            (value) => value.name?.isNotEmpty ?? false,
+          ),
+        )
+        ? () {
+            final position = ref.watch(
+              mainVehicleProvider.select((value) => value.position),
+            );
+            final bearing = ref.watch(
+              mainVehicleProvider.select((value) => value.bearing),
+            );
 
-              final vehicle =
-                  ref.watch(configuredVehicleProvider)
-                    ..position = position
-                    ..bearing = bearing
-                    ..lastUsed = DateTime.now();
+            final vehicle = ref.watch(configuredVehicleProvider)
+              ..position = position
+              ..bearing = bearing
+              ..lastUsed = DateTime.now();
 
-              ref.read(mainVehicleProvider.notifier).update(vehicle);
+            ref.read(mainVehicleProvider.notifier).update(vehicle);
 
-              ref.read(simInputProvider.notifier).send(vehicle);
-              if (Device.isNative) {
-                ref.read(saveVehicleProvider(vehicle));
-              }
-              Navigator.of(context).pop();
+            ref.read(simInputProvider.notifier).send(vehicle);
+            if (Device.isNative) {
+              ref.read(saveVehicleProvider(vehicle));
             }
-            : null,
+            Navigator.of(context).pop();
+          }
+        : null,
     icon: const Icon(Icons.check),
     label: const Text('Apply configuration'),
   );
